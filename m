@@ -1,44 +1,70 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dt-binding: fix GIC example
-Date: Fri, 11 Apr 2014 09:16:04 +0800
-Message-ID: <20140411011602.GF28420@dragon>
-References: <1396023951-32383-1-git-send-email-l.stach@pengutronix.de>
- <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg@mail.gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Questions about of/base.c:of_update_property()
+Date: Thu, 10 Apr 2014 18:18:59 -0700
+Message-ID: <53474303.6030108@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+_+B=TKMQ2ULkXiBJGTNmGGLkB1xjKNJkF1BK_4TRXkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 10:21:35AM -0500, Rob Herring wrote:
-> On Fri, Mar 28, 2014 at 11:25 AM, Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > From: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-> >
-> > When using interrupt-maps, the size of a map entry is #address-cells +
-> 
-> Plus what? You mean ", and "?
-> 
-> > address-cells should be 0 as this is not used.
-> >
-> > As #address-cells = <0> is the same as not specifying the
-> > property, simply remove it.
-> >
-> > Signed-off-by: Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>
-> > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Did this get applied? I can't seem to find patch 2.
+Hi folks,
 
-No.  We expect this patch to be applied on DT tree, while the
-patch #2 [1] is going through IMX tree.
+looking into drivers/of/base.c, I notices a couple of oddities in
+of_update_property(). Both were interoduced with commit 75b57ecf
+(of: Make device nodes kobjects so they show up in sysfs).
+In both cases, there is an unnecessary value check. Sending
+a patch to remove the checks would be simple, but I want to
+make sure that the checks are not supposed to address some other
+condition.
 
-Shawn
+1) Unnecessary check if rc != 0
 
-[1] http://www.spinics.net/lists/arm-kernel/msg318810.html
+Here are all the uses of the 'rc' variable in of_update_property():
 
+         rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
+         if (rc)
+                 return rc;
+	...
+	while (*next) {
+		...
+	}
+	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+         if (rc)
+                 return rc;
+
+What is the purpose of the second check ? Can it be removed,
+or is there some other condition which should have been checked
+instead ? Should the check possibly be "if (!found)" ?
+
+2) Unnecessary check if oldprop != NULL
+
+	oldprop = of_find_property(np, newprop->name, NULL);
+         if (!oldprop)
+                 return of_add_property(np, newprop);
+	...
+	/* Update the sysfs attribute */
+         if (oldprop)
+                 sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+
+oldprop is not modified between the two checks. Can the check be
+removed, or is there some other condition which should have been
+checked instead ?
+
+3) At the very end of the function, there is a check
+
+        if (!found)
+                 return -ENODEV;
+
+This is _after_ the sysfs entry for the old property was removed,
+and the sysfs entry for the new property was created. Yet, '!found'
+suggests that there is some inconsistency in the property, so I wonder
+if the check should happen earlier, before sysfs entries are touched.
+
+Thanks,
+Guenter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
