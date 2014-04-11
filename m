@@ -1,73 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7790: link PCI USb devices to USB PHY
-Date: Fri, 11 Apr 2014 15:39:12 +0400
-Message-ID: <5347D460.3070803@cogentembedded.com>
-References: <201404092318.26231.sergei.shtylyov@cogentembedded.com>	<CANqRtoQeuT=Q9PRYNMqA079gjb1VkwgvcDmsWKxjzSVxcVfeWw@mail.gmail.com>	<534674B5.6080706@cogentembedded.com>	<5346E717.4040507@cogentembedded.com> <CANqRtoSub2TULO2rURiODz1VFXNUqe5gi488mkPtq_F+Oje2cQ@mail.gmail.com>
+From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Subject: [PATCH 0/2] Add support for sii9234 chip
+Date: Fri, 11 Apr 2014 13:48:28 +0200
+Message-ID: <1397216910-15904-1-git-send-email-t.stanislaws@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoSub2TULO2rURiODz1VFXNUqe5gi488mkPtq_F+Oje2cQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt@kernel.org, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, kgene.kim@samsung.com, arnd@arndb.de, gregkh@linuxfoundation.org, rdunlap@infradead.org, kyungmin.park@samsung.com, robh+dt@kernel.org, ben-linux@fluff.org, grant.likely@linaro.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 11.04.2014 9:48, Magnus Damm wrote:
+Hi everyone,
+This patchset adds support for sii9234 HD Mobile Link Bridge.  The chip is used
+to convert HDMI signal into MHL.  The driver enables HDMI output on Trats and
+Trats2 boards.
 
->>>> Thanks for this patch, good to see that the relationship between the
->>>> USB Host and the PHY is described via DT.
+The code is based on the driver [1] developed by:
+       Adam Hampson <ahampson@sta.samsung.com>
+       Erik Gilling <konkers@android.com>
+with additional contributions from:
+       Shankar Bandal <shankar.b@samsung.com>
+       Dharam Kumar <dharam.kr@samsung.com>
 
->>>> This patch seems to cover USB0 and USB2 that both require special
->>>> control in the PHY. How about USB1? Can you explain about the reason
->>>> why you omit that?
+The drivers architecture was greatly simplified and transformed into a form
+accepted (hopefully) by opensource community.  The main differences from
+original code are:
+* using single I2C client instead of 4 subclients
+* remove all logic non-related to establishing HDMI link
+* simplify error handling
+* rewrite state machine in interrupt handler
+* wakeup and discovery triggered by an extcon event
+* integrate with Device Tree
 
->>>      Because the driver does nothing for USB1 anyway.
+For now, the driver is added to drivers/misc/ directory because it has neigher
+userspace nor kernel interface.  The chip is capable of receiving and
+processing CEC events, so the driver may export an input device in /dev/ in the
+future.  However CEC could be also handled by HDMI driver.
 
->>     Looks like I should have tested that last minute change: kernel oopses
->> due to NULL pointer dereference somewhere in phy_get() once it gets called
->> for EHCI on the channel #1. At least doesn't seem to be my mistake...
+I kindly ask for suggestions about the best location for this driver.
 
-> No worries, thanks for looking into fixing that.
+Both the chip and the driver are quite autonomic. The chip works as 'invisible
+proxy' for HDMI signal, so there is no need to integrate it with HDMI drivers
+by helper-subsystems like v4l2_subdev or drm_bridge.  If the driver is merged
+then the driver from drivers/media/platform/s5p-tv/sii9234_drv.c could be safely
+removed.
 
-> Regarding the USB ports on R-Car Gen2 in general and especially USB1,
-> it is my impression that even though there is no USB controller
-> selection available for USB1 I still believe the UGCTL.CONNECT bit
-> shall be used for power management purpose.
+All comments are welcome.
 
-    I don't think so. As I said the EHCI driver happily works without touching 
-this bit.
+Regards,
+Tomasz Stanislawski
 
-> I may of course be wrong, but since the PHY hardware is shared between
-> USB0, USB1 and USB2
 
-    I believe it's a wrong impression (which probably my and Valentine's PHY 
-drivers have created). The PHY actually belongs to USBHS only; UGCTRL2 
-register is some kind of ad-hockery in this PHY.
+References:
+[1] https://github.com/junpei0824/SC02C-linux/tree/master-jelly-cm-aokp/drivers/media/video/mhl
 
-> it makes sense to have some kind of usage counter
 
-    Generic PHY core already maintains such counters for phy_{init|exit}() and 
-phy_power_{on|off}() calls.
+Tomasz Stanislawski (2):
+  misc: add sii9234 driver
+  arm: dts: trats2: add SiI9234 node
 
-> and manage the hardware enable bit based on registered users somehow.
-> There is no need to manage this bit at this point IMO, but in the
-> future we may want to add such handling to improve power management.
+ Documentation/devicetree/bindings/sii9234.txt |   22 +
+ arch/arm/boot/dts/exynos4412-trats2.dts       |   43 +
+ drivers/misc/Kconfig                          |    8 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/sii9234.c                        | 1081 +++++++++++++++++++++++++
+ 5 files changed, 1155 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sii9234.txt
+ create mode 100644 drivers/misc/sii9234.c
 
-    I handle this bit but only for USBHS. What is actually necessary for all 
-USB controllers is enabling the USBHS clocks in order for UGCTRL2 to work.
-
-> And that can only happen if DT is used to connect all USB controllers
-> with the PHY, so please make sure to describe the complete
-> dependencies in DT.
-
-    I cannnot represent USBHS in the device tree yet. I think I can represent 
-xHCI there but I was told it needs the firmware in order to work -- which we 
-don't have, so I'm not sure about xHCI testing.
-
-> Thanks,
-
-> / magnus
-
-WBR, Sergei
-
+-- 
+1.7.9.5
