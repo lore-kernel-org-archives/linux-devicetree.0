@@ -1,53 +1,128 @@
-From: =?UTF-8?B?7LWc7LCs7Jqw?= <cwchoi00@gmail.com>
-Subject: Re: [PATCH] iio: adc: exynos_adc: Control special clock of ADC to
- support Exynos3250 ADC
-Date: Sat, 12 Apr 2014 07:49:22 +0900
-Message-ID: <CAGTfZH1t9QEZk5qaDRnGkeMatwtTXFq5SGgR27-4nXhdzKU-Ng@mail.gmail.com>
-References: <1397181640-18513-1-git-send-email-cw00.choi@samsung.com>
-	<5347BE67.1080209@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5347BE67.1080209@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-iio@vger.kernel.org, linux-kernel <linux-kernel@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, ch.naveen@samsung.com, jic23@kernel.org
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH] rtc: Fix suspend/resume for APM X-Gene SoC RTC driver
+Date: Fri, 11 Apr 2014 17:33:38 -0600
+Message-ID: <1397259218-20494-1-git-send-email-lho@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org
+Cc: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+This patch fixes suspend/resume functions properly for the APM X-Gene
+SoC RTC driver. This patch requires the merged v2 of the APM X-Gene 
+SoC RTC driver.
 
-On Fri, Apr 11, 2014 at 7:05 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> Hi Chanwoo,
->
-> On 11/04/14 04:00, Chanwoo Choi wrote:
->> This patch control special clock for ADC in Exynos series's FSYS block.
->> If special clock of ADC is registerd on clock list of common clk framework,
->> Exynos ADC drvier have to control this clock.
->>
->> Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
->> - 'adc' clock: bus clock for ADC
->>
->> Exynos3250 has additional 'sclk_tsadc' clock as following:
->> - 'sclk_tsadc' clock: special clock for ADC which provide clock to internal ADC
->>
->> Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_tsadc' clock
->> in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_tsadc'
->> clock in FSYS_BLK.
->
-> I think a new compatible should be added for the ADC device for Exynos3250
-> and the required clocks should be handled properly, based on compatible
-> value. This could be handled, e.g. through some flags in driver's data
-> selected based on the compatible property value.
+Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+---
+ drivers/rtc/rtc-xgene.c |   39 ++++++++++++++++++++++++++++++---------
+ 1 files changed, 30 insertions(+), 9 deletions(-)
 
-OK, I'll consider new patch using new compatible string according to
-your comment.
+diff --git a/drivers/rtc/rtc-xgene.c b/drivers/rtc/rtc-xgene.c
+index 14129cc..a80d26f 100644
+--- a/drivers/rtc/rtc-xgene.c
++++ b/drivers/rtc/rtc-xgene.c
+@@ -52,6 +52,7 @@ struct xgene_rtc_dev {
+ 	void __iomem *csr_base;
+ 	struct clk *clk;
+ 	unsigned int irq_wake;
++	unsigned int irq_enabled;
+ };
+ 
+ static int xgene_rtc_read_time(struct device *dev, struct rtc_time *tm)
+@@ -104,15 +105,19 @@ static int xgene_rtc_alarm_irq_enable(struct device *dev, u32 enabled)
+ 	return 0;
+ }
+ 
++static int xgene_rtc_alarm_irq_enabled(struct device *dev)
++{
++	struct xgene_rtc_dev *pdata = dev_get_drvdata(dev);
++
++	return readl(pdata->csr_base + RTC_CCR) & RTC_CCR_IE ? 1 : 0;
++}
++
+ static int xgene_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alrm)
+ {
+ 	struct xgene_rtc_dev *pdata = dev_get_drvdata(dev);
+-	unsigned long rtc_time;
+ 	unsigned long alarm_time;
+ 
+-	rtc_time = readl(pdata->csr_base + RTC_CCVR);
+ 	rtc_tm_to_time(&alrm->time, &alarm_time);
+-
+ 	pdata->alarm_time = alarm_time;
+ 	writel((u32) pdata->alarm_time, pdata->csr_base + RTC_CMR);
+ 
+@@ -180,12 +185,16 @@ static int xgene_rtc_probe(struct platform_device *pdev)
+ 		dev_err(&pdev->dev, "Couldn't get the clock for RTC\n");
+ 		return -ENODEV;
+ 	}
+-	clk_prepare_enable(pdata->clk);
++	ret = clk_prepare_enable(pdata->clk);
++	if (ret)
++		return ret;
+ 
+ 	/* Turn on the clock and the crystal */
+ 	writel(RTC_CCR_EN, pdata->csr_base + RTC_CCR);
+ 
+-	device_init_wakeup(&pdev->dev, 1);
++	ret = device_init_wakeup(&pdev->dev, 1);
++	if (ret)
++		return ret;
+ 
+ 	pdata->rtc = devm_rtc_device_register(&pdev->dev, pdev->name,
+ 					 &xgene_rtc_ops, THIS_MODULE);
+@@ -218,14 +227,20 @@ static int xgene_rtc_suspend(struct device *dev)
+ 	int irq;
+ 
+ 	irq = platform_get_irq(pdev, 0);
++
++	/*
++	 * If this RTC alarm will be used for waking the system up,
++	 * don't disable it of course. Else we just disable the alarm
++	 * and await suspension.
++	 */
+ 	if (device_may_wakeup(&pdev->dev)) {
+ 		if (!enable_irq_wake(irq))
+ 			pdata->irq_wake = 1;
+ 	} else {
++		pdata->irq_enabled = xgene_rtc_alarm_irq_enabled(dev);
+ 		xgene_rtc_alarm_irq_enable(dev, 0);
+-		clk_disable(pdata->clk);
++		clk_disable_unprepare(pdata->clk);
+ 	}
+-
+ 	return 0;
+ }
+ 
+@@ -234,16 +249,22 @@ static int xgene_rtc_resume(struct device *dev)
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct xgene_rtc_dev *pdata = platform_get_drvdata(pdev);
+ 	int irq;
++	int rc;
+ 
+ 	irq = platform_get_irq(pdev, 0);
++
+ 	if (device_may_wakeup(&pdev->dev)) {
+ 		if (pdata->irq_wake) {
+ 			disable_irq_wake(irq);
+ 			pdata->irq_wake = 0;
+ 		}
+ 	} else {
+-		clk_enable(pdata->clk);
+-		xgene_rtc_alarm_irq_enable(dev, 1);
++		rc = clk_prepare_enable(pdata->clk);
++		if (rc) {
++			dev_err(dev, "Unable to enable clock error %d\n", rc);
++			return rc;
++		}
++		xgene_rtc_alarm_irq_enable(dev, pdata->irq_enabled);
+ 	}
+ 
+ 	return 0;
+-- 
+1.5.5
 
->
-> And the new clocks should be documented in Documentation/devicetree/bindings
-> /arm/samsung/exynos-adc.txt.
-
-OK, I'll modify it. Thanks,
-
-Best Regards,
-Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
