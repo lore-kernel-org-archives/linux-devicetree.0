@@ -1,84 +1,77 @@
-From: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Subject: [PATCH 2/2] arm: dts: trats2: add SiI9234 node
-Date: Fri, 11 Apr 2014 13:48:30 +0200
-Message-ID: <1397216910-15904-3-git-send-email-t.stanislaws@samsung.com>
-References: <1397216910-15904-1-git-send-email-t.stanislaws@samsung.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] phy: Renesas R-Car Gen2 PHY driver
+Date: Fri, 11 Apr 2014 16:10:28 +0400
+Message-ID: <5347DBB4.3070401@cogentembedded.com>
+References: <201404090144.26769.sergei.shtylyov@cogentembedded.com> <53466C07.4080409@ti.com> <5346F6B6.8000901@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1397216910-15904-1-git-send-email-t.stanislaws@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-doc@vger.kernel.org
-Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, kgene.kim@samsung.com, arnd@arndb.de, gregkh@linuxfoundation.org, rdunlap@infradead.org, kyungmin.park@samsung.com, robh+dt@kernel.org, ben-linux@fluff.org, grant.likely@linaro.org, m.szyprowski@samsung.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5346F6B6.8000901@cogentembedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds configuration of SiI9234 bridge to Trats2 board.
+Hello.
 
-Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
----
- arch/arm/boot/dts/exynos4412-trats2.dts |   43 +++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+On 10-04-2014 23:53, Sergei Shtylyov wrote:
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 9583563d..65fd1d4 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -680,4 +680,47 @@
- 		pulldown-ohm = <100000>; /* 100K */
- 		io-channels = <&adc 2>;  /* Battery temperature */
- 	};
-+
-+	vsil: voltage-regulator-vsil {
-+	        compatible = "regulator-fixed";
-+		regulator-name = "HDMI_5V";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&gpl0 4 0>;
-+		enable-active-high;
-+		vin-supply = <&buck7_reg>;
-+	};
-+
-+	i2c-mhl {
-+		compatible = "i2c-gpio";
-+		gpios = <&gpf0 4 0 &gpf0 6 0>;
-+		i2c-gpio,delay-us = <100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pinctrl-0 = <&i2c_mhl_bus>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+
-+		sii9234: sii9234@39 {
-+			compatible = "sil,sii9234";
-+			vcc-supply = <&vsil>;
-+			gpio-reset = <&gpf3 4 0>;
-+			gpio-int = <&gpf3 5 0>;
-+			reg = <0x39>;
-+		};
-+	};
-+};
-+
-+&pinctrl_0 {
-+	mhl_int: mhl-int {
-+		samsung,pins = "gpf3-5";
-+		samsung,pin-pud = <0>;
-+	};
-+	i2c_mhl_bus: i2c-mhl-bus {
-+		samsung,pins = "gpf0-4", "gpf0-6";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <1>;
-+		samsung,pin-drv = <0>;
-+	};
- };
--- 
-1.7.9.5
+>> On Wednesday 09 April 2014 03:14 AM, Sergei Shtylyov wrote:
+>>> This PHY, though formally being a part of Renesas USBHS controller,
+>>> contains the
+>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
+>>> them
+>>> channels) to the different USB controllers: channel 0 can be connected to
+>>> either
+>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI
+>>> EHCI/OHCI
+>>> or xHCI controllers.
+
+>>> This is a new driver for this USB PHY currently already supported under
+>>> drivers/
+>>> usb/phy/. The reason for writing the new driver was the requirement that the
+>>> multiplexing of USB channels to the controller be dynamic, depending on what
+>>> USB drivers are loaded,  rather than static as provided by the old driver.
+
+[...]
+
+>>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that
+>>> purpose
+>>> ideally. The new driver only supports device tree probing for now.
+
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+
+>>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
+>>> @@ -0,0 +1,287 @@
+
+[...]
+
+>>> +static struct phy_ops rcar_gen2_phy_ops = {
+>>> +    .init        = rcar_gen2_phy_init,
+>>> +    .exit        = rcar_gen2_phy_exit,
+>>> +    .owner        = THIS_MODULE,
+>>> +};
+>>> +
+>>> +static struct phy_ops rcar_gen2_usbhs_phy_ops = {
+>>> +    .init        = rcar_gen2_phy_init,
+>>> +    .exit        = rcar_gen2_phy_exit,
+>>> +    .power_on    = rcar_gen2_usbhs_phy_power_on,
+>>> +    .power_off    = rcar_gen2_usbhs_phy_power_off,
+>>> +    .owner        = THIS_MODULE,
+>>> +};
+
+>> Let's not create multiple phy_ops for a single driver.
+
+>     Unfortunately, I have to because not all PHYs are equal.
+
+    OK, actually I can do without extra 'struct phy_ops'. I just figured that 
+out a bit late...
+
+WBR, Sergei
+
