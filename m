@@ -1,75 +1,58 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
-Date: Fri, 11 Apr 2014 10:43:30 +0100
-Message-ID: <5347B942.2040703@arm.com>
-References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
- <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
- <CAL_JsqJowqV2bsxE2VeYXQQSj4_L_KcH+C_dD=ZUvC=1crN4dA@mail.gmail.com>
- <87ha6136dz.fsf@approximate.cambridge.arm.com>
- <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH v2] Documentation: dt: Reduce fragmentation of <..> placeholders
+Date: Fri, 11 Apr 2014 11:55:00 +0200
+Message-ID: <5347BBF4.2060408@epfl.ch>
+References: <CAMuHMdUmcnzafPhWrp4qYBB3UniFbVtqzNNg-7ed_Q6hZKMeDw@mail.gmail.com>	<1394234910-8547-1-git-send-email-florian.vaussard@epfl.ch>	<CAL_Jsq+4SztwyrmMtN31Vof3Tb8U9VVpLs1uON5W=VVOpX=nUQ@mail.gmail.com> <CAL_JsqLiAF916KvHDgRu2df0qbkYAUL51BFq-62z50xfzZOr-g@mail.gmail.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Kumar
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLiAF916KvHDgRu2df0qbkYAUL51BFq-62z50xfzZOr-g@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Joe Perches <joe@perches.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/04/14 10:11, Matthias Brugger wrote:
-> 2014-04-10 11:01 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
->> A couple of things on top of Rob's comments:
->>
->> On Wed, Apr 09 2014 at 10:50:33 pm BST, Rob Herring <robherring2@gmail.com> wrote:
->>> On Wed, Apr 9, 2014 at 2:45 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
->>>> This adds a generic devicetree board file and a dtsi for boards
->>>> based on the MT6589 SoCs from Mediatek.
->>>>
->>>> Apart from the generic parts (gic, clocks) the only component
->>>> currently supported are the timers.
->>>>
->>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>
->> [...]
->>
->>>> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
->>>> new file mode 100644
->>>> index 0000000..c0139ca
->>>> --- /dev/null
->>>> +++ b/arch/arm/mach-mediatek/Kconfig
->>>> @@ -0,0 +1,14 @@
->>>> +config ARCH_MEDIATEK
->>>> +       bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
->>>> +       select ARCH_REQUIRE_GPIOLIB
+Hi,
+
+On 04/11/2014 02:25 AM, Rob Herring wrote:
+> On Sat, Mar 8, 2014 at 3:09 PM, Rob Herring <robherring2@gmail.com> wrote:
+>> On Fri, Mar 7, 2014 at 5:28 PM, Florian Vaussard
+>> <florian.vaussard@epfl.ch> wrote:
+>>> Placeholders <..> are sometimes used in the devicetree documentation
+>>> to define family-wide compatible strings (like fsl,<chip>-ipu where
+>>> chip can be any Freescale SoC).
 >>>
->>> Then where is your GPIO driver?
+>>> These placeholders are loosly defined. This lead to some
+>>> fragmentation. Looking at the current placeholders, we have:
 >>>
->>>> +       select ARM_GIC
->>>> +       select CACHE_L2X0
->>>> +       select HAVE_ARM_TWD if LOCAL_TIMERS
+>>>       3 <board>
+>>>      32 <chip>
+>>>       1 <chip name>
+>>>       1 <mcu-chip>
+>>>       1 <processor>
+>>>      30 <soc>
+>>>       1 <SOC>
+>>>       1 <soc-family>
+>>>
+>>> This patch consolidates this to:
+>>>
+>>>       3 <board>
+>>>      33 <chip>
+>>>       1 <mcu-chip>
+>>>       1 <processor>
+>>>      32 <soc>
+>>>
 >>
->> Hell no! ;-) ARM_ARCH_TIMER is the way (please also add the missing
->> node).
+>> I would prefer to consolidate these into just board and chip. If we
+>> have any oddballs, they can just document the exact strings.
 > 
-> I considered this, but the timer wasn't able to get it's clock frequency:
-> "Architected timer frequency not available
-> Division by zero in kernel."
+> Florian, Do you plan to re-spin this? I can take it for 3.15 if it is
+> early in the rc's.
+> 
 
-This is because your bootloader/firmware is utterly broken, and doesn't
-set CNTFRQ (it must be set on all CPUs, from secure mode). As a
-*workaround*, you can set the timer frequency in the timer node, but
-that's just a hack, and will prevent virtual machines from running on
-such hardware.
+Yes sure, I can re-spin this as soon as 3.15-rc1 is out.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Regards,
+Florian
