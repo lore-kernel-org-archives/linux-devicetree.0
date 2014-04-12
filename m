@@ -1,7 +1,7 @@
 From: Alexander Stein <alexanders83@web.de>
-Subject: [PATCH 4/4] ARM: at91/dt: sam9263: Add ac97 device node
-Date: Sat, 12 Apr 2014 11:08:27 +0200
-Message-ID: <1397293707-26890-5-git-send-email-alexanders83@web.de>
+Subject: [PATCH 2/4] ALSA: sound/atmel-ac97c.h: Remove unused flags from platform data
+Date: Sat, 12 Apr 2014 11:08:25 +0200
+Message-ID: <1397293707-26890-3-git-send-email-alexanders83@web.de>
 References: <1397293707-26890-1-git-send-email-alexanders83@web.de>
 Return-path: <linux-doc-owner@vger.kernel.org>
 In-Reply-To: <1397293707-26890-1-git-send-email-alexanders83@web.de>
@@ -10,48 +10,33 @@ To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutl
 Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexander Stein <alexanders83@web.de>
 List-Id: devicetree@vger.kernel.org
 
+This platform data member is unsed, so remove it.
+
 Signed-off-by: Alexander Stein <alexanders83@web.de>
 ---
- arch/arm/boot/dts/at91sam9263.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ include/sound/atmel-ac97c.h | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/at91sam9263.dtsi b/arch/arm/boot/dts/at91sam9263.dtsi
-index fece866..34db6d8 100644
---- a/arch/arm/boot/dts/at91sam9263.dtsi
-+++ b/arch/arm/boot/dts/at91sam9263.dtsi
-@@ -395,6 +395,16 @@
- 					};
- 				};
+diff --git a/include/sound/atmel-ac97c.h b/include/sound/atmel-ac97c.h
+index e6aabdb..00e6c289 100644
+--- a/include/sound/atmel-ac97c.h
++++ b/include/sound/atmel-ac97c.h
+@@ -23,7 +23,6 @@
+  * @reset_pin: GPIO pin wired to the reset input on the external AC97 codec,
+  *             optional to use, set to -ENODEV if not in use. AC97 layer will
+  *             try to do a software reset of the external codec anyway.
+- * @flags: Flags for which directions should be enabled.
+  *
+  * If the user do not want to use a DMA channel for playback or capture, i.e.
+  * only one feature is required on the board. The slave for playback or capture
+@@ -33,7 +32,6 @@
+ struct ac97c_platform_data {
+ 	struct dw_dma_slave	rx_dws;
+ 	struct dw_dma_slave	tx_dws;
+-	unsigned int 		flags;
+ 	int			reset_pin;
+ };
  
-+				ac97 {
-+					pinctrl_ac97: ac97-0 {
-+						atmel,pins =
-+							<AT91_PIOB 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB12 periph A AC97FS pin */
-+							 AT91_PIOB 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB13 periph A AC97CK pin */
-+							 AT91_PIOB 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PB14 periph A AC97TX pin */
-+							 AT91_PIOB 3 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* PB14 periph A AC97RX pin */
-+					};
-+				};
-+
- 				pioA: gpio@fffff200 {
- 					compatible = "atmel,at91rm9200-gpio";
- 					reg = <0xfffff200 0x200>;
-@@ -506,6 +516,15 @@
- 				status = "disabled";
- 			};
- 
-+			ac97: sound@fffa0000 {
-+				compatible = "atmel,atmel_ac97c";
-+				reg = <0xfffa0000 0x4000>;
-+				interrupts = <18 IRQ_TYPE_LEVEL_HIGH 5>;
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&pinctrl_ac97>;
-+				status = "disabled";
-+			};
-+
- 			macb0: ethernet@fffbc000 {
- 				compatible = "cdns,at32ap7000-macb", "cdns,macb";
- 				reg = <0xfffbc000 0x100>;
 -- 
 1.9.2
 
