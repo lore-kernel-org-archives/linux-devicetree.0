@@ -1,96 +1,59 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] phy: exynos5-usbdrd: Add facility to toggle vbus gpio
- on/off
-Date: Fri, 11 Apr 2014 22:37:18 -0500
-Message-ID: <20140412033718.GA18777@saruman.home>
-References: <1397044485-26483-1-git-send-email-gautam.vivek@samsung.com>
-Reply-To: <balbi@ti.com>
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH v2 2/2] ASoC: cirrus: clps711x: Add bindings
+	documentation for the CLPS711X DAI
+Date: Sat, 12 Apr 2014 10:17:34 +0400
+Message-ID: <1397283454-684-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1397044485-26483-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, kishon@ti.com, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, t.figa@samsung.com, k.debski@samsung.com, jg1.han@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Brown <broonie@kernel.org>, Alexander Shiyan <shc_work@mail.ru>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
---y0ulUmNC+osPPQO6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch adds the devicetree documentation for the Cirrus Logic
+CLPS711X Digital Audio Interface (DAI).
 
-On Wed, Apr 09, 2014 at 05:24:45PM +0530, Vivek Gautam wrote:
-> Adding support to enable/disable VBUS hooked to a gpio
-> to enable vbus supply on the port.
->=20
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> ---
->=20
-> Based on 'phy-exynos5-usbdrd' patches:
-> [PATCH V4 0/5] Add Exynos5 USB 3.0 phy driver based on generic PHY framew=
-ork
-> http://www.spinics.net/lists/linux-usb/msg105507.html
->=20
->  drivers/phy/phy-exynos5-usbdrd.c |   18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
->=20
-> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-u=
-sbdrd.c
-> index ff54a7c..5ca7485 100644
-> --- a/drivers/phy/phy-exynos5-usbdrd.c
-> +++ b/drivers/phy/phy-exynos5-usbdrd.c
-> @@ -18,6 +18,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/mutex.h>
-> @@ -176,6 +177,7 @@ struct exynos5_usbdrd_phy {
->  	struct clk *ref_clk;
->  	unsigned long ref_rate;
->  	unsigned int refclk_reg;
-> +	int gpio;
->  };
-> =20
->  #define to_usbdrd_phy(inst) \
-> @@ -460,6 +462,9 @@ static int exynos5_usbdrd_phy_power_on(struct phy *ph=
-y)
->  	if (!IS_ERR(phy_drd->usb30_sclk))
->  		clk_prepare_enable(phy_drd->usb30_sclk);
-> =20
-> +	/* Toggle VBUS gpio - on */
-> +	gpio_set_value(phy_drd->gpio, 1);
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ .../bindings/sound/cirrus,clps711x-dai.txt           | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt
 
-It seems like you'd be better off using a regulator_enable() call for
-this.
-
---=20
-balbi
-
---y0ulUmNC+osPPQO6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTSLTuAAoJEIaOsuA1yqREZQUQAJ7ez8ZDZBRAzn3wjiUQNYfp
-GO3QGVWSsbQe80ONOjde+hOKkCf1cW/mVYgU4Yz4/kZ0J9TuwFTtGWvC+Y8kRGOH
-Ti/gxDCrDu3P7f1TBw3yF8PXNyNU1iuFAiKVQesNzOt8PT7TsRAESLrYQGCX9AnK
-r/MqoN7bbdrFucQ7UxqPMMIReR+HJGUYDv8hcjjpPeffoPi70yVm4/Kf4rloi8Zy
-E/bS9Q1gvSGHx8oVtTZ0ejww6b6f8Jz1yLNa8Bq01ag+kkmqaAI9Aj4379BiV67a
-UeOCdER3vJAaYQp9sgINx3r0+fLNZ1K5Fk0DXgpU+i+TZfzGYfK2zlXVXV/lwS/n
-C9A7K5VOiYWR56pS4EdcH9UKotF5OnHio6XkSp+a5FK7DpJ1nG1A5qusWl4tTrOo
-QlgdnCXLzNUO0htQKo0GRUxQG8LKHFRp22JWw0r3aJHpfDpUmdgj0MHUR634thqt
-N4F6pvrrl6WYrIOj7e+RCMzYC1qWj1vpKSzGENOLI/zCTlAX/3rxi0V5xMAOEQvb
-LqdSiDU09xqkG5N6h/r1RsWwmAbeQRqFKTnHMLsT8agNA6U7CNyvVBq3UnAodU/A
-nG/JUXgdw8M9oxcb9x0XtLvdnRi7xci01A3/NBwkFpJPyh5+mUJPHqa1VYHjRiSC
-POXfoGYZKhsMCUCA5lSr
-=sVm9
------END PGP SIGNATURE-----
-
---y0ulUmNC+osPPQO6--
+diff --git a/Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt b/Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt
+new file mode 100644
+index 0000000..fd37774
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt
+@@ -0,0 +1,20 @@
++* Cirrus Logic CLPS711X Digital Audio Interface (DAI)
++
++Required properties:
++- compatible:  Shall contain "cirrus,clps711x-dai".
++- reg:         Should contain registers location and length.
++- clocks:      phandle + clock specifier pair of the CPU PLL reference
++               clock and (optionally) external MCLK reference clock.
++- clock-names: The clock should be named "pll" for CPU PLL and "mclk"
++               for external MCLK.
++- interrupts:  Should contain DAI interrupt number.
++
++Example:
++	dai: dai@80002000 {
++		#sound-dai-cells = <0>;
++		compatible = "cirrus,ep7312-dai", "cirrus,clps711x-dai";
++		reg = <0x80002000 0x604>;
++		clocks = <&clks 3>, <&clk12288>;
++		clock-names = "pll", "mclk";
++		interrupts = <32>;
++	};
+-- 
+1.8.3.2
