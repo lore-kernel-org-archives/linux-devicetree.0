@@ -1,1717 +1,1941 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH] DMA: add a driver for AMBA AXI NBPF DMAC IP cores
-Date: Sat, 12 Apr 2014 19:39:23 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1404121932040.8725@axis700.grange>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH] mmc: add a driver for the Renesas v08r07s01e SD/SDIO host
+ controller
+Date: Sat, 12 Apr 2014 19:42:24 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1404121939250.8725@axis700.grange>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: "Koul, Vinod" <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: Chris Ball <chris@printf.net>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a driver for NBPF DMAC IP cores from Renesas, designed for
-the AMBA AXI bus.
+This patch adds a driver for the Renesas v08r07s01e SD/SDIO host controller
+in both PIO and DMA modes.
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 ---
 
-Tested on a Xilinx zc706-based board with an SD-host (driver will be 
-submitted shortly) and a PL011 UART.
+Tested on a Xilinx zc706-based board with SD, MMC and SDIO cards.
 
- Documentation/devicetree/bindings/dma/nbpfaxi.txt |   61 +
- drivers/dma/Kconfig                               |    6 +
- drivers/dma/Makefile                              |    1 +
- drivers/dma/nbpfaxi.c                             | 1554 +++++++++++++++++++++
- include/dt-bindings/dma/nbpfaxi.h                 |   20 +
- 5 files changed, 1642 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/nbpfaxi.txt
- create mode 100644 drivers/dma/nbpfaxi.c
- create mode 100644 include/dt-bindings/dma/nbpfaxi.h
+ .../devicetree/bindings/mmc/v08r07s01e.txt         |   33 +
+ drivers/mmc/host/Kconfig                           |    6 +
+ drivers/mmc/host/Makefile                          |    1 +
+ drivers/mmc/host/v08r07s01e.c                      | 1835 ++++++++++++++++++++
+ 4 files changed, 1875 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/v08r07s01e.txt
+ create mode 100644 drivers/mmc/host/v08r07s01e.c
 
-diff --git a/Documentation/devicetree/bindings/dma/nbpfaxi.txt b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+diff --git a/Documentation/devicetree/bindings/mmc/v08r07s01e.txt b/Documentation/devicetree/bindings/mmc/v08r07s01e.txt
 new file mode 100644
-index 0000000..d5e2522
+index 0000000..60e6cb5
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
-@@ -0,0 +1,61 @@
-+* Renesas "Type-AXI" NBPFAXI* DMA controllers
-+
-+* DMA controller
-+
-+Required properties
-+
-+- compatible:	must be one of
-+		"renesas,nbpfaxi64dmac1b4"
-+		"renesas,nbpfaxi64dmac1b8"
-+		"renesas,nbpfaxi64dmac1b16"
-+		"renesas,nbpfaxi64dmac4b4"
-+		"renesas,nbpfaxi64dmac4b8"
-+		"renesas,nbpfaxi64dmac4b16"
-+		"renesas,nbpfaxi64dmac8b4"
-+		"renesas,nbpfaxi64dmac8b8"
-+		"renesas,nbpfaxi64dmac8b16"
-+- #dma-cells:	must be 2: the first integer is a terminal number, to which this
-+		slave is connected, the second one is flags. Flags is a bitmask
-+		with the following bits defined:
-+
-+#define NBPF_SLAVE_RQ_HIGH	1
-+#define NBPF_SLAVE_RQ_LOW	2
-+#define NBPF_SLAVE_RQ_LEVEL	4
-+
-+Optional properties:
-+
-+You can use dma-channels and dma-requests as described in dma.txt, although they
-+won't be used, this information is derived from the compatibility string.
-+
-+Example:
-+
-+	dma: dma-controller@48000000 {
-+		compatible = "renesas,nbpfaxi64dmac8b4";
-+		reg = <0x48000000 0x400>;
-+		interrupts = <0 12 0x4
-+			      0 13 0x4
-+			      0 14 0x4
-+			      0 15 0x4
-+			      0 16 0x4
-+			      0 17 0x4
-+			      0 18 0x4
-+			      0 19 0x4>;
-+		#dma-cells = <2>;
-+		dma-channels = <8>;
-+		dma-requests = <8>;
-+	};
-+
-+* DMA client
++++ b/Documentation/devicetree/bindings/mmc/v08r07s01e.txt
+@@ -0,0 +1,33 @@
++* Renesas v08r07s01e SD/SDIO host controller
 +
 +Required properties:
 +
-+dmas and dma-names are required, as described in dma.txt.
++- compatible:	must be
++		"renesas,v08r07s01e"
++- interrupts:	3 interrupts, named "card detect", "data" and "SDIO" must be
++		specified
++- clocks:	a clock binding for the IMCLK input
++
++Optional properties:
++
++- vmmc-supply:	a phandle of a regulator, supplying Vcc to the card
++- vqmmc-supply:	a phandle of a regulator, supplying VccQ to the card
++
++Additionally any standard mmc bindings from mmc.txt can be used.
 +
 +Example:
 +
-+#include <dt-bindings/dma/nbpfaxi.h>
-+
-+...
-+		dmas = <&dma 0 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)
-+			&dma 1 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)>;
-+		dma-names = "rx", "tx";
-diff --git a/drivers/dma/Kconfig b/drivers/dma/Kconfig
-index ba06d1d..513207a 100644
---- a/drivers/dma/Kconfig
-+++ b/drivers/dma/Kconfig
-@@ -361,6 +361,12 @@ config FSL_EDMA
- 	  multiplexing capability for DMA request sources(slot).
- 	  This module can be found on Freescale Vybrid and LS-1 SoCs.
++sd0: sd@ab000000 {
++	compatible = "renesas,v08r07s01e";
++	reg = <0xab000000 0x200>;
++	interrupts = <0 23 0x4
++		      0 24 0x4
++		      0 25 0x4>;
++	interrupt-names = "card detect", "data", "SDIO";
++	bus-width = <4>;
++	max-frequency = <50000000>;
++	cap-power-off-card;
++	clocks = <&imclk>;
++	vmmc-supply = <&vcc_sd0>;
++	vqmmc-supply = <&vccq_sd0>;
++};
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 8aaf8c1..0feccd5 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -688,6 +688,12 @@ config MMC_WMT
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called wmt-sdmmc.
  
-+config NBPFAXI_DMA
-+	tristate "Renesas Type-AXI NBPF DMA support"
-+	select DMA_ENGINE
++config MMC_V08R07S01E
++	tristate "Renesas V08R07S01E SD/SDIO Host Controller support"
 +	help
-+	  Support for "Type-AXI" NBPF DMA IPs from Renesas
++	  This selects support for the Renesas V08R07S01E SD/SDIO
++	  Host Controller
 +
- config DMA_ENGINE
- 	bool
+ config MMC_REALTEK_PCI
+ 	tristate "Realtek PCI-E SD/MMC Card Interface Driver"
+ 	depends on MFD_RTSX_PCI
+diff --git a/drivers/mmc/host/Makefile b/drivers/mmc/host/Makefile
+index 0c8aa5e..d7d3ee9 100644
+--- a/drivers/mmc/host/Makefile
++++ b/drivers/mmc/host/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_MMC_JZ4740)	+= jz4740_mmc.o
+ obj-$(CONFIG_MMC_VUB300)	+= vub300.o
+ obj-$(CONFIG_MMC_USHC)		+= ushc.o
+ obj-$(CONFIG_MMC_WMT)		+= wmt-sdmmc.o
++obj-$(CONFIG_MMC_V08R07S01E)	+= v08r07s01e.o
  
-diff --git a/drivers/dma/Makefile b/drivers/dma/Makefile
-index 5150c82..9589ebb 100644
---- a/drivers/dma/Makefile
-+++ b/drivers/dma/Makefile
-@@ -46,3 +46,4 @@ obj-$(CONFIG_K3_DMA) += k3dma.o
- obj-$(CONFIG_MOXART_DMA) += moxart-dma.o
- obj-$(CONFIG_FSL_EDMA) += fsl-edma.o
- obj-$(CONFIG_QCOM_BAM_DMA) += qcom_bam_dma.o
-+obj-$(CONFIG_NBPFAXI_DMA) += nbpfaxi.o
-diff --git a/drivers/dma/nbpfaxi.c b/drivers/dma/nbpfaxi.c
+ obj-$(CONFIG_MMC_REALTEK_PCI)	+= rtsx_pci_sdmmc.o
+ 
+diff --git a/drivers/mmc/host/v08r07s01e.c b/drivers/mmc/host/v08r07s01e.c
 new file mode 100644
-index 0000000..152bb13
+index 0000000..4eb9ce1
 --- /dev/null
-+++ b/drivers/dma/nbpfaxi.c
-@@ -0,0 +1,1554 @@
++++ b/drivers/mmc/host/v08r07s01e.c
+@@ -0,0 +1,1835 @@
 +/*
 + * Copyright (C) 2013-2014 Renesas Europe Ltd.
-+ * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
++ * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of version 2 of the GNU General Public License as
 + * published by the Free Software Foundation.
 + */
 +
-+#include <linux/bitmap.h>
-+#include <linux/bitops.h>
 +#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/device.h>
 +#include <linux/dma-mapping.h>
 +#include <linux/dmaengine.h>
-+#include <linux/err.h>
++#include <linux/highmem.h>
 +#include <linux/interrupt.h>
 +#include <linux/io.h>
 +#include <linux/log2.h>
++#include <linux/mmc/host.h>
++#include <linux/mmc/mmc.h>
++#include <linux/mmc/sd.h>
++#include <linux/mmc/sdio.h>
 +#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_dma.h>
++#include <linux/pagemap.h>
 +#include <linux/platform_device.h>
-+#include <linux/slab.h>
++#include <linux/scatterlist.h>
++#include <linux/string.h>
++#include <linux/time.h>
++#include <linux/virtio.h>
++#include <linux/workqueue.h>
 +
-+#include <dt-bindings/dma/nbpfaxi.h>
++#define V08R07_SD_CMD		0x0000
++#define V08R07_SD_PORT_SEL	0x0004
++#define V08R07_SD_ARG		0x0008
++#define V08R07_SD_STOP		0x0010
++#define V08R07_SD_SECCNT	0x0014
++#define V08R07_SD_RSP10		0x0018
++#define V08R07_SD_RSP32		0x0020
++#define V08R07_SD_RSP54		0x0028
++#define V08R07_SD_RSP76		0x0030
++#define V08R07_SD_INFO1		0x0038
++#define V08R07_SD_INFO2		0x003c
++#define V08R07_SD_INFO1_MASK	0x0040
++#define V08R07_SD_INFO2_MASK	0x0044
++#define V08R07_SD_CLK_CTRL	0x0048
++#define V08R07_SD_SIZE		0x004c
++#define V08R07_SD_OPTION	0x0050
++#define V08R07_SD_ERR_STS1	0x0058
++#define V08R07_SD_ERR_STS2	0x005c
++#define V08R07_SD_BUF0		0x0060
++#define V08R07_SDIO_MODE	0x0068
++#define V08R07_SDIO_INFO1	0x006c
++#define V08R07_SDIO_INFO1_MASK	0x0070
++#define V08R07_CC_EXT_MODE	0x01b0
++#define V08R07_SOFT_RST		0x01c0
++#define V08R07_VERSION		0x01c4
++#define V08R07_HOST_MODE	0x01c8
++#define V08R07_SDIF_MODE	0x01cc
 +
-+#include "dmaengine.h"
++#define V08R07_SD_CMD_APP		0x0040
++#define V08R07_SD_CMD_MODE_RSP_AUTO	0x0000
++#define V08R07_SD_CMD_MODE_RSP_NONE	0x0300
++#define V08R07_SD_CMD_MODE_RSP_R1	0x0400	/* Also R5, R6, R7 */
++#define V08R07_SD_CMD_MODE_RSP_R1B	0x0500	/* R1b */
++#define V08R07_SD_CMD_MODE_RSP_R2	0x0600
++#define V08R07_SD_CMD_MODE_RSP_R3	0x0700	/* Also R4 */
++#define V08R07_SD_CMD_DATA		0x0800
++#define V08R07_SD_CMD_READ		0x1000
++#define V08R07_SD_CMD_MULTI		0x2000
++#define V08R07_SD_CMD_CMD12_AUTO_OFF	0x4000
 +
-+#define NBPF_REG_CHAN_OFFSET	0
-+#define NBPF_REG_CHAN_SIZE	0x40
++#define V08R07_CC_EXT_MODE_SDRW		BIT(1)
 +
-+/* Channel Current Transaction Byte register */
-+#define NBPF_CHAN_CUR_TR_BYTE	0x20
++#define V08R07_SD_INFO1_RSP_END		BIT(0)
++#define V08R07_SD_INFO1_ACCESS_END	BIT(2)
++#define V08R07_SD_INFO1_CARD_OUT	BIT(3)
++#define V08R07_SD_INFO1_CARD_IN		BIT(4)
++#define V08R07_SD_INFO1_CD		BIT(5)
++#define V08R07_SD_INFO1_WP		BIT(7)
++#define V08R07_SD_INFO1_D3_CARD_OUT	BIT(8)
++#define V08R07_SD_INFO1_D3_CARD_IN	BIT(9)
 +
-+/* Channel Status register */
-+#define NBPF_CHAN_STAT	0x24
-+#define NBPF_CHAN_STAT_EN	1
-+#define NBPF_CHAN_STAT_TACT	4
-+#define NBPF_CHAN_STAT_ERR	0x10
-+#define NBPF_CHAN_STAT_END	0x20
-+#define NBPF_CHAN_STAT_TC	0x40
-+#define NBPF_CHAN_STAT_DER	0x400
++#define V08R07_SD_INFO2_CMD_ERR		BIT(0)
++#define V08R07_SD_INFO2_CRC_ERR		BIT(1)
++#define V08R07_SD_INFO2_END_ERR		BIT(2)
++#define V08R07_SD_INFO2_TOUT		BIT(3)
++#define V08R07_SD_INFO2_IWA_ERR		BIT(4)
++#define V08R07_SD_INFO2_IRA_ERR		BIT(5)
++#define V08R07_SD_INFO2_RSP_TOUT	BIT(6)
++#define V08R07_SD_INFO2_SDDAT0		BIT(7)
++#define V08R07_SD_INFO2_BRE		BIT(8)
++#define V08R07_SD_INFO2_BWE		BIT(9)
++#define V08R07_SD_INFO2_SCLKDIVEN	BIT(13)
++#define V08R07_SD_INFO2_CBSY		BIT(14)
++#define V08R07_SD_INFO2_ILA		BIT(15)
 +
-+/* Channel Control register */
-+#define NBPF_CHAN_CTRL	0x28
-+#define NBPF_CHAN_CTRL_SETEN	1
-+#define NBPF_CHAN_CTRL_CLREN	2
-+#define NBPF_CHAN_CTRL_STG	4
-+#define NBPF_CHAN_CTRL_SWRST	8
-+#define NBPF_CHAN_CTRL_CLRRQ	0x10
-+#define NBPF_CHAN_CTRL_CLREND	0x20
-+#define NBPF_CHAN_CTRL_CLRTC	0x40
-+#define NBPF_CHAN_CTRL_SETSUS	0x100
-+#define NBPF_CHAN_CTRL_CLRSUS	0x200
++#define V08R07_SD_INFO1_CARD_INSERT (V08R07_SD_INFO1_CARD_IN | V08R07_SD_INFO1_D3_CARD_IN)
++#define V08R07_SD_INFO1_CARD_EJECT (V08R07_SD_INFO1_CARD_OUT | V08R07_SD_INFO1_D3_CARD_OUT)
++#define V08R07_SD_INFO1_CARD (V08R07_SD_INFO1_CARD_INSERT | V08R07_SD_INFO1_CARD_EJECT)
++#define V08R07_SD_INFO1_CARD_CD (V08R07_SD_INFO1_CARD_IN | V08R07_SD_INFO1_CARD_OUT)
 +
-+/* Channel Configuration register */
-+#define NBPF_CHAN_CFG	0x2c
-+#define NBPF_CHAN_CFG_SEL	7		/* terminal SELect: 0..7 */
-+#define NBPF_CHAN_CFG_REQD	8		/* REQuest Direction: DMAREQ is 0: input, 1: output */
-+#define NBPF_CHAN_CFG_LOEN	0x10		/* LOw ENable: low DMA request line is: 0: inactive, 1: active */
-+#define NBPF_CHAN_CFG_HIEN	0x20		/* HIgh ENable: high DMA request line is: 0: inactive, 1: active */
-+#define NBPF_CHAN_CFG_LVL	0x40		/* LeVeL: DMA request line is sensed as 0: edge, 1: level */
-+#define NBPF_CHAN_CFG_AM	0x700		/* ACK Mode: 0: Pulse mode, 1: Level mode, b'1x: Bus Cycle */
-+#define NBPF_CHAN_CFG_SDS	0xf000		/* Source Data Size: 0: 8 bits,... , 7: 1024 bits */
-+#define NBPF_CHAN_CFG_DDS	0xf0000		/* Destination Data Size: as above */
-+#define NBPF_CHAN_CFG_SAD	0x100000	/* Source ADdress counting: 0: increment, 1: fixed */
-+#define NBPF_CHAN_CFG_DAD	0x200000	/* Destination ADdress counting: 0: increment, 1: fixed */
-+#define NBPF_CHAN_CFG_TM	0x400000	/* Transfer Mode: 0: single, 1: block TM */
-+#define NBPF_CHAN_CFG_DEM	0x1000000	/* DMAEND interrupt Mask */
-+#define NBPF_CHAN_CFG_TCM	0x2000000	/* DMATCO interrupt Mask */
-+#define NBPF_CHAN_CFG_SBE	0x8000000	/* Sweep Buffer Enable */
-+#define NBPF_CHAN_CFG_RSEL	0x10000000	/* RM: Register Set sELect */
-+#define NBPF_CHAN_CFG_RSW	0x20000000	/* RM: Register Select sWitch */
-+#define NBPF_CHAN_CFG_REN	0x40000000	/* RM: Register Set Enable */
-+#define NBPF_CHAN_CFG_DMS	0x80000000	/* 0: register mode (RM), 1: link mode (LM) */
++#define V08R07_SD_INFO2_ERR	(V08R07_SD_INFO2_CMD_ERR |	\
++	V08R07_SD_INFO2_CRC_ERR | V08R07_SD_INFO2_END_ERR |	\
++	V08R07_SD_INFO2_TOUT | V08R07_SD_INFO2_IWA_ERR |	\
++	V08R07_SD_INFO2_IRA_ERR | V08R07_SD_INFO2_RSP_TOUT |	\
++	V08R07_SD_INFO2_ILA)
 +
-+#define NBPF_CHAN_NXLA	0x38
-+#define NBPF_CHAN_CRLA	0x3c
++#define V08R07_SD_INFO1_IRQ	(V08R07_SD_INFO1_RSP_END | V08R07_SD_INFO1_ACCESS_END | \
++				 V08R07_SD_INFO1_CARD)
 +
-+/* Link Header field */
-+#define NBPF_HEADER_LV	1
-+#define NBPF_HEADER_LE	2
-+#define NBPF_HEADER_WBD	4
-+#define NBPF_HEADER_DIM	8
++#define V08R07_SD_INFO2_IRQ	(V08R07_SD_INFO2_ERR | V08R07_SD_INFO2_BRE | \
++				 V08R07_SD_INFO2_BWE | 0x0800 | V08R07_SD_INFO2_ILA)
 +
-+#define NBPF_CTRL	0x300
-+#define NBPF_CTRL_PR	1		/* 0: fixed priority, 1: round robin */
-+#define NBPF_CTRL_LVINT	2		/* DMAEND and DMAERR signalling: 0: pulse, 1: level */
++#define V08R07_SD_CLK_CTRL_SCLKEN	BIT(8)
 +
-+#define NBPF_DSTAT_ER	0x314
-+#define NBPF_DSTAT_END	0x318
++#define V08R07_SD_STOP_STP		BIT(0)
++#define V08R07_SD_STOP_SEC		BIT(8)
 +
-+#define NBPF_DMA_BUSWIDTHS \
-+	(BIT(DMA_SLAVE_BUSWIDTH_UNDEFINED) | \
-+	 BIT(DMA_SLAVE_BUSWIDTH_1_BYTE) | \
-+	 BIT(DMA_SLAVE_BUSWIDTH_2_BYTES) | \
-+	 BIT(DMA_SLAVE_BUSWIDTH_4_BYTES) | \
-+	 BIT(DMA_SLAVE_BUSWIDTH_8_BYTES))
++#define V08R07_SDIO_INFO1_IOIRQ		BIT(0)
++#define V08R07_SDIO_INFO1_EXPUB52	BIT(14)
++#define V08R07_SDIO_INFO1_EXWT		BIT(15)
 +
-+struct nbpf_config {
-+	int num_channels;
-+	int buffer_size;
++#define V08R07_SDIO_INFO1_IRQ	(V08R07_SDIO_INFO1_IOIRQ | 3 | \
++				 V08R07_SDIO_INFO1_EXPUB52 | V08R07_SDIO_INFO1_EXWT)
++
++#define V08R07_MIN_DMA 64
++
++enum v08r07_wait_for {
++	V08R07_WAIT_FOR_REQUEST,
++	V08R07_WAIT_FOR_CMD,
++	V08R07_WAIT_FOR_MREAD,
++	V08R07_WAIT_FOR_MWRITE,
++	V08R07_WAIT_FOR_READ,
++	V08R07_WAIT_FOR_WRITE,
++	V08R07_WAIT_FOR_DATA_END,
++	V08R07_WAIT_FOR_STOP,
++	V08R07_WAIT_FOR_DMA,
 +};
 +
-+/*
-+ * We've got 3 types of objects, used to describe DMA transfers:
-+ * 1. high-level descriptor, containing a struct dma_async_tx_descriptor object
-+ *	in it, used to communicate with the user
-+ * 2. hardware DMA link descriptors, that we pass to DMAC for DMA transfer
-+ *	queuing, these must be DMAable, using either the streaming DMA API or
-+ *	allocated from coherent memory - one per SG segment
-+ * 3. one per SG segment descriptors, used to manage HW link descriptors from
-+ *	(2). They do not have to be DMAable. They can either be (a) allocated
-+ *	together with link descriptors as mixed (DMA / CPU) objects, or (b)
-+ *	separately. Even if allocated separately it would be best to link them
-+ *	to link descriptors once during channel resource allocation and always
-+ *	use them as a single object.
-+ * Therefore for both cases (a) and (b) at run-time objects (2) and (3) shall be
-+ * treated as a single SG segment descriptor.
-+ */
-+
-+struct nbpf_link_reg {
-+	u32	header;
-+	u32	src_addr;
-+	u32	dst_addr;
-+	u32	transaction_size;
-+	u32	config;
-+	u32	interval;
-+	u32	extension;
-+	u32	next;
-+} __packed;
-+
-+struct nbpf_device;
-+struct nbpf_channel;
-+struct nbpf_desc;
-+
-+struct nbpf_link_desc {
-+	struct nbpf_link_reg *hwdesc;
-+	dma_addr_t hwdesc_dma_addr;
-+	struct nbpf_desc *desc;
-+	struct list_head node;
++struct v08r07_page {
++	struct page *page;
++	void *mapped;		/* mapped page */
 +};
 +
-+/**
-+ * @sg:		list of hardware descriptors, represented by struct nbpf_link_desc
-+ * @node:	member in channel descriptor lists
-+ */
-+struct nbpf_desc {
-+	struct dma_async_tx_descriptor async_tx;
-+	bool user_wait;
-+	struct nbpf_channel *chan;
-+	struct list_head sg;
-+	struct list_head node;
-+};
-+
-+/* Take a wild guess: allocate 4 segments per descriptor */
-+#define NBPF_SEGMENTS_PER_DESC 4
-+#define NBPF_DESCS_PER_PAGE ((PAGE_SIZE - sizeof(struct list_head)) /	\
-+	(sizeof(struct nbpf_desc) +					\
-+	 NBPF_SEGMENTS_PER_DESC *					\
-+	 (sizeof(struct nbpf_link_desc) + sizeof(struct nbpf_link_reg))))
-+#define NBPF_SEGMENTS_PER_PAGE (NBPF_SEGMENTS_PER_DESC * NBPF_DESCS_PER_PAGE)
-+
-+struct nbpf_desc_page {
-+	struct list_head node;
-+	struct nbpf_desc desc[NBPF_DESCS_PER_PAGE];
-+	struct nbpf_link_desc ldesc[NBPF_SEGMENTS_PER_PAGE];
-+	struct nbpf_link_reg hwdesc[NBPF_SEGMENTS_PER_PAGE];
-+};
-+
-+#define NBPF_STATUS_SHIFT 7
-+#define NBPF_STATUS_KEEP BIT(NBPF_STATUS_SHIFT)
-+#define NBPF_STATUS_MASK (NBPF_STATUS_KEEP - 1)
-+
-+/**
-+ * struct nbpf_channel - one DMAC channel
-+ * @dma_chan:	standard dmaengine channel object
-+ * @base:	register address base
-+ * @nbpf:	DMAC
-+ * @name:	IRQ name
-+ * @irq:	IRQ number
-+ * @slave_addr:	address for slave DMA
-+ * @slave_width:slave data size in bytes
-+ * @slave_burst:maximum slave burst size in bytes
-+ * @terminal:	DMA terminal, assigned to this channel
-+ * @dmarq_cfg:	DMA request line configuration - high / low, edge / level for NBPF_CHAN_CFG
-+ * @flags:	configuration flags from DT
-+ * @lock:	protect descriptor lists
-+ * @free_links:	list of free link descriptors
-+ * @free:	list of free descriptors
-+ * @queued:	list of queued descriptors
-+ * @active:	list of descriptors, scheduled for processing
-+ * @done:	list of completed descriptors, waiting post-processing
-+ * @desc_page:	list of additionally allocated descriptor pages - if any
-+ */
-+struct nbpf_channel {
-+	struct dma_chan dma_chan;
-+	void __iomem *base;
-+	struct nbpf_device *nbpf;
-+	char name[16];
-+	int irq;
-+	dma_addr_t slave_addr;
-+	u32 slave_width;
-+	u32 slave_burst;
-+	unsigned int terminal;
-+	u32 dmarq_cfg;
-+	unsigned long flags;
-+	spinlock_t lock;
-+	struct list_head free_links;
-+	struct list_head free;
-+	struct list_head queued;
-+	struct list_head active;
-+	struct list_head done;
-+	struct list_head desc_page;
-+	struct nbpf_desc *running;
-+	dma_cookie_t cookie_forgotten;
-+	DECLARE_BITMAP(status, NBPF_STATUS_KEEP);
-+	bool paused;
-+};
-+
-+struct nbpf_device {
-+	struct dma_device dma_dev;
++struct v08r07_host {
++	struct mmc_host *mmc;
++	struct mmc_request *mrq;
 +	void __iomem *base;
 +	struct clk *clk;
-+	const struct nbpf_config *config;
-+	struct nbpf_channel chan[];
++
++	/* SG memory handling */
++
++	/* Common for multiple and single block requests */
++	struct v08r07_page pg;	/* current page from an SG */
++	void *blk_page;		/* either a mapped page, or the bounce buffer */
++	size_t offset;		/* offset within a page, including sg->offset */
++
++	/* Blocks, crossing a page boundary */
++	size_t head_len;
++	struct v08r07_page head_pg;
++
++	/* A bounce buffer for unaligned blocks or blocks, crossing a page boundary */
++	struct scatterlist bounce_sg;
++	u8 bounce_buf[512];
++
++	/* Multiple block requests only */
++	struct scatterlist *sg;	/* current SG segment */
++	int page_idx;		/* page index within an SG segment */
++
++	enum v08r07_wait_for wait;
++	u32 status_mask;
++	u32 status2_mask;
++	u32 sdio_mask;
++	u32 io_error;
++	u32 irq_status;
++	unsigned long imclk;
++	unsigned long rate;
++	bool app_cmd;
++
++	/* Timeout handling */
++	struct delayed_work timeout_work;
++	unsigned long timeout;
++
++	/* DMA support */
++	struct dma_chan *chan_rx;
++	struct dma_chan *chan_tx;
++	bool dma_active;
 +};
 +
-+enum nbpf_model {
-+	NBPF1B4,
-+	NBPF1B8,
-+	NBPF1B16,
-+	NBPF4B4,
-+	NBPF4B8,
-+	NBPF4B16,
-+	NBPF8B4,
-+	NBPF8B8,
-+	NBPF8B16,
-+};
++/*			I/O primitives					*/
 +
-+static struct nbpf_config nbpf_cfg[] = {
-+	[NBPF1B4] = {
-+		.num_channels = 1,
-+		.buffer_size = 4,
-+	},
-+	[NBPF1B8] = {
-+		.num_channels = 1,
-+		.buffer_size = 8,
-+	},
-+	[NBPF1B16] = {
-+		.num_channels = 1,
-+		.buffer_size = 16,
-+	},
-+	[NBPF4B4] = {
-+		.num_channels = 4,
-+		.buffer_size = 4,
-+	},
-+	[NBPF4B8] = {
-+		.num_channels = 4,
-+		.buffer_size = 8,
-+	},
-+	[NBPF4B16] = {
-+		.num_channels = 4,
-+		.buffer_size = 16,
-+	},
-+	[NBPF8B4] = {
-+		.num_channels = 8,
-+		.buffer_size = 4,
-+	},
-+	[NBPF8B8] = {
-+		.num_channels = 8,
-+		.buffer_size = 8,
-+	},
-+	[NBPF8B16] = {
-+		.num_channels = 8,
-+		.buffer_size = 16,
-+	},
-+};
-+
-+#define nbpf_to_chan(d) container_of(d, struct nbpf_channel, dma_chan)
-+
-+/*
-+ * dmaengine drivers seem to have a lot in common and instead of sharing more
-+ * code, they reimplement those common algorithms independently. In this driver
-+ * we try to separate the hardware-specific part from the (largely) generic
-+ * part. This improves code readability and makes it possible in the future to
-+ * reuse the generic code in form of a helper library. That generic code should
-+ * be suitable for various DMA controllers, using transfer descriptors in RAM
-+ * and pushing one SG list at a time to the DMA controller.
-+ */
-+
-+/*		Hardware-specific part		*/
-+
-+static inline u32 nbpf_chan_read(struct nbpf_channel *chan,
-+				 unsigned int offset)
++static void v08r07_write(struct v08r07_host *host, u32 reg, u32 data)
 +{
-+	u32 data = ioread32(chan->base + offset);
-+	pr_debug("%s(0x%p + 0x%x) = 0x%x\n", __func__, chan->base, offset, data);
++	iowrite32(data, host->base + reg);
++	dev_vdbg(mmc_dev(host->mmc), "%s(0x%p + 0x%x) = 0x%x\n", __func__,
++		host->base, reg, data);
++}
++
++static void v08r07_write16(struct v08r07_host *host, u32 reg, u16 data)
++{
++	iowrite16(data, host->base + reg);
++	dev_vdbg(mmc_dev(host->mmc), "%s(0x%p + 0x%x) = 0x%x\n", __func__,
++		host->base, reg, data);
++}
++
++static u32 v08r07_read(struct v08r07_host *host, u32 reg)
++{
++	u32 data = ioread32(host->base + reg);
++	dev_vdbg(mmc_dev(host->mmc), "%s(0x%p + 0x%x) = 0x%x\n", __func__,
++		host->base, reg, data);
 +	return data;
 +}
 +
-+static inline void nbpf_chan_write(struct nbpf_channel *chan,
-+				   unsigned int offset, u32 data)
++static u16 v08r07_read16(struct v08r07_host *host, u32 reg)
 +{
-+	iowrite32(data, chan->base + offset);
-+	pr_debug("%s(0x%p + 0x%x) = 0x%x\n", __func__, chan->base, offset, data);
-+}
-+
-+static inline u32 nbpf_read(struct nbpf_device *nbpf,
-+			    unsigned int offset)
-+{
-+	u32 data = ioread32(nbpf->base + offset);
-+	pr_debug("%s(0x%p + 0x%x) = 0x%x\n", __func__, nbpf->base, offset, data);
++	u16 data = ioread16(host->base + reg);
++	dev_vdbg(mmc_dev(host->mmc), "%s(0x%p + 0x%x) = 0x%x\n", __func__,
++		host->base, reg, data);
 +	return data;
 +}
 +
-+static inline void nbpf_write(struct nbpf_device *nbpf,
-+			      unsigned int offset, u32 data)
++static void v08r07_irq_enable(struct v08r07_host *host, u32 info1, u32 info2)
 +{
-+	iowrite32(data, nbpf->base + offset);
-+	pr_debug("%s(0x%p + 0x%x) = 0x%x\n", __func__, nbpf->base, offset, data);
++	host->status_mask = V08R07_SD_INFO1_IRQ & ~info1;
++	host->status2_mask = V08R07_SD_INFO2_IRQ & ~info2;
++	v08r07_write(host, V08R07_SD_INFO1_MASK, host->status_mask);
++	v08r07_write(host, V08R07_SD_INFO2_MASK, host->status2_mask);
 +}
 +
-+static void nbpf_chan_halt(struct nbpf_channel *chan)
++static void v08r07_wait_for_resp(struct v08r07_host *host)
 +{
-+	nbpf_chan_write(chan, NBPF_CHAN_CTRL, NBPF_CHAN_CTRL_CLREN);
++	v08r07_irq_enable(host, V08R07_SD_INFO1_RSP_END |
++			  V08R07_SD_INFO1_ACCESS_END | V08R07_SD_INFO1_CARD_CD,
++			  V08R07_SD_INFO2_ERR);
 +}
 +
-+static bool nbpf_status_get(struct nbpf_channel *chan)
++static void v08r07_wait_for_brwe(struct v08r07_host *host, bool read)
 +{
-+	u32 status = nbpf_read(chan->nbpf, NBPF_DSTAT_END);
-+
-+	return status & BIT(chan - chan->nbpf->chan);
++	v08r07_irq_enable(host, V08R07_SD_INFO1_ACCESS_END |
++			  V08R07_SD_INFO1_CARD_CD, V08R07_SD_INFO2_ERR |
++			  (read ? V08R07_SD_INFO2_BRE : V08R07_SD_INFO2_BWE));
 +}
 +
-+static void nbpf_status_ack(struct nbpf_channel *chan)
++static void v08r07_only_cd(struct v08r07_host *host)
 +{
-+	nbpf_chan_write(chan, NBPF_CHAN_CTRL, NBPF_CHAN_CTRL_CLREND);
++	/* Mask all except card hotplug */
++	v08r07_irq_enable(host, V08R07_SD_INFO1_CARD_CD, 0);
 +}
 +
-+static u32 nbpf_error_get(struct nbpf_device *nbpf)
++static void v08r07_mask_all(struct v08r07_host *host)
 +{
-+	return nbpf_read(nbpf, NBPF_DSTAT_ER);
++	v08r07_irq_enable(host, 0, 0);
 +}
 +
-+struct nbpf_channel *nbpf_error_get_channel(struct nbpf_device *nbpf, u32 error)
++static int v08r07_error_code(struct v08r07_host *host)
 +{
-+	return nbpf->chan + __ffs(error);
-+}
++	u32 err;
 +
-+static void nbpf_error_clear(struct nbpf_channel *chan)
-+{
-+	u32 status;
-+	int i;
++	v08r07_write(host, V08R07_SD_STOP, V08R07_SD_STOP_STP);
 +
-+	/* stop the channel, make sure DMA has been aborted */
-+	nbpf_chan_halt(chan);
++	if (host->io_error &
++	    (V08R07_SD_INFO2_RSP_TOUT | V08R07_SD_INFO2_TOUT)) {
++		u32 rsp54 = v08r07_read(host, V08R07_SD_RSP54);
++		int opc = host->mrq ? host->mrq->cmd->opcode : -1;
 +
-+	for (i = 0; i < 1000; i++) {
-+		status = nbpf_chan_read(chan, NBPF_CHAN_STAT);
-+		if (!(status & NBPF_CHAN_STAT_TACT))
-+			break;
-+		cpu_relax();
++		err = v08r07_read(host, V08R07_SD_ERR_STS2);
++		/* Response timeout is often normal, don't spam the log */
++		if (host->wait == V08R07_WAIT_FOR_CMD)
++			dev_dbg(mmc_dev(host->mmc),
++				"T-out sts 0x%x, resp 0x%x, state %u, CMD%d\n",
++				err, rsp54, host->wait, opc);
++		else
++			dev_warn(mmc_dev(host->mmc),
++				 "T-out sts 0x%x, resp 0x%x, state %u, CMD%d\n",
++				 err, rsp54, host->wait, opc);
++		return -ETIMEDOUT;
 +	}
 +
-+	if (i == 1000)
-+		dev_err(chan->dma_chan.device->dev, "%s() abort timeout\n", __func__);
++	err = v08r07_read(host, V08R07_SD_ERR_STS1);
++	if (err != 0x2000)
++		dev_warn(mmc_dev(host->mmc), "Err sts 0x%x, state %u, CMD%d\n",
++			 err, host->wait, host->mrq ? host->mrq->cmd->opcode : -1);
++	if (host->io_error & V08R07_SD_INFO2_ILA)
++		return -EILSEQ;
 +
-+	nbpf_chan_write(chan, NBPF_CHAN_CTRL, NBPF_CHAN_CTRL_SWRST);
++	return -EIO;
 +}
 +
-+static int nbpf_start(struct nbpf_desc *desc)
-+{
-+	struct nbpf_channel *chan = desc->chan;
-+	struct nbpf_link_desc *ldesc = list_first_entry(&desc->sg, struct nbpf_link_desc, node);
-+
-+	nbpf_chan_write(chan, NBPF_CHAN_NXLA, ldesc->hwdesc_dma_addr);
-+	nbpf_chan_write(chan, NBPF_CHAN_CTRL, NBPF_CHAN_CTRL_SETEN | NBPF_CHAN_CTRL_CLRSUS);
-+	chan->paused = false;
-+
-+	/* Software trigger MEMCPY - only MEMCPY uses the block mode */
-+	if (ldesc->hwdesc->config & NBPF_CHAN_CFG_TM)
-+		nbpf_chan_write(chan, NBPF_CHAN_CTRL, NBPF_CHAN_CTRL_STG);
-+
-+	dev_dbg(chan->nbpf->dma_dev.dev, "%s(): next 0x%x, cur 0x%x\n", __func__,
-+		nbpf_chan_read(chan, NBPF_CHAN_NXLA), nbpf_chan_read(chan, NBPF_CHAN_CRLA));
-+
-+	return 0;
-+}
-+
-+static void nbpf_chan_prepare(struct nbpf_channel *chan)
-+{
-+	chan->dmarq_cfg = (chan->flags & NBPF_SLAVE_RQ_HIGH ? NBPF_CHAN_CFG_HIEN : 0) |
-+		(chan->flags & NBPF_SLAVE_RQ_LOW ? NBPF_CHAN_CFG_LOEN : 0) |
-+		(chan->flags & NBPF_SLAVE_RQ_LEVEL ?
-+		 NBPF_CHAN_CFG_LVL | (NBPF_CHAN_CFG_AM & 0x200) : 0) |
-+		chan->terminal;
-+}
-+
-+static void nbpf_chan_prepare_default(struct nbpf_channel *chan)
-+{
-+	/* Don't output DMAACK */
-+	chan->dmarq_cfg = NBPF_CHAN_CFG_AM & 0x400;
-+	chan->terminal = 0;
-+	chan->flags = 0;
-+}
-+
-+static void nbpf_chan_configure(struct nbpf_channel *chan)
-+{
-+	/*
-+	 * We assume, that only the link mode and DMA request line configuration
-+	 * have to be set in the configuration register manually. Dynamic
-+	 * per-transfer configuration will be loaded from transfer descriptors.
-+	 */
-+	nbpf_chan_write(chan, NBPF_CHAN_CFG, NBPF_CHAN_CFG_DMS | chan->dmarq_cfg);
-+}
-+
-+static u32 nbpf_xfer_ds(struct nbpf_device *nbpf, size_t size)
-+{
-+	/* Maximum supported bursts depend on the buffer size */
-+	return min_t(int, __ffs(size), ilog2(nbpf->config->buffer_size * 8));
-+}
-+
-+static u32 nbpf_xfer_size(struct nbpf_device *nbpf,
-+			  enum dma_slave_buswidth width, u32 burst)
-+{
-+	size_t size;
-+
-+	if (!burst)
-+		burst = 1;
-+
-+	switch (width) {
-+	case DMA_SLAVE_BUSWIDTH_8_BYTES:
-+		size = 8 * burst;
-+		break;
-+	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-+		size = 4 * burst;
-+		break;
-+	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-+		size = 2 * burst;
-+		break;
-+	default:
-+		pr_warn("%s(): invalid bus width %u\n", __func__, width);
-+	case DMA_SLAVE_BUSWIDTH_1_BYTE:
-+		size = burst;
-+	}
-+
-+	return nbpf_xfer_ds(nbpf, size);
-+}
++/*			Scatter-Gather management			*/
 +
 +/*
-+ * We need a way to recognise slaves, whose data is sent "raw" over the bus,
-+ * i.e. it isn't known in advance how many bytes will be received. Therefore
-+ * the slave driver has to provide a "large enough" buffer and either read the
-+ * buffer, when it is full, or detect, that some data has arrived, then wait for
-+ * a timeout, if no more data arrives - receive what's already there. We want to
-+ * handle such slaves in a special way to allow an optimised mode for other
-+ * users, for whom the amount of data is known in advance. So far there's no way
-+ * to recognise such slaves. We use a data-width check to distinguish between
-+ * the SD host and the PL011 UART.
++ * In PIO mode we have to map each page separately, using kmap(). That way
++ * adjacent pages are mapped to non-adjacent virtual addresses. That's why we
++ * have to use a bounce buffer for blocks, crossing page boundaries. Such blocks
++ * have been observed with an SDIO WiFi card (b43 driver).
 + */
-+#define nbpf_slave_can_burst(chan) (chan->slave_width >= 3)
-+
-+static int nbpf_prep_one(struct nbpf_link_desc *ldesc,
-+			 enum dma_transfer_direction direction,
-+			 dma_addr_t src, dma_addr_t dst, size_t size, bool last)
++static void v08r07_blk_bounce(struct v08r07_host *host,
++			      struct scatterlist *sg)
 +{
-+	struct nbpf_link_reg *hwdesc = ldesc->hwdesc;
-+	struct nbpf_desc *desc = ldesc->desc;
-+	struct nbpf_channel *chan = desc->chan;
-+	struct device *dev = chan->dma_chan.device->dev;
-+	size_t mem_xfer, slave_xfer;
++	struct mmc_data *data = host->mrq->data;
++	size_t blk_head = host->head_len;
 +
-+	hwdesc->header = NBPF_HEADER_WBD | NBPF_HEADER_LV |
-+		(last ? NBPF_HEADER_LE : 0);
++	dev_dbg(mmc_dev(host->mmc), "%s(): CMD%u of %u SG: %ux%u @ 0x%x\n",
++		__func__, host->mrq->cmd->opcode, data->sg_len,
++		data->blksz, data->blocks, sg->offset);
 +
-+	hwdesc->src_addr = src;
-+	hwdesc->dst_addr = dst;
-+	hwdesc->transaction_size = size;
++	host->head_pg.page	= host->pg.page;
++	host->head_pg.mapped	= host->pg.mapped;
++	host->pg.page		= nth_page(host->pg.page, 1);
++	host->pg.mapped		= kmap(host->pg.page);
++
++	host->blk_page = host->bounce_buf;
++	host->offset = 0;
++
++	if (data->flags & MMC_DATA_READ)
++		return;
++
++	memcpy(host->bounce_buf, host->head_pg.mapped + PAGE_SIZE - blk_head,
++	       blk_head);
++	memcpy(host->bounce_buf + blk_head, host->pg.mapped,
++	       data->blksz - blk_head);
++}
++
++/* Only called for multiple block IO */
++static void v08r07_sg_prep(struct v08r07_host *host)
++{
++	struct mmc_request *mrq = host->mrq;
++	struct mmc_data *data = mrq->data;
++
++	v08r07_write(host, V08R07_SD_SECCNT, data->blocks);
++
++	host->sg = data->sg;
++	/* TODO: if we always map, this is redundant */
++	host->offset = host->sg->offset;
++}
++
++/* Map the first page in an SG segment: common for multiple and single block IO */
++static void *v08r07_sg_map(struct v08r07_host *host)
++{
++	struct mmc_data *data = host->mrq->data;
++	struct scatterlist *sg = data->sg_len > 1 ? host->sg : data->sg;
++	size_t head = PAGE_SIZE - sg->offset;
++	size_t blk_head = head % data->blksz;
++
++	WARN(host->pg.page, "%p not properly unmapped!\n", host->pg.page);
++	if (WARN(sg_dma_len(sg) % data->blksz,
++		 "SG size %zd isn't a multiple of block size %zd\n",
++		 sg_dma_len(sg), data->blksz))
++		return NULL;
++
++	host->pg.page = sg_page(sg);
++	host->pg.mapped = kmap(host->pg.page);
++	host->offset = sg->offset;
 +
 +	/*
-+	 * set config: SAD, DAD, DDS, SDS, etc.
-+	 * Note on transfer sizes: the DMAC can perform unaligned DMA transfers,
-+	 * but it is important to have transaction size a multiple of both
-+	 * receiver and transmitter transfer sizes. It is also possible to use
-+	 * different RAM and device transfer sizes, and it does work well with
-+	 * some devices, e.g. with V08R07S01E SD host controllers, which can use
-+	 * 128 byte transfers. But this doesn't work with other devices,
-+	 * especially when the transaction size is unknown. This is the case,
-+	 * e.g. with serial drivers like amba-pl011.c. For reception it sets up
-+	 * the transaction size of 4K and if fewer bytes are received, it
-+	 * pauses DMA and reads out data received via DMA as well as those left
-+	 * in the Rx FIFO. For this to work with the RAM side using burst
-+	 * transfers we enable the SBE bit and terminate the transfer in our
-+	 * DMA_PAUSE handler.
++	 * Block size must be a power of 2 for multi-block transfers,
++	 * therefore blk_head is equal for all pages in this SG
 +	 */
-+	mem_xfer = nbpf_xfer_ds(chan->nbpf, size);
-+	slave_xfer = min(mem_xfer, nbpf_slave_can_burst(chan) ?
-+			 chan->slave_burst : chan->slave_width);
++	host->head_len = blk_head;
 +
-+	switch (direction) {
-+	case DMA_DEV_TO_MEM:
++	if (head < data->blksz)
 +		/*
-+		 * Is the slave narrower than 64 bits, i.e. isn't using the full
-+		 * bus width and cannot use bursts?
++		 * The first block in the SG crosses a page boundary.
++		 * Max blksz = 512, so blocks can only span 2 pages
 +		 */
-+		if (mem_xfer > chan->slave_burst && !nbpf_slave_can_burst(chan))
-+			mem_xfer = chan->slave_burst;
-+		/* Device-to-RAM DMA is unreliable without REQD set */
-+		hwdesc->config = NBPF_CHAN_CFG_SAD | (NBPF_CHAN_CFG_DDS & (mem_xfer << 16)) |
-+			(NBPF_CHAN_CFG_SDS & (slave_xfer << 12)) | NBPF_CHAN_CFG_REQD |
-+			NBPF_CHAN_CFG_SBE;
-+		break;
++		v08r07_blk_bounce(host, sg);
++	else
++		host->blk_page = host->pg.mapped;
++
++	dev_dbg(mmc_dev(host->mmc), "Mapped %p (%lx) at %p + %u for CMD%u @ 0x%p\n",
++		host->pg.page, page_to_pfn(host->pg.page), host->pg.mapped,
++		sg->offset, host->mrq->cmd->opcode, host->mrq);
++
++	return host->blk_page + host->offset;
++}
++
++/* Unmap the current page: common for multiple and single block IO */
++static void v08r07_sg_unmap(struct v08r07_host *host, bool force)
++{
++	struct mmc_data *data = host->mrq->data;
++	struct page *page = host->head_pg.page;
++
++	if (page) {
++		/* Previous block was cross-page boundary */
++		struct scatterlist *sg = data->sg_len > 1 ?
++			host->sg : data->sg;
++		size_t blk_head = host->head_len;
++
++		if (!data->error && data->flags & MMC_DATA_READ) {
++			memcpy(host->head_pg.mapped + PAGE_SIZE - blk_head,
++			       host->bounce_buf, blk_head);
++			memcpy(host->pg.mapped, host->bounce_buf + blk_head,
++			       data->blksz - blk_head);
++		}
++
++		flush_dcache_page(page);
++		kunmap(page);
++
++		host->head_pg.page = NULL;
++
++		if (!force && sg_dma_len(sg) + sg->offset >
++		    (host->page_idx << PAGE_SHIFT) + data->blksz - blk_head)
++			/* More blocks in this SG, don't unmap the next page */
++			return;
++	}
++
++	page = host->pg.page;
++	if (!page)
++		return;
++
++	flush_dcache_page(page);
++	kunmap(page);
++
++	host->pg.page = NULL;
++}
++
++/* Called from MMC_WRITE_MULTIPLE_BLOCK or MMC_READ_MULTIPLE_BLOCK */
++static void v08r07_sg_advance(struct v08r07_host *host)
++{
++	struct mmc_data *data = host->mrq->data;
++	size_t done, total;
++
++	/* New offset: set at the end of the previous block */
++	if (host->head_pg.page) {
++		/* Finished a cross-page block, jump to the new page */
++		host->page_idx++;
++		host->offset = data->blksz - host->head_len;
++		host->blk_page = host->pg.mapped;
++		v08r07_sg_unmap(host, false);
++	} else {
++		host->offset += data->blksz;
++		/* The completed block didn't cross a page boundary */
++		if (host->offset == PAGE_SIZE) {
++			/* If required, we'll map the page below */
++			host->offset = 0;
++			host->page_idx++;
++		}
++	}
++
++	/*
++	 * Now host->blk_page + host->offset point at the end of our last block
++	 * and host->page_idx is the index of the page, in which our new block
++	 * is located, if any
++	 */
++
++	done = (host->page_idx << PAGE_SHIFT) + host->offset;
++	total = host->sg->offset + sg_dma_len(host->sg);
++
++	dev_dbg(mmc_dev(host->mmc), "%s(): %zu of %zu @ %u\n", __func__,
++		done, total, host->offset);
++
++	if (done < total && host->offset) {
++		/* More blocks in this page */
++		if (host->offset + data->blksz > PAGE_SIZE)
++			/* We approached at a block, that spans 2 pages */
++			v08r07_blk_bounce(host, host->sg);
++
++		return;
++	}
++
++	/* Finished current page or an SG segment */
++	v08r07_sg_unmap(host, false);
++
++	if (done == total) {
++		/*
++		 * End of an SG segment or the complete SG: jump to the next
++		 * segment, we'll map it later in v08r07_blk_read() or
++		 * v08r07_blk_write()
++		 */
++		struct scatterlist *next = sg_next(host->sg);
++
++		host->page_idx = 0;
++
++		if (!next)
++			host->wait = V08R07_WAIT_FOR_DATA_END;
++		host->sg = next;
++
++		if (WARN(next && sg_dma_len(next) % data->blksz,
++			 "SG size %zd isn't a multiple of block size %zd\n",
++			 sg_dma_len(next), data->blksz))
++			data->error = -EINVAL;
++
++		return;
++	}
++
++	/* We cannot get here after crossing a page border */
++
++	/* Next page in the same SG */
++	host->pg.page = nth_page(sg_page(host->sg), host->page_idx);
++	host->pg.mapped = kmap(host->pg.page);
++	host->blk_page = host->pg.mapped;
++
++	dev_dbg(mmc_dev(host->mmc), "Mapped %p (%lx) at %p for CMD%u @ 0x%p\n",
++		host->pg.page, page_to_pfn(host->pg.page), host->pg.mapped,
++		host->mrq->cmd->opcode, host->mrq);
++}
++
++/*			DMA handling					*/
++
++static void v08r07_dma_release(struct v08r07_host *host)
++{
++	host->dma_active = false;
++	if (host->chan_tx) {
++		struct dma_chan *chan = host->chan_tx;
++		host->chan_tx = NULL;
++		dma_release_channel(chan);
++	}
++	if (host->chan_rx) {
++		struct dma_chan *chan = host->chan_rx;
++		host->chan_rx = NULL;
++		dma_release_channel(chan);
++	}
++}
++
++static void v08r07_dma_stop_unmap(struct v08r07_host *host)
++{
++	struct mmc_data *data = host->mrq->data;
++
++	if (!host->dma_active)
++		return;
++
++	v08r07_write(host, V08R07_CC_EXT_MODE, 0);
++	host->dma_active = false;
++
++	if (data->flags & MMC_DATA_READ)
++		/* TODO: do we have to synchronise? */
++		dma_unmap_sg(host->chan_rx->device->dev, data->sg,
++			     data->sg_len, DMA_FROM_DEVICE);
++	else
++		dma_unmap_sg(host->chan_tx->device->dev, data->sg,
++			     data->sg_len, DMA_TO_DEVICE);
++}
++
++static void v08r07_dma_complete(void *arg)
++{
++	struct v08r07_host *host = arg;
++	struct mmc_request *mrq = host->mrq;
++
++	if (WARN(!mrq || !mrq->data, "%s: NULL data in DMA completion for %p!\n",
++		 dev_name(mmc_dev(host->mmc)), mrq))
++		return;
++
++	dev_dbg(mmc_dev(host->mmc), "%s(): CMD%u DMA completed\n", __func__,
++		mrq->cmd->opcode);
++
++	v08r07_dma_stop_unmap(host);
++	v08r07_wait_for_brwe(host, mrq->data->flags & MMC_DATA_READ);
++}
++
++static int v08r07_dma_setup(struct v08r07_host *host, struct dma_chan *chan,
++			    enum dma_transfer_direction dir)
++{
++	struct mmc_data *data = host->mrq->data;
++	struct scatterlist *sg = data->sg;
++	struct dma_async_tx_descriptor *desc = NULL;
++	dma_cookie_t cookie = -EINVAL;
++	enum dma_data_direction data_dir;
++	int ret;
++
++	switch (dir) {
 +	case DMA_MEM_TO_DEV:
-+		hwdesc->config = NBPF_CHAN_CFG_DAD | (NBPF_CHAN_CFG_SDS & (mem_xfer << 12)) |
-+			(NBPF_CHAN_CFG_DDS & (slave_xfer << 16)) | NBPF_CHAN_CFG_REQD;
++		data_dir = DMA_TO_DEVICE;
 +		break;
-+	case DMA_MEM_TO_MEM:
-+		hwdesc->config = NBPF_CHAN_CFG_TCM | NBPF_CHAN_CFG_TM |
-+			(NBPF_CHAN_CFG_SDS & (mem_xfer << 12)) |
-+			(NBPF_CHAN_CFG_DDS & (mem_xfer << 16));
++	case DMA_DEV_TO_MEM:
++		data_dir = DMA_FROM_DEVICE;
 +		break;
 +	default:
 +		return -EINVAL;
 +	}
 +
-+	hwdesc->config |= chan->dmarq_cfg | (last ? 0 : NBPF_CHAN_CFG_DEM) |
-+		NBPF_CHAN_CFG_DMS;
-+
-+	dev_dbg(dev, "%s(): desc @ 0x%x: hdr 0x%x, cfg 0x%x, %u @ 0x%x -> 0x%x\n",
-+		__func__, ldesc->hwdesc_dma_addr, hwdesc->header,
-+		hwdesc->config, size, src, dst);
-+
-+	dma_sync_single_for_device(dev, ldesc->hwdesc_dma_addr, sizeof(*hwdesc),
-+				   DMA_TO_DEVICE);
-+
-+	return 0;
-+}
-+
-+static size_t nbpf_bytes_left(struct nbpf_channel *chan)
-+{
-+	return nbpf_chan_read(chan, NBPF_CHAN_CUR_TR_BYTE);
-+}
-+
-+static void nbpf_configure(struct nbpf_device *nbpf)
-+{
-+	nbpf_write(nbpf, NBPF_CTRL, NBPF_CTRL_LVINT);
-+}
-+
-+static void nbpf_pause(struct nbpf_channel *chan)
-+{
-+	nbpf_chan_write(chan, NBPF_CHAN_CTRL, NBPF_CHAN_CTRL_SETSUS);
-+	/* See comment in nbpf_prep_one() */
-+	nbpf_chan_write(chan, NBPF_CHAN_CTRL, NBPF_CHAN_CTRL_CLREN);
-+}
-+
-+/*		Generic part			*/
-+
-+/* DMA ENGINE functions */
-+static void nbpf_issue_pending(struct dma_chan *dchan)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+	unsigned long flags;
-+
-+	dev_dbg(dchan->device->dev, "Entry %s()\n", __func__);
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	if (list_empty(&chan->queued))
-+		goto unlock;
-+
-+	list_splice_tail_init(&chan->queued, &chan->active);
-+
-+	if (!chan->running) {
-+		struct nbpf_desc *desc = list_first_entry(&chan->active,
-+						struct nbpf_desc, node);
-+		if (!nbpf_start(desc))
-+			chan->running = desc;
++	ret = dma_map_sg(chan->device->dev, sg, data->sg_len, data_dir);
++	if (ret > 0) {
++		host->dma_active = true;
++		desc = dmaengine_prep_slave_sg(chan, sg, ret, dir,
++					DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
 +	}
 +
-+unlock:
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+}
-+
-+/*
-+ * cookies are numbered 1...DMA_MAX_COOKIE=INT_MAX
-+ */
-+static void nbpf_cookie_update(struct nbpf_channel *chan, dma_cookie_t cookie)
-+{
-+	dma_cookie_t forgotten = cookie - NBPF_STATUS_KEEP;
-+
-+	if (cookie < NBPF_STATUS_KEEP && !chan->cookie_forgotten)
-+		/* Not forgetting yet */
-+		return;
-+
-+	if (forgotten < DMA_MIN_COOKIE)
-+		/* Wrapped */
-+		forgotten = (DMA_MAX_COOKIE & ~NBPF_STATUS_MASK) + cookie;
-+	chan->cookie_forgotten = forgotten;
-+}
-+
-+static bool nbpf_cookie_in_cache(struct nbpf_channel *chan,
-+		dma_cookie_t cookie, struct dma_tx_state *state)
-+{
-+	if (cookie > chan->cookie_forgotten)
-+		return true;
-+
-+	/*
-+	 * We still remember the cookie, if it has wrapped beyond INT_MAX:
-+	 * (1) forgotten is almost INT_MAX
-+	 * cookie_forgotten >> NBPF_STATUS_SHIFT == DMA_MAX_COOKIE >> NBPF_STATUS_SHIFT
-+	 * and enquired is small
-+	 * (2)
-+	 * cookie & ~NBPF_STATUS_MASK == 0
-+	 */
-+
-+	return chan->cookie_forgotten >> NBPF_STATUS_SHIFT ==
-+		DMA_MAX_COOKIE >> NBPF_STATUS_SHIFT &&
-+		!(cookie < ~NBPF_STATUS_MASK);
-+}
-+
-+static void nbpf_cookie_success(struct nbpf_channel *chan, dma_cookie_t cookie)
-+{
-+	nbpf_cookie_update(chan, cookie);
-+	clear_bit(cookie & NBPF_STATUS_MASK, chan->status);
-+}
-+
-+static void nbpf_cookie_fail(struct nbpf_channel *chan, dma_cookie_t cookie)
-+{
-+	nbpf_cookie_update(chan, cookie);
-+	set_bit(cookie & NBPF_STATUS_MASK, chan->status);
-+}
-+
-+static enum dma_status nbpf_cookie_cached(struct nbpf_channel *chan,
-+		dma_cookie_t cookie, struct dma_tx_state *state)
-+{
-+	return test_bit(cookie & NBPF_STATUS_MASK, chan->status) ?
-+		DMA_ERROR : DMA_COMPLETE;
-+}
-+
-+static enum dma_status nbpf_tx_status(struct dma_chan *dchan,
-+		dma_cookie_t cookie, struct dma_tx_state *state)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+	enum dma_status status = dma_cookie_status(dchan, cookie, state);
-+	dma_cookie_t running = chan->running ? chan->running->async_tx.cookie : -EINVAL;
-+
-+	if (chan->paused)
-+		status = DMA_PAUSED;
-+
-+	/* Note: we cannot return residues for old cookies */
-+	if (state && cookie == running) {
-+		state->residue = nbpf_bytes_left(chan);
-+		dev_dbg(dchan->device->dev, "%s(): residue %u\n", __func__,
-+			state->residue);
++	if (desc) {
++		desc->callback = v08r07_dma_complete;
++		desc->callback_param = host;
++		cookie = dmaengine_submit(desc);
 +	}
 +
-+	if (status == DMA_IN_PROGRESS || status == DMA_PAUSED)
-+		return status;
++	dev_dbg(mmc_dev(host->mmc), "%s(): mapped %d -> %d, cookie %d @ %p\n",
++		__func__, data->sg_len, ret, cookie, desc);
 +
-+	if (nbpf_cookie_in_cache(chan, cookie, state))
-+		return nbpf_cookie_cached(chan, cookie, state);
-+
-+	return status;
-+}
-+
-+static dma_cookie_t nbpf_tx_submit(struct dma_async_tx_descriptor *tx)
-+{
-+	struct nbpf_desc *desc = container_of(tx, struct nbpf_desc, async_tx);
-+	struct nbpf_channel *chan = desc->chan;
-+	unsigned long flags;
-+	dma_cookie_t cookie;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	cookie = dma_cookie_assign(tx);
-+	list_add_tail(&desc->node, &chan->queued);
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	dev_dbg(chan->dma_chan.device->dev, "Entry %s(%d)\n", __func__, cookie);
++	if (cookie < 0) {
++		/* DMA failed, fall back to PIO */
++		if (ret >= 0)
++			ret = cookie;
++		v08r07_dma_release(host);
++		dev_warn(mmc_dev(host->mmc),
++			 "DMA failed: %d, falling back to PIO\n", ret);
++	}
 +
 +	return cookie;
 +}
 +
-+static int nbpf_desc_page_alloc(struct nbpf_channel *chan)
++static int v08r07_dma_start(struct v08r07_host *host)
 +{
-+	struct dma_chan *dchan = &chan->dma_chan;
-+	struct nbpf_desc_page *dpage = (void *)get_zeroed_page(GFP_KERNEL | GFP_DMA);
-+	struct nbpf_link_desc *ldesc;
-+	struct nbpf_link_reg *hwdesc;
-+	struct nbpf_desc *desc;
-+	LIST_HEAD(head);
-+	LIST_HEAD(lhead);
-+	int i;
-+	struct device *dev = dchan->device->dev;
++	if (!host->chan_rx || !host->chan_tx)
++		return -ENODEV;
 +
-+	if (!dpage)
-+		return -ENOMEM;
++	if (host->mrq->data->flags & MMC_DATA_READ)
++		return v08r07_dma_setup(host, host->chan_rx, DMA_DEV_TO_MEM);
 +
-+	dev_dbg(dev, "%s(): alloc %lu descriptors, %lu segments, total alloc %u\n",
-+		__func__, NBPF_DESCS_PER_PAGE, NBPF_SEGMENTS_PER_PAGE, sizeof(*dpage));
++	return v08r07_dma_setup(host, host->chan_tx, DMA_MEM_TO_DEV);
++}
 +
-+	for (i = 0, ldesc = dpage->ldesc, hwdesc = dpage->hwdesc;
-+	     i < ARRAY_SIZE(dpage->ldesc);
-+	     i++, ldesc++, hwdesc++) {
-+		ldesc->hwdesc = hwdesc;
-+		list_add_tail(&ldesc->node, &lhead);
-+		ldesc->hwdesc_dma_addr = dma_map_single(dchan->device->dev,
-+					hwdesc, sizeof(*hwdesc), DMA_TO_DEVICE);
++static void v08r07_dma_kill(struct v08r07_host *host)
++{
++	struct mmc_data *data = host->mrq->data;
 +
-+		dev_dbg(dev, "%s(): mapped %p to %u\n", __func__,
-+			hwdesc, ldesc->hwdesc_dma_addr);
-+	}
++	dev_dbg(mmc_dev(host->mmc), "%s(): SG of %u: %ux%u\n",
++		__func__, data->sg_len, data->blocks, data->blksz);
++	/* Abort DMA */
++	if (data->flags & MMC_DATA_READ)
++		dmaengine_terminate_all(host->chan_rx);
++	else
++		dmaengine_terminate_all(host->chan_tx);
++}
 +
-+	for (i = 0, desc = dpage->desc;
-+	     i < ARRAY_SIZE(dpage->desc);
-+	     i++, desc++) {
-+		dma_async_tx_descriptor_init(&desc->async_tx, dchan);
-+		desc->async_tx.tx_submit = nbpf_tx_submit;
-+		desc->chan = chan;
-+		INIT_LIST_HEAD(&desc->sg);
-+		list_add_tail(&desc->node, &head);
++static void v08r07_dma_check_error(struct v08r07_host *host)
++{
++	struct mmc_data *data = host->mrq->data;
++
++	dev_dbg(mmc_dev(host->mmc), "%s(): IO error %d, status 0x%x\n",
++		__func__, host->io_error, v08r07_read(host, V08R07_SD_INFO1));
++
++	if (host->io_error) {
++		data->error = v08r07_error_code(host);
++		data->bytes_xfered = 0;
++		v08r07_dma_kill(host);
++		v08r07_dma_release(host);
++		dev_warn(mmc_dev(host->mmc),
++			 "DMA failed: %d, falling back to PIO\n", data->error);
++		return;
 +	}
 +
 +	/*
-+	 * This function cannot be called from interrupt context, so, no need to
-+	 * save flags
++	 * The datasheet tells us to check a response from the card, whereas
++	 * responses only come after the command phase, not after the data
++	 * phase. Let's check anyway.
 +	 */
-+	spin_lock_irq(&chan->lock);
-+	list_splice_tail(&lhead, &chan->free_links);
-+	list_splice_tail(&head, &chan->free);
-+	list_add(&dpage->node, &chan->desc_page);
-+	spin_unlock_irq(&chan->lock);
-+
-+	return ARRAY_SIZE(dpage->desc);
++	if (host->irq_status & V08R07_SD_INFO1_RSP_END)
++		dev_warn(mmc_dev(host->mmc), "Unexpected response received!\n");
 +}
 +
-+static void nbpf_desc_put(struct nbpf_desc *desc)
++static void v08r07_dma_kick(struct v08r07_host *host)
 +{
-+	struct nbpf_channel *chan = desc->chan;
-+	struct nbpf_link_desc *ldesc, *tmp;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+	list_for_each_entry_safe(ldesc, tmp, &desc->sg, node)
-+		list_move(&ldesc->node, &chan->free_links);
-+
-+	list_add(&desc->node, &chan->free);
-+	spin_unlock_irqrestore(&chan->lock, flags);
++	if (host->mrq->data->flags & MMC_DATA_READ)
++		dma_async_issue_pending(host->chan_rx);
++	else
++		dma_async_issue_pending(host->chan_tx);
 +}
 +
-+static void nbpf_scan_acked(struct nbpf_channel *chan)
++static void v08r07_dma_request(struct v08r07_host *host, phys_addr_t start)
 +{
-+	struct nbpf_desc *desc, *tmp;
-+	unsigned long flags;
-+	LIST_HEAD(head);
++	struct dma_slave_config cfg = {
++		.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
++		.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES,
++	};
++	int ret;
 +
-+	spin_lock_irqsave(&chan->lock, flags);
-+	list_for_each_entry_safe(desc, tmp, &chan->done, node)
-+		if (async_tx_test_ack(&desc->async_tx) && desc->user_wait) {
-+			list_move(&desc->node, &head);
-+			desc->user_wait = false;
-+		}
-+	spin_unlock_irqrestore(&chan->lock, flags);
++	host->chan_tx = dma_request_slave_channel(mmc_dev(host->mmc), "tx");
++	dev_dbg(mmc_dev(host->mmc), "%s: TX: got channel %p\n", __func__,
++		host->chan_tx);
 +
-+	list_for_each_entry_safe(desc, tmp, &head, node) {
-+		list_del(&desc->node);
-+		nbpf_desc_put(desc);
++	if (!host->chan_tx)
++		return;
++
++	cfg.direction = DMA_MEM_TO_DEV;
++	cfg.dst_addr = start + V08R07_SD_BUF0;
++	cfg.dst_maxburst = 128;	/* 128 words * 4 bytes = 512 bytes */
++	cfg.src_addr = 0;
++	ret = dmaengine_slave_config(host->chan_tx, &cfg);
++	if (ret < 0)
++		goto e_release_tx;
++
++	host->chan_rx = dma_request_slave_channel(mmc_dev(host->mmc), "rx");
++	dev_dbg(mmc_dev(host->mmc), "%s: RX: got channel %p\n", __func__,
++		host->chan_rx);
++
++	if (!host->chan_rx)
++		goto e_release_tx;
++
++	cfg.direction = DMA_DEV_TO_MEM;
++	cfg.src_addr = cfg.dst_addr;
++	cfg.src_maxburst = 128;	/* 128 words * 4 bytes = 512 bytes */
++	cfg.dst_addr = 0;
++	ret = dmaengine_slave_config(host->chan_rx, &cfg);
++	if (ret < 0)
++		goto e_release_rx;
++
++	return;
++
++e_release_rx:
++	dma_release_channel(host->chan_rx);
++	host->chan_rx = NULL;
++e_release_tx:
++	dma_release_channel(host->chan_tx);
++	host->chan_tx = NULL;
++}
++
++/*			API helpers					*/
++
++static void v08r07_clk_set(struct v08r07_host *host, struct mmc_ios *ios)
++{
++	unsigned long rate = ios->clock;
++	u32 val;
++	unsigned int i;
++
++	for (i = 1000; i; i--) {
++		if (v08r07_read(host, V08R07_SD_INFO2) & V08R07_SD_INFO2_SCLKDIVEN)
++			break;
++		usleep_range(10, 100);
 +	}
++
++	if (!i) {
++		dev_err(mmc_dev(host->mmc), "SD bus busy, clock set aborted\n");
++		return;
++	}
++
++	val = v08r07_read(host, V08R07_SD_CLK_CTRL) & 0xff00;
++
++	if (rate) {
++		unsigned long new_rate;
++
++		if (host->imclk <= rate) {
++			if (ios->timing != MMC_TIMING_UHS_DDR50) {
++				/* Cannot have 1-to-1 clock in DDR mode */
++				new_rate = host->imclk;
++				val |= 0xff;
++			} else {
++				new_rate = host->imclk / 2;
++			}
++		} else {
++			unsigned long div =
++				roundup_pow_of_two(DIV_ROUND_UP(host->imclk, rate));
++			val |= div >> 2;
++			new_rate = host->imclk / div;
++		}
++
++		if (host->rate == new_rate)
++			return;
++
++		host->rate = new_rate;
++
++		dev_dbg(mmc_dev(host->mmc), "target %lu, div %u, set %lu\n",
++			rate, (val & 0xff) << 2, new_rate);
++	}
++
++	/*
++	 * if old or new rate is equal to input rate, have to switch the clock
++	 * off before changing and on after
++	 */
++	if (host->imclk == rate || host->imclk == host->rate || !rate)
++		v08r07_write(host, V08R07_SD_CLK_CTRL,
++			     val & ~V08R07_SD_CLK_CTRL_SCLKEN);
++
++	if (!rate) {
++		host->rate = 0;
++		return;
++	}
++
++	v08r07_write(host, V08R07_SD_CLK_CTRL, val);
++
++	if (host->imclk == rate || host->imclk == host->rate ||
++	    !(val & V08R07_SD_CLK_CTRL_SCLKEN))
++		v08r07_write(host, V08R07_SD_CLK_CTRL,
++			     val | V08R07_SD_CLK_CTRL_SCLKEN);
++}
++
++static void v08r07_set_power(struct v08r07_host *host, struct mmc_ios *ios)
++{
++	struct mmc_host *mmc = host->mmc;
++
++	if (!IS_ERR(mmc->supply.vmmc))
++		/* Errors ignored... */
++		mmc_regulator_set_ocr(mmc, mmc->supply.vmmc,
++				      ios->power_mode ? ios->vdd : 0);
++}
++
++static int v08r07_reset(struct v08r07_host *host)
++{
++	int i;
++
++	v08r07_write(host, V08R07_SOFT_RST, 6);
++	cpu_relax();
++	v08r07_write(host, V08R07_SOFT_RST, 7);
++	for (i = 1000; i; i--)
++		if (v08r07_read(host, V08R07_SOFT_RST) & 1)
++			break;
++
++	return i ? 0 : -ETIMEDOUT;
++}
++
++static void v08r07_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
++{
++	struct v08r07_host *host = mmc_priv(mmc);
++	u32 option, mode;
++	int ret;
++
++	dev_dbg(mmc_dev(mmc), "%uHz, OCR: %u, power %u, bus-width %u, timing %u\n",
++		ios->clock, ios->vdd, ios->power_mode, ios->bus_width, ios->timing);
++
++	switch (ios->power_mode) {
++	case MMC_POWER_OFF:
++		v08r07_set_power(host, ios);
++		v08r07_only_cd(host);
++		break;
++	case MMC_POWER_UP:
++		/*
++		 * We only also touch V08R07_SD_OPTION from .request(), which
++		 * cannot race with MMC_POWER_UP
++		 */
++		ret = v08r07_reset(host);
++		if (ret < 0) {
++			dev_err(mmc_dev(mmc), "Cannot reset the interface!\n");
++		} else {
++			v08r07_set_power(host, ios);
++			v08r07_only_cd(host);
++		}
++		break;
++	case MMC_POWER_ON:
++		option = v08r07_read(host, V08R07_SD_OPTION);
++		/*
++		 * The eMMC standard only allows 4 or 8 bits in the DDR mode,
++		 * the same probably holds for SD cards. We check here anyway,
++		 * since the datasheet explicitly requires 4 bits for DDR.
++		 */
++		if (ios->bus_width == MMC_BUS_WIDTH_1) {
++			if (ios->timing == MMC_TIMING_UHS_DDR50)
++				dev_err(mmc_dev(mmc),
++					"4 bits are required for DDR\n");
++			option |= 0x8000;
++			mode = 0;
++		} else {
++			option &= 0x7fff;
++			mode = ios->timing == MMC_TIMING_UHS_DDR50;
++		}
++		v08r07_write(host, V08R07_SD_OPTION, option);
++		v08r07_write(host, V08R07_SDIF_MODE, mode);
++		break;
++	}
++
++	if (host->rate != ios->clock)
++		v08r07_clk_set(host, ios);
++}
++
++/* This is data timeout. Response timeout is fixed to 640 clock cycles */
++static void v08r07_timeout_set(struct v08r07_host *host)
++{
++	struct mmc_request *mrq = host->mrq;
++	u32 val;
++	unsigned long ticks;
++
++	if (!mrq->data)
++		ticks = host->rate / 1000 * mrq->cmd->busy_timeout;
++	else
++		ticks = host->rate / 1000000 * (mrq->data->timeout_ns / 1000) +
++			mrq->data->timeout_clks;
++
++	if (!ticks || ticks > 1 << 27)
++		/* Max timeout */
++		val = 14;
++	else if (ticks < 1 << 13)
++		/* Min timeout */
++		val = 0;
++	else
++		val = order_base_2(ticks) - 13;
++
++	dev_dbg(mmc_dev(host->mmc), "Set %s timeout %lu ticks @ %lu Hz\n",
++		mrq->data ? "data" : "cmd", ticks, host->rate);
++
++	v08r07_write(host, V08R07_SD_OPTION, (val << 4) |
++		     (v08r07_read(host, V08R07_SD_OPTION) & 0xff0f));
++}
++
++static void v08r07_request_done(struct v08r07_host *host)
++{
++	struct mmc_request *mrq = host->mrq;
++	struct mmc_data *data = mrq->data;
++
++	if (WARN(host->pg.page || host->head_pg.page,
++		 "Page %p or %p not unmapped: wait %u, CMD%d(%c) @ +0x%x %ux%u in SG%u!\n",
++		 host->pg.page, host->head_pg.page, host->wait, mrq->cmd->opcode,
++		 data ? (data->flags & MMC_DATA_READ ? 'R' : 'W') : '-',
++		 data ? host->offset : 0, data ? data->blocks : 0,
++		 data ? data->blksz : 0, data ? data->sg_len : 0))
++		v08r07_sg_unmap(host, true);
++
++	if (mrq->cmd->error ||
++	    (data && data->error) ||
++	    (mrq->stop && mrq->stop->error))
++		dev_dbg(mmc_dev(host->mmc), "%s(CMD%d: %ux%u): err %d %d %d\n",
++			__func__, mrq->cmd->opcode, data ? data->blocks : 0,
++			data ? data->blksz : 0,
++			mrq->cmd->error,
++			data ? data->error : 1,
++			mrq->stop ? mrq->stop->error : 1);
++
++	/* Disable DMA */
++	v08r07_write(host, V08R07_CC_EXT_MODE, 0);
++	host->wait = V08R07_WAIT_FOR_REQUEST;
++	host->mrq = NULL;
++
++	mmc_request_done(host->mmc, mrq);
++}
++
++static int v08r07_cmd_flags(struct v08r07_host *host)
++{
++	struct mmc_request *mrq = host->mrq;
++	struct mmc_command *cmd = mrq->cmd;
++	u16 opc = cmd->opcode;
++
++	if (host->app_cmd) {
++		host->app_cmd = false;
++		opc |= V08R07_SD_CMD_APP;
++	}
++
++	if (mrq->data) {
++		opc |= V08R07_SD_CMD_DATA;
++
++		if (mrq->data->flags & MMC_DATA_READ)
++			opc |= V08R07_SD_CMD_READ;
++
++		if (cmd->opcode == MMC_READ_MULTIPLE_BLOCK ||
++		    cmd->opcode == MMC_WRITE_MULTIPLE_BLOCK ||
++		    (cmd->opcode == SD_IO_RW_EXTENDED &&
++		     mrq->data->blocks > 1)) {
++			opc |= V08R07_SD_CMD_MULTI;
++			if (!mrq->stop)
++				opc |= V08R07_SD_CMD_CMD12_AUTO_OFF;
++		}
++
++		switch (mmc_resp_type(cmd)) {
++		case MMC_RSP_NONE:
++			opc |= V08R07_SD_CMD_MODE_RSP_NONE;
++			break;
++		case MMC_RSP_R1:
++			opc |= V08R07_SD_CMD_MODE_RSP_R1;
++			break;
++		case MMC_RSP_R1B:
++			opc |= V08R07_SD_CMD_MODE_RSP_R1B;
++			break;
++		case MMC_RSP_R2:
++			opc |= V08R07_SD_CMD_MODE_RSP_R2;
++			break;
++		case MMC_RSP_R3:
++			opc |= V08R07_SD_CMD_MODE_RSP_R3;
++			break;
++		default:
++			dev_warn(mmc_dev(host->mmc),
++				 "Unknown response type %d\n",
++				 mmc_resp_type(cmd));
++			return -EINVAL;
++		}
++	}
++
++	return opc;
++}
++
++static int v08r07_rq_start(struct v08r07_host *host)
++{
++	struct mmc_request *mrq = host->mrq;
++	struct mmc_command *cmd = mrq->cmd;
++	struct mmc_data *data = mrq->data;
++	int opc = v08r07_cmd_flags(host);
++	int i;
++
++	if (opc < 0)
++		return opc;
++
++	for (i = 1000; i; i--) {
++		if (!(v08r07_read(host, V08R07_SD_INFO2) & V08R07_SD_INFO2_CBSY))
++			break;
++		usleep_range(10, 100);
++	}
++
++	if (!i) {
++		dev_dbg(mmc_dev(host->mmc), "Command active, request aborted\n");
++		return -EAGAIN;
++	}
++
++	if (data) {
++		bool use_dma;
++		int ret = 0;
++
++		host->page_idx = 0;
++
++		if (cmd->opcode == SD_IO_RW_EXTENDED && data->blocks > 1) {
++			switch (data->blksz) {
++			case 512:
++				break;
++			case 32:
++			case 64:
++			case 128:
++			case 256:
++				if (mrq->stop)
++					ret = -EINVAL;
++				break;
++			default:
++				ret = -EINVAL;
++			}
++		} else if ((cmd->opcode == MMC_READ_MULTIPLE_BLOCK ||
++			    cmd->opcode == MMC_WRITE_MULTIPLE_BLOCK) &&
++			   data->blksz != 512) {
++			ret = -EINVAL;
++		}
++
++		if (ret < 0) {
++			dev_warn(mmc_dev(host->mmc), "%s(): %u blocks of %u bytes\n",
++				 __func__, data->blocks, data->blksz);
++			return -EINVAL;
++		}
++
++		if (cmd->opcode == MMC_READ_MULTIPLE_BLOCK ||
++		    cmd->opcode == MMC_WRITE_MULTIPLE_BLOCK ||
++		    (cmd->opcode == SD_IO_RW_EXTENDED &&
++		     data->blocks > 1))
++			v08r07_sg_prep(host);
++
++		v08r07_write(host, V08R07_SD_SIZE, data->blksz);
++
++		if ((data->blksz >= V08R07_MIN_DMA ||
++		     data->blocks > 1) &&
++		    (data->blksz % 4 ||
++		     data->sg->offset % 4))
++			dev_dbg(mmc_dev(host->mmc),
++				"Bad SG of %u: %ux%u @ %u\n", data->sg_len,
++				data->blksz, data->blocks, data->sg->offset);
++
++		/* Enable DMA for V08R07_MIN_DMA bytes or more */
++		use_dma = data->blksz >= V08R07_MIN_DMA &&
++			!(data->blksz % 4) &&
++			v08r07_dma_start(host) >= DMA_MIN_COOKIE;
++
++		if (use_dma)
++			v08r07_write(host, V08R07_CC_EXT_MODE, V08R07_CC_EXT_MODE_SDRW);
++
++		dev_dbg(mmc_dev(host->mmc),
++			"%s(): request opcode %u, %u blocks of %u bytes in %u segments, %s %s @+0x%x%s\n",
++			__func__, cmd->opcode, data->blocks, data->blksz,
++			data->sg_len, use_dma ? "DMA" : "PIO",
++			data->flags & MMC_DATA_READ ? "read" : "write",
++			data->sg->offset, mrq->stop ? " + stop" : "");
++	} else {
++		dev_dbg(mmc_dev(host->mmc), "%s(): request opcode %u\n",
++			__func__, cmd->opcode);
++	}
++
++	/* We have to get a command completion interrupt with DMA too */
++	v08r07_wait_for_resp(host);
++
++	host->wait = V08R07_WAIT_FOR_CMD;
++	schedule_delayed_work(&host->timeout_work, host->timeout * 4);
++
++	/* SEC bit is required to enable block counting by the core */
++	v08r07_write(host, V08R07_SD_STOP,
++		     data && data->blocks > 1 ? V08R07_SD_STOP_SEC : 0);
++	v08r07_write(host, V08R07_SD_ARG, cmd->arg);
++
++	/* Kick command execution */
++	v08r07_write(host, V08R07_SD_CMD, opc);
++
++	return 0;
++}
++
++static void v08r07_request(struct mmc_host *mmc, struct mmc_request *mrq)
++{
++	struct v08r07_host *host = mmc_priv(mmc);
++	int ret;
++
++	cancel_delayed_work_sync(&host->timeout_work);
++
++	host->mrq = mrq;
++	host->sg = NULL;
++
++	v08r07_timeout_set(host);
++	ret = v08r07_rq_start(host);
++	if (ret < 0) {
++		mrq->cmd->error = ret;
++		v08r07_request_done(host);
++	}
++}
++
++static int v08r07_get_cd(struct mmc_host *mmc)
++{
++	struct v08r07_host *host = mmc_priv(mmc);
++	/* Read is atomic, no need to lock */
++	u32 status = v08r07_read(host, V08R07_SD_INFO1) & V08R07_SD_INFO1_CD;
++
++/*
++ *	level	status.CD	CD_ACTIVE_HIGH	card present
++ *	1	0		0		0
++ *	1	0		1		1
++ *	0	1		0		1
++ *	0	1		1		0
++ */
++	return !status ^ !(mmc->caps2 & MMC_CAP2_CD_ACTIVE_HIGH);
++}
++
++static int v08r07_get_ro(struct mmc_host *mmc)
++{
++	struct v08r07_host *host = mmc_priv(mmc);
++	/* No locking as above */
++	u32 status = v08r07_read(host, V08R07_SD_INFO1) & V08R07_SD_INFO1_WP;
++
++/*
++ *	level	status.WP	RO_ACTIVE_HIGH	card read-only
++ *	1	0		0		0
++ *	1	0		1		1
++ *	0	1		0		1
++ *	0	1		1		0
++ */
++	return !status ^ !(mmc->caps2 & MMC_CAP2_RO_ACTIVE_HIGH);
++}
++
++static void v08r07_enable_sdio_irq(struct mmc_host *mmc, int enable)
++{
++	struct v08r07_host *host = mmc_priv(mmc);
++
++	dev_dbg(mmc_dev(mmc), "%s(): %sable\n", __func__, enable ? "en" : "dis");
++
++	if (enable) {
++		host->sdio_mask = V08R07_SDIO_INFO1_IRQ & ~V08R07_SDIO_INFO1_IOIRQ;
++		v08r07_write(host, V08R07_SDIO_INFO1_MASK, host->sdio_mask);
++		v08r07_write(host, V08R07_SDIO_MODE, 1);
++	} else {
++		v08r07_write(host, V08R07_SDIO_MODE, 0);
++		v08r07_write(host, V08R07_SDIO_INFO1_MASK, V08R07_SDIO_INFO1_IRQ);
++		host->sdio_mask = V08R07_SDIO_INFO1_IRQ;
++	}
++}
++
++static struct mmc_host_ops v08r07_ops = {
++	.request	= v08r07_request,
++	.set_ios	= v08r07_set_ios,
++	.get_cd		= v08r07_get_cd,
++	.get_ro		= v08r07_get_ro,
++	.enable_sdio_irq = v08r07_enable_sdio_irq,
++};
++
++/*			State machine handlers				*/
++
++static void v08r07_resp_cmd12(struct v08r07_host *host)
++{
++	struct mmc_command *cmd = host->mrq->stop;
++	cmd->resp[0] = v08r07_read(host, V08R07_SD_RSP10);
++}
++
++static void v08r07_resp_read(struct v08r07_host *host)
++{
++	struct mmc_command *cmd = host->mrq->cmd;
++	u32 *rsp = cmd->resp, tmp = 0;
++	int i;
++
++/*
++ * RSP10	39-8
++ * RSP32	71-40
++ * RSP54	103-72
++ * RSP76	127-104
++ * R2-type response:
++ * resp[0]	= r[127..96]
++ * resp[1]	= r[95..64]
++ * resp[2]	= r[63..32]
++ * resp[3]	= r[31..0]
++ * Other responses:
++ * resp[0]	= r[39..8]
++ */
++
++	if (mmc_resp_type(cmd) == MMC_RSP_NONE)
++		return;
++
++	if (!(host->irq_status & V08R07_SD_INFO1_RSP_END)) {
++		dev_err(mmc_dev(host->mmc),
++			"CMD%d: response expected but is missing!\n", cmd->opcode);
++		return;
++	}
++
++	if (mmc_resp_type(cmd) & MMC_RSP_136)
++		for (i = 0; i < 4; i++) {
++			if (i)
++				rsp[3 - i] = tmp >> 24;
++			tmp = v08r07_read(host, V08R07_SD_RSP10 + i * 8);
++			rsp[3 - i] |= tmp << 8;
++		}
++	else if (cmd->opcode == MMC_READ_MULTIPLE_BLOCK ||
++		 cmd->opcode == MMC_WRITE_MULTIPLE_BLOCK)
++		/* Read RSP54 to avoid conflict with auto CMD12 */
++		rsp[0] = v08r07_read(host, V08R07_SD_RSP54);
++	else
++		rsp[0] = v08r07_read(host, V08R07_SD_RSP10);
++
++	dev_dbg(mmc_dev(host->mmc), "Response 0x%x\n", rsp[0]);
++}
++
++static int v08r07_blk_read(struct v08r07_host *host)
++{
++	struct mmc_data *data = host->mrq->data;
++	u32 *p;
++	int i, rest;
++
++	if (host->io_error) {
++		data->error = v08r07_error_code(host);
++		goto error;
++	}
++
++	if (host->pg.page) {
++		p = host->blk_page + host->offset;
++	} else {
++		p = v08r07_sg_map(host);
++		if (!p) {
++			data->error = -ENOMEM;
++			goto error;
++		}
++	}
++
++	for (i = 0; i < data->blksz / 4; i++, p++)
++		*p = v08r07_read(host, V08R07_SD_BUF0);
++
++	rest = data->blksz % 4;
++	for (i = 0; i < (rest + 1) / 2; i++) {
++		u16 d = v08r07_read16(host, V08R07_SD_BUF0);
++		((u8 *)p)[2 * i] = ((u8 *)&d)[0];
++		if (rest > 1 && !i)
++			((u8 *)p)[2 * i + 1] = ((u8 *)&d)[1];
++	}
++
++	return 0;
++
++error:
++	dev_dbg(mmc_dev(host->mmc), "%s(): %d\n", __func__, data->error);
++	host->wait = V08R07_WAIT_FOR_REQUEST;
++	return data->error;
++}
++
++static int v08r07_blk_write(struct v08r07_host *host)
++{
++	struct mmc_data *data = host->mrq->data;
++	u32 *p;
++	int i, rest;
++
++	if (host->io_error) {
++		data->error = v08r07_error_code(host);
++		goto error;
++	}
++
++	if (host->pg.page) {
++		p = host->blk_page + host->offset;
++	} else {
++		p = v08r07_sg_map(host);
++		if (!p) {
++			data->error = -ENOMEM;
++			goto error;
++		}
++	}
++
++	for (i = 0; i < data->blksz / 4; i++, p++)
++		v08r07_write(host, V08R07_SD_BUF0, *p);
++
++	rest = data->blksz % 4;
++	for (i = 0; i < (rest + 1) / 2; i++) {
++		u16 d;
++		((u8 *)&d)[0] = ((u8 *)p)[2 * i];
++		if (rest > 1 && !i)
++			((u8 *)&d)[1] = ((u8 *)p)[2 * i + 1];
++		else
++			((u8 *)&d)[1] = 0;
++		v08r07_write16(host, V08R07_SD_BUF0, d);
++	}
++
++	return 0;
++
++error:
++	dev_dbg(mmc_dev(host->mmc), "%s(): %d\n", __func__, data->error);
++	host->wait = V08R07_WAIT_FOR_REQUEST;
++	return data->error;
++}
++
++static int v08r07_stop_cmd(struct v08r07_host *host)
++{
++	struct mmc_request *mrq = host->mrq;
++
++	switch (mrq->cmd->opcode) {
++	case MMC_READ_MULTIPLE_BLOCK:
++	case MMC_WRITE_MULTIPLE_BLOCK:
++		if (mrq->stop->opcode == MMC_STOP_TRANSMISSION) {
++			host->wait = V08R07_WAIT_FOR_STOP;
++			return 0;
++		}
++		/* Unsupported STOP command */
++	default:
++		dev_err(mmc_dev(host->mmc),
++			"unsupported stop CMD%d for CMD%d\n",
++			mrq->stop->opcode, mrq->cmd->opcode);
++		mrq->stop->error = -EOPNOTSUPP;
++	}
++
++	return -EOPNOTSUPP;
++}
++
++static bool v08r07_end_cmd(struct v08r07_host *host)
++{
++	struct mmc_request *mrq = host->mrq;
++	struct mmc_command *cmd = mrq->cmd;
++
++	if (host->io_error) {
++		cmd->error = v08r07_error_code(host);
++		return false;
++	}
++
++	v08r07_resp_read(host);
++
++	if (!mrq->data)
++		return false;
++
++	if (host->dma_active) {
++		v08r07_dma_kick(host);
++		if (!mrq->stop)
++			host->wait = V08R07_WAIT_FOR_DMA;
++		else if (v08r07_stop_cmd(host) < 0)
++			return false;
++	} else if (mrq->data->flags & MMC_DATA_READ) {
++		if (cmd->opcode == MMC_READ_MULTIPLE_BLOCK ||
++		    (cmd->opcode == SD_IO_RW_EXTENDED &&
++		     mrq->data->blocks > 1))
++			host->wait = V08R07_WAIT_FOR_MREAD;
++		else
++			host->wait = V08R07_WAIT_FOR_READ;
++	} else {
++		if (cmd->opcode == MMC_WRITE_MULTIPLE_BLOCK ||
++		    (cmd->opcode == SD_IO_RW_EXTENDED &&
++		     mrq->data->blocks > 1))
++			host->wait = V08R07_WAIT_FOR_MWRITE;
++		else
++			host->wait = V08R07_WAIT_FOR_WRITE;
++	}
++
++	return true;
++}
++
++static bool v08r07_read_block(struct v08r07_host *host)
++{
++	/* ACCESS_END IRQ is already unmasked */
++	int ret = v08r07_blk_read(host);
++
++	/*
++	 * Have to force unmapping both pages: the single block could have been
++	 * cross-page, in which case for single-block IO host->page_idx == 0.
++	 * So, if we don't force, the second page won't be unmapped.
++	 */
++	v08r07_sg_unmap(host, true);
++
++	if (ret < 0)
++		return false;
++
++	host->wait = V08R07_WAIT_FOR_DATA_END;
++	return true;
++}
++
++static bool v08r07_mread_block(struct v08r07_host *host)
++{
++	int ret = v08r07_blk_read(host);
++
++	if (ret < 0)
++		return false;
++
++	v08r07_sg_advance(host);
++
++	return !host->mrq->data->error &&
++		(host->wait != V08R07_WAIT_FOR_DATA_END || !host->mrq->stop);
++}
++
++static bool v08r07_write_block(struct v08r07_host *host)
++{
++	int ret = v08r07_blk_write(host);
++
++	/* See comment in v08r07_read_block() */
++	v08r07_sg_unmap(host, true);
++
++	if (ret < 0)
++		return false;
++
++	host->wait = V08R07_WAIT_FOR_DATA_END;
++	return true;
++}
++
++static bool v08r07_mwrite_block(struct v08r07_host *host)
++{
++	int ret = v08r07_blk_write(host);
++
++	if (ret < 0)
++		return false;
++
++	v08r07_sg_advance(host);
++
++	return !host->mrq->data->error &&
++		(host->wait != V08R07_WAIT_FOR_DATA_END || !host->mrq->stop);
++}
++
++/*			Interrupt & timeout handlers			*/
++
++static irqreturn_t v08r07_sd_bh(int irq, void *dev_id)
++{
++	struct v08r07_host *host = dev_id;
++	struct mmc_request *mrq;
++	struct mmc_command *cmd;
++	struct mmc_data *data;
++	bool io_wait = false;
++
++	cancel_delayed_work_sync(&host->timeout_work);
++
++	mrq = host->mrq;
++	if (!mrq)
++		return IRQ_HANDLED;
++
++	cmd = mrq->cmd;
++	data = mrq->data;
++
++	switch (host->wait) {
++	case V08R07_WAIT_FOR_REQUEST:
++		/* We're too late, the timeout has already kicked in */
++		return IRQ_HANDLED;
++	case V08R07_WAIT_FOR_CMD:
++		/* Wait for data? */
++		io_wait = v08r07_end_cmd(host);
++		break;
++	case V08R07_WAIT_FOR_MREAD:
++		/* Wait for more data? */
++		io_wait = v08r07_mread_block(host);
++		break;
++	case V08R07_WAIT_FOR_READ:
++		/* Wait for data end? */
++		io_wait = v08r07_read_block(host);
++		break;
++	case V08R07_WAIT_FOR_MWRITE:
++		/* Wait data to write? */
++		io_wait = v08r07_mwrite_block(host);
++		break;
++	case V08R07_WAIT_FOR_WRITE:
++		/* Wait for data end? */
++		io_wait = v08r07_write_block(host);
++		break;
++	case V08R07_WAIT_FOR_DMA:
++		v08r07_dma_check_error(host);
++		break;
++	case V08R07_WAIT_FOR_STOP:
++		v08r07_write(host, V08R07_SD_STOP, 0);
++		if (host->io_error) {
++			int ret = v08r07_error_code(host);
++			if (mrq->stop)
++				mrq->stop->error = ret;
++			else
++				mrq->data->error = ret;
++			dev_warn(mmc_dev(host->mmc), "%s(): %d\n", __func__, ret);
++			break;
++		}
++		v08r07_resp_cmd12(host);
++		mrq->stop->error = 0;
++		break;
++	case V08R07_WAIT_FOR_DATA_END:
++		if (host->io_error) {
++			mrq->data->error = v08r07_error_code(host);
++			dev_warn(mmc_dev(host->mmc), "%s(): %d\n", __func__,
++				 mrq->data->error);
++		}
++		break;
++	default:
++		cmd->error = -EFAULT;
++		dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
++		v08r07_request_done(host);
++		return IRQ_HANDLED;
++	}
++
++	if (io_wait) {
++		schedule_delayed_work(&host->timeout_work, host->timeout * 4);
++		/* Wait for more data or ACCESS_END */
++		if (!host->dma_active)
++			v08r07_wait_for_brwe(host, mrq->data->flags & MMC_DATA_READ);
++		return IRQ_HANDLED;
++	}
++
++	if (!cmd->error) {
++		if (data) {
++			if (!data->error) {
++				if (host->wait != V08R07_WAIT_FOR_STOP &&
++				    host->mrq->stop &&
++				    !host->mrq->stop->error &&
++				    !v08r07_stop_cmd(host)) {
++					/* Sending STOP */
++					v08r07_wait_for_resp(host);
++
++					schedule_delayed_work(&host->timeout_work,
++							      host->timeout * 4);
++
++					return IRQ_HANDLED;
++				}
++
++				data->bytes_xfered = data->blocks * data->blksz;
++			} else {
++				/* Data error: might need to unmap the last page */
++				dev_warn(mmc_dev(host->mmc), "%s(): data error %d\n",
++					 __func__, data->error);
++				v08r07_sg_unmap(host, true);
++			}
++		} else if (cmd->opcode == MMC_APP_CMD) {
++			host->app_cmd = true;
++		}
++	}
++
++	v08r07_request_done(host);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t v08r07_sd(int irq, void *dev_id)
++{
++	struct v08r07_host *host = dev_id;
++	u16 status, status2, error;
++
++	status = v08r07_read(host, V08R07_SD_INFO1) & ~host->status_mask &
++		~V08R07_SD_INFO1_CARD;
++	status2 = v08r07_read(host, V08R07_SD_INFO2) & ~host->status2_mask;
++
++	v08r07_only_cd(host);
++
++	dev_dbg(mmc_dev(host->mmc),
++		"IRQ status = 0x%08x, status2 = 0x%08x\n", status, status2);
++
++	if (!status && !status2)
++		return IRQ_NONE;
++
++	error = status2 & V08R07_SD_INFO2_ERR;
++
++	/* Ack / clear interrupts */
++	if (V08R07_SD_INFO1_IRQ & status)
++		v08r07_write(host, V08R07_SD_INFO1,
++			     0xffff & ~(V08R07_SD_INFO1_IRQ & status));
++
++	if (V08R07_SD_INFO2_IRQ & status2) {
++		if (error)
++			/* In error cases BWE and BRE aren't cleared automatically */
++			status2 |= V08R07_SD_INFO2_BWE | V08R07_SD_INFO2_BRE;
++
++		v08r07_write(host, V08R07_SD_INFO2,
++			     0xffff & ~(V08R07_SD_INFO2_IRQ & status2));
++	}
++
++	host->io_error = error;
++	host->irq_status = status;
++
++	if (error) {
++		/* Don't pollute the log with unsupported command timeouts */
++		if (host->wait != V08R07_WAIT_FOR_CMD ||
++		    error != V08R07_SD_INFO2_RSP_TOUT)
++			dev_warn(mmc_dev(host->mmc),
++				 "%s(): INFO2 error bits 0x%08x\n",
++				 __func__, error);
++		else
++			dev_dbg(mmc_dev(host->mmc),
++				"%s(): INFO2 error bits 0x%08x\n",
++				__func__, error);
++	}
++
++	return IRQ_WAKE_THREAD;
++}
++
++static irqreturn_t v08r07_sdio(int irq, void *dev_id)
++{
++	struct v08r07_host *host = dev_id;
++	u32 status = v08r07_read(host, V08R07_SDIO_INFO1) & ~host->sdio_mask;
++
++	dev_dbg(mmc_dev(host->mmc), "%s(): status 0x%x\n", __func__, status);
++
++	if (!status)
++		return IRQ_NONE;
++
++	v08r07_write(host, V08R07_SDIO_INFO1, ~status);
++
++	mmc_signal_sdio_irq(host->mmc);
++
++	return IRQ_HANDLED;
++}
++
++static irqreturn_t v08r07_cd(int irq, void *dev_id)
++{
++	struct v08r07_host *host = dev_id;
++	struct mmc_host *mmc = host->mmc;
++	u16 status;
++
++	/* We're only interested in hotplug events here */
++	status = v08r07_read(host, V08R07_SD_INFO1) & ~host->status_mask &
++		V08R07_SD_INFO1_CARD;
++
++	if (!status)
++		return IRQ_NONE;
++
++	/* Ack */
++	v08r07_write(host, V08R07_SD_INFO1, !status);
++
++	if (!work_pending(&mmc->detect.work) &&
++	    (((status & V08R07_SD_INFO1_CARD_INSERT) &&
++	      !mmc->card) ||
++	     ((status & V08R07_SD_INFO1_CARD_EJECT) &&
++	      mmc->card)))
++		mmc_detect_change(mmc, msecs_to_jiffies(100));
++
++	return IRQ_HANDLED;
 +}
 +
 +/*
-+ * We have to allocate descriptors with the channel lock dropped. This means,
-+ * before we re-acquire the lock buffers can be taken already, so we have to
-+ * re-check after re-acquiring the lock and possibly retry, if buffers are gone
-+ * again.
++ * Actually this should not be needed, if the built-in timeout works reliably in
++ * the both PIO cases and DMA never fails. But if DMA does fail, a timeout
++ * handler might be the only way to catch the error.
 + */
-+static struct nbpf_desc *nbpf_desc_get(struct nbpf_channel *chan, size_t len)
++static void v08r07_timeout_work(struct work_struct *work)
 +{
-+	struct nbpf_desc *desc = NULL;
-+	struct nbpf_link_desc *ldesc, *prev = NULL;
++	struct delayed_work *d = container_of(work, struct delayed_work, work);
++	struct v08r07_host *host = container_of(d, struct v08r07_host, timeout_work);
++	struct mmc_request *mrq = host->mrq;
++	struct mmc_data *data = mrq ? mrq->data : NULL;
 +
-+	nbpf_scan_acked(chan);
++	dev_warn(mmc_dev(host->mmc),
++		 "%s timeout wait %u CMD%d: IRQ 0x%08x:0x%08x, last IRQ 0x%08x\n",
++		 host->dma_active ? "DMA" : "PIO",
++		 host->wait, mrq ? mrq->cmd->opcode : -1,
++		 v08r07_read(host, V08R07_SD_INFO1),
++		 v08r07_read(host, V08R07_SD_INFO2), host->irq_status);
 +
-+	spin_lock_irq(&chan->lock);
-+
-+	do {
-+		int i = 0, ret;
-+
-+		if (list_empty(&chan->free)) {
-+			/* No more free descriptors */
-+			spin_unlock_irq(&chan->lock);
-+			ret = nbpf_desc_page_alloc(chan);
-+			if (ret < 0)
-+				return NULL;
-+			spin_lock_irq(&chan->lock);
-+			continue;
-+		}
-+		desc = list_first_entry(&chan->free, struct nbpf_desc, node);
-+		list_del(&desc->node);
-+
-+		do {
-+			if (list_empty(&chan->free_links)) {
-+				/* No more free link descriptors */
-+				spin_unlock_irq(&chan->lock);
-+				ret = nbpf_desc_page_alloc(chan);
-+				if (ret < 0) {
-+					nbpf_desc_put(desc);
-+					return NULL;
-+				}
-+				spin_lock_irq(&chan->lock);
-+				continue;
-+			}
-+
-+			ldesc = list_first_entry(&chan->free_links,
-+						 struct nbpf_link_desc, node);
-+			ldesc->desc = desc;
-+			if (prev)
-+				prev->hwdesc->next = ldesc->hwdesc_dma_addr;
-+
-+			prev = ldesc;
-+			list_move_tail(&ldesc->node, &desc->sg);
-+
-+			i++;
-+		} while (i < len);
-+	} while (!desc);
-+
-+	prev->hwdesc->next = 0;
-+
-+	spin_unlock_irq(&chan->lock);
-+
-+	return desc;
-+}
-+
-+static void nbpf_chan_idle(struct nbpf_channel *chan)
-+{
-+	struct nbpf_desc *desc, *tmp;
-+	unsigned long flags;
-+	LIST_HEAD(head);
-+
-+	spin_lock_irqsave(&chan->lock, flags);
-+
-+	list_splice_init(&chan->done, &head);
-+	list_splice_init(&chan->active, &head);
-+	list_splice_init(&chan->queued, &head);
-+
-+	chan->running = NULL;
-+
-+	spin_unlock_irqrestore(&chan->lock, flags);
-+
-+	list_for_each_entry_safe(desc, tmp, &head, node) {
-+		dev_dbg(chan->nbpf->dma_dev.dev, "%s(): force-free desc %p cookie %d\n",
-+			__func__, desc, desc->async_tx.cookie);
-+		list_del(&desc->node);
-+		nbpf_cookie_fail(chan, desc->async_tx.cookie);
-+		nbpf_desc_put(desc);
++	if (host->dma_active) {
++		v08r07_dma_kill(host);
++		v08r07_dma_stop_unmap(host);
 +	}
-+}
 +
-+static int nbpf_control(struct dma_chan *dchan, enum dma_ctrl_cmd cmd,
-+			unsigned long arg)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+	struct dma_slave_config *config;
-+
-+	dev_dbg(dchan->device->dev, "Entry %s(%d)\n", __func__, cmd);
-+
-+	switch (cmd) {
-+	case DMA_TERMINATE_ALL:
-+		dev_dbg(dchan->device->dev, "Terminating\n");
-+		nbpf_chan_halt(chan);
-+		nbpf_chan_idle(chan);
++	switch (host->wait) {
++	default:
++		dev_err(mmc_dev(host->mmc), "Invalid state %u\n", host->wait);
++		/* mrq can be NULL in this actually impossible case */
++	case V08R07_WAIT_FOR_CMD:
++		v08r07_error_code(host);
++		if (mrq)
++			mrq->cmd->error = -ETIMEDOUT;
 +		break;
-+	case DMA_SLAVE_CONFIG:
-+		if (!arg)
-+			return -EINVAL;
-+		config = (struct dma_slave_config *)arg;
-+
++	case V08R07_WAIT_FOR_STOP:
++		v08r07_error_code(host);
++		mrq->stop->error = -ETIMEDOUT;
++		break;
++	case V08R07_WAIT_FOR_DMA:
++	case V08R07_WAIT_FOR_MREAD:
++	case V08R07_WAIT_FOR_MWRITE:
++	case V08R07_WAIT_FOR_READ:
++	case V08R07_WAIT_FOR_WRITE:
++		dev_dbg(mmc_dev(host->mmc),
++			"%c: page #%u @ +0x%x %ux%u in SG%u. Current SG %u bytes @ %u\n",
++			data->flags & MMC_DATA_READ ? 'R' : 'W', host->page_idx,
++			host->offset, data->blocks, data->blksz, data->sg_len,
++			sg_dma_len(host->sg), host->sg->offset);
++		v08r07_sg_unmap(host, true);
 +		/*
-+		 * We could check config->slave_id to match chan->terminal here,
-+		 * but with DT they would be coming from the same source, so
-+		 * such a check would be superflous
++		 * If V08R07_WAIT_FOR_DATA_END times out, we have already unmapped
++		 * the page
 +		 */
-+
-+		switch (config->direction) {
-+		case DMA_MEM_TO_DEV:
-+			chan->slave_addr = config->dst_addr;
-+			chan->slave_width = nbpf_xfer_size(chan->nbpf,
-+							config->dst_addr_width, 1);
-+			chan->slave_burst = nbpf_xfer_size(chan->nbpf,
-+							config->dst_addr_width,
-+							config->dst_maxburst);
-+			break;
-+		case DMA_DEV_TO_MEM:
-+			chan->slave_addr = config->src_addr;
-+			chan->slave_width = nbpf_xfer_size(chan->nbpf,
-+							config->src_addr_width, 1);
-+			chan->slave_burst = nbpf_xfer_size(chan->nbpf,
-+							config->src_addr_width,
-+							config->src_maxburst);
-+			break;
-+		default:
-+			return -EINVAL;
-+		}
-+		break;
-+	case DMA_PAUSE:
-+		chan->paused = true;
-+		nbpf_pause(chan);
-+		break;
-+	case DMA_RESUME:
-+		/* Leave unimplemented until we get a use case. */
-+	default:
-+		return -ENXIO;
++	case V08R07_WAIT_FOR_DATA_END:
++		v08r07_error_code(host);
++		data->error = -ETIMEDOUT;
 +	}
 +
-+	return 0;
++	if (mrq)
++		v08r07_request_done(host);
 +}
 +
-+static struct dma_async_tx_descriptor *nbpf_prep_sg(struct nbpf_channel *chan,
-+		struct scatterlist *src_sg, struct scatterlist *dst_sg,
-+		size_t len, enum dma_transfer_direction direction,
-+		unsigned long flags)
-+{
-+	struct nbpf_link_desc *ldesc;
-+	struct scatterlist *mem_sg;
-+	struct nbpf_desc *desc;
-+	bool inc_src, inc_dst;
-+	int i = 0;
-+
-+	switch (direction) {
-+	case DMA_DEV_TO_MEM:
-+		mem_sg = dst_sg;
-+		inc_src = false;
-+		inc_dst = true;
-+		break;
-+	case DMA_MEM_TO_DEV:
-+		mem_sg = src_sg;
-+		inc_src = true;
-+		inc_dst = false;
-+		break;
-+	default:
-+	case DMA_MEM_TO_MEM:
-+		mem_sg = src_sg;
-+		inc_src = true;
-+		inc_dst = true;
-+	}
-+
-+	desc = nbpf_desc_get(chan, len);
-+	if (!desc)
-+		return NULL;
-+
-+	desc->async_tx.flags = flags;
-+	desc->async_tx.cookie = -EBUSY;
-+	desc->user_wait = false;
-+
-+	/*
-+	 * this is a private descriptor list, and we own the descriptor. No need
-+	 * to lock.
-+	 */
-+	list_for_each_entry(ldesc, &desc->sg, node) {
-+		int ret = nbpf_prep_one(ldesc, direction,
-+					sg_dma_address(src_sg),
-+					sg_dma_address(dst_sg),
-+					sg_dma_len(mem_sg),
-+					i == len - 1);
-+		if (ret < 0) {
-+			nbpf_desc_put(desc);
-+			return NULL;
-+		}
-+		if (inc_src)
-+			src_sg = sg_next(src_sg);
-+		if (inc_dst)
-+			dst_sg = sg_next(dst_sg);
-+		mem_sg = direction == DMA_DEV_TO_MEM ? dst_sg : src_sg;
-+		i++;
-+	}
-+
-+	/* The user has to return the descriptor to us ASAP via .tx_submit() */
-+	return &desc->async_tx;
-+}
-+
-+static struct dma_async_tx_descriptor *nbpf_prep_memcpy(
-+	struct dma_chan *dchan, dma_addr_t dst, dma_addr_t src,
-+	size_t len, unsigned long flags)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+	struct scatterlist dst_sg;
-+	struct scatterlist src_sg;
-+
-+	sg_init_table(&dst_sg, 1);
-+	sg_init_table(&src_sg, 1);
-+
-+	sg_dma_address(&dst_sg) = dst;
-+	sg_dma_address(&src_sg) = src;
-+
-+	sg_dma_len(&dst_sg) = len;
-+	sg_dma_len(&src_sg) = len;
-+
-+	dev_dbg(dchan->device->dev, "%s(): %u @ 0x%x -> 0x%x\n",
-+		__func__, len, src, dst);
-+
-+	return nbpf_prep_sg(chan, &src_sg, &dst_sg, 1,
-+			    DMA_MEM_TO_MEM, flags);
-+}
-+
-+static struct dma_async_tx_descriptor *nbpf_prep_memcpy_sg(
-+	struct dma_chan *dchan,
-+	struct scatterlist *dst_sg, unsigned int dst_nents,
-+	struct scatterlist *src_sg, unsigned int src_nents,
-+	unsigned long flags)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+
-+	if (dst_nents != src_nents)
-+		return NULL;
-+
-+	return nbpf_prep_sg(chan, src_sg, dst_sg, src_nents,
-+			    DMA_MEM_TO_MEM, flags);
-+}
-+
-+static struct dma_async_tx_descriptor *nbpf_prep_slave_sg(
-+	struct dma_chan *dchan, struct scatterlist *sgl, unsigned int sg_len,
-+	enum dma_transfer_direction direction, unsigned long flags, void *context)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+	struct scatterlist slave_sg;
-+
-+	dev_dbg(dchan->device->dev, "Entry %s()\n", __func__);
-+
-+	sg_init_table(&slave_sg, 1);
-+	sg_dma_address(&slave_sg) = chan->slave_addr;
-+
-+	switch (direction) {
-+	case DMA_MEM_TO_DEV:
-+		return nbpf_prep_sg(chan, sgl, &slave_sg, sg_len,
-+				    direction, flags);
-+	case DMA_DEV_TO_MEM:
-+		return nbpf_prep_sg(chan, &slave_sg, sgl, sg_len,
-+				    direction, flags);
-+	default:
-+		return NULL;
-+	}
-+}
-+
-+static int nbpf_alloc_chan_resources(struct dma_chan *dchan)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+	int ret;
-+
-+	INIT_LIST_HEAD(&chan->free);
-+	INIT_LIST_HEAD(&chan->free_links);
-+	INIT_LIST_HEAD(&chan->queued);
-+	INIT_LIST_HEAD(&chan->active);
-+	INIT_LIST_HEAD(&chan->done);
-+
-+	memset(chan->status, 0, sizeof(chan->status));
-+
-+	ret = nbpf_desc_page_alloc(chan);
-+	if (ret < 0)
-+		return ret;
-+
-+	dev_dbg(dchan->device->dev, "Entry %s(): terminal %u\n", __func__,
-+		chan->terminal);
-+
-+	nbpf_chan_configure(chan);
-+
-+	return ret;
-+}
-+
-+static void nbpf_free_chan_resources(struct dma_chan *dchan)
-+{
-+	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-+	struct nbpf_desc_page *dpage, *tmp;
-+
-+	dev_dbg(dchan->device->dev, "Entry %s()\n", __func__);
-+
-+	nbpf_chan_halt(chan);
-+	/* Clean up for if a channel is re-used for MEMCPY after slave DMA */
-+	nbpf_chan_prepare_default(chan);
-+
-+	list_for_each_entry_safe(dpage, tmp, &chan->desc_page, node) {
-+		struct nbpf_link_desc *ldesc;
-+		int i;
-+		list_del(&dpage->node);
-+		for (i = 0, ldesc = dpage->ldesc;
-+		     i < ARRAY_SIZE(dpage->ldesc);
-+		     i++, ldesc++)
-+			dma_unmap_single(dchan->device->dev, ldesc->hwdesc_dma_addr,
-+					 sizeof(*ldesc->hwdesc), DMA_TO_DEVICE);
-+		free_page((unsigned long)dpage);
-+	}
-+}
-+
-+static int nbpf_slave_caps(struct dma_chan *dchan,
-+			   struct dma_slave_caps *caps)
-+{
-+	caps->src_addr_widths = NBPF_DMA_BUSWIDTHS;
-+	caps->dstn_addr_widths = NBPF_DMA_BUSWIDTHS;
-+	caps->directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
-+	caps->cmd_pause = false;
-+	caps->cmd_terminate = true;
-+
-+	return 0;
-+}
-+
-+static bool nbpf_dma_filter(struct dma_chan *chan, void *param)
-+{
-+	return param == chan->device->dev->of_node;
-+}
-+
-+static struct dma_chan *nbpf_of_xlate(struct of_phandle_args *dma_spec,
-+				      struct of_dma *ofdma)
-+{
-+	dma_cap_mask_t mask;
-+	struct dma_chan *dchan;
-+	struct nbpf_channel *chan;
-+
-+	if (dma_spec->args_count != 2)
-+		return NULL;
-+
-+	dma_cap_zero(mask);
-+	dma_cap_set(DMA_SLAVE, mask);
-+
-+	dchan = dma_request_channel(mask, nbpf_dma_filter, ofdma->of_node);
-+	if (!dchan)
-+		return NULL;
-+
-+	dev_dbg(dchan->device->dev, "Entry %s(%s)\n", __func__,
-+		dma_spec->np->name);
-+
-+	chan = nbpf_to_chan(dchan);
-+
-+	chan->terminal = dma_spec->args[0];
-+	chan->flags = dma_spec->args[1];
-+
-+	nbpf_chan_prepare(chan);
-+	nbpf_chan_configure(chan);
-+
-+	return dchan;
-+}
-+
-+static irqreturn_t nbpf_chan_irqt(int irq, void *dev)
-+{
-+	struct nbpf_channel *chan = dev;
-+	struct nbpf_desc *desc, *tmp;
-+	dma_async_tx_callback callback;
-+	void *param;
-+
-+	while (!list_empty(&chan->done)) {
-+		bool found = false, must_put, recycling = false;
-+
-+		spin_lock_irq(&chan->lock);
-+
-+		list_for_each_entry_safe(desc, tmp, &chan->done, node) {
-+			if (!desc->user_wait) {
-+				/* Newly completed descriptor, have to process */
-+				found = true;
-+				break;
-+			} else if (async_tx_test_ack(&desc->async_tx)) {
-+				/*
-+				 * This descriptor was waiting for a user ACK,
-+				 * it can be recycled now.
-+				 */
-+				list_del(&desc->node);
-+				spin_unlock_irq(&chan->lock);
-+				nbpf_desc_put(desc);
-+				recycling = true;
-+				break;
-+			}
-+		}
-+
-+		if (recycling)
-+			continue;
-+
-+		if (!found) {
-+			/* This can happen if TERMINATE_ALL has been called */
-+			spin_unlock_irq(&chan->lock);
-+			break;
-+		}
-+
-+		dev_dbg(chan->dma_chan.device->dev,
-+			"%s(): chan %p #%d: cookie %d complete\n",
-+			__func__, &chan->dma_chan, chan - chan->nbpf->chan,
-+			desc->async_tx.cookie);
-+		dma_cookie_complete(&desc->async_tx);
-+
-+		/*
-+		 * With released lock we cannot dereference desc, maybe it's
-+		 * still on the "done" list
-+		 */
-+		if (async_tx_test_ack(&desc->async_tx)) {
-+			list_del(&desc->node);
-+			must_put = true;
-+		} else {
-+			desc->user_wait = true;
-+			must_put = false;
-+		}
-+
-+		callback = desc->async_tx.callback;
-+		param = desc->async_tx.callback_param;
-+
-+		nbpf_cookie_success(chan, desc->async_tx.cookie);
-+
-+		/* ack and callback completed descriptor */
-+		spin_unlock_irq(&chan->lock);
-+
-+		if (callback)
-+			callback(param);
-+
-+		if (must_put)
-+			nbpf_desc_put(desc);
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static irqreturn_t nbpf_chan_irq(int irq, void *dev)
-+{
-+	struct nbpf_channel *chan = dev;
-+	bool done = nbpf_status_get(chan);
-+	struct nbpf_desc *desc;
-+	irqreturn_t ret;
-+
-+	if (!done)
-+		return IRQ_NONE;
-+
-+	nbpf_status_ack(chan);
-+
-+	dev_dbg(&chan->dma_chan.dev->device, "%s()\n", __func__);
-+
-+	spin_lock(&chan->lock);
-+	desc = chan->running;
-+	if (WARN_ON(!desc)) {
-+		ret = IRQ_NONE;
-+		goto unlock;
-+	} else {
-+		ret = IRQ_WAKE_THREAD;
-+	}
-+
-+	list_move_tail(&desc->node, &chan->done);
-+	chan->running = NULL;
-+
-+	if (!list_empty(&chan->active)) {
-+		desc = list_first_entry(&chan->active,
-+					struct nbpf_desc, node);
-+		if (!nbpf_start(desc))
-+			chan->running = desc;
-+	}
-+
-+unlock:
-+	spin_unlock(&chan->lock);
-+
-+	return ret;
-+}
-+
-+static irqreturn_t nbpf_err_irq(int irq, void *dev)
-+{
-+	struct nbpf_device *nbpf = dev;
-+	u32 error = nbpf_error_get(nbpf);
-+
-+	dev_warn(nbpf->dma_dev.dev, "DMA error IRQ %u\n", irq);
-+
-+	if (!error)
-+		return IRQ_NONE;
-+
-+	do {
-+		struct nbpf_channel *chan = nbpf_error_get_channel(nbpf, error);
-+		/* On error: abort all queued transfers, no callback */
-+		nbpf_error_clear(chan);
-+		nbpf_chan_idle(chan);
-+		error = nbpf_error_get(nbpf);
-+	} while (error);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int nbpf_chan_probe(struct nbpf_device *nbpf, int n)
-+{
-+	struct dma_device *dma_dev = &nbpf->dma_dev;
-+	int pdev_id = to_platform_device(dma_dev->dev)->id;
-+	struct nbpf_channel *chan = nbpf->chan + n;
-+	int ret;
-+
-+	chan->nbpf = nbpf;
-+	chan->base = nbpf->base + NBPF_REG_CHAN_OFFSET + NBPF_REG_CHAN_SIZE * n;
-+	INIT_LIST_HEAD(&chan->desc_page);
-+	spin_lock_init(&chan->lock);
-+	chan->dma_chan.device = dma_dev;
-+	dma_cookie_init(&chan->dma_chan);
-+	nbpf_chan_prepare_default(chan);
-+
-+	dev_dbg(dma_dev->dev, "%s(): channel %d: -> %p\n", __func__, n, chan->base);
-+
-+	if (pdev_id >= 0)
-+		snprintf(chan->name, sizeof(chan->name),
-+			 "nbpf %d.%d", pdev_id, n);
-+	else
-+		snprintf(chan->name, sizeof(chan->name),
-+			 "nbpf %d", n);
-+
-+	ret = devm_request_threaded_irq(dma_dev->dev, chan->irq,
-+			nbpf_chan_irq, nbpf_chan_irqt, IRQF_SHARED,
-+			chan->name, chan);
-+	if (ret < 0)
-+		return ret;
-+
-+	/* Add the channel to DMA device channel list */
-+	list_add_tail(&chan->dma_chan.device_node,
-+		      &dma_dev->channels);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id nbpf_match[] = {
-+	{.compatible = "renesas,nbpfaxi64dmac1b4",	.data = &nbpf_cfg[NBPF1B4]},
-+	{.compatible = "renesas,nbpfaxi64dmac1b8",	.data = &nbpf_cfg[NBPF1B8]},
-+	{.compatible = "renesas,nbpfaxi64dmac1b16",	.data = &nbpf_cfg[NBPF1B16]},
-+	{.compatible = "renesas,nbpfaxi64dmac4b4",	.data = &nbpf_cfg[NBPF4B4]},
-+	{.compatible = "renesas,nbpfaxi64dmac4b8",	.data = &nbpf_cfg[NBPF4B8]},
-+	{.compatible = "renesas,nbpfaxi64dmac4b16",	.data = &nbpf_cfg[NBPF4B16]},
-+	{.compatible = "renesas,nbpfaxi64dmac8b4",	.data = &nbpf_cfg[NBPF8B4]},
-+	{.compatible = "renesas,nbpfaxi64dmac8b8",	.data = &nbpf_cfg[NBPF8B8]},
-+	{.compatible = "renesas,nbpfaxi64dmac8b16",	.data = &nbpf_cfg[NBPF8B16]},
++/*			 Probe / release				*/
++
++static const struct of_device_id v08r07_of_match[] = {
++	{.compatible = "renesas,usdhi6rol0"},
++	{.compatible = "renesas,v08r07s01e"},
 +	{}
 +};
-+MODULE_DEVICE_TABLE(of, nbpf_match);
++MODULE_DEVICE_TABLE(of, v08r07_of_match);
 +
-+static int nbpf_probe(struct platform_device *pdev)
++static int v08r07_probe(struct platform_device *pdev)
 +{
 +	struct device *dev = &pdev->dev;
-+	const struct of_device_id *of_id = of_match_device(nbpf_match, dev);
-+	struct device_node *np = dev->of_node;
-+	struct nbpf_device *nbpf;
-+	struct dma_device *dma_dev;
-+	struct resource *iomem, *irq_res;
-+	const struct nbpf_config *cfg;
-+	int num_channels;
-+	int ret, irq, eirq, i;
-+	int irqbuf[9] /* maximum 8 channels + error IRQ */;
-+	unsigned int irqs = 0;
++	struct mmc_host *mmc;
++	struct v08r07_host *host;
++	struct resource *res;
++	int irq_cd, irq_sd, irq_sdio;
++	u32 version;
++	int ret;
 +
-+	BUILD_BUG_ON(sizeof(struct nbpf_desc_page) > PAGE_SIZE);
-+
-+	/* DT only */
-+	if (!np || !of_id || !of_id->data)
++	if (!dev->of_node)
 +		return -ENODEV;
 +
-+	cfg = of_id->data;
-+	num_channels = cfg->num_channels;
++	irq_cd = platform_get_irq_byname(pdev, "card detect");
++	irq_sd = platform_get_irq_byname(pdev, "data");
++	irq_sdio = platform_get_irq_byname(pdev, "SDIO");
++	if (irq_sd < 0 || irq_sdio < 0)
++		return -ENODEV;
 +
-+	nbpf = devm_kzalloc(dev, sizeof(*nbpf) + num_channels *
-+			    sizeof(nbpf->chan[0]), GFP_KERNEL);
-+	if (!nbpf) {
-+		dev_err(dev, "Memory allocation failed\n");
++	mmc = mmc_alloc_host(sizeof(struct v08r07_host), dev);
++	if (!mmc)
 +		return -ENOMEM;
-+	}
-+	dma_dev = &nbpf->dma_dev;
-+	dma_dev->dev = dev;
 +
-+	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	nbpf->base = devm_ioremap_resource(dev, iomem);
-+	if (IS_ERR(nbpf->base))
-+		return PTR_ERR(nbpf->base);
++	ret = mmc_of_parse(mmc);
++	if (ret < 0)
++		goto e_free_mmc;
 +
-+	nbpf->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(nbpf->clk))
-+		return PTR_ERR(nbpf->clk);
++	mmc_regulator_get_supply(mmc);
 +
-+	nbpf->config = cfg;
++	host		= mmc_priv(mmc);
++	host->mmc	= mmc;
++	host->wait	= V08R07_WAIT_FOR_REQUEST;
++	host->timeout	= msecs_to_jiffies(1000);
 +
-+	for (i = 0; irqs < ARRAY_SIZE(irqbuf); i++) {
-+		irq_res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
-+		if (!irq_res)
-+			break;
-+
-+		for (irq = irq_res->start; irq <= irq_res->end;
-+		     irq++, irqs++)
-+			irqbuf[irqs] = irq;
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	host->base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(host->base)) {
++		ret = PTR_ERR(host->base);
++		goto e_free_mmc;
 +	}
 +
-+	dev_dbg(dev, "%s(): mapped %x -> %p\n", __func__, iomem->start, nbpf->base);
++	host->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(host->clk))
++		goto e_free_mmc;
 +
-+	/*
-+	 * 3 IRQ resource schemes are supported:
-+	 * 1. 1 shared IRQ for error and all channels
-+	 * 2. 2 IRQs: one for error and one shared for all channels
-+	 * 3. 1 IRQ for error and an own IRQ for each channel
-+	 */
-+	if (irqs != 1 && irqs != 2 && irqs != num_channels + 1)
-+		return -ENXIO;
++	host->imclk = clk_get_rate(host->clk);
 +
-+	if (irqs == 1) {
-+		eirq = irqbuf[0];
++	ret = clk_prepare_enable(host->clk);
++	if (ret < 0)
++		goto e_free_mmc;
 +
-+		for (i = 0; i <= num_channels; i++)
-+			nbpf->chan[i].irq = irqbuf[0];
++	version = v08r07_read(host, V08R07_VERSION);
++	if ((version & 0xfff) != 0xa0d) {
++		dev_err(dev, "Version not recognized %x\n", version);
++		goto e_clk_off;
++	}
++
++	dev_info(dev, "A V08R07S01E SD host detected with %d ports\n",
++		 v08r07_read(host, V08R07_SD_PORT_SEL) >> 8);
++
++	v08r07_mask_all(host);
++
++	if (irq_cd >= 0) {
++		ret = devm_request_irq(dev, irq_cd, v08r07_cd, 0,
++				       dev_name(dev), host);
++		if (ret < 0)
++			goto e_clk_off;
 +	} else {
-+		eirq = platform_get_irq_byname(pdev, "error");
-+		if (eirq < 0)
-+			return eirq;
-+
-+		if (irqs == num_channels + 1) {
-+			struct nbpf_channel *chan;
-+
-+			for (i = 0, chan = nbpf->chan; i <= num_channels;
-+			     i++, chan++) {
-+				/* Skip the error IRQ */
-+				if (irqbuf[i] == eirq)
-+					i++;
-+				chan->irq = irqbuf[i];
-+			}
-+
-+			if (chan != nbpf->chan + num_channels)
-+				return -EINVAL;
-+		} else {
-+			/* 2 IRQs and more than one channel */
-+			if (irqbuf[0] == eirq)
-+				irq = irqbuf[1];
-+			else
-+				irq = irqbuf[0];
-+
-+			for (i = 0; i <= num_channels; i++)
-+				nbpf->chan[i].irq = irq;
-+		}
++		mmc->caps |= MMC_CAP_NEEDS_POLL;
 +	}
 +
-+	ret = devm_request_threaded_irq(dev, eirq, nbpf_err_irq, NULL,
-+					IRQF_SHARED, "dma error", nbpf);
++	ret = devm_request_threaded_irq(dev, irq_sd, v08r07_sd, v08r07_sd_bh, 0,
++			       dev_name(dev), host);
 +	if (ret < 0)
-+		return ret;
++		goto e_clk_off;
 +
-+	INIT_LIST_HEAD(&dma_dev->channels);
++	ret = devm_request_irq(dev, irq_sdio, v08r07_sdio, 0,
++			       dev_name(dev), host);
++	if (ret < 0)
++		goto e_clk_off;
 +
-+	/* Create DMA Channel */
-+	for (i = 0; i < num_channels; i++) {
-+		ret = nbpf_chan_probe(nbpf, i);
-+		if (ret < 0)
-+			return ret;
-+	}
++	INIT_DELAYED_WORK(&host->timeout_work, v08r07_timeout_work);
 +
-+	dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
-+	dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
-+	dma_cap_set(DMA_SG, dma_dev->cap_mask);
++	v08r07_dma_request(host, res->start);
 +
-+	/* Common and MEMCPY operations */
-+	dma_dev->device_alloc_chan_resources
-+		= nbpf_alloc_chan_resources;
-+	dma_dev->device_free_chan_resources = nbpf_free_chan_resources;
-+	dma_dev->device_prep_dma_sg = nbpf_prep_memcpy_sg;
-+	dma_dev->device_prep_dma_memcpy = nbpf_prep_memcpy;
-+	dma_dev->device_tx_status = nbpf_tx_status;
-+	dma_dev->device_issue_pending = nbpf_issue_pending;
-+	dma_dev->device_slave_caps = nbpf_slave_caps;
-+
++	mmc->ops = &v08r07_ops;
++	mmc->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED |
++		MMC_CAP_UHS_SDR50 | MMC_CAP_UHS_DDR50 | MMC_CAP_SDIO_IRQ;
++	/* Set .max_segs to some random number. Feel free to adjust. */
++	mmc->max_segs = 32;
++	mmc->max_blk_size = 512;
++	mmc->max_req_size = PAGE_CACHE_SIZE * mmc->max_segs;
++	mmc->max_blk_count = mmc->max_req_size / mmc->max_blk_size;
 +	/*
-+	 * If we drop support for unaligned MEMCPY buffer addresses and / or
-+	 * lengths by setting
-+	 * dma_dev->copy_align = 4;
-+	 * then we can set transfer length to 4 bytes in nbpf_prep_one() for
-+	 * DMA_MEM_TO_MEM
++	 * Setting .max_seg_size to 1 page would simplify our page-mapping code,
++	 * But OTOH, having large segments makes DMA more efficient. We could
++	 * check, whether we managed to get DMA and fall back to 1 page
++	 * segments, but if we do manage to obtain DMA and then it fails at
++	 * run-time and we fall back to PIO, we will continue getting large
++	 * segments. So, we wouldn't be able to get rid of the code anyway.
 +	 */
++	mmc->max_seg_size = mmc->max_req_size;
++	if (!mmc->f_max)
++		mmc->f_max = host->imclk;
++	mmc->f_min = host->imclk / 512;
 +
-+	/* Compulsory for DMA_SLAVE fields */
-+	dma_dev->device_prep_slave_sg = nbpf_prep_slave_sg;
-+	dma_dev->device_control = nbpf_control;
++	platform_set_drvdata(pdev, host);
 +
-+	if (np) {
-+		ret = of_dma_controller_register(np, nbpf_of_xlate, pdev);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	platform_set_drvdata(pdev, nbpf);
-+
-+	ret = clk_prepare_enable(nbpf->clk);
-+	if (ret < 0)
-+		goto e_of_unreg;
-+
-+	nbpf_configure(nbpf);
-+
-+	ret = dma_async_device_register(dma_dev);
++	ret = mmc_add_host(mmc);
 +	if (ret < 0)
 +		goto e_clk_off;
 +
 +	return 0;
 +
 +e_clk_off:
-+	clk_disable_unprepare(nbpf->clk);
-+e_of_unreg:
-+	of_dma_controller_free(np);
++	clk_disable_unprepare(host->clk);
++e_free_mmc:
++	mmc_free_host(mmc);
 +
 +	return ret;
 +}
 +
-+static int nbpf_remove(struct platform_device *pdev)
++static int v08r07_remove(struct platform_device *pdev)
 +{
-+	struct nbpf_device *nbpf = platform_get_drvdata(pdev);
++	struct v08r07_host *host = platform_get_drvdata(pdev);
 +
-+	dma_async_device_unregister(&nbpf->dma_dev);
-+	clk_disable_unprepare(nbpf->clk);
-+	of_dma_controller_free(pdev->dev.of_node);
++	mmc_remove_host(host->mmc);
++
++	v08r07_mask_all(host);
++	cancel_delayed_work_sync(&host->timeout_work);
++	v08r07_dma_release(host);
++	clk_disable_unprepare(host->clk);
++	mmc_free_host(host->mmc);
 +
 +	return 0;
 +}
 +
-+static struct platform_device_id nbpf_ids[] = {
-+	{"nbpfaxi64dmac1b4",	(kernel_ulong_t)&nbpf_cfg[NBPF1B4]},
-+	{"nbpfaxi64dmac1b8",	(kernel_ulong_t)&nbpf_cfg[NBPF1B8]},
-+	{"nbpfaxi64dmac1b16",	(kernel_ulong_t)&nbpf_cfg[NBPF1B16]},
-+	{"nbpfaxi64dmac4b4",	(kernel_ulong_t)&nbpf_cfg[NBPF4B4]},
-+	{"nbpfaxi64dmac4b8",	(kernel_ulong_t)&nbpf_cfg[NBPF4B8]},
-+	{"nbpfaxi64dmac4b16",	(kernel_ulong_t)&nbpf_cfg[NBPF4B16]},
-+	{"nbpfaxi64dmac8b4",	(kernel_ulong_t)&nbpf_cfg[NBPF8B4]},
-+	{"nbpfaxi64dmac8b8",	(kernel_ulong_t)&nbpf_cfg[NBPF8B8]},
-+	{"nbpfaxi64dmac8b16",	(kernel_ulong_t)&nbpf_cfg[NBPF8B16]},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(platform, nbpf_ids);
-+
-+#ifdef CONFIG_PM_RUNTIME
-+static int nbpf_runtime_suspend(struct device *dev)
-+{
-+	struct nbpf_device *nbpf = platform_get_drvdata(to_platform_device(dev));
-+	clk_disable_unprepare(nbpf->clk);
-+	return 0;
-+}
-+
-+static int nbpf_runtime_resume(struct device *dev)
-+{
-+	struct nbpf_device *nbpf = platform_get_drvdata(to_platform_device(dev));
-+	return clk_prepare_enable(nbpf->clk);
-+}
-+#endif
-+
-+static const struct dev_pm_ops nbpf_pm_ops = {
-+	SET_RUNTIME_PM_OPS(nbpf_runtime_suspend, nbpf_runtime_resume, NULL)
-+};
-+
-+static struct platform_driver nbpf_driver = {
-+	.driver = {
-+		.owner = THIS_MODULE,
-+		.name = "dma-nbpf",
-+		.of_match_table = nbpf_match,
-+		.pm = &nbpf_pm_ops,
++static struct platform_driver v08r07_driver = {
++	.probe		= v08r07_probe,
++	.remove		= v08r07_remove,
++	.driver		= {
++		.name	= "v08r07s01e",
++		.owner	= THIS_MODULE,
++		.of_match_table = v08r07_of_match,
 +	},
-+	.id_table = nbpf_ids,
-+	.probe = nbpf_probe,
-+	.remove = nbpf_remove,
 +};
 +
-+module_platform_driver(nbpf_driver);
++module_platform_driver(v08r07_driver);
 +
-+MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>");
-+MODULE_DESCRIPTION("dmaengine driver for NBPFAXI64* DMACs");
++MODULE_DESCRIPTION("Renesas v08r07s01e SD/SDIO host driver");
 +MODULE_LICENSE("GPL v2");
-diff --git a/include/dt-bindings/dma/nbpfaxi.h b/include/dt-bindings/dma/nbpfaxi.h
-new file mode 100644
-index 0000000..74f2054
---- /dev/null
-+++ b/include/dt-bindings/dma/nbpfaxi.h
-@@ -0,0 +1,20 @@
-+/*
-+ * Copyright (C) 2013 Renesas Europe Ltd.
-+ * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef DT_BINDINGS_NBPFAXI_H
-+#define DT_BINDINGS_NBPFAXI_H
-+
-+/**
-+ * Use "#dma-cells = <2>;" with the second integer defining slave DMA flags:
-+ */
-+#define NBPF_SLAVE_RQ_HIGH	1
-+#define NBPF_SLAVE_RQ_LOW	2
-+#define NBPF_SLAVE_RQ_LEVEL	4
-+
-+#endif
++MODULE_ALIAS("platform:v08r07s01e");
++MODULE_AUTHOR("Guennadi Liakhovetski <g.liakhovetski@gmx.de>");
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
