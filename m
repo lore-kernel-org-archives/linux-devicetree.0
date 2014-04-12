@@ -1,409 +1,76 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
-Date: Sat, 12 Apr 2014 04:15:42 +0400
-Message-ID: <201404120415.43761.sergei.shtylyov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, grant.likely@linaro.org
-Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH v2 2/4] Documentation: dts: Add bindings for APM X-Gene SoC ethernet driver
+Date: Fri, 11 Apr 2014 20:06:22 -0700
+Message-ID: <1397271984-23405-3-git-send-email-isubramanian@apm.com>
+References: <1397271984-23405-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1397271984-23405-1-git-send-email-isubramanian@apm.com>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-This PHY, though formally being a part of Renesas USBHS controller, contains the
-UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls them
-channels) to the different USB controllers: channel 0 can be connected to either
-PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
-or xHCI controllers.
+This patch adds documentation for APM X-Gene SoC ethernet DTS binding.
 
-This is a new driver for this USB PHY currently already supported under drivers/
-usb/phy/. The reason for writing the new driver was the requirement that the
-multiplexing of USB channels to the controller be dynamic, depending on what
-USB drivers are loaded,  rather than static as provided by the old driver.
-The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
-ideally. The new driver only supports device tree probing for now.
-
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+Signed-off-by: Ravi Patel <rapatel@apm.com>
+Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
 ---
-The patch is against the 'next' branch of Kishon's 'linux-phy.git' repo.
+ .../devicetree/bindings/net/apm-xgene-enet.txt     |   46 ++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
 
-Changes in version 3:
-- removed 'rcar_gen2_usbhs_phy_ops', moving 'power_{on|off}' intializers to
-  'rcar_gen2_phy_ops' and adding a check for USBHS PHY to power_{on|off}()
-  methods;
-- renamed the power_{on|off}() methods;
-- replaced io{read|write}16() calls with {read|write}w();
-- removed the comment to '#define USBHS_UGSTS_LOCK';
-- broke the line in the dev_err() call in the probe() method;
-- moved the driver's line in the 'Makefile' before OMAP drivers.
-
-Changes in version 2:
-- rebased the patch, resolving reject.
-
- Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt |   35 +
- drivers/phy/Kconfig                                     |    7 
- drivers/phy/Makefile                                    |    1 
- drivers/phy/phy-rcar-gen2.c                             |  283 ++++++++++++++++
- 4 files changed, 326 insertions(+)
-
-Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-===================================================================
+diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+new file mode 100644
+index 0000000..0c983e8
 --- /dev/null
-+++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-@@ -0,0 +1,35 @@
-+* Renesas R-Car generation 2 USB PHY
++++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+@@ -0,0 +1,46 @@
++APM X-Gene SoC Ethernet nodes
 +
-+This file provides information on what the device node for the R-Car generation
-+2 USB PHY contains.
++Ethernet nodes are defined to describe on-chip ethernet interfaces in
++APM X-Gene SoC.
 +
 +Required properties:
-+- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
-+	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
-+- reg: offset and length of the register block.
-+- #phy-cells: see phy-bindings.txt in the same directory, must be 2.
-+- clocks: clock phandle and specifier pair.
-+- clock-names: string, clock input name, must be "usbhs".
++- compatible		: Should be "apm,xgene-enet"
++- reg			: First resource is the ethernet base register set
++			  Second resource is the ring base register set
++			  Third resource is the ring command register set
++- interrupts		: Ethernet main interrupt
++- clocks		: Reference to the clock entry.
++- local-mac-address	: Ethernet MAC address.
++- phy-addr		: Ethernet MII phy address.
++- phy-mode		: Ethernet MII mode.
 +
-+The phandle's first argument in the PHY specifier identifies the USB channel,
-+the second one is the USB controller selector and depends on the first:
++Optional properties:
++- status		: Should be "ok" or "disabled" for enabled/disabled.
++			  Default is "ok".
 +
-++-----------+---------------+---------------+
-+|\ Selector |               |               |
-++ --------- +       0       |       1       |
-+| Channel  \|               |               |
-++-----------+---------------+---------------+
-+| 0         | PCI EHCI/OHCI | HS-USB        |
-+| 1         | PCI EHCI/OHCI | PCI EHCI/OHCI |
-+| 2         | PCI EHCI/OHCI | xHCI          |
-++-----------+---------------+---------------+
-+
-+Example (Lager board):
-+
-+	usb-phy@e6590100 {
-+		compatible = "renesas,usb-phy-r8a7790";
-+		reg = <0 0xe6590100 0 0x100>;
-+		#phy-cells = <2>;
-+		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-+		clock-names = "usbhs";
++Example:
++	menetclk: menetclk {
++		compatible = "apm,xgene-device-clock";
++		clock-output-names = "menetclk";
++		status = "ok";
 +	};
-Index: linux-phy/drivers/phy/Kconfig
-===================================================================
---- linux-phy.orig/drivers/phy/Kconfig
-+++ linux-phy/drivers/phy/Kconfig
-@@ -31,6 +31,13 @@ config PHY_MVEBU_SATA
- 	depends on OF
- 	select GENERIC_PHY
- 
-+config PHY_RCAR_GEN2
-+	tristate "Renesas R-Car generation 2 USB PHY driver"
-+	depends on ARCH_SHMOBILE
-+	depends on GENERIC_PHY
-+	help
-+	  Support for USB PHY found on Renesas R-Car generation 2 SoCs.
 +
- config OMAP_CONTROL_PHY
- 	tristate "OMAP CONTROL PHY Driver"
- 	help
-Index: linux-phy/drivers/phy/Makefile
-===================================================================
---- linux-phy.orig/drivers/phy/Makefile
-+++ linux-phy/drivers/phy/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-
- obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
- obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
- obj-$(CONFIG_PHY_MVEBU_SATA)		+= phy-mvebu-sata.o
-+obj-$(CONFIG_PHY_RCAR_GEN2)		+= phy-rcar-gen2.o
- obj-$(CONFIG_OMAP_CONTROL_PHY)		+= phy-omap-control.o
- obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
- obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
-Index: linux-phy/drivers/phy/phy-rcar-gen2.c
-===================================================================
---- /dev/null
-+++ linux-phy/drivers/phy/phy-rcar-gen2.c
-@@ -0,0 +1,283 @@
-+/*
-+ * Renesas R-Car Gen2 PHY driver
-+ *
-+ * Copyright (C) 2014 Renesas Solutions Corp.
-+ * Copyright (C) 2014 Cogent Embedded, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++	menet: ethernet@17020000 {
++		compatible = "apm,xgene-enet";
++		status = "disabled";
++		reg = <0x0 0x17020000 0x0 0xd100>,
++		      <0x0 0X17030000 0x0 0X400>,
++		      <0x0 0X10000000 0x0 0X200>;
++		interrupts = <0x0 0x3c 0x4>;
++		clocks = <&menetclk 0>;
++		local-mac-address = [00 01 73 00 00 01];
++		phy-addr = <3>;
++		phy-mode = "rgmii";
++	};
 +
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/phy/phy.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
 +
-+#define USBHS_LPSTS			0x02
-+#define USBHS_UGCTRL			0x80
-+#define USBHS_UGCTRL2			0x84
-+#define USBHS_UGSTS			0x88
++/* Board-specific peripheral configurations */
 +
-+/* Low Power Status register (LPSTS) */
-+#define USBHS_LPSTS_SUSPM		0x4000
-+
-+/* USB General control register (UGCTRL) */
-+#define USBHS_UGCTRL_CONNECT		0x00000004
-+#define USBHS_UGCTRL_PLLRESET		0x00000001
-+
-+/* USB General control register 2 (UGCTRL2) */
-+#define USBHS_UGCTRL2_USB2SEL		0x80000000
-+#define USBHS_UGCTRL2_USB2SEL_PCI	0x00000000
-+#define USBHS_UGCTRL2_USB2SEL_USB30	0x80000000
-+#define USBHS_UGCTRL2_USB0SEL		0x00000030
-+#define USBHS_UGCTRL2_USB0SEL_PCI	0x00000010
-+#define USBHS_UGCTRL2_USB0SEL_HS_USB	0x00000030
-+
-+/* USB General status register (UGSTS) */
-+#define USBHS_UGSTS_LOCK		0x00000300
-+
-+#define	NUM_USB_CHANNELS	3
-+
-+struct rcar_gen2_phy {
-+	struct phy *phy;
-+	struct rcar_gen2_phy_driver *drv;
-+	u32 select_mask;
-+	u32 select_value;
++&menet {
++        status = "ok";
 +};
-+
-+struct rcar_gen2_phy_driver {
-+	void __iomem *base;
-+	struct clk *clk;
-+	spinlock_t lock;
-+	struct rcar_gen2_phy phys[NUM_USB_CHANNELS][2];
-+};
-+
-+static int rcar_gen2_phy_init(struct phy *p)
-+{
-+	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
-+	struct rcar_gen2_phy_driver *drv = phy->drv;
-+	unsigned long flags;
-+	u32 ugctrl2;
-+
-+	if (phy->select_mask) {
-+		clk_prepare_enable(drv->clk);
-+
-+		spin_lock_irqsave(&drv->lock, flags);
-+		ugctrl2 = readl(drv->base + USBHS_UGCTRL2);
-+		ugctrl2 &= ~phy->select_mask;
-+		ugctrl2 |= phy->select_value;
-+		writel(ugctrl2, drv->base + USBHS_UGCTRL2);
-+		spin_unlock_irqrestore(&drv->lock, flags);
-+	}
-+
-+	return 0;
-+}
-+
-+static int rcar_gen2_phy_exit(struct phy *p)
-+{
-+	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
-+
-+	if (phy->select_mask)
-+		clk_disable_unprepare(phy->drv->clk);
-+
-+	return 0;
-+}
-+
-+static int rcar_gen2_phy_power_on(struct phy *p)
-+{
-+	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
-+	struct rcar_gen2_phy_driver *drv = phy->drv;
-+	void __iomem *base = drv->base;
-+	unsigned long flags;
-+	u32 value;
-+	int err = 0, i;
-+
-+	/* Skip if it's not USBHS */
-+	if (phy->select_value != USBHS_UGCTRL2_USB0SEL_HS_USB)
-+		return 0;
-+
-+	spin_lock_irqsave(&drv->lock, flags);
-+
-+	/* Power on USBHS PHY */
-+	value = readl(base + USBHS_UGCTRL);
-+	value &= ~USBHS_UGCTRL_PLLRESET;
-+	writel(value, base + USBHS_UGCTRL);
-+
-+	value = readw(base + USBHS_LPSTS);
-+	value |= USBHS_LPSTS_SUSPM;
-+	writew(value, base + USBHS_LPSTS);
-+
-+	for (i = 0; i < 20; i++) {
-+		value = readl(base + USBHS_UGSTS);
-+		if ((value & USBHS_UGSTS_LOCK) == USBHS_UGSTS_LOCK) {
-+			value = readl(base + USBHS_UGCTRL);
-+			value |= USBHS_UGCTRL_CONNECT;
-+			writel(value, base + USBHS_UGCTRL);
-+			goto out;
-+		}
-+		udelay(1);
-+	}
-+
-+	/* Timed out waiting for the PLL lock */
-+	err = -ETIMEDOUT;
-+
-+out:
-+	spin_unlock_irqrestore(&drv->lock, flags);
-+
-+	return err;
-+}
-+
-+static int rcar_gen2_phy_power_off(struct phy *p)
-+{
-+	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
-+	struct rcar_gen2_phy_driver *drv = phy->drv;
-+	void __iomem *base = drv->base;
-+	unsigned long flags;
-+	u32 value;
-+
-+	/* Skip if it's not USBHS */
-+	if (phy->select_value != USBHS_UGCTRL2_USB0SEL_HS_USB)
-+		return 0;
-+
-+	spin_lock_irqsave(&drv->lock, flags);
-+
-+	/* Power off USBHS PHY */
-+	value = readl(base + USBHS_UGCTRL);
-+	value &= ~USBHS_UGCTRL_CONNECT;
-+	writel(value, base + USBHS_UGCTRL);
-+
-+	value = readw(base + USBHS_LPSTS);
-+	value &= ~USBHS_LPSTS_SUSPM;
-+	writew(value, base + USBHS_LPSTS);
-+
-+	value = readl(base + USBHS_UGCTRL);
-+	value |= USBHS_UGCTRL_PLLRESET;
-+	writel(value, base + USBHS_UGCTRL);
-+
-+	spin_unlock_irqrestore(&drv->lock, flags);
-+
-+	return 0;
-+}
-+
-+static struct phy_ops rcar_gen2_phy_ops = {
-+	.init		= rcar_gen2_phy_init,
-+	.exit		= rcar_gen2_phy_exit,
-+	.power_on	= rcar_gen2_phy_power_on,
-+	.power_off	= rcar_gen2_phy_power_off,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static const struct of_device_id rcar_gen2_phy_match_table[] = {
-+	{ .compatible = "renesas,usb-phy-r8a7790" },
-+	{ .compatible = "renesas,usb-phy-r8a7791" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, rcar_gen2_phy_match_table);
-+
-+static struct phy *rcar_gen2_phy_xlate(struct device *dev,
-+				       struct of_phandle_args *args)
-+{
-+	struct rcar_gen2_phy_driver *drv;
-+
-+	drv = dev_get_drvdata(dev);
-+	if (!drv)
-+		return ERR_PTR(-EINVAL);
-+
-+	if (args->args[0] >= NUM_USB_CHANNELS || args->args[1] >= 2)
-+		return ERR_PTR(-ENODEV);
-+
-+	return drv->phys[args->args[0]][args->args[1]].phy;
-+}
-+
-+static int rcar_gen2_phy_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct rcar_gen2_phy_driver *drv;
-+	struct phy_provider *provider;
-+	struct resource *res;
-+	void __iomem *base;
-+	struct clk *clk;
-+	int i, j;
-+
-+	if (!dev->of_node) {
-+		dev_err(dev,
-+			"This driver is required to be instantiated from device tree\n");
-+		return -EINVAL;
-+	}
-+
-+	clk = devm_clk_get(dev, "usbhs");
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "Can't get USBHS clock\n");
-+		return PTR_ERR(clk);
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return PTR_ERR(base);
-+
-+	drv = devm_kzalloc(dev, sizeof(*drv), GFP_KERNEL);
-+	if (!drv)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&drv->lock);
-+
-+	drv->clk = clk;
-+	drv->base = base;
-+
-+	drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
-+	drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
-+	drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
-+	drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
-+	drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
-+	drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
-+	drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
-+	drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
-+
-+	for (i = 0; i < NUM_USB_CHANNELS; i++) {
-+		for (j = 0; j < 2; j++) {
-+			struct rcar_gen2_phy *phy = &drv->phys[i][j];
-+
-+			phy->phy = devm_phy_create(dev, &rcar_gen2_phy_ops,
-+						   NULL);
-+			if (IS_ERR(phy->phy)) {
-+				dev_err(dev,
-+					"Failed to create PHY for channel %d\n",
-+					i);
-+				return PTR_ERR(phy->phy);
-+			}
-+
-+			phy->drv = drv;
-+			phy_set_drvdata(phy->phy, phy);
-+		}
-+	}
-+
-+	provider = devm_of_phy_provider_register(dev, rcar_gen2_phy_xlate);
-+	if (IS_ERR(provider)) {
-+		dev_err(dev, "Failed to register PHY provider\n");
-+		return PTR_ERR(provider);
-+	}
-+
-+	dev_set_drvdata(dev, drv);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver rcar_gen2_phy_driver = {
-+	.driver = {
-+		.name		= "phy_rcar_gen2",
-+		.of_match_table	= rcar_gen2_phy_match_table,
-+	},
-+	.probe	= rcar_gen2_phy_probe,
-+};
-+
-+module_platform_driver(rcar_gen2_phy_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("Renesas R-Car Gen2 PHY");
-+MODULE_AUTHOR("Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>");
+-- 
+1.7.9.5
