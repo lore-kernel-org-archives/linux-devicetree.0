@@ -1,42 +1,36 @@
-From: Alexander Stein <alexanders83@web.de>
-Subject: [PATCH 2/4] ALSA: sound/atmel-ac97c.h: Remove unused flags from platform data
-Date: Sat, 12 Apr 2014 11:08:25 +0200
-Message-ID: <1397293707-26890-3-git-send-email-alexanders83@web.de>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzRdIEFMU0E6IHNvdW5kL2F0bWVsL2FjOTdjLmM6IEFk?=
+ =?UTF-8?B?ZCBkZXZpY2UgdHJlZSBzdXBwb3J0?=
+Date: Sat, 12 Apr 2014 14:31:28 +0400
+Message-ID: <1397298688.295112408__46361.1127612696$1397298884$gmane$org@f331.i.mail.ru>
 References: <1397293707-26890-1-git-send-email-alexanders83@web.de>
+ <1397293707-26890-4-git-send-email-alexanders83@web.de>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1397293707-26890-1-git-send-email-alexanders83@web.de>
+In-Reply-To: <1397293707-26890-4-git-send-email-alexanders83@web.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alexander Stein <alexanders83@web.de>
+To: =?UTF-8?B?QWxleGFuZGVyIFN0ZWlu?= <alexanders83@web.de>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh+dt@kernel.org>, =?UTF-8?B?UGF3ZWwgTW9sbA==?= <pawel.moll@arm.com>, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>, =?UTF-8?B?SWFuIENhbXBiZWxs?= <ijc+devicetree@hellion.org.uk>, =?UTF-8?B?S3VtYXIgR2FsYQ==?= <galak@codeaurora.org>, =?UTF-8?B?UmFuZHkgRHVubGFw?= <rdunlap@infradead.org>, =?UTF-8?B?QW5kcmV3IFZpY3Rvcg==?= <linux@maxim.org.za>, =?UTF-8?B?Tmljb2xhcyBGZXJyZQ==?= <nicolas.ferre@atmel.com>, =?UTF-8?B?SmVhbi1DaHJpc3RvcGhlIFBsYWduaW9sLVZpbGxhcmQ=?= <plagnioj@jcrosoft.com>, =?UTF-8?B?SmFyb3NsYXYgS3lzZWxh?= <perex@perex.cz>, =?UTF-8?B?VGFrYXNoaSBJd2Fp?= <tiwai@suse.de>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This platform data member is unsed, so remove it.
-
-Signed-off-by: Alexander Stein <alexanders83@web.de>
----
- include/sound/atmel-ac97c.h | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/include/sound/atmel-ac97c.h b/include/sound/atmel-ac97c.h
-index e6aabdb..00e6c289 100644
---- a/include/sound/atmel-ac97c.h
-+++ b/include/sound/atmel-ac97c.h
-@@ -23,7 +23,6 @@
-  * @reset_pin: GPIO pin wired to the reset input on the external AC97 codec,
-  *             optional to use, set to -ENODEV if not in use. AC97 layer will
-  *             try to do a software reset of the external codec anyway.
-- * @flags: Flags for which directions should be enabled.
-  *
-  * If the user do not want to use a DMA channel for playback or capture, i.e.
-  * only one feature is required on the board. The slave for playback or capture
-@@ -33,7 +32,6 @@
- struct ac97c_platform_data {
- 	struct dw_dma_slave	rx_dws;
- 	struct dw_dma_slave	tx_dws;
--	unsigned int 		flags;
- 	int			reset_pin;
- };
- 
--- 
-1.9.2
-
+U2F0LCAxMiBBcHIgMjAxNCAxMTowODoyNiArMDIwMCDQvtGCIEFsZXhhbmRlciBTdGVpbiA8YWxl
+eGFuZGVyczgzQHdlYi5kZT46Cj4gU2lnbmVkLW9mZi1ieTogQWxleGFuZGVyIFN0ZWluIDxhbGV4
+YW5kZXJzODNAd2ViLmRlPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9h
+dG1lbF9hYzk3Yy50eHQgICAgICB8IDIwICsrKysrKysrKwo+ICBzb3VuZC9hdG1lbC9hYzk3Yy5j
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8IDUyICsrKysrKysrKysrKysrKysrKysr
+LS0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA2OSBpbnNlcnRpb25zKCspLCAzIGRlbGV0aW9ucygtKQo+
+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Nv
+dW5kL2F0bWVsX2FjOTdjLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3Mvc291bmQvYXRtZWxfYWM5N2MudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3NvdW5kL2F0bWVsX2FjOTdjLnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAw
+NjQ0Cj4gaW5kZXggMDAwMDAwMC4uOTgzOTQwMwo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvYXRtZWxfYWM5N2MudHh0Cj4gQEAg
+LTAsMCArMSwyMCBAQAo+ICsqIEF0bWVsIEFDOTcgY29udHJvbGxlcgo+ICsKPiArUmVxdWlyZWQg
+cHJvcGVydGllczoKPiArICAtIGNvbXBhdGlibGU6ICJhdG1lbCxhdG1lbF9hYzk3YyIKPiArICAt
+IHJlZzogQWRkcmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQgZm9yIHRoZSBkZXZp
+Y2UKPiArICAtIGludGVycnVwdHM6IFNob3VsZCBjb250YWluIEFDOTcgaW50ZXJydXB0Cj4gKyAg
+LSBhdG1lbCxyZXNldC1waW46IEdQSU8gZm9yIHJlc2V0dGluZyB0aGUgY29kZWMKCldoeSBzdGFu
+ZGFyZCAiZ3Bpb3MiIHByb3BlcnR5IGNhbm5vdCBiZSB1c2VkIGhlcmU/CgotLS0KCg==
