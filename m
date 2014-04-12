@@ -1,59 +1,78 @@
-From: Alexander Shiyan <shc_work@mail.ru>
-Subject: [PATCH v2 2/2] ASoC: cirrus: clps711x: Add bindings
-	documentation for the CLPS711X DAI
-Date: Sat, 12 Apr 2014 10:17:34 +0400
-Message-ID: <1397283454-684-1-git-send-email-shc_work@mail.ru>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: alsa-devel@alsa-project.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Brown <broonie@kernel.org>, Alexander Shiyan <shc_work@mail.ru>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v2 3/3] video: clps711x: Add bindings documentation for CLPS711X framebuffer
+Date: Sat, 12 Apr 2014 10:55:34 +0400
+Message-ID: <1397285734-15243-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the devicetree documentation for the Cirrus Logic
-CLPS711X Digital Audio Interface (DAI).
+Add OF document for Cirrus Logic CLPS711X framebuffer driver.
 
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 ---
- .../bindings/sound/cirrus,clps711x-dai.txt           | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt
+ .../bindings/video/cirrus,clps711x-fb.txt          | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt b/Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt
+diff --git a/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
 new file mode 100644
-index 0000000..fd37774
+index 0000000..6fc3c6a
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cirrus,clps711x-dai.txt
-@@ -0,0 +1,20 @@
-+* Cirrus Logic CLPS711X Digital Audio Interface (DAI)
++++ b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
+@@ -0,0 +1,47 @@
++* Currus Logic CLPS711X Framebuffer
 +
 +Required properties:
-+- compatible:  Shall contain "cirrus,clps711x-dai".
-+- reg:         Should contain registers location and length.
-+- clocks:      phandle + clock specifier pair of the CPU PLL reference
-+               clock and (optionally) external MCLK reference clock.
-+- clock-names: The clock should be named "pll" for CPU PLL and "mclk"
-+               for external MCLK.
-+- interrupts:  Should contain DAI interrupt number.
++- compatible: Shall contain "cirrus,clps711x-fb".
++- reg       : Physical base address and length of the controller's registers +
++              location and size of the framebuffer memory.
++- clocks    : phandle + clock specifier pair of the FB reference clock.
++- display   : phandle to a display node as described in
++              Documentation/devicetree/bindings/video/display-timing.txt.
++              Additionally, the display node has to define properties:
++  - bits-per-pixel: Bits per pixel.
++  - ac-prescale   : LCD AC bias frequency. This frequency is the required
++                    AC bias frequency for a given manufacturer's LCD plate.
++  - cmap-invert   : Invert the color levels (Optional).
++
++Optional properties:
++- lcd-supply: Regulator for LCD supply voltage.
 +
 +Example:
-+	dai: dai@80002000 {
-+		#sound-dai-cells = <0>;
-+		compatible = "cirrus,ep7312-dai", "cirrus,clps711x-dai";
-+		reg = <0x80002000 0x604>;
-+		clocks = <&clks 3>, <&clk12288>;
-+		clock-names = "pll", "mclk";
-+		interrupts = <32>;
++	fb: fb@800002c0 {
++		compatible = "cirrus,ep7312-fb", "cirrus,clps711x-fb";
++		reg = <0x800002c0 0xd44>, <0x60000000 0xc000>;
++		clocks = <&clks 2>;
++		lcd-supply = <&reg5v0>;
++		display = <&display>;
++	};
++
++	display: display {
++		model = "320x240x4";
++		native-mode = <&timing0>;
++		bits-per-pixel = <4>;
++		ac-prescale = <17>;
++
++		display-timings {
++			timing0: 320x240 {
++				hactive = <320>;
++				hback-porch = <0>;
++				hfront-porch = <0>;
++				hsync-len = <0>;
++				vactive = <240>;
++				vback-porch = <0>;
++				vfront-porch = <0>;
++				vsync-len = <0>;
++				clock-frequency = <6500000>;
++			};
++		};
 +	};
 -- 
 1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
