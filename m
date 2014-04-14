@@ -1,71 +1,160 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 2/9] ARM: shmobile: r8a7790: add dma defines for sys
- and audio dmacs
-Date: Tue, 15 Apr 2014 07:51:51 +0900
-Message-ID: <20140414225151.GF22518@verge.net.au>
-References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
- <1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk>
- <6876261.h1xXmWF0f3@wuerfel>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 3/4] ALSA: sound/atmel/ac97c.c: Add device tree support
+Date: Tue, 15 Apr 2014 01:07:49 +0200
+Message-ID: <20140414230749.GA2967@piout.net>
+References: <1397293707-26890-1-git-send-email-alexanders83@web.de>
+ <1397293707-26890-4-git-send-email-alexanders83@web.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6876261.h1xXmWF0f3@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
+In-Reply-To: <1397293707-26890-4-git-send-email-alexanders83@web.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexander Stein <alexanders83@web.de>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 15, 2014 at 12:10:00AM +0200, Arnd Bergmann wrote:
-> On Monday 14 April 2014 22:35:05 Ben Dooks wrote:
-> > Add the DMA resource IDs for the R8A7790 Audio and SYS DMA controllers
-> > for use when specifying DMA handles.
-> > 
-> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> 
-> I really hate these lists in bindings:
-> 
-> > +#define R8A7790_DMA_SCIFA0_TX	(0x21)
-> > +#define R8A7790_DMA_SCIFA0_RX	(0x22)
-> > +#define R8A7790_DMA_SCIFA1_TX	(0x25)
-> > +#define R8A7790_DMA_SCIFA1_RX	(0x26)
-> > +#define R8A7790_DMA_SCIFA2_TX	(0x27)
-> > +#define R8A7790_DMA_SCIFA2_RX	(0x28)
-> > +
-> > +#define R8A7790_DMA_SCIFB0_TX	(0x3D)
-> > +#define R8A7790_DMA_SCIFB0_RX	(0x3E)
-> > +#define R8A7790_DMA_SCIFB1_TX	(0x19)
-> > +#define R8A7790_DMA_SCIFB1_RX	(0x1A)
-> > +#define R8A7790_DMA_SCIFB2_TX	(0x1D)
-> > +#define R8A7790_DMA_SCIFB2_RX	(0x1E)
-> 
-> These are all hardware constants, they should come from the data sheet and
-> get put into the dtsi file. The driver doesn't care what they are, and
-> the binding doesn't care, this only serves to make the binding less
-> generic.
+On 12/04/2014 at 11:08:26 +0200, Alexander Stein wrote :
 
-They serve to make the dts file significantly more readable and
-give some small level of compile-time checking to the dts file.
+Even if dead simple, please try to include a commit log.
 
-I am entirely in favour of them and its the direction that we
-have been moving in for shmobile bindings.
+> Signed-off-by: Alexander Stein <alexanders83@web.de>
+> ---
+>  .../devicetree/bindings/sound/atmel_ac97c.txt      | 20 +++++++++
+>  sound/atmel/ac97c.c                                | 52 ++++++++++++++++++++--
 
-> > +#define CHCR_RX_32BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
-> > +#define CHCR_TX_32BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
-> > +#define CHCR_RX_256BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
-> > +#define CHCR_TX_256BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
+You should separate the documentation from the rest of the patch. The
+patch adding documentation is actually the only one of the series that
+should go to devicetree@vger.kernel.org and the devicetree maintainers.
+
+>  2 files changed, 69 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/atmel_ac97c.txt
 > 
-> For these, it's different: There is nothing wrong putting macros like
-> these into DT, because they will be the same across all SoCs.
+> diff --git a/Documentation/devicetree/bindings/sound/atmel_ac97c.txt b/Documentation/devicetree/bindings/sound/atmel_ac97c.txt
+> new file mode 100644
+> index 0000000..9839403
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/atmel_ac97c.txt
+> @@ -0,0 +1,20 @@
+> +* Atmel AC97 controller
+> +
+> +Required properties:
+> +  - compatible: "atmel,atmel_ac97c"
+> +  - reg: Address and length of the register set for the device
+> +  - interrupts: Should contain AC97 interrupt
+> +  - atmel,reset-pin: GPIO for resetting the codec
+> +Optional properties:
+> +  - pinctrl-names, pinctrl-0: Please refer to pinctrl-bindings.txt
+> +
+> +Example:
+> +sound@fffa0000 {
+> +	compatible = "atmel,atmel_ac97c";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_ac97>;
+> +	reg = <0xfffa0000 0x4000>;
+> +	interrupts = <18 IRQ_TYPE_LEVEL_HIGH 5>;
+> +
+> +	atmel,reset-pin = <&pioC 29 GPIO_ACTIVE_LOW>;
+> +};
+> diff --git a/sound/atmel/ac97c.c b/sound/atmel/ac97c.c
+> index 9a13875..b84432b 100644
+> --- a/sound/atmel/ac97c.c
+> +++ b/sound/atmel/ac97c.c
+> @@ -22,6 +22,9 @@
+>  #include <linux/gpio.h>
+>  #include <linux/types.h>
+>  #include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_device.h>
+>  
+>  #include <sound/core.h>
+>  #include <sound/initval.h>
+> @@ -901,6 +904,47 @@ static void atmel_ac97c_reset(struct atmel_ac97c *chip)
+>  	}
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id atmel_ac97c_dt_ids[] = {
+> +	{ .compatible = "atmel,atmel_ac97c", },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, atmel_ac97c_dt_ids);
+> +
+> +static struct ac97c_platform_data *atmel_ac97c_probe_dt(struct device *dev)
+> +{
+> +	struct ac97c_platform_data *pdata;
+> +	struct device_node *node = dev->of_node;
+> +	const struct of_device_id *match;
+> +
+> +	if (!node) {
+> +		dev_err(dev, "Device does not have associated DT data\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+> +
+> +	match = of_match_device(atmel_ac97c_dt_ids, dev);
+> +	if (!match) {
+> +		dev_err(dev, "Unknown device model\n");
+> +		return ERR_PTR(-EINVAL);
+> +	}
+
+You probably don't need that, it will always match. You would need it if
+you were actually using match (for example to get the .data member).
+
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	pdata->reset_pin = of_get_named_gpio(dev->of_node,
+> +					     "atmel,reset-pin", 0);
+> +
+> +	return pdata;
+> +}
+> +#else
+> +static struct ac97c_platform_data *atmel_ac97c_probe_dt(struct device *dev)
+> +{
+> +	dev_err(dev, "no platform data defined\n");
+> +	return ERR_PTR(-ENXIO);
+> +}
+> +#endif
+> +
+>  static int atmel_ac97c_probe(struct platform_device *pdev)
+>  {
+>  	struct snd_card			*card;
+> @@ -921,10 +965,11 @@ static int atmel_ac97c_probe(struct platform_device *pdev)
+>  		return -ENXIO;
+>  	}
+>  
+> -	pdata = pdev->dev.platform_data;
+> +	pdata = dev_get_platdata(&pdev->dev);
+>  	if (!pdata) {
+> -		dev_dbg(&pdev->dev, "no platform data\n");
+> -		return -ENXIO;
+> +		pdata = atmel_ac97c_probe_dt(&pdev->dev);
+> +		if (IS_ERR(pdata))
+> +			return PTR_ERR(pdata);
+>  	}
+>  
+>  	irq = platform_get_irq(pdev, 0);
+> @@ -1208,6 +1253,7 @@ static struct platform_driver atmel_ac97c_driver = {
+>  		.name	= "atmel_ac97c",
+>  		.owner	= THIS_MODULE,
+>  		.pm	= ATMEL_AC97C_PM_OPS,
+> +		.of_match_table = of_match_ptr(atmel_ac97c_dt_ids),
+>  	},
+>  };
+>  module_platform_driver(atmel_ac97c_driver);
+> -- 
+> 1.9.2
 > 
-> However, as I mentioned in my reply to patch 8, I don't think that information
-> belongs into DT, and it should be in the device driver instead, because
-> that already knows the direction and transfer width and has to set it
-> through the slave config interface anyway.
 > 
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
