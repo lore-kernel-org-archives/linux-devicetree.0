@@ -1,64 +1,71 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 2/4] ALSA: sound/atmel-ac97c.h: Remove unused flags from
- platform data
-Date: Tue, 15 Apr 2014 00:51:29 +0200
-Message-ID: <20140414225129.GZ2967@piout.net>
-References: <1397293707-26890-1-git-send-email-alexanders83@web.de>
- <1397293707-26890-3-git-send-email-alexanders83@web.de>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/9] ARM: shmobile: r8a7790: add dma defines for sys
+ and audio dmacs
+Date: Tue, 15 Apr 2014 07:51:51 +0900
+Message-ID: <20140414225151.GF22518@verge.net.au>
+References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
+ <1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk>
+ <6876261.h1xXmWF0f3@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1397293707-26890-3-git-send-email-alexanders83@web.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Alexander Stein <alexanders83@web.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+In-Reply-To: <6876261.h1xXmWF0f3@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2014 at 11:08:25 +0200, Alexander Stein wrote :
-> This platform data member is unsed, so remove it.
-                                 ^
-                                 another typo :)
+On Tue, Apr 15, 2014 at 12:10:00AM +0200, Arnd Bergmann wrote:
+> On Monday 14 April 2014 22:35:05 Ben Dooks wrote:
+> > Add the DMA resource IDs for the R8A7790 Audio and SYS DMA controllers
+> > for use when specifying DMA handles.
+> > 
+> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
 > 
-> Signed-off-by: Alexander Stein <alexanders83@web.de>
-I would say that it doesn't matter anymore but no code is better tahn
-dead code.
+> I really hate these lists in bindings:
+> 
+> > +#define R8A7790_DMA_SCIFA0_TX	(0x21)
+> > +#define R8A7790_DMA_SCIFA0_RX	(0x22)
+> > +#define R8A7790_DMA_SCIFA1_TX	(0x25)
+> > +#define R8A7790_DMA_SCIFA1_RX	(0x26)
+> > +#define R8A7790_DMA_SCIFA2_TX	(0x27)
+> > +#define R8A7790_DMA_SCIFA2_RX	(0x28)
+> > +
+> > +#define R8A7790_DMA_SCIFB0_TX	(0x3D)
+> > +#define R8A7790_DMA_SCIFB0_RX	(0x3E)
+> > +#define R8A7790_DMA_SCIFB1_TX	(0x19)
+> > +#define R8A7790_DMA_SCIFB1_RX	(0x1A)
+> > +#define R8A7790_DMA_SCIFB2_TX	(0x1D)
+> > +#define R8A7790_DMA_SCIFB2_RX	(0x1E)
+> 
+> These are all hardware constants, they should come from the data sheet and
+> get put into the dtsi file. The driver doesn't care what they are, and
+> the binding doesn't care, this only serves to make the binding less
+> generic.
 
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> ---
->  include/sound/atmel-ac97c.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/sound/atmel-ac97c.h b/include/sound/atmel-ac97c.h
-> index e6aabdb..00e6c289 100644
-> --- a/include/sound/atmel-ac97c.h
-> +++ b/include/sound/atmel-ac97c.h
-> @@ -23,7 +23,6 @@
->   * @reset_pin: GPIO pin wired to the reset input on the external AC97 codec,
->   *             optional to use, set to -ENODEV if not in use. AC97 layer will
->   *             try to do a software reset of the external codec anyway.
-> - * @flags: Flags for which directions should be enabled.
->   *
->   * If the user do not want to use a DMA channel for playback or capture, i.e.
->   * only one feature is required on the board. The slave for playback or capture
-> @@ -33,7 +32,6 @@
->  struct ac97c_platform_data {
->  	struct dw_dma_slave	rx_dws;
->  	struct dw_dma_slave	tx_dws;
-> -	unsigned int 		flags;
->  	int			reset_pin;
->  };
->  
-> -- 
-> 1.9.2
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+They serve to make the dts file significantly more readable and
+give some small level of compile-time checking to the dts file.
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+I am entirely in favour of them and its the direction that we
+have been moving in for shmobile bindings.
+
+> > +#define CHCR_RX_32BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
+> > +#define CHCR_TX_32BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
+> > +#define CHCR_RX_256BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
+> > +#define CHCR_TX_256BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
+> 
+> For these, it's different: There is nothing wrong putting macros like
+> these into DT, because they will be the same across all SoCs.
+> 
+> However, as I mentioned in my reply to patch 8, I don't think that information
+> belongs into DT, and it should be in the device driver instead, because
+> that already knows the direction and transfer width and has to set it
+> through the slave config interface anyway.
+> 
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
