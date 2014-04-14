@@ -1,90 +1,42 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: [PATCH v2 9/9] DMA: shdma: wire r8a7790
-Date: Mon, 14 Apr 2014 22:35:12 +0100
-Message-ID: <1397511312-4845-10-git-send-email-ben.dooks@codethink.co.uk>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: [PATCH v2 7/9] ARM: shmobile: lager: enable sysdma units 0 and 1
+Date: Mon, 14 Apr 2014 22:35:10 +0100
+Message-ID: <1397511312-4845-8-git-send-email-ben.dooks@codethink.co.uk>
 References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
-Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397511312-4845-1-git-send-email-ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, g.liakhovetski@gmx.d, kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for R8A7790 with new device tree code.
+Add the new sysdma units to the lager board.
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 ---
- drivers/dma/sh/shdmac.c | 32 +++++++++++++++++++++++++-------
- 1 file changed, 25 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/r8a7790-lager.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/drivers/dma/sh/shdmac.c b/drivers/dma/sh/shdmac.c
-index 0d765c0..eb57cf2 100644
---- a/drivers/dma/sh/shdmac.c
-+++ b/drivers/dma/sh/shdmac.c
-@@ -342,11 +342,21 @@ static const struct sh_dmae_slave_config *dmae_find_slave(
- 			if (cfg->slave_id == match)
- 				return cfg;
- 	} else {
--		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
--			if (cfg->mid_rid == match) {
-+		if (!pdata->slave) {
-+			cfg = shdma_find_slave_of(shdev, match, &i);
-+			if (cfg) {
- 				sh_chan->shdma_chan.slave_id = i;
- 				return cfg;
- 			}
-+
-+			return NULL;
-+		} else
-+			for (i = 0, cfg = pdata->slave; i < pdata->slave_num;
-+			     i++, cfg++)
-+				if (cfg->mid_rid == match) {
-+					sh_chan->shdma_chan.slave_id = i;
-+					return cfg;
-+				}
- 	}
- 
- 	return NULL;
-@@ -677,7 +687,8 @@ static const struct shdma_ops sh_dmae_shdma_ops = {
+diff --git a/arch/arm/boot/dts/r8a7790-lager.dts b/arch/arm/boot/dts/r8a7790-lager.dts
+index 26a9010..3b4f59c 100644
+--- a/arch/arm/boot/dts/r8a7790-lager.dts
++++ b/arch/arm/boot/dts/r8a7790-lager.dts
+@@ -214,3 +214,11 @@
+ 	cd-gpios = <&gpio3 22 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
  };
- 
- static const struct of_device_id sh_dmae_of_match[] = {
--	{.compatible = "renesas,shdma-r8a73a4", .data = r8a73a4_shdma_devid,},
-+	{ .compatible = "renesas,shdma-r8a73a4", .data = r8a73a4_shdma_devid },
-+	{ .compatible = "renesas,dma-r8a7790", .data = &shdma_arm_info },
- 	{}
- };
- MODULE_DEVICE_TABLE(of, sh_dmae_of_match);
-@@ -693,10 +704,17 @@ static int sh_dmae_probe(struct platform_device *pdev)
- 	struct dma_device *dma_dev;
- 	struct resource *chan, *dmars, *errirq_res, *chanirq_res;
- 
--	if (pdev->dev.of_node)
--		pdata = of_match_device(sh_dmae_of_match, &pdev->dev)->data;
--	else
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
 +
-+		match = of_match_device(sh_dmae_of_match, &pdev->dev);
-+		if (match->data == r8a73a4_shdma_devid)
-+			pdata = match->data;
-+		else
-+			pdata = sh_dma_probe_of(pdev, match);
-+	} else {
- 		pdata = dev_get_platdata(&pdev->dev);
-+	}
- 
- 	/* get platform data */
- 	if (!pdata || !pdata->channel_num)
-@@ -745,7 +763,7 @@ static int sh_dmae_probe(struct platform_device *pdev)
- 
- 	if (!pdata->slave_only)
- 		dma_cap_set(DMA_MEMCPY, dma_dev->cap_mask);
--	if (pdata->slave && pdata->slave_num)
-+	if ((pdata->slave && pdata->slave_num) || pdev->dev.of_node)
- 		dma_cap_set(DMA_SLAVE, dma_dev->cap_mask);
- 
- 	/* Default transfer size of 32 bytes requires 32-byte alignment */
++&sysdma0 {
++	status = "okay";
++};
++
++&sysdma1 {
++	status = "okay";
++};
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
