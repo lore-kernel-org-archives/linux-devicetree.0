@@ -1,48 +1,72 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [alsa-devel] [PATCH RFC v2 0/2] Fix simple-card *-master DT parameter
- handling
-Date: Mon, 14 Apr 2014 12:53:43 +0300
-Message-ID: <534BB027.8000808@ti.com>
-References: <cover.1394451329.git.jsarha@ti.com>	<877g80rzgg.wl%kuninori.morimoto.gx@gmail.com>	<CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com>	<87wqg0q74d.wl%kuninori.morimoto.gx@gmail.com>	<5320286D.6080009@ti.com> <878ur81ou7.wl%kuninori.morimoto.gx@gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 0/4] ARM: sunxi: dt: Misc. fixes
+Date: Mon, 14 Apr 2014 11:57:58 +0200
+Message-ID: <20140414095758.GD28585@lukather>
+References: <1397389265-22288-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <878ur81ou7.wl%kuninori.morimoto.gx@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
-Cc: Richard Lee <superlibj8301@gmail.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, peter.ujfalusi@ti.com, broonie@kernel.org, bcousson@baylibre.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="89VDYHnQ8ukgENkm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJXDV2NAKGQE5C2FUUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397389265-22288-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/14/2014 08:07 AM, Kuninori Morimoto wrote:
->
-> Hi Jyri, Mark
->
-...
-> Could you please teach me current status of this patch ?
+
+--89VDYHnQ8ukgENkm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
-This patch-set was never merged as such. Instead there is another 
-patch-set that has been applied by Mark to cover this issue [1]. The 
-patch maintains backward compatibility, with the Nicolin Chen's patch 
-[2]. In other words, old style "bitclock-master" and "frame-master" 
-boolean parameters are read from the codec node if they can not be found 
-from the top level node. The backward compatibility does not apply to 
-multi-link [3] configurations.
 
-Best regards,
-Jyri
+On Sun, Apr 13, 2014 at 01:41:01PM +0200, Hans de Goede wrote:
+> Hi Maxime,
+>=20
+> Here is are 4 misc. dts fixes for sunxi.
+>=20
+> Regards,
+>=20
+> Hans
 
+Applied all of them to sunxi/dt-for-3.16.
 
-[1] 
-http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074717.html
+Thanks!
+Maxime
 
-[2] 
-http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074219.html
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-[3] 
-http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074592.html
+--89VDYHnQ8ukgENkm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-ps. The discussions that lead to the current solution can be found here:
-http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074388.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
+iQIcBAEBAgAGBQJTS7EmAAoJEBx+YmzsjxAg63UP/A3ghcJscvc3zInkb8W6xekx
+y0ogUV48ysX/E8uRceBm/m07rSqz+WOKsPZ+tgLcp+MhWPEiTrkc0jnOTEr8NYNF
+2AziJ121QC1mjHeg6k3xcuZCIrC4O4UHZO1E8VEqh8dtP7n9farXsGwhlP9FuIAw
+uLaR0ciCV5Zw/gTugFqj74TYFQGUH8hJQTjpWVh1uHC0muTEpFT90T3cch1FQmqp
+JzcJgxcjvAsuHDeJMeX9YbJE04VJVmgWtIlN+DaT2NLDvY2hWRfqNUlMNxWT6Jae
+QENAmuvmzdXmw+lDxgnCrbO4SvSLWn0VaivWUTC9keIQYnBxETZ3VI53nzk9RCeJ
+AaMKqCrOHy003gvlazPpSPj0Wm+BToXUpV29yAoX4p7RlYbTGgx/e0UNp0T3rdHl
+eqoW4PcIGP2muuezj8JsyNsurDI1hu+pYkSPo/vcjpn9Xwn0DMZjiGH/uD26jC+I
+w/o0A1l7PP7DvbBnMvGyzLMi0xTeAy7Nep786jQJAEFH14FWFAGcBDTIKN+hXc5L
+Wpx+cC1rjyJ15wi0CISYVIA2muHLf5RzlU3XX8/Zeeek1WNCNCK2gwUxHJsqV/kT
+zqAeHOkR88I+sy6ZWQR2DGPXLbD03sYozPvCBkS0BmnxuUGprbZ7UeGQHXuiMSOT
+gftstYwOMgT3kgavMCrP
+=HcsJ
+-----END PGP SIGNATURE-----
+
+--89VDYHnQ8ukgENkm--
