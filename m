@@ -1,68 +1,125 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/5] ARM: EXYNOS5420: Add IO mapping for non-secure SYSRAM
-Date: Mon, 14 Apr 2014 12:59:11 +0100
-Message-ID: <20140414115910.GD3844@e103592.cambridge.arm.com>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
- <1397239311-27717-4-git-send-email-a.kesavan@samsung.com>
- <20140414112520.GC3844@e103592.cambridge.arm.com>
- <11327275.EJLfDGG21r@wuerfel>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Mon, 14 Apr 2014 17:35:43 +0530
+Message-ID: <CAFp+6iGxhfgZRPysMuj5nALEQBbFXnAXhtDPpbf3P42LDHqFxg@mail.gmail.com>
+References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
+	<1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
+	<534529B2.2020107@samsung.com>
+	<534BCC91.8090108@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <11327275.EJLfDGG21r@wuerfel>
+In-Reply-To: <534BCC91.8090108-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 14, 2014 at 01:47:56PM +0200, Arnd Bergmann wrote:
-> On Monday 14 April 2014 12:25:20 Dave Martin wrote:
-> > On Fri, Apr 11, 2014 at 11:31:49PM +0530, Abhilash Kesavan wrote:
-> > > On the Exynos5420 non-secure SYSRAM is used for secondary CPU bring-up,
-> > > so add a mapping for it.
-> > > 
-> > > Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > ---
-> > >  arch/arm/mach-exynos/exynos.c           |   11 +++++++++++
-> > >  arch/arm/mach-exynos/include/mach/map.h |    1 +
-> > >  2 files changed, 12 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-> > > index b32a907..b1cf9d5 100644
-> > > --- a/arch/arm/mach-exynos/exynos.c
-> > > +++ b/arch/arm/mach-exynos/exynos.c
-> > > @@ -159,6 +159,15 @@ static struct map_desc exynos5250_iodesc[] __initdata = {
-> > >       },
-> > >  };
-> > >  
-> > > +static struct map_desc exynos5420_iodesc[] __initdata = {
-> > > +     {
-> > > +             .virtual        = (unsigned long)S5P_VA_SYSRAM_NS,
-> > > +             .pfn            = __phys_to_pfn(EXYNOS5420_PA_SYSRAM_NS),
-> > > +             .length         = SZ_4K,
-> > > +             .type           = MT_DEVICE,
-> > > +     },
-> > > +};
-> > > +
-> > 
-> > Regarding Arnd's NAK in
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/246936.html,
-> > this looks like another instance of the same thing.
-> > 
-> > Arnd, what was your preferred solution?  Should this be described in DT?
-> 
-> Yes. There are already patches on the list to do this right.
+Hi Kishon,
 
-This is http://www.spinics.net/lists/linux-samsung-soc/msg27647.html,
-right?
 
-If so, it looks like exynos5420 should definitely follow the same
-approach.
+On Mon, Apr 14, 2014 at 5:24 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
+>
+> On Wednesday 09 April 2014 04:36 PM, Tomasz Figa wrote:
+>> Hi Vivek,
+>>
+>> Please see my comments inline.
+>>
+>> On 08.04.2014 16:36, Vivek Gautam wrote:
+>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+>>> The new driver uses the generic PHY framework and will interact
+>>> with DWC3 controller present on Exynos5 series of SoCs.
+>>> Thereby, removing old phy-samsung-usb3 driver and related code
+>>> used untill now which was based on usb/phy framework.
+>>>
+>>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>   .../devicetree/bindings/phy/samsung-phy.txt        |   42 ++
+>>>   drivers/phy/Kconfig                                |   11 +
+>>>   drivers/phy/Makefile                               |    1 +
+>>>   drivers/phy/phy-exynos5-usbdrd.c                   |  668 ++++++++++++++++++++
+>>>   4 files changed, 722 insertions(+)
+>>>   create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
+>>
+>> [snip]
+>>
+>>> +    Additional clock required for Exynos5420:
+>>> +    - usb30_sclk_100m: Additional special clock used for PHY operation
+>>> +               depicted as 'sclk_usbphy30' in CMU of Exynos5420.
+>>
+>> Are you sure this isn't simply a gate for the ref clock, as it can be found on
+>> another SoC that is not upstream yet? I don't have documentation for Exynos
+>> 5420 so I can't tell, but I'd like to ask you to recheck this.
+>>
+>>> +- samsung,syscon-phandle: phandle for syscon interface, which is used to
+>>> +              control pmu registers for power isolation.
+>>> +- samsung,pmu-offset: phy power control register offset to
+>>> pmu-system-controller
+>>> +              base.
+>>> +- #phy-cells : from the generic PHY bindings, must be 1;
+>>> +
+>>> +For "samsung,exynos5250-usbdrd-phy" and "samsung,exynos5420-usbdrd-phy"
+>>> +compatible PHYs, the second cell in the PHY specifier identifies the
+>>> +PHY id, which is interpreted as follows:
+>>> +  0 - UTMI+ type phy,
+>>> +  1 - PIPE3 type phy,
+>>> +
+>>> +Example:
+>>> +    usb3_phy: usbphy@12100000 {
+>>> +        compatible = "samsung,exynos5250-usbdrd-phy";
+>>> +        reg = <0x12100000 0x100>;
+>>> +        clocks = <&clock 286>, <&clock 1>;
+>>> +        clock-names = "phy", "usb3phy_refclk";
+>>
+>> Binding description above doesn't mention "usb3phy_refclk" entry.
+>>
+>>> +        samsung,syscon-phandle = <&pmu_syscon>;
+>>> +        samsung,pmu-offset = <0x704>;
+>>> +        #phy-cells = <1>;
+>>> +    };
+>>
+>> [snip]
+>>
+>>> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-usbdrd.c
+>>> new file mode 100644
+>>> index 0000000..ff54a7c
+>>> --- /dev/null
+>>> +++ b/drivers/phy/phy-exynos5-usbdrd.c
+>>
+>> [snip]
+>>
+>>> +static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
+>>> +{
+>>> +    struct device *dev = &pdev->dev;
+>>> +    struct device_node *node = dev->of_node;
+>>> +    struct exynos5_usbdrd_phy *phy_drd;
+>>> +    struct phy_provider *phy_provider;
+>>> +    struct resource *res;
+>>> +    const struct of_device_id *match;
+>>> +    const struct exynos5_usbdrd_phy_drvdata *drv_data;
+>>> +    struct regmap *reg_pmu;
+>>> +    u32 pmu_offset;
+>>> +    int i;
+>>> +
+>>> +    /*
+>>> +     * Exynos systems are completely DT enabled,
+>>> +     * so lets not have any platform data support for this driver.
+>>> +     */
+>>> +    if (!node) {
+>>> +        dev_err(dev, "no device node found\n");
+>>
+>> This error message is not very meaningful. I'd rather use something like "This
+>> driver can be only instantiated using Device Tree".
+>
+> how about just adding depend_on OF in Kconfig?
 
-Cheers
----Dave
+Already added a depend on 'OF'. Copying below the part of Kconfig in this patch.
+
+  config PHY_EXYNOS5_USBDRD
+         tristate "Exynos5 SoC series USB DRD PHY driver"
+         depends on ARCH_EXYNOS5 && OF
+         depends on HAS_IOMEM
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
