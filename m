@@ -1,69 +1,32 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH 6/6] ARM: dts: sh: drop address cells from GIC node
-Date: Mon, 14 Apr 2014 10:17:29 +0900
-Message-ID: <20140414011726.GA22411@verge.net.au>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/6] ARM: dts: vybrid: drop address and size cells from
+ GIC node
+Date: Mon, 14 Apr 2014 10:14:54 +0800
+Message-ID: <20140414021451.GA2344@dragon>
 References: <1397228380-7352-1-git-send-email-l.stach@pengutronix.de>
- <1397228380-7352-6-git-send-email-l.stach@pengutronix.de>
+ <1397228380-7352-4-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397228380-7352-6-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1397228380-7352-4-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 11, 2014 at 04:59:40PM +0200, Lucas Stach wrote:
+On Fri, Apr 11, 2014 at 04:59:38PM +0200, Lucas Stach wrote:
 > This is likely a copy-and-paste error from the
 > ARM GIC documentation, that has already been fixed.
 > 
 > address-cells should have been set to 0, as with the size
 > cells. As having those properties set to 0 is the
 > same thing as not specifying them, drop them completely.
-
-Hi Lucas,
-
-Please split this patch into two, one for r8a7740 with the prefix
-ARM: shmobile: r8a7740:
-
-And one for sh73a0 with the prefix
-ARM: shmobile: sh73a0:
-
 > 
 > Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/r8a7740.dtsi | 1 -
->  arch/arm/boot/dts/sh73a0.dtsi  | 1 -
->  2 files changed, 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
-> index 8280884bfa59..2551e9438d35 100644
-> --- a/arch/arm/boot/dts/r8a7740.dtsi
-> +++ b/arch/arm/boot/dts/r8a7740.dtsi
-> @@ -28,7 +28,6 @@
->  	gic: interrupt-controller@c2800000 {
->  		compatible = "arm,cortex-a9-gic";
->  		#interrupt-cells = <3>;
-> -		#address-cells = <1>;
->  		interrupt-controller;
->  		reg = <0xc2800000 0x1000>,
->  		      <0xc2000000 0x1000>;
-> diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-> index b7bd3b9a6753..5ecf552e1c00 100644
-> --- a/arch/arm/boot/dts/sh73a0.dtsi
-> +++ b/arch/arm/boot/dts/sh73a0.dtsi
-> @@ -34,7 +34,6 @@
->  	gic: interrupt-controller@f0001000 {
->  		compatible = "arm,cortex-a9-gic";
->  		#interrupt-cells = <3>;
-> -		#address-cells = <1>;
->  		interrupt-controller;
->  		reg = <0xf0001000 0x1000>,
->  		      <0xf0000100 0x100>;
-> -- 
-> 1.9.1
-> 
+
+Applied, thanks.
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
