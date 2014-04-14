@@ -1,105 +1,44 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [PATCH v2 2/5] Power: reset: add bindings for keystone reset driver
-Date: Mon, 14 Apr 2014 20:41:20 +0300
-Message-ID: <1397497283-16391-3-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [rtc-linux] [PATCH] rtc: Fix suspend/resume for APM X-Gene SoC
+ RTC driver
+Date: Mon, 14 Apr 2014 10:52:41 -0700
+Message-ID: <CAPw-ZTn1qjA+1n62HhwphnSCTuqDMEE+adYeJ_L9c8n-Yqmtog@mail.gmail.com>
+References: <1397259218-20494-1-git-send-email-lho@apm.com>
+	<20140414172134.GB25182@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, santosh.shilimkar@ti.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, olof@lixom.net, ivan.khoronzhuk@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140414172134.GB25182-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This node is intended to allow SoC reset in case of software reset
-or appropriate watchdogs.
+Hi,
 
-The Keystone SoCs can contain up to 4 watchdog timers to reset
-SoC. Each watchdog timer event input is connected to the Reset Mux
-block. The Reset Mux block can be configured to cause reset or not.
+>> -     clk_prepare_enable(pdata->clk);
+>> +     ret = clk_prepare_enable(pdata->clk);
+>> +     if (ret)
+>> +             return ret;
+>>
+>>       /* Turn on the clock and the crystal */
+>>       writel(RTC_CCR_EN, pdata->csr_base + RTC_CCR);
+>>
+>> -     device_init_wakeup(&pdev->dev, 1);
+>> +     ret = device_init_wakeup(&pdev->dev, 1);
+>> +     if (ret)
+>> +             return ret;
+>>
+> If the init fails you should unprepare (though I suspect the same issue
+> applies to other things in the probe function anyway).  If you fix that
+> then feel free to add:
+>
 
-Additionally soft or hard reset can be configured.
+Okay... This is the only place missed. I don't see issue with other
+locations. I will post another version soon.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- .../bindings/power/reset/keystone-reset.txt        | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-
-diff --git a/Documentation/devicetree/bindings/power/reset/keystone-reset.txt b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-new file mode 100644
-index 0000000..5ad5883
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-@@ -0,0 +1,59 @@
-+* Device tree bindings for Texas Instruments keystone reset
-+
-+This node is intended to allow SoC reset in case of software reset
-+of selected watchdogs.
-+
-+The Keystone SoCs can contain up to 4 watchdog timers to reset
-+SoC. Each watchdog timer event input is connected to the Reset Mux
-+block. The Reset Mux block can be configured to cause reset or not.
-+
-+Additionally soft or hard reset can be configured.
-+
-+Required properties:
-+
-+- compatible:		ti,keystone-reset
-+
-+- reg:			Contains offset/length value for mux registers.
-+
-+			reg = <0x23100e4 0x10>,
-+			      <0x2620328 0x10>;
-+
-+-reg-names:		Contains two ranges "pllregs" and "muxregs".
-+			"pllregs" - PLL reset control regs: RSTYPE, RSCTRL,
-+			RSCFG, RSISO.
-+			"muxregs" - mux block registers for all watchdogs.
-+
-+Optional properties:
-+
-+- ti,soft-reset:	Boolean option indicating soft reset.
-+			By default hard reset is used.
-+
-+- ti,wdt_list:		WDT list that can cause SoC reset.
-+			The list in format: <0>, <2>;
-+			Begins from 0 to 3, as keystone can contain up
-+			to 4 SoC reset watchdogs.
-+
-+Example 1:
-+Setup keystone reset so that in case software reset or
-+WDT1 is triggered it issues hard reset for SoC.
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	reg = <0x23100e4 0x10>,
-+	      <0x2620328 0x10>;
-+	reg-names = "pllregs", "muxregs";
-+	ti,wdt_list = <0>;
-+};
-+
-+Example 2:
-+Setup keystone reset so that in case of software reset or
-+WDT1 or WDT3 is triggered it issues soft reset for SoC.
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	reg = <0x23100e4 0x10>,
-+	      <0x2620328 0x10>;
-+	reg-names = "pllregs", "muxregs";
-+	ti,wdt_list = <0>, <2>;
-+	ti,soft-reset;
-+};
--- 
-1.8.3.2
+-Loc
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
