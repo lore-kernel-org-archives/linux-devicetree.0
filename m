@@ -1,72 +1,194 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/4] ARM: sunxi: dt: Misc. fixes
-Date: Mon, 14 Apr 2014 11:57:58 +0200
-Message-ID: <20140414095758.GD28585@lukather>
-References: <1397389265-22288-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: exynos: Add MCPM call-back functions
+Date: Mon, 14 Apr 2014 11:41:29 +0100
+Message-ID: <20140414104116.GA3844@e103592.cambridge.arm.com>
+References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
+ <1397239311-27717-6-git-send-email-a.kesavan@samsung.com>
+ <alpine.LFD.2.11.1404111426510.980@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="89VDYHnQ8ukgENkm"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBJXDV2NAKGQE5C2FUUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397389265-22288-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <alpine.LFD.2.11.1404111426510.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Apr 11, 2014 at 04:23:04PM -0400, Nicolas Pitre wrote:
+> On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
+> 
+> > Add machine-dependent MCPM call-backs for Exynos5420. These are used
+> > to power up/down the secondary CPUs during boot, shutdown, s2r and
+> > switching.
+> > 
+> > Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> See comments inline.
 
---89VDYHnQ8ukgENkm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I won't duplicate Nico's review, but I have a couple of extra comments/
+questions, below.
 
-Hi,
+[...]
 
-On Sun, Apr 13, 2014 at 01:41:01PM +0200, Hans de Goede wrote:
-> Hi Maxime,
->=20
-> Here is are 4 misc. dts fixes for sunxi.
->=20
-> Regards,
->=20
-> Hans
+> > diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
+> > new file mode 100644
+> > index 0000000..46d4968
+> > --- /dev/null
+> > +++ b/arch/arm/mach-exynos/mcpm-exynos.c
+> > @@ -0,0 +1,444 @@
 
-Applied all of them to sunxi/dt-for-3.16.
+[...]
 
-Thanks!
-Maxime
+> > +static void exynos_cluster_power_control(unsigned int cluster, int enable)
+> > +{
+> > +	unsigned long timeout = jiffies + msecs_to_jiffies(20);
+> > +	unsigned int status, val = EXYNOS_CORE_LOCAL_PWR_DIS;
+> > +
+> > +	if (enable)
+> > +		val = EXYNOS_CORE_LOCAL_PWR_EN;
+> > +
+> > +	status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
+> > +	if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
+> > +		return;
+> > +
+> > +	__raw_writel(val, EXYNOS_COMMON_CONFIGURATION(cluster));
+> > +	/* Wait until cluster power control is applied */
+> > +	while (time_before(jiffies, timeout)) {
+> > +		status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
+> > +
+> > +		if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
+> > +			return;
+> > +
+> > +		cpu_relax();
+> > +	}
+> > +	pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
+> > +		enable ? "on" : "off");
+> 
+> You should not have to wait for the power status to change here.  
+> Simply signaling the desired state and returning is all that is 
+> expected.  And because IRQs are turned off, it is likely that 
+> time_before(jiffies, timeout) will always be true anyway because jiffies 
+> are not updated if there is no other CPU to service the timer interrupt.
+> 
+> The actual power status should be polled for in the mcpm_finish() 
+> method only.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Depending on the power controller, it might be possible for writes to
+the controller to be lost or not acted upon, if a previous change is
+still pending.
 
---89VDYHnQ8ukgENkm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Does this issue apply to the exynos power controller?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+If this is the case, it might be necessary to ensure before a power-up
+request, that the power controller has caught up and reports the
+cluster/CPU as down.  Putting this poll before the write to the
+power controller maximises the chance of pipelining useful work
+in the meantime.  Putting the poll after the write is the worst case.
 
-iQIcBAEBAgAGBQJTS7EmAAoJEBx+YmzsjxAg63UP/A3ghcJscvc3zInkb8W6xekx
-y0ogUV48ysX/E8uRceBm/m07rSqz+WOKsPZ+tgLcp+MhWPEiTrkc0jnOTEr8NYNF
-2AziJ121QC1mjHeg6k3xcuZCIrC4O4UHZO1E8VEqh8dtP7n9farXsGwhlP9FuIAw
-uLaR0ciCV5Zw/gTugFqj74TYFQGUH8hJQTjpWVh1uHC0muTEpFT90T3cch1FQmqp
-JzcJgxcjvAsuHDeJMeX9YbJE04VJVmgWtIlN+DaT2NLDvY2hWRfqNUlMNxWT6Jae
-QENAmuvmzdXmw+lDxgnCrbO4SvSLWn0VaivWUTC9keIQYnBxETZ3VI53nzk9RCeJ
-AaMKqCrOHy003gvlazPpSPj0Wm+BToXUpV29yAoX4p7RlYbTGgx/e0UNp0T3rdHl
-eqoW4PcIGP2muuezj8JsyNsurDI1hu+pYkSPo/vcjpn9Xwn0DMZjiGH/uD26jC+I
-w/o0A1l7PP7DvbBnMvGyzLMi0xTeAy7Nep786jQJAEFH14FWFAGcBDTIKN+hXc5L
-Wpx+cC1rjyJ15wi0CISYVIA2muHLf5RzlU3XX8/Zeeek1WNCNCK2gwUxHJsqV/kT
-zqAeHOkR88I+sy6ZWQR2DGPXLbD03sYozPvCBkS0BmnxuUGprbZ7UeGQHXuiMSOT
-gftstYwOMgT3kgavMCrP
-=HcsJ
------END PGP SIGNATURE-----
+> 
+> > +}
+> > +
+> > +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
+> > +{
+> > +	unsigned long mpidr;
+> > +
+> > +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+> > +	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
+> > +		cluster >= EXYNOS5420_NR_CLUSTERS)
+> > +		return -EINVAL;
+> > +
+> > +	/*
+> > +	 * Since this is called with IRQs enabled, and no arch_spin_lock_irq
+> > +	 * variant exists, we need to disable IRQs manually here.
+> > +	 */
+> > +	local_irq_disable();
+> > +	arch_spin_lock(&bl_lock);
+> > +
+> > +	cpu_use_count[cpu][cluster]++;
+> > +	if (cpu_use_count[cpu][cluster] == 1) {
+> > +		bool was_cluster_down =
+> > +			__mcpm_cluster_state(cluster) == CLUSTER_DOWN;
+> > +
+> > +		if (was_cluster_down)
+> > +			exynos_cluster_power_control(cluster, 1);
+> > +		exynos_core_power_control(cpu, cluster, 1);
+> > +
+> > +		if (was_cluster_down) {
+> > +			mpidr = read_cpuid_mpidr();
+> > +			udelay(10);
+> > +			cci_control_port_by_cpu(mpidr, true);
+> > +		}
+> 
+> This is completely wrong.  Is this why you created the patch to 
+> introduce cci_control_port_by_cpu()?  If so I'm NAKing that other patch 
+> as well.
+> 
+> This is going to be completely ineffective with concurrent usage by 
+> cpuidle where CPUs in the other cluster are awaken by an interrupt and 
+> not by calling the cpu_up method.  The current cluster will therefore 
+> not be aware of the other cluster coming online and system memory 
+> corruption will occur.
+> 
+> I see below that you do turn off the CCI port for the current cluster 
+> and the other cluster together, hence the need to enable back the CCI 
+> for the current cluster here.  Please don't do that.  That's not the 
+> proper way to achieve that and there are many race conditions to take 
+> care of before this can be done.  And if we were to go that route, I 
+> want to be convinced it is worth the needed complexity first i.e. I want 
+> to see evidence this actually does save power or improve performance by 
+> a non negligible margin.
 
---89VDYHnQ8ukgENkm--
+Agreed.
+
+The fact that there is no C interface for enabling ACE ports is
+deliberate.  For CPUs connected to ACE and managed via MCPM,
+it is incorrect to enable CCI via C code, since the safe window
+is the window during which all outbound CPUs have reached CLUSTER_DOWN
+and all inbound CPUs have not turned their MMU on yet (and thus cannot
+execute any general Linux C code).
+
+There might be scenarios involving GPUs and other non-CPU devices
+connected to ACE ports where the device cannot enable CCI snoops
+for itself -- but this would require a holding-pen protocol to enable
+the device to wait and signal a CPU to enable CCI snoops on the device's
+behalf before the device proceeds.  It is not the correct solution for
+CPU clusters attached to ACE, precisely because we can be more efficient
+in that case.
+
+In fact, because you implement a power_up_setup method that calls
+cci_enable_port_for_self, CCI snoops are actually enabled twice, making
+the above code appear redundant.   Have I missed something?
+
+Cheers
+---Dave
+
+> 
+> > +		/* CPU should be powered up there */
+> > +		/* Also setup Cluster Power Sequence here */
+> > +	} else if (cpu_use_count[cpu][cluster] != 2) {
+> > +		/*
+> > +		 * The only possible values are:
+> > +		 * 0 = CPU down
+> > +		 * 1 = CPU (still) up
+> > +		 * 2 = CPU requested to be up before it had a chance
+> > +		 *     to actually make itself down.
+> > +		 * Any other value is a bug.
+> > +		 */
+> > +		BUG();
+> > +	}
+> > +
+> > +	arch_spin_unlock(&bl_lock);
+> > +	local_irq_enable();
+> > +
+> > +	return 0;
+> > +}
+
+[...]
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
