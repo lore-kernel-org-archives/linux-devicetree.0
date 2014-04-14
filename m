@@ -1,169 +1,104 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Mon, 14 Apr 2014 15:49:50 +0200
-Message-ID: <534BE77E.5090902@gmail.com>
-References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>	<1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>	<534BD447.1080909@ti.com>	<CAFp+6iF=SpEax+5KUhZkmtkwp=Pj7LbAHOoySgOwJx_50u6GZQ@mail.gmail.com>	<534BDBBC.5010701@ti.com>	<CAFp+6iFFW8XQg_UtYEZfaiENULZDD8A7_9fr4f2no=qfau7-sQ@mail.gmail.com>	<534BE200.8080009@ti.com> <CAFp+6iHWa8RoO8Ey5B+Lj6Z10ZRJ5+2BDrTD=VNUv5Hw=9gUCg@mail.gmail.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm: exynos: Add MCPM call-back functions
+Date: Mon, 14 Apr 2014 10:01:27 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1404140956060.980@knanqh.ubzr>
+References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com> <1397239311-27717-6-git-send-email-a.kesavan@samsung.com> <alpine.LFD.2.11.1404111426510.980@knanqh.ubzr> <20140414104116.GA3844@e103592.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iHWa8RoO8Ey5B+Lj6Z10ZRJ5+2BDrTD=VNUv5Hw=9gUCg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Stephen Warren <swarren@wwwdotorg.org>, dong.aisheng@linaro.org, sameo@linux.intel.com
-Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140414104116.GA3844-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14.04.2014 15:40, Vivek Gautam wrote:
-> On Mon, Apr 14, 2014 at 6:56 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>
->>
->> On Monday 14 April 2014 06:50 PM, Vivek Gautam wrote:
->>> On Mon, Apr 14, 2014 at 6:29 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>
->>>>
->>>> On Monday 14 April 2014 06:12 PM, Vivek Gautam wrote:
->>>>> Hi,
->>>>>
->>>>>
->>>>> On Mon, Apr 14, 2014 at 5:57 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On Tuesday 08 April 2014 08:06 PM, Vivek Gautam wrote:
->>>>>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
->>>>>>> The new driver uses the generic PHY framework and will interact
->>>>>>> with DWC3 controller present on Exynos5 series of SoCs.
->>>>>>> Thereby, removing old phy-samsung-usb3 driver and related code
->>>>>>> used untill now which was based on usb/phy framework.
->>>>>>>
->>>>>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->>>>>>> ---
->>>>>>>   .../devicetree/bindings/phy/samsung-phy.txt        |   42 ++
->>>>>>>   drivers/phy/Kconfig                                |   11 +
->>>>>>>   drivers/phy/Makefile                               |    1 +
->>>>>>>   drivers/phy/phy-exynos5-usbdrd.c                   |  668 ++++++++++++++++++++
->>>>>>>   4 files changed, 722 insertions(+)
->>>>>>>   create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
->>>>>>>
->>>>>>> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->>>>>>> index 28f9edb..6d99ba9 100644
->>>>>>> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
->>>>>>> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->>>>>>> @@ -74,3 +74,45 @@ phy-consumer@12340000 {
->>>>>>>
->>>>>>>   Refer to DT bindings documentation of particular PHY consumer devices for more
->>>>>>>   information about required PHYs and the way of specification.
->>>>>>> +
->>>>>>> +Samsung Exynos5 SoC series USB DRD PHY controller
->>>>>>> +--------------------------------------------------
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +- compatible : Should be set to one of the following supported values:
->>>>>>> +     - "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
->>>>>>> +     - "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
->>>>>>> +- reg : Register offset and length of USB DRD PHY register set;
->>>>>>> +- clocks: Clock IDs array as required by the controller
->>>>>>> +- clock-names: names of clocks correseponding to IDs in the clock property;
->>>>>>> +            Required clocks:
->>>>>>> +     - phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
->>>>>>> +            used for register access.
->>>>>>> +     - ref: PHY's reference clock (usually crystal clock), associated by
->>>>>>> +            phy name, used to determine bit values for clock settings
->>>>>>> +            register.
->>>>>>> +     Additional clock required for Exynos5420:
->>>>>>> +     - usb30_sclk_100m: Additional special clock used for PHY operation
->>>>>>> +                        depicted as 'sclk_usbphy30' in CMU of Exynos5420.
->>>>>>> +- samsung,syscon-phandle: phandle for syscon interface, which is used to
->>>>>>> +                       control pmu registers for power isolation.
->>>>>>> +- samsung,pmu-offset: phy power control register offset to pmu-system-controller
->>>>>>> +                   base.
->>>>>>> +- #phy-cells : from the generic PHY bindings, must be 1;
->>>>>>> +
->>>>>>> +For "samsung,exynos5250-usbdrd-phy" and "samsung,exynos5420-usbdrd-phy"
->>>>>>> +compatible PHYs, the second cell in the PHY specifier identifies the
->>>>>>> +PHY id, which is interpreted as follows:
->>>>>>> +  0 - UTMI+ type phy,
->>>>>>> +  1 - PIPE3 type phy,
->>>>>>> +
->>>>>>> +Example:
->>>>>>> +     usb3_phy: usbphy@12100000 {
->>>>>>> +             compatible = "samsung,exynos5250-usbdrd-phy";
->>>>>>> +             reg = <0x12100000 0x100>;
->>>>>>> +             clocks = <&clock 286>, <&clock 1>;
->>>>>>> +             clock-names = "phy", "usb3phy_refclk";
->>>>>>> +             samsung,syscon-phandle = <&pmu_syscon>;
->>>>>>> +             samsung,pmu-offset = <0x704>;
->>>>>>> +             #phy-cells = <1>;
->>>>>>> +     };
->>>>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->>>>>>> index 8d3c49c..d955a05 100644
->>>>>>> --- a/drivers/phy/Kconfig
->>>>>>> +++ b/drivers/phy/Kconfig
->>>>>>> @@ -166,4 +166,15 @@ config PHY_XGENE
->>>>>>>        help
->>>>>>>          This option enables support for APM X-Gene SoC multi-purpose PHY.
->>>>>>>
->>>>>>> +config PHY_EXYNOS5_USBDRD
->>>>>>> +     tristate "Exynos5 SoC series USB DRD PHY driver"
->>>>>>> +     depends on ARCH_EXYNOS5 && OF
->>>>>>> +     depends on HAS_IOMEM
->>>>>>> +     select GENERIC_PHY
->>>>>>> +     select MFD_SYSCON
->>>>>>
->>>>>> Lets try to avoid select in Kconfig. We've got enough problems with that.
->>>>>
->>>>> I hope you meant with "select MFD_SYSCON".
->>>>> We are referencing the syscon for accessing pmu reg, for which we need
->>>>> this config to be selected.
->>>>> Other Exynos phy drivers also need this config and for that they have
->>>>> selected this.
->>>>>
->>>>> Do you want me to do it any other way ?
->>>>
->>>> depends on is one option.
->>>
->>> Ok, i can see there are places where depends_on MFD_SYSCON is used.
->>> "drivers/gpu/drm/exynos/Kconfig:60"
->>>
->>> so, do you want me to fix at other places too ?
->>>
->>> But i also have a question here.
->>> MFD_SYSCON is a subsystem that's facilitating us in getting our work
->>> done here by giving an access to pmu_system_controller.
->>> So unless MFD_SYSCON is exposed, the phy driver will not be exposed to us.
->>> So is that valid enough really ?
->>
->> maybe in the Kconfig for MFD_SYSCON, we can select it if PHY_EXYNOS5_USBDRD is
->> enabled?
->>
->> config MFD_SYSCON
->> default y if PHY_EXYNOS5_USBDRD
->
-> Yes, that seems to be one option. But we will end up adding this
-> dependency for all the drivers which want to use syscon.
->
-> Adding few people who worked on MFS_SYSCON, just to gather ideas.
->
-> Re-quoting our problem here:
-> "Inside our phy driver we are accessing power mgt unit registers,
-> which we register using syscon in ut device tree.
-> Now we don't want to select MFD_SYSCON from our phy driver, instead
-> want to go 'depend_on' way."
->
-> So one solution seems to be enabling MFD_SYSCON by default, if any of
-> driver using syscon is enabled.
-> Can we use some other way here ?
+On Mon, 14 Apr 2014, Dave Martin wrote:
 
-This is an awful idea from maintainability perspective... This means 
-that every driver depending on MFD_SYSCON would have to add new "default 
-y if" to MFD_SYSCON Kconfig entry. Even with respect to readability, it 
-is more logical to have all dependencies of a driver listed in its 
-Kconfig entry.
+> On Fri, Apr 11, 2014 at 04:23:04PM -0400, Nicolas Pitre wrote:
+> > On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
+> > 
+> > > Add machine-dependent MCPM call-backs for Exynos5420. These are used
+> > > to power up/down the secondary CPUs during boot, shutdown, s2r and
+> > > switching.
+> > > 
+> > > Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > > Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > > Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> > > Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > See comments inline.
+> 
+> I won't duplicate Nico's review, but I have a couple of extra comments/
+> questions, below.
+> 
+> [...]
+> 
+> > > diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
+> > > new file mode 100644
+> > > index 0000000..46d4968
+> > > --- /dev/null
+> > > +++ b/arch/arm/mach-exynos/mcpm-exynos.c
+> > > @@ -0,0 +1,444 @@
+> 
+> [...]
+> 
+> > > +static void exynos_cluster_power_control(unsigned int cluster, int enable)
+> > > +{
+> > > +	unsigned long timeout = jiffies + msecs_to_jiffies(20);
+> > > +	unsigned int status, val = EXYNOS_CORE_LOCAL_PWR_DIS;
+> > > +
+> > > +	if (enable)
+> > > +		val = EXYNOS_CORE_LOCAL_PWR_EN;
+> > > +
+> > > +	status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
+> > > +	if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
+> > > +		return;
+> > > +
+> > > +	__raw_writel(val, EXYNOS_COMMON_CONFIGURATION(cluster));
+> > > +	/* Wait until cluster power control is applied */
+> > > +	while (time_before(jiffies, timeout)) {
+> > > +		status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
+> > > +
+> > > +		if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
+> > > +			return;
+> > > +
+> > > +		cpu_relax();
+> > > +	}
+> > > +	pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
+> > > +		enable ? "on" : "off");
+> > 
+> > You should not have to wait for the power status to change here.  
+> > Simply signaling the desired state and returning is all that is 
+> > expected.  And because IRQs are turned off, it is likely that 
+> > time_before(jiffies, timeout) will always be true anyway because jiffies 
+> > are not updated if there is no other CPU to service the timer interrupt.
+> > 
+> > The actual power status should be polled for in the mcpm_finish() 
+> > method only.
+> 
+> Depending on the power controller, it might be possible for writes to
+> the controller to be lost or not acted upon, if a previous change is
+> still pending.
+> 
+> Does this issue apply to the exynos power controller?
 
-Anyway, PHY_EXYNOS5_USBDRD can't work without MFD_SYSCON and somehow 
-this needs to be stated. I believe select is the right thing here and 
-I'm not sure why it could be a problem. The biggest reason for going 
-this way is that users wouldn't have to care about internal 
-dependencies, instead they would simply enable drivers for their hardware.
+Given the way the code is structured now, I suppose that has not been 
+the case so far.
 
-Best regards,
-Tomasz
+> 
+> If this is the case, it might be necessary to ensure before a power-up
+> request, that the power controller has caught up and reports the
+> cluster/CPU as down.  Putting this poll before the write to the
+> power controller maximises the chance of pipelining useful work
+> in the meantime.  Putting the poll after the write is the worst case.
+
+More useful might be a check on the actual _control_ bit.  If the 
+control bits may be read back then I expect the indicated state will 
+happen even if delayed.
+
+
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
