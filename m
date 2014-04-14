@@ -1,63 +1,50 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH] spi: core: Ignore unsupported Dual/Quad Transfer Mode bits
-Date: Mon, 14 Apr 2014 19:39:53 +0200
-Message-ID: <1397497193-28067-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [PATCH v2 4/5] ARM: dts: keystone: update reset node to work with reset driver
+Date: Mon, 14 Apr 2014 20:41:22 +0300
+Message-ID: <1397497283-16391-5-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, santosh.shilimkar@ti.com, grant.likely@linaro.org
+Cc: rdunlap@infradead.org, linux@arm.linux.org.uk, ivan.khoronzhuk@ti.com, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+The reset controller registers are part of the PLL Controller MMRs.
+According to TRM there are the following registers:
+RSTYPE, RSCTRL, RSCFG and RSISO. Currently declared only one of them,
+but that is not enough to correctly setup reset properties, so add
+whole range of pll registers - pllregs.
 
-The availability of SPI Dual or Quad Transfer Mode as indicated by the
-"spi-tx-bus-width" and "spi-rx-bus-width" properties in the device tree is
-a hardware property of the SPI master, SPI slave, and board wiring.  Hence
-the SPI core should not reject an SPI slave because an SPI master driver
-doesn't (yet) support Dual or Quad Transfer Mode.
+Also add range for reset multiplex registers for SoC on the device.
+These registers are located in Bootcfg memory space and needed
+to setup behaviour after appropriate watchdog is triggered.
 
-Change the lack of Dual or Quad Transfer Mode support in the SPI master
-driver from an error condition to a warning condition, and ignore the
-unsupported mode bits, falling back to Single Transfer Mode, to avoid
-breakages when running old kernels with new device trees.
+Add "ti,wdt_list" option to declare what watchdog are used to reboot
+the SoC.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
-I think this should be applied to -stable, for all versions containing
-commit f477b7fb13df2b843997559ff34e87d054ba6538 ("spi: DUAL and QUAD
-support"), i.e. v3.12, v3.13, v3.14.
----
- drivers/spi/spi.c |   11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/keystone.dtsi | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 4eb9bf02996c..1534fa1dac34 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1756,7 +1756,7 @@ EXPORT_SYMBOL_GPL(spi_busnum_to_master);
-  */
- int spi_setup(struct spi_device *spi)
- {
--	unsigned	bad_bits;
-+	unsigned	bad_bits, ugly_bits;
- 	int		status = 0;
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 90823eb..9d6b850 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -69,7 +69,9 @@
  
- 	/* check mode to prevent that DUAL and QUAD set at the same time
-@@ -1776,6 +1776,15 @@ int spi_setup(struct spi_device *spi)
- 	 * that aren't supported with their current master
- 	 */
- 	bad_bits = spi->mode & ~spi->master->mode_bits;
-+	ugly_bits = bad_bits &
-+		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_RX_DUAL | SPI_RX_QUAD);
-+	if (ugly_bits) {
-+		dev_warn(&spi->dev,
-+			 "setup: ignoring unsupported mode bits %x\n",
-+			 ugly_bits);
-+		spi->mode &= ~ugly_bits;
-+		bad_bits &= ~ugly_bits;
-+	}
- 	if (bad_bits) {
- 		dev_err(&spi->dev, "setup: unsupported mode bits %x\n",
- 			bad_bits);
+ 		rstctrl: reset-controller {
+ 			compatible = "ti,keystone-reset";
+-			reg = <0x023100e8 4>;	/* pll reset control reg */
++			reg = <0x23100e4 0x10>, <0x2620328 0x10>;
++			reg-names = "pllregs", "muxregs";
++			ti,wdt_list = <0>;
+ 		};
+ 
+ 		/include/ "keystone-clocks.dtsi"
 -- 
-1.7.9.5
+1.8.3.2
+
