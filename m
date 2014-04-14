@@ -1,73 +1,63 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH] rtc: Fix suspend/resume for APM X-Gene SoC
- RTC driver
-Date: Mon, 14 Apr 2014 18:21:34 +0100
-Message-ID: <20140414172134.GB25182@sirena.org.uk>
-References: <1397259218-20494-1-git-send-email-lho@apm.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7ZAtKRhVyVSsbBD2"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1397259218-20494-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: [PATCH] spi: core: Ignore unsupported Dual/Quad Transfer Mode bits
+Date: Mon, 14 Apr 2014 19:39:53 +0200
+Message-ID: <1397497193-28067-1-git-send-email-geert@linux-m68k.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+From: Geert Uytterhoeven <geert+renesas@glider.be>
 
---7ZAtKRhVyVSsbBD2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The availability of SPI Dual or Quad Transfer Mode as indicated by the
+"spi-tx-bus-width" and "spi-rx-bus-width" properties in the device tree is
+a hardware property of the SPI master, SPI slave, and board wiring.  Hence
+the SPI core should not reject an SPI slave because an SPI master driver
+doesn't (yet) support Dual or Quad Transfer Mode.
 
-On Fri, Apr 11, 2014 at 05:33:38PM -0600, Loc Ho wrote:
+Change the lack of Dual or Quad Transfer Mode support in the SPI master
+driver from an error condition to a warning condition, and ignore the
+unsupported mode bits, falling back to Single Transfer Mode, to avoid
+breakages when running old kernels with new device trees.
 
-> -	clk_prepare_enable(pdata->clk);
-> +	ret =3D clk_prepare_enable(pdata->clk);
-> +	if (ret)
-> +		return ret;
-> =20
->  	/* Turn on the clock and the crystal */
->  	writel(RTC_CCR_EN, pdata->csr_base + RTC_CCR);
-> =20
-> -	device_init_wakeup(&pdev->dev, 1);
-> +	ret =3D device_init_wakeup(&pdev->dev, 1);
-> +	if (ret)
-> +		return ret;
-> =20
-If the init fails you should unprepare (though I suspect the same issue
-applies to other things in the probe function anyway).  If you fix that
-then feel free to add:
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+I think this should be applied to -stable, for all versions containing
+commit f477b7fb13df2b843997559ff34e87d054ba6538 ("spi: DUAL and QUAD
+support"), i.e. v3.12, v3.13, v3.14.
+---
+ drivers/spi/spi.c |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Reviewed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-or anyway I guess.
-
---7ZAtKRhVyVSsbBD2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTTBkaAAoJELSic+t+oim9vlAP/R9x0zeJYAMQ0Z7oCW4DDYQq
-NvTGgK0copOBRefKiQbK7m5p8TNZ8PD9p0MLYzFLfRTsyuvNzdSkfMMhOjqefg88
-taBz1ltgm7zhYok61DmJrLTV6S2Igr5/6LgThjY8kLcbWnhQkI/g6P+iKTyBn+DF
-XK/qs3+XrvatNC2txw1Eo3iHgP8NQI7U2tWj8gjxqH/iqyTj/A8w7mNQG7k6DMrh
-Ynk55B6dM46MjIg5sTNGGUJSghIr8u1W3K3PXA61Q4GNP3QVRLNmdMWk3j00u/Z+
-jXyT/ws8HYnic7dfzzdVMpaO4rkXZgFlM/y2ylvJhLRNav3FqD8XXg+FdJDOvY3a
-R9uI8eMaB1q5CmyzPGPdWhcj2oFuNxOrZyPDgnkMYFLYAnTYbJ+QF5bx1fqArlI5
-2gQcugVKJh7R52oSRqkNIYVCxKhBJ/zOSf1wHeYSUbGynrjszvKg5BbWjLVXi6mN
-Rb1hZ0z9Tf9t6YGYNveoWPgVoncglgC1CPAaNze3LZtwMXg4TooOaSsJNvlBuDzi
-IeCNC4tUrAVGYOPNBTjflI/TDLPy0/if/9buKRSs8QbbfVBI7KHKOTJU9k+AnnRq
-amr8TxM31isn8BztDS65dOn1novS0fT1SJVWmS6NbSUsThL7tk0OfCdosNfiVZrM
-UvRVWxbSlXt5/T8CIR78
-=GUCq
------END PGP SIGNATURE-----
-
---7ZAtKRhVyVSsbBD2--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 4eb9bf02996c..1534fa1dac34 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1756,7 +1756,7 @@ EXPORT_SYMBOL_GPL(spi_busnum_to_master);
+  */
+ int spi_setup(struct spi_device *spi)
+ {
+-	unsigned	bad_bits;
++	unsigned	bad_bits, ugly_bits;
+ 	int		status = 0;
+ 
+ 	/* check mode to prevent that DUAL and QUAD set at the same time
+@@ -1776,6 +1776,15 @@ int spi_setup(struct spi_device *spi)
+ 	 * that aren't supported with their current master
+ 	 */
+ 	bad_bits = spi->mode & ~spi->master->mode_bits;
++	ugly_bits = bad_bits &
++		    (SPI_TX_DUAL | SPI_TX_QUAD | SPI_RX_DUAL | SPI_RX_QUAD);
++	if (ugly_bits) {
++		dev_warn(&spi->dev,
++			 "setup: ignoring unsupported mode bits %x\n",
++			 ugly_bits);
++		spi->mode &= ~ugly_bits;
++		bad_bits &= ~ugly_bits;
++	}
+ 	if (bad_bits) {
+ 		dev_err(&spi->dev, "setup: unsupported mode bits %x\n",
+ 			bad_bits);
+-- 
+1.7.9.5
