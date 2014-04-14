@@ -1,122 +1,71 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [PATCH 1/9] crypto: qce: Add core driver implementation
-Date: Mon, 14 Apr 2014 11:19:43 +0300
-Message-ID: <534B9A1F.6080301@mm-sol.com>
-References: <1396541886-10966-1-git-send-email-svarbanov@mm-sol.com> <1396541886-10966-2-git-send-email-svarbanov@mm-sol.com> <20140403233844.GF17066@sonymobile.com> <53442344.8000801@mm-sol.com> <20140408220044.GH17066@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v4 1/2] Documentation: Add GPIO reset binding to reset binding documentation
+Date: Mon, 14 Apr 2014 10:21:48 +0200
+Message-ID: <1397463709-19405-1-git-send-email-p.zabel@pengutronix.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140408220044.GH17066@sonymobile.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+To: linux-kernel@vger.kernel.org, Arnd Bergmann Arnd Bergmann <arnd@arndb.de>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Mark Rutland <mark.rutland@arm.com>, Roger Quadros <rogerq@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Courtney,
+This patch adds documentation clarifying the reset GPIO bindings most
+commonly in use (reset-gpios and <name>-reset-gpios properties).
 
-On 04/09/2014 01:00 AM, Courtney Cavin wrote:
-> On Tue, Apr 08, 2014 at 06:26:44PM +0200, Stanimir Varbanov wrote:
->> On 04/04/2014 02:38 AM, Courtney Cavin wrote:
->>> On Thu, Apr 03, 2014 at 06:17:58PM +0200, Stanimir Varbanov wrote:
->>>> This adds core driver files. The core part is implementing a
->>>> platform driver probe and remove callbaks, the probe enables
->>>> clocks, checks crypto version, initialize and request dma
->>>> channels, create done tasklet and work queue and finally
->>>> register the algorithms into crypto subsystem.
->>>>
->>>> Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
->>>> ---
->>>>  drivers/crypto/qce/core.c | 333 ++++++++++++++++++++++++++++++++++++++++++++++
->>>>  drivers/crypto/qce/core.h |  69 ++++++++++
->>>>  2 files changed, 402 insertions(+)
->>>>  create mode 100644 drivers/crypto/qce/core.c
->>>>  create mode 100644 drivers/crypto/qce/core.h
->>>>
->>>> diff --git a/drivers/crypto/qce/core.c b/drivers/crypto/qce/core.c
->>> [...]
->>>> +static struct qce_algo_ops qce_ops[] = {
->>>> +	{
->>>> +		.type = CRYPTO_ALG_TYPE_ABLKCIPHER,
->>>> +		.register_alg = qce_ablkcipher_register,
->>>> +	},
->>>> +	{
->>>> +		.type = CRYPTO_ALG_TYPE_AHASH,
->>>> +		.register_alg = qce_ahash_register,
->>>> +	},
->>>> +};
->>>> +
->>>> +static void qce_unregister_algs(struct qce_device *qce)
->>>> +{
->>>> +	struct qce_alg_template *tmpl, *n;
->>>> +
->>>> +	list_for_each_entry_safe(tmpl, n, &qce->alg_list, entry) {
->>>> +		if (tmpl->crypto_alg_type == CRYPTO_ALG_TYPE_AHASH)
->>>> +			crypto_unregister_ahash(&tmpl->alg.ahash);
->>>> +		else
->>>> +			crypto_unregister_alg(&tmpl->alg.crypto);
->>>> +
->>>> +		list_del(&tmpl->entry);
->>>> +		kfree(tmpl);
->>>
->>> I find this whole memory/list management to be very disorganised.
->>> ops->register_alg() is supposed to allocate this item--more precisely,
->>> multiple items--using something that must be able to be kfree'd
->>> directly, register it with the crypto core, and put it on this list
->>> manually.  Here we unregister/remove/free this in the core.  Josh's
->>> recommendation of a unregister_alg callback might help, but it all
->>> remains a bit unclear with register_alg/unregister_alg managing X
->>> algorithms per call. 
->>>
->>> Additionally, above you have qce_ops, which clearly defines the
->>> operations for specific algorithms types/groups, which in later patches
->>> are shown to be seperated out into independent implementations.
->>>
->>> From what I can tell, this seems to be a framework with built-in yet
->>> independent crypto implementations which call the crypto API directly.
->>>
->>> It would be more logical to me if this was seperated out into a
->>> "library/core" API, with the individual implementations as platform
->>> drivers of their own.  Then they can register with the core, managing
->>> memory how they please.
->>>
->>> What am I missing?
->>>
->>
->> No, you have not miss nothing.
->>
->> OK I see your point. I made few changes in the core, killed the alg_list
->> and its manipulation function and added a .unregister_algs operation.
->> Now every type of algorithm will handle all core crypto api functions
->> itself. Also I'm using devm_kzalloc() in .register_algs when allocating
->> memory for qce_alg_template structures to avoid kfree(). The callbacks
->> async_req_queue/done are now embedded in qce_device structure and they
->> are invoked directly from algorithm implementations. Thus I have
->> separated the interfaces: functions implemented in core part of the
->> driver and struct qce_algo_ops having the function pointers implemented
->> by every type of algorithm.
->>
->> If you don't have some objections I can send out a version 2.
-> 
-> 
-> Well, I'd have to see the code to understand clearly what you are
-> describing here, but the mention of devm_kzalloc() concerns me.  The
-> only device which I currently see to which this allocation could be
-> associated is the single platform_device in the core.  Associating the
-> memory with the core gets rid of the explicit call to kfree() by the
-> core, but doesn't rearrange the way the memory is actually managed.
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+---
+ Documentation/devicetree/bindings/reset/reset.txt | 26 +++++++++++++++++++++--
+ 1 file changed, 24 insertions(+), 2 deletions(-)
 
-OK, no worries. I have no strong opinion and will use kzalloc() then.
-
-> 
-> If you have changed it so that each algorithm "block" has its own
-> device, then this would seem more reasonable, but I don't see that in
-> the explanation you provided.
-
-No, that is not possible. The platform driver must be one because the
-register space is common. The hardware accesses must be serialised from
-core part of the driver.
-
+diff --git a/Documentation/devicetree/bindings/reset/reset.txt b/Documentation/devicetree/bindings/reset/reset.txt
+index 31db6ff..51f9e35 100644
+--- a/Documentation/devicetree/bindings/reset/reset.txt
++++ b/Documentation/devicetree/bindings/reset/reset.txt
+@@ -2,8 +2,8 @@
+ 
+ This binding is intended to represent the hardware reset signals present
+ internally in most IC (SoC, FPGA, ...) designs. Reset signals for whole
+-standalone chips are most likely better represented as GPIOs, although there
+-are likely to be exceptions to this rule.
++standalone chips are most likely better represented as GPIOs, ideally using a
++common scheme as described below.
+ 
+ Hardware blocks typically receive a reset signal. This signal is generated by
+ a reset provider (e.g. power management or clock module) and received by a
+@@ -56,6 +56,20 @@ reset-names:	List of reset signal name strings sorted in the same order as
+ 		the resets property. Consumers drivers will use reset-names to
+ 		match reset signal names with reset specifiers.
+ 
++= GPIO Reset consumers =
++
++For the common case of reset lines controlled by GPIOs, the GPIO binding
++documented in devicetree/bindings/gpio/gpio.txt should be used:
++
++Required properties:
++reset-gpios or		Reset GPIO using standard GPIO bindings,
++<name>-reset-gpios:	optionally named to specify the reset line
++
++Optional properties:
++reset-boot-asserted or		Boolean. If set, the corresponding reset is
++<name>-reset-boot-asserted:	initially asserted and should be kept that way
++				until released by the driver.
++
+ For example:
+ 
+ 	device {
+@@ -65,6 +79,14 @@ For example:
+ 
+ This represents a device with a single reset signal named "reset".
+ 
++	device2 {
++		reset-gpios = <&gpio3 15 GPIO_ACTIVE_LOW>;
++		reset-boot-asserted;
++	};
++
++This represents a device with a single reset signal, controlled
++by an active-low GPIO, which is initally kept in reset.
++
+ 	bus {
+ 		resets = <&rst 10> <&rst 11> <&rst 12> <&rst 11>;
+ 		reset-names = "i2s1", "i2s2", "dma", "mixer";
 -- 
-regards,
-Stan
+1.9.1
