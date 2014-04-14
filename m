@@ -1,42 +1,63 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: Re: [PATCH 4/4] ARM: at91: move sam9n12 SoC to the CCF
-Date: Mon, 14 Apr 2014 10:58:09 +0200
-Message-ID: <20140414085809.GN2967@piout.net>
-References: <1397463399-11771-1-git-send-email-boris.brezillon@free-electrons.com>
- <1397463399-11771-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: at91: prepare common clk transition for sam9x5
+ SoCs
+Date: Mon, 14 Apr 2014 10:59:35 +0200
+Message-ID: <20140414085935.GO2967@piout.net>
+References: <1397464994-27267-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1397464994-27267-2-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397463399-11771-5-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1397464994-27267-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14/04/2014 at 10:16:39 +0200, Boris Brezillon wrote :
-> This patch removes the selection of AT91_USE_OLD_CLK when selecting
-> sam9n12 SoC support. This will automatically enable COMMON_CLK_AT91 option
-> and add support for at91 common clk implementation.
+On 14/04/2014 at 10:43:11 +0200, Boris Brezillon wrote :
+> This patch encloses sam9x5 old clk registration in
+> "#if defined(CONFIG_OLD_CLK_AT91) #endif" sections.
 > 
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/mach-at91/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
+>  arch/arm/mach-at91/at91sam9x5.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-> index b2d2cf4..a1ac430 100644
-> --- a/arch/arm/mach-at91/Kconfig
-> +++ b/arch/arm/mach-at91/Kconfig
-> @@ -183,7 +183,6 @@ config SOC_AT91SAM9N12
->  	select HAVE_AT91_DBGU0
->  	select HAVE_FB_ATMEL
->  	select SOC_AT91SAM9
-> -	select AT91_USE_OLD_CLK
->  	select HAVE_AT91_USB_CLK
->  	help
->  	  Select this if you are using Atmel's AT91SAM9N12 SoC.
+> diff --git a/arch/arm/mach-at91/at91sam9x5.c b/arch/arm/mach-at91/at91sam9x5.c
+> index 9ad781d..e994edd 100644
+> --- a/arch/arm/mach-at91/at91sam9x5.c
+> +++ b/arch/arm/mach-at91/at91sam9x5.c
+> @@ -19,9 +19,10 @@
+>  #include "board.h"
+>  #include "soc.h"
+>  #include "generic.h"
+> -#include "clock.h"
+>  #include "sam9_smc.h"
+>  
+> +#if defined(CONFIG_OLD_CLK_AT91)
+> +#include "clock.h"
+>  /* --------------------------------------------------------------------
+>   *  Clocks
+>   * -------------------------------------------------------------------- */
+> @@ -313,6 +314,7 @@ static void __init at91sam9x5_register_clocks(void)
+>  	clk_register(&pck0);
+>  	clk_register(&pck1);
+>  }
+> +#endif
+>  
+>  /* --------------------------------------------------------------------
+>   *  AT91SAM9x5 processor initialization
+> @@ -334,6 +336,8 @@ static void __init at91sam9x5_initialize(void)
+>  
+>  AT91_SOC_START(at91sam9x5)
+>  	.map_io = at91sam9x5_map_io,
+> +#if defined(CONFIG_OLD_CLK_AT91)
+>  	.register_clocks = at91sam9x5_register_clocks,
+> +#endif
+>  	.init = at91sam9x5_initialize,
+>  AT91_SOC_END
 > -- 
 > 1.8.3.2
 > 
@@ -45,3 +66,7 @@ Acked-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 Alexandre Belloni, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
