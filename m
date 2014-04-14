@@ -1,56 +1,75 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/9] ARM: shmobile: r8a7790: add dma defines for sys and audio dmacs
-Date: Tue, 15 Apr 2014 00:10 +0200
-Message-ID: <6876261.h1xXmWF0f3@wuerfel>
-References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk> <1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: Re: [PATCH v2 4/4] drivers: net: Add APM X-Gene SoC ethernet driver
+ support.
+Date: Mon, 14 Apr 2014 15:09:26 -0700
+Message-ID: <CAKh23Fn2-P3QAntShpjBV027POgYfxmCFh3H3KZ5dSpUpa+4yQ@mail.gmail.com>
+References: <1397271984-23405-1-git-send-email-isubramanian@apm.com>
+ <1397271984-23405-5-git-send-email-isubramanian@apm.com>
+ <20140412.165549.1068958710661824002.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140412.165549.1068958710661824002.davem@davemloft.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Miller <davem@davemloft.net>
+Cc: devicetree@vger.kernel.org, gregkh@linuxfoundation.org, netdev@vger.kernel.org, patches <patches@apm.com>, linux-kernel@vger.kernel.org, "jcm@redhat.com" <jcm@redhat.com>, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org, Ravi Patel <rapatel@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 14 April 2014 22:35:05 Ben Dooks wrote:
-> Add the DMA resource IDs for the R8A7790 Audio and SYS DMA controllers
-> for use when specifying DMA handles.
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Hi David,
 
-I really hate these lists in bindings:
+Thanks for the review comments.  Please find my responses inline.
 
-> +#define R8A7790_DMA_SCIFA0_TX	(0x21)
-> +#define R8A7790_DMA_SCIFA0_RX	(0x22)
-> +#define R8A7790_DMA_SCIFA1_TX	(0x25)
-> +#define R8A7790_DMA_SCIFA1_RX	(0x26)
-> +#define R8A7790_DMA_SCIFA2_TX	(0x27)
-> +#define R8A7790_DMA_SCIFA2_RX	(0x28)
-> +
-> +#define R8A7790_DMA_SCIFB0_TX	(0x3D)
-> +#define R8A7790_DMA_SCIFB0_RX	(0x3E)
-> +#define R8A7790_DMA_SCIFB1_TX	(0x19)
-> +#define R8A7790_DMA_SCIFB1_RX	(0x1A)
-> +#define R8A7790_DMA_SCIFB2_TX	(0x1D)
-> +#define R8A7790_DMA_SCIFB2_RX	(0x1E)
+Thanks,
+Iyappan
 
-These are all hardware constants, they should come from the data sheet and
-get put into the dtsi file. The driver doesn't care what they are, and
-the binding doesn't care, this only serves to make the binding less
-generic.
-
-> +#define CHCR_RX_32BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
-> +#define CHCR_TX_32BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
-> +#define CHCR_RX_256BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
-> +#define CHCR_TX_256BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
-
-For these, it's different: There is nothing wrong putting macros like
-these into DT, because they will be the same across all SoCs.
-
-However, as I mentioned in my reply to patch 8, I don't think that information
-belongs into DT, and it should be in the device driver instead, because
-that already knows the direction and transfer width and has to set it
-through the slave config interface anyway.
-
-	Arnd
+On Sat, Apr 12, 2014 at 1:55 PM, David Miller <davem@davemloft.net> wrote:
+> From: Iyappan Subramanian <isubramanian@apm.com>
+> Date: Fri, 11 Apr 2014 20:06:24 -0700
+>
+>> This patch adds network driver for APM X-Gene SoC ethernet.
+>>
+>> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+>> Signed-off-by: Ravi Patel <rapatel@apm.com>
+>> Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
+>
+> This driver is going to take a long to review and get to the point
+> where it can be integrated upstream, I'm just trying to set your
+> expectations properly.
+Okay.
+>
+>> +inline void set_desc(struct xgene_enet_desc *desc, enum desc_info_index index,
+>> +                  u64 val)
+>> +{
+>
+> The "inline" tag is not necessary, let the compiler figure it out.
+Okay.  I will remove inline keyword from the code.
+>
+>> +     u8 word_index = desc_info[index].word_index;
+>> +     u8 start_bit = desc_info[index].start_bit;
+>> +     u8 len = desc_info[index].len;
+>> +
+>> +     u64 mask = GENMASK_ULL((start_bit + len - 1), start_bit);
+>> +     ((u64 *)desc)[word_index] = (((u64 *)desc)[word_index] & ~mask)
+>> +         | (((u64) val << start_bit) & mask);
+>
+> This looks horrible for several reasons.
+>
+> First of all, do not put empty lines in the middle of a set of
+> local variable declarations.
+>
+> But do put a single empty line after the last local variable, and
+> before the actual code of the function starts.
+>
+> Get rid of all of this excessive casting.  Tell the compiler what you're
+> actually doing, pass 'desc' in as "void *" and use local "u64 *" pointers
+> (to which 'desc' is assigned to) if you must.
+I will fix this in the next patch.
