@@ -1,52 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4] Documentation: regulator: s2mps11: Document external
- GPIO control
-Date: Mon, 14 Apr 2014 22:13:53 +0100
-Message-ID: <20140414211353.GF12304@sirena.org.uk>
-References: <1397462949-22379-1-git-send-email-k.kozlowski@samsung.com>
- <1397462949-22379-4-git-send-email-k.kozlowski@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Questions about of/base.c:of_update_property()
+Date: Mon, 14 Apr 2014 16:29:09 -0500
+Message-ID: <CAL_JsqKW23XYFzPcft04n22S__T6fDx68xayV55NG0h+h--UVA@mail.gmail.com>
+References: <53474303.6030108@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9ADF8FXzFeE7X4jE"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1397462949-22379-4-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53474303.6030108-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Apr 10, 2014 at 8:18 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+> Hi folks,
+>
+> looking into drivers/of/base.c, I notices a couple of oddities in
+> of_update_property(). Both were interoduced with commit 75b57ecf
+> (of: Make device nodes kobjects so they show up in sysfs).
+> In both cases, there is an unnecessary value check. Sending
+> a patch to remove the checks would be simple, but I want to
+> make sure that the checks are not supposed to address some other
+> condition.
+>
+> 1) Unnecessary check if rc != 0
+>
+> Here are all the uses of the 'rc' variable in of_update_property():
+>
+>         rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
+>         if (rc)
+>                 return rc;
+>         ...
+>         while (*next) {
+>                 ...
+>         }
+>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>         if (rc)
+>                 return rc;
+>
+> What is the purpose of the second check ? Can it be removed,
+> or is there some other condition which should have been checked
+> instead ? Should the check possibly be "if (!found)" ?
 
---9ADF8FXzFeE7X4jE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Looks like cut 'n paste from of_add_property. I believe the second one
+should be removed and !found should be checked before updating sysfs.
 
-On Mon, Apr 14, 2014 at 10:09:08AM +0200, Krzysztof Kozlowski wrote:
-> Add documentation for new property for controlling (enable/disable) some
-> of the S2MPS14 regulators by GPIO.
+>
+> 2) Unnecessary check if oldprop != NULL
+>
+>         oldprop = of_find_property(np, newprop->name, NULL);
+>         if (!oldprop)
+>                 return of_add_property(np, newprop);
+>         ...
+>         /* Update the sysfs attribute */
+>         if (oldprop)
+>                 sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+>
+> oldprop is not modified between the two checks. Can the check be
+> removed, or is there some other condition which should have been
+> checked instead ?
 
-Applied, thanks.
+Yes, it can be removed.
 
---9ADF8FXzFeE7X4jE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 3) At the very end of the function, there is a check
+>
+>        if (!found)
+>                 return -ENODEV;
+>
+> This is _after_ the sysfs entry for the old property was removed,
+> and the sysfs entry for the new property was created. Yet, '!found'
+> suggests that there is some inconsistency in the property, so I wonder
+> if the check should happen earlier, before sysfs entries are touched.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Right.
 
-iQIcBAEBAgAGBQJTTE+OAAoJELSic+t+oim9pNIP/2T6oMkzDUIf1thSA4RP6XlI
-c9abjXnQeyAjaaCQbsLs1oIFIbYkOyaXeJ3bzHfYciIz5TziH3GBJCO+WCY9ZoqT
-ZQZqLgzlQzVo+0XyrDXMcE/ViBZIz5zoDgjXxi/aw+wyqWAyhvAc51xTAB/3CRgk
-yE/52Xx+OFyf9KgL7LID30ABtd9YWiZdOj2yLXDoS7Y2oXeTZkdoGl2YnUBDpCWf
-1hey/Vu2zYkLG61eUh3QRBDVw4ZfPXkyZOOTa2en1FIKEqeNaMsMq9qwUm8Xr5wq
-+/j22U/1ccaLQsEVO84G00R/zoBrEwKBfz3aF82s6dNN9vPlg/HNP9yHbaOdTPLh
-iZY07JGQuPq5kR6hdg9bVnrtxJq9EINzEKEwLvvwLStEAUkt50oH39+oOaFQMtnD
-tOiQy/Hp3uLUgycR+3h+tcbqo14Q5ZJ0TOOaA71fe3lmA4D089qrQt5Vu47/vvpL
-qwcgB0gpsFaGqIFe04Cytm+wRPFTt9EII3Ngck9RaoKzLPigHJYPagYDPzQ6wwzO
-9jAHgVdUerzAEv5Pv/bcemcn6e1JBjuVErvoR3+8xql0xS3CT0gLbIEuALUS344b
-OiQD4E6SOGi9U99+k50Mv5BO8iNoEaA3j7HPyH/K7fqMJbaQg76W99fu/8izl6s8
-RKDDSje0WtL9/l5Uej6P
-=1hlc
------END PGP SIGNATURE-----
+Can you send a patch fixing these.
 
---9ADF8FXzFeE7X4jE--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
