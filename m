@@ -1,194 +1,53 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: exynos: Add MCPM call-back functions
-Date: Mon, 14 Apr 2014 11:41:29 +0100
-Message-ID: <20140414104116.GA3844@e103592.cambridge.arm.com>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
- <1397239311-27717-6-git-send-email-a.kesavan@samsung.com>
- <alpine.LFD.2.11.1404111426510.980@knanqh.ubzr>
+From: Srikanth Thokala <sriku.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] PCI: tegra: use new OF interrupt mapping when possible
+Date: Mon, 14 Apr 2014 16:26:33 +0530
+Message-ID: <CA+mB=1KTqmTW9=NftNXM9V7Pms7zpMHbsW6oThf=cPJ1qGLriw@mail.gmail.com>
+References: <1394025951-32438-1-git-send-email-l.stach@pengutronix.de>
+	<1394025951-32438-3-git-send-email-l.stach@pengutronix.de>
+	<5318B232.2020507@wwwdotorg.org>
+	<1394127555.4582.1.camel@weser.hi.pengutronix.de>
+	<CA+mB=1JCjDMzTuctvSQgjNhBnkyUPC2ooAzJOX_PC5L1gAau8w@mail.gmail.com>
+	<20140411204140.GA8967@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.11.1404111426510.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140411204140.GA8967-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 11, 2014 at 04:23:04PM -0400, Nicolas Pitre wrote:
-> On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
-> 
-> > Add machine-dependent MCPM call-backs for Exynos5420. These are used
-> > to power up/down the secondary CPUs during boot, shutdown, s2r and
-> > switching.
-> > 
-> > Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> 
-> See comments inline.
+On Sat, Apr 12, 2014 at 2:11 AM, Jason Gunthorpe
+<jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org> wrote:
+> On Fri, Apr 11, 2014 at 11:10:59PM +0530, Srikanth Thokala wrote:
+>
+>> I see this error too on my setup (Xilinx PCIe Root Complex Driver),
+>> https://lkml.org/lkml/2014/3/3/183
+>
+>> After digging into it, I see I need to override the API
+>> pcibios_get_phb_of_node()
+>
+> No, as I pointed out before, the DT node comes in through
+> pci_scan_root_bus:
 
-I won't duplicate Nico's review, but I have a couple of extra comments/
-questions, below.
+Thanks Jason for the advice, it is working.
 
-[...]
+Srikanth
 
-> > diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-> > new file mode 100644
-> > index 0000000..46d4968
-> > --- /dev/null
-> > +++ b/arch/arm/mach-exynos/mcpm-exynos.c
-> > @@ -0,0 +1,444 @@
-
-[...]
-
-> > +static void exynos_cluster_power_control(unsigned int cluster, int enable)
-> > +{
-> > +	unsigned long timeout = jiffies + msecs_to_jiffies(20);
-> > +	unsigned int status, val = EXYNOS_CORE_LOCAL_PWR_DIS;
-> > +
-> > +	if (enable)
-> > +		val = EXYNOS_CORE_LOCAL_PWR_EN;
-> > +
-> > +	status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
-> > +	if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
-> > +		return;
-> > +
-> > +	__raw_writel(val, EXYNOS_COMMON_CONFIGURATION(cluster));
-> > +	/* Wait until cluster power control is applied */
-> > +	while (time_before(jiffies, timeout)) {
-> > +		status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
-> > +
-> > +		if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
-> > +			return;
-> > +
-> > +		cpu_relax();
-> > +	}
-> > +	pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
-> > +		enable ? "on" : "off");
-> 
-> You should not have to wait for the power status to change here.  
-> Simply signaling the desired state and returning is all that is 
-> expected.  And because IRQs are turned off, it is likely that 
-> time_before(jiffies, timeout) will always be true anyway because jiffies 
-> are not updated if there is no other CPU to service the timer interrupt.
-> 
-> The actual power status should be polled for in the mcpm_finish() 
-> method only.
-
-Depending on the power controller, it might be possible for writes to
-the controller to be lost or not acted upon, if a previous change is
-still pending.
-
-Does this issue apply to the exynos power controller?
-
-If this is the case, it might be necessary to ensure before a power-up
-request, that the power controller has caught up and reports the
-cluster/CPU as down.  Putting this poll before the write to the
-power controller maximises the chance of pipelining useful work
-in the meantime.  Putting the poll after the write is the worst case.
-
-> 
-> > +}
-> > +
-> > +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
-> > +{
-> > +	unsigned long mpidr;
-> > +
-> > +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
-> > +	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
-> > +		cluster >= EXYNOS5420_NR_CLUSTERS)
-> > +		return -EINVAL;
-> > +
-> > +	/*
-> > +	 * Since this is called with IRQs enabled, and no arch_spin_lock_irq
-> > +	 * variant exists, we need to disable IRQs manually here.
-> > +	 */
-> > +	local_irq_disable();
-> > +	arch_spin_lock(&bl_lock);
-> > +
-> > +	cpu_use_count[cpu][cluster]++;
-> > +	if (cpu_use_count[cpu][cluster] == 1) {
-> > +		bool was_cluster_down =
-> > +			__mcpm_cluster_state(cluster) == CLUSTER_DOWN;
-> > +
-> > +		if (was_cluster_down)
-> > +			exynos_cluster_power_control(cluster, 1);
-> > +		exynos_core_power_control(cpu, cluster, 1);
-> > +
-> > +		if (was_cluster_down) {
-> > +			mpidr = read_cpuid_mpidr();
-> > +			udelay(10);
-> > +			cci_control_port_by_cpu(mpidr, true);
-> > +		}
-> 
-> This is completely wrong.  Is this why you created the patch to 
-> introduce cci_control_port_by_cpu()?  If so I'm NAKing that other patch 
-> as well.
-> 
-> This is going to be completely ineffective with concurrent usage by 
-> cpuidle where CPUs in the other cluster are awaken by an interrupt and 
-> not by calling the cpu_up method.  The current cluster will therefore 
-> not be aware of the other cluster coming online and system memory 
-> corruption will occur.
-> 
-> I see below that you do turn off the CCI port for the current cluster 
-> and the other cluster together, hence the need to enable back the CCI 
-> for the current cluster here.  Please don't do that.  That's not the 
-> proper way to achieve that and there are many race conditions to take 
-> care of before this can be done.  And if we were to go that route, I 
-> want to be convinced it is worth the needed complexity first i.e. I want 
-> to see evidence this actually does save power or improve performance by 
-> a non negligible margin.
-
-Agreed.
-
-The fact that there is no C interface for enabling ACE ports is
-deliberate.  For CPUs connected to ACE and managed via MCPM,
-it is incorrect to enable CCI via C code, since the safe window
-is the window during which all outbound CPUs have reached CLUSTER_DOWN
-and all inbound CPUs have not turned their MMU on yet (and thus cannot
-execute any general Linux C code).
-
-There might be scenarios involving GPUs and other non-CPU devices
-connected to ACE ports where the device cannot enable CCI snoops
-for itself -- but this would require a holding-pen protocol to enable
-the device to wait and signal a CPU to enable CCI snoops on the device's
-behalf before the device proceeds.  It is not the correct solution for
-CPU clusters attached to ACE, precisely because we can be more efficient
-in that case.
-
-In fact, because you implement a power_up_setup method that calls
-cci_enable_port_for_self, CCI snoops are actually enabled twice, making
-the above code appear redundant.   Have I missed something?
-
-Cheers
----Dave
-
-> 
-> > +		/* CPU should be powered up there */
-> > +		/* Also setup Cluster Power Sequence here */
-> > +	} else if (cpu_use_count[cpu][cluster] != 2) {
-> > +		/*
-> > +		 * The only possible values are:
-> > +		 * 0 = CPU down
-> > +		 * 1 = CPU (still) up
-> > +		 * 2 = CPU requested to be up before it had a chance
-> > +		 *     to actually make itself down.
-> > +		 * Any other value is a bug.
-> > +		 */
-> > +		BUG();
-> > +	}
-> > +
-> > +	arch_spin_unlock(&bl_lock);
-> > +	local_irq_enable();
-> > +
-> > +	return 0;
-> > +}
-
-[...]
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> +static struct pci_bus __init *xilinx_pcie_scan_bus(int nr,
+> +                               struct pci_sys_data *sys)
+> +{
+> +       struct xilinx_pcie_port *port = sys_to_pcie(sys);
+> +       struct pci_bus *bus;
+> +
+> +       if (port) {
+> +               port->root_busno = sys->busnr;
+> +               bus = pci_scan_root_bus(NULL, sys->busnr, &xilinx_pcie_ops,
+>                                        ^^^^^^
+>
+> You can't pass NULL here and have DT work properly.
+>
+> See http://www.spinics.net/lists/arm-kernel/msg312392.html
+>
+> Jason
