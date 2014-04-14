@@ -1,36 +1,40 @@
-From: Alexander Stein <alexanders83@web.de>
-Subject: Re: Re: Device tree support for Atmel AC97 controller on AT91SAM9263
-Date: Mon, 14 Apr 2014 20:43:02 +0200
-Message-ID: <2216396.r6UFNn5RuG@kongar>
-References: <1397293707-26890-1-git-send-email-alexanders83@web.de> <s5h38hgnvz5.wl%tiwai@suse.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/5] Power: reset: add bindings for keystone reset driver
+Date: Mon, 14 Apr 2014 20:44:32 +0200
+Message-ID: <6937937.4J6iI7VpBO@wuerfel>
+References: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com> <1397497283-16391-3-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <s5h38hgnvz5.wl%tiwai@suse.de>
+In-Reply-To: <1397497283-16391-3-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Takashi Iwai <tiwai@suse.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jaroslav Kysela <perex@perex.cz>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, santosh.shilimkar@ti.com, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-Hello Takashi,
-
-On Monday 14 April 2014, 10:42:06 wrote Takashi Iwai:
-> At Sat, 12 Apr 2014 11:08:23 +0200,
-> Alexander Stein wrote:
-> > 
-> > This set of patches add device tree support for the AC97 controller found
-> > on AT91SAM9263.
-> > The first two patches are minor cleanup, while the last ones add the 
-actual
-> > support.
+On Monday 14 April 2014 20:41:20 Ivan Khoronzhuk wrote:
+> +Optional properties:
+> +
+> +- ti,soft-reset:       Boolean option indicating soft reset.
+> +                       By default hard reset is used.
+> +
+> +- ti,wdt_list:         WDT list that can cause SoC reset.
+> +                       The list in format: <0>, <2>;
+> +                       Begins from 0 to 3, as keystone can contain up
+> +                       to 4 SoC reset watchdogs.
 > 
-> Do you really need work on this driver?  The sound/atmel/* stuff is an
-> old one before ASoC was introduced, mostly obsoleted nowadays.
 
-Ah, ok. I wasn't aware of that. But is there a replacement for the ac97c 
-driver? All I found in sound/soc/atmel is using the SSC peripheral. Not 
-something I can use.
-Regards,
-Alexander
+This looks like your binding just describes a subset of the
+watchdog timer registers. If so, don't do a standalone reset
+driver, but instead do a watchdog driver that can also be
+used for reset, and have a binding that properly describes
+the watchdog hardware.
 
+It is bad to have overlapping register ranges between logical
+devices, and it's also generally wrong to describe devices that
+are not actually there: The hardware contains a watchdog, not
+a system-reset device, so you should not make one up because
+it seems easier given the Linux driver model.
+
+	Arnd
