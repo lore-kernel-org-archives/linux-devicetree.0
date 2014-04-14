@@ -1,7 +1,7 @@
 From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 6/6] ARM: shmobile: sh73a0: drop address cells from GIC node
-Date: Mon, 14 Apr 2014 16:18:18 +0200
-Message-ID: <1397485098-19198-6-git-send-email-l.stach@pengutronix.de>
+Subject: [PATCH v2 4/6] ARM: dts: ste-dbx: drop address cells from GIC node
+Date: Mon, 14 Apr 2014 16:18:16 +0200
+Message-ID: <1397485098-19198-4-git-send-email-l.stach@pengutronix.de>
 References: <1397485098-19198-1-git-send-email-l.stach@pengutronix.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1397485098-19198-1-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
@@ -20,23 +20,23 @@ same thing as not specifying them, drop them completely.
 Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
-v2: split patch, added ack
+v2: no change, added ack
 ---
- arch/arm/boot/dts/sh73a0.dtsi | 1 -
+ arch/arm/boot/dts/ste-dbx5x0.dtsi | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
-index b7bd3b9a6753..5ecf552e1c00 100644
---- a/arch/arm/boot/dts/sh73a0.dtsi
-+++ b/arch/arm/boot/dts/sh73a0.dtsi
-@@ -34,7 +34,6 @@
- 	gic: interrupt-controller@f0001000 {
- 		compatible = "arm,cortex-a9-gic";
- 		#interrupt-cells = <3>;
--		#address-cells = <1>;
- 		interrupt-controller;
- 		reg = <0xf0001000 0x1000>,
- 		      <0xf0000100 0x100>;
+diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+index e41eedca3ce3..c73414d3fe50 100644
+--- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
++++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
+@@ -24,7 +24,6 @@
+ 		intc: interrupt-controller@a0411000 {
+ 			compatible = "arm,cortex-a9-gic";
+ 			#interrupt-cells = <3>;
+-			#address-cells = <1>;
+ 			interrupt-controller;
+ 			reg = <0xa0411000 0x1000>,
+ 			      <0xa0410100 0x100>;
 -- 
 1.9.1
 
