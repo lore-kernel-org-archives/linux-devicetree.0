@@ -1,51 +1,48 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: at91: move sam9x5 SoCs to the CCF
-Date: Mon, 14 Apr 2014 11:10:03 +0200
-Message-ID: <20140414091002.GR2967@piout.net>
-References: <1397464994-27267-1-git-send-email-boris.brezillon@free-electrons.com>
- <1397464994-27267-5-git-send-email-boris.brezillon@free-electrons.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [alsa-devel] [PATCH RFC v2 0/2] Fix simple-card *-master DT parameter
+ handling
+Date: Mon, 14 Apr 2014 12:53:43 +0300
+Message-ID: <534BB027.8000808@ti.com>
+References: <cover.1394451329.git.jsarha@ti.com>	<877g80rzgg.wl%kuninori.morimoto.gx@gmail.com>	<CAHPCO9FmL__LmUyMRhsy2mnPNAV0h--aMY=GBJjL9TBrAqWSFw@mail.gmail.com>	<87wqg0q74d.wl%kuninori.morimoto.gx@gmail.com>	<5320286D.6080009@ti.com> <878ur81ou7.wl%kuninori.morimoto.gx@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1397464994-27267-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <878ur81ou7.wl%kuninori.morimoto.gx@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Cc: Richard Lee <superlibj8301@gmail.com>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, peter.ujfalusi@ti.com, broonie@kernel.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 14/04/2014 at 10:43:14 +0200, Boris Brezillon wrote :
-> This patch removes the selection of AT91_USE_OLD_CLK when selecting
-> sam9x5 SoCs support. This will automatically enable COMMON_CLK_AT91 option
-> and add support for at91 common clk implementation.
-> 
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/mach-at91/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-> index a1ac430..45b55e0 100644
-> --- a/arch/arm/mach-at91/Kconfig
-> +++ b/arch/arm/mach-at91/Kconfig
-> @@ -167,7 +167,6 @@ config SOC_AT91SAM9X5
->  	select HAVE_AT91_DBGU0
->  	select HAVE_FB_ATMEL
->  	select SOC_AT91SAM9
-> -	select AT91_USE_OLD_CLK
->  	select HAVE_AT91_UTMI
->  	select HAVE_AT91_SMD
->  	select HAVE_AT91_USB_CLK
-> -- 
-> 1.8.3.2
-> 
+On 04/14/2014 08:07 AM, Kuninori Morimoto wrote:
+>
+> Hi Jyri, Mark
+>
+...
+> Could you please teach me current status of this patch ?
 
--- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi,
+This patch-set was never merged as such. Instead there is another 
+patch-set that has been applied by Mark to cover this issue [1]. The 
+patch maintains backward compatibility, with the Nicolin Chen's patch 
+[2]. In other words, old style "bitclock-master" and "frame-master" 
+boolean parameters are read from the codec node if they can not be found 
+from the top level node. The backward compatibility does not apply to 
+multi-link [3] configurations.
+
+Best regards,
+Jyri
+
+
+[1] 
+http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074717.html
+
+[2] 
+http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074219.html
+
+[3] 
+http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074592.html
+
+ps. The discussions that lead to the current solution can be found here:
+http://mailman.alsa-project.org/pipermail/alsa-devel/2014-March/074388.html
+
