@@ -1,50 +1,53 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: [PATCH 8/9] drm/exynos: fix comment to exynos_drm_device_subdrv_prove
- call
-Date: Mon, 14 Apr 2014 15:09:53 +0900
-Message-ID: <1397455794-7759-9-git-send-email-inki.dae@samsung.com>
-References: <1397455794-7759-1-git-send-email-inki.dae@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1397455794-7759-1-git-send-email-inki.dae@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+From: Tarek Dakhran <t.dakhran@samsung.com>
+Subject: [PATCH v8 0/3] Exynos 5410 support
+Date: Mon, 14 Apr 2014 11:17:37 +0400
+Message-ID: <1397459860-21869-1-git-send-email-t.dakhran@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>, Tarek Dakhran <t.dakhran@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-subdrv_probe callback of virtual display driver will be
-called by exynos_drm_device_subdrv_probe() to create crtc
-and encoder/connector for virtual display driver.
-So it fixes comments to exynos_drm_device_subdrv probe call.
+The series of patches represent support of Exynos 5410 SoC
 
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- drivers/gpu/drm/exynos/exynos_drm_drv.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_drv.c b/drivers/gpu/drm/exynos/exynos_drm_drv.c
-index 63dabba..cdd74e2 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_drv.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_drv.c
-@@ -101,7 +101,7 @@ static int exynos_drm_load(struct drm_device *dev, unsigned long flags)
- 	if (ret)
- 		goto err_cleanup_vblank;
- 
--	/* Probe non kms sub drivers. */
-+	/* Probe non kms sub drivers and virtual display driver. */
- 	ret = exynos_drm_device_subdrv_probe(dev);
- 	if (ret)
- 		goto err_unbind_all;
+Patches add new platform description, support of clock controller and device
+tree for Exynos 5410.
+
+Has been build on Linux Kernel v3.15-rc1
+Has been tested on: 1) Exynos 5410 reference board (exynos_defconfig)
+		    2) Odroid-XU board (exynos_defconfig)
+
+I hope, this will be commited to Linux v3.15...
+
+Tarek.
+
+Tarek Dakhran (3):
+  ARM: EXYNOS: Add support for EXYNOS5410 SoC
+  clk: exynos5410: register clocks using common clock framework
+  ARM: dts: Add initial device tree support for EXYNOS5410
+
+ .../devicetree/bindings/clock/exynos5410-clock.txt |   51 +++++
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/exynos5410-smdk5410.dts          |   65 ++++++
+ arch/arm/boot/dts/exynos5410.dtsi                  |  140 ++++++++++++
+ arch/arm/mach-exynos/Kconfig                       |    8 +
+ arch/arm/mach-exynos/exynos.c                      |   12 ++
+ arch/arm/mach-exynos/hotplug.c                     |    4 +-
+ arch/arm/mach-exynos/include/mach/map.h            |    1 +
+ arch/arm/mach-exynos/platsmp.c                     |   10 +-
+ arch/arm/mach-exynos/regs-pmu.h                    |    4 +-
+ arch/arm/plat-samsung/include/plat/cpu.h           |   11 +-
+ drivers/clk/samsung/Makefile                       |    1 +
+ drivers/clk/samsung/clk-exynos5410.c               |  223 ++++++++++++++++++++
+ include/dt-bindings/clock/exynos5410.h             |   33 +++
+ 14 files changed, 556 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+ create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+ create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+ create mode 100644 drivers/clk/samsung/clk-exynos5410.c
+ create mode 100644 include/dt-bindings/clock/exynos5410.h
+
 -- 
 1.7.9.5
