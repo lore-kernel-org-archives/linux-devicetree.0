@@ -1,53 +1,55 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/6] ARM: dts: zynq: drop address cells from GIC node
-Date: Mon, 14 Apr 2014 14:53:09 +0200
-Message-ID: <1397479989.4548.26.camel@weser.hi.pengutronix.de>
-References: <1397228380-7352-1-git-send-email-l.stach@pengutronix.de>
-	 <1397228380-7352-3-git-send-email-l.stach@pengutronix.de>
-	 <f0de762f-56b3-4894-aa78-7ca3c88b9e28@AM1EHSMHS004.ehs.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <f0de762f-56b3-4894-aa78-7ca3c88b9e28-dAX9Bq04yCSXHCJdrdq+zrjjLBE8jN/0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [RFC PATCH v2 9/9] ARM: DT: qcom: Add Qualcomm crypto driver binding document
+Date: Mon, 14 Apr 2014 15:48:45 +0300
+Message-ID: <1397479725-20954-10-git-send-email-svarbanov@mm-sol.com>
+References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi S=C3=B6ren,
+Here is Qualcomm crypto driver device tree binding documentation
+to be used as a reference example.
 
-Am Freitag, den 11.04.2014, 08:54 -0700 schrieb S=C3=B6ren Brinkmann:
-> On Fri, 2014-04-11 at 04:59PM +0200, Lucas Stach wrote:
-> > This is likely a copy-and-paste error from the
-> > ARM GIC documentation, that has already been fixed.
-> >=20
-> > address-cells should have been set to 0, as with the size
-> > cells. As having those properties set to 0 is the
-> > same thing as not specifying them, drop them completely.
->=20
-> Isn't this property inherited from the parent node, requiring to
-> actually set them to 0 to comply with the docs?
->=20
+Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
+---
+ .../devicetree/bindings/crypto/qcom-qce.txt        | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
 
-No, it isn't. From ePAPR v1.1 section 2.3.5:
-"The #address-cells and #size-cells properties are not inherited from
-ancestors in the device tree. They shall be explicitly defined."
+diff --git a/Documentation/devicetree/bindings/crypto/qcom-qce.txt b/Documentation/devicetree/bindings/crypto/qcom-qce.txt
+new file mode 100644
+index 000000000000..fdd53b184ba8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/crypto/qcom-qce.txt
+@@ -0,0 +1,25 @@
++Qualcomm crypto engine driver
++
++Required properties:
++
++- compatible  : should be "qcom,crypto-v5.1"
++- reg         : specifies base physical address and size of the registers map
++- clocks      : phandle to clock-controller plus clock-specifier pair
++- clock-names : "iface" clocks register interface
++                "bus" clocks data transfer interface
++                "core" clocks rest of the crypto block
++- dmas        : DMA specifiers for tx and rx dma channels. For more see
++                Documentation/devicetree/bindings/dma/dma.txt
++- dma-names   : DMA request names should be "rx" and "tx"
++
++Example:
++	crypto@fd45a000 {
++		compatible = "qcom,crypto-v5.1";
++		reg = <0xfd45a000 0x6000>;
++		clocks = <&gcc GCC_CE2_AHB_CLK>,
++			 <&gcc GCC_CE2_AXI_CLK>,
++			 <&gcc GCC_CE2_CLK>;
++		clock-names = "iface", "bus", "core";
++		dmas = <&cryptobam 2>, <&cryptobam 3>;
++		dma-names = "rx", "tx";
++	};
+-- 
+1.8.4.4
 
-Regards,
-Lucas
---=20
-Pengutronix e.K.                           | Lucas Stach               =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-507=
-6 |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
