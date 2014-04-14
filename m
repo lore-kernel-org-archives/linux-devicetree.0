@@ -1,65 +1,62 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Mon, 14 Apr 2014 16:37:02 +0200
-Message-ID: <534BF28E.7040906@samsung.com>
-References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
- <1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] Allow to specify an ECC scheme through DT
+Date: Mon, 14 Apr 2014 11:56:22 -0300
+Message-ID: <20140414145622.GA9294@arch>
+References: <1395401690-25221-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140401100417.GI27979@kw.sim.vm.gnt>
+ <20140403151941.GA21114@arch.cereza>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, kishon@ti.com, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, t.figa@samsung.com, k.debski@samsung.com, jg1.han@samsung.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140403151941.GA21114-nAQHv47ARr+vIlHkl8J1cg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Simon Guinot <sguinot-D+JDLXUtGQkAvxtiuMwx3w@public.gmane.org>, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 08/04/14 16:36, Vivek Gautam wrote:
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> index 28f9edb..6d99ba9 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> @@ -74,3 +74,45 @@ phy-consumer@12340000 {
->  
->  Refer to DT bindings documentation of particular PHY consumer devices for more
->  information about required PHYs and the way of specification.
-> +
-> +Samsung Exynos5 SoC series USB DRD PHY controller
-> +--------------------------------------------------
-> +
-> +Required properties:
-> +- compatible : Should be set to one of the following supported values:
-> +	- "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
-> +	- "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
-> +- reg : Register offset and length of USB DRD PHY register set;
-> +- clocks: Clock IDs array as required by the controller
-> +- clock-names: names of clocks correseponding to IDs in the clock property;
-> +	       Required clocks:
-> +	- phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
-> +	       used for register access.
-> +	- ref: PHY's reference clock (usually crystal clock), associated by
-> +	       phy name, used to determine bit values for clock settings
-> +	       register.
-> +	Additional clock required for Exynos5420:
-> +	- usb30_sclk_100m: Additional special clock used for PHY operation
-> +			   depicted as 'sclk_usbphy30' in CMU of Exynos5420.
-> +- samsung,syscon-phandle: phandle for syscon interface, which is used to
-> +			  control pmu registers for power isolation.
+On Apr 03, Ezequiel Garcia wrote:
+> On Apr 01, Simon Guinot wrote:
+> > On Fri, Mar 21, 2014 at 08:34:46AM -0300, Ezequiel Garcia wrote:
+> > > Now that we have agreed on the ECC devicetree binding, here's a p=
+atchset
+> > > that makes pxa3xx-nand driver use it.
+> > >=20
+> > > This work is required on platforms where the flash device reports=
+ a required
+> > > ECC strength, but that are capable of handling a stronger one. Si=
+mon Guinot
+> > > reported a situation where the vendor provided a bootloader confi=
+gured with
+> > > a stronger than required ECC scheme. Without this patches, such a=
+ situation
+> > > would require a hack to make the driver use a specific ECC scheme=
+=2E
+> > >=20
+> > > (Simon: it would be great if you can confirm this allows you to r=
+emove any hacks).
+> >=20
+> > Hi Ezequiel,
+> >=20
+> > I confirm this allows me to configure the ECC strength and step siz=
+e
+> > from DT.
+> >=20
+> > Tested-by: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+> >=20
+>=20
+> Thanks a lot for the test.
+>=20
+> Brian, any comments?
 
-Why to append "-phandle" to the property's name ? If this is for PMU
-perhaps make it more explicit and name it: samsung,pmu-syscon or
-samsung,pmureg ?
-
-> +- samsung,pmu-offset: phy power control register offset to pmu-system-controller
-> +		      base.
-> +- #phy-cells : from the generic PHY bindings, must be 1;
-> +
-> +For "samsung,exynos5250-usbdrd-phy" and "samsung,exynos5420-usbdrd-phy"
-> +compatible PHYs, the second cell in the PHY specifier identifies the
-> +PHY id, which is interpreted as follows:
-> +  0 - UTMI+ type phy,
-> +  1 - PIPE3 type phy,
-
--- 
-Thanks,
-Sylwester
+Any chance this can be applied?
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
