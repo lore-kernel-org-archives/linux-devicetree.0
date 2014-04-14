@@ -1,83 +1,46 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Questions about of/base.c:of_update_property()
-Date: Mon, 14 Apr 2014 16:29:09 -0500
-Message-ID: <CAL_JsqKW23XYFzPcft04n22S__T6fDx68xayV55NG0h+h--UVA@mail.gmail.com>
-References: <53474303.6030108@roeck-us.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53474303.6030108-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: [PATCH v2 1/9] ARM: shmobile: r8a7790: add dmac0,dmac1 clocks
+Date: Mon, 14 Apr 2014 22:35:04 +0100
+Message-ID: <1397511312-4845-2-git-send-email-ben.dooks@codethink.co.uk>
+References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 8:18 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> Hi folks,
->
-> looking into drivers/of/base.c, I notices a couple of oddities in
-> of_update_property(). Both were interoduced with commit 75b57ecf
-> (of: Make device nodes kobjects so they show up in sysfs).
-> In both cases, there is an unnecessary value check. Sending
-> a patch to remove the checks would be simple, but I want to
-> make sure that the checks are not supposed to address some other
-> condition.
->
-> 1) Unnecessary check if rc != 0
->
-> Here are all the uses of the 'rc' variable in of_update_property():
->
->         rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
->         if (rc)
->                 return rc;
->         ...
->         while (*next) {
->                 ...
->         }
->         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->         if (rc)
->                 return rc;
->
-> What is the purpose of the second check ? Can it be removed,
-> or is there some other condition which should have been checked
-> instead ? Should the check possibly be "if (!found)" ?
+Add clocks for the SYS-DMAC0 and SYS-DMAC1 hardware blocks.
 
-Looks like cut 'n paste from of_add_property. I believe the second one
-should be removed and !found should be checked before updating sysfs.
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+ arch/arm/boot/dts/r8a7790.dtsi | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
->
-> 2) Unnecessary check if oldprop != NULL
->
->         oldprop = of_find_property(np, newprop->name, NULL);
->         if (!oldprop)
->                 return of_add_property(np, newprop);
->         ...
->         /* Update the sysfs attribute */
->         if (oldprop)
->                 sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
->
-> oldprop is not modified between the two checks. Can the check be
-> removed, or is there some other condition which should have been
-> checked instead ?
+diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+index a1e7c39..f98b01d 100644
+--- a/arch/arm/boot/dts/r8a7790.dtsi
++++ b/arch/arm/boot/dts/r8a7790.dtsi
+@@ -671,16 +671,17 @@
+ 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+ 			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
+ 			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
+-				 <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>;
++				 <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&hp_clk>, <&hp_clk>;
+ 			#clock-cells = <1>;
+ 			renesas,clock-indices = <
+ 				R8A7790_CLK_SCIFA2 R8A7790_CLK_SCIFA1 R8A7790_CLK_SCIFA0
+ 				R8A7790_CLK_MSIOF2 R8A7790_CLK_SCIFB0 R8A7790_CLK_SCIFB1
+ 				R8A7790_CLK_MSIOF1 R8A7790_CLK_MSIOF3 R8A7790_CLK_SCIFB2
++				R8A7790_CLK_SYS_DMAC0 R8A7790_CLK_SYS_DMAC1
+ 			>;
+ 			clock-output-names =
+ 				"scifa2", "scifa1", "scifa0", "msiof2", "scifb0",
+-				"scifb1", "msiof1", "msiof3", "scifb2";
++				"scifb1", "msiof1", "msiof3", "scifb2", "dmac0", "dmac1";
+ 		};
+ 		mstp3_clks: mstp3_clks@e615013c {
+ 			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+-- 
+1.9.1
 
-Yes, it can be removed.
-
-> 3) At the very end of the function, there is a check
->
->        if (!found)
->                 return -ENODEV;
->
-> This is _after_ the sysfs entry for the old property was removed,
-> and the sysfs entry for the new property was created. Yet, '!found'
-> suggests that there is some inconsistency in the property, so I wonder
-> if the check should happen earlier, before sysfs entries are touched.
-
-Right.
-
-Can you send a patch fixing these.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
