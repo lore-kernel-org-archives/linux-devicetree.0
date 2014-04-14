@@ -1,54 +1,77 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] SPI: Add driver for Cadence SPI controller
-Date: Mon, 14 Apr 2014 21:01:21 +0100
-Message-ID: <20140414200121.GS25182@sirena.org.uk>
-References: <1397466414-18368-1-git-send-email-harinik@xilinx.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/2] ARM: dts: Append clock bindings for sai2 on VF610
+ platform
+Date: Mon, 14 Apr 2014 21:38:51 +0100
+Message-ID: <20140414203851.GD25182@sirena.org.uk>
+References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
+ <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XCAZszJJXrQJLz3d"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1397466414-18368-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0318140547564076325=="
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Nicolin Chen <Guangyu.Chen@freescale.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, linux-doc@vger.kernel.org, ijc+devicetree@hellion.org.uk, linux-kernel@vger.kernel.org, robh+dt@kernel.org, timur@tabi.org, Li.Xiubo@freescale.com, rob@landley.net, galak@codeaurora.org, shawn.guo@linaro.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 
---XCAZszJJXrQJLz3d
+--===============0318140547564076325==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="bwMunqOr7B7rzQrh"
+Content-Disposition: inline
+
+
+--bwMunqOr7B7rzQrh
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Apr 14, 2014 at 02:36:53PM +0530, Harini Katakam wrote:
-> Add driver for Cadence SPI controller. This is used in Xilinx Zynq.
+On Wed, Apr 02, 2014 at 06:10:20PM +0800, Nicolin Chen wrote:
+> Since we added fours clock to the DT binding, we should update the current
+> SAI dts/dtsi so as not to break their functions.
 
-Applied both, thanks.  Please use subject lines consistent with the
-style for the subsystem.
+This doesn't apply against v3.15-rc1, can you please check and resend?
 
---XCAZszJJXrQJLz3d
+--bwMunqOr7B7rzQrh
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTTD6NAAoJELSic+t+oim93MwP/js3vU/5K363UHhqiHdUKx0e
-NsKBmg8+jGzOGO7yTHkHI1ZHuciE8rrjK/opm32RzhJHDyGtH+7uqI9CWq4nm03E
-zmJnVxhXCm2aVheioTB0t93KGXCvTxAOwsOtyXncZlWpFxNlxeuo+HS5U8TbHqJ5
-J7qBxSVLqT5QZiOwmidUxbEwyvrNQ5Uti+iYjddR8KMfQw9/44pal2I6O1zsIMCs
-wjQRgn5MEZ0ssuP0kDU1QHVMzp2tOLJMjnQDz8LOUUHHGhtOj/nZYgsTFBN+lQ6F
-Uc7+LB6A4Tr6nGtp0STdesWrS7f22Ps8YEOg+aVRBdMQllisHwiyISPz4w0785JR
-QBSl0BO8dVfKU+lSHUp7l66L3SESOEwaB/4QRRR3tSvWFOFc3h6jUC1IuOeEVFnw
-nJTsSZYjMzNwSv/E9eV5uu9KRaJfRnz1r9rAHAc0fXgFGZ/zv0SRmY0S/unJrT9z
-NxnK1UNQaIhOrnhm4jGx5/fWEPKm8UF/aH72dJvdl7u/up6npA0hmgxyK+GD6rgG
-viqE3yO8DN/XZhfhETeMCeAVUWUylBDKfmlG1BRd+Vw5rK/KlBR1q+JDWKWmKC2k
-4Iu8tt3HoSxrCQlGe3SIhnqLHPl83RkIfBSdm8Y/KV9ow+cGXGOxqtBMmqmKuZVd
-4oO/hL7EYPrduJ8NSO6i
-=Pabl
+iQIcBAEBAgAGBQJTTEdYAAoJELSic+t+oim909YP/1fePSP/VU6q5ZG2V6LA+Ien
+nDePfbzPoLOsJA05Wg8OFj1xKg5TLpnk7ZAqRr/kg4dLxp8QdEO1LlpR9f/YNBdw
+5NKYyQDCGNf6x0Qglbr8v2vrXlrV7CeWIeZ2PLE3S2O/0YZUXWGw7vy6mz/aNjFL
+DqyNM/MQft/FNHN+A4odSGRT+zQkDM6chtAqCQa7/Xw0y4F9OsbWQCRXb4Q+KxL1
+bYwoc2xHonhUgZD01M0k80SXGcXfiAYDfx5a5l5u7+K3hz0HVGudsHclaSI/cy4T
+PUGi3sZ9i+oLwdmrYtNPAmmllcY60+VTbdWdK2EJrE9MUpaCUOhtvoqqcQ1WD7iC
+iWaDJ8CCer4rHo090cPQwejlnb62VVeLsZrjKyZXMT/XupxnJQo7Nbhs7gSbUwWb
+mi6q+A/+DvyaMhZMbKRdjQhoED6xoQjArirWLmKiNPH95FPKDAwMo+AyqYvPGJWy
+5KAoMjDIaV7zrTlZSRGefgpBhKzCGQBxg+P2NSmantEX94rKW43kwQng5OlMRhV2
+nSQ/x3Wj0xPZwxhfQS/KDaGpS32KSnj1lFCbwLRFuNciphzmXRHI2/4IeVoQzvvZ
+yi+sATUjrrcshPU4qLdsp8h2GRiC6Uz06+hmCPElI2Bvby3xt5E4k2zv49KzlsqB
+LMedOA0Rd2Lg6ygCIfYE
+=3HvM
 -----END PGP SIGNATURE-----
 
---XCAZszJJXrQJLz3d--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--bwMunqOr7B7rzQrh--
+
+--===============0318140547564076325==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMt
+ZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
+c3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+
+--===============0318140547564076325==--
