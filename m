@@ -1,86 +1,70 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 4/6] iio: st_sensors: add device tree bindings
-Date: Sun, 13 Apr 2014 21:09:01 +0200
-Message-ID: <1397416143-4396-5-git-send-email-linus.walleij@linaro.org>
-References: <1397416143-4396-1-git-send-email-linus.walleij@linaro.org>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397416143-4396-1-git-send-email-linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 6/6] ARM: dts: sh: drop address cells from GIC node
+Date: Mon, 14 Apr 2014 10:17:29 +0900
+Message-ID: <20140414011726.GA22411@verge.net.au>
+References: <1397228380-7352-1-git-send-email-l.stach@pengutronix.de>
+ <1397228380-7352-6-git-send-email-l.stach@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397228380-7352-6-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds some basic, simple device tree bindings to the STMicro
-MEMS sensor drivers.
+On Fri, Apr 11, 2014 at 04:59:40PM +0200, Lucas Stach wrote:
+> This is likely a copy-and-paste error from the
+> ARM GIC documentation, that has already been fixed.
+> 
+> address-cells should have been set to 0, as with the size
+> cells. As having those properties set to 0 is the
+> same thing as not specifying them, drop them completely.
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Denis CIOCCA <denis.ciocca-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- .../devicetree/bindings/iio/st-sensors.txt         | 54 ++++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/st-sensors.txt
+Hi Lucas,
 
-diff --git a/Documentation/devicetree/bindings/iio/st-sensors.txt b/Documentation/devicetree/bindings/iio/st-sensors.txt
-new file mode 100644
-index 000000000000..a7a0a15913ad
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/st-sensors.txt
-@@ -0,0 +1,54 @@
-+STMicroelectronics MEMS sensors
-+
-+The STMicroelectronics sensor devices are pretty straight-forward I2C or
-+SPI devices, all sharing the same device tree descriptions no matter what
-+type of sensor it is.
-+
-+Required properties:
-+- compatible: see the list of valid compatible strings below
-+- reg: the I2C or SPI address the device will respond to
-+
-+Optional properties:
-+- vdd-supply: an optional regulator that needs to be on to provide VDD
-+  power to the sensor.
-+- vddio-supply: an optional regulator that needs to be on to provide the
-+  VDD IO power to the sensor.
-+- st,drdy-int-pin: the pin on the package that will be used to signal
-+  "data ready" (valid values: 1 or 2). This property is not configurable
-+  on all sensors.
-+
-+Sensors may also have applicable pin control settings, those use the
-+standard bindings from pinctrl/pinctrl-bindings.txt.
-+
-+Valid compatible strings:
-+
-+Accelerometers:
-+- st,lsm303dlh-accel
-+- st,lsm303dlhc-accel
-+- st,lis3dh-accel
-+- st,lsm330d-accel
-+- st,lsm330dl-accel
-+- st,lsm330dlc-accel
-+- st,lis331dlh-accel
-+- st,lsm303dl-accel
-+- st,lsm303dlm-accel
-+- st,lsm330-accel
-+
-+Gyroscopes:
-+- st,l3g4200d-gyro
-+- st,lsm330d-gyro
-+- st,lsm330dl-gyro
-+- st,lsm330dlc-gyro
-+- st,l3gd20-gyro
-+- st,l3g4is-gyro
-+- st,lsm330-gyro
-+
-+Magnetometers:
-+- st,lsm303dlhc-magn
-+- st,lsm303dlm-magn
-+- st,lis3mdl-magn
-+
-+Pressure sensors:
-+- st,lps001wp-press
-+- st,lps25h-press
-+- st,lps331ap-press
--- 
-1.9.0
+Please split this patch into two, one for r8a7740 with the prefix
+ARM: shmobile: r8a7740:
+
+And one for sh73a0 with the prefix
+ARM: shmobile: sh73a0:
+
+> 
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/r8a7740.dtsi | 1 -
+>  arch/arm/boot/dts/sh73a0.dtsi  | 1 -
+>  2 files changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index 8280884bfa59..2551e9438d35 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -28,7 +28,6 @@
+>  	gic: interrupt-controller@c2800000 {
+>  		compatible = "arm,cortex-a9-gic";
+>  		#interrupt-cells = <3>;
+> -		#address-cells = <1>;
+>  		interrupt-controller;
+>  		reg = <0xc2800000 0x1000>,
+>  		      <0xc2000000 0x1000>;
+> diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+> index b7bd3b9a6753..5ecf552e1c00 100644
+> --- a/arch/arm/boot/dts/sh73a0.dtsi
+> +++ b/arch/arm/boot/dts/sh73a0.dtsi
+> @@ -34,7 +34,6 @@
+>  	gic: interrupt-controller@f0001000 {
+>  		compatible = "arm,cortex-a9-gic";
+>  		#interrupt-cells = <3>;
+> -		#address-cells = <1>;
+>  		interrupt-controller;
+>  		reg = <0xf0001000 0x1000>,
+>  		      <0xf0000100 0x100>;
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
