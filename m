@@ -1,203 +1,54 @@
-From: Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] reset: add driver for socfpga
-Date: Mon, 14 Apr 2014 17:31:15 -0500
-Message-ID: <534C61B3.9020504@gmail.com>
-References: <1397118063-21619-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: shmobile: sh73a0: drop address cells from
+ GIC node
+Date: Tue, 15 Apr 2014 07:38:26 +0900
+Message-ID: <20140414223826.GA22518@verge.net.au>
+References: <1397485098-19198-1-git-send-email-l.stach@pengutronix.de>
+ <1397485098-19198-6-git-send-email-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397118063-21619-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397485098-19198-6-git-send-email-l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/10/2014 03:21 AM, Steffen Trumtrar wrote:
-> Add a reset-controller driver for the socfpga platform.
-> The reset-controller has four banks with up to 32 entries all encapsulated in
-> one module block.
->
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Mon, Apr 14, 2014 at 04:18:18PM +0200, Lucas Stach wrote:
+> This is likely a copy-and-paste error from the
+> ARM GIC documentation, that has already been fixed.
+> 
+> address-cells should have been set to 0, as with the size
+> cells. As having those properties set to 0 is the
+> same thing as not specifying them, drop them completely.
+> 
+> Signed-off-by: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > ---
-> Changes since v1:
-> 	- use BITS_PER_LONG everywhere instead of MAX_BANK_WIDTH
-> 	- print pdev->dev.of_node->full_name on error
-> 	- use proper IS_ERR/PTR_ERR
->
->   drivers/reset/Makefile        |   1 +
->   drivers/reset/reset-socfpga.c | 147 ++++++++++++++++++++++++++++++++++++++++++
->   2 files changed, 148 insertions(+)
->   create mode 100644 drivers/reset/reset-socfpga.c
->
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index cc29832..ab64077 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -1,2 +1,3 @@
->   obj-$(CONFIG_RESET_CONTROLLER) += core.o
->   obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
-> +obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
-> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-> new file mode 100644
-> index 0000000..bdcd2fa
-> --- /dev/null
-> +++ b/drivers/reset/reset-socfpga.c
-> @@ -0,0 +1,147 @@
-> +/*
-> + * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + *
-> + * based on
-> + * Allwinner SoCs Reset Controller driver
-> + *
-> + * Copyright 2013 Maxime Ripard
-> + *
-> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +#define NR_BANKS		4
-> +#define OFFSET_MODRST		0x10
-> +
-> +struct socfpga_reset_data {
-> +	spinlock_t			lock;
-> +	void __iomem			*membase;
-> +	struct reset_controller_dev	rcdev;
-> +};
-> +
-> +static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	struct socfpga_reset_data *data = container_of(rcdev,
-> +						     struct socfpga_reset_data,
-> +						     rcdev);
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-> +				 (bank * NR_BANKS));
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
-> +				  unsigned long id)
-> +{
-> +	struct socfpga_reset_data *data = container_of(rcdev,
-> +						     struct socfpga_reset_data,
-> +						     rcdev);
-> +
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-> +				  (bank * NR_BANKS));
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops socfpga_reset_ops = {
-> +	.assert		= socfpga_reset_assert,
-> +	.deassert	= socfpga_reset_deassert,
-> +};
-> +
-> +static int socfpga_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct socfpga_reset_data *data;
-> +	struct resource *res;
-> +	int ret;
+> v2: split patch, added ack
 
-'ret' is not used in this function.
+Thanks, I have queued this up as a fix for v3.15.
 
-Dinh
-> +
-> +	/*
-> +	 * The binding was mainlined without the required property.
-> +	 * Do not continue, when we encounter an old DT.
-> +	 */
-> +	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
-> +		dev_err(&pdev->dev, "%s missing #reset-cells property\n",
-> +			pdev->dev.of_node->full_name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->membase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->membase))
-> +		return PTR_ERR(data->membase);
-> +
-> +	spin_lock_init(&data->lock);
-> +
-> +	data->rcdev.owner = THIS_MODULE;
-> +	data->rcdev.nr_resets = NR_BANKS * BITS_PER_LONG;
-> +	data->rcdev.ops = &socfpga_reset_ops;
-> +	data->rcdev.of_node = pdev->dev.of_node;
-> +	reset_controller_register(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int socfpga_reset_remove(struct platform_device *pdev)
-> +{
-> +	struct socfpga_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +	reset_controller_unregister(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id socfpga_reset_dt_ids[] = {
-> +	{ .compatible = "altr,rst-mgr", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver socfpga_reset_driver = {
-> +	.probe	= socfpga_reset_probe,
-> +	.remove	= socfpga_reset_remove,
-> +	.driver = {
-> +		.name		= "socfpga-reset",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= socfpga_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(socfpga_reset_driver);
-> +
-> +MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
-> +MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
-> +MODULE_LICENSE("GPL");
->
+> ---
+>  arch/arm/boot/dts/sh73a0.dtsi | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/sh73a0.dtsi b/arch/arm/boot/dts/sh73a0.dtsi
+> index b7bd3b9a6753..5ecf552e1c00 100644
+> --- a/arch/arm/boot/dts/sh73a0.dtsi
+> +++ b/arch/arm/boot/dts/sh73a0.dtsi
+> @@ -34,7 +34,6 @@
+>  	gic: interrupt-controller@f0001000 {
+>  		compatible = "arm,cortex-a9-gic";
+>  		#interrupt-cells = <3>;
+> -		#address-cells = <1>;
+>  		interrupt-controller;
+>  		reg = <0xf0001000 0x1000>,
+>  		      <0xf0000100 0x100>;
+> -- 
+> 1.9.1
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
