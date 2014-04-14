@@ -1,40 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/5] Power: reset: add bindings for keystone reset driver
-Date: Mon, 14 Apr 2014 20:44:32 +0200
-Message-ID: <6937937.4J6iI7VpBO@wuerfel>
-References: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com> <1397497283-16391-3-git-send-email-ivan.khoronzhuk@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1397497283-16391-3-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, santosh.shilimkar@ti.com, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, olof@lixom.net
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/4] Support additional regulators on BCM590xx
+Date: Mon, 14 Apr 2014 14:50:24 -0400
+Message-ID: <1397501428-8857-1-git-send-email-mporter@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 14 April 2014 20:41:20 Ivan Khoronzhuk wrote:
-> +Optional properties:
-> +
-> +- ti,soft-reset:       Boolean option indicating soft reset.
-> +                       By default hard reset is used.
-> +
-> +- ti,wdt_list:         WDT list that can cause SoC reset.
-> +                       The list in format: <0>, <2>;
-> +                       Begins from 0 to 3, as keystone can contain up
-> +                       to 4 SoC reset watchdogs.
-> 
+This series enables support for 7 additional regulators on the BCM59056
+PMU. These regulators are accessed via a secondary I2C slave address.
+The MFD driver exposes an additional regmap descriptor for the additional
+address space and the regulator implements support for GPLDO1-6 and VBUS
+regulators.
 
-This looks like your binding just describes a subset of the
-watchdog timer registers. If so, don't do a standalone reset
-driver, but instead do a watchdog driver that can also be
-used for reset, and have a binding that properly describes
-the watchdog hardware.
+Matt Porter (4):
+  mfd: bcm590xx: update binding with additional BCM59056 regulators
+  mfd: bcm590xx: add support for second i2c slave address space
+  regulator: bcm590xx: add support for regulators on secondary i2c slave
+  ARM: dts: bcm590xx: add support for GPLDO and VBUS regulators
 
-It is bad to have overlapping register ranges between logical
-devices, and it's also generally wrong to describe devices that
-are not actually there: The hardware contains a watchdog, not
-a system-reset device, so you should not make one up because
-it seems easier given the Linux driver model.
+ Documentation/devicetree/bindings/mfd/bcm590xx.txt |  4 +-
+ arch/arm/boot/dts/bcm59056.dtsi                    | 21 +++++
+ drivers/mfd/bcm590xx.c                             | 60 ++++++++++----
+ drivers/regulator/bcm590xx-regulator.c             | 92 +++++++++++++++++++---
+ include/linux/mfd/bcm590xx.h                       |  9 ++-
+ 5 files changed, 158 insertions(+), 28 deletions(-)
 
-	Arnd
+-- 
+1.8.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
