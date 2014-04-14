@@ -1,60 +1,54 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/4] regulator: bcm590xx: add support for regulators on
- secondary i2c slave
-Date: Mon, 14 Apr 2014 20:59:39 +0100
-Message-ID: <20140414195939.GR25182@sirena.org.uk>
-References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
- <1397501428-8857-4-git-send-email-mporter@linaro.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 1/2] SPI: Add driver for Cadence SPI controller
+Date: Mon, 14 Apr 2014 21:01:21 +0100
+Message-ID: <20140414200121.GS25182@sirena.org.uk>
+References: <1397466414-18368-1-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PPxI8paQBs33t8dK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="XCAZszJJXrQJLz3d"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397501428-8857-4-git-send-email-mporter@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1397466414-18368-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---PPxI8paQBs33t8dK
+--XCAZszJJXrQJLz3d
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2014 at 02:50:27PM -0400, Matt Porter wrote:
-> The bcm590xx mfd driver now exposes a second regmap descriptor making
-> the registers for regulators on the secondary i2c slave address
-> available.  Add support for GPLDO1-6 and VBUS regulators found within
-> this register range.
->=20
-> Signed-off-by: Matt Porter <mporter@linaro.org>
+On Mon, Apr 14, 2014 at 02:36:53PM +0530, Harini Katakam wrote:
+> Add driver for Cadence SPI controller. This is used in Xilinx Zynq.
 
-Acked-by: Mark Brown <broonie@linaro.org>
+Applied both, thanks.  Please use subject lines consistent with the
+style for the subsystem.
 
-though if possible I'd prefer to merge this into the regulator tree
-which would need a cross tree merge with MFD.
-
---PPxI8paQBs33t8dK
+--XCAZszJJXrQJLz3d
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTTD4oAAoJELSic+t+oim9iNEP/j5zNfSRbmnUDjsI7avrqpdf
-rESLNCU+3eRCAG63Sum+KYl9yeNELHE7lP3FFiuTdPahGcezHOvqmKvgMf7ti6mJ
-G0Tv7Fp8LVFgGyT3sqA5aTQwgXsWpusBA3e4tNNVQtH67DsTh7wOCmfOK31GuU4B
-0cIy4vDRcC/x5cd8h2G1SkLbm0v1QP68T1y998n1UPzh4omAdnbKeUbIfL5GvO3I
-zHuB3MXdleZsh7/gpuo+ddUCpHKU5ftZlI3rUvEZyxBCcg8QHa9jk+Y4FHRMnwfE
-+WOd1GgIwAV1+Lt54qGfc+MsBv7MFPxPMDnHHon4QKyWa9P7Ws8RKQZbyBjjqky9
-wQ3og7dM5qQbtYRNscahxjN5nqfowzi362ld+NQqDuO96yjOKLZzx1b6CtGvcY4i
-lLvPsJFZgHs8BM7hvV5RmhroiM1tbhyxX8a/XvR1DYNtolCNgqPGajPi1X3XFVsK
-5EQ7DPnk22EmGG+LcPK2o/5x+JxSocGBonCYD1BT6mGiGSiyEtyw1H6pCpdSajpW
-MBo687Nq98EkHMbFQGT5ocMuJMY0LV8V0DC5hXEpafuq0h+MQyIvXpJtojLy5qUh
-7tGKan8HaUECnvUc3DOdABSFY+gbOmGgLHaX7j8dspRwVP2Y74T5+o+4KIWEhXLv
-bG8LjRbxnGQex5MZC6Ei
-=joNP
+iQIcBAEBAgAGBQJTTD6NAAoJELSic+t+oim93MwP/js3vU/5K363UHhqiHdUKx0e
+NsKBmg8+jGzOGO7yTHkHI1ZHuciE8rrjK/opm32RzhJHDyGtH+7uqI9CWq4nm03E
+zmJnVxhXCm2aVheioTB0t93KGXCvTxAOwsOtyXncZlWpFxNlxeuo+HS5U8TbHqJ5
+J7qBxSVLqT5QZiOwmidUxbEwyvrNQ5Uti+iYjddR8KMfQw9/44pal2I6O1zsIMCs
+wjQRgn5MEZ0ssuP0kDU1QHVMzp2tOLJMjnQDz8LOUUHHGhtOj/nZYgsTFBN+lQ6F
+Uc7+LB6A4Tr6nGtp0STdesWrS7f22Ps8YEOg+aVRBdMQllisHwiyISPz4w0785JR
+QBSl0BO8dVfKU+lSHUp7l66L3SESOEwaB/4QRRR3tSvWFOFc3h6jUC1IuOeEVFnw
+nJTsSZYjMzNwSv/E9eV5uu9KRaJfRnz1r9rAHAc0fXgFGZ/zv0SRmY0S/unJrT9z
+NxnK1UNQaIhOrnhm4jGx5/fWEPKm8UF/aH72dJvdl7u/up6npA0hmgxyK+GD6rgG
+viqE3yO8DN/XZhfhETeMCeAVUWUylBDKfmlG1BRd+Vw5rK/KlBR1q+JDWKWmKC2k
+4Iu8tt3HoSxrCQlGe3SIhnqLHPl83RkIfBSdm8Y/KV9ow+cGXGOxqtBMmqmKuZVd
+4oO/hL7EYPrduJ8NSO6i
+=Pabl
 -----END PGP SIGNATURE-----
 
---PPxI8paQBs33t8dK--
+--XCAZszJJXrQJLz3d--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
