@@ -1,61 +1,132 @@
-From: Chanho Park <chanho61.park@samsung.com>
-Subject: [PATCH 2/4] ARM: dts: exynos4: add exynos_usbphy node
-Date: Mon, 14 Apr 2014 21:48:18 +0900
-Message-ID: <1397479700-15864-3-git-send-email-chanho61.park@samsung.com>
-References: <1397479700-15864-1-git-send-email-chanho61.park@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1397479700-15864-1-git-send-email-chanho61.park@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: t.figa@samsung.com, k.debski@samsung.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [RFC PATCH v2 0/9] Add Qualcomm crypto driver
+Date: Mon, 14 Apr 2014 15:48:36 +0300
+Message-ID: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables a exynos_usbphy node for exynos4 SoCs.
-A exynos4x12 usb phy node is almost same with 4210's one
-except compatible string and pmu syscon.
+Hi,
 
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: Kamil Debski <k.debski@samsung.com>
-Signed-off-by: Chanho Park <chanho61.park@samsung.com>
----
- arch/arm/boot/dts/exynos4.dtsi    | 10 ++++++++++
- arch/arm/boot/dts/exynos4x12.dtsi |  5 +++++
- 2 files changed, 15 insertions(+)
+Here is the second version of the patch set. This time tagged
+as an RFC to avoid confusions. The driver is splitted by files
+and is buildable at the last patch. When the review has finished
+1/9 to 7/9 could be squashed in one patch.
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index e565b86..0e32d7f 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -278,6 +278,16 @@
- 		status = "disabled";
- 	};
- 
-+	exynos_usbphy: exynos-usbphy@125B0000 {
-+		compatible = "samsung,exynos4210-usb2-phy";
-+		reg = <0x125B0000 0x100>;
-+		samsung,pmureg-phandle = <&pmu_reg>;
-+		clocks = <&clock 305>, <&clock 2>;
-+		clock-names = "phy", "ref";
-+		status = "disabled";
-+		#phy-cells = <1>;
-+	};
-+
- 	ehci@12580000 {
- 		compatible = "samsung,exynos4210-ehci";
- 		reg = <0x12580000 0x100>;
-diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
-index c4a9306..3d77a40 100644
---- a/arch/arm/boot/dts/exynos4x12.dtsi
-+++ b/arch/arm/boot/dts/exynos4x12.dtsi
-@@ -243,4 +243,9 @@
- 		clock-names = "biu", "ciu";
- 		status = "disabled";
- 	};
-+
-+	exynos-usbphy@125B0000 {
-+		compatible = "samsung,exynos4x12-usb2-phy";
-+		samsung,sysreg-phandle = <&sys_reg>;
-+	};
- };
+Any comments appreciated!
+
+Changes since v1:
+
+core
+ - added MODULE_DEVICE_TABLE
+ - reorganise includes
+ - kernel doc comments
+ - fix probe error path, forgot to destroy workqueue
+ - rework clocks and kill loops for enabling
+ - restructure the interfaces between core part of the driver
+   and crypto type algorithms. Now struct qce_algo_ops has
+   .unregister_algs operation and it is implemented by every
+   algorithm type (unregister_algs was common in v1).
+   Also async_req_queue/done are now part of core structure
+   qce_device
+
+regs-v5
+ - use GENMASK and include bitops.h
+
+dma-sg helpers
+ - do not check !IS_ERR on error path
+ - various fixes as per review comments
+ - reorganise includes
+ - return error on qce_dma_terminate_all
+
+ablkcipher
+ - use queue and done callbacks from struct qce_device
+ - reorganise includes
+ - kernel doc notation
+
+sha-hmac
+ - use queue and done callbacks from struct qce_device
+ - make byte_count __be32
+ - kernel doc notation
+ - make rctx flags member unsigned long
+ - cleanup qce_ahash_update function
+ - make const * input args of qce_import_common
+
+common
+ - rename bits/masks to use _SHIFT suffix
+ - reorganise includes and add qce_get_version function
+ - make rctx flags unsigned long
+ - move blocksize boundary check on function begging and
+   clear BYTECOUNT registers on first processing block
+
+This driver is based on Codeaurora's driver found at [1]
+
+regards,
+Stan
+
+[1] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers
+/crypto/msm?h=msm-3.10
+------------------------------------------------------------
+v1.
+
+The following patch set implements support for Qualcomm
+crypto hardware accelerator driver. It registers itself
+to the crypto subsystem and adds the following operations
+for encryption/decription - AES with ECB CBC CTR XTS modes,
+DES with ECB CBC modes, and 3DES ECB CBC modes.
+For hashing and MAC it adds support for sha1 sha256,
+hmac(sha1) hmac(sha256).
+
+The version of the driver is reworked by me and it is based
+on Codeaurora's qcrypto driver. The proposed version has many
+coding style fixes, re-factored files, separated by
+functionality. I wanted to make the driver more readable and
+easier for review, hope I done well. I'll appreciate any review
+comments which will help me to make this code clear and ready
+for mainline kernel.
+
+Stanimir Varbanov (9):
+  crypto: qce: Add core driver implementation
+  crypto: qce: Add register defines
+  crypto: qce: Add dma and sg helpers
+  crypto: qce: Add ablkcipher algorithms
+  crypto: qce: Adds sha and hmac transforms
+  crypto: qce: Adds infrastructure to setup the crypto block
+  crypto: qce: Adds Makefile to build the driver
+  crypto: qce: Build Qualcomm qce driver
+  ARM: DT: qcom: Add Qualcomm crypto driver binding document
+
+ .../devicetree/bindings/crypto/qcom-qce.txt        |  25 +
+ drivers/crypto/Kconfig                             |  10 +
+ drivers/crypto/Makefile                            |   1 +
+ drivers/crypto/qce/Makefile                        |   6 +
+ drivers/crypto/qce/ablkcipher.c                    | 403 ++++++++++++++
+ drivers/crypto/qce/cipher.h                        |  67 +++
+ drivers/crypto/qce/common.c                        | 438 +++++++++++++++
+ drivers/crypto/qce/common.h                        | 104 ++++
+ drivers/crypto/qce/core.c                          | 295 ++++++++++
+ drivers/crypto/qce/core.h                          |  73 +++
+ drivers/crypto/qce/dma.c                           | 188 +++++++
+ drivers/crypto/qce/dma.h                           |  58 ++
+ drivers/crypto/qce/regs-v5.h                       | 331 ++++++++++++
+ drivers/crypto/qce/sha.c                           | 591 +++++++++++++++++++++
+ drivers/crypto/qce/sha.h                           |  81 +++
+ 15 files changed, 2671 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
+ create mode 100644 drivers/crypto/qce/Makefile
+ create mode 100644 drivers/crypto/qce/ablkcipher.c
+ create mode 100644 drivers/crypto/qce/cipher.h
+ create mode 100644 drivers/crypto/qce/common.c
+ create mode 100644 drivers/crypto/qce/common.h
+ create mode 100644 drivers/crypto/qce/core.c
+ create mode 100644 drivers/crypto/qce/core.h
+ create mode 100644 drivers/crypto/qce/dma.c
+ create mode 100644 drivers/crypto/qce/dma.h
+ create mode 100644 drivers/crypto/qce/regs-v5.h
+ create mode 100644 drivers/crypto/qce/sha.c
+ create mode 100644 drivers/crypto/qce/sha.h
+
 -- 
-1.8.3.2
+1.8.4.4
