@@ -1,104 +1,125 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: exynos: Add MCPM call-back functions
-Date: Mon, 14 Apr 2014 10:01:27 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1404140956060.980@knanqh.ubzr>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com> <1397239311-27717-6-git-send-email-a.kesavan@samsung.com> <alpine.LFD.2.11.1404111426510.980@knanqh.ubzr> <20140414104116.GA3844@e103592.cambridge.arm.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH v2 4/4] drivers: net: Add APM X-Gene SoC ethernet driver
+ support.
+Date: Mon, 14 Apr 2014 15:05:20 +0100
+Message-ID: <534BEB20.3080501@codethink.co.uk>
+References: <1397271984-23405-1-git-send-email-isubramanian@apm.com> <1397271984-23405-5-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140414104116.GA3844-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397271984-23405-5-git-send-email-isubramanian@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Iyappan Subramanian <isubramanian@apm.com>, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Apr 2014, Dave Martin wrote:
+On 12/04/14 04:06, Iyappan Subramanian wrote:
+> This patch adds network driver for APM X-Gene SoC ethernet.
+>
+> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+> Signed-off-by: Ravi Patel <rapatel@apm.com>
 
-> On Fri, Apr 11, 2014 at 04:23:04PM -0400, Nicolas Pitre wrote:
-> > On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
-> > 
-> > > Add machine-dependent MCPM call-backs for Exynos5420. These are used
-> > > to power up/down the secondary CPUs during boot, shutdown, s2r and
-> > > switching.
-> > > 
-> > > Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > > Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> > > Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > 
-> > See comments inline.
-> 
-> I won't duplicate Nico's review, but I have a couple of extra comments/
-> questions, below.
-> 
-> [...]
-> 
-> > > diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-> > > new file mode 100644
-> > > index 0000000..46d4968
-> > > --- /dev/null
-> > > +++ b/arch/arm/mach-exynos/mcpm-exynos.c
-> > > @@ -0,0 +1,444 @@
-> 
-> [...]
-> 
-> > > +static void exynos_cluster_power_control(unsigned int cluster, int enable)
-> > > +{
-> > > +	unsigned long timeout = jiffies + msecs_to_jiffies(20);
-> > > +	unsigned int status, val = EXYNOS_CORE_LOCAL_PWR_DIS;
-> > > +
-> > > +	if (enable)
-> > > +		val = EXYNOS_CORE_LOCAL_PWR_EN;
-> > > +
-> > > +	status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
-> > > +	if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
-> > > +		return;
-> > > +
-> > > +	__raw_writel(val, EXYNOS_COMMON_CONFIGURATION(cluster));
-> > > +	/* Wait until cluster power control is applied */
-> > > +	while (time_before(jiffies, timeout)) {
-> > > +		status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
-> > > +
-> > > +		if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
-> > > +			return;
-> > > +
-> > > +		cpu_relax();
-> > > +	}
-> > > +	pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
-> > > +		enable ? "on" : "off");
-> > 
-> > You should not have to wait for the power status to change here.  
-> > Simply signaling the desired state and returning is all that is 
-> > expected.  And because IRQs are turned off, it is likely that 
-> > time_before(jiffies, timeout) will always be true anyway because jiffies 
-> > are not updated if there is no other CPU to service the timer interrupt.
-> > 
-> > The actual power status should be polled for in the mcpm_finish() 
-> > method only.
-> 
-> Depending on the power controller, it might be possible for writes to
-> the controller to be lost or not acted upon, if a previous change is
-> still pending.
-> 
-> Does this issue apply to the exynos power controller?
+[snip]
 
-Given the way the code is structured now, I suppose that has not been 
-the case so far.
+> +{
+> +	struct xgene_enet_pdata *pdata = netdev_priv(ndev);
+> +	struct phy_device *phydev;
+> +	unsigned char phy_id[MII_BUS_ID_SIZE+3];
+> +	int ret = 0;
+> +
+> +	phydev = phy_find_first(pdata->mdio_bus);
+> +	if (!phydev) {
+> +		netdev_info(ndev, "no PHY found\n");
+> +		ret = -1;
+> +		goto out;
+> +	}
+> +
+> +	/* attach the mac to the phy */
+> +	snprintf(phy_id, sizeof(phy_id), PHY_ID_FMT, pdata->mdio_bus->id,
+> +		 pdata->phy_addr);
+> +	phydev = phy_connect(ndev, phy_id,
+> +			     &xgene_enet_mdio_link_change, pdata->phy_mode);
+> +	if (IS_ERR(phydev)) {
+> +		netdev_err(ndev, "Could not attach to PHY\n");
+> +		ret = PTR_ERR(phydev);
+> +		phydev = NULL;
+> +		goto out;
+> +	}
+> +
 
-> 
-> If this is the case, it might be necessary to ensure before a power-up
-> request, that the power controller has caught up and reports the
-> cluster/CPU as down.  Putting this poll before the write to the
-> power controller maximises the chance of pipelining useful work
-> in the meantime.  Putting the poll after the write is the worst case.
+You should be using of_phy_connect or similar so that the
+necessary PHY<>OF data is properly initialised
 
-More useful might be a check on the actual _control_ bit.  If the 
-control bits may be read back then I expect the indicated state will 
-happen even if delayed.
+> +	netdev_info(ndev, "phy_id=0x%08x phy_drv=\"%s\"",
+> +		    phydev->phy_id, phydev->drv->name);
+> +out:
+> +	pdata->phy_link = 0;
+> +	pdata->phy_speed = 0;
+> +	pdata->phy_dev = phydev;
+> +
+> +	return ret;
+> +}
+> +
 
 
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+
+> +struct xgene_enet_desc {
+> +	u64 m0;
+> +	u64 m1;
+> +	u64 m2;
+> +	u64 m3;
+> +};
+> +
+> +struct xgene_enet_desc16 {
+> +	u64 m0;
+> +	u64 m1;
+> +};
+> +
+> +static inline void xgene_enet_cpu_to_le64(struct xgene_enet_desc *desc,
+> +					  int count)
+> +{
+> +#ifdef CONFIG_CPU_BIG_ENDIAN
+> +	int i;
+> +
+> +	for (i = 0; i < count; i++)
+> +		((u64 *)desc)[i] = cpu_to_le64(((u64 *)desc)[i]);
+> +#endif
+> +}
+> +
+> +static inline void xgene_enet_le64_to_cpu(struct xgene_enet_desc *desc,
+> +					  int count)
+> +{
+> +#ifdef CONFIG_CPU_BIG_ENDIAN
+> +	int i;
+> +
+> +	for (i = 0; i < count; i++)
+> +		((u64 *)desc)[i] = le64_to_cpu(((u64 *)desc)[i]);
+> +#endif
+> +}
+> +
+> +static inline void xgene_enet_desc16_to_le64(struct xgene_enet_desc *desc)
+> +{
+> +#ifdef CONFIG_CPU_BIG_ENDIAN
+> +	((u64 *)desc)[1] = cpu_to_le64(((u64 *)desc)[1]);
+> +#endif
+> +}
+> +
+> +static inline void xgene_enet_le64_to_desc16(struct xgene_enet_desc *desc)
+> +{
+> +#ifdef CONFIG_CPU_BIG_ENDIAN
+> +	((u64 *)desc)[1] = le64_to_cpu(((u64 *)desc)[1]);
+> +#endif
+> +}
+
+With this do you not risk confusing the hardware by swapping the
+format of the descriptors?
+
+Why not use xxx_to_cpu() and cpu_to_xxx() functions when reading or
+writing the descriptors? It would also remove a lot of the #ifdef in
+this code.
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
