@@ -1,46 +1,42 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: [PATCH v2 1/6] gpio: rcar: Add optional functional clock to bindings
-Date: Mon, 14 Apr 2014 20:33:12 +0200
-Message-ID: <1397500397-12607-2-git-send-email-geert@linux-m68k.org>
-References: <1397500397-12607-1-git-send-email-geert@linux-m68k.org>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1397500397-12607-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
+From: Alexander Stein <alexanders83@web.de>
+Subject: Re: Re: Device tree support for Atmel AC97 controller on AT91SAM9263
+Date: Mon, 14 Apr 2014 20:34:10 +0200
+Message-ID: <3514422.OSZGxjlElf@kongar>
+References: <1397293707-26890-1-git-send-email-alexanders83@web.de> <534B9ECF.806@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <534B9ECF.806@atmel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Andrew Victor <linux@maxim.org.za>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Geert Uytterhoeven <geert+renesas@glider.be>
+Hello Bo,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-Cc: linux-gpio@vger.kernel.org
-Cc: devicetree@vger.kernel.org
----
-v2:
-  - Functional clock is mandatory depending on hardware (thanks, Laurent)
----
- .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |    6 ++++++
- 1 file changed, 6 insertions(+)
+On Monday 14 April 2014, 16:39:43 wrote Bo Shen:
+> On 04/12/2014 05:08 PM, Alexander Stein wrote:
+> > This set of patches add device tree support for the AC97 controller found
+> > on AT91SAM9263.
+> > The first two patches are minor cleanup, while the last ones add the actual
+> > support.
+> 
+> I just test the whole patch series, and find issues to work with device 
+> tree kernel.
+> When we use dt kernel, no where assign the device id (so take it as 
+> "-1"), so when register devices, it will be /dev/snd/pcmC0D-1p and 
+> /dev/snd/pcmC0D-1c. So, the sound won't work.
+> 
+> The root cause is that when call "snd_pcm_new", it will pass 
+> "chip->pdev->id" as parameter.
+> 
+> So, I am thinking whether this should be fix in <sound/atmel/ac97c.c> or 
+> in <sound/core/pcm.c>
 
-diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-index f61cef74a212..941a26aa4322 100644
---- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-+++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
-@@ -21,6 +21,12 @@ Required Properties:
-     GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
-   - gpio-ranges: Range of pins managed by the GPIO controller.
- 
-+Optional properties:
-+
-+  - clocks: Must contain a reference to the functional clock.  The property is
-+    mandatory if the hardware implements a controllable functional clock for
-+    the GPIO instance.
-+
- Please refer to gpio.txt in this directory for details of gpio-ranges property
- and the common GPIO bindings used by client devices.
- 
--- 
-1.7.9.5
+Ah. thanks for figuring out. I also noticed later that e.g. aplay actually doesn't work, but could not figure out why. pcmC0D-1c looked valid at first glance I wasn't aware that this includes a -1 :)
+I was already happy that the controller found the codec.
+
+Best regards,
+Alexander
 
