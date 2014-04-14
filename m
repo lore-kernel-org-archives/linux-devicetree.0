@@ -1,46 +1,38 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH 4/4] ARM: at91: move sam9n12 SoC to the CCF
-Date: Mon, 14 Apr 2014 10:16:39 +0200
-Message-ID: <1397463399-11771-5-git-send-email-boris.brezillon@free-electrons.com>
-References: <1397463399-11771-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397463399-11771-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH 0/4] ARM: at91: move sam9n12 SoC and boards to the CCF
+Date: Mon, 14 Apr 2014 10:16:35 +0200
+Message-ID: <1397463399-11771-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the selection of AT91_USE_OLD_CLK when selecting
-sam9n12 SoC support. This will automatically enable COMMON_CLK_AT91 option
-and add support for at91 common clk implementation.
+Hello,
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
----
- arch/arm/mach-at91/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+This series moves the at91sam9n12 SoC and the at91sam9n12-ek board to
+the Common Clock Framework.
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index b2d2cf4..a1ac430 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -183,7 +183,6 @@ config SOC_AT91SAM9N12
- 	select HAVE_AT91_DBGU0
- 	select HAVE_FB_ATMEL
- 	select SOC_AT91SAM9
--	select AT91_USE_OLD_CLK
- 	select HAVE_AT91_USB_CLK
- 	help
- 	  Select this if you are using Atmel's AT91SAM9N12 SoC.
+It depends on this series [1], which introduces new slow clock and main
+clock implementation (and DT bindings) for at91 SoCs.
+
+Best Regards,
+
+Boris
+
+[1] http://lkml.iu.edu/hypermail/linux/kernel/1403.3/00074.html
+
+Boris BREZILLON (4):
+  ARM: at91: prepare common clk transition for sam9n12 SoC
+  ARM: at91/dt: define sam9n12 clocks
+  ARM: at91/dt: define sam9n12ek crystal frequencies
+  ARM: at91: move sam9n12 SoC to the CCF
+
+ arch/arm/boot/dts/at91sam9n12.dtsi  | 350 +++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/at91sam9n12ek.dts |   8 +
+ arch/arm/mach-at91/Kconfig          |   1 -
+ arch/arm/mach-at91/at91sam9n12.c    |   6 +-
+ 4 files changed, 361 insertions(+), 4 deletions(-)
+
 -- 
 1.8.3.2
