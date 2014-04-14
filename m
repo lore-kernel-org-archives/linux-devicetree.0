@@ -1,61 +1,66 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 1/1] ARM: dts: omap5: Add clocks to USB3 PHY node
-Date: Mon, 14 Apr 2014 10:22:43 +0300
-Message-ID: <534B8CC3.7050008@ti.com>
-References: <1396348647-11545-1-git-send-email-rogerq@ti.com> <1396348647-11545-2-git-send-email-rogerq@ti.com> <20140401141308.GB4717@saruman.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 4/4] regulator: s5m8767: Use same binding for external control
+ as in s2mps11
+Date: Mon, 14 Apr 2014 10:09:09 +0200
+Message-ID: <1397462949-22379-5-git-send-email-k.kozlowski@samsung.com>
+References: <1397462949-22379-1-git-send-email-k.kozlowski@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140401141308.GB4717@saruman.home>
+In-reply-to: <1397462949-22379-1-git-send-email-k.kozlowski@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: balbi@ti.com, kishon@ti.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+To: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+Change the binding for regulators external control to the same used in
+s2mps11 driver to be consistent.
 
-On 04/01/2014 05:13 PM, Felipe Balbi wrote:
-> On Tue, Apr 01, 2014 at 01:37:27PM +0300, Roger Quadros wrote:
->> The USB3 PHY driver (ti-pipe3) was updated so that the relevant
->> clock phandles are expected in the DT node.
->> Provide the necessary clocks.
->>
->> Reported-by: Kishon Vijay Abraham I <kishon@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> 
-> Great!!!
-> 
-> Acked-by: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+---
+ Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt | 4 ++--
+ drivers/regulator/s5m8767.c                                       | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Could you please pick this up for 3.15-rc? Thanks.
-
-cheers,
--roger
-
-> 
->> ---
->>  arch/arm/boot/dts/omap5.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
->> index 757f0b9..4df1e7a 100644
->> --- a/arch/arm/boot/dts/omap5.dtsi
->> +++ b/arch/arm/boot/dts/omap5.dtsi
->> @@ -794,6 +794,12 @@
->>  				      <0x4a084c00 0x40>;
->>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
->>  				ctrl-module = <&omap_control_usb3phy>;
->> +				clocks = <&usb_phy_cm_clk32k>,
->> +					 <&sys_clkin>,
->> +					 <&usb_otg_ss_refclk960m>;
->> +				clock-names =	"wkupclk",
->> +						"sysclk",
->> +						"refclk";
->>  				#phy-cells = <0>;
->>  			};
->>  		};
->> -- 
->> 1.8.3.2
->>
-> 
+diff --git a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
+index d290988ed975..558c80345ef0 100644
+--- a/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/s5m8767-regulator.txt
+@@ -76,7 +76,7 @@ except these properties:
+ 		1 - on in normal mode
+ 		2 - low power mode
+ 		3 - suspend mode
+-	- s5m8767,pmic-ext-control-gpios: (optional) GPIO specifier for one
++	- samsung,ext-control-gpios: (optional) GPIO specifier for one
+ 		GPIO controlling this regulator (enable/disable); This is
+ 		valid only for buck9.
+ 
+@@ -157,7 +157,7 @@ Example:
+ 				regulator-min-microvolt = <2800000>;
+ 				regulator-max-microvolt = <2800000>;
+ 				op_mode = <3>; /* Standby Mode */
+-				s5m8767,pmic-ext-control-gpios = <&gpk0 2 0>;
++				samsung,ext-control-gpios = <&gpk0 2 0>;
+ 			};
+ 		};
+ 	};
+diff --git a/drivers/regulator/s5m8767.c b/drivers/regulator/s5m8767.c
+index 92f19a005dc3..dbfd98b04a77 100644
+--- a/drivers/regulator/s5m8767.c
++++ b/drivers/regulator/s5m8767.c
+@@ -534,7 +534,7 @@ static void s5m8767_pmic_dt_parse_ext_control_gpio(struct sec_pmic_dev *iodev,
+ 		struct device_node *reg_np)
+ {
+ 	rdata->ext_control_gpio = of_get_named_gpio(reg_np,
+-			"s5m8767,pmic-ext-control-gpios", 0);
++			"samsung,ext-control-gpios", 0);
+ 	if (!gpio_is_valid(rdata->ext_control_gpio))
+ 		rdata->ext_control_gpio = 0;
+ }
+-- 
+1.8.3.2
