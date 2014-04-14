@@ -1,151 +1,46 @@
-From: Matt Porter <mporter@linaro.org>
-Subject: [PATCH 2/4] mfd: bcm590xx: add support for second i2c slave address
- space
-Date: Mon, 14 Apr 2014 14:50:26 -0400
-Message-ID: <1397501428-8857-3-git-send-email-mporter@linaro.org>
-References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2] ARM: dts: DRA7/AM4372: add l3_noc information
+Date: Mon, 14 Apr 2014 14:12:44 -0500
+Message-ID: <1397502766-13994-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397501428-8857-1-git-send-email-mporter@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Devicetree List <devicetree@vger.kernel.org>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
-Cc: Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-BCM590xx utilizes a second i2c slave address to access additional
-register space. Add support for the second address space by
-instantiated a dummy i2c device with the appropriate secondary
-i2c slave address. Expose a second regmap register space so that
-mfd drivers can access this secondary i2c slave address space.
+Patch series based on:
+v3.15-rc1 tag.
 
-Signed-off-by: Matt Porter <mporter@linaro.org>
----
- drivers/mfd/bcm590xx.c       | 60 +++++++++++++++++++++++++++++++++-----------
- include/linux/mfd/bcm590xx.h |  9 ++++---
- 2 files changed, 52 insertions(+), 17 deletions(-)
+Depends on series posted: http://marc.info/?l=linux-omap&m=139749383932575&w=2
 
-diff --git a/drivers/mfd/bcm590xx.c b/drivers/mfd/bcm590xx.c
-index e9a33c7..b710ffa 100644
---- a/drivers/mfd/bcm590xx.c
-+++ b/drivers/mfd/bcm590xx.c
-@@ -28,39 +28,71 @@ static const struct mfd_cell bcm590xx_devs[] = {
- 	},
- };
- 
--static const struct regmap_config bcm590xx_regmap_config = {
-+static const struct regmap_config bcm590xx_regmap_config_0 = {
- 	.reg_bits	= 8,
- 	.val_bits	= 8,
--	.max_register	= BCM590XX_MAX_REGISTER,
-+	.max_register	= BCM590XX_MAX_REGISTER_0,
- 	.cache_type	= REGCACHE_RBTREE,
- };
- 
--static int bcm590xx_i2c_probe(struct i2c_client *i2c,
-+static const struct regmap_config bcm590xx_regmap_config_1 = {
-+	.reg_bits	= 8,
-+	.val_bits	= 8,
-+	.max_register	= BCM590XX_MAX_REGISTER_1,
-+	.cache_type	= REGCACHE_RBTREE,
-+};
-+
-+static int bcm590xx_i2c_probe(struct i2c_client *addmap0,
- 			      const struct i2c_device_id *id)
- {
- 	struct bcm590xx *bcm590xx;
- 	int ret;
- 
--	bcm590xx = devm_kzalloc(&i2c->dev, sizeof(*bcm590xx), GFP_KERNEL);
-+	bcm590xx = devm_kzalloc(&addmap0->dev, sizeof(*bcm590xx), GFP_KERNEL);
- 	if (!bcm590xx)
- 		return -ENOMEM;
- 
--	i2c_set_clientdata(i2c, bcm590xx);
--	bcm590xx->dev = &i2c->dev;
--	bcm590xx->i2c_client = i2c;
-+	i2c_set_clientdata(addmap0, bcm590xx);
-+	bcm590xx->dev = &addmap0->dev;
-+	bcm590xx->addmap0 = addmap0;
- 
--	bcm590xx->regmap = devm_regmap_init_i2c(i2c, &bcm590xx_regmap_config);
--	if (IS_ERR(bcm590xx->regmap)) {
--		ret = PTR_ERR(bcm590xx->regmap);
--		dev_err(&i2c->dev, "regmap initialization failed: %d\n", ret);
-+	bcm590xx->regmap0 = devm_regmap_init_i2c(addmap0,
-+						 &bcm590xx_regmap_config_0);
-+	if (IS_ERR(bcm590xx->regmap0)) {
-+		ret = PTR_ERR(bcm590xx->regmap0);
-+		dev_err(&addmap0->dev, "regmap 0 init failed: %d\n", ret);
- 		return ret;
- 	}
- 
--	ret = mfd_add_devices(&i2c->dev, -1, bcm590xx_devs,
-+	/* Second I2C slave address is the base address with A(2) asserted */
-+	bcm590xx->addmap1 = i2c_new_dummy(addmap0->adapter,
-+					  addmap0->addr | BIT(2));
-+	if (IS_ERR_OR_NULL(bcm590xx->addmap1)) {
-+		dev_err(&addmap0->dev, "failed to add address map 1 device\n");
-+		return -ENODEV;
-+	}
-+	i2c_set_clientdata(bcm590xx->addmap1, bcm590xx);
-+
-+	bcm590xx->regmap1 = devm_regmap_init_i2c(bcm590xx->addmap1,
-+						&bcm590xx_regmap_config_1);
-+	if (IS_ERR(bcm590xx->regmap1)) {
-+		ret = PTR_ERR(bcm590xx->regmap1);
-+		dev_err(&bcm590xx->addmap1->dev,
-+			"regmap 1 init failed: %d\n", ret);
-+		goto err;
-+	}
-+
-+	ret = mfd_add_devices(&addmap0->dev, -1, bcm590xx_devs,
- 			      ARRAY_SIZE(bcm590xx_devs), NULL, 0, NULL);
--	if (ret < 0)
--		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
-+	if (ret < 0) {
-+		dev_err(&addmap0->dev, "failed to add sub-devices: %d\n", ret);
-+		goto err;
-+	}
-+
-+	return 0;
- 
-+err:
-+	i2c_unregister_device(bcm590xx->addmap1);
- 	return ret;
- }
- 
-diff --git a/include/linux/mfd/bcm590xx.h b/include/linux/mfd/bcm590xx.h
-index 434df2d..a2723f2 100644
---- a/include/linux/mfd/bcm590xx.h
-+++ b/include/linux/mfd/bcm590xx.h
-@@ -19,12 +19,15 @@
- #include <linux/regmap.h>
- 
- /* max register address */
--#define BCM590XX_MAX_REGISTER	0xe7
-+#define BCM590XX_MAX_REGISTER_0	0xe7
-+#define BCM590XX_MAX_REGISTER_1	0xf0
- 
- struct bcm590xx {
- 	struct device *dev;
--	struct i2c_client *i2c_client;
--	struct regmap *regmap;
-+	struct i2c_client *addmap0;
-+	struct i2c_client *addmap1;
-+	struct regmap *regmap0;
-+	struct regmap *regmap1;
- 	unsigned int id;
- };
- 
+DTS Patches is available here:
+https://github.com/nmenon/linux-2.6-playground/commits/l3noc/dts-fixes
+
+This just adds the dts information based on driver support provided.
+
+Test log:
+1: am43xx-epos:  Boot PASS: http://slexy.org/raw/s2pjavFUYd
+2: DRA7xx-EVM:  Boot PASS: http://slexy.org/raw/s21pdAj0hU
+3: pandaboard-es:  Boot PASS: http://slexy.org/raw/s21Hsq97mt
+4:    sdp4430:  Boot PASS: http://slexy.org/raw/s2ZQJUqjrP
+5: OMAP5432uEVM:  Boot PASS: http://slexy.org/raw/s2hNulLOuX
+
+Afzal Mohammed (1):
+  ARM: dts: AM4372: add l3-noc information
+
+Rajendra Nayak (1):
+  ARM: dts: DRA7: Use dra7-l3-noc instead of omap4-l3-noc
+
+ arch/arm/boot/dts/am4372.dtsi |    6 +++++-
+ arch/arm/boot/dts/dra7.dtsi   |    6 +++---
+ 2 files changed, 8 insertions(+), 4 deletions(-)
+
 -- 
-1.8.4
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
