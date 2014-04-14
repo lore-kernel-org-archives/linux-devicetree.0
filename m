@@ -1,56 +1,56 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/2] ASoC: fsl_sai: Add clock controls for SAI
-Date: Mon, 14 Apr 2014 21:43:31 +0100
-Message-ID: <20140414204331.GE25182@sirena.org.uk>
-References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
- <12898efab7a5907e6ed1c438a486692f59ef9d8b.1396432924.git.Guangyu.Chen@freescale.com>
+Subject: Re: [PATCH 4/4] regulator: s5m8767: Use same binding for external
+ control as in s2mps11
+Date: Mon, 14 Apr 2014 22:11:06 +0100
+Message-ID: <20140414211106.GC12304@sirena.org.uk>
+References: <1397462949-22379-1-git-send-email-k.kozlowski@samsung.com>
+ <1397462949-22379-5-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TXtjXAp+Y+VkYOQB"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="L6iaP+gRLNZHKoI4"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <12898efab7a5907e6ed1c438a486692f59ef9d8b.1396432924.git.Guangyu.Chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nicolin Chen <Guangyu.Chen@freescale.com>
-Cc: shawn.guo@linaro.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+In-Reply-To: <1397462949-22379-5-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---TXtjXAp+Y+VkYOQB
+--L6iaP+gRLNZHKoI4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Wed, Apr 02, 2014 at 06:10:19PM +0800, Nicolin Chen wrote:
+On Mon, Apr 14, 2014 at 10:09:09AM +0200, Krzysztof Kozlowski wrote:
 
-> -- clock-names : Must include the "sai" entry.
-> +- clock-names : Must include the "bus" for register access and "mclk1" "mclk2"
-> +  "mclk3" for bit clock and frame clock providing.
+> -	- s5m8767,pmic-ext-control-gpios: (optional) GPIO specifier for one
+> +	- samsung,ext-control-gpios: (optional) GPIO specifier for one
+>  		GPIO controlling this regulator (enable/disable); This is
+>  		valid only for buck9.
 
-This breaks compatibilty with old DTs - it just removes the "sai" name.
-It's OK to deprecate the "sai" clock name but you need to keep support
-for DTs that only specify that, there's no code for that left in the
-driver.
+This is an incompatible change.  It's OK to deprecate the old property
+but it's bad form to just remove it.
 
---TXtjXAp+Y+VkYOQB
+--L6iaP+gRLNZHKoI4
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTTEhwAAoJELSic+t+oim9Mj0QAIwQBL/SGdZ+n6vV3Z5XflLP
-KzUVEG4ODRrVYCLwZIcYLz6wQyqAEq/KcT+gZkB3hysZ0xSm+WzF8Dmpt5BUEIhr
-VaQvN/CzlliLwQvCYWPI0U6tQiAY76eI7TEMOaqt2qqU/R0uIAVO+KdqWyurJ31X
-3bhgUznDpPo6sVaxf5ngAM4dgxmHFWR+UsDFOzV7EzGbkvllT8mWya7mPPT+Iyod
-YD204C0qsU9KKSrPJ0MUr/u3xZdURiHCBgHlVXP+KNn+8Du8q0fuYlnKa7daecPz
-y/8q5tYFFUDjhQtjdtZoBHSp7/rvp4JiY0LtC3YuVo12EDHMipVzd1lZUDan2O1o
-vFcl2GZ8iJYJMGzsLZtVpHF8vId9X5wt34FOSxt1G0DVwzHuEGeHhovE0jLUDRLr
-y6JSL8VgULXGm88qmn+orOAqBlOj82sK8gdaP8jGaxC8qNhcXvbZiVRfZ0bgR4pl
-reOocP9N+rx5oU9kUzDHM1lnl23Nywy5+mqxcpuknZU0uGTRFRMQuOV6xxLYSF/e
-d4IziBZ0KTeoKp7dD5i5XbGfR5zlSfFT8BI5OOTOX5GtBg3Zxo95thk3bBG72zWs
-D70sxZ9T3uzYLaTC65KkGxF+a3PX7eIcB14EzsqPc8js4L4Bjpz/nioyj9gL9kSt
-Rx4C13U/4otoTh6EcCMy
-=NkVo
+iQIcBAEBAgAGBQJTTE7nAAoJELSic+t+oim9wnQP/j1E9nH/Vo2WkPVYslXz7ClG
+FZcO7kNtYcc7FEHgs/KB+yOCY7qtp9Iu7HcdkJCdaYbTU5QHuGqprPmaFYWFEMPO
+DX4Yyh0qWUXy7hKWJKaD8cpEi/UhwLKaaEsCqFSCKvET8N7GHiRXP6WAeQDdW+LW
+gGQevoqC0cr+5dIPbxhKmuS+79FS1dOpvWW2YvGxYe5TPC43hLfNr3MKI/wnozgW
+PuOsyw43QSvw2LLJfynx2KQHnYL0r65+aqxcfI9Rjhv+bcnukPdQk3uPV2C4Obf/
+TdNGbVvBq97hEDVZHBkFoXqgKtd5b/YXYBudn2Oo3CQtExGUKFrSjnDnFdMTIBqB
+vJjEA+fvhdpj5bb1p+OhwtiUK1/M8QsdY6HmWeGU4ppwoADPaMU7ew9MvInotfnY
+1N+zWZ1ai8rzuzr7zxQ+jaa6oLrSV6IQZlk5gEdWQwAPb5TktYFVSiFPOzaKknEU
+JO5pXd3pnl0rTTRnc0FXWBk/DA8ESD3UdghZdSehP+xC/fpXPruKZT/oC+68VNLk
+A882ZxMILnBlmXjGN9C8XXsPNbS6oJZ3EpE7Na6X6RNn7BuBGjrENR+Bk7/PZUyM
+xKHMOO4MAH0l9ThJmuHnwsoeH9+Nl6EI85y+RL6DZLU7WXjG45pRTIDq2EqL4rV6
+OZyukAI8U7NKPwCKfN4y
+=ddaJ
 -----END PGP SIGNATURE-----
 
---TXtjXAp+Y+VkYOQB--
+--L6iaP+gRLNZHKoI4--
