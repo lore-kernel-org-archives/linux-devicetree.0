@@ -1,32 +1,33 @@
-From: Nicolin Chen <Guangyu.Chen@freescale.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: Append clock bindings for sai2 on VF610
- platform
-Date: Tue, 15 Apr 2014 10:28:47 +0800
-Message-ID: <20140415022846.GD7197@MrMyself>
-References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
- <d09da3eb629143abd3f61ae037af4ddaf7286a83.1396432924.git.Guangyu.Chen@freescale.com>
- <20140414203851.GD25182@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140414203851.GD25182@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: shawn.guo@linaro.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
+From: Andy Gross <agross@codeaurora.org>
+Subject: [PATCH 0/3] pinctrl: qcom: Add IPQ8064 pinctrl support
+Date: Mon, 14 Apr 2014 22:10:34 -0500
+Message-ID: <1397531437-9104-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 14, 2014 at 09:38:51PM +0100, Mark Brown wrote:
-> On Wed, Apr 02, 2014 at 06:10:20PM +0800, Nicolin Chen wrote:
-> > Since we added fours clock to the DT binding, we should update the current
-> > SAI dts/dtsi so as not to break their functions.
-> 
-> This doesn't apply against v3.15-rc1, can you please check and resend?
+This set of patches adds pinctrl support for the Qualcomm IPQ8064 platform.
+The IPQ8064 uses the same TLMM block as the APQ8064, but has a different number
+of pins, functions, and function assignments.  The second patch contains the
+devicetree documentation.  The last patch selects PINCTRL for all ARCH_QCOM
+platforms.  This allows for selection of pinctrl support via a make menuconfig.
 
-Please disregard this patch, since my v6 patch was compatible with the old
-binding, the patch here is provisionally useless and I can later send it
-via Shawn's tree.
+Andy Gross (3):
+  pinctrl: qcom: Add definitions for IPQ8064
+  dt: Document Qualcomm IPQ8064 pinctrl binding
+  ARM: qcom: Select PINCTRL by default for ARCH_QCOM
 
-Thank you,
-Nicolin
+ .../bindings/pinctrl/qcom,ipq8064-pinctrl.txt      |   95 +++
+ arch/arm/mach-qcom/Kconfig                         |    1 +
+ drivers/pinctrl/Kconfig                            |    8 +
+ drivers/pinctrl/Makefile                           |    1 +
+ drivers/pinctrl/pinctrl-ipq8064.c                  |  653 ++++++++++++++++++++
+ 5 files changed, 758 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,ipq8064-pinctrl.txt
+ create mode 100644 drivers/pinctrl/pinctrl-ipq8064.c
 
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
