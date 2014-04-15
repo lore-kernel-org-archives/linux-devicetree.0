@@ -1,85 +1,72 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: berlin: add GPIO nodes for the BG2Q
-Date: Tue, 15 Apr 2014 13:48:49 +0200
-Message-ID: <20140415114848.GA2813@piout.net>
-References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397549245-3338-3-git-send-email-antoine.tenart@free-electrons.com>
- <534CFA77.9030108@gmail.com>
- <20140415180058.2fefca78@xhacker>
- <534D0943.2050100@gmail.com>
+From: Mohit Kumar <mohit.kumar@st.com>
+Subject: [PATCH V8 1/9] clk: SPEAr13XX: Fix pcie clock name
+Date: Tue, 15 Apr 2014 17:19:43 +0530
+Message-ID: <378dc5a17716db13553ae05257b9b0e9722d29b8.1397555158.git.mohit.kumar__16963.0539756783$1397562656$gmane$org@st.com>
+References: <cover.1397555158.git.mohit.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <534D0943.2050100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <cover.1397555158.git.mohit.kumar@st.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: spear-devel@list.st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Pratyush Anand <pratyush.anand@st.com>, Mohit Kumar <mohit.kumar@st.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 15/04/2014 at 12:26:11 +0200, Sebastian Hesselbarth wrote :
-> On 04/15/2014 12:00 PM, Jisheng Zhang wrote:
-> >On Tue, 15 Apr 2014 02:23:03 -0700
-> >Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >>On 04/15/2014 10:07 AM, Antoine T=E9nart wrote:
-> >>>The Marvell Berlin BG2Q has 6 GPIO ports compatible with the
-> >>>snps,dw-apb-gpio driver. This patch add the corresponding device t=
-ree
-> >>>nodes.
-> >>>
-> >>>Signed-off-by: Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
->
-> >>>---
-> >>>   arch/arm/boot/dts/berlin2q.dtsi | 102
-> >>>++++++++++++++++++++++++++++++++++++++++ 1 file changed, 102 inser=
-tions(+)
-> >>>
-> >>>diff --git a/arch/arm/boot/dts/berlin2q.dtsi
-> >>>b/arch/arm/boot/dts/berlin2q.dtsi index e6e556055dfc..b2625f896bc5=
- 100644
-> >>>--- a/arch/arm/boot/dts/berlin2q.dtsi
-> >>>+++ b/arch/arm/boot/dts/berlin2q.dtsi
-> [...]
-> >>>+					compatible =3D
-> >>>"snps,dw-apb-gpio-port";
-> >>>+					gpio-controller;
-> >>>+					#gpio-cells =3D <2>;
-> >>>+					snps,nr-gpios =3D <32>;
-> >>
-> >>32 gpio pins for each of the 6 GPIO controllers? Either BG2Q is a G=
-PIO
-> >
-> >Yes, BG2Q support 32 pins every port
->=20
-> Wow. Thanks for confirming this!
->=20
-> >>I am fine with using nr-gpios property now, but I guess BG2Q also
-> >>has that CONFIG[1,2] registers to actually read out the features
-> >>synthesized in? If I find some time, I'll prepare a patch for
-> >>dw-apb-gpio to exploit that (optional) information instead of
-> >>using nr-gpios.
-> >
-> >The problem is CONFIG1/2 registers don't exist on some versions.
-> >For example, the version used in BG2/BG2CD. So nr-gpio is necessary
-> >if we want to support these versions.
->=20
-> Hmm, are you sure about BG2? I remember reading it and it contains
-> sane values. Anyway, a proper patch for dw-apb-gpio would include
-> checking for sane (e.g. non-zero) values. And nr-gpios will always
-> stay as fall-back just because e.g. sunxi does not have the CONFIG
-> registers.
->=20
+From: Pratyush Anand <pratyush.anand@st.com>
 
-Shouldn't that be use nr-gpios and if not available, read the CONFIG
-registers? Else, what about bogus registers ?
+Follow dt clock naming convention for PCIe clocks.
 
---=20
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
+Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Mohit Kumar <mohit.kumar@st.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: spear-devel@list.st.com
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ drivers/clk/spear/spear1310_clock.c |    6 +++---
+ drivers/clk/spear/spear1340_clock.c |    2 +-
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/clk/spear/spear1310_clock.c b/drivers/clk/spear/spear1310_clock.c
+index 65894f7..4daa597 100644
+--- a/drivers/clk/spear/spear1310_clock.c
++++ b/drivers/clk/spear/spear1310_clock.c
+@@ -742,19 +742,19 @@ void __init spear1310_clk_init(void __iomem *misc_base, void __iomem *ras_base)
+ 	clk = clk_register_gate(NULL, "pcie_sata_0_clk", "ahb_clk", 0,
+ 			SPEAR1310_PERIP1_CLK_ENB, SPEAR1310_PCIE_SATA_0_CLK_ENB,
+ 			0, &_lock);
+-	clk_register_clkdev(clk, NULL, "dw_pcie.0");
++	clk_register_clkdev(clk, NULL, "b1000000.pcie");
+ 	clk_register_clkdev(clk, NULL, "b1000000.ahci");
+ 
+ 	clk = clk_register_gate(NULL, "pcie_sata_1_clk", "ahb_clk", 0,
+ 			SPEAR1310_PERIP1_CLK_ENB, SPEAR1310_PCIE_SATA_1_CLK_ENB,
+ 			0, &_lock);
+-	clk_register_clkdev(clk, NULL, "dw_pcie.1");
++	clk_register_clkdev(clk, NULL, "b1800000.pcie");
+ 	clk_register_clkdev(clk, NULL, "b1800000.ahci");
+ 
+ 	clk = clk_register_gate(NULL, "pcie_sata_2_clk", "ahb_clk", 0,
+ 			SPEAR1310_PERIP1_CLK_ENB, SPEAR1310_PCIE_SATA_2_CLK_ENB,
+ 			0, &_lock);
+-	clk_register_clkdev(clk, NULL, "dw_pcie.2");
++	clk_register_clkdev(clk, NULL, "b4000000.pcie");
+ 	clk_register_clkdev(clk, NULL, "b4000000.ahci");
+ 
+ 	clk = clk_register_gate(NULL, "sysram0_clk", "ahb_clk", 0,
+diff --git a/drivers/clk/spear/spear1340_clock.c b/drivers/clk/spear/spear1340_clock.c
+index fe835c1..5a5c664 100644
+--- a/drivers/clk/spear/spear1340_clock.c
++++ b/drivers/clk/spear/spear1340_clock.c
+@@ -839,7 +839,7 @@ void __init spear1340_clk_init(void __iomem *misc_base)
+ 	clk = clk_register_gate(NULL, "pcie_sata_clk", "ahb_clk", 0,
+ 			SPEAR1340_PERIP1_CLK_ENB, SPEAR1340_PCIE_SATA_CLK_ENB,
+ 			0, &_lock);
+-	clk_register_clkdev(clk, NULL, "dw_pcie");
++	clk_register_clkdev(clk, NULL, "b1000000.pcie");
+ 	clk_register_clkdev(clk, NULL, "b1000000.ahci");
+ 
+ 	clk = clk_register_gate(NULL, "sysram0_clk", "ahb_clk", 0,
+-- 
+1.7.0.1
