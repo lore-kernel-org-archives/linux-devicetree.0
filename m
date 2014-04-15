@@ -1,194 +1,85 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: berlin: add GPIO nodes for the BG2Q
-Date: Tue, 15 Apr 2014 11:35:49 +0200
-Message-ID: <20140415093549.GD4584@kwain>
-References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397549245-3338-3-git-send-email-antoine.tenart@free-electrons.com>
- <534CFA77.9030108@gmail.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH v2 2/9] ARM: shmobile: r8a7790: add dma defines for sys
+ and audio dmacs
+Date: Tue, 15 Apr 2014 10:46:17 +0100
+Message-ID: <534CFFE9.2050100@codethink.co.uk>
+References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk> <1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk> <6876261.h1xXmWF0f3@wuerfel> <20140414225151.GF22518@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <534CFA77.9030108-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140414225151.GF22518@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sebastian,
+On 14/04/14 23:51, Simon Horman wrote:
+> On Tue, Apr 15, 2014 at 12:10:00AM +0200, Arnd Bergmann wrote:
+>> On Monday 14 April 2014 22:35:05 Ben Dooks wrote:
+>>> Add the DMA resource IDs for the R8A7790 Audio and SYS DMA controllers
+>>> for use when specifying DMA handles.
+>>>
+>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>
+>> I really hate these lists in bindings:
+>>
+>>> +#define R8A7790_DMA_SCIFA0_TX	(0x21)
+>>> +#define R8A7790_DMA_SCIFA0_RX	(0x22)
+>>> +#define R8A7790_DMA_SCIFA1_TX	(0x25)
+>>> +#define R8A7790_DMA_SCIFA1_RX	(0x26)
+>>> +#define R8A7790_DMA_SCIFA2_TX	(0x27)
+>>> +#define R8A7790_DMA_SCIFA2_RX	(0x28)
+>>> +
+>>> +#define R8A7790_DMA_SCIFB0_TX	(0x3D)
+>>> +#define R8A7790_DMA_SCIFB0_RX	(0x3E)
+>>> +#define R8A7790_DMA_SCIFB1_TX	(0x19)
+>>> +#define R8A7790_DMA_SCIFB1_RX	(0x1A)
+>>> +#define R8A7790_DMA_SCIFB2_TX	(0x1D)
+>>> +#define R8A7790_DMA_SCIFB2_RX	(0x1E)
+>>
+>> These are all hardware constants, they should come from the data sheet and
+>> get put into the dtsi file. The driver doesn't care what they are, and
+>> the binding doesn't care, this only serves to make the binding less
+>> generic.
+>
+> They serve to make the dts file significantly more readable and
+> give some small level of compile-time checking to the dts file.
+>
+> I am entirely in favour of them and its the direction that we
+> have been moving in for shmobile bindings.
 
-On Tue, Apr 15, 2014 at 11:23:03AM +0200, Sebastian Hesselbarth wrote:
-> On 04/15/2014 10:07 AM, Antoine T=C3=A9nart wrote:
+I don't really mind either way on these, when we had the
+configuration for each slave in the dma-controller node
+then having defines was very sensible.
 
-[=E2=80=A6]
+>>> +#define CHCR_RX_32BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
+>>> +#define CHCR_TX_32BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
+>>> +#define CHCR_RX_256BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
+>>> +#define CHCR_TX_256BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
+>>
+>> For these, it's different: There is nothing wrong putting macros like
+>> these into DT, because they will be the same across all SoCs.
+>>
+>> However, as I mentioned in my reply to patch 8, I don't think that information
+>> belongs into DT, and it should be in the device driver instead, because
+>> that already knows the direction and transfer width and has to set it
+>> through the slave config interface anyway.
 
-> >diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/ber=
-lin2q.dtsi
-> >index e6e556055dfc..b2625f896bc5 100644
-> >--- a/arch/arm/boot/dts/berlin2q.dtsi
-> >+++ b/arch/arm/boot/dts/berlin2q.dtsi
-> >@@ -109,6 +109,78 @@
-> >  			ranges =3D <0 0xe80000 0x10000>;
-> >  			interrupt-parent =3D <&aic>;
-> >
-> >+			gpio0: gpio@0400 {
-> >+				compatible =3D "snps,dw-apb-gpio";
-> >+				reg =3D <0x0400 0x400>;
-> >+				#address-cells =3D <1>;
-> >+				#size-cells =3D <0>;
-> >+
-> >+				porta: gpio-controller@0 {
->=20
-> ePAPR recommended name is even more generic, i.e. "gpio". If
-> that clashed in any way with other numbered names, I suggest
-> to rename to "gpio-port" as actually the controller is the
-> parent node and this represents one port (in the nomenclature
-> of DW-APB-GPIO).
+There are a couple of issues here, firstly is that I have no idea if
+any other SoCs have control bits that are not currently configurable
+from the information supplied by a driver when it is bound.
 
-I followed the dwapb GPIO binding documentation, but I think this is a =
-good
-idea. I'll update.
+The second is that the DMA for some peripherals do not match the size
+of the registers, for example the SDHI blocks can do 256bit DMA to
+what is specified to be a 32bit register.
 
-> >+					compatible =3D "snps,dw-apb-gpio-port";
-> >+					gpio-controller;
-> >+					#gpio-cells =3D <2>;
-> >+					snps,nr-gpios =3D <32>;
->=20
-> 32 gpio pins for each of the 6 GPIO controllers? Either BG2Q is a GPI=
-O
-> beast or it is a mistake :P
->=20
-> Can you please double-check?
+I also prefer these to be in one place, to avoid the following
 
-Maybe Jisheng can confirm this.
-
-> I am fine with using nr-gpios property now, but I guess BG2Q also
-> has that CONFIG[1,2] registers to actually read out the features
-> synthesized in? If I find some time, I'll prepare a patch for
-> dw-apb-gpio to exploit that (optional) information instead of
-> using nr-gpios.
-
-Maybe, that would be nice.
+- Altering every $OS run on the system when you add a new dma peripheral
+- Having to cross merge adding to DTS/DTSI and a driver for the same.
 
 
-Antoine
-
-> Otherwise,
->=20
-> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->=20
-> >+					reg =3D <0>;
-> >+					interrupt-controller;
-> >+					#interrupt-cells =3D <2>;
-> >+					interrupts =3D <0>;
-> >+				};
-> >+			};
-> >+
-> >+			gpio1: gpio@0800 {
-> >+				compatible =3D "snps,dw-apb-gpio";
-> >+				reg =3D <0x0800 0x400>;
-> >+				#address-cells =3D <1>;
-> >+				#size-cells =3D <0>;
-> >+
-> >+				portb: gpio-controller@1 {
-> >+					compatible =3D "snps,dw-apb-gpio-port";
-> >+					gpio-controller;
-> >+					#gpio-cells =3D <2>;
-> >+					snps,nr-gpios =3D <32>;
-> >+					reg =3D <0>;
-> >+					interrupt-controller;
-> >+					#interrupt-cells =3D <2>;
-> >+					interrupts =3D <1>;
-> >+				};
-> >+			};
-> >+
-> >+			gpio2: gpio@0c00 {
-> >+				compatible =3D "snps,dw-apb-gpio";
-> >+				reg =3D <0x0c00 0x400>;
-> >+				#address-cells =3D <1>;
-> >+				#size-cells =3D <0>;
-> >+
-> >+				portc: gpio-controller@2 {
-> >+					compatible =3D "snps,dw-apb-gpio-port";
-> >+					gpio-controller;
-> >+					#gpio-cells =3D <2>;
-> >+					snps,nr-gpios =3D <32>;
-> >+					reg =3D <0>;
-> >+					interrupt-controller;
-> >+					#interrupt-cells =3D <2>;
-> >+					interrupts =3D <2>;
-> >+				};
-> >+			};
-> >+
-> >+			gpio3: gpio@1000 {
-> >+				compatible =3D "snps,dw-apb-gpio";
-> >+				reg =3D <0x1000 0x400>;
-> >+				#address-cells =3D <1>;
-> >+				#size-cells =3D <0>;
-> >+
-> >+				portd: gpio-controller@3 {
-> >+					compatible =3D "snps,dw-apb-gpio-port";
-> >+					gpio-controller;
-> >+					#gpio-cells =3D <2>;
-> >+					snps,nr-gpios =3D <32>;
-> >+					reg =3D <0>;
-> >+					interrupt-controller;
-> >+					#interrupt-cells =3D <2>;
-> >+					interrupts =3D <3>;
-> >+				};
-> >+			};
-> >+
-> >  			timer0: timer@2c00 {
-> >  				compatible =3D "snps,dw-apb-timer";
-> >  				reg =3D <0x2c00 0x14>;
-> >@@ -181,6 +253,36 @@
-> >  				interrupt-parent =3D <&gic>;
-> >  				interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
-> >  			};
-> >+
-> >+			gpio4: gpio@5000 {
-> >+				compatible =3D "snps,dw-apb-gpio";
-> >+				reg =3D <0x5000 0x400>;
-> >+				#address-cells =3D <1>;
-> >+				#size-cells =3D <0>;
-> >+
-> >+				porte: gpio-controller@4 {
-> >+					compatible =3D "snps,dw-apb-gpio-port";
-> >+					gpio-controller;
-> >+					#gpio-cells =3D <2>;
-> >+					snps,nr-gpios =3D <32>;
-> >+					reg =3D <0>;
-> >+				};
-> >+			};
-> >+
-> >+			gpio5: gpio@c000 {
-> >+				compatible =3D "snps,dw-apb-gpio";
-> >+				reg =3D <0xc000 0x400>;
-> >+				#address-cells =3D <1>;
-> >+				#size-cells =3D <0>;
-> >+
-> >+				portf: gpio-controller@5 {
-> >+					compatible =3D "snps,dw-apb-gpio-port";
-> >+					gpio-controller;
-> >+					#gpio-cells =3D <2>;
-> >+					snps,nr-gpios =3D <32>;
-> >+					reg =3D <0>;
-> >+				};
-> >+			};
-> >  		};
-> >
-> >  		pinctrl: pinctrl@0 {
-> >
->=20
-
---=20
-Antoine T=C3=A9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
