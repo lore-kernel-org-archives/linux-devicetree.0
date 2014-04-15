@@ -1,59 +1,85 @@
-From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH V8 6/9] SPEAr13XX: Add binding information for PCIe controller
-Date: Tue, 15 Apr 2014 17:13:32 +0530
-Message-ID: <6d35ffd2873453be8ccba8a53062f1830e367e5f.1397555158.git.mohit.kumar@st.com>
-References: <cover.1397555158.git.mohit.kumar@st.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: berlin: add GPIO nodes for the BG2Q
+Date: Tue, 15 Apr 2014 13:48:49 +0200
+Message-ID: <20140415114848.GA2813@piout.net>
+References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1397549245-3338-3-git-send-email-antoine.tenart@free-electrons.com>
+ <534CFA77.9030108@gmail.com>
+ <20140415180058.2fefca78@xhacker>
+ <534D0943.2050100@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1397555158.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <534D0943.2050100-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: arnd-r2nGTMty4D4@public.gmane.org
-Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+On 15/04/2014 at 12:26:11 +0200, Sebastian Hesselbarth wrote :
+> On 04/15/2014 12:00 PM, Jisheng Zhang wrote:
+> >On Tue, 15 Apr 2014 02:23:03 -0700
+> >Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >>On 04/15/2014 10:07 AM, Antoine T=E9nart wrote:
+> >>>The Marvell Berlin BG2Q has 6 GPIO ports compatible with the
+> >>>snps,dw-apb-gpio driver. This patch add the corresponding device t=
+ree
+> >>>nodes.
+> >>>
+> >>>Signed-off-by: Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> >>>---
+> >>>   arch/arm/boot/dts/berlin2q.dtsi | 102
+> >>>++++++++++++++++++++++++++++++++++++++++ 1 file changed, 102 inser=
+tions(+)
+> >>>
+> >>>diff --git a/arch/arm/boot/dts/berlin2q.dtsi
+> >>>b/arch/arm/boot/dts/berlin2q.dtsi index e6e556055dfc..b2625f896bc5=
+ 100644
+> >>>--- a/arch/arm/boot/dts/berlin2q.dtsi
+> >>>+++ b/arch/arm/boot/dts/berlin2q.dtsi
+> [...]
+> >>>+					compatible =3D
+> >>>"snps,dw-apb-gpio-port";
+> >>>+					gpio-controller;
+> >>>+					#gpio-cells =3D <2>;
+> >>>+					snps,nr-gpios =3D <32>;
+> >>
+> >>32 gpio pins for each of the 6 GPIO controllers? Either BG2Q is a G=
+PIO
+> >
+> >Yes, BG2Q support 32 pins every port
+>=20
+> Wow. Thanks for confirming this!
+>=20
+> >>I am fine with using nr-gpios property now, but I guess BG2Q also
+> >>has that CONFIG[1,2] registers to actually read out the features
+> >>synthesized in? If I find some time, I'll prepare a patch for
+> >>dw-apb-gpio to exploit that (optional) information instead of
+> >>using nr-gpios.
+> >
+> >The problem is CONFIG1/2 registers don't exist on some versions.
+> >For example, the version used in BG2/BG2CD. So nr-gpio is necessary
+> >if we want to support these versions.
+>=20
+> Hmm, are you sure about BG2? I remember reading it and it contains
+> sane values. Anyway, a proper patch for dw-apb-gpio would include
+> checking for sane (e.g. non-zero) values. And nr-gpios will always
+> stay as fall-back just because e.g. sunxi does not have the CONFIG
+> registers.
+>=20
 
-SPEAr13XX uses designware PCIe controller. This patch adds information
-for the PCIe binding properties which are specific to SPEAr13XX SoC
-series.
+Shouldn't that be use nr-gpios and if not available, read the CONFIG
+registers? Else, what about bogus registers ?
 
-Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- .../devicetree/bindings/pci/spear13xx-pcie.txt     |   14 ++++++++++++++
- 1 files changed, 14 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pci/spear13xx-pcie.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/spear13xx-pcie.txt b/Documentation/devicetree/bindings/pci/spear13xx-pcie.txt
-new file mode 100644
-index 0000000..49ea76d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/spear13xx-pcie.txt
-@@ -0,0 +1,14 @@
-+SPEAr13XX PCIe DT detail:
-+================================
-+
-+SPEAr13XX uses synopsis designware PCIe controller and ST MiPHY as phy
-+controller.
-+
-+Required properties:
-+- compatible : should be "st,spear1340-pcie", "snps,dw-pcie".
-+- phys		    : phandle to phy node associated with pcie controller
-+- phy-names	    : must be "pcie-phy"
-+- All other definitions as per generic PCI bindings
-+
-+ Optional properties:
-+- st,pcie-is-gen1 indicates that forced gen1 initialization is needed.
--- 
-1.7.0.1
-
+--=20
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
