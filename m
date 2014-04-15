@@ -1,107 +1,45 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] regulator: tps65090: Make FETs more reliable
-Date: Tue, 15 Apr 2014 23:52:10 +0100
-Message-ID: <20140415225210.GK12304@sirena.org.uk>
-References: <1397592876-5741-1-git-send-email-dianders@chromium.org>
- <1397592876-5741-4-git-send-email-dianders@chromium.org>
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] reset: add driver for socfpga
+Date: Tue, 15 Apr 2014 17:54:43 -0500
+Message-ID: <1397602483.3330.2.camel@linux-builds1>
+References: <1397548592-6384-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ef8eQmdvO1j1gFMO"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1397592876-5741-4-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <1397548592-6384-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Michael Spang <spang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2014-04-15 at 09:56 +0200, Steffen Trumtrar wrote:
+> Add a reset-controller driver for the socfpga platform.
+> The reset-controller has four banks with up to 32 entries all encapsulated in
+> one module block.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+> 
+> Notes:
+>     Changes since v2:
+>     	- remove superfluous ret in probe function
+>     	- add Acked-by
+>     
+>     Changes since v1:
+>     	- use BITS_PER_LONG everywhere instead of MAX_BANK_WIDTH
+>     	- print pdev->dev.of_node->full_name on error
+>     	- use proper IS_ERR/PTR_ERR
+> 
 
---ef8eQmdvO1j1gFMO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've applied this series to rocketboards linux-socfpga-next/drivers and
+linux-socfpga-next/next-dt.
 
-On Tue, Apr 15, 2014 at 01:14:36PM -0700, Doug Anderson wrote:
+Thanks,
 
-> Mitigate the problem by:
-> * Allow setting the overcurrent wait time so devices with this problem
->   can set it to the max.
-> * Add retry logic on enables of FETs.
+Dinh
 
-This is two changes, should really be two patches.
-
-> +- ti,overcurrent-wait: This is applicable to FET registers, which have a
-> +  poorly defined "overcurrent wait" field.  If this property is present it
-> +  should be between 0 - 3.  If this property isn't present we won't touch the
-> +  "overcurrent wait" field and we'll leave it to the BIOS/EC to deal with.
-
-I take it this is the raw value to write to the register?
-
-> +static int tps65090_fet_is_enabled(struct regulator_dev *rdev)
-> +{
-> +	unsigned int control;
-> +	unsigned int expected = rdev->desc->enable_mask | BIT(CTRL_PG_BIT);
-> +	int ret;
-> +
-> +	ret = regmap_read(rdev->regmap, rdev->desc->enable_reg, &control);
-> +	if (ret != 0)
-> +		return ret;
-> +
-> +	return (control & expected) == expected;
-> +}
-
-No need to open code this, regulator_is_enabled_regmap() can check for
-any value in a bitfield.
-
-> +static int tps6090_try_enable_fet(struct regulator_dev *rdev)
-
-Why is this called tps6090_try_enable_fet(), looks like a missing 5?
-
-> +	/*
-> +	 * Try enabling multiple times until we succeed since sometimes the
-> +	 * first try times out.
-> +	 */
-> +	for (tries = 0; ; tries++) {
-> +		ret = tps6090_try_enable_fet(rdev);
-> +		if (!ret)
-> +			break;
-> +		if (ret != -ENOTRECOVERABLE || tries == MAX_FET_ENABLE_TRIES)
-> +			goto err;
-
-Make this a do { } while so we don't have the exit condition missing in
-the for loop please, it's doing the right thing but it's not as obvious
-as it could be.
-
-> +	if (tries) {
-> +		dev_warn(&rdev->dev, "reg %#x enable ok after %d tries\n",
-> +			 rdev->desc->enable_reg, tries);
-> +	}
-
-No need for braces here, and I guess that ought to be retries rather
-than tries (though that is pedantry).
-
---ef8eQmdvO1j1gFMO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTTbgXAAoJELSic+t+oim9d4sP/i/a/GYy9I0TNekV4rWaxk67
-7KMA9v6M2BlBpwpefTkd+WD4zEgk1T9KsLei+yHI/AaXvwQyT4MNAkgTEw7x/UQS
-B0XIg7bbIPMGb1zX6izsNqZbARMZPmNd16K3DLtD8B0tdZTZVN1r8G7cUxO675DQ
-poYYRLgP+Zr+1CZVFVmE7HyNelQgDx+aVMg4Q8gLpDElCDHnDSnWl4eKX1dmucdi
-pkTKobcMY5ZOy5UtGVVvg6MhVwvtKHL7atLZAWW1dRxqb80yTL8V4wdKSl5nnzaj
-L14JtxhhpD0Qr+gSUWerS+FjwSdoMxWZRQWuvkYQ4FSRwbMrn/P57+8fQ5x6NbjI
-22wYyWztTm7CpuKOVxoeJBnWO+qJXT6LKxuIzn75lX0i0b5uh8Hq72a4bGexiLUp
-MAt7Pesb07xwsfpvJkEUyDlEGQ4ulPIxidszunUmZjf8ebGQSs9jlBtlbc4CT5i/
-RfVtIStbKTDCycLKs7HrQSyqW0oSUet1hoyEzDiGw03ZvXmx6X59r24DU2fA7dHl
-RWI7chwYBgc2VvqwGQywhjOmDYaeFFYg0/P/qFTKDp9fizWTXisDji7dsC5dUhcn
-nkSrl4PygKaOx7Vrb+fyW2SwGlZelRlqDHqgIMynq82jU3hLWwmCWhffZX86FTYI
-szQZIkhakJUtLfEqIXtk
-=HF/7
------END PGP SIGNATURE-----
-
---ef8eQmdvO1j1gFMO--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
