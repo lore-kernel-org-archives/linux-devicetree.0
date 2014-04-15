@@ -1,36 +1,50 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Subject: [PATCH 0/2] ARM: berlin: add GPIO support for the BG2Q
-Date: Tue, 15 Apr 2014 10:07:23 +0200
-Message-ID: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 07/14] ARM: dts: exynos_dsim: add exynos5420 Soc compatible
+Date: Tue, 15 Apr 2014 13:39:02 +0530
+Message-ID: <CAK9yfHwew_O57FuYiwohQUB1nhs5PJ5mg7TiPcPOvpbp=6sFgQ@mail.gmail.com>
+References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
+	<1397540862-21359-8-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com
-Cc: zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397540862-21359-8-git-send-email-yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgYWRkIHRoZSBzdXBwb3J0IGZvciB0aGUgR1BJT3Mgb2YgdGhlIEJlcmxpbiBC
-RzJRLiBXZSB1c2UgdGhlCm5ld2x5IGludGVncmF0ZWQgZHdhcGIgR1BJTyBkcml2ZXIgaGVyZS4K
-ClRoaXMgYXBwbGllcyBvbiB0b3Agb2YgQWxleGFuZHJlJ3MgQkcyUSBzeW1ib2wgaW50cm9kdWN0
-aW9uWzFdIGFuZCB0aGUgZHdhcGIKZ3BpbyBwYXRjaCBmaXhpbmcgSVJRIGluaXRpYWxpemF0aW9u
-WzJdLgoKWzFdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMzg3NjE0MS8KWzJd
-IGh0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE0LzQvNy85NgoKQW50b2luZSBUw6luYXJ0ICgyKToK
-ICBBUk06IGJlcmxpbjogYWRkIHRoZSBMSUJHUElPIGFzIGEgZGVwZW5kZW5jeSBmb3IgdGhlIEJH
-MlEKICBBUk06IGR0czogYmVybGluOiBhZGQgR1BJTyBub2RlcyBmb3IgdGhlIEJHMlEKCiBhcmNo
-L2FybS9ib290L2R0cy9iZXJsaW4ycS5kdHNpIHwgMTAyICsrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysKIGFyY2gvYXJtL21hY2gtYmVybGluL0tjb25maWcgICAgfCAgIDEg
-KwogMiBmaWxlcyBjaGFuZ2VkLCAxMDMgaW5zZXJ0aW9ucygrKQoKLS0gCjEuOC4zLjIKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+On 15 April 2014 11:17, YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch adds exynos5420 SoC support.
+
+This patch just updates binding documentation :)
+
+> Signed-off-by: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/video/exynos_dsim.txt      |    4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> index 33b5730..9bbf82b 100644
+> --- a/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> +++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
+> @@ -1,7 +1,9 @@
+>  Exynos MIPI DSI Master
+>
+>  Required properties:
+> -  - compatible: "samsung,exynos4210-mipi-dsi"
+> +  - compatible: value should be one of the following
+> +                       "samsung,exynos4210-mipi-dsi" /* for Exynos4 SoCs */
+> +                       "samsung,exynos5420-mipi-dsi" /* for Exynos5420 Soc */
+s/Soc/SoC
+
+
+
+-- 
+With warm regards,
+Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
