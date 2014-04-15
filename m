@@ -1,50 +1,55 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 07/14] ARM: dts: exynos_dsim: add exynos5420 Soc compatible
-Date: Tue, 15 Apr 2014 13:39:02 +0530
-Message-ID: <CAK9yfHwew_O57FuYiwohQUB1nhs5PJ5mg7TiPcPOvpbp=6sFgQ@mail.gmail.com>
-References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
-	<1397540862-21359-8-git-send-email-yj44.cho@samsung.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH] tty/serial: atmel_serial: Fix device tree documentation
+Date: Tue, 15 Apr 2014 10:12:39 +0200
+Message-ID: <534CE9F7.60202@gmail.com>
+References: <1397487482-3816-1-git-send-email-richard.genoud@gmail.com> <20140414152212.GC2255@ldesroches-Latitude-E6320> <534CE24F.9020703@gmail.com> <20140415080006.GE2255@ldesroches-Latitude-E6320>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397540862-21359-8-git-send-email-yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Joonyoung Shim <jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Seung-Woo Kim <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140415080006.GE2255@ldesroches-Latitude-E6320>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 April 2014 11:17, YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch adds exynos5420 SoC support.
+On 15/04/2014 10:00, Ludovic Desroches wrote:
+> On Tue, Apr 15, 2014 at 09:39:59AM +0200, Richard Genoud wrote:
+>> On 14/04/2014 17:22, Ludovic Desroches wrote:
+>>> Hi Richard,
+>>>
+>>> On Mon, Apr 14, 2014 at 04:58:02PM +0200, Richard Genoud wrote:
+>>>> RTS pin is an active low pin.
+>>>> For now, this doesn't change anything as the ACTIVE_LOW flag is not
+>>>> handled in atmel_serial, but it will be in 3.16.
+>>>>
+>>>> Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/serial/atmel-usart.txt | 2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+>>>> index 17c1042b2df8..2f7aad71b3c9 100644
+>>>> --- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
+>>>> +++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+>>>> @@ -35,7 +35,7 @@ Example:
+>>>>  		clock-names = "usart";
+>>>>  		atmel,use-dma-rx;
+>>>>  		atmel,use-dma-tx;
+>>>> -		rts-gpios = <&pioD 15 0>;
+>>>> +		rts-gpios = <&pioD 15 GPIO_ACTIVE_LOW>;
+>>>
+>>> I was told we should not use macros here. If it is still the truth:
+>>>
+>>> rts-gpios = <&pioD 15 1>;
+>>
+>> But I'd really like to know if macros are forbidden in DT documentation and why...
+>> Because, IMHO, <&pioD 15 1> talks less that <&pioD 15 GPIO_ACTIVE_LOW>.
+>> Which is a shame in a documentation.
+> 
+> I don't remember who told me that but the reason was that device tree
+> should not depend on Linux and macros are relative to Linux.
+> 
+Well, that makes sense, but I thought that include/dt-bindings/ was more
+DT relative.
 
-This patch just updates binding documentation :)
-
-> Signed-off-by: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/video/exynos_dsim.txt      |    4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/video/exynos_dsim.txt b/Documentation/devicetree/bindings/video/exynos_dsim.txt
-> index 33b5730..9bbf82b 100644
-> --- a/Documentation/devicetree/bindings/video/exynos_dsim.txt
-> +++ b/Documentation/devicetree/bindings/video/exynos_dsim.txt
-> @@ -1,7 +1,9 @@
->  Exynos MIPI DSI Master
->
->  Required properties:
-> -  - compatible: "samsung,exynos4210-mipi-dsi"
-> +  - compatible: value should be one of the following
-> +                       "samsung,exynos4210-mipi-dsi" /* for Exynos4 SoCs */
-> +                       "samsung,exynos5420-mipi-dsi" /* for Exynos5420 Soc */
-s/Soc/SoC
-
-
-
--- 
-With warm regards,
-Sachin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
