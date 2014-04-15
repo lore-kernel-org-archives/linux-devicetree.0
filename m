@@ -1,51 +1,45 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH 5/5] ARM: dts: exynos4: Remove simple-bus compatible from
- camera subsystem nodes
-Date: Tue, 15 Apr 2014 19:34:32 +0200
-Message-ID: <1397583272-28295-6-git-send-email-s.nawrocki@samsung.com>
-References: <1397583272-28295-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1397583272-28295-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Tue, 15 Apr 2014 13:55:38 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1404151345580.1310-100000@iolanthe.rowland.org>
+References: <20140415171830.GB16002@saruman.home>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140415171830.GB16002@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: sundeep subbaraya <sundeep.lkml@gmail.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The usage of "simple-bus" was incorrect and the drivers now will also
-work without it so remove it.
+On Tue, 15 Apr 2014, Felipe Balbi wrote:
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/exynos4.dtsi    |    2 +-
- arch/arm/boot/dts/exynos4x12.dtsi |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+> > 2. Does device need to know OUT transactions before hand so that OUT
+> > requests are queued for endpoint before packets are received
+> > from host?
+> 
+> well, no. Gadget driver shouldn't depend on that. That's UDC driver's
+> responsability to manage that. I mean, if host sends OUT token and
+> there's nothing in the out queue, then UDC need to start transfer as
+> soon as gadget driver queues the request. If, on the other hand, gadget
+> driver queues packet before host has sent OUT token then you have two
+> choices:
+> 
+> 1) start the transfer - most HW will wait for OUT token
+> 2) wait for out token
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 912fe72..ad06a1d 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -125,7 +125,7 @@
- 	};
- 
- 	camera {
--		compatible = "samsung,fimc", "simple-bus";
-+		compatible = "samsung,fimc";
- 		status = "disabled";
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
-index 192617b..3fec920 100644
---- a/arch/arm/boot/dts/exynos4x12.dtsi
-+++ b/arch/arm/boot/dts/exynos4x12.dtsi
-@@ -190,7 +190,7 @@
- 		};
- 
- 		fimc_is: fimc-is@12000000 {
--			compatible = "samsung,exynos4212-fimc-is", "simple-bus";
-+			compatible = "samsung,exynos4212-fimc-is";
- 			reg = <0x12000000 0x260000>;
- 			interrupts = <0 90 0>, <0 95 0>;
- 			samsung,power-domain = <&pd_isp>;
--- 
-1.7.9.5
+I'm not familiar with the variations in all the different UDC hardware.  
+Nevertheless, I wouldn't describe the situation in those terms.
+
+If an OUT transaction occurs and the gadget driver hasn't queued a
+request, the UDC hardware could store the incoming data in an internal
+buffer or it could NAK the transaction.  There aren't any other
+choices.  If there isn't enough space available in an internal buffer,
+the only possible action is NAK.
+
+Regardless, gadget drivers do not need to queue requests for OUT
+endpoints before the host starts sending data.  When the request does
+get queued, the UDC driver will make sure that the transfer takes
+place.
+
+Alan Stern
