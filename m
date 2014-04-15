@@ -1,221 +1,134 @@
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] reset: add driver for socfpga
-Date: Tue, 15 Apr 2014 17:22:47 -0500
-Message-ID: <1397600567.13378.1.camel@linux-builds1>
-References: <1397118063-21619-1-git-send-email-s.trumtrar@pengutronix.de>
-	 <1397546425.3836.1.camel@paszta.hi.pengutronix.de>
+From: Jon Ringle <jon@ringle.org>
+Subject: Re: [PATCH v5 1/2] serial: sc16is7xx
+Date: Tue, 15 Apr 2014 18:38:31 -0400
+Message-ID: <CAMwGMjxnVhGanbG-2NNr5ekA489qJsc+J6hyLv+zyMCq+o=LVg@mail.gmail.com>
+References: <1396538615-9128-1-git-send-email-jon@ringle.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397546425.3836.1.camel-+qGW7pzALmz7o/J7KWpOmN53zsg1cpMQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1396538615-9128-1-git-send-email-jon@ringle.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Jon Ringle <jringle@gridpoint.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-04-15 at 09:20 +0200, Philipp Zabel wrote:
-> Hi Dinh,
-> 
-> Am Donnerstag, den 10.04.2014, 10:21 +0200 schrieb Steffen Trumtrar:
-> > Add a reset-controller driver for the socfpga platform.
-> > The reset-controller has four banks with up to 32 entries all encapsulated in
-> > one module block.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> in case you want to take this through your branch,
-> 
-> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> If you want me to take the reset controller driver, please let me know.
-> 
+On Thu, Apr 3, 2014 at 11:23 AM,  <jon@ringle.org> wrote:
+> From: Jon Ringle <jringle@gridpoint.com>
+>
+> The SC16IS7xx is a slave I2C-bus/SPI interface to a single-channel
+> high performance UART. The SC16IS7xx's internal register set is
+> backward-compatible with the widely used and widely popular 16C450.
+>
+> The SC16IS7xx also provides additional advanced features such as
+> auto hardware and software flow control, automatic RS-485 support, and
+> software reset.
+>
+> Signed-off-by: Jon Ringle <jringle@gridpoint.com>
+> ---
+>  drivers/tty/serial/Kconfig       |    9 +
+>  drivers/tty/serial/Makefile      |    1 +
+>  drivers/tty/serial/sc16is7xx.c   | 1302 ++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/serial_core.h |    3 +
+>  4 files changed, 1315 insertions(+)
+>  create mode 100644 drivers/tty/serial/sc16is7xx.c
+>
+[snip]
 
-Yes, I will. 
+> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
+> new file mode 100644
+> index 0000000..20d96cc
+> --- /dev/null
+> +++ b/drivers/tty/serial/sc16is7xx.c
+[snip]
 
-Thanks,
+> +static bool sc16is7xx_regmap_writeable(struct device *dev, unsigned int reg)
+> +{
+> +       switch (reg >> SC16IS7XX_REG_SHIFT) {
+> +       case SC16IS7XX_THR_REG:
+> +       case SC16IS7XX_IER_REG:
+> +       case SC16IS7XX_FCR_REG:
+> +       case SC16IS7XX_LCR_REG:
+> +       case SC16IS7XX_MCR_REG:
+> +       case SC16IS7XX_SPR_REG:
+> +       case SC16IS7XX_IODIR_REG:
+> +       case SC16IS7XX_IOSTATE_REG:
+> +       case SC16IS7XX_IOINTENA_REG:
+> +       case SC16IS7XX_IOCONTROL_REG:
+> +       case SC16IS7XX_EFCR_REG:
+> +               return true;
+> +       default:
+> +               break;
+> +       }
+> +
+> +       return false;
+> +}
 
-Dinh
-> regards
-> Philipp
-> 
-> > ---
-> > Changes since v1:
-> > 	- use BITS_PER_LONG everywhere instead of MAX_BANK_WIDTH
-> > 	- print pdev->dev.of_node->full_name on error
-> > 	- use proper IS_ERR/PTR_ERR
-> > 
-> >  drivers/reset/Makefile        |   1 +
-> >  drivers/reset/reset-socfpga.c | 147 ++++++++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 148 insertions(+)
-> >  create mode 100644 drivers/reset/reset-socfpga.c
-> > 
-> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> > index cc29832..ab64077 100644
-> > --- a/drivers/reset/Makefile
-> > +++ b/drivers/reset/Makefile
-> > @@ -1,2 +1,3 @@
-> >  obj-$(CONFIG_RESET_CONTROLLER) += core.o
-> >  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
-> > +obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
-> > diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-> > new file mode 100644
-> > index 0000000..bdcd2fa
-> > --- /dev/null
-> > +++ b/drivers/reset/reset-socfpga.c
-> > @@ -0,0 +1,147 @@
-> > +/*
-> > + * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > + *
-> > + * based on
-> > + * Allwinner SoCs Reset Controller driver
-> > + *
-> > + * Copyright 2013 Maxime Ripard
-> > + *
-> > + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + */
-> > +
-> > +#include <linux/err.h>
-> > +#include <linux/io.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/reset-controller.h>
-> > +#include <linux/spinlock.h>
-> > +#include <linux/types.h>
-> > +
-> > +#define NR_BANKS		4
-> > +#define OFFSET_MODRST		0x10
-> > +
-> > +struct socfpga_reset_data {
-> > +	spinlock_t			lock;
-> > +	void __iomem			*membase;
-> > +	struct reset_controller_dev	rcdev;
-> > +};
-> > +
-> > +static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
-> > +				unsigned long id)
-> > +{
-> > +	struct socfpga_reset_data *data = container_of(rcdev,
-> > +						     struct socfpga_reset_data,
-> > +						     rcdev);
-> > +	int bank = id / BITS_PER_LONG;
-> > +	int offset = id % BITS_PER_LONG;
-> > +	unsigned long flags;
-> > +	u32 reg;
-> > +
-> > +	spin_lock_irqsave(&data->lock, flags);
-> > +
-> > +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> > +	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-> > +				 (bank * NR_BANKS));
-> > +	spin_unlock_irqrestore(&data->lock, flags);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
-> > +				  unsigned long id)
-> > +{
-> > +	struct socfpga_reset_data *data = container_of(rcdev,
-> > +						     struct socfpga_reset_data,
-> > +						     rcdev);
-> > +
-> > +	int bank = id / BITS_PER_LONG;
-> > +	int offset = id % BITS_PER_LONG;
-> > +	unsigned long flags;
-> > +	u32 reg;
-> > +
-> > +	spin_lock_irqsave(&data->lock, flags);
-> > +
-> > +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> > +	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-> > +				  (bank * NR_BANKS));
-> > +
-> > +	spin_unlock_irqrestore(&data->lock, flags);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static struct reset_control_ops socfpga_reset_ops = {
-> > +	.assert		= socfpga_reset_assert,
-> > +	.deassert	= socfpga_reset_deassert,
-> > +};
-> > +
-> > +static int socfpga_reset_probe(struct platform_device *pdev)
-> > +{
-> > +	struct socfpga_reset_data *data;
-> > +	struct resource *res;
-> > +	int ret;
-> > +
-> > +	/*
-> > +	 * The binding was mainlined without the required property.
-> > +	 * Do not continue, when we encounter an old DT.
-> > +	 */
-> > +	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
-> > +		dev_err(&pdev->dev, "%s missing #reset-cells property\n",
-> > +			pdev->dev.of_node->full_name);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> > +	if (!data)
-> > +		return -ENOMEM;
-> > +
-> > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	data->membase = devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(data->membase))
-> > +		return PTR_ERR(data->membase);
-> > +
-> > +	spin_lock_init(&data->lock);
-> > +
-> > +	data->rcdev.owner = THIS_MODULE;
-> > +	data->rcdev.nr_resets = NR_BANKS * BITS_PER_LONG;
-> > +	data->rcdev.ops = &socfpga_reset_ops;
-> > +	data->rcdev.of_node = pdev->dev.of_node;
-> > +	reset_controller_register(&data->rcdev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int socfpga_reset_remove(struct platform_device *pdev)
-> > +{
-> > +	struct socfpga_reset_data *data = platform_get_drvdata(pdev);
-> > +
-> > +	reset_controller_unregister(&data->rcdev);
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static const struct of_device_id socfpga_reset_dt_ids[] = {
-> > +	{ .compatible = "altr,rst-mgr", },
-> > +	{ /* sentinel */ },
-> > +};
-> > +
-> > +static struct platform_driver socfpga_reset_driver = {
-> > +	.probe	= socfpga_reset_probe,
-> > +	.remove	= socfpga_reset_remove,
-> > +	.driver = {
-> > +		.name		= "socfpga-reset",
-> > +		.owner		= THIS_MODULE,
-> > +		.of_match_table	= socfpga_reset_dt_ids,
-> > +	},
-> > +};
-> > +module_platform_driver(socfpga_reset_driver);
-> > +
-> > +MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
-> > +MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
-> > +MODULE_LICENSE("GPL");
-> 
-> 
+Having the above regmap_writeable callback causes problem with the
+bulk I2C write (via regmap_raw_write()) that is done in
+sc16is7xx_handle_tx(). Removing this callback fixes the issue.
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[snip]
+> +static void sc16is7xx_handle_tx(struct uart_port *port)
+> +{
+> +       struct sc16is7xx_port *s = dev_get_drvdata(port->dev);
+> +       struct circ_buf *xmit = &port->state->xmit;
+> +       unsigned int txlen, to_send, i;
+> +       u8 buf[port->fifosize];
+> +
+> +       if (unlikely(port->x_char)) {
+> +               sc16is7xx_port_write(port, SC16IS7XX_THR_REG, port->x_char);
+> +               port->icount.tx++;
+> +               port->x_char = 0;
+> +               return;
+> +       }
+> +
+> +       if (uart_circ_empty(xmit) || uart_tx_stopped(port))
+> +               return;
+> +
+> +       /* Get length of data pending in circular buffer */
+> +       to_send = uart_circ_chars_pending(xmit);
+> +       if (likely(to_send)) {
+> +               /* Limit to size of TX FIFO */
+> +               txlen = sc16is7xx_port_read(port, SC16IS7XX_TXLVL_REG);
+> +               to_send = (to_send > txlen) ? txlen : to_send;
+> +
+> +               /* Add data to send */
+> +               port->icount.tx += to_send;
+> +
+> +               /* Convert to linear buffer */
+> +               for (i = 0; i < to_send; ++i) {
+> +                       buf[i] = xmit->buf[xmit->tail];
+> +                       xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
+> +               }
+> +               regcache_cache_bypass(s->regmap, true);
+> +               regmap_raw_write(s->regmap, SC16IS7XX_THR_REG, buf, to_send);
+
+This call fails with -EINVAL if to_send is > 20 because it assumes
+that we are writing to consecutive registers rather than writing to a
+single register over and over.
+
+> +               regcache_cache_bypass(s->regmap, false);
+> +       }
+> +
+> +       if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
+> +               uart_write_wakeup(port);
+> +}
+
+[snip]
+
+> +static struct regmap_config regcfg = {
+> +       .reg_bits = 7,
+> +       .pad_bits = 1,
+> +       .val_bits = 8,
+> +       .cache_type = REGCACHE_RBTREE,
+> +       .writeable_reg = sc16is7xx_regmap_writeable,
+Removing writeable_reg
+
+New patch forthcoming that removes the regmap writeable_reg callback.
+But, I also wonder if there is a way to keep it, but teach regcache
+that regmap_raw_write/read() done necessariy increment the register
+being written to or read from. Then I probably wouldn't have to do the
+regcach_cache_bypass business I am doing either.
+
+Jon
