@@ -1,138 +1,79 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 2/7] clk: exynos5420: Add more clock IDs
-Date: Tue, 15 Apr 2014 18:50:31 +0200
-Message-ID: <534D6357.5000801@gmail.com>
-References: <1395918470-16374-1-git-send-email-shaik.ameer@samsung.com> <1395918470-16374-3-git-send-email-shaik.ameer@samsung.com>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] driver: clocksource: fix age-old arch timer C3STOP detection
+ issue
+Date: Tue, 15 Apr 2014 18:57:24 +0200
+Message-ID: <534D64F4.3060808@linaro.org>
+References: <1396947872-6673-1-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1395918470-16374-3-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396947872-6673-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
-
-On 27.03.2014 12:07, Shaik Ameer Basha wrote:
-> From: Rahul Sharma <rahul.sharma@samsung.com>
+On 04/08/2014 11:04 AM, Lorenzo Pieralisi wrote:
+> ARM arch timers are tightly coupled with the CPU logic and lose conte=
+xt
+> on platform implementing HW power management when cores are powered
+> down at run-time. Marking the arch timers as C3STOP regardless of pow=
+er
+> management capabilities causes issues on platforms with no power mana=
+gement,
+> since in that case the arch timers cannot possibly enter states where=
+ the
+> timer loses context at runtime and therefore can always be used as a =
+high
+> resolution clockevent device.
 >
-> Add more clock IDs to be used in DT bindings for Exynos5420.
+> In order to fix the C3STOP issue in a way compliant with how real HW
+> works, this patch adds a boolean property to the arch timer bindings
+> to define if the arch timer is managed by an always-on power domain.
 >
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> This power domain is present on all ARM platforms to date, and manage=
+s
+> HW that must not be turned off, whatever the state of other HW
+> components (eg power controller). On platforms with no power manageme=
+nt
+> capabilities, it is the only power domain present, which encompasses
+> and manages power supply for all HW components in the system.
+>
+> If the timer is powered by the always-on power domain, the always-on
+> property must be present in the bindings which means that the timer c=
+annot
+> be shutdown at runtime, so it is not a C3STOP clockevent device.
+> If the timer binding does not contain the always-on property, the tim=
+er is
+> assumed to be power-gateable, hence it must be defined as a C3STOP
+> clockevent device.
+>
+> Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> Cc: Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Acked-by: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
 > ---
->   include/dt-bindings/clock/exynos5420.h |   62 ++++++++++++++++++++++++++++++--
->   1 file changed, 60 insertions(+), 2 deletions(-)
->
-> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-> index 5eefd88..e921913 100644
-> --- a/include/dt-bindings/clock/exynos5420.h
-> +++ b/include/dt-bindings/clock/exynos5420.h
-> @@ -58,6 +58,16 @@
->   #define CLK_SCLK_GSCL_WA	156
->   #define CLK_SCLK_GSCL_WB	157
->   #define CLK_SCLK_HDMIPHY	158
-> +#define CLK_SCLK_MPHY_REFCLK	159
-> +#define CLK_SCLK_SPI0_ISP	160
-> +#define CLK_SCLK_SPI1_ISP	161
-> +#define CLK_SCLK_UART_ISP	162
-> +#define CLK_SCLK_ISP_SENSOR0	163
-> +#define CLK_SCLK_ISP_SENSOR1	164
-> +#define CLK_SCLK_ISP_SENSOR2	165
-> +#define CLK_SCLK_PWM_ISP	166
-> +#define CLK_SCLK_HSIC_12M	167
-> +#define CLK_SCLK_MPHY_IXTAL24	168
->
->   /* gate clocks */
->   #define CLK_ACLK66_PERIC	256
-> @@ -123,6 +133,7 @@
->   #define CLK_USBH20		365
->   #define CLK_USBD300		366
->   #define CLK_USBD301		367
-> +#define CLK_PCLK200_FSYS	370
->   #define CLK_ACLK400_MSCL	380
->   #define CLK_MSCL0		381
->   #define CLK_MSCL1		382
-> @@ -141,6 +152,8 @@
->   #define CLK_ACLK300_DISP1	420
->   #define CLK_FIMD1		421
->   #define CLK_SMMU_FIMD1		422
-> +#define CLK_SMMU_FIMD1M1	423
-> +#define CLK_ACLK400_DISP1	424
->   #define CLK_ACLK166		430
->   #define CLK_MIXER		431
->   #define CLK_ACLK266		440
-> @@ -172,12 +185,57 @@
->   #define CLK_SMMU_FIMCL1		493
->   #define CLK_SMMU_FIMCL3		494
->   #define CLK_FIMC_LITE3		495
-> -#define CLK_ACLK_G3D		500
-> -#define CLK_G3D			501
-> +#define CLK_G3D			500
 
-What is the reason for this ID change? Even if CLK_ACLK_G3D is removed, 
-as it wasn't even referenced by the driver, original clock IDs should 
-remain fixed.
+Applied as 3.15 fix.
 
->   #define CLK_SMMU_MIXER		502
-> +#define CLK_PCLK_TZPC10		503
-> +#define CLK_PCLK_TZPC11		504
-> +#define CLK_PCLK_MC		505
-> +#define CLK_PCLK_TOP_RTC	506
-> +#define CLK_SMMU_JPEG2		507
-> +#define CLK_PCLK_ROTATOR	508
-> +#define CLK_SMMU_RTIC		509
-> +#define CLK_PCLK_G2D		510
-> +#define CLK_ACLK_SMMU_G2D	511
-> +#define CLK_SMMU_G2D		512
-> +#define CLK_ACLK_SMMU_MDMA0	513
-> +#define CLK_SMMU_MDMA0		514
-> +#define CLK_ACLK_SMMU_SSS	515
-> +#define CLK_SMMU_SSS		516
-> +#define CLK_SMMU_SLIM_SSS	517
-> +#define CLK_ACLK_SMMU_SLIM_SSS	518
-> +#define CLK_ACLK266_ISP		519
-> +#define CLK_ACLK400_ISP		520
-> +#define CLK_ACLK333_432_ISP0	521
-> +#define CLK_ACLK333_432_ISP	522
-> +#define CLK_ACLK_SMMU_MIXER	523
-> +#define CLK_PCLK_HDMIPHY	524
-> +#define CLK_PCLK_GSCL0		525
-> +#define CLK_PCLK_GSCL1		526
-> +#define CLK_PCLK_FIMC_3AA	527
-> +#define CLK_ACLK_FIMC_LITE0	528
-> +#define CLK_ACLK_FIMC_LITE1	529
-> +#define CLK_PCLK_FIMC_LITE0	530
-> +#define CLK_PCLK_FIMC_LITE1	531
-> +#define CLK_PCLK_FIMC_LITE3	532
-> +#define CLK_PCLK_MSCL0		533
-> +#define CLK_PCLK_MSCL1		534
-> +#define CLK_PCLK_MSCL2		535
-> +#define CLK_PCLK_MFC		536
->
->   /* mux clocks */
->   #define CLK_MOUT_HDMI		640
-> +#define CLK_MOUT_FIMD1			641
-> +#define CLK_MOUT_MAUDIO0		642
-> +#define CLK_MOUT_SPI0			643
-> +#define CLK_MOUT_SPI1			644
-> +#define CLK_MOUT_SPI2			645
-> +#define CLK_MOUT_SW_ACLK333		646
-> +#define CLK_MOUT_USER_ACLK333		647
-> +#define CLK_MOUT_SW_ACLK300_GSCL	648
-> +#define CLK_MOUT_USER_ACLK300_GSCL	649
-> +#define CLK_MOUT_SW_ACLK333_432_GSCL	650
-> +#define CLK_MOUT_USER_ACLK333_432_GSCL	651
-> +#define CLK_MOUT_G3D			652
->
->   /* divider clocks */
->   #define CLK_DOUT_PIXEL		768
->
+Thanks
 
-Also similar comment as for patch 1/7, it's hard to tell why this change 
-is needed at all.
+   -- Daniel
 
-Best regards,
-Tomasz
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
