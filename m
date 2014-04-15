@@ -1,47 +1,90 @@
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] reset: add driver for socfpga
-Date: Tue, 15 Apr 2014 18:06:03 -0500
-Message-ID: <1397603163.4702.0.camel@linux-builds1>
-References: <1397548592-6384-1-git-send-email-s.trumtrar@pengutronix.de>
+From: <tthayer@altera.com>
+Subject: [PATCHv2 2/3] dts: socfpga: Add bindings for Altera SoC SDRAM EDAC
+Date: Tue, 15 Apr 2014 18:30:09 -0500
+Message-ID: <1397604610-20931-4-git-send-email-tthayer@altera.com>
+References: <1397604610-20931-1-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397548592-6384-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1397604610-20931-1-git-send-email-tthayer@altera.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, Thor Thayer <tthayer@altera.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, Borislav Petkov <bp@alien8.de>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-04-15 at 09:56 +0200, Steffen Trumtrar wrote:
-> Add a reset-controller driver for the socfpga platform.
-> The reset-controller has four banks with up to 32 entries all encapsulated in
-> one module block.
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
-> 
-> Notes:
->     Changes since v2:
->     	- remove superfluous ret in probe function
->     	- add Acked-by
->     
->     Changes since v1:
->     	- use BITS_PER_LONG everywhere instead of MAX_BANK_WIDTH
->     	- print pdev->dev.of_node->full_name on error
->     	- use proper IS_ERR/PTR_ERR
-> 
+From: Thor Thayer <tthayer@altera.com>
 
-I've applied this series to rocketboards linux-socfpga-next/drivers and
-linux-socfpga-next/next-dt.
+Addition of the Altera SDRAM EDAC bindings and device
+tree changes to the Altera SoC project.
 
-Thanks,
+---
+v2: Update the mailing list to include the EDAC mailing list.
 
-Dinh
+Signed-off-by: Thor Thayer <tthayer@altera.com>
+To: Rob Herring <robherring2@gmail.com>
+To: Pawel Moll <pawel.moll@arm.com>
+To: Mark Rutland <mark.rutland@arm.com>
+To: Ian Campbell <ijc+devicetree@hellion.org.uk>
+To: Kumar Gala <galak@codeaurora.org>
+To: Rob Landley <rob@landley.net>
+To: Russell King <linux@arm.linux.org.uk>
+To: Dinh Nguyen <dinguyen@altera.com>
+To: Doug Thompson <dougthompson@xmission.com>
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-edac@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ .../bindings/arm/altera/socfpga-sdram-edac.txt     |   12 ++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+ 2 files changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+new file mode 100644
+index 0000000..9348c53
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+@@ -0,0 +1,12 @@
++Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
++
++Required properties:
++- compatible : should contain "altr,sdr-edac";
++- interrupts : Should contain the SDRAM ECC IRQ in the
++	appropriate format for the IRQ controller.
++
++Example:
++	sdramedac@0 {
++		compatible = "altr,sdram-edac";
++		interrupts = <0 39 4>;
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 6ce912e..a0ea69b 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -681,6 +681,11 @@
+ 			reg = <0xffc25000 0x1000>;
+ 		};
+ 
++		sdramedac@0 {
++			compatible = "altr,sdram-edac";
++			interrupts = <0 39 4>;
++		};
++
+ 		rstmgr@ffd05000 {
+ 			compatible = "altr,rst-mgr";
+ 			reg = <0xffd05000 0x1000>;
+-- 
+1.7.9.5
