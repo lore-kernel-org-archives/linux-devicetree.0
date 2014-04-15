@@ -1,28 +1,28 @@
-From: Mohit Kumar <mohit.kumar@st.com>
+From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 Subject: [PATCH V8 1/9] clk: SPEAr13XX: Fix pcie clock name
 Date: Tue, 15 Apr 2014 17:19:43 +0530
-Message-ID: <378dc5a17716db13553ae05257b9b0e9722d29b8.1397555158.git.mohit.kumar__4856.15446600622$1397562913$gmane$org@st.com>
+Message-ID: <378dc5a17716db13553ae05257b9b0e9722d29b8.1397555158.git.mohit.kumar__6740.5246351429$1397562941$gmane$org@st.com>
 References: <cover.1397555158.git.mohit.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1397555158.git.mohit.kumar@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: spear-devel@list.st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Pratyush Anand <pratyush.anand@st.com>, Mohit Kumar <mohit.kumar@st.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1397555158.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pratyush Anand <pratyush.anand@st.com>
+From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
 
 Follow dt clock naming convention for PCIe clocks.
 
-Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Mohit Kumar <mohit.kumar@st.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: spear-devel@list.st.com
-Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 ---
  drivers/clk/spear/spear1310_clock.c |    6 +++---
  drivers/clk/spear/spear1340_clock.c |    2 +-
@@ -70,3 +70,8 @@ index fe835c1..5a5c664 100644
  	clk = clk_register_gate(NULL, "sysram0_clk", "ahb_clk", 0,
 -- 
 1.7.0.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
