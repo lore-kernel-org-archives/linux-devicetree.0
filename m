@@ -1,7 +1,8 @@
 From: <tthayer@altera.com>
-Subject: [PATCHv2 2/3] dts: socfpga: Add bindings for Altera SoC SDRAM EDAC
-Date: Tue, 15 Apr 2014 18:30:09 -0500
-Message-ID: <1397604610-20931-4-git-send-email-tthayer@altera.com>
+Subject: [PATCHv2 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
+ controller
+Date: Tue, 15 Apr 2014 18:30:08 -0500
+Message-ID: <1397604610-20931-3-git-send-email-tthayer@altera.com>
 References: <1397604610-20931-1-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,7 +24,7 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@altera.com>
 
-Addition of the Altera SDRAM EDAC bindings and device
+Addition of the Altera SDRAM controller bindings and device
 tree changes to the Altera SoC project.
 
 ---
@@ -47,40 +48,42 @@ Cc: linux-edac@vger.kernel.org
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 ---
- .../bindings/arm/altera/socfpga-sdram-edac.txt     |   12 ++++++++++++
+ .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++++++++
  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
- 2 files changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
 new file mode 100644
-index 0000000..9348c53
+index 0000000..525cb76
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-@@ -0,0 +1,12 @@
-+Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+@@ -0,0 +1,14 @@
++Altera SOCFPGA SDRAM Controller
 +
 +Required properties:
-+- compatible : should contain "altr,sdr-edac";
-+- interrupts : Should contain the SDRAM ECC IRQ in the
-+	appropriate format for the IRQ controller.
++- compatible : "altr,sdr-ctl", "syscon";
++                Note that syscon is invoked for this device to support the FPGA
++		bridge driver, EDAC driver and other devices that share the
++		registers.
++- reg : Should contain 1 register ranges(address and length)
 +
 +Example:
-+	sdramedac@0 {
-+		compatible = "altr,sdram-edac";
-+		interrupts = <0 39 4>;
++	sdrctl@ffc25000 {
++		compatible = "altr,sdr-ctl", "syscon";
++		reg = <0xffc25000 0x1000>;
 +	};
 diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 6ce912e..a0ea69b 100644
+index df43702..6ce912e 100644
 --- a/arch/arm/boot/dts/socfpga.dtsi
 +++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -681,6 +681,11 @@
- 			reg = <0xffc25000 0x1000>;
+@@ -676,6 +676,11 @@
+ 			clocks = <&l4_sp_clk>;
  		};
  
-+		sdramedac@0 {
-+			compatible = "altr,sdram-edac";
-+			interrupts = <0 39 4>;
++		sdrctl@ffc25000 {
++			compatible = "altr,sdr-ctl", "syscon";
++			reg = <0xffc25000 0x1000>;
 +		};
 +
  		rstmgr@ffd05000 {
