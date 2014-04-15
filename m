@@ -1,125 +1,41 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv2 1/8] ARM: EXYNOS: Add Exynos3250 SoC ID
-Date: Tue, 15 Apr 2014 10:59:45 +0900
-Message-ID: <1397527192-21988-2-git-send-email-cw00.choi@samsung.com>
-References: <1397527192-21988-1-git-send-email-cw00.choi@samsung.com>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: Re: [PATCH v2 1/2] ASoC: fsl_sai: Add clock controls for SAI
+Date: Tue, 15 Apr 2014 10:26:58 +0800
+Message-ID: <20140415022656.GC7197@MrMyself>
+References: <cover.1396432924.git.Guangyu.Chen@freescale.com>
+ <12898efab7a5907e6ed1c438a486692f59ef9d8b.1396432924.git.Guangyu.Chen@freescale.com>
+ <20140414204331.GE25182@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1397527192-21988-1-git-send-email-cw00.choi@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, linux@arm.linux.org.uk, arnd@arndb.de, marc.zyngier@arm.com, t.figa@samsung.com, hyunhee.kim@samsung.com, sw0312.kim@samsung.com, yj44.cho@samsung.com, cw00.choi@samsung.com, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, thomas.abraham@linaro.org, ben-linux@fluff.org, olof@lixom.net, chanho61.park@samsung.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140414204331.GE25182@sirena.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: shawn.guo@linaro.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, alsa-devel@alsa-project.org, timur@tabi.org, Li.Xiubo@freescale.com, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch add Exynos3250's SoC ID. Exynos 3250 is System-On-Chip(SoC) that
-is based on the 32-bit RISC processor for Smartphone. Exynos3250 uses Cortex-A7
-dual cores and has a target speed of 1.0GHz.
+On Mon, Apr 14, 2014 at 09:43:31PM +0100, Mark Brown wrote:
+> On Wed, Apr 02, 2014 at 06:10:19PM +0800, Nicolin Chen wrote:
+> 
+> > -- clock-names : Must include the "sai" entry.
+> > +- clock-names : Must include the "bus" for register access and "mclk1" "mclk2"
+> > +  "mclk3" for bit clock and frame clock providing.
+> 
+> This breaks compatibilty with old DTs - it just removes the "sai" name.
+> It's OK to deprecate the "sai" clock name but you need to keep support
+> for DTs that only specify that, there's no code for that left in the
+> driver.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/mach-exynos/Kconfig             | 22 ++++++++++++++++++++++
- arch/arm/mach-exynos/exynos.c            |  2 ++
- arch/arm/plat-samsung/include/plat/cpu.h | 10 ++++++++++
- 3 files changed, 34 insertions(+)
+Sir, you've already applied the v6 of this patch last week :)
+And I can still find it in topic/fsl-sai.
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index fc8bf18..6da8a68 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -11,6 +11,17 @@ if ARCH_EXYNOS
- 
- menu "SAMSUNG EXYNOS SoCs Support"
- 
-+config ARCH_EXYNOS3
-+	bool "SAMSUNG EXYNOS3"
-+	select ARM_AMBA
-+	select CLKSRC_OF
-+	select HAVE_ARM_SCU if SMP
-+	select HAVE_SMP
-+	select PINCTRL
-+	select PM_GENERIC_DOMAINS if PM_RUNTIME
-+	help
-+	  Samsung EXYNOS3 SoCs based systems
-+
- config ARCH_EXYNOS4
- 	bool "SAMSUNG EXYNOS4"
- 	default y
-@@ -41,6 +52,17 @@ config ARCH_EXYNOS5
- 
- comment "EXYNOS SoCs"
- 
-+config SOC_EXYNOS3250
-+	bool "SAMSUNG EXYNOS3250"
-+	default y
-+	depends on ARCH_EXYNOS3
-+	select ARCH_HAS_BANDGAP
-+	select ARM_CPU_SUSPEND if PM
-+	select PINCTRL_EXYNOS
-+	select SAMSUNG_DMADEV
-+	help
-+	  Enable EXYNOS3250 CPU support
-+
- config CPU_EXYNOS4210
- 	bool "SAMSUNG EXYNOS4210"
- 	default y
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index b32a907..a603dfa 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -370,6 +370,8 @@ static void __init exynos_dt_machine_init(void)
- }
- 
- static char const *exynos_dt_compat[] __initconst = {
-+	"samsung,exynos3",
-+	"samsung,exynos3250",
- 	"samsung,exynos4",
- 	"samsung,exynos4210",
- 	"samsung,exynos4212",
-diff --git a/arch/arm/plat-samsung/include/plat/cpu.h b/arch/arm/plat-samsung/include/plat/cpu.h
-index 5992b8d..3d808f6b 100644
---- a/arch/arm/plat-samsung/include/plat/cpu.h
-+++ b/arch/arm/plat-samsung/include/plat/cpu.h
-@@ -43,6 +43,9 @@ extern unsigned long samsung_cpu_id;
- #define S5PV210_CPU_ID		0x43110000
- #define S5PV210_CPU_MASK	0xFFFFF000
- 
-+#define EXYNOS3250_SOC_ID       0xE3472000
-+#define EXYNOS3_SOC_MASK        0xFFFFF000
-+
- #define EXYNOS4210_CPU_ID	0x43210000
- #define EXYNOS4212_CPU_ID	0x43220000
- #define EXYNOS4412_CPU_ID	0xE4412200
-@@ -68,6 +71,7 @@ IS_SAMSUNG_CPU(s5p6440, S5P6440_CPU_ID, S5P64XX_CPU_MASK)
- IS_SAMSUNG_CPU(s5p6450, S5P6450_CPU_ID, S5P64XX_CPU_MASK)
- IS_SAMSUNG_CPU(s5pc100, S5PC100_CPU_ID, S5PC100_CPU_MASK)
- IS_SAMSUNG_CPU(s5pv210, S5PV210_CPU_ID, S5PV210_CPU_MASK)
-+IS_SAMSUNG_CPU(exynos3250, EXYNOS3250_SOC_ID, EXYNOS3_SOC_MASK)
- IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
-@@ -126,6 +130,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
- # define soc_is_s5pv210()	0
- #endif
- 
-+#if defined(CONFIG_SOC_EXYNOS3250)
-+# define soc_is_exynos3250()    is_samsung_exynos3250()
-+#else
-+# define soc_is_exynos3250()    0
-+#endif
-+
- #if defined(CONFIG_CPU_EXYNOS4210)
- # define soc_is_exynos4210()	is_samsung_exynos4210()
- #else
--- 
-1.8.0
+ca3e35c ASoC: fsl_sai: Add clock controls for SAI
+
+And regarding the old DTs compatibilty, Shawn has already reminded me
+in his comments against one of the version. I took his advice and made
+the patch compatible with the old 'sai' clock binding within that v6.
+
+Thank you,
+Nicolin
+
