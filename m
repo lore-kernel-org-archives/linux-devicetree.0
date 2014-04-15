@@ -1,85 +1,63 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH v2 2/9] ARM: shmobile: r8a7790: add dma defines for sys
- and audio dmacs
-Date: Tue, 15 Apr 2014 10:46:17 +0100
-Message-ID: <534CFFE9.2050100@codethink.co.uk>
-References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk> <1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk> <6876261.h1xXmWF0f3@wuerfel> <20140414225151.GF22518@verge.net.au>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/4] regulator: s5m8767: Use same binding for external
+ control as in s2mps11
+Date: Tue, 15 Apr 2014 15:21:55 +0530
+Message-ID: <CAK9yfHzgH-4C5agpu9SFckp1BcB6s9jeviDVZBokhS+aRh9RUA@mail.gmail.com>
+References: <1397462949-22379-1-git-send-email-k.kozlowski@samsung.com>
+	<1397462949-22379-5-git-send-email-k.kozlowski@samsung.com>
+	<20140414211106.GC12304@sirena.org.uk>
+	<CAK9yfHwL4o7-7Q03dw9JdD1UDsP_v2=we1kadRXaGAuaN1de_g@mail.gmail.com>
+	<1397549539.29169.2.camel@AMDC1943>
+	<CAK9yfHwUwjMEXisi5Jf+nAkS7CLnAUt-REkekns9JrRTAGQ=WQ@mail.gmail.com>
+	<1397552145.29169.17.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140414225151.GF22518@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397552145.29169.17.camel@AMDC1943>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sangbeom Kim <sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/04/14 23:51, Simon Horman wrote:
-> On Tue, Apr 15, 2014 at 12:10:00AM +0200, Arnd Bergmann wrote:
->> On Monday 14 April 2014 22:35:05 Ben Dooks wrote:
->>> Add the DMA resource IDs for the R8A7790 Audio and SYS DMA controllers
->>> for use when specifying DMA handles.
->>>
->>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+On 15 April 2014 14:25, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On wto, 2014-04-15 at 14:02 +0530, Sachin Kamat wrote:
+>> On 15 April 2014 13:42, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > On wto, 2014-04-15 at 13:26 +0530, Sachin Kamat wrote:
+>> >> On 15 April 2014 02:41, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> >> > On Mon, Apr 14, 2014 at 10:09:09AM +0200, Krzysztof Kozlowski wrote:
+>> >> >
+>> >> >> -     - s5m8767,pmic-ext-control-gpios: (optional) GPIO specifier for one
+>> >> >> +     - samsung,ext-control-gpios: (optional) GPIO specifier for one
+>> >> >>               GPIO controlling this regulator (enable/disable); This is
+>> >> >>               valid only for buck9.
+>> >> >
+>> >> > This is an incompatible change.  It's OK to deprecate the old property
+>> >> > but it's bad form to just remove it.
+>> >>
+>> >> I agree with Mark. Also, there is no need to make it generic.
+>> >
+>> > I thought it would be good to make it consistent and to reduce the
+>> > number of bindings with same meaning on similar drivers.
 >>
->> I really hate these lists in bindings:
->>
->>> +#define R8A7790_DMA_SCIFA0_TX	(0x21)
->>> +#define R8A7790_DMA_SCIFA0_RX	(0x22)
->>> +#define R8A7790_DMA_SCIFA1_TX	(0x25)
->>> +#define R8A7790_DMA_SCIFA1_RX	(0x26)
->>> +#define R8A7790_DMA_SCIFA2_TX	(0x27)
->>> +#define R8A7790_DMA_SCIFA2_RX	(0x28)
->>> +
->>> +#define R8A7790_DMA_SCIFB0_TX	(0x3D)
->>> +#define R8A7790_DMA_SCIFB0_RX	(0x3E)
->>> +#define R8A7790_DMA_SCIFB1_TX	(0x19)
->>> +#define R8A7790_DMA_SCIFB1_RX	(0x1A)
->>> +#define R8A7790_DMA_SCIFB2_TX	(0x1D)
->>> +#define R8A7790_DMA_SCIFB2_RX	(0x1E)
->>
->> These are all hardware constants, they should come from the data sheet and
->> get put into the dtsi file. The driver doesn't care what they are, and
->> the binding doesn't care, this only serves to make the binding less
->> generic.
+>> How about making the other one use "s5m8767,pmic-ext-control-gpios"
+>> compatible instead of introducing a new one?
 >
-> They serve to make the dts file significantly more readable and
-> give some small level of compile-time checking to the dts file.
+> But then we would introduce semi-generic binding with a driver-specific
+> name.
+
+We can have a IP specific name (first IP to have this property) common
+across family of IPs.
+
 >
-> I am entirely in favour of them and its the direction that we
-> have been moving in for shmobile bindings.
+> Anyway more drivers seem to use this kind of binding (tps65090, max8952,
+> da9055, arizona) so maybe there is a point in making this generic?
 
-I don't really mind either way on these, when we had the
-configuration for each slave in the dma-controller node
-then having defines was very sensible.
-
->>> +#define CHCR_RX_32BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
->>> +#define CHCR_TX_32BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
->>> +#define CHCR_RX_256BIT	SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
->>> +#define CHCR_TX_256BIT	SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
->>
->> For these, it's different: There is nothing wrong putting macros like
->> these into DT, because they will be the same across all SoCs.
->>
->> However, as I mentioned in my reply to patch 8, I don't think that information
->> belongs into DT, and it should be in the device driver instead, because
->> that already knows the direction and transfer width and has to set it
->> through the slave config interface anyway.
-
-There are a couple of issues here, firstly is that I have no idea if
-any other SoCs have control bits that are not currently configurable
-from the information supplied by a driver when it is bound.
-
-The second is that the DMA for some peripherals do not match the size
-of the registers, for example the SDHI blocks can do 256bit DMA to
-what is specified to be a 32bit register.
-
-I also prefer these to be in one place, to avoid the following
-
-- Altering every $OS run on the system when you add a new dma peripheral
-- Having to cross merge adding to DTS/DTSI and a driver for the same.
-
+In that case we could but probably not with samsung prefix.
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+With warm regards,
+Sachin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
