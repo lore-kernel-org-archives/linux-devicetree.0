@@ -1,99 +1,50 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
-Date: Tue, 15 Apr 2014 12:18:30 -0500
-Message-ID: <20140415171830.GB16002@saruman.home>
-References: <774153d4-d33f-4bb4-813b-582762bc3af9@TX2EHSMHS021.ehs.local>
- <20140220182257.GF23217@saruman.home>
- <CALHRZuoF52kHH7aPd5AA3iCG9iZhCFu-2=u3_jEiSFrUOnBAew@mail.gmail.com>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1UWUbFP1cBYEclgG"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALHRZuoF52kHH7aPd5AA3iCG9iZhCFu-2=u3_jEiSFrUOnBAew@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sundeep subbaraya <sundeep.lkml@gmail.com>
-Cc: balbi@ti.com, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michal Simek <michals@xilinx.com>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH 0/5] Exynos4 SoC camera subsystem driver cleanups
+Date: Tue, 15 Apr 2014 19:34:27 +0200
+Message-ID: <1397583272-28295-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---1UWUbFP1cBYEclgG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch series removes support for non-dt platforms from the
+Exynos4/S5P SoC camera interface drivers and removes (ab)use
+of "simple-bus" compatible string.
 
-Hi,
+Sylwester Nawrocki (5):
+  ARM: S5PV210: Remove camera support from mach-goni.c
+  exynos4-is: Fix compilation for !CONFIG_COMMON_CLK
+  exynos4-is: Remove support for non-dt platforms
+  exynos4-is: Remove requirement for "simple-bus" compatible
+  ARM: dts: exynos4: Remove simple-bus compatible from camera subsystem
+    nodes
 
-On Wed, Mar 26, 2014 at 03:37:52PM +0530, sundeep subbaraya wrote:
-> >> +     INIT_LIST_HEAD(&req->queue);
-> >
-> > remove this INIT_LIST_HEAD();
-> >
-> > also, before returning, I suppose you probably want to link the request
-> > to the endpoint somehow. Usually people save the endpoint pointer inside
-> > the private request structure (iow: req->ep =3D ep;)
-> >
->=20
-> in ep_queue (say,for IN transaction) the driver copies the gadget
-> driver buffer to HW endpoint buffer and if whole data
-> has been transferred successfully then request is not added to
-> endpoint request list. Hence  INIT_LIST_HEAD(&req->queue)
-> is required since list_add_tail is not done every time in ep_queue. Is
-> it ok to let this be here?o
+ .../devicetree/bindings/media/samsung-fimc.txt     |    6 +-
+ Documentation/video4linux/fimc.txt                 |   30 --
+ MAINTAINERS                                        |    1 -
+ arch/arm/boot/dts/exynos4.dtsi                     |    2 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |    2 +-
+ arch/arm/mach-s5pv210/mach-goni.c                  |   51 ---
+ drivers/media/platform/exynos4-is/Kconfig          |    3 +-
+ drivers/media/platform/exynos4-is/common.c         |   49 ++-
+ drivers/media/platform/exynos4-is/common.h         |    6 +-
+ drivers/media/platform/exynos4-is/fimc-core.h      |    2 +-
+ drivers/media/platform/exynos4-is/fimc-is.c        |   12 +-
+ drivers/media/platform/exynos4-is/fimc-isp-video.c |    2 +-
+ drivers/media/platform/exynos4-is/fimc-isp.h       |    2 +-
+ drivers/media/platform/exynos4-is/fimc-lite-reg.c  |    2 +-
+ drivers/media/platform/exynos4-is/fimc-lite.c      |    2 +-
+ drivers/media/platform/exynos4-is/fimc-lite.h      |    2 +-
+ drivers/media/platform/exynos4-is/fimc-reg.c       |    2 +-
+ drivers/media/platform/exynos4-is/media-dev.c      |  356 +++-----------------
+ drivers/media/platform/exynos4-is/media-dev.h      |    2 +-
+ drivers/media/platform/exynos4-is/mipi-csis.c      |   43 +--
+ include/linux/platform_data/mipi-csis.h            |   28 --
+ include/media/{s5p_fimc.h => exynos-fimc.h}        |   21 --
+ 22 files changed, 138 insertions(+), 488 deletions(-)
+ delete mode 100644 include/linux/platform_data/mipi-csis.h
+ rename include/media/{s5p_fimc.h => exynos-fimc.h} (87%)
 
-my bad, you _do_ need this INIT_LIST_HEAD() here. When I first read, I
-thought you were initializing struct usb_request list_head, and that is
-not necessary ;-)
-
-> >> +     if (req !=3D NULL)
-> >> +             list_add_tail(&req->queue, &ep->queue);
-> Here. INIT_LIST_HEAD(&req->queue) is required in alloc_req since
-> list_add_tail is not executed every time.
->=20
-> Could you please clarify my questions regarding requests queuing.
-> 1. If Device need to send 5120 bytes to host and
-> ep->desc->wMaxPacketSize is 512 then single request with length 5120
-> is issued or 10 requests are issued?
-
-single request.
-
-> 2. Does device need to know OUT transactions before hand so that OUT
-> requests are queued for endpoint before packets are received
-> from host?
-
-well, no. Gadget driver shouldn't depend on that. That's UDC driver's
-responsability to manage that. I mean, if host sends OUT token and
-there's nothing in the out queue, then UDC need to start transfer as
-soon as gadget driver queues the request. If, on the other hand, gadget
-driver queues packet before host has sent OUT token then you have two
-choices:
-
-1) start the transfer - most HW will wait for OUT token
-2) wait for out token
-
---=20
-balbi
-
---1UWUbFP1cBYEclgG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTTWnmAAoJEIaOsuA1yqRENb4QAIOqCsRTTq+olnq+15irjaey
-Kt++seu/we5grxBRQ12Zbm4HsWjlxMF+1XOepAVdjzCdGqRpBc4cvqVJONwBbfxt
-fYgMrALwUGCkfyStqENSYgBNBhHMNtTk2wxITtP4LvXcbiGCRLVnmbHpuA3C7Gp3
-MgO6Oaep/UIfFAtMmwdldS6tIB62LXnH4SonFzNHpi5QfM7K45lKQjJwdMtvpZgG
-43R34mjCqarI5FJjK+pUUKSrlT0y9Jy0OER3PbkmDFNRbhWhU4bKRi2GJPVyp2sv
-tfZeCiT0n3oW20nBMe6oFinPpWv16H49/HxTlReDYCnpwsRMKD+01N/xX8dUKtim
-wFkD6P0iN9BzvADer7Wsm5WYnBNIIqoASkJ6d77zuMHB90zXCev1vejCrfL4uhGF
-waYxoydMkucX5+87FYK7VionVvHDXY0QkaK1L01mYhX2cmNQgY9/rRHHbA5i2HDa
-Q2C11z72WpRv4AAe6Ud0xbZy4KmZUQ/ChBR/RAERzQF5Ml/vStuduBlx7BOI2p0B
-mrW+bv8ROWcD58da7CqDGNwbRHI4DNWvYWsNCYfeeOpgG2h71cA8IjrB3cjD4Fjx
-865gcClsawb2FhvfM1z7kaqeY3KQrMi9HWqqVo+4LOkWiG0FwvTstzvEjANCQJEN
-y18tINYolwtfiQ9Dwl43
-=tPC9
------END PGP SIGNATURE-----
-
---1UWUbFP1cBYEclgG--
+--
+1.7.9.5
