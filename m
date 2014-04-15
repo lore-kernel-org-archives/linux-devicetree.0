@@ -1,19 +1,19 @@
-From: Mohit Kumar <mohit.kumar@st.com>
+From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 Subject: [PATCH V8 8/9] pcie: SPEAr13xx: Add designware wrapper support
 Date: Tue, 15 Apr 2014 17:19:50 +0530
-Message-ID: <344c498ec0e2d4fceb7653ad79cc94a53a4b07f1.1397555158.git.mohit.kumar__27721.6976545335$1397562679$gmane$org@st.com>
+Message-ID: <344c498ec0e2d4fceb7653ad79cc94a53a4b07f1.1397555158.git.mohit.kumar__33201.57999774$1397562709$gmane$org@st.com>
 References: <cover.1397555158.git.mohit.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1397555158.git.mohit.kumar@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: spear-devel@list.st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Pratyush Anand <pratyush.anand@st.com>, Mohit Kumar <mohit.kumar@st.com>, Viresh Kumar <viresh.linux@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1397555158.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pratyush Anand <pratyush.anand@st.com>
+From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
 
 SPEAr1310 and SPEAr1340 SOC uses designware PCIe controller. Add
 SPEAr13xx PCIe driver based on designware controller driver.
@@ -27,14 +27,14 @@ from respective evb dtsi file.
 
 Add Mohit Kumar as maintainer for ST SPEAr13xx PCIe driver.
 
-Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
-Signed-off-by: Mohit Kumar <mohit.kumar@st.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Bjorn Helgaas <bhelgaas@google.com>
-Acked-by: Jingoo Han <jg1.han@samsung.com>
-Cc: Viresh Kumar <viresh.linux@gmail.com>
-Cc: spear-devel@list.st.com
-Cc: linux-pci@vger.kernel.org
+Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Acked-by: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
  MAINTAINERS                       |    6 +
  arch/arm/boot/dts/spear1310.dtsi  |    6 +
@@ -51,19 +51,19 @@ diff --git a/MAINTAINERS b/MAINTAINERS
 index 2421c8d..574218f 100644
 --- a/MAINTAINERS
 +++ b/MAINTAINERS
-@@ -6734,6 +6734,12 @@ L:	linux-pci@vger.kernel.org
+@@ -6734,6 +6734,12 @@ L:	linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
  S:	Maintained
  F:	drivers/pci/host/*designware*
  
 +PCIE DRIVER FOR ST SPEAR13XX
-+M:	Mohit Kumar <mohit.kumar@st.com>
-+L:	linux-pci@vger.kernel.org
++M:	Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
++L:	linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 +S:	Maintained
 +F:	drivers/pci/host/pcie-spear13xx.c
 +
  PCMCIA SUBSYSTEM
  P:	Linux PCMCIA Team
- L:	linux-pcmcia@lists.infradead.org
+ L:	linux-pcmcia-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 diff --git a/arch/arm/boot/dts/spear1310.dtsi b/arch/arm/boot/dts/spear1310.dtsi
 index 53f73a2..77bebae 100644
 --- a/arch/arm/boot/dts/spear1310.dtsi
@@ -173,8 +173,8 @@ index 0000000..47e8e91
 + * SPEAr13xx PCIe Glue Layer Source Code
 + *
 + * Copyright (C) 2010-2014 ST Microelectronics
-+ * Pratyush Anand <pratyush.anand@st.com>
-+ * Mohit Kumar <mohit.kumar@st.com>
++ * Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
++ * Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 + *
 + * This file is licensed under the terms of the GNU General Public
 + * License version 2. This program is licensed "as is" without any
@@ -572,7 +572,12 @@ index 0000000..47e8e91
 +module_init(pcie_init);
 +
 +MODULE_DESCRIPTION("ST Microelectronics SPEAr13xx PCIe host controller driver");
-+MODULE_AUTHOR("Pratyush Anand <pratyush.anand@st.com>");
++MODULE_AUTHOR("Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>");
 +MODULE_LICENSE("GPL v2");
 -- 
 1.7.0.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
