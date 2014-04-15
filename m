@@ -1,55 +1,40 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: Re: [PATCH] tty/serial: atmel_serial: Fix device tree documentation
-Date: Tue, 15 Apr 2014 10:12:39 +0200
-Message-ID: <534CE9F7.60202@gmail.com>
-References: <1397487482-3816-1-git-send-email-richard.genoud@gmail.com> <20140414152212.GC2255@ldesroches-Latitude-E6320> <534CE24F.9020703@gmail.com> <20140415080006.GE2255@ldesroches-Latitude-E6320>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv2 3/8] ARM: EXYNOS: Add IO mapping for PMU of Exynos3250
+Date: Tue, 15 Apr 2014 10:11:57 +0200
+Message-ID: <4788081.xvaJfdGTMu@wuerfel>
+References: <1397527192-21988-1-git-send-email-cw00.choi@samsung.com> <1397527192-21988-4-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140415080006.GE2255@ldesroches-Latitude-E6320>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397527192-21988-4-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hyunhee.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15/04/2014 10:00, Ludovic Desroches wrote:
-> On Tue, Apr 15, 2014 at 09:39:59AM +0200, Richard Genoud wrote:
->> On 14/04/2014 17:22, Ludovic Desroches wrote:
->>> Hi Richard,
->>>
->>> On Mon, Apr 14, 2014 at 04:58:02PM +0200, Richard Genoud wrote:
->>>> RTS pin is an active low pin.
->>>> For now, this doesn't change anything as the ACTIVE_LOW flag is not
->>>> handled in atmel_serial, but it will be in 3.16.
->>>>
->>>> Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/serial/atmel-usart.txt | 2 +-
->>>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
->>>> index 17c1042b2df8..2f7aad71b3c9 100644
->>>> --- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
->>>> +++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
->>>> @@ -35,7 +35,7 @@ Example:
->>>>  		clock-names = "usart";
->>>>  		atmel,use-dma-rx;
->>>>  		atmel,use-dma-tx;
->>>> -		rts-gpios = <&pioD 15 0>;
->>>> +		rts-gpios = <&pioD 15 GPIO_ACTIVE_LOW>;
->>>
->>> I was told we should not use macros here. If it is still the truth:
->>>
->>> rts-gpios = <&pioD 15 1>;
->>
->> But I'd really like to know if macros are forbidden in DT documentation and why...
->> Because, IMHO, <&pioD 15 1> talks less that <&pioD 15 GPIO_ACTIVE_LOW>.
->> Which is a shame in a documentation.
+On Tuesday 15 April 2014 10:59:47 Chanwoo Choi wrote:
+> This patch add memory mapping for PMU (Power Management Unit) which is used
+> for power control of Exynos3250.
 > 
-> I don't remember who told me that but the reason was that device tree
-> should not depend on Linux and macros are relative to Linux.
+> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Arnd Bergmann suggested that need proper driver instead of static memory mapping.
+> As Chanho Park reply[2], Sachin Kamat already posted the DT support patch[1]
+> for memory mapping for SYSRAM.
+> [1] http://www.spinics.net/lists/linux-samsung-soc/msg27647.html
+> [2] https://lkml.org/lkml/2014/4/10/161
 > 
-Well, that makes sense, but I thought that include/dt-bindings/ was more
-DT relative.
+> So, I'm going to re-implement following patch related to static memory mapping
+> after merged Sachin Kamat patch[1].
+>   ARM: EXYNOS: Add IO mapping for PMU of Exynos3250
 
+I don't think we have a patch for the PMU yet, Sachin was looking at the SYSRAM
+only.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
