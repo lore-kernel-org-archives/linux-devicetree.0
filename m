@@ -1,51 +1,49 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 4/4] regulator: s5m8767: Use same binding for external
- control as in s2mps11
-Date: Tue, 15 Apr 2014 10:55:45 +0200
-Message-ID: <1397552145.29169.17.camel@AMDC1943>
-References: <1397462949-22379-1-git-send-email-k.kozlowski@samsung.com>
- <1397462949-22379-5-git-send-email-k.kozlowski@samsung.com>
- <20140414211106.GC12304@sirena.org.uk>
- <CAK9yfHwL4o7-7Q03dw9JdD1UDsP_v2=we1kadRXaGAuaN1de_g@mail.gmail.com>
- <1397549539.29169.2.camel@AMDC1943>
- <CAK9yfHwUwjMEXisi5Jf+nAkS7CLnAUt-REkekns9JrRTAGQ=WQ@mail.gmail.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 1/2] ARM: berlin: add the LIBGPIO as a dependency for
+ the BG2Q
+Date: Tue, 15 Apr 2014 17:07:50 +0800
+Message-ID: <20140415170750.7721e907@xhacker>
+References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
+	<1397549245-3338-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHwUwjMEXisi5Jf+nAkS7CLnAUt-REkekns9JrRTAGQ=WQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397549245-3338-2-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
+Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, Jimmy Xu <zmxu@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On wto, 2014-04-15 at 14:02 +0530, Sachin Kamat wrote:
-> On 15 April 2014 13:42, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> > On wto, 2014-04-15 at 13:26 +0530, Sachin Kamat wrote:
-> >> On 15 April 2014 02:41, Mark Brown <broonie@kernel.org> wrote:
-> >> > On Mon, Apr 14, 2014 at 10:09:09AM +0200, Krzysztof Kozlowski wrote:
-> >> >
-> >> >> -     - s5m8767,pmic-ext-control-gpios: (optional) GPIO specifier for one
-> >> >> +     - samsung,ext-control-gpios: (optional) GPIO specifier for one
-> >> >>               GPIO controlling this regulator (enable/disable); This is
-> >> >>               valid only for buck9.
-> >> >
-> >> > This is an incompatible change.  It's OK to deprecate the old property
-> >> > but it's bad form to just remove it.
-> >>
-> >> I agree with Mark. Also, there is no need to make it generic.
-> >
-> > I thought it would be good to make it consistent and to reduce the
-> > number of bindings with same meaning on similar drivers.
-> 
-> How about making the other one use "s5m8767,pmic-ext-control-gpios"
-> compatible instead of introducing a new one?
+Hi Antoine,
 
-But then we would introduce semi-generic binding with a driver-specific
-name.
+On Tue, 15 Apr 2014 01:07:24 -0700
+Antoine T=C3=A9nart <antoine.tenart@free-electrons.com> wrote:
 
-Anyway more drivers seem to use this kind of binding (tps65090, max8952,
-da9055, arizona) so maybe there is a point in making this generic?
+> The BG2Q has GPIOs driven by the dwapb GPIO driver. Add the LIBGPIO a=
+s a
+> dependency to be able to support them.
+>=20
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
+>
+> ---
+>  arch/arm/mach-berlin/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/arm/mach-berlin/Kconfig b/arch/arm/mach-berlin/Kcon=
+fig
+> index 291f1cac6c3d..c31968712095 100644
+> --- a/arch/arm/mach-berlin/Kconfig
+> +++ b/arch/arm/mach-berlin/Kconfig
+> @@ -28,6 +28,7 @@ config MACH_BERLIN_BG2Q
+>  	select CPU_V7
+>  	select HAVE_ARM_TWD if SMP
+>  	select HAVE_SMP
+> +	select ARCH_REQUIRE_GPIOLIB
 
-Best regards,
-Krzysztof
+alphabetically sort.
+
+Others looks good ;)
+
+Thanks,
+Jisheng
