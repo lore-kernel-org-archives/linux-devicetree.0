@@ -1,101 +1,118 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
-Date: Tue, 15 Apr 2014 17:40:38 +0100
-Message-ID: <534D6106.1070005@arm.com>
-References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
- <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
- <CAL_JsqJowqV2bsxE2VeYXQQSj4_L_KcH+C_dD=ZUvC=1crN4dA@mail.gmail.com>
- <87ha6136dz.fsf@approximate.cambridge.arm.com>
- <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
- <5347B942.2040703@arm.com>
- <CABuKBeLLC2xApUMpT=u5nq4kxp9f4AotQCdk0nRU=aREM6Bwkg@mail.gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2 1/7] clk: exynos5420: Add more clock register offsets
+Date: Tue, 15 Apr 2014 18:45:54 +0200
+Message-ID: <534D6242.9000605@gmail.com>
+References: <1395918470-16374-1-git-send-email-shaik.ameer@samsung.com> <1395918470-16374-2-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABuKBeLLC2xApUMpT=u5nq4kxp9f4AotQCdk0nRU=aREM6Bwkg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Kumar
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1395918470-16374-2-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15/04/14 17:09, Matthias Brugger wrote:
-> 2014-04-11 11:43 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
->> On 11/04/14 10:11, Matthias Brugger wrote:
->>> 2014-04-10 11:01 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
->>>> A couple of things on top of Rob's comments:
->>>>
->>>> On Wed, Apr 09 2014 at 10:50:33 pm BST, Rob Herring <robherring2@gmail.com> wrote:
->>>>> On Wed, Apr 9, 2014 at 2:45 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
->>>>>> This adds a generic devicetree board file and a dtsi for boards
->>>>>> based on the MT6589 SoCs from Mediatek.
->>>>>>
->>>>>> Apart from the generic parts (gic, clocks) the only component
->>>>>> currently supported are the timers.
->>>>>>
->>>>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>>>
->>>> [...]
->>>>
->>>>>> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
->>>>>> new file mode 100644
->>>>>> index 0000000..c0139ca
->>>>>> --- /dev/null
->>>>>> +++ b/arch/arm/mach-mediatek/Kconfig
->>>>>> @@ -0,0 +1,14 @@
->>>>>> +config ARCH_MEDIATEK
->>>>>> +       bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
->>>>>> +       select ARCH_REQUIRE_GPIOLIB
->>>>>
->>>>> Then where is your GPIO driver?
->>>>>
->>>>>> +       select ARM_GIC
->>>>>> +       select CACHE_L2X0
->>>>>> +       select HAVE_ARM_TWD if LOCAL_TIMERS
->>>>
->>>> Hell no! ;-) ARM_ARCH_TIMER is the way (please also add the missing
->>>> node).
->>>
->>> I considered this, but the timer wasn't able to get it's clock frequency:
->>> "Architected timer frequency not available
->>> Division by zero in kernel."
->>
->> This is because your bootloader/firmware is utterly broken, and doesn't
->> set CNTFRQ (it must be set on all CPUs, from secure mode). As a
->> *workaround*, you can set the timer frequency in the timer node, but
->> that's just a hack, and will prevent virtual machines from running on
->> such hardware.
-> 
-> The last days I tried to get the ARM_ARCH_TIMER working, but I wasn't
-> able to do so.
-> I set the frequency in the DT node.
-> But reading CNTP_TVAL at the end of arch_timer_init, it always returns
-> the same value.
-> When reading CNTPCT at the same place, returns zero.
-> As far as I understand CNTPCT will be always incremented, am I right?
-> 
-> Consequently, when calling mdelay in arch_timer_init the system hangs.
-> 
-> So can it be, that the timers are not working due to a screwed up chip
-> design? Or do I miss something here?
+Hi Shaik,
 
-That would indicate that the clock that feeds into the timer is gated.
-Other SoC vendors have done the same thing. Do you have access to
-documentation describing the clock tree?
+On 27.03.2014 12:07, Shaik Ameer Basha wrote:
+> From: Rahul Sharma <rahul.sharma@samsung.com>
+>
+> This patch adds the missing clock register offsets for Exynos5420.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>   drivers/clk/samsung/clk-exynos5420.c |   29 ++++++++++++++++++++++++++++-
+>   1 file changed, 28 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 13f624d..3d0fb77 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -27,6 +27,9 @@
+>   #define DIV_CPU1		0x504
+>   #define GATE_BUS_CPU		0x700
+>   #define GATE_SCLK_CPU		0x800
+> +#define CLKOUT_CMU_CPU		0xa00
+> +#define DIV_G2D			0x8500
+> +#define GATE_BUS_G2D		0x8700
+>   #define GATE_IP_G2D		0x8800
+>   #define CPLL_LOCK		0x10020
+>   #define DPLL_LOCK		0x10030
+> @@ -39,7 +42,11 @@
+>   #define CPLL_CON0		0x10120
+>   #define DPLL_CON0		0x10128
+>   #define EPLL_CON0		0x10130
+> +#define EPLL_CON1		0x10134
+> +#define EPLL_CON2		0x10138
+>   #define RPLL_CON0		0x10140
+> +#define RPLL_CON1		0x10144
+> +#define RPLL_CON2		0x10148
+>   #define IPLL_CON0		0x10150
+>   #define SPLL_CON0		0x10160
+>   #define VPLL_CON0		0x10170
+> @@ -57,10 +64,13 @@
+>   #define SRC_FSYS		0x10244
+>   #define SRC_PERIC0		0x10250
+>   #define SRC_PERIC1		0x10254
+> +#define SRC_ISP			0x10270
+>   #define SRC_TOP10		0x10280
+>   #define SRC_TOP11		0x10284
+>   #define SRC_TOP12		0x10288
+> -#define	SRC_MASK_DISP10		0x1032c
+> +#define SRC_MASK_TOP2		0x10308
+> +#define SRC_MASK_DISP10		0x1032c
+> +#define SRC_MASK_MAU		0x10334
+>   #define SRC_MASK_FSYS		0x10340
+>   #define SRC_MASK_PERIC0		0x10350
+>   #define SRC_MASK_PERIC1		0x10354
+> @@ -77,24 +87,41 @@
+>   #define DIV_PERIC2		0x10560
+>   #define DIV_PERIC3		0x10564
+>   #define DIV_PERIC4		0x10568
+> +#define SCLK_DIV_ISP0		0x10580
+> +#define SCLK_DIV_ISP1		0x10584
+> +#define DIV2_RATIO0		0x10590
+> +#define DIV4_RATIO		0x105a0
+>   #define GATE_BUS_TOP		0x10700
+> +#define GATE_BUS_GSCL0		0x10710
+> +#define GATE_BUS_GSCL1		0x10720
+> +#define GATE_BUS_DISP1		0x10728
+> +#define GATE_BUS_MFC		0x10734
+> +#define GATE_BUS_GEN		0x1073c
+>   #define GATE_BUS_FSYS0		0x10740
+> +#define GATE_BUS_FSYS2		0x10748
+> +#define GATE_BUS_MSCL		0x1074C
+>   #define GATE_BUS_PERIC		0x10750
+>   #define GATE_BUS_PERIC1		0x10754
+>   #define GATE_BUS_PERIS0		0x10760
+>   #define GATE_BUS_PERIS1		0x10764
+> +#define GATE_BUS_NOC		0x10770
+> +#define GATE_TOP_SCLK_ISP	0x10870
+>   #define GATE_IP_GSCL0		0x10910
+>   #define GATE_IP_GSCL1		0x10920
+>   #define GATE_IP_MFC		0x1092c
+>   #define GATE_IP_DISP1		0x10928
+>   #define GATE_IP_G3D		0x10930
+>   #define GATE_IP_GEN		0x10934
+> +#define GATE_IP_FSYS		0x10944
+> +#define GATE_IP_PERIC		0x10950
+> +#define GATE_IP_PERIS		0x10960
+>   #define GATE_IP_MSCL		0x10970
+>   #define GATE_TOP_SCLK_GSCL	0x10820
+>   #define GATE_TOP_SCLK_DISP1	0x10828
+>   #define GATE_TOP_SCLK_MAU	0x1083c
+>   #define GATE_TOP_SCLK_FSYS	0x10840
+>   #define GATE_TOP_SCLK_PERIC	0x10850
+> +#define TOP_SPARE2		0x10b08
+>   #define BPLL_LOCK		0x20010
+>   #define BPLL_CON0		0x20110
+>   #define SRC_CDREX		0x20200
+>
 
-Of course, a broken design is always possible, but let's not think of
-the worse just yet... ;-)
+ From this patch, it's hard to tell what is the use for those registers. 
+I think they should be added along with definitions that need them.
 
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Best regards,
+Tomasz
