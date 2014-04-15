@@ -1,80 +1,73 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v11 6/6] dma: mpc512x: register for device tree channel lookup
-Date: Tue, 15 Apr 2014 14:54:10 +0400
-Message-ID: <1397559250-17680-7-git-send-email-a13xp0p0v88@gmail.com>
-References: <1397559250-17680-1-git-send-email-a13xp0p0v88@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397559250-17680-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: Re: [PATCH v2 2/5] Power: reset: add bindings for keystone reset
+ driver
+Date: Tue, 15 Apr 2014 14:25:13 +0300
+Message-ID: <534D1719.40701@ti.com>
+References: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com> <1397497283-16391-3-git-send-email-ivan.khoronzhuk@ti.com> <6937937.4J6iI7VpBO@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <6937937.4J6iI7VpBO@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, santosh.shilimkar@ti.com, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-Register the controller for device tree based lookup of DMA channels
-(non-fatal for backwards compatibility with older device trees) and
-provide the '#dma-cells' property in the shared mpc5121.dtsi file
 
-Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/powerpc/boot/dts/mpc5121.dtsi |  1 +
- drivers/dma/mpc512x_dma.c          | 13 ++++++++++++-
- 2 files changed, 13 insertions(+), 1 deletion(-)
+On 04/14/2014 09:44 PM, Arnd Bergmann wrote:
+> On Monday 14 April 2014 20:41:20 Ivan Khoronzhuk wrote:
+>> +Optional properties:
+>> +
+>> +- ti,soft-reset:       Boolean option indicating soft reset.
+>> +                       By default hard reset is used.
+>> +
+>> +- ti,wdt_list:         WDT list that can cause SoC reset.
+>> +                       The list in format: <0>, <2>;
+>> +                       Begins from 0 to 3, as keystone can contain up
+>> +                       to 4 SoC reset watchdogs.
+>>
+> This looks like your binding just describes a subset of the
+> watchdog timer registers. If so, don't do a standalone reset
 
-diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
-index 2c0e155..7f9d14f 100644
---- a/arch/powerpc/boot/dts/mpc5121.dtsi
-+++ b/arch/powerpc/boot/dts/mpc5121.dtsi
-@@ -498,6 +498,7 @@
- 			compatible = "fsl,mpc5121-dma";
- 			reg = <0x14000 0x1800>;
- 			interrupts = <65 0x8>;
-+			#dma-cells = <1>;
- 		};
- 	};
- 
-diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
-index 1b90b3b..ab70012 100644
---- a/drivers/dma/mpc512x_dma.c
-+++ b/drivers/dma/mpc512x_dma.c
-@@ -52,6 +52,7 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
-+#include <linux/of_dma.h>
- #include <linux/of_platform.h>
- 
- #include <linux/random.h>
-@@ -1031,7 +1032,15 @@ static int mpc_dma_probe(struct platform_device *op)
- 	if (retval)
- 		goto err_free2;
- 
--	return retval;
-+	/* Register with OF helpers for DMA lookups (nonfatal) */
-+	if (dev->of_node) {
-+		retval = of_dma_controller_register(dev->of_node,
-+						of_dma_xlate_by_chan_id, mdma);
-+		if (retval)
-+			dev_warn(dev, "Could not register for OF lookup\n");
-+	}
-+
-+	return 0;
- 
- err_free2:
- 	if (mdma->is_mpc8308)
-@@ -1052,6 +1061,8 @@ static int mpc_dma_remove(struct platform_device *op)
- 	struct device *dev = &op->dev;
- 	struct mpc_dma *mdma = dev_get_drvdata(dev);
- 
-+	if (dev->of_node)
-+		of_dma_controller_free(dev->of_node);
- 	dma_async_device_unregister(&mdma->dma);
- 	if (mdma->is_mpc8308) {
- 		free_irq(mdma->irq2, mdma);
+The registers are not a subset of watchdog hardware it's SoC specific future
+controlled by SoC specific registers (bootregs and PLL regs).
+
+For watchog IP setup, the Keystone uses the watchdog driver common with 
+other
+SoCs -- davinci_watchdog that is not depend on other SoC settings like 
+this driver does.
+
+The Keystone SoCs have separate registers to tune Keystone2 reset 
+functionality
+by configuring Reset multiplexer &  PLL. And it tunes not only watchdog 
+usage.
+The keystone SoC can be rebooted in several ways. By external reset pin, 
+by soft and
+by watchdogs. This driver allows software reset or reset by one of the 
+watchdogs
+(and other settings) independently on watchdog driver settings. This is 
+job of reset driver.
+
+> It's
+> driver, but instead do a watchdog driver that can also be
+> used for reset, and have a binding that properly describes
+> the watchdog hardware.
+>
+> It is bad to have overlapping register ranges between logical
+
+WDT doesn't overlap with this driver.
+
+> devices, and it's also generally wrong to describe devices that
+> are not actually there: The hardware contains a watchdog, not
+> a system-reset device, so you should not make one up because
+> it seems easier given the Linux driver model.
+>
+> 	Arnd
+
+
+
 -- 
-1.8.4.2
+Regards,
+Ivan Khoronzhuk
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
