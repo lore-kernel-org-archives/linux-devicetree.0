@@ -1,77 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/5] ASoC: Allow Aux Codecs to be specified
-	using DT
-Date: Tue, 15 Apr 2014 13:14:32 +0100
-Message-ID: <20140415121432.GY12304@sirena.org.uk>
-References: <1396733753-9820-1-git-send-email-sre@kernel.org>
- <1396733753-9820-3-git-send-email-sre@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 9/9] DMA: shdma: wire r8a7790
+Date: Tue, 15 Apr 2014 16:20:48 +0400
+Message-ID: <534D2420.5060308@cogentembedded.com>
+References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk> <1397511312-4845-10-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3287065818251548246=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1396733753-9820-3-git-send-email-sre@kernel.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, Sebastian Reichel <sre@ring0.de>, Pavel Machek <pavel@ucw.cz>, Kumar Gala <galak@codeaurora.org>, linux-omap@vger.kernel.org, Jarkko Nikula <jarkko.nikula@bitmer.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1397511312-4845-10-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org
+Cc: vinod.koul@intel.com, dan.j.williams@intel.com, linux-sh@vger.kernel.org, magnus.damm@opensource.se, horms@verge.net.au, g.liakhovetski@gmx.d, kuninori.morimoto.gx@renesas.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---===============3287065818251548246==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="apSYfA7d5AHMku3c"
-Content-Disposition: inline
+On 15-04-2014 1:35, Ben Dooks wrote:
 
+> Add support for R8A7790 with new device tree code.
 
---apSYfA7d5AHMku3c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> ---
+>   drivers/dma/sh/shdmac.c | 32 +++++++++++++++++++++++++-------
+>   1 file changed, 25 insertions(+), 7 deletions(-)
 
-On Sat, Apr 05, 2014 at 11:35:50PM +0200, Sebastian Reichel wrote:
-> This patch adds support for specifying auxiliary codecs and
-> codec configuration via device tree phandles.
->=20
-> This change adds new fields to snd_soc_aux_dev and snd_soc_codec_conf
-> and adds support for the changes to SoC core methods.
+> diff --git a/drivers/dma/sh/shdmac.c b/drivers/dma/sh/shdmac.c
+> index 0d765c0..eb57cf2 100644
+> --- a/drivers/dma/sh/shdmac.c
+> +++ b/drivers/dma/sh/shdmac.c
+> @@ -342,11 +342,21 @@ static const struct sh_dmae_slave_config *dmae_find_slave(
+>   			if (cfg->slave_id == match)
+>   				return cfg;
+>   	} else {
+> -		for (i = 0, cfg = pdata->slave; i < pdata->slave_num; i++, cfg++)
+> -			if (cfg->mid_rid == match) {
+> +		if (!pdata->slave) {
+> +			cfg = shdma_find_slave_of(shdev, match, &i);
+> +			if (cfg) {
+>   				sh_chan->shdma_chan.slave_id = i;
+>   				return cfg;
+>   			}
+> +
+> +			return NULL;
+> +		} else
 
-What binding is supposed to be implemented by this?
+    All arms of the *if* statement should have {} if at least one arm has {}.
 
---apSYfA7d5AHMku3c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +			for (i = 0, cfg = pdata->slave; i < pdata->slave_num;
+> +			     i++, cfg++)
+> +				if (cfg->mid_rid == match) {
+> +					sh_chan->shdma_chan.slave_id = i;
+> +					return cfg;
+> +				}
+>   	}
+>
+>   	return NULL;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+WBR, Sergei
 
-iQIcBAEBAgAGBQJTTSKkAAoJELSic+t+oim9/WsQAJbb5rAEXw99PNcgkQGDmK6p
-OepYpcpMf8RO85qL3no2x8C+YjW7w44sljpozlFf8px/SDuee8FCjKUm9HN26htl
-bcSX9DN80S/zMOcO3h74sdTLZrNYIrAgiEPzNs/IbMH67lLTHm23BjTlfUdFlldz
-3H/FlXvJ86Hux5fwMcrhz5JSgCngQ8tnDAAA5C5/mbPLVchKpsm4/l4eiAf35YQe
-bf33rMxLqDH9l97aTrjguDSRefnqI4PZmyMxg0VQONnLb5vadDo93ucYQyITbU7W
-Rxf8HJvrJte41xbcZovltF9xtmGZ+yE+MMrruwaqLKUrIAz6tKUQXm+NHO27irUL
-Jq+nZr0vyHg03uRTdJBrRWVq3yOmmQUCCjHlAQJ0CfZeK/sASbzouNXyK5JuL8SU
-IRbANr4GqXBOEM3Tnmvoq/pktQgdVcNL2pJsJ/R8D6Y+nZTiqHCCT/djRQblQe5n
-SOh8ExBeRVSoyyNGOs4+OEYZiYYol01dgU0cm7S5fJ3/IlvyuxZXnLBvf1v5NEC1
-eX/fKR7/CVK3dz4/1bihW/2QYgX7XkUq+UmwIsaaYPTGZVAPPIJJWfq4N0DYdQ3J
-NupACShR9v+iq8YPQAgZvb9JzzXhucQvXm21xQVdQtF5VFen18/t893q7IbpNsIO
-FrdPDQeJAspFbSZd1nS5
-=tQs2
------END PGP SIGNATURE-----
-
---apSYfA7d5AHMku3c--
-
---===============3287065818251548246==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============3287065818251548246==--
