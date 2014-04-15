@@ -1,156 +1,87 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] arm: exynos5260: add support for S2R
-Date: Tue, 15 Apr 2014 20:41:57 +0200
-Message-ID: <534D7D75.8080701@gmail.com>
-References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com> <1395061795-17777-4-git-send-email-vikas.sajjan@samsung.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/3] net: phy: add minimal support for QSGMII PHY
+Date: Tue, 15 Apr 2014 11:48:50 -0700
+Message-ID: <CAGVrzcbtrFd=KCabHuzUGpzTdq15n9kWw04xDbve22Xu1M+H8Q@mail.gmail.com>
+References: <1397569821-5530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1397569821-5530-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395061795-17777-4-git-send-email-vikas.sajjan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vikas Sajjan <vikas.sajjan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1397569821-5530-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, George Joseph <george.joseph@fairview5.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Alexander Reuter <Alexander.Reuter@gmx.net>, Alice Ebalard <arno@natisbad.org>, Willy Tarreau <w@1wt.eu>, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Dmitri Epshtein <dima@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikas,
-
-On 17.03.2014 14:09, Vikas Sajjan wrote:
-> Adds Suspend to RAM (S2R) support to exynos5260.
+2014-04-15 6:50 GMT-07:00 Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com>:
+> This commit adds the necessary definitions for the PHY layer to
+> recognize "qsgmii" as a valid PHY interface. A QSMII interface, as
+> defined at
+> http://en.wikipedia.org/wiki/Media_Independent_Interface#Quad_Serial_Gigabit_Media_Independent_Interface,
+> is "is a method of combining four SGMII lines into a 5Gbit/s
+> interface. QSGMII, like SGMII, uses LVDS signalling for the TX and RX
+> data and a single LVDS clock signal. QSGMII uses significantly fewer
+> signal lines than four SGMII busses."
 >
-> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Vikas Sajjan <vikas.sajjan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> This type of MAC <-> PHY connection might require special handling on
+> the MAC driver side, so it should be possible to express this type of
+> MAC <-> PHY connection, for example in the Device Tree.
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+
+> Cc: devicetree@vger.kernel.org
 > ---
->   arch/arm/mach-exynos/pm.c       |   62 +++++++++++++++++++++++++++++++--------
->   arch/arm/mach-exynos/regs-pmu.h |   12 ++++++++
->   2 files changed, 61 insertions(+), 13 deletions(-)
+>  Documentation/devicetree/bindings/net/ethernet.txt | 2 +-
+>  include/linux/phy.h                                | 3 +++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
 >
-> diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
-> index dbe9670..12cc241 100644
-> --- a/arch/arm/mach-exynos/pm.c
-> +++ b/arch/arm/mach-exynos/pm.c
-> @@ -77,12 +77,20 @@ static const struct exynos_wkup_irq exynos5250_wkup_irq[] = {
->   	{ /* sentinel */ },
->   };
+> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+> index 9ecd43d..3fc3605 100644
+> --- a/Documentation/devicetree/bindings/net/ethernet.txt
+> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
+> @@ -10,7 +10,7 @@ The following properties are common to the Ethernet controllers:
+>  - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+>    the maximum frame size (there's contradiction in ePAPR).
+>  - phy-mode: string, operation mode of the PHY interface; supported values are
+> -  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
+> +  "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
+>    "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
+>    standard property;
+>  - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
+> diff --git a/include/linux/phy.h b/include/linux/phy.h
+> index 24126c4..4d0221f 100644
+> --- a/include/linux/phy.h
+> +++ b/include/linux/phy.h
+> @@ -75,6 +75,7 @@ typedef enum {
+>         PHY_INTERFACE_MODE_SMII,
+>         PHY_INTERFACE_MODE_XGMII,
+>         PHY_INTERFACE_MODE_MOCA,
+> +       PHY_INTERFACE_MODE_QSGMII,
+>         PHY_INTERFACE_MODE_MAX,
+>  } phy_interface_t;
 >
-> +static const struct exynos_wkup_irq exynos5260_wkup_irq[] = {
-> +	{ 105, BIT(1) }, /* RTC alarm */
-> +	{ 106, BIT(2) }, /* RTC tick */
-> +	{ /* sentinel */ },
-> +};
-> +
->   static int exynos_irq_set_wake(struct irq_data *data, unsigned int state)
->   {
->   	const struct exynos_wkup_irq *wkup_irq;
+> @@ -116,6 +117,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+>                 return "xgmii";
+>         case PHY_INTERFACE_MODE_MOCA:
+>                 return "moca";
+> +       case PHY_INTERFACE_MODE_QSGMII:
+> +               return "qsgmii";
+>         default:
+>                 return "unknown";
+>         }
+> --
+> 1.8.3.2
 >
->   	if (soc_is_exynos5250())
->   		wkup_irq = exynos5250_wkup_irq;
-> +	else if (soc_is_exynos5260())
-> +		wkup_irq = exynos5260_wkup_irq;
->   	else
->   		wkup_irq = exynos4_wkup_irq;
-
-This should probably be tied to some DT match table as match data for 
-particular compatible strings. Also to eliminate the need to add such 
-change for every new SoC, the mapping between wake-up sources and GIC 
-interrupts should be probably parsed from DT.
-
-Adding some people on CC for further comments.
-
 >
-> @@ -124,10 +132,20 @@ static void exynos_pm_prepare(void)
->   	unsigned int tmp;
->
->   	/* Set wake-up mask registers */
-> -	__raw_writel(exynos_get_eint_wake_mask(), S5P_EINT_WAKEUP_MASK);
-> -	__raw_writel(exynos_irqwake_intmask & ~(1 << 31), S5P_WAKEUP_MASK);
-> +	if (soc_is_exynos5260()) {
-> +		__raw_writel(exynos_get_eint_wake_mask(),
-> +					EXYNOS5260_EINT_WAKEUP_MASK);
-> +		__raw_writel(exynos_irqwake_intmask & ~(1 << 31),
-> +					EXYNOS5260_WAKEUP_MASK);
-> +	} else {
-> +		__raw_writel(exynos_get_eint_wake_mask(),
-> +					S5P_EINT_WAKEUP_MASK);
-> +		__raw_writel(exynos_irqwake_intmask & ~(1 << 31),
-> +					S5P_WAKEUP_MASK);
-> +	}
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Same here. I wonder what we could do to eliminate the need for such changes.
 
-By the way, don't you need to handle here EXYNOS5260_WAKEUP_MASK2 and 
-EXYNOS5260_WAKEUP_MASK3 as well?
 
->
-> -	s3c_pm_do_save(exynos_core_save, ARRAY_SIZE(exynos_core_save));
-> +	if (!soc_is_exynos5260())
-> +		s3c_pm_do_save(exynos_core_save, ARRAY_SIZE(exynos_core_save));
-
-Ugly.
-
->
->   	if (soc_is_exynos5250()) {
->   		s3c_pm_do_save(exynos5_sys_save, ARRAY_SIZE(exynos5_sys_save));
-> @@ -221,21 +239,39 @@ static void exynos_pm_resume(void)
->   			      : "cc");
->   	}
->
-> -	/* For release retention */
-> -
-> -	__raw_writel((1 << 28), S5P_PAD_RET_MAUDIO_OPTION);
-> -	__raw_writel((1 << 28), S5P_PAD_RET_GPIO_OPTION);
-> -	__raw_writel((1 << 28), S5P_PAD_RET_UART_OPTION);
-> -	__raw_writel((1 << 28), S5P_PAD_RET_MMCA_OPTION);
-> -	__raw_writel((1 << 28), S5P_PAD_RET_MMCB_OPTION);
-> -	__raw_writel((1 << 28), S5P_PAD_RET_EBIA_OPTION);
-> -	__raw_writel((1 << 28), S5P_PAD_RET_EBIB_OPTION);
-> +	if (soc_is_exynos5250()) {
-> +		/* For release retention */
-> +
-> +		__raw_writel((1 << 28), S5P_PAD_RET_MAUDIO_OPTION);
-> +		__raw_writel((1 << 28), S5P_PAD_RET_GPIO_OPTION);
-> +		__raw_writel((1 << 28), S5P_PAD_RET_UART_OPTION);
-> +		__raw_writel((1 << 28), S5P_PAD_RET_MMCA_OPTION);
-> +		__raw_writel((1 << 28), S5P_PAD_RET_MMCB_OPTION);
-> +		__raw_writel((1 << 28), S5P_PAD_RET_EBIA_OPTION);
-> +		__raw_writel((1 << 28), S5P_PAD_RET_EBIB_OPTION);
-> +	} else if (soc_is_exynos5260()) {
-> +		/* For release retention */
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_LPDDR3_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RET_MAUDIO_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RET_JTAG_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MMC2_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_TOP_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_UART_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MMC0_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MMC1_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_SPI_OPTION);
-> +		__raw_writel((1 << 28), EXYNOS5260_PAD_RETENTION_MIF_OPTION);
-> +		__raw_writel((1 << 28),
-> +				EXYNOS5260_PAD_RETENTION_BOOTLDO_OPTION);
-> +	}
->
-
-Ugly.
-
->   	if (soc_is_exynos5250())
->   		s3c_pm_do_restore(exynos5_sys_save,
->   			ARRAY_SIZE(exynos5_sys_save));
->
-> -	s3c_pm_do_restore_core(exynos_core_save, ARRAY_SIZE(exynos_core_save));
-> +	if (!soc_is_exynos5260())
-> +		s3c_pm_do_restore_core(exynos_core_save,
-> +				ARRAY_SIZE(exynos_core_save));
-
-Ugly.
-
-I believe that exactly the same comments apply to this file as mentioned 
-in my review of patch 2/3 for pmu.c. The code needs to be reworked to 
-let us remove soc_is_exynos*() macros.
-
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Florian
