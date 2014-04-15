@@ -1,7 +1,7 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v2 1/5] ARM: introduce CPU_METHOD_OF_DECLARE_SETUP()
-Date: Tue, 15 Apr 2014 08:12:50 -0500
-Message-ID: <1397567574-31599-2-git-send-email-elder@linaro.org>
+Subject: [PATCH v2 4/5] ARM: dts: enable SMP support for bcm28155
+Date: Tue, 15 Apr 2014 08:12:53 -0500
+Message-ID: <1397567574-31599-5-git-send-email-elder@linaro.org>
 References: <1397567574-31599-1-git-send-email-elder@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,121 +21,43 @@ To: mporter@linaro.org, bcm@fixthebug.org, linux@arm.linux.org.uk, devicetree@vg
 Cc: bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The CPU_METHOD_OF_DECLARE() macro allows methods for assigning
-SMP/hotplug operations to CPUS to be defined using device tree,
-without the need for machine-dependent code.
+Define nodes representing the two Cortex A9 CPUs in a bcm28155 SoC.
 
-And although it allows the *method* to be specified, it does *not*
-allow any parameterization of that method.  For example, there is no
-efficient way to define a machine-specific address or other
-property one might want to define for secondary CPUs.
-
-Define a new of_cpu_method->setup() function, which (if defined) is
-called for nodes found having a matching "enable-method" property.
-The matching node is supplied as the function's argument, allowing
-additional required information to be extracted from that node.
-A new macro CPU_METHOD_OF_DECLARE_SETUP() allows a setup method
-to be supplied when a method is declared.
-
-Extend the interface for set_smp_ops_by_method() so that it can
-return a negative error code to allow DT parsing errors to be
-reported by the setup function.
-
-(Note that only the first "cpu" (or "cpus") node having a matching
-method is used by set_smp_ops_by_method(); this logic is not
-changed.)
-
+Signed-off-by: Ray Jui <rjui@broadcom.com>
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- arch/arm/include/asm/smp.h |   10 ++++++++--
- arch/arm/kernel/devtree.c  |   31 +++++++++++++++++++++++++------
- 2 files changed, 33 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/bcm11351.dtsi |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/include/asm/smp.h b/arch/arm/include/asm/smp.h
-index 2ec765c..ab4a5a9 100644
---- a/arch/arm/include/asm/smp.h
-+++ b/arch/arm/include/asm/smp.h
-@@ -115,15 +115,21 @@ struct smp_operations {
- #endif
- };
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 64d069b..61372a6 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
+@@ -27,6 +27,25 @@
+ 		bootargs = "console=ttyS0,115200n8";
+ 	};
  
-+struct device_node;
- struct of_cpu_method {
- 	const char *method;
-+	int (*setup)(struct device_node *node);
- 	struct smp_operations *ops;
- };
- 
--#define CPU_METHOD_OF_DECLARE(name, _method, _ops)			\
-+#define CPU_METHOD_OF_DECLARE_SETUP(name, _method, _setup, _ops)	\
- 	static const struct of_cpu_method __cpu_method_of_table_##name	\
- 		__used __section(__cpu_method_of_table)			\
--		= { .method = _method, .ops = _ops }
-+		= { .method = _method, .setup = _setup, .ops = _ops }
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "brcm,bcm11351-cpu-method";
++		secondary-boot-reg = <0x3500417c>;
 +
-+#define CPU_METHOD_OF_DECLARE(name, _method, _ops)			\
-+	CPU_METHOD_OF_DECLARE_SETUP(name, _method, NULL, _ops)
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0>;
++		};
 +
- /*
-  * set platform specific SMP operations
-  */
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index c7419a5..1a0cca3 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -76,11 +76,18 @@ static int __init set_smp_ops_by_method(struct device_node *node)
- 	if (of_property_read_string(node, "enable-method", &method))
- 		return 0;
- 
--	for (; m < __cpu_method_of_table_end; m++)
-+	for (; m < __cpu_method_of_table_end; m++) {
- 		if (!strcmp(m->method, method)) {
--			smp_set_ops(m->ops);
--			return 1;
-+			int ret = 0;
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <1>;
++		};
++	};
 +
-+			if (m->setup)
-+				ret = m->setup(node);
-+			if (!ret)
-+				smp_set_ops(m->ops);
-+
-+			return ret ? ret : 1;
- 		}
-+	}
- 
- 	return 0;
- }
-@@ -181,16 +188,28 @@ void __init arm_dt_init_cpu_maps(void)
- 
- 		tmp_map[i] = hwid;
- 
--		if (!found_method)
-+		if (!found_method) {
- 			found_method = set_smp_ops_by_method(cpu);
-+			if (WARN(found_method < 0,
-+					"error %d getting enable-method for "
-+					"DT /cpu %u\n", found_method, cpuidx)) {
-+				return;
-+			}
-+		}
- 	}
- 
- 	/*
- 	 * Fallback to an enable-method in the cpus node if nothing found in
- 	 * a cpu node.
- 	 */
--	if (!found_method)
--		set_smp_ops_by_method(cpus);
-+	if (!found_method) {
-+		found_method = set_smp_ops_by_method(cpus);
-+		if (WARN(found_method < 0,
-+				"error %d getting enable-method for "
-+				"DT /cpus node\n", found_method)) {
-+			return;
-+		}
-+	}
- 
- 	if (!bootcpu_valid) {
- 		pr_warn("DT missing boot CPU MPIDR[23:0], fall back to default cpu_logical_map\n");
+ 	gic: interrupt-controller@3ff00100 {
+ 		compatible = "arm,cortex-a9-gic";
+ 		#interrupt-cells = <3>;
 -- 
 1.7.9.5
