@@ -1,149 +1,37 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH 2/2] ARM: dts: berlin: add GPIO nodes for the BG2Q
-Date: Tue, 15 Apr 2014 10:07:25 +0200
-Message-ID: <1397549245-3338-3-git-send-email-antoine.tenart@free-electrons.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
+Subject: [PATCH 1/2] ARM: berlin: add the LIBGPIO as a dependency for the BG2Q
+Date: Tue, 15 Apr 2014 10:07:24 +0200
+Message-ID: <1397549245-3338-2-git-send-email-antoine.tenart@free-electrons.com>
 References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sebastian.hesselbarth@gmail.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Berlin BG2Q has 6 GPIO ports compatible with the snps,dw-ap=
-b-gpio
-driver. This patch add the corresponding device tree nodes.
-
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- arch/arm/boot/dts/berlin2q.dtsi | 102 ++++++++++++++++++++++++++++++++=
-++++++++
- 1 file changed, 102 insertions(+)
-
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
-2q.dtsi
-index e6e556055dfc..b2625f896bc5 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -109,6 +109,78 @@
- 			ranges =3D <0 0xe80000 0x10000>;
- 			interrupt-parent =3D <&aic>;
-=20
-+			gpio0: gpio@0400 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x0400 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				porta: gpio-controller@0 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <32>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <0>;
-+				};
-+			};
-+
-+			gpio1: gpio@0800 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x0800 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portb: gpio-controller@1 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <32>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <1>;
-+				};
-+			};
-+
-+			gpio2: gpio@0c00 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x0c00 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portc: gpio-controller@2 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <32>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <2>;
-+				};
-+			};
-+
-+			gpio3: gpio@1000 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x1000 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portd: gpio-controller@3 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <32>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <3>;
-+				};
-+			};
-+
- 			timer0: timer@2c00 {
- 				compatible =3D "snps,dw-apb-timer";
- 				reg =3D <0x2c00 0x14>;
-@@ -181,6 +253,36 @@
- 				interrupt-parent =3D <&gic>;
- 				interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 			};
-+
-+			gpio4: gpio@5000 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x5000 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				porte: gpio-controller@4 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <32>;
-+					reg =3D <0>;
-+				};
-+			};
-+
-+			gpio5: gpio@c000 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0xc000 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portf: gpio-controller@5 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <32>;
-+					reg =3D <0>;
-+				};
-+			};
- 		};
-=20
- 		pinctrl: pinctrl@0 {
---=20
-1.8.3.2
+VGhlIEJHMlEgaGFzIEdQSU9zIGRyaXZlbiBieSB0aGUgZHdhcGIgR1BJTyBkcml2ZXIuIEFkZCB0
+aGUgTElCR1BJTyBhcyBhCmRlcGVuZGVuY3kgdG8gYmUgYWJsZSB0byBzdXBwb3J0IHRoZW0uCgpT
+aWduZWQtb2ZmLWJ5OiBBbnRvaW5lIFTDqW5hcnQgPGFudG9pbmUudGVuYXJ0QGZyZWUtZWxlY3Ry
+b25zLmNvbT4KLS0tCiBhcmNoL2FybS9tYWNoLWJlcmxpbi9LY29uZmlnIHwgMSArCiAxIGZpbGUg
+Y2hhbmdlZCwgMSBpbnNlcnRpb24oKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9tYWNoLWJlcmxp
+bi9LY29uZmlnIGIvYXJjaC9hcm0vbWFjaC1iZXJsaW4vS2NvbmZpZwppbmRleCAyOTFmMWNhYzZj
+M2QuLmMzMTk2ODcxMjA5NSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vbWFjaC1iZXJsaW4vS2NvbmZp
+ZworKysgYi9hcmNoL2FybS9tYWNoLWJlcmxpbi9LY29uZmlnCkBAIC0yOCw2ICsyOCw3IEBAIGNv
+bmZpZyBNQUNIX0JFUkxJTl9CRzJRCiAJc2VsZWN0IENQVV9WNwogCXNlbGVjdCBIQVZFX0FSTV9U
+V0QgaWYgU01QCiAJc2VsZWN0IEhBVkVfU01QCisJc2VsZWN0IEFSQ0hfUkVRVUlSRV9HUElPTElC
+CiAKIGVuZG1lbnUKIAotLSAKMS44LjMuMgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFy
+bS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
