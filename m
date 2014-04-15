@@ -1,71 +1,53 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
-Date: Tue, 15 Apr 2014 10:35:29 -0500
-Message-ID: <534D51C1.3010007@ti.com>
-References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com> <CAOCHtYg5_Lvi3SWuWaRTDDNhLJ32jiXsKYQmrsKaShVWpM+xWQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAOCHtYg5_Lvi3SWuWaRTDDNhLJ32jiXsKYQmrsKaShVWpM+xWQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Robert Nelson <robertcnelson@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, "tony@atomide.com" <tony@atomide.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: [PATCH] of: Clean up of_update_property
+Date: Tue, 15 Apr 2014 08:38:17 -0700
+Message-ID: <1397576297-4785-1-git-send-email-linux@roeck-us.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2014 10:12 AM, Robert Nelson wrote:
-> On Tue, Apr 15, 2014 at 10:09 AM, Robert Nelson <robertcnelson@gmail.com> wrote:
->> BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
->>
->> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
->> ---
->>  arch/arm/boot/dts/Makefile               |  1 +
->>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
->>  2 files changed, 16 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 35c146f..0bdeba3 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->>         omap3-sbc-t3730.dtb \
->>         omap3-devkit8000.dtb \
->>         omap3-beagle-xm.dtb \
->> +       omap3-beagle-xm-ab.dtb \
->>         omap3-evm.dtb \
->>         omap3-evm-37xx.dtb \
->>         omap3-ldp.dtb \
->> diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->> new file mode 100644
->> index 0000000..9d81123
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->> @@ -0,0 +1,15 @@
->> +/*
->> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include "omap3-beagle-xm.dts"
->> +
->> +/ {
->> +       /* HS USB Port 2 Power enable was inverted with the xM C */
->> +       hsusb2_power: hsusb2_power_reg {
->> +               enable-active-high;
->        };
->> +};
-> 
-> Crap, copy paste bug, there.  I can send a v2, if you guys are happy
-> with the "omap3-beagle-xm-ab.dtb" naming..
-> 
-> Regards,
-> 
-Will u-boot adequately handle this as part of find_fdt?
+After searching for the old property, bail out with -ENODEV
+if it was not found.
 
+It is unnecessary to check if oldprop is NULL before removing
+its binary file; the check was already done before.
+
+Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+---
+ drivers/of/base.c |   10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index f72d19b..6d4ee22 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1828,17 +1828,13 @@ int of_update_property(struct device_node *np, struct property *newprop)
+ 		next = &(*next)->next;
+ 	}
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-	if (rc)
+-		return rc;
++	if (!found)
++		return -ENODEV;
+ 
+ 	/* Update the sysfs attribute */
+-	if (oldprop)
+-		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
++	sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+ 	__of_add_property_sysfs(np, newprop);
+ 
+-	if (!found)
+-		return -ENODEV;
+-
+ 	return 0;
+ }
+ 
 -- 
-Regards,
-Nishanth Menon
+1.7.9.7
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
