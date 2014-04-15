@@ -1,66 +1,35 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 0/5] ARM: SMP: support Broadcom mobile SoCs
-Date: Tue, 15 Apr 2014 08:12:49 -0500
-Message-ID: <1397567574-31599-1-git-send-email-elder@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alex Elder <elder@linaro.org>
+Subject: [PATCH v2 3/5] ARM: configs: enable SMP in bcm_defconfig
+Date: Tue, 15 Apr 2014 08:12:52 -0500
+Message-ID: <1397567574-31599-4-git-send-email-elder@linaro.org>
+References: <1397567574-31599-1-git-send-email-elder@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397567574-31599-1-git-send-email-elder@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mporter@linaro.org, bcm@fixthebug.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds SMP support for two Broadcom mobile SoC families.
-It uses CPU_METHOD_OF_DECLARE() (or rather a new variant of that)
-so that SMP operations are assigned using device tree rather than
-adding it to a machine definition in a board file.
+Also explicitly set CONFIG_NR_CPUS to 2, limiting it to the most we
+currently need.
 
-The first patch adds the ability to extract information from device
-tree nodes having a matching "enable-method" value.  This allows
-additional parameters to be associated with the enable method.  This
-is used for the Broadcom SoCs to efficiently determine the location
-of a special register used in coordinating the start of secondary
-CPUs.
+Signed-off-by: Ray Jui <rjui@broadcom.com>
+Signed-off-by: Alex Elder <elder@linaro.org>
+---
+ arch/arm/configs/bcm_defconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
-I have not included a device tree document update here; I would like
-suggestions on where the new enable method and its parameter should
-be documented.  (I presume in .../arm/cpus.txt, but that could get
-out of hand as more boards define new enable methods.)
-
-					-Alex
-
-Note:
-This series is based on v3.15-rc1, plus one more recently-posted patch:
-    http://permalink.gmane.org/gmane.linux.kernel/1683693
-
-History
-v2: - Fixed a Makefile error (:= should have been +=)
-    - No longer set CONFIG_NR_CPUS in bcm_defconfig
-    - Rebased onto v3.15-rc1
-
-This series is available here:
-    http://git.linaro.org/landing-teams/working/broadcom/kernel.git
-    Branch review/bcm-smp-v2
-
-Alex Elder (5):
-  ARM: introduce CPU_METHOD_OF_DECLARE_SETUP()
-  ARM: add SMP support for Broadcom mobile SoCs
-  ARM: configs: enable SMP in bcm_defconfig
-  ARM: dts: enable SMP support for bcm28155
-  ARM: dts: enable SMP support for bcm21664
-
- arch/arm/boot/dts/bcm11351.dtsi |   19 ++++
- arch/arm/boot/dts/bcm21664.dtsi |   19 ++++
- arch/arm/configs/bcm_defconfig  |    1 +
- arch/arm/include/asm/smp.h      |   10 +-
- arch/arm/kernel/devtree.c       |   31 +++++--
- arch/arm/mach-bcm/Kconfig       |   18 +++-
- arch/arm/mach-bcm/Makefile      |    3 +
- arch/arm/mach-bcm/platsmp.c     |  194 +++++++++++++++++++++++++++++++++++++++
- 8 files changed, 284 insertions(+), 11 deletions(-)
- create mode 100644 arch/arm/mach-bcm/platsmp.c
-
+diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
+index 0100464..65fcc58 100644
+--- a/arch/arm/configs/bcm_defconfig
++++ b/arch/arm/configs/bcm_defconfig
+@@ -24,6 +24,7 @@ CONFIG_MODULES=y
+ CONFIG_MODULE_UNLOAD=y
+ # CONFIG_BLK_DEV_BSG is not set
+ CONFIG_PARTITION_ADVANCED=y
++CONFIG_SMP=y
+ CONFIG_ARCH_BCM=y
+ CONFIG_ARCH_BCM_MOBILE=y
+ CONFIG_ARM_THUMBEE=y
 -- 
 1.7.9.5
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
