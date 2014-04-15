@@ -1,98 +1,68 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
-Date: Tue, 15 Apr 2014 10:40:54 -0500
-Message-ID: <CAOCHtYhygGFbUunY9abEkjKfpQ1hh-DfRfhm160NehSYhWJSRw@mail.gmail.com>
-References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
- <CAOCHtYg5_Lvi3SWuWaRTDDNhLJ32jiXsKYQmrsKaShVWpM+xWQ@mail.gmail.com>
- <534D51C1.3010007@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH] clk: Improve clock-indices binding documentation
+Date: Tue, 15 Apr 2014 17:56:12 +0200
+Message-ID: <21852545.7Zg9c00i3i@avalon>
+References: <1397494840-22420-1-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <534D51C1.3010007@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "tony@atomide.com" <tony@atomide.com>, devicetree <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benoit Cousson <bcousson@baylibre.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1397494840-22420-1-git-send-email-geert@linux-m68k.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 15, 2014 at 10:35 AM, Nishanth Menon <nm@ti.com> wrote:
-> On 04/15/2014 10:12 AM, Robert Nelson wrote:
->> On Tue, Apr 15, 2014 at 10:09 AM, Robert Nelson <robertcnelson@gmail.com> wrote:
->>> BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
->>>
->>> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
->>> ---
->>>  arch/arm/boot/dts/Makefile               |  1 +
->>>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
->>>  2 files changed, 16 insertions(+)
->>>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->>>
->>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>> index 35c146f..0bdeba3 100644
->>> --- a/arch/arm/boot/dts/Makefile
->>> +++ b/arch/arm/boot/dts/Makefile
->>> @@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->>>         omap3-sbc-t3730.dtb \
->>>         omap3-devkit8000.dtb \
->>>         omap3-beagle-xm.dtb \
->>> +       omap3-beagle-xm-ab.dtb \
->>>         omap3-evm.dtb \
->>>         omap3-evm-37xx.dtb \
->>>         omap3-ldp.dtb \
->>> diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->>> new file mode 100644
->>> index 0000000..9d81123
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->>> @@ -0,0 +1,15 @@
->>> +/*
->>> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> + */
->>> +
->>> +#include "omap3-beagle-xm.dts"
->>> +
->>> +/ {
->>> +       /* HS USB Port 2 Power enable was inverted with the xM C */
->>> +       hsusb2_power: hsusb2_power_reg {
->>> +               enable-active-high;
->>        };
->>> +};
->>
->> Crap, copy paste bug, there.  I can send a v2, if you guys are happy
->> with the "omap3-beagle-xm-ab.dtb" naming..
->>
->> Regards,
->>
-> Will u-boot adequately handle this as part of find_fdt?
+Hi Geert,
 
-It will after i submit something like: (this uses a new feature in v2014.04)
+Thank you for the patch.
 
-https://github.com/eewiki/u-boot-patches/blob/master/v2014.04/0001-am335x_evm-uEnv.txt-bootz-n-fixes.patch#L76
+On Monday 14 April 2014 19:00:40 Geert Uytterhoeven wrote:
+> From: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Improve the wording for the clock-indices binding documentation.
+> Also replace "empty nodes" by "empty strings", as reported before by Sergei
+> Shtylyov.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Essentially, test for presence of omap3-beagle-xm-ab.dtb, if not found
-drop to old omap3-beagle-xm.dtb
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Background: i also tried getting this having this fixed in u-boot:
-
->
-> --
-> Regards,
-> Nishanth Menon
-
-
+> ---
+>  .../devicetree/bindings/clock/clock-bindings.txt   |    9 ++++-----
+>  1 file changed, 4 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
+> 700e7aac3717..f15787817d6b 100644
+> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> @@ -44,10 +44,9 @@ For example:
+>    clocks by index. The names should reflect the clock output signal
+>    names for the device.
+> 
+> -clock-indices:	   If the identifyng number for the clocks in the node
+> -		   is not linear from zero, then the this mapping allows
+> -		   the mapping of identifiers into the clock-output-names
+> -		   array.
+> +clock-indices:	   If the identifying number for the clocks in the node
+> +		   is not linear from zero, then this allows the mapping of
+> +		   identifiers into the clock-output-names array.
+> 
+>  For example, if we have two clocks <&oscillator 1> and <&oscillator 3>:
+> 
+> @@ -58,7 +57,7 @@ For example, if we have two clocks <&oscillator 1> and
+> <&oscillator 3>: clock-output-names = "clka", "clkb";
+>  	}
+> 
+> -	This ensures we do not have any empty nodes in clock-output-names
+> +	This ensures we do not have any empty strings in clock-output-names
+> 
+> 
+>  ==Clock consumers==
 
 -- 
-Robert Nelson
-http://www.rcn-ee.com/
+Regards,
+
+Laurent Pinchart
+
