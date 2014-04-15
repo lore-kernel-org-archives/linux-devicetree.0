@@ -1,211 +1,89 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] reset: add driver for socfpga
-Date: Tue, 15 Apr 2014 09:20:25 +0200
-Message-ID: <1397546425.3836.1.camel@paszta.hi.pengutronix.de>
-References: <1397118063-21619-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH] tty/serial: atmel_serial: Fix device tree documentation
+Date: Tue, 15 Apr 2014 09:39:59 +0200
+Message-ID: <534CE24F.9020703@gmail.com>
+References: <1397487482-3816-1-git-send-email-richard.genoud@gmail.com> <20140414152212.GC2255@ldesroches-Latitude-E6320>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397118063-21619-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140414152212.GC2255@ldesroches-Latitude-E6320>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
-
-Am Donnerstag, den 10.04.2014, 10:21 +0200 schrieb Steffen Trumtrar:
-> Add a reset-controller driver for the socfpga platform.
-> The reset-controller has four banks with up to 32 entries all encapsulated in
-> one module block.
+On 14/04/2014 17:22, Ludovic Desroches wrote:
+> Hi Richard,
 > 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-in case you want to take this through your branch,
-
-Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-If you want me to take the reset controller driver, please let me know.
-
-regards
-Philipp
-
-> ---
-> Changes since v1:
-> 	- use BITS_PER_LONG everywhere instead of MAX_BANK_WIDTH
-> 	- print pdev->dev.of_node->full_name on error
-> 	- use proper IS_ERR/PTR_ERR
+> On Mon, Apr 14, 2014 at 04:58:02PM +0200, Richard Genoud wrote:
+>> RTS pin is an active low pin.
+>> For now, this doesn't change anything as the ACTIVE_LOW flag is not
+>> handled in atmel_serial, but it will be in 3.16.
+>>
+>> Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/serial/atmel-usart.txt | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+>> index 17c1042b2df8..2f7aad71b3c9 100644
+>> --- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
+>> +++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+>> @@ -35,7 +35,7 @@ Example:
+>>  		clock-names = "usart";
+>>  		atmel,use-dma-rx;
+>>  		atmel,use-dma-tx;
+>> -		rts-gpios = <&pioD 15 0>;
+>> +		rts-gpios = <&pioD 15 GPIO_ACTIVE_LOW>;
 > 
->  drivers/reset/Makefile        |   1 +
->  drivers/reset/reset-socfpga.c | 147 ++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 148 insertions(+)
->  create mode 100644 drivers/reset/reset-socfpga.c
+> I was told we should not use macros here. If it is still the truth:
 > 
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index cc29832..ab64077 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -1,2 +1,3 @@
->  obj-$(CONFIG_RESET_CONTROLLER) += core.o
->  obj-$(CONFIG_ARCH_SUNXI) += reset-sunxi.o
-> +obj-$(CONFIG_ARCH_SOCFPGA) += reset-socfpga.o
-> diff --git a/drivers/reset/reset-socfpga.c b/drivers/reset/reset-socfpga.c
-> new file mode 100644
-> index 0000000..bdcd2fa
-> --- /dev/null
-> +++ b/drivers/reset/reset-socfpga.c
-> @@ -0,0 +1,147 @@
-> +/*
-> + * Copyright 2014 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> + *
-> + * based on
-> + * Allwinner SoCs Reset Controller driver
-> + *
-> + * Copyright 2013 Maxime Ripard
-> + *
-> + * Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/err.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/types.h>
-> +
-> +#define NR_BANKS		4
-> +#define OFFSET_MODRST		0x10
-> +
-> +struct socfpga_reset_data {
-> +	spinlock_t			lock;
-> +	void __iomem			*membase;
-> +	struct reset_controller_dev	rcdev;
-> +};
-> +
-> +static int socfpga_reset_assert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	struct socfpga_reset_data *data = container_of(rcdev,
-> +						     struct socfpga_reset_data,
-> +						     rcdev);
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	writel(reg | BIT(offset), data->membase + OFFSET_MODRST +
-> +				 (bank * NR_BANKS));
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static int socfpga_reset_deassert(struct reset_controller_dev *rcdev,
-> +				  unsigned long id)
-> +{
-> +	struct socfpga_reset_data *data = container_of(rcdev,
-> +						     struct socfpga_reset_data,
-> +						     rcdev);
-> +
-> +	int bank = id / BITS_PER_LONG;
-> +	int offset = id % BITS_PER_LONG;
-> +	unsigned long flags;
-> +	u32 reg;
-> +
-> +	spin_lock_irqsave(&data->lock, flags);
-> +
-> +	reg = readl(data->membase + OFFSET_MODRST + (bank * NR_BANKS));
-> +	writel(reg & ~BIT(offset), data->membase + OFFSET_MODRST +
-> +				  (bank * NR_BANKS));
-> +
-> +	spin_unlock_irqrestore(&data->lock, flags);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops socfpga_reset_ops = {
-> +	.assert		= socfpga_reset_assert,
-> +	.deassert	= socfpga_reset_deassert,
-> +};
-> +
-> +static int socfpga_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct socfpga_reset_data *data;
-> +	struct resource *res;
-> +	int ret;
-> +
-> +	/*
-> +	 * The binding was mainlined without the required property.
-> +	 * Do not continue, when we encounter an old DT.
-> +	 */
-> +	if (!of_find_property(pdev->dev.of_node, "#reset-cells", NULL)) {
-> +		dev_err(&pdev->dev, "%s missing #reset-cells property\n",
-> +			pdev->dev.of_node->full_name);
-> +		return -EINVAL;
-> +	}
-> +
-> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> +	if (!data)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	data->membase = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(data->membase))
-> +		return PTR_ERR(data->membase);
-> +
-> +	spin_lock_init(&data->lock);
-> +
-> +	data->rcdev.owner = THIS_MODULE;
-> +	data->rcdev.nr_resets = NR_BANKS * BITS_PER_LONG;
-> +	data->rcdev.ops = &socfpga_reset_ops;
-> +	data->rcdev.of_node = pdev->dev.of_node;
-> +	reset_controller_register(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static int socfpga_reset_remove(struct platform_device *pdev)
-> +{
-> +	struct socfpga_reset_data *data = platform_get_drvdata(pdev);
-> +
-> +	reset_controller_unregister(&data->rcdev);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id socfpga_reset_dt_ids[] = {
-> +	{ .compatible = "altr,rst-mgr", },
-> +	{ /* sentinel */ },
-> +};
-> +
-> +static struct platform_driver socfpga_reset_driver = {
-> +	.probe	= socfpga_reset_probe,
-> +	.remove	= socfpga_reset_remove,
-> +	.driver = {
-> +		.name		= "socfpga-reset",
-> +		.owner		= THIS_MODULE,
-> +		.of_match_table	= socfpga_reset_dt_ids,
-> +	},
-> +};
-> +module_platform_driver(socfpga_reset_driver);
-> +
-> +MODULE_AUTHOR("Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org");
-> +MODULE_DESCRIPTION("Socfpga Reset Controller Driver");
-> +MODULE_LICENSE("GPL");
+> rts-gpios = <&pioD 15 1>;
 
+But I'd really like to know if macros are forbidden in DT documentation and why...
+Because, IMHO, <&pioD 15 1> talks less that <&pioD 15 GPIO_ACTIVE_LOW>.
+Which is a shame in a documentation.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob, any idea on that ?
+
+(actually, I missed some uses of GPIO_ACTIVE_ macros in Documentation :)
+git grep GPIO_ACTIVE Documentation/devicetree/bindings/
+Documentation/devicetree/bindings/gpio/gpio-davinci.txt:                gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/gpio/gpio-davinci.txt:                gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/gpio/gpio-lp3943.txt:         gpios = <&gpioex 9 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/gpio/gpio-lp3943.txt:         gpios = <&gpioex 10 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt:    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+Documentation/devicetree/bindings/gpio/gpio-tz1090-pdc.txt:      GPIO_ACTIVE_HIGH
+Documentation/devicetree/bindings/gpio/gpio-tz1090-pdc.txt:      GPIO_ACTIVE_LOW
+Documentation/devicetree/bindings/gpio/gpio-tz1090.txt:        GPIO_ACTIVE_HIGH
+Documentation/devicetree/bindings/gpio/gpio-tz1090.txt:        GPIO_ACTIVE_LOW
+Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt:    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+Documentation/devicetree/bindings/input/gpio-beeper.txt:                gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/mmc/mmc.txt:also be specified using the OF_GPIO_ACTIVE_LOW flag. This creates an ambiguity
+Documentation/devicetree/bindings/mmc/mmc.txt:OF_GPIO_ACTIVE_LOW flag clear and specifying the respective *-inverted
+Documentation/devicetree/bindings/net/nfc/trf7970a.txt:         ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>,
+Documentation/devicetree/bindings/net/nfc/trf7970a.txt:                           <&gpio2 5 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt:           ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
+Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt:    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt:                      gpios = <&pfc 20 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/power/isp1704.txt:    nxp,enable-gpio = <&gpio3 3 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/sound/max98090.txt:   interrupts = <TEGRA_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/sound/rt5640.txt:     interrupts = <TEGRA_GPIO(W, 3) GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/sound/rt5640.txt:             <&gpio TEGRA_GPIO(V, 3) GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/sound/tpa6130a2.txt:  power-gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt:                reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt:           gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/video/panel-dsi-cm.txt:       reset-gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>;
+Documentation/devicetree/bindings/video/sony,acx565akm.txt:     reset-gpios = <&gpio3 26 GPIO_ACTIVE_HIGH>; /* 90 */
+Documentation/devicetree/bindings/video/ti,omap-dss.txt:                gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;     /* 0, power-down */
+Documentation/devicetree/bindings/video/ti,omap-dss.txt:                gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>,   /* 60, CT CP HPD */
+Documentation/devicetree/bindings/video/ti,omap-dss.txt:                        <&gpio2 9 GPIO_ACTIVE_HIGH>,    /* 41, LS OE */
+Documentation/devicetree/bindings/video/ti,omap-dss.txt:                        <&gpio2 31 GPIO_ACTIVE_HIGH>;   /* 63, HPD */
+Documentation/devicetree/bindings/video/ti,tfp410.txt:  powerdown-gpios = <&twl_gpio 2 GPIO_ACTIVE_LOW>;
+Documentation/devicetree/bindings/video/ti,tpd12s015.txt:       gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>,   /* 60, CT CP HPD */
+Documentation/devicetree/bindings/video/ti,tpd12s015.txt:               <&gpio2 9 GPIO_ACTIVE_HIGH>,    /* 41, LS OE */
+Documentation/devicetree/bindings/video/ti,tpd12s015.txt:               <&gpio2 31 GPIO_ACTIVE_HIGH>;   /* 63, HPD */
+Documentation/devicetree/bindings/watchdog/gpio-wdt.txt:                gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
+
+Richard.
+
