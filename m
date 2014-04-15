@@ -1,87 +1,94 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/3] net: phy: add minimal support for QSGMII PHY
-Date: Tue, 15 Apr 2014 11:48:50 -0700
-Message-ID: <CAGVrzcbtrFd=KCabHuzUGpzTdq15n9kWw04xDbve22Xu1M+H8Q@mail.gmail.com>
-References: <1397569821-5530-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1397569821-5530-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Alexander Stein <alexanders83@web.de>
+Subject: Re: Re: Re: [PATCH 3/4] ALSA: sound/atmel/ac97c.c: Add device tree support
+Date: Tue, 15 Apr 2014 21:17:13 +0200
+Message-ID: <1507201.Sg3DHX4q4v@kongar>
+References: <1397293707-26890-1-git-send-email-alexanders83@web.de> <11572820.ByGz2BLudS@kongar> <20140414232134.GB2967@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1397569821-5530-2-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, George Joseph <george.joseph@fairview5.com>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Alexander Reuter <Alexander.Reuter@gmx.net>, Alice Ebalard <arno@natisbad.org>, Willy Tarreau <w@1wt.eu>, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Dmitri Epshtein <dima@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140414232134.GB2967@piout.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Alexander Shiyan <shc_work@mail.ru>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Nicolas Ferre <nicolas.ferre@atmel.com>, Jaroslav Kysela <perex@perex.cz>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Andrew Victor <linux@maxim.org.za>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-2014-04-15 6:50 GMT-07:00 Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com>:
-> This commit adds the necessary definitions for the PHY layer to
-> recognize "qsgmii" as a valid PHY interface. A QSMII interface, as
-> defined at
-> http://en.wikipedia.org/wiki/Media_Independent_Interface#Quad_Serial_Gigabit_Media_Independent_Interface,
-> is "is a method of combining four SGMII lines into a 5Gbit/s
-> interface. QSGMII, like SGMII, uses LVDS signalling for the TX and RX
-> data and a single LVDS clock signal. QSGMII uses significantly fewer
-> signal lines than four SGMII busses."
->
-> This type of MAC <-> PHY connection might require special handling on
-> the MAC driver side, so it should be possible to express this type of
-> MAC <-> PHY connection, for example in the Device Tree.
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+On Tuesday 15 April 2014, 01:21:34 wrote Alexandre Belloni:
+> On 13/04/2014 at 10:32:09 +0200, Alexander Stein wrote :
+> > On Saturday 12 April 2014, 14:48:17 wrote Alexander Shiyan:
+> > > Sat, 12 Apr 2014 12:42:18 +0200 =D0=BE=D1=82 Alexander Stein <ale=
+xanders83@web.de>:
+> > > > On Saturday 12 April 2014, 14:31:28 wrote Alexander Shiyan:
+> > > > > Sat, 12 Apr 2014 11:08:26 +0200 =D0=BE=D1=82 Alexander Stein =
+<alexanders83@web.de>:
+> > > > > > Signed-off-by: Alexander Stein <alexanders83@web.de>
+> > > > > > ---
+> > > > > >  .../devicetree/bindings/sound/atmel_ac97c.txt      | 20 ++=
++++++++
+> > > > > >  sound/atmel/ac97c.c                                | 52 ++=
+++++++++++++++++++--
+> > > > > >  2 files changed, 69 insertions(+), 3 deletions(-)
+> > > > > >  create mode 100644 Documentation/devicetree/bindings/sound=
+/atmel_ac97c.txt
+> > > > > >=20
+> > > > > > diff --git a/Documentation/devicetree/bindings/sound/atmel_=
+ac97c.txt b/Documentation/devicetree/bindings/sound/atmel_ac97c.txt
+> > > > > > new file mode 100644
+> > > > > > index 0000000..9839403
+> > > > > > --- /dev/null
+> > > > > > +++ b/Documentation/devicetree/bindings/sound/atmel_ac97c.t=
+xt
+> > > > > > @@ -0,0 +1,20 @@
+> > > > > > +* Atmel AC97 controller
+> > > > > > +
+> > > > > > +Required properties:
+> > > > > > +  - compatible: "atmel,atmel_ac97c"
+> > > > > > +  - reg: Address and length of the register set for the de=
+vice
+> > > > > > +  - interrupts: Should contain AC97 interrupt
+> > > > > > +  - atmel,reset-pin: GPIO for resetting the codec
+> > > > >=20
+> > > > > Why standard "gpios" property cannot be used here?
+> > > >=20
+> > > > I guess they can. I have no experience defining a devicetree bi=
+nding, so I just stuck to the platformdata member name.
+> > > > If this is the recommended way, I'll gladly change that.
+> > >=20
+> > > Another question is whether this property should refer to the con=
+troller,
+> > > as it is clear that it refers to the codec ....
+> >=20
+> > AFAICT the codec itself has no representation in the devicetree. It=
+ gets detected by the controller which uses the reset GPIO.
+> >
+>=20
+> Yeah, maybe we can already go for ac97-gpios, there. It actually take=
+s a
+> list of gpios: ac97-sync, ac97-sdata and ac97-reset. You may want to
+> have a look at Documentation/devicetree/bindings/sound/soc-ac97link.t=
+xt
+> and snd_soc_set_ac97_ops_of_reset(), snd_soc_ac97_parse_pinctl() in
+> sound/soc/core.c
+>=20
+> The goal would be to be able to keep the same bindings when switching
+> over to ASoC.
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
+Those bindings are only for the description an AC97 codec attached, rig=
+ht?
+I'm just wondering what is ac97-sdata actually?
+The datasheet to my microcontroller (atmel ac97c) has 4 signals:
+* AC97CK - this would be omitted in the description as it's fixed 12,28=
+8MHz
+* AC97RX - sdata_in
+* AC97FS - is this ac97-sync?
+* AC97TX - sdata_out
 
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/net/ethernet.txt | 2 +-
->  include/linux/phy.h                                | 3 +++
->  2 files changed, 4 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
-> index 9ecd43d..3fc3605 100644
-> --- a/Documentation/devicetree/bindings/net/ethernet.txt
-> +++ b/Documentation/devicetree/bindings/net/ethernet.txt
-> @@ -10,7 +10,7 @@ The following properties are common to the Ethernet controllers:
->  - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
->    the maximum frame size (there's contradiction in ePAPR).
->  - phy-mode: string, operation mode of the PHY interface; supported values are
-> -  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
-> +  "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
->    "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
->    standard property;
->  - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
-> diff --git a/include/linux/phy.h b/include/linux/phy.h
-> index 24126c4..4d0221f 100644
-> --- a/include/linux/phy.h
-> +++ b/include/linux/phy.h
-> @@ -75,6 +75,7 @@ typedef enum {
->         PHY_INTERFACE_MODE_SMII,
->         PHY_INTERFACE_MODE_XGMII,
->         PHY_INTERFACE_MODE_MOCA,
-> +       PHY_INTERFACE_MODE_QSGMII,
->         PHY_INTERFACE_MODE_MAX,
->  } phy_interface_t;
->
-> @@ -116,6 +117,8 @@ static inline const char *phy_modes(phy_interface_t interface)
->                 return "xgmii";
->         case PHY_INTERFACE_MODE_MOCA:
->                 return "moca";
-> +       case PHY_INTERFACE_MODE_QSGMII:
-> +               return "qsgmii";
->         default:
->                 return "unknown";
->         }
-> --
-> 1.8.3.2
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+ac97-reset would be board-specific. Is ac97-reset one of those AC97TX o=
+r AC97RX?
 
+Best regards,
+Alexander
 
+PS: I splitted Patch 3 to separate the device-tree binding and removed =
+the device match as you suggested.
 
--- 
-Florian
