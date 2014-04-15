@@ -1,29 +1,73 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 5/7] net: rfkill: gpio: add device tree support
-Date: Tue, 15 Apr 2014 15:01:59 -0600
-Message-ID: <534D9E47.30708@wwwdotorg.org>
-References: <1397544101-18135-1-git-send-email-wens@csie.org> <1397544101-18135-6-git-send-email-wens@csie.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
+Subject: Re: [PATCH] dtc: add ability to make nodes conditional on them being referenced
+Date: Wed, 16 Apr 2014 00:16:37 +0200
+Message-ID: <12484017.EBrG8OPNT6@phil>
+References: <199290403.sj4aYrj8FC@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1397544101-18135-6-git-send-email-wens@csie.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>, Linus Walleij <linus.walleij@linaro.org>, Johannes Berg <johannes@sipsolutions.net>, "John W. Linville" <linville@tuxdriver.com>, Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-sunxi@googlegroups.com, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <199290403.sj4aYrj8FC@diego>
+Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <philipp.zabel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2014 12:41 AM, Chen-Yu Tsai wrote:
+Am Sonntag, 16. M=E4rz 2014, 22:22:02 schrieb Heiko St=FCbner:
+> From: Heiko Stuebner <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
+>=20
+> On i.MX, which carries a lot of pin-groups of which most are unused o=
+n
+> individual boards, they noticed that this plethora of nodes also resu=
+lts
+> in the runtime-lookup-performance also degrading [0].
+>=20
+> A i.MX-specific solution defining the pingroups in the board files bu=
+t
+> using macros to reference the pingroup-data was not well received.
+>=20
+> This patch is trying to solve this issue in a more general way, by
+> adding the ability to mark nodes as needing to be referenced somewher=
+e
+> in the tree.
+>=20
+> To mark a node a needing to be referenced it must be prefixed with
+> /delete-unreferenced/. This makes dtc check the nodes reference-statu=
+s
+> when creating the flattened tree, dropping it if unreferenced.
+>=20
+> For example, the i.MX6SL pingroup
+>=20
+> 	/delete-unreferenced/ pinctrl_ecspi1_1: ecspi1grp-1 {
+> 		fsl,pins =3D <
+> 			MX6SL_PAD_ECSPI1_MISO__ECSPI1_MISO 0x100b1
+> 			MX6SL_PAD_ECSPI1_MOSI__ECSPI1_MOSI 0x100b1
+> 			MX6SL_PAD_ECSPI1_SCLK__ECSPI1_SCLK 0x100b1
+>=20
+> 		>;
+>=20
+> 	};
+>=20
+> would only be included in the dtb if it got referenced somewhere
+> as pingroup via
+>=20
+> 	node {
+> 		pinctrl-0 <&pinctrl_ecscpi1_1>;
+> 	};
+>=20
+> [0] http://thread.gmane.org/gmane.linux.ports.arm.kernel/275912/
+>=20
+> Signed-off-by: Heiko Stuebner <heiko.stuebner-K3U4GQvHnyU@public.gmane.org>
 
-> diff --git a/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt b/Documentation/devicetree/bindings/rfkill/rfkill-gpio.txt
+ping?
 
-> +Optional properties:
-> +- clocks		: phandle to clock to enable/disable
+Is this ok, bad, something else entirely? :-)
 
-Oh, and can't we use clock-names here too, with wording like:
 
-- clocks: Must contain an entry for each entry in clock-names.
-  See ../clocks/clock-bindings.txt for details.
-- clock-names: May contain any of the following entries:
-  - module
-
+Thanks
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree-co=
+mpiler" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
