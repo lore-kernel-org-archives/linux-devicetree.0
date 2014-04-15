@@ -1,79 +1,68 @@
-From: Rajeev kumar <rajeev-dlh.kumar@st.com>
-Subject: Re: [PATCH 1/5] ASoC: omap: rx51: Use
-	devm_snd_soc_register_card
-Date: Tue, 15 Apr 2014 19:09:13 +0530
-Message-ID: <534D3681.3010200@st.com>
-References: <1396733753-9820-1-git-send-email-sre@kernel.org>
- <1396733753-9820-2-git-send-email-sre@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1396733753-9820-2-git-send-email-sre@kernel.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Sebastian Reichel <sre@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tony Lindgren <tony@atomide.com>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <rob.herring@calxeda.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sebastian Reichel <sre@ring0.de>, Mark Brown <broonie@kernel.org>, =?UTF-8?B?UGFsaSBSb2jDoXI=?= <pali.rohar@gmail.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Jarkko Nikula <jarkko.nikula@bitmer.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: [PATCH 1/3] net: phy: add minimal support for QSGMII PHY
+Date: Tue, 15 Apr 2014 15:50:19 +0200
+Message-ID: <1397569821-5530-2-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1397569821-5530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1397569821-5530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: "David S. Miller" <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Dmitri Epshtein <dima@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, George Joseph <george.joseph@fairview5.com>, arno@natisbad.org, Willy Tarreau <w@1wt.eu>, Alexander Reuter <Alexander.Reuter@gmx.net>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gNC82LzIwMTQgMzowNSBBTSwgU2ViYXN0aWFuIFJlaWNoZWwgd3JvdGU6Cj4gRnJvbTogUGFs
-aSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPgo+Cj4gVGhpcyBwYXRjaCBjb252ZXJ0cyB0
-aGUgcng1MSBBU29DIG1vZHVsZSB0byB1c2UKPiBkZXZtX3NuZF9zb2NfcmVnaXN0ZXJfY2FyZC4g
-SXQgYWxzbyBhZGRzIG1vZHVsZSBhbGlhcwo+IHRvIHN1cHBvcnQgZHJpdmVyIGF1dG9sb2FkaW5n
-Lgo+Cj4gU2lnbmVkLW9mZi1ieTogUGFsaSBSb2jDoXIgPHBhbGkucm9oYXJAZ21haWwuY29tPgo+
-IFNpZ25lZC1vZmYtYnk6IFNlYmFzdGlhbiBSZWljaGVsIDxzcmVAa2VybmVsLm9yZz4KPiAtLS0K
-PiAgIHNvdW5kL3NvYy9vbWFwL3J4NTEuYyB8IDQ4ICsrKysrKysrKysrKysrKysrKysrKysrKysr
-KystLS0tLS0tLS0tLS0tLS0tLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDI4IGluc2VydGlvbnMo
-KyksIDIwIGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL3NvdW5kL3NvYy9vbWFwL3J4NTEu
-YyBiL3NvdW5kL3NvYy9vbWFwL3J4NTEuYwo+IGluZGV4IDdmYjNkNGIuLjU4ZjVlMTIgMTAwNjQ0
-Cj4gLS0tIGEvc291bmQvc29jL29tYXAvcng1MS5jCj4gKysrIGIvc291bmQvc29jL29tYXAvcng1
-MS5jCj4gQEAgLTM5NCwxMCArMzk0LDkgQEAgc3RhdGljIHN0cnVjdCBzbmRfc29jX2NhcmQgcng1
-MV9zb3VuZF9jYXJkID0gewo+ICAgCS5udW1fY29uZmlncyA9IEFSUkFZX1NJWkUocng1MV9jb2Rl
-Y19jb25mKSwKPiAgIH07Cj4KPiAtc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnJ4NTFf
-c25kX2RldmljZTsKPiAtCj4gLXN0YXRpYyBpbnQgX19pbml0IHJ4NTFfc29jX2luaXQodm9pZCkK
-PiArc3RhdGljIGludCByeDUxX3NvY19wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
-KQo+ICAgewo+ICsJc3RydWN0IHNuZF9zb2NfY2FyZCAqY2FyZCA9ICZyeDUxX3NvdW5kX2NhcmQ7
-Cj4gICAJaW50IGVycjsKPgo+ICAgCWlmICghbWFjaGluZV9pc19ub2tpYV9yeDUxKCkgJiYgIW9m
-X21hY2hpbmVfaXNfY29tcGF0aWJsZSgibm9raWEsb21hcDMtbjkwMCIpKQo+IEBAIC00MTIsMjIg
-KzQxMSwxNyBAQCBzdGF0aWMgaW50IF9faW5pdCByeDUxX3NvY19pbml0KHZvaWQpCj4gICAJaWYg
-KGVycikKPiAgIAkJZ290byBlcnJfZ3Bpb19lY2lfc3c7Cj4KPiAtCXJ4NTFfc25kX2RldmljZSA9
-IHBsYXRmb3JtX2RldmljZV9hbGxvYygic29jLWF1ZGlvIiwgLTEpOwo+IC0JaWYgKCFyeDUxX3Nu
-ZF9kZXZpY2UpIHsKPiAtCQllcnIgPSAtRU5PTUVNOwo+IC0JCWdvdG8gZXJyMTsKPiAtCX0KPiAt
-Cj4gLQlwbGF0Zm9ybV9zZXRfZHJ2ZGF0YShyeDUxX3NuZF9kZXZpY2UsICZyeDUxX3NvdW5kX2Nh
-cmQpOwo+ICsJY2FyZC0+ZGV2ID0gJnBkZXYtPmRldjsKPgo+IC0JZXJyID0gcGxhdGZvcm1fZGV2
-aWNlX2FkZChyeDUxX3NuZF9kZXZpY2UpOwo+IC0JaWYgKGVycikKPiAtCQlnb3RvIGVycjI7Cj4g
-KwllcnIgPSBkZXZtX3NuZF9zb2NfcmVnaXN0ZXJfY2FyZChjYXJkLT5kZXYsIGNhcmQpOwo+ICsJ
-aWYgKGVycikgewo+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgInNuZF9zb2NfcmVnaXN0ZXJfY2Fy
-ZCBmYWlsZWQgKCVkKVxuIiwgZXJyKTsKPiArCQlnb3RvIGVycl9zbmQ7Cj4gKwl9Cj4KPiAgIAly
-ZXR1cm4gMDsKPiAtZXJyMjoKPiAtCXBsYXRmb3JtX2RldmljZV9wdXQocng1MV9zbmRfZGV2aWNl
-KTsKPiAtZXJyMToKPiArZXJyX3NuZDoKPiArCWNhcmQtPmRldiA9IE5VTEw7CgpXaHkgdGhpcyBp
-cyByZXF1aXJlZD8/PwoKflJhamVldgoKPiAgIAlncGlvX2ZyZWUoUlg1MV9FQ0lfU1dfR1BJTyk7
-Cj4gICBlcnJfZ3Bpb19lY2lfc3c6Cj4gICAJZ3Bpb19mcmVlKFJYNTFfVFZPVVRfU0VMX0dQSU8p
-Owo+IEBAIC00MzYsMTkgKzQzMCwzMyBAQCBlcnJfZ3Bpb190dm91dF9zZWw6Cj4gICAJcmV0dXJu
-IGVycjsKPiAgIH0KPgo+IC1zdGF0aWMgdm9pZCBfX2V4aXQgcng1MV9zb2NfZXhpdCh2b2lkKQo+
-ICtzdGF0aWMgaW50IHJ4NTFfc29jX3JlbW92ZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
-KQo+ICAgewo+ICsJc3RydWN0IHNuZF9zb2NfY2FyZCAqY2FyZCA9IHBsYXRmb3JtX2dldF9kcnZk
-YXRhKHBkZXYpOwo+ICsKPiAgIAlzbmRfc29jX2phY2tfZnJlZV9ncGlvcygmcng1MV9hdl9qYWNr
-LCBBUlJBWV9TSVpFKHJ4NTFfYXZfamFja19ncGlvcyksCj4gICAJCQkJcng1MV9hdl9qYWNrX2dw
-aW9zKTsKPgo+IC0JcGxhdGZvcm1fZGV2aWNlX3VucmVnaXN0ZXIocng1MV9zbmRfZGV2aWNlKTsK
-PiArCWNhcmQtPmRldiA9IE5VTEw7Cj4gKwo+ICAgCWdwaW9fZnJlZShSWDUxX0VDSV9TV19HUElP
-KTsKPiAgIAlncGlvX2ZyZWUoUlg1MV9UVk9VVF9TRUxfR1BJTyk7Cj4gKwo+ICsJcmV0dXJuIDA7
-Cj4gICB9Cj4KPiAtbW9kdWxlX2luaXQocng1MV9zb2NfaW5pdCk7Cj4gLW1vZHVsZV9leGl0KHJ4
-NTFfc29jX2V4aXQpOwo+ICtzdGF0aWMgc3RydWN0IHBsYXRmb3JtX2RyaXZlciByeDUxX3NvY19k
-cml2ZXIgPSB7Cj4gKwkuZHJpdmVyID0gewo+ICsJCS5uYW1lID0gInJ4NTEtYXVkaW8iLAo+ICsJ
-CS5vd25lciA9IFRISVNfTU9EVUxFLAo+ICsJfSwKPiArCS5wcm9iZSA9IHJ4NTFfc29jX3Byb2Jl
-LAo+ICsJLnJlbW92ZSA9IHJ4NTFfc29jX3JlbW92ZSwKPiArfTsKPiArCj4gK21vZHVsZV9wbGF0
-Zm9ybV9kcml2ZXIocng1MV9zb2NfZHJpdmVyKTsKPgo+ICAgTU9EVUxFX0FVVEhPUigiTm9raWEg
-Q29ycG9yYXRpb24iKTsKPiAgIE1PRFVMRV9ERVNDUklQVElPTigiQUxTQSBTb0MgTm9raWEgUlgt
-NTEiKTsKPiAgIE1PRFVMRV9MSUNFTlNFKCJHUEwiKTsKPiArTU9EVUxFX0FMSUFTKCJwbGF0Zm9y
-bTpyeDUxLWF1ZGlvIik7Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9qZWN0
-Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYWxz
-YS1kZXZlbAo=
+This commit adds the necessary definitions for the PHY layer to
+recognize "qsgmii" as a valid PHY interface. A QSMII interface, as
+defined at
+http://en.wikipedia.org/wiki/Media_Independent_Interface#Quad_Serial_Gigabit_Media_Independent_Interface,
+is "is a method of combining four SGMII lines into a 5Gbit/s
+interface. QSGMII, like SGMII, uses LVDS signalling for the TX and RX
+data and a single LVDS clock signal. QSGMII uses significantly fewer
+signal lines than four SGMII busses."
+
+This type of MAC <-> PHY connection might require special handling on
+the MAC driver side, so it should be possible to express this type of
+MAC <-> PHY connection, for example in the Device Tree.
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+---
+ Documentation/devicetree/bindings/net/ethernet.txt | 2 +-
+ include/linux/phy.h                                | 3 +++
+ 2 files changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/net/ethernet.txt b/Documentation/devicetree/bindings/net/ethernet.txt
+index 9ecd43d..3fc3605 100644
+--- a/Documentation/devicetree/bindings/net/ethernet.txt
++++ b/Documentation/devicetree/bindings/net/ethernet.txt
+@@ -10,7 +10,7 @@ The following properties are common to the Ethernet controllers:
+ - max-frame-size: number, maximum transfer unit (IEEE defined MTU), rather than
+   the maximum frame size (there's contradiction in ePAPR).
+ - phy-mode: string, operation mode of the PHY interface; supported values are
+-  "mii", "gmii", "sgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
++  "mii", "gmii", "sgmii", "qsgmii", "tbi", "rev-mii", "rmii", "rgmii", "rgmii-id",
+   "rgmii-rxid", "rgmii-txid", "rtbi", "smii", "xgmii"; this is now a de-facto
+   standard property;
+ - phy-connection-type: the same as "phy-mode" property but described in ePAPR;
+diff --git a/include/linux/phy.h b/include/linux/phy.h
+index 24126c4..4d0221f 100644
+--- a/include/linux/phy.h
++++ b/include/linux/phy.h
+@@ -75,6 +75,7 @@ typedef enum {
+ 	PHY_INTERFACE_MODE_SMII,
+ 	PHY_INTERFACE_MODE_XGMII,
+ 	PHY_INTERFACE_MODE_MOCA,
++	PHY_INTERFACE_MODE_QSGMII,
+ 	PHY_INTERFACE_MODE_MAX,
+ } phy_interface_t;
+ 
+@@ -116,6 +117,8 @@ static inline const char *phy_modes(phy_interface_t interface)
+ 		return "xgmii";
+ 	case PHY_INTERFACE_MODE_MOCA:
+ 		return "moca";
++	case PHY_INTERFACE_MODE_QSGMII:
++		return "qsgmii";
+ 	default:
+ 		return "unknown";
+ 	}
+-- 
+1.8.3.2
