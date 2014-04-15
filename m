@@ -1,54 +1,149 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [RFC PATCH 14/14] ARM: dts: exynos5420: add dsi node
-Date: Tue, 15 Apr 2014 13:34:07 +0530
-Message-ID: <CAK9yfHyC4gvj6eLQnJ1k=6=q2NXOS2ePyBC5rz1poOsN+1x3zg@mail.gmail.com>
-References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
-	<1397540862-21359-15-git-send-email-yj44.cho@samsung.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH 2/2] ARM: dts: berlin: add GPIO nodes for the BG2Q
+Date: Tue, 15 Apr 2014 10:07:25 +0200
+Message-ID: <1397549245-3338-3-git-send-email-antoine.tenart@free-electrons.com>
+References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1397540862-21359-15-git-send-email-yj44.cho@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: Dave Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Inki Dae <inki.dae@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi YoungJun,
+The Marvell Berlin BG2Q has 6 GPIO ports compatible with the snps,dw-ap=
+b-gpio
+driver. This patch add the corresponding device tree nodes.
 
-On 15 April 2014 11:17, YoungJun Cho <yj44.cho@samsung.com> wrote:
-> This patch adds common part of dsi node.
->
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi |   14 ++++++++++++++
->  1 file changed, 14 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index f0184c7..aa2350a 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -422,6 +422,20 @@
->                 #phy-cells = <1>;
->         };
->
-> +       dsi@14500000 {
-> +               compatible = "samsung,exynos5420-mipi-dsi";
-> +               reg = <0x14500000 0x10000>;
-> +               interrupts = <0 82 0>;
-> +               samsung,power-domain = <&disp_pd>;
-> +               phys = <&mipi_phy 1>;
-> +               phy-names = "dsim";
-> +               clocks = <&clock 411>, <&clock 146>;
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+---
+ arch/arm/boot/dts/berlin2q.dtsi | 102 ++++++++++++++++++++++++++++++++=
+++++++++
+ 1 file changed, 102 insertions(+)
 
-Please use macros instead of numbers.
-
-> +               clock-names = "bus_clk", "pll_clk";
-> +               status = "disabled";
-
-nit: Move this to the end for readability.
-
--- 
-With warm regards,
-Sachin
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
+2q.dtsi
+index e6e556055dfc..b2625f896bc5 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -109,6 +109,78 @@
+ 			ranges =3D <0 0xe80000 0x10000>;
+ 			interrupt-parent =3D <&aic>;
+=20
++			gpio0: gpio@0400 {
++				compatible =3D "snps,dw-apb-gpio";
++				reg =3D <0x0400 0x400>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++
++				porta: gpio-controller@0 {
++					compatible =3D "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells =3D <2>;
++					snps,nr-gpios =3D <32>;
++					reg =3D <0>;
++					interrupt-controller;
++					#interrupt-cells =3D <2>;
++					interrupts =3D <0>;
++				};
++			};
++
++			gpio1: gpio@0800 {
++				compatible =3D "snps,dw-apb-gpio";
++				reg =3D <0x0800 0x400>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++
++				portb: gpio-controller@1 {
++					compatible =3D "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells =3D <2>;
++					snps,nr-gpios =3D <32>;
++					reg =3D <0>;
++					interrupt-controller;
++					#interrupt-cells =3D <2>;
++					interrupts =3D <1>;
++				};
++			};
++
++			gpio2: gpio@0c00 {
++				compatible =3D "snps,dw-apb-gpio";
++				reg =3D <0x0c00 0x400>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++
++				portc: gpio-controller@2 {
++					compatible =3D "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells =3D <2>;
++					snps,nr-gpios =3D <32>;
++					reg =3D <0>;
++					interrupt-controller;
++					#interrupt-cells =3D <2>;
++					interrupts =3D <2>;
++				};
++			};
++
++			gpio3: gpio@1000 {
++				compatible =3D "snps,dw-apb-gpio";
++				reg =3D <0x1000 0x400>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++
++				portd: gpio-controller@3 {
++					compatible =3D "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells =3D <2>;
++					snps,nr-gpios =3D <32>;
++					reg =3D <0>;
++					interrupt-controller;
++					#interrupt-cells =3D <2>;
++					interrupts =3D <3>;
++				};
++			};
++
+ 			timer0: timer@2c00 {
+ 				compatible =3D "snps,dw-apb-timer";
+ 				reg =3D <0x2c00 0x14>;
+@@ -181,6 +253,36 @@
+ 				interrupt-parent =3D <&gic>;
+ 				interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 			};
++
++			gpio4: gpio@5000 {
++				compatible =3D "snps,dw-apb-gpio";
++				reg =3D <0x5000 0x400>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++
++				porte: gpio-controller@4 {
++					compatible =3D "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells =3D <2>;
++					snps,nr-gpios =3D <32>;
++					reg =3D <0>;
++				};
++			};
++
++			gpio5: gpio@c000 {
++				compatible =3D "snps,dw-apb-gpio";
++				reg =3D <0xc000 0x400>;
++				#address-cells =3D <1>;
++				#size-cells =3D <0>;
++
++				portf: gpio-controller@5 {
++					compatible =3D "snps,dw-apb-gpio-port";
++					gpio-controller;
++					#gpio-cells =3D <2>;
++					snps,nr-gpios =3D <32>;
++					reg =3D <0>;
++				};
++			};
+ 		};
+=20
+ 		pinctrl: pinctrl@0 {
+--=20
+1.8.3.2
