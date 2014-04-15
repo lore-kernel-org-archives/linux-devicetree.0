@@ -1,124 +1,96 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 7/7] ARM: sun7i: cubietruck: enable
- bluetooth module
-Date: Wed, 16 Apr 2014 00:06:59 +0800
-Message-ID: <CAGb2v643HyvFdhQ0znreB8ENXHWpcx6tFwdeU7VuU8KYWcT4ZA@mail.gmail.com>
-References: <1397544101-18135-1-git-send-email-wens@csie.org>
- <1397544101-18135-8-git-send-email-wens@csie.org> <20140415144215.GG3207@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Tue, 15 Apr 2014 18:09:17 +0200
+Message-ID: <CABuKBeLLC2xApUMpT=u5nq4kxp9f4AotQCdk0nRU=aREM6Bwkg@mail.gmail.com>
+References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
+ <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
+ <CAL_JsqJowqV2bsxE2VeYXQQSj4_L_KcH+C_dD=ZUvC=1crN4dA@mail.gmail.com>
+ <87ha6136dz.fsf@approximate.cambridge.arm.com>
+ <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
+ <5347B942.2040703@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBN5SWWNAKGQEUU3ISKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140415144215.GG3207@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5347B942.2040703@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 15, 2014 at 10:42 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Apr 15, 2014 at 02:41:41PM +0800, Chen-Yu Tsai wrote:
->> The CubieTruck has an AMPAK AP6210 WiFi+Bluetooth module. The Bluetooth
->> part is a BCM20710 device connected to UART2 in the A20 SoC.
+2014-04-11 11:43 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
+> On 11/04/14 10:11, Matthias Brugger wrote:
+>> 2014-04-10 11:01 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
+>>> A couple of things on top of Rob's comments:
+>>>
+>>> On Wed, Apr 09 2014 at 10:50:33 pm BST, Rob Herring <robherring2@gmail.com> wrote:
+>>>> On Wed, Apr 9, 2014 at 2:45 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>>>>> This adds a generic devicetree board file and a dtsi for boards
+>>>>> based on the MT6589 SoCs from Mediatek.
+>>>>>
+>>>>> Apart from the generic parts (gic, clocks) the only component
+>>>>> currently supported are the timers.
+>>>>>
+>>>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>>
+>>> [...]
+>>>
+>>>>> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+>>>>> new file mode 100644
+>>>>> index 0000000..c0139ca
+>>>>> --- /dev/null
+>>>>> +++ b/arch/arm/mach-mediatek/Kconfig
+>>>>> @@ -0,0 +1,14 @@
+>>>>> +config ARCH_MEDIATEK
+>>>>> +       bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+>>>>> +       select ARCH_REQUIRE_GPIOLIB
+>>>>
+>>>> Then where is your GPIO driver?
+>>>>
+>>>>> +       select ARM_GIC
+>>>>> +       select CACHE_L2X0
+>>>>> +       select HAVE_ARM_TWD if LOCAL_TIMERS
+>>>
+>>> Hell no! ;-) ARM_ARCH_TIMER is the way (please also add the missing
+>>> node).
 >>
->> The IC requires a 32.768 KHz low power clock input for proper
->> auto-detection of the main clock, and an enable signal via GPIO.
->>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 25 +++++++++++++++++++++++++
->>  1 file changed, 25 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->> index cb25d3c..767c8e1 100644
->> --- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->> +++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
->> @@ -61,6 +61,13 @@
->>                               allwinner,drive = <0>;
->>                               allwinner,pull = <0>;
->>                       };
->> +
->> +                     bt_pwr_pin_cubietruck: bt_pwr_pin@0 {
->> +                             allwinner,pins = "PH18";
->> +                             allwinner,function = "gpio_out";
->> +                             allwinner,drive = <0>;
->> +                             allwinner,pull = <0>;
->> +                     };
->>               };
->>
->>               uart0: serial@01c28000 {
->> @@ -69,6 +76,12 @@
->>                       status = "okay";
->>               };
->>
->> +             uart2: serial@01c28800 {
->> +                     pinctrl-names = "default";
->> +                     pinctrl-0 = <&uart2_pins_a>;
->> +                     status = "okay";
->> +             };
->> +
+>> I considered this, but the timer wasn't able to get it's clock frequency:
+>> "Architected timer frequency not available
+>> Division by zero in kernel."
 >
-> Please make this a separate patch.
+> This is because your bootloader/firmware is utterly broken, and doesn't
+> set CNTFRQ (it must be set on all CPUs, from secure mode). As a
+> *workaround*, you can set the timer frequency in the timer node, but
+> that's just a hack, and will prevent virtual machines from running on
+> such hardware.
 
-Will do.
+The last days I tried to get the ARM_ARCH_TIMER working, but I wasn't
+able to do so.
+I set the frequency in the DT node.
+But reading CNTP_TVAL at the end of arch_timer_init, it always returns
+the same value.
+When reading CNTPCT at the same place, returns zero.
+As far as I understand CNTPCT will be always incremented, am I right?
 
->>               i2c0: i2c@01c2ac00 {
->>                       pinctrl-names = "default";
->>                       pinctrl-0 = <&i2c0_pins_a>;
->> @@ -139,4 +152,16 @@
->>       reg_usb2_vbus: usb2-vbus {
->>               status = "okay";
->>       };
->> +
->> +     rfkill_bt {
->> +             compatible = "rfkill-gpio";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&bt_pwr_pin_cubietruck>, <&clk_out_a_pins_a>;
->> +             clocks = <&clk_out_a>;
->> +             clock-frequency = <32768>;
->> +             gpios = <&pio 7 18 0>; /* PH18 */
->> +             gpio-names = "reset";
->> +             rfkill-name = "bt";
->> +             rfkill-type = <2>;
->> +     };
+Consequently, when calling mdelay in arch_timer_init the system hangs.
+
+So can it be, that the timers are not working due to a screwed up chip
+design? Or do I miss something here?
+
 >
-> Hmmm, I don't think that's actually right.
->
-> If you have such a device, then I'd expect it to be represented as a
-> full device in the DT, probably with one part for the WiFi, one part
-> for the Bluetooth, and here the definition of the rfkill device that
-> controls it.
-
-The AP6210 is not one device, but 2 separate chips in one module. Each
-chip has its own controls and interface. They just so happen to share
-the same enclosure. Even 2-in-1 chips by Broadcom have separate controls
-and interfaces. The WiFi side is most likely connected via SDIO, while
-the Bluetooth side is connected to a UART, and optionally I2S for sound.
-
-> But tying parts of the device to the rfkill that controls it, such as
-> the clocks, or the frequency it runs at seems just wrong.
-
-I understand where you're coming from. For devices on buses that require
-drivers (such as USB, SDIO) these properties probably should be tied to
-the device node.
-
-For our use case here, which is a bluetooth chip connected on the UART,
-there is no in kernel representation or driver to tie them to. Same goes
-for UART based GPS chips. They just so happen to require toggling a GPIO,
-and maybe enabling a specific clock, to get it running. Afterwards,
-accessing it is done solely from userspace. For our Broadcom chips, the
-user has to upload its firmware first, then designate the tty as a Bluetooth
-HCI using hciattach.
-
-We are using the rfkill device as a on-off switch.
-
-Hope this explains the situation.
+>         M.
+> --
+> Jazz is not dead. It just smells funny...
 
 
-Cheers
-ChenYu
+
+-- 
+motzblog.wordpress.com
