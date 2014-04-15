@@ -1,50 +1,75 @@
-From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] usb: gadget: gr_udc: OF and ep.maxpacket_limit
- improvements and fix of GFP_KERNEL in atomic context
-Date: Tue, 15 Apr 2014 13:41:54 +0200
-Message-ID: <534D1B02.2020804@gaisler.com>
-References: <1395933359-7109-1-git-send-email-andreas@gaisler.com>
+From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH V8 3/9] phy: SPEAr1310/40-miphy: Add binding information
+Date: Tue, 15 Apr 2014 17:13:29 +0530
+Message-ID: <323b13ad6a87e6650c00f6e566818fa2ede7be95.1397555158.git.mohit.kumar@st.com>
+References: <cover.1397555158.git.mohit.kumar@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395933359-7109-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <cover.1397555158.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dan Carpenter <dan.carpenter-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+To: arnd-r2nGTMty4D4@public.gmane.org
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014-03-27 16:15, Andreas Larsson wrote:
-> This patchset:
->   - Adds some OF related improvements suggested by Mark
->     Rutland.
->   - Adds ep.maxpacket_limit to the debugfs file and adds a check if
->     gr_ep_enable is called with a maxpacket value greater than
->     ep.maxpacket_limit.
->   - Fixes a bug where GFP_KERNEL was used in atomic context
->
-> Andreas Larsson (7):
->    usb: gadget: gr_udc: Make struct platform_device variable name
->      clearer and use platform_set/get_drvdata
->    usb: gadget: gr_udc: Expand devicetree documentation
->    usb: gadget: gr_udc: Use platform_get_irq instead of
->      irq_of_parse_and_map
->    usb: gadget: gr_udc: Use of_property_read_u32_index to access arrays
->    usb: gadget: gr_udc: Add ep.maxpacket_limit to debugfs information
->    usb: gadget: gr_udc: Return error code when trying to set
->      ep.maxpacket > ep.maxpacket_limit
->    usb: gadget: gr_udc: Use GFP_ATOMIC when allocating under help
->      spinlock
->
->   Documentation/devicetree/bindings/usb/gr-udc.txt |   22 +++++----
->   drivers/usb/gadget/gr_udc.c                      |   53 ++++++++++++----------
->   2 files changed, 42 insertions(+), 33 deletions(-)
+From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
 
+SPEAr1310/40 uses miphy for PCIe, SATA. This patch adds documentation
+for the binding on the top of generic phy bindings.
 
-Anyone got feedback or reasons this cannot be accepted?
+Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+ .../devicetree/bindings/phy/st-spear1310-miphy.txt |   12 ++++++++++++
+ .../devicetree/bindings/phy/st-spear1340-miphy.txt |   11 +++++++++++
+ 2 files changed, 23 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/st-spear1310-miphy.txt
+ create mode 100644 Documentation/devicetree/bindings/phy/st-spear1340-miphy.txt
 
-Best regards,
-Andreas Larsson
+diff --git a/Documentation/devicetree/bindings/phy/st-spear1310-miphy.txt b/Documentation/devicetree/bindings/phy/st-spear1310-miphy.txt
+new file mode 100644
+index 0000000..b9b281a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/st-spear1310-miphy.txt
+@@ -0,0 +1,12 @@
++ST SPEAr1310-miphy DT detail
++===================================
++
++SPEAr1310-miphy is a phy controller supporting PCIe and SATA.
++
++Required properties:
++- compatible : should be "st,spear1310-miphy"
++- reg : offset and length of the PHY register set.
++- misc: phandle for the syscon node to access misc registers
++- phy-id: Instance id of the phy.
++- #phy-cells : from the generic PHY bindings, must be 1.
++	- cell[1]: 0 if phy used for SATA, 1 for PCIe.
+diff --git a/Documentation/devicetree/bindings/phy/st-spear1340-miphy.txt b/Documentation/devicetree/bindings/phy/st-spear1340-miphy.txt
+new file mode 100644
+index 0000000..7eb5335
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/st-spear1340-miphy.txt
+@@ -0,0 +1,11 @@
++ST SPEAr1340-miphy DT detail
++===================================
++
++SPEAr1340-miphy is a phy controller supporting PCIe and SATA.
++
++Required properties:
++- compatible : should be "st,spear1340-miphy"
++- reg : offset and length of the PHY register set.
++- misc: phandle for the syscon node to access misc registers
++- #phy-cells : from the generic PHY bindings, must be 1.
++	- cell[1]: 0 if phy used for SATA, 1 for PCIe.
+-- 
+1.7.0.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
