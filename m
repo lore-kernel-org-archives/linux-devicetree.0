@@ -1,54 +1,35 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: berlin: add GPIO nodes for the BG2Q
-Date: Tue, 15 Apr 2014 14:50:14 +0200
-Message-ID: <534D2B06.6000408@gmail.com>
-References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397549245-3338-3-git-send-email-antoine.tenart@free-electrons.com>
- <534CFA77.9030108@gmail.com> <20140415180058.2fefca78@xhacker>
- <534D0943.2050100@gmail.com> <20140415114848.GA2813@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140415114848.GA2813@piout.net>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Jisheng Zhang <jszhang@marvell.com>, Jimmy Xu <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?ISO-8859-1?Q?Antoine_T=E9nar?= =?ISO-8859-1?Q?t?= <antoine.tenart@free-electrons.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH] ARM: shmobile: armadillo-reference dts: Seiko Instruments, Inc is "sii"
+Date: Tue, 15 Apr 2014 14:51:50 +0200
+Message-ID: <1397566310-24055-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Ulrich Hecht <ulrich.hecht@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-On 04/15/2014 01:48 PM, Alexandre Belloni wrote:
-> On 15/04/2014 at 12:26:11 +0200, Sebastian Hesselbarth wrote :
->> On 04/15/2014 12:00 PM, Jisheng Zhang wrote:
->>> On Tue, 15 Apr 2014 02:23:03 -0700
->>> Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> wrote:
->>>> I am fine with using nr-gpios property now, but I guess BG2Q also
->>>> has that CONFIG[1,2] registers to actually read out the features
->>>> synthesized in? If I find some time, I'll prepare a patch for
->>>> dw-apb-gpio to exploit that (optional) information instead of
->>>> using nr-gpios.
->>>
->>> The problem is CONFIG1/2 registers don't exist on some versions.
->>> For example, the version used in BG2/BG2CD. So nr-gpio is necessary
->>> if we want to support these versions.
->>
->> Hmm, are you sure about BG2? I remember reading it and it contains
->> sane values. Anyway, a proper patch for dw-apb-gpio would include
->> checking for sane (e.g. non-zero) values. And nr-gpios will always
->> stay as fall-back just because e.g. sunxi does not have the CONFIG
->> registers.
->
-> Shouldn't that be use nr-gpios and if not available, read the CONFIG
-> registers? Else, what about bogus registers ?
+Use "sii,s35390a" instead of "seiko,s35390a", cfr.
+Documentation/devicetree/bindings/i2c/trivial-devices.txt and
+Documentation/devicetree/bindings/vendor-prefixes.txt.
 
-Probably, it is a better idea to only look for CONFIG registers if
-nr-gpios is not set. Anyway, I'll really have to find more time first ;)
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+ .../boot/dts/r8a7740-armadillo800eva-reference.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Sebastian
+diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+index 0cb235a450b9..10344e6edd20 100644
+--- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
++++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+@@ -180,7 +180,7 @@
+ &i2c2 {
+ 	status = "okay";
+ 	rtc@30 {
+-		compatible = "seiko,s35390a";
++		compatible = "sii,s35390a";
+ 		reg = <0x30>;
+ 	};
+ };
+-- 
+1.7.9.5
+
