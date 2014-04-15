@@ -1,32 +1,32 @@
-From: Mohit Kumar <mohit.kumar@st.com>
+From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 Subject: [PATCH V8 5/9] phy: SPEAr1310/40-miphy: Add phy driver for PCIe and SATA
 Date: Tue, 15 Apr 2014 17:19:47 +0530
-Message-ID: <fdf0d926ad07b587af775cb65016c6787ed028a7.1397555158.git.mohit.kumar__42600.9723254994$1397562740$gmane$org@st.com>
+Message-ID: <fdf0d926ad07b587af775cb65016c6787ed028a7.1397555158.git.mohit.kumar__39238.6841973805$1397562743$gmane$org@st.com>
 References: <cover.1397555158.git.mohit.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <cover.1397555158.git.mohit.kumar@st.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: spear-devel@list.st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Pratyush Anand <pratyush.anand@st.com>, Viresh Kumar <viresh.linux@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1397555158.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Pratyush Anand <pratyush.anand@st.com>
+From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
 
 SPEAr1310/40 uses miphy for PCIe and SATA phy. This driver adds
 support for the same.
 
 AHCI phy hookups from arch specific code has been cleaned up.
 
-Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
-Tested-by: Mohit Kumar <mohit.kumar@st.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Viresh Kumar <viresh.linux@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: spear-devel@list.st.com
-Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Tested-by: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 ---
  arch/arm/boot/dts/spear1310-evb.dts |    4 +
  arch/arm/boot/dts/spear1310.dtsi    |   39 ++++-
@@ -392,8 +392,8 @@ index 0000000..6136634
 + * ST SPEAr1310-miphy driver
 + *
 + * Copyright (C) 2014 ST Microelectronics
-+ * Pratyush Anand <pratyush.anand@st.com>
-+ * Mohit Kumar <mohit.kumar@st.com>
++ * Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
++ * Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -660,7 +660,7 @@ index 0000000..6136634
 +module_exit(spear1310_miphy_phy_exit);
 +
 +MODULE_DESCRIPTION("ST SPEAR1310-MIPHY driver");
-+MODULE_AUTHOR("Pratyush Anand <pratyush.anand@st.com>");
++MODULE_AUTHOR("Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>");
 +MODULE_LICENSE("GPL v2");
 diff --git a/drivers/phy/phy-spear1340-miphy.c b/drivers/phy/phy-spear1340-miphy.c
 new file mode 100644
@@ -672,8 +672,8 @@ index 0000000..cbaf284
 + * ST spear1340-miphy driver
 + *
 + * Copyright (C) 2014 ST Microelectronics
-+ * Pratyush Anand <pratyush.anand@st.com>
-+ * Mohit Kumar <mohit.kumar@st.com>
++ * Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
++ * Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 as
@@ -966,7 +966,12 @@ index 0000000..cbaf284
 +module_exit(spear1340_miphy_phy_exit);
 +
 +MODULE_DESCRIPTION("ST SPEAR1340-MIPHY driver");
-+MODULE_AUTHOR("Pratyush Anand <pratyush.anand@st.com>");
++MODULE_AUTHOR("Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>");
 +MODULE_LICENSE("GPL v2");
 -- 
 1.7.0.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
