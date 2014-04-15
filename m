@@ -1,88 +1,90 @@
-From: Tien Hock Loh <thloh@altera.com>
-Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
- devicetree binding
-Date: Tue, 15 Apr 2014 18:00:39 +0800
-Message-ID: <CAOLUe6bFyizanij68a1866QKGSHE=1_+V2yeqxjfamjxjFUUfQ@mail.gmail.com>
-References: <1393842463-5206-1-git-send-email-thloh@altera.com>
-	<20140307151455.GI18529@joshc.qualcomm.com>
-	<CAOLUe6aspffO1PUjKWW7ejpbxnYtb+RKRQrK=y30kuF7KXUUhA@mail.gmail.com>
-	<CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: berlin: add GPIO nodes for the BG2Q
+Date: Tue, 15 Apr 2014 18:00:58 +0800
+Message-ID: <20140415180058.2fefca78@xhacker>
+References: <1397549245-3338-1-git-send-email-antoine.tenart@free-electrons.com>
+	<1397549245-3338-3-git-send-email-antoine.tenart@free-electrons.com>
+	<534CFA77.9030108@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tien Hock Loh <thloh@altera.com>
-Cc: Josh Cartwright <joshc@codeaurora.org>, robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <534CFA77.9030108-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>>>> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
->>>>> Tested on Altera CV SoC board using dipsw and LED using LED framework.
->>>>>
->>>>> Signed-off-by: Tien Hock Loh <thloh@altera.com>
->>>>> ---
->>>>
->>>>> +             return -ENOMEM;
->>>>> +     }
->>>>> +     altera_gc->domain = 0;
->>>>> +
->>>>> +     spin_lock_init(&altera_gc->gpio_lock);
->>>>> +
->>>>> +     id = pdev->id;
->>>>> +
->>>>> +     if (of_property_read_u32(node, "altr,gpio-bank-width", &reg))
->>>>> +             /*By default assume full GPIO controller*/
->>>>> +             altera_gc->mmchip.gc.ngpio = 32;
->>>>> +     else
->>>>> +             altera_gc->mmchip.gc.ngpio = reg;
->>>>> +
->>>>> +     if (altera_gc->mmchip.gc.ngpio > 32) {
->>>>> +             dev_warn(&pdev->dev,
->>>>> +                     "ngpio is greater than 32, defaulting to 32\n");
->>>>> +             altera_gc->mmchip.gc.ngpio = 32;
->>>>> +     }
->>>>> +
->>>>> +     altera_gc->mmchip.gc.direction_input    = altera_gpio_direction_input;
->>>>> +     altera_gc->mmchip.gc.direction_output   = altera_gpio_direction_output;
->>>>> +     altera_gc->mmchip.gc.get                = altera_gpio_get;
->>>>> +     altera_gc->mmchip.gc.set                = altera_gpio_set;
->>>>> +     altera_gc->mmchip.gc.to_irq             = altera_gpio_to_irq;
->>>>> +     altera_gc->mmchip.gc.owner              = THIS_MODULE;
->>>>> +
->>>>> +     ret = of_mm_gpiochip_add(node, &altera_gc->mmchip);
->>>>> +     if (ret) {
->>>>> +             dev_err(&pdev->dev, "Failed adding memory mapped gpiochip\n");
->>>>> +             return ret;
->>>>> +     }
->>>>> +
->>>>> +     platform_set_drvdata(pdev, altera_gc);
->>>>> +
->>>>> +     altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
->>>>>
->>>>
->>>> platform_get_irq(pdev, 0);
->>>>
->>> OK.
->>>
->>
->> platform_get_irq doesn't create the irq mapping which is needed by the
->> driver. Since this driver is targeted at using of, should I be using
->> irq_of_parse_and_map or should I still redo the codes with
->> platform_get_irq and irq_create_mapping? I think the latter would be
->> introducing code redundancy. Please advice.
->
-> Yes, it is technically true that platform_get_irq() doesn't do the mapping directly, but that's
-> because the mapping is setup earlier, when
-> of_device_alloc() (drivers/of/platform.c) allocates resources for your platform device.
->
-> Calling irq_of_parse_and_map() should be unnecessary.
+Hi Sebastian,
 
-I checked and tried running the without irq_create_mapping but it
-seems the mapping is not done.
-What I've seen other GPIO driver is doing is to create the mapping
-during the gpio_to_irq call. However Linus suggested we are avoiding
-that route, thus the use of irq_of_parse_and_map. Do you agree with my
-findings?
+On Tue, 15 Apr 2014 02:23:03 -0700
+Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
->>
->> Thanks.
+> On 04/15/2014 10:07 AM, Antoine T=C3=A9nart wrote:
+> > The Marvell Berlin BG2Q has 6 GPIO ports compatible with the
+> > snps,dw-apb-gpio driver. This patch add the corresponding device tr=
+ee
+> > nodes.
+> >
+> > Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.c=
+om>
+> > ---
+> >   arch/arm/boot/dts/berlin2q.dtsi | 102
+> > ++++++++++++++++++++++++++++++++++++++++ 1 file changed, 102 insert=
+ions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/berlin2q.dtsi
+> > b/arch/arm/boot/dts/berlin2q.dtsi index e6e556055dfc..b2625f896bc5 =
+100644
+> > --- a/arch/arm/boot/dts/berlin2q.dtsi
+> > +++ b/arch/arm/boot/dts/berlin2q.dtsi
+> > @@ -109,6 +109,78 @@
+> >   			ranges =3D <0 0xe80000 0x10000>;
+> >   			interrupt-parent =3D <&aic>;
+> >
+> > +			gpio0: gpio@0400 {
+> > +				compatible =3D "snps,dw-apb-gpio";
+> > +				reg =3D <0x0400 0x400>;
+> > +				#address-cells =3D <1>;
+> > +				#size-cells =3D <0>;
+> > +
+> > +				porta: gpio-controller@0 {
+>=20
+> ePAPR recommended name is even more generic, i.e. "gpio". If
+> that clashed in any way with other numbered names, I suggest
+> to rename to "gpio-port" as actually the controller is the
+> parent node and this represents one port (in the nomenclature
+> of DW-APB-GPIO).
+>=20
+> > +					compatible =3D
+> > "snps,dw-apb-gpio-port";
+> > +					gpio-controller;
+> > +					#gpio-cells =3D <2>;
+> > +					snps,nr-gpios =3D <32>;
+>=20
+> 32 gpio pins for each of the 6 GPIO controllers? Either BG2Q is a GPI=
+O
+
+Yes, BG2Q support 32 pins every port
+
+> beast or it is a mistake :P
+>=20
+> Can you please double-check?
+>=20
+> I am fine with using nr-gpios property now, but I guess BG2Q also
+> has that CONFIG[1,2] registers to actually read out the features
+> synthesized in? If I find some time, I'll prepare a patch for
+> dw-apb-gpio to exploit that (optional) information instead of
+> using nr-gpios.
+
+The problem is CONFIG1/2 registers don't exist on some versions.
+=46or example, the version used in BG2/BG2CD. So nr-gpio is necessary
+if we want to support these versions.
+
+Thanks,
+Jisheng
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
