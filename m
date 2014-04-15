@@ -1,31 +1,31 @@
-From: Mohit Kumar <mohit.kumar@st.com>
+From: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 Subject: [PATCH V8 2/9] SPEAr13XX: Fix static mapping table
 Date: Tue, 15 Apr 2014 17:19:44 +0530
-Message-ID: <d6886e0f97dff12932cf89cb33721ac86c3a8e8b.1397555158.git.mohit.kumar__7933.68945965103$1397562857$gmane$org@st.com>
+Message-ID: <d6886e0f97dff12932cf89cb33721ac86c3a8e8b.1397555158.git.mohit.kumar__41854.959264356$1397562864$gmane$org@st.com>
 References: <cover.1397555158.git.mohit.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <cover.1397555158.git.mohit.kumar@st.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: spear-devel@list.st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Pratyush Anand <pratyush.anand@st.com>, Mohit Kumar <mohit.kumar@st.com>, stable@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <cover.1397555158.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pratyush Anand <pratyush.anand@st.com>
+From: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
 
 SPEAr13XX was using virtual address space 0xFE000000 to map physical address
 space 0xB3000000. pci_remap_io uses 0xFEE00000 as virtual address. So
 change 0xFE000000 to 0xF9000000.
 
-Signed-off-by: Pratyush Anand <pratyush.anand@st.com>
-Signed-off-by: Mohit Kumar <mohit.kumar@st.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Cc: spear-devel@list.st.com
-Cc: stable@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Pratyush Anand <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 ---
  arch/arm/mach-spear/include/mach/spear.h |    4 ++--
  arch/arm/mach-spear/spear13xx.c          |    2 +-
@@ -63,3 +63,8 @@ index 7aa6e8c..89212ff 100644
   * 0xED000000		0xFB000000
 -- 
 1.7.0.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
