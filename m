@@ -1,84 +1,55 @@
-From: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Subject: Re: [PATCH] DT: video: atmel_lcdc: Add example of fixed framebuffer memory
-Date: Tue, 15 Apr 2014 16:57:34 +0200
-Message-ID: <2216878.FzI300VPNh@ws-stein>
-References: <1396333730-10592-1-git-send-email-alexander.stein@systec-electronic.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396333730-10592-1-git-send-email-alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Robert Nelson <robertcnelson@gmail.com>
+Subject: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
+Date: Tue, 15 Apr 2014 10:09:59 -0500
+Message-ID: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Robert Nelson <robertcnelson@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Any feedback in this?
+BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
 
-Regards,
-Alexander
+Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+---
+ arch/arm/boot/dts/Makefile               |  1 +
+ arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
 
-On Tuesday 01 April 2014 08:28:50, Alexander Stein wrote:
-> This drivers allows a fixed framebuffer memory to be set by an additional
-> IORESOURCE_MEM resource. Thus add an example to the DT documentation.
-> 
-> Signed-off-by: Alexander Stein <alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org>
-> ---
-> Actually I stumbled myself over this wondering how can I use this specific
-> feature. In the end I found it myself my coincidence. So it's best to add
-> this as an example for other people maybe not that experienced on
-> device-tree.
-> 
->  Documentation/devicetree/bindings/video/atmel,lcdc.txt | 12 +++++++++++-
->  1 file changed, 11 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/atmel,lcdc.txt b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> index 1ec175e..92492b7 100644
-> --- a/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> +++ b/Documentation/devicetree/bindings/video/atmel,lcdc.txt
-> @@ -10,7 +10,9 @@ Required properties:
->  	"atmel,at91sam9g45es-lcdc" ,
->  	"atmel,at91sam9rl-lcdc" ,
->  	"atmel,at32ap-lcdc"
-> -- reg : Should contain 1 register ranges(address and length)
-> +- reg : Should contain 1 register ranges(address and length).
-> +	Can contain an additional register range(address and length)
-> +	for fixed framebuffer memory.Usefull for dedicated memories.
->  - interrupts : framebuffer controller interrupt
->  - display: a phandle pointing to the display node
->  
-> @@ -35,6 +37,14 @@ Example:
->  
->  	};
->  
-> +Example for fixed framebuffer memory:
-> +
-> +	fb0: fb@0x00500000 {
-> +		compatible = "atmel,at91sam9263-lcdc";
-> +		reg = <0x00700000 0x1000 0x70000000 0x200000>;
-> +		[...]
-> +	};
-> +
->  Atmel LCDC Display
->  -----------------------------------------------------
->  Required properties (as per of_videomode_helper):
-> 
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 35c146f..0bdeba3 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	omap3-sbc-t3730.dtb \
+ 	omap3-devkit8000.dtb \
+ 	omap3-beagle-xm.dtb \
++	omap3-beagle-xm-ab.dtb \
+ 	omap3-evm.dtb \
+ 	omap3-evm-37xx.dtb \
+ 	omap3-ldp.dtb \
+diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+new file mode 100644
+index 0000000..9d81123
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+@@ -0,0 +1,15 @@
++/*
++ * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include "omap3-beagle-xm.dts"
++
++/ {
++	/* HS USB Port 2 Power enable was inverted with the xM C */
++	hsusb2_power: hsusb2_power_reg {
++		enable-active-high;
++};
 -- 
-Dipl.-Inf. Alexander Stein
+1.9.1
 
-SYS TEC electronic GmbH
-Am Windrad 2
-08468 Heinsdorfergrund
-Tel.: 03765 38600-1156
-Fax: 03765 38600-4100
-Email: alexander.stein-93q1YBGzJSMe9JSWTWOYM3xStJ4P+DSV@public.gmane.org
-Website: www.systec-electronic.com
- 
-Managing Director: Dipl.-Phys. Siegmar Schmidt
-Commercial registry: Amtsgericht Chemnitz, HRB 28082
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
