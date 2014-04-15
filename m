@@ -1,65 +1,57 @@
 From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] clk: Improve clock-indices binding documentation
-Date: Tue, 15 Apr 2014 17:56:12 +0200
-Message-ID: <21852545.7Zg9c00i3i@avalon>
-References: <1397494840-22420-1-git-send-email-geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/6] gpio: rcar: Add optional functional clock to bindings
+Date: Tue, 15 Apr 2014 17:56:40 +0200
+Message-ID: <2603505.i7PITsBOUv@avalon>
+References: <1397500397-12607-1-git-send-email-geert@linux-m68k.org> <1397500397-12607-2-git-send-email-geert@linux-m68k.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1397494840-22420-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-sh-owner@vger.kernel.org
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1397500397-12607-2-git-send-email-geert@linux-m68k.org>
+Sender: linux-gpio-owner@vger.kernel.org
 To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Mike Turquette <mturquette@linaro.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Geert,
 
 Thank you for the patch.
 
-On Monday 14 April 2014 19:00:40 Geert Uytterhoeven wrote:
+On Monday 14 April 2014 20:33:12 Geert Uytterhoeven wrote:
 > From: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
-> Improve the wording for the clock-indices binding documentation.
-> Also replace "empty nodes" by "empty strings", as reported before by Sergei
-> Shtylyov.
-> 
 > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+> Cc: linux-gpio@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
 
 Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
 > ---
->  .../devicetree/bindings/clock/clock-bindings.txt   |    9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
+> v2:
+>   - Functional clock is mandatory depending on hardware (thanks, Laurent)
+> ---
+>  .../devicetree/bindings/gpio/renesas,gpio-rcar.txt |    6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
-> 700e7aac3717..f15787817d6b 100644
-> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> @@ -44,10 +44,9 @@ For example:
->    clocks by index. The names should reflect the clock output signal
->    names for the device.
+> diff --git a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+> b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt index
+> f61cef74a212..941a26aa4322 100644
+> --- a/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+> +++ b/Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt
+> @@ -21,6 +21,12 @@ Required Properties:
+>      GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+>    - gpio-ranges: Range of pins managed by the GPIO controller.
 > 
-> -clock-indices:	   If the identifyng number for the clocks in the node
-> -		   is not linear from zero, then the this mapping allows
-> -		   the mapping of identifiers into the clock-output-names
-> -		   array.
-> +clock-indices:	   If the identifying number for the clocks in the node
-> +		   is not linear from zero, then this allows the mapping of
-> +		   identifiers into the clock-output-names array.
-> 
->  For example, if we have two clocks <&oscillator 1> and <&oscillator 3>:
-> 
-> @@ -58,7 +57,7 @@ For example, if we have two clocks <&oscillator 1> and
-> <&oscillator 3>: clock-output-names = "clka", "clkb";
->  	}
-> 
-> -	This ensures we do not have any empty nodes in clock-output-names
-> +	This ensures we do not have any empty strings in clock-output-names
-> 
-> 
->  ==Clock consumers==
+> +Optional properties:
+> +
+> +  - clocks: Must contain a reference to the functional clock.  The property
+> is +    mandatory if the hardware implements a controllable functional
+> clock for +    the GPIO instance.
+> +
+>  Please refer to gpio.txt in this directory for details of gpio-ranges
+> property and the common GPIO bindings used by client devices.
 
 -- 
 Regards,
