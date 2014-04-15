@@ -1,7 +1,7 @@
 From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Subject: Re: [PATCH v3 1/4] reset: add driver for socfpga
-Date: Tue, 15 Apr 2014 17:54:43 -0500
-Message-ID: <1397602483.3330.2.camel@linux-builds1>
+Date: Tue, 15 Apr 2014 18:06:03 -0500
+Message-ID: <1397603163.4702.0.camel@linux-builds1>
 References: <1397548592-6384-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
@@ -39,6 +39,7 @@ linux-socfpga-next/next-dt.
 Thanks,
 
 Dinh
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
