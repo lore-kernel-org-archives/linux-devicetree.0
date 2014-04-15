@@ -1,14 +1,14 @@
 From: Mohit Kumar <mohit.kumar@st.com>
 Subject: [PATCH V8 2/9] SPEAr13XX: Fix static mapping table
 Date: Tue, 15 Apr 2014 17:19:44 +0530
-Message-ID: <d6886e0f97dff12932cf89cb33721ac86c3a8e8b.1397555158.git.mohit.kumar__25091.5162534968$1397562842$gmane$org@st.com>
+Message-ID: <d6886e0f97dff12932cf89cb33721ac86c3a8e8b.1397555158.git.mohit.kumar__7933.68945965103$1397562857$gmane$org@st.com>
 References: <cover.1397555158.git.mohit.kumar@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
 In-Reply-To: <cover.1397555158.git.mohit.kumar@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-pci-owner@vger.kernel.org
 To: spear-devel@list.st.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 Cc: Pratyush Anand <pratyush.anand@st.com>, Mohit Kumar <mohit.kumar@st.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
