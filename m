@@ -1,165 +1,102 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 4/4] ARM: socfpga: dts: add reset-controller
-Date: Tue, 15 Apr 2014 09:56:32 +0200
-Message-ID: <1397548592-6384-4-git-send-email-s.trumtrar@pengutronix.de>
-References: <1397548592-6384-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397548592-6384-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
+Subject: Re: [PATCH] tty/serial: atmel_serial: Fix device tree documentation
+Date: Tue, 15 Apr 2014 10:00:07 +0200
+Message-ID: <20140415080006.GE2255@ldesroches-Latitude-E6320>
+References: <1397487482-3816-1-git-send-email-richard.genoud@gmail.com>
+ <20140414152212.GC2255@ldesroches-Latitude-E6320>
+ <534CE24F.9020703@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <534CE24F.9020703@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Richard Genoud <richard.genoud@gmail.com>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary #reset-cells property to the rst-mgr node and
-provide a header-file with all possible resets specified.
+On Tue, Apr 15, 2014 at 09:39:59AM +0200, Richard Genoud wrote:
+> On 14/04/2014 17:22, Ludovic Desroches wrote:
+> > Hi Richard,
+> > 
+> > On Mon, Apr 14, 2014 at 04:58:02PM +0200, Richard Genoud wrote:
+> >> RTS pin is an active low pin.
+> >> For now, this doesn't change anything as the ACTIVE_LOW flag is not
+> >> handled in atmel_serial, but it will be in 3.16.
+> >>
+> >> Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/serial/atmel-usart.txt | 2 +-
+> >>  1 file changed, 1 insertion(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+> >> index 17c1042b2df8..2f7aad71b3c9 100644
+> >> --- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
+> >> +++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+> >> @@ -35,7 +35,7 @@ Example:
+> >>  		clock-names = "usart";
+> >>  		atmel,use-dma-rx;
+> >>  		atmel,use-dma-tx;
+> >> -		rts-gpios = <&pioD 15 0>;
+> >> +		rts-gpios = <&pioD 15 GPIO_ACTIVE_LOW>;
+> > 
+> > I was told we should not use macros here. If it is still the truth:
+> > 
+> > rts-gpios = <&pioD 15 1>;
+> 
+> But I'd really like to know if macros are forbidden in DT documentation and why...
+> Because, IMHO, <&pioD 15 1> talks less that <&pioD 15 GPIO_ACTIVE_LOW>.
+> Which is a shame in a documentation.
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/socfpga.dtsi           |  8 ++-
- include/dt-bindings/reset/altr,rst-mgr.h | 90 ++++++++++++++++++++++++++++++++
- 2 files changed, 97 insertions(+), 1 deletion(-)
- create mode 100644 include/dt-bindings/reset/altr,rst-mgr.h
+I don't remember who told me that but the reason was that device tree
+should not depend on Linux and macros are relative to Linux.
 
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 1f71e96..027d2c6 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -16,6 +16,7 @@
-  */
- 
- #include "skeleton.dtsi"
-+#include <dt-bindings/reset/altr,rst-mgr.h>
- 
- / {
- 	#address-cells = <1>;
-@@ -456,6 +457,8 @@
- 			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
- 			clocks = <&emac0_clk>;
- 			clock-names = "stmmaceth";
-+			resets = <&rst EMAC0_RESET>;
-+			reset-names = "stmmaceth";
- 			status = "disabled";
- 		};
- 
-@@ -467,6 +470,8 @@
- 			mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
- 			clocks = <&emac1_clk>;
- 			clock-names = "stmmaceth";
-+			resets = <&rst EMAC1_RESET>;
-+			reset-names = "stmmaceth";
- 			status = "disabled";
- 		};
- 
-@@ -584,7 +589,8 @@
- 			reg-io-width = <4>;
- 		};
- 
--		rstmgr@ffd05000 {
-+		rst: rstmgr@ffd05000 {
-+			#reset-cells = <1>;
- 			compatible = "altr,rst-mgr";
- 			reg = <0xffd05000 0x1000>;
- 		};
-diff --git a/include/dt-bindings/reset/altr,rst-mgr.h b/include/dt-bindings/reset/altr,rst-mgr.h
-new file mode 100644
-index 0000000..3f04908
---- /dev/null
-+++ b/include/dt-bindings/reset/altr,rst-mgr.h
-@@ -0,0 +1,90 @@
-+/*
-+ * Copyright (c) 2014, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DT_BINDINGS_RESET_ALTR_RST_MGR_H
-+#define _DT_BINDINGS_RESET_ALTR_RST_MGR_H
-+
-+/* MPUMODRST */
-+#define CPU0_RESET		0
-+#define CPU1_RESET		1
-+#define WDS_RESET		2
-+#define SCUPER_RESET		3
-+#define L2_RESET		4
-+
-+/* PERMODRST */
-+#define EMAC0_RESET		32
-+#define EMAC1_RESET		33
-+#define USB0_RESET		34
-+#define USB1_RESET		35
-+#define NAND_RESET		36
-+#define QSPI_RESET		37
-+#define L4WD0_RESET		38
-+#define L4WD1_RESET		39
-+#define OSC1TIMER0_RESET	40
-+#define OSC1TIMER1_RESET	41
-+#define SPTIMER0_RESET		42
-+#define SPTIMER1_RESET		43
-+#define I2C0_RESET		44
-+#define I2C1_RESET		45
-+#define I2C2_RESET		46
-+#define I2C3_RESET		47
-+#define UART0_RESET		48
-+#define UART1_RESET		49
-+#define SPIM0_RESET		50
-+#define SPIM1_RESET		51
-+#define SPIS0_RESET		52
-+#define SPIS1_RESET		53
-+#define SDMMC_RESET		54
-+#define CAN0_RESET		55
-+#define CAN1_RESET		56
-+#define GPIO0_RESET		57
-+#define GPIO1_RESET		58
-+#define GPIO2_RESET		59
-+#define DMA_RESET		60
-+#define SDR_RESET		61
-+
-+/* PER2MODRST */
-+#define DMAIF0_RESET		64
-+#define DMAIF1_RESET		65
-+#define DMAIF2_RESET		66
-+#define DMAIF3_RESET		67
-+#define DMAIF4_RESET		68
-+#define DMAIF5_RESET		69
-+#define DMAIF6_RESET		70
-+#define DMAIF7_RESET		71
-+
-+/* BRGMODRST */
-+#define HPS2FPGA_RESET		96
-+#define LWHPS2FPGA_RESET	97
-+#define FPGA2HPS_RESET		98
-+
-+/* MISCMODRST*/
-+#define ROM_RESET		128
-+#define OCRAM_RESET		129
-+#define SYSMGR_RESET		130
-+#define SYSMGRCOLD_RESET	131
-+#define FPGAMGR_RESET		132
-+#define ACPIDMAP_RESET		133
-+#define S2F_RESET		134
-+#define S2FCOLD_RESET		135
-+#define NRSTPIN_RESET		136
-+#define TIMESTAMPCOLD_RESET	137
-+#define CLKMGRCOLD_RESET	138
-+#define SCANMGR_RESET		139
-+#define FRZCTRLCOLD_RESET	140
-+#define SYSDBG_RESET		141
-+#define DBG_RESET		142
-+#define TAPCOLD_RESET		143
-+#define SDRCOLD_RESET		144
-+
-+#endif
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Rob, any idea on that ?
+> 
+> (actually, I missed some uses of GPIO_ACTIVE_ macros in Documentation :)
+> git grep GPIO_ACTIVE Documentation/devicetree/bindings/
+> Documentation/devicetree/bindings/gpio/gpio-davinci.txt:                gpios = <&gpio 10 GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/gpio/gpio-davinci.txt:                gpios = <&gpio 11 GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/gpio/gpio-lp3943.txt:         gpios = <&gpioex 9 GPIO_ACTIVE_LOW>;
+> Documentation/devicetree/bindings/gpio/gpio-lp3943.txt:         gpios = <&gpioex 10 GPIO_ACTIVE_LOW>;
+> Documentation/devicetree/bindings/gpio/gpio-pcf857x.txt:    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+> Documentation/devicetree/bindings/gpio/gpio-tz1090-pdc.txt:      GPIO_ACTIVE_HIGH
+> Documentation/devicetree/bindings/gpio/gpio-tz1090-pdc.txt:      GPIO_ACTIVE_LOW
+> Documentation/devicetree/bindings/gpio/gpio-tz1090.txt:        GPIO_ACTIVE_HIGH
+> Documentation/devicetree/bindings/gpio/gpio-tz1090.txt:        GPIO_ACTIVE_LOW
+> Documentation/devicetree/bindings/gpio/renesas,gpio-rcar.txt:    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+> Documentation/devicetree/bindings/input/gpio-beeper.txt:                gpios = <&gpio3 23 GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/mmc/mmc.txt:also be specified using the OF_GPIO_ACTIVE_LOW flag. This creates an ambiguity
+> Documentation/devicetree/bindings/mmc/mmc.txt:OF_GPIO_ACTIVE_LOW flag clear and specifying the respective *-inverted
+> Documentation/devicetree/bindings/net/nfc/trf7970a.txt:         ti,enable-gpios = <&gpio2 2 GPIO_ACTIVE_LOW>,
+> Documentation/devicetree/bindings/net/nfc/trf7970a.txt:                           <&gpio2 5 GPIO_ACTIVE_LOW>;
+> Documentation/devicetree/bindings/net/wireless/ti,wl1251.txt:           ti,power-gpio = <&gpio3 23 GPIO_ACTIVE_HIGH>; /* 87 */
+> Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt:    GPIO_ACTIVE_HIGH and GPIO_ACTIVE_LOW flags are supported.
+> Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt:                      gpios = <&pfc 20 GPIO_ACTIVE_LOW>;
+> Documentation/devicetree/bindings/power/isp1704.txt:    nxp,enable-gpio = <&gpio3 3 GPIO_ACTIVE_LOW>;
+> Documentation/devicetree/bindings/sound/max98090.txt:   interrupts = <TEGRA_GPIO(H, 4) GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/sound/rt5640.txt:     interrupts = <TEGRA_GPIO(W, 3) GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/sound/rt5640.txt:             <&gpio TEGRA_GPIO(V, 3) GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/sound/tpa6130a2.txt:  power-gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt:                reset-gpios = <&gpio1 7 GPIO_ACTIVE_LOW>;
+> Documentation/devicetree/bindings/video/backlight/gpio-backlight.txt:           gpios = <&gpio3 4 GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/video/panel-dsi-cm.txt:       reset-gpios = <&gpio4 6 GPIO_ACTIVE_HIGH>;
+> Documentation/devicetree/bindings/video/sony,acx565akm.txt:     reset-gpios = <&gpio3 26 GPIO_ACTIVE_HIGH>; /* 90 */
+> Documentation/devicetree/bindings/video/ti,omap-dss.txt:                gpios = <&gpio1 0 GPIO_ACTIVE_LOW>;     /* 0, power-down */
+> Documentation/devicetree/bindings/video/ti,omap-dss.txt:                gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>,   /* 60, CT CP HPD */
+> Documentation/devicetree/bindings/video/ti,omap-dss.txt:                        <&gpio2 9 GPIO_ACTIVE_HIGH>,    /* 41, LS OE */
+> Documentation/devicetree/bindings/video/ti,omap-dss.txt:                        <&gpio2 31 GPIO_ACTIVE_HIGH>;   /* 63, HPD */
+> Documentation/devicetree/bindings/video/ti,tfp410.txt:  powerdown-gpios = <&twl_gpio 2 GPIO_ACTIVE_LOW>;
+> Documentation/devicetree/bindings/video/ti,tpd12s015.txt:       gpios = <&gpio2 28 GPIO_ACTIVE_HIGH>,   /* 60, CT CP HPD */
+> Documentation/devicetree/bindings/video/ti,tpd12s015.txt:               <&gpio2 9 GPIO_ACTIVE_HIGH>,    /* 41, LS OE */
+> Documentation/devicetree/bindings/video/ti,tpd12s015.txt:               <&gpio2 31 GPIO_ACTIVE_HIGH>;   /* 63, HPD */
+> Documentation/devicetree/bindings/watchdog/gpio-wdt.txt:                gpios = <&gpio3 9 GPIO_ACTIVE_LOW>;
+> 
+> Richard.
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
