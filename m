@@ -1,134 +1,108 @@
-From: Jon Ringle <jon@ringle.org>
-Subject: Re: [PATCH v5 1/2] serial: sc16is7xx
-Date: Tue, 15 Apr 2014 18:38:31 -0400
-Message-ID: <CAMwGMjxnVhGanbG-2NNr5ekA489qJsc+J6hyLv+zyMCq+o=LVg@mail.gmail.com>
-References: <1396538615-9128-1-git-send-email-jon@ringle.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] regulator: tps65090: Make FETs more reliable
+Date: Tue, 15 Apr 2014 23:52:10 +0100
+Message-ID: <20140415225210.GK12304@sirena.org.uk>
+References: <1397592876-5741-1-git-send-email-dianders@chromium.org>
+ <1397592876-5741-4-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1396538615-9128-1-git-send-email-jon@ringle.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Jon Ringle <jringle@gridpoint.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ef8eQmdvO1j1gFMO"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397592876-5741-4-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Michael Spang <spang-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 3, 2014 at 11:23 AM,  <jon@ringle.org> wrote:
-> From: Jon Ringle <jringle@gridpoint.com>
->
-> The SC16IS7xx is a slave I2C-bus/SPI interface to a single-channel
-> high performance UART. The SC16IS7xx's internal register set is
-> backward-compatible with the widely used and widely popular 16C450.
->
-> The SC16IS7xx also provides additional advanced features such as
-> auto hardware and software flow control, automatic RS-485 support, and
-> software reset.
->
-> Signed-off-by: Jon Ringle <jringle@gridpoint.com>
-> ---
->  drivers/tty/serial/Kconfig       |    9 +
->  drivers/tty/serial/Makefile      |    1 +
->  drivers/tty/serial/sc16is7xx.c   | 1302 ++++++++++++++++++++++++++++++++++++++
->  include/uapi/linux/serial_core.h |    3 +
->  4 files changed, 1315 insertions(+)
->  create mode 100644 drivers/tty/serial/sc16is7xx.c
->
-[snip]
 
-> diff --git a/drivers/tty/serial/sc16is7xx.c b/drivers/tty/serial/sc16is7xx.c
-> new file mode 100644
-> index 0000000..20d96cc
-> --- /dev/null
-> +++ b/drivers/tty/serial/sc16is7xx.c
-[snip]
+--ef8eQmdvO1j1gFMO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> +static bool sc16is7xx_regmap_writeable(struct device *dev, unsigned int reg)
+On Tue, Apr 15, 2014 at 01:14:36PM -0700, Doug Anderson wrote:
+
+> Mitigate the problem by:
+> * Allow setting the overcurrent wait time so devices with this problem
+>   can set it to the max.
+> * Add retry logic on enables of FETs.
+
+This is two changes, should really be two patches.
+
+> +- ti,overcurrent-wait: This is applicable to FET registers, which have a
+> +  poorly defined "overcurrent wait" field.  If this property is present it
+> +  should be between 0 - 3.  If this property isn't present we won't touch the
+> +  "overcurrent wait" field and we'll leave it to the BIOS/EC to deal with.
+
+I take it this is the raw value to write to the register?
+
+> +static int tps65090_fet_is_enabled(struct regulator_dev *rdev)
 > +{
-> +       switch (reg >> SC16IS7XX_REG_SHIFT) {
-> +       case SC16IS7XX_THR_REG:
-> +       case SC16IS7XX_IER_REG:
-> +       case SC16IS7XX_FCR_REG:
-> +       case SC16IS7XX_LCR_REG:
-> +       case SC16IS7XX_MCR_REG:
-> +       case SC16IS7XX_SPR_REG:
-> +       case SC16IS7XX_IODIR_REG:
-> +       case SC16IS7XX_IOSTATE_REG:
-> +       case SC16IS7XX_IOINTENA_REG:
-> +       case SC16IS7XX_IOCONTROL_REG:
-> +       case SC16IS7XX_EFCR_REG:
-> +               return true;
-> +       default:
-> +               break;
-> +       }
+> +	unsigned int control;
+> +	unsigned int expected = rdev->desc->enable_mask | BIT(CTRL_PG_BIT);
+> +	int ret;
 > +
-> +       return false;
+> +	ret = regmap_read(rdev->regmap, rdev->desc->enable_reg, &control);
+> +	if (ret != 0)
+> +		return ret;
+> +
+> +	return (control & expected) == expected;
 > +}
 
-Having the above regmap_writeable callback causes problem with the
-bulk I2C write (via regmap_raw_write()) that is done in
-sc16is7xx_handle_tx(). Removing this callback fixes the issue.
+No need to open code this, regulator_is_enabled_regmap() can check for
+any value in a bitfield.
 
+> +static int tps6090_try_enable_fet(struct regulator_dev *rdev)
 
-[snip]
-> +static void sc16is7xx_handle_tx(struct uart_port *port)
-> +{
-> +       struct sc16is7xx_port *s = dev_get_drvdata(port->dev);
-> +       struct circ_buf *xmit = &port->state->xmit;
-> +       unsigned int txlen, to_send, i;
-> +       u8 buf[port->fifosize];
-> +
-> +       if (unlikely(port->x_char)) {
-> +               sc16is7xx_port_write(port, SC16IS7XX_THR_REG, port->x_char);
-> +               port->icount.tx++;
-> +               port->x_char = 0;
-> +               return;
-> +       }
-> +
-> +       if (uart_circ_empty(xmit) || uart_tx_stopped(port))
-> +               return;
-> +
-> +       /* Get length of data pending in circular buffer */
-> +       to_send = uart_circ_chars_pending(xmit);
-> +       if (likely(to_send)) {
-> +               /* Limit to size of TX FIFO */
-> +               txlen = sc16is7xx_port_read(port, SC16IS7XX_TXLVL_REG);
-> +               to_send = (to_send > txlen) ? txlen : to_send;
-> +
-> +               /* Add data to send */
-> +               port->icount.tx += to_send;
-> +
-> +               /* Convert to linear buffer */
-> +               for (i = 0; i < to_send; ++i) {
-> +                       buf[i] = xmit->buf[xmit->tail];
-> +                       xmit->tail = (xmit->tail + 1) & (UART_XMIT_SIZE - 1);
-> +               }
-> +               regcache_cache_bypass(s->regmap, true);
-> +               regmap_raw_write(s->regmap, SC16IS7XX_THR_REG, buf, to_send);
+Why is this called tps6090_try_enable_fet(), looks like a missing 5?
 
-This call fails with -EINVAL if to_send is > 20 because it assumes
-that we are writing to consecutive registers rather than writing to a
-single register over and over.
+> +	/*
+> +	 * Try enabling multiple times until we succeed since sometimes the
+> +	 * first try times out.
+> +	 */
+> +	for (tries = 0; ; tries++) {
+> +		ret = tps6090_try_enable_fet(rdev);
+> +		if (!ret)
+> +			break;
+> +		if (ret != -ENOTRECOVERABLE || tries == MAX_FET_ENABLE_TRIES)
+> +			goto err;
 
-> +               regcache_cache_bypass(s->regmap, false);
-> +       }
-> +
-> +       if (uart_circ_chars_pending(xmit) < WAKEUP_CHARS)
-> +               uart_write_wakeup(port);
-> +}
+Make this a do { } while so we don't have the exit condition missing in
+the for loop please, it's doing the right thing but it's not as obvious
+as it could be.
 
-[snip]
+> +	if (tries) {
+> +		dev_warn(&rdev->dev, "reg %#x enable ok after %d tries\n",
+> +			 rdev->desc->enable_reg, tries);
+> +	}
 
-> +static struct regmap_config regcfg = {
-> +       .reg_bits = 7,
-> +       .pad_bits = 1,
-> +       .val_bits = 8,
-> +       .cache_type = REGCACHE_RBTREE,
-> +       .writeable_reg = sc16is7xx_regmap_writeable,
-Removing writeable_reg
+No need for braces here, and I guess that ought to be retries rather
+than tries (though that is pedantry).
 
-New patch forthcoming that removes the regmap writeable_reg callback.
-But, I also wonder if there is a way to keep it, but teach regcache
-that regmap_raw_write/read() done necessariy increment the register
-being written to or read from. Then I probably wouldn't have to do the
-regcach_cache_bypass business I am doing either.
+--ef8eQmdvO1j1gFMO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Jon
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTTbgXAAoJELSic+t+oim9d4sP/i/a/GYy9I0TNekV4rWaxk67
+7KMA9v6M2BlBpwpefTkd+WD4zEgk1T9KsLei+yHI/AaXvwQyT4MNAkgTEw7x/UQS
+B0XIg7bbIPMGb1zX6izsNqZbARMZPmNd16K3DLtD8B0tdZTZVN1r8G7cUxO675DQ
+poYYRLgP+Zr+1CZVFVmE7HyNelQgDx+aVMg4Q8gLpDElCDHnDSnWl4eKX1dmucdi
+pkTKobcMY5ZOy5UtGVVvg6MhVwvtKHL7atLZAWW1dRxqb80yTL8V4wdKSl5nnzaj
+L14JtxhhpD0Qr+gSUWerS+FjwSdoMxWZRQWuvkYQ4FSRwbMrn/P57+8fQ5x6NbjI
+22wYyWztTm7CpuKOVxoeJBnWO+qJXT6LKxuIzn75lX0i0b5uh8Hq72a4bGexiLUp
+MAt7Pesb07xwsfpvJkEUyDlEGQ4ulPIxidszunUmZjf8ebGQSs9jlBtlbc4CT5i/
+RfVtIStbKTDCycLKs7HrQSyqW0oSUet1hoyEzDiGw03ZvXmx6X59r24DU2fA7dHl
+RWI7chwYBgc2VvqwGQywhjOmDYaeFFYg0/P/qFTKDp9fizWTXisDji7dsC5dUhcn
+nkSrl4PygKaOx7Vrb+fyW2SwGlZelRlqDHqgIMynq82jU3hLWwmCWhffZX86FTYI
+szQZIkhakJUtLfEqIXtk
+=HF/7
+-----END PGP SIGNATURE-----
+
+--ef8eQmdvO1j1gFMO--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
