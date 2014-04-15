@@ -1,37 +1,48 @@
-From: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Subject: [PATCH] arm: dts: exynos4412-trats2: rename alias for i2c_ak8975 label
-Date: Tue, 15 Apr 2014 16:25:07 +0200
-Message-ID: <534D4143.3050801@samsung.com>
+From: Ulrich Hecht <ulrich.hecht@gmail.com>
+Subject: Re: [PATCH] ARM: shmobile: armadillo-reference dts: Seiko
+ Instruments, Inc is "sii"
+Date: Tue, 15 Apr 2014 16:26:55 +0200
+Message-ID: <CAO3366zsXNcJDsFwHfqeO2SjB2VEEEJbvJBFXdyJZK-zFAyR7w@mail.gmail.com>
+References: <1397566310-24055-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, 'Ben Dooks' <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, j.anaszewski@samsung.com, =?UTF-8?B?J+uwleqyveuvvCc=?= <kyungmin.park@samsung.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1397566310-24055-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The i2c_ak8975 controler uses label i2c8.
-This alias is already used for I2C controller 8 defined
-in file arch/arm/boot/dts/exynos4.dtsi.
+On Tue, Apr 15, 2014 at 2:51 PM, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Use "sii,s35390a" instead of "seiko,s35390a", cfr.
+> Documentation/devicetree/bindings/i2c/trivial-devices.txt and
+> Documentation/devicetree/bindings/vendor-prefixes.txt.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-This patch renames a label for i2c_ak8975 to i2c9.
+Acked-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 
-Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
----
- arch/arm/boot/dts/exynos4412-trats2.dts |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> ---
+>  .../boot/dts/r8a7740-armadillo800eva-reference.dts |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> index 0cb235a450b9..10344e6edd20 100644
+> --- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> +++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
+> @@ -180,7 +180,7 @@
+>  &i2c2 {
+>         status = "okay";
+>         rtc@30 {
+> -               compatible = "seiko,s35390a";
+> +               compatible = "sii,s35390a";
+>                 reg = <0x30>;
+>         };
+>  };
+> --
+> 1.7.9.5
+>
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index c16b315..5add765 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -20,7 +20,7 @@
- 	compatible = "samsung,trats2", "samsung,exynos4412", "samsung,exynos4";
-
- 	aliases {
--		i2c8 = &i2c_ak8975;
-+		i2c9 = &i2c_ak8975;
- 	};
-
- 	memory {
+CU
+Uli
