@@ -1,63 +1,127 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v3 10/21] mtd: support BB SRAM on ICP DAS LP-8x4x
-Date: Wed, 16 Apr 2014 09:21:13 +0400
-Message-ID: <1397625673.22465.8.camel@host5.omatika.ru>
-References: <1386901645-28895-1-git-send-email-ynvich@gmail.com>
-	 <1387309071-22382-1-git-send-email-ynvich@gmail.com>
-	 <1387309071-22382-11-git-send-email-ynvich@gmail.com>
-	 <20140416050449.GJ3131@norris-Latitude-E6410>
+From: Vikas Sajjan <sajjan.linux@gmail.com>
+Subject: Re: [PATCH v2 2/3] ARM: EXYNOS: Add initial support of PMU for Exynos5260
+Date: Wed, 16 Apr 2014 11:04:15 +0530
+Message-ID: <CAGm_ybhzQLbK8K5mj0WK8ww61PqurumkwkHqah2=5v-=VACJzA@mail.gmail.com>
+References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
+	<1395061795-17777-3-git-send-email-vikas.sajjan@samsung.com>
+	<534D7BAB.30503@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140416050449.GJ3131@norris-Latitude-E6410>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Kees Cook <keescook@chromium.org>, Randy Dunlap <rdunlap@infradead.org>, Philip Avinash <avinashphilip@ti.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <534D7BAB.30503@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-04-15 at 22:04 -0700, Brian Norris wrote:
-> Hi Sergei,
-> 
-> On Tue, Dec 17, 2013 at 11:37:40PM +0400, Sergei Ianovich wrote:
-> > This provides an MTD device driver for 512kB of battery backed up SRAM
-> > on ICPDAS LP-8X4X programmable automation controllers.
-> > 
-> > SRAM chip is connected via FPGA and is not accessible without a driver,
-> > unlike flash memory which is wired to CPU MMU.
-> > 
-> > This SRAM becomes an excellent persisent storage of volatile process
-> > data like counter values and sensor statuses. Storing those data in
-> > flash or mmc card is not a viable solution.
-> > 
-> > Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
-> > ---
-> >    v2..v3
-> >    * no changes (except number 08/16 -> 10/21)
-> > 
-> >    v0..v2
-> >    * use device tree
-> >    * use devm helpers where possible
-> 
-> What's the status of this series? Is the rest of this platform support
-> going in via other trees yet? I have a few trivial comments, but this
-> driver mostly looks good as-is.
+Hi Tomasz,
 
-(...)
+On Wed, Apr 16, 2014 at 12:04 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Vikas,
+>
+>
+> On 17.03.2014 14:09, Vikas Sajjan wrote:
+>>
+>> Adds PMU support of PMU for Exynos5260. Suspend-to-RAM can be built on
+>> top this.
+>>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> Signed-off-by: Vikas Sajjan <vikas.sajjan@samsung.com>
+>> ---
+>>   arch/arm/mach-exynos/common.h            |   26 ++++
+>>   arch/arm/mach-exynos/pm.c                |   34 +++--
+>>   arch/arm/mach-exynos/pmu.c               |  238
+>> ++++++++++++++++++++++++++++++
+>>   arch/arm/mach-exynos/regs-pmu.h          |  232
+>> +++++++++++++++++++++++++++++
+>>   arch/arm/plat-samsung/include/plat/cpu.h |    8 +
+>>   5 files changed, 529 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+>> index aba6a2a..a17f701 100644
+>> --- a/arch/arm/mach-exynos/common.h
+>> +++ b/arch/arm/mach-exynos/common.h
+>> @@ -56,6 +56,32 @@ enum sys_powerdown {
+>>         NUM_SYS_POWERDOWN,
+>>   };
+>>
+>> +enum running_cpu {
+>> +       EXYNOS5_KFC,
+>> +       EXYNOS5_ARM,
+>> +};
+>> +
+>> +enum reg_op {
+>> +       REG_INIT,       /* write new value */
+>> +       REG_RESET,      /* clear with zero */
+>> +       REG_SET,        /* bit set */
+>> +       REG_CLEAR,      /* bit clear */
+>> +};
+>> +
+>> +/* reg/value set */
+>> +#define EXYNOS_PMU_REG(REG, VAL, OP)           \
+>> +{                                              \
+>> +       .reg    =       (void __iomem *)REG,    \
+>> +       .val    =       VAL,                    \
+>> +       .op     =       OP,                     \
+>> +}
+>> +
+>> +struct exynos_pmu_init_reg {
+>> +       void __iomem *reg;
+>> +       unsigned int val;
+>> +       enum reg_op op;
+>> +};
+>> +
+>>   extern unsigned long l2x0_regs_phys;
+>>   struct exynos_pmu_conf {
+>>         void __iomem *reg;
+>> diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
+>> index 15af0ce..dbe9670 100644
+>> --- a/arch/arm/mach-exynos/pm.c
+>> +++ b/arch/arm/mach-exynos/pm.c
+>> @@ -109,7 +109,7 @@ static int exynos_cpu_suspend(unsigned long arg)
+>>         outer_flush_all();
+>>   #endif
+>>
+>> -       if (soc_is_exynos5250())
+>> +       if (soc_is_exynos5250() || soc_is_exynos5260())
+>>                 flush_cache_all();
+>
+>
+> I think it's the right time for this code to be restructured. Adding more
+> and more SoCs over this cruft is making this code worse and worse.
+>
 
-> You'll need a (trivial) DT binding doc in
-> Documentation/devicetree/bindings/ to go with this. You might also need
-> to split the arch/arm/boot/dts/ stuff out to a separate patch, so the
-> MTD driver can go in the MTD tree separate from the ARM tree bits.
+ I recently came across RFC [1] posted by pankaj on similar lines, did
+you get a chance to have look at this series.
 
-(...)
+[1] https://lkml.org/lkml/2014/4/2/69
 
-> With that, you have my:
-> 
-> 	Reviewed-by: Brian Norris <computersforpeace@gmail.com>
-> 
-> and I can merge this to the MTD tree if/when you'd like.
 
-Thanks for response, the rest of the series is stuck on a DMA driver
-with no development activity. I'll fix the comments, separate ARM staff
-and refile the patch.
+> I believe this should be done as follows:
+>
+>  - a generic struct describing particular PMU variant should be defined,
+> with things like
+>
+>         bool flush_cache_on_suspend;
+>         struct exynos_pmu_conf *pmu_conf;
+>
+> or even function pointers, like
+>
+>         void (*cpu_suspend)(unsigned long arg);
+>
+> to handle things done currently using soc_is_*() macros, which we should get
+> rid of.
+>
+> - a DT match table would bind particular compatible strings with respective
+> PMU variants structs,
+>
+> - in general, this code should be made more like a normal driver, e.g. bind
+> to a DT node and map registers dynamically.
+>
+> Best regards,
+> Tomasz
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
