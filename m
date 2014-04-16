@@ -1,223 +1,153 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Wed, 16 Apr 2014 20:19:16 +0530
-Message-ID: <CAFp+6iGYfz+ZT9zxgeVefLhtb0mb-=K4faUZC+1FtQoO0hMoqw@mail.gmail.com>
-References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
-	<1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
-	<534529B2.2020107@samsung.com>
-	<CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
-	<53454C11.7060607@samsung.com>
-	<CAFp+6iHU0YXj18ajDwOqPh_SJWr6GkMPRr6qaGdmPoCc0+tz5g@mail.gmail.com>
-	<CAFp+6iH7-O8pNNMrk7Yhg1u+DXcXD1Tp9RYdiFg+-Om5Toojfw@mail.gmail.com>
-	<534E892B.6090409@samsung.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: Re: [RFC PATCH v2 0/9] Add Qualcomm crypto driver
+Date: Wed, 16 Apr 2014 18:10:56 +0300
+Message-ID: <534E9D80.9050801@mm-sol.com>
+References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <534E892B.6090409-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon <kishon-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Herbert, crypto folks
+
+I would like to know your opinions on the state of this driver. How far
+it is from the others crypto drivers in kernel. If you have some
+comments, criticisms etc. I will be glad to hear them and correct the
+potential issues.
+
+Thanks for your time.
+
+regards,
+Stan
+
+On 04/14/2014 03:48 PM, Stanimir Varbanov wrote:
+> Hi,
+> 
+> Here is the second version of the patch set. This time tagged
+> as an RFC to avoid confusions. The driver is splitted by files
+> and is buildable at the last patch. When the review has finished
+> 1/9 to 7/9 could be squashed in one patch.
+> 
+> Any comments appreciated!
+> 
+> Changes since v1:
+> 
+> core
+>  - added MODULE_DEVICE_TABLE
+>  - reorganise includes
+>  - kernel doc comments
+>  - fix probe error path, forgot to destroy workqueue
+>  - rework clocks and kill loops for enabling
+>  - restructure the interfaces between core part of the driver
+>    and crypto type algorithms. Now struct qce_algo_ops has
+>    .unregister_algs operation and it is implemented by every
+>    algorithm type (unregister_algs was common in v1).
+>    Also async_req_queue/done are now part of core structure
+>    qce_device
+> 
+> regs-v5
+>  - use GENMASK and include bitops.h
+> 
+> dma-sg helpers
+>  - do not check !IS_ERR on error path
+>  - various fixes as per review comments
+>  - reorganise includes
+>  - return error on qce_dma_terminate_all
+> 
+> ablkcipher
+>  - use queue and done callbacks from struct qce_device
+>  - reorganise includes
+>  - kernel doc notation
+> 
+> sha-hmac
+>  - use queue and done callbacks from struct qce_device
+>  - make byte_count __be32
+>  - kernel doc notation
+>  - make rctx flags member unsigned long
+>  - cleanup qce_ahash_update function
+>  - make const * input args of qce_import_common
+> 
+> common
+>  - rename bits/masks to use _SHIFT suffix
+>  - reorganise includes and add qce_get_version function
+>  - make rctx flags unsigned long
+>  - move blocksize boundary check on function begging and
+>    clear BYTECOUNT registers on first processing block
+> 
+> This driver is based on Codeaurora's driver found at [1]
+> 
+> regards,
+> Stan
+> 
+> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers
+> /crypto/msm?h=msm-3.10
+> ------------------------------------------------------------
+> v1.
+> 
+> The following patch set implements support for Qualcomm
+> crypto hardware accelerator driver. It registers itself
+> to the crypto subsystem and adds the following operations
+> for encryption/decription - AES with ECB CBC CTR XTS modes,
+> DES with ECB CBC modes, and 3DES ECB CBC modes.
+> For hashing and MAC it adds support for sha1 sha256,
+> hmac(sha1) hmac(sha256).
+> 
+> The version of the driver is reworked by me and it is based
+> on Codeaurora's qcrypto driver. The proposed version has many
+> coding style fixes, re-factored files, separated by
+> functionality. I wanted to make the driver more readable and
+> easier for review, hope I done well. I'll appreciate any review
+> comments which will help me to make this code clear and ready
+> for mainline kernel.
+> 
+> Stanimir Varbanov (9):
+>   crypto: qce: Add core driver implementation
+>   crypto: qce: Add register defines
+>   crypto: qce: Add dma and sg helpers
+>   crypto: qce: Add ablkcipher algorithms
+>   crypto: qce: Adds sha and hmac transforms
+>   crypto: qce: Adds infrastructure to setup the crypto block
+>   crypto: qce: Adds Makefile to build the driver
+>   crypto: qce: Build Qualcomm qce driver
+>   ARM: DT: qcom: Add Qualcomm crypto driver binding document
+> 
+>  .../devicetree/bindings/crypto/qcom-qce.txt        |  25 +
+>  drivers/crypto/Kconfig                             |  10 +
+>  drivers/crypto/Makefile                            |   1 +
+>  drivers/crypto/qce/Makefile                        |   6 +
+>  drivers/crypto/qce/ablkcipher.c                    | 403 ++++++++++++++
+>  drivers/crypto/qce/cipher.h                        |  67 +++
+>  drivers/crypto/qce/common.c                        | 438 +++++++++++++++
+>  drivers/crypto/qce/common.h                        | 104 ++++
+>  drivers/crypto/qce/core.c                          | 295 ++++++++++
+>  drivers/crypto/qce/core.h                          |  73 +++
+>  drivers/crypto/qce/dma.c                           | 188 +++++++
+>  drivers/crypto/qce/dma.h                           |  58 ++
+>  drivers/crypto/qce/regs-v5.h                       | 331 ++++++++++++
+>  drivers/crypto/qce/sha.c                           | 591 +++++++++++++++++++++
+>  drivers/crypto/qce/sha.h                           |  81 +++
+>  15 files changed, 2671 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
+>  create mode 100644 drivers/crypto/qce/Makefile
+>  create mode 100644 drivers/crypto/qce/ablkcipher.c
+>  create mode 100644 drivers/crypto/qce/cipher.h
+>  create mode 100644 drivers/crypto/qce/common.c
+>  create mode 100644 drivers/crypto/qce/common.h
+>  create mode 100644 drivers/crypto/qce/core.c
+>  create mode 100644 drivers/crypto/qce/core.h
+>  create mode 100644 drivers/crypto/qce/dma.c
+>  create mode 100644 drivers/crypto/qce/dma.h
+>  create mode 100644 drivers/crypto/qce/regs-v5.h
+>  create mode 100644 drivers/crypto/qce/sha.c
+>  create mode 100644 drivers/crypto/qce/sha.h
+> 
 
 
-On Wed, Apr 16, 2014 at 7:14 PM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi Vivek,
->
->
-> On 15.04.2014 08:09, Vivek Gautam wrote:
->>
->> Hi Tomasz,
->>
->>
->> On Thu, Apr 10, 2014 at 5:09 PM, Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> wrote:
->>>
->>> On Wed, Apr 9, 2014 at 7:03 PM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>
->>>> On 09.04.2014 13:49, Vivek Gautam wrote:
->>>>>
->>>>>
->>>>> Hi,
->>>>>
->>>>>
->>>>> On Wed, Apr 9, 2014 at 4:36 PM, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>>>
->>>>>>
->>>>>> Hi Vivek,
->>>>>>
->>>>>> Please see my comments inline.
->>>>>>
->>>>>>
->>>>>> On 08.04.2014 16:36, Vivek Gautam wrote:
->>>>>>>
->>>>>>>
->>>>>>>
->>>>>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
->>>>>>> The new driver uses the generic PHY framework and will interact
->>>>>>> with DWC3 controller present on Exynos5 series of SoCs.
->>>>>>> Thereby, removing old phy-samsung-usb3 driver and related code
->>>>>>> used untill now which was based on usb/phy framework.
->>>>>>>
->>>>>>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>>> ---
->>>>>>>     .../devicetree/bindings/phy/samsung-phy.txt        |   42 ++
->>>>>>>     drivers/phy/Kconfig                                |   11 +
->>>>>>>     drivers/phy/Makefile                               |    1 +
->>>>>>>     drivers/phy/phy-exynos5-usbdrd.c                   |  668
->>>>>>> ++++++++++++++++++++
->>>>>>>     4 files changed, 722 insertions(+)
->>>>>>>     create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> [snip]
->>>>>>
->>>>>>
->>>>>>> +       Additional clock required for Exynos5420:
->>>>>>> +       - usb30_sclk_100m: Additional special clock used for PHY
->>>>>>> operation
->>>>>>> +                          depicted as 'sclk_usbphy30' in CMU of
->>>>>>> Exynos5420.
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> Are you sure this isn't simply a gate for the ref clock, as it can be
->>>>>> found
->>>>>> on another SoC that is not upstream yet? I don't have documentation
->>>>>> for
->>>>>> Exynos 5420 so I can't tell, but I'd like to ask you to recheck this.
->>>>>
->>>>>
->>>>>
->>>>>>  From what i can see in the manual :
->>>>>
->>>>>
->>>>> sclk_usbphy30 is derived from OSCCLK.
->>>>> It is coming from a MUX (default input line to this is OSCCLK)  and
->>>>> then through a DIV
->>>>> there's this gate.
->>>>>
->>>>>         {OSCCLK  + other sources} --->[MUX] ---> [DIV] --> [GATE for
->>>>> sclk_usbphy30]
->>>>>
->>>>> the {rate of sclk_usbphy30} == OSCCLK
->>>>>
->>>>> However the 'ref' clock that we have been using is the actual
->>>>> oscillator
->>>>> clock.
->>>>> And on SoC Exynos5250, we don't have any such gate (sclk_usbphy30).
->>>>> So should this mean that ref clock and sclk_usbphy30 are still be
->>>>> controlled by
->>>>> two different gates ?
->>>>>
->>>>
->>>> Is there maybe a diagram of PHY input clocks in the datasheet, like for
->>>> USB
->>>> 2.0 PHY in Exynos4210/4412/5250 datasheets in the chapter about USB2.0
->>>> Device? Something like:
->>>>
->>>>                       ____________________________________
->>>>                      |                                    |
->>>>                      |                         ___________|
->>>> XusbXTI             |   Phy_fsel[2:0]        |  _______  |
->>>>     _______[X]_______|    |         __________|_|___|\__|_|
->>>>    |                 |   _v___     |  _____   ^ |   |/  | |
->>>> _____               |  |     |    | |     |  | |  ___  | |
->>>>   ___                |  |     |    | |     |  | | |   |_|_|
->>>> |___|               |  | X 0 |____|_| PLL |__|_|_|CLK|_|_|
->>>> _____               |  |     |      |     |    | |DIV|_|_|
->>>>    |_______[X]       |  |_____| 12   |_____|480 | |___| | |
->>>>                      |          MHz         MHz |Digital| |
->>>> XusbXTO             |   USB PHY                |_______| |
->>>>                      |____________________________________|
->>>>
->>>>
->>>
->>> Below is the block diagram given for DRD controller.
->>>
->>> ___________________
->>> |                                |
->>> |      ____________     |
->>> |      | PHY           |      |
->>> |      | controller
->>> |-----|-----------------------------------------------
->>> |      |__________  |     |
->>> |
->>> |                                |
->>>            |
->>> |         USB 3.0           |
->>> V
->>> |           DRD              |
->>> -----------------------
->>> |        Controller          |                                      |
->>>                       |
->>> |                                |    USB30_SCLK_100M    | USB 3.0 DRD  |
->>> |      ----------------          |           ----------------------->
->>> |       PHY         |
->>> |     | Link cont. |         |                                      |
->>>                       |
->>> |      -------------             |
->>>   |                       |
->>> |___________________|                                     |_____________|
->>>
->>> Does this help ?
->>>
->>> So, USB30_SCLK_100M is the SCLK that we are talking in the driver. I
->>> don't see any reference to XXTI in the USB 3.0 DRD controller chapter
->>> (in both Exynos5250 and 5420)
->>> In addition to this there's one more point to be noticed here.
->>> On Exynos5420 system, the sclk_usbphy300 (which is the sclk_usbphy30
->>> for USB DRD channel 0), is also the PICO phy clock, i.e. USB 2.0 phy
->>> clock.
->>> So we should add a similar clk_get() for this clock in the
->>> phy-exynos5250-usb2 driver too, to support Exynos5420.
->>
->>
->> Is something clear from the above block diagram ? (although the
->> diagram looks weird - space and tabs problem :-(  )
->> Basically there's the clock USB30_SCLK_100M which is going into the
->> USB 3.0 DRD PHY controller.
->> And this is the only sclk mentioned in the block diagram for USB 3.0
->> DRD controller in Exynos5420.
->> Same is not there in the block diagram in Exynos5250 UM.
->
->
-> From what I can see in the documentation, there are 4 USB 3.0 related clocks
-> generated in CMU:
->
->  - sclk_usbphy300,
->  - sclk_usbphy301,
->  - sclk_usbdrd300,
->  - sclk_usbdrd301,
->
-> They are all rated to max. 24 MHz and the recommended operating frequency is
-> 24 MHz, so it looks exactly like USB PHY reference, which is usually a 24
-> MHz clock.
->
-> To me, this looks like on Exynos5420 a separate special clock path is used
-> instead of xusbxti as reference of USB 3.0 PHY and so the sclk should be
-> simply passed as the "ref" clock.
-
-Ok, i will clear on this with the hardware engineer also once.
-May be Jingoo can help me with this.
-
-Jingoo,
-Can you please enquire about the clock path of usbphy30 reference
-clocks on Exynos5420.
-As mentioned by Tomasz above, we have sclk_usbphy300 and
-sclk_usbphy301 as the reference clocks for USB3.0 DRD phy. *Also*
-sclk_usbphy300 is used for Pico phy (which is the USb 2.0 phy used by
-ehci/ohci controller on Exynos5420).
-It will be of great help.
-
-
-Thanks
-Vivek
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+regards,
+Stan
