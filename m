@@ -1,127 +1,59 @@
-From: Vikas Sajjan <sajjan.linux@gmail.com>
-Subject: Re: [PATCH v2 2/3] ARM: EXYNOS: Add initial support of PMU for Exynos5260
-Date: Wed, 16 Apr 2014 11:04:15 +0530
-Message-ID: <CAGm_ybhzQLbK8K5mj0WK8ww61PqurumkwkHqah2=5v-=VACJzA@mail.gmail.com>
-References: <1395061795-17777-1-git-send-email-vikas.sajjan@samsung.com>
-	<1395061795-17777-3-git-send-email-vikas.sajjan@samsung.com>
-	<534D7BAB.30503@gmail.com>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer
+ Module timer node.
+Date: Wed, 16 Apr 2014 06:08:45 +0000
+Message-ID: <42acfcd1b83143d38bda219a7854838d@DM2PR03MB509.namprd03.prod.outlook.com>
+References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
+ <1397614787-8300-2-git-send-email-Li.Xiubo@freescale.com>
+ <a7aeb70fae2c480198b413f581f76846@BN1PR03MB188.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <534D7BAB.30503@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a7aeb70fae2c480198b413f581f76846@BN1PR03MB188.namprd03.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Dongsheng.Wang@freescale.com" <Dongsheng.Wang@freescale.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Jingchang Lu <jingchang.lu@freescale.com>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+> > --- a/arch/arm/boot/dts/vf610.dtsi
+> > +++ b/arch/arm/boot/dts/vf610.dtsi
+> > @@ -153,6 +153,19 @@
+> >  				clock-names = "pit";
+> >  			};
+> >
+> > +			ftm0: ftm@40038000 {
+> > +				compatible = "fsl,vf610-ftm-timer";
+> > +				reg = <0x40038000 0x2000>;
+> > +				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clock-names = "ftm0", "ftm1",
+> > +					"ftm0_counter_en", "ftm1_counter_en";
+> > +				clocks = <&clks VF610_CLK_FTM0>,
+> > +					<&clks VF610_CLK_FTM1>,
+> > +					<&clks VF610_CLK_FTM0_EXT_FIX_EN>,
+> > +					<&clks VF610_CLK_FTM1_EXT_FIX_EN>;
+> > +				status = "disabled";
+> > +			};
+> > +
+> 
+> They need to be separated. ftm0, ftm1.
+> 
 
-On Wed, Apr 16, 2014 at 12:04 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Vikas,
->
->
-> On 17.03.2014 14:09, Vikas Sajjan wrote:
->>
->> Adds PMU support of PMU for Exynos5260. Suspend-to-RAM can be built on
->> top this.
->>
->> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->> Signed-off-by: Vikas Sajjan <vikas.sajjan@samsung.com>
->> ---
->>   arch/arm/mach-exynos/common.h            |   26 ++++
->>   arch/arm/mach-exynos/pm.c                |   34 +++--
->>   arch/arm/mach-exynos/pmu.c               |  238
->> ++++++++++++++++++++++++++++++
->>   arch/arm/mach-exynos/regs-pmu.h          |  232
->> +++++++++++++++++++++++++++++
->>   arch/arm/plat-samsung/include/plat/cpu.h |    8 +
->>   5 files changed, 529 insertions(+), 9 deletions(-)
->>
->> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
->> index aba6a2a..a17f701 100644
->> --- a/arch/arm/mach-exynos/common.h
->> +++ b/arch/arm/mach-exynos/common.h
->> @@ -56,6 +56,32 @@ enum sys_powerdown {
->>         NUM_SYS_POWERDOWN,
->>   };
->>
->> +enum running_cpu {
->> +       EXYNOS5_KFC,
->> +       EXYNOS5_ARM,
->> +};
->> +
->> +enum reg_op {
->> +       REG_INIT,       /* write new value */
->> +       REG_RESET,      /* clear with zero */
->> +       REG_SET,        /* bit set */
->> +       REG_CLEAR,      /* bit clear */
->> +};
->> +
->> +/* reg/value set */
->> +#define EXYNOS_PMU_REG(REG, VAL, OP)           \
->> +{                                              \
->> +       .reg    =       (void __iomem *)REG,    \
->> +       .val    =       VAL,                    \
->> +       .op     =       OP,                     \
->> +}
->> +
->> +struct exynos_pmu_init_reg {
->> +       void __iomem *reg;
->> +       unsigned int val;
->> +       enum reg_op op;
->> +};
->> +
->>   extern unsigned long l2x0_regs_phys;
->>   struct exynos_pmu_conf {
->>         void __iomem *reg;
->> diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
->> index 15af0ce..dbe9670 100644
->> --- a/arch/arm/mach-exynos/pm.c
->> +++ b/arch/arm/mach-exynos/pm.c
->> @@ -109,7 +109,7 @@ static int exynos_cpu_suspend(unsigned long arg)
->>         outer_flush_all();
->>   #endif
->>
->> -       if (soc_is_exynos5250())
->> +       if (soc_is_exynos5250() || soc_is_exynos5260())
->>                 flush_cache_all();
->
->
-> I think it's the right time for this code to be restructured. Adding more
-> and more SoCs over this cruft is making this code worse and worse.
->
+Well, if so the driver will adjust much more to and I do think one dts
+Node is okey.
 
- I recently came across RFC [1] posted by pankaj on similar lines, did
-you get a chance to have look at this series.
+The dts patches of this series are just for testing and reference for
+The timer driver on Vybrid-twr.
 
-[1] https://lkml.org/lkml/2014/4/2/69
+Thanks,
 
+BRs
+Xiubo
 
-> I believe this should be done as follows:
->
->  - a generic struct describing particular PMU variant should be defined,
-> with things like
->
->         bool flush_cache_on_suspend;
->         struct exynos_pmu_conf *pmu_conf;
->
-> or even function pointers, like
->
->         void (*cpu_suspend)(unsigned long arg);
->
-> to handle things done currently using soc_is_*() macros, which we should get
-> rid of.
->
-> - a DT match table would bind particular compatible strings with respective
-> PMU variants structs,
->
-> - in general, this code should be made more like a normal driver, e.g. bind
-> to a DT node and map registers dynamically.
->
-> Best regards,
-> Tomasz
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
-> in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >  			wdog@4003e000 {
+> >  				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
+> >  				reg = <0x4003e000 0x1000>;
+> > --
+> > 1.8.4
+> >
