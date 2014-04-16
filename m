@@ -1,110 +1,50 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 06/11] dt-bindings: add documentation for rk3188 clock and reset unit
-Date: Wed, 16 Apr 2014 18:42:25 +0200
-Message-ID: <2756214.EPIkc1d4cv@phil>
-References: <3673317.X1crLrrlCS@phil>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH 5/6] ARM: mvebu: Add thermal quirk for the Armada 375
+ DB board
+Date: Wed, 16 Apr 2014 12:55:48 -0400
+Message-ID: <20140416165548.GI28159@titan.lakedaemon.net>
+References: <1397657720-10893-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1397657720-10893-6-git-send-email-ezequiel.garcia@free-electrons.com>
+ <534EA8C9.7010907@gmail.com>
+ <20140416180315.5153c3f7@skate>
+ <20140416160824.GA14842@lunn.ch>
+ <20140416181938.6e8f8f4b@skate>
+ <20140416163447.GB14842@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3673317.X1crLrrlCS@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140416163447.GB14842@lunn.ch>
+Sender: linux-pm-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-This add bindings documentation for the clock and reset unit found on
-rk3188 SoCs from Rockchip.
+On Wed, Apr 16, 2014 at 06:34:47PM +0200, Andrew Lunn wrote:
+> > So, I would like to see the Z1 stepping supported for now, and have the
+> > freedom to remove its support later once we are all ready to switch to
+> > A0.
+> 
+> Hi Thomas
+> 
+> Sounds like a good plan. Try to keep all the mess to support Z1 in one
+> place so that it can be easily taken out once people have A0.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- .../bindings/clock/rockchip,rk3188-cru.txt         | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+Agreed.  Thomas, do you think you'll be able to get a definitive answer
+from Marvell re the number of Z1 boards in the wild?  Once they've moved
+to the A0, of course.
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-new file mode 100644
-index 0000000..26ad529
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-@@ -0,0 +1,72 @@
-+* Rockchip RK3188 Clock and Reset Unit
-+
-+The RK3188 clock controller generates and supplies clock to various controllers
-+within the SoC and also implements a reset controller for SoC peripherals.
-+
-+Required Properties:
-+
-+- compatible: should be "rockchip,rk3188-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region. The first element should be the cru register space and the second
-+  element should be the address of the GRF_SOC_STATUS register providing the
-+  pll lock status.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+- rockchip,armclk-divider-table: when the frequency of the APLL is changed
-+  some core divider clocks also need to be updated. These divider clocks have
-+  SoC specific divider clock output requirements for a specific APLL clock
-+  speeds. When APLL clock rate is changed, these divider clocks are
-+  reprogrammed with pre-determined values in order to maintain the SoC
-+  specific divider clock outputs. This property lists the divider values
-+  for these clocks for supported APLL clock speeds.
-+  The format of each entry included in the arm-frequency-table should be
-+  defined as
-+
-+      cell #1: arm clock parent frequency
-+      cell #2 ~ cell 3#: value of clock divider of core_peri and aclk_core.
-+
-+- #rockchip,armclk-cells: defines the number of cells in
-+  rockchip,armclk-divider-table property. The value of this property depends on
-+  the SoC type. For RK3188 SoCs it should be 3.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in dt-bindings/clock/rk3188-cru.h header and can be used
-+in device tree sources.
-+
-+External clocks:
-+
-+The basic input clock is generated outside the SoC. It is expected that it is
-+defined using standard clock bindings with a clock-output-name of "xin24m".
-+
-+Example: Clock controller node:
-+
-+	cru: cru@20000000 {
-+		compatible = "rockchip,rk3188-cru";
-+		reg = <0x20000000 0x1000>,
-+		      <0x200080ac 0x4>;
-+
-+		#clock-cells = <1>;
-+
-+		#rockchip,armclk-cells = <3>;
-+		rockchip,armclk-divider-table =	<1608000 2 3>,
-+						<1416000 2 3>,
-+						<1200000 2 3>,
-+						<1008000 2 3>,
-+						< 816000 2 3>,
-+						< 504000 1 3>,
-+						< 312000 0 1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@10124000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x10124000 0x400>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <1>;
-+		clocks = <&cru SCLK_UART0>;
-+	};
--- 
-1.9.0
+Unless we can get a hard answer on that, I doubt we'll ever withdraw
+support for the Z1.  Not that that's a bad thing, just trying to be
+realistic.  If we add code, expect to support it.
 
+And keeping it all in one place is kind of an impossibility.  Just for
+thermal Z1, there are changes to the binding docs, the thermal driver,
+and the soc code.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'd say it's more important to keep it clean, with dts files targeting
+the A0+ SoCs, and the Z1 being the exception case(s).
+
+thx,
+
+Jason.
