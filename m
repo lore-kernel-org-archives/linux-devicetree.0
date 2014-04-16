@@ -1,120 +1,38 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH v2 09/14] ARM: dts: s6e3fa0: add DT bindings
-Date: Wed, 16 Apr 2014 23:45:01 +0200
-Message-ID: <2105764.669WcFsSVk@avalon>
-References: <CAK9yfHyJTpYNCwjCSAmFR-sHRMu5Z94k5eT78WmD-cwmYOEQyw@mail.gmail.com>
- <1397623138-11526-1-git-send-email-yj44.cho@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1397623138-11526-1-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, a.hajda@samsung.com, sachin.kamat@linaro.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+From: Andy Gross <agross@codeaurora.org>
+Subject: [PATCH 2/2] dmaengine: qcom_bam_dma: Add binding for v1.3.0
+Date: Wed, 16 Apr 2014 16:45:19 -0500
+Message-ID: <1397684719-30065-3-git-send-email-agross@codeaurora.org>
+References: <1397684719-30065-1-git-send-email-agross@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397684719-30065-1-git-send-email-agross@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, dmaengine@vger.kernel.org, Andy Gross <agross@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi YoungJun,
+Add the device tree binding support for the v1.3.0 version of the QCOM BAM DMA
+driver.
 
-Thank you for the patch.
+Signed-off-by: Andy Gross <agross@codeaurora.org>
+---
+ .../devicetree/bindings/dma/qcom_bam_dma.txt       |    4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-On Wednesday 16 April 2014 13:38:57 YoungJun Cho wrote:
-> This patch adds DT bindings for s6e3fa0 panel.
-> The bindings describes panel resources, display timings, delays
-> and physical size.
-> 
-> Changelog v2:
-> - Adds unit address (commented by Sachin Kamat)
-> 
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   52 +++++++++++++++++
->  1 file changed, 52 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt new file mode
-> 100644
-> index 0000000..889a74d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> @@ -0,0 +1,52 @@
-> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
-> +
-> +Required properties:
-> +  - compatible: "samsung,s6e3fa0"
-> +  - reg: the virtual channel number of a DSI peripheral
-> +  - vdd3-supply: core voltage supply
-> +  - vci-supply: voltage supply for analog circuits
-> +  - reset-gpio: a GPIO spec for the reset pin
-> +  - display-timings: timings for the connected panel as described by [1]
-> +
-> +Optional properties:
-> +  - power-on-delay: delay after turning regulators on [ms]
-> +  - reset-delay: delay after reset sequence [ms]
-> +  - init-delay: delay after initialization sequence [ms]
-> +  - panel-width-mm: physical panel width [mm]
-> +  - panel-height-mm: physical panel height [mm]
-
-Based on the next patch the panel seems to require quite a lot of device-
-specific handling, although I might be mistaken as I'm not too familiar with 
-DSI. If my understanding is correct, do we really need to specify all those 
-properties in DT, or could they be hardcoded in the driver ? I would usually 
-push for generic drivers that read device information from DT, but I'm 
-wondering whether that is the right choice here.
-
-If you decide to keep the information in DT I think you should document what 
-happens when optional properties are not specified. I suppose the driver uses 
-a default value, I would document it in the DT bindings.
-
-> +The device node can contain one 'port' child node with one child
-> +'endpoint' node, according to the bindings defined in [2]. This
-> +node should describe panel's video bus.
-> +
-> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
-> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	panel@0 {
-> +		compatible = "samsung,s6e3fa0";
-> +		reg = <0>;
-> +		vdd3-supply = <&vcclcd_reg>;
-> +		vci-supply = <&vlcd_reg>;
-> +		reset-gpio = <&gpy7 4 0>;
-> +		power-on-delay= <10>;
-> +		reset-delay = <5>;
-> +		init-delay = <120>;
-> +		panel-width-mm = <71>;
-> +		panel-height-mm = <126>;
-> +
-> +		display-timings {
-> +			timing0: timing-0 {
-> +				clock-frequency = <57153600>;
-> +				hactive = <1080>;
-> +				vactive = <1920>;
-> +				hfront-porch = <2>;
-> +				hback-porch = <2>;
-> +				hsync-len = <1>;
-> +				vfront-porch = <1>;
-> +				vback-porch = <4>;
-> +				vsync-len = <1>;
-> +			};
-> +		};
-> +	};
-
+diff --git a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+index d75a9d7..802572f 100644
+--- a/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
++++ b/Documentation/devicetree/bindings/dma/qcom_bam_dma.txt
+@@ -1,7 +1,9 @@
+ QCOM BAM DMA controller
+ 
+ Required properties:
+-- compatible: must contain "qcom,bam-v1.4.0" for MSM8974
++- compatible: must contain one of the following:
++			"qcom,bam-v1.4.0" for MSM8974
++			"qcom,bam-v1.3.0" for APQ8064, IPQ8064, MSM8x64
+ - reg: Address range for DMA registers
+ - interrupts: Should contain the one interrupt shared by all channels
+ - #dma-cells: must be <1>, the cell in the dmas property of the client device
 -- 
-Regards,
-
-Laurent Pinchart
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
