@@ -1,82 +1,48 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] Introducing (yet again) Device Tree Overlays
-Date: Wed, 16 Apr 2014 16:33:44 -0500
-Message-ID: <CAL_JsqKHY_osEhE6HefV_PT+bXmv1vBWvCOY_93Sju0pbULoqQ@mail.gmail.com>
-References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<CANk1AXTb=ob52AfK2z--HvFkxJnjnfYWuTCch_Gw99OCoS1ABg@mail.gmail.com>
-	<CANk1AXRAsktOcfpMO7DzvenmUmZ_hUERkqa3nkKsqrGXn6eM=A@mail.gmail.com>
-	<CANk1AXT7bPeus3WFPJ3mVHZ+HSuJ5DabxKQ7df1TV2A8-82-OQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCHv3 1/2] ALSA: hda/hdmi - Add Nvidia Tegra124 HDMI support
+Date: Wed, 16 Apr 2014 14:39:31 -0700
+Message-ID: <1397684372-1639-1-git-send-email-dgreid@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANk1AXT7bPeus3WFPJ3mVHZ+HSuJ5DabxKQ7df1TV2A8-82-OQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@konsulko.c>
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+Cc: tiwai-l3A5Bk7waGM@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Sumit Bhattacharya <sumitb-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 16, 2014 at 4:23 PM, delicious quinoa
-<delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Apr 3, 2014 at 3:40 PM, delicious quinoa
-> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Mar 28, 2014 at 1:27 PM, delicious quinoa
->> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Tue, Mar 18, 2014 at 4:55 PM, Pantelis Antoniou
->>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>> The following patchset introduces Device Tree overlays, a method
->>>> of dynamically altering the kernel's live Device Tree, along with
->>>> a generic interface to use it in a board agnostic manner.
+From: Sumit Bhattacharya <sumitb-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-[snip]
+Add the Tegra 12x HDMI controller id to patch_hdmi.
 
->>> I can get a NULL pointer when I apply and remove an overlay and the
->>> conditions are right.  The overlay applies correctly.  The crash is
->>> when I do the rmdir.  My overlay is:
->>>
->>> /dts-v1/;
->>> /plugin/;
->>> / {
->>>     fragment@0 {
->>>         target-path="/soc";
->>>         __overlay__ {
->>>             #address-cells = <1>;
->>>                     #size-cells = <1>;
->>>             agpio0: agpio0 {
->>>                 compatible = "altr,pio-1.0";
->>>                 reg = <0xff210040 0x10>;
->>
->> Added some printks and got a bit further with debug.  If I leave this
->> as-is, the platform device has 2 resources. We get the NULL pointer in
->> __release_resource() when releasing the first one (reg). If I remove
->> this one line ('reg =') the crash goes away.  So in this case, we are
->> ok when releasing an irq resource but get a NULL pointer when removing
->> a reg resource.  Don't know why at this point.
->
-> The crash is confirmed on v4 patches as well.  The immediate cause of the crash:
->
-> static int __release_resource(struct resource *old)
-> {
->         struct resource *tmp, **p;
->
->         p = &old->parent->child;
->         for (;;) {
->                 tmp = *p; <===kablooey
-> ...
->
-> when __release_resource() is called for the reg resource, it does 'p =
-> &olde->parent->child' and then crashes when it does 'tmp = *p'.
->
-> Root cause: It appears that there isn't any code in drivers/of/ that
-> eventually calls __request_resource() or __insert_resource() so the
-> resource's parents/sibling pointers are never initialized.  Maybe I'm
-> missing some patches or something.
+Signed-off-by: Sumit Bhattacharya <sumitb-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+No changes since v1.
+---
+ sound/pci/hda/patch_hdmi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-It's probably related to this issue:
+diff --git a/sound/pci/hda/patch_hdmi.c b/sound/pci/hda/patch_hdmi.c
+index 0cb5b89..b5d1371 100644
+--- a/sound/pci/hda/patch_hdmi.c
++++ b/sound/pci/hda/patch_hdmi.c
+@@ -3322,6 +3322,7 @@ static const struct hda_codec_preset snd_hda_preset_hdmi[] = {
+ { .id = 0x10de001a, .name = "GPU 1a HDMI/DP",	.patch = patch_nvhdmi },
+ { .id = 0x10de001b, .name = "GPU 1b HDMI/DP",	.patch = patch_nvhdmi },
+ { .id = 0x10de001c, .name = "GPU 1c HDMI/DP",	.patch = patch_nvhdmi },
++{ .id = 0x10de0028, .name = "Tegra12x HDMI",	.patch = patch_nvhdmi },
+ { .id = 0x10de0040, .name = "GPU 40 HDMI/DP",	.patch = patch_nvhdmi },
+ { .id = 0x10de0041, .name = "GPU 41 HDMI/DP",	.patch = patch_nvhdmi },
+ { .id = 0x10de0042, .name = "GPU 42 HDMI/DP",	.patch = patch_nvhdmi },
+@@ -3377,6 +3378,7 @@ MODULE_ALIAS("snd-hda-codec-id:10de0019");
+ MODULE_ALIAS("snd-hda-codec-id:10de001a");
+ MODULE_ALIAS("snd-hda-codec-id:10de001b");
+ MODULE_ALIAS("snd-hda-codec-id:10de001c");
++MODULE_ALIAS("snd-hda-codec-id:10de0028");
+ MODULE_ALIAS("snd-hda-codec-id:10de0040");
+ MODULE_ALIAS("snd-hda-codec-id:10de0041");
+ MODULE_ALIAS("snd-hda-codec-id:10de0042");
+-- 
+1.8.1.3.605.g02339dd
 
-https://groups.google.com/forum/#!topic/fa.linux.kernel/CTx1ReiOjnQ
-http://www.mail-archive.com/linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg63678.html
-
-Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
