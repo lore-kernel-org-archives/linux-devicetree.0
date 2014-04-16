@@ -1,54 +1,46 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Configure FSL eSPI CSBEF and CSAFT
-Date: Wed, 16 Apr 2014 22:05:28 +0100
-Message-ID: <20140416210528.GB12304@sirena.org.uk>
-References: <1397678979-7655-1-git-send-email-Jane.Wan@gainspeed.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Wed, 16 Apr 2014 15:21:04 -0600
+Message-ID: <20140416212104.GA3469@obsidianresearch.com>
+References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
+ <1395270762-6055-3-git-send-email-tinamdar@apm.com>
+ <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
+ <20140416170545.GD4858@bart>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="upHqgONuYbTeMWr5"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1397678979-7655-1-git-send-email-Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, b48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, insop.song-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20140416170545.GD4858@bart>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Tanmay Inamdar <tinamdar@apm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 16, 2014 at 06:05:45PM +0100, Liviu Dudau wrote:
 
---upHqgONuYbTeMWr5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> I have found out that we cannot pasd the config ranges from the DT into the
+> pci_host_bridge structure as the PCI framework doesn't have a resource type
+> for config resources. Leaving the translation between range flags and
+> resource type as is (filtered through the IORESOURCE_TYPE_BITS) will lead
+> to a resource type of value zero, which is not recognised by any resource
+> handling API so bridge configuration and bus scanning will barf.
+> 
+> I'm looking for suggestions here, as Jason Gunthorpe suggested that we
+> should be able to parse config ranges if they conform to the ECAM part
+> of the PCI standard.
 
-On Wed, Apr 16, 2014 at 01:09:39PM -0700, Jane Wan wrote:
-> Make FSL eSPI CSnBEF and CSnAFT fields in ESPI_SPMODEn registers
-> (n=0,1,2,3) configurable through device tree.
+The thinking here is the ranges should be well defined and general, it
+isn't a dumping ground for driver specific stuff.
 
-Applied, thanks.
+No spec says you can put config space into the ranges at all, nobody
+should be doing that today, obviously some cases were missed during
+review..
 
---upHqgONuYbTeMWr5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The comment about ECAM was intended as a general guidance on what
+config space in ranges could/should be used for.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Right now config space shouldn't propagate out side any driver, so you
+can probably just filter it in your generic code, and make it very hard
+and obviously wrong for a driver to parse ranges for config space, so
+we don't get more usages.
 
-iQIcBAEBAgAGBQJTTvCVAAoJELSic+t+oim956sP/0RFWCq+s8VfcmaasODaTNU+
-sjoBmhK7/xcbn7jFfgDtLD9tMpS+3UNNkumDagepvU1VSfjbSUvYS9/5MkCxPYIG
-S+6hG8PI04wLV5Fgs59ZmX1pIKcQXq2zfLrylv8hynVjSC6+MTZTpLhOkE2uUoz4
-A/EyS6z4KN+jcGeqNkl2mAXBBxg8pk5GubwtJc7Dnx2c7QnsiH4jNbKejs+OWqr8
-QalKP6DN7kuvrrS8ZalUNJRJ7k8yTywS/FrHqVGwhjbUrOSGC60KyPWZPG2Yq9Cf
-f/n+mO2fmWlRDXsINOGW2nHrha8TBRpkg0llyMvu4ItLHkUCEUQVVloDIAUz/5s9
-+h75wHqhL+ztjp+OAZZMiS4HQChk4P7ImWejW1RvqE+mYUqcd6xxJaR3VPVo1AKM
-vuR7kVE+HAsAHybdBv9A0kENxB6Yo76jjVOKIwFIv+50Y+OO+eYlSSPJHYKc4Afe
-dTBZLXQFo6e+QDWx2jDOJX6YxLhOY1iFKou1LfDW2vTxfp0bmHNbqHx+6z99tLW6
-cs6JtRLQfXqbaK2xK3okJDieoK2a7fFY5k0S5TKkV8SWOlU9L3BjAlpEsRpjccz6
-yiM5O/RAXzaRbbeAQgcVQSioxdjI3itK9zOYRywtJHA6/EGX1myoQFFBJ2BnlDx4
-Z6GUkQ7Qx74ZWGL2X0ki
-=QfXr
------END PGP SIGNATURE-----
-
---upHqgONuYbTeMWr5--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason
