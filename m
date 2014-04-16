@@ -1,43 +1,61 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 4/5] regulator: tps65090: Allow setting the overcurrent
- wait time
-Date: Wed, 16 Apr 2014 16:12:36 -0700
-Message-ID: <CAD=FV=XxToiWvq8x2HNAnEANUWtsmu6CnP6P3Uu4X3_DT+=sqA@mail.gmail.com>
-References: <1397592876-5741-1-git-send-email-dianders@chromium.org>
-	<1397672724-9063-1-git-send-email-dianders@chromium.org>
-	<1397672724-9063-5-git-send-email-dianders@chromium.org>
-	<534EE90A.7070602@infradead.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Subject: [PATCH v3 0/5] Fixes for tps65090 for Samsung ARM Chromebook
+Date: Wed, 16 Apr 2014 16:12:24 -0700
+Message-ID: <1397689950-1568-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <534EE90A.7070602@infradead.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, AJAY KUMAR RAMAKRISHNA SHYMALAMMA <ajaykumar.rs@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Anton Vorontsov <anton@enomsg.org>
+Cc: Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@kernel.org>, Simon Glass <sjg@chromium.org>, linux-doc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Pawel Moll <pawel.moll@arm.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Sean Paul <seanpaul@chromium.org>, Michael Spang <spang@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Randy,
+These five patches bring tps65090 up to speed with what's currently
+in the Chromium OS kernel 3.8 tree and running on the Samsung ARM
+Chromebook.  Changes were tested atop the current linux tree
+(v3.15-rc1).  FET retries were tested on a machine with a known flaky
+tps65090.  Since display isn't working on pure upstream, I augmented
+the code to turn FET1 (vcd_led) on/off 500 times at bootup.  When
+testing I included <https://patchwork.kernel.org/patch/3980731/> to
+make sure tps65090 was in exynos5250-snow's device tree.
 
-On Wed, Apr 16, 2014 at 1:33 PM, Randy Dunlap <rdunlap@infradead.org> wrote:
-> On 04/16/2014 11:25 AM, Doug Anderson wrote:
->> diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
->> index 2e92ef6..ca13a1a 100644
->> --- a/drivers/regulator/tps65090-regulator.c
->> +++ b/drivers/regulator/tps65090-regulator.c
->> @@ -28,15 +28,57 @@
->
->> +/**
->> + * tps65090_reg_set_overcurrent_wait - Setup overcurrent wait
->> + *
->> + * This will set the overcurrent wait time based on what's in the regulator
->> + * info.
->> + *
->> + * @ri:              Overall regulator data
->> + * @rdev:    Regulator device
->> + * @return 0 if no error, non-zero if there was an error writing the register.
->
-> kernel-doc notation here should be:
->
->  * Return: 0 if no error, non-zero if there was an error writing the register.
+Dependencies:
+- Patch #1 (mfd no irq) has no dependencies, though patch #2 won't
+  work without it.
+- Patch #2 (charger polling) can be applied without patch #1 but won't
+  actually make charger polling work without it.
+- Patch #3 (caching) can be applied before retries patch but not
+  after.
+- Patch #4 (overcurrent wait time) can be applied before retries patch
+  but not after (just due to merge conflicts, no other reason).
+- Patch #5 (retries) absolutely requires patch #3 (caching).
 
-Done in v3.
+Changes in v3:
+- Fixed kernel-doc notation for return
+
+Changes in v2:
+- Split noirq (polling mode) changes into MFD and charger
+- Leave cache on for the registers that can be cached.
+- Move register offsets to mfd header file.
+- Separated the overcurrent and retries changes into two patches.
+- Now set overcurrent at probe time since it doesn't change.
+- Separated the overcurrent and retries changes into two patches.
+- No longer open code fet_is_enabled().
+- Fixed tps6090 typo.
+- For loop => "while true".
+- Removed a set of braces.
+
+Doug Anderson (5):
+  mfd: tps65090: Don't tell child devices we have an IRQ if we don't
+  charger: tps65090: Allow charger module to be used when no irq
+  mfd: tps65090: Stop caching most registers
+  regulator: tps65090: Allow setting the overcurrent wait time
+  regulator: tps65090: Make FETs more reliable by adding retries
+
+ .../devicetree/bindings/regulator/tps65090.txt     |   4 +
+ drivers/mfd/tps65090.c                             |  41 ++--
+ drivers/power/tps65090-charger.c                   |  87 ++++++---
+ drivers/regulator/tps65090-regulator.c             | 211 +++++++++++++++++++--
+ include/linux/mfd/tps65090.h                       |  19 ++
+ 5 files changed, 303 insertions(+), 59 deletions(-)
+
+-- 
+1.9.1.423.g4596e3a
