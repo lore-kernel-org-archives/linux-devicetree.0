@@ -1,61 +1,168 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v3 0/5] Fixes for tps65090 for Samsung ARM Chromebook
-Date: Wed, 16 Apr 2014 16:12:24 -0700
-Message-ID: <1397689950-1568-1-git-send-email-dianders@chromium.org>
+Subject: [PATCH v3 4/5] regulator: tps65090: Allow setting the overcurrent wait time
+Date: Wed, 16 Apr 2014 16:12:28 -0700
+Message-ID: <1397689950-1568-5-git-send-email-dianders@chromium.org>
+References: <1397689950-1568-1-git-send-email-dianders@chromium.org>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1397689950-1568-1-git-send-email-dianders@chromium.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Anton Vorontsov <anton@enomsg.org>
-Cc: Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@kernel.org>, Simon Glass <sjg@chromium.org>, linux-doc@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Rob Herring <robh+dt@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Pawel Moll <pawel.moll@arm.com>, Lee Jones <lee.jones@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Sean Paul <seanpaul@chromium.org>, Michael Spang <spang@chromium.org>
+Cc: Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-These five patches bring tps65090 up to speed with what's currently
-in the Chromium OS kernel 3.8 tree and running on the Samsung ARM
-Chromebook.  Changes were tested atop the current linux tree
-(v3.15-rc1).  FET retries were tested on a machine with a known flaky
-tps65090.  Since display isn't working on pure upstream, I augmented
-the code to turn FET1 (vcd_led) on/off 500 times at bootup.  When
-testing I included <https://patchwork.kernel.org/patch/3980731/> to
-make sure tps65090 was in exynos5250-snow's device tree.
+The tps65090 regulator allows you to specify how long you want it to
+wait before detecting an overcurrent condition.  Allow specifying that
+through the device tree (or through platform data).
 
-Dependencies:
-- Patch #1 (mfd no irq) has no dependencies, though patch #2 won't
-  work without it.
-- Patch #2 (charger polling) can be applied without patch #1 but won't
-  actually make charger polling work without it.
-- Patch #3 (caching) can be applied before retries patch but not
-  after.
-- Patch #4 (overcurrent wait time) can be applied before retries patch
-  but not after (just due to merge conflicts, no other reason).
-- Patch #5 (retries) absolutely requires patch #3 (caching).
-
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+Signed-off-by: Simon Glass <sjg@chromium.org>
+Signed-off-by: Michael Spang <spang@chromium.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
+---
 Changes in v3:
 - Fixed kernel-doc notation for return
 
 Changes in v2:
-- Split noirq (polling mode) changes into MFD and charger
-- Leave cache on for the registers that can be cached.
-- Move register offsets to mfd header file.
 - Separated the overcurrent and retries changes into two patches.
 - Now set overcurrent at probe time since it doesn't change.
-- Separated the overcurrent and retries changes into two patches.
-- No longer open code fet_is_enabled().
-- Fixed tps6090 typo.
-- For loop => "while true".
-- Removed a set of braces.
 
-Doug Anderson (5):
-  mfd: tps65090: Don't tell child devices we have an IRQ if we don't
-  charger: tps65090: Allow charger module to be used when no irq
-  mfd: tps65090: Stop caching most registers
-  regulator: tps65090: Allow setting the overcurrent wait time
-  regulator: tps65090: Make FETs more reliable by adding retries
+ .../devicetree/bindings/regulator/tps65090.txt     |  4 ++
+ drivers/regulator/tps65090-regulator.c             | 56 ++++++++++++++++++++++
+ include/linux/mfd/tps65090.h                       |  5 ++
+ 3 files changed, 65 insertions(+)
 
- .../devicetree/bindings/regulator/tps65090.txt     |   4 +
- drivers/mfd/tps65090.c                             |  41 ++--
- drivers/power/tps65090-charger.c                   |  87 ++++++---
- drivers/regulator/tps65090-regulator.c             | 211 +++++++++++++++++++--
- include/linux/mfd/tps65090.h                       |  19 ++
- 5 files changed, 303 insertions(+), 59 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt b/Documentation/devicetree/bindings/regulator/tps65090.txt
+index 313a60b..34098023 100644
+--- a/Documentation/devicetree/bindings/regulator/tps65090.txt
++++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
+@@ -21,6 +21,10 @@ Optional properties:
+   number should be provided. If it is externally controlled and no GPIO
+   entry then driver will just configure this rails as external control
+   and will not provide any enable/disable APIs.
++- ti,overcurrent-wait: This is applicable to FET registers, which have a
++  poorly defined "overcurrent wait" field.  If this property is present it
++  should be between 0 - 3.  If this property isn't present we won't touch the
++  "overcurrent wait" field and we'll leave it to the BIOS/EC to deal with.
+ 
+ Each regulator is defined using the standard binding for regulators.
+ 
+diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
+index 2e92ef6..ca04e9f 100644
+--- a/drivers/regulator/tps65090-regulator.c
++++ b/drivers/regulator/tps65090-regulator.c
+@@ -28,15 +28,58 @@
+ #include <linux/regulator/of_regulator.h>
+ #include <linux/mfd/tps65090.h>
+ 
++#define CTRL_WT_BIT		2 /* Regulator wait time 0 bit */
++
++#define MAX_OVERCURRENT_WAIT	3 /* Overcurrent wait must be <= this */
++
++/**
++ * struct tps65090_regulator - Per-regulator data for a tps65090 regulator
++ *
++ * @dev: Pointer to our device.
++ * @desc: The struct regulator_desc for the regulator.
++ * @rdev: The struct regulator_dev for the regulator.
++ * @overcurrent_wait_valid: True if overcurrent_wait is valid.
++ * @overcurrent_wait: For FETs, the value to put in the WTFET bitfield.
++ */
++
+ struct tps65090_regulator {
+ 	struct device		*dev;
+ 	struct regulator_desc	*desc;
+ 	struct regulator_dev	*rdev;
++	bool			overcurrent_wait_valid;
++	int			overcurrent_wait;
+ };
+ 
+ static struct regulator_ops tps65090_ext_control_ops = {
+ };
+ 
++/**
++ * tps65090_reg_set_overcurrent_wait - Setup overcurrent wait
++ *
++ * This will set the overcurrent wait time based on what's in the regulator
++ * info.
++ *
++ * @ri:		Overall regulator data
++ * @rdev:	Regulator device
++ *
++ * Return: 0 if no error, non-zero if there was an error writing the register.
++ */
++static int tps65090_reg_set_overcurrent_wait(struct tps65090_regulator *ri,
++					     struct regulator_dev *rdev)
++{
++	int ret;
++
++	ret = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
++				 MAX_OVERCURRENT_WAIT << CTRL_WT_BIT,
++				 ri->overcurrent_wait << CTRL_WT_BIT);
++	if (ret) {
++		dev_err(&rdev->dev, "Error updating overcurrent wait %#x\n",
++			rdev->desc->enable_reg);
++	}
++
++	return ret;
++}
++
+ static struct regulator_ops tps65090_reg_contol_ops = {
+ 	.enable		= regulator_enable_regmap,
+ 	.disable	= regulator_disable_regmap,
+@@ -209,6 +252,11 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
+ 			rpdata->gpio = of_get_named_gpio(np,
+ 					"dcdc-ext-control-gpios", 0);
+ 
++		if (of_property_read_u32(tps65090_matches[idx].of_node,
++					 "ti,overcurrent-wait",
++					 &rpdata->overcurrent_wait) == 0)
++			rpdata->overcurrent_wait_valid = true;
++
+ 		tps65090_pdata->reg_pdata[idx] = rpdata;
+ 	}
+ 	return tps65090_pdata;
+@@ -258,6 +306,8 @@ static int tps65090_regulator_probe(struct platform_device *pdev)
+ 		ri = &pmic[num];
+ 		ri->dev = &pdev->dev;
+ 		ri->desc = &tps65090_regulator_desc[num];
++		ri->overcurrent_wait_valid = tps_pdata->overcurrent_wait_valid;
++		ri->overcurrent_wait = tps_pdata->overcurrent_wait;
+ 
+ 		/*
+ 		 * TPS5090 DCDC support the control from external digital input.
+@@ -299,6 +349,12 @@ static int tps65090_regulator_probe(struct platform_device *pdev)
+ 		}
+ 		ri->rdev = rdev;
+ 
++		if (ri->overcurrent_wait_valid) {
++			ret = tps65090_reg_set_overcurrent_wait(ri, rdev);
++			if (ret < 0)
++				return ret;
++		}
++
+ 		/* Enable external control if it is require */
+ 		if (tps_pdata && is_dcdc(num) && tps_pdata->reg_init_data &&
+ 				tps_pdata->enable_ext_control) {
+diff --git a/include/linux/mfd/tps65090.h b/include/linux/mfd/tps65090.h
+index 45f0f9d..0bf2708 100644
+--- a/include/linux/mfd/tps65090.h
++++ b/include/linux/mfd/tps65090.h
+@@ -92,11 +92,16 @@ struct tps65090 {
+  *     DCDC1, DCDC2 and DCDC3.
+  * @gpio: Gpio number if external control is enabled and controlled through
+  *     gpio.
++ * @overcurrent_wait_valid: True if the overcurrent_wait should be applied.
++ * @overcurrent_wait: Value to set as the overcurrent wait time.  This is the
++ *     actual bitfield value, not a time in ms (valid value are 0 - 3).
+  */
+ struct tps65090_regulator_plat_data {
+ 	struct regulator_init_data *reg_init_data;
+ 	bool enable_ext_control;
+ 	int gpio;
++	bool overcurrent_wait_valid;
++	int overcurrent_wait;
+ };
+ 
+ struct tps65090_platform_data {
 -- 
 1.9.1.423.g4596e3a
