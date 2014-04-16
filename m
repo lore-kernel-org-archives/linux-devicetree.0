@@ -1,265 +1,432 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: [PATCH v4 18/21] misc: support for parallel slots in LP-8x4x
-Date: Wed, 16 Apr 2014 21:17:23 +0400
-Message-ID: <1397668667-27328-12-git-send-email-ynvich@gmail.com>
-References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
- <1397668667-27328-1-git-send-email-ynvich@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397668667-27328-1-git-send-email-ynvich@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Sergei Ianovich <ynvich@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH Resend] ARM: EXYNOS: Map SYSRAM address through DT
+Date: Wed, 16 Apr 2014 19:25:31 +0200
+Message-ID: <1493367.CDjMd4ghZP@phil>
+References: <1397649051-3288-1-git-send-email-sachin.kamat@linaro.org> <5721231.s2ATyWsK21@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5721231.s2ATyWsK21@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Sachin Kamat <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, cw00.choi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch enumerates parallel modules in expansion slots and exposes
-model numbers via sysfs.
+Hi,
 
-Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
----
-   v3..v4
-   * move DTS binding to a different patch (8/21)
+Am Mittwoch, 16. April 2014, 16:35:36 schrieb Arnd Bergmann:
+> On Wednesday 16 April 2014 17:20:51 Sachin Kamat wrote:
+> > Instead of hardcoding the SYSRAM details for each SoC,
+> > pass this information through device tree (DT) and make
+> > the code SoC agnostic.
+> > 
+> > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> > ---
+> > Rebased on latest linux-next.
+> 
+> Thanks for sending this again. I'd like Heiko to have a look
+> and provide an Ack if he's happy with it.
+> 
+> It seems similar to what he did with the SRAM for mach-rockchip,
+> and if it is we should use the same binding that he introduced,
+> which would be a minor variation of this.
 
-   v2..v3
-   * no changes (except number 13/16 -> 18/21)
+The sram binding is derived from the generic reserved-memory bindings to 
+enable the sram in general to be used generically through the sram driver, 
+while still retaining some areas for special purposes, like the smp-trampoline 
+in my case.
 
-   v0..v2
-   * use device tree
-   * use devm helpers where possible
+>From my reading of platsmp.c, it looks like offset+0x4 starts the so called 
+boot-registesr, which get the smp-start-address written to.
 
- .../devicetree/bindings/misc/lp8x4x-bus.txt        |   9 ++
- Documentation/misc-devices/lp8x4x_bus.txt          |   8 ++
- drivers/misc/lp8x4x_bus.c                          | 119 +++++++++++++++++++++
- 3 files changed, 136 insertions(+)
+So I guess it all depends on what is contained in the rest of the sysram. If 
+it is all covered with such special registers or other special uses, the code 
+below is fine. But if the most of the area is just general purpose sram, a 
+solution like on rockchip might be nicer - i.e. handling the sysram via the 
+sram driver and declaring a reserved section for the boot registers.
 
-diff --git a/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt b/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-index 24a8c62..75ac3b2 100644
---- a/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-+++ b/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-@@ -7,6 +7,7 @@ Required properties:
- 
- - reg: physical base addresses and region lengths of
-        * the rotary switch
-+       * 8 plugable industrial IO slots
-        * the 8bit DIP switch
-        * the serial slot select register
-        * the slot count register
-@@ -18,6 +19,14 @@ Example:
- 	backplane {
- 		compatible = "icpdas,backplane-lp8x4x";
- 		reg = <0x0 0x2
-+		       0x1000 0x10
-+		       0x2000 0x10
-+		       0x3000 0x10
-+		       0x4000 0x10
-+		       0x5000 0x10
-+		       0x6000 0x10
-+		       0x7000 0x10
-+		       0x8000 0x10
- 		       0x9002 0x2
- 		       0x9004 0x2
- 		       0x9046 0x2>;
-diff --git a/Documentation/misc-devices/lp8x4x_bus.txt b/Documentation/misc-devices/lp8x4x_bus.txt
-index 7b86797..09380fd 100644
---- a/Documentation/misc-devices/lp8x4x_bus.txt
-+++ b/Documentation/misc-devices/lp8x4x_bus.txt
-@@ -28,6 +28,9 @@ into the device, they could be accessed using the 2nd PXA built-in UART port
- (/dev/ttyS1). However, it seems that addresses are not processed by
- the modules. So the parallel bus needs to select which slot is connected.
- 
-+Parallel modules allow much faster communication. There are accessed using
-+IO memory through the FPGA. Their ports are exposed via sysfs.
-+
- SYSFS
- -----
- 
-@@ -50,3 +53,8 @@ rotary
- 
- slot_count
- 	RO - shows total number of expansion slots on the device
-+
-+/sys/bus/icpdas/devices/slot%02i:
-+
-+model
-+	RO - shows expansion module model number
-diff --git a/drivers/misc/lp8x4x_bus.c b/drivers/misc/lp8x4x_bus.c
-index e805640..59dc767 100644
---- a/drivers/misc/lp8x4x_bus.c
-+++ b/drivers/misc/lp8x4x_bus.c
-@@ -23,6 +23,13 @@ MODULE_LICENSE("GPL");
- MODULE_AUTHOR("Sergei Ianovich <ynvich@gmail.com>");
- MODULE_DESCRIPTION("ICP DAS LP-8x4x parallel bus driver");
- 
-+struct lp8x4x_slot {
-+	void			*data_addr;
-+	unsigned int		model;
-+	struct device		dev;
-+};
-+
-+#define LP8X4X_MAX_SLOT_COUNT	8
- struct lp8x4x_master {
- 	unsigned int		slot_count;
- 	void			*count_addr;
-@@ -31,9 +38,45 @@ struct lp8x4x_master {
- 	struct gpio_desc        *eeprom_nWE;
- 	unsigned int		active_slot;
- 	void			*switch_addr;
-+	struct lp8x4x_slot	slot[LP8X4X_MAX_SLOT_COUNT];
- 	struct device		dev;
- };
- 
-+static unsigned char lp8x4x_model[256] = {
-+	   0,    0,    0, 0x11,    0, 0x18, 0x13, 0x11,
-+	0x0e, 0x11,    0,    0,    0, 0x5a, 0x5b, 0x5c,
-+	0x3c, 0x44, 0x34, 0x3a, 0x39, 0x36, 0x37, 0x33,
-+	0x35, 0x40, 0x41, 0x42, 0x38, 0x3f, 0x32, 0x45,
-+	0xac, 0x70, 0x8e, 0x8e, 0x1e, 0x72, 0x90, 0x29,
-+	0x4a, 0x22, 0xd3, 0xd2, 0x28, 0x25, 0x2a, 0x29,
-+	0x48, 0x49, 0x5d, 0x1f, 0x20, 0x23, 0x24, 0x4d,
-+	0x3d, 0x3e,    0,    0,    0,    0,    0,    0,
-+	   0, 0x78, 0x72, 0x2b, 0x5e, 0x5e, 0x36, 0xae,
-+	0x30,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0, 0x5c, 0x5e,    0, 0x5e,    0,    0,
-+	   0, 0x3b,    0,    0,    0,    0,    0,    0,
-+	   0, 0x50, 0x2e,    0, 0x58,    0,    0, 0x43,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0, 0x54,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0,
-+	   0,    0,    0,    0,    0,    0,    0,    0
-+};
-+
- static int lp8x4x_match(struct device *dev, struct device_driver *drv)
- {
- 	return 1;
-@@ -44,6 +87,26 @@ static struct bus_type lp8x4x_bus_type = {
- 	.match		= lp8x4x_match,
- };
- 
-+static void lp8x4x_slot_release(struct device *dev)
-+{
-+}
-+
-+static ssize_t model_show(struct device *dev,
-+		struct device_attribute *attr, char *buf)
-+{
-+	struct lp8x4x_slot *s = container_of(dev, struct lp8x4x_slot, dev);
-+
-+	return sprintf(buf, "%u\n", s->model + 8000);
-+}
-+
-+static DEVICE_ATTR_RO(model);
-+
-+static struct attribute *slot_dev_attrs[] = {
-+	&dev_attr_model.attr,
-+	NULL,
-+};
-+ATTRIBUTE_GROUPS(slot_dev);
-+
- static void lp8x4x_master_release(struct device *dev)
- {
- 	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
-@@ -173,18 +236,50 @@ ATTRIBUTE_GROUPS(master_dev);
- static void devm_lp8x4x_bus_release(struct device *dev, void *res)
- {
- 	struct lp8x4x_master *m = *(struct lp8x4x_master **)res;
-+	struct lp8x4x_slot *s;
-+	int i;
- 
- 	dev_dbg(dev, "releasing devices\n");
-+	for (i = 0; i < LP8X4X_MAX_SLOT_COUNT; i++) {
-+		s = &m->slot[i];
-+		if (s->model)
-+			device_unregister(&s->dev);
-+	}
- 	device_unregister(&m->dev);
- 	bus_unregister(&lp8x4x_bus_type);
- }
- 
-+static void __init lp8x4x_bus_probe_slot(struct lp8x4x_master *m, int i,
-+		unsigned char model)
-+{
-+	struct lp8x4x_slot *s = &m->slot[i];
-+	int err;
-+
-+	dev_info(&m->dev, "found %u in slot %i\n", 8000 + model, i + 1);
-+
-+	s->dev.bus = &lp8x4x_bus_type;
-+	dev_set_name(&s->dev, "slot%02i", i + 1);
-+	s->dev.parent = &m->dev;
-+	s->dev.release = lp8x4x_slot_release;
-+	s->dev.groups = slot_dev_groups;
-+	s->model = model;
-+
-+	err = device_register(&s->dev);
-+	if (err < 0) {
-+		dev_err(&s->dev, "failed to register device\n");
-+		s->model = 0;
-+		return;
-+	}
-+}
-+
- static int __init lp8x4x_bus_probe(struct platform_device *pdev)
- {
- 	struct lp8x4x_master *m, **p;
- 	struct resource *res;
- 	int r = 0;
-+	int i;
- 	int err = 0;
-+	unsigned int model;
- 
- 	m = kzalloc(sizeof(*m), GFP_KERNEL);
- 	if (!m)
-@@ -211,6 +306,23 @@ static int __init lp8x4x_bus_probe(struct platform_device *pdev)
- 		goto err_free;
- 	}
- 
-+	for (i = 0; i < LP8X4X_MAX_SLOT_COUNT; i++) {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, r++);
-+		if (!res) {
-+			dev_err(&pdev->dev, "Failed to get slot %i address\n",
-+					i);
-+			err = -ENODEV;
-+			goto err_free;
-+		}
-+
-+		m->slot[i].data_addr = devm_ioremap_resource(&pdev->dev, res);
-+		if (IS_ERR(m->slot[i].data_addr)) {
-+			dev_err(&pdev->dev, "Failed to ioremap slot %i\n", i);
-+			err = PTR_ERR(m->slot[i].data_addr);
-+			goto err_free;
-+		}
-+	}
-+
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, r++);
- 	if (!res) {
- 		dev_err(&pdev->dev, "Failed to get DIP switch address\n");
-@@ -305,6 +417,13 @@ static int __init lp8x4x_bus_probe(struct platform_device *pdev)
- 	}
- 
- 	devres_add(&pdev->dev, p);
-+	for (i = 0; i < LP8X4X_MAX_SLOT_COUNT; i++) {
-+		model = lp8x4x_model[ioread8(m->slot[i].data_addr)];
-+		if (!model)
-+			continue;
-+
-+		lp8x4x_bus_probe_slot(m, i, model);
-+	}
- 	return 0;
- 
- err_bus:
--- 
-1.8.4.2
+So, depending on the above:
+Acked-by: Heiko Stuebner <heiko@sntech.de>
+
+
+Heiko
+
+> 
+> 	Arnd
+> 
+> >  .../devicetree/bindings/arm/samsung-boards.txt     |   11 +++
+> >  arch/arm/boot/dts/exynos4210-universal_c210.dts    |    9 ++
+> >  arch/arm/boot/dts/exynos4210.dtsi                  |   10 ++
+> >  arch/arm/boot/dts/exynos4x12.dtsi                  |   10 ++
+> >  arch/arm/boot/dts/exynos5.dtsi                     |    5 +
+> >  arch/arm/boot/dts/exynos5250.dtsi                  |    5 +
+> >  arch/arm/boot/dts/exynos5420.dtsi                  |    5 +
+> >  arch/arm/mach-exynos/exynos.c                      |  104
+> >  ++++++++------------ arch/arm/mach-exynos/include/mach/map.h           
+> >  |    7 --
+> >  9 files changed, 95 insertions(+), 71 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> > b/Documentation/devicetree/bindings/arm/samsung-boards.txt index
+> > 2168ed31e1b0..f79710eb7e79 100644
+> > --- a/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> > +++ b/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> > 
+> > @@ -7,6 +7,17 @@ Required root node properties:
+> >          (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
+> >          (b) "samsung,exynos4210"  - for boards based on Exynos4210 SoC.
+> > 
+> > +    - sysram node, specifying the type (secure or non-secure) of SYSRAM
+> > +	- compatible: following types are supported
+> > +		"samsung,exynos4210-sysram" : Secure SYSRAM
+> > +		"samsung,exynos4210-sysram-ns" : Non-secure SYSRAM
+> > +	- reg: address of SYSRAM bank
+> > +
+> > +	sysram@02020000 {
+> > +		compatible = "samsung,exynos4210-sysram";
+> > +		reg = <0x02020000 0x1000>;
+> > +	};
+> > +
+> > 
+> >  Optional:
+> >      - firmware node, specifying presence and type of secure firmware:
+> >          - compatible: only "samsung,secure-firmware" is currently
+> >          supported
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> > b/arch/arm/boot/dts/exynos4210-universal_c210.dts index
+> > 63e34b24b04f..cf4158728108 100644
+> > --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> > +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> > @@ -28,6 +28,15 @@
+> > 
+> >  		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw 
+rootwait
+> >  		earlyprintk panic=5 maxcpus=1";>  	
+> >  	};
+> > 
+> > +	sysram@02020000 {
+> > +		status = "disabled";
+> > +	};
+> > +
+> > +	sysram@02025000 {
+> > +		compatible = "samsung,exynos4210-sysram";
+> > +		reg = <0x02025000 0x1000>;
+> > +	};
+> > +
+> > 
+> >  	mct@10050000 {
+> >  	
+> >  		compatible = "none";
+> >  	
+> >  	};
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4210.dtsi
+> > b/arch/arm/boot/dts/exynos4210.dtsi index cacf6140dd2f..a3f4bba099e6
+> > 100644
+> > --- a/arch/arm/boot/dts/exynos4210.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> > @@ -31,6 +31,16 @@
+> > 
+> >  		pinctrl2 = &pinctrl_2;
+> >  	
+> >  	};
+> > 
+> > +	sysram@02020000 {
+> > +		compatible = "samsung,exynos4210-sysram";
+> > +		reg = <0x02020000 0x1000>;
+> > +	};
+> > +
+> > +	sysram-ns@0203F000 {
+> > +		compatible = "samsung,exynos4210-sysram-ns";
+> > +		reg = <0x0203F000 0x1000>;
+> > +	};
+> > +
+> > 
+> >  	pd_lcd1: lcd1-power-domain@10023CA0 {
+> >  	
+> >  		compatible = "samsung,exynos4210-pd";
+> >  		reg = <0x10023CA0 0x20>;
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
+> > b/arch/arm/boot/dts/exynos4x12.dtsi index c4a9306f8529..d57e3120223f
+> > 100644
+> > --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> > @@ -37,6 +37,16 @@
+> > 
+> >  		interrupts = <2 2>, <3 2>, <18 2>, <19 2>;
+> >  	
+> >  	};
+> > 
+> > +	sysram@02020000 {
+> > +		compatible = "samsung,exynos4210-sysram";
+> > +		reg = <0x02020000 0x1000>;
+> > +	};
+> > +
+> > +	sysram-ns@0204F000 {
+> > +		compatible = "samsung,exynos4210-sysram-ns";
+> > +		reg = <0x0204F000 0x1000>;
+> > +	};
+> > +
+> > 
+> >  	pd_isp: isp-power-domain@10023CA0 {
+> >  	
+> >  		compatible = "samsung,exynos4210-pd";
+> >  		reg = <0x10023CA0 0x20>;
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos5.dtsi
+> > b/arch/arm/boot/dts/exynos5.dtsi index 79d0608d6dcc..c03bd09ec37d 100644
+> > --- a/arch/arm/boot/dts/exynos5.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5.dtsi
+> > @@ -18,6 +18,11 @@
+> > 
+> >  / {
+> >  
+> >  	interrupt-parent = <&gic>;
+> > 
+> > +	sysram@02020000 {
+> > +		compatible = "samsung,exynos4210-sysram";
+> > +		reg = <0x02020000 0x1000>;
+> > +	};
+> > +
+> > 
+> >  	chipid@10000000 {
+> >  	
+> >  		compatible = "samsung,exynos4210-chipid";
+> >  		reg = <0x10000000 0x100>;
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> > b/arch/arm/boot/dts/exynos5250.dtsi index 37423314a028..bae6c3f253f0
+> > 100644
+> > --- a/arch/arm/boot/dts/exynos5250.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> > @@ -72,6 +72,11 @@
+> > 
+> >  		};
+> >  	
+> >  	};
+> > 
+> > +	sysram-ns@0204F000 {
+> > +		compatible = "samsung,exynos4210-sysram-ns";
+> > +		reg = <0x0204F000 0x1000>;
+> > +	};
+> > +
+> > 
+> >  	pd_gsc: gsc-power-domain@10044000 {
+> >  	
+> >  		compatible = "samsung,exynos4210-pd";
+> >  		reg = <0x10044000 0x20>;
+> > 
+> > diff --git a/arch/arm/boot/dts/exynos5420.dtsi
+> > b/arch/arm/boot/dts/exynos5420.dtsi index c3a9a66c5767..217376fe1d82
+> > 100644
+> > --- a/arch/arm/boot/dts/exynos5420.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> > @@ -110,6 +110,11 @@
+> > 
+> >  		};
+> >  	
+> >  	};
+> > 
+> > +	sysram-ns@02073000 {
+> > +		compatible = "samsung,exynos4210-sysram-ns";
+> > +		reg = <0x02073000 0x1000>;
+> > +	};
+> > +
+> > 
+> >  	clock: clock-controller@10010000 {
+> >  	
+> >  		compatible = "samsung,exynos5420-clock";
+> >  		reg = <0x10010000 0x30000>;
+> > 
+> > diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+> > index b32a907d021d..6a5fe18ec9b1 100644
+> > --- a/arch/arm/mach-exynos/exynos.c
+> > +++ b/arch/arm/mach-exynos/exynos.c
+> > @@ -114,51 +114,6 @@ static struct map_desc exynos4_iodesc[] __initdata =
+> > {
+> > 
+> >  	},
+> >  
+> >  };
+> > 
+> > -static struct map_desc exynos4_iodesc0[] __initdata = {
+> > -	{
+> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
+> > -		.pfn		= __phys_to_pfn(EXYNOS4_PA_SYSRAM0),
+> > -		.length		= SZ_4K,
+> > -		.type		= MT_DEVICE,
+> > -	},
+> > -};
+> > -
+> > -static struct map_desc exynos4_iodesc1[] __initdata = {
+> > -	{
+> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
+> > -		.pfn		= __phys_to_pfn(EXYNOS4_PA_SYSRAM1),
+> > -		.length		= SZ_4K,
+> > -		.type		= MT_DEVICE,
+> > -	},
+> > -};
+> > -
+> > -static struct map_desc exynos4210_iodesc[] __initdata = {
+> > -	{
+> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> > -		.pfn		= __phys_to_pfn(EXYNOS4210_PA_SYSRAM_NS),
+> > -		.length		= SZ_4K,
+> > -		.type		= MT_DEVICE,
+> > -	},
+> > -};
+> > -
+> > -static struct map_desc exynos4x12_iodesc[] __initdata = {
+> > -	{
+> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> > -		.pfn		= __phys_to_pfn(EXYNOS4x12_PA_SYSRAM_NS),
+> > -		.length		= SZ_4K,
+> > -		.type		= MT_DEVICE,
+> > -	},
+> > -};
+> > -
+> > -static struct map_desc exynos5250_iodesc[] __initdata = {
+> > -	{
+> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> > -		.pfn		= __phys_to_pfn(EXYNOS5250_PA_SYSRAM_NS),
+> > -		.length		= SZ_4K,
+> > -		.type		= MT_DEVICE,
+> > -	},
+> > -};
+> > -
+> > 
+> >  static struct map_desc exynos5_iodesc[] __initdata = {
+> >  
+> >  	{
+> >  	
+> >  		.virtual	= (unsigned long)S3C_VA_SYS,
+> > 
+> > @@ -181,11 +136,6 @@ static struct map_desc exynos5_iodesc[] __initdata =
+> > {
+> > 
+> >  		.length		= SZ_4K,
+> >  		.type		= MT_DEVICE,
+> >  	
+> >  	}, {
+> > 
+> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
+> > -		.pfn		= __phys_to_pfn(EXYNOS5_PA_SYSRAM),
+> > -		.length		= SZ_4K,
+> > -		.type		= MT_DEVICE,
+> > -	}, {
+> > 
+> >  		.virtual	= (unsigned long)S5P_VA_CMU,
+> >  		.pfn		= __phys_to_pfn(EXYNOS5_PA_CMU),
+> >  		.length		= 144 * SZ_1K,
+> > 
+> > @@ -268,6 +218,44 @@ static int __init exynos_fdt_map_chipid(unsigned long
+> > node, const char *uname,> 
+> >  	return 1;
+> >  
+> >  }
+> > 
+> > +struct __sysram_desc {
+> > +	char name[32];
+> > +	unsigned long addr;
+> > +};
+> > +
+> > +static struct __sysram_desc sysram_desc[] __initdata = {
+> > +	{
+> > +		.name = "samsung,exynos4210-sysram",
+> > +		.addr = (unsigned long)S5P_VA_SYSRAM,
+> > +	}, {
+> > +		.name = "samsung,exynos4210-sysram-ns",
+> > +		.addr = (unsigned long)S5P_VA_SYSRAM_NS,
+> > +	},
+> > +};
+> > +
+> > +static int __init exynos_fdt_map_sysram(unsigned long node, const char
+> > *uname, +					int depth, void *data)
+> > +{
+> > +	struct map_desc iodesc;
+> > +	__be32 *reg;
+> > +	unsigned long len;
+> > +	int i;
+> > +
+> > +	for (i = 0; i < ARRAY_SIZE(sysram_desc); i++) {
+> > +		if (of_flat_dt_is_compatible(node, sysram_desc[i].name)) {
+> > +			reg = of_get_flat_dt_prop(node, "reg", &len);
+> > +			if (!reg || len != (sizeof(unsigned long) * 2))
+> > +				return -ENODEV;
+> > +			iodesc.virtual = sysram_desc[i].addr;
+> > +			iodesc.pfn = __phys_to_pfn(be32_to_cpu(reg[0]));
+> > +			iodesc.length = be32_to_cpu(reg[1]);
+> > +			iodesc.type = MT_DEVICE;
+> > +			iotable_init(&iodesc, 1);
+> > +		}
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> > 
+> >  /*
+> >  
+> >   * exynos_map_io
+> >   *
+> > 
+> > @@ -280,20 +268,6 @@ static void __init exynos_map_io(void)
+> > 
+> >  	if (soc_is_exynos5())
+> >  	
+> >  		iotable_init(exynos5_iodesc, ARRAY_SIZE(exynos5_iodesc));
+> > 
+> > -
+> > -	if (soc_is_exynos4210()) {
+> > -		if (samsung_rev() == EXYNOS4210_REV_0)
+> > -			iotable_init(exynos4_iodesc0,
+> > -						ARRAY_SIZE(exynos4_iodesc0));
+> > -		else
+> > -			iotable_init(exynos4_iodesc1,
+> > -						ARRAY_SIZE(exynos4_iodesc1));
+> > -		iotable_init(exynos4210_iodesc, ARRAY_SIZE(exynos4210_iodesc));
+> > -	}
+> > -	if (soc_is_exynos4212() || soc_is_exynos4412())
+> > -		iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
+> > -	if (soc_is_exynos5250())
+> > -		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
+> > 
+> >  }
+> >  
+> >  void __init exynos_init_io(void)
+> > 
+> > @@ -306,6 +280,8 @@ void __init exynos_init_io(void)
+> > 
+> >  	s5p_init_cpu(S5P_VA_CHIPID);
+> >  	
+> >  	exynos_map_io();
+> > 
+> > +
+> > +	of_scan_flat_dt(exynos_fdt_map_sysram, NULL);
+> > 
+> >  }
+> >  
+> >  struct bus_type exynos_subsys = {
+> > 
+> > diff --git a/arch/arm/mach-exynos/include/mach/map.h
+> > b/arch/arm/mach-exynos/include/mach/map.h index
+> > 7b046b59d9ec..548269a60634 100644
+> > --- a/arch/arm/mach-exynos/include/mach/map.h
+> > +++ b/arch/arm/mach-exynos/include/mach/map.h
+> > @@ -23,13 +23,6 @@
+> > 
+> >  #include <plat/map-s5p.h>
+> > 
+> > -#define EXYNOS4_PA_SYSRAM0		0x02025000
+> > -#define EXYNOS4_PA_SYSRAM1		0x02020000
+> > -#define EXYNOS5_PA_SYSRAM		0x02020000
+> > -#define EXYNOS4210_PA_SYSRAM_NS		0x0203F000
+> > -#define EXYNOS4x12_PA_SYSRAM_NS		0x0204F000
+> > -#define EXYNOS5250_PA_SYSRAM_NS		0x0204F000
+> > -
+> > 
+> >  #define EXYNOS_PA_CHIPID		0x10000000
+> >  
+> >  #define EXYNOS4_PA_SYSCON		0x10010000
