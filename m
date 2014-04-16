@@ -1,47 +1,54 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: davinci-nand: disable subpage write for
- keystone-nand
-Date: Wed, 16 Apr 2014 00:08:33 -0700
-Message-ID: <20140416070833.GA5512@norris-Latitude-E6410>
-References: <1395346112-13350-1-git-send-email-ivan.khoronzhuk@ti.com>
- <532B4C36.8060405@ti.com>
- <5343F0D6.2010804@ti.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/4] reset: add driver for socfpga
+Date: Wed, 16 Apr 2014 09:13:50 +0200
+Message-ID: <20140416071350.GI16054@pengutronix.de>
+References: <1397548592-6384-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1397602483.3330.2.camel@linux-builds1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5343F0D6.2010804-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1397602483.3330.2.camel@linux-builds1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+To: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 08, 2014 at 03:51:34PM +0300, Ivan Khoronzhuk wrote:
-> On 03/20/2014 10:14 PM, Santosh Shilimkar wrote:
-> >On Thursday 20 March 2014 04:08 PM, Ivan Khoronzhuk wrote:
-> >>From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> >>Sub page write doesn't work because of hw issue in controller found on
-> >>Keystone SOCs. AEMIF controller is also used on DaVinci SOCs which
-> >>don't seems to have any issue. So add "ti,keysone-nand" compatible
-> >>to nand driver in order to set NAND_NO_SUBPAGE_WRITE option.
-> >>
-> >>Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>Cc: Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
-> >>Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> >>
-> >>Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> >>Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-> >>---
-> >>
-> >Acked-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+On Tue, Apr 15, 2014 at 05:54:43PM -0500, Dinh Nguyen wrote:
+> On Tue, 2014-04-15 at 09:56 +0200, Steffen Trumtrar wrote:
+> > Add a reset-controller driver for the socfpga platform.
+> > The reset-controller has four banks with up to 32 entries all encapsulated in
+> > one module block.
+> > 
+> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > Acked-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> > 
+> > Notes:
+> >     Changes since v2:
+> >     	- remove superfluous ret in probe function
+> >     	- add Acked-by
+> >     
+> >     Changes since v1:
+> >     	- use BITS_PER_LONG everywhere instead of MAX_BANK_WIDTH
+> >     	- print pdev->dev.of_node->full_name on error
+> >     	- use proper IS_ERR/PTR_ERR
+> > 
 > 
-> Brian,
-> Could you pick up subj patch?
+> I've applied this series to rocketboards linux-socfpga-next/drivers and
+> linux-socfpga-next/next-dt.
+> 
 
-Pushed to l2-mtd.git. Is it critical this goes in for 3.15? It's
-currently queued for -next (3.16).
+\o/
 
-Brian
+Thanks,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
