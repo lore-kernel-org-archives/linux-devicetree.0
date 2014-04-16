@@ -1,70 +1,104 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: [RFC PATCH v2 14/14] ARM: dts: exynos5420: add dsi node
-Date: Wed, 16 Apr 2014 13:39:19 +0900
-Message-ID: <1397623159-11574-1-git-send-email-yj44.cho@samsung.com>
-References: <CAK9yfHyC4gvj6eLQnJ1k=6=q2NXOS2ePyBC5rz1poOsN+1x3zg@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH RFC] usb: gadget: Add xilinx axi usb2 device support
+Date: Tue, 15 Apr 2014 23:39:23 -0500
+Message-ID: <20140416043922.GC15056@saruman.home>
+References: <20140415171830.GB16002@saruman.home>
+ <Pine.LNX.4.44L0.1404151345580.1310-100000@iolanthe.rowland.org>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAK9yfHyC4gvj6eLQnJ1k=6=q2NXOS2ePyBC5rz1poOsN+1x3zg@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2JFBq9zoW8cOFH7v"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1404151345580.1310-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds common part of dsi node.
+--2JFBq9zoW8cOFH7v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changelog v2:
-- Uses clock macros instead of numbers (commented by Sachin Kamat)
+Hi,
 
-Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- arch/arm/boot/dts/exynos5420.dtsi |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
+On Tue, Apr 15, 2014 at 01:55:38PM -0400, Alan Stern wrote:
+> On Tue, 15 Apr 2014, Felipe Balbi wrote:
+>=20
+> > > 2. Does device need to know OUT transactions before hand so that OUT
+> > > requests are queued for endpoint before packets are received
+> > > from host?
+> >=20
+> > well, no. Gadget driver shouldn't depend on that. That's UDC driver's
+> > responsability to manage that. I mean, if host sends OUT token and
+> > there's nothing in the out queue, then UDC need to start transfer as
+> > soon as gadget driver queues the request. If, on the other hand, gadget
+> > driver queues packet before host has sent OUT token then you have two
+> > choices:
+> >=20
+> > 1) start the transfer - most HW will wait for OUT token
+> > 2) wait for out token
+>=20
+> I'm not familiar with the variations in all the different UDC hardware. =
+=20
+> Nevertheless, I wouldn't describe the situation in those terms.
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index f0184c7..f1030f5 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -17,6 +17,7 @@
- #include "exynos5420-pinctrl.dtsi"
- 
- #include <dt-bindings/clk/exynos-audss-clk.h>
-+#include <dt-bindings/clock/exynos5420.h>
- 
- / {
- 	compatible = "samsung,exynos5420";
-@@ -422,6 +423,20 @@
- 		#phy-cells = <1>;
- 	};
- 
-+	dsi@14500000 {
-+		compatible = "samsung,exynos5420-mipi-dsi";
-+		reg = <0x14500000 0x10000>;
-+		interrupts = <0 82 0>;
-+		samsung,power-domain = <&disp_pd>;
-+		phys = <&mipi_phy 1>;
-+		phy-names = "dsim";
-+		clocks = <&clock CLK_DSIM1>, <&clock CLK_SCLK_MIPI1>;
-+		clock-names = "bus_clk", "pll_clk";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		status = "disabled";
-+	};
-+
- 	fimd@14400000 {
- 		samsung,power-domain = <&disp_pd>;
- 		clocks = <&clock 147>, <&clock 421>;
--- 
-1.7.9.5
+OK, I've oversimplified... what I meant was that even if you start a
+transfer at the UDC level, nothing will happen on the bus until HW sees
+an OUT token. The buffer pointed to by req->buf won't get any writes,
+DMA won't do anything.
+
+On (2) I meant that some HW (e.g. dwc3) will assert the IRQ line once
+they see a token for which they have to transfer descriptors in the
+internal controller's cache.
+
+> If an OUT transaction occurs and the gadget driver hasn't queued a
+> request, the UDC hardware could store the incoming data in an internal
+> buffer or it could NAK the transaction.  There aren't any other
+> choices.  If there isn't enough space available in an internal buffer,
+> the only possible action is NAK.
+
+in HS there's also NYET
+
+> Regardless, gadget drivers do not need to queue requests for OUT
+> endpoints before the host starts sending data.  When the request does
+
+they're not required, but they can. It's UDC driver's responsability to
+start consuming the queue at the proper time.
+
+> get queued, the UDC driver will make sure that the transfer takes
+> place.
+
+correct.
+
+--=20
+balbi
+
+--2JFBq9zoW8cOFH7v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTTgl6AAoJEIaOsuA1yqREuP8P/iGR8dgxDlZyDWcLF5MFP7il
+UML0YN3vmzN5k7XUcWQ7VP4fORyNoPgzDkXkLzZavOQbTR2wuw5JKgF2xpi6nP4J
+hKoOSjoyvX9IRQOoQHaT+aqD9OlTVNNWFTgpOwqcsCsWLY8YOCkcYXJKrwdYaJXA
+o1GafbCtBexY6g0Aa0CcGFSOfjQiFQIPjGm1z6USz+67w072kdeG9/Dkep6Po7jN
+udEW1b0IZK8HPVBo1IQClSlqnQh/LGU5P4xYKshBV7SqG/OjAKiBNE7zvcNUpU35
+9xjOf0hrD/M3tX3oJCYF657MoPh5NfHN6a4a1gp6XxIk8nPxCQ7lvvCztqiBImBZ
+Ve6UNPP2HY7O/+V8fwLFqnsv67FTWbW7kPMwCS48fYNyB9II+MCD8XwM9B2QRkZi
+1vA9duYOodqiAQ9C2d6Gh3wGGs0iNUYjC9HPzhbQPWWn0/XfobmRUuxqqUwcsV82
+tOS+zmcb874NGPGvaljFe7FtBoDfMetJCklcMzv/fqjTjsgKbVj5J3huh9ytBiEQ
+Nt4yGHJ3Ide9fteYeWf1WvnLkAe/E1f3XQfLgFcro2+mWXuL9t1WnubDwutw3J4r
+wOYlkkvkUDr6sZ1q+Ul/sWWVCraAFx5kBAfM6HnRl74CRpqWUBQmWF6BKeiDyBYC
+3qpB6c4dmcwpXZwn35e8
+=CFFn
+-----END PGP SIGNATURE-----
+
+--2JFBq9zoW8cOFH7v--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
