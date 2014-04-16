@@ -1,14 +1,18 @@
 From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv3 2/2] iio: devicetree: Add DT binding documentation for
- Exynos3250 ADC
-Date: Wed, 16 Apr 2014 19:11:58 +0900
-Message-ID: <1397643118-6934-3-git-send-email-cw00.choi@samsung.com>
-References: <1397643118-6934-1-git-send-email-cw00.choi@samsung.com>
+Subject: Re: [PATCHv2 8/8] ARM: dts: Add device tree sources for Exynos3250
+Date: Wed, 16 Apr 2014 19:23:49 +0900
+Message-ID: <534E5A35.7050708@samsung.com>
+References: <1397527192-21988-1-git-send-email-cw00.choi@samsung.com>
+ <1397527192-21988-9-git-send-email-cw00.choi@samsung.com>
+ <534CEAB7.6020600@arm.com> <534CED76.9010302@samsung.com>
+ <534CF847.5040008@arm.com> <534CF9B4.306@samsung.com>
+ <534CFAD7.4030508@arm.com> <534E3DC0.40502@samsung.com>
+ <534E4089.9070804@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1397643118-6934-1-git-send-email-cw00.choi@samsung.com>
+In-reply-to: <534E4089.9070804@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,73 +22,100 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: jic23@kernel.org, ch.naveen@samsung.com, kgene.kim@samsung.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, t.figa@samsung.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, linux-arm-kernel@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hyunhee.kim@samsung.com" <hyunhee.kim@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, linux-ker
 List-Id: devicetree@vger.kernel.org
 
-This patch add DT binding documentation for Exynos3250 ADC IP. Exynos3250 has
-special clock ('sclk_tsadc') for ADC which provide clock to internal ADC.
+Hi Marc,
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- .../devicetree/bindings/arm/samsung/exynos-adc.txt   | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+On 04/16/2014 05:34 PM, Marc Zyngier wrote:
+> On 16/04/14 09:22, Chanwoo Choi wrote:
+>> Hi Marc,
+>>
+>> On 04/15/2014 06:24 PM, Marc Zyngier wrote:
+>>> On 15/04/14 10:19, Chanwoo Choi wrote:
+>>>> On 04/15/2014 06:13 PM, Marc Zyngier wrote:
+>>>>> On 15/04/14 09:27, Chanwoo Choi wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 04/15/2014 05:15 PM, Marc Zyngier wrote:
+>>>>>>> On 15/04/14 02:59, Chanwoo Choi wrote:
+>>>>>>>> From: Tomasz Figa <t.figa@samsung.com>
+>>>>>>>>
+>>>>>>>> This patch add new exynos3250.dtsi to support Exynos3250 SoC based on Cortex-A7
+>>>>>>>> dual core and includes following dt nodes:
+>>>>>>>>
+>>>>>>>> - GIC interrupt controller
+>>>>>>>> - Pinctrl to control GPIOs
+>>>>>>>> - Clock controller
+>>>>>>>> - CPU information (Cortex-A7 dual core)
+>>>>>>>> - UART to support serial port
+>>>>>>>> - MCT (Multi Core Timer)
+>>>>>>>> - ADC (Analog Digital Converter)
+>>>>>>>> - I2C/SPI bus
+>>>>>>>> - Power domain
+>>>>>>>> - PMU (Performance Monitoring Unit)
+>>>>>>>> - MSHC (Mobile Storage Host Controller)
+>>>>>>>> - PWM (Pluse Width Modulation)
+>>>>>>>> - AMBA bus
+>>>>>>>
+>>>>>>> [...]
+>>>>>>>
+>>>>>>> Where is the arch timer node?
+>>>>>>
+>>>>>> Exynos3250 uses MCT (Multi Core Timer) instead of ARM_ARCH_TIMER.
+>>>>>> - in drivers/clocksource/exynos_mct.c
+>>>>>
+>>>>> Don't you have a Cortex-A7? If so, you have the arch timer.
+>>>>
+>>>> Do you means that 'arch timer" is ARM_ARCH_TIMER?
+>>>
+>>> Yes.
+>>>
+>>>> As I knew, ARM_ARCH_TIMER is clocksource driver for system timer.
+>>>> But, Exynos SoC used MCT clocksource for system timer.
+>>>>
+>>>> Exynos dts file didn't include arch timer node but only include mct node.
+>>>
+>>> Well, it is a bug, and a recurrent one. A Cortex-A7 has the arch timers
+>>> implemented. Always.
+>>>
+>>> http://infocenter.arm.com/help/topic/com.arm.doc.ddi0464f/BABFEBJJ.html
+>>>
+>>> All Cortex-A7 have it, and so do A12, A15, A17, A53, A57.
+>>
+>> I tested 'arch_timer'(drivers/clocksource/arm_arch_timer.c) on Exynos3250 based on Cortex-A7.
+>>
+>> To test arch timer, I used the clocksource of arch_timer for timekeeping instead of clocksource
+>> of Exynos MCT. But, I faced with issue. The following function return only same value(zero)
+>> as following kernel log:
+>> - arch_counter_get_cntvct() in arch/arm/include/asm/arch_timer.h
+>>
+>> Uncompressing Linux... done, booting the kernel.
+>> [    0.000000] Booting Linux on physical CPU 0x0
+>> [    0.000000] Initializing cgroup subsys cpuset
+>> [    0.000000] Initializing cgroup subsys cpu
+>> [    0.000000] Initializing cgroup subsys cpuacct
+>> [    0.000000] Linux version 3.15.0-rc1-00020-gf452826-dirty ...
+>> [    0.000000] CPU: ARMv7 Processor ...
+>> ...
+>> [    0.000000] Architected cp15 timer(s) running at 24.00MHz (virt).
+>> [    0.000000] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 2863311519744ns
+>> ...
+>>
+>> Could you give me a solution to resolve this issue or a expected cause?
+> 
+> My guess is that you need to enable some clock for the timer to tick.
+> Ask your HW guys how they have wired this clock.
+> 
+> Also, I cannot help but notice that you are entering your kernel at SVC
+> instead of HYP. I suggest you fix your bootloader/firmware to allow all
+> CPUs to enter the kernel in HYP.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-index 5d49f2b..7532ec3 100644
---- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-@@ -14,6 +14,8 @@ Required properties:
- 				for exynos4412/5250 controllers.
- 			Must be "samsung,exynos-adc-v2" for
- 				future controllers.
-+			Must be "samsung,exynos-adc-v3" for
-+				for exynos3250 controllers.
- - reg:			Contains ADC register address range (base address and
- 			length) and the address of the phy enable register.
- - interrupts: 		Contains the interrupt information for the timer. The
-@@ -21,7 +23,11 @@ Required properties:
- 			the Samsung device uses.
- - #io-channel-cells = <1>; As ADC has multiple outputs
- - clocks		From common clock binding: handle to adc clock.
-+			From common clock binding: handle to sclk_tsadc clock
-+			if using Exynos3250.
- - clock-names		From common clock binding: Shall be "adc".
-+			From common clock binding: Shall be "sclk_tsadc"
-+			if using Exynos3250.
- - vdd-supply		VDD input supply.
- 
- Note: child nodes can be added for auto probing from device tree.
-@@ -41,6 +47,20 @@ adc: adc@12D10000 {
- 	vdd-supply = <&buck5_reg>;
- };
- 
-+If Exynos3250 uses ADC,
-+adc: adc@126C0000 {
-+	compatible = "samsung,exynos-adc-v3";
-+	reg = <0x126C0000 0x100>, <0x10020718 0x4>;
-+	interrupts = <0 137 0>;
-+	#io-channel-cells = <1>;
-+	io-channel-ranges;
-+
-+	clock-names = "adc", "sclk_tsadc";
-+	clocks = <&cmu CLK_TSADC>, <&cmu CLK_SCLK_TSADC>;
-+
-+	vdd-supply = <&buck5_reg>;
-+};
-+
- 
- Example: Adding child nodes in dts file
- 
--- 
-1.8.0
+I think again that I would like to add arch_timer dt node to exynos3250.dtsi
+as separated patchset after finishing the test arch_timer clocksource for timekeeping.
+
+Thanks for your review.
+
+Best Regards,
+Chanwoo Choi
