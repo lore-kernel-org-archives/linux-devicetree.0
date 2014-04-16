@@ -1,37 +1,45 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v4 13/21] misc: support for LP-8x4x custom parallel bus
-Date: Wed, 16 Apr 2014 21:29:19 +0100
-Message-ID: <20140416212919.7f6f35ac@alan.etchedpixels.co.uk>
-References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
-	<1397668667-27328-7-git-send-email-ynvich@gmail.com>
-	<20140416194109.3ef914d2@alan.etchedpixels.co.uk>
-	<6356054.sn5XpK65Cm@wuerfel>
+From: Randy Dunlap <rdunlap@infradead.org>
+Subject: Re: [PATCH v2 4/5] regulator: tps65090: Allow setting the overcurrent
+ wait time
+Date: Wed, 16 Apr 2014 13:33:14 -0700
+Message-ID: <534EE90A.7070602@infradead.org>
+References: <1397592876-5741-1-git-send-email-dianders@chromium.org> <1397672724-9063-1-git-send-email-dianders@chromium.org> <1397672724-9063-5-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <6356054.sn5XpK65Cm@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Sergei Ianovich <ynvich@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1397672724-9063-5-git-send-email-dianders@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Anton Vorontsov <anton@enomsg.org>
+Cc: Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Apr 2014 20:42:39 +0200
-Arnd Bergmann <arnd@arndb.de> wrote:
+On 04/16/2014 11:25 AM, Doug Anderson wrote:
+> diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
+> index 2e92ef6..ca13a1a 100644
+> --- a/drivers/regulator/tps65090-regulator.c
+> +++ b/drivers/regulator/tps65090-regulator.c
+> @@ -28,15 +28,57 @@
 
-> On Wednesday 16 April 2014 19:41:09 One Thousand Gnomes wrote:
-> > On Wed, 16 Apr 2014 21:17:18 +0400
-> > Sergei Ianovich <ynvich@gmail.com> wrote:
-> > 
-> > > This patch implements probing for the bus and reporting the number
-> > > of available expansion slots.
-> > 
-> > This appears to be a bus not a misc device. I don't think it belongs in
-> > misc. As you've got devices on this bus (or nailed into the 'bus' driver)
-> > perhaps this belongs as drivers/platform/lp8x4x or similar with any
-> > specific drivers split out - or even drivers/lp8x4x if there will be more
-> > of them and more than one platform using it ?
-> 
-> We have drivers/bus now, I think it could fit well in there.
+> +/**
+> + * tps65090_reg_set_overcurrent_wait - Setup overcurrent wait
+> + *
+> + * This will set the overcurrent wait time based on what's in the regulator
+> + * info.
+> + *
+> + * @ri:		Overall regulator data
+> + * @rdev:	Regulator device
+> + * @return 0 if no error, non-zero if there was an error writing the register.
 
-Agreed
+kernel-doc notation here should be:
+
+ * Return: 0 if no error, non-zero if there was an error writing the register.
+
+> + */
+> +static int tps65090_reg_set_overcurrent_wait(struct tps65090_regulator *ri,
+> +					     struct regulator_dev *rdev)
+> +{
+
+
+-- 
+~Randy
