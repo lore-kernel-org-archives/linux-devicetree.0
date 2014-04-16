@@ -1,55 +1,95 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v4 12/21] serial: support for 16550A serial ports on LP-8x4x
-Date: Wed, 16 Apr 2014 23:01:47 +0400
-Message-ID: <c4533da6-30bd-4ea4-9011-a7e3b7258e62@email.android.com>
-References: <1397668411-27162-7-git-send-email-ynvich@gmail.com> <1397668667-27328-1-git-send-email-ynvich@gmail.com> <1397668667-27328-6-git-send-email-ynvich@gmail.com> <20140416193532.0782f045@alan.etchedpixels.co.uk>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: berlin: add scu and chipctrl device nodes for
+ BG2/BG2Q
+Date: Wed, 16 Apr 2014 21:03:54 +0200
+Message-ID: <534ED41A.3000202@gmail.com>
+References: <1395347986-30203-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1395347986-30203-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140416193532.0782f045@alan.etchedpixels.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Stefan Seyfried <seife+kernel@b1-systems.com>, James Cameron <quozl@laptop.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1395347986-30203-2-git-send-email-sebastian.hesselbarth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Antoine Tenart <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk> wrote:
->> +	baud = uart_get_baud_rate(port, termios, old,
->> +				  port->uartclk / 16 / 0xffff,
->> +				  port->uartclk / 16);
->> +	switch (baud) {
->> +	case 2400:
->> +		len |= 1;
->> +		break;
->> +	case 4800:
->> +		len |= 2;
->> +		break;
->> +	case 19200:
->> +		len |= 4;
->> +		break;
->> +	case 38400:
->> +		len |= 5;
->> +		break;
->> +	case 57600:
->> +		len |= 6;
->> +		break;
->> +	case 115200:
->> +		len |= 7;
->> +		break;
->> +	case 9600:
->> +	default:
->> +		len |= 3;
->> +		break;
->> +	};
->
->Some explanation of this would be useful - eg why is it set to 7 for
->115200 baud and 3 for 115201 baud ?
+On 03/20/2014 09:39 PM, Sebastian Hesselbarth wrote:
+> This adds scu and general purpose registers device nodes required for
+> SMP on Berlin BG2 and BG2Q SoCs. The secondary CPUs will pick their jump
+> address from general purpose (SW generic) register 1.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-I am not related to the device vendor in any way, so please take my answers for what they are worth.
+Applied to berlin/dt.
 
-It seems that there is not enough pins to properly connect the chips to the memory bus and just you the standard 8250 UART driver. Instead, clock divisor is set using this register.
-
-So, if you know you're asking for (115200) you get it. If you don't or guess (115201), you get the default 9600.
-
-This is a policy, it may not be the right way to write a driver, but it is cheap and it works.
+> ---
+>  arch/arm/boot/dts/berlin2.dtsi  | 10 ++++++++++
+>  arch/arm/boot/dts/berlin2q.dtsi | 10 ++++++++++
+>  2 files changed, 20 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
+> index 56a1af2f1052..4d85312dc17a 100644
+> --- a/arch/arm/boot/dts/berlin2.dtsi
+> +++ b/arch/arm/boot/dts/berlin2.dtsi
+> @@ -72,6 +72,11 @@
+>  			cache-level = <2>;
+>  		};
+>  
+> +		scu: snoop-control-unit@ad0000 {
+> +			compatible = "arm,cortex-a9-scu";
+> +			reg = <0xad0000 0x58>;
+> +		};
+> +
+>  		gic: interrupt-controller@ad1000 {
+>  			compatible = "arm,cortex-a9-gic";
+>  			reg = <0xad1000 0x1000>, <0xad0100 0x0100>;
+> @@ -176,6 +181,11 @@
+>  			};
+>  		};
+>  
+> +		generic-regs@ea0184 {
+> +			compatible = "marvell,berlin-generic-regs", "syscon";
+> +			reg = <0xea0184 0x10>;
+> +		};
+> +
+>  		apb@fc0000 {
+>  			compatible = "simple-bus";
+>  			#address-cells = <1>;
+> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+> index 07452a7483fa..86d8a2c49f38 100644
+> --- a/arch/arm/boot/dts/berlin2q.dtsi
+> +++ b/arch/arm/boot/dts/berlin2q.dtsi
+> @@ -87,6 +87,11 @@
+>  			cache-level = <2>;
+>  		};
+>  
+> +		scu: snoop-control-unit@ad0000 {
+> +			compatible = "arm,cortex-a9-scu";
+> +			reg = <0xad0000 0x58>;
+> +		};
+> +
+>  		local-timer@ad0600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
+>  			reg = <0xad0600 0x20>;
+> @@ -183,6 +188,11 @@
+>  			};
+>  		};
+>  
+> +		generic-regs@ea0110 {
+> +			compatible = "marvell,berlin-generic-regs", "syscon";
+> +			reg = <0xea0110 0x10>;
+> +		};
+> +
+>  		apb@fc0000 {
+>  			compatible = "simple-bus";
+>  			#address-cells = <1>;
+> 
