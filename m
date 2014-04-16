@@ -1,144 +1,95 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH 1/5] ARM: bL_switcher: Don't enable bL switcher on systems
- without CCI
-Date: Wed, 16 Apr 2014 16:18:25 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1404161524050.980@knanqh.ubzr>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
- <1397239311-27717-2-git-send-email-a.kesavan@samsung.com>
- <alpine.LFD.2.11.1404111406210.980@knanqh.ubzr>
- <CAM4voanduaJ32ztj6ZDMOPXNd9W6Ttwae_PQ68VGxPKZEsj3kA@mail.gmail.com>
+From: Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 12/21] serial: support for 16550A serial ports on LP-8x4x
+Date: Thu, 17 Apr 2014 00:32:12 +0400
+Message-ID: <560965e4-7201-43fd-9ad9-73036d50f576@email.android.com>
+References: <1397668411-27162-7-git-send-email-ynvich@gmail.com> <1397668667-27328-1-git-send-email-ynvich@gmail.com> <1397668667-27328-6-git-send-email-ynvich@gmail.com> <20140416193532.0782f045@alan.etchedpixels.co.uk> <c4533da6-30bd-4ea4-9011-a7e3b7258e62@email.android.com> <20140416210051.01bef49e@alan.etchedpixels.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAM4voanduaJ32ztj6ZDMOPXNd9W6Ttwae_PQ68VGxPKZEsj3kA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Cc: "mark.rutland" <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Bresticker <abrestic@chromium.org>, Tomasz Figa <t.figa@samsung.com>, inderpal.s@samsung.com, Will Deacon <will.deacon@arm.com>, robh+dt <robh+dt@kernel.org>, Thomas P Abraham <thomas.ab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140416210051.01bef49e-mUKnrFFms3BCCTY1wZZT65JpZx93mCW/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Stefan Seyfried <seife+kernel-shG/GajIFYoxoycv7ERPSQ@public.gmane.org>, James Cameron <quozl-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 17 Apr 2014, Abhilash Kesavan wrote:
+One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org> wrote:
+>On Wed, 16 Apr 2014 23:01:47 +0400
+>Sergei Ianovich <ynvich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>
+>> One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org> wrote:
+>> >> +	baud = uart_get_baud_rate(port, termios, old,
+>> >> +				  port->uartclk / 16 / 0xffff,
+>> >> +				  port->uartclk / 16);
+>> >> +	switch (baud) {
+>> >> +	case 2400:
+>> >> +		len |= 1;
+>> >> +		break;
+>> >> +	case 4800:
+>> >> +		len |= 2;
+>> >> +		break;
+>> >> +	case 19200:
+>> >> +		len |= 4;
+>> >> +		break;
+>> >> +	case 38400:
+>> >> +		len |= 5;
+>> >> +		break;
+>> >> +	case 57600:
+>> >> +		len |= 6;
+>> >> +		break;
+>> >> +	case 115200:
+>> >> +		len |= 7;
+>> >> +		break;
+>> >> +	case 9600:
+>> >> +	default:
+>> >> +		len |= 3;
+>> >> +		break;
+>> >> +	};
+>> >
+>> >Some explanation of this would be useful - eg why is it set to 7 for
+>> >115200 baud and 3 for 115201 baud ?
+>> 
+>> I am not related to the device vendor in any way, so please take my
+>answers for what they are worth.
+>> 
+>> It seems that there is not enough pins to properly connect the chips
+>to the memory bus and just you the standard 8250 UART driver. Instead,
+>clock divisor is set using this register.
+>> 
+>> So, if you know you're asking for (115200) you get it. If you don't
+>or guess (115201), you get the default 9600.
+>
+>Thats not quite what the code actually implements though.
 
-> Hi Nicolas,
-> 
-> On Fri, Apr 11, 2014 at 11:44 PM, Nicolas Pitre
-> <nicolas.pitre@linaro.org> wrote:
-> > On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
-> >
-> >> From: Andrew Bresticker <abrestic@chromium.org>
-> >>
-> >> Do not enable the big.LITTLE switcher on systems that do not have an
-> >> ARM CCI (cache-coherent interconnect) present.  Since the CCI is used
-> >> to maintain cache coherency between multiple clusters and peripherals,
-> >> it is unlikely that a system without CCI would support big.LITTLE.
-> >>
-> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
-> >> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> >
-> > The b.L switcher depends on MCPM, and it also expects only 2 clusters
-> > which is evaluated at run time or it bails out.
-> >
-> > There might be in theory other ways than the CCI to enforce coherency
-> > between clusters.  And that should all be encapsulated by the MCPM
-> > layer.  The switcher module should not be concerned at all by the
-> > underlying hardware mechanism.
-> >
-> > So if the goal is to determine at run time whether or not the switcher
-> > should be activated in a multi-config kernel, then the criteria should
-> > be whether or not MCPM is initialized, and not if there is a CCI.
-> 
-> Yes, we have a multi-SoC enabled kernel (with MCPM and BL_SWITCHER
-> configs enabled); one SoC has a single cluster while the other is a
-> dual cluster. We wanted a run-time check to prevent bL_switcher from
-> running on the single cluster one and zeroed in on CCI. But, I get
-> your point as to why CCI should not be used as a distinguishing factor
-> for switcher initialization.
-> 
-> For now, I can use the no_bL_switcher parameter to disable it on
-> certain platforms. However, can you elaborate on the MCPM
-> initialization check you suggested ?
+>> This is a policy, it may not be the right way to write a driver, but
+>it is cheap and it works.
 
-Here's what I mean:
+>If thats how the hardware works and only supports a few fixed rates
+>then
+>fine, but for default: you need to actually update he baudrate in the
+>passed termios struct so that the userspace knows its request was not
+>matched.
+>
+>Take a look how the standard 8250 termios does it.
 
------ >8
+I will. I've tested the driver by setting termios from userspace. There was no chance to ask for arbitrary rate, so I didn't think much about this case.
 
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Date: Wed, 16 Apr 2014 15:43:59 -0400
-Subject: [PATCH] ARM: bL_switcher: fix validation check before its activation
+>Also looking at this and some of the other serial bits I see no
+>dependencies on the problematic DMA driver, so does that mean you've
+>got
+>a set of pieces that can be submitted anyway while the DMA driver
+>discussion continues ?
 
-The switcher should not depend on MAX_CLUSTER which is a build time
-limit to  determine ifit should be activated or not. In a multiplatform
-kernel binary it is possible to have dual-cluster and quad-cluster
-platforms configured in. In that case MAX_CLUSTER should be 4 and that
-shouldn't prevent the switcher from working if the kernel is booted on a
-b.L dual-cluster system.
+Yes, getting each peace in will reduce the support burden.
 
-In bL_switcher_halve_cpus() we already have a runtime validation check
-to make sure we're dealing with only two clusters, so booting on a quad
-cluster system will be caught and switcher activation aborted.
+The degree of interdependence varies from feature to feature. rtc, mtd, irq and serial could be taken independently.
 
-However, the b.L switcher must ensure the MCPM layer is initialized on
-the booted hardware before doing anything.  The mcpm_is_available()
-function is added to that effect.
+The main patch is #8. It requires #1-7. The is problem with DMA is one of policy, not technical one. It is explained in #6-7 in details.
 
-Signed-off-by: Nicolas Pitre <nico@linaro.org>
+Everything in the misc depends on bus. But the bus is very simple. There is even no interrupts.
 
-diff --git a/arch/arm/common/bL_switcher.c b/arch/arm/common/bL_switcher.c
-index 5774b6ea7a..f01c0ee0c8 100644
---- a/arch/arm/common/bL_switcher.c
-+++ b/arch/arm/common/bL_switcher.c
-@@ -797,10 +797,8 @@ static int __init bL_switcher_init(void)
- {
- 	int ret;
- 
--	if (MAX_NR_CLUSTERS != 2) {
--		pr_err("%s: only dual cluster systems are supported\n", __func__);
--		return -EINVAL;
--	}
-+	if (!mcpm_is_available())
-+		return -ENODEV;
- 
- 	cpu_notifier(bL_switcher_hotplug_callback, 0);
- 
-diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
-index 1e361abc29..86fd60fefb 100644
---- a/arch/arm/common/mcpm_entry.c
-+++ b/arch/arm/common/mcpm_entry.c
-@@ -48,6 +48,11 @@ int __init mcpm_platform_register(const struct mcpm_platform_ops *ops)
- 	return 0;
- }
- 
-+bool mcpm_is_available(void)
-+{
-+	return (platform_ops) ? true : false;
-+}
-+
- int mcpm_cpu_power_up(unsigned int cpu, unsigned int cluster)
- {
- 	if (!platform_ops)
-diff --git a/arch/arm/include/asm/mcpm.h b/arch/arm/include/asm/mcpm.h
-index 608516ebab..a5ff410dcd 100644
---- a/arch/arm/include/asm/mcpm.h
-+++ b/arch/arm/include/asm/mcpm.h
-@@ -54,6 +54,13 @@ void mcpm_set_early_poke(unsigned cpu, unsigned cluster,
-  */
- 
- /**
-+ * mcpm_is_available - returns whether MCPM is initialized and available
-+ *
-+ * This returns true or false accordingly.
-+ */
-+bool mcpm_is_available(void);
-+
-+/**
-  * mcpm_cpu_power_up - make given CPU in given cluster runable
-  *
-  * @cpu: CPU number within given cluster
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
