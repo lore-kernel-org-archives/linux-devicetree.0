@@ -1,129 +1,74 @@
-From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] Introducing (yet again) Device Tree Overlays
-Date: Wed, 16 Apr 2014 16:23:15 -0500
-Message-ID: <CANk1AXT7bPeus3WFPJ3mVHZ+HSuJ5DabxKQ7df1TV2A8-82-OQ@mail.gmail.com>
-References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<CANk1AXTb=ob52AfK2z--HvFkxJnjnfYWuTCch_Gw99OCoS1ABg@mail.gmail.com>
-	<CANk1AXRAsktOcfpMO7DzvenmUmZ_hUERkqa3nkKsqrGXn6eM=A@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 05/14] ARM: dts: samsung-fimd: add I80 specific
+ properties
+Date: Wed, 16 Apr 2014 23:26:45 +0200
+Message-ID: <1673300.nbbjNiKf1K@avalon>
+References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
+ <1397540862-21359-6-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CANk1AXRAsktOcfpMO7DzvenmUmZ_hUERkqa3nkKsqrGXn6eM=A@mail.gmail.com>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1397540862-21359-6-git-send-email-yj44.cho@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 3, 2014 at 3:40 PM, delicious quinoa
-<delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Mar 28, 2014 at 1:27 PM, delicious quinoa
-> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, Mar 18, 2014 at 4:55 PM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>> The following patchset introduces Device Tree overlays, a method
->>> of dynamically altering the kernel's live Device Tree, along with
->>> a generic interface to use it in a board agnostic manner.
->>>
->>> It is dependent on Grant Likely's DT kobjectification patches located
->>> in his tree as queued for -next.
->>>
->>> It relies on the following previously submitted patches/patchsets:
->>>
->>> * OF: Add [__]of_find_node_by_full_name
->>> * OF: Utility helper functions for dynamic nodes
->>> * of: Make of_find_node_by_path() handle /aliases
->>>
->>> To compile overlays you need the DTC compiler patch
->>>
->>> * "dtc: Dynamic symbols & fixup support (v2)"
->>>
->>> Changes since V2:
->>> * Use of a configfs board agnostic overlay method
->>> * Use of per bus handlers instead of hardcoded behaviour
->>> * Optional target-path overlay target, which allows one to use standard
->>> DTBs without resolution options.
->>>
->>> Changes since V1:
->>>
->>> * Removal of any bits related to a specific board (beaglebone).
->>> * Introduced a platform agnostic interface using /proc/device-tree-overlay
->>> * Various bug fixes related to i2c device handling have been squashed in.
->>>
->>>
->>> Pantelis Antoniou (7):
->>>   OF: Introduce Device Tree resolve support.
->>>   OF: Introduce DT overlay support.
->>>   OF: DT-Overlay configfs interface
->>>   OF: platform: Add overlay bus handler
->>>   OF: i2c: Add overlay bus handler
->>>   OF: spi: Add overlay bus handler
->>>   of: i2c: Export single device registration method
->>>
->>>  .../devicetree/dynamic-resolution-notes.txt        |  25 +
->>>  Documentation/devicetree/overlay-notes.txt         | 187 +++++
->>>  drivers/base/platform.c                            |  99 ++-
->>>  drivers/i2c/i2c-core.c                             | 186 +++--
->>>  drivers/of/Kconfig                                 |  24 +
->>>  drivers/of/Makefile                                |   3 +
->>>  drivers/of/configfs.c                              | 272 +++++++
->>>  drivers/of/overlay.c                               | 895 +++++++++++++++++++++
->>>  drivers/of/resolver.c                              | 376 +++++++++
->>>  drivers/spi/spi.c                                  | 345 +++++---
->>>  include/linux/i2c.h                                |  10 +
->>>  include/linux/of.h                                 | 170 ++++
->>>  12 files changed, 2440 insertions(+), 152 deletions(-)
->>>  create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
->>>  create mode 100644 Documentation/devicetree/overlay-notes.txt
->>>  create mode 100644 drivers/of/configfs.c
->>>  create mode 100644 drivers/of/overlay.c
->>>  create mode 100644 drivers/of/resolver.c
->>
->> I can get a NULL pointer when I apply and remove an overlay and the
->> conditions are right.  The overlay applies correctly.  The crash is
->> when I do the rmdir.  My overlay is:
->>
->> /dts-v1/;
->> /plugin/;
->> / {
->>     fragment@0 {
->>         target-path="/soc";
->>         __overlay__ {
->>             #address-cells = <1>;
->>                     #size-cells = <1>;
->>             agpio0: agpio0 {
->>                 compatible = "altr,pio-1.0";
->>                 reg = <0xff210040 0x10>;
->
-> Added some printks and got a bit further with debug.  If I leave this
-> as-is, the platform device has 2 resources. We get the NULL pointer in
-> __release_resource() when releasing the first one (reg). If I remove
-> this one line ('reg =') the crash goes away.  So in this case, we are
-> ok when releasing an irq resource but get a NULL pointer when removing
-> a reg resource.  Don't know why at this point.
+Hi YoungJun,
 
-The crash is confirmed on v4 patches as well.  The immediate cause of the crash:
+Thank you for the patch.
 
-static int __release_resource(struct resource *old)
-{
-        struct resource *tmp, **p;
+On Tuesday 15 April 2014 14:47:33 YoungJun Cho wrote:
+> In case of using CPU interface panel, the relevant registers should be set.
+> So this patch adds relevant dt bindings.
+> 
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  .../devicetree/bindings/video/samsung-fimd.txt     |    9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> b/Documentation/devicetree/bindings/video/samsung-fimd.txt index
+> 2dad41b..924c2e1 100644
+> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> @@ -44,6 +44,15 @@ Optional Properties:
+>  - display-timings: timing settings for FIMD, as described in document [1].
+>  		Can be used in case timings cannot be provided otherwise
+>  		or to override timings provided by the panel.
+> +- samsung,sysreg-phandle: handle to syscon used to control the system
+> registers +- vidout-i80-ldi: boolean to support i80 interface instead of
+> rgb one +- cs-setup: clock cycles for the active period of address signal
+> enable until +	chip select is enable in i80 interface
+> +- wr-setup: clock cycles for the active period of CS signal enable until
+> +	write signal is enable in i80 interface
+> +- wr-act: clock cycles for the active period of CS enable in i80 interface
+> +- wr-hold: clock cycles for the active period of CS disable until write
+> signal +	is disable in i80 interface
 
-        p = &old->parent->child;
-        for (;;) {
-                tmp = *p; <===kablooey
-...
+Shouldn't the interface parameters be considered as a property of the slave 
+device instead ? The bus master side is programmable, and different slaves 
+would have different timing requirements. I think it would make more sense to 
+specify the timings on the slave (panel) side and query them dynamically at 
+runtime. Depending on the slave the timings could be hardcoded in the driver 
+(as they're usually an intrinsic property of the slave) or partially or fully 
+specified in the slave DT node.
 
-when __release_resource() is called for the reg resource, it does 'p =
-&olde->parent->child' and then crashes when it does 'tmp = *p'.
+>  The device node can contain 'port' child nodes according to the bindings
+> defined in [2]. The following are properties specific to those nodes:
 
-Root cause: It appears that there isn't any code in drivers/of/ that
-eventually calls __request_resource() or __insert_resource() so the
-resource's parents/sibling pointers are never initialized.  Maybe I'm
-missing some patches or something.
+-- 
+Regards,
 
-Alan Tull
-aka
-delicious quinoa
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
