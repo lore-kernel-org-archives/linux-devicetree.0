@@ -1,77 +1,37 @@
-From: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Subject: [PATCH] arm: dts: exynos4: add missing pinctrls for I2C controllers
-Date: Wed, 16 Apr 2014 14:40:31 +0200
-Message-ID: <534E7A3F.7050406@samsung.com>
+From: "Gillian and Adrain Bayford" <bayford-uAjRD0nVeow@public.gmane.org>
+Subject: Grant
+Date: Wed, 16 Apr 2014 06:11:42 -0600
+Message-ID: <201404161214.s3GBgBnq014261@smtpb12.isg.siue.edu>
+Reply-To: gillianandadrianb-bJEeYj9oJeDQT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>
-Cc: 'Ben Dooks' <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, =?UTF-8?B?J+uwleqyveuvvCc=?= <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Description: Mail message body
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Recipients <bayford-uAjRD0nVeow@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds missing pinctrls for I2C controllers 2-7.
+My wife and i won =A3148.6 Million Pounds last year, and we have done l=
+ot of=20
 
-Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
----
- arch/arm/boot/dts/exynos4.dtsi |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+charity donation, so we decide to give 1.5Million Pounds each to 5 luck=
+y=20
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 0401f4d..288aa81 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -357,6 +357,8 @@
- 		interrupts = <0 60 0>;
- 		clocks = <&clock CLK_I2C2>;
- 		clock-names = "i2c";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c2_bus>;
- 		status = "disabled";
- 	};
+people  2014, lucky for you, your email, was given to us by google mana=
+gment=20
 
-@@ -368,6 +370,8 @@
- 		interrupts = <0 61 0>;
- 		clocks = <&clock CLK_I2C3>;
- 		clock-names = "i2c";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c3_bus>;
- 		status = "disabled";
- 	};
+as one of our lucky receipants.=20
 
-@@ -379,6 +383,8 @@
- 		interrupts = <0 62 0>;
- 		clocks = <&clock CLK_I2C4>;
- 		clock-names = "i2c";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c4_bus>;
- 		status = "disabled";
- 	};
+=46or verification process see below
+Please read the article - http://www.bbc.co.uk/news/uk-england-19254228
 
-@@ -390,6 +396,8 @@
- 		interrupts = <0 63 0>;
- 		clocks = <&clock CLK_I2C5>;
- 		clock-names = "i2c";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c5_bus>;
- 		status = "disabled";
- 	};
+Send Name, Country, Age, Occupation and Phone Number for details
 
-@@ -401,6 +409,8 @@
- 		interrupts = <0 64 0>;
- 		clocks = <&clock CLK_I2C6>;
- 		clock-names = "i2c";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c6_bus>;
- 		status = "disabled";
- 	};
-
-@@ -412,6 +422,8 @@
- 		interrupts = <0 65 0>;
- 		clocks = <&clock CLK_I2C7>;
- 		clock-names = "i2c";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&i2c7_bus>;
- 		status = "disabled";
- 	};
+Congratulations & Happy Celebrations in Advance,
+Gillian and Adrian Bayford
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
