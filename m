@@ -1,74 +1,65 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [RFC PATCH 05/14] ARM: dts: samsung-fimd: add I80 specific
- properties
-Date: Wed, 16 Apr 2014 23:26:45 +0200
-Message-ID: <1673300.nbbjNiKf1K@avalon>
-References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
- <1397540862-21359-6-git-send-email-yj44.cho@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] mfd: bcm590xx: add support for second i2c slave
+ address space
+Date: Wed, 16 Apr 2014 22:31:41 +0100
+Message-ID: <20140416213141.GD12304@sirena.org.uk>
+References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
+ <1397501428-8857-3-git-send-email-mporter@linaro.org>
+ <20140416110603.GA19671@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1397540862-21359-6-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LAK3FBfgZ514qYSN"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140416110603.GA19671@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi YoungJun,
 
-Thank you for the patch.
+--LAK3FBfgZ514qYSN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Tuesday 15 April 2014 14:47:33 YoungJun Cho wrote:
-> In case of using CPU interface panel, the relevant registers should be set.
-> So this patch adds relevant dt bindings.
-> 
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/video/samsung-fimd.txt     |    9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> b/Documentation/devicetree/bindings/video/samsung-fimd.txt index
-> 2dad41b..924c2e1 100644
-> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> @@ -44,6 +44,15 @@ Optional Properties:
->  - display-timings: timing settings for FIMD, as described in document [1].
->  		Can be used in case timings cannot be provided otherwise
->  		or to override timings provided by the panel.
-> +- samsung,sysreg-phandle: handle to syscon used to control the system
-> registers +- vidout-i80-ldi: boolean to support i80 interface instead of
-> rgb one +- cs-setup: clock cycles for the active period of address signal
-> enable until +	chip select is enable in i80 interface
-> +- wr-setup: clock cycles for the active period of CS signal enable until
-> +	write signal is enable in i80 interface
-> +- wr-act: clock cycles for the active period of CS enable in i80 interface
-> +- wr-hold: clock cycles for the active period of CS disable until write
-> signal +	is disable in i80 interface
+On Wed, Apr 16, 2014 at 12:06:03PM +0100, Lee Jones wrote:
 
-Shouldn't the interface parameters be considered as a property of the slave 
-device instead ? The bus master side is programmable, and different slaves 
-would have different timing requirements. I think it would make more sense to 
-specify the timings on the slave (panel) side and query them dynamically at 
-runtime. Depending on the slave the timings could be hardcoded in the driver 
-(as they're usually an intrinsic property of the slave) or partially or fully 
-specified in the slave DT node.
+> s/regmap/Regmap
 
->  The device node can contain 'port' child nodes according to the bindings
-> defined in [2]. The following are properties specific to those nodes:
+It's consistently written regmap in all the documentation and so on :)
 
--- 
-Regards,
+> addmap{0,1} doesn't quite sit right with me.
 
-Laurent Pinchart
+> REVISIT: Ah, it's address-map, rather than add map. Okay, not as bad
+> as I first thought, but still, is there a better naming convention you
+> could use?
+
+addrmap or something?
+
+--LAK3FBfgZ514qYSN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTTva6AAoJELSic+t+oim9LLsP/1UtaZD4+crkbY14/E9wjarT
+UnLzJHw+wH6iq6KagICOVoi2XkrpRDq14iYWdkZrct7Z7tlUaehHzrpEMwOZndfo
+kKVIMwVvdhxtto2yAp0MnmlKloyo7vTj0WzF2VnliAnnbT/db+xXOpEF88X88wtd
+6D3OrRRbx2YnRNI+A/whZrcYCBNCWQpPzJxv1VUpEUo3seaDHbAfnzj5+07KhpFM
+hFeSPW92R2gOocEpNfKEVJoQJgArmM70nlldD67UaxgNcp33khTNfYdKhhScJp+9
+i0pWQwl/IzUlhjKEX7IlQ+99yv+d6p8aJSc6dO8zgcKQwquBvEbdbN5KtlCuTfi+
+EnNug7SSTB9BFzuSARqftr9y05cg95h+raIePVt3IiGiEKkzHG5dhZTEDCfDGglm
+Yk/5WVgUDin5OIO6/QSTwMhT1pWck7oFbHzdHZhWMDE/VwhBCgnzGJXDShUCHhY0
+eLEdxGkW2C5rUKp6dAocHp7w6NxAxJEqNs3yNT4OuIud4+mCy7TYWch+Xdtl0eRD
+fYyOL0x93JDyyAgnN+D1VNps95pYrqio8JYQzz3667UYGrAM9HXLZYEd8jAV2si7
+j1bdPlGOUybjBk2eGQ+vSFaINcXWW0AOaOXmwjVdSp8cTSKouXtijz6EUlX13/JU
+uBa+VOgoolz3VZrRvuqo
+=20+M
+-----END PGP SIGNATURE-----
+
+--LAK3FBfgZ514qYSN--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
