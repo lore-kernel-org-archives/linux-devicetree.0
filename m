@@ -1,62 +1,67 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 5/6] ARM: mvebu: Add thermal quirk for the Armada 375 DB
- board
-Date: Wed, 16 Apr 2014 18:19:38 +0200
-Message-ID: <20140416181938.6e8f8f4b@skate>
-References: <1397657720-10893-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1397657720-10893-6-git-send-email-ezequiel.garcia@free-electrons.com>
-	<534EA8C9.7010907@gmail.com>
-	<20140416180315.5153c3f7@skate>
-	<20140416160824.GA14842@lunn.ch>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: omap5: Add dr_mode for dwc3
+Date: Wed, 16 Apr 2014 11:16:19 -0500
+Message-ID: <20140416161619.GH28035@saruman.home>
+References: <1381402195-29257-1-git-send-email-kishon@ti.com>
+ <1381402195-29257-2-git-send-email-kishon@ti.com>
+ <52580F34.8030809@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140416160824.GA14842@lunn.ch>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="wZdghQXYJzyo6AGC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <52580F34.8030809@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, bcousson@baylibre.com, tony@atomide.com, rob.herring@calxeda.com, pawel.moll@arm.com, mark.rutland@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, George Cherian <george.cherian@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
+--wZdghQXYJzyo6AGC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, 16 Apr 2014 18:08:24 +0200, Andrew Lunn wrote:
-> > For minor differences such as SoC stepping, I personally prefer to not
-> > have separate Device Trees. We already have many of them, for each
-> > variant of the various SOCs. If we add the different steppings, it's
-> > going to be even more complicated. Also, there will be a new iteration
-> > of the Armada 375 DB with an A0 chip, which does not have the Z1 bug.
-> 
-> How many Z1 are there out and about? Would it be simpler to just
-> disable thermal on Z1? If only development boards have Z1, this could
-> be reasonable.
+On Fri, Oct 11, 2013 at 05:46:12PM +0300, Roger Quadros wrote:
+> Hi,
+>=20
+> On 10/10/2013 01:49 PM, Kishon Vijay Abraham I wrote:
+> > From: George Cherian <george.cherian@ti.com>
+> >=20
+> > Added dr_mode property in dwc3 and set its default mode to device.
+>=20
+> If there is a specific reason why this is not set to "otg", we need
+> to explain it here.
+>=20
+> AFAIK the port is meant to be used as OTG port.
 
-Not many, but we also need workarounds for other Z1 issues, such as the
-I/O coherency workaround (see the 375 coherency patches) and the SMP
-issue (see the 375 SMP patches).
+we still don't have the workaround for dual role ports, I've been
+working on it but still need to retest and make sure it's working fine
+before merging upstream.
 
-For now, Gregory, Ezequiel and myself only have access to Z1 boards, so
-we would like to support this stepping at least until all of us have
-access to A0 boards. If we don't do this, then we need to keep an ugly
-pile of out-of-tree patches just to get our boards running, which is
-clearly not the best way of ensuring that mainline has all the
-necessary fixes.
+--=20
+balbi
 
-So, I would like to see the Z1 stepping supported for now, and have the
-freedom to remove its support later once we are all ready to switch to
-A0.
+--wZdghQXYJzyo6AGC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-For 375 and 38x, we have the chance of having started the mainlining
-process very early compared to the life cycle of the SoC, and part of
-the consequences of this chance is that we work on early steppings. It
-would seem weird for the kernel community to ask silicon vendors to
-mainline their code earlier, and at the same time refuse workarounds
-needed to bring up early SoC variants.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Thanks,
+iQIcBAEBAgAGBQJTTqzTAAoJEIaOsuA1yqREfaEP/RoDpVwvbrhix7yIKYOE55F3
+IR3oD0L+SqVgBqcZnQGIzD20C8GqDnPBdk8YpG4v08hlvx1pLWChzup97E/Dc2A1
+UfZTteVJRSnARflOkAH7ck/Jrqdp6lVTK2BWMKEkiHyvZmg3RGeteWdmambPeZhs
+GIR2k58mSJguHEt9tRHzttvSSmZSk4lNoE14m/aGp1OqP1pQ/llWIJmNP/Up1iF1
+WT1zB+8Zfj5QJx6mJK4kwDM3uYNAvMM7NkWWyz2qvuj3t+jvMM+6elIAu6pDt8XA
+TtO3LqlVjOWYcyFCBPzoX3ZNPLEzKvklACUsecOJsSQ8bAFVyfTaco/Qa61wbR6b
+sSwl00Qj9FEYN9KVdlCgbWWpxJ9oLGF1qD+uwwzuF59rD2c/AZspOiZu/pIy7519
+ooLT9p5ENah0FkumSDPlTKbkB7EXhCl43uGqpB0Ae+D5fKvRnt3vBnOKE7YhNKob
+m7wqRtgJN9FzGs9EuHrxkmH7YRMSdqMzQ//3+V9jWAVFCrfFgOjpfRU+v8IhfRx4
+w4FEpKqW1j5A8nlQrx016gVaQ3rhgm0b7zUu7D9srAywYyv/jFp4YoMGVfFx9oCo
+1vZ6frG1ex9/OzKzKmwqu7I8UJCs6vvXLDp6NkobkzflSXLtZNbyZ3TyxzvGkOxX
+vyHH+G2aPh+Q9aOgMoEb
+=XF8Y
+-----END PGP SIGNATURE-----
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+--wZdghQXYJzyo6AGC--
