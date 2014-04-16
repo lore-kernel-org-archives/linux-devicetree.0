@@ -1,111 +1,144 @@
-From: Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
-Subject: [PATCH] Configure FSL eSPI CSBEF and CSAFT
-Date: Wed, 16 Apr 2014 13:09:39 -0700
-Message-ID: <1397678979-7655-1-git-send-email-Jane.Wan@gainspeed.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH 1/5] ARM: bL_switcher: Don't enable bL switcher on systems
+ without CCI
+Date: Wed, 16 Apr 2014 16:18:25 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1404161524050.980@knanqh.ubzr>
+References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
+ <1397239311-27717-2-git-send-email-a.kesavan@samsung.com>
+ <alpine.LFD.2.11.1404111406210.980@knanqh.ubzr>
+ <CAM4voanduaJ32ztj6ZDMOPXNd9W6Ttwae_PQ68VGxPKZEsj3kA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, b48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, insop.song-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org
-Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAM4voanduaJ32ztj6ZDMOPXNd9W6Ttwae_PQ68VGxPKZEsj3kA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Cc: "mark.rutland" <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, Andrew Bresticker <abrestic@chromium.org>, Tomasz Figa <t.figa@samsung.com>, inderpal.s@samsung.com, Will Deacon <will.deacon@arm.com>, robh+dt <robh+dt@kernel.org>, Thomas P Abraham <thomas.ab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Make FSL eSPI CSnBEF and CSnAFT fields in ESPI_SPMODEn registers
-(n=0,1,2,3) configurable through device tree.
+On Thu, 17 Apr 2014, Abhilash Kesavan wrote:
 
-CSnBEF is the chip select setup time.  It's the delay in bits from the
-activation of chip select pin to the first clock for data frame.
+> Hi Nicolas,
+> 
+> On Fri, Apr 11, 2014 at 11:44 PM, Nicolas Pitre
+> <nicolas.pitre@linaro.org> wrote:
+> > On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
+> >
+> >> From: Andrew Bresticker <abrestic@chromium.org>
+> >>
+> >> Do not enable the big.LITTLE switcher on systems that do not have an
+> >> ARM CCI (cache-coherent interconnect) present.  Since the CCI is used
+> >> to maintain cache coherency between multiple clusters and peripherals,
+> >> it is unlikely that a system without CCI would support big.LITTLE.
+> >>
+> >> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> >> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+> >
+> > The b.L switcher depends on MCPM, and it also expects only 2 clusters
+> > which is evaluated at run time or it bails out.
+> >
+> > There might be in theory other ways than the CCI to enforce coherency
+> > between clusters.  And that should all be encapsulated by the MCPM
+> > layer.  The switcher module should not be concerned at all by the
+> > underlying hardware mechanism.
+> >
+> > So if the goal is to determine at run time whether or not the switcher
+> > should be activated in a multi-config kernel, then the criteria should
+> > be whether or not MCPM is initialized, and not if there is a CCI.
+> 
+> Yes, we have a multi-SoC enabled kernel (with MCPM and BL_SWITCHER
+> configs enabled); one SoC has a single cluster while the other is a
+> dual cluster. We wanted a run-time check to prevent bL_switcher from
+> running on the single cluster one and zeroed in on CCI. But, I get
+> your point as to why CCI should not be used as a distinguishing factor
+> for switcher initialization.
+> 
+> For now, I can use the no_bL_switcher parameter to disable it on
+> certain platforms. However, can you elaborate on the MCPM
+> initialization check you suggested ?
 
-CSnAFT is the chip select hold time.  It's the delay in bits from the
-last clock for data frame to the deactivation of chip select pin.
+Here's what I mean:
 
-The FSL eSPI driver hardcodes CSnBEF and CSnAFT to 0.  Need to set
-them to a different value for some device.
+----- >8
 
-Signed-off-by: Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/fsl-spi.txt |    6 ++++
- drivers/spi/spi-fsl-espi.c                        |   34 ++++++++++++++++++---
- 2 files changed, 36 insertions(+), 4 deletions(-)
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Date: Wed, 16 Apr 2014 15:43:59 -0400
+Subject: [PATCH] ARM: bL_switcher: fix validation check before its activation
 
-diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-index b032dd7..2c7fd41 100644
---- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
-+++ b/Documentation/devicetree/bindings/spi/fsl-spi.txt
-@@ -42,6 +42,10 @@ Required properties:
- - interrupts : should contain eSPI interrupt, the device has one interrupt.
- - fsl,espi-num-chipselects : the number of the chipselect signals.
+The switcher should not depend on MAX_CLUSTER which is a build time
+limit to  determine ifit should be activated or not. In a multiplatform
+kernel binary it is possible to have dual-cluster and quad-cluster
+platforms configured in. In that case MAX_CLUSTER should be 4 and that
+shouldn't prevent the switcher from working if the kernel is booted on a
+b.L dual-cluster system.
+
+In bL_switcher_halve_cpus() we already have a runtime validation check
+to make sure we're dealing with only two clusters, so booting on a quad
+cluster system will be caught and switcher activation aborted.
+
+However, the b.L switcher must ensure the MCPM layer is initialized on
+the booted hardware before doing anything.  The mcpm_is_available()
+function is added to that effect.
+
+Signed-off-by: Nicolas Pitre <nico@linaro.org>
+
+diff --git a/arch/arm/common/bL_switcher.c b/arch/arm/common/bL_switcher.c
+index 5774b6ea7a..f01c0ee0c8 100644
+--- a/arch/arm/common/bL_switcher.c
++++ b/arch/arm/common/bL_switcher.c
+@@ -797,10 +797,8 @@ static int __init bL_switcher_init(void)
+ {
+ 	int ret;
  
-+Optional properties:
-+- fsl,csbef: chip select assertion time in bits before frame starts
-+- fsl,csaft: chip select negation time in bits after frame ends
+-	if (MAX_NR_CLUSTERS != 2) {
+-		pr_err("%s: only dual cluster systems are supported\n", __func__);
+-		return -EINVAL;
+-	}
++	if (!mcpm_is_available())
++		return -ENODEV;
+ 
+ 	cpu_notifier(bL_switcher_hotplug_callback, 0);
+ 
+diff --git a/arch/arm/common/mcpm_entry.c b/arch/arm/common/mcpm_entry.c
+index 1e361abc29..86fd60fefb 100644
+--- a/arch/arm/common/mcpm_entry.c
++++ b/arch/arm/common/mcpm_entry.c
+@@ -48,6 +48,11 @@ int __init mcpm_platform_register(const struct mcpm_platform_ops *ops)
+ 	return 0;
+ }
+ 
++bool mcpm_is_available(void)
++{
++	return (platform_ops) ? true : false;
++}
 +
- Example:
- 	spi@110000 {
- 		#address-cells = <1>;
-@@ -51,4 +55,6 @@ Example:
- 		interrupts = <53 0x2>;
- 		interrupt-parent = <&mpic>;
- 		fsl,espi-num-chipselects = <4>;
-+		fsl,csbef = <1>;
-+		fsl,csaft = <1>;
- 	};
-diff --git a/drivers/spi/spi-fsl-espi.c b/drivers/spi/spi-fsl-espi.c
-index 428dc7a..7ff9463 100644
---- a/drivers/spi/spi-fsl-espi.c
-+++ b/drivers/spi/spi-fsl-espi.c
-@@ -590,8 +590,10 @@ static struct spi_master * fsl_espi_probe(struct device *dev,
- 	struct spi_master *master;
- 	struct mpc8xxx_spi *mpc8xxx_spi;
- 	struct fsl_espi_reg *reg_base;
--	u32 regval;
--	int i, ret = 0;
-+	struct device_node *nc;
-+	const __be32 *prop;
-+	u32 regval, csmode;
-+	int i, len, ret = 0;
+ int mcpm_cpu_power_up(unsigned int cpu, unsigned int cluster)
+ {
+ 	if (!platform_ops)
+diff --git a/arch/arm/include/asm/mcpm.h b/arch/arm/include/asm/mcpm.h
+index 608516ebab..a5ff410dcd 100644
+--- a/arch/arm/include/asm/mcpm.h
++++ b/arch/arm/include/asm/mcpm.h
+@@ -54,6 +54,13 @@ void mcpm_set_early_poke(unsigned cpu, unsigned cluster,
+  */
  
- 	master = spi_alloc_master(dev, sizeof(struct mpc8xxx_spi));
- 	if (!master) {
-@@ -638,8 +640,32 @@ static struct spi_master * fsl_espi_probe(struct device *dev,
- 	mpc8xxx_spi_write_reg(&reg_base->event, 0xffffffff);
- 
- 	/* Init eSPI CS mode register */
--	for (i = 0; i < pdata->max_chipselect; i++)
--		mpc8xxx_spi_write_reg(&reg_base->csmode[i], CSMODE_INIT_VAL);
-+	for_each_available_child_of_node(master->dev.of_node, nc) {
-+		/* get chip select */
-+		prop = of_get_property(nc, "reg", &len);
-+		if (!prop || len < sizeof(*prop))
-+			continue;
-+		i = be32_to_cpup(prop);
-+		if (i < 0 || i >= pdata->max_chipselect)
-+			continue;
+ /**
++ * mcpm_is_available - returns whether MCPM is initialized and available
++ *
++ * This returns true or false accordingly.
++ */
++bool mcpm_is_available(void);
 +
-+		csmode = CSMODE_INIT_VAL;
-+		/* check if CSBEF is set in device tree */
-+		prop = of_get_property(nc, "fsl,csbef", &len);
-+		if (prop && len >= sizeof(*prop)) {
-+			csmode &= ~(CSMODE_BEF(0xf));
-+			csmode |= CSMODE_BEF(be32_to_cpup(prop));
-+		}
-+		/* check if CSAFT is set in device tree */
-+		prop = of_get_property(nc, "fsl,csaft", &len);
-+		if (prop && len >= sizeof(*prop)) {
-+			csmode &= ~(CSMODE_AFT(0xf));
-+			csmode |= CSMODE_AFT(be32_to_cpup(prop));
-+		}
-+		mpc8xxx_spi_write_reg(&reg_base->csmode[i], csmode);
-+
-+		dev_info(dev, "cs=%d, init_csmode=0x%x\n", i, csmode);
-+	}
- 
- 	/* Enable SPI interface */
- 	regval = pdata->initial_spmode | SPMODE_INIT_VAL | SPMODE_ENABLE;
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++/**
+  * mcpm_cpu_power_up - make given CPU in given cluster runable
+  *
+  * @cpu: CPU number within given cluster
