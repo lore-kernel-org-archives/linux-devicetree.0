@@ -1,123 +1,54 @@
-From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH RFC v11 5/6] dma: mpc512x: add device tree binding
- document
-Date: Wed, 16 Apr 2014 22:44:10 +0200
-Message-ID: <20140416204410.GP3528@book.gsilab.sittig.org>
-References: <1397559250-17680-1-git-send-email-a13xp0p0v88@gmail.com>
- <1397559250-17680-6-git-send-email-a13xp0p0v88@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] Configure FSL eSPI CSBEF and CSAFT
+Date: Wed, 16 Apr 2014 22:05:28 +0100
+Message-ID: <20140416210528.GB12304@sirena.org.uk>
+References: <1397678979-7655-1-git-send-email-Jane.Wan@gainspeed.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="upHqgONuYbTeMWr5"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397559250-17680-6-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1397678979-7655-1-git-send-email-Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
+Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, b48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, insop.song-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-04-15 at 14:54 +0400, Alexander Popov wrote:
-> 
-> Introduce a device tree binding document for the MPC512x DMA controller
-> 
-> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-> Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I'm not certain whether the attribution is right.  Is the S-o-b
-appropriate when the patch is not "from" me?  As I've stated
-before, it's OK if you pick up and extend what I provide, but
-please don't pretend that I wrote what you did, and don't pretend
-that I ACKed or passed along your submission when I didn't.
+--upHqgONuYbTeMWr5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Apr 16, 2014 at 01:09:39PM -0700, Jane Wan wrote:
+> Make FSL eSPI CSnBEF and CSnAFT fields in ESPI_SPMODEn registers
+> (n=0,1,2,3) configurable through device tree.
 
-This binding certainly needs further improvement to become a good
-one.  As I've communicated in the past, I was rather ignorant
-"back then" when I wrote v1 and v2 of the RFC.  We have learned
-something in the meantime.  Though I admit having gone silent
-after several review iterations.  Assumed you would pick up
-information that showed up several times on public lists.
+Applied, thanks.
 
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> @@ -0,0 +1,51 @@
-> +* Freescale MPC512x and MPC8308 DMA Controller
-> +
-> +The DMA controller in the Freescale MPC512x and MPC8308 SoCs can move
-> +blocks of memory contents between memory and peripherals or
-> +from memory to memory.
-> +
-> +Refer to the "Generic DMA Controller and DMA request bindings" in
-> +the dma/dma.txt file for a more detailed description of binding.
-> +
-> +* DMA controller
-> +
-> +Required properties:
-> +- compatible: Should be one of
-> +	"fsl,mpc5121-dma"
-> +	"fsl,mpc8308-dma", "fsl,mpc5121-dma"
+--upHqgONuYbTeMWr5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-is this a duplicate?  looks funny, needs a fix
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-or is it a requirement that for MPC8308 you need to provide both
-compatible strings?  that would be wrong, as MPC8308 certainly is
-not an MPC5121
+iQIcBAEBAgAGBQJTTvCVAAoJELSic+t+oim956sP/0RFWCq+s8VfcmaasODaTNU+
+sjoBmhK7/xcbn7jFfgDtLD9tMpS+3UNNkumDagepvU1VSfjbSUvYS9/5MkCxPYIG
+S+6hG8PI04wLV5Fgs59ZmX1pIKcQXq2zfLrylv8hynVjSC6+MTZTpLhOkE2uUoz4
+A/EyS6z4KN+jcGeqNkl2mAXBBxg8pk5GubwtJc7Dnx2c7QnsiH4jNbKejs+OWqr8
+QalKP6DN7kuvrrS8ZalUNJRJ7k8yTywS/FrHqVGwhjbUrOSGC60KyPWZPG2Yq9Cf
+f/n+mO2fmWlRDXsINOGW2nHrha8TBRpkg0llyMvu4ItLHkUCEUQVVloDIAUz/5s9
++h75wHqhL+ztjp+OAZZMiS4HQChk4P7ImWejW1RvqE+mYUqcd6xxJaR3VPVo1AKM
+vuR7kVE+HAsAHybdBv9A0kENxB6Yo76jjVOKIwFIv+50Y+OO+eYlSSPJHYKc4Afe
+dTBZLXQFo6e+QDWx2jDOJX6YxLhOY1iFKou1LfDW2vTxfp0bmHNbqHx+6z99tLW6
+cs6JtRLQfXqbaK2xK3okJDieoK2a7fFY5k0S5TKkV8SWOlU9L3BjAlpEsRpjccz6
+yiM5O/RAXzaRbbeAQgcVQSioxdjI3itK9zOYRywtJHA6/EGX1myoQFFBJ2BnlDx4
+Z6GUkQ7Qx74ZWGL2X0ki
+=QfXr
+-----END PGP SIGNATURE-----
 
-a quick search reveals: the drivers/dma/mpc512x_dma.c Linux
-driver implementation is wrong, it should match on both strings;
-expecting the MPC8308 to disguise as an MPC5121 when it's not is
-inappropriate (and only went unnoticed because of missing
-bindings, I guess)
-
-> +- reg: Address and size of the DMA controller's register set
-> +- interrupts: Interrupt for the DMA controller. Generic interrupt client node
-> +	is described in interrupt-controller/interrupts.txt
-
-'interrupts' only works in combinations with 'interrupt-parent',
-that actual .dts files don't have the latter in the nodes is an
-implementation detail but not a binding's requirement
-
-and an alternative method of specifying interrupts was introduced
-recently, a reference to the common binding without naming one
-specific property name could be most appropriate
-
-> +
-> +Optional properties:
-> +- #dma-cells: The length of the DMA specifier, must be <1> since
-> +	the DMA controller uses a fixed assignment of request lines
-> +	per channel. Refer to dma/dma.txt for the detailed description
-> +	of this property
-
-I'm afraid that a generic/common document does not and cannot
-describe the specific semantics of this provider's cells
-
-this binding should explicitly mention that the number of cells
-needs to be one, and that this one cell is the DMA channel (which
-translates to "peripheral request line"), because these
-assigments are fixed in hardware
-
-> +
-> +Example:
-> +
-> +	dma0: dma@14000 {
-> +		compatible = "fsl,mpc5121-dma";
-> +		reg = <0x14000 0x1800>;
-> +		interrupts = <65 0x8>;
-> +		#dma-cells = <1>;
-> +	};
-> +
-> +* DMA client
-
-the DMA provider's binding probably need not discuss client
-specs, a reference to the common binding should suffice if it's
-appropriate at all
-
-
-virtually yours
-Gerhard Sittig
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
-Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--upHqgONuYbTeMWr5--
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
