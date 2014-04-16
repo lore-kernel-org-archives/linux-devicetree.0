@@ -1,83 +1,122 @@
-From: Russell King <rmk+kernel@arm.linux.org.uk>
-Subject: [PATCH RFC 5/5] ahci_imx: add disable for spread-spectrum
-Date: Wed, 16 Apr 2014 09:43:46 +0100
-Message-ID: <E1WaLRa-0002yX-7L@rmk-PC.arm.linux.org.uk>
-References: <20140416084227.GD24070@n2100.arm.linux.org.uk>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140416084227.GD24070@n2100.arm.linux.org.uk>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Shawn Guo <shawn.guo@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv2 8/8] ARM: dts: Add device tree sources for Exynos3250
+Date: Wed, 16 Apr 2014 17:45:56 +0900
+Message-ID: <534E4344.30504@samsung.com>
+References: <1397527192-21988-1-git-send-email-cw00.choi@samsung.com>
+ <1397527192-21988-9-git-send-email-cw00.choi@samsung.com>
+ <534CEAB7.6020600@arm.com> <534CED76.9010302@samsung.com>
+ <534CF847.5040008@arm.com> <534CF9B4.306@samsung.com>
+ <534CFAD7.4030508@arm.com> <534E3DC0.40502@samsung.com>
+ <534E4089.9070804@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <534E4089.9070804@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Inki Dae <inki.dae@samsung.com>, Rob Herring <robh+dt@kernel.org>, "ben-linux@fluff.org" <ben-linux@fluff.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "hyunhee.kim@samsung.com" <hyunhee.kim@samsung.com>, "sw0312.kim@samsung.com" <sw0312.kim@samsung.com>, linux-ker
 List-Id: devicetree@vger.kernel.org
 
-Spread-spectrum doesn't work with Cubox-i hardware, so we have to
-disable this feature.  Add a DT property so that platforms can
-indicate that this feature should not be enabled.
+Hi Marc,
 
-Having it as a negative property keeps existing DT files working.
+On 04/16/2014 05:34 PM, Marc Zyngier wrote:
+> On 16/04/14 09:22, Chanwoo Choi wrote:
+>> Hi Marc,
+>>
+>> On 04/15/2014 06:24 PM, Marc Zyngier wrote:
+>>> On 15/04/14 10:19, Chanwoo Choi wrote:
+>>>> On 04/15/2014 06:13 PM, Marc Zyngier wrote:
+>>>>> On 15/04/14 09:27, Chanwoo Choi wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 04/15/2014 05:15 PM, Marc Zyngier wrote:
+>>>>>>> On 15/04/14 02:59, Chanwoo Choi wrote:
+>>>>>>>> From: Tomasz Figa <t.figa@samsung.com>
+>>>>>>>>
+>>>>>>>> This patch add new exynos3250.dtsi to support Exynos3250 SoC based on Cortex-A7
+>>>>>>>> dual core and includes following dt nodes:
+>>>>>>>>
+>>>>>>>> - GIC interrupt controller
+>>>>>>>> - Pinctrl to control GPIOs
+>>>>>>>> - Clock controller
+>>>>>>>> - CPU information (Cortex-A7 dual core)
+>>>>>>>> - UART to support serial port
+>>>>>>>> - MCT (Multi Core Timer)
+>>>>>>>> - ADC (Analog Digital Converter)
+>>>>>>>> - I2C/SPI bus
+>>>>>>>> - Power domain
+>>>>>>>> - PMU (Performance Monitoring Unit)
+>>>>>>>> - MSHC (Mobile Storage Host Controller)
+>>>>>>>> - PWM (Pluse Width Modulation)
+>>>>>>>> - AMBA bus
+>>>>>>>
+>>>>>>> [...]
+>>>>>>>
+>>>>>>> Where is the arch timer node?
+>>>>>>
+>>>>>> Exynos3250 uses MCT (Multi Core Timer) instead of ARM_ARCH_TIMER.
+>>>>>> - in drivers/clocksource/exynos_mct.c
+>>>>>
+>>>>> Don't you have a Cortex-A7? If so, you have the arch timer.
+>>>>
+>>>> Do you means that 'arch timer" is ARM_ARCH_TIMER?
+>>>
+>>> Yes.
+>>>
+>>>> As I knew, ARM_ARCH_TIMER is clocksource driver for system timer.
+>>>> But, Exynos SoC used MCT clocksource for system timer.
+>>>>
+>>>> Exynos dts file didn't include arch timer node but only include mct node.
+>>>
+>>> Well, it is a bug, and a recurrent one. A Cortex-A7 has the arch timers
+>>> implemented. Always.
+>>>
+>>> http://infocenter.arm.com/help/topic/com.arm.doc.ddi0464f/BABFEBJJ.html
+>>>
+>>> All Cortex-A7 have it, and so do A12, A15, A17, A53, A57.
+>>
+>> I tested 'arch_timer'(drivers/clocksource/arm_arch_timer.c) on Exynos3250 based on Cortex-A7.
+>>
+>> To test arch timer, I used the clocksource of arch_timer for timekeeping instead of clocksource
+>> of Exynos MCT. But, I faced with issue. The following function return only same value(zero)
+>> as following kernel log:
+>> - arch_counter_get_cntvct() in arch/arm/include/asm/arch_timer.h
+>>
+>> Uncompressing Linux... done, booting the kernel.
+>> [    0.000000] Booting Linux on physical CPU 0x0
+>> [    0.000000] Initializing cgroup subsys cpuset
+>> [    0.000000] Initializing cgroup subsys cpu
+>> [    0.000000] Initializing cgroup subsys cpuacct
+>> [    0.000000] Linux version 3.15.0-rc1-00020-gf452826-dirty ...
+>> [    0.000000] CPU: ARMv7 Processor ...
+>> ...
+>> [    0.000000] Architected cp15 timer(s) running at 24.00MHz (virt).
+>> [    0.000000] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 2863311519744ns
+>> ...
+>>
+>> Could you give me a solution to resolve this issue or a expected cause?
+> 
+> My guess is that you need to enable some clock for the timer to tick.
+> Ask your HW guys how they have wired this clock.
+> 
+> Also, I cannot help but notice that you are entering your kernel at SVC
+> instead of HYP. I suggest you fix your bootloader/firmware to allow all
+> CPUs to enter the kernel in HYP.
 
-Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
----
- arch/arm/boot/dts/imx6q-cubox-i.dts |  1 +
- drivers/ata/ahci_imx.c              | 14 +++++++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+OK, I understand. Thanks for your comment.
 
-diff --git a/arch/arm/boot/dts/imx6q-cubox-i.dts b/arch/arm/boot/dts/imx6q-cubox-i.dts
-index 941365d7ee65..9efd8b0c8011 100644
---- a/arch/arm/boot/dts/imx6q-cubox-i.dts
-+++ b/arch/arm/boot/dts/imx6q-cubox-i.dts
-@@ -16,4 +16,5 @@
- 	fsl,transmit-level-mV = <1104>;
- 	fsl,transmit-boost-mdB = <0>;
- 	fsl,transmit-atten-16ths = <9>;
-+	fsl,no-spread-spectrum;
- };
-diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c
-index 1251d719cc73..f3221b8bfafa 100644
---- a/drivers/ata/ahci_imx.c
-+++ b/drivers/ata/ahci_imx.c
-@@ -208,6 +208,7 @@ struct reg_property {
- 	const struct reg_value *values;
- 	size_t num_values;
- 	u32 def_value;
-+	u32 set_value;
- };
- 
- static const struct reg_value gpr13_tx_level[] = {
-@@ -305,6 +306,10 @@ static const struct reg_property gpr13_props[] = {
- 		.values = gpr13_rx_eq,
- 		.num_values = ARRAY_SIZE(gpr13_rx_eq),
- 		.def_value = IMX6Q_GPR13_SATA_RX_EQ_VAL_3_0_DB,
-+	}, {
-+		.name = "fsl,no-spread-spectrum",
-+		.def_value = IMX6Q_GPR13_SATA_MPLL_SS_EN,
-+		.set_value = 0,
- 	},
- };
- 
-@@ -318,6 +323,14 @@ static u32 imx_ahci_parse_props(struct device *dev,
- 	for (i = 0; i < num; i++, prop++) {
- 		u32 of_val;
- 
-+		if (prop->num_values == 0) {
-+			if (of_property_read_bool(np, prop->name))
-+				reg_value |= prop->set_value;
-+			else
-+				reg_value |= prop->def_value;
-+			continue;
-+		}
-+
- 		if (of_property_read_u32(np, prop->name, &of_val)) {
- 			dev_info(dev, "%s not specified, using %08x\n",
- 				prop->name, prop->def_value);
-@@ -392,7 +405,6 @@ static int imx_ahci_probe(struct platform_device *pdev)
- 				   IMX6Q_GPR13_SATA_RX_LOS_LVL_SATA2M |
- 				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_2P_4F |
- 				   IMX6Q_GPR13_SATA_SPD_MODE_3P0G |
--				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
- 				   reg_value;
- 	}
- 
--- 
-1.8.3.1
+I think this patchset series will add arch_timer node to exynos3250.dtsi on next patchset(v3).
 
+And then I will post other patch for arch_timer node after find the solution of this issue.
+
+Best Regards,
+Chanwoo Choi
