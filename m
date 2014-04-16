@@ -1,345 +1,53 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v5 01/20] clk: shmobile: r8a7779: Add clocks support
-Date: Wed, 16 Apr 2014 11:27:13 +0200
-Message-ID: <14283906.sas8IJiLMr@avalon>
-References: <1397613454-7522-1-git-send-email-horms+renesas@verge.net.au> <1397613454-7522-2-git-send-email-horms+renesas@verge.net.au>
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer
+ Module timer node.
+Date: Wed, 16 Apr 2014 09:38:33 +0000
+Message-ID: <ac0038bd2f9142119cfe5843afbf78e9@DM2PR03MB509.namprd03.prod.outlook.com>
+References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
+ <1397614787-8300-2-git-send-email-Li.Xiubo@freescale.com>
+ <534E4873.5070308@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1397613454-7522-2-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, GeertUytterhoeven <geert@linux-m68k.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <534E4873.5070308-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-Thank you for the patch.
-
-On Wednesday 16 April 2014 10:57:15 Simon Horman wrote:
-> The R8A7779 SoC has several clocks that are too custom to be supported in a
-> generic driver. Those clocks are all fixed rate clocks with multiplier and
-> divisor set according to boot mode configuration.
-> 
-> Based on work for R-Car Gen2 SoCs by Laurent Pinchart.
-> 
-> Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> 
-> ---
-> 
-> Laurent Pinchart suggested an "renesas,rcar-gen1-cpg-clocks" compat string,
-> however, I have decided against including this as I do not believe
-> that it describes the hardware as to my knowledge the documentation
-> does not explicitly state that the hardware is compatible between
-> different R-Car Gen 1 SoCs.
-> 
-> v5
-> * Rebase
-> * As suggested by Laurent Pinchart
->   - Do not print an error if kzalloc() fails,
->     kzalloc() will print OOM message to the kernel log in such cases
-> v4
-> * As suggested by Geert Uytterhoeven
->   - Remove double and from bindings documentation
->   - Remove unused CPG_PLL_CONFIG_INDEX and struct cpg_pll_config
->   - Correct order of cpg_clk_configs entries
-> * As suggested by Laurent Pinchart
->   - Update copyright to include 2014
->   - Remove reference to non-existent divider clocks in changelog
->   - Do not map cpg->reg as it is not accessed
->   - Return an error for unknown name values in r8a7779_cpg_register_clock()
->   - Expose clkb in binding
->   - Do not include MSPT registers in register range in binding example
-> * Write (BIT(2)|BIT(1)) instead of (BIT(1)|BIT(2)) as it is less confusing
->   (to me)
-> v3
-> * As suggested by Laurent Pinchart
->   - Added external clock input
->   - Use PLLA ratio set bu MD11 and MD12
->   - Add _div suffixes of fields of struct cpt_clk_config
->   - Register PLLA as a fixed factor clock
->   - Use sizeof() instead of sizeof
->   - Use num_clks instead of CPG_NUM_CLOCKS in r8a7779_cpg_clocks_init()
-> 
->   - I kept this as r8a7779 binding rather than moving to a R-Car Gen1
->     binding which could be shared with other SoCs as I do not believe that
->     the SoCs is are sufficiently similar.
-> ---
->  .../bindings/clock/renesas,r8a7779-cpg-clocks.txt  |  27 ++++
->  drivers/clk/shmobile/Makefile                      |   1 +
->  drivers/clk/shmobile/clk-r8a7779.c                 | 180
-> +++++++++++++++++++++ include/linux/clk/shmobile.h                       | 
->  3 +
->  4 files changed, 211 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> create mode 100644 drivers/clk/shmobile/clk-r8a7779.c
-> 
-> diff --git
-> a/Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> b/Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> new file mode 100644
-> index 0000000..ed3c8cb
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/renesas,r8a7779-cpg-clocks.txt
-> @@ -0,0 +1,27 @@
-> +* Renesas R8A7779 Clock Pulse Generator (CPG)
-> +
-> +The CPG generates core clocks for the R8A7779. It includes one PLL and
-> +several fixed ratio dividers
-> +
-> +Required Properties:
-> +
-> +  - compatible: Must be "renesas,r8a7779-cpg-clocks"
-> +  - reg: Base address and length of the memory resource used by the CPG
-> +
-> +  - clocks: Reference to the parent clock
-> +  - #clock-cells: Must be 1
-> +  - clock-output-names: The names of the clocks. Supported clocks are
-> "plla", +    "z", "zs", "s", "s1", "p", "b", "out".
-> +
-> +
-> +Example
-> +-------
-> +
-> +	cpg_clocks: cpg_clocks@ffc80000 {
-> +		compatible = "renesas,r8a7779-cpg-clocks";
-> +		reg = <0 0xffc80000 0 0x30>;
-> +		clocks = <&extal_clk>;
-> +		#clock-cells = <1>;
-> +		clock-output-names = "plla", "z", "zs", "s", "s1", "p",
-> +		                     "b", "out";
-> +	};
-> diff --git a/drivers/clk/shmobile/Makefile b/drivers/clk/shmobile/Makefile
-> index 5404cb9..bdf342d 100644
-> --- a/drivers/clk/shmobile/Makefile
-> +++ b/drivers/clk/shmobile/Makefile
-> @@ -1,5 +1,6 @@
->  obj-$(CONFIG_ARCH_EMEV2)		+= clk-emev2.o
->  obj-$(CONFIG_ARCH_R7S72100)		+= clk-rz.o
-> +obj-$(CONFIG_ARCH_R8A7779)		+= clk-r8a7779.o
->  obj-$(CONFIG_ARCH_R8A7790)		+= clk-rcar-gen2.o
->  obj-$(CONFIG_ARCH_R8A7791)		+= clk-rcar-gen2.o
->  obj-$(CONFIG_ARCH_SHMOBILE_MULTI)	+= clk-div6.o
-> diff --git a/drivers/clk/shmobile/clk-r8a7779.c
-> b/drivers/clk/shmobile/clk-r8a7779.c new file mode 100644
-> index 0000000..652ecac
-> --- /dev/null
-> +++ b/drivers/clk/shmobile/clk-r8a7779.c
-> @@ -0,0 +1,180 @@
-> +/*
-> + * r8a7779 Core CPG Clocks
-> + *
-> + * Copyright (C) 2013, 2014 Horms Solutions Ltd.
-> + *
-> + * Contact: Simon Horman <horms@verge.net.au>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; version 2 of the License.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk/shmobile.h>
-> +#include <linux/init.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/spinlock.h>
-> +
-> +#include <dt-bindings/clock/r8a7779-clock.h>
-> +
-> +#define CPG_NUM_CLOCKS			(R8A7779_CLK_OUT + 1)
-> +
-> +struct r8a7779_cpg {
-> +	struct clk_onecell_data data;
-> +	spinlock_t lock;
-> +	void __iomem *reg;
-> +};
-> +
-> +/*
-> ---------------------------------------------------------------------------
-> -- + * CPG Clock Data
-> + */
-> +
-> +/*
-> + *		MD1 = 1			MD1 = 0
-> + *		(PLLA = 1500)		(PLLA = 1600)
-> + *		(MHz)			(MHz)
-> + *------------------------------------------------+--------------------
-> + * clkz		1000   (2/3)		800   (1/2)
-> + * clkzs	 250   (1/6)		200   (1/8)
-> + * clki		 750   (1/2)		800   (1/2)
-> + * clks		 250   (1/6)		200   (1/8)
-> + * clks1	 125   (1/12)		100   (1/16)
-> + * clks3	 187.5 (1/8)		200   (1/8)
-> + * clks4	  93.7 (1/16)		100   (1/16)
-> + * clkp		  62.5 (1/24)		 50   (1/32)
-> + * clkg		  62.5 (1/24)		 66.6 (1/24)
-> + * clkb, CLKOUT
-> + * (MD2 = 0)	  62.5 (1/24)		 66.6 (1/24)
-> + * (MD2 = 1)	  41.6 (1/36)		 50   (1/32)
-> + */
-> +
-> +#define CPG_CLK_CONFIG_INDEX(md)	(((md) & (BIT(2)|BIT(1))) >> 1)
-> +
-> +struct cpg_clk_config {
-> +	unsigned int z_mult;
-> +	unsigned int z_div;
-> +	unsigned int zs_and_s_div;
-> +	unsigned int s1_div;
-> +	unsigned int p_div;
-> +	unsigned int b_and_out_div;
-> +};
-> +
-> +static const struct cpg_clk_config cpg_clk_configs[4] __initconst = {
-> +	{ 1, 2, 8, 16, 32, 24 },
-> +	{ 2, 3, 6, 12, 24, 24 },
-> +	{ 1, 2, 8, 16, 32, 32 },
-> +	{ 2, 3, 6, 12, 24, 36 },
-> +};
-> +
-> +/*
-> + *   MD		PLLA Ratio
-> + * 12 11
-> + *------------------------
-> + * 0  0		x42
-> + * 0  1		x48
-> + * 1  0		x56
-> + * 1  1		x64
-> + */
-> +
-> +#define CPG_PLLA_MULT_INDEX(md)	(((md) & (BIT(12)|BIT(11))) >> 11)
-> +
-> +static const unsigned int cpg_plla_mult[4] __initconst = { 42, 48, 56, 64
-> }; +
-> +/*
-> ---------------------------------------------------------------------------
-> -- + * Initialization
-> + */
-> +
-> +static u32 cpg_mode __initdata;
-> +
-> +static struct clk * __init
-> +r8a7779_cpg_register_clock(struct device_node *np, struct r8a7779_cpg *cpg,
-> +			   const struct cpg_clk_config *config,
-> +			   unsigned int plla_mult, const char *name)
-> +{
-> +	const char *parent_name = "plla";
-> +	unsigned int mult = 1;
-> +	unsigned int div = 1;
-> +
-> +	if (!strcmp(name, "plla")) {
-> +		parent_name = of_clk_get_parent_name(np, 0);
-> +		mult = plla_mult;
-> +	} else if (!strcmp(name, "z")) {
-> +		div = config->z_div;
-> +		mult = config->z_mult;
-> +	} else if (!strcmp(name, "zs") || !strcmp(name, "s")) {
-> +		div = config->zs_and_s_div;
-> +	} else if (!strcmp(name, "s1")) {
-> +		div = config->s1_div;
-> +	} else if (!strcmp(name, "p")) {
-> +		div = config->p_div;
-> +	} else if (!strcmp(name, "b") || !strcmp(name, "out")) {
-> +		div = config->b_and_out_div;
-> +	} else {
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	return clk_register_fixed_factor(NULL, name, parent_name, 0, mult, div);
-> +}
-> +
-> +static void __init r8a7779_cpg_clocks_init(struct device_node *np)
-> +{
-> +	const struct cpg_clk_config *config;
-> +	struct r8a7779_cpg *cpg;
-> +	struct clk **clks;
-> +	unsigned int i, plla_mult;
-> +	int num_clks;
-> +
-> +	num_clks = of_property_count_strings(np, "clock-output-names");
-> +	if (num_clks < 0) {
-> +		pr_err("%s: failed to count clocks\n", __func__);
-> +		return;
-> +	}
-> +
-> +	cpg = kzalloc(sizeof(*cpg), GFP_KERNEL);
-> +	clks = kzalloc(CPG_NUM_CLOCKS * sizeof(*clks), GFP_KERNEL);
-> +	if (cpg == NULL || clks == NULL) {
-> +		/* We're leaking memory on purpose, there's no point in cleaning
-> +		 * up as the system won't boot anyway.
-> +		 */
-> +		return;
-> +	}
-> +
-> +	spin_lock_init(&cpg->lock);
-> +
-> +	cpg->data.clks = clks;
-> +	cpg->data.clk_num = num_clks;
-> +
-> +	config = &cpg_clk_configs[CPG_CLK_CONFIG_INDEX(cpg_mode)];
-> +	plla_mult = cpg_plla_mult[CPG_PLLA_MULT_INDEX(cpg_mode)];
-> +
-> +	for (i = 0; i < num_clks; ++i) {
-> +		const char *name;
-> +		struct clk *clk;
-> +
-> +		of_property_read_string_index(np, "clock-output-names", i,
-> +					      &name);
-> +
-> +		clk = r8a7779_cpg_register_clock(np, cpg, config,
-> +						 plla_mult, name);
-> +		if (IS_ERR(clk))
-> +			pr_err("%s: failed to register %s %s clock (%ld)\n",
-> +			       __func__, np->name, name, PTR_ERR(clk));
-> +		else
-> +			cpg->data.clks[i] = clk;
-> +	}
-> +
-> +	of_clk_add_provider(np, of_clk_src_onecell_get, &cpg->data);
-> +}
-> +CLK_OF_DECLARE(r8a7779_cpg_clks, "renesas,r8a7779-cpg-clocks",
-> +	       r8a7779_cpg_clocks_init);
-> +
-> +void __init r8a7779_clocks_init(u32 mode)
-> +{
-> +	cpg_mode = mode;
-> +
-> +	of_clk_init(NULL);
-> +}
-> diff --git a/include/linux/clk/shmobile.h b/include/linux/clk/shmobile.h
-> index f9bf080..9f8a140 100644
-> --- a/include/linux/clk/shmobile.h
-> +++ b/include/linux/clk/shmobile.h
-> @@ -1,7 +1,9 @@
->  /*
->   * Copyright 2013 Ideas On Board SPRL
-> + * Copyright 2013, 2014 Horms Solutions Ltd.
->   *
->   * Contact: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> + * Contact: Simon Horman <horms@verge.net.au>
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License as published by
-> @@ -14,6 +16,7 @@
-> 
->  #include <linux/types.h>
-> 
-> +void r8a7779_clocks_init(u32 mode);
->  void rcar_gen2_clocks_init(u32 mode);
-> 
->  #endif
-
--- 
-Regards,
-
-Laurent Pinchart
-
+PiBTdWJqZWN0OiBSZTogW1JGQ11bUEFUQ0ggMS8zXSBBUk06IGR0czogdmY2MTA6IEFkZCBGcmVl
+c2NhbGUgRmxleFRpbWVyIE1vZHVsZQ0KPiB0aW1lciBub2RlLg0KPiANCj4gT24gMDQvMTYvMjAx
+NCAwNDoxOSBBTSwgWGl1Ym8gTGkgd3JvdGU6DQo+ID4gU2lnbmVkLW9mZi1ieTogWGl1Ym8gTGkg
+PExpLlhpdWJvQGZyZWVzY2FsZS5jb20+DQo+ID4gQ2M6IFNoYXduIEd1byA8c2hhd24uZ3VvQGxp
+bmFyby5vcmc+DQo+ID4gQ2M6IEppbmdjaGFuZyBMdSA8YjM1MDgzQGZyZWVzY2FsZS5jb20+DQo+
+IA0KPiBUaGF0IGRlc2VydmVzIGEgcGF0Y2ggZGVzY3JpcHRpb24gYW5kIGFuIHVwZGF0ZSBvZiB0
+aGUgZG9jdW1lbnRhdGlvbi4NCj4NCg0KWWVzLCBJJ2xsIGFkZCB0aGlzLg0KDQoNClRoYW5rcywN
+Cg0KQlJzDQpYaXVibw0KDQogDQo+IFRoYW5rcw0KPiAgICAtLSBEYW5pZWwNCj4gDQo+ID4gLS0t
+DQo+ID4gICBhcmNoL2FybS9ib290L2R0cy92ZjYxMC5kdHNpIHwgMTMgKysrKysrKysrKysrKw0K
+PiA+ICAgMSBmaWxlIGNoYW5nZWQsIDEzIGluc2VydGlvbnMoKykNCj4gPg0KPiA+IGRpZmYgLS1n
+aXQgYS9hcmNoL2FybS9ib290L2R0cy92ZjYxMC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvdmY2
+MTAuZHRzaQ0KPiA+IGluZGV4IDEwN2UyYzAuLmMzYTI3NmYgMTAwNjQ0DQo+ID4gLS0tIGEvYXJj
+aC9hcm0vYm9vdC9kdHMvdmY2MTAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3Zm
+NjEwLmR0c2kNCj4gPiBAQCAtMTUzLDYgKzE1MywxOSBAQA0KPiA+ICAgCQkJCWNsb2NrLW5hbWVz
+ID0gInBpdCI7DQo+ID4gICAJCQl9Ow0KPiA+DQo+ID4gKwkJCWZ0bTA6IGZ0bUA0MDAzODAwMCB7
+DQo+ID4gKwkJCQljb21wYXRpYmxlID0gImZzbCx2ZjYxMC1mdG0tdGltZXIiOw0KPiA+ICsJCQkJ
+cmVnID0gPDB4NDAwMzgwMDAgMHgyMDAwPjsNCj4gPiArCQkJCWludGVycnVwdHMgPSA8MCA0MiBJ
+UlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiArCQkJCWNsb2NrLW5hbWVzID0gImZ0bTAiLCAiZnRt
+MSIsDQo+ID4gKwkJCQkJImZ0bTBfY291bnRlcl9lbiIsICJmdG0xX2NvdW50ZXJfZW4iOw0KPiA+
+ICsJCQkJY2xvY2tzID0gPCZjbGtzIFZGNjEwX0NMS19GVE0wPiwNCj4gPiArCQkJCQk8JmNsa3Mg
+VkY2MTBfQ0xLX0ZUTTE+LA0KPiA+ICsJCQkJCTwmY2xrcyBWRjYxMF9DTEtfRlRNMF9FWFRfRklY
+X0VOPiwNCj4gPiArCQkJCQk8JmNsa3MgVkY2MTBfQ0xLX0ZUTTFfRVhUX0ZJWF9FTj47DQo+ID4g
+KwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICsJCQl9Ow0KPiA+ICsNCj4gPiAgIAkJCXdk
+b2dANDAwM2UwMDAgew0KPiA+ICAgCQkJCWNvbXBhdGlibGUgPSAiZnNsLHZmNjEwLXdkdCIsICJm
+c2wsaW14MjEtd2R0IjsNCj4gPiAgIAkJCQlyZWcgPSA8MHg0MDAzZTAwMCAweDEwMDA+Ow0KPiA+
+DQo+IA0KPiANCj4gLS0NCj4gICA8aHR0cDovL3d3dy5saW5hcm8ub3JnLz4gTGluYXJvLm9yZyDi
+lIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzDQo+IA0KPiBGb2xsb3cgTGluYXJv
+OiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xpbmFybz4gRmFjZWJvb2sgfA0KPiA8
+aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRlciB8DQo+IDxodHRwOi8vd3d3
+LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPiBCbG9nDQo+IA0KPiANCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
