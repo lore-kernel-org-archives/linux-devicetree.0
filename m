@@ -1,432 +1,1006 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH Resend] ARM: EXYNOS: Map SYSRAM address through DT
-Date: Wed, 16 Apr 2014 19:25:31 +0200
-Message-ID: <1493367.CDjMd4ghZP@phil>
-References: <1397649051-3288-1-git-send-email-sachin.kamat@linaro.org> <5721231.s2ATyWsK21@wuerfel>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC v3 3/5] leds: Add support for max77693 mfd flash cell
+Date: Wed, 16 Apr 2014 20:26:05 +0300
+Message-ID: <20140416172604.GF8753@valkosipuli.retiisi.org.uk>
+References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
+ <1397228216-6657-4-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5721231.s2ATyWsK21@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Sachin Kamat <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, cw00.choi@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1397228216-6657-4-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, SangYoung Son <hello.son@smasung.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Jacek,
 
-Am Mittwoch, 16. April 2014, 16:35:36 schrieb Arnd Bergmann:
-> On Wednesday 16 April 2014 17:20:51 Sachin Kamat wrote:
-> > Instead of hardcoding the SYSRAM details for each SoC,
-> > pass this information through device tree (DT) and make
-> > the code SoC agnostic.
-> > 
-> > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> > ---
-> > Rebased on latest linux-next.
+Thanks for the patch! Comments below.
+
+On Fri, Apr 11, 2014 at 04:56:54PM +0200, Jacek Anaszewski wrote:
+> This patch adds led-flash support to Maxim max77693 chipset.
+> A device can be exposed to user space through LED subsystem
+> sysfs interface or through V4L2 subdevice when the support
+> for V4L2 Flash sub-devices is enabled. Device supports up to
+> two leds which can work in flash and torch mode. Leds can
+> be triggered externally or by software.
 > 
-> Thanks for sending this again. I'd like Heiko to have a look
-> and provide an Ack if he's happy with it.
+> Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
+> Signed-off-by: Jacek Anaszewski <j.anaszewski@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> Cc: Bryan Wu <cooloney@gmail.com>
+> Cc: Richard Purdie <rpurdie@rpsys.net>
+> Cc: SangYoung Son <hello.son@smasung.com>
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/leds/Kconfig         |   10 +
+>  drivers/leds/Makefile        |    1 +
+>  drivers/leds/leds-max77693.c |  794 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/mfd/max77693.c       |    2 +-
+>  include/linux/mfd/max77693.h |   38 ++
+>  5 files changed, 844 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/leds/leds-max77693.c
 > 
-> It seems similar to what he did with the SRAM for mach-rockchip,
-> and if it is we should use the same binding that he introduced,
-> which would be a minor variation of this.
+> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+> index 1e1c81f..b2152a6 100644
+> --- a/drivers/leds/Kconfig
+> +++ b/drivers/leds/Kconfig
+> @@ -462,6 +462,16 @@ config LEDS_TCA6507
+>  	  LED driver chips accessed via the I2C bus.
+>  	  Driver support brightness control and hardware-assisted blinking.
+>  
+> +config LEDS_MAX77693
+> +	tristate "LED support for MAX77693 Flash"
+> +	depends on LEDS_CLASS_FLASH
+> +	depends on MFD_MAX77693
+> +	depends on OF
+> +	help
+> +	  This option enables support for the flash part of the MAX77693
+> +	  multifunction device. It has build in control for two leds in flash
+> +	  and torch mode.
+> +
+>  config LEDS_MAX8997
+>  	tristate "LED support for MAX8997 PMIC"
+>  	depends on LEDS_CLASS && MFD_MAX8997
+> diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+> index 8861b86..64f6234 100644
+> --- a/drivers/leds/Makefile
+> +++ b/drivers/leds/Makefile
+> @@ -52,6 +52,7 @@ obj-$(CONFIG_LEDS_MC13783)		+= leds-mc13783.o
+>  obj-$(CONFIG_LEDS_NS2)			+= leds-ns2.o
+>  obj-$(CONFIG_LEDS_NETXBIG)		+= leds-netxbig.o
+>  obj-$(CONFIG_LEDS_ASIC3)		+= leds-asic3.o
+> +obj-$(CONFIG_LEDS_MAX77693)		+= leds-max77693.o
+>  obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
+>  obj-$(CONFIG_LEDS_LM355x)		+= leds-lm355x.o
+>  obj-$(CONFIG_LEDS_BLINKM)		+= leds-blinkm.o
+> diff --git a/drivers/leds/leds-max77693.c b/drivers/leds/leds-max77693.c
+> new file mode 100644
+> index 0000000..979736c
+> --- /dev/null
+> +++ b/drivers/leds/leds-max77693.c
+> @@ -0,0 +1,794 @@
+> +/*
+> + *	Copyright (C) 2014, Samsung Electronics Co., Ltd.
+> + *
+> + *	Authors: Andrzej Hajda <a.hajda@samsung.com>
+> + *		 Jacek Anaszewski <j.anaszewski@samsung.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + */
+> +
+> +#include <asm/div64.h>
+> +#include <linux/leds_flash.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +#include <media/v4l2-flash.h>
 
-The sram binding is derived from the generic reserved-memory bindings to 
-enable the sram in general to be used generically through the sram driver, 
-while still retaining some areas for special purposes, like the smp-trampoline 
-in my case.
+I guess this should be last in the list.
 
->From my reading of platsmp.c, it looks like offset+0x4 starts the so called 
-boot-registesr, which get the smp-start-address written to.
+> +#include <linux/workqueue.h>
+> +#include <linux/mfd/max77693.h>
+> +#include <linux/mfd/max77693-private.h>
+> +
+> +#define MAX77693_LED_NAME		"max77693-flash"
+> +
+> +#define MAX77693_TORCH_IOUT_BITS	4
+> +
+> +#define MAX77693_TORCH_NO_TIMER		0x40
+> +#define MAX77693_FLASH_TIMER_LEVEL	0x80
+> +
+> +#define MAX77693_FLASH_EN_OFF		0
+> +#define MAX77693_FLASH_EN_FLASH		1
+> +#define MAX77693_FLASH_EN_TORCH		2
+> +#define MAX77693_FLASH_EN_ON		3
+> +
+> +#define MAX77693_FLASH_EN1_SHIFT	6
+> +#define MAX77693_FLASH_EN2_SHIFT	4
+> +#define MAX77693_TORCH_EN1_SHIFT	2
+> +#define MAX77693_TORCH_EN2_SHIFT	0
+> +
+> +#define MAX77693_FLASH_LOW_BATTERY_EN	0x80
+> +
+> +#define MAX77693_FLASH_BOOST_FIXED	0x04
+> +#define MAX77693_FLASH_BOOST_LEDNUM_2	0x80
+> +
+> +#define MAX77693_FLASH_TIMEOUT_MIN	62500
+> +#define MAX77693_FLASH_TIMEOUT_MAX	1000000
+> +#define MAX77693_FLASH_TIMEOUT_STEP	62500
+> +
+> +#define MAX77693_TORCH_TIMEOUT_MIN	262000
+> +#define MAX77693_TORCH_TIMEOUT_MAX	15728000
+> +
+> +#define MAX77693_FLASH_IOUT_MIN		15625
+> +#define MAX77693_FLASH_IOUT_MAX_1LED	1000000
+> +#define MAX77693_FLASH_IOUT_MAX_2LEDS	625000
+> +#define MAX77693_FLASH_IOUT_STEP	15625
+> +
+> +#define MAX77693_TORCH_IOUT_MIN		15625
+> +#define MAX77693_TORCH_IOUT_MAX		250000
+> +#define MAX77693_TORCH_IOUT_STEP	15625
+> +
+> +#define MAX77693_FLASH_VSYS_MIN		2400
+> +#define MAX77693_FLASH_VSYS_MAX		3400
+> +#define MAX77693_FLASH_VSYS_STEP	33
+> +
+> +#define MAX77693_FLASH_VOUT_MIN		3300
+> +#define MAX77693_FLASH_VOUT_MAX		5500
+> +#define MAX77693_FLASH_VOUT_STEP	25
+> +#define MAX77693_FLASH_VOUT_RMIN	0x0c
+> +
+> +#define MAX77693_LED_STATUS_FLASH_ON	(1 << 3)
+> +#define MAX77693_LED_STATUS_TORCH_ON	(1 << 2)
+> +
+> +#define MAX77693_LED_FLASH_INT_FLED2_OPEN	(1 << 0)
+> +#define MAX77693_LED_FLASH_INT_FLED2_SHORT	(1 << 1)
+> +#define MAX77693_LED_FLASH_INT_FLED1_OPEN	(1 << 2)
+> +#define MAX77693_LED_FLASH_INT_FLED1_SHORT	(1 << 3)
+> +#define MAX77693_LED_FLASH_INT_OVER_CURRENT	(1 << 4)
+> +
+> +#define MAX77693_MODE_OFF			0
+> +#define MAX77693_MODE_FLASH			(1 << 0)
+> +#define MAX77693_MODE_TORCH			(1 << 1)
+> +#define MAX77693_MODE_FLASH_EXTERNAL		(1 << 2)
+> +
+> +enum {
+> +	FLASH1,
+> +	FLASH2,
+> +	TORCH1,
+> +	TORCH2
+> +};
+> +
+> +enum {
+> +	FLASH,
+> +	TORCH
+> +};
+> +
+> +struct max77693_led {
+> +	struct regmap *regmap;
+> +	struct platform_device *pdev;
+> +	struct max77693_led_platform_data *pdata;
+> +	struct mutex lock;
+> +
+> +	struct led_classdev ldev;
+> +
+> +	unsigned int torch_brightness;
+> +	struct work_struct work_brightness_set;
+> +	unsigned int mode_flags;
+> +};
+> +
+> +static u8 max77693_led_iout_to_reg(u32 ua)
+> +{
+> +	if (ua < MAX77693_FLASH_IOUT_MIN)
+> +		ua = MAX77693_FLASH_IOUT_MIN;
+> +	return (ua - MAX77693_FLASH_IOUT_MIN) / MAX77693_FLASH_IOUT_STEP;
+> +}
+> +
+> +static u8 max77693_flash_timeout_to_reg(u32 us)
+> +{
+> +	return (us - MAX77693_FLASH_TIMEOUT_MIN) / MAX77693_FLASH_TIMEOUT_STEP;
+> +}
+> +
+> +static const u32 max77693_torch_timeouts[] = {
+> +	262000, 524000, 786000, 1048000,
+> +	1572000, 2096000, 2620000, 3144000,
+> +	4193000, 5242000, 6291000, 7340000,
+> +	9437000, 11534000, 13631000, 1572800
+> +};
+> +
+> +static u8 max77693_torch_timeout_to_reg(u32 us)
+> +{
+> +	int i, b = 0, e = ARRAY_SIZE(max77693_torch_timeouts);
 
-So I guess it all depends on what is contained in the rest of the sysram. If 
-it is all covered with such special registers or other special uses, the code 
-below is fine. But if the most of the area is just general purpose sram, a 
-solution like on rockchip might be nicer - i.e. handling the sysram via the 
-sram driver and declaring a reserved section for the boot registers.
+I haven't run this, but it looks like it'll access max77693_torch_timeouts[]
+array after the last element if you pass it a value greater than 1572800.
+Shouldn't e be initialised to ARRAY_SIZE() - 1 instead?
 
-So, depending on the above:
-Acked-by: Heiko Stuebner <heiko@sntech.de>
+> +
+> +	while (e - b > 1) {
+> +		i = b + (e - b) / 2;
+> +		if (us < max77693_torch_timeouts[i])
+> +			e = i;
+> +		else
+> +			b = i;
+> +	}
+> +	return b;
+> +}
+> +
+> +static struct max77693_led *ldev_to_led(struct led_classdev *ldev)
+> +{
+> +	return container_of(ldev, struct max77693_led, ldev);
+> +}
+> +
+> +static u32 max77693_torch_timeout_from_reg(u8 reg)
+> +{
 
+I might limit reg to ARRAY_SIZE(...) as well. Up to you.
 
-Heiko
+> +	return max77693_torch_timeouts[reg];
+> +}
+> +
+> +static u8 max77693_led_vsys_to_reg(u32 mv)
+> +{
+> +	return ((mv - MAX77693_FLASH_VSYS_MIN) / MAX77693_FLASH_VSYS_STEP) << 2;
+> +}
+> +
+> +static u8 max77693_led_vout_to_reg(u32 mv)
+> +{
+> +	return (mv - MAX77693_FLASH_VOUT_MIN) / MAX77693_FLASH_VOUT_STEP +
+> +		MAX77693_FLASH_VOUT_RMIN;
+> +}
+> +
+> +/* split composite current @i into two @iout according to @imax weights */
 
-> 
-> 	Arnd
-> 
-> >  .../devicetree/bindings/arm/samsung-boards.txt     |   11 +++
-> >  arch/arm/boot/dts/exynos4210-universal_c210.dts    |    9 ++
-> >  arch/arm/boot/dts/exynos4210.dtsi                  |   10 ++
-> >  arch/arm/boot/dts/exynos4x12.dtsi                  |   10 ++
-> >  arch/arm/boot/dts/exynos5.dtsi                     |    5 +
-> >  arch/arm/boot/dts/exynos5250.dtsi                  |    5 +
-> >  arch/arm/boot/dts/exynos5420.dtsi                  |    5 +
-> >  arch/arm/mach-exynos/exynos.c                      |  104
-> >  ++++++++------------ arch/arm/mach-exynos/include/mach/map.h           
-> >  |    7 --
-> >  9 files changed, 95 insertions(+), 71 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/samsung-boards.txt
-> > b/Documentation/devicetree/bindings/arm/samsung-boards.txt index
-> > 2168ed31e1b0..f79710eb7e79 100644
-> > --- a/Documentation/devicetree/bindings/arm/samsung-boards.txt
-> > +++ b/Documentation/devicetree/bindings/arm/samsung-boards.txt
-> > 
-> > @@ -7,6 +7,17 @@ Required root node properties:
-> >          (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
-> >          (b) "samsung,exynos4210"  - for boards based on Exynos4210 SoC.
-> > 
-> > +    - sysram node, specifying the type (secure or non-secure) of SYSRAM
-> > +	- compatible: following types are supported
-> > +		"samsung,exynos4210-sysram" : Secure SYSRAM
-> > +		"samsung,exynos4210-sysram-ns" : Non-secure SYSRAM
-> > +	- reg: address of SYSRAM bank
-> > +
-> > +	sysram@02020000 {
-> > +		compatible = "samsung,exynos4210-sysram";
-> > +		reg = <0x02020000 0x1000>;
-> > +	};
-> > +
-> > 
-> >  Optional:
-> >      - firmware node, specifying presence and type of secure firmware:
-> >          - compatible: only "samsung,secure-firmware" is currently
-> >          supported
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> > b/arch/arm/boot/dts/exynos4210-universal_c210.dts index
-> > 63e34b24b04f..cf4158728108 100644
-> > --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> > +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
-> > @@ -28,6 +28,15 @@
-> > 
-> >  		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw 
-rootwait
-> >  		earlyprintk panic=5 maxcpus=1";>  	
-> >  	};
-> > 
-> > +	sysram@02020000 {
-> > +		status = "disabled";
-> > +	};
-> > +
-> > +	sysram@02025000 {
-> > +		compatible = "samsung,exynos4210-sysram";
-> > +		reg = <0x02025000 0x1000>;
-> > +	};
-> > +
-> > 
-> >  	mct@10050000 {
-> >  	
-> >  		compatible = "none";
-> >  	
-> >  	};
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4210.dtsi
-> > b/arch/arm/boot/dts/exynos4210.dtsi index cacf6140dd2f..a3f4bba099e6
-> > 100644
-> > --- a/arch/arm/boot/dts/exynos4210.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4210.dtsi
-> > @@ -31,6 +31,16 @@
-> > 
-> >  		pinctrl2 = &pinctrl_2;
-> >  	
-> >  	};
-> > 
-> > +	sysram@02020000 {
-> > +		compatible = "samsung,exynos4210-sysram";
-> > +		reg = <0x02020000 0x1000>;
-> > +	};
-> > +
-> > +	sysram-ns@0203F000 {
-> > +		compatible = "samsung,exynos4210-sysram-ns";
-> > +		reg = <0x0203F000 0x1000>;
-> > +	};
-> > +
-> > 
-> >  	pd_lcd1: lcd1-power-domain@10023CA0 {
-> >  	
-> >  		compatible = "samsung,exynos4210-pd";
-> >  		reg = <0x10023CA0 0x20>;
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
-> > b/arch/arm/boot/dts/exynos4x12.dtsi index c4a9306f8529..d57e3120223f
-> > 100644
-> > --- a/arch/arm/boot/dts/exynos4x12.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4x12.dtsi
-> > @@ -37,6 +37,16 @@
-> > 
-> >  		interrupts = <2 2>, <3 2>, <18 2>, <19 2>;
-> >  	
-> >  	};
-> > 
-> > +	sysram@02020000 {
-> > +		compatible = "samsung,exynos4210-sysram";
-> > +		reg = <0x02020000 0x1000>;
-> > +	};
-> > +
-> > +	sysram-ns@0204F000 {
-> > +		compatible = "samsung,exynos4210-sysram-ns";
-> > +		reg = <0x0204F000 0x1000>;
-> > +	};
-> > +
-> > 
-> >  	pd_isp: isp-power-domain@10023CA0 {
-> >  	
-> >  		compatible = "samsung,exynos4210-pd";
-> >  		reg = <0x10023CA0 0x20>;
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos5.dtsi
-> > b/arch/arm/boot/dts/exynos5.dtsi index 79d0608d6dcc..c03bd09ec37d 100644
-> > --- a/arch/arm/boot/dts/exynos5.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5.dtsi
-> > @@ -18,6 +18,11 @@
-> > 
-> >  / {
-> >  
-> >  	interrupt-parent = <&gic>;
-> > 
-> > +	sysram@02020000 {
-> > +		compatible = "samsung,exynos4210-sysram";
-> > +		reg = <0x02020000 0x1000>;
-> > +	};
-> > +
-> > 
-> >  	chipid@10000000 {
-> >  	
-> >  		compatible = "samsung,exynos4210-chipid";
-> >  		reg = <0x10000000 0x100>;
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi
-> > b/arch/arm/boot/dts/exynos5250.dtsi index 37423314a028..bae6c3f253f0
-> > 100644
-> > --- a/arch/arm/boot/dts/exynos5250.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> > @@ -72,6 +72,11 @@
-> > 
-> >  		};
-> >  	
-> >  	};
-> > 
-> > +	sysram-ns@0204F000 {
-> > +		compatible = "samsung,exynos4210-sysram-ns";
-> > +		reg = <0x0204F000 0x1000>;
-> > +	};
-> > +
-> > 
-> >  	pd_gsc: gsc-power-domain@10044000 {
-> >  	
-> >  		compatible = "samsung,exynos4210-pd";
-> >  		reg = <0x10044000 0x20>;
-> > 
-> > diff --git a/arch/arm/boot/dts/exynos5420.dtsi
-> > b/arch/arm/boot/dts/exynos5420.dtsi index c3a9a66c5767..217376fe1d82
-> > 100644
-> > --- a/arch/arm/boot/dts/exynos5420.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> > @@ -110,6 +110,11 @@
-> > 
-> >  		};
-> >  	
-> >  	};
-> > 
-> > +	sysram-ns@02073000 {
-> > +		compatible = "samsung,exynos4210-sysram-ns";
-> > +		reg = <0x02073000 0x1000>;
-> > +	};
-> > +
-> > 
-> >  	clock: clock-controller@10010000 {
-> >  	
-> >  		compatible = "samsung,exynos5420-clock";
-> >  		reg = <0x10010000 0x30000>;
-> > 
-> > diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-> > index b32a907d021d..6a5fe18ec9b1 100644
-> > --- a/arch/arm/mach-exynos/exynos.c
-> > +++ b/arch/arm/mach-exynos/exynos.c
-> > @@ -114,51 +114,6 @@ static struct map_desc exynos4_iodesc[] __initdata =
-> > {
-> > 
-> >  	},
-> >  
-> >  };
-> > 
-> > -static struct map_desc exynos4_iodesc0[] __initdata = {
-> > -	{
-> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
-> > -		.pfn		= __phys_to_pfn(EXYNOS4_PA_SYSRAM0),
-> > -		.length		= SZ_4K,
-> > -		.type		= MT_DEVICE,
-> > -	},
-> > -};
-> > -
-> > -static struct map_desc exynos4_iodesc1[] __initdata = {
-> > -	{
-> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
-> > -		.pfn		= __phys_to_pfn(EXYNOS4_PA_SYSRAM1),
-> > -		.length		= SZ_4K,
-> > -		.type		= MT_DEVICE,
-> > -	},
-> > -};
-> > -
-> > -static struct map_desc exynos4210_iodesc[] __initdata = {
-> > -	{
-> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
-> > -		.pfn		= __phys_to_pfn(EXYNOS4210_PA_SYSRAM_NS),
-> > -		.length		= SZ_4K,
-> > -		.type		= MT_DEVICE,
-> > -	},
-> > -};
-> > -
-> > -static struct map_desc exynos4x12_iodesc[] __initdata = {
-> > -	{
-> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
-> > -		.pfn		= __phys_to_pfn(EXYNOS4x12_PA_SYSRAM_NS),
-> > -		.length		= SZ_4K,
-> > -		.type		= MT_DEVICE,
-> > -	},
-> > -};
-> > -
-> > -static struct map_desc exynos5250_iodesc[] __initdata = {
-> > -	{
-> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
-> > -		.pfn		= __phys_to_pfn(EXYNOS5250_PA_SYSRAM_NS),
-> > -		.length		= SZ_4K,
-> > -		.type		= MT_DEVICE,
-> > -	},
-> > -};
-> > -
-> > 
-> >  static struct map_desc exynos5_iodesc[] __initdata = {
-> >  
-> >  	{
-> >  	
-> >  		.virtual	= (unsigned long)S3C_VA_SYS,
-> > 
-> > @@ -181,11 +136,6 @@ static struct map_desc exynos5_iodesc[] __initdata =
-> > {
-> > 
-> >  		.length		= SZ_4K,
-> >  		.type		= MT_DEVICE,
-> >  	
-> >  	}, {
-> > 
-> > -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
-> > -		.pfn		= __phys_to_pfn(EXYNOS5_PA_SYSRAM),
-> > -		.length		= SZ_4K,
-> > -		.type		= MT_DEVICE,
-> > -	}, {
-> > 
-> >  		.virtual	= (unsigned long)S5P_VA_CMU,
-> >  		.pfn		= __phys_to_pfn(EXYNOS5_PA_CMU),
-> >  		.length		= 144 * SZ_1K,
-> > 
-> > @@ -268,6 +218,44 @@ static int __init exynos_fdt_map_chipid(unsigned long
-> > node, const char *uname,> 
-> >  	return 1;
-> >  
-> >  }
-> > 
-> > +struct __sysram_desc {
-> > +	char name[32];
-> > +	unsigned long addr;
-> > +};
-> > +
-> > +static struct __sysram_desc sysram_desc[] __initdata = {
-> > +	{
-> > +		.name = "samsung,exynos4210-sysram",
-> > +		.addr = (unsigned long)S5P_VA_SYSRAM,
-> > +	}, {
-> > +		.name = "samsung,exynos4210-sysram-ns",
-> > +		.addr = (unsigned long)S5P_VA_SYSRAM_NS,
-> > +	},
-> > +};
-> > +
-> > +static int __init exynos_fdt_map_sysram(unsigned long node, const char
-> > *uname, +					int depth, void *data)
-> > +{
-> > +	struct map_desc iodesc;
-> > +	__be32 *reg;
-> > +	unsigned long len;
-> > +	int i;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(sysram_desc); i++) {
-> > +		if (of_flat_dt_is_compatible(node, sysram_desc[i].name)) {
-> > +			reg = of_get_flat_dt_prop(node, "reg", &len);
-> > +			if (!reg || len != (sizeof(unsigned long) * 2))
-> > +				return -ENODEV;
-> > +			iodesc.virtual = sysram_desc[i].addr;
-> > +			iodesc.pfn = __phys_to_pfn(be32_to_cpu(reg[0]));
-> > +			iodesc.length = be32_to_cpu(reg[1]);
-> > +			iodesc.type = MT_DEVICE;
-> > +			iotable_init(&iodesc, 1);
-> > +		}
-> > +	}
-> > +	return 0;
-> > +}
-> > +
-> > 
-> >  /*
-> >  
-> >   * exynos_map_io
-> >   *
-> > 
-> > @@ -280,20 +268,6 @@ static void __init exynos_map_io(void)
-> > 
-> >  	if (soc_is_exynos5())
-> >  	
-> >  		iotable_init(exynos5_iodesc, ARRAY_SIZE(exynos5_iodesc));
-> > 
-> > -
-> > -	if (soc_is_exynos4210()) {
-> > -		if (samsung_rev() == EXYNOS4210_REV_0)
-> > -			iotable_init(exynos4_iodesc0,
-> > -						ARRAY_SIZE(exynos4_iodesc0));
-> > -		else
-> > -			iotable_init(exynos4_iodesc1,
-> > -						ARRAY_SIZE(exynos4_iodesc1));
-> > -		iotable_init(exynos4210_iodesc, ARRAY_SIZE(exynos4210_iodesc));
-> > -	}
-> > -	if (soc_is_exynos4212() || soc_is_exynos4412())
-> > -		iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
-> > -	if (soc_is_exynos5250())
-> > -		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
-> > 
-> >  }
-> >  
-> >  void __init exynos_init_io(void)
-> > 
-> > @@ -306,6 +280,8 @@ void __init exynos_init_io(void)
-> > 
-> >  	s5p_init_cpu(S5P_VA_CHIPID);
-> >  	
-> >  	exynos_map_io();
-> > 
-> > +
-> > +	of_scan_flat_dt(exynos_fdt_map_sysram, NULL);
-> > 
-> >  }
-> >  
-> >  struct bus_type exynos_subsys = {
-> > 
-> > diff --git a/arch/arm/mach-exynos/include/mach/map.h
-> > b/arch/arm/mach-exynos/include/mach/map.h index
-> > 7b046b59d9ec..548269a60634 100644
-> > --- a/arch/arm/mach-exynos/include/mach/map.h
-> > +++ b/arch/arm/mach-exynos/include/mach/map.h
-> > @@ -23,13 +23,6 @@
-> > 
-> >  #include <plat/map-s5p.h>
-> > 
-> > -#define EXYNOS4_PA_SYSRAM0		0x02025000
-> > -#define EXYNOS4_PA_SYSRAM1		0x02020000
-> > -#define EXYNOS5_PA_SYSRAM		0x02020000
-> > -#define EXYNOS4210_PA_SYSRAM_NS		0x0203F000
-> > -#define EXYNOS4x12_PA_SYSRAM_NS		0x0204F000
-> > -#define EXYNOS5250_PA_SYSRAM_NS		0x0204F000
-> > -
-> > 
-> >  #define EXYNOS_PA_CHIPID		0x10000000
-> >  
-> >  #define EXYNOS4_PA_SYSCON		0x10010000
+Are there dependencies between the two LEDs or are they entirely
+independent? If they're independent (with the possible exception of strobe),
+then I'd expose them individually.
+
+> +static void max77693_calc_iout(u32 iout[2], u32 i, u32 imax[2])
+> +{
+> +	u64 t = i;
+> +
+> +	t *= imax[1];
+> +	do_div(t, imax[0] + imax[1]);
+> +
+> +	iout[1] = (u32)t / MAX77693_FLASH_IOUT_STEP * MAX77693_FLASH_IOUT_STEP;
+> +	iout[0] = i - iout[1];
+> +}
+> +
+> +static int max77693_set_mode(struct max77693_led *led, unsigned int mode)
+> +{
+> +	struct max77693_led_platform_data *p = led->pdata;
+> +	struct regmap *rmap = led->regmap;
+> +	int ret, v = 0;
+> +
+> +	if (mode & MAX77693_MODE_TORCH) {
+> +		if (p->trigger[TORCH1] & MAX77693_LED_TRIG_SOFT)
+> +			v |= MAX77693_FLASH_EN_ON << MAX77693_TORCH_EN1_SHIFT;
+> +		if (p->trigger[TORCH2] & MAX77693_LED_TRIG_SOFT)
+> +			v |= MAX77693_FLASH_EN_ON << MAX77693_TORCH_EN2_SHIFT;
+> +	}
+> +
+> +	if (mode & MAX77693_MODE_FLASH) {
+> +		if (p->trigger[FLASH1] & MAX77693_LED_TRIG_SOFT)
+> +			v |= MAX77693_FLASH_EN_ON << MAX77693_FLASH_EN1_SHIFT;
+> +		if (p->trigger[FLASH2] & MAX77693_LED_TRIG_SOFT)
+> +			v |= MAX77693_FLASH_EN_ON << MAX77693_FLASH_EN2_SHIFT;
+> +	} else if (mode & MAX77693_MODE_FLASH_EXTERNAL) {
+> +		if (p->trigger[FLASH1] & MAX77693_LED_TRIG_EXT)
+> +			v |= MAX77693_FLASH_EN_FLASH << MAX77693_FLASH_EN1_SHIFT;
+> +		if (p->trigger[FLASH2] & MAX77693_LED_TRIG_EXT)
+> +			v |= MAX77693_FLASH_EN_FLASH << MAX77693_FLASH_EN2_SHIFT;
+> +		/*
+> +		 * Enable hw triggering also for torch mode, as some camera
+> +		 * sensors use torch led to fathom ambient light conditions
+> +		 * before strobing the flash.
+> +		 */
+> +		if (p->trigger[TORCH1] & MAX77693_LED_TRIG_EXT)
+> +			v |= MAX77693_FLASH_EN_TORCH << MAX77693_TORCH_EN1_SHIFT;
+> +		if (p->trigger[TORCH2] & MAX77693_LED_TRIG_EXT)
+> +			v |= MAX77693_FLASH_EN_TORCH << MAX77693_TORCH_EN2_SHIFT;
+> +	}
+> +
+> +	/* Reset the register only prior setting flash modes */
+> +	if (mode != MAX77693_MODE_TORCH) {
+> +		ret = max77693_write_reg(rmap, MAX77693_LED_REG_FLASH_EN, 0);
+
+A single wrie for strobe. Looks good!
+
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	return max77693_write_reg(rmap, MAX77693_LED_REG_FLASH_EN, v);
+> +}
+> +
+> +static int max77693_add_mode(struct max77693_led *led, unsigned int mode)
+> +{
+> +	int ret;
+> +
+> +	/* Once enabled torch mode is active until turned off */
+> +	if ((mode == MAX77693_MODE_TORCH) &&
+> +	    (led->mode_flags & MAX77693_MODE_TORCH))
+> +		return 0;
+> +
+> +	/*
+> +	 * FLASH_EXTERNAL mode activates HW triggered flash and torch
+> +	 * modes in the device. The related register settings interfere
+> +	 * with SW triggerred modes, thus clear them to ensure proper
+> +	 * device configuration.
+> +	 */
+> +	if (mode == MAX77693_MODE_FLASH_EXTERNAL)
+> +		led->mode_flags &= (~MAX77693_MODE_TORCH &
+> +				    ~MAX77693_MODE_FLASH);
+> +
+> +	led->mode_flags |= mode;
+> +
+> +	ret = max77693_set_mode(led, led->mode_flags);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	/*
+> +	 * Clear flash mode flag after setting the mode to avoid
+> +	 * spurous flash strobing on each successive torch mode
+> +	 * setting.
+> +	 */
+> +	if ((mode == MAX77693_MODE_FLASH) ||
+> +	    (mode == MAX77693_MODE_FLASH_EXTERNAL))
+> +		led->mode_flags &= ~mode;
+> +
+> +	return 0;
+> +}
+> +
+> +static int max77693_clear_mode(struct max77693_led *led, unsigned int mode)
+> +{
+> +	led->mode_flags &= ~mode;
+> +
+> +	return max77693_set_mode(led, led->mode_flags);
+> +}
+> +
+> +static int max77693_set_torch_current(struct max77693_led *led,
+> +					u32 micro_amp)
+> +{
+> +	struct max77693_led_platform_data *p = led->pdata;
+> +	struct regmap *rmap = led->regmap;
+> +	u32 iout[2];
+> +	u8 v, iout1_reg, iout2_reg;
+> +	int ret;
+> +
+> +	max77693_calc_iout(iout, micro_amp, &p->iout[TORCH1]);
+> +	iout1_reg = max77693_led_iout_to_reg(iout[0]);
+> +	iout2_reg = max77693_led_iout_to_reg(iout[1]);
+> +
+> +	v = iout1_reg | (iout2_reg << MAX77693_TORCH_IOUT_BITS);
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_ITORCH, v);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int max77693_set_flash_current(struct max77693_led *led,
+> +					u32 micro_amp)
+> +{
+> +	struct max77693_led_platform_data *p = led->pdata;
+> +	struct regmap *rmap = led->regmap;
+> +	u32 iout[2];
+> +	u8 iout1_reg, iout2_reg;
+> +	int ret;
+> +
+> +	max77693_calc_iout(iout, micro_amp, &p->iout[FLASH1]);
+> +	iout1_reg = max77693_led_iout_to_reg(iout[0]);
+> +	iout2_reg = max77693_led_iout_to_reg(iout[1]);
+> +
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_IFLASH1, iout1_reg);
+> +	if (ret < 0)
+> +		goto error_ret;
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_IFLASH2, iout2_reg);
+> +	if (ret < 0)
+> +		goto error_ret;
+> +
+> +error_ret:
+> +	return ret;
+> +}
+> +
+> +static int max77693_set_timeout(struct max77693_led *led,
+> +				u32 timeout)
+> +{
+> +	struct max77693_led_platform_data *p = led->pdata;
+> +	struct regmap *rmap = led->regmap;
+> +	u8 v;
+> +
+> +	v = max77693_flash_timeout_to_reg(timeout);
+> +
+> +	if (p->trigger_type[FLASH] == MAX77693_LED_TRIG_TYPE_LEVEL)
+> +		v |= MAX77693_FLASH_TIMER_LEVEL;
+> +
+> +	return max77693_write_reg(rmap, MAX77693_LED_REG_FLASH_TIMER, v);
+> +}
+> +
+> +static int max77693_strobe_status_get(struct max77693_led *led)
+> +{
+> +	struct regmap *rmap = led->regmap;
+> +	u8 v;
+> +	int ret;
+> +
+> +	ret = max77693_read_reg(rmap, MAX77693_LED_REG_FLASH_INT_STATUS, &v);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return !!(v & MAX77693_LED_STATUS_FLASH_ON);
+> +}
+> +
+> +static int max77693_int_flag_get(struct max77693_led *led, u8 *v)
+> +{
+> +	struct regmap *rmap = led->regmap;
+> +
+> +	return max77693_read_reg(rmap, MAX77693_LED_REG_FLASH_INT, v);
+> +}
+> +
+> +static int max77693_setup(struct max77693_led *led)
+> +{
+> +	struct max77693_led_platform_data *p = led->pdata;
+> +	struct regmap *rmap = led->regmap;
+> +	int ret;
+> +	u8 v;
+> +
+> +	ret = max77693_set_torch_current(led, p->iout[TORCH1] +
+> +						p->iout[TORCH2]);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = max77693_set_flash_current(led, p->iout[FLASH1] +
+> +						p->iout[FLASH2]);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (p->timeout[TORCH] > 0)
+> +		v = max77693_torch_timeout_to_reg(p->timeout[TORCH]);
+> +	else
+> +		v = MAX77693_TORCH_NO_TIMER;
+> +	if (p->trigger_type[TORCH] == MAX77693_LED_TRIG_TYPE_LEVEL)
+> +		v |= MAX77693_FLASH_TIMER_LEVEL;
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_ITORCHTIMER, v);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	v = max77693_flash_timeout_to_reg(p->timeout[FLASH]);
+> +	if (p->trigger_type[FLASH] == MAX77693_LED_TRIG_TYPE_LEVEL)
+> +		v |= MAX77693_FLASH_TIMER_LEVEL;
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_FLASH_TIMER, v);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (p->low_vsys > 0)
+> +		v = max77693_led_vsys_to_reg(p->low_vsys) |
+> +						MAX77693_FLASH_LOW_BATTERY_EN;
+> +	else
+> +		v = 0;
+> +
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_MAX_FLASH1, v);
+> +	if (ret < 0)
+> +		return ret;
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_MAX_FLASH2, 0);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	if (p->boost_mode[FLASH1] == MAX77693_LED_BOOST_FIXED ||
+> +	    p->boost_mode[FLASH2] == MAX77693_LED_BOOST_FIXED)
+> +		v = MAX77693_FLASH_BOOST_FIXED;
+> +	else
+> +		v = p->boost_mode[FLASH1] | (p->boost_mode[FLASH2] << 1);
+> +	if (p->boost_mode[FLASH1] && p->boost_mode[FLASH2])
+> +		v |= MAX77693_FLASH_BOOST_LEDNUM_2;
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_VOUT_CNTL, v);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	v = max77693_led_vout_to_reg(p->boost_vout);
+> +	ret = max77693_write_reg(rmap, MAX77693_LED_REG_VOUT_FLASH1, v);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return max77693_set_mode(led, MAX77693_MODE_OFF);
+> +}
+> +
+> +/* LED subsystem callbacks */
+> +
+> +static void max77693_brightness_set_work(struct work_struct *work)
+> +{
+> +	struct max77693_led *led =
+> +		container_of(work, struct max77693_led, work_brightness_set);
+> +	int ret;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	if (led->torch_brightness == 0) {
+> +		ret = max77693_clear_mode(led, MAX77693_MODE_TORCH);
+> +		if (ret < 0)
+> +			dev_dbg(&led->pdev->dev,
+> +				"Failed to clear torch mode (%d)\n",
+> +				ret);
+> +		goto unlock;
+> +	}
+> +
+> +	ret = max77693_set_torch_current(led, led->torch_brightness *
+> +						MAX77693_TORCH_IOUT_STEP);
+> +	if (ret < 0) {
+> +		dev_dbg(&led->pdev->dev, "Failed to set torch current (%d)\n",
+> +			ret);
+> +		goto unlock;
+> +	}
+> +
+> +	ret = max77693_add_mode(led, MAX77693_MODE_TORCH);
+> +	if (ret < 0)
+> +		dev_dbg(&led->pdev->dev, "Failed to set torch mode (%d)\n",
+> +			ret);
+> +unlock:
+> +	mutex_unlock(&led->lock);
+> +}
+> +
+> +static void max77693_led_brightness_set(struct led_classdev *led_cdev,
+> +				enum led_brightness value)
+> +{
+> +	struct max77693_led *led = ldev_to_led(led_cdev);
+> +
+> +	led->torch_brightness = value;
+> +	schedule_work(&led->work_brightness_set);
+
+Is there a reason not to do this right now (but in a work queue instead)?
+
+> +}
+> +
+> +static int max77693_led_flash_strobe_get(struct led_classdev *led_cdev)
+> +{
+> +	struct max77693_led *led = ldev_to_led(led_cdev);
+> +	int ret;
+> +
+> +	mutex_lock(&led->lock);
+> +	ret = max77693_strobe_status_get(led);
+> +	mutex_unlock(&led->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int max77693_led_flash_fault_get(struct led_classdev *led_cdev,
+> +					u32 *fault)
+> +{
+> +	struct max77693_led *led = ldev_to_led(led_cdev);
+> +	u8 v;
+> +	int ret;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	ret = max77693_int_flag_get(led, &v);
+> +	if (ret < 0)
+> +		goto unlock;
+> +
+> +	*fault = 0;
+> +
+> +	if (v & MAX77693_LED_FLASH_INT_FLED2_OPEN ||
+> +	    v & MAX77693_LED_FLASH_INT_FLED1_OPEN)
+> +		*fault |= LED_FAULT_OVER_VOLTAGE;
+> +	if (v & MAX77693_LED_FLASH_INT_FLED2_SHORT ||
+> +	    v & MAX77693_LED_FLASH_INT_FLED1_SHORT)
+> +		*fault |= LED_FAULT_SHORT_CIRCUIT;
+> +	if (v & MAX77693_LED_FLASH_INT_OVER_CURRENT)
+> +		*fault |= LED_FAULT_OVER_CURRENT;
+> +unlock:
+> +	mutex_unlock(&led->lock);
+> +	return ret;
+> +}
+> +
+> +static int max77693_led_flash_strobe_set(struct led_classdev *led_cdev,
+> +						bool state)
+> +{
+> +	struct max77693_led *led = ldev_to_led(led_cdev);
+> +	struct led_flash *flash = led_cdev->flash;
+> +	int ret;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	if (flash->external_strobe) {
+> +		ret = -EBUSY;
+> +		goto unlock;
+> +	}
+> +
+> +	if (!state) {
+> +		ret = max77693_clear_mode(led, MAX77693_MODE_FLASH);
+> +		goto unlock;
+> +	}
+> +
+> +	ret = max77693_add_mode(led, MAX77693_MODE_FLASH);
+> +	if (ret < 0)
+> +		goto unlock;
+> +unlock:
+> +	mutex_unlock(&led->lock);
+> +	return ret;
+> +}
+> +
+> +static int max77693_led_external_strobe_set(struct led_classdev *led_cdev,
+> +						bool enable)
+> +{
+> +	struct max77693_led *led = ldev_to_led(led_cdev);
+> +	int ret;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	if (enable)
+> +		ret = max77693_add_mode(led, MAX77693_MODE_FLASH_EXTERNAL);
+> +	else
+> +		ret = max77693_clear_mode(led, MAX77693_MODE_FLASH_EXTERNAL);
+> +
+> +	mutex_unlock(&led->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int max77693_led_flash_brightness_set(struct led_classdev *led_cdev,
+> +						u32 brightness)
+> +{
+> +	struct max77693_led *led = ldev_to_led(led_cdev);
+> +	int ret;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	ret = max77693_set_flash_current(led, brightness);
+> +	if (ret < 0)
+> +		goto unlock;
+> +unlock:
+> +	mutex_unlock(&led->lock);
+> +	return ret;
+> +}
+> +
+> +static int max77693_led_flash_timeout_set(struct led_classdev *led_cdev,
+> +						u32 timeout)
+> +{
+> +	struct max77693_led *led = ldev_to_led(led_cdev);
+> +	int ret;
+> +
+> +	mutex_lock(&led->lock);
+> +
+> +	ret = max77693_set_timeout(led, timeout);
+> +	if (ret < 0)
+> +		goto unlock;
+> +
+> +unlock:
+> +	mutex_unlock(&led->lock);
+> +	return ret;
+> +}
+> +
+> +static void max77693_led_parse_dt(struct max77693_led_platform_data *p,
+> +			    struct device_node *node)
+> +{
+> +	of_property_read_u32_array(node, "maxim,iout", p->iout, 4);
+
+How about separate current for flash and torch modes? They are the same
+LEDs; just the mode is different.
+
+> +	of_property_read_u32_array(node, "maxim,trigger", p->trigger, 4);
+> +	of_property_read_u32_array(node, "maxim,trigger-type", p->trigger_type,
+> +									2);
+> +	of_property_read_u32_array(node, "maxim,timeout", p->timeout, 2);
+> +	of_property_read_u32_array(node, "maxim,boost-mode", p->boost_mode, 2);
+> +	of_property_read_u32(node, "maxim,boost-vout", &p->boost_vout);
+> +	of_property_read_u32(node, "maxim,vsys-min", &p->low_vsys);
+
+Are these values specific to the maxim chip? I'd suppose e.g. timeout and
+iout are something that can be found pretty much in any flash controller.
+
+> +}
+> +
+> +static void clamp_align(u32 *v, u32 min, u32 max, u32 step)
+> +{
+> +	*v = clamp_val(*v, min, max);
+> +	if (step > 1)
+> +		*v = (*v - min) / step * step + min;
+> +}
+> +
+> +static void max77693_led_validate_platform_data(
+> +					struct max77693_led_platform_data *p)
+> +{
+> +	u32 max;
+> +	int i;
+> +
+> +	for (i = 0; i < 2; ++i)
+
+How about using ARRAY_SIZE() here, too?
+
+> +		clamp_align(&p->boost_mode[i], MAX77693_LED_BOOST_NONE,
+> +			    MAX77693_LED_BOOST_FIXED, 1);
+> +	/* boost, if enabled, should be the same on both leds */
+> +	if (p->boost_mode[0] != MAX77693_LED_BOOST_NONE &&
+> +	    p->boost_mode[1] != MAX77693_LED_BOOST_NONE)
+> +		p->boost_mode[1] = p->boost_mode[0];
+> +
+> +	max = (p->boost_mode[FLASH1] && p->boost_mode[FLASH2]) ?
+> +		  MAX77693_FLASH_IOUT_MAX_2LEDS : MAX77693_FLASH_IOUT_MAX_1LED;
+> +
+> +	clamp_align(&p->iout[FLASH1], MAX77693_FLASH_IOUT_MIN,
+> +		    max, MAX77693_FLASH_IOUT_STEP);
+> +	clamp_align(&p->iout[FLASH2], MAX77693_FLASH_IOUT_MIN,
+> +		    max, MAX77693_FLASH_IOUT_STEP);
+> +	clamp_align(&p->iout[TORCH1], MAX77693_TORCH_IOUT_MIN,
+> +		    MAX77693_TORCH_IOUT_MAX, MAX77693_TORCH_IOUT_STEP);
+> +	clamp_align(&p->iout[TORCH2], MAX77693_TORCH_IOUT_MIN,
+> +		    MAX77693_TORCH_IOUT_MAX, MAX77693_TORCH_IOUT_STEP);
+> +
+> +	for (i = 0; i < 4; ++i)
+> +		clamp_align(&p->trigger[i], 0, 7, 1);
+> +	for (i = 0; i < 2; ++i)
+> +		clamp_align(&p->trigger_type[i], MAX77693_LED_TRIG_TYPE_EDGE,
+> +			    MAX77693_LED_TRIG_TYPE_LEVEL, 1);
+
+ARRAY_SIZE() would be nicer than using numeric values for the loop
+condition.
+
+> +	clamp_align(&p->timeout[FLASH], MAX77693_FLASH_TIMEOUT_MIN,
+> +		    MAX77693_FLASH_TIMEOUT_MAX, MAX77693_FLASH_TIMEOUT_STEP);
+> +
+> +	if (p->timeout[TORCH]) {
+> +		clamp_align(&p->timeout[TORCH], MAX77693_TORCH_TIMEOUT_MIN,
+> +			    MAX77693_TORCH_TIMEOUT_MAX, 1);
+> +		p->timeout[TORCH] = max77693_torch_timeout_from_reg(
+> +			      max77693_torch_timeout_to_reg(p->timeout[TORCH]));
+> +	}
+> +
+> +	clamp_align(&p->boost_vout, MAX77693_FLASH_VOUT_MIN,
+> +		    MAX77693_FLASH_VOUT_MAX, MAX77693_FLASH_VOUT_STEP);
+> +
+> +	if (p->low_vsys) {
+> +		clamp_align(&p->low_vsys, MAX77693_FLASH_VSYS_MIN,
+> +			    MAX77693_FLASH_VSYS_MAX, MAX77693_FLASH_VSYS_STEP);
+> +	}
+> +}
+> +
+> +static int max77693_led_get_platform_data(struct max77693_led *led)
+> +{
+> +	struct max77693_led_platform_data *p;
+> +	struct device *dev = &led->pdev->dev;
+> +
+> +	if (dev->of_node) {
+> +		p = devm_kzalloc(dev, sizeof(*led->pdata), GFP_KERNEL);
+> +		if (!p)
+> +			return -ENOMEM;
+
+Check for p can be moved out of the if as it's the same for both.
+
+You could also use led->pdata directly. Up to you.
+
+> +		max77693_led_parse_dt(p, dev->of_node);
+> +	} else {
+> +		p = dev_get_platdata(dev);
+> +		if (!p)
+> +			return -ENODEV;
+> +	}
+> +	led->pdata = p;
+> +
+> +	max77693_led_validate_platform_data(p);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct led_flash led_flash = {
+> +	.ops = {
+> +		.brightness_set		= max77693_led_flash_brightness_set,
+> +		.strobe_set		= max77693_led_flash_strobe_set,
+> +		.strobe_get		= max77693_led_flash_strobe_get,
+> +		.timeout_set		= max77693_led_flash_timeout_set,
+> +		.external_strobe_set	= max77693_led_external_strobe_set,
+> +		.fault_get		= max77693_led_flash_fault_get,
+> +	},
+> +	.has_flash_led = true,
+> +};
+> +
+> +static void max77693_init_led_controls(struct led_classdev *led_cdev,
+> +					struct max77693_led_platform_data *p)
+> +{
+> +	struct led_flash *flash = led_cdev->flash;
+> +	struct led_ctrl *c;
+> +
+> +	/*
+> +	 * brightness_ctrl and fault_flags are used only
+> +	 * for initializing related V4L2 controls.
+> +	 */
+> +#ifdef CONFIG_V4L2_FLASH
+> +	flash->fault_flags = V4L2_FLASH_FAULT_OVER_VOLTAGE |
+> +			     V4L2_FLASH_FAULT_SHORT_CIRCUIT |
+> +			     V4L2_FLASH_FAULT_OVER_CURRENT;
+> +
+> +	c = &led_cdev->brightness_ctrl;
+> +	c->min = (p->iout[TORCH1] != 0 && p->iout[TORCH2] != 0) ?
+> +					MAX77693_TORCH_IOUT_MIN * 2 :
+> +					MAX77693_TORCH_IOUT_MIN;
+> +	c->max = p->iout[TORCH1] + p->iout[TORCH2];
+> +	c->step = MAX77693_TORCH_IOUT_STEP;
+> +	c->val = p->iout[TORCH1] + p->iout[TORCH2];
+
+Can you control the current for the two flash LEDs separately? If yes, this
+should be also available on the V4L2 flash API. The lm3560 driver does this,
+for example. (It creates two sub-devices since we can only control a single
+LED using a single sub-device, at least for the time being.)
+
+> +#endif
+> +
+> +	c = &flash->brightness;
+> +	c->min = (p->iout[FLASH1] != 0 && p->iout[FLASH2] != 0) ?
+> +					MAX77693_FLASH_IOUT_MIN * 2 :
+> +					MAX77693_FLASH_IOUT_MIN;
+> +	c->max = p->iout[FLASH1] + p->iout[FLASH2];
+> +	c->step = MAX77693_FLASH_IOUT_STEP;
+> +	c->val = p->iout[FLASH1] + p->iout[FLASH2];
+> +
+> +	c = &flash->timeout;
+> +	c->min = MAX77693_FLASH_TIMEOUT_MIN;
+> +	c->max = MAX77693_FLASH_TIMEOUT_MAX;
+> +	c->step = MAX77693_FLASH_TIMEOUT_STEP;
+> +	c->val = p->timeout[FLASH];
+> +
+> +}
+> +
+> +static int max77693_led_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct max77693_dev *iodev = dev_get_drvdata(dev->parent);
+> +	struct max77693_led *led;
+> +	struct max77693_led_platform_data *p;
+> +	struct led_classdev *led_cdev;
+> +	int ret;
+> +
+> +	led = devm_kzalloc(dev, sizeof(*led), GFP_KERNEL);
+> +	if (!led)
+> +		return -ENOMEM;
+> +
+> +	led->pdev = pdev;
+> +	led_cdev = &led->ldev;
+> +	led->regmap = iodev->regmap;
+> +	platform_set_drvdata(pdev, led);
+> +	ret = max77693_led_get_platform_data(led);
+> +	if (ret < 0)
+> +		return -EINVAL;
+> +	p = led->pdata;
+> +
+> +	mutex_init(&led->lock);
+> +
+> +	INIT_WORK(&led->work_brightness_set, max77693_brightness_set_work);
+> +
+> +	/* LED class device initialization */
+> +	led_cdev->name = MAX77693_LED_NAME;
+> +	led_cdev->brightness_set = max77693_led_brightness_set;
+> +	led_cdev->max_brightness = (p->iout[TORCH1] + p->iout[TORCH2]) /
+> +						MAX77693_TORCH_IOUT_STEP;
+> +
+> +	if ((p->trigger[FLASH1] & MAX77693_LED_TRIG_FLASH) ||
+> +	    (p->trigger[FLASH2] & MAX77693_LED_TRIG_FLASH))
+> +		led_flash.has_external_strobe = true;
+> +	led_cdev->flash = &led_flash;
+> +
+> +	max77693_init_led_controls(led_cdev, p);
+> +
+> +	/* Register in the LED subsystem. */
+> +	ret = led_classdev_flash_register(&pdev->dev, led_cdev);
+> +	if (ret < 0)
+
+mutex_destroy()?
+
+> +		return -EINVAL;
+> +
+> +	ret = max77693_setup(led);
+
+Do you intentionally ignore the return value?
+
+> +	return 0;
+> +}
+> +
+> +static int max77693_led_remove(struct platform_device *pdev)
+> +{
+> +	struct max77693_led *led = platform_get_drvdata(pdev);
+> +
+> +	led_classdev_flash_unregister(&led->ldev);
+
+mutex_destroy()?
+
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id max77693_led_dt_match[] = {
+> +	{.compatible = "maxim,max77693-flash"},
+> +	{},
+> +};
+> +
+> +static struct platform_driver max77693_led_driver = {
+> +	.probe		= max77693_led_probe,
+> +	.remove		= max77693_led_remove,
+> +	.driver		= {
+> +		.name	= "max77693-flash",
+> +		.owner	= THIS_MODULE,
+> +		.of_match_table = max77693_led_dt_match,
+> +	},
+> +};
+> +
+> +module_platform_driver(max77693_led_driver);
+> +
+> +MODULE_AUTHOR("Andrzej Hajda <a.hajda@samsung.com>");
+> +MODULE_AUTHOR("Jacek Anaszewski <j.anaszewski@samsung.com>");
+> +MODULE_DESCRIPTION("Maxim MAX77693 led flash driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
+> index c5535f0..f061aa8 100644
+> --- a/drivers/mfd/max77693.c
+> +++ b/drivers/mfd/max77693.c
+> @@ -44,7 +44,7 @@
+>  static const struct mfd_cell max77693_devs[] = {
+>  	{ .name = "max77693-pmic", },
+>  	{ .name = "max77693-charger", },
+> -	{ .name = "max77693-flash", },
+> +	{ .name = "max77693-flash", .of_compatible = "maxim,max77693-flash", },
+>  	{ .name = "max77693-muic", },
+>  	{ .name = "max77693-haptic", },
+>  };
+> diff --git a/include/linux/mfd/max77693.h b/include/linux/mfd/max77693.h
+> index 3f3dc45..f2285b7 100644
+> --- a/include/linux/mfd/max77693.h
+> +++ b/include/linux/mfd/max77693.h
+> @@ -63,6 +63,43 @@ struct max77693_muic_platform_data {
+>  	int path_uart;
+>  };
+>  
+> +/* MAX77693 led flash */
+> +
+> +/* triggers */
+> +enum max77693_led_trigger {
+> +	MAX77693_LED_TRIG_OFF,
+> +	MAX77693_LED_TRIG_FLASH,
+> +	MAX77693_LED_TRIG_TORCH,
+> +	MAX77693_LED_TRIG_EXT,
+> +	MAX77693_LED_TRIG_SOFT,
+> +};
+> +
+> +
+> +/* trigger types */
+> +enum max77693_led_trigger_type {
+> +	MAX77693_LED_TRIG_TYPE_EDGE,
+> +	MAX77693_LED_TRIG_TYPE_LEVEL,
+> +};
+> +
+> +/* boost modes */
+> +enum max77693_led_boost_mode {
+> +	MAX77693_LED_BOOST_NONE,
+> +	MAX77693_LED_BOOST_ADAPTIVE,
+> +	MAX77693_LED_BOOST_FIXED,
+> +};
+> +
+> +struct max77693_led_platform_data {
+> +	u32 iout[4];
+> +	u32 trigger[4];
+> +	u32 trigger_type[2];
+> +	u32 timeout[2];
+> +	u32 boost_mode[2];
+> +	u32 boost_vout;
+> +	u32 low_vsys;
+> +};
+> +
+> +/* MAX77693 */
+> +
+>  struct max77693_platform_data {
+>  	/* regulator data */
+>  	struct max77693_regulator_data *regulators;
+> @@ -70,5 +107,6 @@ struct max77693_platform_data {
+>  
+>  	/* muic data */
+>  	struct max77693_muic_platform_data *muic_data;
+> +	struct max77693_led_platform_data *led_data;
+>  };
+>  #endif	/* __LINUX_MFD_MAX77693_H */
+
+-- 
+Kind regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
