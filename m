@@ -1,86 +1,74 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM: dts: berlin: add the SDHCI nodes for the BG2Q
-Date: Wed, 16 Apr 2014 15:23:13 +0200
-Message-ID: <20140416132313.GA6253@kwain>
-References: <1397652011-21284-1-git-send-email-antoine.tenart@free-electrons.com>
- <1397652011-21284-4-git-send-email-antoine.tenart@free-electrons.com>
- <20140416130915.GC11310@lunn.ch>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: Re: [PATCH V4 5/5] usb-phy: samsung-usb3: Remove older
+ phy-samsung-usb3 driver
+Date: Wed, 16 Apr 2014 15:33:04 +0200
+Message-ID: <CACQ1gAgbiQJmpJDebeKSRGKhDjOcmOAdt8L3CmNAO=h5i7yV1A@mail.gmail.com>
+References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
+ <1396967803-28868-6-git-send-email-gautam.vivek@samsung.com>
+ <53452B59.8030901@samsung.com> <CAFp+6iGQMS5_YAimBRdV-P2h3LczQEHMq_cXGrOtHJSZqM7UfQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140416130915.GC11310-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iGQMS5_YAimBRdV-P2h3LczQEHMq_cXGrOtHJSZqM7UfQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, kishon <kishon@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi Vivek,
 
-On Wed, Apr 16, 2014 at 03:09:15PM +0200, Andrew Lunn wrote:
-> On Wed, Apr 16, 2014 at 02:40:10PM +0200, Antoine T=E9nart wrote:
-> > Add the SDHCI nodes for the Marvell Berlin BG2Q, using the berlin-s=
-dhci
-> > driver.
-> >=20
-> > Signed-off-by: Antoine T=E9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/berlin2q.dtsi | 40 +++++++++++++++++++++++++++++=
-+++++++++++
-> >  1 file changed, 40 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/be=
-rlin2q.dtsi
-> > index 5925e6a16749..8f897d461460 100644
-> > --- a/arch/arm/boot/dts/berlin2q.dtsi
-> > +++ b/arch/arm/boot/dts/berlin2q.dtsi
-> > @@ -67,6 +67,14 @@
-> >  		clock-div =3D <3>;
-> >  	};
-> > =20
-> > +	sdio1clk: sdio1clk {
-> > +		compatible =3D "fixed-factor-clock";
-> > +		#clock-cells =3D <0>;
-> > +		clocks =3D <&syspll>;
-> > +		clock-mult =3D <1>;
-> > +		clock-div =3D <4>;
-> > +	};
-> > +
-> >  	soc {
-> >  		compatible =3D "simple-bus";
-> >  		#address-cells =3D <1>;
-> > @@ -75,6 +83,38 @@
-> >  		ranges =3D <0 0xf7000000 0x1000000>;
-> >  		interrupt-parent =3D <&gic>;
-> > =20
-> > +		sdhci0: sdhci@ab0000 {
-> > +			compatible =3D "marvell,berlin2q-sdhci";
-> > +			reg =3D <0xab0000 0x200>;
-> > +			clocks =3D <&sdio1clk>;
-> > +			interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> > +			keep-power-in-suspend;
-> > +			enable-sdio-wakeup;
-> > +			broken-cd;
->=20
-> Hi Antoine
->=20
-> I would expect these three last properties to be a property of the
-> board, not the SoC. Or am i missing something?
+2014-04-09 13:34 GMT+02:00 Vivek Gautam <gautam.vivek@samsung.com>:
+> Hi Tomasz,
+> '
+>
+> On Wed, Apr 9, 2014 at 4:43 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> Hi Vivek,
+>>
+> Thanks for reviewing the patch series.
+>
+>>
+>> On 08.04.2014 16:36, Vivek Gautam wrote:
+>>>
+>>> Removing this older USB 3.0 DRD controller PHY driver, since
+>>> a new driver based on generic phy framework is now available.
+>>>
+>>> Also removing the dt node for older driver from Exynos5250
+>>> device tree and updating the dt node for DWC3 controller.
+>>>
+>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>> ---
+>>>
+>>> NOTE: This patch should be merged only when the new USB 3.0
+>>> DRD phy controller driver is available in the tree from the
+>>> patches:
+>>>         phy: Add new Exynos5 USB 3.0 PHY driver; and
+>>>         dt: exynos5250: Enable support for generic USB DRD phy
+>>>
+>>>   arch/arm/boot/dts/exynos5250.dtsi  |   17 +-
+>>>   drivers/usb/phy/phy-samsung-usb.h  |   83 ---------
+>>>   drivers/usb/phy/phy-samsung-usb3.c |  350
+>>> ------------------------------------
+>>>   3 files changed, 2 insertions(+), 448 deletions(-)
+>>>   delete mode 100644 drivers/usb/phy/phy-samsung-usb3.c
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+>>> b/arch/arm/boot/dts/exynos5250.dtsi
+>>> index 92c6fcd..1cb1e91 100644
+>>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>>
+>>
+>> IMHO driver and dts changes should be separated into two patches, first
+>> updating device tree to use the new driver and second removing the driver.
+>
+> Sure will separate the patch into driver and dts change.
+>
+>>
+>> After fixing this issue,
+>>
+>> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+>>
+I guess you should also remove phy-samsung-usb3.c references in the
+Makefile, Kconfig and exynos_defconfig
 
-No reason, I'll move them.
-
-Thanks !
-
-Antoine
-
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Richard.
