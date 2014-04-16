@@ -1,58 +1,40 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 0/2] ARM: berlin: add GPIO support for the BG2Q
-Date: Wed, 16 Apr 2014 21:21:23 +0200
-Message-ID: <534ED833.9080004@gmail.com>
-References: <1397634395-7456-1-git-send-email-antoine.tenart@free-electrons.com> <20140416171112.31757110@xhacker>
+From: Sergei Ianovich <ynvich@gmail.com>
+Subject: Re: [PATCH v4 13/21] misc: support for LP-8x4x custom parallel bus
+Date: Wed, 16 Apr 2014 23:53:58 +0400
+Message-ID: <fff1a89e-346c-45fd-9832-7484bdc3561a@email.android.com>
+References: <1397668411-27162-7-git-send-email-ynvich@gmail.com> <1397668667-27328-1-git-send-email-ynvich@gmail.com> <1397668667-27328-7-git-send-email-ynvich@gmail.com> <20140416194109.3ef914d2@alan.etchedpixels.co.uk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140416171112.31757110@xhacker>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain;
+ charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140416194109.3ef914d2@alan.etchedpixels.co.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2014 11:11 AM, Jisheng Zhang wrote:
-> On Wed, 16 Apr 2014 00:46:33 -0700
-> Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->=20
->> This series add the support for the GPIOs of the Berlin BG2Q. We use=
- the
->> newly integrated dwapb GPIO driver here.
->>
->> This applies on top of Alexandre's BG2Q symbol introduction[1] and t=
-he dwapb
->> gpio patch fixing IRQ initialization[2].
->>
->> [1] https://patchwork.kernel.org/patch/3876141/
->> [2] https://lkml.org/lkml/2014/4/7/96
->>
->> Changes since v1:
->> 	- s/gpio-controller@/gpio-port@/ in device tree
->> 	- moved ARCH_REQUIRE_GPIOLIB to ARCH_BERLIN in Kconfig
->>
->> Antoine T=C3=A9nart (2):
->>   ARM: berlin: add the LIBGPIO as a dependency for the BG2Q
->>   ARM: dts: berlin: add GPIO nodes for the BG2Q
->>
->>  arch/arm/boot/dts/berlin2q.dtsi | 102
->> ++++++++++++++++++++++++++++++++++++++++ arch/arm/mach-berlin/Kconfi=
-g
->> |   1 + 2 files changed, 103 insertions(+)
->>
->=20
-> All the two patches look good
+One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk> wrote:
+>On Wed, 16 Apr 2014 21:17:18 +0400
+>Sergei Ianovich <ynvich@gmail.com> wrote:
+>
+>> This patch implements probing for the bus and reporting the number
+>> of available expansion slots.
+>
+>This appears to be a bus not a misc device. I don't think it belongs in
+>misc. As you've got devices on this bus (or nailed into the 'bus'
+>driver)
+>perhaps this belongs as drivers/platform/lp8x4x or similar with any
+>specific drivers split out - or even drivers/lp8x4x if there will be
+>more
+>of them and more than one platform using it ?
 
-Patch 1 applied to berlin/soc,
-Patch 2 applied to berlin/dt,
+Thanks again for responding. I don't have a clear idea about proper code organization concering this bus.
 
-both with Jisheng's Reviewed-by.
+The total number of possible bus devices is quite large, around 30. Half of them would take less than 10 extra lines to get support. The rest is more complicated.
 
-Thanks!
+LP-8x4x has several features that would require a misc device anyway. It has a rotary switch which isn't an input device, because it produces no interrupts. The device also has a similar DIP switch. In addition, it acts as a kind of RS-485-port-to-multi-RS-232-ports logical bridge. It has a multiplexer which allows to talk to several serial modules which support a custom protocol designed for RS-485 using a RS-232 port.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
