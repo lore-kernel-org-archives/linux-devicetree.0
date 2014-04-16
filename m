@@ -1,110 +1,48 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 3/3] regulator: tps65090: Make FETs more reliable
-Date: Wed, 16 Apr 2014 11:28:16 -0700
-Message-ID: <CAD=FV=WtspeorCqJ_dTjZbhhMzUJ-+t6bWeh7pwmJd3VAJqEGQ@mail.gmail.com>
-References: <1397592876-5741-1-git-send-email-dianders@chromium.org>
-	<1397592876-5741-4-git-send-email-dianders@chromium.org>
-	<20140415225210.GK12304@sirena.org.uk>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v4 12/21] serial: support for 16550A serial ports on
+ LP-8x4x
+Date: Wed, 16 Apr 2014 19:35:32 +0100
+Message-ID: <20140416193532.0782f045@alan.etchedpixels.co.uk>
+References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
+	<1397668667-27328-1-git-send-email-ynvich@gmail.com>
+	<1397668667-27328-6-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140415225210.GK12304@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, AJAY KUMAR RAMAKRISHNA SHYMALAMMA <ajaykumar.rs@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1397668667-27328-6-git-send-email-ynvich@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Stefan Seyfried <seife+kernel@b1-systems.com>, James Cameron <quozl@laptop.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+> +	baud = uart_get_baud_rate(port, termios, old,
+> +				  port->uartclk / 16 / 0xffff,
+> +				  port->uartclk / 16);
+> +	switch (baud) {
+> +	case 2400:
+> +		len |= 1;
+> +		break;
+> +	case 4800:
+> +		len |= 2;
+> +		break;
+> +	case 19200:
+> +		len |= 4;
+> +		break;
+> +	case 38400:
+> +		len |= 5;
+> +		break;
+> +	case 57600:
+> +		len |= 6;
+> +		break;
+> +	case 115200:
+> +		len |= 7;
+> +		break;
+> +	case 9600:
+> +	default:
+> +		len |= 3;
+> +		break;
+> +	};
 
-On Tue, Apr 15, 2014 at 3:52 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Apr 15, 2014 at 01:14:36PM -0700, Doug Anderson wrote:
->
->> Mitigate the problem by:
->> * Allow setting the overcurrent wait time so devices with this problem
->>   can set it to the max.
->> * Add retry logic on enables of FETs.
->
-> This is two changes, should really be two patches.
-
-OK, sure.
-
-
->> +- ti,overcurrent-wait: This is applicable to FET registers, which have a
->> +  poorly defined "overcurrent wait" field.  If this property is present it
->> +  should be between 0 - 3.  If this property isn't present we won't touch the
->> +  "overcurrent wait" field and we'll leave it to the BIOS/EC to deal with.
->
-> I take it this is the raw value to write to the register?
-
-Yes.
-
-
->> +static int tps65090_fet_is_enabled(struct regulator_dev *rdev)
->> +{
->> +     unsigned int control;
->> +     unsigned int expected = rdev->desc->enable_mask | BIT(CTRL_PG_BIT);
->> +     int ret;
->> +
->> +     ret = regmap_read(rdev->regmap, rdev->desc->enable_reg, &control);
->> +     if (ret != 0)
->> +             return ret;
->> +
->> +     return (control & expected) == expected;
->> +}
->
-> No need to open code this, regulator_is_enabled_regmap() can check for
-> any value in a bitfield.
-
-The overall problem was that we were checking a different bit than we
-were setting.  We set "enabled" to turn things on and then we check
-"power good".
-
-I can avoid the open coding by doing something that's slightly a hack.
- I'll put that in V2 and you can tell me if you like it better.  I'll
-set "enable_mask" and "enable_val" to include both bits.  The "power
-good" is read only so it won't hurt to set it.  ...and it doesn't hurt
-to check the enabled bit in addition to the power good bit.
-
-
->> +static int tps6090_try_enable_fet(struct regulator_dev *rdev)
->
-> Why is this called tps6090_try_enable_fet(), looks like a missing 5?
-
-typo.  fixed.
-
->
->> +     /*
->> +      * Try enabling multiple times until we succeed since sometimes the
->> +      * first try times out.
->> +      */
->> +     for (tries = 0; ; tries++) {
->> +             ret = tps6090_try_enable_fet(rdev);
->> +             if (!ret)
->> +                     break;
->> +             if (ret != -ENOTRECOVERABLE || tries == MAX_FET_ENABLE_TRIES)
->> +                     goto err;
->
-> Make this a do { } while so we don't have the exit condition missing in
-> the for loop please, it's doing the right thing but it's not as obvious
-> as it could be.
-
-It's not quite a "do { } while" since the break is in the middle, but
-happy to change to a "while (true)".  Hope that's OK.
-
->
->> +     if (tries) {
->> +             dev_warn(&rdev->dev, "reg %#x enable ok after %d tries\n",
->> +                      rdev->desc->enable_reg, tries);
->> +     }
->
-> No need for braces here, and I guess that ought to be retries rather
-> than tries (though that is pedantry).
-
-LOL.  I've been yelled at for the opposite.  ;)  There's at least
-someone out there who thinks that we should have braces if you've got
-a single statement like this that wraps to two lines, but I can't
-remember who.
-
-In any case, fixed.
-
--Doug
+Some explanation of this would be useful - eg why is it set to 7 for
+115200 baud and 3 for 115201 baud ?
