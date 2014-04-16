@@ -1,126 +1,45 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: [PATCH 2/6] regulator: arizona-ldo1: Move setup processing from arizona-core
-Date: Wed, 16 Apr 2014 10:01:38 +0100
-Message-ID: <1397638902-7576-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-References: <1397638902-7576-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397638902-7576-1-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH v2 0/2] ARM: berlin: add GPIO support for the BG2Q
+Date: Wed, 16 Apr 2014 17:11:12 +0800
+Message-ID: <20140416171112.31757110@xhacker>
+References: <1397634395-7456-1-git-send-email-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397634395-7456-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
+Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, Jimmy Xu <zmxu@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-It is more idiomatic to process things relating to the regulator in its
-driver. This patch moves both processing of device tree relating to the
-regulator and checking if the regulator is external from arizona-core
-into the regulator driver.
+On Wed, 16 Apr 2014 00:46:33 -0700
+Antoine T=C3=A9nart <antoine.tenart@free-electrons.com> wrote:
 
-Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
----
- drivers/mfd/arizona-core.c       |   12 +++---------
- drivers/regulator/arizona-ldo1.c |   27 +++++++++++++++++++++++++++
- 2 files changed, 30 insertions(+), 9 deletions(-)
+> This series add the support for the GPIOs of the Berlin BG2Q. We use =
+the
+> newly integrated dwapb GPIO driver here.
+>=20
+> This applies on top of Alexandre's BG2Q symbol introduction[1] and th=
+e dwapb
+> gpio patch fixing IRQ initialization[2].
+>=20
+> [1] https://patchwork.kernel.org/patch/3876141/
+> [2] https://lkml.org/lkml/2014/4/7/96
+>=20
+> Changes since v1:
+> 	- s/gpio-controller@/gpio-port@/ in device tree
+> 	- moved ARCH_REQUIRE_GPIOLIB to ARCH_BERLIN in Kconfig
+>=20
+> Antoine T=C3=A9nart (2):
+>   ARM: berlin: add the LIBGPIO as a dependency for the BG2Q
+>   ARM: dts: berlin: add GPIO nodes for the BG2Q
+>=20
+>  arch/arm/boot/dts/berlin2q.dtsi | 102
+> ++++++++++++++++++++++++++++++++++++++++ arch/arm/mach-berlin/Kconfig
+> |   1 + 2 files changed, 103 insertions(+)
+>=20
 
-diff --git a/drivers/mfd/arizona-core.c b/drivers/mfd/arizona-core.c
-index 37b5e14..07e6e27 100644
---- a/drivers/mfd/arizona-core.c
-+++ b/drivers/mfd/arizona-core.c
-@@ -533,7 +533,6 @@ static int arizona_of_get_core_pdata(struct arizona *arizona)
- 	int ret, i;
- 
- 	pdata->reset = arizona_of_get_named_gpio(arizona, "wlf,reset", true);
--	pdata->ldoena = arizona_of_get_named_gpio(arizona, "wlf,ldoena", true);
- 
- 	ret = of_property_read_u32_array(arizona->dev->of_node,
- 					 "wlf,gpio-defaults",
-@@ -665,6 +664,9 @@ int arizona_dev_init(struct arizona *arizona)
- 		return -EINVAL;
- 	}
- 
-+	/* Mark DCVDD as external, LDO1 driver will clear if internal */
-+	arizona->external_dcvdd = true;
-+
- 	ret = mfd_add_devices(arizona->dev, -1, early_devs,
- 			      ARRAY_SIZE(early_devs), NULL, 0, NULL);
- 	if (ret != 0) {
-@@ -864,14 +866,6 @@ int arizona_dev_init(struct arizona *arizona)
- 			     arizona->pdata.gpio_defaults[i]);
- 	}
- 
--	/*
--	 * LDO1 can only be used to supply DCVDD so if it has no
--	 * consumers then DCVDD is supplied externally.
--	 */
--	if (arizona->pdata.ldo1 &&
--	    arizona->pdata.ldo1->num_consumer_supplies == 0)
--		arizona->external_dcvdd = true;
--
- 	pm_runtime_set_autosuspend_delay(arizona->dev, 100);
- 	pm_runtime_use_autosuspend(arizona->dev);
- 	pm_runtime_enable(arizona->dev);
-diff --git a/drivers/regulator/arizona-ldo1.c b/drivers/regulator/arizona-ldo1.c
-index b1033d3..2248733 100644
---- a/drivers/regulator/arizona-ldo1.c
-+++ b/drivers/regulator/arizona-ldo1.c
-@@ -178,6 +178,15 @@ static const struct regulator_init_data arizona_ldo1_default = {
- 	.num_consumer_supplies = 1,
- };
- 
-+static int arizona_ldo1_of_get_pdata(struct arizona *arizona)
-+{
-+	struct arizona_pdata *pdata = &arizona->pdata;
-+
-+	pdata->ldoena = arizona_of_get_named_gpio(arizona, "wlf,ldoena", true);
-+
-+	return 0;
-+}
-+
- static int arizona_ldo1_probe(struct platform_device *pdev)
- {
- 	struct arizona *arizona = dev_get_drvdata(pdev->dev.parent);
-@@ -186,6 +195,8 @@ static int arizona_ldo1_probe(struct platform_device *pdev)
- 	struct arizona_ldo1 *ldo1;
- 	int ret;
- 
-+	arizona->external_dcvdd = false;
-+
- 	ldo1 = devm_kzalloc(&pdev->dev, sizeof(*ldo1), GFP_KERNEL);
- 	if (!ldo1)
- 		return -ENOMEM;
-@@ -216,6 +227,15 @@ static int arizona_ldo1_probe(struct platform_device *pdev)
- 	config.dev = arizona->dev;
- 	config.driver_data = ldo1;
- 	config.regmap = arizona->regmap;
-+
-+	if (IS_ENABLED(CONFIG_OF)) {
-+		if (!dev_get_platdata(arizona->dev)) {
-+			ret = arizona_ldo1_of_get_pdata(arizona);
-+			if (ret < 0)
-+				return ret;
-+		}
-+	}
-+
- 	config.ena_gpio = arizona->pdata.ldoena;
- 
- 	if (arizona->pdata.ldo1)
-@@ -223,6 +243,13 @@ static int arizona_ldo1_probe(struct platform_device *pdev)
- 	else
- 		config.init_data = &ldo1->init_data;
- 
-+	/*
-+	 * LDO1 can only be used to supply DCVDD so if it has no
-+	 * consumers then DCVDD is supplied externally.
-+	 */
-+	if (config.init_data->num_consumer_supplies == 0)
-+		arizona->external_dcvdd = true;
-+
- 	ldo1->regulator = devm_regulator_register(&pdev->dev, desc, &config);
- 	if (IS_ERR(ldo1->regulator)) {
- 		ret = PTR_ERR(ldo1->regulator);
--- 
-1.7.2.5
+All the two patches look good
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks very much
