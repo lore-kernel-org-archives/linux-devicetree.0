@@ -1,53 +1,48 @@
-From: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer Module timer node.
-Date: Wed, 16 Apr 2014 10:19:45 +0800
-Message-ID: <1397614787-8300-2-git-send-email-Li.Xiubo@freescale.com>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [RFC][PATCH 2/3] ARM: dts: vf610-twr: Enable Freescale FlexTimer
+ Module timer.
+Date: Wed, 16 Apr 2014 10:19:46 +0800
+Message-ID: <1397614787-8300-3-git-send-email-Li.Xiubo@freescale.com>
 References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397614787-8300-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org, r64188-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b40534-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de, shawn.guo@linaro.org, b35083@freescale.com, r64188@freescale.com, b40534@freescale.com
+Cc: devicetree@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Jingchang Lu <b35083@freescale.com>
 ---
- arch/arm/boot/dts/vf610.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ arch/arm/boot/dts/vf610-twr.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index 107e2c0..c3a276f 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -153,6 +153,19 @@
- 				clock-names = "pit";
- 			};
+diff --git a/arch/arm/boot/dts/vf610-twr.dts b/arch/arm/boot/dts/vf610-twr.dts
+index e3a3805..0638847 100644
+--- a/arch/arm/boot/dts/vf610-twr.dts
++++ b/arch/arm/boot/dts/vf610-twr.dts
+@@ -130,6 +130,10 @@
+ 	};
+ };
  
-+			ftm0: ftm@40038000 {
-+				compatible = "fsl,vf610-ftm-timer";
-+				reg = <0x40038000 0x2000>;
-+				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-names = "ftm0", "ftm1",
-+					"ftm0_counter_en", "ftm1_counter_en";
-+				clocks = <&clks VF610_CLK_FTM0>,
-+					<&clks VF610_CLK_FTM1>,
-+					<&clks VF610_CLK_FTM0_EXT_FIX_EN>,
-+					<&clks VF610_CLK_FTM1_EXT_FIX_EN>;
-+				status = "disabled";
-+			};
++&ftm0 {
++	status = "okay";
++};
 +
- 			wdog@4003e000 {
- 				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
- 				reg = <0x4003e000 0x1000>;
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
 -- 
 1.8.4
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
