@@ -1,59 +1,111 @@
-From: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
-Date: Wed, 16 Apr 2014 20:08:03 +0000
-Message-ID: <A2CA0424C0A6F04399FB9E1CD98E03046D18F4A6@US01WEMBX2.internal.synopsys.com>
-References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com>
-	<113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local>
-	<20140403145853.GD14162@saruman.home>
- <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA@mail.gmail.com>
+From: Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
+Subject: [PATCH] Configure FSL eSPI CSBEF and CSAFT
+Date: Wed, 16 Apr 2014 13:09:39 -0700
+Message-ID: <1397678979-7655-1-git-send-email-Jane.Wan@gainspeed.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
-Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org, b48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, insop.song-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org
+Cc: linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBsaW51eC11c2Itb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtdXNi
-LW93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIHN1bmRlZXAgc3ViYmFyYXlhDQo+
-IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwgMTYsIDIwMTQgMzozOSBBTQ0KPiANCj4gSGkgRmVsaXBl
-LA0KPiANCj4gT24gVGh1LCBBcHIgMywgMjAxNCBhdCA4OjI4IFBNLCBGZWxpcGUgQmFsYmkgPGJh
-bGJpQHRpLmNvbT4gd3JvdGU6DQo+IA0KPiA+PiArc3RhdGljIGludCBzdGFydF9kbWEoc3RydWN0
-IHh1c2JfZXAgKmVwLCB1MzIgc3JjLCB1MzIgZHN0LCB1MzIgbGVuZ3RoKQ0KPiA+DQo+ID4gcGxl
-YXNlIHByZXBlbmQgdGhpcyB3aXRoIHh1ZGNfLCBpdCBtYWtlcyB0cmFjaW5nIGEgbG90IGVhc2ll
-ci4NCj4gPg0KPiA+PiArew0KPiA+PiArICAgICBzdHJ1Y3QgeHVzYl91ZGMgKnVkYzsNCj4gPj4g
-KyAgICAgaW50IHJjID0gMDsNCj4gPj4gKyAgICAgdW5zaWduZWQgbG9uZyB0aW1lb3V0Ow0KPiA+
-PiArDQo+ID4+ICsgICAgIHVkYyA9IGVwLT51ZGM7DQo+ID4+ICsgICAgIC8qDQo+ID4+ICsgICAg
-ICAqIFNldCB0aGUgYWRkcmVzc2VzIGluIHRoZSBETUEgc291cmNlIGFuZA0KPiA+PiArICAgICAg
-KiBkZXN0aW5hdGlvbiByZWdpc3RlcnMgYW5kIHRoZW4gc2V0IHRoZSBsZW5ndGgNCj4gPj4gKyAg
-ICAgICogaW50byB0aGUgRE1BIGxlbmd0aCByZWdpc3Rlci4NCj4gPj4gKyAgICAgICovDQo+ID4+
-ICsgICAgIHVkYy0+d3JpdGVfZm4odWRjLT5iYXNlX2FkZHJlc3MsIFhVU0JfRE1BX0RTQVJfQURE
-Ul9PRkZTRVQsIHNyYyk7DQo+ID4+ICsgICAgIHVkYy0+d3JpdGVfZm4odWRjLT5iYXNlX2FkZHJl
-c3MsIFhVU0JfRE1BX0REQVJfQUREUl9PRkZTRVQsIGRzdCk7DQo+ID4+ICsgICAgIHVkYy0+d3Jp
-dGVfZm4odWRjLT5iYXNlX2FkZHJlc3MsIFhVU0JfRE1BX0xFTkdUSF9PRkZTRVQsIGxlbmd0aCk7
-DQo+ID4+ICsNCj4gPj4gKyAgICAgLyoNCj4gPj4gKyAgICAgICogV2FpdCB0aWxsIERNQSB0cmFu
-c2FjdGlvbiBpcyBjb21wbGV0ZSBhbmQNCj4gPj4gKyAgICAgICogY2hlY2sgd2hldGhlciB0aGUg
-RE1BIHRyYW5zYWN0aW9uIHdhcw0KPiA+PiArICAgICAgKiBzdWNjZXNzZnVsLg0KPiA+PiArICAg
-ICAqLw0KPiA+PiArICAgICB3aGlsZSAoKHVkYy0+cmVhZF9mbihlcC0+dWRjLT5iYXNlX2FkZHJl
-c3MgKyBYVVNCX0RNQV9TVEFUVVNfT0ZGU0VUKSAmDQo+ID4+ICsgICAgICAgICAgICAgICAgICAg
-ICBYVVNCX0RNQV9ETUFTUl9CVVNZKSA9PSBYVVNCX0RNQV9ETUFTUl9CVVNZKSB7DQo+ID4+ICsg
-ICAgICAgICAgICAgdGltZW91dCA9IGppZmZpZXMgKyAxMDAwMDsNCj4gPj4gKw0KPiA+PiArICAg
-ICAgICAgICAgIGlmICh0aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKSB7DQo+ID4+ICsgICAg
-ICAgICAgICAgICAgICAgICByYyA9IC1FVElNRURPVVQ7DQo+ID4+ICsgICAgICAgICAgICAgICAg
-ICAgICBnb3RvIGNsZWFuOw0KPiA+PiArICAgICAgICAgICAgIH0NCj4gPj4gKyAgICAgfQ0KPiA+
-DQo+ID4gZG9uJ3QgeW91IGdldCBhbiBJUlEgZm9yIERNQSBjb21wbGV0aW9uID8gSWYgeW91IGRv
-LCB5b3UgY291bGQgYmUgdXNpbmcNCj4gPiB3YWl0X2Zvcl9jb21wbGV0aW9uKCkNCj4gDQo+IFRo
-aXMgZnVuY3Rpb24gaXMgY2FsbGVkIGluIGludGVycnVwdCBjb250ZXh0IHdoZW4gYnVmZmVyIGlz
-IHJlYWR5IG9yDQo+IGZyZWUuIEl0IGluaXRpYXRlcw0KPiBETUEgdG8gdHJhbnNmZXIgZGF0YSBm
-cm9tIElQIGJ1ZmZlciB0byBtZW1vcnkuIEhlbmNlIGl0IHdhaXRzIGluIGJ1c3kNCj4gbG9vcCB0
-aWxsIERNQQ0KPiBjb21wbGV0ZXMNCg0KSWYgdGhpcyBmdW5jdGlvbiBpcyBjYWxsZWQgaW4gaW50
-ZXJydXB0IGNvbnRleHQsIHRoZW4geW91IGNhbid0IHVzZQ0KamlmZmllcyBmb3IgeW91ciB0aW1l
-b3V0LCBzaW5jZSBqaWZmaWVzIG1heSBub3QgZ2V0IHVwZGF0ZWQgd2hpbGUgaW4NCmludGVycnVw
-dCBjb250ZXh0Lg0KDQotLSANClBhdWwNCg0K
+Make FSL eSPI CSnBEF and CSnAFT fields in ESPI_SPMODEn registers
+(n=0,1,2,3) configurable through device tree.
+
+CSnBEF is the chip select setup time.  It's the delay in bits from the
+activation of chip select pin to the first clock for data frame.
+
+CSnAFT is the chip select hold time.  It's the delay in bits from the
+last clock for data frame to the deactivation of chip select pin.
+
+The FSL eSPI driver hardcodes CSnBEF and CSnAFT to 0.  Need to set
+them to a different value for some device.
+
+Signed-off-by: Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/spi/fsl-spi.txt |    6 ++++
+ drivers/spi/spi-fsl-espi.c                        |   34 ++++++++++++++++++---
+ 2 files changed, 36 insertions(+), 4 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/fsl-spi.txt b/Documentation/devicetree/bindings/spi/fsl-spi.txt
+index b032dd7..2c7fd41 100644
+--- a/Documentation/devicetree/bindings/spi/fsl-spi.txt
++++ b/Documentation/devicetree/bindings/spi/fsl-spi.txt
+@@ -42,6 +42,10 @@ Required properties:
+ - interrupts : should contain eSPI interrupt, the device has one interrupt.
+ - fsl,espi-num-chipselects : the number of the chipselect signals.
+ 
++Optional properties:
++- fsl,csbef: chip select assertion time in bits before frame starts
++- fsl,csaft: chip select negation time in bits after frame ends
++
+ Example:
+ 	spi@110000 {
+ 		#address-cells = <1>;
+@@ -51,4 +55,6 @@ Example:
+ 		interrupts = <53 0x2>;
+ 		interrupt-parent = <&mpic>;
+ 		fsl,espi-num-chipselects = <4>;
++		fsl,csbef = <1>;
++		fsl,csaft = <1>;
+ 	};
+diff --git a/drivers/spi/spi-fsl-espi.c b/drivers/spi/spi-fsl-espi.c
+index 428dc7a..7ff9463 100644
+--- a/drivers/spi/spi-fsl-espi.c
++++ b/drivers/spi/spi-fsl-espi.c
+@@ -590,8 +590,10 @@ static struct spi_master * fsl_espi_probe(struct device *dev,
+ 	struct spi_master *master;
+ 	struct mpc8xxx_spi *mpc8xxx_spi;
+ 	struct fsl_espi_reg *reg_base;
+-	u32 regval;
+-	int i, ret = 0;
++	struct device_node *nc;
++	const __be32 *prop;
++	u32 regval, csmode;
++	int i, len, ret = 0;
+ 
+ 	master = spi_alloc_master(dev, sizeof(struct mpc8xxx_spi));
+ 	if (!master) {
+@@ -638,8 +640,32 @@ static struct spi_master * fsl_espi_probe(struct device *dev,
+ 	mpc8xxx_spi_write_reg(&reg_base->event, 0xffffffff);
+ 
+ 	/* Init eSPI CS mode register */
+-	for (i = 0; i < pdata->max_chipselect; i++)
+-		mpc8xxx_spi_write_reg(&reg_base->csmode[i], CSMODE_INIT_VAL);
++	for_each_available_child_of_node(master->dev.of_node, nc) {
++		/* get chip select */
++		prop = of_get_property(nc, "reg", &len);
++		if (!prop || len < sizeof(*prop))
++			continue;
++		i = be32_to_cpup(prop);
++		if (i < 0 || i >= pdata->max_chipselect)
++			continue;
++
++		csmode = CSMODE_INIT_VAL;
++		/* check if CSBEF is set in device tree */
++		prop = of_get_property(nc, "fsl,csbef", &len);
++		if (prop && len >= sizeof(*prop)) {
++			csmode &= ~(CSMODE_BEF(0xf));
++			csmode |= CSMODE_BEF(be32_to_cpup(prop));
++		}
++		/* check if CSAFT is set in device tree */
++		prop = of_get_property(nc, "fsl,csaft", &len);
++		if (prop && len >= sizeof(*prop)) {
++			csmode &= ~(CSMODE_AFT(0xf));
++			csmode |= CSMODE_AFT(be32_to_cpup(prop));
++		}
++		mpc8xxx_spi_write_reg(&reg_base->csmode[i], csmode);
++
++		dev_info(dev, "cs=%d, init_csmode=0x%x\n", i, csmode);
++	}
+ 
+ 	/* Enable SPI interface */
+ 	regval = pdata->initial_spmode | SPMODE_INIT_VAL | SPMODE_ENABLE;
+-- 
+1.7.9.5
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
