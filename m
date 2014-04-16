@@ -1,50 +1,83 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH 5/6] ARM: mvebu: Add thermal quirk for the Armada 375
- DB board
-Date: Wed, 16 Apr 2014 12:55:48 -0400
-Message-ID: <20140416165548.GI28159@titan.lakedaemon.net>
-References: <1397657720-10893-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1397657720-10893-6-git-send-email-ezequiel.garcia@free-electrons.com>
- <534EA8C9.7010907@gmail.com>
- <20140416180315.5153c3f7@skate>
- <20140416160824.GA14842@lunn.ch>
- <20140416181938.6e8f8f4b@skate>
- <20140416163447.GB14842@lunn.ch>
+From: "Liviu Dudau" <liviu@dudau.co.uk>
+Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Wed, 16 Apr 2014 18:05:45 +0100
+Message-ID: <20140416170545.GD4858@bart>
+References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
+ <1395270762-6055-3-git-send-email-tinamdar@apm.com>
+ <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140416163447.GB14842@lunn.ch>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Gregory Clement <gregory.clement@free-electrons.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>
+In-Reply-To: <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Tanmay Inamdar <tinamdar@apm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 16, 2014 at 06:34:47PM +0200, Andrew Lunn wrote:
-> > So, I would like to see the Z1 stepping supported for now, and have the
-> > freedom to remove its support later once we are all ready to switch to
-> > A0.
+On Wed, Mar 26, 2014 at 09:28:42AM -0500, Rob Herring wrote:
+> On Wed, Mar 19, 2014 at 6:12 PM, Tanmay Inamdar <tinamdar@apm.com> wrote:
+> > This patch adds the device tree nodes for APM X-Gene PCIe controller and
+> > PCIe clock interface. Since X-Gene SOC supports maximum 5 ports, 5 dts
+> > nodes are added.
 > 
-> Hi Thomas
+> [snip]
 > 
-> Sounds like a good plan. Try to keep all the mess to support Z1 in one
-> place so that it can be easily taken out once people have A0.
+> > +               pcie0: pcie@1f2b0000 {
+> > +                       status = "disabled";
+> > +                       device_type = "pci";
+> > +                       compatible = "apm,xgene-storm-pcie", "apm,xgene-pcie";
+> > +                       #interrupt-cells = <1>;
+> > +                       #size-cells = <2>;
+> > +                       #address-cells = <3>;
+> > +                       reg = < 0x00 0x1f2b0000 0x0 0x00010000   /* Controller registers */
+> > +                               0xe0 0xd0000000 0x0 0x00200000>; /* PCI config space */
+> 
 
-Agreed.  Thomas, do you think you'll be able to get a definitive answer
-from Marvell re the number of Z1 boards in the wild?  Once they've moved
-to the A0, of course.
+Resurecting an old thread as this is relevant to what I'm doing at the moment:
 
-Unless we can get a hard answer on that, I doubt we'll ever withdraw
-support for the Z1.  Not that that's a bad thing, just trying to be
-realistic.  If we add code, expect to support it.
+> Where is the right place for config space? This binding has it here
+> and others have it in ranges. Given that config space type is defined
+> for ranges, I would think that is the right place. But Liviu's patches
+> do not process config space entries in ranges. Perhaps we need a
+> config space resource populated in the bridge struct.
 
-And keeping it all in one place is kind of an impossibility.  Just for
-thermal Z1, there are changes to the binding docs, the thermal driver,
-and the soc code.
+I have found out that we cannot pasd the config ranges from the DT into the
+pci_host_bridge structure as the PCI framework doesn't have a resource type
+for config resources. Leaving the translation between range flags and
+resource type as is (filtered through the IORESOURCE_TYPE_BITS) will lead
+to a resource type of value zero, which is not recognised by any resource
+handling API so bridge configuration and bus scanning will barf.
 
-I'd say it's more important to keep it clean, with dts files targeting
-the A0+ SoCs, and the Z1 being the exception case(s).
+I'm looking for suggestions here, as Jason Gunthorpe suggested that we
+should be able to parse config ranges if they conform to the ECAM part
+of the PCI standard.
 
-thx,
+Best regards,
+Liviu
 
-Jason.
+> 
+> Rob
+> 
+> 
+> > +                       reg-names = "csr", "cfg";
+> > +                       ranges = <0x01000000 0x00 0x00000000 0xe0 0x00000000 0x00 0x00010000   /* io */
+> > +                                 0x02000000 0x00 0x10000000 0xe0 0x10000000 0x00 0x80000000>; /* mem */
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
+
