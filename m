@@ -1,35 +1,36 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: [PATCH 0/5] imx ahci DT updates + cubox-i eSATA support
-Date: Wed, 16 Apr 2014 09:42:27 +0100
-Message-ID: <20140416084227.GD24070@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-ide@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Tejun Heo <tj@kernel.org>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH RFC 4/5] ARM: cubox-i: add eSATA DT configuration
+Date: Wed, 16 Apr 2014 09:43:41 +0100
+Message-ID: <E1WaLRV-0002yT-3o@rmk-PC.arm.linux.org.uk>
+References: <20140416084227.GD24070@n2100.arm.linux.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140416084227.GD24070-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The following series adds several DT properties to the iMX ahci driver,
-which are necessary to configure the electrical characteristics of the
-SATA interface.
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6q-cubox-i.dts | 3 +++
+ 1 file changed, 3 insertions(+)
 
-The required electrical characteristics are board dependent, so the
-existing solution where the parameters are hard-coded for the first
-board(s) which came along is completely rediculous, and cause their
-own set of problems: we have to default to these parameters when no
-properties are given, and it means we have to use negative properties
-to turn stuff off rather than positive properties to enable features.
-
-Yes, I know that the required Documentation/devicetree file is missing,
-I couldn't find the existing file to update for this driver with the
-new properties. :)
-
- arch/arm/boot/dts/imx6q-cubox-i.dts |   4 +
- drivers/ata/ahci_imx.c              | 188 ++++++++++++++++++++++++++++++++++--
- 2 files changed, 184 insertions(+), 8 deletions(-)
-
+diff --git a/arch/arm/boot/dts/imx6q-cubox-i.dts b/arch/arm/boot/dts/imx6q-cubox-i.dts
+index bc5f31e3e892..941365d7ee65 100644
+--- a/arch/arm/boot/dts/imx6q-cubox-i.dts
++++ b/arch/arm/boot/dts/imx6q-cubox-i.dts
+@@ -13,4 +13,7 @@
+ 
+ &sata {
+ 	status = "okay";
++	fsl,transmit-level-mV = <1104>;
++	fsl,transmit-boost-mdB = <0>;
++	fsl,transmit-atten-16ths = <9>;
+ };
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+1.8.3.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
