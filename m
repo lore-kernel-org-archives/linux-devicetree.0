@@ -1,36 +1,83 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH RFC 4/5] ARM: cubox-i: add eSATA DT configuration
-Date: Wed, 16 Apr 2014 09:43:41 +0100
-Message-ID: <E1WaLRV-0002yT-3o@rmk-PC.arm.linux.org.uk>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH RFC 5/5] ahci_imx: add disable for spread-spectrum
+Date: Wed, 16 Apr 2014 09:43:46 +0100
+Message-ID: <E1WaLRa-0002yX-7L@rmk-PC.arm.linux.org.uk>
 References: <20140416084227.GD24070@n2100.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140416084227.GD24070-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140416084227.GD24070@n2100.arm.linux.org.uk>
+Sender: linux-ide-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Shawn Guo <shawn.guo@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, devicetree@vger.kernel.org, linux-ide@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Spread-spectrum doesn't work with Cubox-i hardware, so we have to
+disable this feature.  Add a DT property so that platforms can
+indicate that this feature should not be enabled.
+
+Having it as a negative property keeps existing DT files working.
+
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
- arch/arm/boot/dts/imx6q-cubox-i.dts | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/arm/boot/dts/imx6q-cubox-i.dts |  1 +
+ drivers/ata/ahci_imx.c              | 14 +++++++++++++-
+ 2 files changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm/boot/dts/imx6q-cubox-i.dts b/arch/arm/boot/dts/imx6q-cubox-i.dts
-index bc5f31e3e892..941365d7ee65 100644
+index 941365d7ee65..9efd8b0c8011 100644
 --- a/arch/arm/boot/dts/imx6q-cubox-i.dts
 +++ b/arch/arm/boot/dts/imx6q-cubox-i.dts
-@@ -13,4 +13,7 @@
- 
- &sata {
- 	status = "okay";
-+	fsl,transmit-level-mV = <1104>;
-+	fsl,transmit-boost-mdB = <0>;
-+	fsl,transmit-atten-16ths = <9>;
+@@ -16,4 +16,5 @@
+ 	fsl,transmit-level-mV = <1104>;
+ 	fsl,transmit-boost-mdB = <0>;
+ 	fsl,transmit-atten-16ths = <9>;
++	fsl,no-spread-spectrum;
  };
+diff --git a/drivers/ata/ahci_imx.c b/drivers/ata/ahci_imx.c
+index 1251d719cc73..f3221b8bfafa 100644
+--- a/drivers/ata/ahci_imx.c
++++ b/drivers/ata/ahci_imx.c
+@@ -208,6 +208,7 @@ struct reg_property {
+ 	const struct reg_value *values;
+ 	size_t num_values;
+ 	u32 def_value;
++	u32 set_value;
+ };
+ 
+ static const struct reg_value gpr13_tx_level[] = {
+@@ -305,6 +306,10 @@ static const struct reg_property gpr13_props[] = {
+ 		.values = gpr13_rx_eq,
+ 		.num_values = ARRAY_SIZE(gpr13_rx_eq),
+ 		.def_value = IMX6Q_GPR13_SATA_RX_EQ_VAL_3_0_DB,
++	}, {
++		.name = "fsl,no-spread-spectrum",
++		.def_value = IMX6Q_GPR13_SATA_MPLL_SS_EN,
++		.set_value = 0,
+ 	},
+ };
+ 
+@@ -318,6 +323,14 @@ static u32 imx_ahci_parse_props(struct device *dev,
+ 	for (i = 0; i < num; i++, prop++) {
+ 		u32 of_val;
+ 
++		if (prop->num_values == 0) {
++			if (of_property_read_bool(np, prop->name))
++				reg_value |= prop->set_value;
++			else
++				reg_value |= prop->def_value;
++			continue;
++		}
++
+ 		if (of_property_read_u32(np, prop->name, &of_val)) {
+ 			dev_info(dev, "%s not specified, using %08x\n",
+ 				prop->name, prop->def_value);
+@@ -392,7 +405,6 @@ static int imx_ahci_probe(struct platform_device *pdev)
+ 				   IMX6Q_GPR13_SATA_RX_LOS_LVL_SATA2M |
+ 				   IMX6Q_GPR13_SATA_RX_DPLL_MODE_2P_4F |
+ 				   IMX6Q_GPR13_SATA_SPD_MODE_3P0G |
+-				   IMX6Q_GPR13_SATA_MPLL_SS_EN |
+ 				   reg_value;
+ 	}
+ 
 -- 
 1.8.3.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
