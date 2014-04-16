@@ -1,40 +1,78 @@
-From: Sergei Ianovich <ynvich@gmail.com>
-Subject: Re: [PATCH v4 13/21] misc: support for LP-8x4x custom parallel bus
-Date: Wed, 16 Apr 2014 23:53:58 +0400
-Message-ID: <fff1a89e-346c-45fd-9832-7484bdc3561a@email.android.com>
-References: <1397668411-27162-7-git-send-email-ynvich@gmail.com> <1397668667-27328-1-git-send-email-ynvich@gmail.com> <1397668667-27328-7-git-send-email-ynvich@gmail.com> <20140416194109.3ef914d2@alan.etchedpixels.co.uk>
+From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH v4 12/21] serial: support for 16550A serial ports on
+ LP-8x4x
+Date: Wed, 16 Apr 2014 21:00:51 +0100
+Message-ID: <20140416210051.01bef49e@alan.etchedpixels.co.uk>
+References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
+	<1397668667-27328-1-git-send-email-ynvich@gmail.com>
+	<1397668667-27328-6-git-send-email-ynvich@gmail.com>
+	<20140416193532.0782f045@alan.etchedpixels.co.uk>
+	<c4533da6-30bd-4ea4-9011-a7e3b7258e62@email.android.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140416194109.3ef914d2@alan.etchedpixels.co.uk>
+In-Reply-To: <c4533da6-30bd-4ea4-9011-a7e3b7258e62@email.android.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Stefan Seyfried <seife+kernel@b1-systems.com>, James Cameron <quozl@laptop.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk> wrote:
->On Wed, 16 Apr 2014 21:17:18 +0400
->Sergei Ianovich <ynvich@gmail.com> wrote:
->
->> This patch implements probing for the bus and reporting the number
->> of available expansion slots.
->
->This appears to be a bus not a misc device. I don't think it belongs in
->misc. As you've got devices on this bus (or nailed into the 'bus'
->driver)
->perhaps this belongs as drivers/platform/lp8x4x or similar with any
->specific drivers split out - or even drivers/lp8x4x if there will be
->more
->of them and more than one platform using it ?
+On Wed, 16 Apr 2014 23:01:47 +0400
+Sergei Ianovich <ynvich@gmail.com> wrote:
 
-Thanks again for responding. I don't have a clear idea about proper code organization concering this bus.
+> One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk> wrote:
+> >> +	baud = uart_get_baud_rate(port, termios, old,
+> >> +				  port->uartclk / 16 / 0xffff,
+> >> +				  port->uartclk / 16);
+> >> +	switch (baud) {
+> >> +	case 2400:
+> >> +		len |= 1;
+> >> +		break;
+> >> +	case 4800:
+> >> +		len |= 2;
+> >> +		break;
+> >> +	case 19200:
+> >> +		len |= 4;
+> >> +		break;
+> >> +	case 38400:
+> >> +		len |= 5;
+> >> +		break;
+> >> +	case 57600:
+> >> +		len |= 6;
+> >> +		break;
+> >> +	case 115200:
+> >> +		len |= 7;
+> >> +		break;
+> >> +	case 9600:
+> >> +	default:
+> >> +		len |= 3;
+> >> +		break;
+> >> +	};
+> >
+> >Some explanation of this would be useful - eg why is it set to 7 for
+> >115200 baud and 3 for 115201 baud ?
+> 
+> I am not related to the device vendor in any way, so please take my answers for what they are worth.
+> 
+> It seems that there is not enough pins to properly connect the chips to the memory bus and just you the standard 8250 UART driver. Instead, clock divisor is set using this register.
+> 
+> So, if you know you're asking for (115200) you get it. If you don't or guess (115201), you get the default 9600.
 
-The total number of possible bus devices is quite large, around 30. Half of them would take less than 10 extra lines to get support. The rest is more complicated.
+Thats not quite what the code actually implements though.
 
-LP-8x4x has several features that would require a misc device anyway. It has a rotary switch which isn't an input device, because it produces no interrupts. The device also has a similar DIP switch. In addition, it acts as a kind of RS-485-port-to-multi-RS-232-ports logical bridge. It has a multiplexer which allows to talk to several serial modules which support a custom protocol designed for RS-485 using a RS-232 port.
+> This is a policy, it may not be the right way to write a driver, but it is cheap and it works.
 
+If thats how the hardware works and only supports a few fixed rates then
+fine, but for default: you need to actually update he baudrate in the
+passed termios struct so that the userspace knows its request was not
+matched.
 
+Take a look how the standard 8250 termios does it.
 
+Also looking at this and some of the other serial bits I see no
+dependencies on the problematic DMA driver, so does that mean you've got
+a set of pieces that can be submitted anyway while the DMA driver
+discussion continues ?
 
+Alan
