@@ -1,153 +1,160 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: Re: [RFC PATCH v2 0/9] Add Qualcomm crypto driver
-Date: Wed, 16 Apr 2014 18:10:56 +0300
-Message-ID: <534E9D80.9050801@mm-sol.com>
-References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH Resend] ARM: EXYNOS: Map SYSRAM address through DT
+Date: Wed, 16 Apr 2014 10:16:12 -0500
+Message-ID: <CAL_JsqLjPZmPrd=qmcxUCosx=Xu87NSTvG0d-LrGR=uncBHE5g@mail.gmail.com>
+References: <1397649051-3288-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Herbert Xu <herbert@gondor.apana.org.au>
-Cc: Stanimir Varbanov <svarbanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1397649051-3288-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Herbert, crypto folks
+On Wed, Apr 16, 2014 at 6:50 AM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> Instead of hardcoding the SYSRAM details for each SoC,
+> pass this information through device tree (DT) and make
+> the code SoC agnostic.
+>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+> Rebased on latest linux-next.
+> ---
+>  .../devicetree/bindings/arm/samsung-boards.txt     |   11 +++
+>  arch/arm/boot/dts/exynos4210-universal_c210.dts    |    9 ++
+>  arch/arm/boot/dts/exynos4210.dtsi                  |   10 ++
+>  arch/arm/boot/dts/exynos4x12.dtsi                  |   10 ++
+>  arch/arm/boot/dts/exynos5.dtsi                     |    5 +
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    5 +
+>  arch/arm/boot/dts/exynos5420.dtsi                  |    5 +
+>  arch/arm/mach-exynos/exynos.c                      |  104 ++++++++------------
+>  arch/arm/mach-exynos/include/mach/map.h            |    7 --
+>  9 files changed, 95 insertions(+), 71 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> index 2168ed31e1b0..f79710eb7e79 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> @@ -7,6 +7,17 @@ Required root node properties:
+>          (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
+>          (b) "samsung,exynos4210"  - for boards based on Exynos4210 SoC.
+>
+> +    - sysram node, specifying the type (secure or non-secure) of SYSRAM
+> +       - compatible: following types are supported
+> +               "samsung,exynos4210-sysram" : Secure SYSRAM
+> +               "samsung,exynos4210-sysram-ns" : Non-secure SYSRAM
 
-I would like to know your opinions on the state of this driver. How far
-it is from the others crypto drivers in kernel. If you have some
-comments, criticisms etc. I will be glad to hear them and correct the
-potential issues.
+Base this on mmio-sram binding please.
 
-Thanks for your time.
+> +       - reg: address of SYSRAM bank
+> +
+> +       sysram@02020000 {
+> +               compatible = "samsung,exynos4210-sysram";
+> +               reg = <0x02020000 0x1000>;
+> +       };
+> +
+>  Optional:
+>      - firmware node, specifying presence and type of secure firmware:
+>          - compatible: only "samsung,secure-firmware" is currently supported
+> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> index 63e34b24b04f..cf4158728108 100644
+> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> @@ -28,6 +28,15 @@
+>                 bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
+>         };
+>
+> +       sysram@02020000 {
+> +               status = "disabled";
+> +       };
+> +
+> +       sysram@02025000 {
+> +               compatible = "samsung,exynos4210-sysram";
+> +               reg = <0x02025000 0x1000>;
+> +       };
+> +
+>         mct@10050000 {
+>                 compatible = "none";
+>         };
+> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+> index cacf6140dd2f..a3f4bba099e6 100644
+> --- a/arch/arm/boot/dts/exynos4210.dtsi
+> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> @@ -31,6 +31,16 @@
+>                 pinctrl2 = &pinctrl_2;
+>         };
+>
+> +       sysram@02020000 {
+> +               compatible = "samsung,exynos4210-sysram";
+> +               reg = <0x02020000 0x1000>;
+> +       };
+> +
+> +       sysram-ns@0203F000 {
+> +               compatible = "samsung,exynos4210-sysram-ns";
+> +               reg = <0x0203F000 0x1000>;
 
-regards,
-Stan
-
-On 04/14/2014 03:48 PM, Stanimir Varbanov wrote:
-> Hi,
-> 
-> Here is the second version of the patch set. This time tagged
-> as an RFC to avoid confusions. The driver is splitted by files
-> and is buildable at the last patch. When the review has finished
-> 1/9 to 7/9 could be squashed in one patch.
-> 
-> Any comments appreciated!
-> 
-> Changes since v1:
-> 
-> core
->  - added MODULE_DEVICE_TABLE
->  - reorganise includes
->  - kernel doc comments
->  - fix probe error path, forgot to destroy workqueue
->  - rework clocks and kill loops for enabling
->  - restructure the interfaces between core part of the driver
->    and crypto type algorithms. Now struct qce_algo_ops has
->    .unregister_algs operation and it is implemented by every
->    algorithm type (unregister_algs was common in v1).
->    Also async_req_queue/done are now part of core structure
->    qce_device
-> 
-> regs-v5
->  - use GENMASK and include bitops.h
-> 
-> dma-sg helpers
->  - do not check !IS_ERR on error path
->  - various fixes as per review comments
->  - reorganise includes
->  - return error on qce_dma_terminate_all
-> 
-> ablkcipher
->  - use queue and done callbacks from struct qce_device
->  - reorganise includes
->  - kernel doc notation
-> 
-> sha-hmac
->  - use queue and done callbacks from struct qce_device
->  - make byte_count __be32
->  - kernel doc notation
->  - make rctx flags member unsigned long
->  - cleanup qce_ahash_update function
->  - make const * input args of qce_import_common
-> 
-> common
->  - rename bits/masks to use _SHIFT suffix
->  - reorganise includes and add qce_get_version function
->  - make rctx flags unsigned long
->  - move blocksize boundary check on function begging and
->    clear BYTECOUNT registers on first processing block
-> 
-> This driver is based on Codeaurora's driver found at [1]
-> 
-> regards,
-> Stan
-> 
-> [1] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers
-> /crypto/msm?h=msm-3.10
-> ------------------------------------------------------------
-> v1.
-> 
-> The following patch set implements support for Qualcomm
-> crypto hardware accelerator driver. It registers itself
-> to the crypto subsystem and adds the following operations
-> for encryption/decription - AES with ECB CBC CTR XTS modes,
-> DES with ECB CBC modes, and 3DES ECB CBC modes.
-> For hashing and MAC it adds support for sha1 sha256,
-> hmac(sha1) hmac(sha256).
-> 
-> The version of the driver is reworked by me and it is based
-> on Codeaurora's qcrypto driver. The proposed version has many
-> coding style fixes, re-factored files, separated by
-> functionality. I wanted to make the driver more readable and
-> easier for review, hope I done well. I'll appreciate any review
-> comments which will help me to make this code clear and ready
-> for mainline kernel.
-> 
-> Stanimir Varbanov (9):
->   crypto: qce: Add core driver implementation
->   crypto: qce: Add register defines
->   crypto: qce: Add dma and sg helpers
->   crypto: qce: Add ablkcipher algorithms
->   crypto: qce: Adds sha and hmac transforms
->   crypto: qce: Adds infrastructure to setup the crypto block
->   crypto: qce: Adds Makefile to build the driver
->   crypto: qce: Build Qualcomm qce driver
->   ARM: DT: qcom: Add Qualcomm crypto driver binding document
-> 
->  .../devicetree/bindings/crypto/qcom-qce.txt        |  25 +
->  drivers/crypto/Kconfig                             |  10 +
->  drivers/crypto/Makefile                            |   1 +
->  drivers/crypto/qce/Makefile                        |   6 +
->  drivers/crypto/qce/ablkcipher.c                    | 403 ++++++++++++++
->  drivers/crypto/qce/cipher.h                        |  67 +++
->  drivers/crypto/qce/common.c                        | 438 +++++++++++++++
->  drivers/crypto/qce/common.h                        | 104 ++++
->  drivers/crypto/qce/core.c                          | 295 ++++++++++
->  drivers/crypto/qce/core.h                          |  73 +++
->  drivers/crypto/qce/dma.c                           | 188 +++++++
->  drivers/crypto/qce/dma.h                           |  58 ++
->  drivers/crypto/qce/regs-v5.h                       | 331 ++++++++++++
->  drivers/crypto/qce/sha.c                           | 591 +++++++++++++++++++++
->  drivers/crypto/qce/sha.h                           |  81 +++
->  15 files changed, 2671 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
->  create mode 100644 drivers/crypto/qce/Makefile
->  create mode 100644 drivers/crypto/qce/ablkcipher.c
->  create mode 100644 drivers/crypto/qce/cipher.h
->  create mode 100644 drivers/crypto/qce/common.c
->  create mode 100644 drivers/crypto/qce/common.h
->  create mode 100644 drivers/crypto/qce/core.c
->  create mode 100644 drivers/crypto/qce/core.h
->  create mode 100644 drivers/crypto/qce/dma.c
->  create mode 100644 drivers/crypto/qce/dma.h
->  create mode 100644 drivers/crypto/qce/regs-v5.h
->  create mode 100644 drivers/crypto/qce/sha.c
->  create mode 100644 drivers/crypto/qce/sha.h
-> 
+hex should be lower case.
 
 
--- 
-regards,
-Stan
+[...]
+
+> @@ -268,6 +218,44 @@ static int __init exynos_fdt_map_chipid(unsigned long node, const char *uname,
+>         return 1;
+>  }
+>
+> +struct __sysram_desc {
+> +       char name[32];
+> +       unsigned long addr;
+> +};
+> +
+> +static struct __sysram_desc sysram_desc[] __initdata = {
+> +       {
+> +               .name = "samsung,exynos4210-sysram",
+> +               .addr = (unsigned long)S5P_VA_SYSRAM,
+> +       }, {
+> +               .name = "samsung,exynos4210-sysram-ns",
+> +               .addr = (unsigned long)S5P_VA_SYSRAM_NS,
+> +       },
+> +};
+> +
+> +static int __init exynos_fdt_map_sysram(unsigned long node, const char *uname,
+> +                                       int depth, void *data)
+> +{
+> +       struct map_desc iodesc;
+> +       __be32 *reg;
+> +       unsigned long len;
+> +       int i;
+> +
+> +       for (i = 0; i < ARRAY_SIZE(sysram_desc); i++) {
+> +               if (of_flat_dt_is_compatible(node, sysram_desc[i].name)) {
+> +                       reg = of_get_flat_dt_prop(node, "reg", &len);
+> +                       if (!reg || len != (sizeof(unsigned long) * 2))
+> +                               return -ENODEV;
+> +                       iodesc.virtual = sysram_desc[i].addr;
+> +                       iodesc.pfn = __phys_to_pfn(be32_to_cpu(reg[0]));
+> +                       iodesc.length = be32_to_cpu(reg[1]);
+> +                       iodesc.type = MT_DEVICE;
+> +                       iotable_init(&iodesc, 1);
+
+I don't think this needs to be a static mapping at all. Fix your SMP
+code. Move the code setting the boot address in prepare_cpus to
+boot_secondary.
+
+Also, the pen code is all unnecessary if you can properly reset a core
+on hotplug. Given this code:
+
+if (!(__raw_readl(S5P_ARM_CORE1_STATUS) & S5P_CORE_LOCAL_PWR_EN)) {
+__raw_writel(S5P_CORE_LOCAL_PWR_EN,
+    S5P_ARM_CORE1_CONFIGURATION);
+
+and:
+
+/* make cpu1 to be turned off at next WFI command */
+if (cpu == 1)
+__raw_writel(0, S5P_ARM_CORE1_CONFIGURATION);
+
+It would appear you probably have this capability and the exynos smp
+code is pure mindless cut n' paste.
+
+Rob
