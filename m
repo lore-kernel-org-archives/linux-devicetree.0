@@ -1,92 +1,77 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: berlin: add the SDHCI nodes for the BG2Q
-Date: Wed, 16 Apr 2014 14:40:10 +0200
-Message-ID: <1397652011-21284-4-git-send-email-antoine.tenart@free-electrons.com>
-References: <1397652011-21284-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Subject: [PATCH] arm: dts: exynos4: add missing pinctrls for I2C controllers
+Date: Wed, 16 Apr 2014 14:40:31 +0200
+Message-ID: <534E7A3F.7050406@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397652011-21284-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim@samsung.com>
+Cc: 'Ben Dooks' <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, =?UTF-8?B?J+uwleqyveuvvCc=?= <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the SDHCI nodes for the Marvell Berlin BG2Q, using the berlin-sdhci
-driver.
+This patch adds missing pinctrls for I2C controllers 2-7.
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
 ---
- arch/arm/boot/dts/berlin2q.dtsi | 40 +++++++++++++++++++++++++++++++++=
-+++++++
- 1 file changed, 40 insertions(+)
+ arch/arm/boot/dts/exynos4.dtsi |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
-2q.dtsi
-index 5925e6a16749..8f897d461460 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -67,6 +67,14 @@
- 		clock-div =3D <3>;
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 0401f4d..288aa81 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -357,6 +357,8 @@
+ 		interrupts = <0 60 0>;
+ 		clocks = <&clock CLK_I2C2>;
+ 		clock-names = "i2c";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c2_bus>;
+ 		status = "disabled";
  	};
-=20
-+	sdio1clk: sdio1clk {
-+		compatible =3D "fixed-factor-clock";
-+		#clock-cells =3D <0>;
-+		clocks =3D <&syspll>;
-+		clock-mult =3D <1>;
-+		clock-div =3D <4>;
-+	};
-+
- 	soc {
- 		compatible =3D "simple-bus";
- 		#address-cells =3D <1>;
-@@ -75,6 +83,38 @@
- 		ranges =3D <0 0xf7000000 0x1000000>;
- 		interrupt-parent =3D <&gic>;
-=20
-+		sdhci0: sdhci@ab0000 {
-+			compatible =3D "marvell,berlin2q-sdhci";
-+			reg =3D <0xab0000 0x200>;
-+			clocks =3D <&sdio1clk>;
-+			interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			keep-power-in-suspend;
-+			enable-sdio-wakeup;
-+			broken-cd;
-+			status =3D "disabled";
-+		};
-+
-+		sdhci1: sdhci@ab0800 {
-+			compatible =3D "marvell,berlin2q-sdhci";
-+			reg =3D <0xab0800 0x200>;
-+			clocks =3D <&sdio1clk>;
-+			interrupts =3D <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			keep-power-in-suspend;
-+			enable-sdio-wakeup;
-+			status =3D "disabled";
-+		};
-+
-+		sdhci2: sdhci@ab1000 {
-+			compatible =3D "marvell,berlin2q-sdhci";
-+			reg =3D <0xab1000 0x200>;
-+			interrupts =3D <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&sdio1clk>;
-+			keep-power-in-suspend;
-+			enable-sdio-wakeup;
-+			broken-cd;
-+			status =3D "disabled";
-+		};
-+
- 		l2: l2-cache-controller@ac0000 {
- 			compatible =3D "arm,pl310-cache";
- 			reg =3D <0xac0000 0x1000>;
---=20
-1.8.3.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+@@ -368,6 +370,8 @@
+ 		interrupts = <0 61 0>;
+ 		clocks = <&clock CLK_I2C3>;
+ 		clock-names = "i2c";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c3_bus>;
+ 		status = "disabled";
+ 	};
+
+@@ -379,6 +383,8 @@
+ 		interrupts = <0 62 0>;
+ 		clocks = <&clock CLK_I2C4>;
+ 		clock-names = "i2c";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c4_bus>;
+ 		status = "disabled";
+ 	};
+
+@@ -390,6 +396,8 @@
+ 		interrupts = <0 63 0>;
+ 		clocks = <&clock CLK_I2C5>;
+ 		clock-names = "i2c";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c5_bus>;
+ 		status = "disabled";
+ 	};
+
+@@ -401,6 +409,8 @@
+ 		interrupts = <0 64 0>;
+ 		clocks = <&clock CLK_I2C6>;
+ 		clock-names = "i2c";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c6_bus>;
+ 		status = "disabled";
+ 	};
+
+@@ -412,6 +422,8 @@
+ 		interrupts = <0 65 0>;
+ 		clocks = <&clock CLK_I2C7>;
+ 		clock-names = "i2c";
++		pinctrl-names = "default";
++		pinctrl-0 = <&i2c7_bus>;
+ 		status = "disabled";
+ 	};
