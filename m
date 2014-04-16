@@ -1,72 +1,46 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer Module
- timer node.
-Date: Wed, 16 Apr 2014 11:08:03 +0200
-Message-ID: <534E4873.5070308@linaro.org>
-References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com> <1397614787-8300-2-git-send-email-Li.Xiubo@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: [PATCH 0/6] Arizona Regulator Updates v6
+Date: Wed, 16 Apr 2014 10:01:36 +0100
+Message-ID: <1397638902-7576-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397614787-8300-2-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org, r64188-KZfg59tc24xl57MIdRCFDg@public.gmane.org, b40534-KZfg59tc24xl57MIdRCFDg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2014 04:19 AM, Xiubo Li wrote:
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Hi,
 
-That deserves a patch description and an update of the documentation.
+This series of patches are small fixes/improvements to the
+Arizona regulators. The main thing added is proper device
+tree bindings for getting the regulator init_data.
 
-Thanks
-   -- Daniel
+Changes Since v5:
+  - Use IS_ENABLED rather than ifdef for OF specific code
+  - Tidy up arizona_of_get_named_gpio base on comments by Lee Jones
 
-> ---
->   arch/arm/boot/dts/vf610.dtsi | 13 +++++++++++++
->   1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.d=
-tsi
-> index 107e2c0..c3a276f 100644
-> --- a/arch/arm/boot/dts/vf610.dtsi
-> +++ b/arch/arm/boot/dts/vf610.dtsi
-> @@ -153,6 +153,19 @@
->   				clock-names =3D "pit";
->   			};
->
-> +			ftm0: ftm@40038000 {
-> +				compatible =3D "fsl,vf610-ftm-timer";
-> +				reg =3D <0x40038000 0x2000>;
-> +				interrupts =3D <0 42 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-names =3D "ftm0", "ftm1",
-> +					"ftm0_counter_en", "ftm1_counter_en";
-> +				clocks =3D <&clks VF610_CLK_FTM0>,
-> +					<&clks VF610_CLK_FTM1>,
-> +					<&clks VF610_CLK_FTM0_EXT_FIX_EN>,
-> +					<&clks VF610_CLK_FTM1_EXT_FIX_EN>;
-> +				status =3D "disabled";
-> +			};
-> +
->   			wdog@4003e000 {
->   				compatible =3D "fsl,vf610-wdt", "fsl,imx21-wdt";
->   				reg =3D <0x4003e000 0x1000>;
->
+Thanks,
+Charles
 
+Charles Keepax (6):
+  mfd: arizona: Factor out read of device tree GPIOs
+  regulator: arizona-ldo1: Move setup processing from arizona-core
+  regulator: arizona-ldo1: Add processing of init_data from device tree
+  mfd: arizona: Update DT binding to support LDO1 init_data
+  regulator: arizona-micsupp: Add processing of init_data from device
+    tree
+  mfd: arizona: Update DT binding to support MICVDD init_data
 
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
+ Documentation/devicetree/bindings/mfd/arizona.txt |   10 ++++
+ drivers/mfd/arizona-core.c                        |   41 +++++++++------
+ drivers/regulator/arizona-ldo1.c                  |   57 +++++++++++++++++++++
+ drivers/regulator/arizona-micsupp.c               |   37 +++++++++++++
+ include/linux/mfd/arizona/core.h                  |    3 +
+ 5 files changed, 131 insertions(+), 17 deletions(-)
 
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+-- 
+1.7.2.5
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
