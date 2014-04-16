@@ -1,22 +1,29 @@
 From: Sergei Ianovich <ynvich@gmail.com>
-Subject: [PATCH v4 17/21] misc: support for serial slots in LP-8x4x
-Date: Wed, 16 Apr 2014 21:17:22 +0400
-Message-ID: <1397668667-27328-11-git-send-email-ynvich@gmail.com>
+Subject: [PATCH v4 13/21] misc: support for LP-8x4x custom parallel bus
+Date: Wed, 16 Apr 2014 21:17:18 +0400
+Message-ID: <1397668667-27328-7-git-send-email-ynvich@gmail.com>
 References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
  <1397668667-27328-1-git-send-email-ynvich@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1397668667-27328-1-git-send-email-ynvich@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Sergei Ianovich <ynvich@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Sergei Ianovich <ynvich@gmail.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Serial modules (I-870xxW series) implement DCON protocol which
-allows one-master-many-slaves configuration over RS-485. When
-these modules are installed into the device, they could be
-accessed using the 2nd PXA built-in UART port (/dev/ttyS1).
-However, it seems that addresses are not processed by the modules.
-So the parallel bus needs to select which slot is connected.
+This patch implements probing for the bus and reporting the number
+of available expansion slots.
 
 Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
 ---
@@ -24,176 +31,299 @@ Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
    * move DTS binding to a different patch (8/21)
 
    v2..v3
-   * no changes (except number 12/16 -> 17/21)
+   * fixed goto after bus_register
+   * number change (11/16 -> 13/21)
 
    v0..v2
    * use device tree
    * use devm helpers where possible
 
- .../devicetree/bindings/misc/lp8x4x-bus.txt        |  2 +
- Documentation/misc-devices/lp8x4x_bus.txt          | 15 +++++-
- drivers/misc/lp8x4x_bus.c                          | 63 ++++++++++++++++++++++
- 3 files changed, 79 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/misc/lp8x4x-bus.txt        |  16 ++
+ Documentation/misc-devices/lp8x4x_bus.txt          |  30 ++++
+ arch/arm/configs/lp8x4x_defconfig                  |   1 +
+ drivers/misc/Kconfig                               |  13 ++
+ drivers/misc/Makefile                              |   1 +
+ drivers/misc/lp8x4x_bus.c                          | 167 +++++++++++++++++++++
+ 6 files changed, 228 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
+ create mode 100644 Documentation/misc-devices/lp8x4x_bus.txt
+ create mode 100644 drivers/misc/lp8x4x_bus.c
 
 diff --git a/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt b/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-index b0fb145..24a8c62 100644
---- a/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
+new file mode 100644
+index 0000000..1c87a29
+--- /dev/null
 +++ b/Documentation/devicetree/bindings/misc/lp8x4x-bus.txt
-@@ -8,6 +8,7 @@ Required properties:
- - reg: physical base addresses and region lengths of
-        * the rotary switch
-        * the 8bit DIP switch
-+       * the serial slot select register
-        * the slot count register
- 
- - eeprom-gpios : should point to active-low write enable GPIO
-@@ -18,6 +19,7 @@ Example:
- 		compatible = "icpdas,backplane-lp8x4x";
- 		reg = <0x0 0x2
- 		       0x9002 0x2
-+		       0x9004 0x2
- 		       0x9046 0x2>;
- 		eeprom-gpios = <&gpio 4 0>;
- 	};
+@@ -0,0 +1,16 @@
++Custom parallel bus on ICP DAS LP-8x4x industrial computers
++
++See Documentation/misc-devices/lp8x4x_bus.txt for details.
++
++Required properties:
++- compatible : should be "icpdas,backplane-lp8x4x"
++
++- reg: physical base address of the slot count register and the length
++       of the memory mapped region.
++
++Example:
++
++	backplane {
++		compatible = "icpdas,backplane-lp8x4x";
++		reg = <0x17009046 0x2>;
++	};
 diff --git a/Documentation/misc-devices/lp8x4x_bus.txt b/Documentation/misc-devices/lp8x4x_bus.txt
-index 78ea0a89..7b86797 100644
---- a/Documentation/misc-devices/lp8x4x_bus.txt
+new file mode 100644
+index 0000000..f5392b3
+--- /dev/null
 +++ b/Documentation/misc-devices/lp8x4x_bus.txt
-@@ -19,13 +19,26 @@ LP-8x4x is an ARM-based industrial computer with a custom parallel bus to
- connect expansion modules with digital input/output, analog input/output,
- serial, CAN and other types of ports.
- 
--The bus is implemented by a FPGA.
-+The bus is implemented by a FPGA. There are two major groups of expansion
-+modules: serial and parallel.
+@@ -0,0 +1,30 @@
++Kernel driver lpx8x4x_bus
++======================
 +
-+Serial modules (I-870xxW series) implement DCON protocol which allows one-
-+master-many-slaves configuration over RS-485. When these modules are installed
-+into the device, they could be accessed using the 2nd PXA built-in UART port
-+(/dev/ttyS1). However, it seems that addresses are not processed by
-+the modules. So the parallel bus needs to select which slot is connected.
- 
- SYSFS
- -----
- 
- /sys/bus/icpdas/devices/backplane:
- 
-+active_slot
-+	RW - connects the select slot for serial communications. If there
-+	     is a parallel module in the selected slot, it simply ignores
-+	     incoming packets. So it is safe to activate any available
-+	     slot.
++Supported hardare:
++Custom parallel bus on ICP DAS LP-8x4x industrial computers
 +
- dip
- 	RO - shows status of LP-8x4x 8bit DIP switch
++Data sheet:
++Not freely available
++
++Author:
++Sergei Ianovich <ynvich@gmail.com>
++
++Description
++-----------
++
++http://www.icpdas.com/root/product/solutions/pac/linpac/lp-8x4x_hardware.html
++
++LP-8x4x is an ARM-based industrial computer with a custom parallel bus to
++connect expansion modules with digital input/output, analog input/output,
++serial, CAN and other types of ports.
++
++The bus is implemented by a FPGA.
++
++SYSFS
++-----
++
++/sys/bus/icpdas/devices/backplane:
++
++slot_count
++	RO - shows total number of expansion slots on the device
+diff --git a/arch/arm/configs/lp8x4x_defconfig b/arch/arm/configs/lp8x4x_defconfig
+index 9116ce1..c34eb2a 100644
+--- a/arch/arm/configs/lp8x4x_defconfig
++++ b/arch/arm/configs/lp8x4x_defconfig
+@@ -62,6 +62,7 @@ CONFIG_PROC_DEVICETREE=y
+ CONFIG_BLK_DEV_LOOP=y
+ CONFIG_BLK_DEV_LOOP_MIN_COUNT=2
+ CONFIG_EEPROM_AT24=m
++CONFIG_LP8X4X_BUS=m
+ CONFIG_SCSI=y
+ # CONFIG_SCSI_PROC_FS is not set
+ CONFIG_BLK_DEV_SD=y
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 1cb7408..08ffe63 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -515,6 +515,19 @@ config SRAM
+ 	  the genalloc API. It is supposed to be used for small on-chip SRAM
+ 	  areas found on many SoCs.
  
++config LP8X4X_BUS
++	tristate "ICP DAS LP-8x4x industrial IO bus"
++	depends on OF && ARCH_PXA
++	select SYSFS
++	---help---
++	  This is a driver for ICP DAS LP-8x4x programmable automation
++	  controller. It exposes a custom parallel bus. The bus services
++	  data acquisition and control modules.
++
++	  Say N, unless you plan to run this kernel on a LP-8x4x system.
++
++	  If you say M here, the module will be called lp8x4x_bus.
++
+ source "drivers/misc/c2port/Kconfig"
+ source "drivers/misc/eeprom/Kconfig"
+ source "drivers/misc/cb710/Kconfig"
+diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
+index 7eb4b69..2bfe25d 100644
+--- a/drivers/misc/Makefile
++++ b/drivers/misc/Makefile
+@@ -55,3 +55,4 @@ obj-$(CONFIG_SRAM)		+= sram.o
+ obj-y				+= mic/
+ obj-$(CONFIG_GENWQE)		+= genwqe/
+ obj-$(CONFIG_ECHO)		+= echo/
++obj-$(CONFIG_LP8X4X_BUS)	+= lp8x4x_bus.o
 diff --git a/drivers/misc/lp8x4x_bus.c b/drivers/misc/lp8x4x_bus.c
-index 567fe078..e805640 100644
---- a/drivers/misc/lp8x4x_bus.c
+new file mode 100644
+index 0000000..7aa55cf
+--- /dev/null
 +++ b/drivers/misc/lp8x4x_bus.c
-@@ -29,6 +29,8 @@ struct lp8x4x_master {
- 	void			*rotary_addr;
- 	void			*dip_addr;
- 	struct gpio_desc        *eeprom_nWE;
-+	unsigned int		active_slot;
-+	void			*switch_addr;
- 	struct device		dev;
- };
- 
-@@ -47,6 +49,9 @@ static void lp8x4x_master_release(struct device *dev)
- 	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
- 	WARN_ON(!dev);
- 
-+	/* Disable serial communications */
-+	iowrite8(0xff, m->switch_addr);
+@@ -0,0 +1,167 @@
++/*
++ *  linux/misc/lp8x4x_bus.c
++ *
++ *  Support for ICP DAS LP-8x4x programmable automation controller bus
++ *  Copyright (C) 2013 Sergei Ianovich <ynvich@gmail.com>
++ *
++ *  This program is free software; you can redistribute it and/or modify
++ *  it under the terms of the GNU General Public License version 2 as
++ *  published by the Free Software Foundation or any later version.
++ */
++#include <linux/err.h>
++#include <linux/init.h>
++#include <linux/io.h>
++#include <linux/list.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
 +
- 	kfree(m);
- }
- 
-@@ -114,11 +119,52 @@ static ssize_t dip_show(struct device *dev,
- 
- static DEVICE_ATTR_RO(dip);
- 
-+static ssize_t active_slot_show(struct device *dev,
++#define MODULE_NAME	"lp8x4x-bus"
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("Sergei Ianovich <ynvich@gmail.com>");
++MODULE_DESCRIPTION("ICP DAS LP-8x4x parallel bus driver");
++
++struct lp8x4x_master {
++	unsigned int		slot_count;
++	void			*count_addr;
++	struct device		dev;
++};
++
++static int lp8x4x_match(struct device *dev, struct device_driver *drv)
++{
++	return 1;
++}
++
++static struct bus_type lp8x4x_bus_type = {
++	.name		= "icpdas",
++	.match		= lp8x4x_match,
++};
++
++static void lp8x4x_master_release(struct device *dev)
++{
++	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
++	WARN_ON(!dev);
++
++	kfree(m);
++}
++
++static ssize_t slot_count_show(struct device *dev,
 +		struct device_attribute *attr, char *buf)
 +{
 +	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
 +
-+	return sprintf(buf, "%u\n", m->active_slot);
++	return sprintf(buf, "%u\n", m->slot_count);
 +}
 +
-+static ssize_t active_slot_store(struct device *dev,
-+		struct device_attribute *attr, const char *buf, size_t count)
++static DEVICE_ATTR_RO(slot_count);
++
++static struct attribute *master_dev_attrs[] = {
++	&dev_attr_slot_count.attr,
++	NULL,
++};
++ATTRIBUTE_GROUPS(master_dev);
++
++
++static void devm_lp8x4x_bus_release(struct device *dev, void *res)
 +{
-+	struct lp8x4x_master *m = container_of(dev, struct lp8x4x_master, dev);
-+	unsigned int active_slot = 0;
-+	int err;
++	struct lp8x4x_master *m = *(struct lp8x4x_master **)res;
 +
-+	if (!buf)
-+		return count;
-+	if (0 == count)
-+		return count;
-+
-+	err = kstrtouint(buf, 10, &active_slot);
-+	if (err != 0 || active_slot > m->slot_count) {
-+		dev_err(dev, "slot number is out of range 1..%u\n",
-+				m->slot_count);
-+		return count;
-+	}
-+
-+	if (!active_slot) {
-+		m->active_slot = 0;
-+		iowrite8(0xff, m->switch_addr);
-+		return count;
-+	}
-+
-+	m->active_slot = active_slot;
-+	iowrite8((1 << (m->active_slot - 1)) ^ 0xff, m->switch_addr);
-+	return count;
++	dev_dbg(dev, "releasing devices\n");
++	device_unregister(&m->dev);
++	bus_unregister(&lp8x4x_bus_type);
 +}
 +
-+static DEVICE_ATTR_RW(active_slot);
++static int __init lp8x4x_bus_probe(struct platform_device *pdev)
++{
++	struct lp8x4x_master *m, **p;
++	struct resource *res;
++	int err = 0;
 +
- static struct attribute *master_dev_attrs[] = {
- 	&dev_attr_slot_count.attr,
- 	&dev_attr_rotary.attr,
- 	&dev_attr_eeprom_write_enable.attr,
- 	&dev_attr_dip.attr,
-+	&dev_attr_active_slot.attr,
- 	NULL,
- };
- ATTRIBUTE_GROUPS(master_dev);
-@@ -181,6 +227,20 @@ static int __init lp8x4x_bus_probe(struct platform_device *pdev)
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, r++);
- 	if (!res) {
-+		dev_err(&pdev->dev, "Failed to get slot switch address\n");
-+		err = -ENODEV;
-+		goto err_free;
++	m = kzalloc(sizeof(*m), GFP_KERNEL);
++	if (!m)
++		return -ENOMEM;
++
++	p = devres_alloc(devm_lp8x4x_bus_release, sizeof(*p), GFP_KERNEL);
++	if (!p) {
++		err = -ENOMEM;
++		goto err1;
 +	}
++	*p = m;
 +
-+	m->switch_addr = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(m->switch_addr)) {
-+		dev_err(&pdev->dev, "Failed to ioremap switch address\n");
-+		err = PTR_ERR(m->switch_addr);
-+		goto err_free;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, r++);
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 +	if (!res) {
- 		dev_err(&pdev->dev, "could not get slot count address\n");
- 		err = -ENODEV;
- 		goto err_free;
-@@ -223,6 +283,9 @@ static int __init lp8x4x_bus_probe(struct platform_device *pdev)
- 
- 	dev_info(&pdev->dev, "found bus with up to %u slots\n", m->slot_count);
- 
-+	/* Disable serial communications until explicitly enabled */
-+	iowrite8(0xff, m->switch_addr);
++		dev_err(&pdev->dev, "could not get slot count address\n");
++		err = -ENODEV;
++		goto err2;
++	}
 +
- 	err = bus_register(&lp8x4x_bus_type);
- 	if (err < 0) {
- 		dev_err(&pdev->dev, "failed to register bus type\n");
++	m->count_addr = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(m->count_addr)) {
++		dev_err(&pdev->dev, "Failed to ioremap slot count address\n");
++		err = PTR_ERR(m->count_addr);
++		goto err2;
++	}
++
++	m->slot_count = ioread8(m->count_addr);
++	switch (m->slot_count) {
++	case 1:
++	case 4:
++		break;
++	case 7:
++		m->slot_count = 8;
++		break;
++	default:
++		dev_err(&pdev->dev, "unexpected slot number(%u)",
++				m->slot_count);
++		err = -ENODEV;
++		goto err2;
++	};
++
++	dev_info(&pdev->dev, "found bus with up to %u slots\n", m->slot_count);
++
++	err = bus_register(&lp8x4x_bus_type);
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to register bus type\n");
++		goto err2;
++	}
++
++	m->dev.bus = &lp8x4x_bus_type;
++	dev_set_name(&m->dev, "backplane");
++	m->dev.parent = &pdev->dev;
++	m->dev.release = lp8x4x_master_release;
++	m->dev.groups = master_dev_groups;
++
++	err = device_register(&m->dev);
++	if (err < 0) {
++		dev_err(&pdev->dev, "failed to register backplane device\n");
++		goto err3;
++	}
++
++	devres_add(&pdev->dev, p);
++	return 0;
++
++err3:
++	bus_unregister(&lp8x4x_bus_type);
++err2:
++	devres_free(p);
++err1:
++	kfree(m);
++	return err;
++}
++
++static const struct of_device_id lp8x4x_bus_dt_ids[] = {
++	{ .compatible = "icpdas,backplane-lp8x4x" },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, lp8x4x_bus_dt_ids);
++
++static struct platform_driver lp8x4x_bus_driver = {
++	.driver		= {
++		.name	= MODULE_NAME,
++		.owner	= THIS_MODULE,
++		.of_match_table = lp8x4x_bus_dt_ids,
++	},
++};
++
++module_platform_driver_probe(lp8x4x_bus_driver, lp8x4x_bus_probe);
 -- 
 1.8.4.2
-
