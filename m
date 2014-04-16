@@ -1,72 +1,72 @@
-From: "Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer
- Module timer node.
-Date: Wed, 16 Apr 2014 04:00:59 +0000
-Message-ID: <a7aeb70fae2c480198b413f581f76846@BN1PR03MB188.namprd03.prod.outlook.com>
-References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
- <1397614787-8300-2-git-send-email-Li.Xiubo@freescale.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v8 0/3] exynos: arch: add support for exynos5260 SoC
+Date: Wed, 16 Apr 2014 09:55:29 +0530
+Message-ID: <CAK9yfHz4=5H-PKUGmL0CAetJ3jABgoPAZx1cPBjfCw40_GmtgQ@mail.gmail.com>
+References: <1397620738-14431-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397614787-8300-2-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1397620738-14431-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rahul,
 
+On 16 April 2014 09:28, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> From: Rahul Sharma <Rahul.Sharma@samsung.com>
+>
+> v8:
+>   1) Removed exynos5260 compatible from mach/exynos5.c
+>   2) Added generic "exynos5" compatible in board and soc dts file.
+>
+> v7:
+>   1) Renamed board file
+>
+> V6:
+>   1) Renamed mmc nodes.
+>   2) Removed PHY clocks from DT and put them inside clock driver.
+>   3) Added clock-cells property for all fixed clocks.
+>   4) Removed spdif_ext_clk fixed rate clock.
+>
+> V5:
+>   1) Removed SYSRAM related code.
+>   2) Fixed mct clocks.
+>   3) Add SoC and Board specifc fixed-rate clocks in respective files.
+>
+> V4:
+>   1) Removed duplicate MMC Soc property from Board file.
+>
+> V3:
+>   1) Addressed review comments from Tomasz figa.
+>
+> V2:
+>   1) Split up DT patch into SoC and Board patch.
+>
+> This series is based on Kukjin's for-next branch at
+> http://git.kernel.org/?p=linux/kernel/git/kgene/linux-samsung.git
+>
+> Pankaj Dubey (1):
+>   ARM: EXYNOS: initial board support for exynos5260 SoC
+>
+> Rahul Sharma (2):
+>   ARM: dts: add dts files for exynos5260 SoC
+>   ARM: dts: add dts files for xyref5260 board
+>
+>  arch/arm/boot/dts/Makefile                 |    1 +
+>  arch/arm/boot/dts/exynos5260-pinctrl.dtsi  |  574 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5260-xyref5260.dts |  103 +++++
+>  arch/arm/boot/dts/exynos5260.dtsi          |  304 +++++++++++++++
+>  arch/arm/mach-exynos/Kconfig               |    5 +
+>  5 files changed, 987 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/exynos5260-pinctrl.dtsi
+>  create mode 100644 arch/arm/boot/dts/exynos5260-xyref5260.dts
+>  create mode 100644 arch/arm/boot/dts/exynos5260.dtsi
 
-> -----Original Message-----
-> From: Xiubo Li [mailto:Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org]
-> Sent: Wednesday, April 16, 2014 10:20 AM
-> To: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org; shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Lu
-> Jingchang-B35083; Jin Zhengxiong-R64188; Wang Dongsheng-B40534
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Xiubo Li-B47053
-> Subject: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer Module timer
-> node.
-> 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/vf610.dtsi | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-> index 107e2c0..c3a276f 100644
-> --- a/arch/arm/boot/dts/vf610.dtsi
-> +++ b/arch/arm/boot/dts/vf610.dtsi
-> @@ -153,6 +153,19 @@
->  				clock-names = "pit";
->  			};
-> 
-> +			ftm0: ftm@40038000 {
-> +				compatible = "fsl,vf610-ftm-timer";
-> +				reg = <0x40038000 0x2000>;
-> +				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
-> +				clock-names = "ftm0", "ftm1",
-> +					"ftm0_counter_en", "ftm1_counter_en";
-> +				clocks = <&clks VF610_CLK_FTM0>,
-> +					<&clks VF610_CLK_FTM1>,
-> +					<&clks VF610_CLK_FTM0_EXT_FIX_EN>,
-> +					<&clks VF610_CLK_FTM1_EXT_FIX_EN>;
-> +				status = "disabled";
-> +			};
-> +
+Series looks good.
+Reviewed-by: Sachin Kamat <sachin.kamat@linaro.org>
 
-They need to be separated. ftm0, ftm1.
-
->  			wdog@4003e000 {
->  				compatible = "fsl,vf610-wdt", "fsl,imx21-wdt";
->  				reg = <0x4003e000 0x1000>;
-> --
-> 1.8.4
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+With warm regards,
+Sachin
