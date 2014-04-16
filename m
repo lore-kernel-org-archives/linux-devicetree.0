@@ -1,49 +1,56 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2] mtd: davinci-nand: disable subpage write for keystone-nand
-Date: Wed, 16 Apr 2014 10:03:13 -0400
-Message-ID: <534E8DA1.8090101@ti.com>
-References: <1395346112-13350-1-git-send-email-ivan.khoronzhuk@ti.com> <532B4C36.8060405@ti.com> <5343F0D6.2010804@ti.com> <20140416070833.GA5512@norris-Latitude-E6410> <534E51BF.9050508@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <534E51BF.9050508@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Brian Norris <computersforpeace@gmail.com>
-Cc: dwmw2@infradead.org, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, m-karicheri2@ti.com, Warner Losh <imp@bsdimp.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: [PATCH 0/6] thermal: Add Armada 375 SoC support
+Date: Wed, 16 Apr 2014 11:15:14 -0300
+Message-ID: <1397657720-10893-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Zhang Rui <rui.zhang@intel.com>, Jason Cooper <jason@lakedaemon.net>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Andrew Lunn <andrew@lunn.ch>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 16 April 2014 05:47 AM, Ivan Khoronzhuk wrote:
-> 
-> On 04/16/2014 10:08 AM, Brian Norris wrote:
->> On Tue, Apr 08, 2014 at 03:51:34PM +0300, Ivan Khoronzhuk wrote:
->>> On 03/20/2014 10:14 PM, Santosh Shilimkar wrote:
->>>> On Thursday 20 March 2014 04:08 PM, Ivan Khoronzhuk wrote:
->>>>> From: Murali Karicheri <m-karicheri2@ti.com>
->>>>> Sub page write doesn't work because of hw issue in controller found on
->>>>> Keystone SOCs. AEMIF controller is also used on DaVinci SOCs which
->>>>> don't seems to have any issue. So add "ti,keysone-nand" compatible
->>>>> to nand driver in order to set NAND_NO_SUBPAGE_WRITE option.
->>>>>
->>>>> Cc: Brian Norris <computersforpeace@gmail.com>
->>>>> Cc: Warner Losh <imp@bsdimp.com>
->>>>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>>>>
->>>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>>>> ---
->>>>>
->>>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> Brian,
->>> Could you pick up subj patch?
->> Pushed to l2-mtd.git. Is it critical this goes in for 3.15? It's
->> currently queued for -next (3.16).
->>
->> Brian
-> 
-> This is a critical fix and it should be for 3.15.
-Yep. The NAND is broken on Keystone without this patch.
-So 3.15 fixes please
+This patchset adds the support for the thermal sensor in the recently
+introduced Armada 375 SoC.
 
-Regards,
-Santosh
+The first three patches are preparation work. They add a generic
+infrastructure that allows to support similar thermal sensors in
+a non-intrusive way.
+
+Patch four uses the infrastructure to support the Armada 375 SoC
+thermal sensor.
+
+Since there are some issues in the Z1 SoC thermal sensor, patch five
+adds a quirk to workaround such issues. The Z1 stepping is detected
+and the compatible string is updated, so the driver can perform
+a special sensor initialization. Also, the quirk moves the offset of
+the thermal control register, and allows to specifiy the correct
+(A0 stepping) offset in the devicetree.
+
+This quirk is applied only for the A375-DB board, being the only
+board with the problematic Z1 SoC.
+
+Finally, the last patch enables the thermal sensor in the devicetree.
+for the Armada 375 A0 stepping SoC.
+
+The series applies on v3.15-rc1, and has been tested on A375-DB board and
+A370-RD board.
+
+Feedback and comments are welcome!
+
+Ezequiel Garcia (6):
+  thermal: armada: Rename armada_thermal_ops struct
+  thermal: armada: Add infrastructure to support generic formulas
+  thermal: armada: Add generic infrastructure to handle the sensor
+  thermal: armada: Support Armada 375 SoC
+  ARM: mvebu: Add thermal quirk for the Armada 375 DB board
+  ARM: mvebu: Enable the thermal sensor in Armada 375 SoC
+
+ .../devicetree/bindings/thermal/armada-thermal.txt |   7 ++
+ arch/arm/boot/dts/armada-375.dtsi                  |   6 +
+ arch/arm/mach-mvebu/board-v7.c                     |  57 +++++++++
+ arch/arm/mach-mvebu/mvebu-soc-id.h                 |   3 +
+ drivers/thermal/armada_thermal.c                   | 140 ++++++++++++++++++---
+ 5 files changed, 197 insertions(+), 16 deletions(-)
+
+-- 
+1.9.1
+
