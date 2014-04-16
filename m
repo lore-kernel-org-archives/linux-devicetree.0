@@ -1,89 +1,103 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] Configure FSL eSPI CSBEF, CSAFT, and whether to send all
- received data to user
-Date: Wed, 16 Apr 2014 18:28:30 +0100
-Message-ID: <20140416172830.GV12304@sirena.org.uk>
-References: <1397328516-13260-1-git-send-email-Jane.Wan@gainspeed.com>
- <1397328516-13260-2-git-send-email-Jane.Wan@gainspeed.com>
- <20140414205547.GI25182@sirena.org.uk>
- <6f2c800fbba74470a6a49903b34e7796@SN2PR07MB064.namprd07.prod.outlook.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
+Date: Wed, 16 Apr 2014 13:02:28 -0500
+Message-ID: <20140416180228.GK28035@saruman.home>
+References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com>
+ <113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local>
+ <20140403145853.GD14162@saruman.home>
+ <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="grb+5QKeMfpTKipq"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="nrM5Z5VIJgwP9LWp"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6f2c800fbba74470a6a49903b34e7796-w1qlG7ycJuujtJEAekZsixQPvRvOrrxkXA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jane Wan <Jane.Wan-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org" <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, "kenth.eriksson-SNLAxHN9vbdl57MIdRCFDg@public.gmane.org" <kenth.eriksson-SNLAxHN9vbdl57MIdRCFDg@public.gmane.org>, "thomas.de.schampheleire-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <thomas.de.schampheleire-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "b48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <b48286-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sr-ynQEQJNshbs@public.gmane.org" <sr-ynQEQJNshbs@public.gmane.org>, Insop Song <Insop.Song-X7+3OicCfH32eFz/2MeuCQ@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sundeep subbaraya <sundeep.lkml@gmail.com>
+Cc: balbi@ti.com, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michals@xilinx.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-
---grb+5QKeMfpTKipq
+--nrM5Z5VIJgwP9LWp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 16, 2014 at 04:39:47PM +0000, Jane Wan wrote:
-> On Mon, Apr 14, 2014 at 09:51:56PM +0100, Mark Brown wrote:
+Hi,
 
-> > > +		if (spi_raw_rxdata_to_user[m->spi->chip_select])
-> > > +			espi_trans->len =3D n_tx;
-> > > +		else
-> > > +			espi_trans->len =3D trans_len + n_tx;
+On Wed, Apr 16, 2014 at 04:09:28PM +0530, sundeep subbaraya wrote:
+> Hi Felipe,
+>=20
+> On Thu, Apr 3, 2014 at 8:28 PM, Felipe Balbi <balbi@ti.com> wrote:
+>=20
+> >> +static int start_dma(struct xusb_ep *ep, u32 src, u32 dst, u32 length)
+> >
+> > please prepend this with xudc_, it makes tracing a lot easier.
+> >
+> >> +{
+> >> +     struct xusb_udc *udc;
+> >> +     int rc =3D 0;
+> >> +     unsigned long timeout;
+> >> +
+> >> +     udc =3D ep->udc;
+> >> +     /*
+> >> +      * Set the addresses in the DMA source and
+> >> +      * destination registers and then set the length
+> >> +      * into the DMA length register.
+> >> +      */
+> >> +     udc->write_fn(udc->base_address, XUSB_DMA_DSAR_ADDR_OFFSET, src);
+> >> +     udc->write_fn(udc->base_address, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
+> >> +     udc->write_fn(udc->base_address, XUSB_DMA_LENGTH_OFFSET, length);
+> >> +
+> >> +     /*
+> >> +      * Wait till DMA transaction is complete and
+> >> +      * check whether the DMA transaction was
+> >> +      * successful.
+> >> +     */
+> >> +     while ((udc->read_fn(ep->udc->base_address + XUSB_DMA_STATUS_OFF=
+SET) &
+> >> +                     XUSB_DMA_DMASR_BUSY) =3D=3D XUSB_DMA_DMASR_BUSY)=
+ {
+> >> +             timeout =3D jiffies + 10000;
+> >> +
+> >> +             if (time_after(jiffies, timeout)) {
+> >> +                     rc =3D -ETIMEDOUT;
+> >> +                     goto clean;
+> >> +             }
+> >> +     }
+> >
+> > don't you get an IRQ for DMA completion ? If you do, you could be using
+> > wait_for_completion()
+>=20
+> This function is called in interrupt context when buffer is ready or
+> free. It initiates DMA to transfer data from IP buffer to memory.
+> Hence it waits in busy loop till DMA completes
 
-> > Why is there even an option for the buggy behaviour?
+wait, so you start_dma() before your gadget driver asks you to ?
 
-> We have three devices attached to the FSL eSPI interface, with chip selec=
-t (CS)=20
-> 0-2. The device driver for the device at CS #2 requires to know all the d=
-ata that=20
-> the slave device put on MISO.  But the device drivers for the other two d=
-evices=20
-> (at CS #0 and #1) work with the existing FSL eSPI driver.  The device at =
-CS #0 is=20
-> Micron n25q512a compatible.
+--=20
+balbi
 
-> We make the FSL eSPI driver configurable through device tree.  If we make=
- a fix=20
-> without the DT option, the fix will break other device drivers working wi=
-th the=20
-> existing FSL eSPI driver.
-
-> Could this still be considered as a solution?  If this is ok, I can send =
-it as a separate=20
-> patch.  Otherwise, we will look if this driver can be modified without DT=
- option.
-
-No, this is completely unaceptable.  The drivers relying on the buggy
-behaviour are broken and must be fixed.  The whole point of DT is to
-describe the hardware, not to allow the OS to implement workarounds for
-itself.
-
---grb+5QKeMfpTKipq
+--nrM5Z5VIJgwP9LWp
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTTr27AAoJELSic+t+oim94mcP/3nnTHvDU/iRSANZlP3KN5El
-d4Eof9WtT8Pe/3qv2JSGT8yU9rO9NtVT8SsGJcRanP/Rh3tOoDZQdR6rR6Zo26v/
-bt1TXsdG/C75iEtkF417f3ZaxvGQXDNGkSV6osUjpXXbD6VTuXOSaPIz+oi3BlH3
-TD7EfjW4y7IEENEsRisLrA/mHak3oapQCnyvMUE13//G/U1R1wjJrBcqDh7r8nhG
-/cS1MmrKmr9p55u/CBHtgNsibpTD7OD/ujg8l3u2dZmfPKkA/pohi9pxOLfMYkQ7
-2+RKUHZARV/AHrBRlMuK15wQ0gYmo12AVVdQkErdh6S0cBXKSDF2wFa6wNaInljj
-rtuqVHKlHu37JWdpyXCz+QRrmEl4ZjOTJxelxK/m71mAf4lhSqtyJRmNR7QWZOaR
-+RgXtj7KTN91WgOlFcL911L7CbaVGcEPNgP8IfC+nJ5kZ96piSsYIYQET3uSgI7Z
-i2uv4/7gs7GCJwnOWDrCRq4UenTpio2desY03YTiR27IHeE0rr7BEFE5xUeqetE2
-YEVjalnZ7kxKOuEsnk5Ftwai1Yy0D4QIPxUQDFjuBqkxqk3LgDrpi6ZOVIp8ma+v
-n7Yo3irZd4KqTakHwjStd5rocp6AEthu1WWfkjDsltU6tYn0NeqW+TFMoqMxdK/X
-oqjZXZpDiGLSaQww3IiK
-=FQSI
+iQIcBAEBAgAGBQJTTsW0AAoJEIaOsuA1yqREHwAP/R0teoahsAB8zL6AjKLcMJNO
+pG4yFlMlaF/FnjkLARjtJGaW1gqOe7xgV89+BFzjt9613Jr9RUOJB4E5jbLYG87A
+4lxyaI4oPset5cgG3Pa/L2W43COg1v368usIZTiA/jyNBa/P8InU0K8NhHCExKDZ
+Q98LXvRHk5v2BY6rrROpsZlTzhs+z8zrPohT7LajL435Ywo6AcD+Q3kanWt9zV1n
+dtyMM3sPk3oSe3oAFloBPqxsh5T6BfuRRHL1U10dwoXq4HUnV6+KDGrykhJot+A1
+QnBqJzNP4hawDY/3naDk5PIgM5G/EZyooDYQA/86vx2O70ltCzhuxRODn+dJxyVt
+6qHAkEZw+s7gg09XxT0eHcvoo7WtoX9iw6ok+IthCEs89Uz70fSdl5/Y/wSBXEWg
+H5H5zG1XfQhLTaiY6BDXgp8QuRDlf2C/XzZlhH+IPOfQWFTGgarr80M/UnE642iN
+FDXYQWkOKu/Cbj3mhnwgBVkS43T0pfv6jkI3ki7XZiWnlipUgX2p5pR3lz/FjkbZ
+fmT9DLReNq6eyoyDDDc7tt3IOZwJgvdbtslvIQq14lQhfzCcxmo4hmUw5ealWzOL
+ozs80ZQH3dddN7uAMnuMoEfMa1+mkZFbhf78cHiaPcofFGpCdM8MeUEKLt3CO6sl
+SuAR/EEYObe4xB5T3Rpw
+=54C0
 -----END PGP SIGNATURE-----
 
---grb+5QKeMfpTKipq--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--nrM5Z5VIJgwP9LWp--
