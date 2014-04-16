@@ -1,195 +1,337 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] mfd: bcm590xx: add support for second i2c slave
- address space
-Date: Wed, 16 Apr 2014 12:06:03 +0100
-Message-ID: <20140416110603.GA19671@lee--X1>
-References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
- <1397501428-8857-3-git-send-email-mporter@linaro.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH Resend 3/3] ARM: EXYNOS: Map SYSRAM address through DT
+Date: Wed, 16 Apr 2014 20:06:22 +0900
+Message-ID: <534E642E.7010507@samsung.com>
+References: <1395224705-2935-1-git-send-email-sachin.kamat@linaro.org>
+ <1395224705-2935-3-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1397501428-8857-3-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1395224705-2935-3-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, mark.rutland@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Apr 2014, Matt Porter wrote:
+Hi Sachin,
 
-> BCM590xx utilizes a second i2c slave address to access additional
+I want to use this patch to remove static SYSRAM memory mapping for Exynos3250.
+But this patch has conflict on 3.15-rc1 base.
+Do you have a plan to resend this patch?
 
-s/i2c/I2C
+Thanks,
+Chanwoo Choi
 
-> register space. Add support for the second address space by
-> instantiated a dummy i2c device with the appropriate secondary
-
-s/instantiated/instantiating
-
-> i2c slave address. Expose a second regmap register space so that
-
-s/i2c/I2C
-
-Exposing?
-
-s/regmap/Regmap
-
-> mfd drivers can access this secondary i2c slave address space.
-
-s/mfd/MFD
-
-s/i2c/I2C
-
-> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On 03/19/2014 07:25 PM, Sachin Kamat wrote:
+> Instead of hardcoding the SYSRAM details for each SoC,
+> pass this information through device tree (DT) and make
+> the code SoC agnostic.
+> 
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 > ---
->  drivers/mfd/bcm590xx.c       | 60 +++++++++++++++++++++++++++++++++-=
-----------
->  include/linux/mfd/bcm590xx.h |  9 ++++---
->  2 files changed, 52 insertions(+), 17 deletions(-)
->=20
-> diff --git a/drivers/mfd/bcm590xx.c b/drivers/mfd/bcm590xx.c
-> index e9a33c7..b710ffa 100644
-> --- a/drivers/mfd/bcm590xx.c
-> +++ b/drivers/mfd/bcm590xx.c
-> @@ -28,39 +28,71 @@ static const struct mfd_cell bcm590xx_devs[] =3D =
-{
+>  .../devicetree/bindings/arm/samsung-boards.txt     |   11 +++
+>  arch/arm/boot/dts/exynos4210-universal_c210.dts    |    9 ++
+>  arch/arm/boot/dts/exynos4210.dtsi                  |   10 ++
+>  arch/arm/boot/dts/exynos4x12.dtsi                  |   10 ++
+>  arch/arm/boot/dts/exynos5.dtsi                     |    5 +
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    5 +
+>  arch/arm/boot/dts/exynos5420.dtsi                  |    5 +
+>  arch/arm/mach-exynos/common.c                      |  104 ++++++++------------
+>  arch/arm/mach-exynos/include/mach/map.h            |    7 --
+>  9 files changed, 95 insertions(+), 71 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung-boards.txt b/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> index 2168ed31e1b0..f79710eb7e79 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung-boards.txt
+> @@ -7,6 +7,17 @@ Required root node properties:
+>          (a) "samsung,smdkv310" - for Samsung's SMDKV310 eval board.
+>          (b) "samsung,exynos4210"  - for boards based on Exynos4210 SoC.
+>  
+> +    - sysram node, specifying the type (secure or non-secure) of SYSRAM
+> +	- compatible: following types are supported
+> +		"samsung,exynos4210-sysram" : Secure SYSRAM
+> +		"samsung,exynos4210-sysram-ns" : Non-secure SYSRAM
+> +	- reg: address of SYSRAM bank
+> +
+> +	sysram@02020000 {
+> +		compatible = "samsung,exynos4210-sysram";
+> +		reg = <0x02020000 0x1000>;
+> +	};
+> +
+>  Optional:
+>      - firmware node, specifying presence and type of secure firmware:
+>          - compatible: only "samsung,secure-firmware" is currently supported
+> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> index d2e3f5f5916d..b893a042e3f7 100644
+> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+> @@ -28,6 +28,15 @@
+>  		bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5 rw rootwait earlyprintk panic=5 maxcpus=1";
+>  	};
+>  
+> +	sysram@02020000 {
+> +		status = "disabled";
+> +	};
+> +
+> +	sysram@02025000 {
+> +		compatible = "samsung,exynos4210-sysram";
+> +		reg = <0x02025000 0x1000>;
+> +	};
+> +
+>  	mct@10050000 {
+>  		compatible = "none";
+>  	};
+> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+> index cb0e768dc6d4..b92982b9607e 100644
+> --- a/arch/arm/boot/dts/exynos4210.dtsi
+> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> @@ -31,6 +31,16 @@
+>  		pinctrl2 = &pinctrl_2;
+>  	};
+>  
+> +	sysram@02020000 {
+> +		compatible = "samsung,exynos4210-sysram";
+> +		reg = <0x02020000 0x1000>;
+> +	};
+> +
+> +	sysram-ns@0203F000 {
+> +		compatible = "samsung,exynos4210-sysram-ns";
+> +		reg = <0x0203F000 0x1000>;
+> +	};
+> +
+>  	pd_lcd1: lcd1-power-domain@10023CA0 {
+>  		compatible = "samsung,exynos4210-pd";
+>  		reg = <0x10023CA0 0x20>;
+> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+> index c4a9306f8529..d57e3120223f 100644
+> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> @@ -37,6 +37,16 @@
+>  		interrupts = <2 2>, <3 2>, <18 2>, <19 2>;
+>  	};
+>  
+> +	sysram@02020000 {
+> +		compatible = "samsung,exynos4210-sysram";
+> +		reg = <0x02020000 0x1000>;
+> +	};
+> +
+> +	sysram-ns@0204F000 {
+> +		compatible = "samsung,exynos4210-sysram-ns";
+> +		reg = <0x0204F000 0x1000>;
+> +	};
+> +
+>  	pd_isp: isp-power-domain@10023CA0 {
+>  		compatible = "samsung,exynos4210-pd";
+>  		reg = <0x10023CA0 0x20>;
+> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+> index 79d0608d6dcc..c03bd09ec37d 100644
+> --- a/arch/arm/boot/dts/exynos5.dtsi
+> +++ b/arch/arm/boot/dts/exynos5.dtsi
+> @@ -18,6 +18,11 @@
+>  / {
+>  	interrupt-parent = <&gic>;
+>  
+> +	sysram@02020000 {
+> +		compatible = "samsung,exynos4210-sysram";
+> +		reg = <0x02020000 0x1000>;
+> +	};
+> +
+>  	chipid@10000000 {
+>  		compatible = "samsung,exynos4210-chipid";
+>  		reg = <0x10000000 0x100>;
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index fdeed7c29ac9..abfceadbb1ea 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -72,6 +72,11 @@
+>  		};
+>  	};
+>  
+> +	sysram-ns@0204F000 {
+> +		compatible = "samsung,exynos4210-sysram-ns";
+> +		reg = <0x0204F000 0x1000>;
+> +	};
+> +
+>  	pd_gsc: gsc-power-domain@10044000 {
+>  		compatible = "samsung,exynos4210-pd";
+>  		reg = <0x10044000 0x20>;
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index 82071154eb84..ea401d3b58e3 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -110,6 +110,11 @@
+>  		};
+>  	};
+>  
+> +	sysram-ns@02073000 {
+> +		compatible = "samsung,exynos4210-sysram-ns";
+> +		reg = <0x02073000 0x1000>;
+> +	};
+> +
+>  	clock: clock-controller@10010000 {
+>  		compatible = "samsung,exynos5420-clock";
+>  		reg = <0x10010000 0x30000>;
+> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
+> index 10ed374c0744..d9ae5cd49194 100644
+> --- a/arch/arm/mach-exynos/common.c
+> +++ b/arch/arm/mach-exynos/common.c
+> @@ -129,51 +129,6 @@ static struct map_desc exynos4_iodesc[] __initdata = {
 >  	},
 >  };
-> =20
-> -static const struct regmap_config bcm590xx_regmap_config =3D {
-> +static const struct regmap_config bcm590xx_regmap_config_0 =3D {
-
-Not loving _0 and _1 appendages.
-
-Is one of them {primary|master} and the other {secondary|slave}?
-
->  	.reg_bits	=3D 8,
->  	.val_bits	=3D 8,
-> -	.max_register	=3D BCM590XX_MAX_REGISTER,
-> +	.max_register	=3D BCM590XX_MAX_REGISTER_0,
->  	.cache_type	=3D REGCACHE_RBTREE,
->  };
-> =20
-> -static int bcm590xx_i2c_probe(struct i2c_client *i2c,
-> +static const struct regmap_config bcm590xx_regmap_config_1 =3D {
-> +	.reg_bits	=3D 8,
-> +	.val_bits	=3D 8,
-> +	.max_register	=3D BCM590XX_MAX_REGISTER_1,
-> +	.cache_type	=3D REGCACHE_RBTREE,
+>  
+> -static struct map_desc exynos4_iodesc0[] __initdata = {
+> -	{
+> -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
+> -		.pfn		= __phys_to_pfn(EXYNOS4_PA_SYSRAM0),
+> -		.length		= SZ_4K,
+> -		.type		= MT_DEVICE,
+> -	},
+> -};
+> -
+> -static struct map_desc exynos4_iodesc1[] __initdata = {
+> -	{
+> -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
+> -		.pfn		= __phys_to_pfn(EXYNOS4_PA_SYSRAM1),
+> -		.length		= SZ_4K,
+> -		.type		= MT_DEVICE,
+> -	},
+> -};
+> -
+> -static struct map_desc exynos4210_iodesc[] __initdata = {
+> -	{
+> -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> -		.pfn		= __phys_to_pfn(EXYNOS4210_PA_SYSRAM_NS),
+> -		.length		= SZ_4K,
+> -		.type		= MT_DEVICE,
+> -	},
+> -};
+> -
+> -static struct map_desc exynos4x12_iodesc[] __initdata = {
+> -	{
+> -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> -		.pfn		= __phys_to_pfn(EXYNOS4x12_PA_SYSRAM_NS),
+> -		.length		= SZ_4K,
+> -		.type		= MT_DEVICE,
+> -	},
+> -};
+> -
+> -static struct map_desc exynos5250_iodesc[] __initdata = {
+> -	{
+> -		.virtual	= (unsigned long)S5P_VA_SYSRAM_NS,
+> -		.pfn		= __phys_to_pfn(EXYNOS5250_PA_SYSRAM_NS),
+> -		.length		= SZ_4K,
+> -		.type		= MT_DEVICE,
+> -	},
+> -};
+> -
+>  static struct map_desc exynos5_iodesc[] __initdata = {
+>  	{
+>  		.virtual	= (unsigned long)S3C_VA_SYS,
+> @@ -196,11 +151,6 @@ static struct map_desc exynos5_iodesc[] __initdata = {
+>  		.length		= SZ_4K,
+>  		.type		= MT_DEVICE,
+>  	}, {
+> -		.virtual	= (unsigned long)S5P_VA_SYSRAM,
+> -		.pfn		= __phys_to_pfn(EXYNOS5_PA_SYSRAM),
+> -		.length		= SZ_4K,
+> -		.type		= MT_DEVICE,
+> -	}, {
+>  		.virtual	= (unsigned long)S5P_VA_CMU,
+>  		.pfn		= __phys_to_pfn(EXYNOS5_PA_CMU),
+>  		.length		= 144 * SZ_1K,
+> @@ -291,6 +241,44 @@ static int __init exynos_fdt_map_chipid(unsigned long node, const char *uname,
+>  	return 1;
+>  }
+>  
+> +struct __sysram_desc {
+> +	char name[32];
+> +	unsigned long addr;
 > +};
 > +
-> +static int bcm590xx_i2c_probe(struct i2c_client *addmap0,
-
-Would this be best left as i2c, then naming the other one
-i2c_secondary for instance?
-
-addmap{0,1} doesn't quite sit right with me.
-
-REVISIT: Ah, it's address-map, rather than add map. Okay, not as bad
-as I first thought, but still, is there a better naming convention you
-could use?
-
->  			      const struct i2c_device_id *id)
->  {
->  	struct bcm590xx *bcm590xx;
->  	int ret;
-> =20
-> -	bcm590xx =3D devm_kzalloc(&i2c->dev, sizeof(*bcm590xx), GFP_KERNEL)=
-;
-> +	bcm590xx =3D devm_kzalloc(&addmap0->dev, sizeof(*bcm590xx), GFP_KER=
-NEL);
->  	if (!bcm590xx)
->  		return -ENOMEM;
-> =20
-> -	i2c_set_clientdata(i2c, bcm590xx);
-> -	bcm590xx->dev =3D &i2c->dev;
-> -	bcm590xx->i2c_client =3D i2c;
-> +	i2c_set_clientdata(addmap0, bcm590xx);
-> +	bcm590xx->dev =3D &addmap0->dev;
-> +	bcm590xx->addmap0 =3D addmap0;
-> =20
-> -	bcm590xx->regmap =3D devm_regmap_init_i2c(i2c, &bcm590xx_regmap_con=
-fig);
-> -	if (IS_ERR(bcm590xx->regmap)) {
-> -		ret =3D PTR_ERR(bcm590xx->regmap);
-> -		dev_err(&i2c->dev, "regmap initialization failed: %d\n", ret);
-> +	bcm590xx->regmap0 =3D devm_regmap_init_i2c(addmap0,
-> +						 &bcm590xx_regmap_config_0);
-> +	if (IS_ERR(bcm590xx->regmap0)) {
-> +		ret =3D PTR_ERR(bcm590xx->regmap0);
-> +		dev_err(&addmap0->dev, "regmap 0 init failed: %d\n", ret);
->  		return ret;
->  	}
-> =20
-> -	ret =3D mfd_add_devices(&i2c->dev, -1, bcm590xx_devs,
-> +	/* Second I2C slave address is the base address with A(2) asserted =
-*/
-> +	bcm590xx->addmap1 =3D i2c_new_dummy(addmap0->adapter,
-> +					  addmap0->addr | BIT(2));
-> +	if (IS_ERR_OR_NULL(bcm590xx->addmap1)) {
-> +		dev_err(&addmap0->dev, "failed to add address map 1 device\n");
-> +		return -ENODEV;
-> +	}
-> +	i2c_set_clientdata(bcm590xx->addmap1, bcm590xx);
+> +static struct __sysram_desc sysram_desc[] __initdata = {
+> +	{
+> +		.name = "samsung,exynos4210-sysram",
+> +		.addr = (unsigned long)S5P_VA_SYSRAM,
+> +	}, {
+> +		.name = "samsung,exynos4210-sysram-ns",
+> +		.addr = (unsigned long)S5P_VA_SYSRAM_NS,
+> +	},
+> +};
 > +
-> +	bcm590xx->regmap1 =3D devm_regmap_init_i2c(bcm590xx->addmap1,
-> +						&bcm590xx_regmap_config_1);
-> +	if (IS_ERR(bcm590xx->regmap1)) {
-> +		ret =3D PTR_ERR(bcm590xx->regmap1);
-> +		dev_err(&bcm590xx->addmap1->dev,
-> +			"regmap 1 init failed: %d\n", ret);
-> +		goto err;
-> +	}
+> +static int __init exynos_fdt_map_sysram(unsigned long node, const char *uname,
+> +					int depth, void *data)
+> +{
+> +	struct map_desc iodesc;
+> +	__be32 *reg;
+> +	unsigned long len;
+> +	int i;
 > +
-> +	ret =3D mfd_add_devices(&addmap0->dev, -1, bcm590xx_devs,
->  			      ARRAY_SIZE(bcm590xx_devs), NULL, 0, NULL);
-> -	if (ret < 0)
-> -		dev_err(&i2c->dev, "failed to add sub-devices: %d\n", ret);
-> +	if (ret < 0) {
-> +		dev_err(&addmap0->dev, "failed to add sub-devices: %d\n", ret);
-> +		goto err;
+> +	for (i = 0; i < ARRAY_SIZE(sysram_desc); i++) {
+> +		if (of_flat_dt_is_compatible(node, sysram_desc[i].name)) {
+> +			reg = of_get_flat_dt_prop(node, "reg", &len);
+> +			if (!reg || len != (sizeof(unsigned long) * 2))
+> +				return -ENODEV;
+> +			iodesc.virtual = sysram_desc[i].addr;
+> +			iodesc.pfn = __phys_to_pfn(be32_to_cpu(reg[0]));
+> +			iodesc.length = be32_to_cpu(reg[1]);
+> +			iodesc.type = MT_DEVICE;
+> +			iotable_init(&iodesc, 1);
+> +		}
 > +	}
-> +
 > +	return 0;
-> =20
-> +err:
-> +	i2c_unregister_device(bcm590xx->addmap1);
->  	return ret;
+> +}
+> +
+>  /*
+>   * exynos_map_io
+>   *
+> @@ -303,20 +291,6 @@ static void __init exynos_map_io(void)
+>  
+>  	if (soc_is_exynos5250() || soc_is_exynos5420())
+>  		iotable_init(exynos5_iodesc, ARRAY_SIZE(exynos5_iodesc));
+> -
+> -	if (soc_is_exynos4210()) {
+> -		if (samsung_rev() == EXYNOS4210_REV_0)
+> -			iotable_init(exynos4_iodesc0,
+> -						ARRAY_SIZE(exynos4_iodesc0));
+> -		else
+> -			iotable_init(exynos4_iodesc1,
+> -						ARRAY_SIZE(exynos4_iodesc1));
+> -		iotable_init(exynos4210_iodesc, ARRAY_SIZE(exynos4210_iodesc));
+> -	}
+> -	if (soc_is_exynos4212() || soc_is_exynos4412())
+> -		iotable_init(exynos4x12_iodesc, ARRAY_SIZE(exynos4x12_iodesc));
+> -	if (soc_is_exynos5250())
+> -		iotable_init(exynos5250_iodesc, ARRAY_SIZE(exynos5250_iodesc));
 >  }
-> =20
-> diff --git a/include/linux/mfd/bcm590xx.h b/include/linux/mfd/bcm590x=
-x.h
-> index 434df2d..a2723f2 100644
-> --- a/include/linux/mfd/bcm590xx.h
-> +++ b/include/linux/mfd/bcm590xx.h
-> @@ -19,12 +19,15 @@
->  #include <linux/regmap.h>
-> =20
->  /* max register address */
-> -#define BCM590XX_MAX_REGISTER	0xe7
-> +#define BCM590XX_MAX_REGISTER_0	0xe7
-> +#define BCM590XX_MAX_REGISTER_1	0xf0
-> =20
->  struct bcm590xx {
->  	struct device *dev;
-> -	struct i2c_client *i2c_client;
-> -	struct regmap *regmap;
-> +	struct i2c_client *addmap0;
-> +	struct i2c_client *addmap1;
-> +	struct regmap *regmap0;
-> +	struct regmap *regmap1;
->  	unsigned int id;
->  };
-> =20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  
+>  void __init exynos_init_io(void)
+> @@ -329,6 +303,8 @@ void __init exynos_init_io(void)
+>  	s5p_init_cpu(S5P_VA_CHIPID);
+>  
+>  	exynos_map_io();
+> +
+> +	of_scan_flat_dt(exynos_fdt_map_sysram, NULL);
+>  }
+>  
+>  struct bus_type exynos_subsys = {
+> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+> index 7b046b59d9ec..548269a60634 100644
+> --- a/arch/arm/mach-exynos/include/mach/map.h
+> +++ b/arch/arm/mach-exynos/include/mach/map.h
+> @@ -23,13 +23,6 @@
+>  
+>  #include <plat/map-s5p.h>
+>  
+> -#define EXYNOS4_PA_SYSRAM0		0x02025000
+> -#define EXYNOS4_PA_SYSRAM1		0x02020000
+> -#define EXYNOS5_PA_SYSRAM		0x02020000
+> -#define EXYNOS4210_PA_SYSRAM_NS		0x0203F000
+> -#define EXYNOS4x12_PA_SYSRAM_NS		0x0204F000
+> -#define EXYNOS5250_PA_SYSRAM_NS		0x0204F000
+> -
+>  #define EXYNOS_PA_CHIPID		0x10000000
+>  
+>  #define EXYNOS4_PA_SYSCON		0x10010000
+> 
