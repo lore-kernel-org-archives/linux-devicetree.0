@@ -1,45 +1,123 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 4/5] regulator: tps65090: Allow setting the overcurrent
- wait time
-Date: Wed, 16 Apr 2014 13:33:14 -0700
-Message-ID: <534EE90A.7070602@infradead.org>
-References: <1397592876-5741-1-git-send-email-dianders@chromium.org> <1397672724-9063-1-git-send-email-dianders@chromium.org> <1397672724-9063-5-git-send-email-dianders@chromium.org>
+From: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH RFC v11 5/6] dma: mpc512x: add device tree binding
+ document
+Date: Wed, 16 Apr 2014 22:44:10 +0200
+Message-ID: <20140416204410.GP3528@book.gsilab.sittig.org>
+References: <1397559250-17680-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1397559250-17680-6-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1397672724-9063-5-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Anton Vorontsov <anton@enomsg.org>
-Cc: Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397559250-17680-6-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/16/2014 11:25 AM, Doug Anderson wrote:
-> diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-> index 2e92ef6..ca13a1a 100644
-> --- a/drivers/regulator/tps65090-regulator.c
-> +++ b/drivers/regulator/tps65090-regulator.c
-> @@ -28,15 +28,57 @@
+On Tue, 2014-04-15 at 14:54 +0400, Alexander Popov wrote:
+> 
+> Introduce a device tree binding document for the MPC512x DMA controller
+> 
+> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
+> Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-> +/**
-> + * tps65090_reg_set_overcurrent_wait - Setup overcurrent wait
-> + *
-> + * This will set the overcurrent wait time based on what's in the regulator
-> + * info.
-> + *
-> + * @ri:		Overall regulator data
-> + * @rdev:	Regulator device
-> + * @return 0 if no error, non-zero if there was an error writing the register.
-
-kernel-doc notation here should be:
-
- * Return: 0 if no error, non-zero if there was an error writing the register.
-
-> + */
-> +static int tps65090_reg_set_overcurrent_wait(struct tps65090_regulator *ri,
-> +					     struct regulator_dev *rdev)
-> +{
+I'm not certain whether the attribution is right.  Is the S-o-b
+appropriate when the patch is not "from" me?  As I've stated
+before, it's OK if you pick up and extend what I provide, but
+please don't pretend that I wrote what you did, and don't pretend
+that I ACKed or passed along your submission when I didn't.
 
 
+This binding certainly needs further improvement to become a good
+one.  As I've communicated in the past, I was rather ignorant
+"back then" when I wrote v1 and v2 of the RFC.  We have learned
+something in the meantime.  Though I admit having gone silent
+after several review iterations.  Assumed you would pick up
+information that showed up several times on public lists.
+
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+> @@ -0,0 +1,51 @@
+> +* Freescale MPC512x and MPC8308 DMA Controller
+> +
+> +The DMA controller in the Freescale MPC512x and MPC8308 SoCs can move
+> +blocks of memory contents between memory and peripherals or
+> +from memory to memory.
+> +
+> +Refer to the "Generic DMA Controller and DMA request bindings" in
+> +the dma/dma.txt file for a more detailed description of binding.
+> +
+> +* DMA controller
+> +
+> +Required properties:
+> +- compatible: Should be one of
+> +	"fsl,mpc5121-dma"
+> +	"fsl,mpc8308-dma", "fsl,mpc5121-dma"
+
+is this a duplicate?  looks funny, needs a fix
+
+or is it a requirement that for MPC8308 you need to provide both
+compatible strings?  that would be wrong, as MPC8308 certainly is
+not an MPC5121
+
+a quick search reveals: the drivers/dma/mpc512x_dma.c Linux
+driver implementation is wrong, it should match on both strings;
+expecting the MPC8308 to disguise as an MPC5121 when it's not is
+inappropriate (and only went unnoticed because of missing
+bindings, I guess)
+
+> +- reg: Address and size of the DMA controller's register set
+> +- interrupts: Interrupt for the DMA controller. Generic interrupt client node
+> +	is described in interrupt-controller/interrupts.txt
+
+'interrupts' only works in combinations with 'interrupt-parent',
+that actual .dts files don't have the latter in the nodes is an
+implementation detail but not a binding's requirement
+
+and an alternative method of specifying interrupts was introduced
+recently, a reference to the common binding without naming one
+specific property name could be most appropriate
+
+> +
+> +Optional properties:
+> +- #dma-cells: The length of the DMA specifier, must be <1> since
+> +	the DMA controller uses a fixed assignment of request lines
+> +	per channel. Refer to dma/dma.txt for the detailed description
+> +	of this property
+
+I'm afraid that a generic/common document does not and cannot
+describe the specific semantics of this provider's cells
+
+this binding should explicitly mention that the number of cells
+needs to be one, and that this one cell is the DMA channel (which
+translates to "peripheral request line"), because these
+assigments are fixed in hardware
+
+> +
+> +Example:
+> +
+> +	dma0: dma@14000 {
+> +		compatible = "fsl,mpc5121-dma";
+> +		reg = <0x14000 0x1800>;
+> +		interrupts = <65 0x8>;
+> +		#dma-cells = <1>;
+> +	};
+> +
+> +* DMA client
+
+the DMA provider's binding probably need not discuss client
+specs, a reference to the common binding should suffice if it's
+appropriate at all
+
+
+virtually yours
+Gerhard Sittig
 -- 
-~Randy
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr. 5, D-82194 Groebenzell, Germany
+Phone: +49-8142-66989-0 Fax: +49-8142-66989-80  Email: office-ynQEQJNshbs@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
