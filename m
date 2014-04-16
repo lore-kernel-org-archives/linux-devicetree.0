@@ -1,78 +1,59 @@
-From: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
-Subject: Re: [PATCH v4 12/21] serial: support for 16550A serial ports on
- LP-8x4x
-Date: Wed, 16 Apr 2014 21:00:51 +0100
-Message-ID: <20140416210051.01bef49e@alan.etchedpixels.co.uk>
-References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
-	<1397668667-27328-1-git-send-email-ynvich@gmail.com>
-	<1397668667-27328-6-git-send-email-ynvich@gmail.com>
-	<20140416193532.0782f045@alan.etchedpixels.co.uk>
-	<c4533da6-30bd-4ea4-9011-a7e3b7258e62@email.android.com>
+From: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
+Date: Wed, 16 Apr 2014 20:08:03 +0000
+Message-ID: <A2CA0424C0A6F04399FB9E1CD98E03046D18F4A6@US01WEMBX2.internal.synopsys.com>
+References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com>
+	<113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local>
+	<20140403145853.GD14162@saruman.home>
+ <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <c4533da6-30bd-4ea4-9011-a7e3b7258e62@email.android.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Ianovich <ynvich@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Paul Bolle <pebolle@tiscali.nl>, Stefan Seyfried <seife+kernel@b1-systems.com>, James Cameron <quozl@laptop.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-serial@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Apr 2014 23:01:47 +0400
-Sergei Ianovich <ynvich@gmail.com> wrote:
-
-> One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk> wrote:
-> >> +	baud = uart_get_baud_rate(port, termios, old,
-> >> +				  port->uartclk / 16 / 0xffff,
-> >> +				  port->uartclk / 16);
-> >> +	switch (baud) {
-> >> +	case 2400:
-> >> +		len |= 1;
-> >> +		break;
-> >> +	case 4800:
-> >> +		len |= 2;
-> >> +		break;
-> >> +	case 19200:
-> >> +		len |= 4;
-> >> +		break;
-> >> +	case 38400:
-> >> +		len |= 5;
-> >> +		break;
-> >> +	case 57600:
-> >> +		len |= 6;
-> >> +		break;
-> >> +	case 115200:
-> >> +		len |= 7;
-> >> +		break;
-> >> +	case 9600:
-> >> +	default:
-> >> +		len |= 3;
-> >> +		break;
-> >> +	};
-> >
-> >Some explanation of this would be useful - eg why is it set to 7 for
-> >115200 baud and 3 for 115201 baud ?
-> 
-> I am not related to the device vendor in any way, so please take my answers for what they are worth.
-> 
-> It seems that there is not enough pins to properly connect the chips to the memory bus and just you the standard 8250 UART driver. Instead, clock divisor is set using this register.
-> 
-> So, if you know you're asking for (115200) you get it. If you don't or guess (115201), you get the default 9600.
-
-Thats not quite what the code actually implements though.
-
-> This is a policy, it may not be the right way to write a driver, but it is cheap and it works.
-
-If thats how the hardware works and only supports a few fixed rates then
-fine, but for default: you need to actually update he baudrate in the
-passed termios struct so that the userspace knows its request was not
-matched.
-
-Take a look how the standard 8250 termios does it.
-
-Also looking at this and some of the other serial bits I see no
-dependencies on the problematic DMA driver, so does that mean you've got
-a set of pieces that can be submitted anyway while the DMA driver
-discussion continues ?
-
-Alan
+PiBGcm9tOiBsaW51eC11c2Itb3duZXJAdmdlci5rZXJuZWwub3JnIFttYWlsdG86bGludXgtdXNi
+LW93bmVyQHZnZXIua2VybmVsLm9yZ10gT24gQmVoYWxmIE9mIHN1bmRlZXAgc3ViYmFyYXlhDQo+
+IFNlbnQ6IFdlZG5lc2RheSwgQXByaWwgMTYsIDIwMTQgMzozOSBBTQ0KPiANCj4gSGkgRmVsaXBl
+LA0KPiANCj4gT24gVGh1LCBBcHIgMywgMjAxNCBhdCA4OjI4IFBNLCBGZWxpcGUgQmFsYmkgPGJh
+bGJpQHRpLmNvbT4gd3JvdGU6DQo+IA0KPiA+PiArc3RhdGljIGludCBzdGFydF9kbWEoc3RydWN0
+IHh1c2JfZXAgKmVwLCB1MzIgc3JjLCB1MzIgZHN0LCB1MzIgbGVuZ3RoKQ0KPiA+DQo+ID4gcGxl
+YXNlIHByZXBlbmQgdGhpcyB3aXRoIHh1ZGNfLCBpdCBtYWtlcyB0cmFjaW5nIGEgbG90IGVhc2ll
+ci4NCj4gPg0KPiA+PiArew0KPiA+PiArICAgICBzdHJ1Y3QgeHVzYl91ZGMgKnVkYzsNCj4gPj4g
+KyAgICAgaW50IHJjID0gMDsNCj4gPj4gKyAgICAgdW5zaWduZWQgbG9uZyB0aW1lb3V0Ow0KPiA+
+PiArDQo+ID4+ICsgICAgIHVkYyA9IGVwLT51ZGM7DQo+ID4+ICsgICAgIC8qDQo+ID4+ICsgICAg
+ICAqIFNldCB0aGUgYWRkcmVzc2VzIGluIHRoZSBETUEgc291cmNlIGFuZA0KPiA+PiArICAgICAg
+KiBkZXN0aW5hdGlvbiByZWdpc3RlcnMgYW5kIHRoZW4gc2V0IHRoZSBsZW5ndGgNCj4gPj4gKyAg
+ICAgICogaW50byB0aGUgRE1BIGxlbmd0aCByZWdpc3Rlci4NCj4gPj4gKyAgICAgICovDQo+ID4+
+ICsgICAgIHVkYy0+d3JpdGVfZm4odWRjLT5iYXNlX2FkZHJlc3MsIFhVU0JfRE1BX0RTQVJfQURE
+Ul9PRkZTRVQsIHNyYyk7DQo+ID4+ICsgICAgIHVkYy0+d3JpdGVfZm4odWRjLT5iYXNlX2FkZHJl
+c3MsIFhVU0JfRE1BX0REQVJfQUREUl9PRkZTRVQsIGRzdCk7DQo+ID4+ICsgICAgIHVkYy0+d3Jp
+dGVfZm4odWRjLT5iYXNlX2FkZHJlc3MsIFhVU0JfRE1BX0xFTkdUSF9PRkZTRVQsIGxlbmd0aCk7
+DQo+ID4+ICsNCj4gPj4gKyAgICAgLyoNCj4gPj4gKyAgICAgICogV2FpdCB0aWxsIERNQSB0cmFu
+c2FjdGlvbiBpcyBjb21wbGV0ZSBhbmQNCj4gPj4gKyAgICAgICogY2hlY2sgd2hldGhlciB0aGUg
+RE1BIHRyYW5zYWN0aW9uIHdhcw0KPiA+PiArICAgICAgKiBzdWNjZXNzZnVsLg0KPiA+PiArICAg
+ICAqLw0KPiA+PiArICAgICB3aGlsZSAoKHVkYy0+cmVhZF9mbihlcC0+dWRjLT5iYXNlX2FkZHJl
+c3MgKyBYVVNCX0RNQV9TVEFUVVNfT0ZGU0VUKSAmDQo+ID4+ICsgICAgICAgICAgICAgICAgICAg
+ICBYVVNCX0RNQV9ETUFTUl9CVVNZKSA9PSBYVVNCX0RNQV9ETUFTUl9CVVNZKSB7DQo+ID4+ICsg
+ICAgICAgICAgICAgdGltZW91dCA9IGppZmZpZXMgKyAxMDAwMDsNCj4gPj4gKw0KPiA+PiArICAg
+ICAgICAgICAgIGlmICh0aW1lX2FmdGVyKGppZmZpZXMsIHRpbWVvdXQpKSB7DQo+ID4+ICsgICAg
+ICAgICAgICAgICAgICAgICByYyA9IC1FVElNRURPVVQ7DQo+ID4+ICsgICAgICAgICAgICAgICAg
+ICAgICBnb3RvIGNsZWFuOw0KPiA+PiArICAgICAgICAgICAgIH0NCj4gPj4gKyAgICAgfQ0KPiA+
+DQo+ID4gZG9uJ3QgeW91IGdldCBhbiBJUlEgZm9yIERNQSBjb21wbGV0aW9uID8gSWYgeW91IGRv
+LCB5b3UgY291bGQgYmUgdXNpbmcNCj4gPiB3YWl0X2Zvcl9jb21wbGV0aW9uKCkNCj4gDQo+IFRo
+aXMgZnVuY3Rpb24gaXMgY2FsbGVkIGluIGludGVycnVwdCBjb250ZXh0IHdoZW4gYnVmZmVyIGlz
+IHJlYWR5IG9yDQo+IGZyZWUuIEl0IGluaXRpYXRlcw0KPiBETUEgdG8gdHJhbnNmZXIgZGF0YSBm
+cm9tIElQIGJ1ZmZlciB0byBtZW1vcnkuIEhlbmNlIGl0IHdhaXRzIGluIGJ1c3kNCj4gbG9vcCB0
+aWxsIERNQQ0KPiBjb21wbGV0ZXMNCg0KSWYgdGhpcyBmdW5jdGlvbiBpcyBjYWxsZWQgaW4gaW50
+ZXJydXB0IGNvbnRleHQsIHRoZW4geW91IGNhbid0IHVzZQ0KamlmZmllcyBmb3IgeW91ciB0aW1l
+b3V0LCBzaW5jZSBqaWZmaWVzIG1heSBub3QgZ2V0IHVwZGF0ZWQgd2hpbGUgaW4NCmludGVycnVw
+dCBjb250ZXh0Lg0KDQotLSANClBhdWwNCg0K
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
