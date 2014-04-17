@@ -1,94 +1,79 @@
-From: "Liviu Dudau" <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Thu, 17 Apr 2014 01:20:42 +0100
-Message-ID: <20140417002041.GE4858@bart>
+Date: Wed, 16 Apr 2014 19:24:34 -0600
+Message-ID: <20140417012434.GA8734@obsidianresearch.com>
 References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
  <1395270762-6055-3-git-send-email-tinamdar@apm.com>
  <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
  <20140416170545.GD4858@bart>
  <20140416212104.GA3469@obsidianresearch.com>
+ <20140417002041.GE4858@bart>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140416212104.GA3469-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20140417002041.GE4858@bart>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Tanmay Inamdar <tinamdar@apm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 16, 2014 at 03:21:04PM -0600, Jason Gunthorpe wrote:
-> On Wed, Apr 16, 2014 at 06:05:45PM +0100, Liviu Dudau wrote:
+On Thu, Apr 17, 2014 at 01:20:42AM +0100, Liviu Dudau wrote:
+
+> > No spec says you can put config space into the ranges at all, nobody
+> > should be doing that today, obviously some cases were missed during
+> > review..
 > 
-> > I have found out that we cannot pasd the config ranges from the DT into the
-> > pci_host_bridge structure as the PCI framework doesn't have a resource type
-> > for config resources. Leaving the translation between range flags and
-> > resource type as is (filtered through the IORESOURCE_TYPE_BITS) will lead
-> > to a resource type of value zero, which is not recognised by any resource
-> > handling API so bridge configuration and bus scanning will barf.
+> ePAPR documents allows that when ss == 00.
+
+Which do you mean? The 'PCI Bus Binding' spec has fairly specific
+language on how ranges should be used and interpreted, and it
+precludes doing anything meaningful with config space (like requiring
+b,d,f and r to be zeroed when doing compares against ranges, requiring
+the ranges to represent the bridge windows, etc).
+
+There is certainly room to invent something (like ECAM mapping) but
+nothing is specified in that document.
+
+The ePAPR document I have doesn't talk about PCI..
+
+If you've found a document that defines how it works then that changes
+things.. ;)
+
+> > The comment about ECAM was intended as a general guidance on what
+> > config space in ranges could/should be used for.
 > > 
-> > I'm looking for suggestions here, as Jason Gunthorpe suggested that we
-> > should be able to parse config ranges if they conform to the ECAM part
-> > of the PCI standard.
+> > Right now config space shouldn't propagate out side any driver, so you
+> > can probably just filter it in your generic code, and make it very hard
+> > and obviously wrong for a driver to parse ranges for config space, so
+> > we don't get more usages.
 > 
-> The thinking here is the ranges should be well defined and general, it
-> isn't a dumping ground for driver specific stuff.
+> OK, this goes slightly against your email from 26th March:
 > 
-> No spec says you can put config space into the ranges at all, nobody
-> should be doing that today, obviously some cases were missed during
-> review..
-
-ePAPR documents allows that when ss == 00.
-
+> "When we talked about this earlier on the DT bindings list the
+> consensus seemed to be that configuration MMIO ranges should only be
+> used if the underlying memory was exactly ECAM, and was not to be used
+> for random configuration related register blocks.
 > 
-> The comment about ECAM was intended as a general guidance on what
-> config space in ranges could/should be used for.
+> The rational being that generic code, upon seeing that ranges entry,
+> could just go ahead and assume ECAM mapping."
 > 
-> Right now config space shouldn't propagate out side any driver, so you
-> can probably just filter it in your generic code, and make it very hard
-> and obviously wrong for a driver to parse ranges for config space, so
-> we don't get more usages.
+> What I'm saying is that the only code that will see this ranges entry will
+> be the parsing code as if we try to create a resource out of the range
+> and add it to the host bridge structure (not driver) we will confuse the
+> rest of the pci_host_bridge API. So we cannot do any ECAM accesses (yet?).
 
-OK, this goes slightly against your email from 26th March:
+Sorry if this seems unclear, what you quoted was from a specification
+standpoint - someday defining config space ranges to be the ECAM
+window makes the most sense. This is from the direction of precluding
+drivers from using it for random purposes.
 
-"When we talked about this earlier on the DT bindings list the
-consensus seemed to be that configuration MMIO ranges should only be
-used if the underlying memory was exactly ECAM, and was not to be used
-for random configuration related register blocks.
+>From a Linux standpoint, there is simply no infrastructure for generic
+config access outside the driver, so config space must remain
+contained in the driver, and shouldn't leak into the host bridge or
+other core structures.
 
-The rational being that generic code, upon seeing that ranges entry,
-could just go ahead and assume ECAM mapping."
+I think the shared code you are working on should simply ignore config
+ss ranges entirely, they have no defined meaning..
 
-What I'm saying is that the only code that will see this ranges entry will
-be the parsing code as if we try to create a resource out of the range
-and add it to the host bridge structure (not driver) we will confuse the
-rest of the pci_host_bridge API. So we cannot do any ECAM accesses (yet?).
-
-
-Best regards,
-Liviu
-
-> 
-> Jason
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
--------------------
-   .oooO
-   (   )
-    \ (  Oooo.
-     \_) (   )
-          ) /
-         (_/
-
- One small step
-   for me ...
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Jason
