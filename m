@@ -1,190 +1,66 @@
-From: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V2 2/4] arm: mmp: make SOCes without DT use new timer driver
-Date: Thu, 17 Apr 2014 15:30:29 +0800
-Message-ID: <1397719831-23677-3-git-send-email-chao.xie@marvell.com>
-References: <1397719831-23677-1-git-send-email-chao.xie@marvell.com>
+From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+Subject: Re: [PATCH 9/10] ARM: dts: tx28: restructure and update DTS file
+Date: Thu, 17 Apr 2014 09:35:34 +0200
+Message-ID: <20140417093534.5a513b05@ipc1.ka-ro>
+References: <1375281480-25775-1-git-send-email-LW@KARO-electronics.de>
+	<1375281480-25775-9-git-send-email-LW@KARO-electronics.de>
+	<534F7710.8050801@de.bosch.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397719831-23677-1-git-send-email-chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <534F7710.8050801-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org
+To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Hi,
 
-For no DT support, directly call new timer's APIs to initialize
-timer.
-It need to initialize the timer first, then initialize the clock
-event device or clock source which are based on counter.
+Dirk Behme wrote:
+> On 31.07.2013 16:37, Lothar Wa=C3=9Fmann wrote:
+> >
+> > Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
+> > ---
+> ...
+> > +&lcdif {
+> > +       pinctrl-names =3D "default";
+> > +       pinctrl-0 =3D <&lcdif_24bit_pins_a &lcdif_sync_pins_a &lcdi=
+f_ctrl_pins_a>;
+> > +       lcd-supply =3D <&reg_lcd>;
+> > +       display =3D <&display>;
+> > +       status =3D "okay";
+> > +
+> > +       display: display@0 {
+> > +               bits-per-pixel =3D <32>;
+> > +               bus-width =3D <24>;
+> > +
+> > +               display-timings {
+> > +                       native-mode =3D <&timing5>;
+> > +                       timing0: timing0 {
+> > +                               panel-name =3D "VGA";
+> ...
+>=20
+> I've been looking for any user or documentation of 'panel-name'. But=20
+> couldn't find anything. Anything I missed?
+>=20
+Our U-Boot uses this to find the active video setting according to an
+environment variable setting.
 
-Signed-off-by: Chao Xie <chao.xie-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/mach-mmp/common.h |  2 --
- arch/arm/mach-mmp/mmp2.c   | 23 ++++++++++++++++++++++-
- arch/arm/mach-mmp/pxa168.c | 23 ++++++++++++++++++++++-
- arch/arm/mach-mmp/pxa910.c | 24 +++++++++++++++++++++++-
- 4 files changed, 67 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm/mach-mmp/common.h b/arch/arm/mach-mmp/common.h
-index cf445ba..015b209 100644
---- a/arch/arm/mach-mmp/common.h
-+++ b/arch/arm/mach-mmp/common.h
-@@ -1,8 +1,6 @@
- #include <linux/reboot.h>
- #define ARRAY_AND_SIZE(x)	(x), ARRAY_SIZE(x)
- 
--extern void timer_init(int irq);
--
- extern void __init mmp_map_io(void);
- extern void mmp_restart(enum reboot_mode, const char *);
- extern void __init pxa168_clk_init(void);
-diff --git a/arch/arm/mach-mmp/mmp2.c b/arch/arm/mach-mmp/mmp2.c
-index a70b553..12ba28a 100644
---- a/arch/arm/mach-mmp/mmp2.c
-+++ b/arch/arm/mach-mmp/mmp2.c
-@@ -16,12 +16,14 @@
- #include <linux/irq.h>
- #include <linux/irqchip/mmp.h>
- #include <linux/platform_device.h>
-+#include <linux/mmp_timer.h>
- 
- #include <asm/hardware/cache-tauros2.h>
- 
- #include <asm/mach/time.h>
- #include <mach/addr-map.h>
- #include <mach/regs-apbc.h>
-+#include <mach/regs-timers.h>
- #include <mach/cputype.h>
- #include <mach/irqs.h>
- #include <mach/dma.h>
-@@ -133,7 +135,26 @@ void __init mmp2_timer_init(void)
- 	clk_rst = APBC_APBCLK | APBC_FNCLK | APBC_FNCLKSEL(1);
- 	__raw_writel(clk_rst, APBC_TIMERS);
- 
--	timer_init(IRQ_MMP2_TIMER1);
-+	/*
-+	 * Make use of timer 1 which id is 0.
-+	 * It has no shadow and crsr regsiters.
-+	 * The fast lock is 6.5M.
-+	 * apb bus is 26M.
-+	 */
-+	mmp_timer_init(0, TIMERS1_VIRT_BASE, 0, 6500000, 26000000);
-+
-+	/*
-+	 * Enable counter 1 to be clock source.
-+	 * The frequency is 32K.
-+	 */
-+	mmp_counter_clocksource_init(0, 1, 32768);
-+
-+	/*
-+	 * Enable counter 0 to be clock event device.
-+	 * The frequency is 32K.
-+	 * Only one cpu and there is no broadcast timer.
-+	 */
-+	mmp_counter_clockevent_init(0, 0, IRQ_MMP2_TIMER1, 32768, 0, 0);
- }
- 
- /* on-chip devices */
-diff --git a/arch/arm/mach-mmp/pxa168.c b/arch/arm/mach-mmp/pxa168.c
-index 144e997..bb65d8f 100644
---- a/arch/arm/mach-mmp/pxa168.c
-+++ b/arch/arm/mach-mmp/pxa168.c
-@@ -15,6 +15,7 @@
- #include <linux/clk.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/mv_usb.h>
-+#include <linux/mmp_timer.h>
- 
- #include <asm/mach/time.h>
- #include <asm/system_misc.h>
-@@ -22,6 +23,7 @@
- #include <mach/addr-map.h>
- #include <mach/regs-apbc.h>
- #include <mach/regs-apmu.h>
-+#include <mach/regs-timers.h>
- #include <mach/irqs.h>
- #include <mach/dma.h>
- #include <mach/devices.h>
-@@ -78,7 +80,26 @@ void __init pxa168_timer_init(void)
- 	/* 3.25MHz, bus/functional clock enabled, release reset */
- 	__raw_writel(TIMER_CLK_RST, APBC_TIMERS);
- 
--	timer_init(IRQ_PXA168_TIMER1);
-+	/*
-+	 * Make use of timer 1 which id is 0.
-+	 * It has no shadow and crsr regsiters.
-+	 * The fast lock is 3.25M.
-+	 * apb bus is 26M.
-+	 */
-+	mmp_timer_init(0, TIMERS1_VIRT_BASE, 0, 3250000, 26000000);
-+
-+	/*
-+	 * Enable counter 1 to be clock source.
-+	 * The frequency is 32K.
-+	 */
-+	mmp_counter_clocksource_init(0, 1, 32768);
-+
-+	/*
-+	 * Enable counter 0 to be clock event device.
-+	 * The frequency is 32K.
-+	 * Only one cpu and there is no broadcast timer.
-+	 */
-+	mmp_counter_clockevent_init(0, 0, IRQ_PXA168_TIMER1, 32768, 0, 0);
- }
- 
- void pxa168_clear_keypad_wakeup(void)
-diff --git a/arch/arm/mach-mmp/pxa910.c b/arch/arm/mach-mmp/pxa910.c
-index eb57ee1..e8ae5b1 100644
---- a/arch/arm/mach-mmp/pxa910.c
-+++ b/arch/arm/mach-mmp/pxa910.c
-@@ -15,11 +15,13 @@
- #include <linux/irq.h>
- #include <linux/irqchip/mmp.h>
- #include <linux/platform_device.h>
-+#include <linux/mmp_timer.h>
- 
- #include <asm/hardware/cache-tauros2.h>
- #include <asm/mach/time.h>
- #include <mach/addr-map.h>
- #include <mach/regs-apbc.h>
-+#include <mach/regs-timers.h>
- #include <mach/cputype.h>
- #include <mach/irqs.h>
- #include <mach/dma.h>
-@@ -114,7 +116,27 @@ void __init pxa910_timer_init(void)
- 	__raw_writel(APBC_APBCLK | APBC_RST, APBC_TIMERS);
- 	__raw_writel(TIMER_CLK_RST, APBC_TIMERS);
- 
--	timer_init(IRQ_PXA910_AP1_TIMER1);
-+	/*
-+	 * Make use of timer 1 which id is 0.
-+	 * It has no shadow and crsr regsiters.
-+	 * The fast lock is 3.25M.
-+	 * apb bus is 26M.
-+	 */
-+	mmp_timer_init(0, TIMERS1_VIRT_BASE, 0, 3250000, 26000000);
-+
-+	/*
-+	 * Enable counter 1 to be clock source.
-+	 * The frequency is 32K.
-+	 */
-+	mmp_counter_clocksource_init(0, 1, 32768);
-+
-+	/*
-+	 * Enable counter 0 to be clock event device.
-+	 * The frequency is 32K.
-+	 * Only one cpu and there is no broadcast timer.
-+	 */
-+	mmp_counter_clockevent_init(0, 0, IRQ_PXA910_AP1_TIMER1,
-+				    32768, 0, 0);
- }
- 
- /* on-chip devices */
--- 
-1.8.3.2
+Lothar Wa=C3=9Fmann
+--=20
+___________________________________________________________
 
+Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
+Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
+Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
+Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
+
+www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
+___________________________________________________________
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
