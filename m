@@ -1,96 +1,50 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 3/4] ARM: dts: berlin: add the SDHCI nodes for the BG2Q
-Date: Thu, 17 Apr 2014 08:54:20 +0200
-Message-ID: <534F7A9C.2080609@gmail.com>
-References: <1397652011-21284-1-git-send-email-antoine.tenart@free-electrons.com> <1397652011-21284-4-git-send-email-antoine.tenart@free-electrons.com> <20140417113306.545ca4a7@xhacker>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] mfd: bcm590xx: add support for second i2c slave
+ address space
+Date: Thu, 17 Apr 2014 07:57:53 +0100
+Message-ID: <20140417065753.GC28725@lee--X1>
+References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
+ <1397501428-8857-3-git-send-email-mporter@linaro.org>
+ <20140416110603.GA19671@lee--X1>
+ <20140416213141.GD12304@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140417113306.545ca4a7@xhacker>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>
-Cc: "chris@printf.net" <chris@printf.net>, "anton@enomsg.org" <anton@enomsg.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, Jimmy Xu <zmxu@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140416213141.GD12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2014 05:33 AM, Jisheng Zhang wrote:
-> On Wed, 16 Apr 2014 05:40:10 -0700
-> Antoine T=C3=A9nart <antoine.tenart@free-electrons.com> wrote:
->> Add the SDHCI nodes for the Marvell Berlin BG2Q, using the berlin-sd=
-hci
->> driver.
-[...]
->> +		sdhci0: sdhci@ab0000 {
->> +			compatible =3D "marvell,berlin2q-sdhci";
->> +			reg =3D <0xab0000 0x200>;
->> +			clocks =3D <&sdio1clk>;
->> +			interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
->> +			keep-power-in-suspend;
->> +			enable-sdio-wakeup;
->> +			broken-cd;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		sdhci1: sdhci@ab0800 {
->> +			compatible =3D "marvell,berlin2q-sdhci";
->> +			reg =3D <0xab0800 0x200>;
->> +			clocks =3D <&sdio1clk>;
->> +			interrupts =3D <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
->> +			keep-power-in-suspend;
->> +			enable-sdio-wakeup;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		sdhci2: sdhci@ab1000 {
->> +			compatible =3D "marvell,berlin2q-sdhci";
->> +			reg =3D <0xab1000 0x200>;
->> +			interrupts =3D <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
->> +			clocks =3D <&sdio1clk>;
->> +			keep-power-in-suspend;
->> +			enable-sdio-wakeup;
->> +			broken-cd;
->> +			status =3D "disabled";
->> +		};
+> > s/regmap/Regmap
 >=20
-> could we put sdhci@ab1000 at the first of sdhci lists? For two reason=
-s:
+> It's consistently written regmap in all the documentation and so on :=
+)
 
-Don't reorder the nodes, but use aliases.
+=46urry muff; but the comments still stand for the acronyms.
 
-> 1. sdhci@ab0000 and sdhci@ab0800 is called as sdhci1 and sdhci2 in mr=
-vl
-> internal discussion, so this would make the name consistent when we
-> upgrade linux kernel to one mainline version.
+> > addmap{0,1} doesn't quite sit right with me.
+>=20
+> > REVISIT: Ah, it's address-map, rather than add map. Okay, not as ba=
+d
+> > as I first thought, but still, is there a better naming convention =
+you
+> > could use?
+>=20
+> addrmap or something?
 
-How about we only move the node labels?
+Right, that was what I was thinking. However, I prefer something along
+the lines of 'i2c' and 'i2c_sec' or 'client' and 'client_slv' etc.
 
-> 2. sdhci@ab1000 is always used for emmc. if sdhci@ab0800 is put at th=
-e
-> head of sdhci@ab1000, and there's one sdcard in it, mmcblock0 would b=
-e
-> the sdcard rather than emmc.
-
-And label this one sdhci0?
-
-> I dunno whether there's elegant solutions for these two issues. alias=
-? Could
-> anyone kindly help?
-
-Have a look at drivers/mmc/host/dw_mmc.c:
-
-ctrl_id =3D of_alias_get_id(host->dev->of_node, "mshc");
-
-this also requires an aliases node in berlin2foo.dtsi:
-
-aliases {
-	mshc0 =3D &sdhci0;
-	mshc1 =3D &sdhci1;
-	mshc2 =3D &sdhci2;
-};
-
-Rather than using "mshc", I'd prefer something like "sdio" or "mmc".
-
-Also, if that alias would be part of generic mmc OF code would be
-good too, but we'll have to wait for Chris' call here.
-
-Sebastian
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
