@@ -1,183 +1,164 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] ARM: tegra: Remove deprecated nvidia,hpd-gpio properties
-Date: Thu, 17 Apr 2014 14:03:01 +0200
-Message-ID: <1397736181-1593-4-git-send-email-thierry.reding@gmail.com>
-References: <1397736181-1593-1-git-send-email-thierry.reding@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397736181-1593-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 46/48] adv7604: Add DT support
+Date: Thu, 17 Apr 2014 14:36:32 +0200
+Message-ID: <1810096.BfEfAl25kc@avalon>
+References: <1394493359-14115-1-git-send-email-laurent.pinchart@ideasonboard.com> <1394493359-14115-47-git-send-email-laurent.pinchart@ideasonboard.com> <534FB40A.20506@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <534FB40A.20506@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi Sylwester,
 
-This property has been replaced by one with a more standard name
-(nvidia,hpd-gpios) and is now obsolete.
+Thank you for the review.
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/tegra114-dalmore.dts     | 4 ----
- arch/arm/boot/dts/tegra20-colibri-512.dtsi | 4 ----
- arch/arm/boot/dts/tegra20-harmony.dts      | 4 ----
- arch/arm/boot/dts/tegra20-paz00.dts        | 4 ----
- arch/arm/boot/dts/tegra20-seaboard.dts     | 4 ----
- arch/arm/boot/dts/tegra20-tamonten.dtsi    | 4 ----
- arch/arm/boot/dts/tegra20-trimslice.dts    | 4 ----
- arch/arm/boot/dts/tegra20-ventana.dts      | 4 ----
- arch/arm/boot/dts/tegra20-whistler.dts     | 4 ----
- arch/arm/boot/dts/tegra30-beaver.dts       | 4 ----
- 10 files changed, 40 deletions(-)
+On Thursday 17 April 2014 12:59:22 Sylwester Nawrocki wrote:
+> On 11/03/14 00:15, Laurent Pinchart wrote:
+> > Parse the device tree node to populate platform data.
+> > 
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > ---
+> > 
+> >  .../devicetree/bindings/media/i2c/adv7604.txt      | 56 +++++++++++++
+> >  drivers/media/i2c/adv7604.c                        | 92 +++++++++++++----
+> >  2 files changed, 134 insertions(+), 14 deletions(-)
+> >  create mode 100644
+> >  Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> > b/Documentation/devicetree/bindings/media/i2c/adv7604.txt new file mode
+> > 100644
+> > index 0000000..0845c50
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> > @@ -0,0 +1,56 @@
+> > +* Analog Devices ADV7604/11 video decoder with HDMI receiver
+> > +
+> > +The ADV7604 and ADV7611 are multiformat video decoders with an integrated
+> > HDMI +receiver. The ADV7604 has four multiplexed HDMI inputs and one
+> > analog input, +and the ADV7611 has one HDMI input and no analog input.
+> > +
+> > +Required Properties:
+> > +
+> > +  - compatible: Must contain one of the following
+> > +    - "adi,adv7604" for the ADV7604
+> > +    - "adi,adv7611" for the ADV7611
+> > +
+> > +  - reg: I2C slave address
+> > +
+> > +  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
+> > +    detection pins, one per HDMI input. The active flag indicates the
+> > GPIO
+> > +    level that enables hot-plug detection.
+> > +
+> > +Optional Properties:
+> > +
+> > +  - reset-gpios: Reference to the GPIO connected to the device's reset
+> > pin. +
+> > +  - adi,default-input: Index of the input to be configured as default.
+> > Valid
+> > +    values are 0..5 for the ADV7604 and 0 for the ADV7611.
+> 
+> I have some doubts about this property. Firstly, it seems it is not needed
+> for ADV7611 since it is always 0 for that device ?
+> Why can't we hard code in the driver some default input ?
 
-diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dts
-index c1e5eb33847a..df22dfad7db7 100644
---- a/arch/arm/boot/dts/tegra114-dalmore.dts
-+++ b/arch/arm/boot/dts/tegra114-dalmore.dts
-@@ -31,10 +31,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio =
--				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
- 		};
- 
- 		dsi@54300000 {
-diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-index 57b9b0d08123..7ab61aef11e0 100644
---- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-+++ b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-@@ -21,10 +21,6 @@
- 			nvidia,ddc-i2c-bus = <&i2c_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
-index f62fe7059bca..650daf16c37b 100644
---- a/arch/arm/boot/dts/tegra20-harmony.dts
-+++ b/arch/arm/boot/dts/tegra20-harmony.dts
-@@ -34,10 +34,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
-index 196578fd007a..80f1827b219c 100644
---- a/arch/arm/boot/dts/tegra20-paz00.dts
-+++ b/arch/arm/boot/dts/tegra20-paz00.dts
-@@ -34,10 +34,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dts
-index 7a69d5f4f55d..aa97216a2683 100644
---- a/arch/arm/boot/dts/tegra20-seaboard.dts
-+++ b/arch/arm/boot/dts/tegra20-seaboard.dts
-@@ -34,10 +34,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-index af582f8fd636..72f07a20aec3 100644
---- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-+++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-@@ -21,10 +21,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
-index 4ab1eea59efe..2affa75c0803 100644
---- a/arch/arm/boot/dts/tegra20-trimslice.dts
-+++ b/arch/arm/boot/dts/tegra20-trimslice.dts
-@@ -26,10 +26,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dts
-index 663fbf4f8b63..b66045b53357 100644
---- a/arch/arm/boot/dts/tegra20-ventana.dts
-+++ b/arch/arm/boot/dts/tegra20-ventana.dts
-@@ -34,10 +34,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra20-whistler.dts b/arch/arm/boot/dts/tegra20-whistler.dts
-index 9b5948f0cbc6..b0ecff2f71cc 100644
---- a/arch/arm/boot/dts/tegra20-whistler.dts
-+++ b/arch/arm/boot/dts/tegra20-whistler.dts
-@@ -26,10 +26,6 @@
- 			nvidia,ddc-i2c-bus = <&hdmi_ddc>;
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
--
--			/* deprecated */
--			nvidia,hpd-gpio = <&gpio TEGRA_GPIO(N, 7)
--				GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
-index e99b9967b2ca..e7a9da968f3b 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dts
-@@ -46,10 +46,6 @@
- 			nvidia,hpd-gpios =
- 				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
- 			nvidia,ddc-i2c-bus = <&hdmiddc>;
--
--			/* deprecated */
--			nvidia,hpd-gpio =
--				<&gpio TEGRA_GPIO(N, 7) GPIO_ACTIVE_HIGH>;
- 		};
- 	};
- 
+I've thought about hardcoding a default input in the driver as well, but Hans 
+wasn't really keen on the idea. Hans, could you please comment on this ?
+
+> And which inputs it refers to ? HDMI inputs A..D + analog ? If we keep this
+> property I think exact mapping of numbers to inputs should be included
+> in description of this property.
+> 
+> > +  - adi,disable-power-down: Boolean property. When set forces the device
+> > to
+> > +    ignore the power-down pin. The property is valid for the ADV7604 only
+> > as
+> > +    the ADV7611 has no power-down pin.
+> 
+> Does it refer to the !PWRDWN pin ? If so I would replace "power-down" with
+> PWRDWN, so it is clear what we're talking about when someone looks only
+> at the datasheet.
+>
+> > +  - adi,disable-cable-reset: Boolean property. When set disables the HDMI
+> > +    receiver automatic reset when the HDMI cable is unplugged.
+> 
+> Couldn't this be configured from user space with some default assumed in the
+> driver ?
+
+Good question. I'm not sure what the exact use case for this is.
+
+Let's be careful not to introduce unneeded properties, I'll drop those two 
+properties for now, we can implement support for the features later when 
+needed.
+
+> > +Example:
+> > +
+> > +	hdmi_receiver@4c {
+> > +		compatible = "adi,adv7611";
+> > +		reg = <0x4c>;
+> > +
+> > +		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+> > +		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> > +
+> > +		adi,default-input = <0>;
+> > +
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> > +
+> > +		port@0 {
+> > +			reg = <0>;
+> > +		};
+> > +		port@1 {
+> > +			reg = <1>;
+> > +			hdmi_in: endpoint {
+> > +				remote-endpoint = <&ccdc_in>;
+> > +			};
+> > +		};
+> > +	};
+> > diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+> > index cce140c..de44213 100644
+> > --- a/drivers/media/i2c/adv7604.c
+> > +++ b/drivers/media/i2c/adv7604.c
+
+[snip]
+
+> > @@ -2836,21 +2906,15 @@ static int adv7604_remove(struct i2c_client
+> > *client)> 
+> >  /* ------------------------------------------------------------------- */
+> > -static struct i2c_device_id adv7604_id[] = {
+> > -	{ "adv7604", ADV7604 },
+> > -	{ "adv7611", ADV7611 },
+> > -	{ }
+> > -};
+> > -MODULE_DEVICE_TABLE(i2c, adv7604_id);
+> > -
+> >  static struct i2c_driver adv7604_driver = {
+> >  	.driver = {
+> >  		.owner = THIS_MODULE,
+> >  		.name = "adv7604",
+> > +		.of_match_table = of_match_ptr(adv7604_of_id),
+> 
+> of_match_ptr() isn't necessary here.
+
+Thanks, will fix in v3.
+
+> >  	},
+> >  	.probe = adv7604_probe,
+> >  	.remove = adv7604_remove,
+> > -	.id_table = adv7604_id,
+> > +	.id_table = adv7604_i2c_id,
+> >  };
+> >  
+> >  module_i2c_driver(adv7604_driver);
+
 -- 
-1.9.2
+Regards,
+
+Laurent Pinchart
