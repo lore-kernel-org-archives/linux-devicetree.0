@@ -1,73 +1,91 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: exynos: Add MCPM call-back functions
-Date: Thu, 17 Apr 2014 16:38:12 +0100
-Message-ID: <20140417153812.GD18864@e103592.cambridge.arm.com>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
- <1397239311-27717-6-git-send-email-a.kesavan@samsung.com>
- <alpine.LFD.2.11.1404111426510.980@knanqh.ubzr>
- <20140414104116.GA3844@e103592.cambridge.arm.com>
- <CAM4voa=-29EsNRCebri1C9D5cWopTT4Ux_0UPGAvdjP60ADZZQ@mail.gmail.com>
- <20140417095925.GA18864@e103592.cambridge.arm.com>
- <alpine.LFD.2.11.1404171114370.980@knanqh.ubzr>
+From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] Introducing (yet again) Device Tree Overlays
+Date: Thu, 17 Apr 2014 10:46:25 -0500
+Message-ID: <CANk1AXSn4bh4BJGQFEuxavehrErYB1gBqzfvfcnNon-Ku=B8nw@mail.gmail.com>
+References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<CANk1AXTb=ob52AfK2z--HvFkxJnjnfYWuTCch_Gw99OCoS1ABg@mail.gmail.com>
+	<CANk1AXRAsktOcfpMO7DzvenmUmZ_hUERkqa3nkKsqrGXn6eM=A@mail.gmail.com>
+	<CANk1AXT7bPeus3WFPJ3mVHZ+HSuJ5DabxKQ7df1TV2A8-82-OQ@mail.gmail.com>
+	<CAL_JsqKHY_osEhE6HefV_PT+bXmv1vBWvCOY_93Sju0pbULoqQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <alpine.LFD.2.11.1404171114370.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+In-Reply-To: <CAL_JsqKHY_osEhE6HefV_PT+bXmv1vBWvCOY_93Sju0pbULoqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@konsulko.c>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 17, 2014 at 04:20:26PM +0100, Nicolas Pitre wrote:
-> On Thu, 17 Apr 2014, Dave Martin wrote:
-> 
-> > On Thu, Apr 17, 2014 at 12:41:22AM +0530, Abhilash Kesavan wrote:
-> > 
-> > [...]
-> > 
-> > > > The fact that there is no C interface for enabling ACE ports is
-> > > > deliberate.  For CPUs connected to ACE and managed via MCPM,
-> > > > it is incorrect to enable CCI via C code, since the safe window
-> > > > is the window during which all outbound CPUs have reached CLUSTER_DOWN
-> > > > and all inbound CPUs have not turned their MMU on yet (and thus cannot
-> > > > execute any general Linux C code).
-> > > >
-> > > > There might be scenarios involving GPUs and other non-CPU devices
-> > > > connected to ACE ports where the device cannot enable CCI snoops
-> > > > for itself -- but this would require a holding-pen protocol to enable
-> > > > the device to wait and signal a CPU to enable CCI snoops on the device's
-> > > > behalf before the device proceeds.  It is not the correct solution for
-> > > > CPU clusters attached to ACE, precisely because we can be more efficient
-> > > > in that case.
-> > > >
-> > > > In fact, because you implement a power_up_setup method that calls
-> > > > cci_enable_port_for_self, CCI snoops are actually enabled twice, making
-> > > > the above code appear redundant.   Have I missed something?
-> > > When a cluster is being turned off the snoops for both the clusters
-> > > are being turned off. When the other cluster comes back the snoops are
-> > > being turned on for the incoming cluster via power_up_setup and here
-> > > for the other cluster. As previously mentioned, I will be dropping
-> > > this change.
-> > 
-> > That's a fair point.  If there is only one cluster alive, turning off
-> > snoops for it should be safe, because there is no second cluster for
-> > it to maintain coherency with.
-> 
-> But that's not that simple as I explained in a previous email.  If the 
-> other cluster has gone down via cpuidle, it may come back up at any 
-> moment without warning.  We do have the infrastructure in place to cope 
-> with possible races handling the CCI within a cluster.  We do not have 
-> anything for cross cluster races.  And before we do, it is necessary to 
-> know if it is worth it.
+On Wed, Apr 16, 2014 at 4:33 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Wed, Apr 16, 2014 at 4:23 PM, delicious quinoa
+> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Thu, Apr 3, 2014 at 3:40 PM, delicious quinoa
+>> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Fri, Mar 28, 2014 at 1:27 PM, delicious quinoa
+>>> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Tue, Mar 18, 2014 at 4:55 PM, Pantelis Antoniou
+>>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>>>> The following patchset introduces Device Tree overlays, a method
+>>>>> of dynamically altering the kernel's live Device Tree, along with
+>>>>> a generic interface to use it in a board agnostic manner.
+>
+> [snip]
+>
+>>>> I can get a NULL pointer when I apply and remove an overlay and the
+>>>> conditions are right.  The overlay applies correctly.  The crash is
+>>>> when I do the rmdir.  My overlay is:
+>>>>
+>>>> /dts-v1/;
+>>>> /plugin/;
+>>>> / {
+>>>>     fragment@0 {
+>>>>         target-path="/soc";
+>>>>         __overlay__ {
+>>>>             #address-cells = <1>;
+>>>>                     #size-cells = <1>;
+>>>>             agpio0: agpio0 {
+>>>>                 compatible = "altr,pio-1.0";
+>>>>                 reg = <0xff210040 0x10>;
+>>>
+>>> Added some printks and got a bit further with debug.  If I leave this
+>>> as-is, the platform device has 2 resources. We get the NULL pointer in
+>>> __release_resource() when releasing the first one (reg). If I remove
+>>> this one line ('reg =') the crash goes away.  So in this case, we are
+>>> ok when releasing an irq resource but get a NULL pointer when removing
+>>> a reg resource.  Don't know why at this point.
+>>
+>> The crash is confirmed on v4 patches as well.  The immediate cause of the crash:
+>>
+>> static int __release_resource(struct resource *old)
+>> {
+>>         struct resource *tmp, **p;
+>>
+>>         p = &old->parent->child;
+>>         for (;;) {
+>>                 tmp = *p; <===kablooey
+>> ...
+>>
+>> when __release_resource() is called for the reg resource, it does 'p =
+>> &olde->parent->child' and then crashes when it does 'tmp = *p'.
+>>
+>> Root cause: It appears that there isn't any code in drivers/of/ that
+>> eventually calls __request_resource() or __insert_resource() so the
+>> resource's parents/sibling pointers are never initialized.  Maybe I'm
+>> missing some patches or something.
+>
+> It's probably related to this issue:
+>
+> https://groups.google.com/forum/#!topic/fa.linux.kernel/CTx1ReiOjnQ
+> http://www.mail-archive.com/linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg63678.html
+>
+> Rob
 
-Agreed.  It could be done, perhaps by the approach I already considered
-for handling multilevel clusters, but it is far from trivial, and I
-would like to see some measurement of the potential benefit before
-getting into it.
+Yes, that's the same root problem (devices are released by 'of' code
+that were never added using resource.c code).  Adding a
+"of_device_unpopulate()" function to a bunch of drivers won't work
+because the crash happens without loading any driver.
 
-Cheers
----Dave
+Alan
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
