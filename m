@@ -1,151 +1,56 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH 1/2] ARM: dts: berlin: add the BG2 GPIO nodes
-Date: Thu, 17 Apr 2014 10:45:28 +0200
-Message-ID: <1397724329-14154-2-git-send-email-antoine.tenart@free-electrons.com>
-References: <1397724329-14154-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 1/8] clk: sunxi: Remove calls to clk_put
+Date: Thu, 17 Apr 2014 10:46:12 +0200
+Message-ID: <1397724379-15398-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1397724379-15398-1-git-send-email-maxime.ripard@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397724329-14154-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPVLX2NAKGQE4S67ZRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1397724379-15398-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Berlin BG2 has 32 GPIOs in SoC power domain and 16 in the SM one.
-Only the first 8 SM GPIOs have interrupt support.
+Callers of clk_put must disable the clock first. This also means that as long
+as the clock is enabled the driver should hold a reference to that clock.
+Hence, the call to clk_put here are bogus and should be removed.
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/berlin2.dtsi | 105 +++++++++++++++++++++++++++++++++=
-++++++++
- 1 file changed, 105 insertions(+)
+ drivers/clk/sunxi/clk-sunxi.c | 8 ++------
+ 1 file changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
-=2Edtsi
-index 4d85312dc17a..57cadd31f4e1 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -99,6 +99,78 @@
- 			ranges =3D <0 0xe80000 0x10000>;
- 			interrupt-parent =3D <&aic>;
-=20
-+			gpio0: gpio@0400 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x0400 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				porta: gpio-port@0 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <8>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <0>;
-+				};
-+			};
-+
-+			gpio1: gpio@0800 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x0800 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portb: gpio-port@1 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <8>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <1>;
-+				};
-+			};
-+
-+			gpio2: gpio@0c00 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x0c00 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portc: gpio-port@2 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <8>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <2>;
-+				};
-+			};
-+
-+			gpio3: gpio@1000 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x1000 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portd: gpio-port@3 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <8>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <3>;
-+				};
-+			};
-+
- 			timer0: timer@2c00 {
- 				compatible =3D "snps,dw-apb-timer";
- 				reg =3D <0x2c00 0x14>;
-@@ -194,6 +266,39 @@
- 			ranges =3D <0 0xfc0000 0x10000>;
- 			interrupt-parent =3D <&sic>;
-=20
-+			sm_gpio1: gpio@5000 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0x5000 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				portf: gpio-port@5 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <8>;
-+					reg =3D <0>;
-+				};
-+			};
-+
-+			sm_gpio0: gpio@c000 {
-+				compatible =3D "snps,dw-apb-gpio";
-+				reg =3D <0xc000 0x400>;
-+				#address-cells =3D <1>;
-+				#size-cells =3D <0>;
-+
-+				porte: gpio-port@4 {
-+					compatible =3D "snps,dw-apb-gpio-port";
-+					gpio-controller;
-+					#gpio-cells =3D <2>;
-+					snps,nr-gpios =3D <8>;
-+					reg =3D <0>;
-+					interrupt-controller;
-+					#interrupt-cells =3D <2>;
-+					interrupts =3D <11>;
-+				};
-+			};
-+
- 			uart0: serial@9000 {
- 				compatible =3D "snps,dw-apb-uart";
- 				reg =3D <0x9000 0x100>;
---=20
-1.8.3.2
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index bd7dc733c1ca..b1fde0f89bc1 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -1297,17 +1297,13 @@ static void __init sunxi_clock_protect(void)
+ 
+ 	/* memory bus clock - sun5i+ */
+ 	clk = clk_get(NULL, "mbus");
+-	if (!IS_ERR(clk)) {
++	if (!IS_ERR(clk))
+ 		clk_prepare_enable(clk);
+-		clk_put(clk);
+-	}
+ 
+ 	/* DDR clock - sun4i+ */
+ 	clk = clk_get(NULL, "pll5_ddr");
+-	if (!IS_ERR(clk)) {
++	if (!IS_ERR(clk))
+ 		clk_prepare_enable(clk);
+-		clk_put(clk);
+-	}
+ }
+ 
+ static void __init sunxi_init_clocks(void)
+-- 
+1.9.1
