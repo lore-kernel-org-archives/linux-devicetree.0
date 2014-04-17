@@ -1,66 +1,135 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-Subject: Re: [PATCH 9/10] ARM: dts: tx28: restructure and update DTS file
-Date: Thu, 17 Apr 2014 09:35:34 +0200
-Message-ID: <20140417093534.5a513b05@ipc1.ka-ro>
-References: <1375281480-25775-1-git-send-email-LW@KARO-electronics.de>
-	<1375281480-25775-9-git-send-email-LW@KARO-electronics.de>
-	<534F7710.8050801@de.bosch.com>
+From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: Re: [PATCH 7/7] ARM: sun7i: cubietruck: enable
+ bluetooth module
+Date: Thu, 17 Apr 2014 09:43:40 +0200
+Message-ID: <534F862C.8010604@broadcom.com>
+References: <1397544101-18135-1-git-send-email-wens@csie.org> <1397544101-18135-8-git-send-email-wens@csie.org> <20140415144215.GG3207@lukather> <CAGb2v643HyvFdhQ0znreB8ENXHWpcx6tFwdeU7VuU8KYWcT4ZA@mail.gmail.com> <20140416094428.GK3207@lukather> <CAGb2v67HzB22a3huRRZyufXkdTFE410MhXqAHyC-MmVo0-GCFA@mail.gmail.com> <534E8102.4070404@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <534F7710.8050801-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dirk Behme <dirk.behme-V5te9oGctAVWk0Htik3J/w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBCKLZOXH5AIBBMUMX2NAKGQEVRN7WDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <534E8102.4070404-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus
+ Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, Mika
+ Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "maxime.ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial@vger.k
 List-Id: devicetree@vger.kernel.org
 
-Hi,
++ linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 
-Dirk Behme wrote:
-> On 31.07.2013 16:37, Lothar Wa=C3=9Fmann wrote:
-> >
-> > Signed-off-by: Lothar Wa=C3=9Fmann <LW-bxm8fMRDkQLDiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org>
-> > ---
-> ...
-> > +&lcdif {
-> > +       pinctrl-names =3D "default";
-> > +       pinctrl-0 =3D <&lcdif_24bit_pins_a &lcdif_sync_pins_a &lcdi=
-f_ctrl_pins_a>;
-> > +       lcd-supply =3D <&reg_lcd>;
-> > +       display =3D <&display>;
-> > +       status =3D "okay";
-> > +
-> > +       display: display@0 {
-> > +               bits-per-pixel =3D <32>;
-> > +               bus-width =3D <24>;
-> > +
-> > +               display-timings {
-> > +                       native-mode =3D <&timing5>;
-> > +                       timing0: timing0 {
-> > +                               panel-name =3D "VGA";
-> ...
->=20
-> I've been looking for any user or documentation of 'panel-name'. But=20
-> couldn't find anything. Anything I missed?
->=20
-Our U-Boot uses this to find the active video setting according to an
-environment variable setting.
+On 16/04/14 15:09, Hans de Goede wrote:
+> Hi,
+>
+> On 04/16/2014 12:39 PM, Chen-Yu Tsai wrote:
+>> Hi,
+>>
+>> On Wed, Apr 16, 2014 at 5:44 PM, Maxime Ripard
+>> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>> Hi,
+>>>
+>>> Please try to keep me in CC, even though the ML doesn't make it easy..
+>>
+>> Sorry about that.
+>>
+>>> On Wed, Apr 16, 2014 at 12:06:59AM +0800, Chen-Yu Tsai wrote:
+>>>>>> @@ -139,4 +152,16 @@
+>>>>>>        reg_usb2_vbus: usb2-vbus {
+>>>>>>                status = "okay";
+>>>>>>        };
+>>>>>> +
+>>>>>> +     rfkill_bt {
+>>>>>> +             compatible = "rfkill-gpio";
+>>>>>> +             pinctrl-names = "default";
+>>>>>> +             pinctrl-0 = <&bt_pwr_pin_cubietruck>, <&clk_out_a_pins_a>;
+>>>>>> +             clocks = <&clk_out_a>;
+>>>>>> +             clock-frequency = <32768>;
+>>>>>> +             gpios = <&pio 7 18 0>; /* PH18 */
+>>>>>> +             gpio-names = "reset";
+>>>>>> +             rfkill-name = "bt";
+>>>>>> +             rfkill-type = <2>;
+>>>>>> +     };
+>>>>>
+>>>>> Hmmm, I don't think that's actually right.
+>>>>>
+>>>>> If you have such a device, then I'd expect it to be represented as a
+>>>>> full device in the DT, probably with one part for the WiFi, one part
+>>>>> for the Bluetooth, and here the definition of the rfkill device that
+>>>>> controls it.
+>>>>
+>>>> The AP6210 is not one device, but 2 separate chips in one module. Each
+>>>> chip has its own controls and interface. They just so happen to share
+>>>> the same enclosure. Even 2-in-1 chips by Broadcom have separate controls
+>>>> and interfaces. The WiFi side is most likely connected via SDIO, while
+>>>> the Bluetooth side is connected to a UART, and optionally I2S for sound.
+>>>
+>>> It's even easier to represent then.
+>>>
+>>>>> But tying parts of the device to the rfkill that controls it, such as
+>>>>> the clocks, or the frequency it runs at seems just wrong.
+>>>>
+>>>> I understand where you're coming from. For devices on buses that require
+>>>> drivers (such as USB, SDIO) these properties probably should be tied to
+>>>> the device node.
+>>>>
+>>>> For our use case here, which is a bluetooth chip connected on the UART,
+>>>> there is no in kernel representation or driver to tie them to. Same goes
+>>>> for UART based GPS chips. They just so happen to require toggling a GPIO,
+>>>> and maybe enabling a specific clock, to get it running. Afterwards,
+>>>> accessing it is done solely from userspace. For our Broadcom chips, the
+>>>> user has to upload its firmware first, then designate the tty as a Bluetooth
+>>>> HCI using hciattach.
+>>>>
+>>>> We are using the rfkill device as a on-off switch.
+>>>
+>>> I understand your point, but the fact that it's implemented in
+>>> user-space, or that UART is not a bus (which probably should be), is
+>>> only a Linux specific story, and how it's implemented in Linux (even
+>>> if the whole rfkill node is another one, but let's stay on topic).
+>>
+>> I gave it some thought last night. You are right. My whole approach
+>> is wrong. But let's try to make it right.
+>>
+>> So considering the fact that it's primarily connected to a UART,
+>> maybe I should make it a sub-node to the UART node it's actually
+>> connected to? Something like:
+>>
+>>          uart2: serial@01c28800 {
+>>                  pinctrl-names = "default";
+>>                  pinctrl-0 = <&uart2_pins_a>;
+>>                  status = "okay";
+>>
+>>                  bt: bt_hci {
+>>                          compatible = "brcm,bcm20710";
+>>                          /* maybe add some generic compatible */
+>>                          pinctrl-names = "default";
+>>                          pinctrl-0 = <&clk_out_a_pins_a>,
+>> <&bt_pwr_pin_cubietruck>;
+>>                          clocks = <&clk_out_a>;
+>>                          clock-frequency = <32768>;
+>>                          gpios = <&pio 7 18 0>; /* PH18 */
+>>                  };
+>>          };
+>>
+>> And let the uart core handle power sequencing for sub-nodes.
+>
+> Great, I missed this reply when I typed my mail I send a few minutes
+> ago. I agree that this approach is how thing should be.
 
+Regarding the device tree hierarchy this seems right, but powering the 
+sub-nodes seems outside the realm of uart core.
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info-AvR2QvxeiV7DiMYJYoSAnRvVK+yQ3ZXh@public.gmane.org
-___________________________________________________________
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards,
+>
+> Hans
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
