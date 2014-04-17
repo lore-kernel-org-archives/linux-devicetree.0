@@ -1,92 +1,82 @@
-From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] Introducing (yet again) Device Tree Overlays
-Date: Thu, 17 Apr 2014 10:46:25 -0500
-Message-ID: <CANk1AXSn4bh4BJGQFEuxavehrErYB1gBqzfvfcnNon-Ku=B8nw@mail.gmail.com>
-References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<CANk1AXTb=ob52AfK2z--HvFkxJnjnfYWuTCch_Gw99OCoS1ABg@mail.gmail.com>
-	<CANk1AXRAsktOcfpMO7DzvenmUmZ_hUERkqa3nkKsqrGXn6eM=A@mail.gmail.com>
-	<CANk1AXT7bPeus3WFPJ3mVHZ+HSuJ5DabxKQ7df1TV2A8-82-OQ@mail.gmail.com>
-	<CAL_JsqKHY_osEhE6HefV_PT+bXmv1vBWvCOY_93Sju0pbULoqQ@mail.gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 0/5] Renesas VMSA-compatible IPMMU DT support
+Date: Thu, 17 Apr 2014 16:55:19 +0100
+Message-ID: <20140417155519.GE30553@arm.com>
+References: <6626224.o7l75GClE1@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKHY_osEhE6HefV_PT+bXmv1vBWvCOY_93Sju0pbULoqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@konsulko.c>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6626224.o7l75GClE1@avalon>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 16, 2014 at 4:33 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 16, 2014 at 4:23 PM, delicious quinoa
-> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Thu, Apr 3, 2014 at 3:40 PM, delicious quinoa
->> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> On Fri, Mar 28, 2014 at 1:27 PM, delicious quinoa
->>> <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>> On Tue, Mar 18, 2014 at 4:55 PM, Pantelis Antoniou
->>>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>>> The following patchset introduces Device Tree overlays, a method
->>>>> of dynamically altering the kernel's live Device Tree, along with
->>>>> a generic interface to use it in a board agnostic manner.
->
-> [snip]
->
->>>> I can get a NULL pointer when I apply and remove an overlay and the
->>>> conditions are right.  The overlay applies correctly.  The crash is
->>>> when I do the rmdir.  My overlay is:
->>>>
->>>> /dts-v1/;
->>>> /plugin/;
->>>> / {
->>>>     fragment@0 {
->>>>         target-path="/soc";
->>>>         __overlay__ {
->>>>             #address-cells = <1>;
->>>>                     #size-cells = <1>;
->>>>             agpio0: agpio0 {
->>>>                 compatible = "altr,pio-1.0";
->>>>                 reg = <0xff210040 0x10>;
->>>
->>> Added some printks and got a bit further with debug.  If I leave this
->>> as-is, the platform device has 2 resources. We get the NULL pointer in
->>> __release_resource() when releasing the first one (reg). If I remove
->>> this one line ('reg =') the crash goes away.  So in this case, we are
->>> ok when releasing an irq resource but get a NULL pointer when removing
->>> a reg resource.  Don't know why at this point.
->>
->> The crash is confirmed on v4 patches as well.  The immediate cause of the crash:
->>
->> static int __release_resource(struct resource *old)
->> {
->>         struct resource *tmp, **p;
->>
->>         p = &old->parent->child;
->>         for (;;) {
->>                 tmp = *p; <===kablooey
->> ...
->>
->> when __release_resource() is called for the reg resource, it does 'p =
->> &olde->parent->child' and then crashes when it does 'tmp = *p'.
->>
->> Root cause: It appears that there isn't any code in drivers/of/ that
->> eventually calls __request_resource() or __insert_resource() so the
->> resource's parents/sibling pointers are never initialized.  Maybe I'm
->> missing some patches or something.
->
-> It's probably related to this issue:
->
-> https://groups.google.com/forum/#!topic/fa.linux.kernel/CTx1ReiOjnQ
-> http://www.mail-archive.com/linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org/msg63678.html
->
-> Rob
+On Thu, Apr 17, 2014 at 12:12:57PM +0100, Laurent Pinchart wrote:
+> Hello,
 
-Yes, that's the same root problem (devices are released by 'of' code
-that were never added using resource.c code).  Adding a
-"of_device_unpopulate()" function to a bunch of drivers won't work
-because the crash happens without loading any driver.
+Hi Laurent,
 
-Alan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This patch set adds DT support to the Renesas VMSA-compatible IPMMU driver.
+> The first patch refactors the driver to remove dependencies on platform data,
+> the second patch adds the DT bindings documentation and the third patch
+> implement them in the driver.
+> 
+> The next two patches show real-life examples for IPMMU DT bindings usage.
+> Patch 4/5 adds IPMMU DT nodes to the r8a7791 SoC dtsi file, and patch 5/5
+> enables IOMMU support for the VSP1 on the same platform.
+> 
+> The patches are based on top of the IPMMU driver previously submitted to the
+> iommu mailing list. The last patch additionally requires to VSP1 DT support
+> patch series previously submitted to the linux-media mailing list and is thus
+> a test patch only at the moment, not meant to be merged yet.
+> 
+> The DT bindings are pretty simple, with only three standard properties in the
+> IPMMU DT node. The driver doesn't need to know the number of micro-TLBs (a
+> micro-TLB being a port to which a bus master device is attached, identified by
+> a number similar in purpose to a stream ID), so I've decided not to specify it
+> in DT. The micro-TLBs are configured when a bus master device is attached or
+> detached, and at that point the device provides its micro-TLB number.
+> 
+> The only reason I can foresee why the number of micro-TLBs would be useful is 
+> to iterate over micro-TLBs when the driver probes the device to disable them 
+> all. A mask would probably be better than a number in that case, and I think 
+> we can always add that later if we find a need for it.
+> 
+> The device to IOMMU association is represented in the bus master device nodes
+> using an iommus property, similarly to interrupts or clocks. This model departs
+> from the ARM SMMU DT bindings that represent the same information inside the
+> IOMMU DT node. Will, please feel free to tell me if you believe this model
+> isn't good.
+
+If this model works for you, then I'm also fine with it. The only complaint
+is that we now have a needless difference between the ARM SMMU driver and
+your driver in the way that the device <-> smmu topology is described. I'd
+be happy to try and move my driver over to your binding, but that would
+break all existing users and, whilst there aren't any in-tree .dts files
+using the ARM SMMU, I doubt it would be a popular move.
+
+> Every IPMMU instance serves multiple bus master devices and implements four
+> independent page tables and TLBs. Each bus master can be freely assigned to one
+> of the page tables, lowering the risk of TLB miss when multiple bus masters
+> require address translation at the same time. I've decided not to express the
+> bus master to page table association in DT as this seems to me to be a software
+> configuration decision, not a hardware property. Feel free to disagree.
+
+Isn't the master -> page table association a dynamic property, defined by
+the (runtime) configuration of IOMMU domains? That is, you have one page
+table per domain and the act of attaching a device to a domain associates
+it with that page table? Or do you need an identity-mapped page table in
+order to pass-through transactions when no translation is configured?
+
+Will
