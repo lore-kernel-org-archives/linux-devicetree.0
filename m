@@ -1,57 +1,51 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer
- Module timer node.
-Date: Thu, 17 Apr 2014 07:49:31 +0000
-Message-ID: <6934b6e7d11f4eb6a8ec74542820d718@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
- <1397614787-8300-2-git-send-email-Li.Xiubo@freescale.com>
- <20140416085953.GC11602@dragon>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv2 5/8] ARM: EXYNOS: Support secondary CPU boot of Exynos3250
+Date: Thu, 17 Apr 2014 17:04:33 +0900
+Message-ID: <534F8B11.8090808@samsung.com>
+References: <1397527192-21988-1-git-send-email-cw00.choi@samsung.com>
+ <1397527192-21988-6-git-send-email-cw00.choi@samsung.com>
+ <534E9374.6010807@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140416085953.GC11602@dragon>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <534E9374.6010807@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, hyunhee.kim@samsung.com, yj44.cho@samsung.com, chanho61.park@samsung.com, arnd@arndb.de, olof@lixom.net, marc.zyngier@arm.com, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > +			ftm0: ftm@40038000 {
-> > +				compatible = "fsl,vf610-ftm-timer";
-> > +				reg = <0x40038000 0x2000>;
-> > +				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
-> > +				clock-names = "ftm0", "ftm1",
-> > +					"ftm0_counter_en", "ftm1_counter_en";
-> > +				clocks = <&clks VF610_CLK_FTM0>,
-> > +					<&clks VF610_CLK_FTM1>,
-> > +					<&clks VF610_CLK_FTM0_EXT_FIX_EN>,
-> > +					<&clks VF610_CLK_FTM1_EXT_FIX_EN>;
-> > +				status = "disabled";
+Hi Tomasz,
+
+On 04/16/2014 11:28 PM, Tomasz Figa wrote:
+> Hi Chanwoo,
 > 
-> For such completely internal block which has no pins route out on board,
-> we should probably just not have this "disabled" status line.
+> On 15.04.2014 03:59, Chanwoo Choi wrote:
+>> This patch fix the offset of CPU boot address and don't operate smc call
+>> of SMC_CMD_CPU1BOOT command for Exynos3250.
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   arch/arm/mach-exynos/firmware.c | 7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-exynos/firmware.c b/arch/arm/mach-exynos/firmware.c
+>> index aa01c42..6205d4f 100644
+>> --- a/arch/arm/mach-exynos/firmware.c
+>> +++ b/arch/arm/mach-exynos/firmware.c
+>> @@ -30,13 +30,16 @@ static int exynos_do_idle(void)
+>>
+>>   static int exynos_cpu_boot(int cpu)
+>>   {
+>> +    if (soc_is_exynos3250()) {
+>> +        return 0;
 > 
+> This is strange. How the firmware knows when to boot the CPU then, if CPU1BOOT command is not called?
 
-Well, from IEEE 1275, there defined a standard 'status' property indicating
-The operational status of one device. The 'status' property has four possible
-values: 'okay/ok', 'disabled', 'fail' and 'fail-xxx'.
+As I knew, Exynos3250 doesn't need smc for secondary boot
+because WFE in secure mode for Exynos3250 is removed.
+So, Exynos3250 doesn't need to send IPI_WAKEUP after call_firmware_op(cpu_boot, ...).
 
-If it is absent, that means the status of the device is unknown or okay.
-
-If discard the status line here in vf610.dtsi, this device will be enabled
-as default though 'no pins route out' on the board, and actually there has
-pins route out on the board, as timer devices here we just not use it, but
-as PWM devices the pins will be used.
-
-How about let the node disabled in vf610.dtsi, and then enable it in vf610-twr.dts
-if it will be used in TWR board... ?
-
-Thanks,
-
-BRs
-Xiubo
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+Chanwoo Choi
