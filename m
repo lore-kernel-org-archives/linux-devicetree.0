@@ -1,107 +1,46 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 0/8] Add support for the Allwinner A31 DMA Controller
-Date: Thu, 17 Apr 2014 10:46:11 +0200
-Message-ID: <1397724379-15398-1-git-send-email-maxime.ripard@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/6] regulator: arizona-ldo1: Move setup processing from
+ arizona-core
+Date: Thu, 17 Apr 2014 09:58:24 +0100
+Message-ID: <20140417085824.GI28725@lee--X1>
+References: <1397638902-7576-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+ <1397638902-7576-3-git-send-email-ckeepax@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBSVLX2NAKGQEUTNS2BQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397638902-7576-3-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> It is more idiomatic to process things relating to the regulator in i=
+ts
+> driver. This patch moves both processing of device tree relating to t=
+he
+> regulator and checking if the regulator is external from arizona-core
+> into the regulator driver.
+>=20
+> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> ---
+>  drivers/mfd/arizona-core.c       |   12 +++---------
+>  drivers/regulator/arizona-ldo1.c |   27 +++++++++++++++++++++++++++
+>  2 files changed, 30 insertions(+), 9 deletions(-)
 
-This patchset adds support for the DMA controller found in the
-Allwinner A31 and A23 SoCs.
+=46or the MFD part:
+  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-This has been tested using the newly introduced SPI driver on an A31
-EVK. Support for DMA-driven SPI transfers will be the subject of
-another patch serie.
+Mark, do you want me to set up an MFD-Regulator IB for v3.16?
 
-Since this serie has been sent for the first time about 2 monthes ago,
-and I never got any comments from the DMA maintainer, yet gathering
-some Acked-by, I expect this to be merged quite quickly.
-
-Thanks,
-Maxime
-
-Changes from v5:
-  - Rebased on top of 3.15-rc1
-
-Changes from v4:
-  - Removed the packed attribute on the LLI
-  - Switched to using a NULL device pointer in clk_get on PLL6 and
-    AHB1 mux to make explicit that we are getting global clocks
-  - Switched from spin_lock_irqsave to spin_lock in the interrupt
-    handler
-  - Various nitpicks from Andy Shevchenko:
-    + Switched to using %p printk formats for pointers
-    + Inverted some tests to lose a level of indentation
-    + Dropped ifdef DEBUG protecting calls to dev_dbg
-
-Changes from v3:
-  - A few other comments made by Andy Shevchenko were fixed:
-    + Used references in %pa* printk formats
-    + Used is_slave_direction in prep_slave_sg to make sure we were
-      actually called for something, and to avoid making assumptions
-      that we were actually called with the expected directions
-    + A few others minor fixes: s/pr_err/dev_err/, etc.
-
-Changes from v2:
-  - Removed the clk_put calls in the clock protection functions
-  - Splitted out the sunxi machines into several files
-  - Moved the clock protection code into these new machine files
-  - Moved the PLL6 reparenting to the DMA driver
-  - Addressed various comments from Andy Shevchenko: switched to using
-    devm_kcalloc, used correct printk formats for physical and DMA
-    addresses, etc.
-
-Changes from v1:
-  - Removed the clk_put call in the clocks protecting patches
-  - Minor fixes here and there as suggested by Andy Shevchenko: switch
-    to dmam_pool_create, switch to dev_dbg instead of pr_debug, etc.
-
-Maxime Ripard (8):
-  clk: sunxi: Remove calls to clk_put
-  ARM: sunxi: Split out the various machines into separate files
-  ARM: sunxi: Move the clock protection to machine hooks
-  ARM: sun6i: Protect CPU clock
-  ARM: sun6i: Protect SDRAM gating bit
-  ARM: sun6i: Sort the NMI node by physical address
-  DMA: sun6i: Add driver for the Allwinner A31 DMA controller
-  ARM: sun6i: dt: Add A31 DMA controller to DTSI
-
- .../devicetree/bindings/dma/sun6i-dma.txt          |  45 +
- arch/arm/boot/dts/sun6i-a31.dtsi                   |  41 +-
- arch/arm/mach-sunxi/Makefile                       |   6 +-
- arch/arm/mach-sunxi/restart.c                      | 104 +++
- arch/arm/mach-sunxi/restart.h                      |  20 +
- arch/arm/mach-sunxi/sun4i.c                        |  45 +
- arch/arm/mach-sunxi/sun5i.c                        |  51 ++
- arch/arm/mach-sunxi/sun6i.c                        |  63 ++
- arch/arm/mach-sunxi/sun7i.c                        |  50 ++
- arch/arm/mach-sunxi/sunxi.c                        | 164 ----
- drivers/clk/sunxi/clk-sunxi.c                      |  28 -
- drivers/dma/Kconfig                                |   8 +
- drivers/dma/Makefile                               |   1 +
- drivers/dma/sun6i-dma.c                            | 987 +++++++++++++++++++++
- 14 files changed, 1414 insertions(+), 199 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/sun6i-dma.txt
- create mode 100644 arch/arm/mach-sunxi/restart.c
- create mode 100644 arch/arm/mach-sunxi/restart.h
- create mode 100644 arch/arm/mach-sunxi/sun4i.c
- create mode 100644 arch/arm/mach-sunxi/sun5i.c
- create mode 100644 arch/arm/mach-sunxi/sun6i.c
- create mode 100644 arch/arm/mach-sunxi/sun7i.c
- delete mode 100644 arch/arm/mach-sunxi/sunxi.c
- create mode 100644 drivers/dma/sun6i-dma.c
-
--- 
-1.9.1
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
