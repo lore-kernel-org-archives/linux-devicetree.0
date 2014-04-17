@@ -1,146 +1,807 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
-Date: Thu, 17 Apr 2014 10:01:10 -0500
-Message-ID: <20140417150110.GB20889@saruman.home>
-References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com>
- <113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local>
- <20140403145853.GD14162@saruman.home>
- <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA@mail.gmail.com>
- <20140416180228.GK28035@saruman.home>
- <CALHRZuq6=TMryHtbjTw7rYoGwbu2w0BTdxiOA95HYS3_CG6vwQ@mail.gmail.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/4] ARM: at91/dt: define sam9x5 clocks
+Date: Thu, 17 Apr 2014 17:16:01 +0200
+Message-ID: <534FF031.6040201@free-electrons.com>
+References: <1397464994-27267-1-git-send-email-boris.brezillon@free-electrons.com> <1397464994-27267-3-git-send-email-boris.brezillon@free-electrons.com> <20140417145529.GN2813@piout.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALHRZuq6=TMryHtbjTw7rYoGwbu2w0BTdxiOA95HYS3_CG6vwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140417145529.GN2813-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2014 at 03:01:37PM +0530, sundeep subbaraya wrote:
-> Hi Felipe,
->=20
-> On Wed, Apr 16, 2014 at 11:32 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
-> > Hi,
-> >
-> > On Wed, Apr 16, 2014 at 04:09:28PM +0530, sundeep subbaraya wrote:
-> >> Hi Felipe,
-> >>
-> >> On Thu, Apr 3, 2014 at 8:28 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
-> >>
-> >> >> +static int start_dma(struct xusb_ep *ep, u32 src, u32 dst, u32 len=
-gth)
-> >> >
-> >> > please prepend this with xudc_, it makes tracing a lot easier.
-> >> >
-> >> >> +{
-> >> >> +     struct xusb_udc *udc;
-> >> >> +     int rc =3D 0;
-> >> >> +     unsigned long timeout;
-> >> >> +
-> >> >> +     udc =3D ep->udc;
-> >> >> +     /*
-> >> >> +      * Set the addresses in the DMA source and
-> >> >> +      * destination registers and then set the length
-> >> >> +      * into the DMA length register.
-> >> >> +      */
-> >> >> +     udc->write_fn(udc->base_address, XUSB_DMA_DSAR_ADDR_OFFSET, s=
-rc);
-> >> >> +     udc->write_fn(udc->base_address, XUSB_DMA_DDAR_ADDR_OFFSET, d=
-st);
-> >> >> +     udc->write_fn(udc->base_address, XUSB_DMA_LENGTH_OFFSET, leng=
-th);
-> >> >> +
-> >> >> +     /*
-> >> >> +      * Wait till DMA transaction is complete and
-> >> >> +      * check whether the DMA transaction was
-> >> >> +      * successful.
-> >> >> +     */
-> >> >> +     while ((udc->read_fn(ep->udc->base_address + XUSB_DMA_STATUS_=
-OFFSET) &
-> >> >> +                     XUSB_DMA_DMASR_BUSY) =3D=3D XUSB_DMA_DMASR_BU=
-SY) {
-> >> >> +             timeout =3D jiffies + 10000;
-> >> >> +
-> >> >> +             if (time_after(jiffies, timeout)) {
-> >> >> +                     rc =3D -ETIMEDOUT;
-> >> >> +                     goto clean;
-> >> >> +             }
-> >> >> +     }
-> >> >
-> >> > don't you get an IRQ for DMA completion ? If you do, you could be us=
-ing
-> >> > wait_for_completion()
-> >>
-> >> This function is called in interrupt context when buffer is ready or
-> >> free. It initiates DMA to transfer data from IP buffer to memory.
-> >> Hence it waits in busy loop till DMA completes
-> >
-> > wait, so you start_dma() before your gadget driver asks you to ?
->=20
-> in ep_queue driver starts dma transfer from/to IP buffer to/from req->buf.
-> If transfer is completed then request is not added to ep request queue
-> and returns from ep_queue.
-> If transfer is not completed (actual < length) then request is added
-> to queue and returns from ep_queue.
+On 17/04/2014 16:55, Alexandre Belloni wrote:
+> On 14/04/2014 at 10:43:12 +0200, Boris Brezillon wrote :
+>> Define sam9x5 clocks in sam9x5 dt files and make use of them in peripheral
+>> definitions.
+>>
+>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/at91sam9x5.dtsi        | 355 ++++++++++++++++++++++++++++++-
+>>  arch/arm/boot/dts/at91sam9x5_can.dtsi    |  31 +++
+>>  arch/arm/boot/dts/at91sam9x5_isi.dtsi    |  26 +++
+>>  arch/arm/boot/dts/at91sam9x5_lcd.dtsi    |  26 +++
+>>  arch/arm/boot/dts/at91sam9x5_macb0.dtsi  |  11 +
+>>  arch/arm/boot/dts/at91sam9x5_macb1.dtsi  |  11 +
+>>  arch/arm/boot/dts/at91sam9x5_usart3.dtsi |  11 +
+>>  7 files changed, 470 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/boot/dts/at91sam9x5_can.dtsi
+>>  create mode 100644 arch/arm/boot/dts/at91sam9x5_isi.dtsi
+>>  create mode 100644 arch/arm/boot/dts/at91sam9x5_lcd.dtsi
+>>
+>> diff --git a/arch/arm/boot/dts/at91sam9x5.dtsi b/arch/arm/boot/dts/at91sam9x5.dtsi
+>> index fc13c92..723daf6 100644
+>> --- a/arch/arm/boot/dts/at91sam9x5.dtsi
+>> +++ b/arch/arm/boot/dts/at91sam9x5.dtsi
+>> @@ -14,6 +14,7 @@
+>>  #include <dt-bindings/pinctrl/at91.h>
+>>  #include <dt-bindings/interrupt-controller/irq.h>
+>>  #include <dt-bindings/gpio/gpio.h>
+>> +#include <dt-bindings/clk/at91.h>
+>>  
+>>  / {
+>>  	model = "Atmel AT91SAM9x5 family SoC";
+>> @@ -51,6 +52,24 @@
+>>  		reg = <0x20000000 0x10000000>;
+>>  	};
+>>  
+>> +	slow_xtal: slow_xtal {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <0>;
+>> +	};
+>> +
+>> +	main_xtal: main_xtal {
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <0>;
+>> +	};
+>> +
+>> +	adc_op_clk: adc_op_clk{
+>> +		compatible = "fixed-clock";
+>> +		#clock-cells = <0>;
+>> +		clock-frequency = <5000000>;
+>> +	};
+>> +
+>>  	ahb {
+>>  		compatible = "simple-bus";
+>>  		#address-cells = <1>;
+>> @@ -77,8 +96,272 @@
+>>  			};
+>>  
+>>  			pmc: pmc@fffffc00 {
+>> -				compatible = "atmel,at91rm9200-pmc";
+>> +				compatible = "atmel,at91sam9x5-pmc";
+>>  				reg = <0xfffffc00 0x100>;
+>> +				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+>> +				interrupt-controller;
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				#interrupt-cells = <1>;
+>> +
+>> +				main_rc_osc: main_rc_osc {
+>> +					compatible = "atmel,at91sam9x5-clk-main-rc-osc";
+>> +					#clock-cells = <0>;
+>> +					interrupts-extended = <&pmc AT91_PMC_MOSCRCS>;
+>> +					clock-frequency = <12000000>;
+>> +					clock-accuracy = <50000000>;
+>> +				};
+>> +
+>> +				main_osc: main_osc {
+>> +					compatible = "atmel,at91sam9x5-clk-main-osc";
+> I know I acked the patch but after having a closer look, I think you are
+> using a compatible string that doesn't exist at all here.
 
-This is wrong. Why wouldn't you give gadget driver the chance to decide
-if it needs to queue the request again or not ?
+You're right, this should be "atmel,at91rm9200-clk-main-osc".
+BTW, the same bug is present in the sam9n12 patch series :-).
 
-> when buffer processed interrupt occurs, handler starts dma if there is
-> request in queue and calls complete call back (when actual =3D=3D length)
-> Hence answer is Yes for some transfers (start dma called from
-> interrupt handler not from ep_queue).
+I'll fix it.
 
-this also seems wrong(-ish).
+Thanks.
 
-1) as Paul pointed out, you can't rely on jiffies if you're calling this
-with IRQs disabled.
+Boris
 
-2) you don't really need to wait until DMA finishes its transaction
-before returning from start_dma(), just use the DMA completion IRQ,
+>
+>> +					#clock-cells = <0>;
+>> +					interrupts-extended = <&pmc AT91_PMC_MOSCS>;
+>> +					clocks = <&main_xtal>;
+>> +				};
+>> +
+>> +				main: mainck {
+>> +					compatible = "atmel,at91sam9x5-clk-main";
+>> +					#clock-cells = <0>;
+>> +					interrupts-extended = <&pmc AT91_PMC_MOSCSELS>;
+>> +					clocks = <&main_rc_osc>, <&main_osc>;
+>> +				};
+>> +
+>> +				plla: pllack {
+>> +					compatible = "atmel,at91rm9200-clk-pll";
+>> +					#clock-cells = <0>;
+>> +					interrupts-extended = <&pmc AT91_PMC_LOCKA>;
+>> +					clocks = <&main>;
+>> +					reg = <0>;
+>> +					atmel,clk-input-range = <2000000 32000000>;
+>> +					#atmel,pll-clk-output-range-cells = <4>;
+>> +					atmel,pll-clk-output-ranges = <745000000 800000000 0 0
+>> +								       695000000 750000000 1 0
+>> +								       645000000 700000000 2 0
+>> +								       595000000 650000000 3 0
+>> +								       545000000 600000000 0 1
+>> +								       495000000 555000000 1 1
+>> +								       445000000 500000000 1 2
+>> +								       400000000 450000000 1 3>;
+>> +				};
+>> +
+>> +				plladiv: plladivck {
+>> +					compatible = "atmel,at91sam9x5-clk-plldiv";
+>> +					#clock-cells = <0>;
+>> +					clocks = <&plla>;
+>> +				};
+>> +
+>> +				utmi: utmick {
+>> +					compatible = "atmel,at91sam9x5-clk-utmi";
+>> +					#clock-cells = <0>;
+>> +					interrupts-extended = <&pmc AT91_PMC_LOCKU>;
+>> +					clocks = <&main>;
+>> +				};
+>> +
+>> +				mck: masterck {
+>> +					compatible = "atmel,at91sam9x5-clk-master";
+>> +					#clock-cells = <0>;
+>> +					interrupts-extended = <&pmc AT91_PMC_MCKRDY>;
+>> +					clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>;
+>> +					atmel,clk-output-range = <0 133333333>;
+>> +					atmel,clk-divisors = <1 2 4 3>;
+>> +					atmel,master-clk-have-div3-pres;
+>> +				};
+>> +
+>> +				usb: usbck {
+>> +					compatible = "atmel,at91sam9x5-clk-usb";
+>> +					#clock-cells = <0>;
+>> +					clocks = <&plladiv>, <&utmi>;
+>> +				};
+>> +
+>> +				prog: progck {
+>> +					compatible = "atmel,at91sam9x5-clk-programmable";
+>> +					#address-cells = <1>;
+>> +					#size-cells = <0>;
+>> +					interrupt-parent = <&pmc>;
+>> +					clocks = <&clk32k>, <&main>, <&plladiv>, <&utmi>, <&mck>;
+>> +
+>> +					prog0: prog0 {
+>> +						#clock-cells = <0>;
+>> +						reg = <0>;
+>> +						interrupts = <AT91_PMC_PCKRDY(0)>;
+>> +					};
+>> +
+>> +					prog1: prog1 {
+>> +						#clock-cells = <0>;
+>> +						reg = <1>;
+>> +						interrupts = <AT91_PMC_PCKRDY(1)>;
+>> +					};
+>> +				};
+>> +
+>> +				smd: smdclk {
+>> +					compatible = "atmel,at91sam9x5-clk-smd";
+>> +					#clock-cells = <0>;
+>> +					clocks = <&plladiv>, <&utmi>;
+>> +				};
+>> +
+>> +				systemck {
+>> +					compatible = "atmel,at91rm9200-clk-system";
+>> +					#address-cells = <1>;
+>> +					#size-cells = <0>;
+>> +
+>> +					ddrck: ddrck {
+>> +						#clock-cells = <0>;
+>> +						reg = <2>;
+>> +						clocks = <&mck>;
+>> +					};
+>> +
+>> +					smdck: smdck {
+>> +						#clock-cells = <0>;
+>> +						reg = <4>;
+>> +						clocks = <&smd>;
+>> +					};
+>> +
+>> +					uhpck: uhpck {
+>> +						#clock-cells = <0>;
+>> +						reg = <6>;
+>> +						clocks = <&usb>;
+>> +					};
+>> +
+>> +					udpck: udpck {
+>> +						#clock-cells = <0>;
+>> +						reg = <7>;
+>> +						clocks = <&usb>;
+>> +					};
+>> +
+>> +					pck0: pck0 {
+>> +						#clock-cells = <0>;
+>> +						reg = <8>;
+>> +						clocks = <&prog0>;
+>> +					};
+>> +
+>> +					pck1: pck1 {
+>> +						#clock-cells = <0>;
+>> +						reg = <9>;
+>> +						clocks = <&prog1>;
+>> +					};
+>> +				};
+>> +
+>> +				periphck {
+>> +					compatible = "atmel,at91sam9x5-clk-peripheral";
+>> +					#address-cells = <1>;
+>> +					#size-cells = <0>;
+>> +					clocks = <&mck>;
+>> +
+>> +					pioAB_clk: pioAB_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <2>;
+>> +					};
+>> +
+>> +					pioCD_clk: pioCD_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <3>;
+>> +					};
+>> +
+>> +					smd_clk: smd_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <4>;
+>> +					};
+>> +
+>> +					usart0_clk: usart0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <5>;
+>> +					};
+>> +
+>> +					usart1_clk: usart1_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <6>;
+>> +					};
+>> +
+>> +					usart2_clk: usart2_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <7>;
+>> +					};
+>> +
+>> +					twi0_clk: twi0_clk {
+>> +						reg = <9>;
+>> +						#clock-cells = <0>;
+>> +					};
+>> +
+>> +					twi1_clk: twi1_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <10>;
+>> +					};
+>> +
+>> +					twi2_clk: twi2_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <11>;
+>> +					};
+>> +
+>> +					mci0_clk: mci0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <12>;
+>> +					};
+>> +
+>> +					spi0_clk: spi0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <13>;
+>> +					};
+>> +
+>> +					spi1_clk: spi1_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <14>;
+>> +					};
+>> +
+>> +					uart0_clk: uart0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <15>;
+>> +					};
+>> +
+>> +					uart1_clk: uart1_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <16>;
+>> +					};
+>> +
+>> +					tcb0_clk: tcb0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <17>;
+>> +					};
+>> +
+>> +					pwm_clk: pwm_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <18>;
+>> +					};
+>> +
+>> +					adc_clk: adc_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <19>;
+>> +					};
+>> +
+>> +					dma0_clk: dma0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <20>;
+>> +					};
+>> +
+>> +					dma1_clk: dma1_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <21>;
+>> +					};
+>> +
+>> +					uhphs_clk: uhphs_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <22>;
+>> +					};
+>> +
+>> +					udphs_clk: udphs_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <23>;
+>> +					};
+>> +
+>> +					mci1_clk: mci1_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <26>;
+>> +					};
+>> +
+>> +					ssc0_clk: ssc0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <28>;
+>> +					};
+>> +				};
+>>  			};
+>>  
+>>  			rstc@fffffe00 {
+>> @@ -95,18 +378,47 @@
+>>  				compatible = "atmel,at91sam9260-pit";
+>>  				reg = <0xfffffe30 0xf>;
+>>  				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+>> +				clocks = <&mck>;
+>> +			};
+>> +
+>> +			sckc@fffffe50 {
+>> +				compatible = "atmel,at91sam9x5-sckc";
+>> +				reg = <0xfffffe50 0x4>;
+>> +
+>> +				slow_osc: slow_osc {
+>> +					compatible = "atmel,at91sam9x5-clk-slow-osc";
+>> +					#clock-cells = <0>;
+>> +					clocks = <&slow_xtal>;
+>> +				};
+>> +
+>> +				slow_rc_osc: slow_rc_osc {
+>> +					compatible = "atmel,at91sam9x5-clk-slow-rc-osc";
+>> +					#clock-cells = <0>;
+>> +					clock-frequency = <32768>;
+>> +					clock-accuracy = <50000000>;
+>> +				};
+>> +
+>> +				clk32k: slck {
+>> +					compatible = "atmel,at91sam9x5-clk-slow";
+>> +					#clock-cells = <0>;
+>> +					clocks = <&slow_rc_osc>, <&slow_osc>;
+>> +				};
+>>  			};
+>>  
+>>  			tcb0: timer@f8008000 {
+>>  				compatible = "atmel,at91sam9x5-tcb";
+>>  				reg = <0xf8008000 0x100>;
+>>  				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +				clocks = <&tcb0_clk>;
+>> +				clock-names = "t0_clk";
+>>  			};
+>>  
+>>  			tcb1: timer@f800c000 {
+>>  				compatible = "atmel,at91sam9x5-tcb";
+>>  				reg = <0xf800c000 0x100>;
+>>  				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +				clocks = <&tcb0_clk>;
+>> +				clock-names = "t0_clk";
+>>  			};
+>>  
+>>  			dma0: dma-controller@ffffec00 {
+>> @@ -114,6 +426,8 @@
+>>  				reg = <0xffffec00 0x200>;
+>>  				interrupts = <20 IRQ_TYPE_LEVEL_HIGH 0>;
+>>  				#dma-cells = <2>;
+>> +				clocks = <&dma0_clk>;
+>> +				clock-names = "dma_clk";
+>>  			};
+>>  
+>>  			dma1: dma-controller@ffffee00 {
+>> @@ -121,6 +435,8 @@
+>>  				reg = <0xffffee00 0x200>;
+>>  				interrupts = <21 IRQ_TYPE_LEVEL_HIGH 0>;
+>>  				#dma-cells = <2>;
+>> +				clocks = <&dma1_clk>;
+>> +				clock-names = "dma_clk";
+>>  			};
+>>  
+>>  			pinctrl@fffff400 {
+>> @@ -453,6 +769,7 @@
+>>  					gpio-controller;
+>>  					interrupt-controller;
+>>  					#interrupt-cells = <2>;
+>> +					clocks = <&pioAB_clk>;
+>>  				};
+>>  
+>>  				pioB: gpio@fffff600 {
+>> @@ -464,6 +781,7 @@
+>>  					#gpio-lines = <19>;
+>>  					interrupt-controller;
+>>  					#interrupt-cells = <2>;
+>> +					clocks = <&pioAB_clk>;
+>>  				};
+>>  
+>>  				pioC: gpio@fffff800 {
+>> @@ -474,6 +792,7 @@
+>>  					gpio-controller;
+>>  					interrupt-controller;
+>>  					#interrupt-cells = <2>;
+>> +					clocks = <&pioCD_clk>;
+>>  				};
+>>  
+>>  				pioD: gpio@fffffa00 {
+>> @@ -485,6 +804,7 @@
+>>  					#gpio-lines = <22>;
+>>  					interrupt-controller;
+>>  					#interrupt-cells = <2>;
+>> +					clocks = <&pioCD_clk>;
+>>  				};
+>>  			};
+>>  
+>> @@ -497,6 +817,8 @@
+>>  				dma-names = "tx", "rx";
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+>> +				clocks = <&ssc0_clk>;
+>> +				clock-names = "pclk";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -507,6 +829,8 @@
+>>  				dmas = <&dma0 1 AT91_DMA_CFG_PER_ID(0)>;
+>>  				dma-names = "rxtx";
+>>  				pinctrl-names = "default";
+>> +				clocks = <&mci0_clk>;
+>> +				clock-names = "mci_clk";
+>>  				#address-cells = <1>;
+>>  				#size-cells = <0>;
+>>  				status = "disabled";
+>> @@ -519,6 +843,8 @@
+>>  				dmas = <&dma1 1 AT91_DMA_CFG_PER_ID(0)>;
+>>  				dma-names = "rxtx";
+>>  				pinctrl-names = "default";
+>> +				clocks = <&mci1_clk>;
+>> +				clock-names = "mci_clk";
+>>  				#address-cells = <1>;
+>>  				#size-cells = <0>;
+>>  				status = "disabled";
+>> @@ -530,6 +856,8 @@
+>>  				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_dbgu>;
+>> +				clocks = <&mck>;
+>> +				clock-names = "usart";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -539,6 +867,8 @@
+>>  				interrupts = <5 IRQ_TYPE_LEVEL_HIGH 5>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_usart0>;
+>> +				clocks = <&usart0_clk>;
+>> +				clock-names = "usart";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -548,6 +878,8 @@
+>>  				interrupts = <6 IRQ_TYPE_LEVEL_HIGH 5>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_usart1>;
+>> +				clocks = <&usart1_clk>;
+>> +				clock-names = "usart";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -557,6 +889,8 @@
+>>  				interrupts = <7 IRQ_TYPE_LEVEL_HIGH 5>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_usart2>;
+>> +				clocks = <&usart2_clk>;
+>> +				clock-names = "usart";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -571,6 +905,7 @@
+>>  				#size-cells = <0>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_i2c0>;
+>> +				clocks = <&twi0_clk>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -585,6 +920,7 @@
+>>  				#size-cells = <0>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_i2c1>;
+>> +				clocks = <&twi1_clk>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -599,6 +935,7 @@
+>>  				#size-cells = <0>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_i2c2>;
+>> +				clocks = <&twi2_clk>;
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -608,6 +945,8 @@
+>>  				interrupts = <15 IRQ_TYPE_LEVEL_HIGH 5>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_uart0>;
+>> +				clocks = <&uart0_clk>;
+>> +				clock-names = "usart";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -617,6 +956,8 @@
+>>  				interrupts = <16 IRQ_TYPE_LEVEL_HIGH 5>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_uart1>;
+>> +				clocks = <&uart1_clk>;
+>> +				clock-names = "usart";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -626,6 +967,9 @@
+>>  				compatible = "atmel,at91sam9260-adc";
+>>  				reg = <0xf804c000 0x100>;
+>>  				interrupts = <19 IRQ_TYPE_LEVEL_HIGH 0>;
+>> +				clocks = <&adc_clk>,
+>> +					 <&adc_op_clk>;
+>> +				clock-names = "adc_clk", "adc_op_clk";
+>>  				atmel,adc-use-external-triggers;
+>>  				atmel,adc-channels-used = <0xffff>;
+>>  				atmel,adc-vref = <3300>;
+>> @@ -673,6 +1017,8 @@
+>>  				dma-names = "tx", "rx";
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_spi0>;
+>> +				clocks = <&spi0_clk>;
+>> +				clock-names = "spi_clk";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -687,6 +1033,8 @@
+>>  				dma-names = "tx", "rx";
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_spi1>;
+>> +				clocks = <&spi1_clk>;
+>> +				clock-names = "spi_clk";
+>>  				status = "disabled";
+>>  			};
+>>  
+>> @@ -805,6 +1153,9 @@
+>>  			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
+>>  			reg = <0x00600000 0x100000>;
+>>  			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
+>> +			clocks = <&usb>, <&uhphs_clk>, <&udphs_clk>,
+>> +				 <&uhpck>;
+>> +			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
+>>  			status = "disabled";
+>>  		};
+>>  
+>> @@ -812,6 +1163,8 @@
+>>  			compatible = "atmel,at91sam9g45-ehci", "usb-ehci";
+>>  			reg = <0x00700000 0x100000>;
+>>  			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
+>> +			clocks = <&usb>, <&uhphs_clk>, <&uhpck>;
+>> +			clock-names = "usb_clk", "ehci_clk", "uhpck";
+>>  			status = "disabled";
+>>  		};
+>>  	};
+>> diff --git a/arch/arm/boot/dts/at91sam9x5_can.dtsi b/arch/arm/boot/dts/at91sam9x5_can.dtsi
+>> new file mode 100644
+>> index 0000000..f44ab77
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/at91sam9x5_can.dtsi
+>> @@ -0,0 +1,31 @@
+>> +/*
+>> + * at91sam9x5_macb0.dtsi - Device Tree Include file for AT91SAM9x5 SoC with 1
+>> + * Ethernet interface.
+>> + *
+>> + * Copyright (C) 2013 Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+>> + *
+>> + * Licensed under GPLv2.
+>> + */
+>> +
+>> +#include <dt-bindings/pinctrl/at91.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +/ {
+>> +	ahb {
+>> +		apb {
+>> +			pmc: pmc@fffffc00 {
+>> +				periphck {
+>> +					can0_clk: can0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <29>;
+>> +					};
+>> +
+>> +                                        can1_clk: can1_clk {
+>> +                                                #clock-cells = <0>;
+>> +                                                reg = <30>;
+>> +                                        };
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/at91sam9x5_isi.dtsi b/arch/arm/boot/dts/at91sam9x5_isi.dtsi
+>> new file mode 100644
+>> index 0000000..98bc877
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/at91sam9x5_isi.dtsi
+>> @@ -0,0 +1,26 @@
+>> +/*
+>> + * at91sam9x5_isi.dtsi - Device Tree Include file for AT91SAM9x5 SoC with an
+>> + * Image Sensor Interface.
+>> + *
+>> + * Copyright (C) 2013 Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+>> + *
+>> + * Licensed under GPLv2.
+>> + */
+>> +
+>> +#include <dt-bindings/pinctrl/at91.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +/ {
+>> +	ahb {
+>> +		apb {
+>> +			pmc: pmc@fffffc00 {
+>> +				periphck {
+>> +					isi_clk: isi_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <25>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/at91sam9x5_lcd.dtsi b/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
+>> new file mode 100644
+>> index 0000000..485302e
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/at91sam9x5_lcd.dtsi
+>> @@ -0,0 +1,26 @@
+>> +/*
+>> + * at91sam9x5_lcd.dtsi - Device Tree Include file for AT91SAM9x5 SoC with an
+>> + * LCD controller.
+>> + *
+>> + * Copyright (C) 2013 Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+>> + *
+>> + * Licensed under GPLv2.
+>> + */
+>> +
+>> +#include <dt-bindings/pinctrl/at91.h>
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +
+>> +/ {
+>> +	ahb {
+>> +		apb {
+>> +			pmc: pmc@fffffc00 {
+>> +				periphck {
+>> +					lcdc_clk: lcdc_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <25>;
+>> +					};
+>> +				};
+>> +			};
+>> +		};
+>> +	};
+>> +};
+>> diff --git a/arch/arm/boot/dts/at91sam9x5_macb0.dtsi b/arch/arm/boot/dts/at91sam9x5_macb0.dtsi
+>> index 55731ff..57e89d1 100644
+>> --- a/arch/arm/boot/dts/at91sam9x5_macb0.dtsi
+>> +++ b/arch/arm/boot/dts/at91sam9x5_macb0.dtsi
+>> @@ -43,12 +43,23 @@
+>>  				};
+>>  			};
+>>  
+>> +			pmc: pmc@fffffc00 {
+>> +				periphck {
+>> +					macb0_clk: macb0_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <24>;
+>> +					};
+>> +				};
+>> +			};
+>> +
+>>  			macb0: ethernet@f802c000 {
+>>  				compatible = "cdns,at32ap7000-macb", "cdns,macb";
+>>  				reg = <0xf802c000 0x100>;
+>>  				interrupts = <24 IRQ_TYPE_LEVEL_HIGH 3>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_macb0_rmii>;
+>> +				clocks = <&macb0_clk>, <&macb0_clk>;
+>> +				clock-names = "hclk", "pclk";
+>>  				status = "disabled";
+>>  			};
+>>  		};
+>> diff --git a/arch/arm/boot/dts/at91sam9x5_macb1.dtsi b/arch/arm/boot/dts/at91sam9x5_macb1.dtsi
+>> index 77425a6..663676c 100644
+>> --- a/arch/arm/boot/dts/at91sam9x5_macb1.dtsi
+>> +++ b/arch/arm/boot/dts/at91sam9x5_macb1.dtsi
+>> @@ -31,12 +31,23 @@
+>>  				};
+>>  			};
+>>  
+>> +			pmc: pmc@fffffc00 {
+>> +				periphck {
+>> +					macb1_clk: macb1_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <27>;
+>> +					};
+>> +				};
+>> +			};
+>> +
+>>  			macb1: ethernet@f8030000 {
+>>  				compatible = "cdns,at32ap7000-macb", "cdns,macb";
+>>  				reg = <0xf8030000 0x100>;
+>>  				interrupts = <27 IRQ_TYPE_LEVEL_HIGH 3>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_macb1_rmii>;
+>> +				clocks = <&macb1_clk>, <&macb1_clk>;
+>> +				clock-names = "hclk", "pclk";
+>>  				status = "disabled";
+>>  			};
+>>  		};
+>> diff --git a/arch/arm/boot/dts/at91sam9x5_usart3.dtsi b/arch/arm/boot/dts/at91sam9x5_usart3.dtsi
+>> index 6801106..140217a5 100644
+>> --- a/arch/arm/boot/dts/at91sam9x5_usart3.dtsi
+>> +++ b/arch/arm/boot/dts/at91sam9x5_usart3.dtsi
+>> @@ -42,12 +42,23 @@
+>>  				};
+>>  			};
+>>  
+>> +			pmc: pmc@fffffc00 {
+>> +				periphck {
+>> +					usart3_clk: usart3_clk {
+>> +						#clock-cells = <0>;
+>> +						reg = <8>;
+>> +					};
+>> +				};
+>> +			};
+>> +
+>>  			usart3: serial@f8028000 {
+>>  				compatible = "atmel,at91sam9260-usart";
+>>  				reg = <0xf8028000 0x200>;
+>>  				interrupts = <8 IRQ_TYPE_LEVEL_HIGH 5>;
+>>  				pinctrl-names = "default";
+>>  				pinctrl-0 = <&pinctrl_usart3>;
+>> +				clocks = <&usart3_clk>;
+>> +				clock-names = "usart";
+>>  				status = "disabled";
+>>  			};
+>>  		};
+>> -- 
+>> 1.8.3.2
+>>
 
-3) I don't see anywhere any sanitizing of arguments, can your DMA really
-handle any alignment/unaligned addresses or should you make sure you're
-getting good arguments?
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
-You need to work on this a little bit, I guess.
-
---=20
-balbi
-
---8GpibOaaTibBMecb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTT+y2AAoJEIaOsuA1yqRE5eIP/RxrSDqj4f1ki8KLcDaf4urD
-9+sTXmxg4WfFjZry+LuoTHn9Aar5KyEjUv53/jO/Lreww1iAN7QrdzidzegwTenl
-M6JS6UEnw5hUyotIKMuU20p43CBdFsd+AC/sQz0UNQbJY8hQ2MCo+kUJLbF50PdP
-llhVzPwbej7JJ/GtR9XkbH0EoNDh6lWw95YX/q2tqXcW2evZ1e6TGBn7T1TJOexZ
-xBjjkPOQgqgNhF30ISMJ5UOn47P2qRhPgYKjCEY5JihZz9WLFneMtoUWug/FFlqR
-rdcLQ2glHi1YMrCtsVlgUUeMygdiUvDnXi+x6V/d7UzTFcCH+KpdEvsuzQShfSSM
-L690ch2KXnRq3y/EFH35IkK039woNc3IB5hfZtb4SlEwsvOGbgQBqTVxsIyqvjZa
-0/PEr7F72R7xIB1YmtFvsCcmAwZ3OcnhmbBb9V4oSbwF2ww6TCaGKr/zNajFDrm8
-Mqgiwjfzk1UIxJYJvwIO+RwTelut8osoxmej/SOdjSfC7wAWPMnUOIKsGfrcK07J
-xZSgM2TOk3fga65mYqjFy3IBoorbmBasOjNih5gyhyD5HikC+iey6ILhxk1EIgkL
-Kr0eqT33nefdo9vWGQcXlI80AAMEvT5m6o3W4qrdrwXqBavb/V/qNeGiPtycfO0W
-BS1BzkbNM8o+61GtRIN4
-=nqwc
------END PGP SIGNATURE-----
-
---8GpibOaaTibBMecb--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
