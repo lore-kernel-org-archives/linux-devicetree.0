@@ -1,168 +1,94 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v3 4/5] regulator: tps65090: Allow setting the overcurrent wait time
-Date: Wed, 16 Apr 2014 16:12:28 -0700
-Message-ID: <1397689950-1568-5-git-send-email-dianders@chromium.org>
-References: <1397689950-1568-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1397689950-1568-1-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Anton Vorontsov <anton@enomsg.org>
-Cc: Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: "Liviu Dudau" <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>
+Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
+Date: Thu, 17 Apr 2014 01:20:42 +0100
+Message-ID: <20140417002041.GE4858@bart>
+References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
+ <1395270762-6055-3-git-send-email-tinamdar@apm.com>
+ <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
+ <20140416170545.GD4858@bart>
+ <20140416212104.GA3469@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140416212104.GA3469-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The tps65090 regulator allows you to specify how long you want it to
-wait before detecting an overcurrent condition.  Allow specifying that
-through the device tree (or through platform data).
+On Wed, Apr 16, 2014 at 03:21:04PM -0600, Jason Gunthorpe wrote:
+> On Wed, Apr 16, 2014 at 06:05:45PM +0100, Liviu Dudau wrote:
+> 
+> > I have found out that we cannot pasd the config ranges from the DT into the
+> > pci_host_bridge structure as the PCI framework doesn't have a resource type
+> > for config resources. Leaving the translation between range flags and
+> > resource type as is (filtered through the IORESOURCE_TYPE_BITS) will lead
+> > to a resource type of value zero, which is not recognised by any resource
+> > handling API so bridge configuration and bus scanning will barf.
+> > 
+> > I'm looking for suggestions here, as Jason Gunthorpe suggested that we
+> > should be able to parse config ranges if they conform to the ECAM part
+> > of the PCI standard.
+> 
+> The thinking here is the ranges should be well defined and general, it
+> isn't a dumping ground for driver specific stuff.
+> 
+> No spec says you can put config space into the ranges at all, nobody
+> should be doing that today, obviously some cases were missed during
+> review..
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-Signed-off-by: Simon Glass <sjg@chromium.org>
-Signed-off-by: Michael Spang <spang@chromium.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
----
-Changes in v3:
-- Fixed kernel-doc notation for return
+ePAPR documents allows that when ss == 00.
 
-Changes in v2:
-- Separated the overcurrent and retries changes into two patches.
-- Now set overcurrent at probe time since it doesn't change.
+> 
+> The comment about ECAM was intended as a general guidance on what
+> config space in ranges could/should be used for.
+> 
+> Right now config space shouldn't propagate out side any driver, so you
+> can probably just filter it in your generic code, and make it very hard
+> and obviously wrong for a driver to parse ranges for config space, so
+> we don't get more usages.
 
- .../devicetree/bindings/regulator/tps65090.txt     |  4 ++
- drivers/regulator/tps65090-regulator.c             | 56 ++++++++++++++++++++++
- include/linux/mfd/tps65090.h                       |  5 ++
- 3 files changed, 65 insertions(+)
+OK, this goes slightly against your email from 26th March:
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt b/Documentation/devicetree/bindings/regulator/tps65090.txt
-index 313a60b..34098023 100644
---- a/Documentation/devicetree/bindings/regulator/tps65090.txt
-+++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
-@@ -21,6 +21,10 @@ Optional properties:
-   number should be provided. If it is externally controlled and no GPIO
-   entry then driver will just configure this rails as external control
-   and will not provide any enable/disable APIs.
-+- ti,overcurrent-wait: This is applicable to FET registers, which have a
-+  poorly defined "overcurrent wait" field.  If this property is present it
-+  should be between 0 - 3.  If this property isn't present we won't touch the
-+  "overcurrent wait" field and we'll leave it to the BIOS/EC to deal with.
- 
- Each regulator is defined using the standard binding for regulators.
- 
-diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
-index 2e92ef6..ca04e9f 100644
---- a/drivers/regulator/tps65090-regulator.c
-+++ b/drivers/regulator/tps65090-regulator.c
-@@ -28,15 +28,58 @@
- #include <linux/regulator/of_regulator.h>
- #include <linux/mfd/tps65090.h>
- 
-+#define CTRL_WT_BIT		2 /* Regulator wait time 0 bit */
-+
-+#define MAX_OVERCURRENT_WAIT	3 /* Overcurrent wait must be <= this */
-+
-+/**
-+ * struct tps65090_regulator - Per-regulator data for a tps65090 regulator
-+ *
-+ * @dev: Pointer to our device.
-+ * @desc: The struct regulator_desc for the regulator.
-+ * @rdev: The struct regulator_dev for the regulator.
-+ * @overcurrent_wait_valid: True if overcurrent_wait is valid.
-+ * @overcurrent_wait: For FETs, the value to put in the WTFET bitfield.
-+ */
-+
- struct tps65090_regulator {
- 	struct device		*dev;
- 	struct regulator_desc	*desc;
- 	struct regulator_dev	*rdev;
-+	bool			overcurrent_wait_valid;
-+	int			overcurrent_wait;
- };
- 
- static struct regulator_ops tps65090_ext_control_ops = {
- };
- 
-+/**
-+ * tps65090_reg_set_overcurrent_wait - Setup overcurrent wait
-+ *
-+ * This will set the overcurrent wait time based on what's in the regulator
-+ * info.
-+ *
-+ * @ri:		Overall regulator data
-+ * @rdev:	Regulator device
-+ *
-+ * Return: 0 if no error, non-zero if there was an error writing the register.
-+ */
-+static int tps65090_reg_set_overcurrent_wait(struct tps65090_regulator *ri,
-+					     struct regulator_dev *rdev)
-+{
-+	int ret;
-+
-+	ret = regmap_update_bits(rdev->regmap, rdev->desc->enable_reg,
-+				 MAX_OVERCURRENT_WAIT << CTRL_WT_BIT,
-+				 ri->overcurrent_wait << CTRL_WT_BIT);
-+	if (ret) {
-+		dev_err(&rdev->dev, "Error updating overcurrent wait %#x\n",
-+			rdev->desc->enable_reg);
-+	}
-+
-+	return ret;
-+}
-+
- static struct regulator_ops tps65090_reg_contol_ops = {
- 	.enable		= regulator_enable_regmap,
- 	.disable	= regulator_disable_regmap,
-@@ -209,6 +252,11 @@ static struct tps65090_platform_data *tps65090_parse_dt_reg_data(
- 			rpdata->gpio = of_get_named_gpio(np,
- 					"dcdc-ext-control-gpios", 0);
- 
-+		if (of_property_read_u32(tps65090_matches[idx].of_node,
-+					 "ti,overcurrent-wait",
-+					 &rpdata->overcurrent_wait) == 0)
-+			rpdata->overcurrent_wait_valid = true;
-+
- 		tps65090_pdata->reg_pdata[idx] = rpdata;
- 	}
- 	return tps65090_pdata;
-@@ -258,6 +306,8 @@ static int tps65090_regulator_probe(struct platform_device *pdev)
- 		ri = &pmic[num];
- 		ri->dev = &pdev->dev;
- 		ri->desc = &tps65090_regulator_desc[num];
-+		ri->overcurrent_wait_valid = tps_pdata->overcurrent_wait_valid;
-+		ri->overcurrent_wait = tps_pdata->overcurrent_wait;
- 
- 		/*
- 		 * TPS5090 DCDC support the control from external digital input.
-@@ -299,6 +349,12 @@ static int tps65090_regulator_probe(struct platform_device *pdev)
- 		}
- 		ri->rdev = rdev;
- 
-+		if (ri->overcurrent_wait_valid) {
-+			ret = tps65090_reg_set_overcurrent_wait(ri, rdev);
-+			if (ret < 0)
-+				return ret;
-+		}
-+
- 		/* Enable external control if it is require */
- 		if (tps_pdata && is_dcdc(num) && tps_pdata->reg_init_data &&
- 				tps_pdata->enable_ext_control) {
-diff --git a/include/linux/mfd/tps65090.h b/include/linux/mfd/tps65090.h
-index 45f0f9d..0bf2708 100644
---- a/include/linux/mfd/tps65090.h
-+++ b/include/linux/mfd/tps65090.h
-@@ -92,11 +92,16 @@ struct tps65090 {
-  *     DCDC1, DCDC2 and DCDC3.
-  * @gpio: Gpio number if external control is enabled and controlled through
-  *     gpio.
-+ * @overcurrent_wait_valid: True if the overcurrent_wait should be applied.
-+ * @overcurrent_wait: Value to set as the overcurrent wait time.  This is the
-+ *     actual bitfield value, not a time in ms (valid value are 0 - 3).
-  */
- struct tps65090_regulator_plat_data {
- 	struct regulator_init_data *reg_init_data;
- 	bool enable_ext_control;
- 	int gpio;
-+	bool overcurrent_wait_valid;
-+	int overcurrent_wait;
- };
- 
- struct tps65090_platform_data {
+"When we talked about this earlier on the DT bindings list the
+consensus seemed to be that configuration MMIO ranges should only be
+used if the underlying memory was exactly ECAM, and was not to be used
+for random configuration related register blocks.
+
+The rational being that generic code, upon seeing that ranges entry,
+could just go ahead and assume ECAM mapping."
+
+What I'm saying is that the only code that will see this ranges entry will
+be the parsing code as if we try to create a resource out of the range
+and add it to the host bridge structure (not driver) we will confuse the
+rest of the pci_host_bridge API. So we cannot do any ECAM accesses (yet?).
+
+
+Best regards,
+Liviu
+
+> 
+> Jason
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
 -- 
-1.9.1.423.g4596e3a
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
