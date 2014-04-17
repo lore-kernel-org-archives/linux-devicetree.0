@@ -1,95 +1,243 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3] of: fix of_update_property again
-Date: Thu, 17 Apr 2014 09:32:16 -0500
-Message-ID: <CAL_JsqKFRLECtSL3CKE_heruO-RJh96G-C_NsEZFVRkjAOdL-Q@mail.gmail.com>
-References: <1397720909-24774-1-git-send-email-Li.Xiubo@freescale.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v4 45/49] adv7604: Add DT support
+Date: Thu, 17 Apr 2014 16:39:29 +0200
+Message-ID: <534FE7A1.8060800@samsung.com>
+References: <1397744000-23967-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1397744000-23967-46-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397720909-24774-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1397744000-23967-46-git-send-email-laurent.pinchart@ideasonboard.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 17, 2014 at 2:48 AM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> The of_update_property() is intented to update a property in a node
-> and if the property does not exist, will add it.
->
-> The second search of the property is possibly won't be found, that
-> maybe removed by other thread just before the second search begain.
->
-> Using the __of_find_property() and __of_add_property() instead and
-> move them into lock operations.
+Hi Laurent,
 
-I have a fix in my tree from Guenter which handles the race of the
-property being removed. However, your change will be needed when we
-have overlays and the node itself can be removed. So this is 3.16
-material and will need to be rebased on Guenter's fix.
+On 17/04/14 16:13, Laurent Pinchart wrote:
+> Parse the device tree node to populate platform data. Only the ADV7611
+> is currently support with DT.
+> 
+> Cc: devicetree@vger.kernel.org
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
 
-Rob
+The patch looks good to me.
 
->
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
+Just one comment below...
 > ---
->  drivers/of/base.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index be2861d..06623d0c 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1767,7 +1767,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  .../devicetree/bindings/media/i2c/adv7604.txt      | 57 +++++++++++++++
+>  drivers/media/i2c/adv7604.c                        | 80 ++++++++++++++++++----
+>  2 files changed, 123 insertions(+), 14 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> new file mode 100644
+> index 0000000..2efb48f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> @@ -0,0 +1,57 @@
+> +* Analog Devices ADV7604/11 video decoder with HDMI receiver
+> +
+> +The ADV7604 and ADV7611 are multiformat video decoders with an integrated HDMI
+> +receiver. The ADV7604 has four multiplexed HDMI inputs and one analog input,
+> +and the ADV7611 has one HDMI input and no analog input.
+> +
+> +These device tree bindings support the ADV7611 only at the moment.
+> +
+> +Required Properties:
+> +
+> +  - compatible: Must contain one of the following
+> +    - "adi,adv7611" for the ADV7611
+> +
+> +  - reg: I2C slave address
+> +
+> +  - hpd-gpios: References to the GPIOs that control the HDMI hot-plug
+> +    detection pins, one per HDMI input. The active flag indicates the GPIO
+> +    level that enables hot-plug detection.
+> +
+> +The device node must contain one 'port' child node per device input and output
+> +port, in accordance with the video interface bindings defined in
+> +Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
+> +are numbered as follows.
+> +
+> +  Port			ADV7611
+> +------------------------------------------------------------
+> +  HDMI			0
+> +  Digital output	1
+> +
+> +The digital output port node must contain at least one endpoint.
+> +
+> +Optional Properties:
+> +
+> +  - reset-gpios: Reference to the GPIO connected to the device's reset pin.
+> +
+> +Example:
+> +
+> +	hdmi_receiver@4c {
+> +		compatible = "adi,adv7611";
+> +		reg = <0x4c>;
+> +
+> +		reset-gpios = <&ioexp 0 GPIO_ACTIVE_LOW>;
+> +		hpd-gpios = <&ioexp 2 GPIO_ACTIVE_HIGH>;
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +		};
+> +		port@1 {
+> +			reg = <1>;
+> +			hdmi_in: endpoint {
+> +				remote-endpoint = <&ccdc_in>;
+> +			};
+> +		};
+> +	};
+> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+> index 342d73d..061794e 100644
+> --- a/drivers/media/i2c/adv7604.c
+> +++ b/drivers/media/i2c/adv7604.c
+> @@ -2663,13 +2663,58 @@ static const struct adv7604_chip_info adv7604_chip_info[] = {
+>  	},
+>  };
+>  
+> +static struct i2c_device_id adv7604_i2c_id[] = {
+> +	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
+> +	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
+> +
+> +static struct of_device_id adv7604_of_id[] = {
+
+Not adding __maybe_unused attribute to this one ?
+
+> +	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, adv7604_of_id);
+> +
+> +static int adv7604_parse_dt(struct adv7604_state *state)
+> +{
+> +	/* Disable the interrupt for now as no DT-based board uses it. */
+> +	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
+> +
+> +	/* Use the default I2C addresses. */
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_AVLINK] = 0x42;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_CEC] = 0x40;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_INFOFRAME] = 0x3e;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_ESDP] = 0x38;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_DPP] = 0x3c;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_AFE] = 0x26;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_REP] = 0x32;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_EDID] = 0x36;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_HDMI] = 0x34;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_TEST] = 0x30;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_CP] = 0x22;
+> +	state->pdata.i2c_addresses[ADV7604_PAGE_VDP] = 0x24;
+> +
+> +	/* Hardcode the remaining platform data fields. */
+> +	state->pdata.disable_pwrdnb = 0;
+> +	state->pdata.disable_cable_det_rst = 0;
+> +	state->pdata.default_input = -1;
+> +	state->pdata.blank_data = 1;
+> +	state->pdata.op_656_range = 1;
+> +	state->pdata.alt_data_sat = 1;
+> +	state->pdata.insert_av_codes = 1;
+> +	state->pdata.op_format_mode_sel = ADV7604_OP_FORMAT_MODE0;
+> +	state->pdata.bus_order = ADV7604_BUS_ORDER_RGB;
+> +
+> +	return 0;
+> +}
+> +
+>  static int adv7604_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
 >  {
->         struct property **next, *oldprop;
->         unsigned long flags;
-> -       int rc, found = 0;
-> +       int rc;
->
->         rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
->         if (rc)
-> @@ -1776,20 +1776,19 @@ int of_update_property(struct device_node *np, struct property *newprop)
->         if (!newprop->name)
->                 return -EINVAL;
->
-> -       oldprop = of_find_property(np, newprop->name, NULL);
-> -       if (!oldprop)
-> -               return of_add_property(np, newprop);
+>  	static const struct v4l2_dv_timings cea640x480 =
+>  		V4L2_DV_BT_CEA_640X480P59_94;
+>  	struct adv7604_state *state;
+> -	struct adv7604_platform_data *pdata = client->dev.platform_data;
+>  	struct v4l2_ctrl_handler *hdl;
+>  	struct v4l2_subdev *sd;
+>  	unsigned int i;
+> @@ -2688,19 +2733,32 @@ static int adv7604_probe(struct i2c_client *client,
+>  		return -ENOMEM;
+>  	}
+>  
+> -	state->info = &adv7604_chip_info[id->driver_data];
+>  	state->i2c_clients[ADV7604_PAGE_IO] = client;
+>  
+>  	/* initialize variables */
+>  	state->restart_stdi_once = true;
+>  	state->selected_input = ~0;
+>  
+> -	/* platform data */
+> -	if (!pdata) {
+> +	if (IS_ENABLED(CONFIG_OF) && client->dev.of_node) {
+> +		const struct of_device_id *oid;
+> +
+> +		oid = of_match_node(adv7604_of_id, client->dev.of_node);
+> +		state->info = oid->data;
+> +
+> +		err = adv7604_parse_dt(state);
+> +		if (err < 0) {
+> +			v4l_err(client, "DT parsing error\n");
+> +			return err;
+> +		}
+> +	} else if (client->dev.platform_data) {
+> +		struct adv7604_platform_data *pdata = client->dev.platform_data;
+> +
+> +		state->info = (const struct adv7604_chip_info *)id->driver_data;
+> +		state->pdata = *pdata;
+> +	} else {
+>  		v4l_err(client, "No platform data!\n");
+>  		return -ENODEV;
+>  	}
+> -	state->pdata = *pdata;
+>  
+>  	/* Request GPIOs. */
+>  	for (i = 0; i < state->info->num_dv_ports; ++i) {
+> @@ -2799,7 +2857,7 @@ static int adv7604_probe(struct i2c_client *client,
+>  			continue;
+>  
+>  		state->i2c_clients[i] =
+> -			adv7604_dummy_client(sd, pdata->i2c_addresses[i],
+> +			adv7604_dummy_client(sd, state->pdata.i2c_addresses[i],
+>  					     0xf2 + i);
+>  		if (state->i2c_clients[i] == NULL) {
+>  			err = -ENOMEM;
+> @@ -2873,21 +2931,15 @@ static int adv7604_remove(struct i2c_client *client)
+>  
+>  /* ----------------------------------------------------------------------- */
+>  
+> -static struct i2c_device_id adv7604_id[] = {
+> -	{ "adv7604", ADV7604 },
+> -	{ "adv7611", ADV7611 },
+> -	{ }
+> -};
+> -MODULE_DEVICE_TABLE(i2c, adv7604_id);
 > -
->         raw_spin_lock_irqsave(&devtree_lock, flags);
->         next = &np->properties;
-> -       while (*next) {
-> +       oldprop = __of_find_property(np, newprop->name, NULL);
-> +       if (!oldprop) {
-> +               /* add the new node */
-> +               rc = __of_add_property(np, newprop);
-> +       } else while (*next) {
-> +               /* found the node and then replace it */
->                 if (*next == oldprop) {
-> -                       /* found the node */
->                         newprop->next = oldprop->next;
->                         *next = newprop;
->                         oldprop->next = np->deadprops;
->                         np->deadprops = oldprop;
-> -                       found = 1;
->                         break;
->                 }
->                 next = &(*next)->next;
-> @@ -1803,9 +1802,6 @@ int of_update_property(struct device_node *np, struct property *newprop)
->                 sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
->         __of_add_property_sysfs(np, newprop);
->
-> -       if (!found)
-> -               return -ENODEV;
-> -
->         return 0;
->  }
->
-> --
-> 1.8.4
->
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>  static struct i2c_driver adv7604_driver = {
+>  	.driver = {
+>  		.owner = THIS_MODULE,
+>  		.name = "adv7604",
+> +		.of_match_table = of_match_ptr(adv7604_of_id),
+>  	},
+>  	.probe = adv7604_probe,
+>  	.remove = adv7604_remove,
+> -	.id_table = adv7604_id,
+> +	.id_table = adv7604_i2c_id,
+>  };
+>  
+>  module_i2c_driver(adv7604_driver);
+> 
+
+-- 
+Regards,
+Sylwester
