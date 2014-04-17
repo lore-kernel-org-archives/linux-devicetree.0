@@ -1,79 +1,152 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v5 2/4] arm64: dts: APM X-Gene PCIe device tree nodes
-Date: Wed, 16 Apr 2014 19:24:34 -0600
-Message-ID: <20140417012434.GA8734@obsidianresearch.com>
-References: <1395270762-6055-1-git-send-email-tinamdar@apm.com>
- <1395270762-6055-3-git-send-email-tinamdar@apm.com>
- <CAL_Jsq+XxAtUeNKFi0hH=ehb_fhFvkM0U1Zm_j1LdtQZbvSzfA@mail.gmail.com>
- <20140416170545.GD4858@bart>
- <20140416212104.GA3469@obsidianresearch.com>
- <20140417002041.GE4858@bart>
+From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
+Date: Wed, 16 Apr 2014 19:06:47 -0700
+Message-ID: <CAKh23FmM6L4PeL+GOz=neQac4ZDj+_LmH5=zTLtVZxfUe9HQVw@mail.gmail.com>
+References: <1397271984-23405-1-git-send-email-isubramanian@apm.com>
+	<1397271984-23405-5-git-send-email-isubramanian@apm.com>
+	<534BEB20.3080501@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140417002041.GE4858@bart>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Tanmay Inamdar <tinamdar@apm.com>, Bjorn Helgaas <bhelgaas@google.com>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Rob Landley <rob@landley.net>, Liviu Dudau <liviu.dudau@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@apm.com" <patches@apm.com>, "jcm@redhat.com" <jcm@redhat.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <534BEB20.3080501-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 17, 2014 at 01:20:42AM +0100, Liviu Dudau wrote:
+Hi,
 
-> > No spec says you can put config space into the ranges at all, nobody
-> > should be doing that today, obviously some cases were missed during
-> > review..
-> 
-> ePAPR documents allows that when ss == 00.
+Please find my response inline.
 
-Which do you mean? The 'PCI Bus Binding' spec has fairly specific
-language on how ranges should be used and interpreted, and it
-precludes doing anything meaningful with config space (like requiring
-b,d,f and r to be zeroed when doing compares against ranges, requiring
-the ranges to represent the bridge windows, etc).
+On Mon, Apr 14, 2014 at 7:05 AM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
+> On 12/04/14 04:06, Iyappan Subramanian wrote:
+>>
+>> This patch adds network driver for APM X-Gene SoC ethernet.
+>>
+>> Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+>> Signed-off-by: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+>
+>
+> [snip]
+>
+>
+>> +{
+>> +       struct xgene_enet_pdata *pdata = netdev_priv(ndev);
+>> +       struct phy_device *phydev;
+>> +       unsigned char phy_id[MII_BUS_ID_SIZE+3];
+>> +       int ret = 0;
+>> +
+>> +       phydev = phy_find_first(pdata->mdio_bus);
+>> +       if (!phydev) {
+>> +               netdev_info(ndev, "no PHY found\n");
+>> +               ret = -1;
+>> +               goto out;
+>> +       }
+>> +
+>> +       /* attach the mac to the phy */
+>> +       snprintf(phy_id, sizeof(phy_id), PHY_ID_FMT, pdata->mdio_bus->id,
+>> +                pdata->phy_addr);
+>> +       phydev = phy_connect(ndev, phy_id,
+>> +                            &xgene_enet_mdio_link_change,
+>> pdata->phy_mode);
+>> +       if (IS_ERR(phydev)) {
+>> +               netdev_err(ndev, "Could not attach to PHY\n");
+>> +               ret = PTR_ERR(phydev);
+>> +               phydev = NULL;
+>> +               goto out;
+>> +       }
+>> +
+>
+>
+> You should be using of_phy_connect or similar so that the
+> necessary PHY<>OF data is properly initialised
+>
 
-There is certainly room to invent something (like ECAM mapping) but
-nothing is specified in that document.
+I will use of_phy_connect function to connect to PHY.
 
-The ePAPR document I have doesn't talk about PCI..
+>
+>> +       netdev_info(ndev, "phy_id=0x%08x phy_drv=\"%s\"",
+>> +                   phydev->phy_id, phydev->drv->name);
+>> +out:
+>> +       pdata->phy_link = 0;
+>> +       pdata->phy_speed = 0;
+>> +       pdata->phy_dev = phydev;
+>> +
+>> +       return ret;
+>> +}
+>> +
+>
+>
+>
+> [snip]
+>
+>
+>> +struct xgene_enet_desc {
+>> +       u64 m0;
+>> +       u64 m1;
+>> +       u64 m2;
+>> +       u64 m3;
+>> +};
+>> +
+>> +struct xgene_enet_desc16 {
+>> +       u64 m0;
+>> +       u64 m1;
+>> +};
+>> +
+>> +static inline void xgene_enet_cpu_to_le64(struct xgene_enet_desc *desc,
+>> +                                         int count)
+>> +{
+>> +#ifdef CONFIG_CPU_BIG_ENDIAN
+>> +       int i;
+>> +
+>> +       for (i = 0; i < count; i++)
+>> +               ((u64 *)desc)[i] = cpu_to_le64(((u64 *)desc)[i]);
+>> +#endif
+>> +}
+>> +
+>> +static inline void xgene_enet_le64_to_cpu(struct xgene_enet_desc *desc,
+>> +                                         int count)
+>> +{
+>> +#ifdef CONFIG_CPU_BIG_ENDIAN
+>> +       int i;
+>> +
+>> +       for (i = 0; i < count; i++)
+>> +               ((u64 *)desc)[i] = le64_to_cpu(((u64 *)desc)[i]);
+>> +#endif
+>> +}
+>> +
+>> +static inline void xgene_enet_desc16_to_le64(struct xgene_enet_desc
+>> *desc)
+>> +{
+>> +#ifdef CONFIG_CPU_BIG_ENDIAN
+>> +       ((u64 *)desc)[1] = cpu_to_le64(((u64 *)desc)[1]);
+>> +#endif
+>> +}
+>> +
+>> +static inline void xgene_enet_le64_to_desc16(struct xgene_enet_desc
+>> *desc)
+>> +{
+>> +#ifdef CONFIG_CPU_BIG_ENDIAN
+>> +       ((u64 *)desc)[1] = le64_to_cpu(((u64 *)desc)[1]);
+>> +#endif
+>> +}
+>
+>
+> With this do you not risk confusing the hardware by swapping the
+> format of the descriptors?
+>
+> Why not use xxx_to_cpu() and cpu_to_xxx() functions when reading or
+> writing the descriptors? It would also remove a lot of the #ifdef in
+> this code.
 
-If you've found a document that defines how it works then that changes
-things.. ;)
+Our hardware expects descriptor in the little endian format.  I will remove the
+#ifdef.
 
-> > The comment about ECAM was intended as a general guidance on what
-> > config space in ranges could/should be used for.
-> > 
-> > Right now config space shouldn't propagate out side any driver, so you
-> > can probably just filter it in your generic code, and make it very hard
-> > and obviously wrong for a driver to parse ranges for config space, so
-> > we don't get more usages.
-> 
-> OK, this goes slightly against your email from 26th March:
-> 
-> "When we talked about this earlier on the DT bindings list the
-> consensus seemed to be that configuration MMIO ranges should only be
-> used if the underlying memory was exactly ECAM, and was not to be used
-> for random configuration related register blocks.
-> 
-> The rational being that generic code, upon seeing that ranges entry,
-> could just go ahead and assume ECAM mapping."
-> 
-> What I'm saying is that the only code that will see this ranges entry will
-> be the parsing code as if we try to create a resource out of the range
-> and add it to the host bridge structure (not driver) we will confuse the
-> rest of the pci_host_bridge API. So we cannot do any ECAM accesses (yet?).
-
-Sorry if this seems unclear, what you quoted was from a specification
-standpoint - someday defining config space ranges to be the ECAM
-window makes the most sense. This is from the direction of precluding
-drivers from using it for random purposes.
-
->From a Linux standpoint, there is simply no infrastructure for generic
-config access outside the driver, so config space must remain
-contained in the driver, and shouldn't leak into the host bridge or
-other core structures.
-
-I think the shared code you are working on should simply ignore config
-ss ranges entirely, they have no defined meaning..
-
-Regards,
-Jason
+>
+> --
+> Ben Dooks                               http://www.codethink.co.uk/
+> Senior Engineer                         Codethink - Providing Genius
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
