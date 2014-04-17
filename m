@@ -1,69 +1,144 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V2 05/19] bus: omap_l3_noc: switch over to relaxed
- variants of readl/writel
-Date: Thu, 17 Apr 2014 17:03:29 -0500
-Message-ID: <20140417220329.GF8504@saruman.home>
-References: <1397492726-17203-1-git-send-email-nm@ti.com>
- <1397767775-10965-1-git-send-email-nm@ti.com>
- <1397767775-10965-6-git-send-email-nm@ti.com>
- <20140417215228.GD8504@saruman.home>
- <53504DFF.7090907@ti.com>
-Reply-To: <balbi@ti.com>
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2] axs_nand - add driver for NAND controller used on
+ Synopsys AXS dev boards
+Date: Thu, 17 Apr 2014 22:12:59 +0000
+Message-ID: <1397772778.5495.1.camel@abrodkin-8560l.internal.synopsys.com>
+References: <1396597089-1081-1-git-send-email-abrodkin@synopsys.com>
+	 <20140404140933.GA25772@arch.cereza>
+	 <1396851239.4081.10.camel@abrodkin-8560l.internal.synopsys.com>
+	 <1397227889.3284.17.camel@abrodkin-8560l.internal.synopsys.com>
+	 <20140411150759.GA19199@arch.cereza>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UBnjLfzoMQYIXCvq"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53504DFF.7090907@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: balbi@ti.com, Nishanth Menon <nm@ti.com>, Tony Lindgren <tony@atomide.com>, Sricharan R <r.sricharan@ti.com>, Sekhar Nori <nsekhar@ti.com>, Rajendra Nayak <rnayak@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140411150759.GA19199-nAQHv47ARr+vIlHkl8J1cg@public.gmane.org>
+Content-Language: en-US
+Content-ID: <601EEDA19CB92B4F935BAF5DCBF15364-z7JfP6tgrtVBCHUSTMH8dZqQE7yCjDx5@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "Francois.Bedard-HKixBCOQz3hWk0Htik3J/w@public.gmane.org" <Francois.Bedard-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---UBnjLfzoMQYIXCvq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Dear Brian,
 
-On Thu, Apr 17, 2014 at 05:56:15PM -0400, Santosh Shilimkar wrote:
-> On Thursday 17 April 2014 05:52 PM, Felipe Balbi wrote:
-> > Hi,
-> >=20
-> > On Thu, Apr 17, 2014 at 03:49:21PM -0500, Nishanth Menon wrote:
-> >> Currently we use __raw_readl and writel in this driver, however, there
-> >=20
-> > __raw_* and *_relaxed variants are the same, just have a look <asm/io.h>
-> >=20
-> Except the relaxed version can take care of endian conversion if
-> needed. :-)
+On Fri, 2014-04-11 at 12:07 -0300, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+wrote:
+> On Apr 11, Alexey Brodkin wrote:
+> > Hi Ezequiel,
+> > 
+> > On Mon, 2014-04-07 at 10:13 +0400, Alexey Brodkin wrote:
+> > > Hi Ezequiel,
+> > > 
+> > > On Fri, 2014-04-04 at 11:09 -0300, Ezequiel Garcia wrote:
+> > > > On Apr 04, Alexey Brodkin wrote:
+> > > > > Signed-off-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> > > > > 
+> > > > 
+> > > > Maybe it would be nice adding some driver description here, so the commit
+> > > > log actually says something useful about the commit.
+> > > 
+> > > Well, I thought about it but frankly I'm not sure if there's anything
+> > > else to add to commit title "driver for NAND controller used on Synopsys
+> > > AXS dev boards".
+> > > 
+> > > Do you think more info may make sense?
+> > > 
+> > > > > +/**
+> > > > > + * axs_flag_wait_and_reset - Waits until requested flag in INT_STATUS register
+> > > > > + *              is set by HW and resets it by writing "1" in INT_CLR_STATUS.
+> > > > > + * @host:	Pointer to private data structure.
+> > > > > + * @flag:	Bit/flag offset in INT_STATUS register
+> > > > > + */
+> > > > > +static void axs_flag_wait_and_reset(struct axs_nand_host *host, int flag)
+> > > > > +{
+> > > > > +	unsigned int i;
+> > > > > +
+> > > > > +	for (i = 0; i < AXS_FLAG_WAIT_DELAY * 100; i++) {
+> > > > > +		unsigned int status = reg_get(host, INT_STATUS);
+> > > > > +
+> > > > > +		if (status & (1 << flag)) {
+> > > > > +			reg_set(host, INT_CLR_STATUS, 1 << flag);
+> > > > > +			return;
+> > > > > +		}
+> > > > > +
+> > > > > +		udelay(10);
+> > > > > +	}
+> > > > > +
+> > > > > +	/*
+> > > > > +	 * Since we cannot report this problem any further than
+> > > > > +	 * axs_nand_{write|read}_buf() letting user know there's a problem.
+> > > > > +	 */
+> > > > > +	dev_err(host->dev, "Waited too long (%d s.) for flag/bit %d\n",
+> > > > > +		AXS_FLAG_WAIT_DELAY, flag);
+> > > > > +}
+> > > > 
+> > > > Hm... I'm not sure the above is really true.
+> > > > 
+> > > > The NAND core uses the replaceable chip->waitfunc callback to check the
+> > > > status of issued commands. See for instance:
+> > > > 
+> > > > static int nand_write_oob_std(struct mtd_info *mtd, struct nand_chip *chip,
+> > > >                               int page)
+> > > > {
+> > > >         int status = 0;
+> > > >         const uint8_t *buf = chip->oob_poi;
+> > > >         int length = mtd->oobsize;
+> > > > 
+> > > >         chip->cmdfunc(mtd, NAND_CMD_SEQIN, mtd->writesize, page);
+> > > >         chip->write_buf(mtd, buf, length);
+> > > >         /* Send command to program the OOB data */
+> > > >         chip->cmdfunc(mtd, NAND_CMD_PAGEPROG, -1, -1);
+> > > > 
+> > > >         status = chip->waitfunc(mtd, chip);
+> > > > 
+> > > >         return status & NAND_STATUS_FAIL ? -EIO : 0;
+> > > > }
+> > > > 
+> > > > On the other side, if you are clearing the flags in axs_flag_wait_and_reset()
+> > > > it might be a bit hard for you to get this right.
+> > > > 
+> > > > IOW, I'm not saying you *must* do this, but instead suggesting that you take
+> > > > a look at waitfunc() and see if it helps report a proper error in the
+> > > > read/write path.
+> > > 
+> > > As I may understand from generic implementation of "waitfunc" in
+> > > "nand_base.c" it checks status of NAND chip itself - which IMHO makes
+> > > sense. And this is done via NAND_CMD_STATUS command sent to chip through
+> > > NAND controller.
+> > > 
+> > > In AXS NAND driver you may see 2 types of wait checks:
+> > > 1. NAND_ISR_CMDDONE - this flag means that NAND controller has just
+> > > executed provided command (i.e. set proper signal on control lines of
+> > > NAND chip etc), but it doesn't mean NAND chip itself has completed
+> > > command execution. That's why "waitfunc" is not direct replacement here.
+> > > 
+> > > 2. NAND_ISR_{RX|TX}DMACOMPLETE - this flag indicates completion of DMA
+> > > transfer to/from NAND chip to RAM. "waitfunc" won't work here as well.
+> > > 
+> > > I hope this explanation makes sense.
+> > 
+> > Please treat this message as a gentle reminder.
+> > I'm wondering if my explanation in the previous email makes any sense or
+> > I still need to fix stuff.
+> 
+> Well, I was merely suggesting to look into using waitfunc(), so you definitely
+> don't need to fix anything (at least from my side).
+> 
+> Just as a comment, regarding your explanation above, I think you can override
+> the waitfunc() and check the NAND_CMD_STATUS, together with the check for your
+> ISR flags. However, you know more about your hardware than me, so this is
+> *just* a suggestion.
+> 
+> The driver looks fine broadly speaking. I guess it's up to Brian now to provide
+> further feedback.
 
-right, but according to commit log, this commit is more concerned about
-the memory barriers which writel()/readl() add, not endianness. Just a
-matter of fixing up commit log.
+I'm wondering if there's a chance for you to look at this patch anytime
+soon?
 
---=20
-balbi
-
---UBnjLfzoMQYIXCvq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTUE+xAAoJEIaOsuA1yqREzaoQAIImtV2Pt6Al5CViocqxiiTi
-fEO/k96f49ypOuk1lNMC1PWYM02ClnuSwNu02my/LM0Ceyz+kPxhdbQWopWV6uAH
-jSGdvUjIgI0kPIB/n4YiKA9usp5jer9fPufHa8v4YsYepu2FPApHYs6kZEkOhrZs
-C06O9Eeu5RLUQ7AWx4Kfxpz2IYc5GWjZok+A2SHX/b7CmCgZwj8JcTfAVG2y6PD1
-GHyUbOEc6kTWLg2fBAQo2/skBuAOB0e6z03Q/NvvUrBGtcyuIx8ZeJRlHsEki8wu
-dZcjiYgXbpvTSpk4U+yGKtpFQGyjO/dfvwNxNEdxDy82zPLSR9YjbnKfOYa0GNbU
-V4onhvFmgFvSFDJvZMTO5Tg2+8zEd11o/XL1ESmt+dXJ1yAOOR3PQPUXNCGhmGLh
-3uFFApIthEDRw7DGKjnvyuoAA4z+YbIldDMoVBOJXK0gEI0u9zfsgd9aYRR9ZHaV
-YSsk9bE9BaRVcwnBJ07q29hOeXSUd7t6UQ/IDJbCmMHC5L+8OW5bhPabY+Twguav
-pdroFyElFv+P7Iy9l5otgasm6zyezSqP83v6idGRSVfHnk6eUwrymfuvJZE40g2I
-ep9rAaXcR8VK0N3MazuMDgpuMYLhoTQDZNMbCIBKiEXp1Rthmyrwoy5/CohpQ/P2
-rmxTUBm6zI3ldH8MftDq
-=YXB6
------END PGP SIGNATURE-----
-
---UBnjLfzoMQYIXCvq--
+Regards,
+Alexey
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
