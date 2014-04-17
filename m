@@ -1,69 +1,122 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 45/49] adv7604: Add DT support
-Date: Thu, 17 Apr 2014 16:43:29 +0200
-Message-ID: <2187787.ESP9YKtS5Y@avalon>
-References: <1397744000-23967-1-git-send-email-laurent.pinchart@ideasonboard.com> <1397744000-23967-46-git-send-email-laurent.pinchart@ideasonboard.com> <534FE7A1.8060800@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v4 47/49] adv7604: Add endpoint properties to DT bindings
+Date: Thu, 17 Apr 2014 16:44:40 +0200
+Message-ID: <534FE8D8.3070700@samsung.com>
+References: <1397744000-23967-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1397744000-23967-48-git-send-email-laurent.pinchart@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <534FE7A1.8060800@samsung.com>
+In-reply-to: <1397744000-23967-48-git-send-email-laurent.pinchart@ideasonboard.com>
 Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 Cc: linux-media@vger.kernel.org, Hans Verkuil <hans.verkuil@cisco.com>, Lars-Peter Clausen <lars@metafoo.de>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
-
-On Thursday 17 April 2014 16:39:29 Sylwester Nawrocki wrote:
-> On 17/04/14 16:13, Laurent Pinchart wrote:
-> > Parse the device tree node to populate platform data. Only the ADV7611
-> > is currently support with DT.
-> > 
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> > Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+On 17/04/14 16:13, Laurent Pinchart wrote:
+> Add support for the hsync-active, vsync-active and pclk-sample
+> properties to the DT bindings and control BT.656 mode implicitly.
 > 
-> The patch looks good to me.
+> Cc: devicetree@vger.kernel.org
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Signed-off-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
+
+Thanks, the patch looks good to me.
+
+Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+
+> ---
+>  .../devicetree/bindings/media/i2c/adv7604.txt      | 13 +++++++++
+>  drivers/media/i2c/adv7604.c                        | 34 ++++++++++++++++++++--
+>  2 files changed, 45 insertions(+), 2 deletions(-)
 > 
-> Acked-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
-Thank you.
-
-> Just one comment below...
-
-[snip]
-
-> > diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
-> > index 342d73d..061794e 100644
-> > --- a/drivers/media/i2c/adv7604.c
-> > +++ b/drivers/media/i2c/adv7604.c
-> > @@ -2663,13 +2663,58 @@ static const struct adv7604_chip_info
-> > adv7604_chip_info[] = {> 
-> >  	},
-> >  
-> >  };
-> > 
-> > +static struct i2c_device_id adv7604_i2c_id[] = {
-> > +	{ "adv7604", (kernel_ulong_t)&adv7604_chip_info[ADV7604] },
-> > +	{ "adv7611", (kernel_ulong_t)&adv7604_chip_info[ADV7611] },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(i2c, adv7604_i2c_id);
-> > +
-> > +static struct of_device_id adv7604_of_id[] = {
-> 
-> Not adding __maybe_unused attribute to this one ?
-
-Sure, of course. I'll squash patch 49/49 into this one.
-
-> > +	{ .compatible = "adi,adv7611", .data = &adv7604_chip_info[ADV7611] },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, adv7604_of_id);
+> diff --git a/Documentation/devicetree/bindings/media/i2c/adv7604.txt b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> index 2efb48f..c27cede 100644
+> --- a/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> +++ b/Documentation/devicetree/bindings/media/i2c/adv7604.txt
+> @@ -33,6 +33,19 @@ Optional Properties:
+>  
+>    - reset-gpios: Reference to the GPIO connected to the device's reset pin.
+>  
+> +Optional Endpoint Properties:
+> +
+> +  The following three properties are defined in video-interfaces.txt and are
+> +  valid for source endpoints only.
+> +
+> +  - hsync-active: Horizontal synchronization polarity. Defaults to active low.
+> +  - vsync-active: Vertical synchronization polarity. Defaults to active low.
+> +  - pclk-sample: Pixel clock polarity. Defaults to output on the falling edge.
+> +
+> +  If none of hsync-active, vsync-active and pclk-sample is specified the
+> +  endpoint will use embedded BT.656 synchronization.
+> +
+> +
+>  Example:
+>  
+>  	hdmi_receiver@4c {
+> diff --git a/drivers/media/i2c/adv7604.c b/drivers/media/i2c/adv7604.c
+> index fd0c646..63f036f 100644
+> --- a/drivers/media/i2c/adv7604.c
+> +++ b/drivers/media/i2c/adv7604.c
+> @@ -41,6 +41,7 @@
+>  #include <media/v4l2-ctrls.h>
+>  #include <media/v4l2-device.h>
+>  #include <media/v4l2-dv-timings.h>
+> +#include <media/v4l2-of.h>
+>  
+>  static int debug;
+>  module_param(debug, int, 0644);
+> @@ -2679,6 +2680,37 @@ MODULE_DEVICE_TABLE(of, adv7604_of_id);
+>  
+>  static int adv7604_parse_dt(struct adv7604_state *state)
+>  {
+> +	struct v4l2_of_endpoint bus_cfg;
+> +	struct device_node *endpoint;
+> +	struct device_node *np;
+> +	unsigned int flags;
+> +
+> +	np = state->i2c_clients[ADV7604_PAGE_IO]->dev.of_node;
+> +
+> +	/* Parse the endpoint. */
+> +	endpoint = of_graph_get_next_endpoint(np, NULL);
+> +	if (!endpoint)
+> +		return -EINVAL;
+> +
+> +	v4l2_of_parse_endpoint(endpoint, &bus_cfg);
+> +	of_node_put(endpoint);
+> +
+> +	flags = bus_cfg.bus.parallel.flags;
+> +
+> +	if (flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
+> +		state->pdata.inv_hs_pol = 1;
+> +
+> +	if (flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
+> +		state->pdata.inv_vs_pol = 1;
+> +
+> +	if (flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
+> +		state->pdata.inv_llc_pol = 1;
+> +
+> +	if (bus_cfg.bus_type == V4L2_MBUS_BT656) {
+> +		state->pdata.insert_av_codes = 1;
+> +		state->pdata.op_656_range = 1;
+> +	}
+> +
+>  	/* Disable the interrupt for now as no DT-based board uses it. */
+>  	state->pdata.int1_config = ADV7604_INT1_CONFIG_DISABLED;
+>  
+> @@ -2701,9 +2733,7 @@ static int adv7604_parse_dt(struct adv7604_state *state)
+>  	state->pdata.disable_cable_det_rst = 0;
+>  	state->pdata.default_input = -1;
+>  	state->pdata.blank_data = 1;
+> -	state->pdata.op_656_range = 1;
+>  	state->pdata.alt_data_sat = 1;
+> -	state->pdata.insert_av_codes = 1;
+>  	state->pdata.op_format_mode_sel = ADV7604_OP_FORMAT_MODE0;
+>  	state->pdata.bus_order = ADV7604_BUS_ORDER_RGB;
+>  
 
 -- 
 Regards,
-
-Laurent Pinchart
+Sylwester
