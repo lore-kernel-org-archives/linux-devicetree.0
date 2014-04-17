@@ -1,41 +1,55 @@
-From: Dirk Behme <dirk.behme@de.bosch.com>
-Subject: Re: [PATCH 9/10] ARM: dts: tx28: restructure and update DTS file
-Date: Thu, 17 Apr 2014 08:39:12 +0200
-Message-ID: <534F7710.8050801@de.bosch.com>
-References: <1375281480-25775-1-git-send-email-LW@KARO-electronics.de>
- <1375281480-25775-9-git-send-email-LW@KARO-electronics.de>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [PATCH] clocksource: pit: Add Freescale PIT-RTI devicetree Documentation
+Date: Thu, 17 Apr 2014 13:59:49 +0800
+Message-ID: <1397714389-10263-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1375281480-25775-9-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Xiubo Li <Li.Xiubo@freescale.com>, Shawn Guo <shawn.guo@linaro.org>, Jingchang Lu <b35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMzEuMDcuMjAxMyAxNjozNywgTG90aGFyIFdhw59tYW5uIHdyb3RlOgo+Cj4gU2lnbmVkLW9m
-Zi1ieTogTG90aGFyIFdhw59tYW5uIDxMV0BLQVJPLWVsZWN0cm9uaWNzLmRlPgo+IC0tLQouLi4K
-PiArJmxjZGlmIHsKPiArICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gKyAgICAg
-ICBwaW5jdHJsLTAgPSA8JmxjZGlmXzI0Yml0X3BpbnNfYSAmbGNkaWZfc3luY19waW5zX2EgJmxj
-ZGlmX2N0cmxfcGluc19hPjsKPiArICAgICAgIGxjZC1zdXBwbHkgPSA8JnJlZ19sY2Q+Owo+ICsg
-ICAgICAgZGlzcGxheSA9IDwmZGlzcGxheT47Cj4gKyAgICAgICBzdGF0dXMgPSAib2theSI7Cj4g
-Kwo+ICsgICAgICAgZGlzcGxheTogZGlzcGxheUAwIHsKPiArICAgICAgICAgICAgICAgYml0cy1w
-ZXItcGl4ZWwgPSA8MzI+Owo+ICsgICAgICAgICAgICAgICBidXMtd2lkdGggPSA8MjQ+Owo+ICsK
-PiArICAgICAgICAgICAgICAgZGlzcGxheS10aW1pbmdzIHsKPiArICAgICAgICAgICAgICAgICAg
-ICAgICBuYXRpdmUtbW9kZSA9IDwmdGltaW5nNT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAg
-dGltaW5nMDogdGltaW5nMCB7Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwYW5l
-bC1uYW1lID0gIlZHQSI7Ci4uLgoKSSd2ZSBiZWVuIGxvb2tpbmcgZm9yIGFueSB1c2VyIG9yIGRv
-Y3VtZW50YXRpb24gb2YgJ3BhbmVsLW5hbWUnLiBCdXQgCmNvdWxkbid0IGZpbmQgYW55dGhpbmcu
-IEFueXRoaW5nIEkgbWlzc2VkPwoKTWFueSB0aGFua3MKCkRpcmsKCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+This add Freescale Periodic Interrupt Timer (PIT-RTI) devicetree
+Documentation, The PIT-RTI binding has already been used on Vybrid,
+so this add a binding document for it.
+
+Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Jingchang Lu <b35083@freescale.com>
+---
+ .../devicetree/bindings/timer/fsl,vf610-pit.txt     | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/fsl,vf610-pit.txt
+
+diff --git a/Documentation/devicetree/bindings/timer/fsl,vf610-pit.txt b/Documentation/devicetree/bindings/timer/fsl,vf610-pit.txt
+new file mode 100644
+index 0000000..67df182
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/fsl,vf610-pit.txt
+@@ -0,0 +1,21 @@
++Freescale Periodic Interrupt Timer (PIT-RTI)
++
++Required properties:
++
++- compatible : should be "fsl,vf610-pit"
++- reg : Specifies base physical address and size of the register set for the
++  clock event device and clock source device.
++- interrupts : Should be the clock event device interrupt.
++- clocks : The clocks provided by the SoC to drive the timer, must contain an
++  entry for each entry in clock-names.
++- clock-names : Must include the "pit" entry.
++
++Example:
++
++pit: pit@40037000 {
++	compatible = "fsl,vf610-pit";
++	reg = <0x40037000 0x1000>;
++	interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks VF610_CLK_PIT>;
++	clock-names = "pit";
++};
+-- 
+1.8.4
+
+
