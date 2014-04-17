@@ -1,135 +1,57 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: Re: [PATCH 7/7] ARM: sun7i: cubietruck: enable
- bluetooth module
-Date: Thu, 17 Apr 2014 09:43:40 +0200
-Message-ID: <534F862C.8010604@broadcom.com>
-References: <1397544101-18135-1-git-send-email-wens@csie.org> <1397544101-18135-8-git-send-email-wens@csie.org> <20140415144215.GG3207@lukather> <CAGb2v643HyvFdhQ0znreB8ENXHWpcx6tFwdeU7VuU8KYWcT4ZA@mail.gmail.com> <20140416094428.GK3207@lukather> <CAGb2v67HzB22a3huRRZyufXkdTFE410MhXqAHyC-MmVo0-GCFA@mail.gmail.com> <534E8102.4070404@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [RFC][PATCH 1/3] ARM: dts: vf610: Add Freescale FlexTimer
+ Module timer node.
+Date: Thu, 17 Apr 2014 07:49:31 +0000
+Message-ID: <6934b6e7d11f4eb6a8ec74542820d718@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
+ <1397614787-8300-2-git-send-email-Li.Xiubo@freescale.com>
+ <20140416085953.GC11602@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBCKLZOXH5AIBBMUMX2NAKGQEVRN7WDQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <534E8102.4070404-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus
- Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, Mika
- Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "maxime.ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-serial@vger.k
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140416085953.GC11602@dragon>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Dongsheng.Wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > +			ftm0: ftm@40038000 {
+> > +				compatible = "fsl,vf610-ftm-timer";
+> > +				reg = <0x40038000 0x2000>;
+> > +				interrupts = <0 42 IRQ_TYPE_LEVEL_HIGH>;
+> > +				clock-names = "ftm0", "ftm1",
+> > +					"ftm0_counter_en", "ftm1_counter_en";
+> > +				clocks = <&clks VF610_CLK_FTM0>,
+> > +					<&clks VF610_CLK_FTM1>,
+> > +					<&clks VF610_CLK_FTM0_EXT_FIX_EN>,
+> > +					<&clks VF610_CLK_FTM1_EXT_FIX_EN>;
+> > +				status = "disabled";
+> 
+> For such completely internal block which has no pins route out on board,
+> we should probably just not have this "disabled" status line.
+> 
 
-On 16/04/14 15:09, Hans de Goede wrote:
-> Hi,
->
-> On 04/16/2014 12:39 PM, Chen-Yu Tsai wrote:
->> Hi,
->>
->> On Wed, Apr 16, 2014 at 5:44 PM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>> Hi,
->>>
->>> Please try to keep me in CC, even though the ML doesn't make it easy..
->>
->> Sorry about that.
->>
->>> On Wed, Apr 16, 2014 at 12:06:59AM +0800, Chen-Yu Tsai wrote:
->>>>>> @@ -139,4 +152,16 @@
->>>>>>        reg_usb2_vbus: usb2-vbus {
->>>>>>                status = "okay";
->>>>>>        };
->>>>>> +
->>>>>> +     rfkill_bt {
->>>>>> +             compatible = "rfkill-gpio";
->>>>>> +             pinctrl-names = "default";
->>>>>> +             pinctrl-0 = <&bt_pwr_pin_cubietruck>, <&clk_out_a_pins_a>;
->>>>>> +             clocks = <&clk_out_a>;
->>>>>> +             clock-frequency = <32768>;
->>>>>> +             gpios = <&pio 7 18 0>; /* PH18 */
->>>>>> +             gpio-names = "reset";
->>>>>> +             rfkill-name = "bt";
->>>>>> +             rfkill-type = <2>;
->>>>>> +     };
->>>>>
->>>>> Hmmm, I don't think that's actually right.
->>>>>
->>>>> If you have such a device, then I'd expect it to be represented as a
->>>>> full device in the DT, probably with one part for the WiFi, one part
->>>>> for the Bluetooth, and here the definition of the rfkill device that
->>>>> controls it.
->>>>
->>>> The AP6210 is not one device, but 2 separate chips in one module. Each
->>>> chip has its own controls and interface. They just so happen to share
->>>> the same enclosure. Even 2-in-1 chips by Broadcom have separate controls
->>>> and interfaces. The WiFi side is most likely connected via SDIO, while
->>>> the Bluetooth side is connected to a UART, and optionally I2S for sound.
->>>
->>> It's even easier to represent then.
->>>
->>>>> But tying parts of the device to the rfkill that controls it, such as
->>>>> the clocks, or the frequency it runs at seems just wrong.
->>>>
->>>> I understand where you're coming from. For devices on buses that require
->>>> drivers (such as USB, SDIO) these properties probably should be tied to
->>>> the device node.
->>>>
->>>> For our use case here, which is a bluetooth chip connected on the UART,
->>>> there is no in kernel representation or driver to tie them to. Same goes
->>>> for UART based GPS chips. They just so happen to require toggling a GPIO,
->>>> and maybe enabling a specific clock, to get it running. Afterwards,
->>>> accessing it is done solely from userspace. For our Broadcom chips, the
->>>> user has to upload its firmware first, then designate the tty as a Bluetooth
->>>> HCI using hciattach.
->>>>
->>>> We are using the rfkill device as a on-off switch.
->>>
->>> I understand your point, but the fact that it's implemented in
->>> user-space, or that UART is not a bus (which probably should be), is
->>> only a Linux specific story, and how it's implemented in Linux (even
->>> if the whole rfkill node is another one, but let's stay on topic).
->>
->> I gave it some thought last night. You are right. My whole approach
->> is wrong. But let's try to make it right.
->>
->> So considering the fact that it's primarily connected to a UART,
->> maybe I should make it a sub-node to the UART node it's actually
->> connected to? Something like:
->>
->>          uart2: serial@01c28800 {
->>                  pinctrl-names = "default";
->>                  pinctrl-0 = <&uart2_pins_a>;
->>                  status = "okay";
->>
->>                  bt: bt_hci {
->>                          compatible = "brcm,bcm20710";
->>                          /* maybe add some generic compatible */
->>                          pinctrl-names = "default";
->>                          pinctrl-0 = <&clk_out_a_pins_a>,
->> <&bt_pwr_pin_cubietruck>;
->>                          clocks = <&clk_out_a>;
->>                          clock-frequency = <32768>;
->>                          gpios = <&pio 7 18 0>; /* PH18 */
->>                  };
->>          };
->>
->> And let the uart core handle power sequencing for sub-nodes.
->
-> Great, I missed this reply when I typed my mail I send a few minutes
-> ago. I agree that this approach is how thing should be.
+Well, from IEEE 1275, there defined a standard 'status' property indicating
+The operational status of one device. The 'status' property has four possible
+values: 'okay/ok', 'disabled', 'fail' and 'fail-xxx'.
 
-Regarding the device tree hierarchy this seems right, but powering the 
-sub-nodes seems outside the realm of uart core.
+If it is absent, that means the status of the device is unknown or okay.
 
-> Regards,
->
-> Hans
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+If discard the status line here in vf610.dtsi, this device will be enabled
+as default though 'no pins route out' on the board, and actually there has
+pins route out on the board, as timer devices here we just not use it, but
+as PWM devices the pins will be used.
+
+How about let the node disabled in vf610.dtsi, and then enable it in vf610-twr.dts
+if it will be used in TWR board... ?
+
+Thanks,
+
+BRs
+Xiubo
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
