@@ -1,63 +1,60 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 0/5] Simple-audio-card support for HP t5325
-Date: Thu, 17 Apr 2014 20:15:06 -0400
-Message-ID: <20140418001506.GW28159@titan.lakedaemon.net>
-References: <1397749994-24983-1-git-send-email-andrew@lunn.ch>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Thu, 17 Apr 2014 19:43:13 -0500
+Message-ID: <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1397749994-24983-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <1397756521-29387-1-git-send-email-leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+On Thu, Apr 17, 2014 at 12:41 PM, Leif Lindholm
+<leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> drivers/of/fdt.c contains a workaround for a missing memory type
+> entry on longtrail firmware. Make that quirk PPC32 only, and while
+> at it - fix up the .dts files in the tree currently working only
+> because of that quirk.
 
-On Thu, Apr 17, 2014 at 05:53:09PM +0200, Andrew Lunn wrote:
-> This patchset allows the Kirkwood based HP t5325 device make use of
-> simple-card to instantiate its audio hardware.
-> 
-> Patch 1 Adds a DT binding to the ALC5623 codec
-> Patch 2 Makes use of this new binding
-> Patch 3 Add fixes up the kirkwood sound node in DT
-> Patch 4 Extends simple-card to support the hw_params() needed
->         when using MVEBU sound hardware.
-> Patch 5 Swaps t5323 to using DT, removing all need for C code.
-> 
-> Andrew Lunn (5):
->   ASoC: alc5623: Add device tree binding
->   ARM: Kirkwood: Use DT to instansiate codec
->   ARM: Kirkwood: DT: Add missing #sound-dai-cells property
->   ASoC: simple-card: Support setting mclk via a fixed factor
->   ARM: Kirkwood: t5325: Use simple-card to instantiate audio
-> 
->  .../devicetree/bindings/sound/alc5623.txt          | 23 ++++++++++++
->  .../devicetree/bindings/sound/simple-card.txt      |  2 ++
+But why do you need this?
 
-Are you alright with taking the above,
+>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>
+> Leif Lindholm (3):
+>   arm: dts: add device_type="memory" for ste-ccu8540
+>   mips: dts: add device_type="memory" where missing
+>   of: Handle memory@0 node on PPC32 only
+>
+>  arch/arm/boot/dts/ste-ccu8540.dts     |    1 +
+>  arch/mips/lantiq/dts/easy50712.dts    |    1 +
+>  arch/mips/ralink/dts/mt7620a_eval.dts |    1 +
+>  arch/mips/ralink/dts/rt2880_eval.dts  |    1 +
+>  arch/mips/ralink/dts/rt3052_eval.dts  |    1 +
+>  arch/mips/ralink/dts/rt3883_eval.dts  |    1 +
 
->  arch/arm/boot/dts/kirkwood-t5325.dts               | 33 +++++++++++++++++
->  arch/arm/boot/dts/kirkwood.dtsi                    |  1 +
->  arch/arm/mach-mvebu/board-t5325.c                  | 41 ----------------------
->  arch/arm/mach-mvebu/board.h                        |  6 ----
->  arch/arm/mach-mvebu/kirkwood.c                     |  3 --
+I'm not worried about these MIPS dts files because they are all
+built-in, but you are breaking compatibility with old dtbs for this
+ARM board.
 
-while I take these,
+Rob
 
->  sound/soc/codecs/alc5623.c                         | 13 +++++++
->  sound/soc/generic/simple-card.c                    | 28 +++++++++++++++
-
-and you take these?
-
-That should be 1 and 4 for you and 2, 3, and 5 for me before Andrew does
-the patch split I asked for in my other response.
-
-thx,
-
-Jason.
-
+>  drivers/of/fdt.c                      |    7 ++++++-
+>  7 files changed, 12 insertions(+), 1 deletion(-)
+>
+> --
+> 1.7.10.4
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
