@@ -1,56 +1,102 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
- probe and defer if needed
-Date: Fri, 18 Apr 2014 13:52:14 -0700
-Message-ID: <20140418205213.GA21823@atomide.com>
-References: <20140320161118.B7075C4067A@trevor.secretlab.ca>
- <1395413185-29763-1-git-send-email-jjhiblot@traphandler.com>
- <1395413185-29763-3-git-send-email-jjhiblot@traphandler.com>
- <CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v5 3/3] ARM: dts: sama5d3xcm: add the regulator device
+ node
+Date: Fri, 18 Apr 2014 23:25:48 +0200
+Message-ID: <5351985C.4090308@atmel.com>
+References: <1387852421-18033-1-git-send-email-wenyou.yang@atmel.com> <1387852570-18159-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1387852570-18159-1-git-send-email-wenyou.yang@atmel.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: broonie@kernel.org, lgirdwood@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com, plagnioj@jcrosoft.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140411 10:33]:
-> On Fri, Mar 21, 2014 at 9:46 AM, Jean-Jacques Hiblot
-> <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org> wrote:
-> > The goal of this patch is to allow drivers to be probed even if at the time of
-> > the DT parsing some of their IRQ ressources are not available yet.
-> >
-> > In the current situation, the IRQ resources of a platform device are filled from
-> > the DT at the time the device is created (of_device_alloc()). The drawback of
-> > this is that a device sitting close to the top of the DT (ahb for example) but
-> > depending on ressources that are initialized later (IRQ domain dynamically
-> > created for example) will fail to probe because the ressources don't exist
-> > at this time.
+On 24/12/2013 03:36, Wenyou Yang :
+> Reviwed-by: Mark Brown <broonie@linaro.org>
+> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+
+Wenyou,
+
+While collecting patches for our next at91-3.16-dt branch I noticed this
+patch that should go on top of the SAMA5D3 CMP board.
+
+I would prefer to create another .dtsi file for CMP board and not mix
+with the current cpu module usual board that does not contain this
+regulator. But well we can do something even more simpler and move this
+PMIC example to the newer SAMA5D3 Xplained board.
+
+So, will it be possible for you to re-send a new patch targeted to
+SAMA5D3 Xplained?
+
+Thanks, bye.
+
+
+> ---
+>  arch/arm/boot/dts/sama5d3xcm.dtsi |   46 +++++++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
 > 
-> s/ressources/resources/
+> diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
+> index 726a0f3..3d4e5c2 100644
+> --- a/arch/arm/boot/dts/sama5d3xcm.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+> @@ -38,6 +38,52 @@
+>  			macb0: ethernet@f0028000 {
+>  				phy-mode = "rgmii";
+>  			};
+> +
+> +			i2c1: i2c@f0018000 {
+> +				pmic: act8865@5b {
+> +					compatible = "active-semi,act8865";
+> +					reg = <0x5b>;
+> +					status = "disabled";
+> +
+> +					regulators {
+> +						vcc_1v8_reg: DCDC_REG1 {
+> +							regulator-name = "VCC_1V8";
+> +							regulator-min-microvolt = <1800000>;
+> +							regulator-max-microvolt = <1800000>;
+> +							regulator-always-on;
+> +						};
+> +
+> +						vcc_1v2_reg: DCDC_REG2 {
+> +							regulator-name = "VCC_1V2";
+> +							regulator-min-microvolt = <1100000>;
+> +							regulator-max-microvolt = <1300000>;
+> +							regulator-suspend-mem-microvolt = <1150000>;
+> +							regulator-suspend-standby-microvolt = <1150000>;
+> +							regulator-always-on;
+> +						};
+> +
+> +						vcc_3v3_reg: DCDC_REG3 {
+> +							regulator-name = "VCC_3V3";
+> +							regulator-min-microvolt = <3300000>;
+> +							regulator-max-microvolt = <3300000>;
+> +							regulator-always-on;
+> +						};
+> +
+> +						vddana_reg: LDO_REG1 {
+> +							regulator-name = "VDDANA";
+> +							regulator-min-microvolt = <3300000>;
+> +							regulator-max-microvolt = <3300000>;
+> +							regulator-always-on;
+> +						};
+> +
+> +						vddfuse_reg: LDO_REG2 {
+> +							regulator-name = "FUSE_2V5";
+> +							regulator-min-microvolt = <2500000>;
+> +							regulator-max-microvolt = <2500000>;
+> +						};
+> +					};
+> +				};
+> +			};
+>  		};
+>  
+>  		nand0: nand@60000000 {
+> 
 
-While I've tested these two patches and they fix the issue for me. I have
-some serious doubts again about this whole ------ up string parsing
-pile of ---- called device tree.
 
-Do we really need to sprinkle more of_* hacks to the irq subsystem?
-
-There's nothing wrong with with the irq subsystem. Platform bus is just
-calling the irq subsystem at the wrong time with uninitialized data.
-
-It seems that we're again papering over the fact that there's nothing
-coordinating the setting up of various resources with device tree.
-That seems to be the repeating never ending pattern as we've already
-seen with GPIOs, pinctrl, and IRQchips. We end up adding all kinds of
-cross subsystem calls that were never needed earlier.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Nicolas Ferre
