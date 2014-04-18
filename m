@@ -1,137 +1,60 @@
-From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCHv3 2/2] ALSA: hda - Add driver for Tegra SoC HDA
-Date: Fri, 18 Apr 2014 14:32:54 -0700
-Message-ID: <CAEUnVG71Bo=4CMDFR2q3=6qC=HsG+-dctxDpR4y6Fd+pXZgFDQ@mail.gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v2] powerpc/fsl: Added binding for Freescale CoreNet
+ coherency fabric (CCF)
+Date: Fri, 18 Apr 2014 16:33:41 -0500
+Message-ID: <1397856821.1694.126.camel@snotra.buserror.net>
+References: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Diana Craciun <diana.craciun@freescale.com>
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 18, 2014 at 1:22 AM, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org> wrote:
-> At Wed, 16 Apr 2014 14:39:32 -0700,
-> Dylan Reid wrote:
->>
->> This adds a driver for the HDA block in Tegra SoCs.  The HDA bus is
->> used to communicate with the HDMI codec on Tegra124.
->>
->> Most of the code is re-used from the Intel/PCI HDA driver.  It brings
->> over only the power_save module parameter.
->>
->> Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
-> Thanks, this looks better, but a few comments below.
-> Besides, I'd like to have a review in DT part.
-
-
-Thanks for looking.  I'll address the comments below and send a v4
-with some more DT maintainers CCed.
-
->
->
->> +/*
->> + * Register access ops. Tegra HDA register access is DWORD only.
->> + */
->> +static void hda_tegra_writel(u32 value, u32 *addr)
->> +{
->> +     writel(value, addr);
->> +}
->> +
->> +static u32 hda_tegra_readl(u32 *addr)
->> +{
->> +     return readl(addr);
->> +}
->> +
->> +static void hda_tegra_writew(u16 value, u16 *addr)
->> +{
->> +     unsigned long shift = ((uintptr_t)(addr) & 0x3) << 3;
->> +     void *dword_addr = (void *)((uintptr_t)(addr) & ~0x3);
->> +     u32 v;
->> +
->> +     v = readl(dword_addr);
->> +     v &= ~(0xffff << shift);
->> +     v |= value << shift;
->> +     writel(v, dword_addr);
->> +}
->
-> The shift doesn't have to be long at all, and the cast in kernel is
-> usually just unsigned long instead of uintptr_t.
->
->
->> +#ifdef CONFIG_PM_SLEEP
->> +/*
->> + * power management
->> + */
->> +static int hda_tegra_suspend(struct device *dev)
->> +{
->> +     struct snd_card *card = dev_get_drvdata(dev);
->> +     struct azx *chip = card->private_data;
->> +     struct azx_pcm *p;
->> +     struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
->> +
->> +     snd_power_change_state(card, SNDRV_CTL_POWER_D3hot);
->> +     list_for_each_entry(p, &chip->pcm_list, list)
->> +             snd_pcm_suspend_all(p->pcm);
->> +     if (chip->initialized)
->> +             snd_hda_suspend(chip->bus);
->> +
->> +     /* enable controller wake up event */
->> +     azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) |
->> +               STATESTS_INT_MASK);
->
-> I guess WAKEEN doesn't work for Tegra?
-
-I'm unsure, but this doesn't belong in the regular resume path, so it
-will disappear in v4.
-
->
->> +
->> +     azx_stop_chip(chip);
->> +     azx_enter_link_reset(chip);
->> +     hda_tegra_disable_clocks(hda);
->> +
->> +     return 0;
->> +}
->> +
->> +static int hda_tegra_resume(struct device *dev)
->> +{
->> +     struct snd_card *card = dev_get_drvdata(dev);
->> +     struct azx *chip = card->private_data;
->> +     struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
->> +     int status;
->> +     struct hda_codec *codec;
->> +
->> +     hda_tegra_enable_clocks(hda);
->> +
->> +     /* Read STATESTS before controller reset */
->> +     status = azx_readw(chip, STATESTS);
->> +
->> +     hda_tegra_init(hda);
->> +
->> +     if (status && chip->bus) {
->> +             list_for_each_entry(codec, &chip->bus->codec_list, list)
->> +                     if (status & (1 << codec->addr))
->> +                             queue_delayed_work(codec->bus->workq,
->> +                                                &codec->jackpoll_work,
->> +                                                codec->jackpoll_interval);
->> +     }
->
-> This is superfluous for the regular resume.  It was some missing call
-> only in the runtime resume.
->
->> +
->> +     /* disable controller Wake Up event*/
->> +     azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) & ~STATESTS_INT_MASK);
->
-> This can be removed like the suspend.
->
->
-> thanks,
->
-> Takashi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCAyMDE0LTA0LTE4IGF0IDE4OjExICswMzAwLCBEaWFuYSBDcmFjaXVuIHdyb3RlOgo+
+IEZyb206IERpYW5hIENyYWNpdW4gPERpYW5hLkNyYWNpdW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBU
+aGUgQ29yZU5ldCBjb2hlcmVuY3kgZmFicmljIGlzIGEgZmFicmljLW9yaWVudGVkLCBjb25lY3Rp
+dml0eQo+IGluZnJhc3RydWN0dXJlIHRoYXQgZW5hYmxlcyB0aGUgaW1wbGVtZW50YXRpb24gb2Yg
+Y29oZXJlbnQsIG11bHRpY29yZQo+IHN5c3RlbXMuIFRoZSBDQ0YgYWN0cyBhcyBhIGNlbnRyYWwg
+aW50ZXJjb25uZWN0IGZvciBjb3JlcywKPiBwbGF0Zm9ybS1sZXZlbCBjYWNoZXMsIG1lbW9yeSBz
+dWJzeXN0ZW0sIHBlcmlwaGVyYWwgZGV2aWNlcyBhbmQgSS9PIGhvc3QKPiBicmlkZ2VzIGluIHRo
+ZSBzeXN0ZW0uCj4gCj4gU2lnbmVkLW9mZi1ieTogRGlhbmEgQ3JhY2l1biA8RGlhbmEuQ3JhY2l1
+bkBmcmVlc2NhbGUuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBj
+L2ZzbC9jY2YudHh0ICAgICAgICB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxl
+IGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2YudHh0Cj4gCj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2Yu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NjZi50
+eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmYwYjcxNDMKPiAtLS0g
+L2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
+cGMvZnNsL2NjZi50eHQKPiBAQCAtMCwwICsxLDM2IEBACj4gK0ZyZWVzY2FsZSBDb3JlTmV0IENv
+aGVyZW5jeSBGYWJyaWMoQ0NGKSBEZXZpY2UgVHJlZSBCaW5kaW5nCj4gKwo+ICtERVNDUklQVElP
+Tgo+ICsKPiArVGhlIENvcmVOZXQgY29oZXJlbmN5IGZhYnJpYyBpcyBhIGZhYnJpYy1vcmllbnRl
+ZCwgY29ubmVjdGl2aXR5IGluZnJhc3RydWN0dXJlCj4gK3RoYXQgZW5hYmxlcyB0aGUgaW1wbGVt
+ZW50YXRpb24gb2YgY29oZXJlbnQsIG11bHRpY29yZSBzeXN0ZW1zLgo+ICsKPiArUmVxdWlyZWQg
+cHJvcGVydGllczoKPiArCj4gKy0gY29tcGF0aWJsZSA6IDxzdHJpbmc+Cj4gKwkJTXVzdCBpbmNs
+dWRlICJmc2wsY29yZW5ldFgtY2YiLCAiZnNsLGNvcmVuZXQtY2YiIC0gQ29yZU5ldCBjb2hlcmVu
+Y3kgCj4gKwkJZmFicmljIHZlcnNpb24gWAoKU3BlY2lmeSAiZnNsLGNvcmVuZXQxLWNmIiBhbmQg
+ImZzbCxjb3JlbmV0Mi1jZiIgcmF0aGVyIHRoYW4KImZzbCxjb3JlbmV0WC1jZiIgKGdpdmVuIHRo
+ZXJlJ3Mgbm90aGluZyBpbiBhIGNoaXAgbWFudWFsIHRoYXQgeW91IGNhbgpjb3JyZWxhdGUgd2l0
+aCB0aGUgdmFsdWUgb2YgWCksIGFuZCBwcm92aWRlIGV4YW1wbGUgY2hpcHMgZm9yIGVhY2guCgpB
+bHNvIHNwZWNpZnkgdGhhdCAiZnNsLGNvcmVuZXQtY2YiIHJlcHJlc2VudHMgdGhlIHJlZ2lzdGVy
+cyB0aGF0IGFyZQpjb21tb24gYmV0d2VlbiB0aGUgdHdvIHZlcnNpb25zIChub3QgYXJiaXRyYXJ5
+ICJmc2wsY29yZW5ldFgtY2YiIC0tIGlmCnRoZXJlJ3MgZXZlciBhbiAiZnNsLGNvcmVuZXQzLWNm
+IiBpdCBtYXkgbm90IGJlIGNvbXBhdGlibGUgd2l0aCB0aGlzKSwKYW5kIGlzIHJldGFpbmVkIGZv
+ciBjb21wYXRpYmlsaXR5IHJlYXNvbnMuCgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4
+cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
+by9saW51eHBwYy1kZXY=
