@@ -1,60 +1,63 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v2] powerpc/fsl: Added binding for Freescale CoreNet
- coherency fabric (CCF)
-Date: Fri, 18 Apr 2014 16:33:41 -0500
-Message-ID: <1397856821.1694.126.camel@snotra.buserror.net>
-References: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
+ probe and defer if needed
+Date: Fri, 18 Apr 2014 16:39:33 -0500
+Message-ID: <CAL_JsqJvVvo6R-qNXxur7wiZERKbi52xyKoWnmzJTfKS2iKK7A@mail.gmail.com>
+References: <20140320161118.B7075C4067A@trevor.secretlab.ca>
+	<1395413185-29763-1-git-send-email-jjhiblot@traphandler.com>
+	<1395413185-29763-3-git-send-email-jjhiblot@traphandler.com>
+	<CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg@mail.gmail.com>
+	<20140418205213.GA21823@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Diana Craciun <diana.craciun@freescale.com>
-Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140418205213.GA21823-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyMDE0LTA0LTE4IGF0IDE4OjExICswMzAwLCBEaWFuYSBDcmFjaXVuIHdyb3RlOgo+
-IEZyb206IERpYW5hIENyYWNpdW4gPERpYW5hLkNyYWNpdW5AZnJlZXNjYWxlLmNvbT4KPiAKPiBU
-aGUgQ29yZU5ldCBjb2hlcmVuY3kgZmFicmljIGlzIGEgZmFicmljLW9yaWVudGVkLCBjb25lY3Rp
-dml0eQo+IGluZnJhc3RydWN0dXJlIHRoYXQgZW5hYmxlcyB0aGUgaW1wbGVtZW50YXRpb24gb2Yg
-Y29oZXJlbnQsIG11bHRpY29yZQo+IHN5c3RlbXMuIFRoZSBDQ0YgYWN0cyBhcyBhIGNlbnRyYWwg
-aW50ZXJjb25uZWN0IGZvciBjb3JlcywKPiBwbGF0Zm9ybS1sZXZlbCBjYWNoZXMsIG1lbW9yeSBz
-dWJzeXN0ZW0sIHBlcmlwaGVyYWwgZGV2aWNlcyBhbmQgSS9PIGhvc3QKPiBicmlkZ2VzIGluIHRo
-ZSBzeXN0ZW0uCj4gCj4gU2lnbmVkLW9mZi1ieTogRGlhbmEgQ3JhY2l1biA8RGlhbmEuQ3JhY2l1
-bkBmcmVlc2NhbGUuY29tPgo+IC0tLQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBj
-L2ZzbC9jY2YudHh0ICAgICAgICB8IDM2ICsrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxl
-IGNoYW5nZWQsIDM2IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2YudHh0Cj4gCj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2Yu
-dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NjZi50
-eHQKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+IGluZGV4IDAwMDAwMDAuLmYwYjcxNDMKPiAtLS0g
-L2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
-cGMvZnNsL2NjZi50eHQKPiBAQCAtMCwwICsxLDM2IEBACj4gK0ZyZWVzY2FsZSBDb3JlTmV0IENv
-aGVyZW5jeSBGYWJyaWMoQ0NGKSBEZXZpY2UgVHJlZSBCaW5kaW5nCj4gKwo+ICtERVNDUklQVElP
-Tgo+ICsKPiArVGhlIENvcmVOZXQgY29oZXJlbmN5IGZhYnJpYyBpcyBhIGZhYnJpYy1vcmllbnRl
-ZCwgY29ubmVjdGl2aXR5IGluZnJhc3RydWN0dXJlCj4gK3RoYXQgZW5hYmxlcyB0aGUgaW1wbGVt
-ZW50YXRpb24gb2YgY29oZXJlbnQsIG11bHRpY29yZSBzeXN0ZW1zLgo+ICsKPiArUmVxdWlyZWQg
-cHJvcGVydGllczoKPiArCj4gKy0gY29tcGF0aWJsZSA6IDxzdHJpbmc+Cj4gKwkJTXVzdCBpbmNs
-dWRlICJmc2wsY29yZW5ldFgtY2YiLCAiZnNsLGNvcmVuZXQtY2YiIC0gQ29yZU5ldCBjb2hlcmVu
-Y3kgCj4gKwkJZmFicmljIHZlcnNpb24gWAoKU3BlY2lmeSAiZnNsLGNvcmVuZXQxLWNmIiBhbmQg
-ImZzbCxjb3JlbmV0Mi1jZiIgcmF0aGVyIHRoYW4KImZzbCxjb3JlbmV0WC1jZiIgKGdpdmVuIHRo
-ZXJlJ3Mgbm90aGluZyBpbiBhIGNoaXAgbWFudWFsIHRoYXQgeW91IGNhbgpjb3JyZWxhdGUgd2l0
-aCB0aGUgdmFsdWUgb2YgWCksIGFuZCBwcm92aWRlIGV4YW1wbGUgY2hpcHMgZm9yIGVhY2guCgpB
-bHNvIHNwZWNpZnkgdGhhdCAiZnNsLGNvcmVuZXQtY2YiIHJlcHJlc2VudHMgdGhlIHJlZ2lzdGVy
-cyB0aGF0IGFyZQpjb21tb24gYmV0d2VlbiB0aGUgdHdvIHZlcnNpb25zIChub3QgYXJiaXRyYXJ5
-ICJmc2wsY29yZW5ldFgtY2YiIC0tIGlmCnRoZXJlJ3MgZXZlciBhbiAiZnNsLGNvcmVuZXQzLWNm
-IiBpdCBtYXkgbm90IGJlIGNvbXBhdGlibGUgd2l0aCB0aGlzKSwKYW5kIGlzIHJldGFpbmVkIGZv
-ciBjb21wYXRpYmlsaXR5IHJlYXNvbnMuCgotU2NvdHQKCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4
-cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5m
-by9saW51eHBwYy1kZXY=
+On Fri, Apr 18, 2014 at 3:52 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140411 10:33]:
+>> On Fri, Mar 21, 2014 at 9:46 AM, Jean-Jacques Hiblot
+>> <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org> wrote:
+>> > The goal of this patch is to allow drivers to be probed even if at the time of
+>> > the DT parsing some of their IRQ ressources are not available yet.
+>> >
+>> > In the current situation, the IRQ resources of a platform device are filled from
+>> > the DT at the time the device is created (of_device_alloc()). The drawback of
+>> > this is that a device sitting close to the top of the DT (ahb for example) but
+>> > depending on ressources that are initialized later (IRQ domain dynamically
+>> > created for example) will fail to probe because the ressources don't exist
+>> > at this time.
+>>
+>> s/ressources/resources/
+>
+> While I've tested these two patches and they fix the issue for me. I have
+> some serious doubts again about this whole ------ up string parsing
+> pile of ---- called device tree.
+>
+> Do we really need to sprinkle more of_* hacks to the irq subsystem?
+>
+> There's nothing wrong with with the irq subsystem. Platform bus is just
+> calling the irq subsystem at the wrong time with uninitialized data.
+
+This patch doesn't even touch the irq subsystem.
+
+> It seems that we're again papering over the fact that there's nothing
+> coordinating the setting up of various resources with device tree.
+> That seems to be the repeating never ending pattern as we've already
+> seen with GPIOs, pinctrl, and IRQchips. We end up adding all kinds of
+> cross subsystem calls that were never needed earlier.
+
+This problem may be made worse with DT, but this problem has existed
+for as long as I have worked on the kernel. It is worse with DT since
+platforms have less control over the init ordering and loose some
+ability to do tricks like changing the initcall levels. We didn't even
+try to do pinctrl in any generic way before DT.
+
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
