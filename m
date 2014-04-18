@@ -1,75 +1,85 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] Devicetree fixes for 3.15
-Date: Fri, 18 Apr 2014 12:08:24 -0500
-Message-ID: <CAL_JsqK2k45hQ_CQTxYpTnW_gq1ougOGipm_QToBKz9T=r4Leg@mail.gmail.com>
+From: John Crispin <john-Pj+rj9U5foFAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 2/3] mips: dts: add device_type="memory" where missing
+Date: Fri, 18 Apr 2014 19:16:34 +0200
+Message-ID: <53515DF2.8060106@phrozen.org>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org> <1397756521-29387-3-git-send-email-leif.lindholm@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397756521-29387-3-git-send-email-leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
 
-Please pull DT fixes for 3.15.
 
-Thanks,
-Rob
+On 17/04/2014 19:42, Leif Lindholm wrote:
+> A few platforms lack a 'device_type = "memory"' for their memory 
+> nodes, relying on an old ppc quirk in order to discover its
+> memory. Add this, to permit that quirk to be made ppc only.
+> 
+> Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> Cc:
+> linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org Cc: John
+> Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org> Cc: Mark Rutland
+> <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 
-The following changes since commit c9eaa447e77efe77b7fa4c953bd62de8297fd6c5:
+Acked-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org?
 
-  Linux 3.15-rc1 (2014-04-13 14:18:35 -0700)
 
-are available in the git repository at:
+Thanks for the cleanup ....
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/dt-fixes-for-3.15
 
-for you to fetch changes up to 20cd477c398decd6a8461ac48609b6c0ab4c7567:
-
-  of: add empty of_find_node_by_path() for !OF (2014-04-18 08:36:10 -0500)
-
-----------------------------------------------------------------
-Devicetree fixes for 3.15:
-- Fix error handling in of_update_property
-- Fix section mismatch warnings in __reserved_mem_check_root
-- Add empty of_find_node_by_path for !OF builds
-- Add various missing binding documentation
-
-----------------------------------------------------------------
-Alexander Shiyan (2):
-      of: Add vendor prefix for Digi International Inc.
-      of: add empty of_find_node_by_path() for !OF
-
-Andrew Lunn (3):
-      DT: bindings: add missing Marvell Kirkwood SoC documentation
-      DT: Vendor: Add prefixes used by Kirkwood devices
-      DT: I2C: Add trivial bindings used by kirkwood boards
-
-Dinh Nguyen (1):
-      dt-bindings: add vendor-prefix for Newhaven Display
-
-Guenter Roeck (1):
-      of: Clean up of_update_property
-
-Javier Martinez Canillas (1):
-      of: add vendor prefix for ISEE 2007 S.L.
-
-Stefan Wahren (1):
-      of: add vendor prefix for I2SE GmbH
-
-Steffen Trumtrar (1):
-      DT: add vendor prefix for EBV Elektronik
-
-Xiubo Li (1):
-      of: Fix the section mismatch warnings.
-
- .../devicetree/bindings/arm/marvell,kirkwood.txt   | 97 ++++++++++++++++++++++
- .../devicetree/bindings/i2c/trivial-devices.txt    | 16 ++++
- .../devicetree/bindings/vendor-prefixes.txt        | 18 +++-
- drivers/of/base.c                                  | 10 +--
- drivers/of/fdt.c                                   |  2 +-
- include/linux/of.h                                 |  5 ++
- 6 files changed, 139 insertions(+), 9 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/marvell,kirkwood.txt
+> --- arch/mips/lantiq/dts/easy50712.dts    |    1 + 
+> arch/mips/ralink/dts/mt7620a_eval.dts |    1 + 
+> arch/mips/ralink/dts/rt2880_eval.dts  |    1 + 
+> arch/mips/ralink/dts/rt3052_eval.dts  |    1 + 
+> arch/mips/ralink/dts/rt3883_eval.dts  |    1 + 5 files changed, 5
+> insertions(+)
+> 
+> diff --git a/arch/mips/lantiq/dts/easy50712.dts
+> b/arch/mips/lantiq/dts/easy50712.dts index fac1f5b..143b8a3 100644 
+> --- a/arch/mips/lantiq/dts/easy50712.dts +++
+> b/arch/mips/lantiq/dts/easy50712.dts @@ -8,6 +8,7 @@ };
+> 
+> memory@0 { +		device_type = "memory"; reg = <0x0 0x2000000>; };
+> 
+> diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts
+> b/arch/mips/ralink/dts/mt7620a_eval.dts index 35eb874..709f581
+> 100644 --- a/arch/mips/ralink/dts/mt7620a_eval.dts +++
+> b/arch/mips/ralink/dts/mt7620a_eval.dts @@ -7,6 +7,7 @@ model =
+> "Ralink MT7620A evaluation board";
+> 
+> memory@0 { +		device_type = "memory"; reg = <0x0 0x2000000>; };
+> 
+> diff --git a/arch/mips/ralink/dts/rt2880_eval.dts
+> b/arch/mips/ralink/dts/rt2880_eval.dts index 322d700..0a685db
+> 100644 --- a/arch/mips/ralink/dts/rt2880_eval.dts +++
+> b/arch/mips/ralink/dts/rt2880_eval.dts @@ -7,6 +7,7 @@ model =
+> "Ralink RT2880 evaluation board";
+> 
+> memory@0 { +		device_type = "memory"; reg = <0x8000000 0x2000000>; 
+> };
+> 
+> diff --git a/arch/mips/ralink/dts/rt3052_eval.dts
+> b/arch/mips/ralink/dts/rt3052_eval.dts index 0ac73ea..ec9e9a0
+> 100644 --- a/arch/mips/ralink/dts/rt3052_eval.dts +++
+> b/arch/mips/ralink/dts/rt3052_eval.dts @@ -7,6 +7,7 @@ model =
+> "Ralink RT3052 evaluation board";
+> 
+> memory@0 { +		device_type = "memory"; reg = <0x0 0x2000000>; };
+> 
+> diff --git a/arch/mips/ralink/dts/rt3883_eval.dts
+> b/arch/mips/ralink/dts/rt3883_eval.dts index 2fa6b33..e8df21a
+> 100644 --- a/arch/mips/ralink/dts/rt3883_eval.dts +++
+> b/arch/mips/ralink/dts/rt3883_eval.dts @@ -7,6 +7,7 @@ model =
+> "Ralink RT3883 evaluation board";
+> 
+> memory@0 { +		device_type = "memory"; reg = <0x0 0x2000000>; };
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
