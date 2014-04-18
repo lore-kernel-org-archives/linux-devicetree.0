@@ -1,62 +1,66 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
-Date: Fri, 18 Apr 2014 21:13:13 +0100
-Message-ID: <20140418201313.GG5904@bivouac.eciton.net>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
- <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
- <20140418124821.GE5904@bivouac.eciton.net>
- <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/8] ARM: at91: sama5d3: enable sound support
+Date: Fri, 18 Apr 2014 22:35:02 +0200
+Message-ID: <53518C76.2020005@atmel.com>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1395049541-28128-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Boris BREZILLON <b.brezillon-ZNYIgs0QAGpBDgjK7y7TUQ@public.gmane.org>
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 18, 2014 at 10:37:58AM -0500, Rob Herring wrote:
-> >> But why do you need this?
-> >
-> > Apart from the current code permitting recreating a 15+ year old
-> > firmware bug into completely new platform ports?
+On 17/03/2014 10:45, Bo Shen :
+> This patch add sound support on sama5d3xek board.
 > 
-> I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
-
-In addition to, or instead of, the QUIRK ifdef?
-
-> Really, I would like to see quirks like this fixed up out of line from
-> the normal flow somewhat like how PCI quirks are handled. So in this
-> example, we would just add the missing property to the dtb for the
-> broken platform before doing the memory scan. That does then require
-> libfdt which is something I'm working on.
-
-Getting rid of all this handling from generic code would clearly be
-preferable. Is that code going in in the near future, or could we add
-the quirk as a stopgap?
-
-> > Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
-> > nodes from the DT. And it would be nice to at least not have to compile
-> > the "and also delete anything called memory@0" into the arm64 image. Or
-> > any image not including support for affected platforms.
+> This patch series based on the following patch set:
+>   clk: at91: better support for the PCKs
+>   http://comments.gmane.org/gmane.linux.kernel/1664477
 > 
-> I don't see why you would handle that in the EFI stub. Given our lack
-> of validation, I can see there is a chance this happens but I think it
-> is pretty small. Given we only have a ARM board, I'd say we are doing
-> surprisingly well.
+> 
+> Bo Shen (5):
+>   ARM: at91: sama5d3: add DMA property for SSC devices
+>   ARM: at91: sama5d3: disable sound by default
+>   ARM: at91: sama5d3: correct the sound compatible string
+>   ARM: at91: sama5d3: add the missing property
+>   ARM: at91: sama5d3: clock for ssc from rk pin
+> 
+> Boris BREZILLON (3):
+>   ASoC: atmel: support CCF based clks
+>   ASoC: atmel: document clock properties of the wm8904 driver
+>   ARM: at91/dt: add clock properties to the wm8904 codec node
 
-I'm not too bothered personally, but Mark Rutland handed me a patch to
-improve the memory node handling in the stub, and he seemed to really
-want this there. You guys can fight it out :)
+Hi Voice and Boris,
 
-What would be the effect of the UEFI code adding all its memblocks,
-minus the reserved areas, and then the DT code doing a memblock_add
-of all RAM (including reserved areas)? Would memblock_reserve()s on
-the protected regions suffice to prevent crazy stuff from happening?
+For this series I am a little bit puzzled: should I take the ASoC part
+of it? I see no acknowledgement from Mark and I also read some messages
+still discussing about CCF and wm8904 afterwards.
 
-/
-    Leif
+So, I take the 5 patches by Voice Shen and tell me what is the proper
+sequence with this wm8904 work.
+
+I will be happy to stack more patches about this topic during the 3.16
+development phase.
+
+
+Otherwise, the 5 patches by Voice go into at91-3.16-dt branch.
+
+Thanks, bye.
+
+
+>  .../devicetree/bindings/sound/atmel-wm8904.txt     |  2 ++
+>  arch/arm/boot/dts/sama5d3.dtsi                     |  6 ++++++
+>  arch/arm/boot/dts/sama5d3xmb.dtsi                  | 11 +++++++++-
+>  sound/soc/atmel/atmel_wm8904.c                     | 25 +++++++++++-----------
+>  4 files changed, 31 insertions(+), 13 deletions(-)
+> 
+
+
+-- 
+Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
