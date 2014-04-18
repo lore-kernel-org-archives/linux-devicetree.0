@@ -1,57 +1,58 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] spi: core: Ignore unsupported Dual/Quad Transfer Mode
- bits
-Date: Fri, 18 Apr 2014 18:26:07 +0100
-Message-ID: <20140418172607.GP12304@sirena.org.uk>
-References: <1397497193-28067-1-git-send-email-geert@linux-m68k.org>
+Subject: Re: [PATCH 4/4] regulator: s5m8767: Use same binding for external
+ control as in s2mps11
+Date: Fri, 18 Apr 2014 18:27:03 +0100
+Message-ID: <20140418172703.GQ12304@sirena.org.uk>
+References: <1397462949-22379-1-git-send-email-k.kozlowski@samsung.com>
+ <1397462949-22379-5-git-send-email-k.kozlowski@samsung.com>
+ <20140414211106.GC12304@sirena.org.uk>
+ <CAK9yfHwL4o7-7Q03dw9JdD1UDsP_v2=we1kadRXaGAuaN1de_g@mail.gmail.com>
+ <1397549539.29169.2.camel@AMDC1943>
+ <CAK9yfHwUwjMEXisi5Jf+nAkS7CLnAUt-REkekns9JrRTAGQ=WQ@mail.gmail.com>
+ <1397552145.29169.17.camel@AMDC1943>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jElBB+g0hITs+cx9"
-Return-path: <linux-sh-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="/bsb8NL1xGjb+j1a"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1397497193-28067-1-git-send-email-geert@linux-m68k.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+In-Reply-To: <1397552145.29169.17.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, Sangbeom Kim <sbkim73@samsung.com>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 
---jElBB+g0hITs+cx9
+--/bsb8NL1xGjb+j1a
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 14, 2014 at 07:39:53PM +0200, Geert Uytterhoeven wrote:
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
->=20
-> The availability of SPI Dual or Quad Transfer Mode as indicated by the
-> "spi-tx-bus-width" and "spi-rx-bus-width" properties in the device tree is
-> a hardware property of the SPI master, SPI slave, and board wiring.  Hence
-> the SPI core should not reject an SPI slave because an SPI master driver
-> doesn't (yet) support Dual or Quad Transfer Mode.
+On Tue, Apr 15, 2014 at 10:55:45AM +0200, Krzysztof Kozlowski wrote:
 
-Applied, thanks.
+> Anyway more drivers seem to use this kind of binding (tps65090, max8952,
+> da9055, arizona) so maybe there is a point in making this generic?
 
---jElBB+g0hITs+cx9
+Yes.
+
+--/bsb8NL1xGjb+j1a
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTUWAsAAoJELSic+t+oim9XqUP/i0hl9S5zGaLJTerphXINOYV
-JpEUhjUSsAggcv0Ur5xmtTL3XimUaWES++qZV4BFZ3Gzh6mErKBCSEYcKZQSEwWm
-IiGpl2ltk4gm8vm/ABquyY1ucG2I0j4EIocVAF20GKhG1t51+sjmN+CperW0Cyu8
-3LBFwBaiX2kQ54ydHun1SyRHaFtK+f/o8nLrBOq7G13i/nxclRBlpNOE8st8PxGF
-rMbF+QhjfD4jDiJXKhN7lOQulROL51dDUOawoHvIE0GbP2Q/Z2O2kNHK+XG6rIuA
-doLvJ9EiyYeWc2HFX2y8VC1xDysMnXfP0ENsG/H1yRCyk0G0fne+mb9nD+znsI9u
-MvyjbI2ZLxyru07VQojO+oIMT4Bj2qtI99scN2Hf6bMgoFrikWaxRGYzNj9B5eIw
-Gebbcb85TuyzRDUVU1X0MLhJg7N1IeNxuVzkiqpoRGcW6NZqzYDZ2ybEzhJSbfrW
-HMasr4mm9pk38GlAYy978eYpMw22aGlXnLZhMbrvSSh0goZlzDRDgoLg1IayLTDB
-YtYoRXMdn8gR6BkEyPf4iCjEP2VkAR/1PqYHRRgvK/8znwRI6YXmji+ILXSEXNLR
-wxLG4E6iUMciRSVzVFuguywe8e4oQzv4+bsvgkyEl6GuwWyPs50iGowJfJLlUha+
-N1zOdHvgqCpex2YBh7Xh
-=xlPO
+iQIcBAEBAgAGBQJTUWBkAAoJELSic+t+oim9978QAIMvncocAH9uIIwBswslfwBi
+EiM6DaMbq515j5Jd/SUjlagyxRGRDTm9T2Z2pl1dgboPe7hLzWqh/3f20ZTkqlWh
+l4rQBG6N4LHG/Ua4cRi0n4km2McFwy69jxnCH9aJfVwF9CGdVm9IxxkjsAh0N9TU
+zxsQGIoK5Y08bvnvCuzqEEQEOgMFd5EUi7jH+xyUIQS5x6/kzTqhn6MEh3bc5IOU
+Gle2OYMrWFBb0xEr0d+8U29WoMpjBvFWrId00n8eoQxaKcXPnR2SC//5MzjVfne7
+SIu1VO6CrHg2HMQgxd2aBYr0259+tL5fP1BBTDGS7GASl1ph77kDmBJ1bv3ixzN8
+08itHPhzCh0YamMbN4/2DWgaKdO43G2SN1z1kJp4VZOyRgi9UKNoagPFoVP3ObT2
+8QN+5edDvp0qkAS3mYcNY0YQFtegWrDFbPntutExvSaj/5B4tNbkRrFc4sVV5ZRw
+XsodmYJKp/b5lyE8cN4kojxTOBZoa9VJD2eivSRzzd8gO/bcQE6BiWAByt6ysEiJ
+fy0btf+MfhSn7kjUt8nt1iu2fuXy+a/NP+kDiZFyGaUbk2M3TLtXisBPI+nbXAls
+hkHZofN+N8CEUsrJ51PoiMfTXpD2Z4sCVcwm5VhfSRo7k5nCXtbouiD/QfmEMju+
+0+65QGUVo8vFLuUpLUqu
+=WgYA
 -----END PGP SIGNATURE-----
 
---jElBB+g0hITs+cx9--
+--/bsb8NL1xGjb+j1a--
