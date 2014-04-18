@@ -1,173 +1,259 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 1/8] usb: host: xhci-plat: Allow to register glue code using the device tree
-Date: Fri, 18 Apr 2014 12:22:36 +0200
-Message-ID: <1397816563-9000-2-git-send-email-gregory.clement@free-electrons.com>
-References: <1397816563-9000-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1397816563-9000-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/8] usb: host: xhci-plat: Add support for the Armada
+ 38x glue code
+Date: Fri, 18 Apr 2014 13:13:39 +0200
+Message-ID: <535108E3.2010208@gmail.com>
+References: <1397816563-9000-1-git-send-email-gregory.clement@free-electrons.com> <1397816563-9000-3-git-send-email-gregory.clement@free-electrons.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397816563-9000-3-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allow to register specific glue code for xhci controller.
-It creates a structure called xhci_plat_ops to register functions
-specific to an SoC. Currently there are only probe() and remove() but
-it can be extended later, it was the point to create such a structure.
+On 04/18/2014 12:22 PM, Gregory CLEMENT wrote:
+> For the armada 38x SoCs which come with an xhci controller, specific
+> initialization must be done during probe, especially in relation with
+> the MBus windows initialization. This patch adds this support.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/usb/host/Kconfig      |   7 +++
+>  drivers/usb/host/Makefile     |   1 +
+>  drivers/usb/host/xhci-mvebu.c | 105 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/host/xhci-mvebu.h |  21 +++++++++
+>  drivers/usb/host/xhci-plat.c  |  10 ++++
+>  5 files changed, 144 insertions(+)
+>  create mode 100644 drivers/usb/host/xhci-mvebu.c
+>  create mode 100644 drivers/usb/host/xhci-mvebu.h
+> 
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index 3d9e54062d62..e70943fac4a1 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -29,6 +29,13 @@ if USB_XHCI_HCD
+>  config USB_XHCI_PLATFORM
+>  	tristate
+>  
+> +config USB_XHCI_MVEBU
+> +	tristate "xHCI support for Marvell Armada 38x"
+> +	select USB_XHCI_PLATFORM
+> +	---help---
+> +	  Say 'Y' to enable the support for the xHCI host controller
+> +	  found in Marvell Armada 38x ARM SOCs.
+> +
+>  endif # USB_XHCI_HCD
+>  
+>  config USB_EHCI_HCD
+> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+> index 7530468c9a4f..7a8db7f7dc01 100644
+> --- a/drivers/usb/host/Makefile
+> +++ b/drivers/usb/host/Makefile
+> @@ -19,6 +19,7 @@ xhci-hcd-$(CONFIG_PCI)	+= xhci-pci.o
+>  
+>  ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
+>  	xhci-hcd-y		+= xhci-plat.o
+> +	xhci-hcd-$(CONFIG_USB_XHCI_MVEBU)	+= xhci-mvebu.o
+>  endif
+>  
+>  obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
+> diff --git a/drivers/usb/host/xhci-mvebu.c b/drivers/usb/host/xhci-mvebu.c
+> new file mode 100644
+> index 000000000000..dc9c7648ab65
+> --- /dev/null
+> +++ b/drivers/usb/host/xhci-mvebu.c
+> @@ -0,0 +1,105 @@
+> +/*
+> + * Copyright (C) 2014 Marvell
+> + * Author: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/mbus.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +
+> +#include "xhci.h"
+> +
+> +#define USB3_MAX_WINDOWS	4
+> +#define USB3_WIN_CTRL(w)	(0x0 + ((w) * 8))
+> +#define USB3_WIN_BASE(w)	(0x4 + ((w) * 8))
+> +
+> +static void __init mv_usb3_conf_mbus_windows(void __iomem *base,
+> +			const struct mbus_dram_target_info *dram)
+> +{
+> +	int win;
+> +
+> +	/* Clear all existing windows */
+> +	for (win = 0; win < USB3_MAX_WINDOWS; win++) {
+> +		writel(0, base + USB3_WIN_CTRL(win));
+> +		writel(0, base + USB3_WIN_BASE(win));
+> +	}
+> +
+> +	/* Program each DRAM CS in a seperate window */
+> +	for (win = 0; win < dram->num_cs; win++) {
+> +		const struct mbus_dram_window *cs = dram->cs + win;
+> +
+> +		writel(((cs->size - 1) & 0xffff0000) | (cs->mbus_attr << 8) |
+> +		       (dram->mbus_dram_target_id << 4) | 1,
+> +		       base + USB3_WIN_CTRL(win));
+> +
+> +		writel((cs->base & 0xffff0000), base + USB3_WIN_BASE(win));
+> +	}
+> +}
+> +
+> +int xhci_mvebu_probe(struct platform_device *pdev)
+> +{
+> +	struct resource	*res;
+> +	void __iomem	*base;
+> +	const struct mbus_dram_target_info *dram;
+> +	int ret;
+> +	struct clk *clk;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	if (!res)
+> +		return -ENODEV;
+> +
+> +	/*
+> +	 * We don't use devm_ioremap() because this mapping should
+> +	 * only exists for the duration of this probe function.
+> +	 */
+> +	base = ioremap(res->start, resource_size(res));
+> +	if (!base)
+> +		return -ENODEV;
+> +
+> +	clk = devm_clk_get(&pdev->dev, NULL);
+> +	if (IS_ERR(clk)) {
+> +		iounmap(base);
+> +		return PTR_ERR(clk);
+> +	}
+> +
+> +	ret = clk_prepare_enable(clk);
+> +	if (ret < 0) {
+> +		iounmap(base);
+> +		return ret;
+> +	}
+> +
+> +	dram = mv_mbus_dram_info();
+> +	mv_usb3_conf_mbus_windows(base, dram);
+> +
+> +	/*
+> +	 * This memory area was only needed to configure the MBus
+> +	 * windows, and is therefore no longer useful.
+> +	 */
+> +	iounmap(base);
+> +
+> +	ret = common_xhci_plat_probe(pdev, clk);
+> +	if (ret < 0) {
+> +		clk_disable_unprepare(clk);
+> +		return ret;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +int xhci_mvebu_remove(struct platform_device *pdev)
+> +{
+> +	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +	struct clk *clk = xhci->priv;
+> +
+> +	common_xhci_plat_remove(pdev);
+> +	clk_disable_unprepare(clk);
+> +
+> +	return 0;
+> +}
+> diff --git a/drivers/usb/host/xhci-mvebu.h b/drivers/usb/host/xhci-mvebu.h
+> new file mode 100644
+> index 000000000000..897ef298f22f
+> --- /dev/null
+> +++ b/drivers/usb/host/xhci-mvebu.h
+> @@ -0,0 +1,21 @@
+> +/*
+> + * Copyright (C) 2014 Marvell
+> + *
+> + * Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2.  This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#ifndef __LINUX_XHCI_MVEBU_H
+> +#define __LINUX_XHCI_MVEBU_H
+> +
+> +#ifdef CONFIG_USB_XHCI_MVEBU
+> +int xhci_mvebu_probe(struct platform_device *pdev);
+> +int xhci_mvebu_remove(struct platform_device *pdev);
+> +#else
+> +#define xhci_mvebu_probe NULL
+> +#define xhci_mvebu_remove NULL
+> +#endif
+> +#endif /* __LINUX_XHCI_MVEBU_H */
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 8029cc82edc4..f1261d3848a9 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/of_device.h>
+>  
+>  #include "xhci.h"
+> +#include "xhci-mvebu.h"
+>  
+>  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  {
+> @@ -250,6 +251,11 @@ static const struct dev_pm_ops xhci_plat_pm_ops = {
+>  #endif /* CONFIG_PM */
+>  
+>  #ifdef CONFIG_OF
 
-Each compatible string can then be associated to an instance of this
-structure. In the non device tree case a default structure is used.
+Gregory,
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/usb/host/xhci-plat.c | 72 +++++++++++++++++++++++++++++++++++++++++---
- drivers/usb/host/xhci.h      |  4 +++
- 2 files changed, 72 insertions(+), 4 deletions(-)
+either you should #ifndef CONFIG_USB_XHCI_MVEBU this and the one below -
+or even better:
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 151901ce1ba9..8029cc82edc4 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -16,6 +16,7 @@
- #include <linux/slab.h>
- #include <linux/of.h>
- #include <linux/dma-mapping.h>
-+#include <linux/of_device.h>
- 
- #include "xhci.h"
- 
-@@ -85,7 +86,7 @@ static const struct hc_driver xhci_plat_xhci_driver = {
- 	.bus_resume =		xhci_bus_resume,
- };
- 
--static int xhci_plat_probe(struct platform_device *pdev)
-+int common_xhci_plat_probe(struct platform_device *pdev, void *priv)
- {
- 	const struct hc_driver	*driver;
- 	struct xhci_hcd		*xhci;
-@@ -145,6 +146,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	/* USB 2.0 roothub is stored in the platform_device now. */
- 	hcd = platform_get_drvdata(pdev);
- 	xhci = hcd_to_xhci(hcd);
-+	xhci->priv = priv;
- 	xhci->shared_hcd = usb_create_shared_hcd(driver, &pdev->dev,
- 			dev_name(&pdev->dev), hcd);
- 	if (!xhci->shared_hcd) {
-@@ -185,7 +187,7 @@ put_hcd:
- 	return ret;
- }
- 
--static int xhci_plat_remove(struct platform_device *dev)
-+int common_xhci_plat_remove(struct platform_device *dev)
- {
- 	struct usb_hcd	*hcd = platform_get_drvdata(dev);
- 	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-@@ -202,6 +204,26 @@ static int xhci_plat_remove(struct platform_device *dev)
- 	return 0;
- }
- 
-+static int default_xhci_plat_probe(struct platform_device *pdev)
-+{
-+	return common_xhci_plat_probe(pdev, NULL);
-+}
-+
-+static int default_xhci_plat_remove(struct platform_device *pdev)
-+{
-+	return common_xhci_plat_remove(pdev);
-+}
-+
-+struct xhci_plat_ops {
-+	int (*probe)(struct platform_device *);
-+	int (*remove)(struct platform_device *);
-+};
-+
-+static struct xhci_plat_ops xhci_plat_default = {
-+	.probe = default_xhci_plat_probe,
-+	.remove =  default_xhci_plat_remove,
-+};
-+
- #ifdef CONFIG_PM
- static int xhci_plat_suspend(struct device *dev)
- {
-@@ -229,13 +251,55 @@ static const struct dev_pm_ops xhci_plat_pm_ops = {
- 
- #ifdef CONFIG_OF
- static const struct of_device_id usb_xhci_of_match[] = {
--	{ .compatible = "generic-xhci" },
--	{ .compatible = "xhci-platform" },
-+	{
-+		.compatible = "generic-xhci",
-+		.data = (void *) &xhci_plat_default,
-+	},
-+	{
-+		.compatible = "xhci-platform",
-+		.data = (void *) &xhci_plat_default,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
- #endif
- 
-+static int xhci_plat_probe(struct platform_device *pdev)
-+{
-+	const struct xhci_plat_ops *plat_of = &xhci_plat_default;
-+
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match =
-+			of_match_device(usb_xhci_of_match, &pdev->dev);
-+		if (!match)
-+			return -ENODEV;
-+		plat_of = match->data;
-+	}
-+
-+	if (!plat_of || !plat_of->probe)
-+		return  -ENODEV;
-+
-+	return plat_of->probe(pdev);
-+}
-+
-+static int xhci_plat_remove(struct platform_device *pdev)
-+{
-+	const struct xhci_plat_ops *plat_of = &xhci_plat_default;
-+
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match =
-+			of_match_device(usb_xhci_of_match, &pdev->dev);
-+		if (!match)
-+			return -ENODEV;
-+		plat_of = match->data;
-+	}
-+
-+	if (!plat_of || !plat_of->remove)
-+		return  -ENODEV;
-+
-+	return plat_of->remove(pdev);
-+}
-+
- static struct platform_driver usb_xhci_driver = {
- 	.probe	= xhci_plat_probe,
- 	.remove	= xhci_plat_remove,
-diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-index d280e9213d08..96dd3df3dd8c 100644
---- a/drivers/usb/host/xhci.h
-+++ b/drivers/usb/host/xhci.h
-@@ -1461,6 +1461,7 @@ struct xhci_hcd {
- 	__u32		hcc_params;
- 
- 	spinlock_t	lock;
-+	void           *priv;
- 
- 	/* packed release number */
- 	u8		sbrn;
-@@ -1597,6 +1598,9 @@ static inline struct usb_hcd *xhci_to_hcd(struct xhci_hcd *xhci)
- 	return xhci->main_hcd;
- }
- 
-+int common_xhci_plat_probe(struct platform_device *pdev, void *priv);
-+int common_xhci_plat_remove(struct platform_device *dev);
-+
- #define xhci_dbg(xhci, fmt, args...) \
- 	dev_dbg(xhci_to_hcd(xhci)->self.controller , fmt , ## args)
- #define xhci_err(xhci, fmt, args...) \
--- 
-1.8.1.2
+Can you put driver stub with its of_match_table right into xhci-mvebu?
+That way platform specific probe wouldn't pollute the generic driver.
+
+Greg will have a better opinion about it, but I remember some cleanup
+in ehci, that basically removed platform specific references from the
+generic code.
+
+> +struct xhci_plat_ops xhci_plat_mvebu = {
+> +	.probe =  xhci_mvebu_probe,
+> +	.remove =  xhci_mvebu_remove,
+> +};
+> +
+>  static const struct of_device_id usb_xhci_of_match[] = {
+>  	{
+>  		.compatible = "generic-xhci",
+> @@ -259,6 +265,10 @@ static const struct of_device_id usb_xhci_of_match[] = {
+>  		.compatible = "xhci-platform",
+>  		.data = (void *) &xhci_plat_default,
+>  	},
+> +	{
+> +		.compatible = "marvell,xhci-armada-380",
+
+nit: the ususal order we use on mvebu is "marvell,<soc>-<ip>", so this
+should be "marvell,armada-380-xhci".
+
+Sebastian
+
+> +		.data = (void *) &xhci_plat_mvebu,
+> +	},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
