@@ -1,46 +1,47 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/3] of: Handle memory@0 node on PPC32 only
-Date: Fri, 18 Apr 2014 15:11:03 +0200
-Message-ID: <CAMuHMdUYisn2ejxd_SJ3LDsCgVKkPPT4hgS0-2znm=VFyfMDeQ@mail.gmail.com>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-	<1397756521-29387-4-git-send-email-leif.lindholm@linaro.org>
-	<CAMuHMdXBNWum7UJ95uT2hwTd1b5C8ebF2LQ4T-A+RS80p7MH=A@mail.gmail.com>
-	<20140418125924.GF5904@bivouac.eciton.net>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH 3/3] net: hisilicon: new hip04 ethernet driver
+Date: Fri, 18 Apr 2014 21:17:52 +0800
+Message-ID: <53512600.6020902@linaro.org>
+References: <1396672506-9296-1-git-send-email-zhangfei.gao@linaro.org>	<1396672506-9296-4-git-send-email-zhangfei.gao@linaro.org> <20140407.145356.928382660541891827.davem@davemloft.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140418125924.GF5904@bivouac.eciton.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@linaro.org, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140407.145356.928382660541891827.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: linux@arm.linux.org.uk, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hei Leif,
+Dear David
 
-On Fri, Apr 18, 2014 at 2:59 PM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> On Fri, Apr 18, 2014 at 10:04:15AM +0200, Geert Uytterhoeven wrote:
->> On Thu, Apr 17, 2014 at 7:42 PM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
->> > In order to deal with an firmware bug on a specific ppc32 platform
->> > (longtrail), early_init_dt_scan_memory() looks for a node called
->> > memory@0 on all platforms. Restrict this quirk to ppc32 kernels only.
->>
->> This breaks backwards compatibilty with old DTSes (at least on ARM/MIPS,
->> where you added the missing property in patches 1 and 2 of the series)?
+On 04/08/2014 02:53 AM, David Miller wrote:
+
+>> +static void hip04_tx_reclaim(struct net_device *ndev, bool force)
+>   ...
+>> +static void hip04_xmit_timer(unsigned long data)
+>> +{
+>> +	struct net_device *ndev = (void *) data;
+>> +
+>> +	hip04_tx_reclaim(ndev, false);
+>> +}
+>   ...
+>> +	mod_timer(&priv->txtimer, jiffies + RECLAIM_PERIOD);
 >
-> As Rob said in response to 0/3, the MIPSs would likely not be affected,
-> since they embed the DT.
+> And this is where I stop reading your driver, I've stated already that this
+> kind of reclaim scheme is unacceptable.
 >
-> How about the below v2 3/3 to address the ARM platform?
+> The kernel timers lack the granularity necessary to service TX reclaim
+> with a reasonable amount of latency.
+>
+> You must use some kind of hardware notification of TX slots becomming
+> available, I find it totally impossible that a modern ethernet controller
+> was created without a TX done interrupt.
+>
 
-Looks fine to me, thanks!
+There is no tx_done interrupt, we may need some workaround.
 
-Gr{oetje,eeting}s,
+Is it acceptable to use poll to reclaim the xmitted buffer.
+And in the xmit calling napi_schedule.
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Thanks
