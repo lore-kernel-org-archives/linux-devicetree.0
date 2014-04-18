@@ -1,53 +1,116 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
-Date: Fri, 18 Apr 2014 13:48:22 +0100
-Message-ID: <20140418124821.GE5904@bivouac.eciton.net>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
- <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 02/11] clk: at91: update main clk documentation
+Date: Fri, 18 Apr 2014 14:49:36 +0200
+Message-ID: <53511F60.3040301@atmel.com>
+References: <1395649643-9146-1-git-send-email-b.brezillon.dev@gmail.com> <1395649643-9146-3-git-send-email-b.brezillon.dev@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1395649643-9146-3-git-send-email-b.brezillon.dev@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <brezillonboris@gmail.com>, Mike Turquette <mturquette@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <b.brezillon.dev@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 17, 2014 at 07:43:13PM -0500, Rob Herring wrote:
-> On Thu, Apr 17, 2014 at 12:41 PM, Leif Lindholm
-> <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > drivers/of/fdt.c contains a workaround for a missing memory type
-> > entry on longtrail firmware. Make that quirk PPC32 only, and while
-> > at it - fix up the .dts files in the tree currently working only
-> > because of that quirk.
+On 24/03/2014 09:27, Boris BREZILLON :
+> Update main clk documentation to match main clk implementation rework.
 > 
-> But why do you need this?
-
-Apart from the current code permitting recreating a 15+ year old
-firmware bug into completely new platform ports?
-
-Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
-nodes from the DT. And it would be nice to at least not have to compile
-the "and also delete anything called memory@0" into the arm64 image. Or
-any image not including support for affected platforms.
-
-> >  arch/arm/boot/dts/ste-ccu8540.dts     |    1 +
-> >  arch/mips/lantiq/dts/easy50712.dts    |    1 +
-> >  arch/mips/ralink/dts/mt7620a_eval.dts |    1 +
-> >  arch/mips/ralink/dts/rt2880_eval.dts  |    1 +
-> >  arch/mips/ralink/dts/rt3052_eval.dts  |    1 +
-> >  arch/mips/ralink/dts/rt3883_eval.dts  |    1 +
+> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+> ---
+>  .../devicetree/bindings/clock/at91-clock.txt       |   56 ++++++++++++++++----
+>  1 file changed, 47 insertions(+), 9 deletions(-)
 > 
-> I'm not worried about these MIPS dts files because they are all
-> built-in, but you are breaking compatibility with old dtbs for this
-> ARM board.
+> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
+> index cd5e239..9a7025b 100644
+> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
+> @@ -15,8 +15,13 @@ Required properties:
+>  		All at91 specific clocks (clocks defined below) must be child
+>  		node of the PMC node.
+>  
+> +	"atmel,at91rm9200-clk-main-osc"
+> +	"atmel,at91sam9x5-clk-main-rc-osc"
+> +		at91 main clk sources
+> +
+> +	"atmel,at91sam9x5-clk-main"
+>  	"atmel,at91rm9200-clk-main":
+> -		at91 main oscillator
+> +		at91 main clock
+>  
+>  	"atmel,at91rm9200-clk-master" or
+>  	"atmel,at91sam9x5-clk-master":
+> @@ -85,24 +90,57 @@ For example:
+>  		/* put at91 clocks here */
+>  	};
+>  
+> +Required properties for main clock oscillator:
+> +- interrupt-parent : must reference the PMC node.
+> +- interrupts : shall be set to "<0>".
+> +- clock-frequency : define the internal RC oscillator frequency.
+> +
+> +Optional properties:
+> +- clock-accuracy : define the internal RC oscillator accuracy.
+> +
+> +For example:
+> +	main_rc_osc: main_rc_osc {
+> +		compatible = "atmel,at91sam9x5-clk-main-rc-osc";
+> +		interrupt-parent = <&pmc>;
+> +		interrupts = <0>;
+> +		clock-frequency = <12000000>;
+> +		clock-accuracy = <50000000>;
+> +	};
 
-Yeah, sorry. Sending out a v2 of part 3 shortly.
+Don't you swapped this example above with the description below?
 
-/
-    Leif
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> +Required properties for main clock internal RC oscillator:
+> +- interrupt-parent : must reference the PMC node.
+> +- interrupts : shall be set to "<0>".
+> +- #clock-cells : from common clock binding; shall be set to 0.
+> +- clocks : shall encode the main osc source clk sources (see atmel datasheet).
+> +
+> +Optional properties:
+> +- atmel,osc-bypass : boolean property. Specified if a clock signal is provided
+> +  on XIN.
+> +
+> +  clock signal is directly provided on XIN pin.
+> +
+> +For example:
+> +	main_osc: main_osc {
+> +		compatible = "atmel,at91rm9200-clk-main-osc";
+> +		interrupt-parent = <&pmc>;
+> +		interrupts = <0>;
+> +		#clock-cells = <0>;
+> +		clocks = <&main_xtal>;
+> +	};
+> +
+>  Required properties for main clock:
+>  - interrupt-parent : must reference the PMC node.
+>  - interrupts : shall be set to "<0>".
+>  - #clock-cells : from common clock binding; shall be set to 0.
+> -- clocks (optional if clock-frequency is provided) : shall be the slow clock
+> -	phandle. This clock is used to calculate the main clock rate if
+> -	"clock-frequency" is not provided.
+> -- clock-frequency : the main oscillator frequency.Prefer the use of
+> -	"clock-frequency" over automatic clock rate calculation.
+> +- clocks : shall encode the main clk sources (see atmel datasheet).
+>  
+>  For example:
+>  	main: mainck {
+> -		compatible = "atmel,at91rm9200-clk-main";
+> +		compatible = "atmel,at91sam9x5-clk-main";
+>  		interrupt-parent = <&pmc>;
+>  		interrupts = <0>;
+>  		#clock-cells = <0>;
+> -		clocks = <&ck32k>;
+> -		clock-frequency = <18432000>;
+> +		clocks = <&main_rc_osc &main_osc>;
+>  	};
+>  
+>  Required properties for master clock:
+> 
+
+
+-- 
+Nicolas Ferre
