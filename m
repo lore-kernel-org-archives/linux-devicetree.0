@@ -1,102 +1,75 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v5 3/3] ARM: dts: sama5d3xcm: add the regulator device
- node
-Date: Fri, 18 Apr 2014 23:25:48 +0200
-Message-ID: <5351985C.4090308@atmel.com>
-References: <1387852421-18033-1-git-send-email-wenyou.yang@atmel.com> <1387852570-18159-1-git-send-email-wenyou.yang@atmel.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Fri, 18 Apr 2014 16:28:17 -0500
+Message-ID: <CAL_Jsq+L14rgYq5swC3H109DThiyDajmTJpO=y562jcE97K-fg@mail.gmail.com>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
+	<CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+	<20140418124821.GE5904@bivouac.eciton.net>
+	<CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
+	<20140418201313.GG5904@bivouac.eciton.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1387852570-18159-1-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: broonie@kernel.org, lgirdwood@gmail.com, grant.likely@linaro.org, rob.herring@calxeda.com, plagnioj@jcrosoft.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140418201313.GG5904-t77nlHhSwNqAroYi2ySoxKxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 24/12/2013 03:36, Wenyou Yang :
-> Reviwed-by: Mark Brown <broonie@linaro.org>
-> Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+On Fri, Apr 18, 2014 at 3:13 PM, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, Apr 18, 2014 at 10:37:58AM -0500, Rob Herring wrote:
+>> >> But why do you need this?
+>> >
+>> > Apart from the current code permitting recreating a 15+ year old
+>> > firmware bug into completely new platform ports?
+>>
+>> I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
+>
+> In addition to, or instead of, the QUIRK ifdef?
 
-Wenyou,
+Instead of because I don't see how you handle the ARM board
+compatibility with the ifdef. (And please, no ifdef for that board).
 
-While collecting patches for our next at91-3.16-dt branch I noticed this
-patch that should go on top of the SAMA5D3 CMP board.
+>> Really, I would like to see quirks like this fixed up out of line from
+>> the normal flow somewhat like how PCI quirks are handled. So in this
+>> example, we would just add the missing property to the dtb for the
+>> broken platform before doing the memory scan. That does then require
+>> libfdt which is something I'm working on.
+>
+> Getting rid of all this handling from generic code would clearly be
+> preferable. Is that code going in in the near future, or could we add
+> the quirk as a stopgap?
 
-I would prefer to create another .dtsi file for CMP board and not mix
-with the current cpu module usual board that does not contain this
-regulator. But well we can do something even more simpler and move this
-PMIC example to the newer SAMA5D3 Xplained board.
+Some sort of quirk infrastructure is not going to happen soon. It's
+just an idea bouncing in my head ATM.
 
-So, will it be possible for you to re-send a new patch targeted to
-SAMA5D3 Xplained?
+>> > Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
+>> > nodes from the DT. And it would be nice to at least not have to compile
+>> > the "and also delete anything called memory@0" into the arm64 image. Or
+>> > any image not including support for affected platforms.
+>>
+>> I don't see why you would handle that in the EFI stub. Given our lack
+>> of validation, I can see there is a chance this happens but I think it
+>> is pretty small. Given we only have a ARM board, I'd say we are doing
+>> surprisingly well.
+>
+> I'm not too bothered personally, but Mark Rutland handed me a patch to
+> improve the memory node handling in the stub, and he seemed to really
+> want this there. You guys can fight it out :)
 
-Thanks, bye.
+Simply put, we shouldn't put work-arounds in new code for new platforms.
 
+> What would be the effect of the UEFI code adding all its memblocks,
+> minus the reserved areas, and then the DT code doing a memblock_add
+> of all RAM (including reserved areas)? Would memblock_reserve()s on
+> the protected regions suffice to prevent crazy stuff from happening?
 
-> ---
->  arch/arm/boot/dts/sama5d3xcm.dtsi |   46 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
-> index 726a0f3..3d4e5c2 100644
-> --- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-> @@ -38,6 +38,52 @@
->  			macb0: ethernet@f0028000 {
->  				phy-mode = "rgmii";
->  			};
-> +
-> +			i2c1: i2c@f0018000 {
-> +				pmic: act8865@5b {
-> +					compatible = "active-semi,act8865";
-> +					reg = <0x5b>;
-> +					status = "disabled";
-> +
-> +					regulators {
-> +						vcc_1v8_reg: DCDC_REG1 {
-> +							regulator-name = "VCC_1V8";
-> +							regulator-min-microvolt = <1800000>;
-> +							regulator-max-microvolt = <1800000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vcc_1v2_reg: DCDC_REG2 {
-> +							regulator-name = "VCC_1V2";
-> +							regulator-min-microvolt = <1100000>;
-> +							regulator-max-microvolt = <1300000>;
-> +							regulator-suspend-mem-microvolt = <1150000>;
-> +							regulator-suspend-standby-microvolt = <1150000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vcc_3v3_reg: DCDC_REG3 {
-> +							regulator-name = "VCC_3V3";
-> +							regulator-min-microvolt = <3300000>;
-> +							regulator-max-microvolt = <3300000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vddana_reg: LDO_REG1 {
-> +							regulator-name = "VDDANA";
-> +							regulator-min-microvolt = <3300000>;
-> +							regulator-max-microvolt = <3300000>;
-> +							regulator-always-on;
-> +						};
-> +
-> +						vddfuse_reg: LDO_REG2 {
-> +							regulator-name = "FUSE_2V5";
-> +							regulator-min-microvolt = <2500000>;
-> +							regulator-max-microvolt = <2500000>;
-> +						};
-> +					};
-> +				};
-> +			};
->  		};
->  
->  		nand0: nand@60000000 {
-> 
+So use UEFI to add the memory, but then add reserved areas with DT?
+I'm not sure I follow, but even if I did I don't know memblock code
+well enough to say what it would do.
 
-
--- 
-Nicolas Ferre
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
