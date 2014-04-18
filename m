@@ -1,117 +1,412 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH 1/2] dt-bindings: clock: Move at91.h to dt-bindigs/clock
-Date: Fri, 18 Apr 2014 17:53:25 +0200
-Message-ID: <53514A75.2030908@atmel.com>
-References: <1394085884-13081-1-git-send-email-tushar.behera@linaro.org> <1394085884-13081-2-git-send-email-tushar.behera@linaro.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [RESEND PATCH v3 1/9] tty: xuartps: Fix kernel-doc errors in the
+ driver
+Date: Fri, 18 Apr 2014 09:11:28 -0700
+Message-ID: <c1835108-0033-4219-89e9-2f02c82b1e27@VA3EHSMHS026.ehs.local>
+References: <1396657425-31029-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1394085884-13081-2-git-send-email-tushar.behera@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1396657425-31029-1-git-send-email-soren.brinkmann@xilinx.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@maxim.org.za, plagnioj@jcrosoft.com, kgene.kim@samsung.com, t.figa@samsung.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
+Cc: Peter Crosthwaite <peter.crosthwaite@xilinx.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2014 07:04, Tushar Behera :
-> Most of the clock related dt-binding header files are located in
-> dt-bindings/clock folder. It would be good to keep all the similar
-> header files at a single location.
-> 
-> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
-> CC: Rob Landley <rob@landley.net>
-> CC: Andrew Victor <linux@maxim.org.za>
-> CC: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>
+Hi Greg,
 
-I have just added at91sam9261 and at91sam9rl which appeared in 3.15
-merge window and stacked this patch on top of at91-3.15-fixes.
+did you have a chance to look at this yet?
 
-I hope that it will be accepted for 3.15.
+	Thanks,
+	S=C3=B6ren
 
-Bye,
-
-
+On Fri, 2014-04-04 at 05:23PM -0700, Soren Brinkmann wrote:
+> From: Michal Simek <michal.simek@xilinx.com>
+>=20
+> No functional changes.
+>=20
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 > ---
->  .../devicetree/bindings/clock/at91-clock.txt       |    2 +-
->  arch/arm/boot/dts/sama5d3.dtsi                     |    2 +-
->  arch/arm/boot/dts/sama5d3_mci2.dtsi                |    2 +-
->  arch/arm/boot/dts/sama5d3_tcb1.dtsi                |    2 +-
->  arch/arm/boot/dts/sama5d3_uart.dtsi                |    2 +-
->  include/dt-bindings/{clk => clock}/at91.h          |    0
->  6 files changed, 5 insertions(+), 5 deletions(-)
->  rename include/dt-bindings/{clk => clock}/at91.h (100%)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/at91-clock.txt b/Documentation/devicetree/bindings/clock/at91-clock.txt
-> index cd5e239..6794cdc 100644
-> --- a/Documentation/devicetree/bindings/clock/at91-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/at91-clock.txt
-> @@ -62,7 +62,7 @@ Required properties for PMC node:
->  - interrupt-controller : tell that the PMC is an interrupt controller.
->  - #interrupt-cells : must be set to 1. The first cell encodes the interrupt id,
->  	and reflect the bit position in the PMC_ER/DR/SR registers.
-> -	You can use the dt macros defined in dt-bindings/clk/at91.h.
-> +	You can use the dt macros defined in dt-bindings/clock/at91.h.
->  	0 (AT91_PMC_MOSCS) -> main oscillator ready
->  	1 (AT91_PMC_LOCKA) -> PLL A ready
->  	2 (AT91_PMC_LOCKB) -> PLL B ready
-> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
-> index 3d5faf8..8c977b5 100644
-> --- a/arch/arm/boot/dts/sama5d3.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3.dtsi
-> @@ -13,7 +13,7 @@
->  #include <dt-bindings/pinctrl/at91.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
->  #include <dt-bindings/gpio/gpio.h>
-> -#include <dt-bindings/clk/at91.h>
-> +#include <dt-bindings/clock/at91.h>
->  
->  / {
->  	model = "Atmel SAMA5D3 family SoC";
-> diff --git a/arch/arm/boot/dts/sama5d3_mci2.dtsi b/arch/arm/boot/dts/sama5d3_mci2.dtsi
-> index b029fe7..1b02208 100644
-> --- a/arch/arm/boot/dts/sama5d3_mci2.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3_mci2.dtsi
-> @@ -9,7 +9,7 @@
->  
->  #include <dt-bindings/pinctrl/at91.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> -#include <dt-bindings/clk/at91.h>
-> +#include <dt-bindings/clock/at91.h>
->  
->  / {
->  	ahb {
-> diff --git a/arch/arm/boot/dts/sama5d3_tcb1.dtsi b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-> index 382b044..0284845 100644
-> --- a/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3_tcb1.dtsi
-> @@ -9,7 +9,7 @@
->  
->  #include <dt-bindings/pinctrl/at91.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> -#include <dt-bindings/clk/at91.h>
-> +#include <dt-bindings/clock/at91.h>
->  
->  / {
->  	aliases {
-> diff --git a/arch/arm/boot/dts/sama5d3_uart.dtsi b/arch/arm/boot/dts/sama5d3_uart.dtsi
-> index a9fa75e..7a8d4c6 100644
-> --- a/arch/arm/boot/dts/sama5d3_uart.dtsi
-> +++ b/arch/arm/boot/dts/sama5d3_uart.dtsi
-> @@ -9,7 +9,7 @@
->  
->  #include <dt-bindings/pinctrl/at91.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> -#include <dt-bindings/clk/at91.h>
-> +#include <dt-bindings/clock/at91.h>
->  
->  / {
->  	aliases {
-> diff --git a/include/dt-bindings/clk/at91.h b/include/dt-bindings/clock/at91.h
-> similarity index 100%
-> rename from include/dt-bindings/clk/at91.h
-> rename to include/dt-bindings/clock/at91.h
-> 
+>=20
+> Changes in v3: None
+> Changes in v2:
+>  - this patch has been added
+>=20
+> ---
+>  drivers/tty/serial/xilinx_uartps.c | 109 +++++++++++++++++----------=
+----------
+>  1 file changed, 49 insertions(+), 60 deletions(-)
+>=20
+> diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/=
+xilinx_uartps.c
+> index f619ad5b5eae..b2f929e48ddd 100644
+> --- a/drivers/tty/serial/xilinx_uartps.c
+> +++ b/drivers/tty/serial/xilinx_uartps.c
+> @@ -163,11 +163,11 @@ MODULE_PARM_DESC(rx_timeout, "Rx timeout, 1-255=
+");
+> =20
+>  /**
+>   * struct xuartps - device data
+> - * @port		Pointer to the UART port
+> - * @refclk		Reference clock
+> - * @aperclk		APB clock
+> - * @baud		Current baud rate
+> - * @clk_rate_change_nb	Notifier block for clock changes
+> + * @port:		Pointer to the UART port
+> + * @refclk:		Reference clock
+> + * @aperclk:		APB clock
+> + * @baud:		Current baud rate
+> + * @clk_rate_change_nb:	Notifier block for clock changes
+>   */
+>  struct xuartps {
+>  	struct uart_port	*port;
+> @@ -183,8 +183,8 @@ struct xuartps {
+>   * @irq: Irq number
+>   * @dev_id: Id of the port
+>   *
+> - * Returns IRQHANDLED
+> - **/
+> + * Return: IRQHANDLED
+> + */
+>  static irqreturn_t xuartps_isr(int irq, void *dev_id)
+>  {
+>  	struct uart_port *port =3D (struct uart_port *)dev_id;
+> @@ -325,7 +325,7 @@ static irqreturn_t xuartps_isr(int irq, void *dev=
+_id)
+>   * @rbdiv: BDIV value (return value)
+>   * @rcd: CD value (return value)
+>   * @div8: Value for clk_sel bit in mod (return value)
+> - * Returns baud rate, requested baud when possible, or actual baud w=
+hen there
+> + * Return: baud rate, requested baud when possible, or actual baud w=
+hen there
+>   *	was too much error, zero if no valid divisors are found.
+>   *
+>   * Formula to obtain baud rate is
+> @@ -384,7 +384,7 @@ static unsigned int xuartps_calc_baud_divs(unsign=
+ed int clk, unsigned int baud,
+>   * xuartps_set_baud_rate - Calculate and set the baud rate
+>   * @port: Handle to the uart port structure
+>   * @baud: Baud rate to set
+> - * Returns baud rate, requested baud when possible, or actual baud w=
+hen there
+> + * Return: baud rate, requested baud when possible, or actual baud w=
+hen there
+>   *	   was too much error, zero if no valid divisors are found.
+>   */
+>  static unsigned int xuartps_set_baud_rate(struct uart_port *port,
+> @@ -419,7 +419,7 @@ static unsigned int xuartps_set_baud_rate(struct =
+uart_port *port,
+>   * @nb:		Notifier block
+>   * @event:	Notify event
+>   * @data:	Notifier data
+> - * Returns NOTIFY_OK on success, NOTIFY_BAD on error.
+> + * Return: NOTIFY_OK on success, NOTIFY_BAD on error.
+>   */
+>  static int xuartps_clk_notifier_cb(struct notifier_block *nb,
+>  		unsigned long event, void *data)
+> @@ -514,8 +514,7 @@ static int xuartps_clk_notifier_cb(struct notifie=
+r_block *nb,
+>  /**
+>   * xuartps_start_tx -  Start transmitting bytes
+>   * @port: Handle to the uart port structure
+> - *
+> - **/
+> + */
+>  static void xuartps_start_tx(struct uart_port *port)
+>  {
+>  	unsigned int status, numbytes =3D port->fifosize;
+> @@ -562,8 +561,7 @@ static void xuartps_start_tx(struct uart_port *po=
+rt)
+>  /**
+>   * xuartps_stop_tx - Stop TX
+>   * @port: Handle to the uart port structure
+> - *
+> - **/
+> + */
+>  static void xuartps_stop_tx(struct uart_port *port)
+>  {
+>  	unsigned int regval;
+> @@ -577,8 +575,7 @@ static void xuartps_stop_tx(struct uart_port *por=
+t)
+>  /**
+>   * xuartps_stop_rx - Stop RX
+>   * @port: Handle to the uart port structure
+> - *
+> - **/
+> + */
+>  static void xuartps_stop_rx(struct uart_port *port)
+>  {
+>  	unsigned int regval;
+> @@ -593,8 +590,8 @@ static void xuartps_stop_rx(struct uart_port *por=
+t)
+>   * xuartps_tx_empty -  Check whether TX is empty
+>   * @port: Handle to the uart port structure
+>   *
+> - * Returns TIOCSER_TEMT on success, 0 otherwise
+> - **/
+> + * Return: TIOCSER_TEMT on success, 0 otherwise
+> + */
+>  static unsigned int xuartps_tx_empty(struct uart_port *port)
+>  {
+>  	unsigned int status;
+> @@ -608,8 +605,7 @@ static unsigned int xuartps_tx_empty(struct uart_=
+port *port)
+>   *			transmitting char breaks
+>   * @port: Handle to the uart port structure
+>   * @ctl: Value based on which start or stop decision is taken
+> - *
+> - **/
+> + */
+>  static void xuartps_break_ctl(struct uart_port *port, int ctl)
+>  {
+>  	unsigned int status;
+> @@ -636,8 +632,7 @@ static void xuartps_break_ctl(struct uart_port *p=
+ort, int ctl)
+>   * @port: Handle to the uart port structure
+>   * @termios: Handle to the input termios structure
+>   * @old: Values of the previously saved termios structure
+> - *
+> - **/
+> + */
+>  static void xuartps_set_termios(struct uart_port *port,
+>  				struct ktermios *termios, struct ktermios *old)
+>  {
+> @@ -761,8 +756,8 @@ static void xuartps_set_termios(struct uart_port =
+*port,
+>   * xuartps_startup - Called when an application opens a xuartps port
+>   * @port: Handle to the uart port structure
+>   *
+> - * Returns 0 on success, negative error otherwise
+> - **/
+> + * Return: 0 on success, negative error otherwise
+> + */
+>  static int xuartps_startup(struct uart_port *port)
+>  {
+>  	unsigned int retval =3D 0, status =3D 0;
+> @@ -824,8 +819,7 @@ static int xuartps_startup(struct uart_port *port=
+)
+>  /**
+>   * xuartps_shutdown - Called when an application closes a xuartps po=
+rt
+>   * @port: Handle to the uart port structure
+> - *
+> - **/
+> + */
+>  static void xuartps_shutdown(struct uart_port *port)
+>  {
+>  	int status;
+> @@ -844,8 +838,8 @@ static void xuartps_shutdown(struct uart_port *po=
+rt)
+>   * xuartps_type - Set UART type to xuartps port
+>   * @port: Handle to the uart port structure
+>   *
+> - * Returns string on success, NULL otherwise
+> - **/
+> + * Return: string on success, NULL otherwise
+> + */
+>  static const char *xuartps_type(struct uart_port *port)
+>  {
+>  	return port->type =3D=3D PORT_XUARTPS ? XUARTPS_NAME : NULL;
+> @@ -856,8 +850,8 @@ static const char *xuartps_type(struct uart_port =
+*port)
+>   * @port: Handle to the uart port structure
+>   * @ser: Handle to the structure whose members are compared
+>   *
+> - * Returns 0 if success otherwise -EINVAL
+> - **/
+> + * Return: 0 if success otherwise -EINVAL
+> + */
+>  static int xuartps_verify_port(struct uart_port *port,
+>  					struct serial_struct *ser)
+>  {
+> @@ -880,8 +874,8 @@ static int xuartps_verify_port(struct uart_port *=
+port,
+>   *				uart_add_one_port()
+>   * @port: Handle to the uart port structure
+>   *
+> - * Returns 0, -ENOMEM if request fails
+> - **/
+> + * Return: 0, -ENOMEM if request fails
+> + */
+>  static int xuartps_request_port(struct uart_port *port)
+>  {
+>  	if (!request_mem_region(port->mapbase, XUARTPS_REGISTER_SPACE,
+> @@ -903,8 +897,7 @@ static int xuartps_request_port(struct uart_port =
+*port)
+>   *				port, called when the driver removes a xuartps
+>   *				port via uart_remove_one_port().
+>   * @port: Handle to the uart port structure
+> - *
+> - **/
+> + */
+>  static void xuartps_release_port(struct uart_port *port)
+>  {
+>  	release_mem_region(port->mapbase, XUARTPS_REGISTER_SPACE);
+> @@ -917,8 +910,7 @@ static void xuartps_release_port(struct uart_port=
+ *port)
+>   *				xuartps port
+>   * @port: Handle to the uart port structure
+>   * @flags: If any
+> - *
+> - **/
+> + */
+>  static void xuartps_config_port(struct uart_port *port, int flags)
+>  {
+>  	if (flags & UART_CONFIG_TYPE && xuartps_request_port(port) =3D=3D 0=
+)
+> @@ -930,9 +922,8 @@ static void xuartps_config_port(struct uart_port =
+*port, int flags)
+>   *
+>   * @port: Handle to the uart port structure
+>   *
+> - * Returns the modem control state
+> - *
+> - **/
+> + * Return: the modem control state
+> + */
+>  static unsigned int xuartps_get_mctrl(struct uart_port *port)
+>  {
+>  	return TIOCM_CTS | TIOCM_DSR | TIOCM_CAR;
+> @@ -1040,8 +1031,8 @@ static struct uart_port xuartps_port[2];
+>   * xuartps_get_port - Configure the port from the platform device re=
+source
+>   *			info
+>   *
+> - * Returns a pointer to a uart_port or NULL for failure
+> - **/
+> + * Return: a pointer to a uart_port or NULL for failure
+> + */
+>  static struct uart_port *xuartps_get_port(void)
+>  {
+>  	struct uart_port *port;
+> @@ -1078,8 +1069,7 @@ static struct uart_port *xuartps_get_port(void)
+>  /**
+>   * xuartps_console_wait_tx - Wait for the TX to be full
+>   * @port: Handle to the uart port structure
+> - *
+> - **/
+> + */
+>  static void xuartps_console_wait_tx(struct uart_port *port)
+>  {
+>  	while ((xuartps_readl(XUARTPS_SR_OFFSET) & XUARTPS_SR_TXEMPTY)
+> @@ -1091,8 +1081,7 @@ static void xuartps_console_wait_tx(struct uart=
+_port *port)
+>   * xuartps_console_putchar - write the character to the FIFO buffer
+>   * @port: Handle to the uart port structure
+>   * @ch: Character to be written
+> - *
+> - **/
+> + */
+>  static void xuartps_console_putchar(struct uart_port *port, int ch)
+>  {
+>  	xuartps_console_wait_tx(port);
+> @@ -1101,10 +1090,10 @@ static void xuartps_console_putchar(struct ua=
+rt_port *port, int ch)
+> =20
+>  /**
+>   * xuartps_console_write - perform write operation
+> - * @port: Handle to the uart port structure
+> + * @co: Console handle
+>   * @s: Pointer to character array
+>   * @count: No of characters
+> - **/
+> + */
+>  static void xuartps_console_write(struct console *co, const char *s,
+>  				unsigned int count)
+>  {
+> @@ -1151,8 +1140,8 @@ static void xuartps_console_write(struct consol=
+e *co, const char *s,
+>   * @co: Console handle
+>   * @options: Initial settings of uart
+>   *
+> - * Returns 0, -ENODEV if no device
+> - **/
+> + * Return: 0, -ENODEV if no device
+> + */
+>  static int __init xuartps_console_setup(struct console *co, char *op=
+tions)
+>  {
+>  	struct uart_port *port =3D &xuartps_port[co->index];
+> @@ -1190,8 +1179,8 @@ static struct console xuartps_console =3D {
+>  /**
+>   * xuartps_console_init - Initialization call
+>   *
+> - * Returns 0 on success, negative error otherwise
+> - **/
+> + * Return: 0 on success, negative error otherwise
+> + */
+>  static int __init xuartps_console_init(void)
+>  {
+>  	register_console(&xuartps_console);
+> @@ -1221,7 +1210,7 @@ static struct uart_driver xuartps_uart_driver =3D=
+ {
+>   * xuartps_suspend - suspend event
+>   * @device: Pointer to the device structure
+>   *
+> - * Returns 0
+> + * Return: 0
+>   */
+>  static int xuartps_suspend(struct device *device)
+>  {
+> @@ -1269,7 +1258,7 @@ static int xuartps_suspend(struct device *devic=
+e)
+>   * xuartps_resume - Resume after a previous suspend
+>   * @device: Pointer to the device structure
+>   *
+> - * Returns 0
+> + * Return: 0
+>   */
+>  static int xuartps_resume(struct device *device)
+>  {
+> @@ -1336,8 +1325,8 @@ static SIMPLE_DEV_PM_OPS(xuartps_dev_pm_ops, xu=
+artps_suspend, xuartps_resume);
+>   * xuartps_probe - Platform driver probe
+>   * @pdev: Pointer to the platform device structure
+>   *
+> - * Returns 0 on success, negative error otherwise
+> - **/
+> + * Return: 0 on success, negative error otherwise
+> + */
+>  static int xuartps_probe(struct platform_device *pdev)
+>  {
+>  	int rc;
+> @@ -1437,8 +1426,8 @@ err_out_clk_dis_aper:
+>   * xuartps_remove - called when the platform driver is unregistered
+>   * @pdev: Pointer to the platform device structure
+>   *
+> - * Returns 0 on success, negative error otherwise
+> - **/
+> + * Return: 0 on success, negative error otherwise
+> + */
+>  static int xuartps_remove(struct platform_device *pdev)
+>  {
+>  	struct uart_port *port =3D platform_get_drvdata(pdev);
+> @@ -1481,8 +1470,8 @@ static struct platform_driver xuartps_platform_=
+driver =3D {
+>  /**
+>   * xuartps_init - Initial driver registration call
+>   *
+> - * Returns whether the registration was successful or not
+> - **/
+> + * Return: whether the registration was successful or not
+> + */
+>  static int __init xuartps_init(void)
+>  {
+>  	int retval =3D 0;
+> @@ -1502,7 +1491,7 @@ static int __init xuartps_init(void)
+> =20
+>  /**
+>   * xuartps_exit - Driver unregistration call
+> - **/
+> + */
+>  static void __exit xuartps_exit(void)
+>  {
+>  	/* The order of unregistration is important. Unregister the
+> --=20
+> 1.9.1.1.gbb9f595
+>=20
+>=20
 
-
--- 
-Nicolas Ferre
