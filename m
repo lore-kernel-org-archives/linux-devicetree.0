@@ -1,148 +1,52 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 4/8] ARM: mvebu: Add USB3 UTMI support
-Date: Fri, 18 Apr 2014 14:19:49 +0200
-Message-ID: <53511865.701@free-electrons.com>
-References: <1397816563-9000-1-git-send-email-gregory.clement@free-electrons.com> <1397816563-9000-5-git-send-email-gregory.clement@free-electrons.com> <53510A4D.8050706@gmail.com>
+From: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: [PATCH 3/6] net/fsl_pq_mdio: Document supported compatibles
+Date: Fri, 18 Apr 2014 07:21:30 -0500
+Message-ID: <1397823693-27977-3-git-send-email-Shruti@Freescale.com>
+References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53510A4D.8050706-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1397823693-27977-1-git-send-email-Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+The device tree binding(s) document has fallen out of sync with the
+driver code. Update the list of supported devices to reflect current
+driver capabilities
 
-On 18/04/2014 13:19, Sebastian Hesselbarth wrote:
-> On 04/18/2014 12:22 PM, Gregory CLEMENT wrote:
->> The usb3-utmi registers allow to configure the internal USB PHY of the
->> Armada 380/385 SoCs. A small initialization is needed to be able to use
->> the USB3 ports.
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  arch/arm/mach-mvebu/Makefile   |  2 +-
->>  arch/arm/mach-mvebu/usb-utmi.c | 64 ++++++++++++++++++++++++++++++++++++++++++
-> 
-> Gregory,
-> 
-> there is the generic PHY framework, that could possibly be used to
-> avoid adding more code to arch/arm/mach-mvebu.
+Signed-off-by: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/net/fsl-tsec-phy.txt | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-Given the very low information I have about UTMI I was a bit reluctant to
-write a driver. This is, for me, more a platform specific initialization than
-something which can be used for a driver. However I will have a look on it.
-
-> 
->>  2 files changed, 65 insertions(+), 1 deletion(-)
->>  create mode 100644 arch/arm/mach-mvebu/usb-utmi.c
->>
->> diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
->> index a63e43b6b451..2d98a3eeecf6 100644
->> --- a/arch/arm/mach-mvebu/Makefile
->> +++ b/arch/arm/mach-mvebu/Makefile
->> @@ -4,7 +4,7 @@ ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include \
->>  AFLAGS_coherency_ll.o		:= -Wa,-march=armv7-a
->>  
->>  obj-y				 += system-controller.o mvebu-soc-id.o
->> -obj-$(CONFIG_MACH_MVEBU_V7)      += board-v7.o
->> +obj-$(CONFIG_MACH_MVEBU_V7)      += board-v7.o  usb-utmi.o
->>  obj-$(CONFIG_MACH_DOVE)		 += dove.o
->>  obj-$(CONFIG_ARCH_MVEBU)	 += coherency.o coherency_ll.o pmsu.o
->>  obj-$(CONFIG_SMP)                += platsmp.o headsmp.o
->> diff --git a/arch/arm/mach-mvebu/usb-utmi.c b/arch/arm/mach-mvebu/usb-utmi.c
->> new file mode 100644
->> index 000000000000..e91e86f85eb4
->> --- /dev/null
->> +++ b/arch/arm/mach-mvebu/usb-utmi.c
->> @@ -0,0 +1,64 @@
->> +/*
->> + * USB UTMI support for Armada 38x platform.
->> + *
->> + * Copyright (C) 2014 Marvell
->> + *
->> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> + *
->> + * This file is licensed under the terms of the GNU General Public
->> + * License version 2.  This program is licensed "as is" without any
->> + * warranty of any kind, whether express or implied.
->> + *
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/init.h>
->> +#include <linux/of_address.h>
->> +#include <linux/io.h>
->> +#include <linux/slab.h>
-> 
-> nit: sort alphabetically
-
-Right
-
-> 
->> +#define USB_UTMI_PHY_CTRL_STATUS(i)	(0x20+i*4)
->> +#define		USB_UTMI_TX_BITSTUFF_EN BIT(1)
->> +#define		USB_UTMI_PU_PHY		BIT(5)
->> +#define		USB_UTMI_VBUS_ON_PHY	BIT(6)
-> 
-> nit: two TABs in front of the defines above.
-
-Right
-
-> 
->> +static struct of_device_id of_usb_utmi_table[] = {
->> +	{ .compatible = "marvell,armada-380-usb-utmi", },
->> +	{ /* end of list */ },
->> +};
->> +
->> +static int __init mvebu_usb_utmi_init(void)
->> +{
->> +	struct device_node *np;
->> +
->> +	np = of_find_matching_node(NULL, of_usb_utmi_table);
->> +	if (np) {
->> +		void __iomem *usb_utmi_base, *utmi_base;
->> +
->> +		usb_utmi_base = of_iomap(np, 0);
->> +		BUG_ON(!usb_utmi_base);
->> +
->> +		utmi_base = of_iomap(np, 1);
->> +		BUG_ON(!utmi_base);
->> +
->> +		writel(USB_UTMI_TX_BITSTUFF_EN |
->> +			   USB_UTMI_PU_PHY |
->> +			   USB_UTMI_VBUS_ON_PHY,
->> +			   usb_utmi_base + USB_UTMI_PHY_CTRL_STATUS(0));
->> +
->> +		/*
->> +		 * Magic init... the registers and their value are not
->> +		 * documented
->> +		 */
->> +		writel(0x40605205, utmi_base);
->> +		writel(0x409, utmi_base + 4);
->> +		writel(0x1be7f6f, utmi_base + 0xc);
-> 
-> nit: decimal/hexadecimal offsets, also IMHO filling the values
-
-OK
-
-> written with leading zeros improves readability of "magic init"
-> alot :)
-
-Well it still remains magic! But I will do it.
-
-Thanks,
-
-Gregory
-
-
+diff --git a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+index d2ea460..14b72fc 100644
+--- a/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
++++ b/Documentation/devicetree/bindings/net/fsl-tsec-phy.txt
+@@ -8,7 +8,16 @@ of how to define a PHY.
+ Required properties:
+   - reg : Offset and length of the register set for the device
+   - compatible : Should define the compatible device type for the
+-    mdio.  Currently, this is most likely to be "fsl,gianfar-mdio"
++    mdio. Currently supported strings/devices are:
++	- "fsl,gianfar-tbi"
++	- "fsl,gianfar-mdio"
++	- "fsl,etsec2-tbi"
++	- "fsl,etsec2-mdio"
++	- "fsl,ucc-mdio"
++	- "fsl,fman-mdio"
++    When device_type is "mdio", the following strings are also considered:
++	- "gianfar"
++	- "ucc_geth_phy"
+ 
+ Example:
+ 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.8.3.1
+
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
