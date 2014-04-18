@@ -1,7 +1,7 @@
 From: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/6] powerpc/corenet: Enable muxing MDIO buses via FPGA
-Date: Fri, 18 Apr 2014 07:21:29 -0500
-Message-ID: <1397823693-27977-2-git-send-email-Shruti@Freescale.com>
+Subject: [PATCH 5/6] powerpc/corenet: Add DPAA FMan support to the SoC device tree(s)
+Date: Fri, 18 Apr 2014 07:21:32 -0500
+Message-ID: <1397823693-27977-5-git-send-email-Shruti@Freescale.com>
 References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,53 +12,780 @@ To: scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org
 Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andy Fleming <afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Shaohui Xie <Shaohui.Xie-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+FMan 1 Gb/s MACs (dTSEC and mEMAC) have support for SGMII PHYs.
+Add support for the internal SerDes TBI PHYs
+
+Based on prior work by Andy Fleming <afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
 Signed-off-by: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 ---
- arch/powerpc/configs/corenet32_smp_defconfig  | 1 +
- arch/powerpc/configs/corenet64_smp_defconfig  | 1 +
- arch/powerpc/platforms/85xx/corenet_generic.c | 3 +++
- 3 files changed, 5 insertions(+)
+ arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  28 +++++
+ arch/powerpc/boot/dts/fsl/b4si-post.dtsi    |  51 +++++++++
+ arch/powerpc/boot/dts/fsl/p1023si-post.dtsi |  14 +++
+ arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |  64 ++++++++++++
+ arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |  64 ++++++++++++
+ arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 104 +++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |  64 ++++++++++++
+ arch/powerpc/boot/dts/fsl/p5040si-post.dtsi | 128 +++++++++++++++++++++++
+ arch/powerpc/boot/dts/fsl/t4240si-post.dtsi | 154 ++++++++++++++++++++++++++++
+ 9 files changed, 671 insertions(+)
 
-diff --git a/arch/powerpc/configs/corenet32_smp_defconfig b/arch/powerpc/configs/corenet32_smp_defconfig
-index 548b21c..132d9f6 100644
---- a/arch/powerpc/configs/corenet32_smp_defconfig
-+++ b/arch/powerpc/configs/corenet32_smp_defconfig
-@@ -104,6 +104,7 @@ CONFIG_AT803X_PHY=y
- CONFIG_FIXED_PHY=y
- CONFIG_MDIO_BUS_MUX=y
- CONFIG_MDIO_BUS_MUX_GPIO=y
-+CONFIG_MDIO_BUS_MUX_MMIOREG=y
- # CONFIG_INPUT_MOUSEDEV is not set
- # CONFIG_INPUT_KEYBOARD is not set
- # CONFIG_INPUT_MOUSE is not set
-diff --git a/arch/powerpc/configs/corenet64_smp_defconfig b/arch/powerpc/configs/corenet64_smp_defconfig
-index cbe7afb..b355552 100644
---- a/arch/powerpc/configs/corenet64_smp_defconfig
-+++ b/arch/powerpc/configs/corenet64_smp_defconfig
-@@ -99,6 +99,7 @@ CONFIG_E1000E=y
- CONFIG_MDIO_BUS_MUX=y
- CONFIG_MDIO_BUS_MUX_GPIO=y
- CONFIG_INPUT_FF_MEMLESS=m
-+CONFIG_MDIO_BUS_MUX_MMIOREG=y
- # CONFIG_INPUT_MOUSEDEV is not set
- # CONFIG_INPUT_KEYBOARD is not set
- # CONFIG_INPUT_MOUSE is not set
-diff --git a/arch/powerpc/platforms/85xx/corenet_generic.c b/arch/powerpc/platforms/85xx/corenet_generic.c
-index dc9e24e..814faae 100644
---- a/arch/powerpc/platforms/85xx/corenet_generic.c
-+++ b/arch/powerpc/platforms/85xx/corenet_generic.c
-@@ -80,6 +80,9 @@ static const struct of_device_id of_device_ids[] = {
- 		.compatible	= "mdio-mux-gpio"
- 	},
- 	{
-+		.compatible	= "fsl,fpga-ngpixis"
-+	},
-+	{
- 		.compatible	= "fsl,srio",
- 	},
- 	{
+diff --git a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
+index cbc354b..45b0ff5 100644
+--- a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
+@@ -172,6 +172,34 @@
+ 		compatible = "fsl,b4860-rcpm", "fsl,qoriq-rcpm-2.0";
+ 	};
+ 
++/include/ "qoriq-fman3-0-1g-4.dtsi"
++/include/ "qoriq-fman3-0-1g-5.dtsi"
++/include/ "qoriq-fman3-0-10g-0.dtsi"
++/include/ "qoriq-fman3-0-10g-1.dtsi"
++	fman@400000 {
++		ethernet@e8000 {
++			tbi-handle = <&tbi4>;
++		};
++
++		mdio@e9000 {
++			tbi4: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@ea000 {
++			tbi-handle = <&tbi5>;
++		};
++
++		mdio@eb000 {
++			tbi5: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
++
+ 	L2: l2-cache-controller@c20000 {
+ 		compatible = "fsl,b4860-l2-cache-controller";
+ 	};
+diff --git a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+index 4f6e482..e59d6ae 100644
+--- a/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/b4si-post.dtsi
+@@ -260,6 +260,57 @@
+ /include/ "qoriq-duart-1.dtsi"
+ /include/ "qoriq-sec5.3-0.dtsi"
+ 
++/include/ "qoriq-fman3-0.dtsi"
++/include/ "qoriq-fman3-0-1g-0.dtsi"
++/include/ "qoriq-fman3-0-1g-1.dtsi"
++/include/ "qoriq-fman3-0-1g-2.dtsi"
++/include/ "qoriq-fman3-0-1g-3.dtsi"
++	fman@400000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi0>;
++		};
++
++		mdio@e1000 {
++			tbi0: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi1>;
++		};
++
++		mdio@e3000 {
++			tbi1: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi2>;
++		};
++
++		mdio@e5000 {
++			tbi2: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi3>;
++		};
++
++		mdio@e7000 {
++			tbi3: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
++
+ 	L2: l2-cache-controller@c20000 {
+ 		compatible = "fsl,b4-l2-cache-controller";
+ 		reg = <0xc20000 0x1000>;
+diff --git a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
+index 81437fd..01fd153 100644
+--- a/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p1023si-post.dtsi
+@@ -226,4 +226,18 @@
+ 		reg = <0xe0000 0x1000>;
+ 		fsl,has-rstcr;
+ 	};
++
++	fman@100000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x100000 0x100000>;
++		compatible = "simple-bus";
++
++		mdio@e1120 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "fsl,fman-mdio";
++			reg = <0xe1120 0xee0>;
++		};
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+index e2987a3..6f3836e 100644
+--- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+@@ -449,4 +449,68 @@
+ crypto: crypto@300000 {
+ 		fsl,iommu-parent = <&pamu1>;
+ 	};
++
++/include/ "qoriq-fman-0.dtsi"
++/include/ "qoriq-fman-0-1g-0.dtsi"
++/include/ "qoriq-fman-0-1g-1.dtsi"
++/include/ "qoriq-fman-0-1g-2.dtsi"
++/include/ "qoriq-fman-0-1g-3.dtsi"
++/include/ "qoriq-fman-0-1g-4.dtsi"
++/include/ "qoriq-fman-0-10g-0.dtsi"
++	fman@400000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi0>;
++		};
++
++		mdio@e1120 {
++			tbi0: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi1>;
++		};
++
++		mdio@e3120 {
++			tbi1: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi2>;
++		};
++
++		mdio@e5120 {
++			tbi2: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi3>;
++		};
++
++		mdio@e7120 {
++			tbi3: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e8000 {
++			tbi-handle = <&tbi4>;
++		};
++
++		mdio@e9120 {
++			tbi4: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+index 7af6d45..6a9ba00 100644
+--- a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+@@ -477,4 +477,68 @@
+ crypto: crypto@300000 {
+ 		fsl,iommu-parent = <&pamu1>;
+ 	};
++
++/include/ "qoriq-fman-0.dtsi"
++/include/ "qoriq-fman-0-1g-0.dtsi"
++/include/ "qoriq-fman-0-1g-1.dtsi"
++/include/ "qoriq-fman-0-1g-2.dtsi"
++/include/ "qoriq-fman-0-1g-3.dtsi"
++/include/ "qoriq-fman-0-1g-4.dtsi"
++/include/ "qoriq-fman-0-10g-0.dtsi"
++	fman@400000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi0>;
++		};
++
++		mdio@e1120 {
++			tbi0: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi1>;
++		};
++
++		mdio@e3120 {
++			tbi1: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi2>;
++		};
++
++		mdio@e5120 {
++			tbi2: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi3>;
++		};
++
++		mdio@e7120 {
++			tbi3: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e8000 {
++			tbi-handle = <&tbi4>;
++		};
++
++		mdio@e9120 {
++			tbi4: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+index 2415e1f..e63823d 100644
+--- a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+@@ -533,4 +533,108 @@
+ crypto: crypto@300000 {
+ 		fsl,iommu-parent = <&pamu1>;
+ 	};
++
++/include/ "qoriq-fman-0.dtsi"
++/include/ "qoriq-fman-0-1g-0.dtsi"
++/include/ "qoriq-fman-0-1g-1.dtsi"
++/include/ "qoriq-fman-0-1g-2.dtsi"
++/include/ "qoriq-fman-0-1g-3.dtsi"
++/include/ "qoriq-fman-0-10g-0.dtsi"
++	fman@400000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi0>;
++		};
++
++		mdio@e1120 {
++			tbi0: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi1>;
++		};
++
++		mdio@e3120 {
++			tbi1: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi2>;
++		};
++
++		mdio@e5120 {
++			tbi2: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi3>;
++		};
++
++		mdio@e7120 {
++			tbi3: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
++
++/include/ "qoriq-fman-1.dtsi"
++/include/ "qoriq-fman-1-1g-0.dtsi"
++/include/ "qoriq-fman-1-1g-1.dtsi"
++/include/ "qoriq-fman-1-1g-2.dtsi"
++/include/ "qoriq-fman-1-1g-3.dtsi"
++/include/ "qoriq-fman-1-10g-0.dtsi"
++	fman@500000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi5>;
++		};
++
++		mdio@e1120 {
++			tbi5: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi6>;
++		};
++
++		mdio@e3120 {
++			tbi6: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi7>;
++		};
++
++		mdio@e5120 {
++			tbi7: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi8>;
++		};
++
++		mdio@e7120 {
++			tbi8: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+index 2985de4..efdb10a 100644
+--- a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+@@ -468,4 +468,68 @@
+ 	raideng@320000 {
+ 		fsl,iommu-parent = <&pamu1>;
+ 	};
++
++/include/ "qoriq-fman-0.dtsi"
++/include/ "qoriq-fman-0-1g-0.dtsi"
++/include/ "qoriq-fman-0-1g-1.dtsi"
++/include/ "qoriq-fman-0-1g-2.dtsi"
++/include/ "qoriq-fman-0-1g-3.dtsi"
++/include/ "qoriq-fman-0-1g-4.dtsi"
++/include/ "qoriq-fman-0-10g-0.dtsi"
++	fman@400000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi0>;
++		};
++
++		mdio@e1120 {
++			tbi0: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi1>;
++		};
++
++		mdio@e3120 {
++			tbi1: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi2>;
++		};
++
++		mdio@e5120 {
++			tbi2: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi3>;
++		};
++
++		mdio@e7120 {
++			tbi3: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e8000 {
++			tbi-handle = <&tbi4>;
++		};
++
++		mdio@e9120 {
++			tbi4: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+index 546a899..cb90867 100644
+--- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+@@ -442,4 +442,132 @@
+ 	crypto@300000 {
+ 		fsl,iommu-parent = <&pamu4>;
+ 	};
++
++/include/ "qoriq-fman-0.dtsi"
++/include/ "qoriq-fman-0-1g-0.dtsi"
++/include/ "qoriq-fman-0-1g-1.dtsi"
++/include/ "qoriq-fman-0-1g-2.dtsi"
++/include/ "qoriq-fman-0-1g-3.dtsi"
++/include/ "qoriq-fman-0-1g-4.dtsi"
++/include/ "qoriq-fman-0-10g-0.dtsi"
++	fman@400000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi0>;
++		};
++
++		mdio@e1120 {
++			tbi0: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi1>;
++		};
++
++		mdio@e3120 {
++			tbi1: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi2>;
++		};
++
++		mdio@e5120 {
++			tbi2: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi3>;
++		};
++
++		mdio@e7120 {
++			tbi3: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e8000 {
++			tbi-handle = <&tbi4>;
++		};
++
++		mdio@e9120 {
++			tbi4: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
++
++/include/ "qoriq-fman-1.dtsi"
++/include/ "qoriq-fman-1-1g-0.dtsi"
++/include/ "qoriq-fman-1-1g-1.dtsi"
++/include/ "qoriq-fman-1-1g-2.dtsi"
++/include/ "qoriq-fman-1-1g-3.dtsi"
++/include/ "qoriq-fman-1-1g-4.dtsi"
++/include/ "qoriq-fman-1-10g-0.dtsi"
++	fman@500000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi5>;
++		};
++
++		mdio@e1120 {
++			tbi5: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi6>;
++		};
++
++		mdio@e3120 {
++			tbi6: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi7>;
++		};
++
++		mdio@e5120 {
++			tbi7: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi8>;
++		};
++
++		mdio@e7120 {
++			tbi8: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e8000 {
++			tbi-handle = <&tbi9>;
++		};
++
++		mdio@e9120 {
++			tbi9: tbi-phy@8 {
++				reg = <8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
+ };
+diff --git a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+index f99d74f..5a35019 100644
+--- a/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/t4240si-post.dtsi
+@@ -525,4 +525,158 @@
+ 		reg = <0xca0000 0x40000>;
+ 		next-level-cache = <&cpc>;
+ 	};
++
++/include/ "qoriq-fman3-0.dtsi"
++/include/ "qoriq-fman3-0-1g-0.dtsi"
++/include/ "qoriq-fman3-0-1g-1.dtsi"
++/include/ "qoriq-fman3-0-1g-2.dtsi"
++/include/ "qoriq-fman3-0-1g-3.dtsi"
++/include/ "qoriq-fman3-0-1g-4.dtsi"
++/include/ "qoriq-fman3-0-1g-5.dtsi"
++/include/ "qoriq-fman3-0-10g-0.dtsi"
++/include/ "qoriq-fman3-0-10g-1.dtsi"
++	fman@400000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi0>;
++		};
++
++		mdio@e1000 {
++			tbi0: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi1>;
++		};
++
++		mdio@e3000 {
++			tbi1: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi2>;
++		};
++
++		mdio@e5000 {
++			tbi2: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi3>;
++		};
++
++		mdio@e7000 {
++			tbi3: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e8000 {
++			tbi-handle = <&tbi4>;
++		};
++
++		mdio@e9000 {
++			tbi4: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@ea000 {
++			tbi-handle = <&tbi5>;
++		};
++
++		mdio@eb000 {
++			tbi5: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
++
++/include/ "qoriq-fman3-1.dtsi"
++/include/ "qoriq-fman3-1-1g-0.dtsi"
++/include/ "qoriq-fman3-1-1g-1.dtsi"
++/include/ "qoriq-fman3-1-1g-2.dtsi"
++/include/ "qoriq-fman3-1-1g-3.dtsi"
++/include/ "qoriq-fman3-1-1g-4.dtsi"
++/include/ "qoriq-fman3-1-1g-5.dtsi"
++/include/ "qoriq-fman3-1-10g-0.dtsi"
++/include/ "qoriq-fman3-0-10g-1.dtsi"
++	fman@500000 {
++		ethernet@e0000 {
++			tbi-handle = <&tbi6>;
++		};
++
++		mdio@e1000 {
++			tbi6: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e2000 {
++			tbi-handle = <&tbi7>;
++		};
++
++		mdio@e3000 {
++			tbi7: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e4000 {
++			tbi-handle = <&tbi8>;
++		};
++
++		mdio@e5000 {
++			tbi8: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e6000 {
++			tbi-handle = <&tbi9>;
++		};
++
++		mdio@e7000 {
++			tbi9: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@e8000 {
++			tbi-handle = <&tbi10>;
++		};
++
++		mdio@e9000 {
++			tbi10: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++
++		ethernet@ea000 {
++			tbi-handle = <&tbi11>;
++		};
++
++		mdio@eb000 {
++			tbi11: tbi-phy@8 {
++				reg = <0x8>;
++				device_type = "tbi-phy";
++			};
++		};
++	};
+ };
 -- 
 1.8.3.1
 
