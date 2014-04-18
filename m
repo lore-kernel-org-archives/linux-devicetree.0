@@ -1,77 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 0/8] ARM: at91: sama5d3: enable sound
-	support
-Date: Fri, 18 Apr 2014 21:38:17 +0100
-Message-ID: <20140418203817.GA3479@sirena.org.uk>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com>
- <53518C76.2020005@atmel.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/8] ARM: at91: sama5d3: add DMA property for SSC devices
+Date: Fri, 18 Apr 2014 22:47:51 +0200
+Message-ID: <53518F77.6020609@atmel.com>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <1395049541-28128-2-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7652774525258962109=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <53518C76.2020005@atmel.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Bo Shen <voice.shen@atmel.com>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Boris BREZILLON <b.brezillon@overkiz.com>, Rob Landley <rob@landley.net>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395049541-28128-2-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 17/03/2014 10:45, Bo Shen :
+> Add DMA property for SSC devices on SAMA5D3 SoC.
+> 
+> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
---===============7652774525258962109==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
-Content-Disposition: inline
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 
-
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Fri, Apr 18, 2014 at 10:35:02PM +0200, Nicolas Ferre wrote:
-
-> For this series I am a little bit puzzled: should I take the ASoC part
-> of it? I see no acknowledgement from Mark and I also read some messages
-> still discussing about CCF and wm8904 afterwards.
-
-I've not seen these patches, judging by where this message went they
-weren't sent to the address in MAINTAINERS (broonie@kernel.org) but to
-my work address instead.
-
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTUY02AAoJELSic+t+oim9N08P/A9BcAybl0fKUBUjU66UeF9u
-YL0gUySKSiF94XQw9CwD6Y4fX58BEDu6r1IdMXL0i8lAiopFwFffuLRyFN1viph1
-+kc2drdyw5N6VJOXNuxAXE76yrOA4SLenfX8HL4lojjEITujXbneRzgHYkBLawym
-3rZgIFjD9/tzYcSiO5Z2fJ6Bynr5I8DF648oDjeM8rSy+cjbHWGiYvreVCNObgfu
-4R9O6XvOmn60vFon91PJmMzdIIjGkVZ3QMdeYgeQRDANaTSYizlmjZ/gUTnrHW1o
-COSp+fpheFojVvojB3UUXmpPbaTg9s5LIrJS9eXVkONVYjkVy8T6mL3j/G6NHJaY
-hvg1FGXwRq0XO5YQ0UTSw6idAskVwzgP+g3t4v083vSxlHa8xr7vtQvliL3ZTEpt
-/pWvnIR8tPIuKyjc2lLfqRV7ccrmiqZKWe/IZ/fN6A/91p9smOz5Hi+fyHKFZTxS
-WlL/kI0AyDSDaStvq4qPGtUVRTJDYXOmN2BD6GvE3+qeoBijvhJ+z0zjlHRECN9R
-EJkOeAbTaMbOM+9ezRcwyS+YvVgwtV72eXOAy3Dag/uBMfHt4ufUDWbiaOHbFofN
-ndYZbnxQESnYNXufLnHWnRwXQP/jrZzdeB7CkqlPrfaAT5oatlXmUN+FToqrEQpd
-mtfLxnF1aCc5xpMbu8Pl
-=t7N5
------END PGP SIGNATURE-----
-
---fdj2RfSjLxBAspz7--
-
---===============7652774525258962109==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> ---
+> 
+>  arch/arm/boot/dts/sama5d3.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sama5d3.dtsi b/arch/arm/boot/dts/sama5d3.dtsi
+> index 3d5faf8..3e753e1 100644
+> --- a/arch/arm/boot/dts/sama5d3.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3.dtsi
+> @@ -113,6 +113,9 @@
+>  				compatible = "atmel,at91sam9g45-ssc";
+>  				reg = <0xf0008000 0x4000>;
+>  				interrupts = <38 IRQ_TYPE_LEVEL_HIGH 4>;
+> +				dmas = <&dma0 2 AT91_DMA_CFG_PER_ID(13)>,
+> +				       <&dma0 2 AT91_DMA_CFG_PER_ID(14)>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
+>  				clocks = <&ssc0_clk>;
+> @@ -231,6 +234,9 @@
+>  				compatible = "atmel,at91sam9g45-ssc";
+>  				reg = <0xf800c000 0x4000>;
+>  				interrupts = <39 IRQ_TYPE_LEVEL_HIGH 4>;
+> +				dmas = <&dma1 2 AT91_DMA_CFG_PER_ID(3)>,
+> +				       <&dma1 2 AT91_DMA_CFG_PER_ID(4)>;
+> +				dma-names = "tx", "rx";
+>  				pinctrl-names = "default";
+>  				pinctrl-0 = <&pinctrl_ssc1_tx &pinctrl_ssc1_rx>;
+>  				clocks = <&ssc1_clk>;
+> 
 
 
---===============7652774525258962109==--
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
