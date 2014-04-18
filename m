@@ -1,75 +1,42 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: [PATCH 5/5] exynos/drm: add DT bindings for super device node
-Date: Fri, 18 Apr 2014 15:41:10 +0900
-Message-ID: <1397803270-5377-6-git-send-email-inki.dae@samsung.com>
-References: <1397803270-5377-1-git-send-email-inki.dae@samsung.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH 1/4] mmc: sdhci: add a driver for Berlin SoCs
+Date: Fri, 18 Apr 2014 09:20:56 +0200
+Message-ID: <20140418072056.GB26909@kwain>
+References: <1397652011-21284-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1397652011-21284-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1397803270-5377-1-git-send-email-inki.dae@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1397652011-21284-2-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, chris@printf.net, anton@enomsg.org
+Cc: alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds bindings for Exynos drm display subsystem.
-The bindings describes ports containing a list of phandles
-pointing to display controller, image enhancer, and display
-interfaces nodes.
+Hi all,
 
-Signed-off-by: Inki Dae <inki.dae@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- .../bindings/drm/exynos/samsung-exynos-drm.txt     |   32 ++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/drm/exynos/samsung-exynos-drm.txt
+On Wed, Apr 16, 2014 at 02:40:08PM +0200, Antoine T=E9nart wrote:
+> Add a Driver to support the SDHCI controller of the Marvell Berlin So=
+Cs.
+> This controller supports 3 sockets.
 
-diff --git a/Documentation/devicetree/bindings/drm/exynos/samsung-exynos-drm.txt b/Documentation/devicetree/bindings/drm/exynos/samsung-exynos-drm.txt
-new file mode 100644
-index 0000000..6f7fae0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/exynos/samsung-exynos-drm.txt
-@@ -0,0 +1,32 @@
-+Samsung Exynos DRM master device
-+================================
-+
-+The Samsung Exynos DRM master device is a virtual device needed to list all
-+display controller, image enhancer, and display interface nodes that comprise
-+the graphics subsystem.
-+
-+Required properties:
-+- compatible: Should be "samsung,exynos-display-subsystem"
-+- ports: Should contain a list of phandles pointing to display controller,
-+  image enhancer, and display interface ports.
-+
-+Examples:
-+
-+In case of using MIPI-DSI,
-+display-subsystem {
-+	compatible = "samsung,exynos-display-subsystem";
-+	ports = <&fimd>, <&dsi>;
-+};
-+
-+
-+In case of using DisplayPort,
-+display-subsystem {
-+	compatible = "samsung,exynos-display-subsystem";
-+	ports = <&fimd>, <&dp>;
-+};
-+
-+In case of using parallel panel,
-+display-subsystem {
-+	compatible = "samsung,exynos-display-subsystem";
-+	ports = <&fimd>;
-+};
--- 
-1.7.9.5
+After talking a bit with Sebastian and Jisheng I decided to have a look=
+ on the
+pxav3 driver. I gave it a try, it seemed to be compatible with the Berl=
+in SDHCI
+controller so I'll use this one instead of adding a Berlin specific one=
+=2E
+
+You all can forget this one, I'll send a v2 using the pxav3 driver.
+
+Thanks!
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
