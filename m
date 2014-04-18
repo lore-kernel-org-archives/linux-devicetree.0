@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/5] Documentation: dt: bindings: Document Allwinner A31 enable method
-Date: Fri, 18 Apr 2014 21:01:51 +0200
-Message-ID: <1397847713-28418-4-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH 4/5] ARM: sun6i: Define the A31 CPUs enable-method
+Date: Fri, 18 Apr 2014 21:01:52 +0200
+Message-ID: <1397847713-28418-5-git-send-email-maxime.ripard@free-electrons.com>
 References: <1397847713-28418-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1397847713-28418-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,25 +10,25 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the necently introduced A31 enable-method as a valid option.
+That will allow to use the CPU_METHOD_OF_DECLARE definition we did previously.
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+ arch/arm/boot/dts/sun6i-a31.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index ad6f7758d6ba..14611d22b95a 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -183,6 +183,7 @@ nodes to be present and contain the properties described below.
- 			# On ARM 32-bit systems this property is optional and
- 			  can be one of:
- 			    "arm,psci"
-+			    "allwinner,sun6i-a31"
- 			    "qcom,gcc-msm8660"
- 			    "qcom,kpss-acc-v1"
- 			    "qcom,kpss-acc-v2"
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index bc46814d2ff0..e88519cc6e70 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -27,6 +27,7 @@
+ 
+ 
+ 	cpus {
++		enable-method = "allwinner,sun6i-a31";
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 
 -- 
 1.9.1
 
