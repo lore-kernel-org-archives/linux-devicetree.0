@@ -1,131 +1,121 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC v11 5/6] dma: mpc512x: add device tree binding document
-Date: Fri, 18 Apr 2014 15:29:42 +0400
-Message-ID: <CAF0T0X4TqhZ=niKRgArG-s1cD6uRH0UZDqGyTLpde_aHBFTVtw@mail.gmail.com>
-References: <1397559250-17680-1-git-send-email-a13xp0p0v88@gmail.com>
-	<1397559250-17680-6-git-send-email-a13xp0p0v88@gmail.com>
-	<20140416204410.GP3528@book.gsilab.sittig.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH 2/8] usb: host: xhci-plat: Add support for the Armada
+ 38x glue code
+Date: Fri, 18 Apr 2014 13:43:40 +0200
+Message-ID: <53510FEC.7030803@free-electrons.com>
+References: <1397816563-9000-1-git-send-email-gregory.clement@free-electrons.com> <1397816563-9000-3-git-send-email-gregory.clement@free-electrons.com> <535108E3.2010208@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140416204410.GP3528-kDjWylLy9wD0K7fsECOQyeGNnDKD8DIp@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <535108E3.2010208@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for your reply, Gerhard
+Hi Sebastian,
 
-2014-04-17 0:44 GMT+04:00 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
-> On Tue, 2014-04-15 at 14:54 +0400, Alexander Popov wrote:
+[...]
+
+>> @@ -0,0 +1,21 @@
+>> +/*
+>> + * Copyright (C) 2014 Marvell
+>> + *
+>> + * Gregory Clement <gregory.clement@free-electrons.com>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + */
+>> +
+>> +#ifndef __LINUX_XHCI_MVEBU_H
+>> +#define __LINUX_XHCI_MVEBU_H
+>> +
+>> +#ifdef CONFIG_USB_XHCI_MVEBU
+>> +int xhci_mvebu_probe(struct platform_device *pdev);
+>> +int xhci_mvebu_remove(struct platform_device *pdev);
+>> +#else
+>> +#define xhci_mvebu_probe NULL
+>> +#define xhci_mvebu_remove NULL
+>> +#endif
+>> +#endif /* __LINUX_XHCI_MVEBU_H */
+>> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+>> index 8029cc82edc4..f1261d3848a9 100644
+>> --- a/drivers/usb/host/xhci-plat.c
+>> +++ b/drivers/usb/host/xhci-plat.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/of_device.h>
+>>  
+>>  #include "xhci.h"
+>> +#include "xhci-mvebu.h"
+>>  
+>>  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>>  {
+>> @@ -250,6 +251,11 @@ static const struct dev_pm_ops xhci_plat_pm_ops = {
+>>  #endif /* CONFIG_PM */
+>>  
+>>  #ifdef CONFIG_OF
+> 
+> Gregory,
+> 
+> either you should #ifndef CONFIG_USB_XHCI_MVEBU this and the one below -
+> or even better:
+
+With the current code we don't need to add this, see xhci-mvebu.h: xhci_mvebu_*
+are set to NULL if CONFIG_USB_XHCI_MVEBU is not define. Then the driver
+is more multiplatform friendly.
+
+> 
+> Can you put driver stub with its of_match_table right into xhci-mvebu?
+> That way platform specific probe wouldn't pollute the generic driver.
+
+This sound more interesting. However the only "pollution" is to extend
+the compatible list, the platform specific code is in is own file. Moreover
+it could make sens to have all the compatible strings at the same place.
+
+I wait for the opinion of the USB maintainers for this point.
+
+Thanks,
+
+Gregory
+
+> 
+> Greg will have a better opinion about it, but I remember some cleanup
+> in ehci, that basically removed platform specific references from the
+> generic code.
+> 
+>> +struct xhci_plat_ops xhci_plat_mvebu = {
+>> +	.probe =  xhci_mvebu_probe,
+>> +	.remove =  xhci_mvebu_remove,
+>> +};
+>> +
+>>  static const struct of_device_id usb_xhci_of_match[] = {
+>>  	{
+>>  		.compatible = "generic-xhci",
+>> @@ -259,6 +265,10 @@ static const struct of_device_id usb_xhci_of_match[] = {
+>>  		.compatible = "xhci-platform",
+>>  		.data = (void *) &xhci_plat_default,
+>>  	},
+>> +	{
+>> +		.compatible = "marvell,xhci-armada-380",
+> 
+> nit: the ususal order we use on mvebu is "marvell,<soc>-<ip>", so this
+> should be "marvell,armada-380-xhci".
+> 
+> Sebastian
+> 
+>> +		.data = (void *) &xhci_plat_mvebu,
+>> +	},
+>>  	{ },
+>>  };
+>>  MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
 >>
->> Introduce a device tree binding document for the MPC512x DMA controller
->>
->> Signed-off-by: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>
->> Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->
-> I'm not certain whether the attribution is right.  Is the S-o-b
-> appropriate when the patch is not "from" me? As I've stated
-> before, it's OK if you pick up and extend what I provide, but
-> please don't pretend that I wrote what you did,
-Thanks. I've read the corresponding part of
-Documentation/SubmittingPatches once again and now I see
-my mistake.
+> 
 
-> and don't pretend
-> that I ACKed or passed along your submission when I didn't.
-I didn't have any malicious intent.
 
-> This binding certainly needs further improvement to become a good
-> one.  As I've communicated in the past, I was rather ignorant
-> "back then" when I wrote v1 and v2 of the RFC.  We have learned
-> something in the meantime.  Though I admit having gone silent
-> after several review iterations.  Assumed you would pick up
-> information that showed up several times on public lists.
->
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
->> @@ -0,0 +1,51 @@
->> +* Freescale MPC512x and MPC8308 DMA Controller
->> +
->> +The DMA controller in the Freescale MPC512x and MPC8308 SoCs can move
->> +blocks of memory contents between memory and peripherals or
->> +from memory to memory.
->> +
->> +Refer to the "Generic DMA Controller and DMA request bindings" in
->> +the dma/dma.txt file for a more detailed description of binding.
->> +
->> +* DMA controller
->> +
->> +Required properties:
->> +- compatible: Should be one of
->> +     "fsl,mpc5121-dma"
->> +     "fsl,mpc8308-dma", "fsl,mpc5121-dma"
->
-> is this a duplicate?  looks funny, needs a fix
->
-> or is it a requirement that for MPC8308 you need to provide both
-> compatible strings?  that would be wrong, as MPC8308 certainly is
-> not an MPC5121
->
-> a quick search reveals: the drivers/dma/mpc512x_dma.c Linux
-> driver implementation is wrong, it should match on both strings;
-> expecting the MPC8308 to disguise as an MPC5121 when it's not is
-> inappropriate (and only went unnoticed because of missing
-> bindings, I guess)
-I can try to fix that and add a new patch to the series.
-
->> +- reg: Address and size of the DMA controller's register set
->> +- interrupts: Interrupt for the DMA controller. Generic interrupt client node
->> +     is described in interrupt-controller/interrupts.txt
->
-> 'interrupts' only works in combinations with 'interrupt-parent',
-> that actual .dts files don't have the latter in the nodes is an
-> implementation detail but not a binding's requirement
-Excuse me, I didn't understand your point.
-
-> and an alternative method of specifying interrupts was introduced
-> recently, a reference to the common binding without naming one
-> specific property name could be most appropriate
-Excuse me, I haven't found such an example.
-
->> +
->> +Optional properties:
->> +- #dma-cells: The length of the DMA specifier, must be <1> since
->> +     the DMA controller uses a fixed assignment of request lines
->> +     per channel. Refer to dma/dma.txt for the detailed description
->> +     of this property
->
-> I'm afraid that a generic/common document does not and cannot
-> describe the specific semantics of this provider's cells
-Ok, I see.
-
-> this binding should explicitly mention that the number of cells
-> needs to be one, and that this one cell is the DMA channel (which
-> translates to "peripheral request line"), because these
-> assigments are fixed in hardware
-Ok.
-
->> +
->> +Example:
->> +
->> +     dma0: dma@14000 {
->> +             compatible = "fsl,mpc5121-dma";
->> +             reg = <0x14000 0x1800>;
->> +             interrupts = <65 0x8>;
->> +             #dma-cells = <1>;
->> +     };
->> +
->> +* DMA client
->
-> the DMA provider's binding probably need not discuss client
-> specs, a reference to the common binding should suffice if it's
-> appropriate at all
-Ok.
-
-Best regards,
-Alexander
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
