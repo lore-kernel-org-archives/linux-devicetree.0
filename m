@@ -1,80 +1,69 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH 0/8] ARM: at91: sama5d3: enable sound support
-Date: Sat, 19 Apr 2014 00:11:42 +0200
-Message-ID: <5351A31E.7080109@atmel.com>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <53518C76.2020005@atmel.com> <5351A1DE.9070801@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/1] ARM: dts: omap5: Add clocks to USB3 PHY node
+Date: Fri, 18 Apr 2014 15:29:54 -0700
+Message-ID: <20140418222954.GH21823@atomide.com>
+References: <1396348647-11545-1-git-send-email-rogerq@ti.com>
+ <1396348647-11545-2-git-send-email-rogerq@ti.com>
+ <20140401141308.GB4717@saruman.home>
+ <534B8CC3.7050008@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5351A1DE.9070801@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon.dev@gmail.com>, Bo Shen <voice.shen@atmel.com>, Boris BREZILLON <b.brezillon@overkiz.com>
-Cc: Mark Brown <broonie@kernel.org>, alsa-devel@alsa-project.org, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@linaro.org>, linux-arm-kernel@lists.infradead.org, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <534B8CC3.7050008-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/04/2014 00:06, Boris BREZILLON :
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140414 00:23]:
+> Hi Tony,
 > 
-> On 18/04/2014 22:35, Nicolas Ferre wrote:
->> On 17/03/2014 10:45, Bo Shen :
->>> This patch add sound support on sama5d3xek board.
->>>
->>> This patch series based on the following patch set:
->>>   clk: at91: better support for the PCKs
->>>   http://comments.gmane.org/gmane.linux.kernel/1664477
->>>
->>>
->>> Bo Shen (5):
->>>   ARM: at91: sama5d3: add DMA property for SSC devices
->>>   ARM: at91: sama5d3: disable sound by default
->>>   ARM: at91: sama5d3: correct the sound compatible string
->>>   ARM: at91: sama5d3: add the missing property
->>>   ARM: at91: sama5d3: clock for ssc from rk pin
->>>
->>> Boris BREZILLON (3):
->>>   ASoC: atmel: support CCF based clks
->>>   ASoC: atmel: document clock properties of the wm8904 driver
->>>   ARM: at91/dt: add clock properties to the wm8904 codec node
->> Hi Voice and Boris,
->>
->> For this series I am a little bit puzzled: should I take the ASoC part
->> of it? I see no acknowledgement from Mark and I also read some messages
->> still discussing about CCF and wm8904 afterwards.
->>
->> So, I take the 5 patches by Voice Shen and tell me what is the proper
->> sequence with this wm8904 work.
+> On 04/01/2014 05:13 PM, Felipe Balbi wrote:
+> > On Tue, Apr 01, 2014 at 01:37:27PM +0300, Roger Quadros wrote:
+> >> The USB3 PHY driver (ti-pipe3) was updated so that the relevant
+> >> clock phandles are expected in the DT node.
+> >> Provide the necessary clocks.
+> >>
+> >> Reported-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> >> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+> > 
+> > Great!!!
+> > 
+> > Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 > 
-> Bo was waiting for the "move sam9n12 SoC to the CCF" (which has been
-> submitted earlier this week) series before sending a new version of his
-> "wm8904: add CCF support" series.
+> Could you please pick this up for 3.15-rc? Thanks.
 
-Ok, that makes perfect sense.
-So I have the whole dependency graph in mind now: we will have fun
-stacking everything in the proper order ;-)
+Yes applying into omap-for-v3.15/fixes thanks.
 
-Thanks for the clarification, Bye.
-
-
->> I will be happy to stack more patches about this topic during the 3.16
->> development phase.
->>
->>
->> Otherwise, the 5 patches by Voice go into at91-3.16-dt branch.
->>
->> Thanks, bye.
->>
->>
->>>  .../devicetree/bindings/sound/atmel-wm8904.txt     |  2 ++
->>>  arch/arm/boot/dts/sama5d3.dtsi                     |  6 ++++++
->>>  arch/arm/boot/dts/sama5d3xmb.dtsi                  | 11 +++++++++-
->>>  sound/soc/atmel/atmel_wm8904.c                     | 25 +++++++++++-----------
->>>  4 files changed, 31 insertions(+), 13 deletions(-)
->>>
->>
+Tony
+ 
+> >>  arch/arm/boot/dts/omap5.dtsi | 6 ++++++
+> >>  1 file changed, 6 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+> >> index 757f0b9..4df1e7a 100644
+> >> --- a/arch/arm/boot/dts/omap5.dtsi
+> >> +++ b/arch/arm/boot/dts/omap5.dtsi
+> >> @@ -794,6 +794,12 @@
+> >>  				      <0x4a084c00 0x40>;
+> >>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
+> >>  				ctrl-module = <&omap_control_usb3phy>;
+> >> +				clocks = <&usb_phy_cm_clk32k>,
+> >> +					 <&sys_clkin>,
+> >> +					 <&usb_otg_ss_refclk960m>;
+> >> +				clock-names =	"wkupclk",
+> >> +						"sysclk",
+> >> +						"refclk";
+> >>  				#phy-cells = <0>;
+> >>  			};
+> >>  		};
+> >> -- 
+> >> 1.8.3.2
+> >>
+> > 
 > 
-> 
-> 
-
-
--- 
-Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
