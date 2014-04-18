@@ -1,59 +1,63 @@
-From: Diana Craciun <diana.craciun@freescale.com>
-Subject: [PATCH v2] powerpc/fsl: Added binding for Freescale CoreNet coherency
- fabric (CCF)
-Date: Fri, 18 Apr 2014 18:11:57 +0300
-Message-ID: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] ARM: at91: fix spi cs on sama5d3 Xplained board
+Date: Fri, 18 Apr 2014 17:31:29 +0200
+Message-ID: <53514551.8030601@atmel.com>
+References: <1396336363-13709-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, devicetree@vger.kernel.org, Diana Craciun <Diana.Craciun@freescale.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1396336363-13709-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRGlhbmEgQ3JhY2l1biA8RGlhbmEuQ3JhY2l1bkBmcmVlc2NhbGUuY29tPgoKVGhlIENv
-cmVOZXQgY29oZXJlbmN5IGZhYnJpYyBpcyBhIGZhYnJpYy1vcmllbnRlZCwgY29uZWN0aXZpdHkK
-aW5mcmFzdHJ1Y3R1cmUgdGhhdCBlbmFibGVzIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBjb2hlcmVu
-dCwgbXVsdGljb3JlCnN5c3RlbXMuIFRoZSBDQ0YgYWN0cyBhcyBhIGNlbnRyYWwgaW50ZXJjb25u
-ZWN0IGZvciBjb3JlcywKcGxhdGZvcm0tbGV2ZWwgY2FjaGVzLCBtZW1vcnkgc3Vic3lzdGVtLCBw
-ZXJpcGhlcmFsIGRldmljZXMgYW5kIEkvTyBob3N0CmJyaWRnZXMgaW4gdGhlIHN5c3RlbS4KClNp
-Z25lZC1vZmYtYnk6IERpYW5hIENyYWNpdW4gPERpYW5hLkNyYWNpdW5AZnJlZXNjYWxlLmNvbT4K
-LS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2YudHh0ICAgICAgICB8
-IDM2ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25z
-KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3Bvd2VycGMvZnNsL2NjZi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY2NmLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2YudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
-IDAwMDAwMDAuLmYwYjcxNDMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY2NmLnR4dApAQCAtMCwwICsxLDM2IEBACitGcmVl
-c2NhbGUgQ29yZU5ldCBDb2hlcmVuY3kgRmFicmljKENDRikgRGV2aWNlIFRyZWUgQmluZGluZwor
-CitERVNDUklQVElPTgorCitUaGUgQ29yZU5ldCBjb2hlcmVuY3kgZmFicmljIGlzIGEgZmFicmlj
-LW9yaWVudGVkLCBjb25uZWN0aXZpdHkgaW5mcmFzdHJ1Y3R1cmUKK3RoYXQgZW5hYmxlcyB0aGUg
-aW1wbGVtZW50YXRpb24gb2YgY29oZXJlbnQsIG11bHRpY29yZSBzeXN0ZW1zLgorCitSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgorCistIGNvbXBhdGlibGUgOiA8c3RyaW5nPgorCQlNdXN0IGluY2x1ZGUg
-ImZzbCxjb3JlbmV0WC1jZiIsICJmc2wsY29yZW5ldC1jZiIgLSBDb3JlTmV0IGNvaGVyZW5jeSAK
-KwkJZmFicmljIHZlcnNpb24gWAorCistIHJlZyA6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJCUEg
-c3RhbmRhcmQgcHJvcGVydHkuIFJlcHJlc2VudHMgdGhlIENDRiByZWdpc3RlcnMuCisKKy0gaW50
-ZXJydXB0cyA6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJCUludGVycnVwdCBtYXBwaW5nIGZvciBD
-Q0YgZXJyb3IgaW50ZXJydXB0LgorCistIGZzbCxjY2YtbnVtLWNzZGlkczogPHUzMj4KKwkJU3Bl
-Y2lmaWVzIHRoZSBudW1iZXIgb2YgQ29oZXJlbmN5IFN1YmRvbWFpbiBJRCBQb3J0IE1hcHBpbmcK
-KwkJUmVnaXN0ZXJzIHRoYXQgYXJlIHN1cHBvcnRlZCBieSB0aGUgQ0NGLgorCistIGZzbCxjY2Yt
-bnVtLXNub29waWRzOiA8dTMyPgorCQlTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBTbm9vcCBJRCBQ
-b3J0IE1hcHBpbmcgUmVnaXN0ZXJzIHRoYXQKKwkJYXJlIHN1cHBvcnRlZCBieSBDQ0YuCisKK0V4
-YW1wbGU6CisKKwljb3JlbmV0LWNmQDE4MDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsY29yZW5l
-dDItY2YiLCAiZnNsLGNvcmVuZXQtY2YiOworCQlyZWcgPSA8MHgxODAwMCAweDEwMDA+OworCQlp
-bnRlcnJ1cHRzID0gPDE2IDIgMSAzMT47CisJCWZzbCxjY2YtbnVtLWNzZGlkcyA9IDwzMj47CisJ
-CWZzbCxjY2YtbnVtLXNub29waWRzID0gPDMyPjsKKwl9OwotLSAKMS43LjExLjcKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFp
-bGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
-YWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
+On 01/04/2014 09:12, Bo Shen :
+> The PD16 is the CS3 for SPI0 while not SPI1.
+> 
+> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+Okay, queued in at91-3.15-fixes. Thanks
+
+
+
+> ---
+> This patch is based on v3.14-rc8
+> 
+>  arch/arm/boot/dts/at91-sama5d3_xplained.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> index ce13755..4537259 100644
+> --- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> @@ -34,7 +34,7 @@
+>  			};
+>  
+>  			spi0: spi@f0004000 {
+> -				cs-gpios = <&pioD 13 0>;
+> +				cs-gpios = <&pioD 13 0>, <0>, <0>, <&pioD 16 0>;
+>  				status = "okay";
+>  			};
+>  
+> @@ -79,7 +79,7 @@
+>  			};
+>  
+>  			spi1: spi@f8008000 {
+> -				cs-gpios = <&pioC 25 0>, <0>, <0>, <&pioD 16 0>;
+> +				cs-gpios = <&pioC 25 0>;
+>  				status = "okay";
+>  			};
+>  
+> 
+
+
+-- 
+Nicolas Ferre
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
