@@ -1,29 +1,50 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [RFC][PATCH 3/3] clocksource: Add Freescale FlexTimer Module
- (FTM) timer support
-Date: Fri, 18 Apr 2014 03:55:46 +0000
-Message-ID: <aa8f83c882144105b4c2c230dc6f517b@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1397614787-8300-1-git-send-email-Li.Xiubo@freescale.com>
- <1397614787-8300-4-git-send-email-Li.Xiubo@freescale.com>
- <534FE3C1.4060509@linaro.org>
+From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] mmc: sdhci: add a driver for Berlin SoCs
+Date: Fri, 18 Apr 2014 14:06:39 +0800
+Message-ID: <20140418140639.03c450f3@xhacker>
+References: <1397652011-21284-1-git-send-email-antoine.tenart@free-electrons.com>
+	<1397652011-21284-2-git-send-email-antoine.tenart@free-electrons.com>
+	<534E92FE.8010400@gmail.com>
+	<20140417133359.GB31034@kwain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <534FE3C1.4060509@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, Jingchang Lu <jingchang.lu@freescale.com>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>, "Dongsheng.Wang@freescale.com" <Dongsheng.Wang@freescale.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140417133359.GB31034@kwain>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org" <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, "anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org" <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiA+ICsJZnJlcSA9IGNsa19nZXRfcmF0ZShmdG1fY2xrKTsNCj4gPiArDQo+ID4gKwljYWxjX2Ns
-b3Nlc3RfY291bmRfY3ljKGZyZXEpOw0KPiA+ICsNCj4gPiArCUJVR19PTihmdG1fY2xvY2tzb3Vy
-Y2VfaW5pdChmcmVxKSk7DQo+ID4gKw0KPiA+ICsJQlVHX09OKGZ0bV9jbG9ja2V2ZW50X2luaXQo
-ZnJlcSwgaXJxKSk7DQo+ID4gK30NCj4gPiArQ0xPQ0tTT1VSQ0VfT0ZfREVDTEFSRSh2ZjYxMCwg
-ImZzbCx2ZjYxMC1mdG0tdGltZXIiLCBmdG1fdGltZXJfaW5pdCk7DQo+IA0KPiANCj4gSSBhbSBu
-b3QgYSBiaWcgZmFuIG9mIHRob3NlIEJVR19PTiBldmVyeSBsaW5lLiBDb3VsZCB5b3UgcGxlYXNl
-IHJlcGxhY2UNCj4gaXQgYnkgZGV2X2VycigpLg0KPiANCg0KV2hpbGUsIGZvciB0aGUgRmxleFRp
-bWVyIGRyaXZlciwgdGhlcmUgaGFzbid0IGFueSBkZXZpY2UgY3JlYXRpb24gYW5kDQpyZWdpc3Rl
-cmluZywgc28gSSdsbCB1c2UgcHJfZXJyKCkgaW5zdGVhZCBvZiBkZXZfZXJyKCkuLi4NCg0KVGhh
-bmtzDQoNCkJScw0KWGl1Ym8NCg==
+Hi,
+
+On Thu, 17 Apr 2014 06:33:59 -0700
+Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+
+> Sebastian,
+>=20
+> On Wed, Apr 16, 2014 at 04:26:06PM +0200, Sebastian Hesselbarth wrote=
+:
+> > On 04/16/2014 02:40 PM, Antoine T=C3=A9nart wrote:
+> > >Add a Driver to support the SDHCI controller of the Marvell Berlin=
+ SoCs.
+> > >This controller supports 3 sockets.
+> >=20
+> > nit: Isn't it three controller with one socket each?
+>=20
+> It's a little bit confusing, there are 3 different register regions a=
+nd
+> I can see 3 separate data lines but, I quote: "The SD host controller
+> supports three sockets".
+>=20
+> Maybe Jisheng can advise on that matter ?
+
+
+It's three controller with one socket each ;)
+
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
