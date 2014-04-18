@@ -1,35 +1,74 @@
-From: Richard Genoud <richard.genoud@gmail.com>
-Subject: [PATCH RESEND] tty/serial: atmel_serial: Fix device tree documentation
-Date: Fri, 18 Apr 2014 17:45:04 +0200
-Message-ID: <1397835904-866-1-git-send-email-richard.genoud@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Linus Walleij <linus.walleij@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Richard Genoud <richard.genoud@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv3 19/41] OMAPDSS: panel-dpi: Add DT support
+Date: Fri, 18 Apr 2014 08:51:08 -0700
+Message-ID: <20140418155107.GB5354@atomide.com>
+References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com>
+ <1390301833-24944-20-git-send-email-tomi.valkeinen@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1390301833-24944-20-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Joachim Eastwood <manabian@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-RTS pin is an active low pin.
-For now, this doesn't change anything as the ACTIVE_LOW (1) flag is not
-handled in atmel_serial, but it will be in 3.16.
+Hi,
 
-Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
----
- Documentation/devicetree/bindings/serial/atmel-usart.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Just trying to summarize what has been discussed so far in
+various threads regarding changes needed to this patch.
 
-diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
-index 17c1042b2df8..0dd0a5493a54 100644
---- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
-+++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
-@@ -35,7 +35,7 @@ Example:
- 		clock-names = "usart";
- 		atmel,use-dma-rx;
- 		atmel,use-dma-tx;
--		rts-gpios = <&pioD 15 0>;
-+		rts-gpios = <&pioD 15 1>;
- 	};
- 
- - use DMA:
--- 
-1.8.5.5
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [140121 03:01]:
+> --- a/drivers/video/omap2/displays-new/panel-dpi.c
+> +++ b/drivers/video/omap2/displays-new/panel-dpi.c
+> @@ -182,6 +186,52 @@ static int panel_dpi_probe_pdata(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int panel_dpi_probe_of(struct platform_device *pdev)
+> +{
+> +	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
+> +	struct device_node *node = pdev->dev.of_node;
+> +	struct omap_dss_device *in;
+> +	int r;
+> +	struct display_timing timing;
+> +	struct videomode vm;
+> +	int gpio;
+> +
+> +	gpio = of_get_gpio(node, 0);
+> +	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
+> +		ddata->enable_gpio = gpio;
+> +	} else {
+> +		dev_err(&pdev->dev, "failed to parse enable gpio\n");
+> +		return gpio;
+> +	}
 
+We should set the GPIO polarity based on the OF_GPIO_ACTIVE_LOW like
+gpio_backlight_probe_dt is doing. 
+
+Then do we really want to do the dev_err for each -EPROBE_DEFER here?
+
+> +	gpio = of_get_gpio(node, 1);
+> +	if (gpio_is_valid(gpio) || gpio == -ENOENT) {
+> +		ddata->backlight_gpio = gpio;
+> +	} else {
+> +		dev_err(&pdev->dev, "failed to parse backlight gpio\n");
+> +		return gpio;
+> +	}
+
+How about let's drop the backlight_gpio as discussed since it
+can be handled with gpio-backlight?
+
+Instead, let's add the panel specific reset_gpio as suggested by
+Joachim. That seems common to some dpi using panels.
+
+Then support for the other panel specific GPIOs can then be added
+as a follow-up patch when we know how we want to handle them.
+
+Oh, and this patch needs the related binding documentation too in
+Documentation/devicetree/bindings.
+
+Regards,
+
+Tony
