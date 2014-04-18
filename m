@@ -1,135 +1,54 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH/RFC v3 0/5] LED / flash API integration
-Date: Fri, 18 Apr 2014 10:54:33 -0700
-Message-ID: <CAK5ve-Ks_YVsM2YEbLMgnAS4jnF-McH7iDY+=hYQ-PaHTzcDOw@mail.gmail.com>
-References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 1/5] ASoC: alc5623: Add device tree binding
+Date: Fri, 18 Apr 2014 20:17:35 +0200
+Message-ID: <20140418181735.GB32580@lunn.ch>
+References: <1397749994-24983-1-git-send-email-andrew@lunn.ch>
+ <1397749994-24983-2-git-send-email-andrew@lunn.ch>
+ <20140418163351.GI12304@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-Reply-To: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140418163351.GI12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 11, 2014 at 7:56 AM, Jacek Anaszewski
-<j.anaszewski@samsung.com> wrote:
-> This is is the third version of the patch series being a follow up
-> of the discussion on Media summit 2013-10-23, related to the
-> LED / flash API integration (the notes from the discussion were
-> enclosed in the message [1], paragraph 5).
-> The series is based on linux-next next-20140328
->
-> Description of the proposed modifications according to
-> the kernel components they are relevant to:
->     - LED subsystem modifications
->         * added led_flash module which, when enabled in the config,
->           registers flash specific sysfs attributes:
->             - flash_brightness
->             - max_flash_brightness
->             - indicator_brightness
->             - max_indicator_brightness
->             - flash_timeout
->             - max_flash_timeout
->             - flash_strobe
->             - flash_fault
->             - external_strobe
->         and exposes kernel internal API
->             - led_set_flash_strobe
->             - led_get_flash_strobe
->             - led_set_indicator_brightness
->             - led_update_indicator_brightness
->             - led_set_flash_timeout
->             - led_get_flash_fault
->             - led_set_external_strobe
->             - led_sysfs_lock
->             - led_sysfs_unlock
->     - Addition of a V4L2 Flash sub-device registration helpers
->         * added v4l2-flash.c and v4l2-flash.h files with helper
->           functions that facilitate registration/unregistration
->           of a subdevice, which wrapps a LED subsystem device and
->           exposes V4L2 Flash control interface
->     - Addition of a driver for the flash cell of the MAX77693 mfd
->         * the driver exploits the newly introduced mechanism
->     - Update of the max77693.txt DT bindings documentation
->
-> ================
-> Changes since v2
-> ================
->
->     - refactored the code so that it is possible to build
->       led-core without led-flash module
->     - added v4l2-flash ops which slackens dependency from
->       the led-flash module
->     - implemented led_clamp_align_val function and led_ctrl
->       structure which allows to align led control values
->       in the manner compatible with V4L2 Flash controls;
->       the flash brightness and timeout units have been defined
->       as microamperes and microseconds respectively to properly
->       support devices which define current and time levels
->       as fractions of 1/1000.
->     - added support for the flash privacy leds
->     - modified LED sysfs locking mechanism - now it locks/unlocks
->       the interface on V4L2 Flash sub-device file open/close
->     - changed hw_triggered attribute name to external_strobe,
->       which maps on the V4L2_FLASH_STROBE_SOURCE_EXTERNAL name
->       more intuitively
->     - made external_strobe and indicator related sysfs attributes
->       created optionally only if related features are declared
->       by the led device driver
->     - removed from the series patches modifying exynos4-is media
->       controller - a proposal for "flash manager" which will take
->       care of flash devices registration is due to be submitted
->     - removed modifications to the LED class devices documentation,
->       it will be covered after the whole functionality is accepted
->
+On Fri, Apr 18, 2014 at 05:33:51PM +0100, Mark Brown wrote:
+> On Thu, Apr 17, 2014 at 05:53:10PM +0200, Andrew Lunn wrote:
+> 
+> > + - compatible:	"realtek,alc5623"
+> 
+> You've not added an ID table to the driver for this.
 
-Thanks a lot for pushing this, I'm trapping in some other urgent tasks
-and will review it soon when I'm free.
+The driver already has:
 
--Bryan
+static const struct i2c_device_id alc5623_i2c_table[] = {
+        {"alc5621", 0x21},
+        {"alc5622", 0x22},
+        {"alc5623", 0x23},
+        {}
+};
+MODULE_DEVICE_TABLE(i2c, alc5623_i2c_table);
 
+which is enough for the i2c layer to load the driver when it walks the
+nodes under the i2c bus driver in the DT.
 
-> Thanks,
-> Jacek Anaszewski
->
-> [1] http://www.spinics.net/lists/linux-media/msg69253.html
->
-> Jacek Anaszewski (5):
->   leds: Add sysfs and kernel internal API for flash LEDs
->   leds: Improve and export led_update_brightness function
->   leds: Add support for max77693 mfd flash cell
->   DT: Add documentation for the mfd Maxim max77693 flash cell
->   media: Add registration helpers for V4L2 flash sub-devices
->
->  Documentation/devicetree/bindings/mfd/max77693.txt |   57 ++
->  drivers/leds/Kconfig                               |   18 +
->  drivers/leds/Makefile                              |    2 +
->  drivers/leds/led-class.c                           |   42 +-
->  drivers/leds/led-core.c                            |   16 +
->  drivers/leds/led-flash.c                           |  627 ++++++++++++++++
->  drivers/leds/led-triggers.c                        |   16 +-
->  drivers/leds/leds-max77693.c                       |  794 ++++++++++++++++++++
->  drivers/leds/leds.h                                |    6 +
->  drivers/media/v4l2-core/Kconfig                    |   10 +
->  drivers/media/v4l2-core/Makefile                   |    2 +
->  drivers/media/v4l2-core/v4l2-flash.c               |  393 ++++++++++
->  drivers/mfd/max77693.c                             |    2 +-
->  include/linux/leds.h                               |   60 +-
->  include/linux/leds_flash.h                         |  252 +++++++
->  include/linux/mfd/max77693.h                       |   38 +
->  include/media/v4l2-flash.h                         |  119 +++
->  17 files changed, 2433 insertions(+), 21 deletions(-)
->  create mode 100644 drivers/leds/led-flash.c
->  create mode 100644 drivers/leds/leds-max77693.c
->  create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
->  create mode 100644 include/linux/leds_flash.h
->  create mode 100644 include/media/v4l2-flash.h
->
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-leds" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > +  - add-ctrl:	Default register value for Reg-40h, Additional Control Register.
+> > +		If absent, the default is 0.
+> 
+> > +  - jack-det-ctrl:	Default register value for Reg-5Ah, Jack Detect
+> > +			Control Register. If absent, the default is 0.
+> 
+> I would expect the default for these to be to leave the hardware
+> defaults untouched - why is it different, what does setting to zero mean?
+
+The description is wrong. I will fix it. If the property is absent, or
+the value is zero, the register is left alone.
+
+    Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
