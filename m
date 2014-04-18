@@ -1,74 +1,136 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
-Date: Fri, 18 Apr 2014 16:28:17 -0500
-Message-ID: <CAL_Jsq+L14rgYq5swC3H109DThiyDajmTJpO=y562jcE97K-fg@mail.gmail.com>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-	<CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
-	<20140418124821.GE5904@bivouac.eciton.net>
-	<CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
-	<20140418201313.GG5904@bivouac.eciton.net>
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCHv3 2/2] ALSA: hda - Add driver for Tegra SoC HDA
+Date: Fri, 18 Apr 2014 14:32:54 -0700
+Message-ID: <CAEUnVG71Bo=4CMDFR2q3=6qC=HsG+-dctxDpR4y6Fd+pXZgFDQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140418201313.GG5904-t77nlHhSwNqAroYi2ySoxKxOck334EZe@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 18, 2014 at 3:13 PM, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Apr 18, 2014 at 10:37:58AM -0500, Rob Herring wrote:
->> >> But why do you need this?
->> >
->> > Apart from the current code permitting recreating a 15+ year old
->> > firmware bug into completely new platform ports?
+On Fri, Apr 18, 2014 at 1:22 AM, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org> wrote:
+> At Wed, 16 Apr 2014 14:39:32 -0700,
+> Dylan Reid wrote:
 >>
->> I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
->
-> In addition to, or instead of, the QUIRK ifdef?
-
-Instead of because I don't see how you handle the ARM board
-compatibility with the ifdef. (And please, no ifdef for that board).
-
->> Really, I would like to see quirks like this fixed up out of line from
->> the normal flow somewhat like how PCI quirks are handled. So in this
->> example, we would just add the missing property to the dtb for the
->> broken platform before doing the memory scan. That does then require
->> libfdt which is something I'm working on.
->
-> Getting rid of all this handling from generic code would clearly be
-> preferable. Is that code going in in the near future, or could we add
-> the quirk as a stopgap?
-
-Some sort of quirk infrastructure is not going to happen soon. It's
-just an idea bouncing in my head ATM.
-
->> > Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
->> > nodes from the DT. And it would be nice to at least not have to compile
->> > the "and also delete anything called memory@0" into the arm64 image. Or
->> > any image not including support for affected platforms.
+>> This adds a driver for the HDA block in Tegra SoCs.  The HDA bus is
+>> used to communicate with the HDMI codec on Tegra124.
 >>
->> I don't see why you would handle that in the EFI stub. Given our lack
->> of validation, I can see there is a chance this happens but I think it
->> is pretty small. Given we only have a ARM board, I'd say we are doing
->> surprisingly well.
+>> Most of the code is re-used from the Intel/PCI HDA driver.  It brings
+>> over only the power_save module parameter.
+>>
+>> Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >
-> I'm not too bothered personally, but Mark Rutland handed me a patch to
-> improve the memory node handling in the stub, and he seemed to really
-> want this there. You guys can fight it out :)
+> Thanks, this looks better, but a few comments below.
+> Besides, I'd like to have a review in DT part.
 
-Simply put, we shouldn't put work-arounds in new code for new platforms.
 
-> What would be the effect of the UEFI code adding all its memblocks,
-> minus the reserved areas, and then the DT code doing a memblock_add
-> of all RAM (including reserved areas)? Would memblock_reserve()s on
-> the protected regions suffice to prevent crazy stuff from happening?
+Thanks for looking.  I'll address the comments below and send a v4
+with some more DT maintainers CCed.
 
-So use UEFI to add the memory, but then add reserved areas with DT?
-I'm not sure I follow, but even if I did I don't know memblock code
-well enough to say what it would do.
+>
+>
+>> +/*
+>> + * Register access ops. Tegra HDA register access is DWORD only.
+>> + */
+>> +static void hda_tegra_writel(u32 value, u32 *addr)
+>> +{
+>> +     writel(value, addr);
+>> +}
+>> +
+>> +static u32 hda_tegra_readl(u32 *addr)
+>> +{
+>> +     return readl(addr);
+>> +}
+>> +
+>> +static void hda_tegra_writew(u16 value, u16 *addr)
+>> +{
+>> +     unsigned long shift = ((uintptr_t)(addr) & 0x3) << 3;
+>> +     void *dword_addr = (void *)((uintptr_t)(addr) & ~0x3);
+>> +     u32 v;
+>> +
+>> +     v = readl(dword_addr);
+>> +     v &= ~(0xffff << shift);
+>> +     v |= value << shift;
+>> +     writel(v, dword_addr);
+>> +}
+>
+> The shift doesn't have to be long at all, and the cast in kernel is
+> usually just unsigned long instead of uintptr_t.
+>
+>
+>> +#ifdef CONFIG_PM_SLEEP
+>> +/*
+>> + * power management
+>> + */
+>> +static int hda_tegra_suspend(struct device *dev)
+>> +{
+>> +     struct snd_card *card = dev_get_drvdata(dev);
+>> +     struct azx *chip = card->private_data;
+>> +     struct azx_pcm *p;
+>> +     struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
+>> +
+>> +     snd_power_change_state(card, SNDRV_CTL_POWER_D3hot);
+>> +     list_for_each_entry(p, &chip->pcm_list, list)
+>> +             snd_pcm_suspend_all(p->pcm);
+>> +     if (chip->initialized)
+>> +             snd_hda_suspend(chip->bus);
+>> +
+>> +     /* enable controller wake up event */
+>> +     azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) |
+>> +               STATESTS_INT_MASK);
+>
+> I guess WAKEEN doesn't work for Tegra?
 
-Rob
+I'm unsure, but this doesn't belong in the regular resume path, so it
+will disappear in v4.
+
+>
+>> +
+>> +     azx_stop_chip(chip);
+>> +     azx_enter_link_reset(chip);
+>> +     hda_tegra_disable_clocks(hda);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static int hda_tegra_resume(struct device *dev)
+>> +{
+>> +     struct snd_card *card = dev_get_drvdata(dev);
+>> +     struct azx *chip = card->private_data;
+>> +     struct hda_tegra *hda = container_of(chip, struct hda_tegra, chip);
+>> +     int status;
+>> +     struct hda_codec *codec;
+>> +
+>> +     hda_tegra_enable_clocks(hda);
+>> +
+>> +     /* Read STATESTS before controller reset */
+>> +     status = azx_readw(chip, STATESTS);
+>> +
+>> +     hda_tegra_init(hda);
+>> +
+>> +     if (status && chip->bus) {
+>> +             list_for_each_entry(codec, &chip->bus->codec_list, list)
+>> +                     if (status & (1 << codec->addr))
+>> +                             queue_delayed_work(codec->bus->workq,
+>> +                                                &codec->jackpoll_work,
+>> +                                                codec->jackpoll_interval);
+>> +     }
+>
+> This is superfluous for the regular resume.  It was some missing call
+> only in the runtime resume.
+>
+>> +
+>> +     /* disable controller Wake Up event*/
+>> +     azx_writew(chip, WAKEEN, azx_readw(chip, WAKEEN) & ~STATESTS_INT_MASK);
+>
+> This can be removed like the suspend.
+>
+>
+> thanks,
+>
+> Takashi
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
