@@ -1,78 +1,65 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: [PATCH v6 0/5] Add Broadcom Kona PWM Support
-Date: Fri, 18 Apr 2014 09:44:49 -0700
-Message-ID: <1397839494-21049-1-git-send-email-tim.kryger@linaro.org>
+From: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] Introducing (yet again) Device Tree Overlays
+Date: Fri, 18 Apr 2014 11:54:38 -0500
+Message-ID: <CANk1AXSCfpYCgZaqPKqPo1wafXaD_t3f4C0YXGfTYCZE8oL8yw@mail.gmail.com>
+References: <1395179766-31575-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<CANk1AXTb=ob52AfK2z--HvFkxJnjnfYWuTCch_Gw99OCoS1ABg@mail.gmail.com>
+	<7706B5FF-45EB-4860-BD12-204B341A510D@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy
- Dunlap <rdunlap@infradead.org>, Christian Daudt <bcm@fixthebug.org>, Grant
- Likely <grant.likely@linaro.org>
-Cc: Linux PWM List <linux-pwm@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Tim Kryger <tim.kryger@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7706B5FF-45EB-4860-BD12-204B341A510D-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This series introduces the driver for the Kona PWM controller found in
-Broadcom mobile SoCs like bcm281xx and updates the device tree and the
-defconfig to enable use of this hardware on the bcm28155 AP board.
+On Thu, Apr 17, 2014 at 11:12 AM, Pantelis Antoniou
+<pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Alan,
+>
+> Ugh, very sorry for the late reply; my mailer filed this somewhere I don't look at very frequently.
+>
+> On Mar 28, 2014, at 8:27 PM, delicious quinoa wrote:
+>
+>> On Tue, Mar 18, 2014 at 4:55 PM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>>> The following patchset introduces Device Tree overlays, a method
+>>> of dynamically altering the kernel's live Device Tree, along with
+>>> a generic interface to use it in a board agnostic manner.
+>>>
+>
+> [snip]
+>
+>> \
+>> I did some debug, haven't figured anything out yet.
+>>
+>> I have been able to successfully add/remove an overlay if it was to a
+>> fpga node that was at /fpga and used 'target = <&fpga>;'   Also
+>> 'target-path="/fpga";' works fine.
+>>
+>
+> Yes, platform devices are broken; I carry a patch that fixes all of that mess, and I intend to follow up with it.
 
-Changes since v5:
-  - Rebased on v3.15-rc1
+That's great.  I like this patchset and what it can do.
 
-Changes since v4:
-  - Added in real polarity support
-  - Labeled trigger bits as such rather than use the name from hw docs
-  - Listed unsual hardware characteristics at the top of the file
-  - Removed default from Kconfig and update defconfig accordingly
-  - Always use unsigned int for temporary register values
+Regards,
+Alan
 
-Changes since v3:
-  - Removed polarity support for now
-  - Cleaned up whitespace issues, shortened some variable names
-  - Use container_of instead of dev_get_drvdata to get private data
-  - Removed workaround for PWM framework bug
-  - Reworded some binding documentation
-
-Changes since v2:
-  - SoC DTS file updated to use real clock's phandle + specifier
-  - Toggle smooth mode off during apply so new settings take immediately
-
-Changes since v1:
-  - Fixed up macros to be clearer and more complete
-  - Corrected spelling and punctuation mistakes
-  - Added support for polarity
-  - Made peripheral clock use more efficient
-  - Made prescale and duty computation clearer
-  - Moved Makefile addition to keep alphabetical
-  - Split complex lines into multiple steps
-
-
-Tim Kryger (5):
-  Documentation: dt: Add Kona PWM binding
-  pwm: kona: Introduce Kona PWM controller support
-  ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
-  ARM: dts: Enable the PWM for bcm28155 AP board
-  ARM: bcm_defconfig: Enable PWM and Backlight
-
- .../devicetree/bindings/pwm/bcm-kona-pwm.txt       |   21 ++
- arch/arm/boot/dts/bcm11351.dtsi                    |    8 +
- arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
- arch/arm/configs/bcm_defconfig                     |    3 +
- drivers/pwm/Kconfig                                |    9 +
- drivers/pwm/Makefile                               |    1 +
- drivers/pwm/pwm-bcm-kona.c                         |  319 ++++++++++++++++++++
- 7 files changed, 365 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
- create mode 100644 drivers/pwm/pwm-bcm-kona.c
-
--- 
-1.7.9.5
+>
+>> Alan Tull
+>> aka
+>> delicious quinoa
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Regards
+>
+> -- Pantelis
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
