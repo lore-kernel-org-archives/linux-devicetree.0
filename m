@@ -1,63 +1,65 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: at91: fix spi cs on sama5d3 Xplained board
-Date: Fri, 18 Apr 2014 17:31:29 +0200
-Message-ID: <53514551.8030601@atmel.com>
-References: <1396336363-13709-1-git-send-email-voice.shen@atmel.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Fri, 18 Apr 2014 10:37:58 -0500
+Message-ID: <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
+	<CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+	<20140418124821.GE5904@bivouac.eciton.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1396336363-13709-1-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140418124821.GE5904@bivouac.eciton.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2014 09:12, Bo Shen :
-> The PD16 is the CS3 for SPI0 while not SPI1.
-> 
-> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+On Fri, Apr 18, 2014 at 7:48 AM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
+> On Thu, Apr 17, 2014 at 07:43:13PM -0500, Rob Herring wrote:
+>> On Thu, Apr 17, 2014 at 12:41 PM, Leif Lindholm
+>> <leif.lindholm@linaro.org> wrote:
+>> > drivers/of/fdt.c contains a workaround for a missing memory type
+>> > entry on longtrail firmware. Make that quirk PPC32 only, and while
+>> > at it - fix up the .dts files in the tree currently working only
+>> > because of that quirk.
+>>
+>> But why do you need this?
+>
+> Apart from the current code permitting recreating a 15+ year old
+> firmware bug into completely new platform ports?
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
 
-Okay, queued in at91-3.15-fixes. Thanks
+Really, I would like to see quirks like this fixed up out of line from
+the normal flow somewhat like how PCI quirks are handled. So in this
+example, we would just add the missing property to the dtb for the
+broken platform before doing the memory scan. That does then require
+libfdt which is something I'm working on.
 
+> Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
+> nodes from the DT. And it would be nice to at least not have to compile
+> the "and also delete anything called memory@0" into the arm64 image. Or
+> any image not including support for affected platforms.
 
+I don't see why you would handle that in the EFI stub. Given our lack
+of validation, I can see there is a chance this happens but I think it
+is pretty small. Given we only have a ARM board, I'd say we are doing
+surprisingly well.
 
-> ---
-> This patch is based on v3.14-rc8
-> 
->  arch/arm/boot/dts/at91-sama5d3_xplained.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-> index ce13755..4537259 100644
-> --- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-> @@ -34,7 +34,7 @@
->  			};
->  
->  			spi0: spi@f0004000 {
-> -				cs-gpios = <&pioD 13 0>;
-> +				cs-gpios = <&pioD 13 0>, <0>, <0>, <&pioD 16 0>;
->  				status = "okay";
->  			};
->  
-> @@ -79,7 +79,7 @@
->  			};
->  
->  			spi1: spi@f8008000 {
-> -				cs-gpios = <&pioC 25 0>, <0>, <0>, <&pioD 16 0>;
-> +				cs-gpios = <&pioC 25 0>;
->  				status = "okay";
->  			};
->  
-> 
+Rob
 
-
--- 
-Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> >  arch/arm/boot/dts/ste-ccu8540.dts     |    1 +
+>> >  arch/mips/lantiq/dts/easy50712.dts    |    1 +
+>> >  arch/mips/ralink/dts/mt7620a_eval.dts |    1 +
+>> >  arch/mips/ralink/dts/rt2880_eval.dts  |    1 +
+>> >  arch/mips/ralink/dts/rt3052_eval.dts  |    1 +
+>> >  arch/mips/ralink/dts/rt3883_eval.dts  |    1 +
+>>
+>> I'm not worried about these MIPS dts files because they are all
+>> built-in, but you are breaking compatibility with old dtbs for this
+>> ARM board.
+>
+> Yeah, sorry. Sending out a v2 of part 3 shortly.
+>
+> /
+>     Leif
