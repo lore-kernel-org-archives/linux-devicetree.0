@@ -1,50 +1,37 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/4] mmc: sdhci: add a driver for Berlin SoCs
-Date: Fri, 18 Apr 2014 14:06:39 +0800
-Message-ID: <20140418140639.03c450f3@xhacker>
-References: <1397652011-21284-1-git-send-email-antoine.tenart@free-electrons.com>
-	<1397652011-21284-2-git-send-email-antoine.tenart@free-electrons.com>
-	<534E92FE.8010400@gmail.com>
-	<20140417133359.GB31034@kwain>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140417133359.GB31034@kwain>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org" <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, "anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org" <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: [PATCH 2/5] ARM: dts: exynos4210-universal: add super device node for
+ exynos drm
+Date: Fri, 18 Apr 2014 15:41:07 +0900
+Message-ID: <1397803270-5377-3-git-send-email-inki.dae@samsung.com>
+References: <1397803270-5377-1-git-send-email-inki.dae@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1397803270-5377-1-git-send-email-inki.dae@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, kyungmin.park@samsung.com, inki.dae@samsung.com, linux@arm.linux.org.uk, a.hajda@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Inki Dae <inki.dae@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ arch/arm/boot/dts/exynos4210-universal_c210.dts |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-On Thu, 17 Apr 2014 06:33:59 -0700
-Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-
-> Sebastian,
->=20
-> On Wed, Apr 16, 2014 at 04:26:06PM +0200, Sebastian Hesselbarth wrote=
-:
-> > On 04/16/2014 02:40 PM, Antoine T=C3=A9nart wrote:
-> > >Add a Driver to support the SDHCI controller of the Marvell Berlin=
- SoCs.
-> > >This controller supports 3 sockets.
-> >=20
-> > nit: Isn't it three controller with one socket each?
->=20
-> It's a little bit confusing, there are 3 different register regions a=
-nd
-> I can see 3 separate data lines but, I quote: "The SD host controller
-> supports three sockets".
->=20
-> Maybe Jisheng can advise on that matter ?
-
-
-It's three controller with one socket each ;)
-
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+index 0a80a72..5351ac4 100644
+--- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
++++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
+@@ -409,6 +409,11 @@
+ 		};
+ 	};
+ 
++	display-subsystem {
++		compatible = "samsung,exynos-display-subsystem";
++		ports = <&fimd>;
++	};
++
+ 	pwm@139D0000 {
+ 		compatible = "samsung,s5p6440-pwm";
+ 		status = "okay";
+-- 
+1.7.9.5
