@@ -1,66 +1,53 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC PATCH v2 05/14] ARM: dts: samsung-fimd: add I80 specific
- properties
-Date: Fri, 18 Apr 2014 14:32:49 +0200
-Message-ID: <53511B71.8090506@samsung.com>
-References: <534F67B1.2020001@samsung.com>
- <1397735629-24028-1-git-send-email-yj44.cho@samsung.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Fri, 18 Apr 2014 13:48:22 +0100
+Message-ID: <20140418124821.GE5904@bivouac.eciton.net>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
+ <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1397735629-24028-1-git-send-email-yj44.cho@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, thierry.reding@gmail.com, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi again,
+On Thu, Apr 17, 2014 at 07:43:13PM -0500, Rob Herring wrote:
+> On Thu, Apr 17, 2014 at 12:41 PM, Leif Lindholm
+> <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > drivers/of/fdt.c contains a workaround for a missing memory type
+> > entry on longtrail firmware. Make that quirk PPC32 only, and while
+> > at it - fix up the .dts files in the tree currently working only
+> > because of that quirk.
+> 
+> But why do you need this?
 
-On 04/17/2014 01:53 PM, YoungJun Cho wrote:
-> In case of using CPU interface panel, the relevant registers should be set.
-> So this patch adds relevant dt bindings.
->
-> Changelog v2:
-> - Changes "samsung,sysreg-phandle" to "samsung,sysreg"
->
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/video/samsung-fimd.txt     |    9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> index 2dad41b..6ea1adc 100644
-> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-> @@ -44,6 +44,15 @@ Optional Properties:
->  - display-timings: timing settings for FIMD, as described in document [1].
->  		Can be used in case timings cannot be provided otherwise
->  		or to override timings provided by the panel.
-> +- samsung,sysreg: handle to syscon used to control the system registers
-> +- vidout-i80-ldi: boolean to support i80 interface instead of rgb one
-> +- cs-setup: clock cycles for the active period of address signal enable until
-> +	chip select is enable in i80 interface
-> +- wr-setup: clock cycles for the active period of CS signal enable until
-> +	write signal is enable in i80 interface
-> +- wr-act: clock cycles for the active period of CS enable in i80 interface
-> +- wr-hold: clock cycles for the active period of CS disable until write signal
-> +	is disable in i80 interface
+Apart from the current code permitting recreating a 15+ year old
+firmware bug into completely new platform ports?
 
-As Laurent wrote earlier it would be good to consider providing these
-properties
-by panel. Panel can pass it to DSI probably via mipi_dsi_device
-structure. DSI to FIMD
-can use exynos drm_framework probably.
-Anyway if you add optional properties please add info about default
-value, ie when property
-is not present.
+Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
+nodes from the DT. And it would be nice to at least not have to compile
+the "and also delete anything called memory@0" into the arm64 image. Or
+any image not including support for affected platforms.
 
-Regards
-Andrzej
+> >  arch/arm/boot/dts/ste-ccu8540.dts     |    1 +
+> >  arch/mips/lantiq/dts/easy50712.dts    |    1 +
+> >  arch/mips/ralink/dts/mt7620a_eval.dts |    1 +
+> >  arch/mips/ralink/dts/rt2880_eval.dts  |    1 +
+> >  arch/mips/ralink/dts/rt3052_eval.dts  |    1 +
+> >  arch/mips/ralink/dts/rt3883_eval.dts  |    1 +
+> 
+> I'm not worried about these MIPS dts files because they are all
+> built-in, but you are breaking compatibility with old dtbs for this
+> ARM board.
 
->  
->  The device node can contain 'port' child nodes according to the bindings defined
->  in [2]. The following are properties specific to those nodes:
+Yeah, sorry. Sending out a v2 of part 3 shortly.
+
+/
+    Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
