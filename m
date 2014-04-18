@@ -1,127 +1,42 @@
-From: sundeep subbaraya <sundeep.lkml@gmail.com>
-Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
-Date: Fri, 18 Apr 2014 19:34:08 +0530
-Message-ID: <CALHRZuqetzEANE=F4mit5sPG_Q-X8Vxsd9-N4k-MKW4_uzDFwg@mail.gmail.com>
-References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com>
-	<113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local>
-	<20140403145853.GD14162@saruman.home>
-	<CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA@mail.gmail.com>
-	<20140416180228.GK28035@saruman.home>
-	<CALHRZuq6=TMryHtbjTw7rYoGwbu2w0BTdxiOA95HYS3_CG6vwQ@mail.gmail.com>
-	<20140417150110.GB20889@saruman.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140417150110.GB20889@saruman.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "balbi@ti.com" <balbi@ti.com>
-Cc: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michals@xilinx.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH 0/4] Fixes for DT CPU topology specification on Exynos
+Date: Fri, 18 Apr 2014 16:42:57 +0200
+Message-ID: <1397832181-5153-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+Due to some parts of Exynos SoC support designed originally in a non-scalable
+way, relying on 1:1 mapping between value returned by cpu_logical_map() and
+CPU IDs as seen by PMU and GIC, trying to specify CPU topology in device tree
+caused various boot-up issues on Exynos SoCs, ranging from CPUs other than 0
+failing to boot to crashes due to GIC driver accessing registers out of range.
 
-On Thu, Apr 17, 2014 at 8:31 PM, Felipe Balbi <balbi@ti.com> wrote:
-> On Thu, Apr 17, 2014 at 03:01:37PM +0530, sundeep subbaraya wrote:
->> Hi Felipe,
->>
->> On Wed, Apr 16, 2014 at 11:32 PM, Felipe Balbi <balbi@ti.com> wrote:
->> > Hi,
->> >
->> > On Wed, Apr 16, 2014 at 04:09:28PM +0530, sundeep subbaraya wrote:
->> >> Hi Felipe,
->> >>
->> >> On Thu, Apr 3, 2014 at 8:28 PM, Felipe Balbi <balbi@ti.com> wrote:
->> >>
->> >> >> +static int start_dma(struct xusb_ep *ep, u32 src, u32 dst, u32 length)
->> >> >
->> >> > please prepend this with xudc_, it makes tracing a lot easier.
->> >> >
->> >> >> +{
->> >> >> +     struct xusb_udc *udc;
->> >> >> +     int rc = 0;
->> >> >> +     unsigned long timeout;
->> >> >> +
->> >> >> +     udc = ep->udc;
->> >> >> +     /*
->> >> >> +      * Set the addresses in the DMA source and
->> >> >> +      * destination registers and then set the length
->> >> >> +      * into the DMA length register.
->> >> >> +      */
->> >> >> +     udc->write_fn(udc->base_address, XUSB_DMA_DSAR_ADDR_OFFSET, src);
->> >> >> +     udc->write_fn(udc->base_address, XUSB_DMA_DDAR_ADDR_OFFSET, dst);
->> >> >> +     udc->write_fn(udc->base_address, XUSB_DMA_LENGTH_OFFSET, length);
->> >> >> +
->> >> >> +     /*
->> >> >> +      * Wait till DMA transaction is complete and
->> >> >> +      * check whether the DMA transaction was
->> >> >> +      * successful.
->> >> >> +     */
->> >> >> +     while ((udc->read_fn(ep->udc->base_address + XUSB_DMA_STATUS_OFFSET) &
->> >> >> +                     XUSB_DMA_DMASR_BUSY) == XUSB_DMA_DMASR_BUSY) {
->> >> >> +             timeout = jiffies + 10000;
->> >> >> +
->> >> >> +             if (time_after(jiffies, timeout)) {
->> >> >> +                     rc = -ETIMEDOUT;
->> >> >> +                     goto clean;
->> >> >> +             }
->> >> >> +     }
->> >> >
->> >> > don't you get an IRQ for DMA completion ? If you do, you could be using
->> >> > wait_for_completion()
->> >>
->> >> This function is called in interrupt context when buffer is ready or
->> >> free. It initiates DMA to transfer data from IP buffer to memory.
->> >> Hence it waits in busy loop till DMA completes
->> >
->> > wait, so you start_dma() before your gadget driver asks you to ?
->>
->> in ep_queue driver starts dma transfer from/to IP buffer to/from req->buf.
->> If transfer is completed then request is not added to ep request queue
->> and returns from ep_queue.
->> If transfer is not completed (actual < length) then request is added
->> to queue and returns from ep_queue.
->
-> This is wrong. Why wouldn't you give gadget driver the chance to decide
-> if it needs to queue the request again or not ?
+This series attempts to fix aforementioned issues by removing incorrect
+assumptions from Exynos SoC core code and GIC driver and then adding CPU
+topology data to device tree sources of Exynos4.
 
-When does gadget driver decides to queue the same request again?
-if -EBUSY is returned from ep_queue or req.status != 0 in completion
-routine?
+[On Exynos4210-based TRATS and Exynos4412-based TRATS2 board]
+Tested-by: Tomasz Figa <t.figa@samsung.com>
 
-there are cases where ping-pong buffers both are busy. currently this driver
-adds request to queue only when buffers are busy. In normal cases request is
-processed without adding to queue.
+Tomasz Figa (4):
+  ARM: EXYNOS: Fix definitions of S5P_ARM_CORE_* registers
+  ARM: EXYNOS: Fix core ID used by platsmp and hotplug code
+  irqchip: gic: Add support for per CPU bank offset specification in DT
+  ARM: dts: exynos4: Add CPU topology data
 
-do i need to have another local queue for requests waiting since
-buffers are busy?
-Or dequeue the request ?
+ Documentation/devicetree/bindings/arm/cpus.txt |  7 ++
+ Documentation/devicetree/bindings/arm/gic.txt  | 34 +++++++++-
+ arch/arm/boot/dts/exynos4210.dtsi              | 19 ++++++
+ arch/arm/boot/dts/exynos4212.dtsi              | 19 ++++++
+ arch/arm/boot/dts/exynos4412.dtsi              | 37 ++++++++--
+ arch/arm/mach-exynos/hotplug.c                 | 10 +--
+ arch/arm/mach-exynos/platsmp.c                 | 31 +++++----
+ arch/arm/mach-exynos/regs-pmu.h                |  4 +-
+ drivers/irqchip/irq-gic.c                      | 94 ++++++++++++++++++--------
+ 9 files changed, 202 insertions(+), 53 deletions(-)
 
->
->> when buffer processed interrupt occurs, handler starts dma if there is
->> request in queue and calls complete call back (when actual == length)
->> Hence answer is Yes for some transfers (start dma called from
->> interrupt handler not from ep_queue).
->
-> this also seems wrong(-ish).
->
-> 1) as Paul pointed out, you can't rely on jiffies if you're calling this
-> with IRQs disabled.
->
-> 2) you don't really need to wait until DMA finishes its transaction
-> before returning from start_dma(), just use the DMA completion IRQ,
->
-> 3) I don't see anywhere any sanitizing of arguments, can your DMA really
-> handle any alignment/unaligned addresses or should you make sure you're
-> getting good arguments?
->
-> You need to work on this a little bit, I guess.
-
-Yes am working on this and will be using seperate ep_ops for ep0  like
-drivers/usb/dwc3/gadget.c since ep0 has no dma and ping-pong buffers
-
-Thanks,
-Sundeep.B.S.
-
->
-> --
-> balbi
+-- 
+1.9.2
