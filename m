@@ -1,48 +1,48 @@
-From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/8] ARM: at91: sama5d3: disable sound by default
-Date: Fri, 18 Apr 2014 22:49:32 +0200
-Message-ID: <53518FDC.2020004@atmel.com>
-References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <1395049541-28128-3-git-send-email-voice.shen@atmel.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH 3/8] ARM: at91: sama5d3: correct the sound compatible
+ string
+Date: Fri, 18 Apr 2014 22:49:50 +0200
+Message-ID: <53518FEE.9090207@atmel.com>
+References: <1395049541-28128-1-git-send-email-voice.shen@atmel.com> <1395049541-28128-4-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395049541-28128-3-git-send-email-voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1395049541-28128-4-git-send-email-voice.shen@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>, Mark Brown <broonie@kernel.org>
+Cc: Andrew Victor <linux@maxim.org.za>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 On 17/03/2014 10:45, Bo Shen :
-> Make the sound device in disabled status by default
+> As the sama5d3 dtsi file in go into mainline before sound driver,
+> and, the sound compatible string is changed when go into mainline.
+> Add this patch to correct the sound compatible string.
 > 
-> Signed-off-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
 
-Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
 > ---
 > 
->  arch/arm/boot/dts/sama5d3xmb.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+>  arch/arm/boot/dts/sama5d3xmb.dtsi | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
 > diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
-> index dba739b..2938605 100644
+> index 2938605..e1bd5767 100644
 > --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
 > +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
-> @@ -170,5 +170,7 @@
->  
->  		atmel,ssc-controller = <&ssc0>;
->  		atmel,audio-codec = <&wm8904>;
-> +
-> +		status = "disabled";
+> @@ -156,7 +156,7 @@
 >  	};
->  };
+>  
+>  	sound {
+> -		compatible = "atmel,sama5d3ek-wm8904";
+> +		compatible = "atmel,asoc-wm8904";
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&pinctrl_pck0_as_audio_mck>;
+>  
 > 
 
 
 -- 
 Nicolas Ferre
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
