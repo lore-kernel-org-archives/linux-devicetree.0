@@ -1,65 +1,35 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
-Date: Fri, 18 Apr 2014 10:37:58 -0500
-Message-ID: <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-	<CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
-	<20140418124821.GE5904@bivouac.eciton.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140418124821.GE5904@bivouac.eciton.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>
+From: Richard Genoud <richard.genoud@gmail.com>
+Subject: [PATCH RESEND] tty/serial: atmel_serial: Fix device tree documentation
+Date: Fri, 18 Apr 2014 17:45:04 +0200
+Message-ID: <1397835904-866-1-git-send-email-richard.genoud@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Nicolas Ferre <nicolas.ferre@atmel.com>, Linus Walleij <linus.walleij@linaro.org>, Ludovic Desroches <ludovic.desroches@atmel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Richard Genoud <richard.genoud@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 18, 2014 at 7:48 AM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> On Thu, Apr 17, 2014 at 07:43:13PM -0500, Rob Herring wrote:
->> On Thu, Apr 17, 2014 at 12:41 PM, Leif Lindholm
->> <leif.lindholm@linaro.org> wrote:
->> > drivers/of/fdt.c contains a workaround for a missing memory type
->> > entry on longtrail firmware. Make that quirk PPC32 only, and while
->> > at it - fix up the .dts files in the tree currently working only
->> > because of that quirk.
->>
->> But why do you need this?
->
-> Apart from the current code permitting recreating a 15+ year old
-> firmware bug into completely new platform ports?
+RTS pin is an active low pin.
+For now, this doesn't change anything as the ACTIVE_LOW (1) flag is not
+handled in atmel_serial, but it will be in 3.16.
 
-I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
+Signed-off-by: Richard Genoud <richard.genoud@gmail.com>
+---
+ Documentation/devicetree/bindings/serial/atmel-usart.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Really, I would like to see quirks like this fixed up out of line from
-the normal flow somewhat like how PCI quirks are handled. So in this
-example, we would just add the missing property to the dtb for the
-broken platform before doing the memory scan. That does then require
-libfdt which is something I'm working on.
+diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+index 17c1042b2df8..0dd0a5493a54 100644
+--- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
++++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+@@ -35,7 +35,7 @@ Example:
+ 		clock-names = "usart";
+ 		atmel,use-dma-rx;
+ 		atmel,use-dma-tx;
+-		rts-gpios = <&pioD 15 0>;
++		rts-gpios = <&pioD 15 1>;
+ 	};
+ 
+ - use DMA:
+-- 
+1.8.5.5
 
-> Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
-> nodes from the DT. And it would be nice to at least not have to compile
-> the "and also delete anything called memory@0" into the arm64 image. Or
-> any image not including support for affected platforms.
-
-I don't see why you would handle that in the EFI stub. Given our lack
-of validation, I can see there is a chance this happens but I think it
-is pretty small. Given we only have a ARM board, I'd say we are doing
-surprisingly well.
-
-Rob
-
->> >  arch/arm/boot/dts/ste-ccu8540.dts     |    1 +
->> >  arch/mips/lantiq/dts/easy50712.dts    |    1 +
->> >  arch/mips/ralink/dts/mt7620a_eval.dts |    1 +
->> >  arch/mips/ralink/dts/rt2880_eval.dts  |    1 +
->> >  arch/mips/ralink/dts/rt3052_eval.dts  |    1 +
->> >  arch/mips/ralink/dts/rt3883_eval.dts  |    1 +
->>
->> I'm not worried about these MIPS dts files because they are all
->> built-in, but you are breaking compatibility with old dtbs for this
->> ARM board.
->
-> Yeah, sorry. Sending out a v2 of part 3 shortly.
->
-> /
->     Leif
