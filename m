@@ -1,69 +1,49 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: omap5: Add clocks to USB3 PHY node
-Date: Fri, 18 Apr 2014 15:29:54 -0700
-Message-ID: <20140418222954.GH21823@atomide.com>
-References: <1396348647-11545-1-git-send-email-rogerq@ti.com>
- <1396348647-11545-2-git-send-email-rogerq@ti.com>
- <20140401141308.GB4717@saruman.home>
- <534B8CC3.7050008@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: DTS: dra7xx-clocks: Correct mcasp2_ahclkx_mux
+ bit-shift
+Date: Fri, 18 Apr 2014 15:33:24 -0700
+Message-ID: <20140418223323.GJ21823@atomide.com>
+References: <1396446385-20258-1-git-send-email-peter.ujfalusi@ti.com>
+ <533C1A6E.4030100@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <534B8CC3.7050008-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <533C1A6E.4030100@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Benoit Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140414 00:23]:
-> Hi Tony,
+* Tero Kristo <t-kristo@ti.com> [140402 07:14]:
+> On 04/02/2014 04:46 PM, Peter Ujfalusi wrote:
+> >The correct bit is 24 for AHCLKX.
+> >
+> >Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 > 
-> On 04/01/2014 05:13 PM, Felipe Balbi wrote:
-> > On Tue, Apr 01, 2014 at 01:37:27PM +0300, Roger Quadros wrote:
-> >> The USB3 PHY driver (ti-pipe3) was updated so that the relevant
-> >> clock phandles are expected in the DT node.
-> >> Provide the necessary clocks.
-> >>
-> >> Reported-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> >> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-> > 
-> > Great!!!
-> > 
-> > Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> Yes, thats a clear bug in the data.
 > 
-> Could you please pick this up for 3.15-rc? Thanks.
+> Acked-by: Tero Kristo <t-kristo@ti.com>
 
-Yes applying into omap-for-v3.15/fixes thanks.
+Applying into omap-for-v3.15/fixes thanks.
 
 Tony
- 
-> >>  arch/arm/boot/dts/omap5.dtsi | 6 ++++++
-> >>  1 file changed, 6 insertions(+)
-> >>
-> >> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> >> index 757f0b9..4df1e7a 100644
-> >> --- a/arch/arm/boot/dts/omap5.dtsi
-> >> +++ b/arch/arm/boot/dts/omap5.dtsi
-> >> @@ -794,6 +794,12 @@
-> >>  				      <0x4a084c00 0x40>;
-> >>  				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
-> >>  				ctrl-module = <&omap_control_usb3phy>;
-> >> +				clocks = <&usb_phy_cm_clk32k>,
-> >> +					 <&sys_clkin>,
-> >> +					 <&usb_otg_ss_refclk960m>;
-> >> +				clock-names =	"wkupclk",
-> >> +						"sysclk",
-> >> +						"refclk";
-> >>  				#phy-cells = <0>;
-> >>  			};
-> >>  		};
-> >> -- 
-> >> 1.8.3.2
-> >>
-> > 
+
+> >  arch/arm/boot/dts/dra7xx-clocks.dtsi | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> >diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> >index e96da9a898ad..cfb8fc753f50 100644
+> >--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> >+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+> >@@ -1640,7 +1640,7 @@
+> >  		#clock-cells = <0>;
+> >  		compatible = "ti,mux-clock";
+> >  		clocks = <&abe_24m_fclk>, <&abe_sys_clk_div>, <&func_24m_clk>, <&atlclkin3_ck>, <&atl_clkin2_ck>, <&atl_clkin1_ck>, <&atl_clkin0_ck>, <&sys_clkin2>, <&ref_clkin0_ck>, <&ref_clkin1_ck>, <&ref_clkin2_ck>, <&ref_clkin3_ck>, <&mlb_clk>, <&mlbp_clk>;
+> >-		ti,bit-shift = <28>;
+> >+		ti,bit-shift = <24>;
+> >  		reg = <0x1860>;
+> >  	};
+> >
+> >
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
