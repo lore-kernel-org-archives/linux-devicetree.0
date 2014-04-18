@@ -1,105 +1,61 @@
-From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: [PATCH v2 10/14] clocksource: sh_mtu2: Add DT support
-Date: Fri, 18 Apr 2014 16:48:10 +0200
-Message-ID: <1397832494-20607-11-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-References: <1397832494-20607-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397832494-20607-1-git-send-email-laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulator: tps65090: Allow setting the
+ overcurrent wait time
+Date: Fri, 18 Apr 2014 16:06:51 +0100
+Message-ID: <20140418150651.GW12304@sirena.org.uk>
+References: <1397689950-1568-1-git-send-email-dianders@chromium.org>
+ <1397689950-1568-5-git-send-email-dianders@chromium.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1nR+rbHAiJEL631A"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1397689950-1568-5-git-send-email-dianders@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Anton Vorontsov <anton@enomsg.org>, Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Tested-by: Wolfram Sang <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
----
- .../devicetree/bindings/timer/renesas,mtu2.txt     | 40 ++++++++++++++++++++++
- drivers/clocksource/sh_mtu2.c                      |  8 +++++
- 2 files changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,mtu2.txt
 
-diff --git a/Documentation/devicetree/bindings/timer/renesas,mtu2.txt b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-new file mode 100644
-index 0000000..c5dd032
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/renesas,mtu2.txt
-@@ -0,0 +1,40 @@
-+* Renesas R-Car Multi-Function Timer Pulse Unit 2 (MTU2)
-+
-+The MTU2 is a multi-purpose, multi-channel timer/counter with configurable
-+clock inputs and programmable compare match.
-+
-+Channels share hardware resources but their counter and compare match value
-+are independent. The MTU2 hardware supports five channels indexed from 0 to 4.
-+
-+Required Properties:
-+
-+  - compatible: must contain "renesas,mtu2"
-+
-+  - reg: base address and length of the registers block for the timer module.
-+
-+  - interrupt-parent, interrupts: interrupt specifiers for the timer, one for
-+    each entry in interrupt-names.
-+  - interrupt-names: must contain one entry named "tgi?a" for each enabled
-+    channel, where "?" is the channel index expressed as one digit from "0" to
-+    "4".
-+
-+  - clocks: a list of phandle + clock-specifier pairs, one for each entry
-+    in clock-names.
-+  - clock-names: must contain "fck" for the functional clock.
-+
-+
-+Example: R7S72100 (RZ/A1H) MTU2 node
-+
-+	mtu2: timer@fcff0000 {
-+		compatible = "renesas,mtu2";
-+		reg = <0xfcff0000 0x400>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 139 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 146 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 150 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 154 IRQ_TYPE_LEVEL_HIGH>,
-+			     <0 159 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupt-names = "tgi0a", "tgi1a", "tgi2a", "tgi3a", "tgi4a";
-+		clocks = <&mstp3_clks R7S72100_CLK_MTU2>;
-+		clock-names = "fck";
-+	};
-diff --git a/drivers/clocksource/sh_mtu2.c b/drivers/clocksource/sh_mtu2.c
-index ebdf9d1..79387af 100644
---- a/drivers/clocksource/sh_mtu2.c
-+++ b/drivers/clocksource/sh_mtu2.c
-@@ -23,6 +23,7 @@
- #include <linux/ioport.h>
- #include <linux/irq.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/pm_domain.h>
- #include <linux/pm_runtime.h>
-@@ -502,11 +503,18 @@ static const struct platform_device_id sh_mtu2_id_table[] = {
- };
- MODULE_DEVICE_TABLE(platform, sh_mtu2_id_table);
- 
-+static const struct of_device_id sh_mtu2_of_table[] = {
-+	{ .compatible = "renesas,mtu2" },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, sh_mtu2_of_table);
-+
- static struct platform_driver sh_mtu2_device_driver = {
- 	.probe		= sh_mtu2_probe,
- 	.remove		= sh_mtu2_remove,
- 	.driver		= {
- 		.name	= "sh_mtu2",
-+		.of_match_table = of_match_ptr(sh_mtu2_of_table),
- 	},
- 	.id_table	= sh_mtu2_id_table,
- };
--- 
-1.8.3.2
+--1nR+rbHAiJEL631A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, Apr 16, 2014 at 04:12:28PM -0700, Doug Anderson wrote:
+> The tps65090 regulator allows you to specify how long you want it to
+> wait before detecting an overcurrent condition.  Allow specifying that
+> through the device tree (or through platform data).
+
+Applied, thanks.
+
+> +- ti,overcurrent-wait: This is applicable to FET registers, which have a
+> +  poorly defined "overcurrent wait" field.  If this property is present it
+> +  should be between 0 - 3.  If this property isn't present we won't touch the
+> +  "overcurrent wait" field and we'll leave it to the BIOS/EC to deal with.
+
+What I was driving at by asking if this was the raw register value was
+that the binding should make this clearer ideally.
+
+--1nR+rbHAiJEL631A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTUT+IAAoJELSic+t+oim9j8UP/3DomAkluVtsjECQ0zQhMleu
+wf2m9lA1wm47hvQSah5FWauysoSfKryrbODUAw1F+Uy19UIZEU/X1HatllWWQT7y
+RQiDXYIlU/W9TK6d6B574Ct64PvGnfLXMg2LUV0JFKUXOOm6o+N6hVQfjlY2O7Qp
+bqsFcK3TP7+slXMCR+f2eoBoUiGj4L8BSq+fU6VWahpLsGWQlHlASlUj/HcMKajw
+a1IJtgrb/ddZb56qjr8ijxZ7aMIapQpgqrmkfuugtrOgNTmwwR7B3H841uwFm8MH
+OolspJDPEJm9NSK10597drGLKriOJbds+alS+gWyY1moZfgE3U/Z+OLze2m6QcHi
+JP+Pw6vGTLpGY8zILfxDJLa2aiFRz+0og9ah3/YRGrCipKT8RcoyU/ZqRESDmbXk
+zMSyOs95mV6S09csHcAocOso4p9rkr+wJ9WjsrtczarwdiV9MMzb9nuZTwdCwfD7
+vC478LKjPQ15Sg5zzbLFiH6rY5UKnQxPuOUuE+fWSLYzR+/pk4Geri7qwVUYNFHI
+aWZb0hlCnSUewy39s0/qW3voDTDRsKCQ+PPlhVNREU+Amc0+AmKoTamHY+NXj5c4
+2ljPQ65EXsCqd1wZCA/KYq/zD/sd3LARVF/HBX0DW0SylzBV0QlKRzntweHI3FRE
+uJGoXESN0wZGfSkdYko4
+=jtIa
+-----END PGP SIGNATURE-----
+
+--1nR+rbHAiJEL631A--
