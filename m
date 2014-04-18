@@ -1,71 +1,149 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC PATCH 02/14] drm/exynos: dsi: delay setting clocks after
- reset
-Date: Fri, 18 Apr 2014 14:15:48 +0200
-Message-ID: <53511774.7030607@samsung.com>
-References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
- <1397540862-21359-3-git-send-email-yj44.cho@samsung.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 4/8] ARM: mvebu: Add USB3 UTMI support
+Date: Fri, 18 Apr 2014 14:19:49 +0200
+Message-ID: <53511865.701@free-electrons.com>
+References: <1397816563-9000-1-git-send-email-gregory.clement@free-electrons.com> <1397816563-9000-5-git-send-email-gregory.clement@free-electrons.com> <53510A4D.8050706@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1397540862-21359-3-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53510A4D.8050706-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi YoungJun,
+Hi Sebastian,
 
-Thanks for the whole patchset.
+On 18/04/2014 13:19, Sebastian Hesselbarth wrote:
+> On 04/18/2014 12:22 PM, Gregory CLEMENT wrote:
+>> The usb3-utmi registers allow to configure the internal USB PHY of the
+>> Armada 380/385 SoCs. A small initialization is needed to be able to use
+>> the USB3 ports.
+>>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  arch/arm/mach-mvebu/Makefile   |  2 +-
+>>  arch/arm/mach-mvebu/usb-utmi.c | 64 ++++++++++++++++++++++++++++++++++++++++++
+> 
+> Gregory,
+> 
+> there is the generic PHY framework, that could possibly be used to
+> avoid adding more code to arch/arm/mach-mvebu.
 
-On 04/15/2014 07:47 AM, YoungJun Cho wrote:
-> Some phy control registers are not kept after software reset.
-> So this patch makes the clocks containing phy control to be set
-> after software reset.
->
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Signed-off-by: Inki Dae <inki.dae@samsung.com>
-> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_dsi.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> index 956e5f3..2cf1f0b 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
-> @@ -946,10 +946,10 @@ static irqreturn_t exynos_dsi_irq(int irq, void *dev_id)
->  
->  static int exynos_dsi_init(struct exynos_dsi *dsi)
->  {
-> -	exynos_dsi_enable_clock(dsi);
->  	exynos_dsi_reset(dsi);
->  	enable_irq(dsi->irq);
->  	exynos_dsi_wait_for_reset(dsi);
-> +	exynos_dsi_enable_clock(dsi);
->  	exynos_dsi_init_link(dsi);
->  
->  	return 0;
-Are you sure this sequence is OK? I have observed that sequence:
+Given the very low information I have about UTMI I was a bit reluctant to
+write a driver. This is, for me, more a platform specific initialization than
+something which can be used for a driver. However I will have a look on it.
 
-dsi power off
-dsi power on
-dsi_reset
+> 
+>>  2 files changed, 65 insertions(+), 1 deletion(-)
+>>  create mode 100644 arch/arm/mach-mvebu/usb-utmi.c
+>>
+>> diff --git a/arch/arm/mach-mvebu/Makefile b/arch/arm/mach-mvebu/Makefile
+>> index a63e43b6b451..2d98a3eeecf6 100644
+>> --- a/arch/arm/mach-mvebu/Makefile
+>> +++ b/arch/arm/mach-mvebu/Makefile
+>> @@ -4,7 +4,7 @@ ccflags-$(CONFIG_ARCH_MULTIPLATFORM) := -I$(srctree)/$(src)/include \
+>>  AFLAGS_coherency_ll.o		:= -Wa,-march=armv7-a
+>>  
+>>  obj-y				 += system-controller.o mvebu-soc-id.o
+>> -obj-$(CONFIG_MACH_MVEBU_V7)      += board-v7.o
+>> +obj-$(CONFIG_MACH_MVEBU_V7)      += board-v7.o  usb-utmi.o
+>>  obj-$(CONFIG_MACH_DOVE)		 += dove.o
+>>  obj-$(CONFIG_ARCH_MVEBU)	 += coherency.o coherency_ll.o pmsu.o
+>>  obj-$(CONFIG_SMP)                += platsmp.o headsmp.o
+>> diff --git a/arch/arm/mach-mvebu/usb-utmi.c b/arch/arm/mach-mvebu/usb-utmi.c
+>> new file mode 100644
+>> index 000000000000..e91e86f85eb4
+>> --- /dev/null
+>> +++ b/arch/arm/mach-mvebu/usb-utmi.c
+>> @@ -0,0 +1,64 @@
+>> +/*
+>> + * USB UTMI support for Armada 38x platform.
+>> + *
+>> + * Copyright (C) 2014 Marvell
+>> + *
+>> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2.  This program is licensed "as is" without any
+>> + * warranty of any kind, whether express or implied.
+>> + *
+>> + */
+>> +
+>> +#include <linux/kernel.h>
+>> +#include <linux/init.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/io.h>
+>> +#include <linux/slab.h>
+> 
+> nit: sort alphabetically
 
-on 4210 or 4412 resulted in lack of irq after reset, only enabling
-clocks helped.
-And according to documentation reset do not touch registers set by
-exynos_dsi_enable_clock,
-so the current solution should work.
+Right
 
-Regards
-Andrzej
+> 
+>> +#define USB_UTMI_PHY_CTRL_STATUS(i)	(0x20+i*4)
+>> +#define		USB_UTMI_TX_BITSTUFF_EN BIT(1)
+>> +#define		USB_UTMI_PU_PHY		BIT(5)
+>> +#define		USB_UTMI_VBUS_ON_PHY	BIT(6)
+> 
+> nit: two TABs in front of the defines above.
+
+Right
+
+> 
+>> +static struct of_device_id of_usb_utmi_table[] = {
+>> +	{ .compatible = "marvell,armada-380-usb-utmi", },
+>> +	{ /* end of list */ },
+>> +};
+>> +
+>> +static int __init mvebu_usb_utmi_init(void)
+>> +{
+>> +	struct device_node *np;
+>> +
+>> +	np = of_find_matching_node(NULL, of_usb_utmi_table);
+>> +	if (np) {
+>> +		void __iomem *usb_utmi_base, *utmi_base;
+>> +
+>> +		usb_utmi_base = of_iomap(np, 0);
+>> +		BUG_ON(!usb_utmi_base);
+>> +
+>> +		utmi_base = of_iomap(np, 1);
+>> +		BUG_ON(!utmi_base);
+>> +
+>> +		writel(USB_UTMI_TX_BITSTUFF_EN |
+>> +			   USB_UTMI_PU_PHY |
+>> +			   USB_UTMI_VBUS_ON_PHY,
+>> +			   usb_utmi_base + USB_UTMI_PHY_CTRL_STATUS(0));
+>> +
+>> +		/*
+>> +		 * Magic init... the registers and their value are not
+>> +		 * documented
+>> +		 */
+>> +		writel(0x40605205, utmi_base);
+>> +		writel(0x409, utmi_base + 4);
+>> +		writel(0x1be7f6f, utmi_base + 0xc);
+> 
+> nit: decimal/hexadecimal offsets, also IMHO filling the values
+
+OK
+
+> written with leading zeros improves readability of "magic init"
+> alot :)
+
+Well it still remains magic! But I will do it.
+
+Thanks,
+
+Gregory
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
