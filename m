@@ -1,55 +1,135 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/6] regulator: arizona-micsupp: Add processing of
- init_data from device tree
-Date: Fri, 18 Apr 2014 18:40:06 +0100
-Message-ID: <20140418174006.GV12304@sirena.org.uk>
-References: <1397638902-7576-1-git-send-email-ckeepax@opensource.wolfsonmicro.com>
- <1397638902-7576-6-git-send-email-ckeepax@opensource.wolfsonmicro.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH/RFC v3 0/5] LED / flash API integration
+Date: Fri, 18 Apr 2014 10:54:33 -0700
+Message-ID: <CAK5ve-Ks_YVsM2YEbLMgnAS4jnF-McH7iDY+=hYQ-PaHTzcDOw@mail.gmail.com>
+References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PgXcaUTy7/dL0WMu"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1397638902-7576-6-git-send-email-ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-leds-owner@vger.kernel.org>
+In-Reply-To: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
+Sender: linux-leds-owner@vger.kernel.org
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Apr 11, 2014 at 7:56 AM, Jacek Anaszewski
+<j.anaszewski@samsung.com> wrote:
+> This is is the third version of the patch series being a follow up
+> of the discussion on Media summit 2013-10-23, related to the
+> LED / flash API integration (the notes from the discussion were
+> enclosed in the message [1], paragraph 5).
+> The series is based on linux-next next-20140328
+>
+> Description of the proposed modifications according to
+> the kernel components they are relevant to:
+>     - LED subsystem modifications
+>         * added led_flash module which, when enabled in the config,
+>           registers flash specific sysfs attributes:
+>             - flash_brightness
+>             - max_flash_brightness
+>             - indicator_brightness
+>             - max_indicator_brightness
+>             - flash_timeout
+>             - max_flash_timeout
+>             - flash_strobe
+>             - flash_fault
+>             - external_strobe
+>         and exposes kernel internal API
+>             - led_set_flash_strobe
+>             - led_get_flash_strobe
+>             - led_set_indicator_brightness
+>             - led_update_indicator_brightness
+>             - led_set_flash_timeout
+>             - led_get_flash_fault
+>             - led_set_external_strobe
+>             - led_sysfs_lock
+>             - led_sysfs_unlock
+>     - Addition of a V4L2 Flash sub-device registration helpers
+>         * added v4l2-flash.c and v4l2-flash.h files with helper
+>           functions that facilitate registration/unregistration
+>           of a subdevice, which wrapps a LED subsystem device and
+>           exposes V4L2 Flash control interface
+>     - Addition of a driver for the flash cell of the MAX77693 mfd
+>         * the driver exploits the newly introduced mechanism
+>     - Update of the max77693.txt DT bindings documentation
+>
+> ================
+> Changes since v2
+> ================
+>
+>     - refactored the code so that it is possible to build
+>       led-core without led-flash module
+>     - added v4l2-flash ops which slackens dependency from
+>       the led-flash module
+>     - implemented led_clamp_align_val function and led_ctrl
+>       structure which allows to align led control values
+>       in the manner compatible with V4L2 Flash controls;
+>       the flash brightness and timeout units have been defined
+>       as microamperes and microseconds respectively to properly
+>       support devices which define current and time levels
+>       as fractions of 1/1000.
+>     - added support for the flash privacy leds
+>     - modified LED sysfs locking mechanism - now it locks/unlocks
+>       the interface on V4L2 Flash sub-device file open/close
+>     - changed hw_triggered attribute name to external_strobe,
+>       which maps on the V4L2_FLASH_STROBE_SOURCE_EXTERNAL name
+>       more intuitively
+>     - made external_strobe and indicator related sysfs attributes
+>       created optionally only if related features are declared
+>       by the led device driver
+>     - removed from the series patches modifying exynos4-is media
+>       controller - a proposal for "flash manager" which will take
+>       care of flash devices registration is due to be submitted
+>     - removed modifications to the LED class devices documentation,
+>       it will be covered after the whole functionality is accepted
+>
 
---PgXcaUTy7/dL0WMu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thanks a lot for pushing this, I'm trapping in some other urgent tasks
+and will review it soon when I'm free.
 
-On Wed, Apr 16, 2014 at 10:01:41AM +0100, Charles Keepax wrote:
-> Signed-off-by: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+-Bryan
 
-Same here, you should have said what this is actually supposed to do.
 
---PgXcaUTy7/dL0WMu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTUWNzAAoJELSic+t+oim9xu4P/0Bk4/eUGZFHlMKC53E47Y9T
-MGRtoxBxFIH7arcBW8lFNR68jPR4fJSS36ZPEUlhCDISu6aCCY/kPHeGKEz6BM9+
-QL/tFKJQtZ/eVGw6mNyLoQXnC2lVOWWH54RrV/2WQIVgIVttVNcvDxBl7xLg+Dim
-Fyt2wV6O6kJnroLusOkBI0xRukxh+bclYbO+MAZMo5+IwdisiXfDcf4alIbJbpxk
-3H2wh61U4lhOss7EIy+ipNm9/4wS9eVkUX7Q8rhoA24tBpgzxsHJQQ+8cFAemUmx
-qXkJ09+bx1Xl8cDAQi3fxNPUKOIbbVqQiRGPrJ8xiu7RufTymIASBEqQ8AqYlvAi
-tNegV5BrgHVhaRm73+eb3wkn6nMoOcqTSSLrlA4ap9GcNVSdWmbfdL2RDDwJluEh
-ctc5EZQQBHz4RVnpszWJnMd3ygnNCFc7eOxTJhApjGCClFaj1LKNuL/LYFbXu7Qf
-xdijhjrqq+Vv7KWbRK4aUlPe5fWykcsBuAZhU3oOgKDTlB4Ei0OKq1lbEPHz76G1
-SLyFiQ9LKEHP1HE6yGC/W8izeADksna0+HoX6qRj4Njb31HBp2oMcnY2Kx0ZXcbT
-uSW4JHfOW1p8fYs9Hm4ssF+sE58q0RT38BqfFb/pYQ49bFsbvoPC4NkLIP9jH9Fk
-t+AGxY4bznTmKszM5w+g
-=srEy
------END PGP SIGNATURE-----
-
---PgXcaUTy7/dL0WMu--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Thanks,
+> Jacek Anaszewski
+>
+> [1] http://www.spinics.net/lists/linux-media/msg69253.html
+>
+> Jacek Anaszewski (5):
+>   leds: Add sysfs and kernel internal API for flash LEDs
+>   leds: Improve and export led_update_brightness function
+>   leds: Add support for max77693 mfd flash cell
+>   DT: Add documentation for the mfd Maxim max77693 flash cell
+>   media: Add registration helpers for V4L2 flash sub-devices
+>
+>  Documentation/devicetree/bindings/mfd/max77693.txt |   57 ++
+>  drivers/leds/Kconfig                               |   18 +
+>  drivers/leds/Makefile                              |    2 +
+>  drivers/leds/led-class.c                           |   42 +-
+>  drivers/leds/led-core.c                            |   16 +
+>  drivers/leds/led-flash.c                           |  627 ++++++++++++++++
+>  drivers/leds/led-triggers.c                        |   16 +-
+>  drivers/leds/leds-max77693.c                       |  794 ++++++++++++++++++++
+>  drivers/leds/leds.h                                |    6 +
+>  drivers/media/v4l2-core/Kconfig                    |   10 +
+>  drivers/media/v4l2-core/Makefile                   |    2 +
+>  drivers/media/v4l2-core/v4l2-flash.c               |  393 ++++++++++
+>  drivers/mfd/max77693.c                             |    2 +-
+>  include/linux/leds.h                               |   60 +-
+>  include/linux/leds_flash.h                         |  252 +++++++
+>  include/linux/mfd/max77693.h                       |   38 +
+>  include/media/v4l2-flash.h                         |  119 +++
+>  17 files changed, 2433 insertions(+), 21 deletions(-)
+>  create mode 100644 drivers/leds/led-flash.c
+>  create mode 100644 drivers/leds/leds-max77693.c
+>  create mode 100644 drivers/media/v4l2-core/v4l2-flash.c
+>  create mode 100644 include/linux/leds_flash.h
+>  create mode 100644 include/media/v4l2-flash.h
+>
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-leds" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
