@@ -1,63 +1,63 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 2/4] Documentation: dts: Add bindings for APM X-Gene
- SoC ethernet driver
-Date: Fri, 18 Apr 2014 23:51:07 +0400
-Message-ID: <5351822B.7010402@cogentembedded.com>
-References: <1397271984-23405-1-git-send-email-isubramanian@apm.com> <1397271984-23405-3-git-send-email-isubramanian@apm.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Fri, 18 Apr 2014 21:13:13 +0100
+Message-ID: <20140418201313.GG5904@bivouac.eciton.net>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
+ <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+ <20140418124821.GE5904@bivouac.eciton.net>
+ <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1397271984-23405-3-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: Iyappan Subramanian <isubramanian@apm.com>, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, Apr 18, 2014 at 10:37:58AM -0500, Rob Herring wrote:
+> >> But why do you need this?
+> >
+> > Apart from the current code permitting recreating a 15+ year old
+> > firmware bug into completely new platform ports?
+> 
+> I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
 
-On 04/12/2014 07:06 AM, Iyappan Subramanian wrote:
+In addition to, or instead of, the QUIRK ifdef?
 
-> This patch adds documentation for APM X-Gene SoC ethernet DTS binding.
+> Really, I would like to see quirks like this fixed up out of line from
+> the normal flow somewhat like how PCI quirks are handled. So in this
+> example, we would just add the missing property to the dtb for the
+> broken platform before doing the memory scan. That does then require
+> libfdt which is something I'm working on.
 
-> Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-> Signed-off-by: Ravi Patel <rapatel@apm.com>
-> Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
-> ---
->   .../devicetree/bindings/net/apm-xgene-enet.txt     |   46 ++++++++++++++++++++
->   1 file changed, 46 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+Getting rid of all this handling from generic code would clearly be
+preferable. Is that code going in in the near future, or could we add
+the quirk as a stopgap?
 
-> diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> new file mode 100644
-> index 0000000..0c983e8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> @@ -0,0 +1,46 @@
-> +APM X-Gene SoC Ethernet nodes
-> +
-> +Ethernet nodes are defined to describe on-chip ethernet interfaces in
-> +APM X-Gene SoC.
-> +
-> +Required properties:
-> +- compatible		: Should be "apm,xgene-enet"
-> +- reg			: First resource is the ethernet base register set
-> +			  Second resource is the ring base register set
-> +			  Third resource is the ring command register set
-> +- interrupts		: Ethernet main interrupt
-> +- clocks		: Reference to the clock entry.
-> +- local-mac-address	: Ethernet MAC address.
+> > Because the UEFI stub for arm/arm64 needs to delete all of the "memory"
+> > nodes from the DT. And it would be nice to at least not have to compile
+> > the "and also delete anything called memory@0" into the arm64 image. Or
+> > any image not including support for affected platforms.
+> 
+> I don't see why you would handle that in the EFI stub. Given our lack
+> of validation, I can see there is a chance this happens but I think it
+> is pretty small. Given we only have a ARM board, I'd say we are doing
+> surprisingly well.
 
-    This property is described in 
-Documentation/devicetree/bindings/net/ethernet.txt, please refer to it.
+I'm not too bothered personally, but Mark Rutland handed me a patch to
+improve the memory node handling in the stub, and he seemed to really
+want this there. You guys can fight it out :)
 
-> +- phy-addr		: Ethernet MII phy address.
+What would be the effect of the UEFI code adding all its memblocks,
+minus the reserved areas, and then the DT code doing a memblock_add
+of all RAM (including reserved areas)? Would memblock_reserve()s on
+the protected regions suffice to prevent crazy stuff from happening?
 
-    No, thus won't do. Please use "phy-handle" property to refer to a PHY subnode.
-
-> +- phy-mode		: Ethernet MII mode.
-
-    This one is described in 
-Documentation/devicetree/bindings/net/ethernet.txt as well.
-
-WBR, Sergei
+/
+    Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
