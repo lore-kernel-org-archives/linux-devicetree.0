@@ -1,61 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 4/5] regulator: tps65090: Allow setting the
- overcurrent wait time
-Date: Fri, 18 Apr 2014 16:06:51 +0100
-Message-ID: <20140418150651.GW12304@sirena.org.uk>
-References: <1397689950-1568-1-git-send-email-dianders@chromium.org>
- <1397689950-1568-5-git-send-email-dianders@chromium.org>
+From: Diana Craciun <diana.craciun@freescale.com>
+Subject: [PATCH v2] powerpc/fsl: Added binding for Freescale CoreNet coherency
+ fabric (CCF)
+Date: Fri, 18 Apr 2014 18:11:57 +0300
+Message-ID: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1nR+rbHAiJEL631A"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1397689950-1568-5-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, ajaykumar.rs@samsung.com, linux-samsung-soc@vger.kernel.org, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, devicetree@vger.kernel.org, Diana Craciun <Diana.Craciun@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-
---1nR+rbHAiJEL631A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Apr 16, 2014 at 04:12:28PM -0700, Doug Anderson wrote:
-> The tps65090 regulator allows you to specify how long you want it to
-> wait before detecting an overcurrent condition.  Allow specifying that
-> through the device tree (or through platform data).
-
-Applied, thanks.
-
-> +- ti,overcurrent-wait: This is applicable to FET registers, which have a
-> +  poorly defined "overcurrent wait" field.  If this property is present it
-> +  should be between 0 - 3.  If this property isn't present we won't touch the
-> +  "overcurrent wait" field and we'll leave it to the BIOS/EC to deal with.
-
-What I was driving at by asking if this was the raw register value was
-that the binding should make this clearer ideally.
-
---1nR+rbHAiJEL631A
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTUT+IAAoJELSic+t+oim9j8UP/3DomAkluVtsjECQ0zQhMleu
-wf2m9lA1wm47hvQSah5FWauysoSfKryrbODUAw1F+Uy19UIZEU/X1HatllWWQT7y
-RQiDXYIlU/W9TK6d6B574Ct64PvGnfLXMg2LUV0JFKUXOOm6o+N6hVQfjlY2O7Qp
-bqsFcK3TP7+slXMCR+f2eoBoUiGj4L8BSq+fU6VWahpLsGWQlHlASlUj/HcMKajw
-a1IJtgrb/ddZb56qjr8ijxZ7aMIapQpgqrmkfuugtrOgNTmwwR7B3H841uwFm8MH
-OolspJDPEJm9NSK10597drGLKriOJbds+alS+gWyY1moZfgE3U/Z+OLze2m6QcHi
-JP+Pw6vGTLpGY8zILfxDJLa2aiFRz+0og9ah3/YRGrCipKT8RcoyU/ZqRESDmbXk
-zMSyOs95mV6S09csHcAocOso4p9rkr+wJ9WjsrtczarwdiV9MMzb9nuZTwdCwfD7
-vC478LKjPQ15Sg5zzbLFiH6rY5UKnQxPuOUuE+fWSLYzR+/pk4Geri7qwVUYNFHI
-aWZb0hlCnSUewy39s0/qW3voDTDRsKCQ+PPlhVNREU+Amc0+AmKoTamHY+NXj5c4
-2ljPQ65EXsCqd1wZCA/KYq/zD/sd3LARVF/HBX0DW0SylzBV0QlKRzntweHI3FRE
-uJGoXESN0wZGfSkdYko4
-=jtIa
------END PGP SIGNATURE-----
-
---1nR+rbHAiJEL631A--
+RnJvbTogRGlhbmEgQ3JhY2l1biA8RGlhbmEuQ3JhY2l1bkBmcmVlc2NhbGUuY29tPgoKVGhlIENv
+cmVOZXQgY29oZXJlbmN5IGZhYnJpYyBpcyBhIGZhYnJpYy1vcmllbnRlZCwgY29uZWN0aXZpdHkK
+aW5mcmFzdHJ1Y3R1cmUgdGhhdCBlbmFibGVzIHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBjb2hlcmVu
+dCwgbXVsdGljb3JlCnN5c3RlbXMuIFRoZSBDQ0YgYWN0cyBhcyBhIGNlbnRyYWwgaW50ZXJjb25u
+ZWN0IGZvciBjb3JlcywKcGxhdGZvcm0tbGV2ZWwgY2FjaGVzLCBtZW1vcnkgc3Vic3lzdGVtLCBw
+ZXJpcGhlcmFsIGRldmljZXMgYW5kIEkvTyBob3N0CmJyaWRnZXMgaW4gdGhlIHN5c3RlbS4KClNp
+Z25lZC1vZmYtYnk6IERpYW5hIENyYWNpdW4gPERpYW5hLkNyYWNpdW5AZnJlZXNjYWxlLmNvbT4K
+LS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2YudHh0ICAgICAgICB8
+IDM2ICsrKysrKysrKysrKysrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAzNiBpbnNlcnRpb25z
+KCspCiBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L3Bvd2VycGMvZnNsL2NjZi50eHQKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRy
+ZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY2NmLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jY2YudHh0Cm5ldyBmaWxlIG1vZGUgMTAwNjQ0CmluZGV4
+IDAwMDAwMDAuLmYwYjcxNDMKLS0tIC9kZXYvbnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY2NmLnR4dApAQCAtMCwwICsxLDM2IEBACitGcmVl
+c2NhbGUgQ29yZU5ldCBDb2hlcmVuY3kgRmFicmljKENDRikgRGV2aWNlIFRyZWUgQmluZGluZwor
+CitERVNDUklQVElPTgorCitUaGUgQ29yZU5ldCBjb2hlcmVuY3kgZmFicmljIGlzIGEgZmFicmlj
+LW9yaWVudGVkLCBjb25uZWN0aXZpdHkgaW5mcmFzdHJ1Y3R1cmUKK3RoYXQgZW5hYmxlcyB0aGUg
+aW1wbGVtZW50YXRpb24gb2YgY29oZXJlbnQsIG11bHRpY29yZSBzeXN0ZW1zLgorCitSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOgorCistIGNvbXBhdGlibGUgOiA8c3RyaW5nPgorCQlNdXN0IGluY2x1ZGUg
+ImZzbCxjb3JlbmV0WC1jZiIsICJmc2wsY29yZW5ldC1jZiIgLSBDb3JlTmV0IGNvaGVyZW5jeSAK
+KwkJZmFicmljIHZlcnNpb24gWAorCistIHJlZyA6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJCUEg
+c3RhbmRhcmQgcHJvcGVydHkuIFJlcHJlc2VudHMgdGhlIENDRiByZWdpc3RlcnMuCisKKy0gaW50
+ZXJydXB0cyA6IDxwcm9wLWVuY29kZWQtYXJyYXk+CisJCUludGVycnVwdCBtYXBwaW5nIGZvciBD
+Q0YgZXJyb3IgaW50ZXJydXB0LgorCistIGZzbCxjY2YtbnVtLWNzZGlkczogPHUzMj4KKwkJU3Bl
+Y2lmaWVzIHRoZSBudW1iZXIgb2YgQ29oZXJlbmN5IFN1YmRvbWFpbiBJRCBQb3J0IE1hcHBpbmcK
+KwkJUmVnaXN0ZXJzIHRoYXQgYXJlIHN1cHBvcnRlZCBieSB0aGUgQ0NGLgorCistIGZzbCxjY2Yt
+bnVtLXNub29waWRzOiA8dTMyPgorCQlTcGVjaWZpZXMgdGhlIG51bWJlciBvZiBTbm9vcCBJRCBQ
+b3J0IE1hcHBpbmcgUmVnaXN0ZXJzIHRoYXQKKwkJYXJlIHN1cHBvcnRlZCBieSBDQ0YuCisKK0V4
+YW1wbGU6CisKKwljb3JlbmV0LWNmQDE4MDAwIHsKKwkJY29tcGF0aWJsZSA9ICJmc2wsY29yZW5l
+dDItY2YiLCAiZnNsLGNvcmVuZXQtY2YiOworCQlyZWcgPSA8MHgxODAwMCAweDEwMDA+OworCQlp
+bnRlcnJ1cHRzID0gPDE2IDIgMSAzMT47CisJCWZzbCxjY2YtbnVtLWNzZGlkcyA9IDwzMj47CisJ
+CWZzbCxjY2YtbnVtLXNub29waWRzID0gPDMyPjsKKwl9OwotLSAKMS43LjExLjcKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFp
+bGluZyBsaXN0CkxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
+YWJzLm9yZy9saXN0aW5mby9saW51eHBwYy1kZXY=
