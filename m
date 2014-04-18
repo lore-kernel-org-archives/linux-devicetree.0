@@ -1,60 +1,96 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
-Date: Thu, 17 Apr 2014 19:43:13 -0500
-Message-ID: <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCHv3 0/7] Support new Exynos3250 SoC based on Cortex-A7 dual core
+Date: Fri, 18 Apr 2014 10:15:21 +0900
+Message-ID: <1397783728-6193-1-git-send-email-cw00.choi@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397756521-29387-1-git-send-email-leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hyunhee.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sajjan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 17, 2014 at 12:41 PM, Leif Lindholm
-<leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> drivers/of/fdt.c contains a workaround for a missing memory type
-> entry on longtrail firmware. Make that quirk PPC32 only, and while
-> at it - fix up the .dts files in the tree currently working only
-> because of that quirk.
+This patchset support new Exynos3250 Samsung SoC based on Cortex-A7 dual core.
+Exynos3250 is a System-On-Chip (SoC) that is based on 32-bit RISC processor
+for Smartphone. It is desigend with the 28nm low-power high-K metal gate process
+and provides the best performance features.
 
-But why do you need this?
+This patchset include some patches such as:
+- Support secondary CPU of Exynos3250 (cpu up/down)
+- Supoort uart/mct/adc/gic/i2c/spi/power-domain/pmu/mshc/pwm/amba
+- Support the clock control for Exynos3250 using common clk framework
 
->
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->
-> Leif Lindholm (3):
->   arm: dts: add device_type="memory" for ste-ccu8540
->   mips: dts: add device_type="memory" where missing
->   of: Handle memory@0 node on PPC32 only
->
->  arch/arm/boot/dts/ste-ccu8540.dts     |    1 +
->  arch/mips/lantiq/dts/easy50712.dts    |    1 +
->  arch/mips/ralink/dts/mt7620a_eval.dts |    1 +
->  arch/mips/ralink/dts/rt2880_eval.dts  |    1 +
->  arch/mips/ralink/dts/rt3052_eval.dts  |    1 +
->  arch/mips/ralink/dts/rt3883_eval.dts  |    1 +
+This patchset is based on following git repo/branch.
+- git repo : git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+- branch   : for-next (Linux 3.15-rc1)
 
-I'm not worried about these MIPS dts files because they are all
-built-in, but you are breaking compatibility with old dtbs for this
-ARM board.
+Additional patch description about static memory mapping:
+This patchset must need to map memory mapping about SYSRAM/PMU for CPU UP/DOWN.
+So, this patchset need to merge following patchset to remove static memory
+mapping for SYSRAM[1] / PMU ([2] or [3]).
 
-Rob
+[1] http://www.spinics.net/lists/arm-kernel/msg323011.html
+[2] https://lkml.org/lkml/2014/4/2/48
+[3] http://www.spinics.net/lists/arm-kernel/msg316013.html
 
->  drivers/of/fdt.c                      |    7 ++++++-
->  7 files changed, 12 insertions(+), 1 deletion(-)
->
-> --
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+And,
+The pinctrl patch for Exynos3250 was posted as separated patch[4].
+[4] https://lkml.org/lkml/2014/4/13/156
+
+Changes from v2:
+- Remove static memory mapping about SYSRAM/PMU such as following patches:
+  ARM: EXYNOS: Add IO mapping for non-secure SYSRAM of Exynos3250
+  ARM: EXYNOS: Add IO mapping for PMU of Exynos3250
+- Add description for secondary CPU boot of Exynos4212/Exynos3250
+- Fix description in exynos_cpu_die() to remove particular SoC series
+- Fix minor coding style
+- Add documentation for Exynos3250 clock controller
+
+Changes from v1:
+- Add new "samsung,exynos3" compatible name
+- Add comment about exynos_cpu_boot in Exynos4212
+- Remove unnecessary 'goto' statement in firmware.c
+- Use read_cpuid_part_number() function instead of assembler directly
+- Post separated pinctrl patch from this patchset
+  : https://lkml.org/lkml/2014/4/13/156
+- Remove unused pmu interrupts due to Exynos3250 dual-core
+- Cosolidate all the patches related to exynos3250.dtsi into one patch
+- Fix gic compatible name to "cortex-a15-gic" because Cortex-A7 GIC is same
+- Add sign-off of sender to all this patches
+- Fix minor typo
+
+Chanwoo Choi (4):
+  ARM: EXYNOS: Add Exynos3250 SoC ID
+  ARM: EXYNOS: Support secondary CPU boot of Exynos3250
+  ARM: EXYNOS: Enter a15 lowpower mode for Exynos3250 based on Cortex-a7
+  dt-bindings: add documentation for Exynos3250 clock controller
+
+Kyungmin Park (1):
+  ARM: EXYNOS: Support secondary CPU boot of Exynos4212
+
+Tomasz Figa (2):
+  clk: samsung: exynos3250: Add clocks using common clock framework
+  ARM: dts: Add device tree sources for Exynos3250
+
+ .../devicetree/bindings/clock/exynos3250-clock.txt |  41 ++
+ arch/arm/boot/dts/exynos3250-pinctrl.dtsi          | 477 +++++++++++++
+ arch/arm/boot/dts/exynos3250.dtsi                  | 427 +++++++++++
+ arch/arm/mach-exynos/Kconfig                       |  22 +
+ arch/arm/mach-exynos/exynos.c                      |   2 +
+ arch/arm/mach-exynos/firmware.c                    |  21 +-
+ arch/arm/mach-exynos/hotplug.c                     |  19 +-
+ arch/arm/plat-samsung/include/plat/cpu.h           |  10 +
+ drivers/clk/samsung/Makefile                       |   1 +
+ drivers/clk/samsung/clk-exynos3250.c               | 785 +++++++++++++++++++++
+ include/dt-bindings/clock/exynos3250.h             | 256 +++++++
+ 11 files changed, 2053 insertions(+), 8 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/exynos3250-clock.txt
+ create mode 100644 arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos3250.dtsi
+ create mode 100644 drivers/clk/samsung/clk-exynos3250.c
+ create mode 100644 include/dt-bindings/clock/exynos3250.h
+
+-- 
+1.8.0
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
