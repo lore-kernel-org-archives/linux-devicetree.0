@@ -1,59 +1,34 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH v2 6/7] ARM: dma: implement set_arch_dma_coherent_ops()
-Date: Sat, 19 Apr 2014 10:32:51 -0400
-Message-ID: <1397917972-6293-7-git-send-email-santosh.shilimkar@ti.com>
-References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+From: Marek Belisko <marek@goldelico.com>
+Subject: [PATCH] ARM: dts: twl4030: Add twl4030-madc node
+Date: Sat, 19 Apr 2014 17:12:53 +0200
+Message-ID: <1397920373-12073-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-Implement the set_arch_dma_coherent_ops() for ARM architecture.
+Add madc node to twl4030 so DT boards can use it.
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Marek Belisko <marek@goldelico.com>
 ---
- arch/arm/include/asm/dma-mapping.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ arch/arm/boot/dts/twl4030.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
-index 8c12149..765c9e7 100644
---- a/arch/arm/include/asm/dma-mapping.h
-+++ b/arch/arm/include/asm/dma-mapping.h
-@@ -114,6 +114,13 @@ static inline unsigned long dma_max_pfn(struct device *dev)
- }
- #define dma_max_pfn(dev) dma_max_pfn(dev)
- 
-+static inline int set_arch_dma_coherent_ops(struct device *dev)
-+{
-+	set_dma_ops(dev, &arm_coherent_dma_ops);
-+	return 0;
-+}
-+#define set_arch_dma_coherent_ops(dev)	set_arch_dma_coherent_ops(dev)
+diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
+index 86cfc7d..36ae916 100644
+--- a/arch/arm/boot/dts/twl4030.dtsi
++++ b/arch/arm/boot/dts/twl4030.dtsi
+@@ -152,4 +152,10 @@
+ 		keypad,num-rows = <8>;
+ 		keypad,num-columns = <8>;
+ 	};
 +
- static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
- {
- 	unsigned int offset = paddr & ~PAGE_MASK;
++	twl_madc: madc {
++		compatible = "ti,twl4030-madc";
++		interrupts = <3>;
++		#io-channel-cells = <1>;
++	};
+ };
 -- 
-1.7.9.5
+1.8.3.2
