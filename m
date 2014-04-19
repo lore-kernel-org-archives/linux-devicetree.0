@@ -1,26 +1,41 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv3 14/14] DTS: ARM: OMAP3-N900: Add modem support
-Date: Sat, 19 Apr 2014 22:28:40 +0200
-Message-ID: <20140419202840.GN5148@amd.pavel.ucw.cz>
-References: <1396053110-21639-1-git-send-email-sre@kernel.org>
- <1396053110-21639-15-git-send-email-sre@kernel.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 1/7] drivers: input: keyboard: st-keyscan: add keyscan
+ driver
+Date: Sat, 19 Apr 2014 14:09:29 -0700
+Message-ID: <20140419210929.GA8343@core.coreip.homeip.net>
+References: <1397228856-9218-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1397228856-9218-2-git-send-email-gabriel.fernandez@linaro.org>
+ <20140413051050.GA7267@core.coreip.homeip.net>
+ <CAG374jCT78wkxwzn9qMsBD2bGiEXr=spu+cF7C45+nr8C6gRRQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1396053110-21639-15-git-send-email-sre@kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+In-Reply-To: <CAG374jCT78wkxwzn9qMsBD2bGiEXr=spu+cF7C45+nr8C6gRRQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Giuseppe Condorelli <giuseppe.condorelli@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat 2014-03-29 01:31:50, Sebastian Reichel wrote:
-> Add modem device tree data to Nokia N900's DTS file.
+On Wed, Apr 16, 2014 at 10:49:29AM +0200, Gabriel Fernandez wrote:
+> On 13 April 2014 07:10, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+> >
+> > Does the version of the patch below still work for you?
+> >
+> Yes it's was tested on b2000 and b2089 sti boards.
 > 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> > Thanks.
+> >
+> > --
+> > Dmitry
+> >
+> Thanks for yours remarks, i will prepare a v5 versions.
 
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
+
+If the version I sent to you works then you do not need to prepare v5,
+I'll just apply what I have.
+
+Thanks!
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Dmitry
