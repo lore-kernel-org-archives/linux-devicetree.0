@@ -1,89 +1,95 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/4] ARM: EXYNOS: Fix definitions of S5P_ARM_CORE_* registers
-Date: Sat, 19 Apr 2014 10:42:02 +0200
-Message-ID: <535236DA.1030806@gmail.com>
-References: <1397832181-5153-1-git-send-email-t.figa@samsung.com>	<1397832181-5153-2-git-send-email-t.figa@samsung.com> <CAGTfZH1Lg=2thqGSgyTehzM_UO1meyOcdXcn-b0AJnrm9dgwXQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 26/29] ARM: orion5x: convert RD-88F5182 to Device Tree
+Date: Sat, 19 Apr 2014 11:18:17 +0200
+Message-ID: <53523F59.60209@gmail.com>
+References: <1397400006-4315-1-git-send-email-thomas.petazzoni@free-electrons.com> <1397400006-4315-27-git-send-email-thomas.petazzoni@free-electrons.com> <534BC5DA.7030106@gmail.com> <20140419094633.2fa0b190@skate>
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGTfZH1Lg=2thqGSgyTehzM_UO1meyOcdXcn-b0AJnrm9dgwXQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cwchoi00@gmail.com>, Tomasz Figa <t.figa@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140419094633.2fa0b190@skate>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+[added devtree ML and Sascha Hauer]
 
-On 19.04.2014 09:47, Chanwoo Choi wrote:
-> Hi Tomasz,
->
-> On Fri, Apr 18, 2014 at 11:42 PM, Tomasz Figa <t.figa@samsung.com> wrote:
->> On SoCs with more than 2 cores there are more than 2 S5P_ARM_CORE_*
->> registers that can be addressed with fixed stride of 0x80. This patch
->> renames the definitions of S5P_ARM_CORE1_* registers to be S5P_ARM_CORE_*
->> and make them take physical core ID as argument to calculate register
->> address.
+On 04/19/2014 09:46 AM, Thomas Petazzoni wrote:
+> Dear Sebastian Hesselbarth,
+> 
+> On Mon, 14 Apr 2014 13:26:18 +0200, Sebastian Hesselbarth wrote:
+> 
+>>> +	chosen {
+>>> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
 >>
->> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
->> ---
->>   arch/arm/mach-exynos/hotplug.c  | 2 +-
->>   arch/arm/mach-exynos/platsmp.c  | 6 +++---
->>   arch/arm/mach-exynos/regs-pmu.h | 4 ++--
->>   3 files changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/mach-exynos/hotplug.c b/arch/arm/mach-exynos/hotplug.c
->> index 5eead53..7e0f31a 100644
->> --- a/arch/arm/mach-exynos/hotplug.c
->> +++ b/arch/arm/mach-exynos/hotplug.c
->> @@ -96,7 +96,7 @@ static inline void platform_do_lowpower(unsigned int cpu, int *spurious)
->>
->>                  /* make cpu1 to be turned off at next WFI command */
->>                  if (cpu == 1)
->> -                       __raw_writel(0, S5P_ARM_CORE1_CONFIGURATION);
->> +                       __raw_writel(0, S5P_ARM_CORE_CONFIGURATION(1));
->
-> Exynos4412 has quad cores. If turn off third/fourth core, this patch
-> could not turn off third/fourth cores.
->
-> Why didn't you use cpu number for argument of
-> S5P_ARM_CORE_CONFIGURATION() as following?
-> - __raw_writel(0, S5P_ARM_CORE_CONFIGURATION(cpu));
->
->>
->>                  /*
->>                   * here's the WFI
->> diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
->> index 03e5e9f..7b7de4b 100644
->> --- a/arch/arm/mach-exynos/platsmp.c
->> +++ b/arch/arm/mach-exynos/platsmp.c
->> @@ -107,14 +107,14 @@ static int exynos_boot_secondary(unsigned int cpu, struct task_struct *idle)
->>           */
->>          write_pen_release(phys_cpu);
->>
->> -       if (!(__raw_readl(S5P_ARM_CORE1_STATUS) & S5P_CORE_LOCAL_PWR_EN)) {
->> +       if (!(__raw_readl(S5P_ARM_CORE_STATUS(1)) & S5P_CORE_LOCAL_PWR_EN)) {
->>                  __raw_writel(S5P_CORE_LOCAL_PWR_EN,
->> -                            S5P_ARM_CORE1_CONFIGURATION);
->> +                            S5P_ARM_CORE_CONFIGURATION(1));
->
-> ditto.
->
->>
->>                  timeout = 10;
->>
->>                  /* wait max 10 ms until cpu1 is on */
->> -               while ((__raw_readl(S5P_ARM_CORE1_STATUS)
->> +               while ((__raw_readl(S5P_ARM_CORE_STATUS(1))
->
-> ditto.
+>> + [linux,]stdout-path = &uart0;
+> 
+> Done. Should it be linux,stdout-path, or stdout-path? As of 3.15-rc1,
+> it seems that only linux,stdout-path is being used.
 
-You are absolutely correct, this needs to be fixed, but this series just 
-keeps current behavior for now to just make CPU topology in DT not break 
-things that are working.
+I remember some discussion on devtree ML that mentioned stdout-path as
+possibly generic enough to loose its "linux," prefix.
 
-I have further patches that clean up platsmp and hotplug code and they 
-will add proper support for arbitrary number of cores.
+Maybe Sascha can give a comment on this.
 
-Best regards,
-Tomasz
+>>> +		devbus-bootcs {
+>>
+>> Use node label references where applicable.
+> 
+> Ok. Which node labels do you suggest for the devbus-* nodes?
+
+I'd say, just pick the foo in devbus-foo, e.g. "bootcs" for the
+one above. Or "devbus_bootcs" if you like.
+
+[...]
+>>> +&mdio {
+>>> +	status = "okay";
+>>> +
+>>> +	ethphy: ethernet-phy {
+>>> +		reg = <8>;
+>>
+>> Can you evaluate if it is GMII or RGMII[-id] and add a
+>> phy-connection-type property now? This is something that
+>> bothers me already on kirkwood.
+> 
+> I'll try to do this for this board for which I believe I have the
+> schematics, but for edmini_v2 or d2net, I don't have the schematics.
+> I'll see if I can infer the information from some U-Boot output, or by
+> dumping some register.
+
+If you find it out now, great. If not just leave it that way.
+
+>>> + * Maintainer: Ronen Shitrit <rshitrit-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>
+>> Maybe add Ronen to the Signed-off tag, too? Or at least put him
+>> on Cc?
+> 
+> Signed-off-by looks a bit strong, because Ronen has never seen this
+> patch nor been involved in writing it. I'll Cc him.
+
+Well, you make him the number one person to ask if there is something
+wrong with the DT ;) Cc is ok.
+
+>>> +	pin = RD88F5182_PCI_SLOT0_IRQ_A_PIN;
+>>> +	if (gpio_request(pin, "PCI IntA") == 0) {
+>>> +		if (gpio_direction_input(pin) == 0) {
+>>> +			irq_set_irq_type(gpio_to_irq(pin), IRQ_TYPE_LEVEL_LOW);
+>>> +		} else {
+>>> +			printk(KERN_ERR "rd88f5182_pci_preinit failed to "
+>>
+>> I am not sure, what is the correct way of using it, but maybe it is
+>> pr_err()? I'd also be interested in the latest policy of using it.
+> 
+> Indeed pr_err() is the right thing to use now. However here I'm just
+> replicating existing code, so I'd prefer to keep it as is in this
+> commit, if possible. I'm anyway planning on removing this PCI platform
+> code soon, but this is going to be for after this series is merged.
+
+Ok, makes sense to me, feel free to leave it that way it is.
+
+Sebastian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
