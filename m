@@ -1,41 +1,89 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4 1/7] drivers: input: keyboard: st-keyscan: add keyscan
- driver
-Date: Sat, 19 Apr 2014 14:09:29 -0700
-Message-ID: <20140419210929.GA8343@core.coreip.homeip.net>
-References: <1397228856-9218-1-git-send-email-gabriel.fernandez@linaro.org>
- <1397228856-9218-2-git-send-email-gabriel.fernandez@linaro.org>
- <20140413051050.GA7267@core.coreip.homeip.net>
- <CAG374jCT78wkxwzn9qMsBD2bGiEXr=spu+cF7C45+nr8C6gRRQ@mail.gmail.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC PATCH 02/14] drm/exynos: dsi: delay setting clocks after
+ reset
+Date: Sun, 20 Apr 2014 07:30:10 +0900
+Message-ID: <5352F8F2.9040003@samsung.com>
+References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
+ <1397540862-21359-3-git-send-email-yj44.cho@samsung.com>
+ <53511774.7030607@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAG374jCT78wkxwzn9qMsBD2bGiEXr=spu+cF7C45+nr8C6gRRQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-input@vger.kernel.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Giuseppe Condorelli <giuseppe.condorelli@st.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <53511774.7030607@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 16, 2014 at 10:49:29AM +0200, Gabriel Fernandez wrote:
-> On 13 April 2014 07:10, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> >
-> > Does the version of the patch below still work for you?
-> >
-> Yes it's was tested on b2000 and b2089 sti boards.
-> 
-> > Thanks.
-> >
-> > --
-> > Dmitry
-> >
-> Thanks for yours remarks, i will prepare a v5 versions.
+Hi Andrzej
 
+Thank you for comments.
 
-If the version I sent to you works then you do not need to prepare v5,
-I'll just apply what I have.
+On 04/18/2014 09:15 PM, Andrzej Hajda wrote:
+> Hi YoungJun,
+>
+> Thanks for the whole patchset.
+>
+> On 04/15/2014 07:47 AM, YoungJun Cho wrote:
+>> Some phy control registers are not kept after software reset.
+>> So this patch makes the clocks containing phy control to be set
+>> after software reset.
+>>
+>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c |    2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> index 956e5f3..2cf1f0b 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> @@ -946,10 +946,10 @@ static irqreturn_t exynos_dsi_irq(int irq, void *dev_id)
+>>
+>>   static int exynos_dsi_init(struct exynos_dsi *dsi)
+>>   {
+>> -	exynos_dsi_enable_clock(dsi);
+>>   	exynos_dsi_reset(dsi);
+>>   	enable_irq(dsi->irq);
+>>   	exynos_dsi_wait_for_reset(dsi);
+>> +	exynos_dsi_enable_clock(dsi);
+>>   	exynos_dsi_init_link(dsi);
+>>
+>>   	return 0;
+> Are you sure this sequence is OK? I have observed that sequence:
+>
+> dsi power off
+> dsi power on
+> dsi_reset
+>
+> on 4210 or 4412 resulted in lack of irq after reset, only enabling
+> clocks helped.
+> And according to documentation reset do not touch registers set by
+> exynos_dsi_enable_clock,
+> so the current solution should work.
 
-Thanks!
+As I mentioned in description, it came from phy control registers.
+Fortunately Exynos4 SoCs are safe, but the DSIM_PHYCTRL_REG,
+DSIM_PHYTIMING_REG, DSIM_PHYTIMING1_REG and DSIM_PHYTIMING2_REG are
+affected which are used in exynos_dsi_set_pll() for Exynos5 SoCs.
 
--- 
-Dmitry
+So this patch is required for Exynos5 SoCs.
+
+Thank you
+best regards YJ
+
+>
+> Regards
+> Andrzej
+>
