@@ -1,42 +1,76 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
-Date: Fri, 18 Apr 2014 16:51:20 -0700
-Message-ID: <20140418235119.GS21823@atomide.com>
-References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
- <CAOCHtYg5_Lvi3SWuWaRTDDNhLJ32jiXsKYQmrsKaShVWpM+xWQ@mail.gmail.com>
- <534D51C1.3010007@ti.com>
- <CAOCHtYhygGFbUunY9abEkjKfpQ1hh-DfRfhm160NehSYhWJSRw@mail.gmail.com>
- <20140418225111.GP21823@atomide.com>
- <CAOCHtYjdC-OGkdaBt74xMqi5eDc1eVbU6O7VyWMEYN-U50-Abw@mail.gmail.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Sat, 19 Apr 2014 01:36:34 +0100
+Message-ID: <20140419003634.GI5904@bivouac.eciton.net>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
+ <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+ <20140418124821.GE5904@bivouac.eciton.net>
+ <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
+ <20140418201313.GG5904@bivouac.eciton.net>
+ <CAL_Jsq+L14rgYq5swC3H109DThiyDajmTJpO=y562jcE97K-fg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOCHtYjdC-OGkdaBt74xMqi5eDc1eVbU6O7VyWMEYN-U50-Abw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benoit Cousson <bcousson@baylibre.com>
+In-Reply-To: <CAL_Jsq+L14rgYq5swC3H109DThiyDajmTJpO=y562jcE97K-fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Robert Nelson <robertcnelson@gmail.com> [140418 16:42]:
-> On Fri, Apr 18, 2014 at 5:51 PM, Tony Lindgren <tony@atomide.com> wrote:
-> > * Robert Nelson <robertcnelson@gmail.com> [140415 08:46]:
+On Fri, Apr 18, 2014 at 04:28:17PM -0500, Rob Herring wrote:
+> >> > Apart from the current code permitting recreating a 15+ year old
+> >> > firmware bug into completely new platform ports?
 > >>
-> >> Background: i also tried getting this having this fixed in u-boot:
+> >> I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
 > >
-> > Do we still need to apply this patch then?
+> > In addition to, or instead of, the QUIRK ifdef?
 > 
-> Yeah, Tom want's it done in the kernel:
-> 
-> Here's my proposed u-boot patch:
-> http://lists.denx.de/pipermail/u-boot/2014-January/172154.html
-> 
-> and Tom's recommendation:
-> http://lists.denx.de/pipermail/u-boot/2014-January/172274.html
-> 
-> Once this hits mainline, i'll submit a patch to u-boot to check for
-> the presence of this version and drop to the old dtb if not found.
+> Instead of because I don't see how you handle the ARM board
+> compatibility with the ifdef. (And please, no ifdef for that board).
 
-OK applying into omap-for-v3.15/fixes thanks.
+Umm, according to my memory as well as my sent mail folder, I cc:d you
+on v2 of part 3. Could you have a look at that, please?
 
-Tony
+A WARN_ON would still mean this ancient workaround for a specific ppc32
+platform remains enabled on ~10 architectures that don't use it.
+
+> >> Really, I would like to see quirks like this fixed up out of line from
+> >> the normal flow somewhat like how PCI quirks are handled. So in this
+> >> example, we would just add the missing property to the dtb for the
+> >> broken platform before doing the memory scan. That does then require
+> >> libfdt which is something I'm working on.
+> >
+> > Getting rid of all this handling from generic code would clearly be
+> > preferable. Is that code going in in the near future, or could we add
+> > the quirk as a stopgap?
+> 
+> Some sort of quirk infrastructure is not going to happen soon. It's
+> just an idea bouncing in my head ATM.
+
+Mmm...
+
+> > What would be the effect of the UEFI code adding all its memblocks,
+> > minus the reserved areas, and then the DT code doing a memblock_add
+> > of all RAM (including reserved areas)? Would memblock_reserve()s on
+> > the protected regions suffice to prevent crazy stuff from happening?
+> 
+> So use UEFI to add the memory, but then add reserved areas with DT?
+
+No, to add memory and reserved areas based on UEFI memory map.
+And then add any memory@0/!type nodes as well, if they're left around.
+
+> I'm not sure I follow, but even if I did I don't know memblock code
+> well enough to say what it would do.
+
+If we did end up with stray memory@0/!type nodes, we could initialise
+memblock multiple times with overlapping but incompatible areas.
+And I don't know if that would be a problem. Which makes me a little
+bit nervous.
+
+/
+    Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
