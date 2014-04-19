@@ -1,27 +1,27 @@
 From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH v2 5/7] ARM: dma: Use dma_pfn_offset for dma address translation
-Date: Sat, 19 Apr 2014 10:32:50 -0400
-Message-ID: <1397917972-6293-6-git-send-email-santosh.shilimkar@ti.com>
+Subject: [PATCH v2 6/7] ARM: dma: implement set_arch_dma_coherent_ops()
+Date: Sat, 19 Apr 2014 10:32:51 -0400
+Message-ID: <1397917972-6293-7-git-send-email-santosh.shilimkar@ti.com>
 References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-
-In most of cases DMA addresses can be performed using offset value of
- Bus address space relatively to physical address space as following:
-
-PFN->DMA:
- __pfn_to_phys(pfn + [-]dma_pfn_offset)
-
-DMA->PFN:
- __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
+Implement the set_arch_dma_coherent_ops() for ARM architecture.
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Russell King <linux@arm.linux.org.uk>
@@ -34,48 +34,26 @@ Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- arch/arm/include/asm/dma-mapping.h |   17 +++++++++++++----
- 1 file changed, 13 insertions(+), 4 deletions(-)
+ arch/arm/include/asm/dma-mapping.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
-index e701a4d..8c12149 100644
+index 8c12149..765c9e7 100644
 --- a/arch/arm/include/asm/dma-mapping.h
 +++ b/arch/arm/include/asm/dma-mapping.h
-@@ -58,22 +58,31 @@ static inline int dma_set_mask(struct device *dev, u64 mask)
- #ifndef __arch_pfn_to_dma
- static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
- {
--	return (dma_addr_t)__pfn_to_bus(pfn);
-+	if (!dev)
-+		return DMA_ERROR_CODE;
-+	return (dma_addr_t)__pfn_to_bus(pfn - dev->dma_pfn_offset);
+@@ -114,6 +114,13 @@ static inline unsigned long dma_max_pfn(struct device *dev)
  }
+ #define dma_max_pfn(dev) dma_max_pfn(dev)
  
- static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
++static inline int set_arch_dma_coherent_ops(struct device *dev)
++{
++	set_dma_ops(dev, &arm_coherent_dma_ops);
++	return 0;
++}
++#define set_arch_dma_coherent_ops(dev)	set_arch_dma_coherent_ops(dev)
++
+ static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
  {
--	return __bus_to_pfn(addr);
-+	if (!dev)
-+		return 0;
-+	return __bus_to_pfn(addr) + dev->dma_pfn_offset;
- }
- 
- static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
- {
--	return (void *)__bus_to_virt((unsigned long)addr);
-+	if (!dev)
-+		return NULL;
-+	return (void *)__bus_to_virt(__pfn_to_bus(dma_to_pfn(dev, addr)));
- }
- 
- static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
- {
--	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
-+	if (!dev)
-+		return DMA_ERROR_CODE;
-+	return pfn_to_dma(dev,
-+			   __bus_to_pfn(__virt_to_bus((unsigned long)(addr))));
- }
- 
- #else
+ 	unsigned int offset = paddr & ~PAGE_MASK;
 -- 
 1.7.9.5
