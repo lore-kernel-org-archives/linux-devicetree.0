@@ -1,7 +1,7 @@
 From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 2/7] of: introduce of_dma_get_range() helper
-Date: Sat, 19 Apr 2014 10:32:47 -0400
-Message-ID: <1397917972-6293-3-git-send-email-santosh.shilimkar@ti.com>
+Subject: [PATCH v2 4/7] of: configure the platform device dma parameters
+Date: Sat, 19 Apr 2014 10:32:49 -0400
+Message-ID: <1397917972-6293-5-git-send-email-santosh.shilimkar@ti.com>
 References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,17 +9,19 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1397917972-6293-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Retrieve DMA configuration from DT and setup platform device's DMA
+parameters. The DMA configuration in DT has to be specified using
+"dma-ranges" and "dma-coherent" properties if supported.
 
-The of_dma_get_range() allows to find "dma-range" property for
-the specified device and parse it.
- dma-ranges format:
-   DMA addr (dma_addr)          : naddr cells
-   CPU addr (phys_addr_t)       : pna cells
-   size                         : nsize cells
+We setup dma_pfn_offset using "dma-ranges" and dma_coherent_ops
+using "dma-coherent" device tree properties.
+
+The set_arch_dma_coherent_ops macro has to be defined by arch if
+it supports coherent dma_ops. Otherwise, set_arch_dma_coherent_ops() is
+declared as nop.
 
 Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
@@ -32,130 +34,89 @@ Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 ---
- drivers/of/platform.c       |   85 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_platform.h |    8 ++++
- 2 files changed, 93 insertions(+)
+ drivers/of/platform.c       |   43 +++++++++++++++++++++++++++++++++++++++++++
+ include/linux/dma-mapping.h |    7 +++++++
+ 2 files changed, 50 insertions(+)
 
 diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 404d1da..2265a55 100644
+index 573db15..7e4a43b 100644
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -485,4 +485,89 @@ int of_platform_populate(struct device_node *root,
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(of_platform_populate);
+@@ -187,6 +187,47 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ EXPORT_SYMBOL(of_device_alloc);
+ 
+ /**
++ * of_dma_configure - Setup DMA configuration
++ * @dev:	Device to apply DMA configuration
++ *
++ * Try to get devices's DMA configuration from DT and update it
++ * accordingly.
++ *
++ * In case if platform code need to use own special DMA configuration,it
++ * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
++ * to fix up DMA configuration.
++ */
++static void of_dma_configure(struct device *dev)
++{
++	dma_addr_t dma_addr;
++	phys_addr_t paddr, size;
++	int ret;
++
++	/*
++	 * if dma-coherent property exist, call arch hook to setup
++	 * dma coherent operations.
++	 */
++	if (of_dma_is_coherent(dev->of_node)) {
++		set_arch_dma_coherent_ops(dev);
++		dev_dbg(dev, "device is dma coherent\n");
++	}
++
++	/*
++	 * if dma-ranges property doesn't exist - just return else
++	 * setup the dma offset
++	 */
++	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
++	if (ret < 0) {
++		dev_dbg(dev, "no dma range information to setup\n");
++		return;
++	} else {
++		/* DMA ranges found. Calculate and set dma_pfn_offset */
++		dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
++		dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
++	}
++}
 +
 +/**
-+ * of_dma_get_range - Get DMA range info
-+ * @np:		device node to get DMA range info
-+ * @dma_addr:	pointer to store initial DMA address of DMA range
-+ * @paddr:	pointer to store initial CPU address of DMA range
-+ * @size:	pointer to store size of DMA range
-+ *
-+ * Look in bottom up direction for the first "dma-range" property
-+ * and parse it.
-+ *  dma-ranges format:
-+ *	DMA addr (dma_addr)	: naddr cells
-+ *	CPU addr (phys_addr_t)	: pna cells
-+ *	size			: nsize cells
-+ *
-+ * It returns -ENODEV if "dma-ranges" property was not found
-+ * for this device in DT.
-+ */
-+extern int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
-+		phys_addr_t *paddr, phys_addr_t *size)
-+{
-+	struct device_node *node = np;
-+	const u32 *ranges = NULL;
-+	int len, naddr, nsize, pna;
-+	int ret = 0;
+  * of_platform_device_create_pdata - Alloc, initialize and register an of_device
+  * @np: pointer to node to create device for
+  * @bus_id: name to assign device
+@@ -217,6 +258,8 @@ static struct platform_device *of_platform_device_create_pdata(
+ 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+ 	if (!dev->dev.dma_mask)
+ 		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
 +
-+	if (!node)
-+		return -EINVAL;
-+
-+	while (1) {
-+		naddr = of_n_addr_cells(node);
-+		nsize = of_n_size_cells(node);
-+		node = of_get_next_parent(node);
-+		if (!node)
-+			break;
-+
-+		ranges = of_get_property(node, "dma-ranges", &len);
-+
-+		/* Ignore empty ranges, they imply no translation required */
-+		if (ranges && len > 0)
-+			break;
-+
-+		/*
-+		 * At least empty ranges has to be defined for parent node if
-+		 * DMA is supported
-+		 */
-+		if (!ranges)
-+			break;
-+	}
-+
-+	if (!ranges) {
-+		pr_debug("%s: no dma-ranges found for node(%s)\n",
-+			 __func__, np->full_name);
-+		ret = -ENODEV;
-+		goto out;
-+	}
-+
-+	len /= sizeof(u32);
-+
-+	pna = of_n_addr_cells(node);
-+
-+	/* dma-ranges format:
-+	 * DMA addr	: naddr cells
-+	 * CPU addr	: pna cells
-+	 * size		: nsize cells
-+	 */
-+	*dma_addr = of_read_number(ranges, naddr);
-+	*paddr = of_translate_dma_address(np, ranges);
-+	if (*paddr == OF_BAD_ADDR) {
-+		pr_err("%s: translation of DMA address(%pad) to CPU address failed node(%s)\n",
-+		       __func__, dma_addr, np->full_name);
-+		ret = -EINVAL;
-+	}
-+
-+	*size = of_read_number(ranges + naddr + pna, nsize);
-+
-+	pr_debug("dma_addr(%pad) cpu_addr(%pa) size(%pa)\n",
-+		 dma_addr, paddr, size);
-+
-+out:
-+	of_node_put(node);
-+
-+	return ret;
-+}
-+EXPORT_SYMBOL_GPL(of_dma_get_range);
- #endif /* CONFIG_OF_ADDRESS */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..ba7d3dc 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -72,6 +72,8 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
-+extern int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
-+				phys_addr_t *paddr, phys_addr_t *size);
- #else
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
-@@ -80,6 +82,12 @@ static inline int of_platform_populate(struct device_node *root,
- {
- 	return -ENODEV;
- }
-+
-+static inline int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
-+					phys_addr_t *paddr, phys_addr_t *size)
-+{
-+	return -ENODEV;
-+}
- #endif
++	of_dma_configure(&dev->dev);
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
  
- #endif	/* _LINUX_OF_PLATFORM_H */
+diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
+index fd4aee2..c7d9b1b 100644
+--- a/include/linux/dma-mapping.h
++++ b/include/linux/dma-mapping.h
+@@ -123,6 +123,13 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
+ 
+ extern u64 dma_get_required_mask(struct device *dev);
+ 
++#ifndef set_arch_dma_coherent_ops
++static inline int set_arch_dma_coherent_ops(struct device *dev)
++{
++	return 0;
++}
++#endif
++
+ static inline unsigned int dma_get_max_seg_size(struct device *dev)
+ {
+ 	return dev->dma_parms ? dev->dma_parms->max_segment_size : 65536;
 -- 
 1.7.9.5
 
