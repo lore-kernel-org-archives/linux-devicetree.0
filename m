@@ -1,68 +1,64 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2 5/7] ARM: dma: Use dma_pfn_offset for dma address
-	translation
-Date: Sat, 19 Apr 2014 20:43:34 +0100
-Message-ID: <20140419194334.GL24070@n2100.arm.linux.org.uk>
-References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com> <1397917972-6293-6-git-send-email-santosh.shilimkar@ti.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCHv3 10/14] HSI: Introduce driver for SSI Protocol
+Date: Sat, 19 Apr 2014 21:49:36 +0200
+Message-ID: <20140419194936.GJ5148@amd.pavel.ucw.cz>
+References: <1396053110-21639-1-git-send-email-sre@kernel.org>
+ <1396053110-21639-11-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397917972-6293-6-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1396053110-21639-11-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Carlos Chinea <carlos.chinea-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 19, 2014 at 10:32:50AM -0400, Santosh Shilimkar wrote:
-> From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> 
-> In most of cases DMA addresses can be performed using offset value of
->  Bus address space relatively to physical address space as following:
-> 
-> PFN->DMA:
->  __pfn_to_phys(pfn + [-]dma_pfn_offset)
-> 
-> DMA->PFN:
->  __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
-> 
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/include/asm/dma-mapping.h |   17 +++++++++++++----
->  1 file changed, 13 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
-> index e701a4d..8c12149 100644
-> --- a/arch/arm/include/asm/dma-mapping.h
-> +++ b/arch/arm/include/asm/dma-mapping.h
-> @@ -58,22 +58,31 @@ static inline int dma_set_mask(struct device *dev, u64 mask)
->  #ifndef __arch_pfn_to_dma
->  static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
->  {
-> -	return (dma_addr_t)__pfn_to_bus(pfn);
-> +	if (!dev)
-> +		return DMA_ERROR_CODE;
-> +	return (dma_addr_t)__pfn_to_bus(pfn - dev->dma_pfn_offset);
+Hi!
 
-How do ISA devices (iow, those which pass a NULL device) work with this?
-This looks to me like it ends up breaking some drivers.
+> This adds a driver for the SSI McSAAB protocol as used in
+> the Nokia N900.
+> 
+> Signed-off-by: Carlos Chinea <carlos.chinea-xNZwKgViW5gAvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-I've also seen some drivers (such as the Freescale FEC driver) which
-perform DMA coherent allocations with a NULL device - technically, that's
-a bug in the driver, but the above change will cause them to regress.
+> +#define SSIP_MIN_PN_HDR		6	/* FIXME: Revisit */
+> +#define SSIP_WDTOUT		2000	/* FIXME: has to be 500 msecs> */
 
+Can they be fixed now, or do they have to wait?
+
+
+> +#ifdef __LITTLE_ENDIAN
+> +	((u16 *)skb->data)[2] = swab16(((u16 *)skb->data)[2]);
+> +	dev_dbg(&dev->dev, "RX length fixed (%04x -> %u)\n",
+> +			((u16 *)skb->data)[2], ntohs(((u16 *)skb->data)[2]));
+> +#endif
+
+Uh. Can this be replaced by
+    ((u16 *)skb->data)[2] = htons(((u16 *)skb->data)[2]);
+
+(without the ifdef?)
+
+> +	/*
+> +	 * Modem sends Phonet messages over SSI with its own endianess...
+> +	 * Assume that modem has the same endianess as we do.
+> +	 */
+> +	if (skb_cow_head(skb, 0))
+> +		goto drop;
+> +#ifdef __LITTLE_ENDIAN
+> +	((u16 *)skb->data)[2] = swab16(((u16 *)skb->data)[2]);
+> +#endif
+
+Here, too?
+
+But it looks like the comment does not match the code, because we
+swap.
+
+Best regards,
+									Pavel
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
