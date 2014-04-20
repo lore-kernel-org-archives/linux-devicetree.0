@@ -1,37 +1,38 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 4/5] ARM: dts: enable fimd for exynos5420 based peach-pit board
-Date: Sun, 20 Apr 2014 17:18:44 +0530
-Message-ID: <1397994525-18537-5-git-send-email-rahul.sharma@samsung.com>
-References: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCHv2 1/2] rx51_battery: convert to iio consumer
+Date: Sun, 20 Apr 2014 14:08:23 +0200
+Message-ID: <20140420120823.GB12135@amd.pavel.ucw.cz>
+References: <1393375569-21751-1-git-send-email-sre@debian.org>
+ <1393705366-32420-1-git-send-email-sre@debian.org>
+ <1393705366-32420-2-git-send-email-sre@debian.org>
+ <5336A9F9.4080504@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5336A9F9.4080504@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Sebastian Reichel <sre@debian.org>, Sebastian Reichel <sre@ring0.de>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Marek Belisko <marek@goldelico.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rahul Sharma <Rahul.Sharma@samsung.com>
+On Sat 2014-03-29 11:09:45, Jonathan Cameron wrote:
+> On 01/03/14 20:22, Sebastian Reichel wrote:
+> >Update rx51-battery driver to use the new IIO API of
+> >twl4030-madc and add DT support.
+> >
+> >Signed-off-by: Sebastian Reichel <sre@debian.org>
+> This looks fine to me.  I'd love to see a more generic solution, but
+> we can work on that another time.
+> 
+> Acked-by: Jonathan Cameron <jic23@kernel.org>
 
-Enable fimd for peach-pit board.
+Reviewed-by: Pavel Machek <pavel@ucw.cz>
 
-Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
----
- arch/arm/boot/dts/exynos5420-peach-pit.dts |    5 +++++
- 1 file changed, 5 insertions(+)
+I don't see this patch in 3.15-rc nor -next. What is needed to push
+this patch?
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 5b70522..d6eaa1f 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -248,4 +248,9 @@
- 		ddc = <&i2c_2>;
- 		status = "okay";
- 	};
-+
-+	fimd@14400000 {
-+		status = "okay";
-+		samsung,invert-vclk;
-+	};
- };
+
 -- 
-1.7.9.5
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
