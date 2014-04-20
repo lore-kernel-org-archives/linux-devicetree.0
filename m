@@ -1,8 +1,10 @@
 From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 0/5] ARM: dts: enable display for peach-pit and snow boards
-Date: Sun, 20 Apr 2014 17:18:40 +0530
-Message-ID: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
+Subject: [PATCH 2/5] ARM: dts: enable fimd for exynos5250 based snow board
+Date: Sun, 20 Apr 2014 17:18:42 +0530
+Message-ID: <1397994525-18537-3-git-send-email-rahul.sharma@samsung.com>
+References: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
@@ -10,29 +12,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-Add nodes for fimd and dp controller for exynos5250 based snow
-and exynos5420 based peach-pit board.
+Enable fimd node for snow board.
 
-This series is based on Kukjin Kims, for-next branch.
+Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+---
+ arch/arm/boot/dts/exynos5250-snow.dts |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-It is dependent on
-1) Andrew Bresticker's patch for hpd gpio addition, avilable at
-http://www.spinics.net/lists/linux-samsung-soc/msg28827.html
-2) Arun's patch for adding peach-pit board dts file at
-http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg28846.html.
-
-Rahul Sharma (5):
-  ARM: dts: move dp hpd line to the board file for exynos5420
-  ARM: dts: enable fimd for exynos5250 based snow board
-  ARM: dts: enable dp-controller for exynos5250 based snow board
-  ARM: dts: enable fimd for exynos5420 based peach-pit board
-  ARM: dts: enable dp-controller for exynos5420 based peach-pit board
-
- arch/arm/boot/dts/exynos5250-snow.dts      |   32 +++++++++++++++++++++++
- arch/arm/boot/dts/exynos5420-peach-pit.dts |   39 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/exynos5420-pinctrl.dtsi  |    7 -----
- arch/arm/boot/dts/exynos5420-smdk5420.dts  |    7 +++++
- 4 files changed, 78 insertions(+), 7 deletions(-)
-
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index 586cd38..09f363d 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -344,6 +344,11 @@
+ 		};
+ 	};
+ 
++	fimd@14400000 {
++		status = "okay";
++		samsung,invert-vclk;
++	};
++
+ 	hdmi {
+ 		hdmi-en-supply = <&tps65090_fet7>;
+ 		vdd-supply = <&ldo8_reg>;
 -- 
 1.7.9.5
