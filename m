@@ -1,45 +1,34 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Re: [PATCHv2 3/9] mfd: twl4030-madc: Cleanup driver
-Date: Sun, 20 Apr 2014 17:54:05 +0200
-Message-ID: <20140420155405.GC16649@amd.pavel.ucw.cz>
-References: <1393702365-26429-1-git-send-email-sre@debian.org>
- <1393970751-18157-1-git-send-email-sre@debian.org>
- <1393970751-18157-4-git-send-email-sre@debian.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [RESEND: PATCH 2/2] input: tc3589x-keypad: support probing from
+ device tree
+Date: Sun, 20 Apr 2014 12:36:36 -0700
+Message-ID: <20140420193636.GG12454@core.coreip.homeip.net>
+References: <1397028491-15462-1-git-send-email-linus.walleij@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1393970751-18157-4-git-send-email-sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1397028491-15462-1-git-send-email-linus.walleij@linaro.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> Some style fixes in twl4030-madc driver.
+On Wed, Apr 09, 2014 at 09:28:11AM +0200, Linus Walleij wrote:
+> Implement device tree probing for the tc3589x keypad driver.
+> This is modeled on the STMPE keypad driver and tested on the
+> Ux500 TVK1281618 UIB.
 > 
-> Reported-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+> ChangeLog v2->v3:
+> - Use two local u32 variables to avoid weirdness in u8 casting
+>   of the resulting values to the pointers.
+> ChangeLog v1->v2:
+> - Fix rows/columns binding to read two u32's insead of two
+>   u8 /bits/ as noted by Mark Rutland.
 
-Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-
-
-> @@ -665,10 +660,6 @@ out:
->  }
->  EXPORT_SYMBOL_GPL(twl4030_madc_conversion);
->  
-> -/*
-> - * Return channel value
-> - * Or < 0 on failure.
-> - */
->  int twl4030_get_madc_conversion(int channel_no)
->  {
->  	struct twl4030_madc_request req;
-
-Maybe I'd put the comment on one line, but it seems useful...?
+Applied, thank you.
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Dmitry
