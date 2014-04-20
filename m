@@ -1,76 +1,100 @@
-From: =?windows-1251?B?yO7x6PQ=?= <yakutin.kirya-JGs/UdohzUI@public.gmane.org>
-Subject: =?windows-1251?b?y+Xy4P754P8g9OX/OiDq8+rr4Cwg7iDq7vLu8O7p?=
-	=?windows-1251?b?IOzl9/Lg5fIg6uDm5OD/IOTl4u736uAh?=
-Date: Sat, 19 Apr 2014 12:16:51 -0400
-Message-ID: <8730844.20140419201627@mail.ru>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC PATCH v2 05/14] ARM: dts: samsung-fimd: add I80 specific
+ properties
+Date: Sun, 20 Apr 2014 09:34:44 +0900
+Message-ID: <53531624.8070802@samsung.com>
+References: <534F67B1.2020001@samsung.com>
+ <1397735629-24028-1-git-send-email-yj44.cho@samsung.com>
+ <53511B71.8090506@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2125495890234482346=="
-Return-path: <nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
-	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=nbd-general>
-List-Post: <mailto:nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/nbd-general>,
-	<mailto:nbd-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: nbd-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: pablo-Cap9r6Oaw4JrovVCs/uTlw@public.gmane.org, netfilter-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, coreteam-Cap9r6Oaw4JrovVCs/uTlw@public.gmane.org, paul-r2n+y4ga6xFZroRs9YW3xA@public.gmane.org, paul.clements-G8/ITkJZaeZWk0Htik3J/w@public.gmane.org, nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, jmorris-gx6/JNMH7DfYtjvyW6yDsg@public.gmane.org, steffen.klassert-opNxpl+3fjRBDgjK7y7TUQ@public.gmane.org, linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org, manish.chopra-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org, sony.chacko-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org, rajesh.borundia-h88ZbnxC6KDQT0dZR+AlfA@public.gmane.org, lauro.venancio-430g2QfJUUCGglJvpFV4uA@public.gmane.org, aloisio.almeida-430g2QfJUUCGglJvpFV4uA@public.gmane.org, trond.myklebust-7I+n7zu2hftEKMMhf/gKZA@public.gmane.org, jon.mason-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, anton-yrGDUoBaLx3QT0dZR+AlfA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <53511B71.8090506@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
---===============2125495890234482346==
-Content-Type: multipart/alternative;
-	boundary="----=_NextPart_000_0598_01CF5C0C.3E53B570"
+Hi Andrzej
 
-------=_NextPart_000_0598_01CF5C0C.3E53B570
-Content-Type: text/plain;
-	charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
+Thank you for comments.
 
-=CB=E5=F2=E0=FE=F9=E0=FF =F4=E5=FF =97 =F1=EA=E0=E7=EA=E0 =E2 =E2=E0=F8=E5=
-=EC =E4=EE=EC=E5! =CB=E5=F2=E0=FE=F9=E0=FF=D4=E5=FF.=D0=D3
+On 04/18/2014 09:32 PM, Andrzej Hajda wrote:
+> Hi again,
+>
+> On 04/17/2014 01:53 PM, YoungJun Cho wrote:
+>> In case of using CPU interface panel, the relevant registers should be set.
+>> So this patch adds relevant dt bindings.
+>>
+>> Changelog v2:
+>> - Changes "samsung,sysreg-phandle" to "samsung,sysreg"
+>>
+>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   .../devicetree/bindings/video/samsung-fimd.txt     |    9 +++++++++
+>>   1 file changed, 9 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+>> index 2dad41b..6ea1adc 100644
+>> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
+>> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+>> @@ -44,6 +44,15 @@ Optional Properties:
+>>   - display-timings: timing settings for FIMD, as described in document [1].
+>>   		Can be used in case timings cannot be provided otherwise
+>>   		or to override timings provided by the panel.
+>> +- samsung,sysreg: handle to syscon used to control the system registers
+>> +- vidout-i80-ldi: boolean to support i80 interface instead of rgb one
+>> +- cs-setup: clock cycles for the active period of address signal enable until
+>> +	chip select is enable in i80 interface
+>> +- wr-setup: clock cycles for the active period of CS signal enable until
+>> +	write signal is enable in i80 interface
+>> +- wr-act: clock cycles for the active period of CS enable in i80 interface
+>> +- wr-hold: clock cycles for the active period of CS disable until write signal
+>> +	is disable in i80 interface
+>
+> As Laurent wrote earlier it would be good to consider providing these
+> properties
+> by panel. Panel can pass it to DSI probably via mipi_dsi_device
+> structure. DSI to FIMD
+> can use exynos drm_framework probably.
+> Anyway if you add optional properties please add info about default
+> value, ie when property
+> is not present.
 
-------=_NextPart_000_0598_01CF5C0C.3E53B570
-Content-Type: text/html;
-	charset="windows-1251"
-Content-Transfer-Encoding: quoted-printable
+You and Laurent thought these CPU timings should be in panel.
 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
-<HTML><HEAD>
-<META content=3D"text/html; charset=3Dwindows-1251" http-equiv=3DContent-=
-Type>
-<META name=3DGENERATOR content=3D"MSHTML 9.00.8112.16470"></HEAD>
-<BODY>
-<DIV>
-<DIV><FONT size=3D4>=CB=E5=F2=E0=FE=F9=E0=FF =F4=E5=FF =97 =F1=EA=E0=E7=EA=
-=E0 =E2 =E2=E0=F8=E5=EC =E4=EE=EC=E5! <A href=3D"http://scabdil.siam.im/x=
-feya.html">=CB=E5=F2=E0=FE=F9=E0=FF=D4=E5=FF.=D0=D3</A></FONT></DIV>
-<DIV><FONT size=3D4></FONT>&nbsp;</DIV></DIV></BODY></HTML>
+Ok, how about that vidout-i80-ldi is remained in fimd board specific DT
+entry and other CPU timings relevant properties are moved to panel for
+considering probe order?
 
-------=_NextPart_000_0598_01CF5C0C.3E53B570--
+That's because the IRQ resource of fimd should be "lcd_sys" for I80
+interface and decided in probe time(bind time after adopting super
+device node).
+But the fimd probe routine is prior to panel probe routine and
+it is also ugly that fimd parses the properties of panel DT for that.
 
+Do you have any better idea?
 
+Thank you
+Best regards YJ
 
---===============2125495890234482346==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-------------------------------------------------------------------------------
-Learn Graph Databases - Download FREE O'Reilly Book
-"Graph Databases" is the definitive new guide to graph databases and their
-applications. Written by three acclaimed leaders in the field,
-this first edition is now available. Download your free book today!
-http://p.sf.net/sfu/NeoTech
---===============2125495890234482346==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-Nbd-general mailing list
-Nbd-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-https://lists.sourceforge.net/lists/listinfo/nbd-general
-
---===============2125495890234482346==--
+>
+> Regards
+> Andrzej
+>
+>>
+>>   The device node can contain 'port' child nodes according to the bindings defined
+>>   in [2]. The following are properties specific to those nodes:
+>
+>
