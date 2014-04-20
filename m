@@ -1,266 +1,155 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH] ARM: dts: Add peach-pit board support
-Date: Sun, 20 Apr 2014 10:56:49 +0530
-Message-ID: <1397971609-6144-1-git-send-email-arun.kk@samsung.com>
+From: Chander Kashyap <chander.kashyap@linaro.org>
+Subject: Re: [PATCH 2/4] ARM: EXYNOS: Fix core ID used by platsmp and hotplug code
+Date: Sun, 20 Apr 2014 12:53:03 +0530
+Message-ID: <CANuQgHF9up5=8+cWgC+9cm-8Bf7sGcRBcg1DyXm-pbmK=EMgmg@mail.gmail.com>
+References: <1397832181-5153-1-git-send-email-t.figa@samsung.com>
+	<1397832181-5153-3-git-send-email-t.figa@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1397832181-5153-3-git-send-email-t.figa@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@google.com, olofj@google.com, arunkk.samsung@gmail.com
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds the google peach-pit board dts file which uses
-exynos5420 SoC.
+Hi Tomasz,
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
- arch/arm/boot/dts/Makefile                 |    1 +
- arch/arm/boot/dts/exynos5420-peach-pit.dts |  225 ++++++++++++++++++++++++++++
- 2 files changed, 226 insertions(+)
- create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b9d6a8b..09bcb8d 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
- 	exynos5250-snow.dtb \
- 	exynos5420-arndale-octa.dtb \
- 	exynos5420-smdk5420.dtb \
-+	exynos5420-peach-pit.dtb \
- 	exynos5440-sd5v1.dtb \
- 	exynos5440-ssdk5440.dtb
- dtb-$(CONFIG_ARCH_HI3xxx) += hi3620-hi4511.dtb
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-new file mode 100644
-index 0000000..4d61a5e
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -0,0 +1,225 @@
-+/*
-+ * Google Peach Pit Rev 6+ board device tree source
-+ *
-+ * Copyright (c) 2014 Google, Inc
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+#include "exynos5420.dtsi"
-+
-+/ {
-+	model = "Google Peach Pit Rev 6+";
-+
-+	compatible = "google,pit-rev16",
-+		"google,pit-rev15", "google,pit-rev14",
-+		"google,pit-rev13", "google,pit-rev12",
-+		"google,pit-rev11", "google,pit-rev10",
-+		"google,pit-rev9", "google,pit-rev8",
-+		"google,pit-rev7", "google,pit-rev6",
-+		"google,pit", "google,peach", "samsung,exynos5420";
-+
-+	memory {
-+		reg = <0x20000000 0x80000000>;
-+	};
-+
-+	fixed-rate-clocks {
-+		oscclk {
-+			compatible = "samsung,exynos5420-oscclk";
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	pinctrl@13400000 {
-+		lid_irq: lid-irq {
-+			samsung,pins = "gpx3-4";
-+			samsung,pin-function = <0>;
-+			samsung,pin-pud = <0>;
-+			samsung,pin-drv = <0>;
-+		};
-+
-+		power_key_irq: power-key-irq {
-+			samsung,pins = "gpx1-2";
-+			samsung,pin-function = <0>;
-+			samsung,pin-pud = <0>;
-+			samsung,pin-drv = <0>;
-+		};
-+
-+		tpm_irq: tpm-irq {
-+			samsung,pins = "gpx1-0";
-+			samsung,pin-function = <0>;
-+			samsung,pin-pud = <0>;
-+			samsung,pin-drv = <0>;
-+		};
-+	};
-+
-+	pinctrl@14010000 {
-+		spi_flash_cs: spi-flash-cs {
-+			samsung,pins = "gpa2-5";
-+			samsung,pin-function = <1>;
-+			samsung,pin-pud = <0>;
-+			samsung,pin-drv = <3>;
-+		};
-+
-+		backlight_pwm: backlight-pwm {
-+			samsung,pins = "gpb2-0";
-+			samsung,pin-function = <2>;
-+			samsung,pin-pud = <0>;
-+			samsung,pin-drv = <0>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&power_key_irq &lid_irq>;
-+
-+		power {
-+			label = "Power";
-+			gpios = <&gpx1 2 1>;
-+			linux,code = <116>; /* KEY_POWER */
-+			gpio-key,wakeup;
-+		};
-+
-+		lid-switch {
-+			label = "Lid";
-+			gpios = <&gpx3 4 1>;
-+			linux,input-type = <5>; /* EV_SW */
-+			linux,code = <0>; /* SW_LID */
-+			debounce-interval = <1>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	rtc@101E0000 {
-+		status = "okay";
-+	};
-+
-+	serial@12C30000 {
-+		status = "okay";
-+	};
-+
-+	mmc@12200000 {
-+		status = "okay";
-+		num-slots = <1>;
-+		broken-cd;
-+		caps2-mmc-hs200-1_8v;
-+		supports-highspeed;
-+		non-removable;
-+		card-detect-delay = <200>;
-+		clock-frequency = <400000000>;
-+		samsung,dw-mshc-ciu-div = <3>;
-+		samsung,dw-mshc-sdr-timing = <0 4>;
-+		samsung,dw-mshc-ddr-timing = <0 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <8>;
-+		};
-+	};
-+
-+	mmc@12220000 {
-+		status = "okay";
-+		num-slots = <1>;
-+		supports-highspeed;
-+		card-detect-delay = <200>;
-+		clock-frequency = <400000000>;
-+		samsung,dw-mshc-ciu-div = <3>;
-+		samsung,dw-mshc-sdr-timing = <2 3>;
-+		samsung,dw-mshc-ddr-timing = <1 2>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-+
-+		slot@0 {
-+			reg = <0>;
-+			bus-width = <4>;
-+		};
-+	};
-+
-+	i2c@12E10000 {
-+		status = "okay";
-+		clock-frequency = <400000>;
-+
-+		tpm@20 {
-+			/* Unused irq; but still need to configure the pins */
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&tpm_irq>;
-+
-+			compatible = "infineon,slb9645tt";
-+			reg = <0x20>;
-+		};
-+	};
-+
-+	spi@12d30000 {
-+		status = "okay";
-+		samsung,spi-src-clk = <0>;
-+		num-cs = <1>;
-+
-+		spidev@0 {
-+			compatible = "spidev";
-+			reg = <0>;
-+			spi-max-frequency = <50000000>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&spi_flash_cs>;
-+
-+			controller-data {
-+				cs-gpio = <&gpa2 5 0>;
-+				samsung,spi-feedback-delay = <2>;
-+			};
-+		};
-+	};
-+
-+	adc@12D10000 {
-+		ncp15wb473@3 {
-+			compatible = "ntc,ncp15wb473";
-+			pullup-uv = <1800000>;
-+			pullup-ohm = <47000>;
-+			pulldown-ohm = <0>;
-+			io-channels = <&adc 3>;
-+		};
-+		ncp15wb473@4 {
-+			compatible = "ntc,ncp15wb473";
-+			pullup-uv = <1800000>;
-+			pullup-ohm = <47000>;
-+			pulldown-ohm = <0>;
-+			io-channels = <&adc 4>;
-+		};
-+		ncp15wb473@5 {
-+			compatible = "ntc,ncp15wb473";
-+			pullup-uv = <1800000>;
-+			pullup-ohm = <47000>;
-+			pulldown-ohm = <0>;
-+			io-channels = <&adc 5>;
-+		};
-+		ncp15wb473@6 {
-+			compatible = "ntc,ncp15wb473";
-+			pullup-uv = <1800000>;
-+			pullup-ohm = <47000>;
-+			pulldown-ohm = <0>;
-+			io-channels = <&adc 6>;
-+		};
-+	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 1000000 0>;
-+		default-brightness-level = <2800>;
-+		pinctrl-0 = <&backlight_pwm>;
-+		pinctrl-names = "default";
-+	};
-+
-+	/*
-+	 * Use longest HW watchdog in SoC (32 seconds) since the hardware
-+	 * watchdog provides no debugging information (compared to soft/hard
-+	 * lockup detectors) and so should be last resort.
-+	 */
-+	watchdog@101D0000 {
-+		timeout-sec = <32>;
-+	};
-+};
+On 18 April 2014 20:12, Tomasz Figa <t.figa@samsung.com> wrote:
+> When CPU topology is specified in device tree, cpu_logical_map() does
+> not return core ID anymore, but rather full MPIDR value. This breaks
+> existing calculation of PMU register offsets on Exynos SoCs.
+>
+> This patch fixes the problem by adjusting the code to use only core ID
+> bits of the value returned by cpu_logical_map() to allow CPU topology to
+> be specified in device tree on Exynos SoCs.
+>
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> ---
+>  arch/arm/mach-exynos/hotplug.c | 10 ++++++----
+>  arch/arm/mach-exynos/platsmp.c | 31 ++++++++++++++++++-------------
+>  2 files changed, 24 insertions(+), 17 deletions(-)
+>
+> diff --git a/arch/arm/mach-exynos/hotplug.c b/arch/arm/mach-exynos/hotplug.c
+> index 7e0f31a..8a5f07d 100644
+> --- a/arch/arm/mach-exynos/hotplug.c
+> +++ b/arch/arm/mach-exynos/hotplug.c
+> @@ -92,11 +92,13 @@ static inline void cpu_leave_lowpower(void)
+>
+>  static inline void platform_do_lowpower(unsigned int cpu, int *spurious)
+>  {
+> +       u32 mpidr = cpu_logical_map(cpu);
+> +       u32 core_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+> +
+>         for (;;) {
+>
+> -               /* make cpu1 to be turned off at next WFI command */
+> -               if (cpu == 1)
+> -                       __raw_writel(0, S5P_ARM_CORE_CONFIGURATION(1));
+
+I think this macro is not yet in ML code.
+
+> +               /* Turn the CPU off on next WFI instruction. */
+> +               __raw_writel(0, S5P_ARM_CORE_CONFIGURATION(core_id));
+>
+>                 /*
+>                  * here's the WFI
+> @@ -106,7 +108,7 @@ static inline void platform_do_lowpower(unsigned int cpu, int *spurious)
+>                     :
+>                     : "memory", "cc");
+>
+> -               if (pen_release == cpu_logical_map(cpu)) {
+> +               if (pen_release == core_id) {
+>                         /*
+>                          * OK, proper wakeup, we're done
+>                          */
+> diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
+> index 7b7de4b..e08b2c5 100644
+> --- a/arch/arm/mach-exynos/platsmp.c
+> +++ b/arch/arm/mach-exynos/platsmp.c
+> @@ -89,7 +89,9 @@ static void exynos_secondary_init(unsigned int cpu)
+>  static int exynos_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>  {
+>         unsigned long timeout;
+> -       unsigned long phys_cpu = cpu_logical_map(cpu);
+> +       u32 mpidr = cpu_logical_map(cpu);
+> +       u32 core_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+> +       u32 reg;
+>
+>         /*
+>          * Set synchronisation state between this boot processor
+> @@ -102,19 +104,20 @@ static int exynos_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>          * the holding pen - release it, then wait for it to flag
+>          * that it has been released by resetting pen_release.
+>          *
+> -        * Note that "pen_release" is the hardware CPU ID, whereas
+> +        * Note that "pen_release" is the hardware CPU core ID, whereas
+>          * "cpu" is Linux's internal ID.
+>          */
+> -       write_pen_release(phys_cpu);
+> +       write_pen_release(core_id);
+>
+> -       if (!(__raw_readl(S5P_ARM_CORE_STATUS(1)) & S5P_CORE_LOCAL_PWR_EN)) {
+> +       reg = __raw_readl(S5P_ARM_CORE_STATUS(core_id));
+> +       if (!(reg & S5P_CORE_LOCAL_PWR_EN)) {
+>                 __raw_writel(S5P_CORE_LOCAL_PWR_EN,
+> -                            S5P_ARM_CORE_CONFIGURATION(1));
+> +                            S5P_ARM_CORE_CONFIGURATION(core_id));
+>
+>                 timeout = 10;
+>
+>                 /* wait max 10 ms until cpu1 is on */
+> -               while ((__raw_readl(S5P_ARM_CORE_STATUS(1))
+> +               while ((__raw_readl(S5P_ARM_CORE_STATUS(core_id))
+>                         & S5P_CORE_LOCAL_PWR_EN) != S5P_CORE_LOCAL_PWR_EN) {
+>                         if (timeout-- == 0)
+>                                 break;
+> @@ -146,10 +149,10 @@ static int exynos_boot_secondary(unsigned int cpu, struct task_struct *idle)
+>                  * Try to set boot address using firmware first
+>                  * and fall back to boot register if it fails.
+>                  */
+> -               if (call_firmware_op(set_cpu_boot_addr, phys_cpu, boot_addr))
+> -                       __raw_writel(boot_addr, cpu_boot_reg(phys_cpu));
+> +               if (call_firmware_op(set_cpu_boot_addr, core_id, boot_addr))
+> +                       __raw_writel(boot_addr, cpu_boot_reg(core_id));
+>
+> -               call_firmware_op(cpu_boot, phys_cpu);
+> +               call_firmware_op(cpu_boot, core_id);
+>
+>                 arch_send_wakeup_ipi_mask(cpumask_of(cpu));
+>
+> @@ -215,14 +218,16 @@ static void __init exynos_smp_prepare_cpus(unsigned int max_cpus)
+>          * boot register if it fails.
+>          */
+>         for (i = 1; i < max_cpus; ++i) {
+> -               unsigned long phys_cpu;
+>                 unsigned long boot_addr;
+> +               u32 mpidr;
+> +               u32 core_id;
+>
+> -               phys_cpu = cpu_logical_map(i);
+> +               mpidr = cpu_logical_map(i);
+> +               core_id = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+>                 boot_addr = virt_to_phys(exynos4_secondary_startup);
+>
+> -               if (call_firmware_op(set_cpu_boot_addr, phys_cpu, boot_addr))
+> -                       __raw_writel(boot_addr, cpu_boot_reg(phys_cpu));
+> +               if (call_firmware_op(set_cpu_boot_addr, core_id, boot_addr))
+> +                       __raw_writel(boot_addr, cpu_boot_reg(core_id));
+>         }
+>  }
+>
+> --
+> 1.9.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-1.7.9.5
+with warm regards,
+Chander Kashyap
