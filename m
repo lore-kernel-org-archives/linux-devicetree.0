@@ -1,100 +1,118 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC PATCH v2 05/14] ARM: dts: samsung-fimd: add I80 specific
- properties
-Date: Sun, 20 Apr 2014 09:34:44 +0900
-Message-ID: <53531624.8070802@samsung.com>
-References: <534F67B1.2020001@samsung.com>
- <1397735629-24028-1-git-send-email-yj44.cho@samsung.com>
- <53511B71.8090506@samsung.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/8] usb: host: xhci-plat: Allow to register glue code
+ using the device tree
+Date: Sat, 19 Apr 2014 22:15:17 -0500
+Message-ID: <20140420031517.GA26893@saruman.home>
+References: <1397816563-9000-1-git-send-email-gregory.clement@free-electrons.com>
+ <1397816563-9000-2-git-send-email-gregory.clement@free-electrons.com>
+Reply-To: balbi@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <53511B71.8090506@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: multipart/mixed; boundary="===============1100739722772385073=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1397816563-9000-2-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej
+--===============1100739722772385073==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
 
-Thank you for comments.
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 04/18/2014 09:32 PM, Andrzej Hajda wrote:
-> Hi again,
->
-> On 04/17/2014 01:53 PM, YoungJun Cho wrote:
->> In case of using CPU interface panel, the relevant registers should be set.
->> So this patch adds relevant dt bindings.
->>
->> Changelog v2:
->> - Changes "samsung,sysreg-phandle" to "samsung,sysreg"
->>
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Signed-off-by: Inki Dae <inki.dae@samsung.com>
->> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   .../devicetree/bindings/video/samsung-fimd.txt     |    9 +++++++++
->>   1 file changed, 9 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
->> index 2dad41b..6ea1adc 100644
->> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
->> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
->> @@ -44,6 +44,15 @@ Optional Properties:
->>   - display-timings: timing settings for FIMD, as described in document [1].
->>   		Can be used in case timings cannot be provided otherwise
->>   		or to override timings provided by the panel.
->> +- samsung,sysreg: handle to syscon used to control the system registers
->> +- vidout-i80-ldi: boolean to support i80 interface instead of rgb one
->> +- cs-setup: clock cycles for the active period of address signal enable until
->> +	chip select is enable in i80 interface
->> +- wr-setup: clock cycles for the active period of CS signal enable until
->> +	write signal is enable in i80 interface
->> +- wr-act: clock cycles for the active period of CS enable in i80 interface
->> +- wr-hold: clock cycles for the active period of CS disable until write signal
->> +	is disable in i80 interface
->
-> As Laurent wrote earlier it would be good to consider providing these
-> properties
-> by panel. Panel can pass it to DSI probably via mipi_dsi_device
-> structure. DSI to FIMD
-> can use exynos drm_framework probably.
-> Anyway if you add optional properties please add info about default
-> value, ie when property
-> is not present.
+Hi,
 
-You and Laurent thought these CPU timings should be in panel.
+On Fri, Apr 18, 2014 at 12:22:36PM +0200, Gregory CLEMENT wrote:
+> This patch allow to register specific glue code for xhci controller.
+> It creates a structure called xhci_plat_ops to register functions
+> specific to an SoC. Currently there are only probe() and remove() but
 
-Ok, how about that vidout-i80-ldi is remained in fimd board specific DT
-entry and other CPU timings relevant properties are moved to panel for
-considering probe order?
+What SoC-specific code do you need ?
 
-That's because the IRQ resource of fimd should be "lcd_sys" for I80
-interface and decided in probe time(bind time after adopting super
-device node).
-But the fimd probe routine is prior to panel probe routine and
-it is also ugly that fimd parses the properties of panel DT for that.
+> it can be extended later, it was the point to create such a structure.
+>=20
+> Each compatible string can then be associated to an instance of this
+> structure. In the non device tree case a default structure is used.
+>=20
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  drivers/usb/host/xhci-plat.c | 72 ++++++++++++++++++++++++++++++++++++++=
++++---
+>  drivers/usb/host/xhci.h      |  4 +++
+>  2 files changed, 72 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 151901ce1ba9..8029cc82edc4 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/of.h>
+>  #include <linux/dma-mapping.h>
+> +#include <linux/of_device.h>
+> =20
+>  #include "xhci.h"
+> =20
+> @@ -85,7 +86,7 @@ static const struct hc_driver xhci_plat_xhci_driver =3D=
+ {
+>  	.bus_resume =3D		xhci_bus_resume,
+>  };
+> =20
+> -static int xhci_plat_probe(struct platform_device *pdev)
+> +int common_xhci_plat_probe(struct platform_device *pdev, void *priv)
 
-Do you have any better idea?
+no, I rather not see this sort of hack.
 
-Thank you
-Best regards YJ
+--=20
+balbi
 
->
-> Regards
-> Andrzej
->
->>
->>   The device node can contain 'port' child nodes according to the bindings defined
->>   in [2]. The following are properties specific to those nodes:
->
->
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTUzvFAAoJEIaOsuA1yqREEoMP/ihPOo8wrZ6Pt2iEGqC6/48A
+kcBk/BkqmzfCBtj2MMOvrvA9qF7VC2dzVlo3QTKiiullp2ogzA2tWxRtjA1ky1Mx
+vqbsr2fs84OjuTMxtOYwUWBcUHXIb2B6lSMomVYvcOrm4AkQ//R5ikYprkdw/dSq
+OBI0wgnsCyALm1sM5ngjraSVyQZakUhBJ3SyUaCiVQgZ2bf75d5JoKzQO+5l9hUI
+Q8UG5pfoNlUebbw//aX8hc0Ewi+QYPWzJP3hGeaduHquV9RQuKRCs3gaPo4okPAB
+EzcG8htpryDZCkye0umznICzGfzkdLNE+0ANiuOPihVEbZITC+nCSVlJN1mBVf59
+fGAPrI+jowyRKmJ20KVeCOmNqFenCEnv+nGyKmb6sBgY58kjAsOZ4Eq3N96YBxuF
+YTQUAVEQ3odJ6Eq30qmIAczaFw6OcFB9DRHiDpm7uBfKrI+P6EcgZ3K8U8NlrccE
+RqG/eKFfiYj3dRlz/KJrr1xADqrDIBd+XRjdTjILTSfaDIar8um65OCpBqPAjTOK
+WbWBUtvICLRM3uqv4hg4CqkN9VdkZdpHhqPePjApWO6aO8zep7RGAEbMlzMFEdcJ
+UcGi/PVm8rEVhBhTkO9A6dths5l6jfXjymZFOjbpl3KGKFD8nx+BcQzUB3ruQXmS
+nvFByDnNFgDEuGY89T48
+=qD3P
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
+
+
+--===============1100739722772385073==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============1100739722772385073==--
