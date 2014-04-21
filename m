@@ -1,145 +1,100 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/7] of: configure the platform device dma parameters
-Date: Mon, 21 Apr 2014 09:58:17 -0500
-Message-ID: <CAL_JsqJJ4Cbh5poMa-KRwy+bp_t3VtRd7bCpcWey+DZ74eYHJQ@mail.gmail.com>
-References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>
-	<1397917972-6293-5-git-send-email-santosh.shilimkar@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 05/19] bus: omap_l3_noc: switch over to relaxed
+ variants of readl/writel
+Date: Mon, 21 Apr 2014 10:09:19 -0500
+Message-ID: <20140421150919.GE27341@saruman.home>
+References: <1397492726-17203-1-git-send-email-nm@ti.com>
+ <1397767775-10965-1-git-send-email-nm@ti.com>
+ <1397767775-10965-6-git-send-email-nm@ti.com>
+ <20140417215228.GD8504@saruman.home>
+ <53504DFF.7090907@ti.com>
+ <20140417220329.GF8504@saruman.home>
+ <53551A2C.8060404@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7LkOrbQMr4cezO2T"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397917972-6293-5-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53551A2C.8060404-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 19, 2014 at 9:32 AM, Santosh Shilimkar
-<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> Retrieve DMA configuration from DT and setup platform device's DMA
-> parameters. The DMA configuration in DT has to be specified using
-> "dma-ranges" and "dma-coherent" properties if supported.
->
-> We setup dma_pfn_offset using "dma-ranges" and dma_coherent_ops
-> using "dma-coherent" device tree properties.
->
-> The set_arch_dma_coherent_ops macro has to be defined by arch if
-> it supports coherent dma_ops. Otherwise, set_arch_dma_coherent_ops() is
-> declared as nop.
->
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/of/platform.c       |   43 +++++++++++++++++++++++++++++++++++++++++++
->  include/linux/dma-mapping.h |    7 +++++++
->  2 files changed, 50 insertions(+)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 573db15..7e4a43b 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -187,6 +187,47 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  EXPORT_SYMBOL(of_device_alloc);
->
->  /**
-> + * of_dma_configure - Setup DMA configuration
-> + * @dev:       Device to apply DMA configuration
-> + *
-> + * Try to get devices's DMA configuration from DT and update it
-> + * accordingly.
-> + *
-> + * In case if platform code need to use own special DMA configuration,it
-> + * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
-> + * to fix up DMA configuration.
-> + */
-> +static void of_dma_configure(struct device *dev)
-> +{
-> +       dma_addr_t dma_addr;
-> +       phys_addr_t paddr, size;
+--7LkOrbQMr4cezO2T
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A problem with using dma_addr_t and phys_addr_t is that they normally
-depend on CONFIG_LPAE, but the address cell sizes are independent of
-that. That is why all the memory related functions stick with u64. I
-think you would have issues here if you have a platform with sizes of
-4GB or more. You need to properly cap the sizes and addresses.
+On Mon, Apr 21, 2014 at 08:16:28AM -0500, Nishanth Menon wrote:
+> On 04/17/2014 05:03 PM, Felipe Balbi wrote:
+> > On Thu, Apr 17, 2014 at 05:56:15PM -0400, Santosh Shilimkar wrote:
+> >> On Thursday 17 April 2014 05:52 PM, Felipe Balbi wrote:
+> >>> Hi,
+> >>>
+> >>> On Thu, Apr 17, 2014 at 03:49:21PM -0500, Nishanth Menon wrote:
+> >>>> Currently we use __raw_readl and writel in this driver, however, the=
+re
+> >>>
+> >>> __raw_* and *_relaxed variants are the same, just have a look <asm/io=
+=2Eh>
+> >>>
+> >> Except the relaxed version can take care of endian conversion if
+> >> needed. :-)
+> >=20
+> > right, but according to commit log, this commit is more concerned about
+> > the memory barriers which writel()/readl() add, not endianness. Just a
+> > matter of fixing up commit log.
+> >=20
+>=20
+> yep, this patch does replace writel with writel_relaxed there is no
+> strong need for barriers in the operations that we perform here.
+>=20
+> I agree that the commit message should probably be a little more
+> detailed at this point.
+>=20
+>=20
+> How about:
+> Currently we use __raw_readl and writel in this driver. Considering
+> there is no specific need for a memory barrier, replacing writel with
+> endian-neutral writel_relaxed and replacing __raw_readls with the
+> corresponding endian-neutral readl_relaxed allows us to have a
+> standard set of register operations for the driver.
+>=20
+> While at it, simplify address computation using variables for register.
 
-> +       int ret;
-> +
-> +       /*
-> +        * if dma-coherent property exist, call arch hook to setup
-> +        * dma coherent operations.
-> +        */
-> +       if (of_dma_is_coherent(dev->of_node)) {
-> +               set_arch_dma_coherent_ops(dev);
-> +               dev_dbg(dev, "device is dma coherent\n");
-> +       }
-> +
-> +       /*
-> +        * if dma-ranges property doesn't exist - just return else
-> +        * setup the dma offset
-> +        */
-> +       ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> +       if (ret < 0) {
+reads a lot better, thanks
 
-Perhaps an error is not the right return for the default case. The
-default should probably be dma_addr and paddr equal to 0 and size 4GB.
+Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 
-> +               dev_dbg(dev, "no dma range information to setup\n");
-> +               return;
-> +       } else {
 
-You don't need the else here.
+--=20
+balbi
 
-> +               /* DMA ranges found. Calculate and set dma_pfn_offset */
-> +               dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-> +               dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
-> +       }
-> +}
-> +
-> +/**
->   * of_platform_device_create_pdata - Alloc, initialize and register an of_device
->   * @np: pointer to node to create device for
->   * @bus_id: name to assign device
-> @@ -217,6 +258,8 @@ static struct platform_device *of_platform_device_create_pdata(
->         dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->         if (!dev->dev.dma_mask)
->                 dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
+--7LkOrbQMr4cezO2T
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-You should move all DMA related setup into of_dma_configure.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> +
-> +       of_dma_configure(&dev->dev);
->         dev->dev.bus = &platform_bus_type;
->         dev->dev.platform_data = platform_data;
->
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index fd4aee2..c7d9b1b 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -123,6 +123,13 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
->
->  extern u64 dma_get_required_mask(struct device *dev);
->
-> +#ifndef set_arch_dma_coherent_ops
-> +static inline int set_arch_dma_coherent_ops(struct device *dev)
-> +{
-> +       return 0;
-> +}
-> +#endif
-> +
->  static inline unsigned int dma_get_max_seg_size(struct device *dev)
->  {
->         return dev->dma_parms ? dev->dma_parms->max_segment_size : 65536;
-> --
-> 1.7.9.5
->
+iQIcBAEBAgAGBQJTVTSfAAoJEIaOsuA1yqREu90P/3ELCyVQIx21nLdXbJdn5XSA
+oORPpzrVVd5gtGcUEFh2wm1VxpYQCDa67dFyZiT5XO+yZMGHxxyBRqwziBEVax8r
+fzArrEO3IFGVBzc/+E1QH/EmcLhaGr2pYdGQhLDNLxJaEDQgyGk4D4zGRxvXqAfb
+MoQztqTzoPXhvxsbpKSIZHD8yylKrv2A3diXqyZcoOORP0YjEjSoZGgEs/+lR9/S
+bve6JW/QLvgUyBdW9eHcu8XwUOmZzgmUAA63Pi76vBmEx2/qj4xyC2wIHaMDQ2Ij
+rcS3vsSgFwc7kKGDOG0iEAlTou2nnl57HQOlcDRpxA2FB7ohwj2Mfjoqkdl/A2Bw
+6MiUP39OrBksF101MahcBdMBY8SGAcr1ZTDRsRO/K0pGNyYgrS1oWIg5jUD7UZcz
+uur2cYU0CbY6KiM/Z9QhJSvyvXHeRNyrbgml2DuB9cbH644DoNlVtCqi+SyIybcL
+4hqlJeXgYdiJBoXjLS46uJIm4GHLTOvsw/QKHZLL6onnDPFHUekeWkMYHcaEuLj6
+R8nPfZcfm5bQp05BgR8SHCo6tXnDD8+6zyzTg9LZScYjBIwKZqPFztwMaDUMzJqQ
+BbW5Gnt2JxFxi7W2TtTmM3Vh5Zw9Q3f7LcTw0OQLBJNN3tD1GfXzSIM+Ps0sudhg
+SSUmlxJYbw3UTVArJtp3
+=2gOW
+-----END PGP SIGNATURE-----
+
+--7LkOrbQMr4cezO2T--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
