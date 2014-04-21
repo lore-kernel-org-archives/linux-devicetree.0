@@ -1,50 +1,115 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 7/7] ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
-Date: Mon, 21 Apr 2014 14:03:49 -0600
-Message-ID: <535579A5.2060603@wwwdotorg.org>
-References: <1397757570-19750-1-git-send-email-dianders@chromium.org>	<1397757570-19750-8-git-send-email-dianders@chromium.org>	<535560E9.5040108@wwwdotorg.org> <CAD=FV=W8=SLxF=goYm9p3Dr0ZQYy9FzN0hbE+MwWFYGarZB9tw@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
+Date: Tue, 22 Apr 2014 00:13:50 +0400
+Message-ID: <53557BFE.5020908@cogentembedded.com>
+References: <201404120415.43761.sergei.shtylyov@cogentembedded.com> <534B77E2.8060901@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=W8=SLxF=goYm9p3Dr0ZQYy9FzN0hbE+MwWFYGarZB9tw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Stephen Warren <swarren@nvidia.com>, Wolfram Sang <wsa@the-dreams.de>, Andrew Bresticker <abrestic@chromium.org>, Dylan Reid <dgreid@chromium.org>, Olof Johansson <olof@lixom.net>, Simon Glass <sjg@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <534B77E2.8060901@ti.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2014 01:35 PM, Doug Anderson wrote:
-> Stephen,
-> 
-> On Mon, Apr 21, 2014 at 11:18 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 04/17/2014 11:59 AM, Doug Anderson wrote:
->>> This adds the EC i2c tunnel (and devices under it) to the
->>> tegra124-venice2 device tree.
+Hello.
 
->>> diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
->>
->>>       aliases {
->>> +             i2c20 = "/spi@0,7000d400/cros-ec@0/i2c-tunnel";
->>
->> Is that needed? I'd prefer not to add it unless there's a specific
->> reason. I don't think I2C buses need specific names, do they?
-> 
-> It is not strictly needed, but from a usability standpoint it is
-> terribly helpful.  It serves to make it obvious to someone looking at
-> the device that it's _not_ an i2c bus associated with the main SoC.
-> If you don't include a number I believe that the i2c core will pick
-> the first available number.
-> 
-> It seems worth it to save a few people a few hours of head scratching.
-> 
-> ...but this is your dts and if you think it's a terrible idea then
-> I'll remove it.  It looks to be less critical on tegra than it is on
-> exynos (which has ~9 i2c busses, they are numbered in the user manual,
-> and if you have one set to "disable" in the dts then the tunnel will
-> end up getting a very confusing number).
+On 04/14/2014 09:53 AM, Kishon Vijay Abraham I wrote:
 
-My opinion is that the in-kernel I2C bus numbering is an entirely
-unrelated numbering space to the HW controller numbering space precisely
-because of issues like that. DT aliases are more useful for user-visible
-port numbering (e.g. HDMI 0, 1 connectors on a case) than purely
-internal details like this. So, I would leave it out.
+>> This PHY, though formally being a part of Renesas USBHS controller, contains the
+>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls them
+>> channels) to the different USB controllers: channel 0 can be connected to either
+>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
+>> or xHCI controllers.
+
+>> This is a new driver for this USB PHY currently already supported under drivers/
+>> usb/phy/. The reason for writing the new driver was the requirement that the
+>> multiplexing of USB channels to the controller be dynamic, depending on what
+>> USB drivers are loaded,  rather than static as provided by the old driver.
+>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
+>> ideally. The new driver only supports device tree probing for now.
+
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+
+>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
+>> ===================================================================
+>> --- /dev/null
+>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
+>> @@ -0,0 +1,283 @@
+
+[...]
+
+>> +static int rcar_gen2_phy_init(struct phy *p)
+>> +{
+>> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
+>> +	struct rcar_gen2_phy_driver *drv = phy->drv;
+>> +	unsigned long flags;
+>> +	u32 ugctrl2;
+
+> We can just add
+> 	if (!phy->select_mask)
+> 		return 0;
+
+    Yes, we can, if you'd prefer that.
+
+>> +
+>> +	if (phy->select_mask) {
+>> +		clk_prepare_enable(drv->clk);
+>> +
+>> +		spin_lock_irqsave(&drv->lock, flags);
+>> +		ugctrl2 = readl(drv->base + USBHS_UGCTRL2);
+>> +		ugctrl2 &= ~phy->select_mask;
+>> +		ugctrl2 |= phy->select_value;
+>> +		writel(ugctrl2, drv->base + USBHS_UGCTRL2);
+>> +		spin_unlock_irqrestore(&drv->lock, flags);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+
+[...]
+
+>> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
+>> +{
+
+[...]
+
+>> +	drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>> +	drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
+>> +	drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>> +	drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
+>> +	drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>> +	drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
+>> +	drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>> +	drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
+>> +
+>> +	for (i = 0; i < NUM_USB_CHANNELS; i++) {
+
+> Instead of hard coding the number of channels,
+
+    It's hard coded in the hardware. We can even decrease that number to 2 as 
+for the channel #1 we have nothing to do, regardless of whether it's present 
+or not...
+
+> we can model the channels (PHYs) as sub-nodes of the main PHY
+
+    Hm, I don't think such representation would be adequate: the channels 
+themselves do not usually correspond to any particular PHY, that's why I used 
+#phy-cells = <2>.
+
+> in dt and use it to create individual PHYs.
+
+    Well, we probably can... however, I fail to see any immediate gain from
+it here...
+    I have to ask why you've selected this particular driver for such DT 
+representation experiments, despite it not being the first one supporting 
+multiple PHYs?
+
+> Thanks
+> Kishon
+
+WBR, Sergei
+
