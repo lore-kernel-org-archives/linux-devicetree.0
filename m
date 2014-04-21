@@ -1,67 +1,96 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] of: setup dma parameters using dma-ranges and
- dma-coherent
-Date: Mon, 21 Apr 2014 11:36:04 -0400
-Message-ID: <53553AE4.8040706@ti.com>
-References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>	<CAL_JsqLogKfqHyw4zYBkPrYh=f6tVibtmX25oYB1Q2hO11Whcw@mail.gmail.com>	<535535A1.4020501@ti.com> <CAL_JsqJws80+o6E13rQQjEwxOaTvACpmYoa5fvnRwJ7Yry3q0A@mail.gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
+ probe and defer if needed
+Date: Mon, 21 Apr 2014 08:54:24 -0700
+Message-ID: <20140421155424.GD23945@atomide.com>
+References: <20140320161118.B7075C4067A@trevor.secretlab.ca>
+ <1395413185-29763-1-git-send-email-jjhiblot@traphandler.com>
+ <1395413185-29763-3-git-send-email-jjhiblot@traphandler.com>
+ <CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg@mail.gmail.com>
+ <20140418205213.GA21823@atomide.com>
+ <CAL_JsqJvVvo6R-qNXxur7wiZERKbi52xyKoWnmzJTfKS2iKK7A@mail.gmail.com>
+ <20140418215848.GD21823@atomide.com>
+ <20140418230335.GI24070@n2100.arm.linux.org.uk>
+ <20140418232407.GQ21823@atomide.com>
+ <CAL_JsqLvLTJwgsB-m0W72WxSUoTV4ubMdvM_a784J4k2eiK9AQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJws80+o6E13rQQjEwxOaTvACpmYoa5fvnRwJ7Yry3q0A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLvLTJwgsB-m0W72WxSUoTV4ubMdvM_a784J4k2eiK9AQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 21 April 2014 11:35 AM, Rob Herring wrote:
-> On Mon, Apr 21, 2014 at 10:13 AM, Santosh Shilimkar
-> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
->> Hi Rob,
->>
->> On Monday 21 April 2014 10:37 AM, Rob Herring wrote:
->>> On Sat, Apr 19, 2014 at 9:32 AM, Santosh Shilimkar
->>> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
->>>> Here is an updated version of [2] based on discussion. Series introduces
->>>> support for setting up dma parameters based on device tree properties
->>>> like 'dma-ranges' and 'dma-coherent' and also update to ARM 32 bit port.
->>>> Earlier version of the same series is here [1].
->>>>
->>>> The 'dma-ranges' helps to take care of few DMAable system memory restrictions
->>>> by use of dma_pfn_offset which we maintain now per device. Arch code then
->>>> uses it for dma address translations for such cases. We update the
->>>> dma_pfn_offset accordingly during DT the device creation process.The
->>>> 'dma-coherent' property is used to setup arch's coherent dma_ops.
->>>>
->>>> After some off-list discussion with RMK and Arnd, I have now dropped the
->>>> controversial dma_mask setup code from the series which actually isn't blocking
->>>> me as such. Considering rest of the parts of the series are already aligned,
->>>> am hoping to get this version merged for 3.16 merge window.
->>>
->>> Can you briefly describe what the h/w looks like in terms of addresses
->>> for the problem you are trying to solve? Something like: Cpu view of
->>> RAM is X to Y address, X corresponds to DMA address Z. Max DMA address
->>> is ?
->>>
->> Let me try with say 8 GB RAM example
->>
->> CPU view of memory : 0x0000 0008 0000 0000 to 0x0000 000a 0000 0000
->>
->> From above memory range, first 2 GB of memory has an alias 32 bit
->> view in the hardware. Hardware internally map the address issued within
->> that first 2 GB to same memory.
->>
->> DMA view of first 2 GB [ 0x0000 0008 0000 0000 to 0x0000 0008 7fff ffff]
->> is : 0x8000 0000 to 0xffff fffff.
+* Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140421 06:47]:
+> On Fri, Apr 18, 2014 at 6:24 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [140418 16:04]:
+> >> On Fri, Apr 18, 2014 at 02:58:48PM -0700, Tony Lindgren wrote:
+> >> > Oh come on, let's stop pretending it's not broken. And it's way worse with
+> >> > device tree as there's nothing making sure the resources for a driver
+> >> > are set up before the driver probes. And we've been unable to fix just
+> >> > this issue alone for about six months now. It's also broken beyond that.
+> >> > It's called of_platform_bus yet it won't even pass the platform_data
+> >> > as auxdata to the devices on a sub-bus instantatiated like I2C.
+> >>
+> >> Isn't there a much simpler solution to the platform device IRQ problem?
+> >>
+> >> Rather than trying to fix it at the point where the resources are
+> >> created, why not just *not* have DT create the IRQ resources in the
+> >> first place, and instead have platform_get_irq() (which is the function
+> >> which should be used to get an IRQ) be the actor to do whatever is
+> >> necessary to return the IRQ(s) ?
+> >
+> > Yeah why not. I don't see why we would need to do all this of_* special
+> > trickery for much anything beyond parsing the binding.
 > 
-> Are you setting ZONE_DMA to be 2GB so allocations stay within DMAable
-> memory and that is enough that you don't need to set DMA masks?
+> That can work, but it will still need something like
+> of_find_irq_domain() to determine whether to return -EPROBE_DEFER or
+> not.
+
+Right. Naturally let's do whatever it takes to first fix this issue
+in a minimal way first for the -rc cycle so we can do the longer term
+changes needed.
+ 
+> You could also go in the other direction and don't create the device
+> until the resources can be resolved. Unlike any of the other
+> solutions, that would work for amba bus as well although we may never
+> have a case where we need this with the amba bus. This would require
+> making of_platform_populate be callable multiple times, but there are
+> already some other reasons for wanting to do that. Specifically, I
+> would like the core code to call of_platform_populate with default
+> options and then only platforms with non-default options need a call
+> to of_platform_populate.
+
+I like this idea as this would also probably remove the the numerous
+dmesg errors we are currently getting for drivers reprobing with
+-EPROBE_DEFER.
+
+In the long term we should have platform bus just call a set of
+standardized functions implemented by whatever the data source might
+be. That way we can limit the use of of_* functions in device drivers
+to just parsing of custom bindings in the drivers and use bus specific
+functions for everything else.
+
+> >> Yes, I know we have some drivers which use platform_get_resources() with
+> >> IORESOURCE_IRQ, but they should really use the right accessor.  And those
+> >> who just dereference the resource array directly... get what's coming
+> >> (though of course they have to be fixed.)
+> >
+> > $ git grep IORESOURCE_IRQ drivers/ | grep platform_get_resource | wc -l
+> > 179
 > 
-Yes. Thats right.
+> Certainly, this is worthwhile clean-up no matter what the solution.
+
+Yeah agreed. But let's also consider the IORESOURCE_IRQ as just another
+source for for the bus or driver data in addition to the DT parsed data.
+Both sources of data should work just fine with platform_bus even
+without cleaning up the drivers.
 
 Regards,
-Santosh
 
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
