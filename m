@@ -1,37 +1,44 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 7/7] ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
-Date: Mon, 21 Apr 2014 12:18:17 -0600
-Message-ID: <535560E9.5040108@wwwdotorg.org>
-References: <1397757570-19750-1-git-send-email-dianders@chromium.org> <1397757570-19750-8-git-send-email-dianders@chromium.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v2 0/7] of: setup dma parameters using dma-ranges and
+ dma-coherent
+Date: Mon, 21 Apr 2014 20:19:11 +0200
+Message-ID: <20140421201911.10783191@skate>
+References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>
+	<20140419182528.414b9b2e@skate>
+	<53551E9D.9080107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1397757570-19750-8-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Lee Jones <lee.jones@linaro.org>, Stephen Warren <swarren@nvidia.com>, Wolfram Sang <wsa@the-dreams.de>
-Cc: abrestic@chromium.org, dgreid@chromium.org, Olof Johansson <olof@lixom.net>, Simon Glass <sjg@chromium.org>, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53551E9D.9080107@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Gregory =?UTF-8?B?Q2zDqW1lbnQ=?= <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/17/2014 11:59 AM, Doug Anderson wrote:
-> This adds the EC i2c tunnel (and devices under it) to the
-> tegra124-venice2 device tree.
+Dear Santosh Shilimkar,
 
-The series,
-Tested-by: Stephen Warren <swarren@nvidia.com>
+On Mon, 21 Apr 2014 09:35:25 -0400, Santosh Shilimkar wrote:
 
-I can apply this one patch once the other patches in the series are
-acked or applied (in order to make sure the DT binding is acceptable to
-others).
+> > In mach-mvebu, what we do is that we register a bus notifier on the
+> > platform bus, so that we can set our custom DMA operations for all
+> > platform devices in the system. Should this be done in a different way
+> > after your series?
+> > 
+> Nope. Since you have a very custom SOC specific case, you can continue
+> what you are doing.
 
-I guess I'll send separate patches for tegra_defconfig and
-multi_v7_defconfig to add the required options once I've applied this,
-unless you beat me to it.
+True, but as you said, the goal is to remove machine code. So instead
+of having just a 'dma-coherent' property, shouldn't we have a
+dma-method property, which could be dma-method = "coherent" or
+dma-method = "marvell,io-coherent" and therefore allow the DT binding
+to cover more use cases than just the default non-coherent and coherent
+DMA operations?
 
-> diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
+Best regards,
 
->  	aliases {
-> +		i2c20 = "/spi@0,7000d400/cros-ec@0/i2c-tunnel";
-
-Is that needed? I'd prefer not to add it unless there's a specific
-reason. I don't think I2C buses need specific names, do they?
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
