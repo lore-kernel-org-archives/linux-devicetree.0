@@ -1,74 +1,112 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 5/6] powerpc/corenet: Add DPAA FMan support to the SoC
- device tree(s)
-Date: Mon, 21 Apr 2014 17:14:02 -0500
-Message-ID: <1398118442.1694.190.camel@snotra.buserror.net>
-References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
-	 <1397823693-27977-5-git-send-email-Shruti@Freescale.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [RFC PATCH 05/14] ARM: dts: samsung-fimd: add I80 specific
+ properties
+Date: Tue, 22 Apr 2014 00:35:29 +0200
+Message-ID: <1903586.zxepIQYiBA@avalon>
+References: <1397540862-21359-1-git-send-email-yj44.cho@samsung.com>
+ <1673300.nbbjNiKf1K@avalon> <534F67B1.2020001@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397823693-27977-5-git-send-email-Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <534F67B1.2020001@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-04-18 at 07:21 -0500, Shruti Kanetkar wrote:
-> FMan 1 Gb/s MACs (dTSEC and mEMAC) have support for SGMII PHYs.
-> Add support for the internal SerDes TBI PHYs
+Hi YoungJun,
+
+On Thursday 17 April 2014 14:33:37 YoungJun Cho wrote:
+> On 04/17/2014 06:26 AM, Laurent Pinchart wrote:
+> > On Tuesday 15 April 2014 14:47:33 YoungJun Cho wrote:
+> >> In case of using CPU interface panel, the relevant registers should be
+> >> set. So this patch adds relevant dt bindings.
+> >> 
+> >> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> >> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+> >> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+> >> ---
+> >> 
+> >>   .../devicetree/bindings/video/samsung-fimd.txt     |    9 +++++++++
+> >>   1 file changed, 9 insertions(+)
+> >> 
+> >> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> >> b/Documentation/devicetree/bindings/video/samsung-fimd.txt index
+> >> 2dad41b..924c2e1 100644
+> >> --- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> >> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+> >> 
+> >> @@ -44,6 +44,15 @@ Optional Properties:
+> >>   - display-timings: timing settings for FIMD, as described in document
+> >>   [1].
+> >>   
+> >>   		Can be used in case timings cannot be provided otherwise
+> >>   		or to override timings provided by the panel.
+> >> 
+> >> +- samsung,sysreg-phandle: handle to syscon used to control the system
 > 
-> Based on prior work by Andy Fleming <afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Oops... I have to change "samsung,sysreg-phandle" to "samsung,sysreg".
 > 
-> Signed-off-by: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-> ---
->  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  28 +++++
->  arch/powerpc/boot/dts/fsl/b4si-post.dtsi    |  51 +++++++++
->  arch/powerpc/boot/dts/fsl/p1023si-post.dtsi |  14 +++
->  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |  64 ++++++++++++
->  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |  64 ++++++++++++
->  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 104 +++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |  64 ++++++++++++
->  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi | 128 +++++++++++++++++++++++
->  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi | 154 ++++++++++++++++++++++++++++
->  9 files changed, 671 insertions(+)
+> >> registers
+> >> +- vidout-i80-ldi: boolean to support i80 interface instead of rgb one
+> >> +- cs-setup: clock cycles for the active period of address signal enable
+> >> until
+> >> +	chip select is enable in i80 interface
+> >> +- wr-setup: clock cycles for the active period of CS signal enable until
+> >> +	write signal is enable in i80 interface
+> >> +- wr-act: clock cycles for the active period of CS enable in i80
+> >> interface
+> >> +- wr-hold: clock cycles for the active period of CS disable until write
+> >> signal
+> >> +	is disable in i80 interface
+> > 
+> > Shouldn't the interface parameters be considered as a property of the
+> > slave device instead ? The bus master side is programmable, and different
+> > slaves would have different timing requirements. I think it would make
+> > more sense to specify the timings on the slave (panel) side and query them
+> > dynamically at runtime. Depending on the slave the timings could be
+> > hardcoded in the driver (as they're usually an intrinsic property of the
+> > slave) or partially or fully specified in the slave DT node.
 > 
-> diff --git a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-> index cbc354b..45b0ff5 100644
-> --- a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-> +++ b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
-> @@ -172,6 +172,34 @@
->  		compatible = "fsl,b4860-rcpm", "fsl,qoriq-rcpm-2.0";
->  	};
->  
-> +/include/ "qoriq-fman3-0-1g-4.dtsi"
-> +/include/ "qoriq-fman3-0-1g-5.dtsi"
-> +/include/ "qoriq-fman3-0-10g-0.dtsi"
-> +/include/ "qoriq-fman3-0-10g-1.dtsi"
-> +	fman@400000 {
-> +		ethernet@e8000 {
-> +			tbi-handle = <&tbi4>;
-> +		};
+> Yes, you're right. These properties are related to panel in a sense.
+> 
+> But my intention is to use these properties to fimd node in the board
+> specific dts file, because it decides the interface with panel and
+> these are required by fimd only.
 
-Binding needed
+I agree, it's a bit of a gray area. The properties describe the connection 
+between the display controller output and the panel. As such they're shared 
+between the two components, so deciding on which node to include them in is a 
+bit difficult. In this specific case, as the panel dictates the interface 
+timings and the display controller is then programmed to comply with those 
+timings, I would be tempted to consider timing information as panel 
+properties. This obviously complicates driver implementation, as we would need 
+to communicate timing information from panel drivers to display controller 
+drivers.
 
-Where is the "reg" for these unit addresses?
+> If dynamic query is more logical approach, I should find some ways
+> with considering probing order.
 
-> +		mdio@e9000 {
-> +			tbi4: tbi-phy@8 {
-> +				reg = <0x8>;
-> +				device_type = "tbi-phy";
-> +			};
-> +		};
+I won't push too much for storing interface timing information in the panel DT 
+node, but I'm a bit worried that storing it in the display controller DT node 
+might cause issues at some point. As DT is an ABI, we need to carefully 
+consider the potential issues.
 
-Binding needed for tbi-phy device_type.  Why are we using device_type at
-all for this?
+> >>   The device node can contain 'port' child nodes according to the
+> >>   bindings
+> >> 
+> >> defined in [2]. The following are properties specific to those nodes:
 
--Scott
+-- 
+Regards,
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
