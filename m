@@ -1,45 +1,40 @@
-From: Christopher Covington <cov@codeaurora.org>
-Subject: Re: [PATCH 0/4] Introduce drivers/soc and add QCOM GSBI driver
-Date: Mon, 21 Apr 2014 09:48:16 -0400
-Message-ID: <535521A0.5050706@codeaurora.org>
-References: <1398058244-14099-1-git-send-email-agross@codeaurora.org>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 0/4] Add support for Exynos5800 SoC
+Date: Mon, 21 Apr 2014 07:07:02 -0700
+Message-ID: <CAOesGMi-ewBVQEq74fwfAf8rhwJ5QZ1xDpf3yF1QsygmKiygag@mail.gmail.com>
+References: <1398062712-28602-1-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1398058244-14099-1-git-send-email-agross@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, Olof Johansson <olof@lixom.net>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398062712-28602-1-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Alim Akhtar <alim.akhtar@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Olof Johansson <olofj@google.com>, Arun Kumar <arunkk.samsung@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+[from the right account and without html formatting this time]
 
-On 04/21/2014 01:30 AM, Andy Gross wrote:
-> The first patch in this set adds the drivers/soc directory and all the necessary
-> plumbing.  These changes were discussed at the kernel summit and also were
-> introduced in an earlier patch set from Santosh Shilimkar.
-> 
-> Reference the following set of patches:
-> https://lkml.org/lkml/2014/2/28/567
 
-In that thread, Olof wrote, "The code [going into drivers/soc] isn't the pure
-drivers. Those we find homes for."
+On Sun, Apr 20, 2014 at 11:45 PM, Arun Kumar K <arun.kk@samsung.com> wrote:
+> Exynos5800 is a derivative of Exynos5420 with higher
+> clock speeds and most other IP blocks remaining the same
+> except for a few.
+> Due to the similarities with 5420, following is done to
+> achieve maximum code re-use:
+> - Use the same 5420 clock file with few changes for adding
+>   extra 5800 clocks.
+> - Re-use the 5420 dtsi by renaming it to exynos5-octa.
 
-https://lkml.org/lkml/2014/3/2/123
 
-> The remaining patches add the QCOM GSBI (General Serial Bus Interface) driver,
-> device tree binding information for both the GSBI and child node interaction,
-> and lastly a patch to fix the current MSM serial driver to work correctly with
-> the GSBI changes.
+Nack, this is a bad idea. You're not converting over 5410, which is
+also marketed as an exynos octa chip. There's definitely no guarantee
+that future octa-core chips will fit into this naming scheme either.
 
-It's not obvious to me what makes the GSBI driver "impure" and unfit for say
-drivers/bus. Could you perhaps include a brief explanation?
+Just call it 5422 like you did in the Chrome OS code base. It is after
+all the product name that is fused in as chip id on these parts, and
+all the other naming falls out much better from that.
 
-Thanks,
-Christopher
+No more soc_is_5420 || soc_is_5800, since you can add a soc_is_542x. Etc.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
+
+-Olof
