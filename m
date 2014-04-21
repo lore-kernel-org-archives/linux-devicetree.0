@@ -1,137 +1,81 @@
-From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
-Subject: RE: [PATCH v5 3/3] ARM: dts: sama5d3xcm: add the regulator device
- node
-Date: Mon, 21 Apr 2014 03:08:34 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364180A855DE@penmbx01>
-References: <1387852421-18033-1-git-send-email-wenyou.yang@atmel.com>
- <1387852570-18159-1-git-send-email-wenyou.yang@atmel.com>
- <5351985C.4090308@atmel.com>
+From: Wenyou Yang <wenyou.yang@atmel.com>
+Subject: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator device node
+Date: Mon, 21 Apr 2014 12:29:07 +0800
+Message-ID: <1398054547-5834-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5351985C.4090308@atmel.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>
-Cc: "broonie@kernel.org" <broonie@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: nicolas.ferre@atmel.com, broonie@kernel.org, robh+dt@kernel.org, linux@arm.linux.org.u
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, wenyou.yang@atmel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Nicolas,
+Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+---
+ arch/arm/boot/dts/at91-sama5d3_xplained.dts |   42 +++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-> -----Original Message-----
-> From: Ferre, Nicolas
-> Sent: Saturday, April 19, 2014 5:26 AM
-> To: Yang, Wenyou
-> Cc: broonie@kernel.org; lgirdwood@gmail.com; grant.likely@linaro.org;
-> rob.herring@calxeda.com; plagnioj@jcrosoft.com; linux-
-> kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-
-> doc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> Subject: Re: [PATCH v5 3/3] ARM: dts: sama5d3xcm: add the regulator
-> device node
-> 
-> On 24/12/2013 03:36, Wenyou Yang :
-> > Reviwed-by: Mark Brown <broonie@linaro.org>
-> > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
-> 
-> Wenyou,
-> 
-> While collecting patches for our next at91-3.16-dt branch I noticed
-> this patch that should go on top of the SAMA5D3 CMP board.
-> 
-> I would prefer to create another .dtsi file for CMP board and not mix
-> with the current cpu module usual board that does not contain this
-> regulator. But well we can do something even more simpler and move this
-> PMIC example to the newer SAMA5D3 Xplained board.
-> 
-> So, will it be possible for you to re-send a new patch targeted to
-> SAMA5D3 Xplained?
-OK, I will re-send a new patch.
-
-> 
-> Thanks, bye.
-> 
-> 
-> > ---
-> >  arch/arm/boot/dts/sama5d3xcm.dtsi |   46
-> +++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 46 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi
-> > b/arch/arm/boot/dts/sama5d3xcm.dtsi
-> > index 726a0f3..3d4e5c2 100644
-> > --- a/arch/arm/boot/dts/sama5d3xcm.dtsi
-> > +++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
-> > @@ -38,6 +38,52 @@
-> >  			macb0: ethernet@f0028000 {
-> >  				phy-mode = "rgmii";
-> >  			};
-> > +
-> > +			i2c1: i2c@f0018000 {
-> > +				pmic: act8865@5b {
-> > +					compatible = "active-semi,act8865";
-> > +					reg = <0x5b>;
-> > +					status = "disabled";
-> > +
-> > +					regulators {
-> > +						vcc_1v8_reg: DCDC_REG1 {
-> > +							regulator-name = "VCC_1V8";
-> > +							regulator-min-microvolt =
-> <1800000>;
-> > +							regulator-max-microvolt =
-> <1800000>;
-> > +							regulator-always-on;
-> > +						};
-> > +
-> > +						vcc_1v2_reg: DCDC_REG2 {
-> > +							regulator-name = "VCC_1V2";
-> > +							regulator-min-microvolt =
-> <1100000>;
-> > +							regulator-max-microvolt =
-> <1300000>;
-> > +							regulator-suspend-mem-
-> microvolt = <1150000>;
-> > +							regulator-suspend-standby-
-> microvolt = <1150000>;
-> > +							regulator-always-on;
-> > +						};
-> > +
-> > +						vcc_3v3_reg: DCDC_REG3 {
-> > +							regulator-name = "VCC_3V3";
-> > +							regulator-min-microvolt =
-> <3300000>;
-> > +							regulator-max-microvolt =
-> <3300000>;
-> > +							regulator-always-on;
-> > +						};
-> > +
-> > +						vddana_reg: LDO_REG1 {
-> > +							regulator-name = "VDDANA";
-> > +							regulator-min-microvolt =
-> <3300000>;
-> > +							regulator-max-microvolt =
-> <3300000>;
-> > +							regulator-always-on;
-> > +						};
-> > +
-> > +						vddfuse_reg: LDO_REG2 {
-> > +							regulator-name = "FUSE_2V5";
-> > +							regulator-min-microvolt =
-> <2500000>;
-> > +							regulator-max-microvolt =
-> <2500000>;
-> > +						};
-> > +					};
-> > +				};
-> > +			};
-> >  		};
-> >
-> >  		nand0: nand@60000000 {
-> >
-> 
-> 
-> --
-> Nicolas Ferre
-
-Best Regards,
-Wenyou Yang
+diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+index ce13755..57cdd83 100644
+--- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
++++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+@@ -48,6 +48,48 @@
+ 
+ 			i2c1: i2c@f0018000 {
+ 				status = "okay";
++
++				pmic: act8865@5b {
++					compatible = "active-semi,act8865";
++					reg = <0x5b>;
++					status = "okay";
++
++					regulators {
++						vcc_1v8_reg: DCDC_REG1 {
++							regulator-name = "VCC_1V8";
++							regulator-min-microvolt = <1800000>;
++							regulator-max-microvolt = <1800000>;
++							regulator-always-on;
++						};
++
++						vcc_1v2_reg: DCDC_REG2 {
++							regulator-name = "VCC_1V2";
++							regulator-min-microvolt = <1200000>;
++							regulator-max-microvolt = <1200000>;
++							regulator-always-on;
++						};
++
++						vcc_3v3_reg: DCDC_REG3 {
++							regulator-name = "VCC_3V3";
++							regulator-min-microvolt = <3300000>;
++							regulator-max-microvolt = <3300000>;
++							regulator-always-on;
++						};
++
++						vddfuse_reg: LDO_REG1 {
++							regulator-name = "FUSE_2V5";
++							regulator-min-microvolt = <2500000>;
++							regulator-max-microvolt = <2500000>;
++						};
++
++						vddana_reg: LDO_REG2 {
++							regulator-name = "VDDANA";
++							regulator-min-microvolt = <3300000>;
++							regulator-max-microvolt = <3300000>;
++							regulator-always-on;
++						};
++					};
++				};
+ 			};
+ 
+ 			macb0: ethernet@f0028000 {
+-- 
+1.7.9.5
