@@ -1,12 +1,12 @@
 From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCH 1/3] clocksource: ftm: Add FlexTimer Module (FTM) Timer devicetree Documentation
-Date: Mon, 21 Apr 2014 15:19:58 +0800
-Message-ID: <1398064800-27250-2-git-send-email-Li.Xiubo@freescale.com>
-References: <1398064800-27250-1-git-send-email-Li.Xiubo@freescale.com>
+Subject: [PATCHv2 1/3] clocksource: ftm: Add FlexTimer Module (FTM) Timer devicetree Documentation
+Date: Mon, 21 Apr 2014 15:23:01 +0800
+Message-ID: <1398064983-440-2-git-send-email-Li.Xiubo@freescale.com>
+References: <1398064983-440-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398064800-27250-1-git-send-email-Li.Xiubo@freescale.com>
+In-Reply-To: <1398064983-440-1-git-send-email-Li.Xiubo@freescale.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: daniel.lezcano@linaro.org, tglx@linutronix.de, shawn.guo@linaro.org, R64188@freescale.com, b40534@freescale.com, b35083@freescale.com
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Xiubo Li <Li.Xiubo@freescale.com>
