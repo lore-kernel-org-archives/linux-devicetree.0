@@ -1,46 +1,44 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv2 3/3] edac: altera: Add SDRAM EDAC support for
- CycloneV/ArriaV
-Date: Mon, 21 Apr 2014 12:27:50 +0200
-Message-ID: <20140421102750.GA27209@amd.pavel.ucw.cz>
-References: <1397604610-20931-1-git-send-email-tthayer@altera.com>
- <1397604610-20931-5-git-send-email-tthayer@altera.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator
+ device node
+Date: Mon, 21 Apr 2014 14:22:05 +0200
+Message-ID: <20140421122205.GB3461@piout.net>
+References: <1398054547-5834-1-git-send-email-wenyou.yang@atmel.com>
+ <20140421095443.GA3461@piout.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397604610-20931-5-git-send-email-tthayer@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@altera.com
-Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, tthayer.linux@gmail.com, Borislav Petkov <bp@alien8.de>, devicetree@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20140421095443.GA3461-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> From: Thor Thayer <tthayer@altera.com>
+On 21/04/2014 at 11:54:43 +0200, Alexandre Belloni wrote :
+> Hi,
 > 
-> Added EDAC support for reporting ECC errors of CycloneV
-> and ArriaV SDRAM controller.
-> - The SDRAM Controller registers are used by the FPGA bridge so
->   these are accessed through the syscon interface.
-> - The configuration of the SDRAM memory size for the EDAC framework
->   is discovered from the SDRAM Controller registers.
-> - Documentation of the bindings in devicetree/bindings/arm/altera/
->   socfpga-sdram-edac.txt
-> - Correction of single bit errors, detection of double bit errors.
+> On 21/04/2014 at 12:29:07 +0800, Wenyou Yang wrote :
+> > +
+> > +						vddana_reg: LDO_REG2 {
+> > +							regulator-name = "VDDANA";
+> > +							regulator-min-microvolt = <3300000>;
+> > +							regulator-max-microvolt = <3300000>;
+> > +							regulator-always-on;
 > 
-> ---
-> v2: Use the SDRAM controller registers to calculate memory size
->     instead of the Device Tree. Update To & Cc list. Add maintainer 
->     information.
+> I'm pretty sure that one is not always on as you actually have to
+> configure it to get any voltage. Are you sure you want to set the
+> regulator-always-on property here ?
+> 
 
-I'd reduce number of *s in the messages, otherwise
-
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
-
-for whole series.
-								Pavel
+Just to clarify my though, wouldn't it be better to make the ADC driver
+handle that regulator instead of using regulator-always-on ?
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
