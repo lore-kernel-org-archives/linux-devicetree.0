@@ -1,147 +1,137 @@
-From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: exynos: Add MCPM call-back functions
-Date: Mon, 21 Apr 2014 21:27:52 +0530
-Message-ID: <CAM4voamiJ-HZqz8Rgc-RTCjNRDaw5VQbs6GVfxPDxqCKKhm6XA@mail.gmail.com>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
-	<1397239311-27717-6-git-send-email-a.kesavan@samsung.com>
-	<alpine.LFD.2.11.1404111426510.980@knanqh.ubzr>
-	<20140414104116.GA3844@e103592.cambridge.arm.com>
-	<alpine.LFD.2.11.1404140956060.980@knanqh.ubzr>
-	<20140415083615.GC3596@e103592.cambridge.arm.com>
-	<CAM4voamo5iiOQ5P1JyO8kekU6cuxoj4oAT+VpS14LNvWqw_T4g@mail.gmail.com>
-	<20140417100302.GB18864@e103592.cambridge.arm.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
+Date: Mon, 21 Apr 2014 11:08:02 -0500
+Message-ID: <20140421160802.GA22794@saruman.home>
+References: <1396510519-8555-1-git-send-email-sbhatta@xilinx.com>
+ <113d0620-4003-417d-806b-0b79ae692829@VA3EHSMHS023.ehs.local>
+ <20140403145853.GD14162@saruman.home>
+ <CALHRZuoCtEz5-CmU17dUpVS_MjSDdYVLMSvgXq_RwxLj_KJMDA@mail.gmail.com>
+ <20140416180228.GK28035@saruman.home>
+ <CALHRZuq6=TMryHtbjTw7rYoGwbu2w0BTdxiOA95HYS3_CG6vwQ@mail.gmail.com>
+ <20140417150110.GB20889@saruman.home>
+ <CALHRZuqetzEANE=F4mit5sPG_Q-X8Vxsd9-N4k-MKW4_uzDFwg@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140417100302.GB18864-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="h31gzZEtNLTqOjlF"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALHRZuqetzEANE=F4mit5sPG_Q-X8Vxsd9-N4k-MKW4_uzDFwg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sundeep subbaraya <sundeep.lkml@gmail.com>
+Cc: "balbi@ti.com" <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michals@xilinx.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dave,
+--h31gzZEtNLTqOjlF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 17, 2014 at 3:33 PM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Thu, Apr 17, 2014 at 12:41:31AM +0530, Abhilash Kesavan wrote:
->> Hi Dave,
->>
->> On Tue, Apr 15, 2014 at 2:06 PM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
->> > On Mon, Apr 14, 2014 at 10:01:27AM -0400, Nicolas Pitre wrote:
->> >> On Mon, 14 Apr 2014, Dave Martin wrote:
->> >>
->> >> > On Fri, Apr 11, 2014 at 04:23:04PM -0400, Nicolas Pitre wrote:
->> >> > > On Fri, 11 Apr 2014, Abhilash Kesavan wrote:
->> >> > >
->> >> > > > Add machine-dependent MCPM call-backs for Exynos5420. These are used
->> >> > > > to power up/down the secondary CPUs during boot, shutdown, s2r and
->> >> > > > switching.
->> >> > > >
->> >> > > > Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >> > > > Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >> > > > Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> >> > > > Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> >> > >
->> >> > > See comments inline.
->> >> >
->> >> > I won't duplicate Nico's review, but I have a couple of extra comments/
->> >> > questions, below.
->> >> >
->> >> > [...]
->> >> >
->> >> > > > diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
->> >> > > > new file mode 100644
->> >> > > > index 0000000..46d4968
->> >> > > > --- /dev/null
->> >> > > > +++ b/arch/arm/mach-exynos/mcpm-exynos.c
->> >> > > > @@ -0,0 +1,444 @@
->> >> >
->> >> > [...]
->> >> >
->> >> > > > +static void exynos_cluster_power_control(unsigned int cluster, int enable)
->> >> > > > +{
->> >> > > > +       unsigned long timeout = jiffies + msecs_to_jiffies(20);
->> >> > > > +       unsigned int status, val = EXYNOS_CORE_LOCAL_PWR_DIS;
->> >> > > > +
->> >> > > > +       if (enable)
->> >> > > > +               val = EXYNOS_CORE_LOCAL_PWR_EN;
->> >> > > > +
->> >> > > > +       status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
->> >> > > > +       if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
->> >> > > > +               return;
->> >> > > > +
->> >> > > > +       __raw_writel(val, EXYNOS_COMMON_CONFIGURATION(cluster));
->> >> > > > +       /* Wait until cluster power control is applied */
->> >> > > > +       while (time_before(jiffies, timeout)) {
->> >> > > > +               status = __raw_readl(EXYNOS_COMMON_STATUS(cluster));
->> >> > > > +
->> >> > > > +               if ((status & EXYNOS_CORE_LOCAL_PWR_EN) == val)
->> >> > > > +                       return;
->> >> > > > +
->> >> > > > +               cpu_relax();
->> >> > > > +       }
->> >> > > > +       pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
->> >> > > > +               enable ? "on" : "off");
->> >> > >
->> >> > > You should not have to wait for the power status to change here.
->> >> > > Simply signaling the desired state and returning is all that is
->> >> > > expected.  And because IRQs are turned off, it is likely that
->> >> > > time_before(jiffies, timeout) will always be true anyway because jiffies
->> >> > > are not updated if there is no other CPU to service the timer interrupt.
->> >> > >
->> >> > > The actual power status should be polled for in the mcpm_finish()
->> >> > > method only.
->> >> >
->>
->> >> > Depending on the power controller, it might be possible for writes to
->> >> > the controller to be lost or not acted upon, if a previous change is
->> >> > still pending.
->> >> >
->> >> > Does this issue apply to the exynos power controller?
->> >>
->> >> Given the way the code is structured now, I suppose that has not been
->> >> the case so far.
->> >
->> > It depends on the purpose of the polling loop.  If it was added to resolve
->> > a race between a power-up and a power-down that is complete in MCPM but
->> > still pending in the hardware, than that would suggest the power controller
->> > does have this behaviour.
->> >
->> > But I'm just guessing.
->> >
->> > Abhilash, can you comment?
->> The polling loop in the above function was added to ensure that the
->> cluster is switched on before we power on the individual cores in
->> exynos_power_up. This is only required when the first man comes up.
->
-> Is this only required on power-up, not power-down?  I don't see a call
-> to exynos_cluster_power_control(..., 0), but maybe I'm looking in the
-> wrong place.
-No, you have not missed it. As of now, we are turning on both the L2s
-for 8 core bring-up and then not turning it off (if all 4 cores in the
-clusters are down). Turning the L2 off (A15 L2 mainly) brings in
-significant power savings and I will be looking at adding support for
-this next.
->
-> I wonder whether this is needed, though.  It imposes a requirement on
-> the OS to waste time polling for the cluster to come online.  Can the
-> hardware not cope with a CPU poweron request being pending already before
-> the cluster is powered on?  If that were possible, there would be no need
-> for an extra poll.
-No, we need to ensure that the cluster L2 is turned On before we can
-turn the core on, the hardware does not handle it.
->
-> How long do you expect to need to poll for?
-In internal testing when we are turning the cluster on from an off
-state, I have seen the loop being executed 3-4 times occasionally
-during ageing tests. Generally, the status returns as being powered ON
-immediately.
+Hi,
 
-Regards,
-Abhilash
->
-> Cheers
-> ---Dave
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Apr 18, 2014 at 07:34:08PM +0530, sundeep subbaraya wrote:
+
+<snip>
+
+> >> in ep_queue driver starts dma transfer from/to IP buffer to/from req->=
+buf.
+> >> If transfer is completed then request is not added to ep request queue
+> >> and returns from ep_queue.
+> >> If transfer is not completed (actual < length) then request is added
+> >> to queue and returns from ep_queue.
+> >
+> > This is wrong. Why wouldn't you give gadget driver the chance to decide
+> > if it needs to queue the request again or not ?
+>=20
+> When does gadget driver decides to queue the same request again?
+> if -EBUSY is returned from ep_queue or req.status !=3D 0 in completion
+> routine?
+
+whenever it so decides. Different gadget drivers might have different
+requirements. The code is open and sits under drivers/usb/gadget/ why
+don't you have a read ?
+
+> there are cases where ping-pong buffers both are busy. currently this dri=
+ver
+> adds request to queue only when buffers are busy. In normal cases request=
+ is
+> processed without adding to queue.
+
+it shouldn't do that. You can't add requests by yourself. If you can't
+initiate transfers right now, let the HW NAK or something.
+
+> do i need to have another local queue for requests waiting since
+> buffers are busy?
+
+you should probably move the request to another queue, yes. Here's what
+dwc3 does:
+
+=2E gadget queues request
+=2E dwc3 puts request in a 'queued' list
+=2E HW sends XferNotReady event to notify it needs transfer requests
+=2E dwc3 moves requests to 'pending' list
+=2E dwc3 tells hw to consume 'pending' list
+
+if gadget driver queues another request, we accept it into 'queued' list
+and wait for another XferNotReady before moving it to 'pending' and
+consuming it.
+
+> Or dequeue the request ?
+
+you could return -EAGAIN, if you wish. But don't add requests by
+yourself, this could end up in hard-to-debug scenarios. Remember you
+don't *own* the reqeusts, only gadget drivers do. You can keep the
+request around until you have space in your FIFOs to start it, but then,
+in that case, don't try to list_del() -> start() -> list_add().
+
+> >> when buffer processed interrupt occurs, handler starts dma if there is
+> >> request in queue and calls complete call back (when actual =3D=3D leng=
+th)
+> >> Hence answer is Yes for some transfers (start dma called from
+> >> interrupt handler not from ep_queue).
+> >
+> > this also seems wrong(-ish).
+> >
+> > 1) as Paul pointed out, you can't rely on jiffies if you're calling this
+> > with IRQs disabled.
+> >
+> > 2) you don't really need to wait until DMA finishes its transaction
+> > before returning from start_dma(), just use the DMA completion IRQ,
+> >
+> > 3) I don't see anywhere any sanitizing of arguments, can your DMA really
+> > handle any alignment/unaligned addresses or should you make sure you're
+> > getting good arguments?
+> >
+> > You need to work on this a little bit, I guess.
+>=20
+> Yes am working on this and will be using seperate ep_ops for ep0  like
+> drivers/usb/dwc3/gadget.c since ep0 has no dma and ping-pong buffers
+
+ok
+
+--=20
+balbi
+
+--h31gzZEtNLTqOjlF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTVUJiAAoJEIaOsuA1yqRE+GUP/1bVrAfH2apM0IwaHFW6+Wbn
+rSbSUsYla0C8OLstyz3alq+pAjnO9DZDh3AQ0MLR/IlfeJ4PHLZSKjoy2Y5JrQ4H
+XQIFtPvZkFIuNiHviiyxnb8otFeSODHLS/hUL1WuliaG/XKENOYTQZy5G+2iO7m3
+XkCZ/QldKIn9bNrwgoS5qAV0BW+0U63/oOrkOCeJRQZd3dfWuMO5EGpT6KOzQmG5
+XZRnxaLQeLZAd+t550vm48WRA49B+k+UDSPWkZCAHYRoB1xrwaaq82R6TDnrLzuN
+cCa6PuWnJA7/RRHOZJk9Mm+hVqBou0tPsX7Rt4QwoZO+w6RogVy5X2vFXtPBEXhl
+TQZCD++LfKN1M72L/Kc26ulIPJv11QOdBZhjbZM27PgwepmEI4ovw/cGAfwBZ7s1
+HRqc1pmOV52sgr/bjqJIiM2fIDsDglHvz8FQ20y7voYnxbQ+yc7Klo/0FFGRfJvY
+5D/Y5EQCRfmqrTOA6cTH4goHS69r2qVPGdPWfQjO+E9cEUnwCkGxgqn1okE0ofUs
+E1Tc5F7VR9Ti6aD463vnwMoeltXJakmhLiVw9KmSyCbaXyCSAuQYaPBbU7dahr7u
+/Rm1io+l7n5A9fEo+oCr86Mxe2QA/Bbo9r/gy8jCOvxCXDtQnEMWjuzwciNwpRDk
+FFAB1Pl+PXSCh/tHn4hb
+=YKdV
+-----END PGP SIGNATURE-----
+
+--h31gzZEtNLTqOjlF--
