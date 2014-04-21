@@ -1,44 +1,55 @@
-From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator
- device node
-Date: Mon, 21 Apr 2014 14:22:05 +0200
-Message-ID: <20140421122205.GB3461@piout.net>
-References: <1398054547-5834-1-git-send-email-wenyou.yang@atmel.com>
- <20140421095443.GA3461@piout.net>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: [RFC v2 PATCH v3 05/14] ARM: dts: samsung-fimd: add I80 specific
+ properties
+Date: Mon, 21 Apr 2014 21:28:32 +0900
+Message-ID: <1398083321-8668-6-git-send-email-yj44.cho@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140421095443.GA3461-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 21/04/2014 at 11:54:43 +0200, Alexandre Belloni wrote :
-> Hi,
-> 
-> On 21/04/2014 at 12:29:07 +0800, Wenyou Yang wrote :
-> > +
-> > +						vddana_reg: LDO_REG2 {
-> > +							regulator-name = "VDDANA";
-> > +							regulator-min-microvolt = <3300000>;
-> > +							regulator-max-microvolt = <3300000>;
-> > +							regulator-always-on;
-> 
-> I'm pretty sure that one is not always on as you actually have to
-> configure it to get any voltage. Are you sure you want to set the
-> regulator-always-on property here ?
-> 
+In case of using CPU interface panel, the relevant registers should be set.
+So this patch adds relevant dt bindings.
 
-Just to clarify my though, wouldn't it be better to make the ADC driver
-handle that regulator instead of using regulator-always-on ?
+Changelog v2:
+- Changes "samsung,sysreg-phandle" to "samsung,sysreg"
+Changelog v3:
+- Moves CPU timings relevant properties to panel DT
+  (commented by Laurent Pinchart, Andrzej Hajda)
 
+Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+Acked-by: Inki Dae <inki.dae@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ .../devicetree/bindings/video/samsung-fimd.txt     |    2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+index 2dad41b..6bf93e9 100644
+--- a/Documentation/devicetree/bindings/video/samsung-fimd.txt
++++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+@@ -44,6 +44,8 @@ Optional Properties:
+ - display-timings: timing settings for FIMD, as described in document [1].
+ 		Can be used in case timings cannot be provided otherwise
+ 		or to override timings provided by the panel.
++- samsung,sysreg: handle to syscon used to control the system registers
++- vidout-i80-ldi: boolean to support i80 interface instead of rgb one
+ 
+ The device node can contain 'port' child nodes according to the bindings defined
+ in [2]. The following are properties specific to those nodes:
 -- 
-Alexandre Belloni, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
