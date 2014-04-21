@@ -1,104 +1,137 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv3 0/7] Support new Exynos3250 SoC based on Cortex-A7 dual
- core
-Date: Mon, 21 Apr 2014 10:10:30 +0900
-Message-ID: <53547006.8030307@samsung.com>
-References: <1397783728-6193-1-git-send-email-cw00.choi@samsung.com>
+From: "Yang, Wenyou" <Wenyou.Yang@atmel.com>
+Subject: RE: [PATCH v5 3/3] ARM: dts: sama5d3xcm: add the regulator device
+ node
+Date: Mon, 21 Apr 2014 03:08:34 +0000
+Message-ID: <B256D81BAE5131468A838E5D7A24364180A855DE@penmbx01>
+References: <1387852421-18033-1-git-send-email-wenyou.yang@atmel.com>
+ <1387852570-18159-1-git-send-email-wenyou.yang@atmel.com>
+ <5351985C.4090308@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1397783728-6193-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene.kim@samsung.com
-Cc: Chanwoo Choi <cw00.choi@samsung.com>, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, t.figa@samsung.com, arnd@arndb.de, olof@lixom.net, marc.zyngier@arm.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, sw0312.kim@samsung.com, hyunhee.kim@samsung.com, yj44.cho@samsung.com, chanho61.park@samsung.com, sajjan.linux@gmail.com, tushar.behera@linaro.org, sachin.kamat@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5351985C.4090308@atmel.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ferre, Nicolas" <Nicolas.FERRE@atmel.com>
+Cc: "broonie@kernel.org" <broonie@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Kukjin,
+Hi Nicolas,
 
-Please review this patchset for Exynos3250 SoC.
+> -----Original Message-----
+> From: Ferre, Nicolas
+> Sent: Saturday, April 19, 2014 5:26 AM
+> To: Yang, Wenyou
+> Cc: broonie@kernel.org; lgirdwood@gmail.com; grant.likely@linaro.org;
+> rob.herring@calxeda.com; plagnioj@jcrosoft.com; linux-
+> kernel@vger.kernel.org; devicetree@vger.kernel.org; linux-
+> doc@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v5 3/3] ARM: dts: sama5d3xcm: add the regulator
+> device node
+> 
+> On 24/12/2013 03:36, Wenyou Yang :
+> > Reviwed-by: Mark Brown <broonie@linaro.org>
+> > Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
+> 
+> Wenyou,
+> 
+> While collecting patches for our next at91-3.16-dt branch I noticed
+> this patch that should go on top of the SAMA5D3 CMP board.
+> 
+> I would prefer to create another .dtsi file for CMP board and not mix
+> with the current cpu module usual board that does not contain this
+> regulator. But well we can do something even more simpler and move this
+> PMIC example to the newer SAMA5D3 Xplained board.
+> 
+> So, will it be possible for you to re-send a new patch targeted to
+> SAMA5D3 Xplained?
+OK, I will re-send a new patch.
+
+> 
+> Thanks, bye.
+> 
+> 
+> > ---
+> >  arch/arm/boot/dts/sama5d3xcm.dtsi |   46
+> +++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 46 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi
+> > b/arch/arm/boot/dts/sama5d3xcm.dtsi
+> > index 726a0f3..3d4e5c2 100644
+> > --- a/arch/arm/boot/dts/sama5d3xcm.dtsi
+> > +++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+> > @@ -38,6 +38,52 @@
+> >  			macb0: ethernet@f0028000 {
+> >  				phy-mode = "rgmii";
+> >  			};
+> > +
+> > +			i2c1: i2c@f0018000 {
+> > +				pmic: act8865@5b {
+> > +					compatible = "active-semi,act8865";
+> > +					reg = <0x5b>;
+> > +					status = "disabled";
+> > +
+> > +					regulators {
+> > +						vcc_1v8_reg: DCDC_REG1 {
+> > +							regulator-name = "VCC_1V8";
+> > +							regulator-min-microvolt =
+> <1800000>;
+> > +							regulator-max-microvolt =
+> <1800000>;
+> > +							regulator-always-on;
+> > +						};
+> > +
+> > +						vcc_1v2_reg: DCDC_REG2 {
+> > +							regulator-name = "VCC_1V2";
+> > +							regulator-min-microvolt =
+> <1100000>;
+> > +							regulator-max-microvolt =
+> <1300000>;
+> > +							regulator-suspend-mem-
+> microvolt = <1150000>;
+> > +							regulator-suspend-standby-
+> microvolt = <1150000>;
+> > +							regulator-always-on;
+> > +						};
+> > +
+> > +						vcc_3v3_reg: DCDC_REG3 {
+> > +							regulator-name = "VCC_3V3";
+> > +							regulator-min-microvolt =
+> <3300000>;
+> > +							regulator-max-microvolt =
+> <3300000>;
+> > +							regulator-always-on;
+> > +						};
+> > +
+> > +						vddana_reg: LDO_REG1 {
+> > +							regulator-name = "VDDANA";
+> > +							regulator-min-microvolt =
+> <3300000>;
+> > +							regulator-max-microvolt =
+> <3300000>;
+> > +							regulator-always-on;
+> > +						};
+> > +
+> > +						vddfuse_reg: LDO_REG2 {
+> > +							regulator-name = "FUSE_2V5";
+> > +							regulator-min-microvolt =
+> <2500000>;
+> > +							regulator-max-microvolt =
+> <2500000>;
+> > +						};
+> > +					};
+> > +				};
+> > +			};
+> >  		};
+> >
+> >  		nand0: nand@60000000 {
+> >
+> 
+> 
+> --
+> Nicolas Ferre
 
 Best Regards,
-Chanwoo Choi
-
-On 04/18/2014 10:15 AM, Chanwoo Choi wrote:
-> This patchset support new Exynos3250 Samsung SoC based on Cortex-A7 dual core.
-> Exynos3250 is a System-On-Chip (SoC) that is based on 32-bit RISC processor
-> for Smartphone. It is desigend with the 28nm low-power high-K metal gate process
-> and provides the best performance features.
-> 
-> This patchset include some patches such as:
-> - Support secondary CPU of Exynos3250 (cpu up/down)
-> - Supoort uart/mct/adc/gic/i2c/spi/power-domain/pmu/mshc/pwm/amba
-> - Support the clock control for Exynos3250 using common clk framework
-> 
-> This patchset is based on following git repo/branch.
-> - git repo : git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-> - branch   : for-next (Linux 3.15-rc1)
-> 
-> Additional patch description about static memory mapping:
-> This patchset must need to map memory mapping about SYSRAM/PMU for CPU UP/DOWN.
-> So, this patchset need to merge following patchset to remove static memory
-> mapping for SYSRAM[1] / PMU ([2] or [3]).
-> 
-> [1] http://www.spinics.net/lists/arm-kernel/msg323011.html
-> [2] https://lkml.org/lkml/2014/4/2/48
-> [3] http://www.spinics.net/lists/arm-kernel/msg316013.html
-> 
-> And,
-> The pinctrl patch for Exynos3250 was posted as separated patch[4].
-> [4] https://lkml.org/lkml/2014/4/13/156
-> 
-> Changes from v2:
-> - Remove static memory mapping about SYSRAM/PMU such as following patches:
->   ARM: EXYNOS: Add IO mapping for non-secure SYSRAM of Exynos3250
->   ARM: EXYNOS: Add IO mapping for PMU of Exynos3250
-> - Add description for secondary CPU boot of Exynos4212/Exynos3250
-> - Fix description in exynos_cpu_die() to remove particular SoC series
-> - Fix minor coding style
-> - Add documentation for Exynos3250 clock controller
-> 
-> Changes from v1:
-> - Add new "samsung,exynos3" compatible name
-> - Add comment about exynos_cpu_boot in Exynos4212
-> - Remove unnecessary 'goto' statement in firmware.c
-> - Use read_cpuid_part_number() function instead of assembler directly
-> - Post separated pinctrl patch from this patchset
->   : https://lkml.org/lkml/2014/4/13/156
-> - Remove unused pmu interrupts due to Exynos3250 dual-core
-> - Cosolidate all the patches related to exynos3250.dtsi into one patch
-> - Fix gic compatible name to "cortex-a15-gic" because Cortex-A7 GIC is same
-> - Add sign-off of sender to all this patches
-> - Fix minor typo
-> 
-> Chanwoo Choi (4):
->   ARM: EXYNOS: Add Exynos3250 SoC ID
->   ARM: EXYNOS: Support secondary CPU boot of Exynos3250
->   ARM: EXYNOS: Enter a15 lowpower mode for Exynos3250 based on Cortex-a7
->   dt-bindings: add documentation for Exynos3250 clock controller
-> 
-> Kyungmin Park (1):
->   ARM: EXYNOS: Support secondary CPU boot of Exynos4212
-> 
-> Tomasz Figa (2):
->   clk: samsung: exynos3250: Add clocks using common clock framework
->   ARM: dts: Add device tree sources for Exynos3250
-> 
->  .../devicetree/bindings/clock/exynos3250-clock.txt |  41 ++
->  arch/arm/boot/dts/exynos3250-pinctrl.dtsi          | 477 +++++++++++++
->  arch/arm/boot/dts/exynos3250.dtsi                  | 427 +++++++++++
->  arch/arm/mach-exynos/Kconfig                       |  22 +
->  arch/arm/mach-exynos/exynos.c                      |   2 +
->  arch/arm/mach-exynos/firmware.c                    |  21 +-
->  arch/arm/mach-exynos/hotplug.c                     |  19 +-
->  arch/arm/plat-samsung/include/plat/cpu.h           |  10 +
->  drivers/clk/samsung/Makefile                       |   1 +
->  drivers/clk/samsung/clk-exynos3250.c               | 785 +++++++++++++++++++++
->  include/dt-bindings/clock/exynos3250.h             | 256 +++++++
->  11 files changed, 2053 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/exynos3250-clock.txt
->  create mode 100644 arch/arm/boot/dts/exynos3250-pinctrl.dtsi
->  create mode 100644 arch/arm/boot/dts/exynos3250.dtsi
->  create mode 100644 drivers/clk/samsung/clk-exynos3250.c
->  create mode 100644 include/dt-bindings/clock/exynos3250.h
-> 
+Wenyou Yang
