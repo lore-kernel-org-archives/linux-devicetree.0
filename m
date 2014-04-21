@@ -1,78 +1,59 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/3] of: Handle memory@0 node on PPC32 only
-Date: Mon, 21 Apr 2014 07:56:22 -0500
-Message-ID: <CAL_JsqJTMWKh3gsv0TnRap82+7BM4XaT4ZAWkQmyfvzTqOq12g@mail.gmail.com>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-	<1397756521-29387-4-git-send-email-leif.lindholm@linaro.org>
-	<CAMuHMdXBNWum7UJ95uT2hwTd1b5C8ebF2LQ4T-A+RS80p7MH=A@mail.gmail.com>
-	<20140418125924.GF5904@bivouac.eciton.net>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 06/19] bus: omap_l3_noc: un-obfuscate l3_targ address
+ computation
+Date: Mon, 21 Apr 2014 08:08:43 -0500
+Message-ID: <5355185B.70003@ti.com>
+References: <1397492726-17203-1-git-send-email-nm@ti.com> <1397767775-10965-1-git-send-email-nm@ti.com> <1397767775-10965-7-git-send-email-nm@ti.com> <20140417220036.GE8504@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140418125924.GF5904-t77nlHhSwNqAroYi2ySoxKxOck334EZe@public.gmane.org>
+In-Reply-To: <20140417220036.GE8504-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 18, 2014 at 7:59 AM, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Hi Geert,
->
-> On Fri, Apr 18, 2014 at 10:04:15AM +0200, Geert Uytterhoeven wrote:
->> On Thu, Apr 17, 2014 at 7:42 PM, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> > In order to deal with an firmware bug on a specific ppc32 platform
->> > (longtrail), early_init_dt_scan_memory() looks for a node called
->> > memory@0 on all platforms. Restrict this quirk to ppc32 kernels only.
+On 04/17/2014 05:00 PM, Felipe Balbi wrote:
+> On Thu, Apr 17, 2014 at 03:49:22PM -0500, Nishanth Menon wrote:
+>> just simplify derefencing that is equivalent.
 >>
->> This breaks backwards compatibilty with old DTSes (at least on ARM/MIPS,
->> where you added the missing property in patches 1 and 2 of the series)?
->
-> As Rob said in response to 0/3, the MIPSs would likely not be affected,
-> since they embed the DT.
->
->> For the Longtrail, I don't care much anymore, as mine died in 2004.
->> AFAIK, there have never been many users anyway.
->
-> There are still a few mentions of it under arch/powerpc/, so I wouldn't
-> want to be the one to kill it off...
->
-> How about the below v2 3/3 to address the ARM platform?
->
-> Regards,
->
-> Leif
->
-> From 6fa0b837ad71780334eb97d63c507165b6c57add Mon Sep 17 00:00:00 2001
-> From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Date: Thu, 17 Apr 2014 14:24:47 +0100
-> Subject: [PATCH] of: arm: powerpc: Restrict memory@0 node handling to
->  affected platforms
->
-> In order to deal with a firmware bug on a specific ppc32 platform
-> (longtrail), early_init_dt_scan_memory() looks for a node called
-> memory@0 on all platforms, for all nodes lacking a device_type.
-> Restrict this quirk to ppc32 and the arm mach-ux500 platforms (one of
-> which has depended on this special handling).
+>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> ---
+>> V2: just ordering change
+>> V1: https://patchwork.kernel.org/patch/3984201/
+>>  drivers/bus/omap_l3_noc.c |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/bus/omap_l3_noc.c b/drivers/bus/omap_l3_noc.c
+>> index c8facb0..f7d3bf4 100644
+>> --- a/drivers/bus/omap_l3_noc.c
+>> +++ b/drivers/bus/omap_l3_noc.c
+>> @@ -76,7 +76,7 @@ static irqreturn_t l3_interrupt_handler(int irq, void *_l3)
+>>  			err_src = __ffs(err_reg);
+>>  
+>>  			/* Read the stderrlog_main_source from clk domain */
+>> -			l3_targ_base = base + *(l3_targ[i] + err_src);
+>> +			l3_targ_base = base + l3_targ[i][err_src];
+> 
+> hmmm, wasn't it so that pointer arithmetic was slightly faster than
+> array indexing ? In that case would it be best to:
+> 
+> l3_targ_base = base + *(l3_targ + i + err_src);
+> 
+Yes, if this was a hot path (example: interrupt handler that gets
+invoked very often), I would probably have preferred optimization at
+this point.
 
+However, the patch is just a step away from patches that converts the
+target information into a structure under flagmux structure allowing
+us to get rid of multiple array operations.
 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index 889005f..230c747 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -77,4 +77,7 @@ config OF_RESERVED_MEM
->         help
->           Helpers to allow for reservation of memory regions
->
-> +config OF_MEMORY_AT_0_QUIRK
-> +       def_bool n
+This patch just makes the further changes a bit readable.
 
-I do not like this because it would not scale to many quirks. As I
-said,, my preference here would be to just add a WARN.
-
-The other option is get approval to break compatibility on the ST
-platform. It may not be a concern on certain platforms.
-
-Rob
+-- 
+Regards,
+Nishanth Menon
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
