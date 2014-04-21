@@ -1,110 +1,159 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Mon, 21 Apr 2014 22:21:50 +0400
-Message-ID: <535561BE.9070303@cogentembedded.com>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <1397869980-21187-3-git-send-email-zhangfei.gao@linaro.org> <53555C28.4050303@cogentembedded.com> <CAGVrzcb8Ykxi72x3iBStjTL+OO1BhDc_yZnnPq8ZHra+mtrBEA@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
+ probe and defer if needed
+Date: Mon, 21 Apr 2014 14:01:05 -0500
+Message-ID: <53556AF1.2030608@gmail.com>
+References: <20140320161118.B7075C4067A@trevor.secretlab.ca> <1395413185-29763-1-git-send-email-jjhiblot@traphandler.com> <1395413185-29763-3-git-send-email-jjhiblot@traphandler.com> <CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg@mail.gmail.com> <20140418205213.GA21823@atomide.com> <CAL_JsqJvVvo6R-qNXxur7wiZERKbi52xyKoWnmzJTfKS2iKK7A@mail.gmail.com> <20140418215848.GD21823@atomide.com> <20140418230335.GI24070@n2100.arm.linux.org.uk> <20140418232407.GQ21823@atomide.com> <CAL_JsqLvLTJwgsB-m0W72WxSUoTV4ubMdvM_a784J4k2eiK9AQ@mail.gmail.com> <20140421155424.GD23945@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcb8Ykxi72x3iBStjTL+OO1BhDc_yZnnPq8ZHra+mtrBEA@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Zhangfei Gao <zhangfei.gao@linaro.org>, David Miller <davem@davemloft.net>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, David Laight <David.Laight@aculab.com>, Eric Dumazet <eric.dumazet@gmail.com>, xuwei5@hisilicon.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140421155424.GD23945-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2014 10:03 PM, Florian Fainelli wrote:
+On Mon, Apr 21, 2014 at 10:54 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> * Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140421 06:47]:
+>> On Fri, Apr 18, 2014 at 6:24 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+>> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [140418 16:04]:
+>> >> On Fri, Apr 18, 2014 at 02:58:48PM -0700, Tony Lindgren wrote:
+>> >> > Oh come on, let's stop pretending it's not broken. And it's way worse with
+>> >> > device tree as there's nothing making sure the resources for a driver
+>> >> > are set up before the driver probes. And we've been unable to fix just
+>> >> > this issue alone for about six months now. It's also broken beyond that.
+>> >> > It's called of_platform_bus yet it won't even pass the platform_data
+>> >> > as auxdata to the devices on a sub-bus instantatiated like I2C.
+>> >>
+>> >> Isn't there a much simpler solution to the platform device IRQ problem?
+>> >>
+>> >> Rather than trying to fix it at the point where the resources are
+>> >> created, why not just *not* have DT create the IRQ resources in the
+>> >> first place, and instead have platform_get_irq() (which is the function
+>> >> which should be used to get an IRQ) be the actor to do whatever is
+>> >> necessary to return the IRQ(s) ?
+>> >
+>> > Yeah why not. I don't see why we would need to do all this of_* special
+>> > trickery for much anything beyond parsing the binding.
+>>
+>> That can work, but it will still need something like
+>> of_find_irq_domain() to determine whether to return -EPROBE_DEFER or
+>> not.
+>
+> Right. Naturally let's do whatever it takes to first fix this issue
+> in a minimal way first for the -rc cycle so we can do the longer term
+> changes needed.
 
->>> Hisilicon hip04 platform mdio driver
->>> Reuse Marvell phy drivers/net/phy/marvell.c
+I'm not really convinced there is a simple and safe enough solution for
+3.15. We should also be willing to tag a solution for stable if we take
+it for -rc (although that decision could be deferred).
 
->>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> [...]
+>> You could also go in the other direction and don't create the device
+>> until the resources can be resolved. Unlike any of the other
+>> solutions, that would work for amba bus as well although we may never
+>> have a case where we need this with the amba bus. This would require
+>> making of_platform_populate be callable multiple times, but there are
+>> already some other reasons for wanting to do that. Specifically, I
+>> would like the core code to call of_platform_populate with default
+>> options and then only platforms with non-default options need a call
+>> to of_platform_populate.
+>
+> I like this idea as this would also probably remove the the numerous
+> dmesg errors we are currently getting for drivers reprobing with
+> -EPROBE_DEFER.
 
->>> diff --git a/drivers/net/ethernet/hisilicon/hip04_mdio.c
->>> b/drivers/net/ethernet/hisilicon/hip04_mdio.c
->>> new file mode 100644
->>> index 0000000..19826a3
->>> --- /dev/null
->>> +++ b/drivers/net/ethernet/hisilicon/hip04_mdio.c
->>> @@ -0,0 +1,185 @@
+One issue with my proposal is with supporting modules. IIUC, deferred
+probe will continue trying forever and loading modules can cause probe
+to succeed. If devices are not created and on the deferred probe list,
+then they will not get probed when a module load fixes the dependency.
 
-[...]
+> In the long term we should have platform bus just call a set of
+> standardized functions implemented by whatever the data source might
+> be. That way we can limit the use of of_* functions in device drivers
+> to just parsing of custom bindings in the drivers and use bus specific
+> functions for everything else.
+>
+>> >> Yes, I know we have some drivers which use platform_get_resources() with
+>> >> IORESOURCE_IRQ, but they should really use the right accessor.  And those
+>> >> who just dereference the resource array directly... get what's coming
+>> >> (though of course they have to be fixed.)
+>> >
+>> > $ git grep IORESOURCE_IRQ drivers/ | grep platform_get_resource | wc -l
+>> > 179
+>>
+>> Certainly, this is worthwhile clean-up no matter what the solution.
+>
+> Yeah agreed. But let's also consider the IORESOURCE_IRQ as just another
+> source for for the bus or driver data in addition to the DT parsed data.
+> Both sources of data should work just fine with platform_bus even
+> without cleaning up the drivers
 
->>> +static int hip04_mdio_reset(struct mii_bus *bus)
->>> +{
->>> +       int temp, err, i;
->>> +
->>> +       for (i = 0; i < PHY_MAX_ADDR; i++) {
->>> +               hip04_mdio_write(bus, i, 22, 0);
+Ah, right. Except for those drivers you need to work with deferred probe
+would have to use platform_get_irq. That fact makes this solution quite
+a bit easier.
 
->>     Why? What kind of a register this is? <uapi/linux/mii.h> tells me it's
->> MII_SREVISION...
+Something like this is what you had in mind?
 
-> I think this rather means clause 22 as opposed to clause 45.
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index e714709..5b47210 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -13,6 +13,7 @@
+ #include <linux/string.h>
+ #include <linux/platform_device.h>
+ #include <linux/of_device.h>
++#include <linux/of_irq.h>
+ #include <linux/module.h>
+ #include <linux/init.h>
+ #include <linux/dma-mapping.h>
+@@ -87,7 +88,11 @@ int platform_get_irq(struct platform_device *dev,
+unsigned int num)
+ 		return -ENXIO;
+ 	return dev->archdata.irqs[num];
+ #else
+-	struct resource *r = platform_get_resource(dev, IORESOURCE_IRQ, num);
++	struct resource *r;
++	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node)
++		return of_irq_get(dev->dev.of_node, num);
++
++	r = platform_get_resource(dev, IORESOURCE_IRQ, num);
 
-    No, the corresponding hip04_mdio_write()'s parameter is a register #, so 
-this is a write of 0 to register #22. A comment certainly wouldn't hurt here...
+ 	return r ? r->start : -ENXIO;
+ #endif
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 7d3184f..30449ad 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -400,6 +400,26 @@ int of_irq_to_resource(struct device_node *dev, int
+index, struct resource *r)
+ EXPORT_SYMBOL_GPL(of_irq_to_resource);
 
->>> +               temp = hip04_mdio_read(bus, i, MII_BMCR);
-
->>     You're not checking for error...
-
->>> +               temp |= BMCR_RESET;
->>> +               err = hip04_mdio_write(bus, i, MII_BMCR, temp);
-
->>     Hmm, why you're open coding BMCR reset? There's phy_init_hw() doing this
->> correctly...
-
-> Except that this runs way before we have created the PHY driver, so we
-> can't use that function just yet.
-
-    Ah, you're right.
-
-> I already asked about this, and he
-> explained that this was because the PHY devices he uses are not
-> responding correcty to MII_PHYSID1/2 reads.
-
-    So, this manual reset loop helps with reading the ID registers? A comment 
-wouldn't hurt either...
-
->>> +               if (err < 0)
->>> +                       return err;
-
-    I'm not at all sure we want to leave the reset loop on a first write error.
-
->>> +       }
->>> +
->>> +       mdelay(500);
-
-    I'm not sure this is enough, given that in phy_init_hw() we poll for 600 
-ms + 1 ms.
-
->>> +       return 0;
->>> +}
->>> +
->>> +static int hip04_mdio_probe(struct platform_device *pdev)
->>> +{
->>> +       struct resource *r;
->>> +       struct mii_bus *bus;
->>> +       struct hip04_mdio_priv *priv;
->>> +       int ret;
->>> +
->>> +       bus = mdiobus_alloc_size(sizeof(struct hip04_mdio_priv));
->>> +       if (!bus) {
->>> +               dev_err(&pdev->dev, "Cannot allocate MDIO bus\n");
->>> +               return -ENOMEM;
->>> +       }
->>> +
->>> +       bus->name = "hip04_mdio_bus";
->>> +       bus->read = hip04_mdio_read;
->>> +       bus->write = hip04_mdio_write;
->>> +       bus->reset = hip04_mdio_reset;
-
->>     Ah... However I don't think it a good implementation of that bus
->> method...
-
-    I assumed this method exists to do a hardware reset of the whole bus, not 
-to do a loop of soft-resetting all PHYs...
-
-WBR, Sergei
+ /**
++ * of_irq_get - Decode a node's IRQ and return it as a Linux irq number
++ * @dev: pointer to device tree node
++ * @index: zero-based index of the irq
++ *
++ * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
++ * is not yet created.
++ *
++ */
++int of_irq_get(struct device_node *dev, int index)
++{
++	int irq = irq_of_parse_and_map(dev, index);
++
++	if (!irq && of_find_irq_domain(dev, index) == NULL)
++		return -EPROBE_DEFER;
++
++	return irq;
++}
++EXPORT_SYMBOL_GPL(of_irq_get);
++
++/**
+  * of_irq_count - Count the number of IRQs a node uses
+  * @dev: pointer to device tree node
+  */
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
