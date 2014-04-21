@@ -1,115 +1,203 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
-Date: Tue, 22 Apr 2014 00:13:50 +0400
-Message-ID: <53557BFE.5020908@cogentembedded.com>
-References: <201404120415.43761.sergei.shtylyov@cogentembedded.com> <534B77E2.8060901@ti.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
+ probe and defer if needed
+Date: Mon, 21 Apr 2014 13:25:47 -0700
+Message-ID: <20140421202546.GA26554@atomide.com>
+References: <1395413185-29763-3-git-send-email-jjhiblot@traphandler.com>
+ <CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg@mail.gmail.com>
+ <20140418205213.GA21823@atomide.com>
+ <CAL_JsqJvVvo6R-qNXxur7wiZERKbi52xyKoWnmzJTfKS2iKK7A@mail.gmail.com>
+ <20140418215848.GD21823@atomide.com>
+ <20140418230335.GI24070@n2100.arm.linux.org.uk>
+ <20140418232407.GQ21823@atomide.com>
+ <CAL_JsqLvLTJwgsB-m0W72WxSUoTV4ubMdvM_a784J4k2eiK9AQ@mail.gmail.com>
+ <20140421155424.GD23945@atomide.com>
+ <53556AF1.2030608@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <534B77E2.8060901@ti.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53556AF1.2030608-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+* Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140421 12:01]:
+> On Mon, Apr 21, 2014 at 10:54 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> > * Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140421 06:47]:
+> >> On Fri, Apr 18, 2014 at 6:24 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [140418 16:04]:
+> >> >> On Fri, Apr 18, 2014 at 02:58:48PM -0700, Tony Lindgren wrote:
+> >> >> > Oh come on, let's stop pretending it's not broken. And it's way worse with
+> >> >> > device tree as there's nothing making sure the resources for a driver
+> >> >> > are set up before the driver probes. And we've been unable to fix just
+> >> >> > this issue alone for about six months now. It's also broken beyond that.
+> >> >> > It's called of_platform_bus yet it won't even pass the platform_data
+> >> >> > as auxdata to the devices on a sub-bus instantatiated like I2C.
+> >> >>
+> >> >> Isn't there a much simpler solution to the platform device IRQ problem?
+> >> >>
+> >> >> Rather than trying to fix it at the point where the resources are
+> >> >> created, why not just *not* have DT create the IRQ resources in the
+> >> >> first place, and instead have platform_get_irq() (which is the function
+> >> >> which should be used to get an IRQ) be the actor to do whatever is
+> >> >> necessary to return the IRQ(s) ?
+> >> >
+> >> > Yeah why not. I don't see why we would need to do all this of_* special
+> >> > trickery for much anything beyond parsing the binding.
+> >>
+> >> That can work, but it will still need something like
+> >> of_find_irq_domain() to determine whether to return -EPROBE_DEFER or
+> >> not.
+> >
+> > Right. Naturally let's do whatever it takes to first fix this issue
+> > in a minimal way first for the -rc cycle so we can do the longer term
+> > changes needed.
+> 
+> I'm not really convinced there is a simple and safe enough solution for
+> 3.15. We should also be willing to tag a solution for stable if we take
+> it for -rc (although that decision could be deferred).
 
-On 04/14/2014 09:53 AM, Kishon Vijay Abraham I wrote:
+Yes the fix needs to also go to stable. And this is a regression
+between legacy booting and DT based booting so we do have good
+reasons to fix this for the -rc cycle. Who knows how many people are
+hitting this and are tinkering with the driver initcall levels to
+work around it. Ideally the fix, even if intrusive, would already
+get us a little bit into the right direction.
 
->> This PHY, though formally being a part of Renesas USBHS controller, contains the
->> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls them
->> channels) to the different USB controllers: channel 0 can be connected to either
->> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
->> or xHCI controllers.
+> >> You could also go in the other direction and don't create the device
+> >> until the resources can be resolved. Unlike any of the other
+> >> solutions, that would work for amba bus as well although we may never
+> >> have a case where we need this with the amba bus. This would require
+> >> making of_platform_populate be callable multiple times, but there are
+> >> already some other reasons for wanting to do that. Specifically, I
+> >> would like the core code to call of_platform_populate with default
+> >> options and then only platforms with non-default options need a call
+> >> to of_platform_populate.
+> >
+> > I like this idea as this would also probably remove the the numerous
+> > dmesg errors we are currently getting for drivers reprobing with
+> > -EPROBE_DEFER.
+> 
+> One issue with my proposal is with supporting modules. IIUC, deferred
+> probe will continue trying forever and loading modules can cause probe
+> to succeed. If devices are not created and on the deferred probe list,
+> then they will not get probed when a module load fixes the dependency.
+> 
+> > In the long term we should have platform bus just call a set of
+> > standardized functions implemented by whatever the data source might
+> > be. That way we can limit the use of of_* functions in device drivers
+> > to just parsing of custom bindings in the drivers and use bus specific
+> > functions for everything else.
+> >
+> >> >> Yes, I know we have some drivers which use platform_get_resources() with
+> >> >> IORESOURCE_IRQ, but they should really use the right accessor.  And those
+> >> >> who just dereference the resource array directly... get what's coming
+> >> >> (though of course they have to be fixed.)
+> >> >
+> >> > $ git grep IORESOURCE_IRQ drivers/ | grep platform_get_resource | wc -l
+> >> > 179
+> >>
+> >> Certainly, this is worthwhile clean-up no matter what the solution.
+> >
+> > Yeah agreed. But let's also consider the IORESOURCE_IRQ as just another
+> > source for for the bus or driver data in addition to the DT parsed data.
+> > Both sources of data should work just fine with platform_bus even
+> > without cleaning up the drivers
+> 
+> Ah, right. Except for those drivers you need to work with deferred probe
+> would have to use platform_get_irq. That fact makes this solution quite
+> a bit easier.
 
->> This is a new driver for this USB PHY currently already supported under drivers/
->> usb/phy/. The reason for writing the new driver was the requirement that the
->> multiplexing of USB channels to the controller be dynamic, depending on what
->> USB drivers are loaded,  rather than static as provided by the old driver.
->> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
->> ideally. The new driver only supports device tree probing for now.
+Yes fixing up the known broken drivers is also doable for the -rc
+cycle.
+ 
+> Something like this is what you had in mind?
+> 
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index e714709..5b47210 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/string.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/module.h>
+>  #include <linux/init.h>
+>  #include <linux/dma-mapping.h>
+> @@ -87,7 +88,11 @@ int platform_get_irq(struct platform_device *dev,
+> unsigned int num)
+>  		return -ENXIO;
+>  	return dev->archdata.irqs[num];
+>  #else
+> -	struct resource *r = platform_get_resource(dev, IORESOURCE_IRQ, num);
+> +	struct resource *r;
+> +	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node)
+> +		return of_irq_get(dev->dev.of_node, num);
+> +
+> +	r = platform_get_resource(dev, IORESOURCE_IRQ, num);
+> 
+>  	return r ? r->start : -ENXIO;
+>  #endif
+> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> index 7d3184f..30449ad 100644
+> --- a/drivers/of/irq.c
+> +++ b/drivers/of/irq.c
+> @@ -400,6 +400,26 @@ int of_irq_to_resource(struct device_node *dev, int
+> index, struct resource *r)
+>  EXPORT_SYMBOL_GPL(of_irq_to_resource);
+> 
+>  /**
+> + * of_irq_get - Decode a node's IRQ and return it as a Linux irq number
+> + * @dev: pointer to device tree node
+> + * @index: zero-based index of the irq
+> + *
+> + * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
+> + * is not yet created.
+> + *
+> + */
+> +int of_irq_get(struct device_node *dev, int index)
+> +{
+> +	int irq = irq_of_parse_and_map(dev, index);
+> +
+> +	if (!irq && of_find_irq_domain(dev, index) == NULL)
+> +		return -EPROBE_DEFER;
+> +
+> +	return irq;
+> +}
 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Yeah something like that. That might also work as a pretty
+minimal fix as long as we fix the known broken drivers to use
+platform_get_irq().
 
-[...]
+But for the long run, how about we define some kind of Linux
+generic bus ops:
 
->> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
->> ===================================================================
->> --- /dev/null
->> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
->> @@ -0,0 +1,283 @@
+struct bus_ops {
+	struct resource *	(*get_resource)(struct device *dev, unsigned int type, unsigned int num);
+	int			(get_irq)(struct device *dev, unsigned int num);
+	...
+};
 
-[...]
+And then DT code would register static of_irq_get() as a get_irq()
+for the platform_bus. And naturally we'd implement these functions
+for legacy resources too. And that way platform_bus code stays clear
+of implementation details and just goes through the list of
+registered data sources. It may even make sense to do it for the
+fix to keep the of_* functions private to drivers/of/*.c and the
+bus code generic.
 
->> +static int rcar_gen2_phy_init(struct phy *p)
->> +{
->> +	struct rcar_gen2_phy *phy = phy_get_drvdata(p);
->> +	struct rcar_gen2_phy_driver *drv = phy->drv;
->> +	unsigned long flags;
->> +	u32 ugctrl2;
+> +EXPORT_SYMBOL_GPL(of_irq_get);
 
-> We can just add
-> 	if (!phy->select_mask)
-> 		return 0;
+Probably no need to export this? I don't think we want other
+code to use this directly..
 
-    Yes, we can, if you'd prefer that.
+Regards,
 
->> +
->> +	if (phy->select_mask) {
->> +		clk_prepare_enable(drv->clk);
->> +
->> +		spin_lock_irqsave(&drv->lock, flags);
->> +		ugctrl2 = readl(drv->base + USBHS_UGCTRL2);
->> +		ugctrl2 &= ~phy->select_mask;
->> +		ugctrl2 |= phy->select_value;
->> +		writel(ugctrl2, drv->base + USBHS_UGCTRL2);
->> +		spin_unlock_irqrestore(&drv->lock, flags);
->> +	}
->> +
->> +	return 0;
->> +}
-
-[...]
-
->> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
->> +{
-
-[...]
-
->> +	drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
->> +	drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
->> +	drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
->> +	drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
->> +	drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
->> +	drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
->> +	drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
->> +	drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
->> +
->> +	for (i = 0; i < NUM_USB_CHANNELS; i++) {
-
-> Instead of hard coding the number of channels,
-
-    It's hard coded in the hardware. We can even decrease that number to 2 as 
-for the channel #1 we have nothing to do, regardless of whether it's present 
-or not...
-
-> we can model the channels (PHYs) as sub-nodes of the main PHY
-
-    Hm, I don't think such representation would be adequate: the channels 
-themselves do not usually correspond to any particular PHY, that's why I used 
-#phy-cells = <2>.
-
-> in dt and use it to create individual PHYs.
-
-    Well, we probably can... however, I fail to see any immediate gain from
-it here...
-    I have to ask why you've selected this particular driver for such DT 
-representation experiments, despite it not being the first one supporting 
-multiple PHYs?
-
-> Thanks
-> Kishon
-
-WBR, Sergei
-
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
