@@ -1,70 +1,55 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v2 RESEND 3/5] ARM: dts: define clock binding for bcm21664
-Date: Mon, 21 Apr 2014 16:26:25 -0500
-Message-ID: <1398115587-32529-4-git-send-email-elder@linaro.org>
-References: <1398115587-32529-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398115587-32529-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mturquette@linaro.org, mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv2 3/3] edac: altera: Add SDRAM EDAC support for
+ CycloneV/ArriaV
+Date: Mon, 21 Apr 2014 16:33:41 -0500
+Message-ID: <1398116021.12716.1.camel@dinh-ubuntu>
+References: <1397604610-20931-1-git-send-email-tthayer@altera.com>
+	 <1397604610-20931-5-git-send-email-tthayer@altera.com>
+	 <20140421102750.GA27209@amd.pavel.ucw.cz>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140421102750.GA27209-tWAi6jLit6GreWDznjuHag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kVAfugRpC6u6w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document the device tree binding for Broadcom BCM28164 clock control
-units and clocks.  This SoC uses Kona CCUs, similar to the BCM281XX
-SoC family.
+On Mon, 2014-04-21 at 12:27 +0200, Pavel Machek wrote:
+> Hi!
+> 
+> > From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> > 
+> > Added EDAC support for reporting ECC errors of CycloneV
+> > and ArriaV SDRAM controller.
+> > - The SDRAM Controller registers are used by the FPGA bridge so
+> >   these are accessed through the syscon interface.
+> > - The configuration of the SDRAM memory size for the EDAC framework
+> >   is discovered from the SDRAM Controller registers.
+> > - Documentation of the bindings in devicetree/bindings/arm/altera/
+> >   socfpga-sdram-edac.txt
+> > - Correction of single bit errors, detection of double bit errors.
+> > 
+> > ---
+> > v2: Use the SDRAM controller registers to calculate memory size
+> >     instead of the Device Tree. Update To & Cc list. Add maintainer 
+> >     information.
+> 
+> I'd reduce number of *s in the messages, otherwise
+> 
+> Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> 
+> for whole series.
+> 								Pavel
+> 
+Hi Pavel.
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
- .../devicetree/bindings/clock/bcm-kona-clock.txt   | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Noted - I will make the change. Thank you for reviewing.
 
-diff --git a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-index ebe3ab6..5286e26 100644
---- a/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/bcm-kona-clock.txt
-@@ -98,3 +98,42 @@ be used.  These specifiers are defined in:
-     slave   bsc2            peri      7     BCM281XX_SLAVE_CCU_BSC2
-     slave   bsc3            peri      8     BCM281XX_SLAVE_CCU_BSC3
-     slave   pwm             peri      9     BCM281XX_SLAVE_CCU_PWM
-+
-+
-+BCM21664 family
-+---------------
-+CCU compatible string values for SoCs in the BCM21664 family are:
-+    "brcm,bcm21664-root-ccu"
-+    "brcm,bcm21664-aon-ccu"
-+    "brcm,bcm21664-master-ccu"
-+    "brcm,bcm21664-slave-ccu"
-+
-+The following table defines the set of CCUs and clock specifiers for
-+BCM21664 family clocks.  When a clock consumer references a clocks,
-+its symbolic specifier (rather than its numeric index value) should
-+be used.  These specifiers are defined in:
-+    "include/dt-bindings/clock/bcm21664.h"
-+
-+    CCU     Clock           Type    Index   Specifier
-+    ---     -----           ----    -----   ---------
-+    root    frac_1m         peri      0     BCM21664_ROOT_CCU_FRAC_1M
-+
-+    aon     hub_timer       peri      0     BCM21664_AON_CCU_HUB_TIMER
-+
-+    master  sdio1           peri      0     BCM21664_MASTER_CCU_SDIO1
-+    master  sdio2           peri      1     BCM21664_MASTER_CCU_SDIO2
-+    master  sdio3           peri      2     BCM21664_MASTER_CCU_SDIO3
-+    master  sdio4           peri      3     BCM21664_MASTER_CCU_SDIO4
-+    master  sdio1_sleep     peri      4     BCM21664_MASTER_CCU_SDIO1_SLEEP
-+    master  sdio2_sleep     peri      5     BCM21664_MASTER_CCU_SDIO2_SLEEP
-+    master  sdio3_sleep     peri      6     BCM21664_MASTER_CCU_SDIO3_SLEEP
-+    master  sdio4_sleep     peri      7     BCM21664_MASTER_CCU_SDIO4_SLEEP
-+
-+    slave   uartb           peri      0     BCM21664_SLAVE_CCU_UARTB
-+    slave   uartb2          peri      1     BCM21664_SLAVE_CCU_UARTB2
-+    slave   uartb3          peri      2     BCM21664_SLAVE_CCU_UARTB3
-+    slave   uartb4          peri      3     BCM21664_SLAVE_CCU_UARTB4
-+    slave   bsc1            peri      4     BCM21664_SLAVE_CCU_BSC1
-+    slave   bsc2            peri      5     BCM21664_SLAVE_CCU_BSC2
-+    slave   bsc3            peri      6     BCM21664_SLAVE_CCU_BSC3
-+    slave   bsc4            peri      7     BCM21664_SLAVE_CCU_BSC4
--- 
-1.9.1
+Thor
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
