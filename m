@@ -1,77 +1,52 @@
-From: Andy Gross <agross@codeaurora.org>
-Subject: [PATCH 1/4] soc: Placeholder files for drivers/soc
-Date: Mon, 21 Apr 2014 00:30:41 -0500
-Message-ID: <1398058244-14099-2-git-send-email-agross@codeaurora.org>
-References: <1398058244-14099-1-git-send-email-agross@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398058244-14099-1-git-send-email-agross@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH 0/4] Add support for Exynos5800 SoC
+Date: Mon, 21 Apr 2014 12:15:08 +0530
+Message-ID: <1398062712-28602-1-git-send-email-arun.kk@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, dianders@chromium.org, alim.akhtar@samsung.com, tomasz.figa@gmail.com, olofj@google.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add placeholder Kconfig and linkage for driver/soc.
+Exynos5800 is a derivative of Exynos5420 with higher
+clock speeds and most other IP blocks remaining the same
+except for a few.
+Due to the similarities with 5420, following is done to
+achieve maximum code re-use:
+- Use the same 5420 clock file with few changes for adding
+  extra 5800 clocks.
+- Re-use the 5420 dtsi by renaming it to exynos5-octa.
 
-The first patch set that implemented this was authored by Santosh Shilimkar:
-https://lkml.org/lkml/2014/2/28/567
+This series is re-based on the 5420 clock cleanup series
+posted by Shaik [1].
+[1] http://www.spinics.net/lists/arm-kernel/msg318493.html
 
-Signed-off-by: Andy Gross <agross@codeaurora.org>
----
- drivers/Kconfig     |    2 ++
- drivers/Makefile    |    4 ++++
- drivers/soc/Kconfig |    4 ++++
- 3 files changed, 10 insertions(+)
- create mode 100644 drivers/soc/Kconfig
+Alim Akhtar (1):
+  clk: exynos5420: Add 5800 specific clocks
 
-diff --git a/drivers/Kconfig b/drivers/Kconfig
-index b3138fb..37f955f 100644
---- a/drivers/Kconfig
-+++ b/drivers/Kconfig
-@@ -130,6 +130,8 @@ source "drivers/staging/Kconfig"
- 
- source "drivers/platform/Kconfig"
- 
-+source "drivers/soc/Kconfig"
-+
- source "drivers/clk/Kconfig"
- 
- source "drivers/hwspinlock/Kconfig"
-diff --git a/drivers/Makefile b/drivers/Makefile
-index 8e3b8b0..ba77e7b 100644
---- a/drivers/Makefile
-+++ b/drivers/Makefile
-@@ -132,6 +132,10 @@ obj-$(CONFIG_VHOST_RING)	+= vhost/
- obj-$(CONFIG_VLYNQ)		+= vlynq/
- obj-$(CONFIG_STAGING)		+= staging/
- obj-y				+= platform/
-+
-+# soc specific drivers
-+obj-y				+= soc/
-+
- #common clk code
- obj-y				+= clk/
- 
-diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
-new file mode 100644
-index 0000000..58bd962
---- /dev/null
-+++ b/drivers/soc/Kconfig
-@@ -0,0 +1,4 @@
-+menu "SOC specific Drivers"
-+
-+endmenu
-+`
+Arun Kumar K (3):
+  ARM: EXYNOS: Add 5800 SoC support
+  ARM: dts: Add 5800 dt files
+  ARM: dts: Add peach-pi board support
+
+ .../devicetree/bindings/clock/exynos5420-clock.txt |    3 +-
+ arch/arm/boot/dts/Makefile                         |    3 +-
+ ...5420-pinctrl.dtsi => exynos5-octa-pinctrl.dtsi} |    0
+ arch/arm/boot/dts/exynos5-octa.dtsi                |  732 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |  713 +------------------
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          |  225 ++++++
+ arch/arm/boot/dts/exynos5800.dtsi                  |   24 +
+ arch/arm/mach-exynos/Kconfig                       |    8 +
+ arch/arm/mach-exynos/exynos.c                      |    1 +
+ arch/arm/mach-exynos/platsmp.c                     |    2 +-
+ arch/arm/plat-samsung/include/plat/cpu.h           |   11 +-
+ drivers/clk/samsung/clk-exynos5420.c               |  276 ++++++--
+ include/dt-bindings/clock/exynos5420.h             |    4 +
+ 13 files changed, 1230 insertions(+), 772 deletions(-)
+ rename arch/arm/boot/dts/{exynos5420-pinctrl.dtsi => exynos5-octa-pinctrl.dtsi} (100%)
+ create mode 100644 arch/arm/boot/dts/exynos5-octa.dtsi
+ create mode 100644 arch/arm/boot/dts/exynos5800-peach-pi.dts
+ create mode 100644 arch/arm/boot/dts/exynos5800.dtsi
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.9.5
