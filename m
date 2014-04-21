@@ -1,77 +1,125 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv3 07/14] HSI: Add common DT binding for HSI client devices
-Date: Mon, 21 Apr 2014 11:52:11 -0500
-Message-ID: <CAL_JsqLMAj7LewzkOk+tSyaZcS8CXyeozY5zMAY=iTWueuVuVA@mail.gmail.com>
-References: <1396053110-21639-1-git-send-email-sre@kernel.org>
-	<1396053110-21639-8-git-send-email-sre@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1396053110-21639-8-git-send-email-sre@kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 3/4] soc: qcom: Add device tree binding for GSBI
+Date: Mon, 21 Apr 2014 11:55:20 -0500
+Message-ID: <CBEDF2BA-C083-4610-AE4C-E5BB2E12C488@codeaurora.org>
+References: <1398058244-14099-1-git-send-email-agross@codeaurora.org> <1398058244-14099-4-git-send-email-agross@codeaurora.org>
+Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1398058244-14099-4-git-send-email-agross@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 28, 2014 at 7:31 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> Implement and document generic DT bindings for HSI clients.
->
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
 
-Seems pretty reasonable although I know little about HSI.
+On Apr 21, 2014, at 12:30 AM, Andy Gross <agross@codeaurora.org> wrote:
 
+> Add device tree binding support for the QCOM GSBI driver.
+> 
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
 > ---
->  .../devicetree/bindings/hsi/client-devices.txt     |  44 +++++
->  drivers/hsi/hsi.c                                  | 197 ++++++++++++++++++++-
->  include/linux/hsi/hsi.h                            |   2 +
->  3 files changed, 241 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/hsi/client-devices.txt
->
-> diff --git a/Documentation/devicetree/bindings/hsi/client-devices.txt b/Documentation/devicetree/bindings/hsi/client-devices.txt
+> .../devicetree/bindings/soc/qcom/qcom,gsbi.txt     |   78 ++++++++++++++++++++
+> 1 file changed, 78 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
 > new file mode 100644
-> index 0000000..7504cb1
+> index 0000000..6462e61
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hsi/client-devices.txt
-> @@ -0,0 +1,44 @@
-> +Each HSI port is supposed to have one child node, which
-> +symbols the remote device connected to the HSI port. The
-> +following properties are standardized for HSI clients:
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
+> @@ -0,0 +1,78 @@
+> +QCOM GSBI (General Serial Bus Interface) Driver
 > +
-> +Required HSI configuration properties:
+> +The GSBI controller is modeled as a node with zero or more child nodes, each
+> +representing a serial sub-node device that is mux'd as part of the GSBI
+> +configuration settings.  The mode setting will govern the input/output mode of
+> +the 4 GSBI IOs.
 > +
-> +- reg:                 A list of channel ids
-> +
-> +- hsi-rx-mode:         Receiver Bit transmission mode ("stream" or "frame")
-> +- hsi-tx-mode:         Transmitter Bit transmission mode ("stream" or "frame")
-> +- hsi-mode:            May be used instead hsi-rx-mode and hsi-tx-mode if
-> +                       the transmission mode is the same for receiver and
-> +                       transmitter
-> +- hsi-speed-kbps:      Max bit transmission speed in kbit/s
-> +- hsi-flow:            RX flow type ("synchronized" or "pipeline")
-> +- hsi-arb-mode:                Arbitration mode for TX frame ("round-robin", "priority")
-> +
-> +Optional HSI configuration properties:
-> +
-> +- reg-names:           A list with one name per channel specified in the
-> +                       reg property
-> +
-> +
-> +Device Tree node example for an HSI client:
-> +
-> +hsi-controller {
-> +       hsi-port {
-> +               modem: hsi-client {
-> +                       compatible = "nokia,n900-modem";
+> +Required properties:
+> +- compatible: must contain "qcom,gsbi-v1.0.0" for APQ8064/IPQ8064
+> +- reg: Address range for GSBI registers
+> +- clocks: required clock
+> +- clock-names: must contain "iface" entry
+> +- qcom,mode : indicates MUX value for configuration of the serial interface.
+> +	mode 0: idle, null values applied to all four GSBI IOs
+> +	mode 1: I2C on 2 ports, SIM/R-UIM on other 2.
+> +	mode 2: I2C
+> +	mode 3: SPI
+> +	mode 4: UART w/ flow control
+> +	mode 5: SIM/R-UIM
+> +	mode 6: I2C on 2 ports, UART (without flow control) on other 2
+> +	mode 7: undefined
 
-Is there only 1 version of HSI? If not, then perhaps you need to know
-what version a client is.
+Can we add defines in a include/dt-bindings for these modes.
 
 > +
-> +                       reg = <0>, <1>, <2>, <3>;
+> +Required properties if child node exists:
+> +- #address-cells: Must be 1
+> +- #size-cells: Must be 1
+> +- ranges: Must be present
+> +
+> +Properties for children:
+> +
+> +A GSBI controller node can contain 0 or more child nodes representing serial
+> +devices.  These serial devices can be a QCOM UART, I2C controller, spi
+> +controller, or some combination of aforementioned devices.
+> +
+> +See the following for child node definitions:
+> +Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
+> +Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
+> +Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
+> +
+> +Example for APQ8064:
+> +
+> +	gsbi4@16300000 {
+> +		compatible = "qcom,gsbi-v1.0.0";
+> +		reg = <0x16300000 0x100>;
+> +		clocks = <&gcc GSBI4_H_CLK>;
+> +		clock-names = "iface";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +		qcom,mode = <6>;
+> +
+> +		/* child nodes go under here */
+> +
+> +		i2c_qup4: i2c@16380000 {
+> +		        compatible = "qcom,i2c-qup-v1.1.1";
+> +		        reg = <0x16380000 0x1000>;
+> +		        interrupts = <0 153 0>;
+> +
+> +		        clocks = <&gcc GSBI4_QUP_CLK>, <&gcc GSBI4_H_CLK>;
+> +		        clock-names = "core", "iface";
+> +
+> +		        clock-frequency = <200000>;
+> +
+> +		        #address-cells = <1>;
+> +		        #size-cells = <0>;
+> +
+> +		 };
+> +
+> +		uart4:	serial@16340000 {
+> +			compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
+> +			reg = <0x16340000 0x1000>,
+> +				<0x16300000 0x1000>;
+> +			interrupts = <0 152 0x0>;
+> +			clocks = <&gcc GSBI4_UART_CLK>, <&gcc GSBI4_H_CLK>;
+> +			clock-names = "core", "iface";
+> +			status = "ok";
+> +		};
+> +	};
+> +
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Where do these numbers get defined? Are they always 0-N?
-
-I don't see much advantage to using reg. Perhaps something like
-hsi-channel-ids would be better.
-
-Rob
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
