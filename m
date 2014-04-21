@@ -1,68 +1,99 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCH 0/3] clocksource: Add Freescale FlexTimer Module (FTM)
- timer support
-Date: Mon, 21 Apr 2014 08:09:40 +0000
-Message-ID: <2b156cf0fffb42df84c0035535bc6672@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1398064800-27250-1-git-send-email-Li.Xiubo@freescale.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator
+ device node
+Date: Mon, 21 Apr 2014 11:54:43 +0200
+Message-ID: <20140421095443.GA3461@piout.net>
+References: <1398054547-5834-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398064800-27250-1-git-send-email-Li.Xiubo@freescale.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "Jason.Jin@freescale.com" <Jason.Jin@freescale.com>, "Dongsheng.Wang@freescale.com" <Dongsheng.Wang@freescale.com>, Jingchang Lu <jingchang.lu@freescale.com>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398054547-5834-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Cc: nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7PKcE1GVeWGA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-@All,
+Hi,
 
-Please ignore this patch series, I just forgot the V2 tag, I have resent a 
-New one.
+On 21/04/2014 at 12:29:07 +0800, Wenyou Yang wrote :
+> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/at91-sama5d3_xplained.dts |   42 +++++++++++++++++++++++++++
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> index ce13755..57cdd83 100644
+> --- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> +++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
+> @@ -48,6 +48,48 @@
+>  
+>  			i2c1: i2c@f0018000 {
+>  				status = "okay";
+> +
+> +				pmic: act8865@5b {
+> +					compatible = "active-semi,act8865";
+> +					reg = <0x5b>;
+> +					status = "okay";
+> +
+> +					regulators {
+> +						vcc_1v8_reg: DCDC_REG1 {
+> +							regulator-name = "VCC_1V8";
+> +							regulator-min-microvolt = <1800000>;
+> +							regulator-max-microvolt = <1800000>;
+> +							regulator-always-on;
+> +						};
+> +
+> +						vcc_1v2_reg: DCDC_REG2 {
+> +							regulator-name = "VCC_1V2";
+> +							regulator-min-microvolt = <1200000>;
+> +							regulator-max-microvolt = <1200000>;
+> +							regulator-always-on;
+> +						};
+> +
+> +						vcc_3v3_reg: DCDC_REG3 {
+> +							regulator-name = "VCC_3V3";
+> +							regulator-min-microvolt = <3300000>;
+> +							regulator-max-microvolt = <3300000>;
+> +							regulator-always-on;
+> +						};
+> +
+> +						vddfuse_reg: LDO_REG1 {
+> +							regulator-name = "FUSE_2V5";
+> +							regulator-min-microvolt = <2500000>;
+> +							regulator-max-microvolt = <2500000>;
+> +						};
+> +
+> +						vddana_reg: LDO_REG2 {
+> +							regulator-name = "VDDANA";
+> +							regulator-min-microvolt = <3300000>;
+> +							regulator-max-microvolt = <3300000>;
+> +							regulator-always-on;
 
-Thanks,
-BRs
-Xiubo
+I'm pretty sure that one is not always on as you actually have to
+configure it to get any voltage. Are you sure you want to set the
+regulator-always-on property here ?
 
+> +						};
+> +					};
+> +				};
+>  			};
+>  
+>  			macb0: ethernet@f0028000 {
+> -- 
+> 1.7.9.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-
-> -----Original Message-----
-> From: Xiubo Li [mailto:Li.Xiubo@freescale.com]
-> Sent: Monday, April 21, 2014 3:20 PM
-> To: daniel.lezcano@linaro.org; tglx@linutronix.de; shawn.guo@linaro.org; Jin
-> Zhengxiong-R64188; Wang Dongsheng-B40534; Lu Jingchang-B35083
-> Cc: linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
-> devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; Xiubo Li-
-> B47053
-> Subject: [PATCH 0/3] clocksource: Add Freescale FlexTimer Module (FTM) timer
-> support
-> 
-> 
-> Changes in V2:
-> - Add big-endian support.
-> - Add using pr_err instead of BUG_ON.
-> - Add more detail comment message of FTM.
-> - Add DT binding documentation.
-> - Remove some header files and macros not useful.
-> 
-> 
-> 
-> Xiubo Li (3):
->   clocksource: ftm: Add FlexTimer Module (FTM) Timer devicetree
->     Documentation
->   ARM: dts: vf610: Add Freescale FlexTimer Module timer node.
->   clocksource: Add Freescale FlexTimer Module (FTM) timer support
-> 
->  .../devicetree/bindings/timer/fsl,ftm-timer.txt    |  31 ++
->  arch/arm/boot/dts/vf610.dtsi                       |  12 +
->  drivers/clocksource/Kconfig                        |   5 +
->  drivers/clocksource/Makefile                       |   1 +
->  drivers/clocksource/fsl_ftm_timer.c                | 344
-> +++++++++++++++++++++
->  5 files changed, 393 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
->  create mode 100644 drivers/clocksource/fsl_ftm_timer.c
-> 
-> --
-> 1.8.4
-
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
