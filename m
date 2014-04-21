@@ -1,140 +1,77 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCHv3 09/14] Documentation: DT: omap-ssi binding documentation
-Date: Mon, 21 Apr 2014 11:43:47 -0500
-Message-ID: <CAL_Jsq+jGeuM+Vmb8uzz3-ZUvKQu=kDv3RqVY0Dudmc9XTm-BA@mail.gmail.com>
+Subject: Re: [PATCHv3 07/14] HSI: Add common DT binding for HSI client devices
+Date: Mon, 21 Apr 2014 11:52:11 -0500
+Message-ID: <CAL_JsqLMAj7LewzkOk+tSyaZcS8CXyeozY5zMAY=iTWueuVuVA@mail.gmail.com>
 References: <1396053110-21639-1-git-send-email-sre@kernel.org>
-	<1396053110-21639-10-git-send-email-sre@kernel.org>
+	<1396053110-21639-8-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1396053110-21639-10-git-send-email-sre@kernel.org>
+In-Reply-To: <1396053110-21639-8-git-send-email-sre@kernel.org>
 Sender: linux-omap-owner@vger.kernel.org
 To: Sebastian Reichel <sre@kernel.org>
 Cc: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, =?UTF-8?Q?Pali_Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
 On Fri, Mar 28, 2014 at 7:31 PM, Sebastian Reichel <sre@kernel.org> wrote:
-> Create device tree binding documentation for
-> OMAP Synchronous Serial Interface (SSI) device.
+> Implement and document generic DT bindings for HSI clients.
 >
 > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+
+Seems pretty reasonable although I know little about HSI.
+
 > ---
->  Documentation/devicetree/bindings/hsi/omap-ssi.txt | 85 ++++++++++++++++++++++
->  1 file changed, 85 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hsi/omap-ssi.txt
+>  .../devicetree/bindings/hsi/client-devices.txt     |  44 +++++
+>  drivers/hsi/hsi.c                                  | 197 ++++++++++++++++++++-
+>  include/linux/hsi/hsi.h                            |   2 +
+>  3 files changed, 241 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/hsi/client-devices.txt
 >
-> diff --git a/Documentation/devicetree/bindings/hsi/omap-ssi.txt b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> diff --git a/Documentation/devicetree/bindings/hsi/client-devices.txt b/Documentation/devicetree/bindings/hsi/client-devices.txt
 > new file mode 100644
-> index 0000000..709419b
+> index 0000000..7504cb1
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
-> @@ -0,0 +1,85 @@
-> +OMAP SSI controller bindings
+> +++ b/Documentation/devicetree/bindings/hsi/client-devices.txt
+> @@ -0,0 +1,44 @@
+> +Each HSI port is supposed to have one child node, which
+> +symbols the remote device connected to the HSI port. The
+> +following properties are standardized for HSI clients:
 > +
-> +OMAP Synchronous Serial Interface (SSI) controller implements a legacy
-> +variant of MIPI's High Speed Synchronous Serial Interface (HSI).
+> +Required HSI configuration properties:
 > +
-> +Required properties:
-> +- compatible:          Should include "ti,omap3-ssi".
-> +- reg-names:           Contains the values "sys" and "gdd".
-> +- reg:                 Contains a register specifier for each entry in
-> +                       reg-names.
+> +- reg:                 A list of channel ids
+> +
+> +- hsi-rx-mode:         Receiver Bit transmission mode ("stream" or "frame")
+> +- hsi-tx-mode:         Transmitter Bit transmission mode ("stream" or "frame")
+> +- hsi-mode:            May be used instead hsi-rx-mode and hsi-tx-mode if
+> +                       the transmission mode is the same for receiver and
+> +                       transmitter
+> +- hsi-speed-kbps:      Max bit transmission speed in kbit/s
+> +- hsi-flow:            RX flow type ("synchronized" or "pipeline")
+> +- hsi-arb-mode:                Arbitration mode for TX frame ("round-robin", "priority")
+> +
+> +Optional HSI configuration properties:
+> +
+> +- reg-names:           A list with one name per channel specified in the
+> +                       reg property
+> +
+> +
+> +Device Tree node example for an HSI client:
+> +
+> +hsi-controller {
+> +       hsi-port {
+> +               modem: hsi-client {
+> +                       compatible = "nokia,n900-modem";
 
-You need to define the order here unless you have a strong argument
-why you can't.
+Is there only 1 version of HSI? If not, then perhaps you need to know
+what version a client is.
 
-> +- interrupt-names:      Contains the value "gdd_mpu".
-> +- interrupts:          Contains interrupt information for each entry in
-> +                       interrupt-names.
-> +- ranges:              Represents the bus address mapping between the main
-> +                       controller node and the child nodes below.
-> +- clocks:              Contains clock specifiers for each entry in
-> +                        clock-names.
-> +- clock-names:         Must include the following entries:
-> +  "ssi_ssr_fck": The OMAP clock of that name
-> +  "ssi_sst_fck": The OMAP clock of that name
-> +  "ssi_ick": The OMAP clock of that name
-> +- #address-cells:      Should be set to <1>
-> +- #size-cells:         Should be set to <1>
 > +
-> +Each port is represented as a sub-node of the ti,omap3-ssi device.
-> +
-> +Required Port sub-node properties:
-> +- compatible:          Should be set to the following value
-> +                        ti,omap3-ssi-port (applicable to OMAP34xx devices)
-> +- reg-names:           Contains the values "rx" and "tx".
-> +- reg:                 Contains a register specifier for each entry in
-> +                       reg-names.
+> +                       reg = <0>, <1>, <2>, <3>;
 
-You need to define the order here unless you have a strong argument
-why you can't.
+Where do these numbers get defined? Are they always 0-N?
 
-> +- interrupt-parent     Should be a phandle for the interrupt controller
-> +- interrupt-names:     Contains the values "mpu_irq0" and "mpu_irq1".
+I don't see much advantage to using reg. Perhaps something like
+hsi-channel-ids would be better.
 
-Those names aren't exactly useful.
-
-> +- interrupts:          Contains interrupt information for each entry in
-> +                       interrupt-names.
-
-You need to define the order here unless you have a strong argument
-why you can't.
-
-> +- ti,ssi-cawake-gpio:  Defines which GPIO pin is used to signify CAWAKE
-> +                       events for the port. This is an optional board-specific
-> +                       property. If it's missing the port will not be
-> +                       enabled.
-> +
-> +Example for Nokia N900:
-> +
-> +ssi-controller@48058000 {
-> +       compatible = "ti,omap3-ssi";
-> +
-> +       /* needed until hwmod is updated to use the compatible string */
-> +       ti,hwmods = "ssi";
-> +
-> +       reg = <0x48058000 0x1000>,
-> +             <0x48059000 0x1000>;
-> +       reg-names = "sys",
-> +                   "gdd";
-> +
-> +       interrupts = <55>;
-> +       interrupt-names = "gdd_mpu";
-> +
-> +       clocks = <&ssi_ssr_fck>,
-> +                <&ssi_sst_fck>,
-> +                <&ssi_ick>;
-> +       clock-names = "ssi_ssr_fck",
-> +                     "ssi_sst_fck",
-> +                     "ssi_ick";
-> +
-> +       #address-cells = <1>;
-> +       #size-cells = <1>;
-> +       ranges;
-> +
-> +       ssi-port@0 {
-
-Does this h/w really have more than 1 port?
-
-This should really be "ssi-port@4805a800" Or you need to fill in
-ranges to have a local offset.
-
-> +               compatible = "ti,omap3-ssi-port";
-> +
-> +               reg = <0x4805a000 0x800>,
-> +                     <0x4805a800 0x800>;
-> +               reg-names = "tx",
-> +                           "rx";
-> +
-> +               interrupt-parent = <&intc>;
-> +               interrupts = <51>,
-> +                            <52>;
-> +               interrupt-names = "mpu_irq0",
-> +                                 "mpu_irq1";
-> +
-> +               ti,ssi-cawake-gpio = <&gpio5 23 GPIO_ACTIVE_HIGH>; /* 151 */
-> +       }
-> +}
-> --
-> 1.9.0
->
+Rob
