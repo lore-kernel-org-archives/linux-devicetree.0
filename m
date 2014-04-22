@@ -1,90 +1,60 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3] of: fix of_update_property again
-Date: Tue, 22 Apr 2014 15:34:28 +0100
-Message-ID: <20140422143428.2666AC40793@trevor.secretlab.ca>
-References: <1397720909-24774-1-git-send-email-Li.Xiubo@freescale.com>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RESEND] tty/serial: atmel_serial: Fix device tree
+ documentation
+Date: Tue, 22 Apr 2014 16:37:10 +0200
+Message-ID: <20140422143710.GJ3461@piout.net>
+References: <1397835904-866-1-git-send-email-richard.genoud@gmail.com>
+ <CACQ1gAhjrb+3Bka64QfbopvEeiU-ifm35eLYUrjwyR-3goW4QQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397720909-24774-1-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACQ1gAhjrb+3Bka64QfbopvEeiU-ifm35eLYUrjwyR-3goW4QQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 17 Apr 2014 15:48:29 +0800, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> The of_update_property() is intented to update a property in a node
-> and if the property does not exist, will add it.
-> 
-> The second search of the property is possibly won't be found, that
-> maybe removed by other thread just before the second search begain.
-> 
-> Using the __of_find_property() and __of_add_property() instead and
-> move them into lock operations.
+Hi,
 
-Applied with context fixups, thanks.
-
-g.
-
+On 22/04/2014 at 15:45:26 +0200, Richard Genoud wrote :
+> 2014-04-18 17:45 GMT+02:00 Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> > RTS pin is an active low pin.
+> > For now, this doesn't change anything as the ACTIVE_LOW (1) flag is not
+> > handled in atmel_serial, but it will be in 3.16.
+> >
+> > Signed-off-by: Richard Genoud <richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/serial/atmel-usart.txt | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/serial/atmel-usart.txt b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+> > index 17c1042b2df8..0dd0a5493a54 100644
+> > --- a/Documentation/devicetree/bindings/serial/atmel-usart.txt
+> > +++ b/Documentation/devicetree/bindings/serial/atmel-usart.txt
+> > @@ -35,7 +35,7 @@ Example:
+> >                 clock-names = "usart";
+> >                 atmel,use-dma-rx;
+> >                 atmel,use-dma-tx;
+> > -               rts-gpios = <&pioD 15 0>;
+> > +               rts-gpios = <&pioD 15 1>;
+> >         };
+> >
+> >  - use DMA:
 > 
-> Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  drivers/of/base.c | 18 +++++++-----------
->  1 file changed, 7 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index be2861d..06623d0c 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1767,7 +1767,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  {
->  	struct property **next, *oldprop;
->  	unsigned long flags;
-> -	int rc, found = 0;
-> +	int rc;
->  
->  	rc = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY, np, newprop);
->  	if (rc)
-> @@ -1776,20 +1776,19 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  	if (!newprop->name)
->  		return -EINVAL;
->  
-> -	oldprop = of_find_property(np, newprop->name, NULL);
-> -	if (!oldprop)
-> -		return of_add_property(np, newprop);
-> -
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
->  	next = &np->properties;
-> -	while (*next) {
-> +	oldprop = __of_find_property(np, newprop->name, NULL);
-> +	if (!oldprop) {
-> +		/* add the new node */
-> +		rc = __of_add_property(np, newprop);
-> +	} else while (*next) {
-> +		/* found the node and then replace it */
->  		if (*next == oldprop) {
-> -			/* found the node */
->  			newprop->next = oldprop->next;
->  			*next = newprop;
->  			oldprop->next = np->deadprops;
->  			np->deadprops = oldprop;
-> -			found = 1;
->  			break;
->  		}
->  		next = &(*next)->next;
-> @@ -1803,9 +1802,6 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
->  	__of_add_property_sysfs(np, newprop);
->  
-> -	if (!found)
-> -		return -ENODEV;
-> -
->  	return 0;
->  }
->  
-> -- 
-> 1.8.4
-> 
+> Rob,
+> Does this has a chance to get to 3.15-rc3 or it's not worth it ?
+> If it's not programmed for the 3.15-rc cycle, please drop it : I've
+> got a patchset depending on it, and it will be in another tree.
 > 
 
+I would say that kind of change should go through Nicolas' tree or
+gregkh tty tree as it is directly related to the driver.
+
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
