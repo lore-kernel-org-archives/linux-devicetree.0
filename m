@@ -1,115 +1,93 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC v2 PATCH v3 10/14] drm/panel: add S6E3FA0 driver
-Date: Tue, 22 Apr 2014 10:24:39 +0900
-Message-ID: <5355C4D7.7010109@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-11-git-send-email-yj44.cho@samsung.com>
- <5275422.8CoHT7g51N@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <5275422.8CoHT7g51N@avalon>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, a.hajda@samsung.com, sachin.kamat@linaro.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: [PATCH 1/2] gpio: pl061: get gpio base from alias id
+Date: Tue, 22 Apr 2014 09:35:42 +0800
+Message-ID: <1398130543-19454-1-git-send-email-haojian.zhuang@linaro.org>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: xuwei5@hisilicon.com, linus.walleij@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, baruch@tkos.co.il
+Cc: Haojian Zhuang <haojian.zhuang@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+If gpio base number isn't specified, the gpio base will be find from
+the end of gpio number. In order to keep with schematics, use alias
+to get the ID of gpio chip.
 
-Thank you for the comment.
+Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+---
+ .../devicetree/bindings/gpio/gpio-pl061.txt        | 31 ++++++++++++++++++++++
+ drivers/gpio/gpio-pl061.c                          | 14 +++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pl061.txt
 
-On 04/22/2014 08:00 AM, Laurent Pinchart wrote:
-> Hi YoungJun,
->
-> Thank you for the patch.
->
-> On Monday 21 April 2014 21:28:37 YoungJun Cho wrote:
->> This patch adds MIPI-DSI command mode based S6E3FA0 AMOLED LCD Panel driver.
->>
->> Changelog v2:
->> - Declares delay, size properties in probe routine instead of DT
->> Changelog v3:
->> - Moves CPU timings relevant properties from FIMD DT
->>    (commented by Laurent Pinchart, Andrzej Hajda)
->>
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Acked-by: Inki Dae <inki.dae@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   drivers/gpu/drm/panel/Kconfig         |    7 +
->>   drivers/gpu/drm/panel/Makefile        |    1 +
->>   drivers/gpu/drm/panel/panel-s6e3fa0.c |  569 ++++++++++++++++++++++++++++++
->>   3 files changed, 577 insertions(+)
->>   create mode 100644 drivers/gpu/drm/panel/panel-s6e3fa0.c
->
-> [snip]
->
->> diff --git a/drivers/gpu/drm/panel/panel-s6e3fa0.c
->> b/drivers/gpu/drm/panel/panel-s6e3fa0.c new file mode 100644
->> index 0000000..1282678
->> --- /dev/null
->> +++ b/drivers/gpu/drm/panel/panel-s6e3fa0.c
->> @@ -0,0 +1,569 @@
->
-> [snip]
->
->> +static int s6e3fa0_get_modes(struct drm_panel *panel)
->> +{
->> +	struct drm_connector *connector = panel->connector;
->> +	struct s6e3fa0 *ctx = panel_to_s6e3fa0(panel);
->> +	struct drm_display_mode *mode;
->> +
->> +	mode = drm_mode_create(connector->dev);
->> +	if (!mode) {
->> +		DRM_ERROR("failed to create a new display mode\n");
->> +		return 0;
->> +	}
->> +
->> +	drm_display_mode_from_videomode(&ctx->vm, mode);
->> +	mode->width_mm = ctx->width_mm;
->> +	mode->height_mm = ctx->height_mm;
->> +	connector->display_info.width_mm = mode->width_mm;
->> +	connector->display_info.height_mm = mode->height_mm;
->> +
->> +	mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
->> +	mode->private = (void *)&ctx->cpu_timings;
->
-> Wouldn't it make sense to create a new get_interface_params (or similar)
-> operation for drm_panel to query interface configuration parameters instead of
-> shoving it in the mode private field ?
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-pl061.txt b/Documentation/devicetree/bindings/gpio/gpio-pl061.txt
+new file mode 100644
+index 0000000..164b5ba
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpio/gpio-pl061.txt
+@@ -0,0 +1,31 @@
++PL061 GPIO controller bindings
++
++Required properties:
++- compatible:
++  - "arm,pl061", "arm,primecell".
++- #gpio-cells : Should be two.
++  - first cell is the gpio pin number
++  - second cell is used to specify the gpio polarity:
++      0 = active high
++      1 = active low
++- gpio-controller : Marks the device node as a GPIO controller.
++- interrupt-controller : Marks the device node as an interrupt controller.
++- #interrupt-cells : Should be two.
++  - first cell is the hw irq number
++  - second cell is used to specify the interrupt type:
++      0 = default, unspecified type
++      1 = rising edge triggered
++      2 = falling edge triggered
++      4 = high level triggered
++      8 = low level triggered
++
++Example:
++	gpio0: gpio@fc806000 {
++		compatible = "arm,pl061", "arm,primecell";
++		reg = <0xfc806000 0x1000>;
++		interrupts = <0 64 0x4>;
++		gpio-controller;
++		#gpio-cells = <2>;
++		interrupt-controller;
++		#interrupt-cells = <2>;
++	};
+diff --git a/drivers/gpio/gpio-pl061.c b/drivers/gpio/gpio-pl061.c
+index b0f4752..14f3ab5 100644
+--- a/drivers/gpio/gpio-pl061.c
++++ b/drivers/gpio/gpio-pl061.c
+@@ -236,6 +236,18 @@ static struct irq_chip pl061_irqchip = {
+ 	.irq_set_type	= pl061_irq_type,
+ };
+ 
++/* Parse gpio base from DT */
++static int pl061_parse_gpio_base(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	int ret, id;
++
++	id = of_alias_get_id(np, "gpio");
++	if (id < 0)
++		return id;
++	return (id * PL061_GPIO_NR);
++}
++
+ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+ 	struct device *dev = &adev->dev;
+@@ -255,7 +267,7 @@ static int pl061_probe(struct amba_device *adev, const struct amba_id *id)
+ 			return -ENODEV;
+ 		}
+ 	} else {
+-		chip->gc.base = -1;
++		chip->gc.base = pl061_parse_gpio_base(dev);
+ 		irq_base = 0;
+ 	}
+ 
+-- 
+1.9.1
 
-You mean "new get_interface_params operation" is different from
-get_modes() ?
-
-Till now, struct drm_display_mode and most of mode relevant APIs are
-only for video interface.
-And CPU interface also needs video mode configurations.
-
-I have a plan to implement the CPU interface relevant APIs like video
-mode ones, but I think they should be used under current DRM mode APIs
-like fill_modes, get_modes and so on.
-So after that implementation, this private field will be replaced by
-new ones.
-
-Could you explain it in more detail?
-
-Thank you.
-Best regards YJ
-
->
->> +	drm_mode_probed_add(connector, mode);
->> +
->> +	return 1;
->> +}
->
-> [snip]
->
