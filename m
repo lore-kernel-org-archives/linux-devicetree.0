@@ -1,83 +1,160 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm: exynos: Add MCPM call-back functions
-Date: Tue, 22 Apr 2014 15:56:23 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1404221540540.980@knanqh.ubzr>
-References: <1397239311-27717-6-git-send-email-a.kesavan@samsung.com> <1398147435-3122-1-git-send-email-a.kesavan@samsung.com> <535650AE.90501@linaro.org> <alpine.LFD.2.11.1404221129150.980@knanqh.ubzr> <5356C134.8070707@linaro.org>
+From: Darren Etheridge <detheridge@ti.com>
+Subject: [PATCH] arm/dts: am335x-evmsk enable display and lcd panel support
+Date: Tue, 22 Apr 2014 15:37:43 -0500
+Message-ID: <1398199063-3026-1-git-send-email-detheridge@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5356C134.8070707-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Add the necessary nodes to enable the LCD controller and the
+LCD panel that is attached to the Texas Instruments AM335x
+EVMSK platform.  Also setup the necessary pin mux within the
+DT file to drive the LCD connector and add the correct
+pinmux settings for the lcd pins to be configured to when
+the SoC goes into sleep state for the minimum power
+consumption.
 
-[ Moved Lorenzo up in the addressee list to get his attention ]
+For the sleep mode LCD pin settings, MUX_MODE7 is chosen as
+this corresponds to switching the pins into input GPIO's with
+an internal pulldown.  Which has been determined to offer the
+lowest power solution vs leaving the pins configured in LCD
+mode.
 
-On Tue, 22 Apr 2014, Daniel Lezcano wrote:
+Signed-off-by: Darren Etheridge <detheridge@ti.com>
+---
+ arch/arm/boot/dts/am335x-evmsk.dts | 105 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
 
-> On 04/22/2014 05:40 PM, Nicolas Pitre wrote:
-> > On Tue, 22 Apr 2014, Daniel Lezcano wrote:
-> >
-> > > On 04/22/2014 08:17 AM, Abhilash Kesavan wrote:
-> > > > +/*
-> > > > + * The common v7_exit_coherency_flush API could not be used because of the
-> > > > + * Erratum 799270 workaround. This macro is the same as the common one (in
-> > > > + * arch/arm/include/asm/cacheflush.h) except for the erratum handling.
-> > > > + */
-> > > > +#define exynos_v7_exit_coherency_flush(level) \
-> > > > +	asm volatile( \
-> > > > +	"stmfd	sp!, {fp, ip}\n\t"\
-> > > > +	"mrc	p15, 0, r0, c1, c0, 0	@ get SCTLR\n\t" \
-> > > > +	"bic	r0, r0, #"__stringify(CR_C)"\n\t" \
-> > > > +	"mcr	p15, 0, r0, c1, c0, 0	@ set SCTLR\n\t" \
-> > > > +	"isb\n\t"\
-> > > > +	"bl	v7_flush_dcache_"__stringify(level)"\n\t" \
-> > > > +	"clrex\n\t"\
-> > > > +	"mrc	p15, 0, r0, c1, c0, 1	@ get ACTLR\n\t" \
-> > > > +	"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t" \
-> > > > +	/* Dummy Load of a device register to avoid Erratum 799270 */ \
-> > >
-> > > Wouldn't make sense to add the erratum in the Kconfig and re-use it in the
-> > > generic v7_exit_coherency_flush macro instead of redefining it ?
-> >
-> > The implementation of the erratum (the dummy device register load) is
-> > platform specific I'm afraid.
-> >
-> > Is TC2 also concerned by this erratum, or is this Samsung specific?
-> 
-> Sounds like it is ARM Cortex-A15MP specific:
-> 
-> http://infocenter.arm.com/help/topic/com.arm.doc.epm028090/cortex_a15_mpcore_software_developers_errata_notice_r2_v12.pdf
-> 
-> Page 31.
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index ec08f6f..a5e1ab8 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -138,12 +138,113 @@
+ 			"Headphone Jack",       "HPLOUT",
+ 			"Headphone Jack",       "HPROUT";
+ 	};
++
++	panel {
++		compatible = "ti,tilcdc,panel";
++		pinctrl-names = "default", "sleep";
++		pinctrl-0 = <&lcd_pins_default>;
++		pinctrl-1 = <&lcd_pins_sleep>;
++		status = "okay";
++		panel-info {
++			ac-bias           = <255>;
++			ac-bias-intrpt    = <0>;
++			dma-burst-sz      = <16>;
++			bpp               = <32>;
++			fdd               = <0x80>;
++			sync-edge         = <0>;
++			sync-ctrl         = <1>;
++			raster-order      = <0>;
++			fifo-th           = <0>;
++		};
++		display-timings {
++			480x272 {
++				hactive         = <480>;
++				vactive         = <272>;
++				hback-porch     = <43>;
++				hfront-porch    = <8>;
++				hsync-len       = <4>;
++				vback-porch     = <12>;
++				vfront-porch    = <4>;
++				vsync-len       = <10>;
++				clock-frequency = <9000000>;
++				hsync-active    = <0>;
++				vsync-active    = <0>;
++			};
++		};
++	};
+ };
+ 
+ &am33xx_pinmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpio_keys_s0 &clkout2_pin>;
+ 
++	lcd_pins_default: lcd_pins_default {
++		pinctrl-single,pins = <
++			0x20 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad8.lcd_data16 */
++			0x24 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad9.lcd_data17 */
++			0x28 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad10.lcd_data18 */
++			0x2c (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad11.lcd_data19 */
++			0x30 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad12.lcd_data20 */
++			0x34 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad13.lcd_data21 */
++			0x38 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad14.lcd_data22 */
++			0x3c (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad15.lcd_data23 */
++			0xa0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data0.lcd_data0 */
++			0xa4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data1.lcd_data1 */
++			0xa8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data2.lcd_data2 */
++			0xac (PIN_OUTPUT | MUX_MODE0)	/* lcd_data3.lcd_data3 */
++			0xb0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data4.lcd_data4 */
++			0xb4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data5.lcd_data5 */
++			0xb8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data6.lcd_data6 */
++			0xbc (PIN_OUTPUT | MUX_MODE0)	/* lcd_data7.lcd_data7 */
++			0xc0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data8.lcd_data8 */
++			0xc4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data9.lcd_data9 */
++			0xc8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data10.lcd_data10 */
++			0xcc (PIN_OUTPUT | MUX_MODE0)	/* lcd_data11.lcd_data11 */
++			0xd0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data12.lcd_data12 */
++			0xd4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data13.lcd_data13 */
++			0xd8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data14.lcd_data14 */
++			0xdc (PIN_OUTPUT | MUX_MODE0)	/* lcd_data15.lcd_data15 */
++			0xe0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_vsync.lcd_vsync */
++			0xe4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_hsync.lcd_hsync */
++			0xe8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_pclk.lcd_pclk */
++			0xec (PIN_OUTPUT | MUX_MODE0)	/* lcd_ac_bias_en.lcd_ac_bias_en */
++		>;
++	};
++
++	lcd_pins_sleep: lcd_pins_sleep {
++		pinctrl-single,pins = <
++			0x20 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad8.lcd_data16 */
++			0x24 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad9.lcd_data17 */
++			0x28 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad10.lcd_data18 */
++			0x2c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad11.lcd_data19 */
++			0x30 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad12.lcd_data20 */
++			0x34 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad13.lcd_data21 */
++			0x38 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad14.lcd_data22 */
++			0x3c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad15.lcd_data23 */
++			0xa0 (PULL_DISABLE | MUX_MODE7)		/* lcd_data0.lcd_data0 */
++			0xa4 (PULL_DISABLE | MUX_MODE7)		/* lcd_data1.lcd_data1 */
++			0xa8 (PULL_DISABLE | MUX_MODE7)		/* lcd_data2.lcd_data2 */
++			0xac (PULL_DISABLE | MUX_MODE7)		/* lcd_data3.lcd_data3 */
++			0xb0 (PULL_DISABLE | MUX_MODE7)		/* lcd_data4.lcd_data4 */
++			0xb4 (PULL_DISABLE | MUX_MODE7)		/* lcd_data5.lcd_data5 */
++			0xb8 (PULL_DISABLE | MUX_MODE7)		/* lcd_data6.lcd_data6 */
++			0xbc (PULL_DISABLE | MUX_MODE7)		/* lcd_data7.lcd_data7 */
++			0xc0 (PULL_DISABLE | MUX_MODE7)		/* lcd_data8.lcd_data8 */
++			0xc4 (PULL_DISABLE | MUX_MODE7)		/* lcd_data9.lcd_data9 */
++			0xc8 (PULL_DISABLE | MUX_MODE7)		/* lcd_data10.lcd_data10 */
++			0xcc (PULL_DISABLE | MUX_MODE7)		/* lcd_data11.lcd_data11 */
++			0xd0 (PULL_DISABLE | MUX_MODE7)		/* lcd_data12.lcd_data12 */
++			0xd4 (PULL_DISABLE | MUX_MODE7)		/* lcd_data13.lcd_data13 */
++			0xd8 (PULL_DISABLE | MUX_MODE7)		/* lcd_data14.lcd_data14 */
++			0xdc (PULL_DISABLE | MUX_MODE7)		/* lcd_data15.lcd_data15 */
++			0xe0 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_vsync.lcd_vsync */
++			0xe4 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_hsync.lcd_hsync */
++			0xe8 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_pclk.lcd_pclk */
++			0xec (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_ac_bias_en.lcd_ac_bias_en */
++		>;
++	};
++
++
+ 	user_leds_s0: user_leds_s0 {
+ 		pinctrl-single,pins = <
+ 			0x10 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad4.gpio1_4 */
+@@ -560,3 +661,7 @@
+ 		ti,wire-config = <0x00 0x11 0x22 0x33>;
+ 	};
+ };
++
++&lcdc {
++      status = "okay";
++};
+-- 
+1.8.4
 
-The condition for hitting the erratum is: "The L2 cache block has been 
-idle for 256 or more cycles with no memory requests from any core, no 
-external snoops, and no ACP requests".
-
-Given that the operation that almost immediately precedes the 
-problematic mcr is a call to v7_flush_dcache_louis or 
-v7_flush_dcache_all, is this possible that the condition for the erratum 
-could ever be met?
-
-If no then we should document that v7_exit_coherency_flush(() is safe 
-against erratum 799270 and use it here.
-
-> > > > +	"ldr	r4, [%0]\n\t" \
-> > > > +	"and	r4, r4, #0\n\t" \
-> > > > +	"orr	r0, r0, r4\n\t" \
-> > > > +	"mcr	p15, 0, r0, c1, c0, 1	@ set ACTLR\n\t" \
-> > > > +	"isb\n\t" \
-> > > > +	"dsb\n\t" \
-> > > > +	"ldmfd	sp!, {fp, ip}" \
-> > > > +	: \
-> > > > +	: "Ir" (S5P_INFORM0) \
-> > > > +	: "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", \
-> > > > +	  "r9", "r10", "lr", "memory")
-> > >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
