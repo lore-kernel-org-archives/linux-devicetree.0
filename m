@@ -1,103 +1,106 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RESEND 3/5] ARM: BCM63XX: add BCM63138 minimal Device Tree
-Date: Tue, 22 Apr 2014 12:52:16 +0200
-Message-ID: <4701106.5EnjdVQgVO@wuerfel>
-References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com> <1398130758-19456-4-git-send-email-f.fainelli@gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v8 00/17] ARM: sunxi: Add driver for SD/MMC
+ hosts found on Allwinner sunxi SoCs
+Date: Tue, 22 Apr 2014 13:01:20 +0200
+Message-ID: <1398164497-14212-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398130758-19456-4-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDL4X2GMZUKRBHEY3GNAKGQET64F22Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?q?David=20Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 21 April 2014 18:39:16 Florian Fainelli wrote:
-> 
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +       compatible = "brcm,bcm63138";
-> +       model = "Broadcom BCM63138 DSL SoC";
-> +       interrupt-parent = <&gic>;
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a9";
-> +                       next-level-cache = <&L2>;
-> +                       reg = <0>;
-> +               };
-> +       };
+Hi All,
 
-Even if you don't support SMP yet, I can see no reason not
-to list both CPUs here. The binding is known and the code
-should ignore the extra cores if it doesn't know how to
-turn them on.
+Here is v8 of the sunxi-mmc patch-set David Lanzend=C3=B6rfer and I have be=
+en
+working on.
 
-> +
-> +       /* ARM bus */
-> +       axi@80000000 {
-> +               compatible = "simple-bus";
-> +               ranges = <0 0x80000000 0x783003>;
-> +               reg = <0x80000000 0x783003>;
+The first 2 patches are depenencies which should go in through the clk tree=
+,
+Mike can you pick these 2 up please ?  :
 
-The length seems odd, I would expect that the bus actually
-translates all addresses in the 0x80000000 range to downstream
-devices even if there is nothing connected. Just round it up
-to your best knowledge.
+"clk: sunxi: factors: automatic reparenting support"
+Is uncontroversial and has been favorably reviewed by various people.
 
-I would also drop the 'reg' property. Since you don't have a
-specific "compatible" value, there is no way to use the registers
-in this node.
+"clk: sunxi: Implement MMC phase control"
+Is somewhat more controversial as there has been lots of discussion about
+adding a generic phase control method to the clk framework. The problem is
+that there has been a lot of talk about such a generic phase control method
+but not a single patch. Therefor I would like to move forwards with using
+a platform specific method for now. I hereby promise that once we've a gene=
+ric
+method I'll write patches to convert the sunxi code to that method.
 
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +
-> +               L2: cache-controller@1d000 {
-> +                       compatible = "arm,pl310-cache";
-> +                       reg = <0x1d000 0x1000>;
-> +                       cache-unified;
-> +                       cache-level = <2>;
-> +                       interrupts = <GIC_PPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> +               };
-> +
-> +               mpcore@1e000 {
-> +                       compatible = "simple-bus";
-> +                       reg = <0x1e000 0x20000>;
-> +                       ranges = <0 0x1e000 0x20000>;
-> +                       #address-cells = <1>;
-> +                       #size-cells = <1>;
+The third patch is the patch adding the actual mmc driver and should go in
+through the mmc tree.
 
+All the other patches are devicetree patches hooking things up, and should
+go upstream through Maxime's sunxi-dt tree.
 
-Same thing here.
+Changes since v1:
+-Using mmc_of_parse instead of diy dt parsing
+-Adding nodes for all mmc controller to the dtsi files,
+ including sofar unused controllers
+-Using generic GPIO slot library for WP/CD
+-Adding additional MMC device nodes into DTSI files
 
-Also, can you explain why there is a separate 'mpcore' bus, and why the
-cache controller is not part of that?
+Changes since v2:
+-Add missing Signed-off-by tags
+-Stop using __raw_readl / __raw_writel so that barriers are properly used
+-Adding missing new lines
+-Adding missing patch for automatic reparenting of clocks
 
-Do you have reason to believe that this is how the hardware actually
-looks?
+Changes since v3:
+-Move clk_enable / disable into host_init / exit (Hans)
+-Fix hang on boot caused by irq storm (Hans)
 
-> +
-> +       /* Legacy UBUS base */
-> +       ubus@fffe8000 {
-> +               compatible = "simple-bus";
-> +               reg = <0xfffe8000 0x8053>;
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges = <0 0xfffe8000 0x8053>;
-> +       };
-> +};
+Changes since v4:
+-moving sunxi-mci.{c/h} to sunxi-mmc.{c/h}
+-removing camel cases from the defines in  sunxi-mmc.h
+-moving defines out of the struct definition
+ since this is bad coding style
+-adding documentation for the device tree binding
+Changes since v5:
+-adding host initialization for when the sdio irq is enabled
+ (just to make sure having a defined state at all time)
+-add mmc support fixup: set pullup on cd pins
+-fixup: Don't set MMC_CAP_NEEDS_POLL /  MMC_CAP_4_BIT_DATA
 
+Changes since v6:
+-fixing copyright info in sunxi-mmc.*
+-s/__SUNXI_MCI_H__/__SUNXI_MMC_H__/g
+-s/SDXC_RESPONSE_/SDXC_RESP_/g
+-s/define/definitions <- Comment from Priit Laes
 
-Again, use a proper 'length' here and remove the 'reg' property.
+Changes since v7:
+-Merge sunxi-mmc.h into sunxi-mmc.c
+-Various style fixes / cleanups based on Maxime's review
+-sun6i support
+-Fix a race condition in interrupt / tasklet interaction
+-Split the dts patches into 3 per platform:
+ 1) Add mmc nodes to the dtsi
+ 2) Add mmc pinmux to the dtsi
+ 3) Add mmc nodes to the various board files
+-Moved setting of bus-width and cd gpio polarity from .dtsi to the board-fi=
+les
+-Added sun6i dts patches
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Hans
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
