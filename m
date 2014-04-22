@@ -1,91 +1,105 @@
-From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
-Date: Tue, 22 Apr 2014 12:58:41 +0530
-Message-ID: <CALHRZur7+MaYXbWOfbvjggPN7_eYAE+th5VNbcLP=ehvm0HGsA@mail.gmail.com>
-References: <20140421160802.GA22794@saruman.home>
-	<Pine.LNX.4.44L0.1404211228190.1201-100000@iolanthe.rowland.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC v2 PATCH v2 06/14] drm/exynos: support MIPI DSI command mode
+Date: Tue, 22 Apr 2014 09:34:44 +0200
+Message-ID: <20140422073442.GC11766@ulmo>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <1398083321-8668-7-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1404211228190.1201-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0126362987=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1398083321-8668-7-git-send-email-yj44.cho@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Mon, Apr 21, 2014 at 10:09 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
-> On Mon, 21 Apr 2014, Felipe Balbi wrote:
->
->> Hi,
->>
->> On Fri, Apr 18, 2014 at 07:34:08PM +0530, sundeep subbaraya wrote:
->>
->> <snip>
->>
->> > >> in ep_queue driver starts dma transfer from/to IP buffer to/from req->buf.
->> > >> If transfer is completed then request is not added to ep request queue
->> > >> and returns from ep_queue.
->> > >> If transfer is not completed (actual < length) then request is added
->> > >> to queue and returns from ep_queue.
->> > >
->> > > This is wrong. Why wouldn't you give gadget driver the chance to decide
->> > > if it needs to queue the request again or not ?
->> >
->> > When does gadget driver decides to queue the same request again?
->> > if -EBUSY is returned from ep_queue or req.status != 0 in completion
->> > routine?
->>
->> whenever it so decides. Different gadget drivers might have different
->> requirements. The code is open and sits under drivers/usb/gadget/ why
->> don't you have a read ?
->
-> I get the impression that the two of you are arguing past each other.
-> It appears that Sundeep is talking about transferring data from the
-> gadget driver's buffer to an internal buffer in the UDC hardware, but
-> Felipe is talking about transferring data from the UDC to the host.
->
-> As I understand it, Sundeep said that when the gadget driver queues a
-> data-IN request, the UDC driver copies as much of the data buffer as
-> possible into a hardware FIFO.  If it succeeds in copying all the data
-> into the FIFO then the request's completion routine gets called
-> immediately, even though the data doesn't get sent from the FIFO to the
-> host until the host asks for it.
->
-> If only part of the data can be copied into the FIFO then the request
-> is added to the ep's request queue before the usb_ep_queue() call
-> returns.  When space becomes available in the FIFO, the data will be
-> copied and eventually sent to the host.  When all the data has been
-> copied to the FIFO, the request's completion routine will be called.
->
-> Thus there never is any need for the gadget driver to queue the request
-> again.  An incomplete transfer means the FIFO didn't have enough room
-> when the request was submitted; it doesn't mean that the data didn't
-> eventually get sent to the host.
+--===============0126362987==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vEao7xgI/oilGqZ+"
+Content-Disposition: inline
 
-Exactly Alan,this is what I was trying to say. Probably I was not
-clear in explaining. I didnt see
-any harm this way and even this implementation is same like
-at91_udc.c. I have been reading
-mas_storage to understand when does gadget driver tries to enqueue a
-request again. Since
-different gadget drivers might have different requirements (agree with
-Felipe), wanted to
-know criteria for queuing a same request again.
 
-I will change this implementation as per Felipe comments and test with
-some of the gadgets.
+--vEao7xgI/oilGqZ+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks Alan and Felipe,
-Sundeep
+On Mon, Apr 21, 2014 at 09:28:33PM +0900, YoungJun Cho wrote:
+[...]
+> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
+> index 7209df1..244d197 100644
+> --- a/include/drm/drm_mipi_dsi.h
+> +++ b/include/drm/drm_mipi_dsi.h
+> @@ -49,6 +49,7 @@ struct mipi_dsi_msg {
+>   * @detach: detach DSI device from DSI host
+>   * @transfer: send and/or receive DSI packet, return number of received =
+bytes,
+>   * 	      or error
+> + * @te_handler: call CRTC TE handler callback from DSI host
 
->
-> HTH,
->
-> Alan Stern
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Perhaps you can explain some more what this means or why it would be
+necessary.
+
+> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
+> index c2ab77a..0ad64ed 100644
+> --- a/include/drm/drm_panel.h
+> +++ b/include/drm/drm_panel.h
+> @@ -46,6 +46,13 @@ struct drm_panel {
+>  	struct list_head list;
+>  };
+> =20
+> +struct drm_panel_cpu_timings {
+> +	unsigned int cs_setup;
+> +	unsigned int wr_setup;
+> +	unsigned int wr_act;
+> +	unsigned int wr_hold;
+> +};
+
+Similarily here. What's this?
+
+Thierry
+
+--vEao7xgI/oilGqZ+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTVhuSAAoJEN0jrNd/PrOhVnEP/jTXnbpA27V1EegTsy7lapnK
+3qn2B3sOooknTEkujeiqCKjrP6eXGUSwAjBa68I7usskj0A9FtkqcrVVusWmLheO
+pu5eSZCV+56Otb1r/3vFS+tPMdVsmQl2TGlKRBgd0HwOg1F1SUD/z5GvD1Sa0vtf
+6+Jai901+a9MyI7tPX8LH5TtAG9b66yoLQwJZHyEFk1R1Pht+V5WxCWqlZUJV8mQ
+E//ukYMSCgyHO47oyi06neEYHNw6Hwa14u4PphQuJN5phfyO42A1tbbMzBZ3jydd
+hZIzCEAAyuLYpkjQR7PgPQNvQNTA9tlaW4GecJX+TIdblbk7Vd7P89bBbaBhnu70
+LcfsMW5HarapB8WXouP1iyLUUa5bNspkAkqUDj37dDjBujsyfwC3GTG0L0uZzPCz
+wTdDXis/S65GUPjFxKFPhFa1KDtzoECJKspT7z4ysPZa5Q5NoUXGT3w1sdHezJmn
+epswMuNw2asnQCdhP80nMpYIxPNSLjMNslv1h4nZyb1q4UdoUMciIRiJFGR5Sbof
+TH6HT7tI17ZRphFvvuTEApkt2gCIAEwDFy3Y9lwPbBgJghzElD75HFCglncC0VV2
+JyOU+pz7o1Ryj2ImhpWPTVknEN2Omj6Vrw4dsGDs5LvXYVF7DLw+obeeE4ua2AvE
+v0pSbXIS7h1NghHYzbwY
+=KfD9
+-----END PGP SIGNATURE-----
+
+--vEao7xgI/oilGqZ+--
+
+--===============0126362987==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0126362987==--
