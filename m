@@ -1,155 +1,60 @@
-From: Arun Kumar K <arunkk.samsung@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Add peach-pit board support
-Date: Tue, 22 Apr 2014 12:01:23 +0530
-Message-ID: <CALt3h79bZGBFCykW9maw1pM0hZnjkYt5nZPO9t881=mn+Hqn6g@mail.gmail.com>
-References: <1397971609-6144-1-git-send-email-arun.kk@samsung.com>
-	<CAK9yfHxxkF_=8phxO8dim6F_BCbYcbsGQHPE4jBaQh=sLoFyvg@mail.gmail.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
+Date: Tue, 22 Apr 2014 06:49:34 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAC458C@DBDE04.ent.ti.com>
+References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
+ <CAOCHtYg5_Lvi3SWuWaRTDDNhLJ32jiXsKYQmrsKaShVWpM+xWQ@mail.gmail.com>
+ <534D51C1.3010007@ti.com>
+ <CAOCHtYhygGFbUunY9abEkjKfpQ1hh-DfRfhm160NehSYhWJSRw@mail.gmail.com>
+ <20140418225111.GP21823@atomide.com>
+ <CAOCHtYjdC-OGkdaBt74xMqi5eDc1eVbU6O7VyWMEYN-U50-Abw@mail.gmail.com>
+ <20140418235119.GS21823@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHxxkF_=8phxO8dim6F_BCbYcbsGQHPE4jBaQh=sLoFyvg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@google.com>, Olof Johansson <olofj@google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140418235119.GS21823@atomide.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Robert Nelson <robertcnelson@gmail.com>
+Cc: "Menon, Nishanth" <nm@ti.com>, devicetree <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benoit Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
+Tony,
 
-Thank you for the review.
-Will address you comments and post the next version.
-
-Regards
-Arun
-
-On Mon, Apr 21, 2014 at 10:59 AM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Hi Arun,
->
-> On 20 April 2014 10:56, Arun Kumar K <arun.kk@samsung.com> wrote:
->> Adds the google peach-pit board dts file which uses
->> exynos5420 SoC.
+>From: Tony Lindgren
+>* Robert Nelson <robertcnelson@gmail.com> [140418 16:42]:
+>> On Fri, Apr 18, 2014 at 5:51 PM, Tony Lindgren <tony@atomide.com> wrote:
+>> > * Robert Nelson <robertcnelson@gmail.com> [140415 08:46]:
+>> >>
+>> >> Background: i also tried getting this having this fixed in u-boot:
+>> >
+>> > Do we still need to apply this patch then?
 >>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> Signed-off-by: Doug Anderson <dianders@chromium.org>
->> ---
->>  arch/arm/boot/dts/Makefile                 |    1 +
->>  arch/arm/boot/dts/exynos5420-peach-pit.dts |  225 ++++++++++++++++++++++++++++
->>  2 files changed, 226 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> Yeah, Tom want's it done in the kernel:
 >>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index b9d6a8b..09bcb8d 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->>         exynos5250-snow.dtb \
->>         exynos5420-arndale-octa.dtb \
->>         exynos5420-smdk5420.dtb \
->> +       exynos5420-peach-pit.dtb \
+>> Here's my proposed u-boot patch:
+>> http://lists.denx.de/pipermail/u-boot/2014-January/172154.html
+>>
+>> and Tom's recommendation:
+>> http://lists.denx.de/pipermail/u-boot/2014-January/172274.html
+>>
+>> Once this hits mainline, i'll submit a patch to u-boot to check for
+>> the presence of this version and drop to the old dtb if not found.
 >
-> Please arrange alphabetically. This should be added above smdk.
+>OK applying into omap-for-v3.15/fixes thanks.
 >
->>         exynos5440-sd5v1.dtb \
->>         exynos5440-ssdk5440.dtb
->>  dtb-$(CONFIG_ARCH_HI3xxx) += hi3620-hi4511.dtb
->> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> new file mode 100644
->> index 0000000..4d61a5e
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->> @@ -0,0 +1,225 @@
->> +/*
->> + * Google Peach Pit Rev 6+ board device tree source
->> + *
->> + * Copyright (c) 2014 Google, Inc
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +/dts-v1/;
->> +#include "exynos5420.dtsi"
->> +
->> +/ {
->> +       model = "Google Peach Pit Rev 6+";
->> +
->> +       compatible = "google,pit-rev16",
->> +               "google,pit-rev15", "google,pit-rev14",
->> +               "google,pit-rev13", "google,pit-rev12",
->> +               "google,pit-rev11", "google,pit-rev10",
->> +               "google,pit-rev9", "google,pit-rev8",
->> +               "google,pit-rev7", "google,pit-rev6",
->> +               "google,pit", "google,peach", "samsung,exynos5420";
->
-> Please include the generic "samsung,exynos5" string.
->
->> +
->> +       memory {
->> +               reg = <0x20000000 0x80000000>;
->> +       };
->> +
->> +       fixed-rate-clocks {
->> +               oscclk {
->> +                       compatible = "samsung,exynos5420-oscclk";
->> +                       clock-frequency = <24000000>;
->> +               };
->> +       };
->> +
->> +       pinctrl@13400000 {
->> +               lid_irq: lid-irq {
->> +                       samsung,pins = "gpx3-4";
->> +                       samsung,pin-function = <0>;
->> +                       samsung,pin-pud = <0>;
->> +                       samsung,pin-drv = <0>;
->> +               };
->> +
->> +               power_key_irq: power-key-irq {
->> +                       samsung,pins = "gpx1-2";
->> +                       samsung,pin-function = <0>;
->> +                       samsung,pin-pud = <0>;
->> +                       samsung,pin-drv = <0>;
->> +               };
->> +
->> +               tpm_irq: tpm-irq {
->> +                       samsung,pins = "gpx1-0";
->> +                       samsung,pin-function = <0>;
->> +                       samsung,pin-pud = <0>;
->> +                       samsung,pin-drv = <0>;
->> +               };
->> +       };
->> +
->> +       pinctrl@14010000 {
->> +               spi_flash_cs: spi-flash-cs {
->> +                       samsung,pins = "gpa2-5";
->> +                       samsung,pin-function = <1>;
->> +                       samsung,pin-pud = <0>;
->> +                       samsung,pin-drv = <3>;
->> +               };
->> +
->> +               backlight_pwm: backlight-pwm {
->> +                       samsung,pins = "gpb2-0";
->> +                       samsung,pin-function = <2>;
->> +                       samsung,pin-pud = <0>;
->> +                       samsung,pin-drv = <0>;
->> +               };
->> +       };
->> +
->> +       gpio-keys {
->> +               compatible = "gpio-keys";
->> +
->> +               pinctrl-names = "default";
->> +               pinctrl-0 = <&power_key_irq &lid_irq>;
->> +
->> +               power {
->> +                       label = "Power";
->> +                       gpios = <&gpx1 2 1>;
->> +                       linux,code = <116>; /* KEY_POWER */
->
-> You may use the macro directly (instead of code) by including the
-> appropriate header file
-> (include/dt-bindings/input/input.h).
->
->
-> --
-> With warm regards,
-> Sachin
+>Tony
+
+You probably missed fixing below typo before applying this patch.
+omap3-beagle-xm-ab.dts breaks without this.
+
+> +/ {
+> +       /* HS USB Port 2 Power enable was inverted with the xM C */
+> +       hsusb2_power: hsusb2_power_reg {
+> +               enable-active-high;
+       };
+> +};
+
+
+with regards, pekon
