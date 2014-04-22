@@ -1,47 +1,59 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] pinctrl: qcom: Add IPQ8064 pinctrl support
-Date: Tue, 22 Apr 2014 17:11:40 +0200
-Message-ID: <CACRpkdZ_TgS2XFHyEhkWTHsgdv-Yw2jj9342nDihiJjjGPh7Bw@mail.gmail.com>
-References: <1397531437-9104-1-git-send-email-agross@codeaurora.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCHv3] of: fix of_update_property again
+Date: Tue, 22 Apr 2014 08:16:09 -0700
+Message-ID: <20140422151609.GB20271@roeck-us.net>
+References: <1397720909-24774-1-git-send-email-Li.Xiubo@freescale.com>
+ <CAL_JsqKFRLECtSL3CKE_heruO-RJh96G-C_NsEZFVRkjAOdL-Q@mail.gmail.com>
+ <20140422140605.EEA6EC40793@trevor.secretlab.ca>
+ <CAL_JsqK6O8AeSMZTv=-nOApr6rhJG=-PTnL4EiomOEGH+jjCRw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397531437-9104-1-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqK6O8AeSMZTv=-nOApr6rhJG=-PTnL4EiomOEGH+jjCRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 15, 2014 at 5:10 AM, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wro=
-te:
+On Tue, Apr 22, 2014 at 09:10:35AM -0500, Rob Herring wrote:
+> On Tue, Apr 22, 2014 at 9:06 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Thu, 17 Apr 2014 09:32:16 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> On Thu, Apr 17, 2014 at 2:48 AM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+> >> > The of_update_property() is intented to update a property in a node
+> >> > and if the property does not exist, will add it.
+> >> >
+> >> > The second search of the property is possibly won't be found, that
+> >> > maybe removed by other thread just before the second search begain.
+> >> >
+> >> > Using the __of_find_property() and __of_add_property() instead and
+> >> > move them into lock operations.
+> >>
+> >> I have a fix in my tree from Guenter which handles the race of the
+> >> property being removed. However, your change will be needed when we
+> >> have overlays and the node itself can be removed. So this is 3.16
+> >> material and will need to be rebased on Guenter's fix.
+> >
+> > I didn't think Guenter's patch actually fixed a race. It only fixed a
+> > double checking of the oldprop pointer. Do I have it wrong?
+> 
+> Yes, the commit message should have been clearer. The problem was that
+> found was checked after updating the sysfs files.
+> 
+Fixing the race was more of a side effect. It wasn't actually clear to me
+at the time that there was a race; I realized it only after I read above
+exchange.
 
-> This set of patches adds pinctrl support for the Qualcomm IPQ8064 pla=
-tform.
-> The IPQ8064 uses the same TLMM block as the APQ8064, but has a differ=
-ent number
-> of pins, functions, and function assignments.  The second patch conta=
-ins the
-> devicetree documentation.  The last patch selects PINCTRL for all ARC=
-H_QCOM
-> platforms.  This allows for selection of pinctrl support via a make m=
-enuconfig.
->
-> Andy Gross (3):
->   pinctrl: qcom: Add definitions for IPQ8064
->   dt: Document Qualcomm IPQ8064 pinctrl binding
->   ARM: qcom: Select PINCTRL by default for ARCH_QCOM
+To clarify: My understanding is that the property could have been removed
+after the call to of_find_property() found it. Thus, the actual search
+for it can fail, and the check if it was found is necessary to prevent
+action on the (now removed) old property.
 
-Bj=C3=B6rn can you look at this series?
+Did I get this right ?
 
-David/Bryan: can either of you ACK the changes hitting
-arch/arm/mach-qcom/Kconfig
-so I can merge this through the pinctrl tree?
-
-Yours,
-Linus Walleij
+Thanks,
+Guenter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
