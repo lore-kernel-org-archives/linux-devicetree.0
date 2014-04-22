@@ -1,46 +1,46 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH 5/6] ARM: berlin: add the AHCI node for the BG2
-Date: Tue, 22 Apr 2014 17:38:24 +0200
-Message-ID: <1398181105-19714-6-git-send-email-antoine.tenart@free-electrons.com>
-References: <1398181105-19714-1-git-send-email-antoine.tenart@free-electrons.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
+Subject: [PATCH 0/6] ARM: berlin: add AHCI support
+Date: Tue, 22 Apr 2014 17:38:19 +0200
+Message-ID: <1398181105-19714-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1398181105-19714-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: sebastian.hesselbarth@gmail.com, tj@kernel.org
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-ide@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The BG2 has an AHCI SATA controller. Add the corresponding node
-in its device tree.
-
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- arch/arm/boot/dts/berlin2.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
-=2Edtsi
-index 56a1af2f1052..3e98d9fa9ec7 100644
---- a/arch/arm/boot/dts/berlin2.dtsi
-+++ b/arch/arm/boot/dts/berlin2.dtsi
-@@ -176,6 +176,13 @@
- 			};
- 		};
-=20
-+		ahci: sata@e90000 {
-+			compatible =3D "marvell,berlin-ahci";
-+			reg =3D <0xe90000 0x10000>;
-+			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			status =3D "disable";
-+		};
-+
- 		apb@fc0000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
---=20
-1.8.3.2
-
+VGhpcyBzZXJpZXMgYWRkcyB0aGUgc3VwcG9ydCBmb3IgQmVybGluIFNvQ3MgQUhDSSBjb250cm9s
+bGVycy4gVGhlCmNvbnRyb2xsZXIgYWxsb3dzIHRvIHVzZSB0aGUgU0FUQSBob3N0IGludGVyZmFj
+ZSBhbmQsIGZvciBleGFtcGxlLCB0aGUKZVNBVEEgcG9ydCBvbiB0aGUgQkcyUS4KCkFsc28gZW5h
+YmxlIHRoZSBlU0FUQSBpbnRlcmZhY2Ugb24gdGhlIEJHMlEgRE1QLgoKVGVzdGVkIG9uIHRoZSBC
+RzJRIERNUC4KCkFudG9pbmUgVMOpbmFydCAoNik6CiAgYXRhOiBhaGNpOiBhZGQgQUhDSSBzdXBw
+b3J0IGZvciBCZXJsaW4gU29DcwogIERvY3VtZW50YXRpb246IGJpbmRpbmdzOiBhZGQgdGhlIGJl
+cmxpbi1hY2hpIGNvbXBhdGlibGUgdG8gdGhlIGFoY2kKICAgIHBsYXRmb3JtCiAgQVJNOiBiZXJs
+aW46IGFkZCB0aGUgQUhDSSBub2RlIGZvciB0aGUgQkcyUQogIEFSTTogYmVybGluOiBlbmFibGUg
+dGhlIGVTQVRBIGludGVyZmFjZSBvbiB0aGUgQkcyUSBETVAKICBBUk06IGJlcmxpbjogYWRkIHRo
+ZSBBSENJIG5vZGUgZm9yIHRoZSBCRzIKICBBUk06IGJlcmxpbjogYWRkIHRoZSBBSENJIG5vZGUg
+Zm9yIHRoZSBCRzJDRAoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2F0YS9haGNpLXBsYXRmb3Jt
+LnR4dCAgICAgIHwgICAzICstCiBhcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kgICAgICAg
+ICAgICAgICAgICAgICB8ICAgNyArCiBhcmNoL2FybS9ib290L2R0cy9iZXJsaW4yY2QuZHRzaSAg
+ICAgICAgICAgICAgICAgICB8ICAgNyArCiBhcmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS1tYXJ2
+ZWxsLWRtcC5kdHMgICAgICAgICB8ICAgNSArCiBhcmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS5k
+dHNpICAgICAgICAgICAgICAgICAgICB8ICAxMiArKwogZHJpdmVycy9hdGEvS2NvbmZpZyAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDkgKysKIGRyaXZlcnMvYXRhL01ha2VmaWxl
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvYXRhL2FoY2lf
+YmVybGluLmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTc1ICsrKysrKysrKysrKysrKysr
+KysrKwogOCBmaWxlcyBjaGFuZ2VkLCAyMTggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQog
+Y3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvYXRhL2FoY2lfYmVybGluLmMKCi0tIAoxLjguMy4y
+CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgt
+YXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJt
+LWtlcm5lbAo=
