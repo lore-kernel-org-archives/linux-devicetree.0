@@ -1,246 +1,327 @@
-From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v7 0/3] Add support for PCI in AArch64
-Date: Tue, 22 Apr 2014 13:34:05 +0100
-Message-ID: <20140422123405.GC865@e106497-lin.cambridge.arm.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
- <CA+b37P3HqMFU6kGA+GH3YpGM_Z=TwNXL6jKu+ConR3kCk-Tp4g@mail.gmail.com>
- <20140422101112.GA865@e106497-lin.cambridge.arm.com>
- <CA+b37P0XV81K4oBNnkXrVHYub=Bcuuw8nrFWUGVw-i8PJ8wGxQ@mail.gmail.com>
+From: Cho KyongHo <pullip.cho@samsung.com>
+Subject: Re: [PATCH v11 12/27] ARM: dts: Add description of System MMU of
+ Exynos SoCs
+Date: Tue, 22 Apr 2014 21:36:25 +0900
+Message-ID: <20140422213625.e5470ec6680bd4c875f0f02f@samsung.com>
+References: <20140314140649.dc5958f420770af48e2376d9@samsung.com>
+ <CAOD6ATr56P03Y3GChOTfTSHGrokU3do-YcRhk_voXSKcJVi8mA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+b37P0XV81K4oBNnkXrVHYub=Bcuuw8nrFWUGVw-i8PJ8wGxQ@mail.gmail.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sandeepa Prabhu <sandeepa.prabhu@linaro.org>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAOD6ATr56P03Y3GChOTfTSHGrokU3do-YcRhk_voXSKcJVi8mA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.samsung@gmail.com>
+Cc: Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Antonios Motakis <a.motakis@virtualopensystems.com>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 12:50:40PM +0100, Sandeepa Prabhu wrote:
-> On 22 April 2014 15:41, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > On Tue, Apr 22, 2014 at 09:58:28AM +0100, Sandeepa Prabhu wrote:
-> >> On 14 March 2014 21:04, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> >> > Hi,
-> >> >
-> >> > This patch adds support for PCI to AArch64. It is based on my v7=
- patch
-> >> > that adds support for creating generic host bridge structure fro=
-m
-> >> > device tree. With that in place, I was able to boot a platform t=
-hat
-> >> > has PCIe host bridge support and use a PCIe network card.
-> >> Hi Liviu,
-> >>
-> >> Are these patches (including your other patchset for device tree h=
-ost
-> >> bridge support ) available on a public git repo I can checkout fro=
-m?
+On Sun, 20 Apr 2014 15:25:59 +0530, Shaik Ameer Basha wrote:
+> Hi KyongHo Cho,
+> 
+> Please find the comments inline.
+> 
+> On Fri, Mar 14, 2014 at 10:36 AM, Cho KyongHo <pullip.cho@samsung.com> wrote:
+> > This patch adds dts entries for the System MMU devices found on
+> > Exynos4 and Exynos5 SoC series and the System MMU binding
+> > documentation.
 > >
-> > Yes, I have pushed them into git://linux-arm.org/linux-ld.git
-> Thanks Liviu,
-> Just to understand, is the X-gene PCIe
-> (https://lwn.net/Articles/589733/) verified using the same patchset?
+> > CC: Rob Herring <robherring2@gmail.com>
+> > CC: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
+> > ---
+> >  .../bindings/iommu/samsung,exynos4210-sysmmu.txt   |   86 +++++++
+> >  arch/arm/boot/dts/exynos4.dtsi                     |  107 ++++++++
+> >  arch/arm/boot/dts/exynos4210.dtsi                  |   23 +-
+> >  arch/arm/boot/dts/exynos4x12.dtsi                  |   77 +++++-
+> >  arch/arm/boot/dts/exynos5250.dtsi                  |  266 +++++++++++++++++++-
+> >  arch/arm/boot/dts/exynos5420.dtsi                  |  205 ++++++++++++++-
+> >  6 files changed, 758 insertions(+), 6 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iommu/samsung,exynos4210-sysmmu.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/iommu/samsung,exynos4210-sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,exynos4210-sysmmu.txt
+> > new file mode 100644
+> > index 0000000..e4417bb
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iommu/samsung,exynos4210-sysmmu.txt
+> > @@ -0,0 +1,86 @@
+> > +Samsung Exynos IOMMU H/W, System MMU (System Memory Management Unit)
+> > +
+> > +Samsung's Exynos architecture contains System MMUs that enables scattered
+> > +physical memory chunks visible as a contiguous region to DMA-capable peripheral
+> > +devices like MFC, FIMC, FIMD, GScaler, FIMC-IS and so forth.
+> > +
+> 
+> [snip]
+> 
+> 
+> > diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> > index 8f6300f..df336ea 100644
+> > --- a/arch/arm/boot/dts/exynos5250.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> > @@ -80,6 +80,16 @@
+> >                 reg = <0x10044040 0x20>;
+> >         };
+> >
+> > +       pd_isp: isp-power-domain@0x10044020 {
+> > +               compatible = "samsung,exynos4210-pd";
+> > +               reg = <0x10044020 0x20>;
+> > +       };
+> > +
+> > +       pd_disp1: disp1-power-domain@0x100440A0 {
+> > +               compatible = "samsung,exynos4210-pd";
+> > +               reg = <0x100440A0 0x20>;
+> > +       };
+> > +
+> >         clock: clock-controller@10010000 {
+> >                 compatible = "samsung,exynos5250-clock";
+> >                 reg = <0x10010000 0x30000>;
+> > @@ -679,7 +689,7 @@
+> >                                 "sclk_hdmiphy", "mout_hdmi";
+> >         };
+> >
+> > -       mixer {
+> > +       mixer: mixer {
+> >                 compatible = "samsung,exynos5250-mixer";
+> >                 reg = <0x14450000 0x10000>;
+> >                 interrupts = <0 94 0>;
+> > @@ -700,7 +710,7 @@
+> >                 phy-names = "dp";
+> >         };
+> >
+> > -       fimd@14400000 {
+> > +       fimd: fimd@14400000 {
+> >                 clocks = <&clock 133>, <&clock 339>;
+> >                 clock-names = "sclk_fimd", "fimd";
+> >         };
+> > @@ -715,4 +725,256 @@
+> >                 io-channel-ranges;
+> >                 status = "disabled";
+> >         };
+> > +
+> > +       sysmmu_g2d: sysmmu@10A60000 {
+> > +               compatible = "samsung,sysmmu-v1";
+> > +               reg = <0x10A60000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <24 5>;
+> > +               clock-names = "sysmmu";
+> > +               clocks = <&clock 361>;
+> > +       };
+> > +
+> > +       sysmmu_mfc_r: sysmmu@11200000 {
+> > +               compatible = "samsung,sysmmu-v2";
+> > +               reg = <0x11200000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <6 2>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 268>, <&clock 266>;
+> 
+> Add mmu-masters...
+>                     mmu-masters = <&mfc>;
+> 
 
-Tanmay can confirm, but I belive so.
+Ok.
 
-Best regards,
-Liviu
+> > +               samsung,power-domain = <&pd_mfc>;
+> > +       };
+> > +
+> > +       sysmmu_mfc_l: sysmmu@11210000 {
+> > +               compatible = "samsung,sysmmu-v2";
+> > +               reg = <0x11210000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <8 5>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 267>, <&clock 266>;
+> 
+> Add mmu-masters...
+>                     mmu-masters = <&mfc>;
+> 
 
->=20
-> ~Sandeepa
-> >
-> > Best regards,
-> > Liviu
-> >
-> >>
-> >> Thanks,
-> >> ~Sandeepa
-> >>
-> >> >
-> >> > I have dropped the RFC tag from the subject as I now have the am=
-bitious goal
-> >> > of trying to get it mainlined.
-> >> >
-> >> > Changes from v6:
-> >> >   - Guard the pci_domain_nr() inline implementation with #ifdef =
-CONFIG_PCI as
-> >> >     to avoid conflict with default empty version present in incl=
-ude/linux/pci.h.
-> >> >     Thanks to Jingoo Han for catching this.
-> >> >
-> >> > Changes from v5:
-> >> >   - Removed pcibios_fixup_bridge_ranges() as the week default ve=
-rsion is fine.
-> >> >   - Removed the ALIGN() call in pcibios_align_resource()
-> >> >   - Stopped exporting pcibios_align_resource()
-> >> >
-> >> > Changes from v4:
-> >> >   - Fixed the pci_domain_nr() implementation for arm64. Now we u=
-se
-> >> >     find_pci_host_bride() to find the host bridge before we retr=
-ieve
-> >> >     the domain number.
-> >> >
-> >> > Changes from v3:
-> >> >   - Added Acks accumulated so far ;)
-> >> >   - Still carrying Catalin's patch for moving the PCI_IO_BASE un=
-til it
-> >> >     lands in linux-next or mainline, in order to ease applying t=
-he series
-> >> >
-> >> > Changes from v2:
-> >> >   - Implement an arch specific version of pci_register_io_range(=
-) and
-> >> >     pci_address_to_pio().
-> >> >   - Return 1 from pci_proc_domain().
-> >> >
-> >> > Changes from v1:
-> >> >   - Added Catalin's patch for moving the PCI_IO_BASE location an=
-d extend
-> >> >     its size to 16MB
-> >> >   - Integrated Arnd's version of pci_ioremap_io that uses a bitm=
-ap for
-> >> >     keeping track of assigned IO space and returns an io_offset.=
- At the
-> >> >     moment the code is added in arch/arm64 but it can be moved i=
-n drivers/pci.
-> >> >   - Added a fix for the generic ioport_map() function when !CONF=
-IG_GENERIC_IOMAP
-> >> >     as suggested by Arnd.
-> >> >
-> >> > v6 thread here: https://lkml.org/lkml/2014/3/5/41
-> >> > v5 thread here: https://lkml.org/lkml/2014/3/4/307
-> >> > v4 thread here: https://lkml.org/lkml/2014/3/3/298
-> >> > v3 thread here: https://lkml.org/lkml/2014/2/28/211
-> >> > v2 thread here: https://lkml.org/lkml/2014/2/27/255
-> >> > v1 thread here: https://lkml.org/lkml/2014/2/3/389
-> >> >
-> >> >
-> >> > The API used is different from the one used by ARM architecture.=
- There is
-> >> > no pci_common_init_dev() function and no hw_pci structure, as th=
-at is no
-> >> > longer needed. Once the last signature is added to the legal agr=
-eement, I
-> >> > will post the host bridge driver code that I am using. Meanwhile=
-, here
-> >> > is an example of what the probe function looks like, posted as a=
-n example:
-> >> >
-> >> > static int myhostbridge_probe(struct platform_device *pdev)
-> >> > {
-> >> >         int err;
-> >> >         struct device_node *dev;
-> >> >         struct pci_host_bridge *bridge;
-> >> >         struct myhostbridge_port *pp;
-> >> >         resource_size_t lastbus;
-> >> >
-> >> >         dev =3D pdev->dev.of_node;
-> >> >
-> >> >         if (!of_device_is_available(dev)) {
-> >> >                 pr_warn("%s: disabled\n", dev->full_name);
-> >> >                 return -ENODEV;
-> >> >         }
-> >> >
-> >> >         pp =3D kzalloc(sizeof(struct myhostbridge_port), GFP_KER=
-NEL);
-> >> >         if (!pp)
-> >> >                 return -ENOMEM;
-> >> >
-> >> >         bridge =3D of_create_pci_host_bridge(&pdev->dev, &myhost=
-bridge_ops, pp);
-> >> >         if (IS_ERR(bridge)) {
-> >> >                 err =3D PTR_ERR(bridge);
-> >> >                 goto bridge_create_fail;
-> >> >         }
-> >> >
-> >> >         err =3D myhostbridge_setup(bridge->bus);
-> >> >         if (err)
-> >> >                 goto bridge_setup_fail;
-> >> >
-> >> >         /* We always enable PCI domains and we keep domain 0 bac=
-kward
-> >> >          * compatible in /proc for video cards
-> >> >          */
-> >> >         pci_add_flags(PCI_ENABLE_PROC_DOMAINS);
-> >> >         pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RS=
-RC);
-> >> >
-> >> >         lastbus =3D pci_scan_child_bus(bridge->bus);
-> >> >         pci_bus_update_busn_res_end(bridge->bus, lastbus);
-> >> >
-> >> >         pci_assign_unassigned_bus_resources(bridge->bus);
-> >> >
-> >> >         pci_bus_add_devices(bridge->bus);
-> >> >
-> >> >         return 0;
-> >> >
-> >> > bridge_setup_fail:
-> >> >         put_device(&bridge->dev);
-> >> >         device_unregister(&bridge->dev);
-> >> > bridge_create_fail:
-> >> >         kfree(pp);
-> >> >         return err;
-> >> > }
-> >> >
-> >> > Best regards,
-> >> > Liviu
-> >> >
-> >> >
-> >> > Catalin Marinas (1):
-> >> >   arm64: Extend the PCI I/O space to 16MB
-> >> >
-> >> > Liviu Dudau (2):
-> >> >   Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
-> >> >   arm64: Add architecture support for PCI
-> >> >
-> >> >  Documentation/arm64/memory.txt |  16 +--
-> >> >  arch/arm64/Kconfig             |  19 +++-
-> >> >  arch/arm64/include/asm/Kbuild  |   1 +
-> >> >  arch/arm64/include/asm/io.h    |   5 +-
-> >> >  arch/arm64/include/asm/pci.h   |  51 +++++++++
-> >> >  arch/arm64/kernel/Makefile     |   1 +
-> >> >  arch/arm64/kernel/pci.c        | 173 ++++++++++++++++++++++++++=
-+++++
-> >> >  include/asm-generic/io.h       |   2 +-
-> >> >  8 files changed, 258 insertions(+), 10 deletions(-)
-> >> >  create mode 100644 arch/arm64/include/asm/pci.h
-> >> >  create mode 100644 arch/arm64/kernel/pci.c
-> >> >
-> >> > --
-> >> > 1.9.0
-> >> >
-> >> >
-> >> > _______________________________________________
-> >> > linux-arm-kernel mailing list
-> >> > linux-arm-kernel@lists.infradead.org
-> >> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> >>
-> >
-> > --
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > | I would like to |
-> > | fix the world,  |
-> > | but they're not |
-> > | giving me the   |
-> >  \ source code!  /
-> >   ---------------
-> >     =C2=AF\_(=E3=83=84)_/=C2=AF
-> >
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" =
-in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+OK.
 
---=20
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    =C2=AF\_(=E3=83=84)_/=C2=AF
+> 
+> > +               samsung,power-domain = <&pd_mfc>;
+> > +       };
+> > +
+> > +       sysmmu_rotator: sysmmu@11D40000 {
+> > +               compatible = "samsung,sysmmu-v1";
+> > +               reg = <0x11D40000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <4 0>;
+> > +               clock-names = "sysmmu";
+> > +               clocks = <&clock 272>;
+> > +       };
+> > +
+> 
+> [snip]
+> 
+> >  };
+> > diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> > index 45e2e65..a736f09 100644
+> > --- a/arch/arm/boot/dts/exynos5420.dtsi
+> > +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> > @@ -470,7 +470,7 @@
+> >                 phy-names = "dp";
+> >         };
+> >
+> > -       fimd@14400000 {
+> > +       fimd: fimd@14400000 {
+> >                 samsung,power-domain = <&disp_pd>;
+> >                 clocks = <&clock 147>, <&clock 421>;
+> >                 clock-names = "sclk_fimd", "fimd";
+> > @@ -641,7 +641,7 @@
+> >                 status = "disabled";
+> >         };
+> >
+> > -       mixer@14450000 {
+> > +       mixer: mixer@14450000 {
+> >                 compatible = "samsung,exynos5420-mixer";
+> >                 reg = <0x14450000 0x10000>;
+> >                 interrupts = <0 94 0>;
+> > @@ -720,4 +720,205 @@
+> >                 clock-names = "watchdog";
+> >                 samsung,syscon-phandle = <&pmu_system_controller>;
+> >          };
+> > +
+> > +       sysmmu_g2dr: sysmmu@10A60000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x10A60000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <24 5>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 482>, <&clock 481>;
+> > +       };
+> > +
+> > +       sysmmu_g2dw: sysmmu@10A70000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x10A60000 0x1000>;
+> 
+> Duplicate sysmmu reg base address.
+>                     reg = <0x10A70000 0x1000>;
+> 
+
+Oh, really it is.
+Thanks.
+
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <22 2>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 482>, <&clock 481>;
+> > +       };
+> > +
+> > +       sysmmu_scaler0r: sysmmu@12880000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x12880000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <22 4>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 384>, <&clock 381>;
+> > +       };
+> > +
+> > +       sysmmu_scaler1r: sysmmu@12890000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x12890000 0x1000>;
+> > +               interrupts = <0 186 0>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 385>, <&clock 382>;
+> > +       };
+> > +
+> > +       sysmmu_scaler2r: sysmmu@128A0000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x128A0000 0x1000>;
+> > +               interrupts = <0 188 0>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 386>, <&clock 383>;
+> > +       };
+> > +
+> > +       sysmmu_scaler0w: sysmmu@128C0000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x128C0000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <27 2>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 384>, <&clock 381>;
+> > +       };
+> > +
+> > +       sysmmu_scaler1w: sysmmu@128D0000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x128D0000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <22 6>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 385>, <&clock 382>;
+> > +       };
+> > +
+> > +       sysmmu_scaler2w: sysmmu@128E0000 {
+> > +               compatible = "samsung,sysmmu-v3.2";
+> > +               reg = <0x128E0000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <19 6>;
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 386>, <&clock 383>;
+> > +       };
+> > +
+> > +       sysmmu_mfc_r: sysmmu@11200000 {
+> 
+> 0x11200000 belongs to mfc_l
+>              sysmmu_mfc_l: sysmmu@11200000
+> 
+
+OK. thanks.
+
+> > +               compatible = "samsung,sysmmu-v2";
+> > +               reg = <0x11200000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <6 2>;
+> 
+>                     interrupts = <8 5>;
+> Add mmu-masters field,
+>                     mmu-masters = <&mfc>;
+
+Oh, irq is also changed.
+Thanks.
+
+> 
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 402>, <&clock 401>;
+> 
+> clocks = <&clock 403>, <&clock 401>;
+
+Thanks.
+
+This will be fixed with macro names.
+
+> 
+> > +               samsung,power-domain = <&mfc_pd>;
+> > +       };
+> > +
+> > +       sysmmu_mfc_l: sysmmu@11210000 {
+> 
+> 0x11210000 belongs to mfc_r
+>                     sysmmu_mfc_r: sysmmu@11210000
+> 
+
+OK.
+
+> > +               compatible = "samsung,sysmmu-v2";
+> > +               reg = <0x11210000 0x1000>;
+> > +               interrupt-parent = <&combiner>;
+> > +               interrupts = <8 5>;
+> 
+> interrupts = <6 2>;
+> Add mmu-masters field,
+>                     mmu-masters = <&mfc>;
+> 
+
+OK. 
+
+> > +               clock-names = "sysmmu", "master";
+> > +               clocks = <&clock 403>, <&clock 401>;
+> 
+> clocks = <&clock 402>, <&clock 401>;
+> 
+
+Thanks for pointing out many mistakes.
+
+Regards,
+
+KyongHo
