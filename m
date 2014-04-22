@@ -1,30 +1,75 @@
 From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 0/3] add hisilicon clk-hix5hd2
-Date: Tue, 22 Apr 2014 19:46:51 +0800
-Message-ID: <1398167214-1604-1-git-send-email-zhangfei.gao@linaro.org>
+Subject: [PATCH 2/3] clk: hisi: add hisi_clk_register_gate
+Date: Tue, 22 Apr 2014 19:46:53 +0800
+Message-ID: <1398167214-1604-3-git-send-email-zhangfei.gao@linaro.org>
+References: <1398167214-1604-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398167214-1604-1-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Zhangfei Gao (3):
-  clk: hisi: use clk_register_mux_table in hisi_clk_register_mux
-  clk: hisi: add hisi_clk_register_gate
-  clk: hisi: add clk-hix5hd2.c
+Add hisi_clk_register_gate register clk gate table
 
- .../devicetree/bindings/clock/hix5hd2-clock.txt    |   31 ++++++
- drivers/clk/Makefile                               |    1 +
- drivers/clk/hisilicon/Makefile                     |    1 +
- drivers/clk/hisilicon/clk-hix5hd2.c                |  101 ++++++++++++++++++++
- drivers/clk/hisilicon/clk.c                        |   41 +++++++-
- drivers/clk/hisilicon/clk.h                        |    3 +
- include/dt-bindings/clock/hix5hd2-clock.h          |   58 +++++++++++
- 7 files changed, 231 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/hix5hd2-clock.txt
- create mode 100644 drivers/clk/hisilicon/clk-hix5hd2.c
- create mode 100644 include/dt-bindings/clock/hix5hd2-clock.h
+Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/clk/hisilicon/clk.c |   28 ++++++++++++++++++++++++++++
+ drivers/clk/hisilicon/clk.h |    2 ++
+ 2 files changed, 30 insertions(+)
 
+diff --git a/drivers/clk/hisilicon/clk.c b/drivers/clk/hisilicon/clk.c
+index 2699388..a078e84 100644
+--- a/drivers/clk/hisilicon/clk.c
++++ b/drivers/clk/hisilicon/clk.c
+@@ -177,6 +177,34 @@ void __init hisi_clk_register_divider(struct hisi_divider_clock *clks,
+ 	}
+ }
+ 
++void __init hisi_clk_register_gate(struct hisi_gate_clock *clks,
++				       int nums, struct hisi_clock_data *data)
++{
++	struct clk *clk;
++	void __iomem *base = data->base;
++	int i;
++
++	for (i = 0; i < nums; i++) {
++		clk = clk_register_gate(NULL, clks[i].name,
++						clks[i].parent_name,
++						clks[i].flags,
++						base + clks[i].offset,
++						clks[i].bit_idx,
++						clks[i].gate_flags,
++						&hisi_clk_lock);
++		if (IS_ERR(clk)) {
++			pr_err("%s: failed to register clock %s\n",
++			       __func__, clks[i].name);
++			continue;
++		}
++
++		if (clks[i].alias)
++			clk_register_clkdev(clk, clks[i].alias, NULL);
++
++		data->clk_data.clks[clks[i].id] = clk;
++	}
++}
++
+ void __init hisi_clk_register_gate_sep(struct hisi_gate_clock *clks,
+ 				       int nums, struct hisi_clock_data *data)
+ {
+diff --git a/drivers/clk/hisilicon/clk.h b/drivers/clk/hisilicon/clk.h
+index bc39a6a..31083ff 100644
+--- a/drivers/clk/hisilicon/clk.h
++++ b/drivers/clk/hisilicon/clk.h
+@@ -104,6 +104,8 @@ void __init hisi_clk_register_mux(struct hisi_mux_clock *, int,
+ 				struct hisi_clock_data *);
+ void __init hisi_clk_register_divider(struct hisi_divider_clock *,
+ 				int, struct hisi_clock_data *);
++void __init hisi_clk_register_gate(struct hisi_gate_clock *,
++					int, struct hisi_clock_data *);
+ void __init hisi_clk_register_gate_sep(struct hisi_gate_clock *,
+ 					int, struct hisi_clock_data *);
+ #endif	/* __HISI_CLK_H */
 -- 
 1.7.9.5
 
