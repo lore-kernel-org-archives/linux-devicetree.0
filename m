@@ -1,67 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Tue, 22 Apr 2014 10:22:04 +0200
-Message-ID: <10652983.rXrAGMo8Yn@wuerfel>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <535561BE.9070303@cogentembedded.com> <5356063C.6070100@linaro.org>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 0/2] ARM: berlin: add SDHCI support
+Date: Tue, 22 Apr 2014 10:27:26 +0200
+Message-ID: <1398155248-1659-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5356063C.6070100-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 April 2014 14:03:40 zhangfei wrote:
-> On 04/22/2014 02:21 AM, Sergei Shtylyov wrote:
-> > On 04/21/2014 10:03 PM, Florian Fainelli wrote:
-> >
-> >>>> Hisilicon hip04 platform mdio driver
-> >>>> Reuse Marvell phy drivers/net/phy/marvell.c
-> >
-> >>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> [...]
-> >
-> >>>> diff --git a/drivers/net/ethernet/hisilicon/hip04_mdio.c
-> >>>> b/drivers/net/ethernet/hisilicon/hip04_mdio.c
-> >>>> new file mode 100644
-> >>>> index 0000000..19826a3
-> >>>> --- /dev/null
-> >>>> +++ b/drivers/net/ethernet/hisilicon/hip04_mdio.c
-> >>>> @@ -0,0 +1,185 @@
-> >>>> +static int hip04_mdio_reset(struct mii_bus *bus)
-> >>>> +{
-> >>>> +       int temp, err, i;
-> >>>> +
-> >>>> +       for (i = 0; i < PHY_MAX_ADDR; i++) {
-> >>>> +               hip04_mdio_write(bus, i, 22, 0);
-> >
-> >>>     Why? What kind of a register this is? <uapi/linux/mii.h> tells me
-> >>> it's
-> >>> MII_SREVISION...
-> >
-> >> I think this rather means clause 22 as opposed to clause 45.
-> >
-> >     No, the corresponding hip04_mdio_write()'s parameter is a register
-> > #, so this is a write of 0 to register #22. A comment certainly wouldn't
-> > hurt here...
-> 
-> It's private register of the phy marvell 88e1512.
-> To make it clearer using define instead.
-> #define MII_MARVELL_PHY_PAGE    22
-> 
-> The registers has been grouped into several pages, access register need 
-> choose which page first.
+This series adds the Berlin BG2Q SDHCI nodes to support the 3 controlle=
+rs
+available. The Berlin BG2Q SDHCI controllers are compatible with the px=
+av3
+driver. This patches also enable the SD Card reader and the eMMC of the
+BG2Q DMP.
 
-You shouldn't touch the PHY private registers in the main driver though,
-this should be purely handled by drivers/net/phy/marvell.c.
+This series applies on top of Alexandre's patches for the Berlin's pll:
+https://patchwork.kernel.org/patch/3890341/
+https://patchwork.kernel.org/patch/3876271/
 
-I don't see support for 88e1512 there, only 88e1510 and lots of older
-ones, but I assume it isn't hard to add.
+Changes since v1:
+	The v2 introduced a custom Berlin SDHCI driver. It turns out the
+	available pxav3 driver was compatible with the BG2Q SDHCI controllers.
+	- removed the unneeded custom driver
+	- switched to the pxav3 driver
+	- removed the board specific properties from the SoC device tree
 
-	Arnd
+Antoine T=C3=A9nart (2):
+  ARM: dts: berlin: add the SDHCI nodes for the BG2Q
+  ARM: dts: berlin: enable SD card reader and eMMC for the BG2Q DMP
+
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 11 ++++++++++
+ arch/arm/boot/dts/berlin2q.dtsi            | 32 ++++++++++++++++++++++=
+++++++++
+ 2 files changed, 43 insertions(+)
+
+--=20
+1.8.3.2
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
