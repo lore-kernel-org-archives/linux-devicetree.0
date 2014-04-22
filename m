@@ -1,63 +1,136 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH] ARM: dts: Add peach-pit board support
-Date: Tue, 22 Apr 2014 11:13:50 +0530
-Message-ID: <CAHbNUh3QPgC_yVn8pNwp3K_fz_ujSF+xmMkD=y-xswUd0YTHYg@mail.gmail.com>
-References: <1397971609-6144-1-git-send-email-arun.kk@samsung.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Tue, 22 Apr 2014 14:03:40 +0800
+Message-ID: <5356063C.6070100@linaro.org>
+References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <1397869980-21187-3-git-send-email-zhangfei.gao@linaro.org> <53555C28.4050303@cogentembedded.com> <CAGVrzcb8Ykxi72x3iBStjTL+OO1BhDc_yZnnPq8ZHra+mtrBEA@mail.gmail.com> <535561BE.9070303@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1397971609-6144-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@google.com>, olofj@google.com, arunkk.samsung@gmail.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <535561BE.9070303@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: David Miller <davem@davemloft.net>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, David Laight <David.Laight@aculab.com>, Eric Dumazet <eric.dumazet@gmail.com>, xuwei5@hisilicon.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 April 2014 10:56, Arun Kumar K <arun.kk@samsung.com> wrote:
-> Adds the google peach-pit board dts file which uses
-> exynos5420 SoC.
+
+
+On 04/22/2014 02:21 AM, Sergei Shtylyov wrote:
+> On 04/21/2014 10:03 PM, Florian Fainelli wrote:
 >
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> ---
->  arch/arm/boot/dts/Makefile                 |    1 +
->  arch/arm/boot/dts/exynos5420-peach-pit.dts |  225 ++++++++++++++++++++++++++++
->  2 files changed, 226 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>>> Hisilicon hip04 platform mdio driver
+>>>> Reuse Marvell phy drivers/net/phy/marvell.c
+>
+>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>>> [...]
+>
+>>>> diff --git a/drivers/net/ethernet/hisilicon/hip04_mdio.c
+>>>> b/drivers/net/ethernet/hisilicon/hip04_mdio.c
+>>>> new file mode 100644
+>>>> index 0000000..19826a3
+>>>> --- /dev/null
+>>>> +++ b/drivers/net/ethernet/hisilicon/hip04_mdio.c
+>>>> @@ -0,0 +1,185 @@
+>
+> [...]
+>
+>>>> +static int hip04_mdio_reset(struct mii_bus *bus)
+>>>> +{
+>>>> +       int temp, err, i;
+>>>> +
+>>>> +       for (i = 0; i < PHY_MAX_ADDR; i++) {
+>>>> +               hip04_mdio_write(bus, i, 22, 0);
+>
+>>>     Why? What kind of a register this is? <uapi/linux/mii.h> tells me
+>>> it's
+>>> MII_SREVISION...
+>
+>> I think this rather means clause 22 as opposed to clause 45.
+>
+>     No, the corresponding hip04_mdio_write()'s parameter is a register
+> #, so this is a write of 0 to register #22. A comment certainly wouldn't
+> hurt here...
+
+It's private register of the phy marvell 88e1512.
+To make it clearer using define instead.
+#define MII_MARVELL_PHY_PAGE    22
+
+The registers has been grouped into several pages, access register need 
+choose which page first.
+>
+>>>> +               temp = hip04_mdio_read(bus, i, MII_BMCR);
+>
+>>>     You're not checking for error...
+>
+>>>> +               temp |= BMCR_RESET;
+>>>> +               err = hip04_mdio_write(bus, i, MII_BMCR, temp);
+>
+>>>     Hmm, why you're open coding BMCR reset? There's phy_init_hw()
+>>> doing this
+>>> correctly...
+>
+>> Except that this runs way before we have created the PHY driver, so we
+>> can't use that function just yet.
+>
+>     Ah, you're right.
+>
+>> I already asked about this, and he
+>> explained that this was because the PHY devices he uses are not
+>> responding correcty to MII_PHYSID1/2 reads.
+>
+>     So, this manual reset loop helps with reading the ID registers? A
+> comment wouldn't hurt either...
+Yes, it required for get_phy_id, will add comments.
+
+>
+>>>> +               if (err < 0)
+>>>> +                       return err;
+>
+>     I'm not at all sure we want to leave the reset loop on a first write
+> error.
+Yes, continue can be used instead.
+
+>
+>>>> +       }
+>>>> +
+>>>> +       mdelay(500);
+>
+>     I'm not sure this is enough, given that in phy_init_hw() we poll for
+> 600 ms + 1 ms.
+Though not find clear delay time required from the phy spec, the 
+experiment shows OK.
+Also here can not verify the BMCR_RESET bit, 0xffff will returned if the 
+phy is not exists.
+>
+>>>> +       return 0;
+>>>> +}
+>>>> +
+>>>> +static int hip04_mdio_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +       struct resource *r;
+>>>> +       struct mii_bus *bus;
+>>>> +       struct hip04_mdio_priv *priv;
+>>>> +       int ret;
+>>>> +
+>>>> +       bus = mdiobus_alloc_size(sizeof(struct hip04_mdio_priv));
+>>>> +       if (!bus) {
+>>>> +               dev_err(&pdev->dev, "Cannot allocate MDIO bus\n");
+>>>> +               return -ENOMEM;
+>>>> +       }
+>>>> +
+>>>> +       bus->name = "hip04_mdio_bus";
+>>>> +       bus->read = hip04_mdio_read;
+>>>> +       bus->write = hip04_mdio_write;
+>>>> +       bus->reset = hip04_mdio_reset;
+>
+>>>     Ah... However I don't think it a good implementation of that bus
+>>> method...
+>
+>     I assumed this method exists to do a hardware reset of the whole
+> bus, not to do a loop of soft-resetting all PHYs...
 >
 
-[ snip ]
+It is required for each phy, if no such reset, the specific phy can NOT be
+detected and get_phy_id returns 0.
 
-> +       pinctrl@13400000 {
-> +               lid_irq: lid-irq {
-> +                       samsung,pins = "gpx3-4";
-> +                       samsung,pin-function = <0>;
-> +                       samsung,pin-pud = <0>;
-> +                       samsung,pin-drv = <0>;
-> +               };
-> +
-> +               power_key_irq: power-key-irq {
-> +                       samsung,pins = "gpx1-2";
-> +                       samsung,pin-function = <0>;
-> +                       samsung,pin-pud = <0>;
-> +                       samsung,pin-drv = <0>;
-> +               };
-> +
-> +               tpm_irq: tpm-irq {
-> +                       samsung,pins = "gpx1-0";
-> +                       samsung,pin-function = <0>;
-> +                       samsung,pin-pud = <0>;
-> +                       samsung,pin-drv = <0>;
-> +               };
-> +       };
-> +
-
-If you plan to respin, please consider keeping the above entries
-sorted based on the pin numbers.
-
-tpm_irq
-power_key_irq
-lid_irq
-
-
--- 
-Tushar Behera
+Thanks
