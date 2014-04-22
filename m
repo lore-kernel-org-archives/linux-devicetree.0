@@ -1,42 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] ARM: sunxi: update the default
- ARCH_NR_GPIO for sunxi arch
-Date: Tue, 22 Apr 2014 16:20:19 +0200
-Message-ID: <201404221620.19519.arnd@arndb.de>
-References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com> <1397137966-30818-8-git-send-email-boris.brezillon@free-electrons.com> <CACRpkdYT9HvG6dOVOEnBSNhRt847tdCsAU6E_dZLdFQEHntpKg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Tue, 22 Apr 2014 16:30:07 +0200
+Message-ID: <201404221630.07865.arnd@arndb.de>
+References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <10652983.rXrAGMo8Yn@wuerfel> <535679A6.4020103@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBQ7V3GNAKGQE6JVRJ6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CACRpkdYT9HvG6dOVOEnBSNhRt847tdCsAU6E_dZLdFQEHntpKg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio =?utf-8?q?L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <535679A6.4020103@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Eric Dumazet <eric.dumazet@gmail.com>, netdev <netdev@vger.kernel.org>, xuwei5@hisilicon.com, David Laight <David.Laight@aculab.com>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 April 2014, Linus Walleij wrote:
-> On Thu, Apr 10, 2014 at 3:52 PM, Boris BREZILLON
-> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+On Tuesday 22 April 2014, zhangfei wrote:
+> On 04/22/2014 04:22 PM, Arnd Bergmann wrote:
 > 
-> > The A31 SoC has PL and PM banks and thus increase the default ARCH_NR_GPIO.
+> >> It's private register of the phy marvell 88e1512.
+> >> To make it clearer using define instead.
+> >> #define MII_MARVELL_PHY_PAGE    22
+> >>
+> >> The registers has been grouped into several pages, access register need
+> >> choose which page first.
 > >
-> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > You shouldn't touch the PHY private registers in the main driver though,
+> > this should be purely handled by drivers/net/phy/marvell.c.
+> >
+> > I don't see support for 88e1512 there, only 88e1510 and lots of older
+> > ones, but I assume it isn't hard to add.
+> >
 > 
-> Patch applied, and grrrr we need to get rid of these static #gpios defines
-> in the long run.
+> 88e1512 driver is already supported, same as 88e1510.
+> #define MARVELL_PHY_ID_MASK             0xfffffff0
+> So it should support 88e151x.
+> 
+> Reset is required here for get_phy_id, otherwise only 0 can be get.
+> phy_device_create will not be called, and can not match any driver.
+> 
+> However in the experiment, it is found BMCR_RESET is not required in fact.
+> Only hip04_mdio_write(bus, i, MII_MARVELL_PHY_PAGE, 0) has to be set.
+> 88e151x registers are divided into pages.
+> Generic MII registers is in page 0, including MII_PHYSID1 and MII_PHYSID2.
+> Unfortunately the default page is not 0, so get_phy_id will fail.
+> 
+> So bus->reset still required to set the page to 0, prepared for get_phy_id.
 
-Yes, that would be nice. I guess the gpio-descriptor framework should
-have solved this, but we can't move everything over to that soon, right?
+But it means that the hip04_mdio driver potentially won't work if connected
+to something other than a Marvell PHY.
 
-> ARM SoC folks: notice this hitting arch/arm/Kconfig, complain if it's
-> problematic.
+I noticed that the marvell_of_reg_init() does this at init time:
 
-Thanks for letting us know about it.
+saved_page = phy_read(phydev, MII_MARVELL_PHY_PAGE);
+... /* perform init */
+if (page_changed)
+	phy_write(phydev, MII_MARVELL_PHY_PAGE, saved_page);
+
+Is this a bug? Maybe it should always set page 0 when leaving
+this function.
 
 	Arnd
