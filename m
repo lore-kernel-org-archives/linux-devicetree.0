@@ -1,83 +1,44 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v8 00/17] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Tue, 22 Apr 2014 14:17:30 +0200
-Message-ID: <53565DDA.9020202@redhat.com>
-References: <1398164497-14212-1-git-send-email-hdegoede@redhat.com> <53565B74.4000703@elopez.com.ar>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v4 0/6] Add STiH407 SoC and reference board support
+Date: Tue, 22 Apr 2014 14:17:00 +0200
+Message-ID: <53565DBC.6040709@st.com>
+References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>	<CACRpkdboBkzcJC35-BNvVYmS_t9Cd204AVz4rZasKtNJp0yE4g@mail.gmail.com>	<53207CA2.4090309@st.com> <CACRpkdZ7NpQBnpKLWSMST6fW9ST_tHi6L66jTQ4kh=+ONfjMgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDL4X2GMZUKRBZN33GNAKGQEMDLKLBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <53565B74.4000703-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?RGF2aWQgTGFuemVuZMO2cmZlcg==?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZ7NpQBnpKLWSMST6fW9ST_tHi6L66jTQ4kh=+ONfjMgg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Arnd, Olof,
 
-On 04/22/2014 02:07 PM, Emilio L=C3=B3pez wrote:
-> Hi Hans,
->=20
-> El 22/04/14 08:01, Hans de Goede escribi=C3=B3:
->> Hi All,
+On 03/14/2014 11:14 AM, Linus Walleij wrote:
+> On Wed, Mar 12, 2014 at 4:26 PM, Maxime Coquelin <maxime.coquelin@st.com> wrote:
+>> On 03/12/2014 03:20 PM, Linus Walleij wrote:
+>
+>>> I've applied the pinctrl changes to the pinctrl tree, please push all the
+>>> DTS[i] changes through ARM SoC.
 >>
->> Here is v8 of the sunxi-mmc patch-set David Lanzend=C3=B6rfer and I have=
- been
->> working on.
+>> As mentioned in the cover-letter, the DTS changes are based on arm_soc's
+>> for-next branch.
 >>
->> The first 2 patches are depenencies which should go in through the clk t=
-ree,
->> Mike can you pick these 2 up please ?  :
->>
->> "clk: sunxi: factors: automatic reparenting support"
->> Is uncontroversial and has been favorably reviewed by various people.
->=20
-> I'll pick this one up for 3.16 if you're ok with that. Mike, let me know =
-if you have any objection to the patch, but I'm pretty sure you (informally=
-?) acked it in the past.
->=20
->> "clk: sunxi: Implement MMC phase control"
->> Is somewhat more controversial as there has been lots of discussion abou=
-t
->> adding a generic phase control method to the clk framework. The problem =
-is
->> that there has been a lot of talk about such a generic phase control met=
-hod
->> but not a single patch. Therefor I would like to move forwards with usin=
-g
->> a platform specific method for now. I hereby promise that once we've a g=
-eneric
->> method I'll write patches to convert the sunxi code to that method.
->=20
-> Mike proposed a RFC for handling this better, and there were talks with A=
-llwinner people to see what did these phase controls actually mean. We shou=
-ld be able to get a proper solution for it during this cycle. I'd prefer to=
- work towards that instead of merging this, as we have more than a month to=
- get it ready still.
+>> Do you mean I should send a pull request for these three patches?
+>
+> You'd have to ask the ARM SoC maintainers, but if it's a few patches
+> they can also apply them directly on the target branch.
 
-A month will be gone before you know it, and merging sunxi mmc support real=
-ly
-is long overdue, and is the last thing keeping distros from shipping with s=
-unxi
-support ootb. So I would really prefer to just get this merged as is for no=
-w,
-changing it later should be easy, and merging an interim solution will make
-some more time for doing the generic clk phase control method properly.
+It looks like the get_maintainer.pl script does not give your names.
+Are DT and mach-sti patches good for you?
 
-Regards,
+If so, can I have you Ack?
 
-Hans
+Thanks,
+Maxime
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+>
+> Yours,
+> Linus Walleij
+>
