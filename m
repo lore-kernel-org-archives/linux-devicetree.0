@@ -1,8 +1,8 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 08/11] ARM: at91/dt: move at91sam9261 SoC to the new main
- clock model
-Date: Tue, 22 Apr 2014 15:12:37 +0200
-Message-ID: <1398172360-7837-9-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 06/11] ARM: at91/dt: add xtal frequencies to sama5d3xcm
+ boards
+Date: Tue, 22 Apr 2014 15:12:35 +0200
+Message-ID: <1398172360-7837-7-git-send-email-boris.brezillon@free-electrons.com>
 References: <1398172360-7837-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,61 +22,31 @@ To: Nicolas Ferre <nicolas.ferre@atmel.com>, Mike Turquette <mturquette@linaro.o
 Cc: devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Acked-by: Jean-Jacques HIBLOT <jjhiblot@traphandler.com>
----
- arch/arm/boot/dts/at91sam9261.dtsi | 23 +++++++++++++++++++++--
- 1 file changed, 21 insertions(+), 2 deletions(-)
+Define crystal frequencies of sama5d3xcm boards.
 
-diff --git a/arch/arm/boot/dts/at91sam9261.dtsi b/arch/arm/boot/dts/at91sam9261.dtsi
-index e21dda0..561addc 100644
---- a/arch/arm/boot/dts/at91sam9261.dtsi
-+++ b/arch/arm/boot/dts/at91sam9261.dtsi
-@@ -45,6 +45,18 @@
- 		reg = <0x20000000 0x08000000>;
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+---
+ arch/arm/boot/dts/sama5d3xcm.dtsi | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/sama5d3xcm.dtsi b/arch/arm/boot/dts/sama5d3xcm.dtsi
+index f55ed07..b0b1331 100644
+--- a/arch/arm/boot/dts/sama5d3xcm.dtsi
++++ b/arch/arm/boot/dts/sama5d3xcm.dtsi
+@@ -18,6 +18,14 @@
+ 		reg = <0x20000000 0x20000000>;
  	};
  
-+	main_xtal: main_xtal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
++	slow_xtal {
++		clock-frequency = <32768>;
 +	};
 +
-+	slow_xtal: slow_xtal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
++	main_xtal {
++		clock-frequency = <12000000>;
 +	};
 +
  	ahb {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -524,17 +536,24 @@
- 				#size-cells = <0>;
- 				#interrupt-cells = <1>;
- 
--				clk32k: slck {
-+				slow_rc_osc: slow_rc_osc {
- 					compatible = "fixed-clock";
- 					#clock-cells = <0>;
- 					clock-frequency = <32768>;
-+					clock-accuracy = <50000000>;
-+				};
-+
-+				clk32k: slck {
-+					compatible = "atmel,at91sam9260-clk-slow";
-+					#clock-cells = <0>;
-+					clocks = <&slow_rc_osc &slow_xtal>;
- 				};
- 
- 				main: mainck {
- 					compatible = "atmel,at91rm9200-clk-main";
- 					#clock-cells = <0>;
- 					interrupts-extended = <&pmc AT91_PMC_MOSCS>;
--					clocks = <&clk32k>;
-+					clocks = <&main_xtal>;
- 				};
- 
- 				plla: pllack {
+ 		apb {
+ 			spi0: spi@f0004000 {
 -- 
 1.8.3.2
