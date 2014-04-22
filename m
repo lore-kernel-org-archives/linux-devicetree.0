@@ -1,208 +1,102 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
- probe and defer if needed
-Date: Mon, 21 Apr 2014 20:05:28 -0700
-Message-ID: <20140422030528.GB26554@atomide.com>
-References: <CAL_Jsq+aU+rs28gV=Gesb_-Dy6Ht7zuKrRA6_hmqp94Uun23Yg@mail.gmail.com>
- <20140418205213.GA21823@atomide.com>
- <CAL_JsqJvVvo6R-qNXxur7wiZERKbi52xyKoWnmzJTfKS2iKK7A@mail.gmail.com>
- <20140418215848.GD21823@atomide.com>
- <20140418230335.GI24070@n2100.arm.linux.org.uk>
- <20140418232407.GQ21823@atomide.com>
- <CAL_JsqLvLTJwgsB-m0W72WxSUoTV4ubMdvM_a784J4k2eiK9AQ@mail.gmail.com>
- <20140421155424.GD23945@atomide.com>
- <53556AF1.2030608@gmail.com>
- <20140421202546.GA26554@atomide.com>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Tue, 22 Apr 2014 09:05:07 +0530
+Message-ID: <CAFp+6iHvFtMbzr1NG7J_DS5upzhgaKOiuKTk_9cUNpfLswbJyQ@mail.gmail.com>
+References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
+	<1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
+	<534529B2.2020107@samsung.com>
+	<CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
+	<53454C11.7060607@samsung.com>
+	<CAFp+6iHU0YXj18ajDwOqPh_SJWr6GkMPRr6qaGdmPoCc0+tz5g@mail.gmail.com>
+	<CAFp+6iH7-O8pNNMrk7Yhg1u+DXcXD1Tp9RYdiFg+-Om5Toojfw@mail.gmail.com>
+	<534E892B.6090409@samsung.com>
+	<CAFp+6iGYfz+ZT9zxgeVefLhtb0mb-=K4faUZC+1FtQoO0hMoqw@mail.gmail.com>
+	<001101cf5dd1$2e04d390$8a0e7ab0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140421202546.GA26554-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <001101cf5dd1$2e04d390$8a0e7ab0$%han@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, kishon <kishon@ti.com>, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [140421 13:26]:
-> * Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140421 12:01]:
-> > On Mon, Apr 21, 2014 at 10:54 AM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > * Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140421 06:47]:
-> > >> On Fri, Apr 18, 2014 at 6:24 PM, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> wrote:
-> > >> > * Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> [140418 16:04]:
-> > >> >> On Fri, Apr 18, 2014 at 02:58:48PM -0700, Tony Lindgren wrote:
-> > >> >> > Oh come on, let's stop pretending it's not broken. And it's way worse with
-> > >> >> > device tree as there's nothing making sure the resources for a driver
-> > >> >> > are set up before the driver probes. And we've been unable to fix just
-> > >> >> > this issue alone for about six months now. It's also broken beyond that.
-> > >> >> > It's called of_platform_bus yet it won't even pass the platform_data
-> > >> >> > as auxdata to the devices on a sub-bus instantatiated like I2C.
-> > >> >>
-> > >> >> Isn't there a much simpler solution to the platform device IRQ problem?
-> > >> >>
-> > >> >> Rather than trying to fix it at the point where the resources are
-> > >> >> created, why not just *not* have DT create the IRQ resources in the
-> > >> >> first place, and instead have platform_get_irq() (which is the function
-> > >> >> which should be used to get an IRQ) be the actor to do whatever is
-> > >> >> necessary to return the IRQ(s) ?
-> > >> >
-> > >> > Yeah why not. I don't see why we would need to do all this of_* special
-> > >> > trickery for much anything beyond parsing the binding.
-> > >>
-> > >> That can work, but it will still need something like
-> > >> of_find_irq_domain() to determine whether to return -EPROBE_DEFER or
-> > >> not.
-> > >
-> > > Right. Naturally let's do whatever it takes to first fix this issue
-> > > in a minimal way first for the -rc cycle so we can do the longer term
-> > > changes needed.
-> > 
-> > I'm not really convinced there is a simple and safe enough solution for
-> > 3.15. We should also be willing to tag a solution for stable if we take
-> > it for -rc (although that decision could be deferred).
-> 
-> Yes the fix needs to also go to stable. And this is a regression
-> between legacy booting and DT based booting so we do have good
-> reasons to fix this for the -rc cycle. Who knows how many people are
-> hitting this and are tinkering with the driver initcall levels to
-> work around it. Ideally the fix, even if intrusive, would already
-> get us a little bit into the right direction.
-> 
-> > >> You could also go in the other direction and don't create the device
-> > >> until the resources can be resolved. Unlike any of the other
-> > >> solutions, that would work for amba bus as well although we may never
-> > >> have a case where we need this with the amba bus. This would require
-> > >> making of_platform_populate be callable multiple times, but there are
-> > >> already some other reasons for wanting to do that. Specifically, I
-> > >> would like the core code to call of_platform_populate with default
-> > >> options and then only platforms with non-default options need a call
-> > >> to of_platform_populate.
-> > >
-> > > I like this idea as this would also probably remove the the numerous
-> > > dmesg errors we are currently getting for drivers reprobing with
-> > > -EPROBE_DEFER.
-> > 
-> > One issue with my proposal is with supporting modules. IIUC, deferred
-> > probe will continue trying forever and loading modules can cause probe
-> > to succeed. If devices are not created and on the deferred probe list,
-> > then they will not get probed when a module load fixes the dependency.
-> > 
-> > > In the long term we should have platform bus just call a set of
-> > > standardized functions implemented by whatever the data source might
-> > > be. That way we can limit the use of of_* functions in device drivers
-> > > to just parsing of custom bindings in the drivers and use bus specific
-> > > functions for everything else.
-> > >
-> > >> >> Yes, I know we have some drivers which use platform_get_resources() with
-> > >> >> IORESOURCE_IRQ, but they should really use the right accessor.  And those
-> > >> >> who just dereference the resource array directly... get what's coming
-> > >> >> (though of course they have to be fixed.)
-> > >> >
-> > >> > $ git grep IORESOURCE_IRQ drivers/ | grep platform_get_resource | wc -l
-> > >> > 179
-> > >>
-> > >> Certainly, this is worthwhile clean-up no matter what the solution.
-> > >
-> > > Yeah agreed. But let's also consider the IORESOURCE_IRQ as just another
-> > > source for for the bus or driver data in addition to the DT parsed data.
-> > > Both sources of data should work just fine with platform_bus even
-> > > without cleaning up the drivers
-> > 
-> > Ah, right. Except for those drivers you need to work with deferred probe
-> > would have to use platform_get_irq. That fact makes this solution quite
-> > a bit easier.
-> 
-> Yes fixing up the known broken drivers is also doable for the -rc
-> cycle.
->  
-> > Something like this is what you had in mind?
-> > 
-> > diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> > index e714709..5b47210 100644
-> > --- a/drivers/base/platform.c
-> > +++ b/drivers/base/platform.c
-> > @@ -13,6 +13,7 @@
-> >  #include <linux/string.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/of_device.h>
-> > +#include <linux/of_irq.h>
-> >  #include <linux/module.h>
-> >  #include <linux/init.h>
-> >  #include <linux/dma-mapping.h>
-> > @@ -87,7 +88,11 @@ int platform_get_irq(struct platform_device *dev,
-> > unsigned int num)
-> >  		return -ENXIO;
-> >  	return dev->archdata.irqs[num];
-> >  #else
-> > -	struct resource *r = platform_get_resource(dev, IORESOURCE_IRQ, num);
-> > +	struct resource *r;
-> > +	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node)
-> > +		return of_irq_get(dev->dev.of_node, num);
-> > +
-> > +	r = platform_get_resource(dev, IORESOURCE_IRQ, num);
-> > 
-> >  	return r ? r->start : -ENXIO;
-> >  #endif
-> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> > index 7d3184f..30449ad 100644
-> > --- a/drivers/of/irq.c
-> > +++ b/drivers/of/irq.c
-> > @@ -400,6 +400,26 @@ int of_irq_to_resource(struct device_node *dev, int
-> > index, struct resource *r)
-> >  EXPORT_SYMBOL_GPL(of_irq_to_resource);
-> > 
-> >  /**
-> > + * of_irq_get - Decode a node's IRQ and return it as a Linux irq number
-> > + * @dev: pointer to device tree node
-> > + * @index: zero-based index of the irq
-> > + *
-> > + * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
-> > + * is not yet created.
-> > + *
-> > + */
-> > +int of_irq_get(struct device_node *dev, int index)
-> > +{
-> > +	int irq = irq_of_parse_and_map(dev, index);
-> > +
-> > +	if (!irq && of_find_irq_domain(dev, index) == NULL)
-> > +		return -EPROBE_DEFER;
-> > +
-> > +	return irq;
-> > +}
-> 
-> Yeah something like that. That might also work as a pretty
-> minimal fix as long as we fix the known broken drivers to use
-> platform_get_irq().
+Hi Jingoo,
 
-Actually, the above code for of_irq_get() won't help as we're still
-calling irq_of_parse_and_map() before we should. So the nasty warnings
-are still there if the irqdomain is not yet found.
- 
-> But for the long run, how about we define some kind of Linux
-> generic bus ops:
-> 
-> struct bus_ops {
-> 	struct resource *	(*get_resource)(struct device *dev, unsigned int type, unsigned int num);
-> 	int			(get_irq)(struct device *dev, unsigned int num);
-> 	...
-> };
-> 
-> And then DT code would register static of_irq_get() as a get_irq()
-> for the platform_bus. And naturally we'd implement these functions
-> for legacy resources too. And that way platform_bus code stays clear
-> of implementation details and just goes through the list of
-> registered data sources. It may even make sense to do it for the
-> fix to keep the of_* functions private to drivers/of/*.c and the
-> bus code generic.
-> 
-> > +EXPORT_SYMBOL_GPL(of_irq_get);
-> 
-> Probably no need to export this? I don't think we want other
-> code to use this directly..
-> 
-> Regards,
-> 
-> Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+On Tue, Apr 22, 2014 at 7:48 AM, Jingoo Han <jg1.han@samsung.com> wrote:
+> On Wednesday, April 16, 2014 11:49 PM, Vivek Gautam wrote:
+>> On Wed, Apr 16, 2014 at 7:14 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> > On 15.04.2014 08:09, Vivek Gautam wrote:
+>> >> On Thu, Apr 10, 2014 at 5:09 PM, Vivek Gautam wrote:
+>> >>> On Wed, Apr 9, 2014 at 7:03 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+>> >>>> On 09.04.2014 13:49, Vivek Gautam wrote:
+>> >>>
+>> >>> So, USB30_SCLK_100M is the SCLK that we are talking in the driver. I
+>> >>> don't see any reference to XXTI in the USB 3.0 DRD controller chapter
+>> >>> (in both Exynos5250 and 5420)
+>> >>> In addition to this there's one more point to be noticed here.
+>> >>> On Exynos5420 system, the sclk_usbphy300 (which is the sclk_usbphy30
+>> >>> for USB DRD channel 0), is also the PICO phy clock, i.e. USB 2.0 phy
+>> >>> clock.
+>> >>> So we should add a similar clk_get() for this clock in the
+>> >>> phy-exynos5250-usb2 driver too, to support Exynos5420.
+>> >>
+>> >>
+>> >> Is something clear from the above block diagram ? (although the
+>> >> diagram looks weird - space and tabs problem :-(  )
+>> >> Basically there's the clock USB30_SCLK_100M which is going into the
+>> >> USB 3.0 DRD PHY controller.
+>> >> And this is the only sclk mentioned in the block diagram for USB 3.0
+>> >> DRD controller in Exynos5420.
+>> >> Same is not there in the block diagram in Exynos5250 UM.
+>> >
+>> >
+>> > From what I can see in the documentation, there are 4 USB 3.0 related clocks
+>> > generated in CMU:
+>> >
+>> >  - sclk_usbphy300,
+>> >  - sclk_usbphy301,
+>> >  - sclk_usbdrd300,
+>> >  - sclk_usbdrd301,
+>> >
+>> > They are all rated to max. 24 MHz and the recommended operating frequency is
+>> > 24 MHz, so it looks exactly like USB PHY reference, which is usually a 24
+>> > MHz clock.
+>> >
+>> > To me, this looks like on Exynos5420 a separate special clock path is used
+>> > instead of xusbxti as reference of USB 3.0 PHY and so the sclk should be
+>> > simply passed as the "ref" clock.
+>>
+>> Ok, i will clear on this with the hardware engineer also once.
+>> May be Jingoo can help me with this.
+>>
+>> Jingoo,
+>> Can you please enquire about the clock path of usbphy30 reference
+>> clocks on Exynos5420.
+>> As mentioned by Tomasz above, we have sclk_usbphy300 and
+>> sclk_usbphy301 as the reference clocks for USB3.0 DRD phy. *Also*
+>> sclk_usbphy300 is used for Pico phy (which is the USb 2.0 phy used by
+>> ehci/ohci controller on Exynos5420).
+>> It will be of great help.
+>
+> Hi Vevek, Tomasz
+>
+> Long time no see.
+>
+> I asked USB S/W engineer and USB H/W engineer.
+>
+> There are two USB3.0 on Exynos5420; thus there are two sclks
+> such as 'sclk_usbphy300 and sclk_usbphy301'.
+>
+> As Tomasz mentioned, 'sclk_usbphy300 and sclk_usbphy301' can
+> be used instead of 'xusbxti' as reference of USB 3.0 PHY.
+
+Thank you so much for getting this information.
+I can re-spin the patch. :-)
+
+>
+> However, on Exynos5420, "ONLY" 'sclk_usbphy300' can be used
+> for USB2.0 pico phy. (so, '301' CANNOT support USB2.0 pico phy.)
+
+True, for USB 2.0 pico phy, only sclk_usbphy300 can be used.
