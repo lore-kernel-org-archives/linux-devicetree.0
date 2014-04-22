@@ -1,126 +1,41 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH] ASoC: SAMSUNG: Add sound card driver for Snow board
-Date: Tue, 22 Apr 2014 19:17:54 +0530
-Message-ID: <CAHbNUh3G5HLaGXddPgjthWTu_VQ95xo=2Lii2BM6iSc-ipnm=w@mail.gmail.com>
-References: <1398153834-16199-1-git-send-email-tushar.behera@linaro.org>
-	<20140422104447.GK12304@sirena.org.uk>
+From: Jonas Gorski <jogo@openwrt.org>
+Subject: Re: [PATCH RESEND 4/5] ARM: BCM63XX: add BCM963138DVT Reference
+ platform DTS
+Date: Tue, 22 Apr 2014 15:49:52 +0200
+Message-ID: <CAOiHx=mxDeAE0OMOr4dWN1g3_PbwNoJ-7UJ4x6PjeOWdP_hFdA@mail.gmail.com>
+References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com>
+ <1398130758-19456-5-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140422104447.GK12304@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-doc@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, rdunlap@infradead.org, "robh+dt@kernel.org" <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1398130758-19456-5-git-send-email-f.fainelli@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, bcm@fixthebug.org, Arnd Bergmann <arnd@arndb.de>, Kevin Cernekee <cernekee@gmail.com>, mporter@linaro.org, aelder@linaro.org, olof@lixom.net, Maxime Bizon <mbizon@freebox.fr>, jpeshkin@broadcom.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 22 April 2014 16:14, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, Apr 22, 2014 at 01:33:54PM +0530, Tushar Behera wrote:
+On Tue, Apr 22, 2014 at 3:39 AM, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Add a DTS file for the Broadcom BCM963138DVT reference platform board
+> which leverages the bcm63138.dtsi SoC DTSi file.
 >
->> Added machine driver to instantiate I2S based sound card on Snow
->> board. It has MAX98095 audio codec on board.
->
-> In general this isn't up to modern standards, please do try to check
-> that new code is following best practices.  Did the support for setting
-> the clocking up in the device tree get merged already?
->
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  arch/arm/boot/dts/Makefile        |  3 +++
+>  arch/arm/boot/dts/bcm63138dvt.dts | 18 ++++++++++++++++++
+>  2 files changed, 21 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/bcm63138dvt.dts
 
-I didn't get this point. Would you please elaborate?
+Shouldn't the file be called bcm*9*63138dvt.dts, same as the board name?
 
-> Please do also pay attention to the CC lists when posting patches, this
-> seems to have been sent to a fairly random selection of people and
-> lists.
->
 
-Okay, I will update the CC list as per get_maintainer script during
-next revision.
-
->> +     switch (params_format(params)) {
->
-> params_width().
->
->> +     ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
->> +                                          SND_SOC_DAIFMT_NB_NF |
->> +                                          SND_SOC_DAIFMT_CBS_CFS);
->
-> Set this in the dai_link.
->
-
-Ok.
-
-However, setting this in dai_link is not working if I2S is running is
-master mode. The bug is with I2S driver as it is setting rclk_srcrate
-as 0 during startup. I will fix that in another patch.
-
->> +     ret = snd_soc_dai_set_sysclk(codec_dai, 0,
->> +                                     FIN_PLL_RATE, SND_SOC_CLOCK_IN);
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     ret = snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_CDCLK,
->> +                                     0, SND_SOC_CLOCK_OUT);
->> +     if (ret < 0)
->> +             return ret;
->> +
->> +     ret = snd_soc_dai_set_clkdiv(cpu_dai, SAMSUNG_I2S_DIV_BCLK, bfs);
->> +     if (ret < 0)
->> +             return ret;
->
-> Set this stuff up on probe.  I'm surprised that you need to set BCLK at
-> all...
->
-
-Should I create a late_probe call for this (in line with tobermory.c)?
-
-Setting BCLK was an oversight, that is not required. I will remove that.
-
->> +static int snow_init(struct snd_soc_pcm_runtime *rtd)
->> +{
->> +     struct snd_soc_codec *codec = rtd->codec;
->> +     struct snd_soc_dapm_context *dapm = &codec->dapm;
->> +
->> +     snd_soc_dapm_sync(dapm);
->> +
->> +     return 0;
->> +}
->
-> This does nothing, remove it.
->
-
-Sure.
-
->> +     if (!pdev->dev.platform_data && !pdev->dev.of_node) {
->> +             dev_err(&pdev->dev, "No platform data supplied\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     name = of_get_property(pdev->dev.of_node, "card-name", NULL);
->> +     if (name)
->> +             card->name = name;
->> +
->> +     i2s_node = of_parse_phandle(pdev->dev.of_node,
->> +                                 "samsung,i2s-controller", 0);
->> +     if (!i2s_node) {
->> +             dev_err(&pdev->dev,
->> +                     "Property 'i2s-controller' missing or invalid\n");
->> +             return -EINVAL;
->> +     }
->
-> You're allowing platform data above but I see DT is mandatory here.
->
-
-I will keep this as DT only, will remove the above check for platform data.
-
->> +     ret = snd_soc_register_card(card);
->> +     if (ret) {
->> +             dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
->> +             return ret;
->> +     }
->
-> devm_snd_soc_register_card().
-
-Ok.
-
-Thanks for reviewing.
-
--- 
-Tushar Behera
+Regards
+Jonas
