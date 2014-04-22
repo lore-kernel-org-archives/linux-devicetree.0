@@ -1,99 +1,62 @@
-From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 2/3] devcietree: bindings: add some MFD Keymile FPGAs
-Date: Tue, 22 Apr 2014 11:30:30 +0200
-Message-ID: <1398159031-10110-3-git-send-email-valentin.longchamp@keymile.com>
-References: <1398159031-10110-1-git-send-email-valentin.longchamp@keymile.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398159031-10110-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+From: Valentin Longchamp <valentin.longchamp@keymile.com>
+Subject: [PATCH v4 0/3] Support of the kmcoge4 board
+Date: Tue, 22 Apr 2014 11:30:28 +0200
+Message-ID: <1398159031-10110-1-git-send-email-valentin.longchamp@keymile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@freescale.com>, linuxppc-dev@lists.ozlabs.org
+Cc: devicetree@vger.kernel.org, Valentin Longchamp <valentin.longchamp@keymile.com>
 List-Id: devicetree@vger.kernel.org
 
-These are the bindings for 2 MFD devices used on some of the Keymile boards.
-The first one is the chassis managmenet bfticu FPGA.
-The second one is the board controller (reset, LEDs, GPIOs) QRIO CPDL.
-These FPGAs are used in the kmcoge4 board.
-
-Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-
----
-
-Changes in v4:
-- remove the addition of the KEYMILE vendor-prefix as it is already
-  picked by Rob
-- Take Scott's and Rob's comments regarding the bindings for the
-  interrupt-cells into account
-
-Changes in v3:
-- add a patch with the bindings for the KEYMILE FPGAs
-
-Changes in v2: None
-
- Documentation/devicetree/bindings/mfd/bfticu.txt | 25 ++++++++++++++++++++++++
- Documentation/devicetree/bindings/mfd/qriox.txt  | 17 ++++++++++++++++
- 2 files changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/bfticu.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/qriox.txt
-
-diff --git a/Documentation/devicetree/bindings/mfd/bfticu.txt b/Documentation/devicetree/bindings/mfd/bfticu.txt
-new file mode 100644
-index 0000000..65c9077
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/bfticu.txt
-@@ -0,0 +1,25 @@
-+KEYMILE bfticu Chassis Management FPGA
-+
-+The bfticu is a multifunction device that manages the whole chassis.
-+Its main functionality is to collect IRQs from the whole chassis and signals
-+them to a single controller.
-+
-+Required properties:
-+- compatible: "keymile,bfticu"
-+- interrupt-controller: the bfticu FPGA is an interrupt controller
-+- interrupts: the main IRQ line to signal the collected IRQs
-+- #interrupt-cells : is 2 and their usage is compliant to the 2 cells variant
-+  of Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+- interrupt-parent: the parent IRQ ctrl the main IRQ is connected to
-+- reg: access on the parent local bus (chip select, offset in chip select, size)
-+
-+Example:
-+
-+	chassis-mgmt@3,0 {
-+		compatible = "keymile,bfticu";
-+		interrupt-controller;
-+		#interrupt-cells = <2>;
-+		reg = <3 0 0x100>;
-+		interrupt-parent = <&mpic>;
-+		interrupts = <6 1 0 0>;
-+	};
-diff --git a/Documentation/devicetree/bindings/mfd/qriox.txt b/Documentation/devicetree/bindings/mfd/qriox.txt
-new file mode 100644
-index 0000000..f301e2d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/qriox.txt
-@@ -0,0 +1,17 @@
-+KEYMILE qrio Board Control CPLD
-+
-+The qrio is a multifunction device that controls the KEYMILE boards based on
-+the kmp204x design.
-+It is consists of a reset controller, watchdog timer, LEDs, and 2 IRQ capable
-+GPIO blocks.
-+
-+Required properties:
-+- compatible: "keymile,qriox"
-+- reg: access on the parent local bus (chip select, offset in chip select, size)
-+
-+Example:
-+
-+	board-control@1,0 {
-+		compatible = "keymile,qriox";
-+		reg = <1 0 0x80>;
-+	};
--- 
-1.8.0.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+VGhpcyBzZXJpZXMgYWRkcyBzdXBwb3J0IGZvciBLZXltaWxlJ3MgQ09HRTQgYm9hcmQsIGNhbGxl
+ZCBrbWNvZ2U0LiBUaGlzCmJvYXJkIGlzIHRoZSByZWZlcmVuY2UgZGVzaWduIGZvciBmdXJ0aGVy
+IGRlc2lnbnMgYXQgS2V5bWlsZSBhcm91bmQgdGhlClAyMDQwL1AyMDQxIFNvQ3MgZnJvbSBGcmVl
+c2NhbGUuIFRoaXMgcmVmZXJlbmNlIGRlc2lnbiBpcyBpbnRlcm5hbGx5CmNhbGxlZCBrbXAyMDR4
+LgoKQ2hhbmdlcyBpbiB2NDoKLSByZW1vdmUgdGhlIGFkZGl0aW9uIG9mIHRoZSBLRVlNSUxFIHZl
+bmRvci1wcmVmaXggYXMgaXQgaXMgYWxyZWFkeQogIHBpY2tlZCBieSBSb2IKLSBUYWtlIFNjb3R0
+J3MgYW5kIFJvYidzIGNvbW1lbnRzIHJlZ2FyZGluZyB0aGUgYmluZGluZ3MgZm9yIHRoZQogIGlu
+dGVycnVwdC1jZWxscyBpbnRvIGFjY291bnQKLSByZW1vdmUgdGhlIHBhcnRpdGlvbiBsYXlvdXQg
+Zm9yIHRoZSBOQU5EIEZsYXNoIGFzIHdlbGwgYXMgaXQgd2FzCiAgZm9yZ290dGVuCi0gUmViYXNl
+ZCBvbiB0b3Agb2YgdjMuMTUtcmMxCgpDaGFuZ2VzIGluIHYzOgotIGFkZCBhIHBhdGNoIHdpdGgg
+dGhlIGJpbmRpbmdzIGZvciB0aGUgS0VZTUlMRSBGUEdBcwotIGFkZCB0aGUgY29tcGF0aWJsZSBz
+dHJpbmdzIGZvciB0aGUgbG9jYWxidXMgbm9kZXMKLSByZW1vdmUgdGhlIElSUSBwYXJ0IG9mIHRo
+ZSBib2FyZC1jb250cm9sIG5vZGUgYXMgaXQgaXMgY3VycmVudGx5IGJlaW5nCiAgcmV3b3JrZWQK
+CkNoYW5nZXMgaW4gdjI6Ci0gYWRkIGEgcGF0Y2ggc28gdGhhdCB0aGUgWmFybGluayB2ZW5kb3Ig
+cHJlZml4IGlzIGRlZmluZWQKLSBhZGQgc29tZSBub2RlcyBvbiB0aGUgbG9jYWxidXMgQ1Mgd2hl
+biBwb3NzaWJsZQotIG9ubHkgdXNlIHRoZSBjb3JlbmV0X2dlbmVyaWMgbWFjaGluZSBhbmQgYWRk
+IGttY29nZTQgdG8gdGhlIHN1cHBvcnRlZAogIGJvYXJkcyBpbnN0ZWFkIG9mIGRlZmluaW5nIGEg
+bmV3IGttcDIwNHggbWFjaGluZQotIHNldCBiZXR0ZXIgYW5kIG1vcmUgcHJlY2lzZSBkZXZpY2Ug
+bm9kZXMgZm9yIHRoZSBzcGkgZGV2aWNlcwotIHJlbW92ZSB0aGUgcGFydGlvbiBsYXlvdXQgZm9y
+IHRoZSBzcGlfZmxhc2hAMAoKVmFsZW50aW4gTG9uZ2NoYW1wICgzKToKICBkZXZpY2V0cmVlOiBi
+aW5kaW5nczogYWRkIFphcmxpbmsgdG8gdGhlIHZlbmRvciBwcmVmaXhlcwogIGRldmNpZXRyZWU6
+IGJpbmRpbmdzOiBhZGQgc29tZSBNRkQgS2V5bWlsZSBGUEdBcwogIHBvd2VycGMvbXBjODV4eDog
+YWRkIHN1cHBvcnQgZm9yIEtleW1pbGUncyBrbWNvZ2U0IGJvYXJkCgogRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9iZnRpY3UudHh0ICAgfCAgMjUgKysrCiBEb2N1bWVudGF0
+aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3FyaW94LnR4dCAgICB8ICAxNyArKwogLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCAgICAgICAgfCAgIDEgKwogYXJj
+aC9wb3dlcnBjL2Jvb3QvZHRzL2ttY29nZTQuZHRzICAgICAgICAgICAgICAgICAgfCAxNTIgKysr
+KysrKysrKysrKysKIGFyY2gvcG93ZXJwYy9jb25maWdzLzg1eHgva21wMjA0eF9kZWZjb25maWcg
+ICAgICAgIHwgMjI1ICsrKysrKysrKysrKysrKysrKysrKwogYXJjaC9wb3dlcnBjL3BsYXRmb3Jt
+cy84NXh4L0tjb25maWcgICAgICAgICAgICAgICAgfCAgIDIgKy0KIGFyY2gvcG93ZXJwYy9wbGF0
+Zm9ybXMvODV4eC9jb3JlbmV0X2dlbmVyaWMuYyAgICAgIHwgICAzICstCiA3IGZpbGVzIGNoYW5n
+ZWQsIDQyMyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAwNjQ0
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvYmZ0aWN1LnR4dAogY3JlYXRl
+IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvcXJpb3gu
+dHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ttY29nZTQuZHRz
+CiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9wb3dlcnBjL2NvbmZpZ3MvODV4eC9rbXAyMDR4X2Rl
+ZmNvbmZpZwoKLS0gCjEuOC4wLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3Rz
+Lm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRl
+dg==
