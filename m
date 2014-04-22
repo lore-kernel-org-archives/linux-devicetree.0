@@ -1,84 +1,49 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
-Date: Tue, 22 Apr 2014 09:57:26 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1404220956210.1326-100000@iolanthe.rowland.org>
-References: <CALHRZur7+MaYXbWOfbvjggPN7_eYAE+th5VNbcLP=ehvm0HGsA@mail.gmail.com>
+From: Leif Lindholm <leif.lindholm@linaro.org>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Tue, 22 Apr 2014 15:05:26 +0100
+Message-ID: <20140422140526.GK5904@bivouac.eciton.net>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
+ <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+ <20140418124821.GE5904@bivouac.eciton.net>
+ <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
+ <20140422130829.CA29DC4042C@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CALHRZur7+MaYXbWOfbvjggPN7_eYAE+th5VNbcLP=ehvm0HGsA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20140422130829.CA29DC4042C@trevor.secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sundeep subbaraya <sundeep.lkml@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michals@xilinx.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linaro Patches <patches@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Apr 2014, sundeep subbaraya wrote:
-
-> Hi,
+On Tue, Apr 22, 2014 at 02:08:29PM +0100, Grant Likely wrote:
+> > I would prefer to see a "WARN_ON(!IS_ENABLED(CONFIG_PPC32));" added here.
 > 
-> On Mon, Apr 21, 2014 at 10:09 PM, Alan Stern <stern@rowland.harvard.edu> wrote:
-> > On Mon, 21 Apr 2014, Felipe Balbi wrote:
-> >
-> >> Hi,
-> >>
-> >> On Fri, Apr 18, 2014 at 07:34:08PM +0530, sundeep subbaraya wrote:
-> >>
-> >> <snip>
-> >>
-> >> > >> in ep_queue driver starts dma transfer from/to IP buffer to/from req->buf.
-> >> > >> If transfer is completed then request is not added to ep request queue
-> >> > >> and returns from ep_queue.
-> >> > >> If transfer is not completed (actual < length) then request is added
-> >> > >> to queue and returns from ep_queue.
-> >> > >
-> >> > > This is wrong. Why wouldn't you give gadget driver the chance to decide
-> >> > > if it needs to queue the request again or not ?
-> >> >
-> >> > When does gadget driver decides to queue the same request again?
-> >> > if -EBUSY is returned from ep_queue or req.status != 0 in completion
-> >> > routine?
-> >>
-> >> whenever it so decides. Different gadget drivers might have different
-> >> requirements. The code is open and sits under drivers/usb/gadget/ why
-> >> don't you have a read ?
-> >
-> > I get the impression that the two of you are arguing past each other.
-> > It appears that Sundeep is talking about transferring data from the
-> > gadget driver's buffer to an internal buffer in the UDC hardware, but
-> > Felipe is talking about transferring data from the UDC to the host.
-> >
-> > As I understand it, Sundeep said that when the gadget driver queues a
-> > data-IN request, the UDC driver copies as much of the data buffer as
-> > possible into a hardware FIFO.  If it succeeds in copying all the data
-> > into the FIFO then the request's completion routine gets called
-> > immediately, even though the data doesn't get sent from the FIFO to the
-> > host until the host asks for it.
-> >
-> > If only part of the data can be copied into the FIFO then the request
-> > is added to the ep's request queue before the usb_ep_queue() call
-> > returns.  When space becomes available in the FIFO, the data will be
-> > copied and eventually sent to the host.  When all the data has been
-> > copied to the FIFO, the request's completion routine will be called.
-> >
-> > Thus there never is any need for the gadget driver to queue the request
-> > again.  An incomplete transfer means the FIFO didn't have enough room
-> > when the request was submitted; it doesn't mean that the data didn't
-> > eventually get sent to the host.
-> 
-> Exactly Alan,this is what I was trying to say. Probably I was not
-> clear in explaining. I didnt see
-> any harm this way and even this implementation is same like
-> at91_udc.c. I have been reading
-> mas_storage to understand when does gadget driver tries to enqueue a
-> request again. Since
-> different gadget drivers might have different requirements (agree with
-> Felipe), wanted to
-> know criteria for queuing a same request again.
-> 
-> I will change this implementation as per Felipe comments and test with
-> some of the gadgets.
+> I completely agree.
 
-Wait until you hear what Felipe has to say about this discussion.  
-Maybe he will decide that the original implementation was correct.
+OK. So do we keep this around on unaffected architectures in perpetuity?
 
-Alan Stern
+Or can there be some cut-off date when the majority of DT-enabled
+platforms can stop including this workaround which permits new incorrect
+DTs to be implemented so long as they are incorrect in this particular
+way?
+
+> > Really, I would like to see quirks like this fixed up out of line from
+> > the normal flow somewhat like how PCI quirks are handled. So in this
+> > example, we would just add the missing property to the dtb for the
+> > broken platform before doing the memory scan. That does then require
+> > libfdt which is something I'm working on.
+> 
+> In fact, for Leif's purposes, I would rather have a flag when booting via
+> UEFI, and make the kernel skip the memory node parsing if the UEFI
+> memory map is available. Then the stub doesn't need to do any munging of
+> the DTB at all.
+
+The reason for me doing that is because we (including you) agreed at
+the discussion held during LCU13 that this was the safest way of
+preventing "mischief" like userland trying to read information from
+/proc/device-tree...
+
+/
+    Leif
