@@ -1,123 +1,137 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: SAMSUNG: Add sound card driver for Snow board
-Date: Tue, 22 Apr 2014 11:44:47 +0100
-Message-ID: <20140422104447.GK12304@sirena.org.uk>
-References: <1398153834-16199-1-git-send-email-tushar.behera@linaro.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
+Date: Tue, 22 Apr 2014 12:45:52 +0200
+Message-ID: <7337945.Kibhmj51LR@wuerfel>
+References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com> <1398130758-19456-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cqUZ7tFrnhCvEBfZ"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398153834-16199-1-git-send-email-tushar.behera@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rdunlap@infradead.org, robh+dt@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398130758-19456-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Monday 21 April 2014 18:39:14 Florian Fainelli wrote:
+> This patch adds basic support for the Broadcom BCM63138 DSL SoC which is
+> using a dual-core Cortex A9 system. Add the very minimum required code
+> boot Linux on this SoC.
+> 
+> Due to the two specific register address spaces located at 0x8000_0000
+> and 0xfffe_0000, we need to setup a specific iotable descriptor for
+> those to be remapped at the expected virtual addresses.
 
---cqUZ7tFrnhCvEBfZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+What is the significance of the "expected virtual address"? All drivers
+nowadays should call ioremap() and use whatever virtual address comes
+out of that.
 
-On Tue, Apr 22, 2014 at 01:33:54PM +0530, Tushar Behera wrote:
+> Finally, the PL310 cache controller requires a bit of tweaking before
+> handing its initialization over l2x0_of_init(), this is also taken care
+> of to make sure that its size is properly configured.
 
-> Added machine driver to instantiate I2S based sound card on Snow
-> board. It has MAX98095 audio codec on board.
+Russell has just spent a lot of work on cleaning up the l2x0 setup
+of various platforms. I really don't want to see new platform specific
+code for this.
 
-In general this isn't up to modern standards, please do try to check
-that new code is following best practices.  Did the support for setting
-the clocking up in the device tree get merged already?
+> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
+> index 49c914cd9c7a..26b51bcf878c 100644
+> --- a/arch/arm/mach-bcm/Kconfig
+> +++ b/arch/arm/mach-bcm/Kconfig
+> @@ -69,6 +69,26 @@ config ARCH_BCM_5301X
+>  	  different SoC or with the older BCM47XX and BCM53XX based
+>  	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
+>  
+> +config ARCH_BCM_63XX
+> +	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
+> +	depends on MMU
+> +	select ARM_ERRATA_754322
+> +	select ARM_ERRATA_764369 if SMP
+> +	select ARM_GIC
+> +	select ARM_GLOBAL_TIMER
+> +	select CACHE_L2X0
+> +	select COMMON_CLK
+> +	select CPU_V7
+> +	select GENERIC_CLOCKEVENTS
+> +	select HAVE_ARM_ARCH_TIMER
+> +	select HAVE_ARM_TWD if SMP
+> +	select HAVE_ARM_SCU if SMP
+> +	select HAVE_SMP
 
-Please do also pay attention to the CC lists when posting patches, this
-seems to have been sent to a fairly random selection of people and
-lists.
+A lot of these are already selected by ARCH_MULTI_V7 and can be
+omitted here.
 
-> +	switch (params_format(params)) {
-
-params_width().
-
-> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
-> +					     SND_SOC_DAIFMT_NB_NF |
-> +					     SND_SOC_DAIFMT_CBS_CFS);
-
-Set this in the dai_link.
-
-> +	ret = snd_soc_dai_set_sysclk(codec_dai, 0,
-> +					FIN_PLL_RATE, SND_SOC_CLOCK_IN);
-> +	if (ret < 0)
-> +		return ret;
+> +#ifndef __ARM_BCM63XX_H
+> +#define __ARM_BCM63XX_H
 > +
-> +	ret = snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_CDCLK,
-> +					0, SND_SOC_CLOCK_OUT);
-> +	if (ret < 0)
-> +		return ret;
+> +#define IO_ADDRESS(x)		(((x) & 0x00ffffff) + 0xfc000000)
 > +
-> +	ret = snd_soc_dai_set_clkdiv(cpu_dai, SAMSUNG_I2S_DIV_BCLK, bfs);
-> +	if (ret < 0)
-> +		return ret;
+> +/* AHB register space */
+> +#define BCM63XX_AHB_PHYS	0x80001000
+> +#define BCM63XX_AHB_VIRT	IO_ADDRESS(BCM63XX_AHB_PHYS)
+> +#define BCM63XX_AHB_SIZE	0x800000
+> +
+> +/* PERIPH (legacy) register space */
+> +#define BCM63XX_PERIPH_PHYS	0xfffe8000
+> +#define BCM63XX_PERIPH_VIRT	IO_ADDRESS(BCM63XX_PERIPH_PHYS)
+> +#define BCM63XX_PERIPH_SIZE	0x10000
 
-Set this stuff up on probe.  I'm surprised that you need to set BCLK at
-all...
+You shouldn't need these any more. If you do, just move all of this
+into the main file, to ensure no other file accidentally relies
+on hardcoded values.
 
-> +static int snow_init(struct snd_soc_pcm_runtime *rtd)
+Note that BCM63XX_AHB_PHYS is nor aligned, so AFAICT you don't
+actually get a huge page entry for it, and there is no point
+doing this at all, as it has neither functional nor performance
+relevance.
+
+You may have out-of-tree drivers that you haven't cleaned up
+or posted yet relying on specific static mappings, but that is
+no reason to have these mappings in the mainline kernel.
+
+> diff --git a/arch/arm/mach-bcm/board_bcm63xx.c b/arch/arm/mach-bcm/board_bcm63xx.c
+> new file mode 100644
+> index 000000000000..a779aca673c4
+> --- /dev/null
+> +++ b/arch/arm/mach-bcm/board_bcm63xx.c
+
+Maybe just "bcm63xx.c"? We don't really do "board" files any more.
+
+> +static void __init bcm63xx_l2cc_init(void)
 > +{
-> +	struct snd_soc_codec *codec = rtd->codec;
-> +	struct snd_soc_dapm_context *dapm = &codec->dapm;
+> +	u32 auxctl_val = 0, auxctl_msk = ~0UL;
 > +
-> +	snd_soc_dapm_sync(dapm);
+> +	/* 16-way cache */
+> +	auxctl_val |= (1 << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
+> +	auxctl_msk &= ~(1 << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
+> +	/* 32 KB */
+> +	auxctl_val |= (2 << L2X0_AUX_CTRL_WAY_SIZE_SHIFT);
+> +	auxctl_msk &= ~(L2X0_AUX_CTRL_WAY_SIZE_MASK);
 > +
-> +	return 0;
+> +	/*
+> +	 * Set bit 22 in the auxiliary control register. If this bit
+> +	 * is cleared, PL310 treats Normal Shared Non-cacheable
+> +	 * accesses as Cacheable no-allocate.
+> +	 */
+> +	auxctl_val |= (1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT);
+> +
+> +	/* Allow non-secure access */
+> +	auxctl_val |= (1 << L2X0_AUX_CTRL_NS_INT_CTRL_SHIFT);
+> +	/* Instruction prefetch */
+> +	auxctl_val |= (1 << L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT);
+> +	/* Early BRESP */
+> +	auxctl_val |= (1 << L2X0_AUX_CTRL_EARLY_BRESP_SHIFT);
+> +
+> +	l2x0_of_init(auxctl_val, auxctl_msk);
 > +}
 
-This does nothing, remove it.
+What are the power-on values of bits you override here? Are you sure
+you have to force all of them?
 
-> +	if (!pdev->dev.platform_data && !pdev->dev.of_node) {
-> +		dev_err(&pdev->dev, "No platform data supplied\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	name = of_get_property(pdev->dev.of_node, "card-name", NULL);
-> +	if (name)
-> +		card->name = name;
-> +
-> +	i2s_node = of_parse_phandle(pdev->dev.of_node,
-> +				    "samsung,i2s-controller", 0);
-> +	if (!i2s_node) {
-> +		dev_err(&pdev->dev,
-> +			"Property 'i2s-controller' missing or invalid\n");
-> +		return -EINVAL;
-> +	}
+Don't we already have ways to specify the same things in DT properties?
 
-You're allowing platform data above but I see DT is mandatory here.
-
-> +	ret = snd_soc_register_card(card);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
-> +		return ret;
-> +	}
-
-devm_snd_soc_register_card().
-
---cqUZ7tFrnhCvEBfZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTVkgcAAoJELSic+t+oim9gwYQAJBsHURQWvolGhdfIdpsyJ7j
-V53YeEWQBHQEq9R/FOdvHwjlbgc0Kl1dT7SwueuSBBigLx7tW1KfT32g8nV9oSgw
-2/7xL1EmOTZciOHgO8hLcD7Yv29hb4YLiqfyM/gSl6Ck5o16+zJSnLbZqUdg/ffW
-1gfdM7nArNl10xGdPh/3azX8R0wNUBIfRFYtuwRxjdzJHKKe0bJOyxlM6eoSYXCG
-ojKQSFEBIlAdqA7acMxp+w88ssxxJAjYN5wB0sOWuz2q5oIgrhCyMCWU/xcM78qq
-SQbWEEwsShAs1QxVM8zr1kU00TTzrPc8SRa4kuJo9RNXWzYnf2OymwI2qMjNNdpS
-2uISuVLqzLXI6dZFw6aMJMMLOYxHzrQg5HH8sEVoKy+pDhlQMNyM//zRBWxpbc96
-UIJt29yS+eheGFZcQF49WD0bQXG8ZFYp2xqRTlnbvuJMPs8lDo5hYJvtwiHR5kJA
-GNf9LkJQ09QeksLgXvwWBUy9M6G6KNx2bERUejf9LhSq0GImwL20e/hkRW8CQeB4
-x9+AIIG/7VKoXnIBpCs5o9n43SHKPBlBFTObxqj1G6I2tdgy0E5M67Q3K4t9lfOi
-rZhjIgJLkj1gi9LZbSqVFfryM5xKB1enM79aMnpaTJDray916zSrac9X1bth1fTZ
-cTfaHrEFGdLx440EM+Oq
-=nbGw
------END PGP SIGNATURE-----
-
---cqUZ7tFrnhCvEBfZ--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
