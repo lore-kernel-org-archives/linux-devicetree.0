@@ -1,59 +1,97 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 5/5] arm: exynos: Add MCPM call-back functions
-Date: Mon, 21 Apr 2014 22:11:07 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1404212207210.980@knanqh.ubzr>
-References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com> <1397239311-27717-6-git-send-email-a.kesavan@samsung.com> <alpine.LFD.2.11.1404111426510.980@knanqh.ubzr> <20140414104116.GA3844@e103592.cambridge.arm.com> <alpine.LFD.2.11.1404140956060.980@knanqh.ubzr>
- <20140415083615.GC3596@e103592.cambridge.arm.com> <CAM4voamo5iiOQ5P1JyO8kekU6cuxoj4oAT+VpS14LNvWqw_T4g@mail.gmail.com> <20140417100302.GB18864@e103592.cambridge.arm.com> <CAM4voamiJ-HZqz8Rgc-RTCjNRDaw5VQbs6GVfxPDxqCKKhm6XA@mail.gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Tue, 22 Apr 2014 11:18:41 +0900
+Message-ID: <001101cf5dd1$2e04d390$8a0e7ab0$%han@samsung.com>
+References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com>
+ <1396967803-28868-2-git-send-email-gautam.vivek@samsung.com>
+ <534529B2.2020107@samsung.com>
+ <CAFp+6iEzaxCQNkGZWuBnAaAHk0uXrX4KhjVbaJfZFChB6uzk4A@mail.gmail.com>
+ <53454C11.7060607@samsung.com>
+ <CAFp+6iHU0YXj18ajDwOqPh_SJWr6GkMPRr6qaGdmPoCc0+tz5g@mail.gmail.com>
+ <CAFp+6iH7-O8pNNMrk7Yhg1u+DXcXD1Tp9RYdiFg+-Om5Toojfw@mail.gmail.com>
+ <534E892B.6090409@samsung.com>
+ <CAFp+6iGYfz+ZT9zxgeVefLhtb0mb-=K4faUZC+1FtQoO0hMoqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAM4voamiJ-HZqz8Rgc-RTCjNRDaw5VQbs6GVfxPDxqCKKhm6XA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iGYfz+ZT9zxgeVefLhtb0mb-=K4faUZC+1FtQoO0hMoqw@mail.gmail.com>
+Content-language: ko
+Sender: linux-doc-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautam.vivek@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>
+Cc: 'Linux USB Mailing List' <linux-usb@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 'kishon' <kishon@ti.com>, 'Greg KH' <gregkh@linuxfoundation.org>, 'Felipe Balbi' <balbi@ti.com>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Kamil Debski' <k.debski@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 Apr 2014, Abhilash Kesavan wrote:
-
-> Hi Dave,
+On Wednesday, April 16, 2014 11:49 PM, Vivek Gautam wrote:
+> On Wed, Apr 16, 2014 at 7:14 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> > On 15.04.2014 08:09, Vivek Gautam wrote:
+> >> On Thu, Apr 10, 2014 at 5:09 PM, Vivek Gautam wrote:
+> >>> On Wed, Apr 9, 2014 at 7:03 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> >>>> On 09.04.2014 13:49, Vivek Gautam wrote:
+> >>>
+> >>> So, USB30_SCLK_100M is the SCLK that we are talking in the driver. I
+> >>> don't see any reference to XXTI in the USB 3.0 DRD controller chapter
+> >>> (in both Exynos5250 and 5420)
+> >>> In addition to this there's one more point to be noticed here.
+> >>> On Exynos5420 system, the sclk_usbphy300 (which is the sclk_usbphy30
+> >>> for USB DRD channel 0), is also the PICO phy clock, i.e. USB 2.0 phy
+> >>> clock.
+> >>> So we should add a similar clk_get() for this clock in the
+> >>> phy-exynos5250-usb2 driver too, to support Exynos5420.
+> >>
+> >>
+> >> Is something clear from the above block diagram ? (although the
+> >> diagram looks weird - space and tabs problem :-(  )
+> >> Basically there's the clock USB30_SCLK_100M which is going into the
+> >> USB 3.0 DRD PHY controller.
+> >> And this is the only sclk mentioned in the block diagram for USB 3.0
+> >> DRD controller in Exynos5420.
+> >> Same is not there in the block diagram in Exynos5250 UM.
+> >
+> >
+> > From what I can see in the documentation, there are 4 USB 3.0 related clocks
+> > generated in CMU:
+> >
+> >  - sclk_usbphy300,
+> >  - sclk_usbphy301,
+> >  - sclk_usbdrd300,
+> >  - sclk_usbdrd301,
+> >
+> > They are all rated to max. 24 MHz and the recommended operating frequency is
+> > 24 MHz, so it looks exactly like USB PHY reference, which is usually a 24
+> > MHz clock.
+> >
+> > To me, this looks like on Exynos5420 a separate special clock path is used
+> > instead of xusbxti as reference of USB 3.0 PHY and so the sclk should be
+> > simply passed as the "ref" clock.
 > 
-> On Thu, Apr 17, 2014 at 3:33 PM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Thu, Apr 17, 2014 at 12:41:31AM +0530, Abhilash Kesavan wrote:
-> >> The polling loop in the above function was added to ensure that the
-> >> cluster is switched on before we power on the individual cores in
-> >> exynos_power_up. This is only required when the first man comes up.
-> >
-> > Is this only required on power-up, not power-down?  I don't see a call
-> > to exynos_cluster_power_control(..., 0), but maybe I'm looking in the
-> > wrong place.
-> No, you have not missed it. As of now, we are turning on both the L2s
-> for 8 core bring-up and then not turning it off (if all 4 cores in the
-> clusters are down). Turning the L2 off (A15 L2 mainly) brings in
-> significant power savings and I will be looking at adding support for
-> this next.
+> Ok, i will clear on this with the hardware engineer also once.
+> May be Jingoo can help me with this.
+> 
+> Jingoo,
+> Can you please enquire about the clock path of usbphy30 reference
+> clocks on Exynos5420.
+> As mentioned by Tomasz above, we have sclk_usbphy300 and
+> sclk_usbphy301 as the reference clocks for USB3.0 DRD phy. *Also*
+> sclk_usbphy300 is used for Pico phy (which is the USb 2.0 phy used by
+> ehci/ohci controller on Exynos5420).
+> It will be of great help.
 
-Good.  Please add a comment in the code to that effect in the mean time.
+Hi Vevek, Tomasz
 
-> > I wonder whether this is needed, though.  It imposes a requirement on
-> > the OS to waste time polling for the cluster to come online.  Can the
-> > hardware not cope with a CPU poweron request being pending already before
-> > the cluster is powered on?  If that were possible, there would be no need
-> > for an extra poll.
-> No, we need to ensure that the cluster L2 is turned On before we can
-> turn the core on, the hardware does not handle it.
-> >
-> > How long do you expect to need to poll for?
-> In internal testing when we are turning the cluster on from an off
-> state, I have seen the loop being executed 3-4 times occasionally
-> during ageing tests. Generally, the status returns as being powered ON
-> immediately.
+Long time no see.
 
-Looping 3-4 times is pretty reasonable.  We certainly can live with 
-that.
+I asked USB S/W engineer and USB H/W engineer.
 
+There are two USB3.0 on Exynos5420; thus there are two sclks
+such as 'sclk_usbphy300 and sclk_usbphy301'.
 
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As Tomasz mentioned, 'sclk_usbphy300 and sclk_usbphy301' can
+be used instead of 'xusbxti' as reference of USB 3.0 PHY.
+
+However, on Exynos5420, "ONLY" 'sclk_usbphy300' can be used
+for USB2.0 pico phy. (so, '301' CANNOT support USB2.0 pico phy.)
+
+Best regards,
+Jingoo Han
+
