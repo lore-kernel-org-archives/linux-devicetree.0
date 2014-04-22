@@ -1,83 +1,79 @@
-From: Wenyou Yang <wenyou.yang@atmel.com>
-Subject: [PATCH v2.0] ARM: dts: at91-sama5d3_xplained: add the regulator device node
-Date: Tue, 22 Apr 2014 11:28:02 +0800
-Message-ID: <1398137282-4864-1-git-send-email-wenyou.yang@atmel.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH 1/2] gpio: pl061: get gpio base from alias id
+Date: Tue, 22 Apr 2014 06:44:17 +0300
+Message-ID: <20140422034417.GA4652@tarshish>
+References: <1398130543-19454-1-git-send-email-haojian.zhuang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: nicolas.ferre@atmel.com, broonie@kernel.org, alexandre.belloni@free-electrons.com, robh+dt@kernel.org, linux@arm.linux.org.u
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wenyou.yang@atmel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398130543-19454-1-git-send-email-haojian.zhuang@linaro.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: xuwei5@hisilicon.com, linus.walleij@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Wenyou Yang <wenyou.yang@atmel.com>
----
-Hi Nicolas,
+Hi Haojian Zhuang,
 
-This patch is based on the branch: at91-3.16-dt
-	git://github.com/at91linux/linux-at91.git
+On Tue, Apr 22, 2014 at 09:35:42AM +0800, Haojian Zhuang wrote:
+> If gpio base number isn't specified, the gpio base will be find from
+> the end of gpio number. In order to keep with schematics, use alias
+> to get the ID of gpio chip.
+> 
+> Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+> ---
+>  .../devicetree/bindings/gpio/gpio-pl061.txt        | 31 ++++++++++++++++++++++
 
-Best Regards,
-Wenyou Yang
+Binding documentation should be done in a separate patch.
 
-Changelog:
-v2.0
- 1./ Remove vddana_reg's property: regulator-always-on.
+>  drivers/gpio/gpio-pl061.c                          | 14 +++++++++-
+>  2 files changed, 44 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-pl061.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pl061.txt b/Documentation/devicetree/bindings/gpio/gpio-pl061.txt
+> new file mode 100644
+> index 0000000..164b5ba
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pl061.txt
+> @@ -0,0 +1,31 @@
+> +PL061 GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible:
+> +  - "arm,pl061", "arm,primecell".
+> +- #gpio-cells : Should be two.
+> +  - first cell is the gpio pin number
+> +  - second cell is used to specify the gpio polarity:
+> +      0 = active high
+> +      1 = active low
+> +- gpio-controller : Marks the device node as a GPIO controller.
+> +- interrupt-controller : Marks the device node as an interrupt controller.
+> +- #interrupt-cells : Should be two.
+> +  - first cell is the hw irq number
+> +  - second cell is used to specify the interrupt type:
+> +      0 = default, unspecified type
+> +      1 = rising edge triggered
+> +      2 = falling edge triggered
+> +      4 = high level triggered
+> +      8 = low level triggered
+> +
+> +Example:
+> +	gpio0: gpio@fc806000 {
+> +		compatible = "arm,pl061", "arm,primecell";
+> +		reg = <0xfc806000 0x1000>;
+> +		interrupts = <0 64 0x4>;
 
- arch/arm/boot/dts/at91-sama5d3_xplained.dts |   41 +++++++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
+The "interrupts" property should be mentioned above.
 
-diff --git a/arch/arm/boot/dts/at91-sama5d3_xplained.dts b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-index ce13755..8361617 100644
---- a/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-+++ b/arch/arm/boot/dts/at91-sama5d3_xplained.dts
-@@ -48,6 +48,47 @@
- 
- 			i2c1: i2c@f0018000 {
- 				status = "okay";
-+
-+				pmic: act8865@5b {
-+					compatible = "active-semi,act8865";
-+					reg = <0x5b>;
-+					status = "okay";
-+
-+					regulators {
-+						vcc_1v8_reg: DCDC_REG1 {
-+							regulator-name = "VCC_1V8";
-+							regulator-min-microvolt = <1800000>;
-+							regulator-max-microvolt = <1800000>;
-+							regulator-always-on;
-+						};
-+
-+						vcc_1v2_reg: DCDC_REG2 {
-+							regulator-name = "VCC_1V2";
-+							regulator-min-microvolt = <1200000>;
-+							regulator-max-microvolt = <1200000>;
-+							regulator-always-on;
-+						};
-+
-+						vcc_3v3_reg: DCDC_REG3 {
-+							regulator-name = "VCC_3V3";
-+							regulator-min-microvolt = <3300000>;
-+							regulator-max-microvolt = <3300000>;
-+							regulator-always-on;
-+						};
-+
-+						vddfuse_reg: LDO_REG1 {
-+							regulator-name = "FUSE_2V5";
-+							regulator-min-microvolt = <2500000>;
-+							regulator-max-microvolt = <2500000>;
-+						};
-+
-+						vddana_reg: LDO_REG2 {
-+							regulator-name = "VDDANA";
-+							regulator-min-microvolt = <3300000>;
-+							regulator-max-microvolt = <3300000>;
-+						};
-+					};
-+				};
- 			};
- 
- 			macb0: ethernet@f0028000 {
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells = <2>;
+> +	};
+
+baruch
+
 -- 
-1.7.9.5
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.2.679.5364, http://www.tkos.co.il -
