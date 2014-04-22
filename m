@@ -1,7 +1,7 @@
 From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
-Date: Mon, 21 Apr 2014 18:39:14 -0700
-Message-ID: <1398130758-19456-2-git-send-email-f.fainelli@gmail.com>
+Subject: [PATCH RESEND 2/5] ARM: BCM63XX: add low-level UART debug support
+Date: Mon, 21 Apr 2014 18:39:15 -0700
+Message-ID: <1398130758-19456-3-git-send-email-f.fainelli@gmail.com>
 References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1398130758-19456-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -10,220 +10,124 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic support for the Broadcom BCM63138 DSL SoC which is
-using a dual-core Cortex A9 system. Add the very minimum required code
-boot Linux on this SoC.
-
-Due to the two specific register address spaces located at 0x8000_0000
-and 0xfffe_0000, we need to setup a specific iotable descriptor for
-those to be remapped at the expected virtual addresses.
-
-Finally, the PL310 cache controller requires a bit of tweaking before
-handing its initialization over l2x0_of_init(), this is also taken care
-of to make sure that its size is properly configured.
+Broadcom BCM63xx DSL SoCs have a different UART implementation for which
+we need specially crafted low-level debug assembly code to support. Add
+support for this using the standard definitions provided in
+include/linux/serial_bcm63xx.h (shared with their MIPS counterparts).
 
 Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/arm/bcm/bcm63138.txt       |  9 +++
- arch/arm/mach-bcm/Kconfig                          | 20 +++++
- arch/arm/mach-bcm/Makefile                         |  1 +
- arch/arm/mach-bcm/bcm63xx.h                        | 29 +++++++
- arch/arm/mach-bcm/board_bcm63xx.c                  | 94 ++++++++++++++++++++++
- 5 files changed, 153 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
- create mode 100644 arch/arm/mach-bcm/bcm63xx.h
- create mode 100644 arch/arm/mach-bcm/board_bcm63xx.c
+ arch/arm/Kconfig.debug            | 18 ++++++++++++++++--
+ arch/arm/include/debug/bcm63xxx.S | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/include/debug/bcm63xxx.S
 
-diff --git a/Documentation/devicetree/bindings/arm/bcm/bcm63138.txt b/Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
-new file mode 100644
-index 000000000000..bd49987a8812
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
-@@ -0,0 +1,9 @@
-+Broadcom BCM63138 DSL System-on-a-Chip device tree bindings
-+-----------------------------------------------------------
-+
-+Boards compatible with the BCM63138 DSL System-on-a-Chip should have the
-+following properties:
-+
-+Required root node property:
-+
-+compatible: should be "brcm,bcm63138"
-diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-index 49c914cd9c7a..26b51bcf878c 100644
---- a/arch/arm/mach-bcm/Kconfig
-+++ b/arch/arm/mach-bcm/Kconfig
-@@ -69,6 +69,26 @@ config ARCH_BCM_5301X
- 	  different SoC or with the older BCM47XX and BCM53XX based
- 	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 4a2fc0bf6fc9..321bc679ff8c 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -122,6 +122,11 @@ choice
+ 		  mobile SoCs in the Kona family of chips (e.g. bcm28155,
+ 		  bcm11351, etc...)
  
-+config ARCH_BCM_63XX
-+	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
-+	depends on MMU
-+	select ARM_ERRATA_754322
-+	select ARM_ERRATA_764369 if SMP
-+	select ARM_GIC
-+	select ARM_GLOBAL_TIMER
-+	select CACHE_L2X0
-+	select COMMON_CLK
-+	select CPU_V7
-+	select GENERIC_CLOCKEVENTS
-+	select HAVE_ARM_ARCH_TIMER
-+	select HAVE_ARM_TWD if SMP
-+	select HAVE_ARM_SCU if SMP
-+	select HAVE_SMP
-+	help
-+	  This enables support for systems based on Broadcom DSL SoCs.
-+	  It currently supports the 'BCM63XX' ARM-based family, which includes
-+	  the BCM63138 variant.
++	config DEBUG_BCM63XX
++		bool "Kernel low-level debugging on BCM63XX UART"
++		depends on ARCH_BCM_63XX
++		select DEBUG_UART_BCM63XX
 +
- endmenu
+ 	config DEBUG_BERLIN_UART
+ 		bool "Marvell Berlin SoC Debug UART"
+ 		depends on ARCH_BERLIN
+@@ -981,6 +986,7 @@ config DEBUG_LL_INCLUDE
+ 	default "debug/vf.S" if DEBUG_VF_UART
+ 	default "debug/vt8500.S" if DEBUG_VT8500_UART0
+ 	default "debug/zynq.S" if DEBUG_ZYNQ_UART0 || DEBUG_ZYNQ_UART1
++	default "debug/bcm63xxx.S" if DEBUG_UART_BCM63XX
+ 	default "mach/debug-macro.S"
  
- endif
-diff --git a/arch/arm/mach-bcm/Makefile b/arch/arm/mach-bcm/Makefile
-index a326b28c4406..c24ba586297d 100644
---- a/arch/arm/mach-bcm/Makefile
-+++ b/arch/arm/mach-bcm/Makefile
-@@ -17,3 +17,4 @@ obj-$(CONFIG_ARCH_BCM2835)	+= board_bcm2835.o
- plus_sec := $(call as-instr,.arch_extension sec,+sec)
- AFLAGS_bcm_kona_smc_asm.o	:=-Wa,-march=armv7-a$(plus_sec)
- obj-$(CONFIG_ARCH_BCM_5301X)	+= bcm_5301x.o
-+obj-$(CONFIG_ARCH_BCM_63XX)	:= board_bcm63xx.o
-diff --git a/arch/arm/mach-bcm/bcm63xx.h b/arch/arm/mach-bcm/bcm63xx.h
+ # Compatibility options for PL01x
+@@ -1000,6 +1006,10 @@ config DEBUG_UART_8250
+ 		ARCH_IOP33X || ARCH_IXP4XX || ARCH_KIRKWOOD || \
+ 		ARCH_LPC32XX || ARCH_MV78XX0 || ARCH_ORION5X || ARCH_RPC
+ 
++# Compatibility options for BCM63xx
++config DEBUG_UART_BCM63XX
++	def_bool ARCH_BCM_63XX
++
+ config DEBUG_UART_PHYS
+ 	hex "Physical base address of debug UART"
+ 	default 0x01c20000 if DEBUG_DAVINCI_DMx_UART0
+@@ -1055,10 +1065,12 @@ config DEBUG_UART_PHYS
+ 	default 0xffc02000 if DEBUG_SOCFPGA_UART
+ 	default 0xffd82340 if ARCH_IOP13XX
+ 	default 0xfff36000 if DEBUG_HIGHBANK_UART
++	default 0xfffe8600 if DEBUG_UART_BCM63XX
+ 	default 0xfffff700 if ARCH_IOP33X
+ 	depends on DEBUG_LL_UART_8250 || DEBUG_LL_UART_PL01X || \
+ 		DEBUG_LL_UART_EFM32 || \
+-		DEBUG_UART_8250 || DEBUG_UART_PL01X
++		DEBUG_UART_8250 || DEBUG_UART_PL01X || \
++		DEBUG_UART_BCM63XX
+ 
+ config DEBUG_UART_VIRT
+ 	hex "Virtual base address of debug UART"
+@@ -1080,6 +1092,7 @@ config DEBUG_UART_VIRT
+ 	default 0xf8090000 if DEBUG_VEXPRESS_UART0_RS1
+ 	default 0xfb009000 if DEBUG_REALVIEW_STD_PORT
+ 	default 0xfb10c000 if DEBUG_REALVIEW_PB1176_PORT
++	default 0xfcfe8600 if DEBUG_UART_BCM63XX
+ 	default 0xfd000000 if ARCH_SPEAR3XX || ARCH_SPEAR6XX
+ 	default 0xfd000000 if ARCH_SPEAR13XX
+ 	default 0xfd012000 if ARCH_MV78XX0
+@@ -1116,7 +1129,8 @@ config DEBUG_UART_VIRT
+ 	default 0xff003000 if DEBUG_U300_UART
+ 	default DEBUG_UART_PHYS if !MMU
+ 	depends on DEBUG_LL_UART_8250 || DEBUG_LL_UART_PL01X || \
+-		DEBUG_UART_8250 || DEBUG_UART_PL01X
++		DEBUG_UART_8250 || DEBUG_UART_PL01X || \
++		DEBUG_UART_BCM63XX
+ 
+ config DEBUG_UART_8250_SHIFT
+ 	int "Register offset shift for the 8250 debug UART"
+diff --git a/arch/arm/include/debug/bcm63xxx.S b/arch/arm/include/debug/bcm63xxx.S
 new file mode 100644
-index 000000000000..95872c8131f6
+index 000000000000..a28fbd1bb5d8
 --- /dev/null
-+++ b/arch/arm/mach-bcm/bcm63xx.h
-@@ -0,0 +1,29 @@
++++ b/arch/arm/include/debug/bcm63xxx.S
+@@ -0,0 +1,33 @@
 +/*
++ * Broadcom BCM63xxx low-level UART debug
++ *
 + * Copyright (C) 2014 Broadcom Corporation
 + *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
 + */
 +
-+#ifndef __ARM_BCM63XX_H
-+#define __ARM_BCM63XX_H
++#include <linux/serial_bcm63xx.h>
 +
-+#define IO_ADDRESS(x)		(((x) & 0x00ffffff) + 0xfc000000)
++	.macro	addruart, rp, rv, tmp
++	ldr	\rp, =CONFIG_DEBUG_UART_PHYS
++	ldr	\rv, =CONFIG_DEBUG_UART_VIRT
++	.endm
 +
-+/* AHB register space */
-+#define BCM63XX_AHB_PHYS	0x80001000
-+#define BCM63XX_AHB_VIRT	IO_ADDRESS(BCM63XX_AHB_PHYS)
-+#define BCM63XX_AHB_SIZE	0x800000
++	.macro	senduart, rd, rx
++	/* word access do not work */
++	strb	\rd, [\rx, #UART_FIFO_REG]
++	.endm
 +
-+/* PERIPH (legacy) register space */
-+#define BCM63XX_PERIPH_PHYS	0xfffe8000
-+#define BCM63XX_PERIPH_VIRT	IO_ADDRESS(BCM63XX_PERIPH_PHYS)
-+#define BCM63XX_PERIPH_SIZE	0x10000
++	.macro	waituart, rd, rx
++1001:	ldr	\rd, [\rx, #UART_IR_REG]
++	tst	\rd, #(1 << UART_IR_TXEMPTY)
++	beq	1001b
++	.endm
 +
-+#endif /* __ARM_BCM63XX_H */
-diff --git a/arch/arm/mach-bcm/board_bcm63xx.c b/arch/arm/mach-bcm/board_bcm63xx.c
-new file mode 100644
-index 000000000000..a779aca673c4
---- /dev/null
-+++ b/arch/arm/mach-bcm/board_bcm63xx.c
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (C) 2014 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation version 2.
-+ *
-+ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
-+ * kind, whether express or implied; without even the implied warranty
-+ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/of_platform.h>
-+#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/clocksource.h>
-+#include <linux/irqchip.h>
-+
-+#include <asm/mach/arch.h>
-+#include <asm/mach/map.h>
-+#include <asm/mach/time.h>
-+#include <asm/hardware/cache-l2x0.h>
-+
-+#include "bcm63xx.h"
-+
-+static void __init bcm63xx_l2cc_init(void)
-+{
-+	u32 auxctl_val = 0, auxctl_msk = ~0UL;
-+
-+	/* 16-way cache */
-+	auxctl_val |= (1 << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
-+	auxctl_msk &= ~(1 << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
-+	/* 32 KB */
-+	auxctl_val |= (2 << L2X0_AUX_CTRL_WAY_SIZE_SHIFT);
-+	auxctl_msk &= ~(L2X0_AUX_CTRL_WAY_SIZE_MASK);
-+
-+	/*
-+	 * Set bit 22 in the auxiliary control register. If this bit
-+	 * is cleared, PL310 treats Normal Shared Non-cacheable
-+	 * accesses as Cacheable no-allocate.
-+	 */
-+	auxctl_val |= (1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT);
-+
-+	/* Allow non-secure access */
-+	auxctl_val |= (1 << L2X0_AUX_CTRL_NS_INT_CTRL_SHIFT);
-+	/* Instruction prefetch */
-+	auxctl_val |= (1 << L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT);
-+	/* Early BRESP */
-+	auxctl_val |= (1 << L2X0_AUX_CTRL_EARLY_BRESP_SHIFT);
-+
-+	l2x0_of_init(auxctl_val, auxctl_msk);
-+}
-+
-+static void __init bcm63xx_init(void)
-+{
-+	of_platform_populate(NULL, of_default_bus_match_table, NULL,
-+		&platform_bus);
-+	bcm63xx_l2cc_init();
-+}
-+
-+static const char * const bcm63xx_dt_compat[] = {
-+	"brcm,bcm63138",
-+	NULL
-+};
-+
-+static struct map_desc bcm63xx_map_desc[] __initdata = {
-+	/* AHB register space */
-+	{
-+		.virtual = BCM63XX_AHB_VIRT,
-+		.pfn = __phys_to_pfn(BCM63XX_AHB_PHYS),
-+		.length	= BCM63XX_AHB_SIZE,
-+		.type = MT_DEVICE,
-+	},
-+	/* PERIPH register space */
-+	{
-+		.virtual = BCM63XX_PERIPH_VIRT,
-+		.pfn = __phys_to_pfn(BCM63XX_PERIPH_PHYS),
-+		.length = BCM63XX_PERIPH_SIZE,
-+		.type = MT_DEVICE,
-+	},
-+};
-+
-+static void __init bcm63xx_map_io(void)
-+{
-+	iotable_init(bcm63xx_map_desc, ARRAY_SIZE(bcm63xx_map_desc));
-+}
-+
-+DT_MACHINE_START(BCM63XXX_DT, "BCM63xx DSL SoC")
-+	.map_io		= bcm63xx_map_io,
-+	.init_machine	= bcm63xx_init,
-+	.dt_compat	= bcm63xx_dt_compat,
-+MACHINE_END
++	.macro	busyuart, rd, rx
++1002:	ldr	\rd, [\rx, #UART_IR_REG]
++	tst	\rd, #(1 << UART_IR_TXTRESH)
++	beq	1002b
++	.endm
 -- 
 1.9.1
 
