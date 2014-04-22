@@ -1,33 +1,75 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/3] arm: dts: add device_type="memory" for ste-ccu8540
-Date: Tue, 22 Apr 2014 14:09:12 +0100
-Message-ID: <20140422130912.A4F71C4042C@trevor.secretlab.ca>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-	<1397756521-29387-2-git-send-email-leif.lindholm@linaro.org>
-	<20140422073926.GC17657@lee--X1>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140422073926.GC17657@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>
-Cc: linux-kernel@vger.kernel.org, patches@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 00/11] ARM: at91: rework main and slow clk implementation
+Date: Tue, 22 Apr 2014 15:12:29 +0200
+Message-ID: <1398172360-7837-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Apr 2014 08:39:26 +0100, Lee Jones <lee.jones@linaro.org> wrote:
-> > The current .dts for ste-ccu8540 lacks a 'device_type = "memory"' for
-> > its memory node, relying on an old ppc quirk in order to discover its
-> > memory. Add this, to permit that quirk to be made ppc only.
-> > 
-> > Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: devicetree@vger.kernel.org
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Lee Jones <lee.jones@linaro.org>
-> > ---
-> >  arch/arm/boot/dts/ste-ccu8540.dts |    1 +
-> >  1 file changed, 1 insertion(+)
-> 
-> Acked-by: Lee Jones <lee.jones@linaro.org>
+Hello,
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+This series introduce the real clock model (as described in atmel datasheets)
+for slow and main clocks.
 
-g.
+The modifications introduced by this series break the DT compat, but, as the
+at91 CCF based implementation is pretty new (introduced in 3.14 only for sama5
+eval boards) I think it won't impact a lot of users.
+
+Nicolas, Mike, if this series is accepted, I'd like to get it merged as soon as
+possible to prevent other developpers from using a deprecated DT binding.
+Moreover, I think this series should go through the same path for both clk
+and DT changes (whatever path is chosen: either at91 or clk tree) because the
+changes are tightly coupled.
+
+Best Regards,
+
+Boris
+
+Changes since v2:
+ - add missing compatible in pmc.c
+ - fix sam9261 slow clock definition
+ - move xtal nodes out of /clocks node
+ - fix DT bindings documentation
+ - fix main RC oscillator initilization
+
+Changes since v1:
+- fix sam9rl main clk definition
+Boris BREZILLON (11):
+  clk: at91: rework main clk implementation
+  clk: at91: update main clk documentation
+  clk: at91: add slow clks driver
+  clk: at91: add slow clk documentation
+  ARM: at91/dt: move sama5d3 SoC to the new main/slow clk model
+  ARM: at91/dt: add xtal frequencies to sama5d3xcm boards
+  ARM: at91/dt: add xtal frequencies to sama5d3 xplained board
+  ARM: at91/dt: move at91sam9261 SoC to the new main clock model
+  ARM: at91/dt: define main xtal frequency of the at91sam9261ek board
+  ARM: at91/dt: move at91sam9rl SoC to the new slow/main clock models
+  ARM: at91/dt: define sam9rlek crystal frequencies
+
+ .../devicetree/bindings/clock/at91-clock.txt       | 128 ++++-
+ arch/arm/boot/dts/at91-sama5d3_xplained.dts        |   8 +
+ arch/arm/boot/dts/at91sam9261.dtsi                 |  23 +-
+ arch/arm/boot/dts/at91sam9261ek.dts                |   4 +
+ arch/arm/boot/dts/at91sam9rl.dtsi                  |  46 +-
+ arch/arm/boot/dts/at91sam9rlek.dts                 |   9 +
+ arch/arm/boot/dts/sama5d3.dtsi                     |  61 ++-
+ arch/arm/boot/dts/sama5d3xcm.dtsi                  |   8 +
+ drivers/clk/at91/Makefile                          |   4 +-
+ drivers/clk/at91/clk-main.c                        | 577 ++++++++++++++++++---
+ drivers/clk/at91/clk-slow.c                        | 467 +++++++++++++++++
+ drivers/clk/at91/pmc.c                             |  17 +
+ drivers/clk/at91/pmc.h                             |   9 +
+ drivers/clk/at91/sckc.c                            |  57 ++
+ drivers/clk/at91/sckc.h                            |  22 +
+ include/linux/clk/at91_pmc.h                       |   1 +
+ 16 files changed, 1352 insertions(+), 89 deletions(-)
+ create mode 100644 drivers/clk/at91/clk-slow.c
+ create mode 100644 drivers/clk/at91/sckc.c
+ create mode 100644 drivers/clk/at91/sckc.h
+
+-- 
+1.8.3.2
+
