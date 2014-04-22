@@ -1,32 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 7/7] ARM: sunxi: update the default ARCH_NR_GPIO for
- sunxi arch
-Date: Tue, 22 Apr 2014 13:51:17 +0200
-Message-ID: <CACRpkdYT9HvG6dOVOEnBSNhRt847tdCsAU6E_dZLdFQEHntpKg@mail.gmail.com>
-References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1397137966-30818-8-git-send-email-boris.brezillon@free-electrons.com>
+From: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Subject: Re: [PATCH v8 00/17] ARM: sunxi: Add driver for SD/MMC
+ hosts found on Allwinner sunxi SoCs
+Date: Tue, 22 Apr 2014 09:07:16 -0300
+Message-ID: <53565B74.4000703@elopez.com.ar>
+References: <1398164497-14212-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1397137966-30818-8-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dev@linux-sunxi.org, Alexandre Courbot <gnurou@gmail.com>, "arm@kernel.org" <arm@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD73XIMS3EHBBG5X3GNAKGQEYBAPOCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1398164497-14212-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?RGF2aWQgTGFuemVuZMO2cmZlcg==?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 3:52 PM, Boris BREZILLON
-<boris.brezillon@free-electrons.com> wrote:
+Hi Hans,
 
-> The A31 SoC has PL and PM banks and thus increase the default ARCH_NR_GPIO.
+El 22/04/14 08:01, Hans de Goede escribi=C3=B3:
+> Hi All,
 >
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> Here is v8 of the sunxi-mmc patch-set David Lanzend=C3=B6rfer and I have =
+been
+> working on.
+>
+> The first 2 patches are depenencies which should go in through the clk tr=
+ee,
+> Mike can you pick these 2 up please ?  :
+>
+> "clk: sunxi: factors: automatic reparenting support"
+> Is uncontroversial and has been favorably reviewed by various people.
 
-Patch applied, and grrrr we need to get rid of these static #gpios defines
-in the long run.
+I'll pick this one up for 3.16 if you're ok with that. Mike, let me know=20
+if you have any objection to the patch, but I'm pretty sure you=20
+(informally?) acked it in the past.
 
-ARM SoC folks: notice this hitting arch/arm/Kconfig, complain if it's
-problematic.
+> "clk: sunxi: Implement MMC phase control"
+> Is somewhat more controversial as there has been lots of discussion about
+> adding a generic phase control method to the clk framework. The problem i=
+s
+> that there has been a lot of talk about such a generic phase control meth=
+od
+> but not a single patch. Therefor I would like to move forwards with using
+> a platform specific method for now. I hereby promise that once we've a ge=
+neric
+> method I'll write patches to convert the sunxi code to that method.
 
-Yours,
-Linus Walleij
+Mike proposed a RFC for handling this better, and there were talks with=20
+Allwinner people to see what did these phase controls actually mean. We=20
+should be able to get a proper solution for it during this cycle. I'd=20
+prefer to work towards that instead of merging this, as we have more=20
+than a month to get it ready still.
+
+Cheers,
+
+Emilio
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
