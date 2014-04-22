@@ -1,68 +1,55 @@
-From: "Yang, Wenyou" <Wenyou.Yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: RE: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator
- device node
-Date: Tue, 22 Apr 2014 01:37:15 +0000
-Message-ID: <B256D81BAE5131468A838E5D7A24364180A876DA@penmbx01>
-References: <1398054547-5834-1-git-send-email-wenyou.yang@atmel.com>
- <20140421095443.GA3461@piout.net> <20140421122205.GB3461@piout.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RESEND 0/5] ARM: BCM63XX: add support for BCM63138 SoC
+Date: Mon, 21 Apr 2014 18:39:13 -0700
+Message-ID: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140421122205.GB3461-m++hUPXGwpdeoWH0uzbU5w@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ferre, Nicolas" <Nicolas.FERRE-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi all,
 
-> -----Original Message-----
-> From: Alexandre Belloni [mailto:alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org]
-> Sent: Monday, April 21, 2014 8:22 PM
-> To: Yang, Wenyou
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Ferre, Nicolas; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org; linux-
-> arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator
-> device node
-> 
-> On 21/04/2014 at 11:54:43 +0200, Alexandre Belloni wrote :
-> > Hi,
-> >
-> > On 21/04/2014 at 12:29:07 +0800, Wenyou Yang wrote :
-> > > +
-> > > +						vddana_reg: LDO_REG2 {
-> > > +							regulator-name = "VDDANA";
-> > > +							regulator-min-microvolt =
-> <3300000>;
-> > > +							regulator-max-microvolt =
-> <3300000>;
-> > > +							regulator-always-on;
-> >
-> > I'm pretty sure that one is not always on as you actually have to
-> > configure it to get any voltage. Are you sure you want to set the
-> > regulator-always-on property here ?
-> >
-> 
-> Just to clarify my though, wouldn't it be better to make the ADC driver
-> handle that regulator instead of using regulator-always-on ?
-Yes, you are right. 
-It should not use regulator-always-on property for this regulator. It is ADC driver and ISI driver to handle it(The ISI takes PCK for clock).
+This patchset adds very minimal support for the BCM63138 SoC which is
+a xDSL SoC using a dual Cortex A9 CPU complex.
 
-I will send new version patch.
+Future work will focus on:
 
-Thanks
+- clock device/driver/providers
+- SMP support (already working)
 
-> 
-> --
-> Alexandre Belloni, Free Electrons
-> Embedded Linux, Kernel and Android engineering http://free-
-> electrons.com
+Resending with a wider audience this time, and hopefully at the right
+time.
 
-Best Regards,
-Wenyou Yang
+Florian Fainelli (5):
+  ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
+  ARM: BCM63XX: add low-level UART debug support
+  ARM: BCM63XX: add BCM63138 minimal Device Tree
+  ARM: BCM63XX: add BCM963138DVT Reference platform DTS
+  MAINTAINERS: add entry for the Broadcom BCM63xx ARM SoCs
+
+ .../devicetree/bindings/arm/bcm/bcm63138.txt       |   9 ++
+ MAINTAINERS                                        |  11 +++
+ arch/arm/Kconfig.debug                             |  18 +++-
+ arch/arm/boot/dts/Makefile                         |   3 +
+ arch/arm/boot/dts/bcm63138.dtsi                    | 109 +++++++++++++++++++++
+ arch/arm/boot/dts/bcm63138dvt.dts                  |  18 ++++
+ arch/arm/include/debug/bcm63xxx.S                  |  33 +++++++
+ arch/arm/mach-bcm/Kconfig                          |  20 ++++
+ arch/arm/mach-bcm/Makefile                         |   1 +
+ arch/arm/mach-bcm/bcm63xx.h                        |  29 ++++++
+ arch/arm/mach-bcm/board_bcm63xx.c                  |  94 ++++++++++++++++++
+ 11 files changed, 343 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/bcm63138.txt
+ create mode 100644 arch/arm/boot/dts/bcm63138.dtsi
+ create mode 100644 arch/arm/boot/dts/bcm63138dvt.dts
+ create mode 100644 arch/arm/include/debug/bcm63xxx.S
+ create mode 100644 arch/arm/mach-bcm/bcm63xx.h
+ create mode 100644 arch/arm/mach-bcm/board_bcm63xx.c
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
