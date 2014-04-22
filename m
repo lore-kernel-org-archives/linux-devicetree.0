@@ -1,78 +1,48 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH v2 1/2] ARM: dts: berlin: add the SDHCI nodes for the BG2Q
-Date: Tue, 22 Apr 2014 10:27:27 +0200
-Message-ID: <1398155248-1659-2-git-send-email-antoine.tenart@free-electrons.com>
-References: <1398155248-1659-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Markus Niebel <list-09_linux_arm@tqsc.de>
+Subject: [PATCH] DT: Vendor: add prefix for TQ Systems
+Date: Tue, 22 Apr 2014 11:01:41 +0200
+Message-ID: <1398157301-4179-1-git-send-email-list-09_linux_arm@tqsc.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398155248-1659-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Markus Niebel <Markus.Niebel@tq-group.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the SDHCI nodes for the Marvell Berlin BG2Q, using the mrvl,pxav3-m=
-mc
-driver.
+From: Markus Niebel <Markus.Niebel@tq-group.com>
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Add prefix for TQ Systems GmbH and for TQ Components.
+Both are needed since the existing PPC device trees use
+tqc but the TQMa53 ARM module uses tq. The tq prefix is better
+since TQ Components was renamed some time ago.
+
+Signed-off-by: Markus Niebel <Markus.Niebel@tq-group.com>
 ---
- arch/arm/boot/dts/berlin2q.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ .../devicetree/bindings/vendor-prefixes.txt        |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
-2q.dtsi
-index 5925e6a16749..85d0ca5cc47a 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -67,6 +67,14 @@
- 		clock-div =3D <3>;
- 	};
-=20
-+	sdio1clk: sdio1clk {
-+		compatible =3D "fixed-factor-clock";
-+		#clock-cells =3D <0>;
-+		clocks =3D <&syspll>;
-+		clock-mult =3D <1>;
-+		clock-div =3D <4>;
-+	};
-+
- 	soc {
- 		compatible =3D "simple-bus";
- 		#address-cells =3D <1>;
-@@ -75,6 +83,30 @@
- 		ranges =3D <0 0xf7000000 0x1000000>;
- 		interrupt-parent =3D <&gic>;
-=20
-+		sdhci0: sdhci@ab0000 {
-+			compatible =3D "mrvl,pxav3-mmc";
-+			reg =3D <0xab0000 0x200>;
-+			clocks =3D <&sdio1clk>;
-+			interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+			status =3D "disabled";
-+		};
-+
-+		sdhci1: sdhci@ab0800 {
-+			compatible =3D "mrvl,pxav3-mmc";
-+			reg =3D <0xab0800 0x200>;
-+			clocks =3D <&sdio1clk>;
-+			interrupts =3D <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			status =3D "disabled";
-+		};
-+
-+		sdhci2: sdhci@ab1000 {
-+			compatible =3D "mrvl,pxav3-mmc";
-+			reg =3D <0xab1000 0x200>;
-+			interrupts =3D <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&sdio1clk>;
-+			status =3D "disabled";
-+		};
-+
- 		l2: l2-cache-controller@ac0000 {
- 			compatible =3D "arm,pl310-cache";
- 			reg =3D <0xac0000 0x1000>;
---=20
-1.8.3.2
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 2855004..eb8a863 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -126,6 +126,8 @@ tlm	Trusted Logic Mobility
+ toradex	Toradex AG
+ toshiba	Toshiba Corporation
+ toumaz	Toumaz
++tq	TQ Systems GmbH
++tqc	TQ Components (deprecated, use tq)
+ usi	Universal Scientifc Industrial Co., Ltd.
+ v3	V3 Semiconductor
+ via	VIA Technologies, Inc.
+-- 
+1.7.9.5
