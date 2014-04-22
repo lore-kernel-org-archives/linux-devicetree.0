@@ -1,23 +1,40 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 1/3] usb: chipidea: msm: Add device tree binding information
-Date: Tue, 22 Apr 2014 16:07:57 +0100
-Message-ID: <535685CD.9080207@linaro.org>
-References: <1398159797-26917-1-git-send-email-iivanov@mm-sol.com> <1398159797-26917-2-git-send-email-iivanov@mm-sol.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH v2 05/13] extcon: extcon-class: improve extcon client API
+Date: Tue, 22 Apr 2014 18:03:36 +0300
+Message-ID: <20140422150336.GA612@drone.musicnaut.iki.fi>
+References: <1397475984-28001-1-git-send-email-r.baldyga@samsung.com>
+ <1397475984-28001-6-git-send-email-r.baldyga@samsung.com>
+ <20140419105225.GB976@ambient.musicnaut.iki.fi>
+ <53560A6F.8030909@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398159797-26917-2-git-send-email-iivanov@mm-sol.com>
+Content-Disposition: inline
+In-Reply-To: <53560A6F.8030909@samsung.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Chen <Peter.Chen@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Robert Baldyga <r.baldyga@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, myungjoo.ham@samsung.com, cw00.choi@samsung.com, dbaryshkov@gmail.com, dwmw2@infradead.org, balbi@ti.com, gregkh@linuxfoundation.org, grant.likely@linaro.org, ldewangan@nvidia.com, kishon@ti.com, gg@slimlogic.co.uk, anton@enomsg.org, jonghwa3.lee@samsung.com, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, m.szyprowski@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Tue, Apr 22, 2014 at 08:21:35AM +0200, Robert Baldyga wrote:
+> On 04/19/2014 12:52 PM, Aaro Koskinen wrote:
+> > On Mon, Apr 14, 2014 at 01:46:16PM +0200, Robert Baldyga wrote:
+> >>  	dev_info(&pdev->dev,
+> >> -		 "OMAP USB OTG controller rev %d.%d (%s, id=%d, vbus=%d)\n",
+> >> -		 (rev >> 4) & 0xf, rev & 0xf, config->extcon, otg_dev->id,
+> >> +		 "OMAP USB OTG controller rev %d.%d (id=%d, vbus=%d)\n",
+> >> +		 (rev >> 4) & 0xf, rev & 0xf, otg_dev->id,
+> >>  		 otg_dev->vbus);
+> > 
+> > This change is unrelated to the patch and not needed.
+> >
+> 
+> It's related because we no longer use config->extcon since we have
+> cable-oriented API. We can keep displaying it, but this value is
+> actually meaningless.
 
-On 22/04/14 10:43, Ivan T. Ivanov wrote:
-> +- interrupts:   interrupt-specifier for the controller interrupt.
-> +- usb-phy:      phandle for the PHY device
-> +- dr_mode:      Sould be "peripheral"
-s/Sould/Should/
-> +
+It's not completely meaningless, as the cable is searched using that name.
+
+A.
