@@ -1,69 +1,80 @@
-From: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Subject: Re: [PATCH v8 00/17] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Tue, 22 Apr 2014 09:07:16 -0300
-Message-ID: <53565B74.4000703@elopez.com.ar>
-References: <1398164497-14212-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC v2 PATCH 02/14] drm/exynos: dsi: delay setting clocks after
+ reset
+Date: Tue, 22 Apr 2014 14:15:16 +0200
+Message-ID: <53565D54.1050609@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <1398083321-8668-3-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD73XIMS3EHBBG5X3GNAKGQEYBAPOCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1398164497-14212-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?RGF2aWQgTGFuemVuZMO2cmZlcg==?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1398083321-8668-3-git-send-email-yj44.cho@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+Hi YoungJun,
 
-El 22/04/14 08:01, Hans de Goede escribi=C3=B3:
-> Hi All,
+On 04/21/2014 02:28 PM, YoungJun Cho wrote:
+> Some phy control registers are not kept after software reset.
+> So this patch makes the clocks containing phy control to be set
+> after software reset.
 >
-> Here is v8 of the sunxi-mmc patch-set David Lanzend=C3=B6rfer and I have =
-been
-> working on.
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> The first 2 patches are depenencies which should go in through the clk tr=
-ee,
-> Mike can you pick these 2 up please ?  :
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index 956e5f3..2cf1f0b 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -946,10 +946,10 @@ static irqreturn_t exynos_dsi_irq(int irq, void *dev_id)
+>  
+>  static int exynos_dsi_init(struct exynos_dsi *dsi)
+>  {
+> -	exynos_dsi_enable_clock(dsi);
+>  	exynos_dsi_reset(dsi);
+>  	enable_irq(dsi->irq);
+>  	exynos_dsi_wait_for_reset(dsi);
+> +	exynos_dsi_enable_clock(dsi);
+>  	exynos_dsi_init_link(dsi);
+>  
+>  	return 0;
+
+I have commented it in the previous version of the patchset. I repeat it
+again.
+This is a regression, on exynos4210-trats I have 'timeout waiting for
+reset' message after dpms off, on.
+
+I will comment your previous answer here to make the discussion easier:
+> As I mentioned in description, it came from phy control registers.
+> Fortunately Exynos4 SoCs are safe, but the DSIM_PHYCTRL_REG,
+> DSIM_PHYTIMING_REG, DSIM_PHYTIMING1_REG and DSIM_PHYTIMING2_REG are
+> affected which are used in exynos_dsi_set_pll() for Exynos5 SoCs.
 >
-> "clk: sunxi: factors: automatic reparenting support"
-> Is uncontroversial and has been favorably reviewed by various people.
+> So this patch is required for Exynos5 SoCs.
 
-I'll pick this one up for 3.16 if you're ok with that. Mike, let me know=20
-if you have any objection to the patch, but I'm pretty sure you=20
-(informally?) acked it in the past.
+In the moment this patch is applied exynos_dsi_set_pll do not touch phy
+registers you have mentioned.
+Your change would be more clear if it will be merged together with the
+patch adding PHYCTRL settings.
 
-> "clk: sunxi: Implement MMC phase control"
-> Is somewhat more controversial as there has been lots of discussion about
-> adding a generic phase control method to the clk framework. The problem i=
-s
-> that there has been a lot of talk about such a generic phase control meth=
-od
-> but not a single patch. Therefor I would like to move forwards with using
-> a platform specific method for now. I hereby promise that once we've a ge=
-neric
-> method I'll write patches to convert the sunxi code to that method.
+Anyway, solution is simple - please set PHY registers after reset and
+configure clocks before reset to avoid
+reset timeouts, is there any reason to not do it this way?
 
-Mike proposed a RFC for handling this better, and there were talks with=20
-Allwinner people to see what did these phase controls actually mean. We=20
-should be able to get a proper solution for it during this cycle. I'd=20
-prefer to work towards that instead of merging this, as we have more=20
-than a month to get it ready still.
-
-Cheers,
-
-Emilio
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Regards
+Andrzej
