@@ -1,137 +1,230 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Tue, 22 Apr 2014 15:55:45 +0530
-Message-ID: <1398162345-3163-1-git-send-email-sourav.poddar@ti.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Tue, 22 Apr 2014 11:36:42 +0100
+Message-ID: <20140422103642.GF7484@arm.com>
+References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: t-kristo@ti.com, mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, balbi@ti.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398133596-29170-1-git-send-email-zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-We need "tblclk" clock data for the functioning of ehrpwm
-module. Hence, populating the required clock information
-in clock dts file.
+Hi Neil,
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
- arch/arm/boot/dts/am43xx-clocks.dtsi |   84 ++++++++++++++++++++++++++++++++++
- drivers/clk/ti/clk-43xx.c            |    6 +++
- 2 files changed, 90 insertions(+)
+On Tue, Apr 22, 2014 at 03:26:36AM +0100, Neil Zhang wrote:
+> This adds core support for saving and restoring CPU PMU registers
+> for suspend/resume support i.e. deeper C-states in cpuidle terms.
+> This patch adds support only to ARMv7 PMU registers save/restore.
+> It needs to be extended to xscale and ARMv6 if needed.
+> 
+> I made this patch because DS-5 is not working on Marvell's CA7 based SoCs.
+> And it has consulted Sudeep KarkadaNagesha's patch set for multiple PMUs.
+> 
+> Thanks Will and Sudeep's suggestion to only save / restore used events.
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 142009c..869f9a5 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -87,6 +87,90 @@
- 		clock-mult = <1>;
- 		clock-div = <1>;
- 	};
-+
-+	ehrpwm0_gate_tbclk: ehrpwm0_gate_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-no-wait-gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		ti,bit-shift = <0>;
-+		reg = <0x0664>;
-+	};
-+
-+	ehrpwm0_tbclk: ehrpwm0_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-clock";
-+		clocks = <&ehrpwm0_gate_tbclk>;
-+	};
-+
-+	ehrpwm1_gate_tbclk: ehrpwm1_gate_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-no-wait-gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		ti,bit-shift = <1>;
-+		reg = <0x0664>;
-+	};
-+
-+	ehrpwm1_tbclk: ehrpwm1_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-clock";
-+		clocks = <&ehrpwm1_gate_tbclk>;
-+	};
-+
-+	ehrpwm2_gate_tbclk: ehrpwm2_gate_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-no-wait-gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		ti,bit-shift = <2>;
-+		reg = <0x0664>;
-+	};
-+
-+	ehrpwm2_tbclk: ehrpwm2_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-clock";
-+		clocks = <&ehrpwm2_gate_tbclk>;
-+	};
-+
-+	ehrpwm3_gate_tbclk: ehrpwm3_gate_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-no-wait-gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		ti,bit-shift = <2>;
-+		reg = <0x0664>;
-+	};
-+
-+	ehrpwm3_tbclk: ehrpwm3_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-clock";
-+		clocks = <&ehrpwm3_gate_tbclk>;
-+	};
-+
-+	ehrpwm4_gate_tbclk: ehrpwm4_gate_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-no-wait-gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		ti,bit-shift = <2>;
-+		reg = <0x0664>;
-+	};
-+
-+	ehrpwm4_tbclk: ehrpwm4_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-clock";
-+		clocks = <&ehrpwm4_gate_tbclk>;
-+	};
-+
-+	ehrpwm5_gate_tbclk: ehrpwm5_gate_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-no-wait-gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		ti,bit-shift = <2>;
-+		reg = <0x0664>;
-+	};
-+
-+	ehrpwm5_tbclk: ehrpwm5_tbclk {
-+		#clock-cells = <0>;
-+		compatible = "ti,composite-clock";
-+		clocks = <&ehrpwm5_gate_tbclk>;
-+	};
- };
- &prcm_clocks {
- 	clk_32768_ck: clk_32768_ck {
-diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-index 67c8de5..5413a6a 100644
---- a/drivers/clk/ti/clk-43xx.c
-+++ b/drivers/clk/ti/clk-43xx.c
-@@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
- 	DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
- 	DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
- 	DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
-+	DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
-+	DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
-+	DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
-+	DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
-+	DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
-+	DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
- 	{ .node_name = NULL },
- };
- 
--- 
-1.7.9.5
+Whilst this is a step in the right direction, I'd still like to see the
+save/restore predicated on something in the device-tree or otherwise. Most
+SoCs *don't* require these registers to be preserved by software, so we need
+a way to describe that the PMU is in a power-domain where its state is lost
+when the CPU goes idle.
 
+This doesn't sound like a PMU-specific problem, so there's a possibility
+that this has been discussed elsewhere, in the context of other IP blocks
+
+[adding the devicetree list in case somebody there is aware of any work in
+ this area]
+
+Will
+
+> diff --git a/arch/arm/include/asm/pmu.h b/arch/arm/include/asm/pmu.h
+> index ae1919b..3de3db7 100644
+> --- a/arch/arm/include/asm/pmu.h
+> +++ b/arch/arm/include/asm/pmu.h
+> @@ -83,6 +83,10 @@ struct arm_pmu {
+>  	int		(*request_irq)(struct arm_pmu *, irq_handler_t handler);
+>  	void		(*free_irq)(struct arm_pmu *);
+>  	int		(*map_event)(struct perf_event *event);
+> +	int		(*register_pm_notifier)(struct arm_pmu *);
+> +	void		(*unregister_pm_notifier)(struct arm_pmu *);
+> +	void		(*save_regs)(struct arm_pmu *);
+> +	void		(*restore_regs)(struct arm_pmu *);
+>  	int		num_events;
+>  	atomic_t	active_events;
+>  	struct mutex	reserve_mutex;
+> diff --git a/arch/arm/kernel/perf_event.c b/arch/arm/kernel/perf_event.c
+> index a6bc431..08822de 100644
+> --- a/arch/arm/kernel/perf_event.c
+> +++ b/arch/arm/kernel/perf_event.c
+> @@ -326,6 +326,7 @@ static void
+>  armpmu_release_hardware(struct arm_pmu *armpmu)
+>  {
+>  	armpmu->free_irq(armpmu);
+> +	armpmu->unregister_pm_notifier(armpmu);
+>  	pm_runtime_put_sync(&armpmu->plat_device->dev);
+>  }
+>  
+> @@ -339,6 +340,7 @@ armpmu_reserve_hardware(struct arm_pmu *armpmu)
+>  		return -ENODEV;
+>  
+>  	pm_runtime_get_sync(&pmu_device->dev);
+> +	armpmu->register_pm_notifier(armpmu);
+>  	err = armpmu->request_irq(armpmu, armpmu_dispatch_irq);
+>  	if (err) {
+>  		armpmu_release_hardware(armpmu);
+> diff --git a/arch/arm/kernel/perf_event_cpu.c b/arch/arm/kernel/perf_event_cpu.c
+> index 51798d7..79e1c06 100644
+> --- a/arch/arm/kernel/perf_event_cpu.c
+> +++ b/arch/arm/kernel/perf_event_cpu.c
+> @@ -19,6 +19,7 @@
+>  #define pr_fmt(fmt) "CPU PMU: " fmt
+>  
+>  #include <linux/bitmap.h>
+> +#include <linux/cpu_pm.h>
+>  #include <linux/export.h>
+>  #include <linux/kernel.h>
+>  #include <linux/of.h>
+> @@ -173,6 +174,31 @@ static int cpu_pmu_request_irq(struct arm_pmu *cpu_pmu, irq_handler_t handler)
+>  	return 0;
+>  }
+>  
+> +static int cpu_pmu_pm_notify(struct notifier_block *b,
+> +					unsigned long action, void *v)
+> +{
+> +	if (action == CPU_PM_ENTER && cpu_pmu->save_regs)
+> +		cpu_pmu->save_regs(cpu_pmu);
+> +	else if (action == CPU_PM_EXIT && cpu_pmu->restore_regs)
+> +		cpu_pmu->restore_regs(cpu_pmu);
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block cpu_pmu_pm_notifier = {
+> +	.notifier_call = cpu_pmu_pm_notify,
+> +};
+> +
+> +static int cpu_pmu_register_pm_notifier(struct arm_pmu *cpu_pmu)
+> +{
+> +	return cpu_pm_register_notifier(&cpu_pmu_pm_notifier);
+> +}
+> +
+> +static void cpu_pmu_unregister_pm_notifier(struct arm_pmu *cpu_pmu)
+> +{
+> +	cpu_pm_unregister_notifier(&cpu_pmu_pm_notifier);
+> +}
+> +
+>  static void cpu_pmu_init(struct arm_pmu *cpu_pmu)
+>  {
+>  	int cpu;
+> @@ -187,6 +213,8 @@ static void cpu_pmu_init(struct arm_pmu *cpu_pmu)
+>  	cpu_pmu->get_hw_events	= cpu_pmu_get_cpu_events;
+>  	cpu_pmu->request_irq	= cpu_pmu_request_irq;
+>  	cpu_pmu->free_irq	= cpu_pmu_free_irq;
+> +	cpu_pmu->register_pm_notifier	= cpu_pmu_register_pm_notifier;
+> +	cpu_pmu->unregister_pm_notifier	= cpu_pmu_unregister_pm_notifier;
+>  
+>  	/* Ensure the PMU has sane values out of reset. */
+>  	if (cpu_pmu->reset)
+> diff --git a/arch/arm/kernel/perf_event_v7.c b/arch/arm/kernel/perf_event_v7.c
+> index f4ef398..9069310 100644
+> --- a/arch/arm/kernel/perf_event_v7.c
+> +++ b/arch/arm/kernel/perf_event_v7.c
+> @@ -1237,6 +1237,78 @@ static void armv7_pmnc_dump_regs(struct arm_pmu *cpu_pmu)
+>  }
+>  #endif
+>  
+> +struct armv7_pmuregs {
+> +	u32 pmc;
+> +	u32 pmcntenset;
+> +	u32 pmintenset;
+> +	u32 pmxevttype[8];
+> +	u32 pmxevtcnt[8];
+> +};
+> +
+> +static DEFINE_PER_CPU(struct armv7_pmuregs, pmu_regs);
+> +
+> +static void armv7pmu_reset(void *info);
+> +
+> +static void armv7pmu_save_regs(struct arm_pmu *cpu_pmu)
+> +{
+> +	struct pmu_hw_events *events = cpu_pmu->get_hw_events();
+> +	struct armv7_pmuregs *regs;
+> +	int bit;
+> +
+> +	/* Check whether there are events used */
+> +	bit = find_first_bit(events->used_mask, cpu_pmu->num_events);
+> +	if (bit >= cpu_pmu->num_events)
+> +		return;
+> +
+> +	regs = this_cpu_ptr(&pmu_regs);
+> +	for_each_set_bit(bit, events->used_mask, cpu_pmu->num_events) {
+> +		if (bit) {
+> +			armv7_pmnc_select_counter(bit);
+> +			asm volatile("mrc p15, 0, %0, c9, c13, 1"
+> +					: "=r"(regs->pmxevttype[bit]));
+> +			asm volatile("mrc p15, 0, %0, c9, c13, 2"
+> +					: "=r"(regs->pmxevtcnt[bit]));
+> +		} else
+> +			asm volatile("mrc p15, 0, %0, c9, c13, 0"
+> +					: "=r" (regs->pmxevtcnt[0]));
+> +	}
+> +
+> +	asm volatile("mrc p15, 0, %0, c9, c12, 1" : "=r" (regs->pmcntenset));
+> +	asm volatile("mrc p15, 0, %0, c9, c14, 1" : "=r" (regs->pmintenset));
+> +	asm volatile("mrc p15, 0, %0, c9, c12, 0" : "=r" (regs->pmc));
+> +}
+> +
+> +static void armv7pmu_restore_regs(struct arm_pmu *cpu_pmu)
+> +{
+> +	struct pmu_hw_events *events = cpu_pmu->get_hw_events();
+> +	struct armv7_pmuregs *regs;
+> +	int bit;
+> +
+> +	/* Check whether there are events used */
+> +	bit = find_first_bit(events->used_mask, cpu_pmu->num_events);
+> +	if (bit >= cpu_pmu->num_events)
+> +		return;
+> +
+> +	armv7pmu_reset(cpu_pmu);
+> +
+> +	regs = this_cpu_ptr(&pmu_regs);
+> +	for_each_set_bit(bit, events->used_mask, cpu_pmu->num_events) {
+> +		if (bit) {
+> +			armv7_pmnc_select_counter(bit);
+> +			asm volatile("mcr p15, 0, %0, c9, c13, 1"
+> +					: : "r"(regs->pmxevttype[bit]));
+> +			asm volatile("mcr p15, 0, %0, c9, c13, 2"
+> +					: : "r"(regs->pmxevtcnt[bit]));
+> +		} else
+> +			asm volatile("mcr p15, 0, %0, c9, c13, 0"
+> +					: : "r" (regs->pmxevtcnt[0]));
+> +	}
+> +
+> +	asm volatile("mcr p15, 0, %0, c9, c12, 1" : : "r" (regs->pmcntenset));
+> +	asm volatile("mcr p15, 0, %0, c9, c14, 1" : : "r" (regs->pmintenset));
+> +	asm volatile("mcr p15, 0, %0, c9, c12, 0" : : "r" (regs->pmc));
+> +}
+> +
+>  static void armv7pmu_enable_event(struct perf_event *event)
+>  {
+>  	unsigned long flags;
+> @@ -1528,6 +1600,8 @@ static void armv7pmu_init(struct arm_pmu *cpu_pmu)
+>  	cpu_pmu->start		= armv7pmu_start;
+>  	cpu_pmu->stop		= armv7pmu_stop;
+>  	cpu_pmu->reset		= armv7pmu_reset;
+> +	cpu_pmu->save_regs	= armv7pmu_save_regs;
+> +	cpu_pmu->restore_regs	= armv7pmu_restore_regs;
+>  	cpu_pmu->max_period	= (1LLU << 32) - 1;
+>  };
+>  
+> -- 
+> 1.7.9.5
+> 
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
