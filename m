@@ -1,136 +1,72 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Tue, 22 Apr 2014 14:03:40 +0800
-Message-ID: <5356063C.6070100@linaro.org>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <1397869980-21187-3-git-send-email-zhangfei.gao@linaro.org> <53555C28.4050303@cogentembedded.com> <CAGVrzcb8Ykxi72x3iBStjTL+OO1BhDc_yZnnPq8ZHra+mtrBEA@mail.gmail.com> <535561BE.9070303@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <535561BE.9070303@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: David Miller <davem@davemloft.net>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Mark Rutland <mark.rutland@arm.com>, David Laight <David.Laight@aculab.com>, Eric Dumazet <eric.dumazet@gmail.com>, xuwei5@hisilicon.com, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/3] MCPM backend for Exynos5420
+Date: Tue, 22 Apr 2014 11:46:29 +0530
+Message-ID: <1398147389-2987-1-git-send-email-a.kesavan@samsung.com>
+References: <1397239311-27717-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1397239311-27717-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This is v2 of the series adding MCPM backend support for SMP secondary boot
+and core switching on Samsung's Exynos5420. The patches are based on the mcpm
+support added for Exynos5420 in the Chromium kernel repository here:
+https://chromium.googlesource.com/chromiumos/third_party/kernel-next/+/chromeos-3.8
 
+This patchset depends on:
+- ARM: EXYNOS5: Add PMU settings for exynos5420
+(https://patchwork.kernel.org/patch/3896471/)
+- ARM: EXYNOS: Map SYSRAM address through DT
+(http://www.spinics.net/lists/arm-kernel/msg323011.html)
+- ARM: bL_switcher: fix validation check before its activation
+(http://www.spinics.net/lists/arm-kernel/msg323274.html)
 
-On 04/22/2014 02:21 AM, Sergei Shtylyov wrote:
-> On 04/21/2014 10:03 PM, Florian Fainelli wrote:
->
->>>> Hisilicon hip04 platform mdio driver
->>>> Reuse Marvell phy drivers/net/phy/marvell.c
->
->>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>> [...]
->
->>>> diff --git a/drivers/net/ethernet/hisilicon/hip04_mdio.c
->>>> b/drivers/net/ethernet/hisilicon/hip04_mdio.c
->>>> new file mode 100644
->>>> index 0000000..19826a3
->>>> --- /dev/null
->>>> +++ b/drivers/net/ethernet/hisilicon/hip04_mdio.c
->>>> @@ -0,0 +1,185 @@
->
-> [...]
->
->>>> +static int hip04_mdio_reset(struct mii_bus *bus)
->>>> +{
->>>> +       int temp, err, i;
->>>> +
->>>> +       for (i = 0; i < PHY_MAX_ADDR; i++) {
->>>> +               hip04_mdio_write(bus, i, 22, 0);
->
->>>     Why? What kind of a register this is? <uapi/linux/mii.h> tells me
->>> it's
->>> MII_SREVISION...
->
->> I think this rather means clause 22 as opposed to clause 45.
->
->     No, the corresponding hip04_mdio_write()'s parameter is a register
-> #, so this is a write of 0 to register #22. A comment certainly wouldn't
-> hurt here...
+The patches have been prepared on Kgene's for-next branch and tested on SMDK5420
+EVT1 using the "/dev/b.L_switcher" user interface. Patches have also been tested
+on linux-next(20140417).
 
-It's private register of the phy marvell 88e1512.
-To make it clearer using define instead.
-#define MII_MARVELL_PHY_PAGE    22
+Changes since v1:
+Addressed the following comments from Dave Martin and Nicolas Pitre:
+	- Fixed help text for EXYNOS5420_MCPM symbol.
+	- Removed mcpm-exynos-setup.S file and added similar code from tc2_pm.c.
+	- Changed the spinlock name from "bl_lock" to "exynos_mcpm_lock".
+	- Removed snoop enable/disable calls due to possible cpuidle issue and
+	  not having numbers proving a significant power savings. Dropped the
+	  "drivers/bus: arm-cci: Add common control interface for ACE ports"
+	  patch from v1 as it was no longer needed.
+	- Created a macro for exynos-specific v7_exit_coherency_flush which
+	  handles an erratum. This was done to prevent duplication of code.
+	- Removed "outer_flush_all" call.
+	- Removed redundant dsb in power_down function.
+	- Removed unnecessary initialization of global variables to zero.
+	- Split the /dev/bL_status debug interface into another patch.
+	- Fixed error handling in exynos_mcpm_init().
+	- Called mcpm_smp_set_ops directly from exynos_mcpm_init().
+	- Added a TODO for supporting cluster down on exynos5420.
 
-The registers has been grouped into several pages, access register need 
-choose which page first.
->
->>>> +               temp = hip04_mdio_read(bus, i, MII_BMCR);
->
->>>     You're not checking for error...
->
->>>> +               temp |= BMCR_RESET;
->>>> +               err = hip04_mdio_write(bus, i, MII_BMCR, temp);
->
->>>     Hmm, why you're open coding BMCR reset? There's phy_init_hw()
->>> doing this
->>> correctly...
->
->> Except that this runs way before we have created the PHY driver, so we
->> can't use that function just yet.
->
->     Ah, you're right.
->
->> I already asked about this, and he
->> explained that this was because the PHY devices he uses are not
->> responding correcty to MII_PHYSID1/2 reads.
->
->     So, this manual reset loop helps with reading the ID registers? A
-> comment wouldn't hurt either...
-Yes, it required for get_phy_id, will add comments.
+There is no change in the patch " ARM: dts: exynos5420: add CCI node" from v1.
 
->
->>>> +               if (err < 0)
->>>> +                       return err;
->
->     I'm not at all sure we want to leave the reset loop on a first write
-> error.
-Yes, continue can be used instead.
+Abhilash Kesavan (2):
+  arm: exynos: Add MCPM call-back functions
+  arm: exynos: Add /dev/bL_status user interface on Exynos5420
 
->
->>>> +       }
->>>> +
->>>> +       mdelay(500);
->
->     I'm not sure this is enough, given that in phy_init_hw() we poll for
-> 600 ms + 1 ms.
-Though not find clear delay time required from the phy spec, the 
-experiment shows OK.
-Also here can not verify the BMCR_RESET bit, 0xffff will returned if the 
-phy is not exists.
->
->>>> +       return 0;
->>>> +}
->>>> +
->>>> +static int hip04_mdio_probe(struct platform_device *pdev)
->>>> +{
->>>> +       struct resource *r;
->>>> +       struct mii_bus *bus;
->>>> +       struct hip04_mdio_priv *priv;
->>>> +       int ret;
->>>> +
->>>> +       bus = mdiobus_alloc_size(sizeof(struct hip04_mdio_priv));
->>>> +       if (!bus) {
->>>> +               dev_err(&pdev->dev, "Cannot allocate MDIO bus\n");
->>>> +               return -ENOMEM;
->>>> +       }
->>>> +
->>>> +       bus->name = "hip04_mdio_bus";
->>>> +       bus->read = hip04_mdio_read;
->>>> +       bus->write = hip04_mdio_write;
->>>> +       bus->reset = hip04_mdio_reset;
->
->>>     Ah... However I don't think it a good implementation of that bus
->>> method...
->
->     I assumed this method exists to do a hardware reset of the whole
-> bus, not to do a loop of soft-resetting all PHYs...
->
+Andrew Bresticker (1):
+  ARM: dts: exynos5420: add CCI node
 
-It is required for each phy, if no such reset, the specific phy can NOT be
-detected and get_phy_id returns 0.
+ arch/arm/boot/dts/exynos5420.dtsi  |   27 +++
+ arch/arm/mach-exynos/Kconfig       |    8 +
+ arch/arm/mach-exynos/Makefile      |    2 +
+ arch/arm/mach-exynos/mcpm-exynos.c |  409 ++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-exynos/regs-pmu.h    |    2 +
+ 5 files changed, 448 insertions(+)
+ create mode 100644 arch/arm/mach-exynos/mcpm-exynos.c
 
-Thanks
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
