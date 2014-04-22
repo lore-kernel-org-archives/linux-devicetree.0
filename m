@@ -1,153 +1,154 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v6 13/19] usb: phy: msm: Add support for secondary PHY control
-Date: Tue, 22 Apr 2014 12:20:32 +0300
-Message-ID: <1398158438-21579-14-git-send-email-iivanov@mm-sol.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v6 18/19] usb: phy: msm: Vote for corner of VDD CX instead of voltage of VDD CX
+Date: Tue, 22 Apr 2014 12:20:37 +0300
+Message-ID: <1398158438-21579-19-git-send-email-iivanov@mm-sol.com>
 References: <1398158438-21579-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1398158438-21579-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Felipe Balbi <balbi@ti.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398158438-21579-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 
-Allow support to use 2nd HSPHY with USB2 Core.
-Some platforms may have configuration to allow USB controller
-work with any of the two HSPHYs present. By default driver
-configures USB core to use primary HSPHY. Add support to allow
-user select 2nd HSPHY using DT parameter.
+New platform uses RBCPR hardware feature, with that voting for
+absolute voltage of VDD CX is not required. Hence vote for corner of
+VDD CX which uses nominal corner voltage on VDD CX.
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-Cc: Manu Gautam <mgautam@codeaurora.org>
+Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- .../devicetree/bindings/usb/msm-hsusb.txt          |  6 ++++++
- drivers/usb/phy/phy-msm-usb.c                      | 24 ++++++++++++++++++++--
+ .../devicetree/bindings/usb/msm-hsusb.txt          |  5 ++++
+ drivers/usb/phy/phy-msm-usb.c                      | 35 +++++++++++++++++-----
  include/linux/usb/msm_hsusb.h                      |  1 +
- include/linux/usb/msm_hsusb_hw.h                   |  1 +
- 4 files changed, 30 insertions(+), 2 deletions(-)
+ 3 files changed, 33 insertions(+), 8 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index ee4123d..0669667 100644
+index 0669667..2826f2a 100644
 --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
 +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -59,6 +59,12 @@ Optional properties:
-                 For example: qcom,phy-init-sequence = < -1 0x63 >;
-                 Will update only value at address ULPI_EXT_VENDOR_SPECIFIC + 1.
+@@ -65,6 +65,10 @@ Optional properties:
+                 Some platforms may have configuration to allow USB
+                 controller work with any of the two HSPHYs present.
 
-+- qcom,phy-num: Select number of pyco-phy to use, can be one of
-+                0 - PHY one, default
-+                1 - Second PHY
-+                Some platforms may have configuration to allow USB
-+                controller work with any of the two HSPHYs present.
++- qcom,vdd-levels: This property must be a list of three integer values
++                (no, min, max) where each value represents either a voltage
++                in microvolts or a value corresponding to voltage corner.
 +
  Example HSUSB OTG controller device node:
 
      usb@f9a55000 {
+@@ -87,4 +91,5 @@ Example HSUSB OTG controller device node:
+
+         qcom,otg-control = <1>;
+         qcom,phy-init-sequence = < -1 0x63 >;
++        qcom,vdd-levels = <1 5 7>;
+ 	};
 diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index d47d940..b03d7f1 100644
+index a89d966..08c9b2b 100644
 --- a/drivers/usb/phy/phy-msm-usb.c
 +++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -314,6 +314,9 @@ static int msm_otg_phy_reset(struct msm_otg *motg)
- 	if (!retries)
- 		return -ETIMEDOUT;
+@@ -62,6 +62,13 @@
 
-+	if (motg->phy_number)
-+		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
+ #define USB_PHY_VDD_DIG_VOL_MIN	1000000 /* uV */
+ #define USB_PHY_VDD_DIG_VOL_MAX	1320000 /* uV */
++#define USB_PHY_SUSP_DIG_VOL	500000  /* uV */
 +
- 	dev_info(motg->phy.dev, "phy_reset: success\n");
- 	return 0;
- }
-@@ -368,6 +371,9 @@ static int msm_otg_reset(struct usb_phy *phy)
- 		ulpi_write(phy, ulpi_val, ULPI_USB_INT_EN_FALL);
- 	}
++enum vdd_levels {
++	VDD_LEVEL_NONE = 0,
++	VDD_LEVEL_MIN,
++	VDD_LEVEL_MAX,
++};
 
-+	if (motg->phy_number)
-+		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
-+
- 	return 0;
- }
-
-@@ -404,6 +410,7 @@ static int msm_otg_suspend(struct msm_otg *motg)
- 	struct usb_phy *phy = &motg->phy;
- 	struct usb_bus *bus = phy->otg->host;
- 	struct msm_otg_platform_data *pdata = motg->pdata;
-+	void __iomem *addr;
- 	int cnt = 0;
-
- 	if (atomic_read(&motg->in_lpm))
-@@ -463,9 +470,13 @@ static int msm_otg_suspend(struct msm_otg *motg)
- 	 */
- 	writel(readl(USB_USBCMD) | ASYNC_INTR_CTRL | ULPI_STP_CTRL, USB_USBCMD);
-
-+	addr = USB_PHY_CTRL;
-+	if (motg->phy_number)
-+		addr = USB_PHY_CTRL2;
-+
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL)
--		writel(readl(USB_PHY_CTRL) | PHY_RETEN, USB_PHY_CTRL);
-+		writel(readl(addr) | PHY_RETEN, addr);
-
- 	clk_disable_unprepare(motg->pclk);
- 	clk_disable_unprepare(motg->clk);
-@@ -495,6 +506,7 @@ static int msm_otg_resume(struct msm_otg *motg)
+ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
  {
- 	struct usb_phy *phy = &motg->phy;
- 	struct usb_bus *bus = phy->otg->host;
-+	void __iomem *addr;
- 	int cnt = 0;
- 	unsigned temp;
+@@ -69,8 +76,8 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
 
-@@ -508,9 +520,14 @@ static int msm_otg_resume(struct msm_otg *motg)
+ 	if (init) {
+ 		ret = regulator_set_voltage(motg->vddcx,
+-				USB_PHY_VDD_DIG_VOL_MIN,
+-				USB_PHY_VDD_DIG_VOL_MAX);
++				motg->vdd_levels[VDD_LEVEL_MIN],
++				motg->vdd_levels[VDD_LEVEL_MAX]);
+ 		if (ret) {
+ 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
+ 			return ret;
+@@ -81,7 +88,7 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+ 			dev_err(motg->phy.dev, "unable to enable hsusb vddcx\n");
+ 	} else {
+ 		ret = regulator_set_voltage(motg->vddcx, 0,
+-			USB_PHY_VDD_DIG_VOL_MAX);
++				motg->vdd_levels[VDD_LEVEL_MAX]);
+ 		if (ret)
+ 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
+ 		ret = regulator_disable(motg->vddcx);
+@@ -435,17 +442,16 @@ static int msm_phy_init(struct usb_phy *phy)
 
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
+ #ifdef CONFIG_PM
+
+-#define USB_PHY_SUSP_DIG_VOL  500000
+ static int msm_hsusb_config_vddcx(struct msm_otg *motg, int high)
+ {
+-	int max_vol = USB_PHY_VDD_DIG_VOL_MAX;
++	int max_vol = motg->vdd_levels[VDD_LEVEL_MAX];
+ 	int min_vol;
+ 	int ret;
+
+ 	if (high)
+-		min_vol = USB_PHY_VDD_DIG_VOL_MIN;
++		min_vol = motg->vdd_levels[VDD_LEVEL_MIN];
+ 	else
+-		min_vol = USB_PHY_SUSP_DIG_VOL;
++		min_vol = motg->vdd_levels[VDD_LEVEL_NONE];
+
+ 	ret = regulator_set_voltage(motg->vddcx, min_vol, max_vol);
+ 	if (ret) {
+@@ -1438,7 +1444,7 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct property *prop;
+ 	int len, ret;
+-	u32 val;
++	u32 val, tmp[3];
+
+ 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+ 	if (!pdata)
+@@ -1469,6 +1475,19 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+ 	if (!of_property_read_u32(node, "qcom,phy-num", &val) && val < 2)
+ 		motg->phy_number = val;
+
++	motg->vdd_levels[VDD_LEVEL_NONE] = USB_PHY_SUSP_DIG_VOL;
++	motg->vdd_levels[VDD_LEVEL_MIN] = USB_PHY_VDD_DIG_VOL_MIN;
++	motg->vdd_levels[VDD_LEVEL_MAX] = USB_PHY_VDD_DIG_VOL_MAX;
 +
-+		addr = USB_PHY_CTRL;
-+		if (motg->phy_number)
-+			addr = USB_PHY_CTRL2;
-+
- 		msm_hsusb_ldo_set_mode(motg, 1);
- 		msm_hsusb_config_vddcx(motg, 1);
--		writel(readl(USB_PHY_CTRL) & ~PHY_RETEN, USB_PHY_CTRL);
-+		writel(readl(addr) & ~PHY_RETEN, addr);
- 	}
-
- 	temp = readl(USB_USBCMD);
-@@ -1396,6 +1413,9 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 		if (val == OTG_PMIC_CONTROL)
- 			pdata->otg_control = val;
-
-+	if (!of_property_read_u32(node, "qcom,phy-num", &val) && val < 2)
-+		motg->phy_number = val;
++	if (of_get_property(node, "qcom,vdd-levels", &len) &&
++	    len == sizeof(tmp)) {
++		of_property_read_u32_array(node, "qcom,vdd-levels",
++					   tmp, len / sizeof(*tmp));
++		motg->vdd_levels[VDD_LEVEL_NONE] = tmp[VDD_LEVEL_NONE];
++		motg->vdd_levels[VDD_LEVEL_MIN] = tmp[VDD_LEVEL_MIN];
++		motg->vdd_levels[VDD_LEVEL_MAX] = tmp[VDD_LEVEL_MAX];
++	}
 +
  	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
  	if (!prop || !len)
  		return 0;
 diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 4e5d916..4628f1a 100644
+index 4628f1a..b0a3924 100644
 --- a/include/linux/usb/msm_hsusb.h
 +++ b/include/linux/usb/msm_hsusb.h
-@@ -158,6 +158,7 @@ struct msm_otg {
- 	atomic_t in_lpm;
- 	int async_int;
- 	unsigned cur_power;
-+	int phy_number;
- 	struct delayed_work chg_work;
- 	enum usb_chg_state chg_state;
- 	enum usb_chg_type chg_type;
-diff --git a/include/linux/usb/msm_hsusb_hw.h b/include/linux/usb/msm_hsusb_hw.h
-index 6e97a2d..e6d7035 100644
---- a/include/linux/usb/msm_hsusb_hw.h
-+++ b/include/linux/usb/msm_hsusb_hw.h
-@@ -25,6 +25,7 @@
- #define USB_OTGSC            (MSM_USB_BASE + 0x01A4)
- #define USB_USBMODE          (MSM_USB_BASE + 0x01A8)
- #define USB_PHY_CTRL         (MSM_USB_BASE + 0x0240)
-+#define USB_PHY_CTRL2        (MSM_USB_BASE + 0x0278)
+@@ -169,6 +169,7 @@ struct msm_otg {
 
- #define USBCMD_RESET   2
- #define USB_USBINTR          (MSM_USB_BASE + 0x0148)
+ 	struct reset_control *phy_rst;
+ 	struct reset_control *link_rst;
++	int vdd_levels[3];
+ };
+
+ #endif
 --
 1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
