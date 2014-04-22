@@ -1,44 +1,156 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3] of: fix of_update_property again
-Date: Tue, 22 Apr 2014 09:10:35 -0500
-Message-ID: <CAL_JsqK6O8AeSMZTv=-nOApr6rhJG=-PTnL4EiomOEGH+jjCRw@mail.gmail.com>
-References: <1397720909-24774-1-git-send-email-Li.Xiubo@freescale.com>
-	<CAL_JsqKFRLECtSL3CKE_heruO-RJh96G-C_NsEZFVRkjAOdL-Q@mail.gmail.com>
-	<20140422140605.EEA6EC40793@trevor.secretlab.ca>
+From: Benoit Cousson <bcousson@baylibre.com>
+Subject: Re: [PATCH RFC] ARM: dts: am335x: update USB DT references
+Date: Tue, 22 Apr 2014 16:14:36 +0200
+Message-ID: <5356794C.7070707@baylibre.com>
+References: <1397647595-10927-1-git-send-email-leigh@solinno.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140422140605.EEA6EC40793-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1397647595-10927-1-git-send-email-leigh@solinno.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Leigh Brown <leigh@solinno.co.uk>, Mugunthan V N <mugunthanvnm@ti.com>
+Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 9:06 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 17 Apr 2014 09:32:16 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Thu, Apr 17, 2014 at 2:48 AM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->> > The of_update_property() is intented to update a property in a node
->> > and if the property does not exist, will add it.
->> >
->> > The second search of the property is possibly won't be found, that
->> > maybe removed by other thread just before the second search begain.
->> >
->> > Using the __of_find_property() and __of_add_property() instead and
->> > move them into lock operations.
->>
->> I have a fix in my tree from Guenter which handles the race of the
->> property being removed. However, your change will be needed when we
->> have overlays and the node itself can be removed. So this is 3.16
->> material and will need to be rebased on Guenter's fix.
+Hi Leigh,
+
+On 16/04/2014 13:26, Leigh Brown wrote:
+> In "ARM: dts: am33xx: correcting dt node unit address for usb", the
+> usb_ctrl_mod and cppi41dma nodes were updated with the correct regist=
+er
+> addresses.  However, the dts files that reference these nodes were no=
+t
+> updated, and those devices are no longer being enabled.
 >
-> I didn't think Guenter's patch actually fixed a race. It only fixed a
-> double checking of the oldprop pointer. Do I have it wrong?
+> This patch corrects the references for the affected dts files.
 
-Yes, the commit message should have been clearer. The problem was that
-found was checked after updating the sysfs files.
+Thanks for the fix. BTW, why is it a RFC? Do you plan to send an update=
+d=20
+version?
 
-Rob
+=46YI, even with this fix, the BBB still does not have a working MUSB o=
+n=20
+3.15-rc2. Have you observed that as well?
+
+> Signed-off-by: Leigh Brown <leigh@solinno.co.uk>
+
+If this is a final version, I'll apply it for -rc3.
+
+Thanks,
+Benoit
+
+
+> ---
+>   arch/arm/boot/dts/am335x-bone-common.dtsi | 4 ++--
+>   arch/arm/boot/dts/am335x-evm.dts          | 4 ++--
+>   arch/arm/boot/dts/am335x-evmsk.dts        | 4 ++--
+>   arch/arm/boot/dts/am335x-igep0033.dtsi    | 4 ++--
+>   4 files changed, 8 insertions(+), 8 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boo=
+t/dts/am335x-bone-common.dtsi
+> index e3f27ec..2e7d932 100644
+> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> @@ -183,7 +183,7 @@
+>   &usb {
+>   	status =3D "okay";
+>
+> -	control@44e10000 {
+> +	control@44e10620 {
+>   		status =3D "okay";
+>   	};
+>
+> @@ -204,7 +204,7 @@
+>   		dr_mode =3D "host";
+>   	};
+>
+> -	dma-controller@07402000  {
+> +	dma-controller@47402000  {
+>   		status =3D "okay";
+>   	};
+>   };
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am3=
+35x-evm.dts
+> index 28ae040..77df10d 100644
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -331,7 +331,7 @@
+>   &usb {
+>   	status =3D "okay";
+>
+> -	control@44e10000 {
+> +	control@44e10620 {
+>   		status =3D "okay";
+>   	};
+>
+> @@ -352,7 +352,7 @@
+>   		dr_mode =3D "host";
+>   	};
+>
+> -	dma-controller@07402000  {
+> +	dma-controller@47402000  {
+>   		status =3D "okay";
+>   	};
+>   };
+> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/a=
+m335x-evmsk.dts
+> index ec08f6f..ab23885 100644
+> --- a/arch/arm/boot/dts/am335x-evmsk.dts
+> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
+> @@ -364,7 +364,7 @@
+>   &usb {
+>   	status =3D "okay";
+>
+> -	control@44e10000 {
+> +	control@44e10620 {
+>   		status =3D "okay";
+>   	};
+>
+> @@ -385,7 +385,7 @@
+>   		dr_mode =3D "host";
+>   	};
+>
+> -	dma-controller@07402000  {
+> +	dma-controller@47402000  {
+>   		status =3D "okay";
+>   	};
+>   };
+> diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/d=
+ts/am335x-igep0033.dtsi
+> index 7063311..5942e7d 100644
+> --- a/arch/arm/boot/dts/am335x-igep0033.dtsi
+> +++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
+> @@ -202,7 +202,7 @@
+>   &usb {
+>   	status =3D "okay";
+>
+> -	control@44e10000 {
+> +	control@44e10620 {
+>   		status =3D "okay";
+>   	};
+>
+> @@ -223,7 +223,7 @@
+>   		dr_mode =3D "host";
+>   	};
+>
+> -	dma-controller@07402000  {
+> +	dma-controller@47402000  {
+>   		status =3D "okay";
+>   	};
+>   };
+>
+
+
+--=20
+Beno=EEt Cousson
+BayLibre
+Embedded Linux Technology Lab
+www.baylibre.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
