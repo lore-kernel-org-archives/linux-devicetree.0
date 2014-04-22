@@ -1,139 +1,64 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH 1/2] omapdss: panel-tpo-td028ec1: Add DT support.
-Date: Tue, 22 Apr 2014 23:12:47 +0200
-Message-ID: <1398201168-25275-2-git-send-email-marek@goldelico.com>
-References: <1398201168-25275-1-git-send-email-marek@goldelico.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: [PATCH 0/2] net: Add Keystone NetCP ethernet driver support
+Date: Tue, 22 Apr 2014 17:21:13 -0400
+Message-ID: <1398201675-17379-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398201168-25275-1-git-send-email-marek@goldelico.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, hns@goldelico.com, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, David Miller <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Sandeep Nair <sandeep_n@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- .../bindings/video/toppoly,td028ttec1.txt          | 30 ++++++++++++++++++++
- .../omap2/displays-new/panel-tpo-td028ttec1.c      | 32 +++++++++++++++++++++-
- 2 files changed, 61 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/video/toppoly,td028ttec1.txt
+Couple of patches to add Keystone NetCP ethernet driver support.
 
-diff --git a/Documentation/devicetree/bindings/video/toppoly,td028ttec1.txt b/Documentation/devicetree/bindings/video/toppoly,td028ttec1.txt
-new file mode 100644
-index 0000000..7175dc3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/toppoly,td028ttec1.txt
-@@ -0,0 +1,30 @@
-+Toppoly TD028TTEC1 Panel
-+========================
-+
-+Required properties:
-+- compatible: "toppoly,td028ttec1"
-+
-+Optional properties:
-+- label: a symbolic name for the panel
-+
-+Required nodes:
-+- Video port for DPI input
-+
-+Example
-+-------
-+
-+lcd-panel: td028ttec1@0 {
-+	compatible = "toppoly,td028ttec1";
-+	reg = <0>;
-+	spi-max-frequency = <100000>;
-+	spi-cpol;
-+	spi-cpha;
-+
-+	label = "lcd";
-+	port {
-+		lcd_in: endpoint {
-+			remote-endpoint = <&dpi_out>;
-+		};
-+	};
-+};
-+
-diff --git a/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c b/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c
-index fae6adc..70a56ff 100644
---- a/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c
-+++ b/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c
-@@ -206,7 +206,8 @@ static int td028ttec1_panel_enable(struct omap_dss_device *dssdev)
- 	if (omapdss_device_is_enabled(dssdev))
- 		return 0;
- 
--	in->ops.dpi->set_data_lines(in, ddata->data_lines);
-+	if (ddata->data_lines)
-+		in->ops.dpi->set_data_lines(in, ddata->data_lines);
- 	in->ops.dpi->set_timings(in, &ddata->videomode);
- 
- 	r = in->ops.dpi->enable(in);
-@@ -389,6 +390,23 @@ static int td028ttec1_panel_probe_pdata(struct spi_device *spi)
- 	return 0;
- }
- 
-+static int td028ttec1_probe_of(struct spi_device *spi)
-+{
-+	struct device_node *node = spi->dev.of_node;
-+	struct panel_drv_data *ddata = dev_get_drvdata(&spi->dev);
-+	struct omap_dss_device *in;
-+
-+	in = omapdss_of_find_source_for_first_ep(node);
-+	if (IS_ERR(in)) {
-+		dev_err(&spi->dev, "failed to find video source\n");
-+		return PTR_ERR(in);
-+	}
-+
-+	ddata->in = in;
-+
-+	return 0;
-+}
-+
- static int td028ttec1_panel_probe(struct spi_device *spi)
- {
- 	struct panel_drv_data *ddata;
-@@ -418,6 +436,10 @@ static int td028ttec1_panel_probe(struct spi_device *spi)
- 		r = td028ttec1_panel_probe_pdata(spi);
- 		if (r)
- 			return r;
-+	} else if (spi->dev.of_node) {
-+		r = td028ttec1_probe_of(spi);
-+		if (r)
-+			return r;
- 	} else {
- 		return -ENODEV;
- 	}
-@@ -463,6 +485,13 @@ static int td028ttec1_panel_remove(struct spi_device *spi)
- 	return 0;
- }
- 
-+static const struct of_device_id td028ttec1_of_match[] = {
-+	{ .compatible = "toppoly,td028ttec1", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, td028ttec1_of_match);
-+
- static struct spi_driver td028ttec1_spi_driver = {
- 	.probe		= td028ttec1_panel_probe,
- 	.remove		= td028ttec1_panel_remove,
-@@ -470,6 +499,7 @@ static struct spi_driver td028ttec1_spi_driver = {
- 	.driver         = {
- 		.name   = "panel-tpo-td028ttec1",
- 		.owner  = THIS_MODULE,
-+		.of_match_table = td028ttec1_of_match,
- 	},
- };
- 
+The network coprocessor (NetCP) is a hardware accelerator that processes
+Ethernet packets. NetCP has a gigabit Ethernet (GbE) subsystem with a ethernet
+switch sub-module to send and receive packets. NetCP also includes a packet
+accelerator (PA) module to perform packet classification operations such as
+header matching, and packet modification operations such as checksum
+generation. NetCP can also optionally include a Security Accelerator(SA)
+capable of performing IPSec operations on ingress/egress packets.
+    
+Keystone SoC's also have a 10 Gigabit Ethernet Subsystem (XGbE) which
+includes a 3-port Ethernet switch sub-module capable of 10Gb/s and
+1Gb/s rates per Ethernet port.
+    
+NetCP driver has a plug-in module architecture where each of the NetCP
+sub-modules exist as a loadable kernel module which plug in to the netcp
+core. These sub-modules are represented as "netcp-devices" in the dts
+bindings. It is mandatory to have the ethernet switch sub-module for
+the ethernet interface to be operational. Any other sub-module like the
+PA is optional.
+
+Both GBE and XGBE network processors supported using common driver. It
+is also designed to handle future variants of NetCP.
+
+Cc: David Miller <davem@davemloft.net>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Sandeep Nair <sandeep_n@ti.com>
+
+Sandeep Nair (2):
+  Documentation: dt: net: Add binding doc for Keystone NetCP ethernet
+    driver
+  net: Add Keystone NetCP ethernet driver
+
+ .../devicetree/bindings/net/keystone-netcp.txt     |  197 ++
+ drivers/net/ethernet/ti/Kconfig                    |   16 +-
+ drivers/net/ethernet/ti/Makefile                   |    4 +
+ drivers/net/ethernet/ti/netcp.h                    |  226 ++
+ drivers/net/ethernet/ti/netcp_core.c               | 2194 ++++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_ethss.c              | 2177 +++++++++++++++++++
+ drivers/net/ethernet/ti/netcp_sgmii.c              |  130 ++
+ drivers/net/ethernet/ti/netcp_xgbepcsr.c           |  502 +++++
+ 8 files changed, 5443 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/keystone-netcp.txt
+ create mode 100644 drivers/net/ethernet/ti/netcp.h
+ create mode 100644 drivers/net/ethernet/ti/netcp_core.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_ethss.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_sgmii.c
+ create mode 100644 drivers/net/ethernet/ti/netcp_xgbepcsr.c
+
 -- 
-1.8.3.2
+1.7.9.5
