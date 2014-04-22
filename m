@@ -1,110 +1,42 @@
-From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/3] arm: exynos: Add /dev/bL_status user interface on
- Exynos5420
-Date: Tue, 22 Apr 2014 11:47:37 +0530
-Message-ID: <1398147457-3186-1-git-send-email-a.kesavan@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 05/13] extcon: extcon-class: improve extcon client API
+Date: Tue, 22 Apr 2014 08:21:35 +0200
+Message-ID: <53560A6F.8030909@samsung.com>
+References: <1397475984-28001-1-git-send-email-r.baldyga@samsung.com>
+ <1397475984-28001-6-git-send-email-r.baldyga@samsung.com>
+ <20140419105225.GB976@ambient.musicnaut.iki.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20140419105225.GB976-xqjnvvOjuzxi8rthE/p55WsfGuYhQEVp@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rongjun.ying-kQvG35nSl+M@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a user interface to check the core and cluster status on
-Exynos5420. This can be utilized while debugging mcpm issues.
-cat /dev/bL_status will show the current power status of all
-the 8 cores along with the cluster.
+On 04/19/2014 12:52 PM, Aaro Koskinen wrote:
+> Hi,
+> 
+> On Mon, Apr 14, 2014 at 01:46:16PM +0200, Robert Baldyga wrote:
+>>  	dev_info(&pdev->dev,
+>> -		 "OMAP USB OTG controller rev %d.%d (%s, id=%d, vbus=%d)\n",
+>> -		 (rev >> 4) & 0xf, rev & 0xf, config->extcon, otg_dev->id,
+>> +		 "OMAP USB OTG controller rev %d.%d (id=%d, vbus=%d)\n",
+>> +		 (rev >> 4) & 0xf, rev & 0xf, otg_dev->id,
+>>  		 otg_dev->vbus);
+> 
+> This change is unrelated to the patch and not needed.
+>
 
-Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/mach-exynos/mcpm-exynos.c |   64 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+It's related because we no longer use config->extcon since we have
+cable-oriented API. We can keep displaying it, but this value is
+actually meaningless.
 
-diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-index 49b9031..6c74c82 100644
---- a/arch/arm/mach-exynos/mcpm-exynos.c
-+++ b/arch/arm/mach-exynos/mcpm-exynos.c
-@@ -293,6 +293,53 @@ static void __init exynos_mcpm_usage_count_init(void)
- 	cpu_use_count[cpu][cluster] = 1;
- }
- 
-+static size_t bL_check_status(char *info)
-+{
-+	size_t len = 0;
-+	int i;
-+
-+	len += sprintf(&info[len], "\t0 1 2 3 L2\n");
-+	len += sprintf(&info[len], "[A15]   ");
-+	for (i = 0; i < 4; i++) {
-+		len += sprintf(&info[len], "%d ",
-+			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
-+	}
-+	len += sprintf(&info[len], "%d\n",
-+			(readl(EXYNOS_COMMON_STATUS(0)) & 0x3) == 3 ? 1 : 0);
-+
-+	len += sprintf(&info[len], "[A7]    ");
-+	for (i = 4; i < 8; i++)
-+		len += sprintf(&info[len], "%d ",
-+			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
-+	len += sprintf(&info[len], "%d\n\n",
-+			(readl(EXYNOS_COMMON_STATUS(1)) & 0x3) == 3 ? 1 : 0);
-+
-+	return len;
-+}
-+
-+static ssize_t bL_status_read(struct file *file, char __user *buf,
-+			size_t len, loff_t *pos)
-+{
-+	size_t count = 0;
-+	char info[100];
-+
-+	count = bL_check_status(info);
-+	if (count < 0)
-+		return -EINVAL;
-+
-+	return simple_read_from_buffer(buf, len, pos, info, count);
-+}
-+
-+static const struct file_operations bL_status_fops = {
-+	.read		= bL_status_read,
-+};
-+
-+static struct miscdevice bL_status_device = {
-+	MISC_DYNAMIC_MINOR,
-+	"bL_status",
-+	&bL_status_fops
-+};
-+
- /*
-  * Enable cluster-level coherency, in preparation for turning on the MMU.
-  */
-@@ -343,3 +390,20 @@ static int __init exynos_mcpm_init(void)
- }
- 
- early_initcall(exynos_mcpm_init);
-+
-+static int __init exynos_bl_status_init(void)
-+{
-+	int ret;
-+
-+	if (!soc_is_exynos5420())
-+		return -ENODEV;
-+
-+	ret = misc_register(&bL_status_device);
-+	if (ret) {
-+		pr_info("bl_status not available\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+late_initcall(exynos_bl_status_init);
--- 
-1.7.9.5
-
+Best regards
+Robert Baldyga
+Samsung R&D Institute Poland
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
