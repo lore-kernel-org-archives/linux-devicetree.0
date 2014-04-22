@@ -1,61 +1,130 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 5/7] pinctrl: sunxi: define A31 R_PIO pin functions
-Date: Tue, 22 Apr 2014 15:27:16 +0200
-Message-ID: <53566E34.2070709@free-electrons.com>
-References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>	<1397137966-30818-6-git-send-email-boris.brezillon@free-electrons.com> <CACRpkdam1a0TUPx4rMG6mzXwRdYZgfeZdBUhk0hnWAbKVQKr=A@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3 2/3] dma: Add Xilinx Video DMA DT Binding Documentation
+Date: Tue, 22 Apr 2014 08:34:25 -0500
+Message-ID: <CAL_Jsq+FZt5yLwePEwiAHoACM1S2rE3Yi0302LwRHWdn-pcnFQ@mail.gmail.com>
+References: <1392465619-27614-1-git-send-email-sthokal@xilinx.com>
+	<1392465619-27614-3-git-send-email-sthokal@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdam1a0TUPx4rMG6mzXwRdYZgfeZdBUhk0hnWAbKVQKr=A@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dev@linux-sunxi.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1392465619-27614-3-git-send-email-sthokal@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srikanth Thokala <sthokal@xilinx.com>
+Cc: Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, levex@linux.com, Lars-Peter Clausen <lars@metafoo.de>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, dmaengine@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 22/04/2014 13:47, Linus Walleij wrote:
-> On Thu, Apr 10, 2014 at 3:52 PM, Boris BREZILLON
-> <boris.brezillon@free-electrons.com> wrote:
+On Sat, Feb 15, 2014 at 6:00 AM, Srikanth Thokala <sthokal@xilinx.com> wrote:
+> Device-tree binding documentation of Xilinx Video DMA Engine
 >
->> The A31 SoC provides both PL and PM pio bank through the R_PIO block.
->>
->> These pins all support gpio function and can bbe assigned to system
->> peripherals (like TWI, P2WI, JTAG, ...)
->>
->> Add new compatible string to the DT bindings doc.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> PARTLY APPLIED.
+> Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
+
+A few typos below, but otherwise:
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+> ---
+> Changes in v3:
+> None
 >
-> The patch to the DT bindings apparently depend on some
-> patch that I do *NOT* have in my tree, please figure out what is
-> going on here and help me figure out what and how to apply the
-> changes to the bindings.
-
-Oops: I dropped the patch documenting existing compatible strings in
-this version ([1]).
-
+> Changes in v2:
+> - Removed device-id DT property, as suggested by Arnd Bergmann
+> - Properly documented DT bindings as suggested by Arnd Bergmann
+> ---
+>  .../devicetree/bindings/dma/xilinx/xilinx_vdma.txt |   75 ++++++++++++++++++++
+>  1 file changed, 75 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
 >
-> The hunk adding the docs was dropped from the patch, please
-> develop new series on top of my pinctrl devel branch as I
-> push it out.
+> diff --git a/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+> new file mode 100644
+> index 0000000..ab8be1a
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/xilinx/xilinx_vdma.txt
+> @@ -0,0 +1,75 @@
+> +Xilinx AXI VDMA engine, it does transfers between memory and video devices.
+> +It can be configured to have one channel or two channels. If configured
+> +as two channels, one is to transmit to the video device and another is
+> +to receive from the video device.
+> +
+> +Required properties:
+> +- compatible: Should be "xlnx,axi-vdma-1.00.a"
+> +- #dma-cells: Should be <1>, see "dmas" property below
+> +- reg: Should contain VDMA registers location and length.
+> +- xlnx,num-fstores: Should be the number of framebuffers as configured in h/w.
+> +- dma-channel child node: Should have atleast one channel and can have upto
 
-Sure, I'll make a new patch listing all compatible strings (including
-this new one) in the sunxi pinctrl DT bindings doc.
+s/atleast/at least/
+s/upto/up to/
 
-Thanks,
+> +       two channels per device. This node specifies the properties of each
+> +       DMA channel (see child node properties below).
+> +
+> +Optional properties:
+> +- xlnx,include-sg: Tells whether configured for Scatter-mode in
+> +       the hardware.
+> +- xlnx,flush-fsync: Tells whether which channel to Flush on Frame sync.
 
-Boris
+s/whether//
 
-[1] https://lkml.org/lkml/2014/4/9/258
+> +       It takes following values:
+> +       {1}, flush both channels
+> +       {2}, flush mm2s channel
+> +       {3}, flush s2mm channel
+> +
+> +Required child node properties:
+> +- compatible: It should be either "xlnx,axi-vdma-mm2s-channel" or
+> +       "xlnx,axi-vdma-s2mm-channel".
+> +- interrupts: Should contain per channel VDMA interrupts.
+> +- xlnx,data-width: Should contain the stream data width, take values
+> +       {32,64...1024}.
+> +
+> +Option child node properties:
+
+s/Option/Optional/
+
+> +- xlnx,include-dre: Tells whether hardware is configured for Data
+> +       Realignment Engine.
+> +- xlnx,genlock-mode: Tells whether Genlock synchronization is
+> +       enabled/disabled in hardware.
+> +
+> +Example:
+> +++++++++
+> +
+> +axi_vdma_0: axivdma@40030000 {
+> +       compatible = "xlnx,axi-vdma-1.00.a";
+> +       #dma_cells = <1>;
+> +       reg = < 0x40030000 0x10000 >;
+> +       xlnx,num-fstores = <0x8>;
+> +       xlnx,flush-fsync = <0x1>;
+> +       dma-channel@40030000 {
+> +               compatible = "xlnx,axi-vdma-mm2s-channel";
+> +               interrupts = < 0 54 4 >;
+> +               xlnx,datawidth = <0x40>;
+> +       } ;
+> +       dma-channel@40030030 {
+> +               compatible = "xlnx,axi-vdma-s2mm-channel";
+> +               interrupts = < 0 53 4 >;
+> +               xlnx,datawidth = <0x40>;
+> +       } ;
+> +} ;
+> +
+> +
+> +* DMA client
+> +
+> +Required properties:
+> +- dmas: a list of <[Video DMA device phandle] [Channel ID]> pairs,
+> +       where Channel ID is '0' for write/tx and '1' for read/rx
+> +       channel.
+> +- dma-names: a list of DMA channel names, one per "dmas" entry
+> +
+> +Example:
+> +++++++++
+> +
+> +vdmatest_0: vdmatest@0 {
+> +       compatible ="xlnx,axi-vdma-test-1.00.a";
+> +       dmas = <&axi_vdma_0 0
+> +               &axi_vdma_0 1>;
+> +       dma-names = "vdma0", "vdma1";
+> +} ;
+> --
+> 1.7.9.5
 >
-> Yours,
-> Linus Walleij
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
