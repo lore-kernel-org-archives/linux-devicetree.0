@@ -1,79 +1,91 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: tegra: Deprecate nvidia,hpd-gpio property
-Date: Tue, 22 Apr 2014 09:23:15 +0200
-Message-ID: <20140422072314.GB11766@ulmo>
-References: <1397736181-1593-1-git-send-email-thierry.reding@gmail.com>
- <1397736181-1593-2-git-send-email-thierry.reding@gmail.com>
- <535574D6.3010002@wwwdotorg.org>
+From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
+Date: Tue, 22 Apr 2014 12:58:41 +0530
+Message-ID: <CALHRZur7+MaYXbWOfbvjggPN7_eYAE+th5VNbcLP=ehvm0HGsA@mail.gmail.com>
+References: <20140421160802.GA22794@saruman.home>
+	<Pine.LNX.4.44L0.1404211228190.1201-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3lcZGd9BuhuYXNfi"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <535574D6.3010002-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1404211228190.1201-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---3lcZGd9BuhuYXNfi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 21, 2014 at 10:09 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> On Mon, 21 Apr 2014, Felipe Balbi wrote:
+>
+>> Hi,
+>>
+>> On Fri, Apr 18, 2014 at 07:34:08PM +0530, sundeep subbaraya wrote:
+>>
+>> <snip>
+>>
+>> > >> in ep_queue driver starts dma transfer from/to IP buffer to/from req->buf.
+>> > >> If transfer is completed then request is not added to ep request queue
+>> > >> and returns from ep_queue.
+>> > >> If transfer is not completed (actual < length) then request is added
+>> > >> to queue and returns from ep_queue.
+>> > >
+>> > > This is wrong. Why wouldn't you give gadget driver the chance to decide
+>> > > if it needs to queue the request again or not ?
+>> >
+>> > When does gadget driver decides to queue the same request again?
+>> > if -EBUSY is returned from ep_queue or req.status != 0 in completion
+>> > routine?
+>>
+>> whenever it so decides. Different gadget drivers might have different
+>> requirements. The code is open and sits under drivers/usb/gadget/ why
+>> don't you have a read ?
+>
+> I get the impression that the two of you are arguing past each other.
+> It appears that Sundeep is talking about transferring data from the
+> gadget driver's buffer to an internal buffer in the UDC hardware, but
+> Felipe is talking about transferring data from the UDC to the host.
+>
+> As I understand it, Sundeep said that when the gadget driver queues a
+> data-IN request, the UDC driver copies as much of the data buffer as
+> possible into a hardware FIFO.  If it succeeds in copying all the data
+> into the FIFO then the request's completion routine gets called
+> immediately, even though the data doesn't get sent from the FIFO to the
+> host until the host asks for it.
+>
+> If only part of the data can be copied into the FIFO then the request
+> is added to the ep's request queue before the usb_ep_queue() call
+> returns.  When space becomes available in the FIFO, the data will be
+> copied and eventually sent to the host.  When all the data has been
+> copied to the FIFO, the request's completion routine will be called.
+>
+> Thus there never is any need for the gadget driver to queue the request
+> again.  An incomplete transfer means the FIFO didn't have enough room
+> when the request was submitted; it doesn't mean that the data didn't
+> eventually get sent to the host.
 
-On Mon, Apr 21, 2014 at 01:43:18PM -0600, Stephen Warren wrote:
-> On 04/17/2014 06:02 AM, Thierry Reding wrote:
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >=20
-> > Properties referencing GPIOs should use the plural suffix -gpios. This
-> > convention is encoded in the device tree backend of gpiod_get(), which
-> > we'll eventually want to migrate to.
->=20
-> Wouldn't it be simpler to fix the GPIO binding documentation and
-> gpiod_get() code to allow the -gpio suffix in addition to -gpios? It
-> always struck me as silly that the binding required a plural property
-> name when only a single entry made sense.
->=20
-> (For something like "clocks", since the property name applies to any
-> clock, and there certainly can be many clocks, a plural property name
-> makes sense. However, since each type of GPIO is "foo-gpios" rather than
-> an "foo" entry in "gpios", that same argument doesn't apply, and a
-> singular property name seems much more correct).
+Exactly Alan,this is what I was trying to say. Probably I was not
+clear in explaining. I didnt see
+any harm this way and even this implementation is same like
+at91_udc.c. I have been reading
+mas_storage to understand when does gadget driver tries to enqueue a
+request again. Since
+different gadget drivers might have different requirements (agree with
+Felipe), wanted to
+know criteria for queuing a same request again.
 
-Yeah, it's somewhat unfortunate that this is done inconsistently across
-different subsystems. GPIO isn't the only exception here. Regulators use
-a similar pattern.
+I will change this implementation as per Felipe comments and test with
+some of the gadgets.
 
-For consistency it'd be nice if we could get everyone to agree to one
-scheme, but I suspect that by now we're far beyond that being a viable
-option.
+Thanks Alan and Felipe,
+Sundeep
 
-I don't have a strong feeling either way, so if allowing both *-gpios
-and *-gpio properties is what we want, then I can certainly come up with
-a patch.
-
-Thierry
-
---3lcZGd9BuhuYXNfi
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTVhjiAAoJEN0jrNd/PrOhDbQP/3DCY/Kj3BwMOHsJ6GZSbBv4
-z+RFkz8CA/Cbncs8/h7YYer2WZyzwqaHzyrcy74s74x6FNucNfAB/lIG5N18a/MG
-FKL81DVezZ1J+AAAWXeF5mc9ext5BXVVkyjxHbg0bPH5jGMXclnafRz8sRnLSCx1
-yTAAL3xwQUZQaXqaYHo48cSDcrvaRhA0l37MM1GVg/eYM5f+ZRA5aWUHWCkzk9cz
-+gWRMaygup0Hkl9NzbRSo2htr8+iwDfjjbSxpt06k+gEVVW8AYzHxFOUTT4XgW2X
-OyadSf4WS3zKlc7FFayBk+QQrr/9RCBP+Iq07tyWwKLAYMdWQmhNOlqxmbpCf7S8
-4STFmnlOrI7xnRPaV7cxT3cpqnAIIYQt09zU2KcnkRmMoptF6/zyRalPpbBtUBUi
-LvY2TkXF/FfTVz+vGntSN9n7+53tZedSggXzikY/ODFGtZAJxcm6Yh3VwOpMiJZM
-VifYaFkft3VJ1MrabUx8+mg5cLDeXwX3FhOvkuWBnuVuqZrRUXvXZjFLDveKUWQ9
-JoovF4IRYYknxpNEfR5WhfgQ3m013zFNNozaUigxQLbivd3WET6zQMe5KhHtiIYg
-ca52SKa4ieRaGhHJzSGfKNXs7l9UoXM0g1SG6ONtBi0A0nesmEikgp6r8udYQBUZ
-B7/FyBeIO7gSqfKdeMXo
-=G3Ur
------END PGP SIGNATURE-----
-
---3lcZGd9BuhuYXNfi--
+>
+> HTH,
+>
+> Alan Stern
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
