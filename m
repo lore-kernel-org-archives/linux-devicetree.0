@@ -1,152 +1,42 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v6 18/19] usb: phy: msm: Vote for corner of VDD CX instead of voltage of VDD CX
-Date: Tue, 22 Apr 2014 12:20:37 +0300
-Message-ID: <1398158438-21579-19-git-send-email-iivanov@mm-sol.com>
-References: <1398158438-21579-1-git-send-email-iivanov@mm-sol.com>
+From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 1/3] devicetree: bindings: add Zarlink to the vendor prefixes
+Date: Tue, 22 Apr 2014 11:30:29 +0200
+Message-ID: <1398159031-10110-2-git-send-email-valentin.longchamp@keymile.com>
+References: <1398159031-10110-1-git-send-email-valentin.longchamp@keymile.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398158438-21579-1-git-send-email-iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1398159031-10110-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Even though the company belongs to Microsemi, many chips are still
+labeled as Zarlink. Among them is the family of network clock generators,
+the zl3034x.
 
-New platform uses RBCPR hardware feature, with that voting for
-absolute voltage of VDD CX is not required. Hence vote for corner of
-VDD CX which uses nominal corner voltage on VDD CX.
+Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Mayank Rana <mrana-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- .../devicetree/bindings/usb/msm-hsusb.txt          |  5 ++++
- drivers/usb/phy/phy-msm-usb.c                      | 35 +++++++++++++++++-----
- include/linux/usb/msm_hsusb.h                      |  1 +
- 3 files changed, 33 insertions(+), 8 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index 0669667..2826f2a 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -65,6 +65,10 @@ Optional properties:
-                 Some platforms may have configuration to allow USB
-                 controller work with any of the two HSPHYs present.
+Changes in v4: None
+Changes in v3: None
+Changes in v2:
+- add a patch so that the Zarlink vendor prefix is defined
 
-+- qcom,vdd-levels: This property must be a list of three integer values
-+                (no, min, max) where each value represents either a voltage
-+                in microvolts or a value corresponding to voltage corner.
-+
- Example HSUSB OTG controller device node:
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-     usb@f9a55000 {
-@@ -87,4 +91,5 @@ Example HSUSB OTG controller device node:
-
-         qcom,otg-control = <1>;
-         qcom,phy-init-sequence = < -1 0x63 >;
-+        qcom,vdd-levels = <1 5 7>;
- 	};
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index a89d966..08c9b2b 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -62,6 +62,13 @@
-
- #define USB_PHY_VDD_DIG_VOL_MIN	1000000 /* uV */
- #define USB_PHY_VDD_DIG_VOL_MAX	1320000 /* uV */
-+#define USB_PHY_SUSP_DIG_VOL	500000  /* uV */
-+
-+enum vdd_levels {
-+	VDD_LEVEL_NONE = 0,
-+	VDD_LEVEL_MIN,
-+	VDD_LEVEL_MAX,
-+};
-
- static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
- {
-@@ -69,8 +76,8 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
-
- 	if (init) {
- 		ret = regulator_set_voltage(motg->vddcx,
--				USB_PHY_VDD_DIG_VOL_MIN,
--				USB_PHY_VDD_DIG_VOL_MAX);
-+				motg->vdd_levels[VDD_LEVEL_MIN],
-+				motg->vdd_levels[VDD_LEVEL_MAX]);
- 		if (ret) {
- 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
- 			return ret;
-@@ -81,7 +88,7 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
- 			dev_err(motg->phy.dev, "unable to enable hsusb vddcx\n");
- 	} else {
- 		ret = regulator_set_voltage(motg->vddcx, 0,
--			USB_PHY_VDD_DIG_VOL_MAX);
-+				motg->vdd_levels[VDD_LEVEL_MAX]);
- 		if (ret)
- 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
- 		ret = regulator_disable(motg->vddcx);
-@@ -435,17 +442,16 @@ static int msm_phy_init(struct usb_phy *phy)
-
- #ifdef CONFIG_PM
-
--#define USB_PHY_SUSP_DIG_VOL  500000
- static int msm_hsusb_config_vddcx(struct msm_otg *motg, int high)
- {
--	int max_vol = USB_PHY_VDD_DIG_VOL_MAX;
-+	int max_vol = motg->vdd_levels[VDD_LEVEL_MAX];
- 	int min_vol;
- 	int ret;
-
- 	if (high)
--		min_vol = USB_PHY_VDD_DIG_VOL_MIN;
-+		min_vol = motg->vdd_levels[VDD_LEVEL_MIN];
- 	else
--		min_vol = USB_PHY_SUSP_DIG_VOL;
-+		min_vol = motg->vdd_levels[VDD_LEVEL_NONE];
-
- 	ret = regulator_set_voltage(motg->vddcx, min_vol, max_vol);
- 	if (ret) {
-@@ -1438,7 +1444,7 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 	struct device_node *node = pdev->dev.of_node;
- 	struct property *prop;
- 	int len, ret;
--	u32 val;
-+	u32 val, tmp[3];
-
- 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
- 	if (!pdata)
-@@ -1469,6 +1475,19 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 	if (!of_property_read_u32(node, "qcom,phy-num", &val) && val < 2)
- 		motg->phy_number = val;
-
-+	motg->vdd_levels[VDD_LEVEL_NONE] = USB_PHY_SUSP_DIG_VOL;
-+	motg->vdd_levels[VDD_LEVEL_MIN] = USB_PHY_VDD_DIG_VOL_MIN;
-+	motg->vdd_levels[VDD_LEVEL_MAX] = USB_PHY_VDD_DIG_VOL_MAX;
-+
-+	if (of_get_property(node, "qcom,vdd-levels", &len) &&
-+	    len == sizeof(tmp)) {
-+		of_property_read_u32_array(node, "qcom,vdd-levels",
-+					   tmp, len / sizeof(*tmp));
-+		motg->vdd_levels[VDD_LEVEL_NONE] = tmp[VDD_LEVEL_NONE];
-+		motg->vdd_levels[VDD_LEVEL_MIN] = tmp[VDD_LEVEL_MIN];
-+		motg->vdd_levels[VDD_LEVEL_MAX] = tmp[VDD_LEVEL_MAX];
-+	}
-+
- 	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
- 	if (!prop || !len)
- 		return 0;
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 4628f1a..b0a3924 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -169,6 +169,7 @@ struct msm_otg {
-
- 	struct reset_control *phy_rst;
- 	struct reset_control *link_rst;
-+	int vdd_levels[3];
- };
-
- #endif
---
-1.8.3.2
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 0f01c9b..93cc7dc 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -119,3 +119,4 @@ wlf	Wolfson Microelectronics
+ wm	Wondermedia Technologies, Inc.
+ xes	Extreme Engineering Solutions (X-ES)
+ xlnx	Xilinx
++zarlink	Zarlink Semiconductor
+-- 
+1.8.0.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
