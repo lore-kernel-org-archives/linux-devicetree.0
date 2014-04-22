@@ -1,42 +1,155 @@
-From: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 05/13] extcon: extcon-class: improve extcon client API
-Date: Tue, 22 Apr 2014 08:21:35 +0200
-Message-ID: <53560A6F.8030909@samsung.com>
-References: <1397475984-28001-1-git-send-email-r.baldyga@samsung.com>
- <1397475984-28001-6-git-send-email-r.baldyga@samsung.com>
- <20140419105225.GB976@ambient.musicnaut.iki.fi>
+From: Arun Kumar K <arunkk.samsung@gmail.com>
+Subject: Re: [PATCH] ARM: dts: Add peach-pit board support
+Date: Tue, 22 Apr 2014 12:01:23 +0530
+Message-ID: <CALt3h79bZGBFCykW9maw1pM0hZnjkYt5nZPO9t881=mn+Hqn6g@mail.gmail.com>
+References: <1397971609-6144-1-git-send-email-arun.kk@samsung.com>
+	<CAK9yfHxxkF_=8phxO8dim6F_BCbYcbsGQHPE4jBaQh=sLoFyvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140419105225.GB976-xqjnvvOjuzxi8rthE/p55WsfGuYhQEVp@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rongjun.ying-kQvG35nSl+M@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHxxkF_=8phxO8dim6F_BCbYcbsGQHPE4jBaQh=sLoFyvg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@google.com>, Olof Johansson <olofj@google.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2014 12:52 PM, Aaro Koskinen wrote:
-> Hi,
-> 
-> On Mon, Apr 14, 2014 at 01:46:16PM +0200, Robert Baldyga wrote:
->>  	dev_info(&pdev->dev,
->> -		 "OMAP USB OTG controller rev %d.%d (%s, id=%d, vbus=%d)\n",
->> -		 (rev >> 4) & 0xf, rev & 0xf, config->extcon, otg_dev->id,
->> +		 "OMAP USB OTG controller rev %d.%d (id=%d, vbus=%d)\n",
->> +		 (rev >> 4) & 0xf, rev & 0xf, otg_dev->id,
->>  		 otg_dev->vbus);
-> 
-> This change is unrelated to the patch and not needed.
+Hi Sachin,
+
+Thank you for the review.
+Will address you comments and post the next version.
+
+Regards
+Arun
+
+On Mon, Apr 21, 2014 at 10:59 AM, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> Hi Arun,
 >
-
-It's related because we no longer use config->extcon since we have
-cable-oriented API. We can keep displaying it, but this value is
-actually meaningless.
-
-Best regards
-Robert Baldyga
-Samsung R&D Institute Poland
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> On 20 April 2014 10:56, Arun Kumar K <arun.kk@samsung.com> wrote:
+>> Adds the google peach-pit board dts file which uses
+>> exynos5420 SoC.
+>>
+>> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> ---
+>>  arch/arm/boot/dts/Makefile                 |    1 +
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts |  225 ++++++++++++++++++++++++++++
+>>  2 files changed, 226 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index b9d6a8b..09bcb8d 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>>         exynos5250-snow.dtb \
+>>         exynos5420-arndale-octa.dtb \
+>>         exynos5420-smdk5420.dtb \
+>> +       exynos5420-peach-pit.dtb \
+>
+> Please arrange alphabetically. This should be added above smdk.
+>
+>>         exynos5440-sd5v1.dtb \
+>>         exynos5440-ssdk5440.dtb
+>>  dtb-$(CONFIG_ARCH_HI3xxx) += hi3620-hi4511.dtb
+>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> new file mode 100644
+>> index 0000000..4d61a5e
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> @@ -0,0 +1,225 @@
+>> +/*
+>> + * Google Peach Pit Rev 6+ board device tree source
+>> + *
+>> + * Copyright (c) 2014 Google, Inc
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +/dts-v1/;
+>> +#include "exynos5420.dtsi"
+>> +
+>> +/ {
+>> +       model = "Google Peach Pit Rev 6+";
+>> +
+>> +       compatible = "google,pit-rev16",
+>> +               "google,pit-rev15", "google,pit-rev14",
+>> +               "google,pit-rev13", "google,pit-rev12",
+>> +               "google,pit-rev11", "google,pit-rev10",
+>> +               "google,pit-rev9", "google,pit-rev8",
+>> +               "google,pit-rev7", "google,pit-rev6",
+>> +               "google,pit", "google,peach", "samsung,exynos5420";
+>
+> Please include the generic "samsung,exynos5" string.
+>
+>> +
+>> +       memory {
+>> +               reg = <0x20000000 0x80000000>;
+>> +       };
+>> +
+>> +       fixed-rate-clocks {
+>> +               oscclk {
+>> +                       compatible = "samsung,exynos5420-oscclk";
+>> +                       clock-frequency = <24000000>;
+>> +               };
+>> +       };
+>> +
+>> +       pinctrl@13400000 {
+>> +               lid_irq: lid-irq {
+>> +                       samsung,pins = "gpx3-4";
+>> +                       samsung,pin-function = <0>;
+>> +                       samsung,pin-pud = <0>;
+>> +                       samsung,pin-drv = <0>;
+>> +               };
+>> +
+>> +               power_key_irq: power-key-irq {
+>> +                       samsung,pins = "gpx1-2";
+>> +                       samsung,pin-function = <0>;
+>> +                       samsung,pin-pud = <0>;
+>> +                       samsung,pin-drv = <0>;
+>> +               };
+>> +
+>> +               tpm_irq: tpm-irq {
+>> +                       samsung,pins = "gpx1-0";
+>> +                       samsung,pin-function = <0>;
+>> +                       samsung,pin-pud = <0>;
+>> +                       samsung,pin-drv = <0>;
+>> +               };
+>> +       };
+>> +
+>> +       pinctrl@14010000 {
+>> +               spi_flash_cs: spi-flash-cs {
+>> +                       samsung,pins = "gpa2-5";
+>> +                       samsung,pin-function = <1>;
+>> +                       samsung,pin-pud = <0>;
+>> +                       samsung,pin-drv = <3>;
+>> +               };
+>> +
+>> +               backlight_pwm: backlight-pwm {
+>> +                       samsung,pins = "gpb2-0";
+>> +                       samsung,pin-function = <2>;
+>> +                       samsung,pin-pud = <0>;
+>> +                       samsung,pin-drv = <0>;
+>> +               };
+>> +       };
+>> +
+>> +       gpio-keys {
+>> +               compatible = "gpio-keys";
+>> +
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&power_key_irq &lid_irq>;
+>> +
+>> +               power {
+>> +                       label = "Power";
+>> +                       gpios = <&gpx1 2 1>;
+>> +                       linux,code = <116>; /* KEY_POWER */
+>
+> You may use the macro directly (instead of code) by including the
+> appropriate header file
+> (include/dt-bindings/input/input.h).
+>
+>
+> --
+> With warm regards,
+> Sachin
