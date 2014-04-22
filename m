@@ -1,41 +1,34 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 5/7] pinctrl: sunxi: define A31 R_PIO pin functions
-Date: Tue, 22 Apr 2014 13:47:01 +0200
-Message-ID: <CACRpkdam1a0TUPx4rMG6mzXwRdYZgfeZdBUhk0hnWAbKVQKr=A@mail.gmail.com>
-References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1397137966-30818-6-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1397137966-30818-6-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dev@linux-sunxi.org
+From: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/3] add hisilicon clk-hix5hd2
+Date: Tue, 22 Apr 2014 19:46:51 +0800
+Message-ID: <1398167214-1604-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 10, 2014 at 3:52 PM, Boris BREZILLON
-<boris.brezillon@free-electrons.com> wrote:
+Zhangfei Gao (3):
+  clk: hisi: use clk_register_mux_table in hisi_clk_register_mux
+  clk: hisi: add hisi_clk_register_gate
+  clk: hisi: add clk-hix5hd2.c
 
-> The A31 SoC provides both PL and PM pio bank through the R_PIO block.
->
-> These pins all support gpio function and can bbe assigned to system
-> peripherals (like TWI, P2WI, JTAG, ...)
->
-> Add new compatible string to the DT bindings doc.
->
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+ .../devicetree/bindings/clock/hix5hd2-clock.txt    |   31 ++++++
+ drivers/clk/Makefile                               |    1 +
+ drivers/clk/hisilicon/Makefile                     |    1 +
+ drivers/clk/hisilicon/clk-hix5hd2.c                |  101 ++++++++++++++++++++
+ drivers/clk/hisilicon/clk.c                        |   41 +++++++-
+ drivers/clk/hisilicon/clk.h                        |    3 +
+ include/dt-bindings/clock/hix5hd2-clock.h          |   58 +++++++++++
+ 7 files changed, 231 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/hix5hd2-clock.txt
+ create mode 100644 drivers/clk/hisilicon/clk-hix5hd2.c
+ create mode 100644 include/dt-bindings/clock/hix5hd2-clock.h
 
-PARTLY APPLIED.
+-- 
+1.7.9.5
 
-The patch to the DT bindings apparently depend on some
-patch that I do *NOT* have in my tree, please figure out what is
-going on here and help me figure out what and how to apply the
-changes to the bindings.
-
-The hunk adding the docs was dropped from the patch, please
-develop new series on top of my pinctrl devel branch as I
-push it out.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
