@@ -1,154 +1,154 @@
-From: Joel Fernandes <joelf-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/7] of: introduce of_dma_get_range() helper
-Date: Mon, 21 Apr 2014 23:09:27 -0500
-Message-ID: <5355EB77.7000306@ti.com>
-References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com> <1397917972-6293-3-git-send-email-santosh.shilimkar@ti.com>
-Reply-To: <joelf-l0cyMroinI0@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 2/2] dt: platform driver: Fill the resources before
+ probe and defer if needed
+Date: Mon, 21 Apr 2014 21:57:31 -0700
+Message-ID: <20140422045730.GC26554@atomide.com>
+References: <20140418205213.GA21823@atomide.com>
+ <CAL_JsqJvVvo6R-qNXxur7wiZERKbi52xyKoWnmzJTfKS2iKK7A@mail.gmail.com>
+ <20140418215848.GD21823@atomide.com>
+ <20140418230335.GI24070@n2100.arm.linux.org.uk>
+ <20140418232407.GQ21823@atomide.com>
+ <CAL_JsqLvLTJwgsB-m0W72WxSUoTV4ubMdvM_a784J4k2eiK9AQ@mail.gmail.com>
+ <20140421155424.GD23945@atomide.com>
+ <53556AF1.2030608@gmail.com>
+ <20140421202546.GA26554@atomide.com>
+ <20140422030528.GB26554@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397917972-6293-3-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140422030528.GB26554@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/19/2014 09:32 AM, Santosh Shilimkar wrote:
-> From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-[..]
-> + * Look in bottom up direction for the first "dma-range" property
-> + * and parse it.
-> + *  dma-ranges format:
-> + *	DMA addr (dma_addr)	: naddr cells
-> + *	CPU addr (phys_addr_t)	: pna cells
-> + *	size			: nsize cells
-> + *
-> + * It returns -ENODEV if "dma-ranges" property was not found
-> + * for this device in DT.
-> + */
-> +extern int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
-> +		phys_addr_t *paddr, phys_addr_t *size)
-> +{
-> +	struct device_node *node = np;
-> +	const u32 *ranges = NULL;
-> +	int len, naddr, nsize, pna;
-> +	int ret = 0;
-> +
-> +	if (!node)
-> +		return -EINVAL;
-> +
-> +	while (1) {
-> +		naddr = of_n_addr_cells(node);
-> +		nsize = of_n_size_cells(node);
-> +		node = of_get_next_parent(node);
-> +		if (!node)
-> +			break;
-> +
-> +		ranges = of_get_property(node, "dma-ranges", &len);
-> +
-> +		/* Ignore empty ranges, they imply no translation required */
-> +		if (ranges && len > 0)
-> +			break;
-> +
-> +		/*
-> +		 * At least empty ranges has to be defined for parent node if
-> +		 * DMA is supported
-> +		 */
-> +		if (!ranges)
-> +			break;
-> +	}
-> +
-> +	if (!ranges) {
-> +		pr_debug("%s: no dma-ranges found for node(%s)\n",
-> +			 __func__, np->full_name);
-> +		ret = -ENODEV;
-> +		goto out;
-> +	}
-> +
-> +	len /= sizeof(u32);
-> +
-> +	pna = of_n_addr_cells(node);
-> +
-> +	/* dma-ranges format:
-> +	 * DMA addr	: naddr cells
-> +	 * CPU addr	: pna cells
-> +	 * size		: nsize cells
-> +	 */
-> +	*dma_addr = of_read_number(ranges, naddr);
-> +	*paddr = of_translate_dma_address(np, ranges);
-
-I am probably missing something but I'm wondering the need for a
-translate step here instead of doing something like:
-
-*paddr = of_read_number(ranges + naddr, pna);
-
-Perhaps there is a need to do a translate step of the DMA Address in
-dma-ranges all the way to the parent, which can be different from the
-CPU Address (second address in dma-ranges).
-
-in which case the format of dma-ranges after parsing looks like
-<DMA-Addr Translate(DMA-Addr) Size>
-to the caller, and not, <DMA-Addr CPU-Addr Size>
-
-But for keystone if something like the following is used,		
- dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
-
-Then, the above fragment I proposed would return 0x8 0x00000000 which is
-sufficient?
-
-thanks,
- -Joel
-
-
-
-> +	if (*paddr == OF_BAD_ADDR) {
-> +		pr_err("%s: translation of DMA address(%pad) to CPU address failed node(%s)\n",
-> +		       __func__, dma_addr, np->full_name);
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	*size = of_read_number(ranges + naddr + pna, nsize);
-> +
-> +	pr_debug("dma_addr(%pad) cpu_addr(%pa) size(%pa)\n",
-> +		 dma_addr, paddr, size);
-> +
-> +out:
-> +	of_node_put(node);
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(of_dma_get_range);
->  #endif /* CONFIG_OF_ADDRESS */
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 05cb4a9..ba7d3dc 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -72,6 +72,8 @@ extern int of_platform_populate(struct device_node *root,
->  				const struct of_device_id *matches,
->  				const struct of_dev_auxdata *lookup,
->  				struct device *parent);
-> +extern int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
-> +				phys_addr_t *paddr, phys_addr_t *size);
->  #else
->  static inline int of_platform_populate(struct device_node *root,
->  					const struct of_device_id *matches,
-> @@ -80,6 +82,12 @@ static inline int of_platform_populate(struct device_node *root,
->  {
->  	return -ENODEV;
->  }
-> +
-> +static inline int of_dma_get_range(struct device_node *np, dma_addr_t *dma_addr,
-> +					phys_addr_t *paddr, phys_addr_t *size)
-> +{
-> +	return -ENODEV;
-> +}
->  #endif
->  
->  #endif	/* _LINUX_OF_PLATFORM_H */
+* Tony Lindgren <tony@atomide.com> [140421 20:06]:
+> * Tony Lindgren <tony@atomide.com> [140421 13:26]:
+> > * Rob Herring <robherring2@gmail.com> [140421 12:01]:
+> > > Something like this is what you had in mind?
+... 
+> > > --- a/drivers/of/irq.c
+> > > +++ b/drivers/of/irq.c
+> > > @@ -400,6 +400,26 @@ int of_irq_to_resource(struct device_node *dev, int
+> > > index, struct resource *r)
+> > >  EXPORT_SYMBOL_GPL(of_irq_to_resource);
+> > > 
+> > >  /**
+> > > + * of_irq_get - Decode a node's IRQ and return it as a Linux irq number
+> > > + * @dev: pointer to device tree node
+> > > + * @index: zero-based index of the irq
+> > > + *
+> > > + * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
+> > > + * is not yet created.
+> > > + *
+> > > + */
+> > > +int of_irq_get(struct device_node *dev, int index)
+> > > +{
+> > > +	int irq = irq_of_parse_and_map(dev, index);
+> > > +
+> > > +	if (!irq && of_find_irq_domain(dev, index) == NULL)
+> > > +		return -EPROBE_DEFER;
+> > > +
+> > > +	return irq;
+> > > +}
+> > 
+> > Yeah something like that. That might also work as a pretty
+> > minimal fix as long as we fix the known broken drivers to use
+> > platform_get_irq().
 > 
+> Actually, the above code for of_irq_get() won't help as we're still
+> calling irq_of_parse_and_map() before we should. So the nasty warnings
+> are still there if the irqdomain is not yet found.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK so to fix the warning part of the problem we first need to not
+try to map uninitialized irqdomains and then downgrade the current
+warning to a dev_dbg.
+
+So looks like the current minimal fix to my original problem the
+first patch from Jean-Jacques in this series, and the following patch.
+
+This works for drivers that currently do of_irq_parse_and_map(),
+then your patch is also needed to make things work properly with
+platform_get_irq().
+
+8< ------------------
+From: Tony Lindgren <tony@atomide.com>
+Date: Mon, 21 Apr 2014 19:33:43 -0700
+Subject: [PATCH] of/platform: Fix no irq domain found errors when populating interrupts
+
+Currently we get the following kind of errors if we try to use interrupt
+phandles to irqchips that have not yet initialized:
+
+irq: no irq domain found for /ocp/pinmux@48002030 !
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 of_device_alloc+0x144/0x184()
+Modules linked in:
+CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-00038-g42a9708 #1012
+(show_stack+0x14/0x1c)
+(dump_stack+0x6c/0xa0)
+(warn_slowpath_common+0x64/0x84)
+(warn_slowpath_null+0x1c/0x24)
+(of_device_alloc+0x144/0x184)
+(of_platform_device_create_pdata+0x44/0x9c)
+(of_platform_bus_create+0xd0/0x170)
+(of_platform_bus_create+0x12c/0x170)
+(of_platform_populate+0x60/0x98)
+
+This is because we're wrongly trying to populate resources that are not
+yet available. It's perfectly valid to create irqchips dynamically, so
+let's fix up the issue by populating the interrupt resources at the
+driver probe time instead.
+
+Let's fix the problem by using of_find_irq_domain() recently introduced
+by Jean-Jacques Hiblot <jjhiblot@traphandler.com>. This way we can
+avoid calling irq_of_parse_and_map() unnecesssarily with incomplete
+data.
+
+And then we also need to accept the fact that some irqdomains do not
+exist that early on, and only get initialized later on. So we can
+make the current WARN_ON into just into a pr_debug().
+
+Note that this patch only solves the problem for drivers that are
+currently doing of_irq_parse_and_map(). A follow-up patch is needed
+to make platform_get_irq() to work without relying on the populated
+resources.
+
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -425,13 +425,17 @@ int of_irq_count(struct device_node *dev)
+ int of_irq_to_resource_table(struct device_node *dev, struct resource *res,
+ 		int nr_irqs)
+ {
+-	int i;
++	int i, found = 0;
+ 
+-	for (i = 0; i < nr_irqs; i++, res++)
++	for (i = 0; i < nr_irqs; i++, res++) {
++		if (!of_find_irq_domain(dev, i))
++			continue;
+ 		if (!of_irq_to_resource(dev, i, res))
+ 			break;
++		found++;
++	}
+ 
+-	return i;
++	return found;
+ }
+ EXPORT_SYMBOL_GPL(of_irq_to_resource_table);
+ 
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -168,7 +168,9 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 			rc = of_address_to_resource(np, i, res);
+ 			WARN_ON(rc);
+ 		}
+-		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
++		if (of_irq_to_resource_table(np, res, num_irq) != num_irq)
++			pr_debug("not all legacy IRQ resources mapped for %s\n",
++				 np->name);
+ 	}
+ 
+ 	dev->dev.of_node = of_node_get(np);
