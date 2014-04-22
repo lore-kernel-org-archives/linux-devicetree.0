@@ -1,327 +1,99 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v6 11/19] usb: phy: msm: Add device tree support and binding information
-Date: Tue, 22 Apr 2014 12:20:30 +0300
-Message-ID: <1398158438-21579-12-git-send-email-iivanov@mm-sol.com>
-References: <1398158438-21579-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398158438-21579-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 2/3] devcietree: bindings: add some MFD Keymile FPGAs
+Date: Tue, 22 Apr 2014 11:30:30 +0200
+Message-ID: <1398159031-10110-3-git-send-email-valentin.longchamp@keymile.com>
+References: <1398159031-10110-1-git-send-email-valentin.longchamp@keymile.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398159031-10110-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+These are the bindings for 2 MFD devices used on some of the Keymile boards.
+The first one is the chassis managmenet bfticu FPGA.
+The second one is the board controller (reset, LEDs, GPIOs) QRIO CPDL.
+These FPGAs are used in the kmcoge4 board.
 
-Allows MSM OTG controller to be specified via device tree.
+Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
 ---
- .../devicetree/bindings/usb/msm-hsusb.txt          |  67 +++++++++++++
- drivers/usb/phy/phy-msm-usb.c                      | 108 +++++++++++++++++----
- include/linux/usb/msm_hsusb.h                      |   6 +-
- 3 files changed, 159 insertions(+), 22 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index 5ea26c6..ee4123d 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -15,3 +15,70 @@ Example EHCI controller device node:
- 		usb-phy = <&usb_otg>;
- 	};
+Changes in v4:
+- remove the addition of the KEYMILE vendor-prefix as it is already
+  picked by Rob
+- Take Scott's and Rob's comments regarding the bindings for the
+  interrupt-cells into account
 
-+USB PHY with optional OTG:
+Changes in v3:
+- add a patch with the bindings for the KEYMILE FPGAs
+
+Changes in v2: None
+
+ Documentation/devicetree/bindings/mfd/bfticu.txt | 25 ++++++++++++++++++++++++
+ Documentation/devicetree/bindings/mfd/qriox.txt  | 17 ++++++++++++++++
+ 2 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/bfticu.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/qriox.txt
+
+diff --git a/Documentation/devicetree/bindings/mfd/bfticu.txt b/Documentation/devicetree/bindings/mfd/bfticu.txt
+new file mode 100644
+index 0000000..65c9077
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/bfticu.txt
+@@ -0,0 +1,25 @@
++KEYMILE bfticu Chassis Management FPGA
++
++The bfticu is a multifunction device that manages the whole chassis.
++Its main functionality is to collect IRQs from the whole chassis and signals
++them to a single controller.
 +
 +Required properties:
-+- compatible:   Should contain:
-+  "qcom,usb-otg-ci" for chipsets with ChipIdea 45nm PHY
-+  "qcom,usb-otg-snps" for chipsets with Synopsys 28nm PHY
++- compatible: "keymile,bfticu"
++- interrupt-controller: the bfticu FPGA is an interrupt controller
++- interrupts: the main IRQ line to signal the collected IRQs
++- #interrupt-cells : is 2 and their usage is compliant to the 2 cells variant
++  of Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
++- interrupt-parent: the parent IRQ ctrl the main IRQ is connected to
++- reg: access on the parent local bus (chip select, offset in chip select, size)
 +
-+- regs:         Offset and length of the register set in the memory map
-+- interrupts:   interrupt-specifier for the OTG interrupt.
++Example:
 +
-+- clocks:       A list of phandle + clock-specifier pairs for the
-+                clocks listed in clock-names
-+- clock-names:  Should contain the following:
-+  "phy"         USB PHY reference clock
-+  "core"        Protocol engine clock
-+  "iface"       Interface bus clock
-+  "alt_core"    Protocol engine clock for targets with asynchronous
-+                reset methodology. (optional)
-+
-+- vdccx-supply: phandle to the regulator for the vdd supply for
-+                digital circuit operation.
-+- v1p8-supply:  phandle to the regulator for the 1.8V supply
-+- v3p3-supply:  phandle to the regulator for the 3.3V supply
-+
-+- resets:       A list of phandle + reset-specifier pairs for the
-+                resets listed in reset-names
-+- reset-names:  Should contain the following:
-+  "phy"         USB PHY controller reset
-+  "link"        USB LINK controller reset
-+
-+- qcom,otg-control: OTG control (VBUS and ID notifications) can be one of
-+                1 - PHY control
-+                2 - PMIC control
-+
-+Optional properties:
-+- dr_mode:      One of "host", "peripheral" or "otg". Defaults to "otg"
-+
-+- qcom,phy-init-sequence: PHY configuration sequence values. This is related to Device
-+                Mode Eye Diagram test. Start address at which these values will be
-+                written is ULPI_EXT_VENDOR_SPECIFIC. Value of -1 is reserved as
-+                "do not overwrite default value at this address".
-+                For example: qcom,phy-init-sequence = < -1 0x63 >;
-+                Will update only value at address ULPI_EXT_VENDOR_SPECIFIC + 1.
-+
-+Example HSUSB OTG controller device node:
-+
-+    usb@f9a55000 {
-+        compatible = "qcom,usb-otg-snps";
-+        reg = <0xf9a55000 0x400>;
-+        interrupts = <0 134 0>;
-+        dr_mode = "peripheral";
-+
-+        clocks = <&gcc GCC_XO_CLK>, <&gcc GCC_USB_HS_SYSTEM_CLK>,
-+                <&gcc GCC_USB_HS_AHB_CLK>;
-+
-+        clock-names = "phy", "core", "iface";
-+
-+        vddcx-supply = <&pm8841_s2_corner>;
-+        v1p8-supply = <&pm8941_l6>;
-+        v3p3-supply = <&pm8941_l24>;
-+
-+        resets = <&gcc GCC_USB2A_PHY_BCR>, <&gcc GCC_USB_HS_BCR>;
-+        reset-names = "phy", "link";
-+
-+        qcom,otg-control = <1>;
-+        qcom,phy-init-sequence = <-1 0x63>;
++	chassis-mgmt@3,0 {
++		compatible = "keymile,bfticu";
++		interrupt-controller;
++		#interrupt-cells = <2>;
++		reg = <3 0 0x100>;
++		interrupt-parent = <&mpic>;
++		interrupts = <6 1 0 0>;
 +	};
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index 2dc7948..7619b3f 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -30,9 +30,12 @@
- #include <linux/debugfs.h>
- #include <linux/seq_file.h>
- #include <linux/pm_runtime.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-
- #include <linux/usb.h>
- #include <linux/usb/otg.h>
-+#include <linux/usb/of.h>
- #include <linux/usb/ulpi.h>
- #include <linux/usb/gadget.h>
- #include <linux/usb/hcd.h>
-@@ -217,16 +220,16 @@ static struct usb_phy_io_ops msm_otg_io_ops = {
- static void ulpi_init(struct msm_otg *motg)
- {
- 	struct msm_otg_platform_data *pdata = motg->pdata;
--	int *seq = pdata->phy_init_seq;
-+	int *seq = pdata->phy_init_seq, idx;
-+	u32 addr = ULPI_EXT_VENDOR_SPECIFIC;
-
--	if (!seq)
--		return;
-+	for (idx = 0; idx < pdata->phy_init_sz; idx++) {
-+		if (seq[idx] == -1)
-+			continue;
-
--	while (seq[0] >= 0) {
- 		dev_vdbg(motg->phy.dev, "ulpi: write 0x%02x to 0x%02x\n",
--				seq[0], seq[1]);
--		ulpi_write(&motg->phy, seq[0], seq[1]);
--		seq += 2;
-+				seq[idx], addr + idx);
-+		ulpi_write(&motg->phy, seq[idx], addr + idx);
- 	}
- }
-
-@@ -1343,25 +1346,87 @@ static void msm_otg_debugfs_cleanup(void)
- 	debugfs_remove(msm_otg_dbg_root);
- }
-
-+static struct of_device_id msm_otg_dt_match[] = {
-+	{
-+		.compatible = "qcom,usb-otg-ci",
-+		.data = (void *) CI_45NM_INTEGRATED_PHY
-+	}, {
-+		.compatible = "qcom,usb-otg-snps",
-+		.data = (void *) SNPS_28NM_INTEGRATED_PHY
-+	}, {}
-+};
+diff --git a/Documentation/devicetree/bindings/mfd/qriox.txt b/Documentation/devicetree/bindings/mfd/qriox.txt
+new file mode 100644
+index 0000000..f301e2d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/qriox.txt
+@@ -0,0 +1,17 @@
++KEYMILE qrio Board Control CPLD
 +
-+static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
-+{
-+	struct msm_otg_platform_data *pdata;
-+	const struct of_device_id *id;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct property *prop;
-+	int len, ret;
-+	u32 val;
++The qrio is a multifunction device that controls the KEYMILE boards based on
++the kmp204x design.
++It is consists of a reset controller, watchdog timer, LEDs, and 2 IRQ capable
++GPIO blocks.
 +
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return -ENOMEM;
++Required properties:
++- compatible: "keymile,qriox"
++- reg: access on the parent local bus (chip select, offset in chip select, size)
 +
-+	motg->pdata = pdata;
++Example:
 +
-+	id = of_match_device(msm_otg_dt_match, &pdev->dev);
-+	pdata->phy_type = (int) id->data;
-+
-+	pdata->mode = of_usb_get_dr_mode(node);
-+	if (pdata->mode == USB_DR_MODE_UNKNOWN)
-+		pdata->mode = USB_DR_MODE_OTG;
-+
-+	pdata->otg_control = OTG_PHY_CONTROL;
-+	if (!of_property_read_u32(node, "qcom,otg-control", &val))
-+		if (val == OTG_PMIC_CONTROL)
-+			pdata->otg_control = val;
-+
-+	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
-+	if (!prop || !len)
-+		return 0;
-+
-+	pdata->phy_init_seq = devm_kzalloc(&pdev->dev, len, GFP_KERNEL);
-+	if (!pdata->phy_init_seq)
-+		return 0;
-+
-+	len /= sizeof(u32);
-+
-+	if (len >= ULPI_EXT_VENDOR_SPECIFIC) {
-+		dev_warn(&pdev->dev, "Too big PHY init sequence %d\n", len);
-+		return 0;
-+	}
-+
-+	ret = of_property_read_u32_array(node, "qcom,phy-init-sequence",
-+					 pdata->phy_init_seq, len);
-+	if (!ret)
-+		pdata->phy_init_sz = len;
-+	return 0;
-+}
-+
- static int msm_otg_probe(struct platform_device *pdev)
- {
- 	int ret = 0;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct msm_otg_platform_data *pdata;
- 	struct resource *res;
- 	struct msm_otg *motg;
- 	struct usb_phy *phy;
++	board-control@1,0 {
++		compatible = "keymile,qriox";
++		reg = <1 0 0x80>;
++	};
+-- 
+1.8.0.1
 
--	dev_info(&pdev->dev, "msm_otg probe\n");
--	if (!dev_get_platdata(&pdev->dev)) {
--		dev_err(&pdev->dev, "No platform data given. Bailing out\n");
--		return -ENODEV;
--	}
--
- 	motg = devm_kzalloc(&pdev->dev, sizeof(struct msm_otg), GFP_KERNEL);
- 	if (!motg) {
- 		dev_err(&pdev->dev, "unable to allocate msm_otg\n");
- 		return -ENOMEM;
- 	}
-
-+	pdata = dev_get_platdata(&pdev->dev);
-+	if (!pdata) {
-+		ret = msm_otg_read_dt(pdev, motg);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	motg->phy.otg = devm_kzalloc(&pdev->dev, sizeof(struct usb_otg),
- 				     GFP_KERNEL);
- 	if (!motg->phy.otg) {
-@@ -1369,17 +1434,17 @@ static int msm_otg_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
-
--	motg->pdata = dev_get_platdata(&pdev->dev);
- 	phy = &motg->phy;
- 	phy->dev = &pdev->dev;
-
--	motg->phy_reset_clk = devm_clk_get(&pdev->dev, "usb_phy_clk");
-+	motg->phy_reset_clk = devm_clk_get(&pdev->dev,
-+					   np ? "phy" : "usb_phy_clk");
- 	if (IS_ERR(motg->phy_reset_clk)) {
- 		dev_err(&pdev->dev, "failed to get usb_phy_clk\n");
- 		return PTR_ERR(motg->phy_reset_clk);
- 	}
-
--	motg->clk = devm_clk_get(&pdev->dev, "usb_hs_clk");
-+	motg->clk = devm_clk_get(&pdev->dev, np ? "core" : "usb_hs_clk");
- 	if (IS_ERR(motg->clk)) {
- 		dev_err(&pdev->dev, "failed to get usb_hs_clk\n");
- 		return PTR_ERR(motg->clk);
-@@ -1391,7 +1456,7 @@ static int msm_otg_probe(struct platform_device *pdev)
- 	 * operation and USB core cannot tolerate frequency changes on
- 	 * CORE CLK.
- 	 */
--	motg->pclk = devm_clk_get(&pdev->dev, "usb_hs_pclk");
-+	motg->pclk = devm_clk_get(&pdev->dev, np ? "iface" : "usb_hs_pclk");
- 	if (IS_ERR(motg->pclk)) {
- 		dev_err(&pdev->dev, "failed to get usb_hs_pclk\n");
- 		return PTR_ERR(motg->pclk);
-@@ -1402,7 +1467,8 @@ static int msm_otg_probe(struct platform_device *pdev)
- 	 * clock is introduced to remove the dependency on AXI
- 	 * bus frequency.
- 	 */
--	motg->core_clk = devm_clk_get(&pdev->dev, "usb_hs_core_clk");
-+	motg->core_clk = devm_clk_get(&pdev->dev,
-+				      np ? "alt_core" : "usb_hs_core_clk");
-
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	motg->regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-@@ -1490,8 +1556,7 @@ static int msm_otg_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, motg);
- 	device_init_wakeup(&pdev->dev, 1);
-
--	if (motg->pdata->mode == USB_DR_MODE_OTG &&
--			motg->pdata->otg_control == OTG_USER_CONTROL) {
-+	if (motg->pdata->mode == USB_DR_MODE_OTG) {
- 		ret = msm_otg_debugfs_init(motg);
- 		if (ret)
- 			dev_dbg(&pdev->dev, "Can not create mode change file\n");
-@@ -1637,6 +1702,8 @@ static const struct dev_pm_ops msm_otg_dev_pm_ops = {
- 				msm_otg_runtime_idle)
- };
-
-+MODULE_DEVICE_TABLE(of, msm_otg_dt_match);
-+
- static struct platform_driver msm_otg_driver = {
- 	.probe = msm_otg_probe,
- 	.remove = msm_otg_remove,
-@@ -1644,6 +1711,7 @@ static struct platform_driver msm_otg_driver = {
- 		.name = DRIVER_NAME,
- 		.owner = THIS_MODULE,
- 		.pm = &msm_otg_dev_pm_ops,
-+		.of_match_table = msm_otg_dt_match,
- 	},
- };
-
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 262ed80..bd68299 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -100,8 +100,9 @@ enum usb_chg_type {
- /**
-  * struct msm_otg_platform_data - platform device data
-  *              for msm_otg driver.
-- * @phy_init_seq: PHY configuration sequence. val, reg pairs
-- *              terminated by -1.
-+ * @phy_init_seq: PHY configuration sequence values. Value of -1 is reserved as
-+ *              "do not overwrite default vaule at this address".
-+ * @phy_init_sz: PHY configuration sequence size.
-  * @vbus_power: VBUS power on/off routine.
-  * @power_budget: VBUS power budget in mA (0 will be treated as 500mA).
-  * @mode: Supported mode (OTG/peripheral/host).
-@@ -109,6 +110,7 @@ enum usb_chg_type {
-  */
- struct msm_otg_platform_data {
- 	int *phy_init_seq;
-+	int phy_init_sz;
- 	void (*vbus_power)(bool on);
- 	unsigned power_budget;
- 	enum usb_dr_mode mode;
 --
-1.8.3.2
-
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
