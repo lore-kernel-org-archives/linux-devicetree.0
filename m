@@ -1,53 +1,31 @@
 From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH RESEND 2/5] pinctrl: berlin: add a pinctrl driver for
- Marvell Berlin SoCs
-Date: Tue, 22 Apr 2014 14:52:10 +0200
-Message-ID: <CACRpkdb1eijF-4e=KyhS=9S868NALdyJJaNnzjUubXnapWEeMg@mail.gmail.com>
-References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
-	<1397135274-10764-3-git-send-email-antoine.tenart@free-electrons.com>
-	<5347AFF4.3050607@gmail.com>
-	<20140411123737.GA5903@kwain>
-	<5347EF8A.8040600@gmail.com>
+Subject: Re: [PATCH] pinctrl/TB10x: Fix signedness bug
+Date: Tue, 22 Apr 2014 14:55:40 +0200
+Message-ID: <CACRpkdZwG4pdczNLZdMi3V=wFqPOxWpbME8P-Y2m5ypAn7EU=Q@mail.gmail.com>
+References: <20140402111358.GA23000@mwanda>
+	<1397227564-8698-1-git-send-email-christian.ruppert@abilis.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5347EF8A.8040600@gmail.com>
+In-Reply-To: <1397227564-8698-1-git-send-email-christian.ruppert@abilis.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, zmxu@marvell.com, Jisheng Zhang <jszhang@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Christian Ruppert <christian.ruppert@abilis.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dan Carpenter <dan.carpenter@oracle.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 11, 2014 at 3:35 PM, Sebastian Hesselbarth
-<sebastian.hesselbarth@gmail.com> wrote:
-> On 04/11/2014 02:37 PM, Antoine T=C3=A9nart wrote:
->> On Fri, Apr 11, 2014 at 11:03:48AM +0200, Sebastian Hesselbarth wrot=
-e:
->>> On 04/10/2014 03:07 PM, Antoine T=C3=A9nart wrote:
+On Fri, Apr 11, 2014 at 4:46 PM, Christian Ruppert
+<christian.ruppert@abilis.com> wrote:
 
->>> Having said that, the above assumes that each function is unique
->>> but IIRC the idea of the function table was to group pins/groups
->>> with the same function, e.g. function "gpio", groups 1,7,25,...
->>
->> Most of the functions you can use on the Berlin they will be unique =
-and
->> would
->> only be used in one group, except for the 'gpio' one.
+> In the TB10x pin database, a port index of -1 is used to indicate
+> unmuxed GPIO pin groups. This bug fixes a 'cast to unsigned' bug of
+> this value.
 >
-> Yeah, I had a similar discussion about it back then for mvebu. IIRC, =
-the
-> correct answer is: Have a list of functions with groups assigned to i=
-t
-> no matter if there is only one group per function (or 40 per function=
- as
-> it will be for gpio).
+> Thanks to Dan Carpenter for highlighting this.
 >
-> Maybe Linus can give an update on how to deal with it?
+> CC: Dan Carpenter <dan.carpenter@oracle.com>
+> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
 
-Have you considered implementing pinmux_ops
-=2Egpio_request_enable(), .gpio_set_direction() and
-=2Egpio_disable_free() instead of defining groups for each
-and every GPIO?
+Patch applied for fixes.
 
 Yours,
 Linus Walleij
