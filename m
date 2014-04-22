@@ -1,134 +1,100 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
-Date: Tue, 22 Apr 2014 12:45:52 +0200
-Message-ID: <7337945.Kibhmj51LR@wuerfel>
-References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com> <1398130758-19456-2-git-send-email-f.fainelli@gmail.com>
+Subject: Re: [PATCH RESEND 3/5] ARM: BCM63XX: add BCM63138 minimal Device Tree
+Date: Tue, 22 Apr 2014 12:52:16 +0200
+Message-ID: <4701106.5EnjdVQgVO@wuerfel>
+References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com> <1398130758-19456-4-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398130758-19456-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1398130758-19456-4-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org, jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 21 April 2014 18:39:14 Florian Fainelli wrote:
-> This patch adds basic support for the Broadcom BCM63138 DSL SoC which is
-> using a dual-core Cortex A9 system. Add the very minimum required code
-> boot Linux on this SoC.
+On Monday 21 April 2014 18:39:16 Florian Fainelli wrote:
 > 
-> Due to the two specific register address spaces located at 0x8000_0000
-> and 0xfffe_0000, we need to setup a specific iotable descriptor for
-> those to be remapped at the expected virtual addresses.
-
-What is the significance of the "expected virtual address"? All drivers
-nowadays should call ioremap() and use whatever virtual address comes
-out of that.
-
-> Finally, the PL310 cache controller requires a bit of tweaking before
-> handing its initialization over l2x0_of_init(), this is also taken care
-> of to make sure that its size is properly configured.
-
-Russell has just spent a lot of work on cleaning up the l2x0 setup
-of various platforms. I really don't want to see new platform specific
-code for this.
-
-> diff --git a/arch/arm/mach-bcm/Kconfig b/arch/arm/mach-bcm/Kconfig
-> index 49c914cd9c7a..26b51bcf878c 100644
-> --- a/arch/arm/mach-bcm/Kconfig
-> +++ b/arch/arm/mach-bcm/Kconfig
-> @@ -69,6 +69,26 @@ config ARCH_BCM_5301X
->  	  different SoC or with the older BCM47XX and BCM53XX based
->  	  network SoC using a MIPS CPU, they are supported by arch/mips/bcm47xx
->  
-> +config ARCH_BCM_63XX
-> +	bool "Broadcom BCM63xx DSL SoC" if ARCH_MULTI_V7
-> +	depends on MMU
-> +	select ARM_ERRATA_754322
-> +	select ARM_ERRATA_764369 if SMP
-> +	select ARM_GIC
-> +	select ARM_GLOBAL_TIMER
-> +	select CACHE_L2X0
-> +	select COMMON_CLK
-> +	select CPU_V7
-> +	select GENERIC_CLOCKEVENTS
-> +	select HAVE_ARM_ARCH_TIMER
-> +	select HAVE_ARM_TWD if SMP
-> +	select HAVE_ARM_SCU if SMP
-> +	select HAVE_SMP
-
-A lot of these are already selected by ARCH_MULTI_V7 and can be
-omitted here.
-
-> +#ifndef __ARM_BCM63XX_H
-> +#define __ARM_BCM63XX_H
+> +#include "skeleton.dtsi"
 > +
-> +#define IO_ADDRESS(x)		(((x) & 0x00ffffff) + 0xfc000000)
+> +/ {
+> +       compatible = "brcm,bcm63138";
+> +       model = "Broadcom BCM63138 DSL SoC";
+> +       interrupt-parent = <&gic>;
 > +
-> +/* AHB register space */
-> +#define BCM63XX_AHB_PHYS	0x80001000
-> +#define BCM63XX_AHB_VIRT	IO_ADDRESS(BCM63XX_AHB_PHYS)
-> +#define BCM63XX_AHB_SIZE	0x800000
+> +       cpus {
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
 > +
-> +/* PERIPH (legacy) register space */
-> +#define BCM63XX_PERIPH_PHYS	0xfffe8000
-> +#define BCM63XX_PERIPH_VIRT	IO_ADDRESS(BCM63XX_PERIPH_PHYS)
-> +#define BCM63XX_PERIPH_SIZE	0x10000
+> +               cpu@0 {
+> +                       device_type = "cpu";
+> +                       compatible = "arm,cortex-a9";
+> +                       next-level-cache = <&L2>;
+> +                       reg = <0>;
+> +               };
+> +       };
 
-You shouldn't need these any more. If you do, just move all of this
-into the main file, to ensure no other file accidentally relies
-on hardcoded values.
+Even if you don't support SMP yet, I can see no reason not
+to list both CPUs here. The binding is known and the code
+should ignore the extra cores if it doesn't know how to
+turn them on.
 
-Note that BCM63XX_AHB_PHYS is nor aligned, so AFAICT you don't
-actually get a huge page entry for it, and there is no point
-doing this at all, as it has neither functional nor performance
-relevance.
-
-You may have out-of-tree drivers that you haven't cleaned up
-or posted yet relying on specific static mappings, but that is
-no reason to have these mappings in the mainline kernel.
-
-> diff --git a/arch/arm/mach-bcm/board_bcm63xx.c b/arch/arm/mach-bcm/board_bcm63xx.c
-> new file mode 100644
-> index 000000000000..a779aca673c4
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/board_bcm63xx.c
-
-Maybe just "bcm63xx.c"? We don't really do "board" files any more.
-
-> +static void __init bcm63xx_l2cc_init(void)
-> +{
-> +	u32 auxctl_val = 0, auxctl_msk = ~0UL;
 > +
-> +	/* 16-way cache */
-> +	auxctl_val |= (1 << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
-> +	auxctl_msk &= ~(1 << L2X0_AUX_CTRL_ASSOCIATIVITY_SHIFT);
-> +	/* 32 KB */
-> +	auxctl_val |= (2 << L2X0_AUX_CTRL_WAY_SIZE_SHIFT);
-> +	auxctl_msk &= ~(L2X0_AUX_CTRL_WAY_SIZE_MASK);
-> +
-> +	/*
-> +	 * Set bit 22 in the auxiliary control register. If this bit
-> +	 * is cleared, PL310 treats Normal Shared Non-cacheable
-> +	 * accesses as Cacheable no-allocate.
-> +	 */
-> +	auxctl_val |= (1 << L2X0_AUX_CTRL_SHARE_OVERRIDE_SHIFT);
-> +
-> +	/* Allow non-secure access */
-> +	auxctl_val |= (1 << L2X0_AUX_CTRL_NS_INT_CTRL_SHIFT);
-> +	/* Instruction prefetch */
-> +	auxctl_val |= (1 << L2X0_AUX_CTRL_INSTR_PREFETCH_SHIFT);
-> +	/* Early BRESP */
-> +	auxctl_val |= (1 << L2X0_AUX_CTRL_EARLY_BRESP_SHIFT);
-> +
-> +	l2x0_of_init(auxctl_val, auxctl_msk);
-> +}
+> +       /* ARM bus */
+> +       axi@80000000 {
+> +               compatible = "simple-bus";
+> +               ranges = <0 0x80000000 0x783003>;
+> +               reg = <0x80000000 0x783003>;
 
-What are the power-on values of bits you override here? Are you sure
-you have to force all of them?
+The length seems odd, I would expect that the bus actually
+translates all addresses in the 0x80000000 range to downstream
+devices even if there is nothing connected. Just round it up
+to your best knowledge.
 
-Don't we already have ways to specify the same things in DT properties?
+I would also drop the 'reg' property. Since you don't have a
+specific "compatible" value, there is no way to use the registers
+in this node.
+
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +
+> +               L2: cache-controller@1d000 {
+> +                       compatible = "arm,pl310-cache";
+> +                       reg = <0x1d000 0x1000>;
+> +                       cache-unified;
+> +                       cache-level = <2>;
+> +                       interrupts = <GIC_PPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> +               };
+> +
+> +               mpcore@1e000 {
+> +                       compatible = "simple-bus";
+> +                       reg = <0x1e000 0x20000>;
+> +                       ranges = <0 0x1e000 0x20000>;
+> +                       #address-cells = <1>;
+> +                       #size-cells = <1>;
+
+
+Same thing here.
+
+Also, can you explain why there is a separate 'mpcore' bus, and why the
+cache controller is not part of that?
+
+Do you have reason to believe that this is how the hardware actually
+looks?
+
+> +
+> +       /* Legacy UBUS base */
+> +       ubus@fffe8000 {
+> +               compatible = "simple-bus";
+> +               reg = <0xfffe8000 0x8053>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0 0xfffe8000 0x8053>;
+> +       };
+> +};
+
+
+Again, use a proper 'length' here and remove the 'reg' property.
 
 	Arnd
 --
