@@ -1,39 +1,58 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 3/6] ARM: berlin: add the AHCI node for the BG2Q
-Date: Tue, 22 Apr 2014 18:28:44 +0200
-Message-ID: <20140422182844.3f2eb558@skate>
-References: <1398181105-19714-1-git-send-email-antoine.tenart@free-electrons.com>
-	<1398181105-19714-4-git-send-email-antoine.tenart@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398181105-19714-4-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
-Cc: sebastian.hesselbarth@gmail.com, tj@kernel.org, zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v2 0/7] Add cros_ec changes for newer boards
+Date: Tue, 22 Apr 2014 09:45:47 -0700
+Message-ID: <1398185154-19404-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: lee.jones@linaro.org, swarren@nvidia.com, wsa@the-dreams.de
+Cc: abrestic@chromium.org, dgreid@chromium.org, olof@lixom.net, sjg@chromium.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, Doug Anderson <dianders@chromium.org>, mark.rutland@arm.com, andrew@lunn.ch, swarren@wwwdotorg.org, thierry.reding@gmail.com, linux-i2c@vger.kernel.org, matt.porter@linaro.org, jdelvare@suse.de, laurent.pinchart+renesas@ideasonboard.com, vpalatin@chromium.org, sameo@linux.intel.com, linux-doc@vger.kernel.org, bjorn.andersson@sonymobile.com, u.kleine-koenig@pengutronix.de, kevin.strasser@linux.intel.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, linux@arm.linux.org.uk, andriy.shevchenko@linux.intel.com, ch.naveen@samsung.com, linux-arm-kernel@lists.infradead.org, shane.huang@amd.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, linux@prisktech.co.nz, galak@codeaurora
 List-Id: devicetree@vger.kernel.org
 
-Dear Antoine T=C3=A9nart,
+This series adds the most critical cros_ec changes for newer boards
+using cros_ec.  Specifically:
+* Fixes timing/locking issues with the previously upstreamed (but
+  never used upstream) cros_ec_spi driver.
+* Updates the cros_ec header file to the latest version which allows
+  us to use newer EC features like i2c tunneling.
+* Adds an i2c tunnel driver to allow communication to the EC's i2c
+  devices.
 
-On Tue, 22 Apr 2014 17:38:22 +0200, Antoine T=C3=A9nart wrote:
+This _doesn't_ get the EC driver fully up to speed with what's in the
+current Chromium OS trees.  There are a whole slew of cleanup patches
+there, an addition of an LPC transport mode, and exports of functions
+to userspace.  Once these patches land and we have functionality we
+can continue to pick more cleanup patches.
 
-> +		ahci: sata@e90000 {
-> +			compatible =3D "marvell,berlin-ahci";
-> +			reg =3D <0xe90000 0x10000>;
-> +			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-> +			status =3D "disable";
+Changes in v2:
+- Update tunnel binding as per swarren
+- Removed i2c20 alias for i2c tunnel
 
-Should be:
+Bill Richardson (1):
+  mfd: cros_ec: Sync to the latest cros_ec_commands.h from EC sources
 
-			status =3D "disabled";
+David Hendricks (1):
+  mfd: cros_ec: spi: calculate delay between transfers correctly
 
-And ditto for patches 5 and 6.
+Doug Anderson (5):
+  mfd: cros_ec: spi: Add mutex to cros_ec_spi
+  mfd: cros_ec: spi: Make the cros_ec_spi timeout more reliable
+  mfd: cros_ec: spi: Increase cros_ec_spi deadline from 5ms to 100ms
+  i2c: ChromeOS EC tunnel driver
+  ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
 
-Thanks,
+ .../devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt |   39 +
+ arch/arm/boot/dts/tegra124-venice2.dts             |   26 +
+ drivers/i2c/busses/Kconfig                         |    9 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c            |  304 ++++++
+ drivers/mfd/cros_ec.c                              |    7 +-
+ drivers/mfd/cros_ec_spi.c                          |   67 +-
+ include/linux/mfd/cros_ec.h                        |    4 +-
+ include/linux/mfd/cros_ec_commands.h               | 1128 ++++++++++++++++++--
+ 9 files changed, 1493 insertions(+), 92 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+ create mode 100644 drivers/i2c/busses/i2c-cros-ec-tunnel.c
 
-Thomas
---=20
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+-- 
+1.9.1.423.g4596e3a
+
