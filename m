@@ -1,64 +1,41 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 3/3] of: Handle memory@0 node on PPC32 only
-Date: Tue, 22 Apr 2014 14:35:15 +0100
-Message-ID: <20140422133515.E7A0BC40754@trevor.secretlab.ca>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-	<1397756521-29387-4-git-send-email-leif.lindholm@linaro.org>
-	<CAMuHMdXBNWum7UJ95uT2hwTd1b5C8ebF2LQ4T-A+RS80p7MH=A@mail.gmail.com>
-	<20140418125924.GF5904@bivouac.eciton.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140418125924.GF5904@bivouac.eciton.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leif Lindholm <leif.lindholm@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, patches@linaro.org, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH] ARM: sunxi: dt: list all pinctrl compatible strings
+Date: Tue, 22 Apr 2014 15:38:06 +0200
+Message-ID: <1398173886-9376-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Apr 2014 13:59:24 +0100, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> Hi Geert,
-> 
-> On Fri, Apr 18, 2014 at 10:04:15AM +0200, Geert Uytterhoeven wrote:
-> > On Thu, Apr 17, 2014 at 7:42 PM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> > > In order to deal with an firmware bug on a specific ppc32 platform
-> > > (longtrail), early_init_dt_scan_memory() looks for a node called
-> > > memory@0 on all platforms. Restrict this quirk to ppc32 kernels only.
-> > 
-> > This breaks backwards compatibilty with old DTSes (at least on ARM/MIPS,
-> > where you added the missing property in patches 1 and 2 of the series)?
-> 
-> As Rob said in response to 0/3, the MIPSs would likely not be affected,
-> since they embed the DT.
-> 
-> > For the Longtrail, I don't care much anymore, as mine died in 2004.
-> > AFAIK, there have never been many users anyway.
-> 
-> There are still a few mentions of it under arch/powerpc/, so I wouldn't
-> want to be the one to kill it off...
-> 
-> How about the below v2 3/3 to address the ARM platform?
+List all sunxi pinctrl compatible strings in order to be able to grep for
+those values.
 
-The problem with this approach is that selecting one board that needs it
-automatically makes it active for all boards. It would need to be
-something more like the following:
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+---
+ .../devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt      | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 399e242e1a42..55d65b2b4c74 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -887,12 +887,10 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
+diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+index dff0e5f..d8d0656 100644
+--- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctrl.txt
+@@ -6,8 +6,13 @@ the first two functions being GPIO in and out. The configuration on
+ the pins includes drive strength and pull-up.
  
- 	/* We are scanning "memory" nodes only */
- 	if (type == NULL) {
--		/*
--		 * The longtrail doesn't have a device_type on the
--		 * /memory node, so look for the node called /memory@0.
--		 */
- 		if (depth != 1 || strcmp(uname, "memory@0") != 0)
- 			return 0;
-+		if (!of_flat_dt_match(dt_root, memory_quirk_list))
-+			return 0;
- 	} else if (strcmp(type, "memory") != 0)
- 		return 0;
+ Required properties:
+-- compatible: "allwinner,<soc>-pinctrl". Supported SoCs for now are:
+-  sun5i-a13.
++- compatible: Should be one of the followings (depending on you SoC):
++  "allwinner,sun4i-a10-pinctrl"
++  "allwinner,sun5i-a10s-pinctrl"
++  "allwinner,sun5i-a13-pinctrl"
++  "allwinner,sun6i-a31-pinctrl"
++  "allwinner,sun6i-a31-r-pinctrl"
++  "allwinner,sun7i-a20-pinctrl"
+ - reg: Should contain the register physical address and length for the
+   pin controller.
  
-With a list of compatible properties for affected boards.
+-- 
+1.8.3.2
 
-g.
