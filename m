@@ -1,40 +1,47 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [PATCH v2 05/13] extcon: extcon-class: improve extcon client API
-Date: Tue, 22 Apr 2014 18:03:36 +0300
-Message-ID: <20140422150336.GA612@drone.musicnaut.iki.fi>
-References: <1397475984-28001-1-git-send-email-r.baldyga@samsung.com>
- <1397475984-28001-6-git-send-email-r.baldyga@samsung.com>
- <20140419105225.GB976@ambient.musicnaut.iki.fi>
- <53560A6F.8030909@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] pinctrl: qcom: Add IPQ8064 pinctrl support
+Date: Tue, 22 Apr 2014 17:11:40 +0200
+Message-ID: <CACRpkdZ_TgS2XFHyEhkWTHsgdv-Yw2jj9342nDihiJjjGPh7Bw@mail.gmail.com>
+References: <1397531437-9104-1-git-send-email-agross@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53560A6F.8030909@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Robert Baldyga <r.baldyga@samsung.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, myungjoo.ham@samsung.com, cw00.choi@samsung.com, dbaryshkov@gmail.com, dwmw2@infradead.org, balbi@ti.com, gregkh@linuxfoundation.org, grant.likely@linaro.org, ldewangan@nvidia.com, kishon@ti.com, gg@slimlogic.co.uk, anton@enomsg.org, jonghwa3.lee@samsung.com, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, m.szyprowski@samsung.com, t.figa@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397531437-9104-1-git-send-email-agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bjorn Andersson <Bjorn.Andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, David Brown <davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Bryan Huntsman <bryanh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Apr 15, 2014 at 5:10 AM, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wro=
+te:
 
-On Tue, Apr 22, 2014 at 08:21:35AM +0200, Robert Baldyga wrote:
-> On 04/19/2014 12:52 PM, Aaro Koskinen wrote:
-> > On Mon, Apr 14, 2014 at 01:46:16PM +0200, Robert Baldyga wrote:
-> >>  	dev_info(&pdev->dev,
-> >> -		 "OMAP USB OTG controller rev %d.%d (%s, id=%d, vbus=%d)\n",
-> >> -		 (rev >> 4) & 0xf, rev & 0xf, config->extcon, otg_dev->id,
-> >> +		 "OMAP USB OTG controller rev %d.%d (id=%d, vbus=%d)\n",
-> >> +		 (rev >> 4) & 0xf, rev & 0xf, otg_dev->id,
-> >>  		 otg_dev->vbus);
-> > 
-> > This change is unrelated to the patch and not needed.
-> >
-> 
-> It's related because we no longer use config->extcon since we have
-> cable-oriented API. We can keep displaying it, but this value is
-> actually meaningless.
+> This set of patches adds pinctrl support for the Qualcomm IPQ8064 pla=
+tform.
+> The IPQ8064 uses the same TLMM block as the APQ8064, but has a differ=
+ent number
+> of pins, functions, and function assignments.  The second patch conta=
+ins the
+> devicetree documentation.  The last patch selects PINCTRL for all ARC=
+H_QCOM
+> platforms.  This allows for selection of pinctrl support via a make m=
+enuconfig.
+>
+> Andy Gross (3):
+>   pinctrl: qcom: Add definitions for IPQ8064
+>   dt: Document Qualcomm IPQ8064 pinctrl binding
+>   ARM: qcom: Select PINCTRL by default for ARCH_QCOM
 
-It's not completely meaningless, as the cable is searched using that name.
+Bj=C3=B6rn can you look at this series?
 
-A.
+David/Bryan: can either of you ACK the changes hitting
+arch/arm/mach-qcom/Kconfig
+so I can merge this through the pinctrl tree?
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
