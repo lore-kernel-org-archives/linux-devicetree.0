@@ -1,76 +1,153 @@
-From: "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCHv3] of: fix of_update_property again
-Date: Tue, 22 Apr 2014 09:12:01 +0000
-Message-ID: <b2f2b8af96e748d8a13e1339833fa71c@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1397720909-24774-1-git-send-email-Li.Xiubo@freescale.com>
- <CAL_JsqKFRLECtSL3CKE_heruO-RJh96G-C_NsEZFVRkjAOdL-Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKFRLECtSL3CKE_heruO-RJh96G-C_NsEZFVRkjAOdL-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH v6 13/19] usb: phy: msm: Add support for secondary PHY control
+Date: Tue, 22 Apr 2014 12:20:32 +0300
+Message-ID: <1398158438-21579-14-git-send-email-iivanov@mm-sol.com>
+References: <1398158438-21579-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1398158438-21579-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Felipe Balbi <balbi@ti.com>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0h2M10gb2Y6IGZpeCBvZl91cGRhdGVfcHJvcGVydHkgYWdh
-aW4NCj4gDQo+IE9uIFRodSwgQXByIDE3LCAyMDE0IGF0IDI6NDggQU0sIFhpdWJvIExpIDxMaS5Y
-aXVib0BmcmVlc2NhbGUuY29tPiB3cm90ZToNCj4gPiBUaGUgb2ZfdXBkYXRlX3Byb3BlcnR5KCkg
-aXMgaW50ZW50ZWQgdG8gdXBkYXRlIGEgcHJvcGVydHkgaW4gYSBub2RlDQo+ID4gYW5kIGlmIHRo
-ZSBwcm9wZXJ0eSBkb2VzIG5vdCBleGlzdCwgd2lsbCBhZGQgaXQuDQo+ID4NCj4gPiBUaGUgc2Vj
-b25kIHNlYXJjaCBvZiB0aGUgcHJvcGVydHkgaXMgcG9zc2libHkgd29uJ3QgYmUgZm91bmQsIHRo
-YXQNCj4gPiBtYXliZSByZW1vdmVkIGJ5IG90aGVyIHRocmVhZCBqdXN0IGJlZm9yZSB0aGUgc2Vj
-b25kIHNlYXJjaCBiZWdhaW4uDQo+ID4NCj4gPiBVc2luZyB0aGUgX19vZl9maW5kX3Byb3BlcnR5
-KCkgYW5kIF9fb2ZfYWRkX3Byb3BlcnR5KCkgaW5zdGVhZCBhbmQNCj4gPiBtb3ZlIHRoZW0gaW50
-byBsb2NrIG9wZXJhdGlvbnMuDQo+IA0KPiBJIGhhdmUgYSBmaXggaW4gbXkgdHJlZSBmcm9tIEd1
-ZW50ZXIgd2hpY2ggaGFuZGxlcyB0aGUgcmFjZSBvZiB0aGUNCj4gcHJvcGVydHkgYmVpbmcgcmVt
-b3ZlZC4gSG93ZXZlciwgeW91ciBjaGFuZ2Ugd2lsbCBiZSBuZWVkZWQgd2hlbiB3ZQ0KPiBoYXZl
-IG92ZXJsYXlzIGFuZCB0aGUgbm9kZSBpdHNlbGYgY2FuIGJlIHJlbW92ZWQuIFNvIHRoaXMgaXMg
-My4xNg0KPiBtYXRlcmlhbCBhbmQgd2lsbCBuZWVkIHRvIGJlIHJlYmFzZWQgb24gR3VlbnRlcidz
-IGZpeC4NCj4gDQoNCkdvdCBpdC4NCg0KVGhhbmtzLA0KDQpCUnMNClhpdWJvDQoNCg0KDQo+IFJv
-Yg0KPiANCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpdWJvIExpIDxMaS5YaXVib0BmcmVlc2Nh
-bGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBkcml2ZXJzL29mL2Jhc2UuYyB8IDE4ICsrKysrKystLS0t
-LS0tLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNyBpbnNlcnRpb25zKCspLCAxMSBkZWxldGlv
-bnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2Jhc2UuYyBiL2RyaXZlcnMv
-b2YvYmFzZS5jDQo+ID4gaW5kZXggYmUyODYxZC4uMDY2MjNkMGMgMTAwNjQ0DQo+ID4gLS0tIGEv
-ZHJpdmVycy9vZi9iYXNlLmMNCj4gPiArKysgYi9kcml2ZXJzL29mL2Jhc2UuYw0KPiA+IEBAIC0x
-NzY3LDcgKzE3NjcsNyBAQCBpbnQgb2ZfdXBkYXRlX3Byb3BlcnR5KHN0cnVjdCBkZXZpY2Vfbm9k
-ZSAqbnAsIHN0cnVjdA0KPiBwcm9wZXJ0eSAqbmV3cHJvcCkNCj4gPiAgew0KPiA+ICAgICAgICAg
-c3RydWN0IHByb3BlcnR5ICoqbmV4dCwgKm9sZHByb3A7DQo+ID4gICAgICAgICB1bnNpZ25lZCBs
-b25nIGZsYWdzOw0KPiA+IC0gICAgICAgaW50IHJjLCBmb3VuZCA9IDA7DQo+ID4gKyAgICAgICBp
-bnQgcmM7DQo+ID4NCj4gPiAgICAgICAgIHJjID0gb2ZfcHJvcGVydHlfbm90aWZ5KE9GX1JFQ09O
-RklHX1VQREFURV9QUk9QRVJUWSwgbnAsIG5ld3Byb3ApOw0KPiA+ICAgICAgICAgaWYgKHJjKQ0K
-PiA+IEBAIC0xNzc2LDIwICsxNzc2LDE5IEBAIGludCBvZl91cGRhdGVfcHJvcGVydHkoc3RydWN0
-IGRldmljZV9ub2RlICpucCwNCj4gc3RydWN0IHByb3BlcnR5ICpuZXdwcm9wKQ0KPiA+ICAgICAg
-ICAgaWYgKCFuZXdwcm9wLT5uYW1lKQ0KPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gLUVJTlZB
-TDsNCj4gPg0KPiA+IC0gICAgICAgb2xkcHJvcCA9IG9mX2ZpbmRfcHJvcGVydHkobnAsIG5ld3By
-b3AtPm5hbWUsIE5VTEwpOw0KPiA+IC0gICAgICAgaWYgKCFvbGRwcm9wKQ0KPiA+IC0gICAgICAg
-ICAgICAgICByZXR1cm4gb2ZfYWRkX3Byb3BlcnR5KG5wLCBuZXdwcm9wKTsNCj4gPiAtDQo+ID4g
-ICAgICAgICByYXdfc3Bpbl9sb2NrX2lycXNhdmUoJmRldnRyZWVfbG9jaywgZmxhZ3MpOw0KPiA+
-ICAgICAgICAgbmV4dCA9ICZucC0+cHJvcGVydGllczsNCj4gPiAtICAgICAgIHdoaWxlICgqbmV4
-dCkgew0KPiA+ICsgICAgICAgb2xkcHJvcCA9IF9fb2ZfZmluZF9wcm9wZXJ0eShucCwgbmV3cHJv
-cC0+bmFtZSwgTlVMTCk7DQo+ID4gKyAgICAgICBpZiAoIW9sZHByb3ApIHsNCj4gPiArICAgICAg
-ICAgICAgICAgLyogYWRkIHRoZSBuZXcgbm9kZSAqLw0KPiA+ICsgICAgICAgICAgICAgICByYyA9
-IF9fb2ZfYWRkX3Byb3BlcnR5KG5wLCBuZXdwcm9wKTsNCj4gPiArICAgICAgIH0gZWxzZSB3aGls
-ZSAoKm5leHQpIHsNCj4gPiArICAgICAgICAgICAgICAgLyogZm91bmQgdGhlIG5vZGUgYW5kIHRo
-ZW4gcmVwbGFjZSBpdCAqLw0KPiA+ICAgICAgICAgICAgICAgICBpZiAoKm5leHQgPT0gb2xkcHJv
-cCkgew0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgIC8qIGZvdW5kIHRoZSBub2RlICovDQo+
-ID4gICAgICAgICAgICAgICAgICAgICAgICAgbmV3cHJvcC0+bmV4dCA9IG9sZHByb3AtPm5leHQ7
-DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgKm5leHQgPSBuZXdwcm9wOw0KPiA+ICAgICAg
-ICAgICAgICAgICAgICAgICAgIG9sZHByb3AtPm5leHQgPSBucC0+ZGVhZHByb3BzOw0KPiA+ICAg
-ICAgICAgICAgICAgICAgICAgICAgIG5wLT5kZWFkcHJvcHMgPSBvbGRwcm9wOw0KPiA+IC0gICAg
-ICAgICAgICAgICAgICAgICAgIGZvdW5kID0gMTsNCj4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICBicmVhazsNCj4gPiAgICAgICAgICAgICAgICAgfQ0KPiA+ICAgICAgICAgICAgICAgICBuZXh0
-ID0gJigqbmV4dCktPm5leHQ7DQo+ID4gQEAgLTE4MDMsOSArMTgwMiw2IEBAIGludCBvZl91cGRh
-dGVfcHJvcGVydHkoc3RydWN0IGRldmljZV9ub2RlICpucCwgc3RydWN0DQo+IHByb3BlcnR5ICpu
-ZXdwcm9wKQ0KPiA+ICAgICAgICAgICAgICAgICBzeXNmc19yZW1vdmVfYmluX2ZpbGUoJm5wLT5r
-b2JqLCAmb2xkcHJvcC0+YXR0cik7DQo+ID4gICAgICAgICBfX29mX2FkZF9wcm9wZXJ0eV9zeXNm
-cyhucCwgbmV3cHJvcCk7DQo+ID4NCj4gPiAtICAgICAgIGlmICghZm91bmQpDQo+ID4gLSAgICAg
-ICAgICAgICAgIHJldHVybiAtRU5PREVWOw0KPiA+IC0NCj4gPiAgICAgICAgIHJldHVybiAwOw0K
-PiA+ICB9DQo+ID4NCj4gPiAtLQ0KPiA+IDEuOC40DQo+ID4NCj4gPg0KPiANCg0K
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+
+Allow support to use 2nd HSPHY with USB2 Core.
+Some platforms may have configuration to allow USB controller
+work with any of the two HSPHYs present. By default driver
+configures USB core to use primary HSPHY. Add support to allow
+user select 2nd HSPHY using DT parameter.
+
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Cc: Manu Gautam <mgautam@codeaurora.org>
+---
+ .../devicetree/bindings/usb/msm-hsusb.txt          |  6 ++++++
+ drivers/usb/phy/phy-msm-usb.c                      | 24 ++++++++++++++++++++--
+ include/linux/usb/msm_hsusb.h                      |  1 +
+ include/linux/usb/msm_hsusb_hw.h                   |  1 +
+ 4 files changed, 30 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+index ee4123d..0669667 100644
+--- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
++++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+@@ -59,6 +59,12 @@ Optional properties:
+                 For example: qcom,phy-init-sequence = < -1 0x63 >;
+                 Will update only value at address ULPI_EXT_VENDOR_SPECIFIC + 1.
+
++- qcom,phy-num: Select number of pyco-phy to use, can be one of
++                0 - PHY one, default
++                1 - Second PHY
++                Some platforms may have configuration to allow USB
++                controller work with any of the two HSPHYs present.
++
+ Example HSUSB OTG controller device node:
+
+     usb@f9a55000 {
+diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+index d47d940..b03d7f1 100644
+--- a/drivers/usb/phy/phy-msm-usb.c
++++ b/drivers/usb/phy/phy-msm-usb.c
+@@ -314,6 +314,9 @@ static int msm_otg_phy_reset(struct msm_otg *motg)
+ 	if (!retries)
+ 		return -ETIMEDOUT;
+
++	if (motg->phy_number)
++		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
++
+ 	dev_info(motg->phy.dev, "phy_reset: success\n");
+ 	return 0;
+ }
+@@ -368,6 +371,9 @@ static int msm_otg_reset(struct usb_phy *phy)
+ 		ulpi_write(phy, ulpi_val, ULPI_USB_INT_EN_FALL);
+ 	}
+
++	if (motg->phy_number)
++		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
++
+ 	return 0;
+ }
+
+@@ -404,6 +410,7 @@ static int msm_otg_suspend(struct msm_otg *motg)
+ 	struct usb_phy *phy = &motg->phy;
+ 	struct usb_bus *bus = phy->otg->host;
+ 	struct msm_otg_platform_data *pdata = motg->pdata;
++	void __iomem *addr;
+ 	int cnt = 0;
+
+ 	if (atomic_read(&motg->in_lpm))
+@@ -463,9 +470,13 @@ static int msm_otg_suspend(struct msm_otg *motg)
+ 	 */
+ 	writel(readl(USB_USBCMD) | ASYNC_INTR_CTRL | ULPI_STP_CTRL, USB_USBCMD);
+
++	addr = USB_PHY_CTRL;
++	if (motg->phy_number)
++		addr = USB_PHY_CTRL2;
++
+ 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
+ 			motg->pdata->otg_control == OTG_PMIC_CONTROL)
+-		writel(readl(USB_PHY_CTRL) | PHY_RETEN, USB_PHY_CTRL);
++		writel(readl(addr) | PHY_RETEN, addr);
+
+ 	clk_disable_unprepare(motg->pclk);
+ 	clk_disable_unprepare(motg->clk);
+@@ -495,6 +506,7 @@ static int msm_otg_resume(struct msm_otg *motg)
+ {
+ 	struct usb_phy *phy = &motg->phy;
+ 	struct usb_bus *bus = phy->otg->host;
++	void __iomem *addr;
+ 	int cnt = 0;
+ 	unsigned temp;
+
+@@ -508,9 +520,14 @@ static int msm_otg_resume(struct msm_otg *motg)
+
+ 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
+ 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
++
++		addr = USB_PHY_CTRL;
++		if (motg->phy_number)
++			addr = USB_PHY_CTRL2;
++
+ 		msm_hsusb_ldo_set_mode(motg, 1);
+ 		msm_hsusb_config_vddcx(motg, 1);
+-		writel(readl(USB_PHY_CTRL) & ~PHY_RETEN, USB_PHY_CTRL);
++		writel(readl(addr) & ~PHY_RETEN, addr);
+ 	}
+
+ 	temp = readl(USB_USBCMD);
+@@ -1396,6 +1413,9 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+ 		if (val == OTG_PMIC_CONTROL)
+ 			pdata->otg_control = val;
+
++	if (!of_property_read_u32(node, "qcom,phy-num", &val) && val < 2)
++		motg->phy_number = val;
++
+ 	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
+ 	if (!prop || !len)
+ 		return 0;
+diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
+index 4e5d916..4628f1a 100644
+--- a/include/linux/usb/msm_hsusb.h
++++ b/include/linux/usb/msm_hsusb.h
+@@ -158,6 +158,7 @@ struct msm_otg {
+ 	atomic_t in_lpm;
+ 	int async_int;
+ 	unsigned cur_power;
++	int phy_number;
+ 	struct delayed_work chg_work;
+ 	enum usb_chg_state chg_state;
+ 	enum usb_chg_type chg_type;
+diff --git a/include/linux/usb/msm_hsusb_hw.h b/include/linux/usb/msm_hsusb_hw.h
+index 6e97a2d..e6d7035 100644
+--- a/include/linux/usb/msm_hsusb_hw.h
++++ b/include/linux/usb/msm_hsusb_hw.h
+@@ -25,6 +25,7 @@
+ #define USB_OTGSC            (MSM_USB_BASE + 0x01A4)
+ #define USB_USBMODE          (MSM_USB_BASE + 0x01A8)
+ #define USB_PHY_CTRL         (MSM_USB_BASE + 0x0240)
++#define USB_PHY_CTRL2        (MSM_USB_BASE + 0x0278)
+
+ #define USBCMD_RESET   2
+ #define USB_USBINTR          (MSM_USB_BASE + 0x0148)
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.2
