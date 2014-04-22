@@ -1,33 +1,32 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2 1/6] gpio: rcar: Add optional functional clock to bindings
-Date: Tue, 22 Apr 2014 23:34:18 +0200
-Message-ID: <CACRpkda=-nViAw7WYjYHVHGwiYgHYKzmk6-nYvm46E5366GMiA@mail.gmail.com>
-References: <1397500397-12607-1-git-send-email-geert@linux-m68k.org>
-	<1397500397-12607-2-git-send-email-geert@linux-m68k.org>
+From: Stephen Hemminger <stephen-OTpzqLSitTUnbdJkjeBofR2eb7JE58TQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] net: Add Keystone NetCP ethernet driver support
+Date: Tue, 22 Apr 2014 15:02:31 -0700
+Message-ID: <20140422150231.2e87b7eb@nehalam.linuxnetplumber.net>
+References: <1398201675-17379-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1397500397-12607-2-git-send-email-geert@linux-m68k.org>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398201675-17379-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sandeep Nair <sandeep_n-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 14, 2014 at 8:33 PM, Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
+On Tue, 22 Apr 2014 17:21:13 -0400
+Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
 
-> From: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
-> Cc: linux-gpio@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
-> v2:
->   - Functional clock is mandatory depending on hardware (thanks, Laurent)
+> NetCP driver has a plug-in module architecture where each of the NetCP
+> sub-modules exist as a loadable kernel module which plug in to the netcp
+> core. These sub-modules are represented as "netcp-devices" in the dts
+> bindings. It is mandatory to have the ethernet switch sub-module for
+> the ethernet interface to be operational. Any other sub-module like the
+> PA is optional.
 
-This v2 version applied with Laurent's ACK.
-
-Yours,
-Linus Walleij
+Where is the implementation of these modules. You need to include
+this as separate patch set. Also the hooks for these modules should all
+be EXPORT_SYMBOL_GPL() to disallow proprietary modules.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
