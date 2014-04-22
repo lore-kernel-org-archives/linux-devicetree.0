@@ -1,48 +1,92 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v3 1/3] usb: chipidea: msm: Add device tree binding information
-Date: Tue, 22 Apr 2014 12:43:15 +0300
-Message-ID: <1398159797-26917-2-git-send-email-iivanov@mm-sol.com>
-References: <1398159797-26917-1-git-send-email-iivanov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1398159797-26917-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Peter Chen <Peter.Chen@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Appana Durga Kedareswara Rao <appana.durga.rao@xilinx.com>
+Subject: RE: [PATCH v7 1/2] can: xilinx CAN controller support
+Date: Tue, 22 Apr 2014 10:06:14 +0000
+Message-ID: <bbe8aafc-8fce-4065-91b3-c051ad5c150f@CH1EHSMHS043.ehs.local>
+References: <3e750ec3-9d47-4b4e-8173-56698ab19786@CH1EHSMHS029.ehs.local>
+ <53424C32.7090000@monstr.eu>
+ <707ea084-ed82-407b-8967-1e82a994b784@AM1EHSMHS003.ehs.local>
+ <53562F36.6020005@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <53562F36.6020005@pengutronix.de>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>, "monstr@monstr.eu" <monstr@monstr.eu>
+Cc: "wg@grandegger.com" <wg@grandegger.com>, Michal Simek <michals@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-
-Document device tree binding information as required by
-the Qualcomm USB controller.
-
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
----
- Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-new file mode 100644
-index 0000000..7221072
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-qcom.txt
-@@ -0,0 +1,17 @@
-+Qualcomm CI13xxx (Chipidea) USB controllers
-+
-+Required properties:
-+- compatible:   should contain "qcom,ci-hdrc"
-+- reg:          offset and length of the register set in the memory map
-+- interrupts:   interrupt-specifier for the controller interrupt.
-+- usb-phy:      phandle for the PHY device
-+- dr_mode:      Sould be "peripheral"
-+
-+Examples:
-+	gadget@f9a55000 {
-+		compatible = "qcom,ci-hdrc";
-+		reg = <0xf9a55000 0x400>;
-+		dr_mode = "peripheral";
-+		interrupts = <0 134 0>;
-+		usb-phy = <&usbphy0>;
-+	};
---
-1.8.3.2
+SGkgTWFyYywNCg0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IE1hcmMg
+S2xlaW5lLUJ1ZGRlIFttYWlsdG86bWtsQHBlbmd1dHJvbml4LmRlXQ0KPiBTZW50OiBUdWVzZGF5
+LCBBcHJpbCAyMiwgMjAxNCAyOjI5IFBNDQo+IFRvOiBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEg
+UmFvOyBtb25zdHJAbW9uc3RyLmV1DQo+IENjOiB3Z0BncmFuZGVnZ2VyLmNvbTsgTWljaGFsIFNp
+bWVrOyBncmFudC5saWtlbHlAbGluYXJvLm9yZzsNCj4gcm9iaCtkdEBrZXJuZWwub3JnOyBsaW51
+eC1jYW5Admdlci5rZXJuZWwub3JnOyBuZXRkZXZAdmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0gg
+djcgMS8yXSBjYW46IHhpbGlueCBDQU4gY29udHJvbGxlciBzdXBwb3J0DQo+DQo+IE9uIDA0LzIy
+LzIwMTQgMDk6NTYgQU0sIEFwcGFuYSBEdXJnYSBLZWRhcmVzd2FyYSBSYW8gd3JvdGU6DQo+ID4g
+SGkgTWFyYywNCj4gPg0KPiA+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9t
+OiBNaWNoYWwgU2ltZWsgW21haWx0bzptb25zdHJAbW9uc3RyLmV1XQ0KPiA+PiBTZW50OiBNb25k
+YXksIEFwcmlsIDA3LCAyMDE0IDEyOjI3IFBNDQo+ID4+IFRvOiBBcHBhbmEgRHVyZ2EgS2VkYXJl
+c3dhcmEgUmFvDQo+ID4+IENjOiB3Z0BncmFuZGVnZ2VyLmNvbTsgbWtsQHBlbmd1dHJvbml4LmRl
+OyBNaWNoYWwgU2ltZWs7DQo+ID4+IGdyYW50Lmxpa2VseUBsaW5hcm8ub3JnOyByb2JoK2R0QGtl
+cm5lbC5vcmc7DQo+ID4+IGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5vcmc7IG5ldGRldkB2Z2VyLmtl
+cm5lbC5vcmc7DQo+ID4+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgbGlu
+dXgtIGtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4+IGRldmljZXRyZWVAdmdlci5rZXJuZWwu
+b3JnOyBBcHBhbmEgRHVyZ2EgS2VkYXJlc3dhcmEgUmFvDQo+ID4+IFN1YmplY3Q6IFJlOiBbUEFU
+Q0ggdjcgMS8yXSBjYW46IHhpbGlueCBDQU4gY29udHJvbGxlciBzdXBwb3J0DQo+ID4+DQo+ID4+
+IE9uIDA0LzAyLzIwMTQgMDM6MTMgUE0sIEtlZGFyZXN3YXJhIHJhbyBBcHBhbmEgd3JvdGU6DQo+
+ID4+PiBUaGlzIHBhdGNoIGFkZHMgeGlsaW54IENBTiBjb250cm9sbGVyIHN1cHBvcnQuDQo+ID4+
+PiBUaGlzIGRyaXZlciBzdXBwb3J0cyBib3RoIFpZTlEgQ0FOUFMgYW5kIFNvZnQgSVAgQVhJIENB
+TiBjb250cm9sbGVyLg0KPiA+Pj4NCj4gPj4+IFNpZ25lZC1vZmYtYnk6IEtlZGFyZXN3YXJhIHJh
+byBBcHBhbmEgPGFwcGFuYWRAeGlsaW54LmNvbT4NCj4gPj4+IC0tLQ0KPiA+Pj4gQ2hhbmdlcyBm
+b3Igdjc6DQo+ID4+PiAtIFVwZGF0ZWQgdGhlIGRyaXZlciB3aXRoIHJldmlldyBjb21tZW50cy4N
+Cj4gPj4+IC0gTW92ZWQgdGhlIGRyaXZlciBiaW5kaW5ncyBkb2MgYXMgYSBzZXBhcnRlIHBhdGNo
+Lg0KPiA+Pj4gQ2hhbmdlcyBmb3IgdjY6DQo+ID4+PiAtIFVwZGF0ZWQgdGhlIGRyaXZlciB3aXRo
+IHJldmlldyBjb21tZW50cy4NCj4gPj4+IC0gVXNlZCB0aGUgY2xvY2sgbmFtZXMgc3BlY2lmaWVk
+IGluIHRoZSBkYXRhIHNoZWV0Lg0KPiA+Pj4gLSBVcGRhdGVkIHRoZSBkZXZpY2V0cmVlIGJpbmRp
+bmdzIGRvYyBhcyBwZXIgUm9iIHN1Z2dlc3Rpb24uDQo+ID4+PiBDaGFuZ2VzIGZvciB2NToNCj4g
+Pj4+IC0gVXBkYXRlZCB0aGUgZHJpdmVyIHdpdGggdGhlIHJldmlldyBjb21tZW50cy4NCj4gPj4+
+IC0gUmVtb3ZlIHRoZSBjaGVjayBmb3IgdGhlIHR4IGZpZm8gZnVsbCBpbnRlcnJ1cHQgY29uZGl0
+aW9uDQo+ID4+PiAgIGZvcm0gVHggaW50ZXJydXB0IHJvdXRpbmUgYXMgd2UgYXJlIGNoZWNraW5n
+IGl0IGluIHRoZSBfeG1pdA0KPiA+Pj4gICByb3V0aW5lLg0KPiA+Pj4gLSBDbGVhcmluZyB0aGUg
+dHhvayBpbnRlcnJ1cHQgaW4gdGhlIHR4IGludGVycnVwdCByb3V0aW5lIGZvcg0KPiA+Pj4gICBl
+dmVyeSBUeCBjYW4gZnJhbWUuDQo+ID4+PiBDaGFuZ2VzIGZvciB2NDoNCj4gPj4+IC0gQWRkZWQg
+Y2hlY2sgZm9yIHRoZSB0eCBmaWZvIGZ1bGwgaW50ZXJydXB0IGNvbmRpdGlvbiBpbiBUeA0KPiA+
+Pj4gaW50ZXJydXB0IHJvdXRpbmUuDQo+ID4+PiAtIEFkZGVkIGJlIGlvaGVscGVyIGZ1bmN0aW9u
+cy4NCj4gPj4+IC0gTW92ZWQgdGhlIGNsb2NrIGVuYWJsZS9kaXNhYmxlIHRvIHByb2JlL3JlbW92
+ZSBiZWNhdXNlIG9mDQo+ID4+PiAgIEFkZGVkIGJpZyBlbmRpYW4gc3VwcG9ydCBmb3IgQVhJIENB
+TiBjb250cm9sbGVyIGNhc2UocmVhZGluZw0KPiA+Pj4gICBhIHJlZ2lzdGVyIGR1cmluZyBwcm9i
+ZSBmb3IgdGhhdCB3ZSBuZWVkIHRvIGVuYWJsZSBjbG9jaykuDQo+ID4+PiBDaGFuZ2VzIGZvciB2
+MzoNCj4gPj4+IC0gVXBkYXRlZCB0aGUgZHJpdmVyIHdpdGggdGhlIHJldmlldyBjb21tZW50cy4N
+Cj4gPj4+IC0gTW9kaWZpZWQgdGhlIHRyYW5taXQgbG9naWMgYXMgcGVyIE1hcmMgc3VnZ2VzdGlv
+bi4NCj4gPj4+IC0gRW5hYmxpbmcgdGhlIGNsb2NrIHdoZW4gdGhlIGludGVyZmFjZSBpcyB1cCB0
+byByZWR1Y2UgdGhlDQo+ID4+PiAgIFBvd2VyIGNvbnN1bXB0aW9uLg0KPiA+Pj4gQ2hhbmdlcyBm
+b3IgdjI6DQo+ID4+PiAtIFVwZGF0ZWQgd2l0aCB0aGUgcmV2aWV3IGNvbW1lbnRzLg0KPiA+Pj4g
+LSBSZW1vdmVkIHRoZSB1bm5lY2Vzc2FyeSBkZWJ1ZyBwcmludHMuDQo+ID4+PiAtIGluY2x1ZGUg
+dHgscnggZmlmbyBkZXB0aHMgaW4gWllOUSBDQU5QUyBjYXNlIGFsc28NCj4gPj4+IC0tLQ0KPiA+
+Pj4gIGRyaXZlcnMvbmV0L2Nhbi9LY29uZmlnICAgICAgfCAgICA3ICsNCj4gPj4+ICBkcml2ZXJz
+L25ldC9jYW4vTWFrZWZpbGUgICAgIHwgICAgMSArDQo+ID4+PiAgZHJpdmVycy9uZXQvY2FuL3hp
+bGlueF9jYW4uYyB8IDExNzYNCj4gPj4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKw0KPiA+Pj4gIDMgZmlsZXMgY2hhbmdlZCwgMTE4NCBpbnNlcnRpb25zKCspLCAw
+IGRlbGV0aW9ucygtKSAgY3JlYXRlIG1vZGUNCj4gPj4+IDEwMDY0NCBkcml2ZXJzL25ldC9jYW4v
+eGlsaW54X2Nhbi5jDQo+ID4+DQo+ID4+IE1hcms6IEFueSB1cGRhdGUgb24gdGhpcyBvbmU/DQo+
+ID4+IEJUVzogV2hlbiB5b3UgYXBwbHkgdGhlc2UgcGF0Y2hlcyB5b3Ugc2hvdWxkIGFwcGx5IDIv
+MiBiZWZvcmUgMS8yLg0KPiA+PiBUaGVyZSBpcyBuZXcgY2hlY2tpbmcgZm9yIGJpbmRpbmcuDQo+
+ID4+DQo+ID4NCj4gPiBQaW5nPw0KPg0KPiBEb25lLCB3aGVuIHlvdSByZXBvc3QsIGNhbiB5b3Ug
+Y2hhbmdlIHRoZSBvcmRlciBvZiB0aGUgcGF0Y2hlcywgc28gdGhhdCB0aGUNCj4gYmluZGluZyBj
+b21lcyBmaXJzdC4NCj4NCk9rIFN1cmUuDQoNClJlZ2FyZHMsDQpLZWRhci4NCg0KPiBNYXJjDQo+
+DQo+IC0tDQo+IFBlbmd1dHJvbml4IGUuSy4gICAgICAgICAgICAgICAgICB8IE1hcmMgS2xlaW5l
+LUJ1ZGRlICAgICAgICAgICB8DQo+IEluZHVzdHJpYWwgTGludXggU29sdXRpb25zICAgICAgICB8
+IFBob25lOiArNDktMjMxLTI4MjYtOTI0ICAgICB8DQo+IFZlcnRyZXR1bmcgV2VzdC9Eb3J0bXVu
+ZCAgICAgICAgICB8IEZheDogICArNDktNTEyMS0yMDY5MTctNTU1NSB8DQo+IEFtdHNnZXJpY2h0
+IEhpbGRlc2hlaW0sIEhSQSAyNjg2ICB8IGh0dHA6Ly93d3cucGVuZ3V0cm9uaXguZGUgICB8DQoN
+Cg0KDQpUaGlzIGVtYWlsIGFuZCBhbnkgYXR0YWNobWVudHMgYXJlIGludGVuZGVkIGZvciB0aGUg
+c29sZSB1c2Ugb2YgdGhlIG5hbWVkIHJlY2lwaWVudChzKSBhbmQgY29udGFpbihzKSBjb25maWRl
+bnRpYWwgaW5mb3JtYXRpb24gdGhhdCBtYXkgYmUgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQgb3Ig
+Y29weXJpZ2h0ZWQgdW5kZXIgYXBwbGljYWJsZSBsYXcuIElmIHlvdSBhcmUgbm90IHRoZSBpbnRl
+bmRlZCByZWNpcGllbnQsIGRvIG5vdCByZWFkLCBjb3B5LCBvciBmb3J3YXJkIHRoaXMgZW1haWwg
+bWVzc2FnZSBvciBhbnkgYXR0YWNobWVudHMuIERlbGV0ZSB0aGlzIGVtYWlsIG1lc3NhZ2UgYW5k
+IGFueSBhdHRhY2htZW50cyBpbW1lZGlhdGVseS4NCg0KCgo=
