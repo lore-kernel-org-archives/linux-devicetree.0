@@ -1,69 +1,67 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/4] mfd: bcm590xx: add support for second i2c slave
- address space
-Date: Tue, 22 Apr 2014 09:21:39 +0100
-Message-ID: <20140422082139.GF17657@lee--X1>
-References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
- <1397501428-8857-3-git-send-email-mporter@linaro.org>
- <20140416110603.GA19671@lee--X1>
- <20140416213141.GD12304@sirena.org.uk>
- <20140417065753.GC28725@lee--X1>
- <20140417222616.GK23695@beef>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Tue, 22 Apr 2014 10:22:04 +0200
+Message-ID: <10652983.rXrAGMo8Yn@wuerfel>
+References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <535561BE.9070303@cogentembedded.com> <5356063C.6070100@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140417222616.GK23695@beef>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5356063C.6070100-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > > s/regmap/Regmap
-> > >=20
-> > > It's consistently written regmap in all the documentation and so =
-on :)
-> >=20
-> > Furry muff; but the comments still stand for the acronyms.
-> >=20
-> > > > addmap{0,1} doesn't quite sit right with me.
-> > >=20
-> > > > REVISIT: Ah, it's address-map, rather than add map. Okay, not a=
-s bad
-> > > > as I first thought, but still, is there a better naming convent=
-ion you
-> > > > could use?
-> > >=20
-> > > addrmap or something?
-> >=20
-> > Right, that was what I was thinking. However, I prefer something al=
-ong
-> > the lines of 'i2c' and 'i2c_sec' or 'client' and 'client_slv' etc.
->=20
-> FWIW, the reason it's addmap{0,1} is that the datasheet has documents
-> ADDMAP=3D0 and the first bank of registers and ADDMAP=3D1 as the seco=
-nd bank
-> of registers. I adopted that to match the docs for the part.
->=20
-> I guess we could do i2c and i2c_sec, I'll just have to put a comment
-> correlating it to the h/w. Calling it 'slv' implies something else
-> so we should avoid that here. The notion of a "secondary" i2c device
-> is completely a Linux I2C subsystem fabrication which wouldn't exist
-> if it allowed multiple slave addresses per device. From a h/w
-> perspective there is really no primary and secondary relationship.
->=20
-> I'm fine with i2c/i2c_sec or addrmap0/1 and I will just comment to
-> correlate with the datasheet..pick one.
+On Tuesday 22 April 2014 14:03:40 zhangfei wrote:
+> On 04/22/2014 02:21 AM, Sergei Shtylyov wrote:
+> > On 04/21/2014 10:03 PM, Florian Fainelli wrote:
+> >
+> >>>> Hisilicon hip04 platform mdio driver
+> >>>> Reuse Marvell phy drivers/net/phy/marvell.c
+> >
+> >>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >>> [...]
+> >
+> >>>> diff --git a/drivers/net/ethernet/hisilicon/hip04_mdio.c
+> >>>> b/drivers/net/ethernet/hisilicon/hip04_mdio.c
+> >>>> new file mode 100644
+> >>>> index 0000000..19826a3
+> >>>> --- /dev/null
+> >>>> +++ b/drivers/net/ethernet/hisilicon/hip04_mdio.c
+> >>>> @@ -0,0 +1,185 @@
+> >>>> +static int hip04_mdio_reset(struct mii_bus *bus)
+> >>>> +{
+> >>>> +       int temp, err, i;
+> >>>> +
+> >>>> +       for (i = 0; i < PHY_MAX_ADDR; i++) {
+> >>>> +               hip04_mdio_write(bus, i, 22, 0);
+> >
+> >>>     Why? What kind of a register this is? <uapi/linux/mii.h> tells me
+> >>> it's
+> >>> MII_SREVISION...
+> >
+> >> I think this rather means clause 22 as opposed to clause 45.
+> >
+> >     No, the corresponding hip04_mdio_write()'s parameter is a register
+> > #, so this is a write of 0 to register #22. A comment certainly wouldn't
+> > hurt here...
+> 
+> It's private register of the phy marvell 88e1512.
+> To make it clearer using define instead.
+> #define MII_MARVELL_PHY_PAGE    22
+> 
+> The registers has been grouped into several pages, access register need 
+> choose which page first.
 
-Let's stick method fabricated by the I2C subsystem. It may seem strange
-from a h/w perspective, but it is the way we (you) have coded it, as
-the first parameter of i2c_new_dummy() is the 'managing' (primary,
-parent, master, whatever) device, so '_sec' would suit as an
-identifying appendage for the resultant device.
+You shouldn't touch the PHY private registers in the main driver though,
+this should be purely handled by drivers/net/phy/marvell.c.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+I don't see support for 88e1512 there, only 88e1510 and lots of older
+ones, but I assume it isn't hard to add.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
