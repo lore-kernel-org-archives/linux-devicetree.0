@@ -1,49 +1,125 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Tue, 22 Apr 2014 22:16:06 +0800
-Message-ID: <535679A6.4020103@linaro.org>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <535561BE.9070303@cogentembedded.com> <5356063C.6070100@linaro.org> <10652983.rXrAGMo8Yn@wuerfel>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/7] of: configure the platform device dma parameters
+Date: Tue, 22 Apr 2014 18:09:53 +0300
+Message-ID: <53568641.2020300@ti.com>
+References: <1397917972-6293-1-git-send-email-santosh.shilimkar@ti.com>	<1397917972-6293-5-git-send-email-santosh.shilimkar@ti.com> <CAL_JsqJJ4Cbh5poMa-KRwy+bp_t3VtRd7bCpcWey+DZ74eYHJQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <10652983.rXrAGMo8Yn@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Eric Dumazet <eric.dumazet@gmail.com>, netdev <netdev@vger.kernel.org>, xuwei5@hisilicon.com, David Laight <David.Laight@aculab.com>, David Miller <davem@davemloft.net>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJJ4Cbh5poMa-KRwy+bp_t3VtRd7bCpcWey+DZ74eYHJQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Rob,
 
-
-On 04/22/2014 04:22 PM, Arnd Bergmann wrote:
-
->> It's private register of the phy marvell 88e1512.
->> To make it clearer using define instead.
->> #define MII_MARVELL_PHY_PAGE    22
+On 04/21/2014 05:58 PM, Rob Herring wrote:
+> On Sat, Apr 19, 2014 at 9:32 AM, Santosh Shilimkar
+> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+>> Retrieve DMA configuration from DT and setup platform device's DMA
+>> parameters. The DMA configuration in DT has to be specified using
+>> "dma-ranges" and "dma-coherent" properties if supported.
 >>
->> The registers has been grouped into several pages, access register need
->> choose which page first.
->
-> You shouldn't touch the PHY private registers in the main driver though,
-> this should be purely handled by drivers/net/phy/marvell.c.
->
-> I don't see support for 88e1512 there, only 88e1510 and lots of older
-> ones, but I assume it isn't hard to add.
->
+>> We setup dma_pfn_offset using "dma-ranges" and dma_coherent_ops
+>> using "dma-coherent" device tree properties.
+>>
+>> The set_arch_dma_coherent_ops macro has to be defined by arch if
+>> it supports coherent dma_ops. Otherwise, set_arch_dma_coherent_ops() is
+>> declared as nop.
+>>
+>> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/of/platform.c       |   43 +++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/dma-mapping.h |    7 +++++++
+>>   2 files changed, 50 insertions(+)
+>>
+>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+>> index 573db15..7e4a43b 100644
+>> --- a/drivers/of/platform.c
+>> +++ b/drivers/of/platform.c
+>> @@ -187,6 +187,47 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>>   EXPORT_SYMBOL(of_device_alloc);
+>>
+>>   /**
+>> + * of_dma_configure - Setup DMA configuration
+>> + * @dev:       Device to apply DMA configuration
+>> + *
+>> + * Try to get devices's DMA configuration from DT and update it
+>> + * accordingly.
+>> + *
+>> + * In case if platform code need to use own special DMA configuration,it
+>> + * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
+>> + * to fix up DMA configuration.
+>> + */
+>> +static void of_dma_configure(struct device *dev)
+>> +{
+>> +       dma_addr_t dma_addr;
+>> +       phys_addr_t paddr, size;
+> 
+> A problem with using dma_addr_t and phys_addr_t is that they normally
+> depend on CONFIG_LPAE, but the address cell sizes are independent of
+> that. That is why all the memory related functions stick with u64. I
+> think you would have issues here if you have a platform with sizes of
+> 4GB or more. You need to properly cap the sizes and addresses.
+> 
+>> +       int ret;
+>> +
+>> +       /*
+>> +        * if dma-coherent property exist, call arch hook to setup
+>> +        * dma coherent operations.
+>> +        */
+>> +       if (of_dma_is_coherent(dev->of_node)) {
+>> +               set_arch_dma_coherent_ops(dev);
+>> +               dev_dbg(dev, "device is dma coherent\n");
+>> +       }
+>> +
+>> +       /*
+>> +        * if dma-ranges property doesn't exist - just return else
+>> +        * setup the dma offset
+>> +        */
+>> +       ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
+>> +       if (ret < 0) {
+> 
+> Perhaps an error is not the right return for the default case. The
+> default should probably be dma_addr and paddr equal to 0 and size 4GB.
 
-88e1512 driver is already supported, same as 88e1510.
-#define MARVELL_PHY_ID_MASK             0xfffffff0
-So it should support 88e151x.
+The error code is needed here to properly distinguish the case when 
+there are no "dma-ranges" defined in DT. Also, I think, that 
+of_dma_get_range() shouldn't return any default values - It just
+has to get data from DT. And the caller should decide what to do
+with this data and how to handle error cases.
 
-Reset is required here for get_phy_id, otherwise only 0 can be get.
-phy_device_create will not be called, and can not match any driver.
+So, I prefer to keep behavior as is:
+- in case of failure of_dma_get_range() will not touch values of
+  &dma_addr, &paddr, &size.
 
-However in the experiment, it is found BMCR_RESET is not required in fact.
-Only hip04_mdio_write(bus, i, MII_MARVELL_PHY_PAGE, 0) has to be set.
-88e151x registers are divided into pages.
-Generic MII registers is in page 0, including MII_PHYSID1 and MII_PHYSID2.
-Unfortunately the default page is not 0, so get_phy_id will fail.
+> 
+>> +               dev_dbg(dev, "no dma range information to setup\n");
+>> +               return;
+>> +       } else {
+> 
+> You don't need the else here.
+> 
 
-So bus->reset still required to set the page to 0, prepared for get_phy_id.
+[...]
 
-Thanks
+Thanks for your comments.
+
+Regards,
+-Grygorii
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
