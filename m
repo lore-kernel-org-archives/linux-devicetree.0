@@ -1,128 +1,57 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC v2 PATCH v4 09/14] ARM: dts: s6e3fa0: add DT bindings
-Date: Tue, 22 Apr 2014 16:02:43 +0200
-Message-ID: <53567683.1020206@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
+Date: Tue, 22 Apr 2014 07:03:16 -0700
+Message-ID: <20140422140316.GA19317@atomide.com>
+References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
+ <CAOCHtYg5_Lvi3SWuWaRTDDNhLJ32jiXsKYQmrsKaShVWpM+xWQ@mail.gmail.com>
+ <534D51C1.3010007@ti.com>
+ <CAOCHtYhygGFbUunY9abEkjKfpQ1hh-DfRfhm160NehSYhWJSRw@mail.gmail.com>
+ <20140418225111.GP21823@atomide.com>
+ <CAOCHtYjdC-OGkdaBt74xMqi5eDc1eVbU6O7VyWMEYN-U50-Abw@mail.gmail.com>
+ <20140418235119.GS21823@atomide.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EAC458C@DBDE04.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EAC458C@DBDE04.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Gupta, Pekon" <pekon@ti.com>
+Cc: Robert Nelson <robertcnelson@gmail.com>, "Menon, Nishanth" <nm@ti.com>, devicetree <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Benoit Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2014 02:28 PM, YoungJun Cho wrote:
-> This patch adds DT bindings for s6e3fa0 panel.
-> The bindings describes panel resources, display timings and cpu timings.
+* Gupta, Pekon <pekon@ti.com> [140421 23:49]:
+> Tony,
 > 
-> Changelog v2:
-> - Adds unit address (commented by Sachin Kamat)
-> Changelog v3:
-> - Removes optional delay, size properties (commented by Laurent Pinchart)
-> - Adds OLED detection, TE gpio properties
-> Changelog v4:
-> - Moves CPU timings relevant properties from FIMD DT
->   (commeted by Laurent Pinchart, Andrzej Hajda)
+> >From: Tony Lindgren
+> >* Robert Nelson <robertcnelson@gmail.com> [140418 16:42]:
+> >> On Fri, Apr 18, 2014 at 5:51 PM, Tony Lindgren <tony@atomide.com> wrote:
+> >> > * Robert Nelson <robertcnelson@gmail.com> [140415 08:46]:
+> >> >>
+> >> >> Background: i also tried getting this having this fixed in u-boot:
+> >> >
+> >> > Do we still need to apply this patch then?
+> >>
+> >> Yeah, Tom want's it done in the kernel:
+> >>
+> >> Here's my proposed u-boot patch:
+> >> http://lists.denx.de/pipermail/u-boot/2014-January/172154.html
+> >>
+> >> and Tom's recommendation:
+> >> http://lists.denx.de/pipermail/u-boot/2014-January/172274.html
+> >>
+> >> Once this hits mainline, i'll submit a patch to u-boot to check for
+> >> the presence of this version and drop to the old dtb if not found.
+> >
+> >OK applying into omap-for-v3.15/fixes thanks.
+> >
+> >Tony
 > 
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   63 ++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> new file mode 100644
-> index 0000000..9eeb38b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> @@ -0,0 +1,63 @@
-> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
-> +
-> +Required properties:
-> +  - compatible: "samsung,s6e3fa0"
-> +  - reg: the virtual channel number of a DSI peripheral
-> +  - vdd3-supply: core voltage supply
-> +  - vci-supply: voltage supply for analog circuits
-> +  - reset-gpio: a GPIO spec for the reset pin
-> +  - det-gpio: a GPIO spec for the OLED detection pin
-> +  - te-gpio: a GPIO spec for the TE pin
+> You probably missed fixing below typo before applying this patch.
+> omap3-beagle-xm-ab.dts breaks without this.
 
-Just FYI, according to DT documentation [1] gpio spec should be in form
-[name]-gpios, however there is plenty bindings with -gpio suffix, so I
-am not sure if it is really enforced. On the other side it is enforced
-by descriptor based gpio framework[2]. Integer-based gpio framework
-used in your driver is obsolete according to [2].
+Yeah pushed out omap-for-v3.15/fixes-v2 with the missing bracket.
 
-[1]: Documentation/devicetree/bindings/gpio/gpio.txt
-[2]: Documentation/gpio/gpio.txt
+Regards,
 
-Regards
-Andrzej
-
-> +  - display-timings: timings for the connected panel as described by [1]
-> +  - cpu-timings: CPU interface timings for the connected panel, and it contains
-> +        following optional properties.
-> +          - cs-setup: clock cycles for the active period of address signal
-> +                enable until chip select is enable in CPU interface
-> +          - wr-setup: clock cycles for the active period of CS signal enable
-> +                until write signal is enable in CPU interface
-> +          - wr-act: clock cycles for the active period of CS enable in CPU
-> +                interface
-> +          - wr-hold: clock cycles for the active period of CS disable until
-> +                write signal is disable in CPU interface
-> +
-> +Optional properties:
-> +
-> +The device node can contain one 'port' child node with one child
-> +'endpoint' node, according to the bindings defined in [2]. This
-> +node should describe panel's video bus.
-> +
-> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
-> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	panel@0 {
-> +		compatible = "samsung,s6e3fa0";
-> +		reg = <0>;
-> +		vdd3-supply = <&vcclcd_reg>;
-> +		vci-supply = <&vlcd_reg>;
-> +		reset-gpio = <&gpy7 4 0>;
-> +		det-gpio = <&gpg0 6 0>;
-> +		te-gpio = <&gpd1 7 0>;
-> +
-> +		display-timings {
-> +			timing0: timing-0 {
-> +				clock-frequency = <0>;
-> +				hactive = <1080>;
-> +				vactive = <1920>;
-> +				hfront-porch = <2>;
-> +				hback-porch = <2>;
-> +				hsync-len = <1>;
-> +				vfront-porch = <1>;
-> +				vback-porch = <4>;
-> +				vsync-len = <1>;
-> +			};
-> +		};
-> +
-> +		cpu-timings {
-> +			cs-setup = <0>;
-> +			wr-setup = <0>;
-> +			wr-act = <1>;
-> +			wr-hold = <0>;
-> +		};
-> +	};
-> 
+Tony
