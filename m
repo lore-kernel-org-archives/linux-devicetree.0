@@ -1,45 +1,57 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/4] dt: bindings: Typo s/clocks-names/clock-names/g
-Date: Tue, 22 Apr 2014 20:40:22 +0200
-Message-ID: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH 2/4] dt: bindings: Typo s/interrupts-names/interrupt-names/g
+Date: Tue, 22 Apr 2014 20:40:23 +0200
+Message-ID: <1398192025-31523-2-git-send-email-geert+renesas@glider.be>
+References: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Dinh Nguyen <dinguyen@altera.com>, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Linus Walleij <linus.walleij@linaro.org>, "Signed-off-by: Mark Brown" <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Dinh Nguyen <dinguyen@altera.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: netdev@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Signed-off-by: Mark Brown <broonie@linaro.org>
 ---
- .../devicetree/bindings/net/socfpga-dwmac.txt      |    2 +-
- Documentation/devicetree/bindings/net/stmmac.txt   |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/pinctrl/pinctrl-st.txt     |    4 ++--
+ .../bindings/sound/davinci-mcasp-audio.txt         |    2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-index 636f0ac4e223..2a60cd3e8d5d 100644
---- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-+++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-@@ -23,5 +23,5 @@ gmac0: ethernet@ff700000 {
- 	interrupt-names = "macirq";
- 	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
- 	clocks = <&emac_0_clk>;
--	clocks-names = "stmmaceth";
-+	clock-names = "stmmaceth";
- };
-diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-index 80c1fb8bfbb8..a2acd2b26baf 100644
---- a/Documentation/devicetree/bindings/net/stmmac.txt
-+++ b/Documentation/devicetree/bindings/net/stmmac.txt
-@@ -33,7 +33,7 @@ Optional properties:
- - max-frame-size: See ethernet.txt file in the same directory
- - clocks: If present, the first clock should be the GMAC main clock,
-   further clocks may be specified in derived bindings.
--- clocks-names: One name for each entry in the clocks property, the
-+- clock-names: One name for each entry in the clocks property, the
-   first one should be "stmmaceth".
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
+index 4bd5be0e5e7d..26bcb18f4e60 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-st.txt
+@@ -83,7 +83,7 @@ Example:
+ 		reg 		= <0xfe61f080 0x4>;
+ 		reg-names	= "irqmux";
+ 		interrupts 	= <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
+-		interrupts-names = "irqmux";
++		interrupt-names	= "irqmux";
+ 		ranges 		= <0 0xfe610000 0x5000>;
  
- Examples:
+ 		PIO0: gpio@fe610000 {
+@@ -165,7 +165,7 @@ sdhci0:sdhci@fe810000{
+ 	interrupt-parent = <&PIO3>;
+ 	#interrupt-cells = <2>;
+ 	interrupts = <3 IRQ_TYPE_LEVEL_HIGH>; /* Interrupt line via PIO3-3 */
+-	interrupts-names = "card-detect";
++	interrupt-names = "card-detect";
+ 	pinctrl-names = "default";
+ 	pinctrl-0	= <&pinctrl_mmc>;
+ };
+diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+index 569b26c4a81e..60ca07996458 100644
+--- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
++++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+@@ -47,7 +47,7 @@ mcasp0: mcasp0@1d00000 {
+ 	reg = <0x100000 0x3000>;
+ 	reg-names "mpu";
+ 	interrupts = <82>, <83>;
+-	interrupts-names = "tx", "rx";
++	interrupt-names = "tx", "rx";
+ 	op-mode = <0>;		/* MCASP_IIS_MODE */
+ 	tdm-slots = <2>;
+ 	serial-dir = <
 -- 
 1.7.9.5
