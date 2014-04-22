@@ -1,156 +1,49 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH RFC] ARM: dts: am335x: update USB DT references
-Date: Tue, 22 Apr 2014 16:14:36 +0200
-Message-ID: <5356794C.7070707@baylibre.com>
-References: <1397647595-10927-1-git-send-email-leigh@solinno.co.uk>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Tue, 22 Apr 2014 22:16:06 +0800
+Message-ID: <535679A6.4020103@linaro.org>
+References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <535561BE.9070303@cogentembedded.com> <5356063C.6070100@linaro.org> <10652983.rXrAGMo8Yn@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1397647595-10927-1-git-send-email-leigh@solinno.co.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Leigh Brown <leigh@solinno.co.uk>, Mugunthan V N <mugunthanvnm@ti.com>
-Cc: devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <10652983.rXrAGMo8Yn@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Eric Dumazet <eric.dumazet@gmail.com>, netdev <netdev@vger.kernel.org>, xuwei5@hisilicon.com, David Laight <David.Laight@aculab.com>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Leigh,
-
-On 16/04/2014 13:26, Leigh Brown wrote:
-> In "ARM: dts: am33xx: correcting dt node unit address for usb", the
-> usb_ctrl_mod and cppi41dma nodes were updated with the correct regist=
-er
-> addresses.  However, the dts files that reference these nodes were no=
-t
-> updated, and those devices are no longer being enabled.
->
-> This patch corrects the references for the affected dts files.
-
-Thanks for the fix. BTW, why is it a RFC? Do you plan to send an update=
-d=20
-version?
-
-=46YI, even with this fix, the BBB still does not have a working MUSB o=
-n=20
-3.15-rc2. Have you observed that as well?
-
-> Signed-off-by: Leigh Brown <leigh@solinno.co.uk>
-
-If this is a final version, I'll apply it for -rc3.
-
-Thanks,
-Benoit
 
 
-> ---
->   arch/arm/boot/dts/am335x-bone-common.dtsi | 4 ++--
->   arch/arm/boot/dts/am335x-evm.dts          | 4 ++--
->   arch/arm/boot/dts/am335x-evmsk.dts        | 4 ++--
->   arch/arm/boot/dts/am335x-igep0033.dtsi    | 4 ++--
->   4 files changed, 8 insertions(+), 8 deletions(-)
+On 04/22/2014 04:22 PM, Arnd Bergmann wrote:
+
+>> It's private register of the phy marvell 88e1512.
+>> To make it clearer using define instead.
+>> #define MII_MARVELL_PHY_PAGE    22
+>>
+>> The registers has been grouped into several pages, access register need
+>> choose which page first.
 >
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boo=
-t/dts/am335x-bone-common.dtsi
-> index e3f27ec..2e7d932 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -183,7 +183,7 @@
->   &usb {
->   	status =3D "okay";
+> You shouldn't touch the PHY private registers in the main driver though,
+> this should be purely handled by drivers/net/phy/marvell.c.
 >
-> -	control@44e10000 {
-> +	control@44e10620 {
->   		status =3D "okay";
->   	};
->
-> @@ -204,7 +204,7 @@
->   		dr_mode =3D "host";
->   	};
->
-> -	dma-controller@07402000  {
-> +	dma-controller@47402000  {
->   		status =3D "okay";
->   	};
->   };
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am3=
-35x-evm.dts
-> index 28ae040..77df10d 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -331,7 +331,7 @@
->   &usb {
->   	status =3D "okay";
->
-> -	control@44e10000 {
-> +	control@44e10620 {
->   		status =3D "okay";
->   	};
->
-> @@ -352,7 +352,7 @@
->   		dr_mode =3D "host";
->   	};
->
-> -	dma-controller@07402000  {
-> +	dma-controller@47402000  {
->   		status =3D "okay";
->   	};
->   };
-> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/a=
-m335x-evmsk.dts
-> index ec08f6f..ab23885 100644
-> --- a/arch/arm/boot/dts/am335x-evmsk.dts
-> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
-> @@ -364,7 +364,7 @@
->   &usb {
->   	status =3D "okay";
->
-> -	control@44e10000 {
-> +	control@44e10620 {
->   		status =3D "okay";
->   	};
->
-> @@ -385,7 +385,7 @@
->   		dr_mode =3D "host";
->   	};
->
-> -	dma-controller@07402000  {
-> +	dma-controller@47402000  {
->   		status =3D "okay";
->   	};
->   };
-> diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/d=
-ts/am335x-igep0033.dtsi
-> index 7063311..5942e7d 100644
-> --- a/arch/arm/boot/dts/am335x-igep0033.dtsi
-> +++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
-> @@ -202,7 +202,7 @@
->   &usb {
->   	status =3D "okay";
->
-> -	control@44e10000 {
-> +	control@44e10620 {
->   		status =3D "okay";
->   	};
->
-> @@ -223,7 +223,7 @@
->   		dr_mode =3D "host";
->   	};
->
-> -	dma-controller@07402000  {
-> +	dma-controller@47402000  {
->   		status =3D "okay";
->   	};
->   };
+> I don't see support for 88e1512 there, only 88e1510 and lots of older
+> ones, but I assume it isn't hard to add.
 >
 
+88e1512 driver is already supported, same as 88e1510.
+#define MARVELL_PHY_ID_MASK             0xfffffff0
+So it should support 88e151x.
 
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reset is required here for get_phy_id, otherwise only 0 can be get.
+phy_device_create will not be called, and can not match any driver.
+
+However in the experiment, it is found BMCR_RESET is not required in fact.
+Only hip04_mdio_write(bus, i, MII_MARVELL_PHY_PAGE, 0) has to be set.
+88e151x registers are divided into pages.
+Generic MII registers is in page 0, including MII_PHYSID1 and MII_PHYSID2.
+Unfortunately the default page is not 0, so get_phy_id will fail.
+
+So bus->reset still required to set the page to 0, prepared for get_phy_id.
+
+Thanks
