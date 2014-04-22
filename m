@@ -1,230 +1,123 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
-Date: Tue, 22 Apr 2014 11:36:42 +0100
-Message-ID: <20140422103642.GF7484@arm.com>
-References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: SAMSUNG: Add sound card driver for Snow board
+Date: Tue, 22 Apr 2014 11:44:47 +0100
+Message-ID: <20140422104447.GK12304@sirena.org.uk>
+References: <1398153834-16199-1-git-send-email-tushar.behera@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cqUZ7tFrnhCvEBfZ"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398133596-29170-1-git-send-email-zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1398153834-16199-1-git-send-email-tushar.behera@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, rdunlap@infradead.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
 
-On Tue, Apr 22, 2014 at 03:26:36AM +0100, Neil Zhang wrote:
-> This adds core support for saving and restoring CPU PMU registers
-> for suspend/resume support i.e. deeper C-states in cpuidle terms.
-> This patch adds support only to ARMv7 PMU registers save/restore.
-> It needs to be extended to xscale and ARMv6 if needed.
-> 
-> I made this patch because DS-5 is not working on Marvell's CA7 based SoCs.
-> And it has consulted Sudeep KarkadaNagesha's patch set for multiple PMUs.
-> 
-> Thanks Will and Sudeep's suggestion to only save / restore used events.
+--cqUZ7tFrnhCvEBfZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Whilst this is a step in the right direction, I'd still like to see the
-save/restore predicated on something in the device-tree or otherwise. Most
-SoCs *don't* require these registers to be preserved by software, so we need
-a way to describe that the PMU is in a power-domain where its state is lost
-when the CPU goes idle.
+On Tue, Apr 22, 2014 at 01:33:54PM +0530, Tushar Behera wrote:
 
-This doesn't sound like a PMU-specific problem, so there's a possibility
-that this has been discussed elsewhere, in the context of other IP blocks
+> Added machine driver to instantiate I2S based sound card on Snow
+> board. It has MAX98095 audio codec on board.
 
-[adding the devicetree list in case somebody there is aware of any work in
- this area]
+In general this isn't up to modern standards, please do try to check
+that new code is following best practices.  Did the support for setting
+the clocking up in the device tree get merged already?
 
-Will
+Please do also pay attention to the CC lists when posting patches, this
+seems to have been sent to a fairly random selection of people and
+lists.
 
-> diff --git a/arch/arm/include/asm/pmu.h b/arch/arm/include/asm/pmu.h
-> index ae1919b..3de3db7 100644
-> --- a/arch/arm/include/asm/pmu.h
-> +++ b/arch/arm/include/asm/pmu.h
-> @@ -83,6 +83,10 @@ struct arm_pmu {
->  	int		(*request_irq)(struct arm_pmu *, irq_handler_t handler);
->  	void		(*free_irq)(struct arm_pmu *);
->  	int		(*map_event)(struct perf_event *event);
-> +	int		(*register_pm_notifier)(struct arm_pmu *);
-> +	void		(*unregister_pm_notifier)(struct arm_pmu *);
-> +	void		(*save_regs)(struct arm_pmu *);
-> +	void		(*restore_regs)(struct arm_pmu *);
->  	int		num_events;
->  	atomic_t	active_events;
->  	struct mutex	reserve_mutex;
-> diff --git a/arch/arm/kernel/perf_event.c b/arch/arm/kernel/perf_event.c
-> index a6bc431..08822de 100644
-> --- a/arch/arm/kernel/perf_event.c
-> +++ b/arch/arm/kernel/perf_event.c
-> @@ -326,6 +326,7 @@ static void
->  armpmu_release_hardware(struct arm_pmu *armpmu)
->  {
->  	armpmu->free_irq(armpmu);
-> +	armpmu->unregister_pm_notifier(armpmu);
->  	pm_runtime_put_sync(&armpmu->plat_device->dev);
->  }
->  
-> @@ -339,6 +340,7 @@ armpmu_reserve_hardware(struct arm_pmu *armpmu)
->  		return -ENODEV;
->  
->  	pm_runtime_get_sync(&pmu_device->dev);
-> +	armpmu->register_pm_notifier(armpmu);
->  	err = armpmu->request_irq(armpmu, armpmu_dispatch_irq);
->  	if (err) {
->  		armpmu_release_hardware(armpmu);
-> diff --git a/arch/arm/kernel/perf_event_cpu.c b/arch/arm/kernel/perf_event_cpu.c
-> index 51798d7..79e1c06 100644
-> --- a/arch/arm/kernel/perf_event_cpu.c
-> +++ b/arch/arm/kernel/perf_event_cpu.c
-> @@ -19,6 +19,7 @@
->  #define pr_fmt(fmt) "CPU PMU: " fmt
->  
->  #include <linux/bitmap.h>
-> +#include <linux/cpu_pm.h>
->  #include <linux/export.h>
->  #include <linux/kernel.h>
->  #include <linux/of.h>
-> @@ -173,6 +174,31 @@ static int cpu_pmu_request_irq(struct arm_pmu *cpu_pmu, irq_handler_t handler)
->  	return 0;
->  }
->  
-> +static int cpu_pmu_pm_notify(struct notifier_block *b,
-> +					unsigned long action, void *v)
-> +{
-> +	if (action == CPU_PM_ENTER && cpu_pmu->save_regs)
-> +		cpu_pmu->save_regs(cpu_pmu);
-> +	else if (action == CPU_PM_EXIT && cpu_pmu->restore_regs)
-> +		cpu_pmu->restore_regs(cpu_pmu);
+> +	switch (params_format(params)) {
+
+params_width().
+
+> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
+> +					     SND_SOC_DAIFMT_NB_NF |
+> +					     SND_SOC_DAIFMT_CBS_CFS);
+
+Set this in the dai_link.
+
+> +	ret = snd_soc_dai_set_sysclk(codec_dai, 0,
+> +					FIN_PLL_RATE, SND_SOC_CLOCK_IN);
+> +	if (ret < 0)
+> +		return ret;
 > +
-> +	return NOTIFY_OK;
+> +	ret = snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_CDCLK,
+> +					0, SND_SOC_CLOCK_OUT);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = snd_soc_dai_set_clkdiv(cpu_dai, SAMSUNG_I2S_DIV_BCLK, bfs);
+> +	if (ret < 0)
+> +		return ret;
+
+Set this stuff up on probe.  I'm surprised that you need to set BCLK at
+all...
+
+> +static int snow_init(struct snd_soc_pcm_runtime *rtd)
+> +{
+> +	struct snd_soc_codec *codec = rtd->codec;
+> +	struct snd_soc_dapm_context *dapm = &codec->dapm;
+> +
+> +	snd_soc_dapm_sync(dapm);
+> +
+> +	return 0;
 > +}
-> +
-> +static struct notifier_block cpu_pmu_pm_notifier = {
-> +	.notifier_call = cpu_pmu_pm_notify,
-> +};
-> +
-> +static int cpu_pmu_register_pm_notifier(struct arm_pmu *cpu_pmu)
-> +{
-> +	return cpu_pm_register_notifier(&cpu_pmu_pm_notifier);
-> +}
-> +
-> +static void cpu_pmu_unregister_pm_notifier(struct arm_pmu *cpu_pmu)
-> +{
-> +	cpu_pm_unregister_notifier(&cpu_pmu_pm_notifier);
-> +}
-> +
->  static void cpu_pmu_init(struct arm_pmu *cpu_pmu)
->  {
->  	int cpu;
-> @@ -187,6 +213,8 @@ static void cpu_pmu_init(struct arm_pmu *cpu_pmu)
->  	cpu_pmu->get_hw_events	= cpu_pmu_get_cpu_events;
->  	cpu_pmu->request_irq	= cpu_pmu_request_irq;
->  	cpu_pmu->free_irq	= cpu_pmu_free_irq;
-> +	cpu_pmu->register_pm_notifier	= cpu_pmu_register_pm_notifier;
-> +	cpu_pmu->unregister_pm_notifier	= cpu_pmu_unregister_pm_notifier;
->  
->  	/* Ensure the PMU has sane values out of reset. */
->  	if (cpu_pmu->reset)
-> diff --git a/arch/arm/kernel/perf_event_v7.c b/arch/arm/kernel/perf_event_v7.c
-> index f4ef398..9069310 100644
-> --- a/arch/arm/kernel/perf_event_v7.c
-> +++ b/arch/arm/kernel/perf_event_v7.c
-> @@ -1237,6 +1237,78 @@ static void armv7_pmnc_dump_regs(struct arm_pmu *cpu_pmu)
->  }
->  #endif
->  
-> +struct armv7_pmuregs {
-> +	u32 pmc;
-> +	u32 pmcntenset;
-> +	u32 pmintenset;
-> +	u32 pmxevttype[8];
-> +	u32 pmxevtcnt[8];
-> +};
-> +
-> +static DEFINE_PER_CPU(struct armv7_pmuregs, pmu_regs);
-> +
-> +static void armv7pmu_reset(void *info);
-> +
-> +static void armv7pmu_save_regs(struct arm_pmu *cpu_pmu)
-> +{
-> +	struct pmu_hw_events *events = cpu_pmu->get_hw_events();
-> +	struct armv7_pmuregs *regs;
-> +	int bit;
-> +
-> +	/* Check whether there are events used */
-> +	bit = find_first_bit(events->used_mask, cpu_pmu->num_events);
-> +	if (bit >= cpu_pmu->num_events)
-> +		return;
-> +
-> +	regs = this_cpu_ptr(&pmu_regs);
-> +	for_each_set_bit(bit, events->used_mask, cpu_pmu->num_events) {
-> +		if (bit) {
-> +			armv7_pmnc_select_counter(bit);
-> +			asm volatile("mrc p15, 0, %0, c9, c13, 1"
-> +					: "=r"(regs->pmxevttype[bit]));
-> +			asm volatile("mrc p15, 0, %0, c9, c13, 2"
-> +					: "=r"(regs->pmxevtcnt[bit]));
-> +		} else
-> +			asm volatile("mrc p15, 0, %0, c9, c13, 0"
-> +					: "=r" (regs->pmxevtcnt[0]));
+
+This does nothing, remove it.
+
+> +	if (!pdev->dev.platform_data && !pdev->dev.of_node) {
+> +		dev_err(&pdev->dev, "No platform data supplied\n");
+> +		return -EINVAL;
 > +	}
 > +
-> +	asm volatile("mrc p15, 0, %0, c9, c12, 1" : "=r" (regs->pmcntenset));
-> +	asm volatile("mrc p15, 0, %0, c9, c14, 1" : "=r" (regs->pmintenset));
-> +	asm volatile("mrc p15, 0, %0, c9, c12, 0" : "=r" (regs->pmc));
-> +}
+> +	name = of_get_property(pdev->dev.of_node, "card-name", NULL);
+> +	if (name)
+> +		card->name = name;
 > +
-> +static void armv7pmu_restore_regs(struct arm_pmu *cpu_pmu)
-> +{
-> +	struct pmu_hw_events *events = cpu_pmu->get_hw_events();
-> +	struct armv7_pmuregs *regs;
-> +	int bit;
-> +
-> +	/* Check whether there are events used */
-> +	bit = find_first_bit(events->used_mask, cpu_pmu->num_events);
-> +	if (bit >= cpu_pmu->num_events)
-> +		return;
-> +
-> +	armv7pmu_reset(cpu_pmu);
-> +
-> +	regs = this_cpu_ptr(&pmu_regs);
-> +	for_each_set_bit(bit, events->used_mask, cpu_pmu->num_events) {
-> +		if (bit) {
-> +			armv7_pmnc_select_counter(bit);
-> +			asm volatile("mcr p15, 0, %0, c9, c13, 1"
-> +					: : "r"(regs->pmxevttype[bit]));
-> +			asm volatile("mcr p15, 0, %0, c9, c13, 2"
-> +					: : "r"(regs->pmxevtcnt[bit]));
-> +		} else
-> +			asm volatile("mcr p15, 0, %0, c9, c13, 0"
-> +					: : "r" (regs->pmxevtcnt[0]));
+> +	i2s_node = of_parse_phandle(pdev->dev.of_node,
+> +				    "samsung,i2s-controller", 0);
+> +	if (!i2s_node) {
+> +		dev_err(&pdev->dev,
+> +			"Property 'i2s-controller' missing or invalid\n");
+> +		return -EINVAL;
 > +	}
-> +
-> +	asm volatile("mcr p15, 0, %0, c9, c12, 1" : : "r" (regs->pmcntenset));
-> +	asm volatile("mcr p15, 0, %0, c9, c14, 1" : : "r" (regs->pmintenset));
-> +	asm volatile("mcr p15, 0, %0, c9, c12, 0" : : "r" (regs->pmc));
-> +}
-> +
->  static void armv7pmu_enable_event(struct perf_event *event)
->  {
->  	unsigned long flags;
-> @@ -1528,6 +1600,8 @@ static void armv7pmu_init(struct arm_pmu *cpu_pmu)
->  	cpu_pmu->start		= armv7pmu_start;
->  	cpu_pmu->stop		= armv7pmu_stop;
->  	cpu_pmu->reset		= armv7pmu_reset;
-> +	cpu_pmu->save_regs	= armv7pmu_save_regs;
-> +	cpu_pmu->restore_regs	= armv7pmu_restore_regs;
->  	cpu_pmu->max_period	= (1LLU << 32) - 1;
->  };
->  
-> -- 
-> 1.7.9.5
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+You're allowing platform data above but I see DT is mandatory here.
+
+> +	ret = snd_soc_register_card(card);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", ret);
+> +		return ret;
+> +	}
+
+devm_snd_soc_register_card().
+
+--cqUZ7tFrnhCvEBfZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTVkgcAAoJELSic+t+oim9gwYQAJBsHURQWvolGhdfIdpsyJ7j
+V53YeEWQBHQEq9R/FOdvHwjlbgc0Kl1dT7SwueuSBBigLx7tW1KfT32g8nV9oSgw
+2/7xL1EmOTZciOHgO8hLcD7Yv29hb4YLiqfyM/gSl6Ck5o16+zJSnLbZqUdg/ffW
+1gfdM7nArNl10xGdPh/3azX8R0wNUBIfRFYtuwRxjdzJHKKe0bJOyxlM6eoSYXCG
+ojKQSFEBIlAdqA7acMxp+w88ssxxJAjYN5wB0sOWuz2q5oIgrhCyMCWU/xcM78qq
+SQbWEEwsShAs1QxVM8zr1kU00TTzrPc8SRa4kuJo9RNXWzYnf2OymwI2qMjNNdpS
+2uISuVLqzLXI6dZFw6aMJMMLOYxHzrQg5HH8sEVoKy+pDhlQMNyM//zRBWxpbc96
+UIJt29yS+eheGFZcQF49WD0bQXG8ZFYp2xqRTlnbvuJMPs8lDo5hYJvtwiHR5kJA
+GNf9LkJQ09QeksLgXvwWBUy9M6G6KNx2bERUejf9LhSq0GImwL20e/hkRW8CQeB4
+x9+AIIG/7VKoXnIBpCs5o9n43SHKPBlBFTObxqj1G6I2tdgy0E5M67Q3K4t9lfOi
+rZhjIgJLkj1gi9LZbSqVFfryM5xKB1enM79aMnpaTJDray916zSrac9X1bth1fTZ
+cTfaHrEFGdLx440EM+Oq
+=nbGw
+-----END PGP SIGNATURE-----
+
+--cqUZ7tFrnhCvEBfZ--
