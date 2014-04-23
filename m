@@ -1,108 +1,163 @@
-From: Courtney Cavin <courtney.cavin@sonymobile.com>
-Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
-Date: Wed, 23 Apr 2014 15:12:00 -0700
-Message-ID: <20140423221200.GL17066@sonymobile.com>
-References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
- <1398259168.4724.217.camel@iivanov-dev>
- <20140423181614.GK17066@sonymobile.com>
- <1398285272.14329.6.camel@violet>
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 10/13] tty: serial: omap: remove some dead code
+Date: Thu, 24 Apr 2014 08:43:05 +1000
+Message-ID: <20140424084305.20c7f301@notabene.brown>
+References: <1398265117-11793-1-git-send-email-balbi@ti.com>
+	<1398265117-11793-10-git-send-email-balbi@ti.com>
+	<5357DDA8.4040206@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398285272.14329.6.camel@violet>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/r2e.+PpvZfTEp5g4Q7HeCXI"; protocol="application/pgp-signature"
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5357DDA8.4040206-l0cyMroinI0@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 10:34:32PM +0200, Ivan T. Ivanov wrote:
-> 
-> On Wed, 2014-04-23 at 11:16 -0700, Courtney Cavin wrote:
-> > On Wed, Apr 23, 2014 at 03:19:28PM +0200, Ivan T. Ivanov wrote:
-> > > 
-> > > Hi,
-> > > 
-> > > On Tue, 2014-04-22 at 17:31 -0700, Courtney Cavin wrote:
-> > > > From: Josh Cartwright <joshc@codeaurora.org>
-> > > > 
-> > > > The Qualcomm 8941 and 8841 PMICs are components used with the Snapdragon
-> > > > 800 series SoC family.  This driver exists largely as a glue mfd component,
-> > > > it exists to be an owner of an SPMI regmap for children devices
-> > > > described in device tree.
-> > > > 
-> > > 
-> > > Thanks. This is exactly what I have planed to do :-)
-> > > 
-> > 
-> > Sorry if I usurped your work!
-> 
-> Noting to worry. I just was surprised how close it is to my vision ;-).
-> 
+--Sig_/r2e.+PpvZfTEp5g4Q7HeCXI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Well, you might notice how extremely close it is to what Josh posted in
-October in his SPMI series [1], so I can't take any credit there.
+On Wed, 23 Apr 2014 10:35:04 -0500 Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
 
-> > 
-> > > > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> > > > Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> > > > ---
-> > > >  drivers/mfd/Kconfig  | 13 +++++++++++
-> > > >  drivers/mfd/Makefile |  1 +
-> > > >  drivers/mfd/pm8x41.c | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > > >  3 files changed, 77 insertions(+)
-> > > >  create mode 100644 drivers/mfd/pm8x41.c
-> > > > 
-> > > 
-> > > <snip>
-> > > 
-> > > > +
-> > > > +static int pm8x41_probe(struct spmi_device *sdev)
-> > > > +{
-> > > > +	struct regmap *regmap;
-> > > > +
-> > > > +	regmap = devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
-> > > > +	if (IS_ERR(regmap)) {
-> > > > +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
-> > > > +		return PTR_ERR(regmap);
-> > > > +	}
-> > > > +
-> > > > +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
-> > > 
-> > > I think that this will not going to work. For example in this particular
-> > > case, both controllers have "qcom,qpnp-revid" peripheral which is
-> > > located at offset 0x100.
-> > > 
-> > > And the result is:
-> > > 
-> > > [    0.963944] sysfs: cannot create duplicate filename '/bus/platform/devices/100.revid'
-> > > 
-> > [...]
-> > > 
-> > > Any suggestions?
-> > 
-> > That's expected behavior actually.  You have two nodes in DT named the
-> > same thing and at the same address.  This error is due to the fact that
-> > all devices are put in '/bus/platform/devices/' with a name made from
-> > the unit address and name specified in DT.  There's no other unique
-> > information used to differentiate the devices.
-> > 
-> > If you simply change the names in DT, it works.  
-> 
-> Sure, it will work. But they are part of different address spaces. 
-> Why we should add, IMHO, artificial requirement that names should
-> be unique? Is it possible to prefix child nodes with parent device 
-> address? As side note, why they should be registered on the platform
-> bus at all? To be honest I don't have solution.
+> On 04/23/2014 09:58 AM, Felipe Balbi wrote:
+> > nobody passes a DTR_gpio to this driver, so
+> > this code is not necessary.
+> >=20
+> > Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > ---
+>=20
+> Niel,
+> this seems to revert the functionality introduced in
+> commit 9574f36fb801035f6ab0fbb1b53ce2c12c17d100
+> (OMAP/serial: Add support for driving a GPIO as DTR.)
+>=20
+> would you like to Ack this change?
 
-I agree, and it would appear that the ePAPR does as well.  Feel free to
-send patches!
+I have a couple of out-of-tree drivers that use this support.
 
-> > [...] qcom,qpnp-revid 100.qcom,pm8841-revid: PM8841 v2.0 options: 0, 0, 2, 2
-> > [...] qcom,qpnp-revid 100.qcom,pm8941-revid: PM8941 v3.0 options: 2, 0, 0, 0
-> > 
-> > Whether this should be "fixed" in the device/bus/sysfs core, I don't
-> > know, but it isn't specifically an issue with this driver, and there's
-> > little-to-nothing I can do to fix it here.
-> > 
-> > -Courtney
+I hope to get back to working on that code one day and even get those drive=
+rs
+upstream.  So I would really prefer this code to remain if it isn't causing
+any actual problems.
+
+Of course, I can always re-submit it when I need it again, but that it just
+extra work all around.
+
+Sorry that I have pushed those drivers already, but sometimes life gets in
+the way :-)
+
+Thanks,
+NeilBrown
+
+
+>=20
+> >  drivers/tty/serial/omap-serial.c | 39 --------------------------------=
+-------
+> >  1 file changed, 39 deletions(-)
+> >=20
+> > diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap=
+-serial.c
+> > index b46aaf3..6654682 100644
+> > --- a/drivers/tty/serial/omap-serial.c
+> > +++ b/drivers/tty/serial/omap-serial.c
+> > @@ -163,10 +163,6 @@ struct uart_omap_port {
+> >  	u8			wakeups_enabled;
+> >  	u32			features;
+> > =20
+> > -	int			DTR_gpio;
+> > -	int			DTR_inverted;
+> > -	int			DTR_active;
+> > -
+> >  	struct serial_rs485	rs485;
+> >  	int			rts_gpio;
+> > =20
+> > @@ -694,16 +690,6 @@ static void serial_omap_set_mctrl(struct uart_port=
+ *port, unsigned int mctrl)
+> >  	serial_out(up, UART_MCR, up->mcr);
+> >  	pm_runtime_mark_last_busy(up->dev);
+> >  	pm_runtime_put_autosuspend(up->dev);
+> > -
+> > -	if (gpio_is_valid(up->DTR_gpio) &&
+> > -	    !!(mctrl & TIOCM_DTR) !=3D up->DTR_active) {
+> > -		up->DTR_active =3D !up->DTR_active;
+> > -		if (gpio_cansleep(up->DTR_gpio))
+> > -			schedule_work(&up->qos_work);
+> > -		else
+> > -			gpio_set_value(up->DTR_gpio,
+> > -				       up->DTR_active !=3D up->DTR_inverted);
+> > -	}
+> >  }
+> > =20
+> >  static void serial_omap_break_ctl(struct uart_port *port, int break_st=
+ate)
+> > @@ -847,9 +833,6 @@ static void serial_omap_uart_qos_work(struct work_s=
+truct *work)
+> >  						qos_work);
+> > =20
+> >  	pm_qos_update_request(&up->pm_qos_request, up->latency);
+> > -	if (gpio_is_valid(up->DTR_gpio))
+> > -		gpio_set_value_cansleep(up->DTR_gpio,
+> > -					up->DTR_active !=3D up->DTR_inverted);
+> >  }
+> > =20
+> >  static void
+> > @@ -1672,28 +1655,6 @@ static int serial_omap_probe(struct platform_dev=
+ice *pdev)
+> >  	if (IS_ERR(base))
+> >  		return PTR_ERR(base);
+> > =20
+> > -	if (gpio_is_valid(omap_up_info->DTR_gpio) &&
+> > -	    omap_up_info->DTR_present) {
+> > -		ret =3D devm_gpio_request(&pdev->dev, omap_up_info->DTR_gpio,
+> > -				"omap-serial");
+> > -		if (ret < 0)
+> > -			return ret;
+> > -		ret =3D gpio_direction_output(omap_up_info->DTR_gpio,
+> > -					    omap_up_info->DTR_inverted);
+> > -		if (ret < 0)
+> > -			return ret;
+> > -	}
+> > -
+> > -	if (gpio_is_valid(omap_up_info->DTR_gpio) &&
+> > -	    omap_up_info->DTR_present) {
+> > -		up->DTR_gpio =3D omap_up_info->DTR_gpio;
+> > -		up->DTR_inverted =3D omap_up_info->DTR_inverted;
+> > -	} else {
+> > -		up->DTR_gpio =3D -EINVAL;
+> > -	}
+> > -
+> > -	up->DTR_active =3D 0;
+> > -
+> >  	up->dev =3D &pdev->dev;
+> >  	up->port.dev =3D &pdev->dev;
+> >  	up->port.type =3D PORT_OMAP;
+> >=20
+>=20
+>=20
+
+
+--Sig_/r2e.+PpvZfTEp5g4Q7HeCXI
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIVAwUBU1hB+Tnsnt1WYoG5AQJudw//fMcJIfOhr28LqdTNf4kM6D43LxeC3Dvz
+BOH3HqYpK45Jthy+Cr+igWbJpaU5Wmc6RVfG1ZPgIprU+gVdXuXe+Up0iC57R0tT
+7NemN5BCxYqCVsmDbOpRv485oz3r04LjMbenzDqaqE/s3KYvdNJJbHdXbxjAFn3w
+9p8MsFJBga+T0TjSJAH9SdprPB22fe6x/o+WqcKOsLcEodpWHjkKK1Rj65P1jKii
+40OTGHcKYYrO5HGwdd8JJWA0oawRgh1DE9S3pAGmZz4a+ocVOSQDMs6gABaV5KqL
+v/9/0sQ5XmL0i6R5n6PCt21Kgt3Di5wvUUoMeGI2YP4TU5fqqsHQnVuuLi+wCHHy
+4Bmxf2h8Zo1+5slTkg04g+hRGUB37x9CnRMdbe0DuDJnwyNQDJn0tMOcUNvihoy1
+BqUjCtE52vzPtu3ZX9GKT5eUaG+bpwKGGkDAjvbnTXNMdnKNRSV5Ns+5q1AM2r3r
+9gVYB87Y6qGnBQIlnot2zvDCzJ2hlzCvNq2t/DJoSyftXzOXc9JgyAsFDug0DN6t
+RaG/hF6IDbEskwLMrVAlPG7PoSSR39FN9ELLscAeon0W04l13bp+rL6lfiPXLzbi
+OhMHuUEsLI/EUf496CZHzSLMXBHpFVL++XhNJecNoQ3mDFd0VA2YuzVoCAhTe3c3
+BI1lgofwgdc=
+=cyuG
+-----END PGP SIGNATURE-----
+
+--Sig_/r2e.+PpvZfTEp5g4Q7HeCXI--
