@@ -1,57 +1,51 @@
-From: Benoit Cousson <bcousson@baylibre.com>
-Subject: Re: [PATCH RFC] ARM: dts: am335x: update USB DT references
-Date: Wed, 23 Apr 2014 17:40:32 +0200
-Message-ID: <5357DEF0.7030000@baylibre.com>
-References: <1397647595-10927-1-git-send-email-leigh@solinno.co.uk> <5356794C.7070707@baylibre.com> <20140423144822.GA4833@atomide.com> <20140423151734.GA5867@arch.cereza>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 4/5] regulator: tps65090: Allow setting the overcurrent
+ wait time
+Date: Wed, 23 Apr 2014 08:48:07 -0700
+Message-ID: <CAD=FV=WN4hVibiK_8+mpNfO7UQnd35ZT9EXA9fuw-mnBzzb1cA@mail.gmail.com>
+References: <1397689950-1568-1-git-send-email-dianders@chromium.org>
+	<1397689950-1568-5-git-send-email-dianders@chromium.org>
+	<20140423115102.GO21613@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140423151734.GA5867@arch.cereza>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Tony Lindgren <tony@atomide.com>
-Cc: Leigh Brown <leigh@solinno.co.uk>, Mugunthan V N <mugunthanvnm@ti.com>, devicetree@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140423115102.GO21613@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Mark Brown <broonie@kernel.org>
+Cc: Anton Vorontsov <anton@enomsg.org>, Olof Johansson <olof@lixom.net>, Sachin Kamat <sachin.kamat@linaro.org>, AJAY KUMAR RAMAKRISHNA SHYMALAMMA <ajaykumar.rs@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ezequiel,
+Lee,
 
-On 23/04/2014 17:17, Ezequiel Garcia wrote:
-> On Apr 23, Tony Lindgren wrote:
->> * Benoit Cousson <bcousson@baylibre.com> [140422 07:14]:
->>> Hi Leigh,
->>>
->>> On 16/04/2014 13:26, Leigh Brown wrote:
->>>> In "ARM: dts: am33xx: correcting dt node unit address for usb", th=
-e
->>>> usb_ctrl_mod and cppi41dma nodes were updated with the correct reg=
-ister
->>>> addresses.  However, the dts files that reference these nodes were=
- not
->>>> updated, and those devices are no longer being enabled.
->>>>
->>>> This patch corrects the references for the affected dts files.
+On Wed, Apr 23, 2014 at 4:51 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> The tps65090 regulator allows you to specify how long you want it to
+>> wait before detecting an overcurrent condition.  Allow specifying that
+>> through the device tree (or through platform data).
+>>
+>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> Signed-off-by: Simon Glass <sjg@chromium.org>
+>> Signed-off-by: Michael Spang <spang@chromium.org>
+>> Signed-off-by: Sean Paul <seanpaul@chromium.org>
+>> ---
+>> Changes in v3:
+>> - Fixed kernel-doc notation for return
+>>
+>> Changes in v2:
+>> - Separated the overcurrent and retries changes into two patches.
+>> - Now set overcurrent at probe time since it doesn't change.
+>>
+>>  .../devicetree/bindings/regulator/tps65090.txt     |  4 ++
+>>  drivers/regulator/tps65090-regulator.c             | 56 ++++++++++++++++++++++
+>>  include/linux/mfd/tps65090.h                       |  5 ++
+>>  3 files changed, 65 insertions(+)
 >
-> Maybe someone can take care of using phandles instead?
->
-> This way, the board's dts files would be immune to such .dtsi changes=
-=2E
+> Applied, thanks.
 
-Indeed, that will avoid such issues.
+Ummmm, Mark said that he had already applied this patch to his tree (I
+mentioned it in my recent summary and you can see it in this thread
+too).  I don't see it on git.kernel.org though
+<https://git.kernel.org/cgit/linux/kernel/git/broonie/regulator.git/log/?h=for-next>
 
-Are you volunteer for that cleanup ? :-)
+I'm worried this will cause a merge conflict if you both apply it.
 
-Thanks,
-Benoit
-
-
---=20
-Beno=EEt Cousson
-BayLibre
-Embedded Linux Technology Lab
-www.baylibre.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Doug
