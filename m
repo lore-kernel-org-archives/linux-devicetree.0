@@ -1,68 +1,65 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 03/21] mips: xlp: copy built-in DTB out of init section
-Date: Tue, 22 Apr 2014 20:18:03 -0500
-Message-ID: <1398215901-25609-4-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 19/21] x86: use FDT accessors for FDT blob header data
+Date: Tue, 22 Apr 2014 20:18:19 -0500
+Message-ID: <1398215901-25609-20-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
+Cc: Rob Herring <robh@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-The existing code is buggy because built-in DTBs are in init memory.
-It is also broken because the reserved bootmem was then freed after
-unflattening, but the unflattened tree points to data in the flat tree.
-Fix this by using the unflatten_and_copy_device_tree function.
-
-This removes all accesses to FDT header data by the arch code.
+Remove the direct accesses to FDT header data using accessor
+function instead. This makes the code more readable and makes the FDT
+blob structure more opaque to the arch code. This also prepares for
+removing struct boot_param_header completely.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
 ---
-v2: no change
+v2: reworked to use of_get_flat_dt_size helper function
 
- arch/mips/netlogic/xlp/dt.c | 17 +----------------
- 1 file changed, 1 insertion(+), 16 deletions(-)
+ arch/x86/kernel/devicetree.c | 12 +++++-------
+ 1 file changed, 5 insertions(+), 7 deletions(-)
 
-diff --git a/arch/mips/netlogic/xlp/dt.c b/arch/mips/netlogic/xlp/dt.c
-index 5754097..7f9615a 100644
---- a/arch/mips/netlogic/xlp/dt.c
-+++ b/arch/mips/netlogic/xlp/dt.c
-@@ -87,22 +87,7 @@ void __init xlp_early_init_devtree(void)
- 
- void __init device_tree_init(void)
+diff --git a/arch/x86/kernel/devicetree.c b/arch/x86/kernel/devicetree.c
+index d35078e..7db54b5 100644
+--- a/arch/x86/kernel/devicetree.c
++++ b/arch/x86/kernel/devicetree.c
+@@ -206,23 +206,21 @@ static void __init dtb_apic_setup(void)
+ static void __init x86_flattree_get_config(void)
  {
--	unsigned long base, size;
--	struct boot_param_header *fdtp = xlp_fdt_blob;
--
--	if (!fdtp)
--		return;
--
--	base = virt_to_phys(fdtp);
--	size = be32_to_cpu(fdtp->totalsize);
--
--	/* Before we do anything, lets reserve the dt blob */
--	reserve_bootmem(base, size, BOOTMEM_DEFAULT);
--
--	unflatten_device_tree();
--
--	/* free the space reserved for the dt blob */
--	free_bootmem(base, size);
-+	unflatten_and_copy_device_tree();
- }
+ 	u32 size, map_len;
+-	struct boot_param_header *dt;
++	void *dt;
  
- static struct of_device_id __initdata xlp_ids[] = {
+ 	if (!initial_dtb)
+ 		return;
+ 
+-	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK),
+-			(u64)sizeof(struct boot_param_header));
++	map_len = max(PAGE_SIZE - (initial_dtb & ~PAGE_MASK), (u64)128);
+ 
+-	dt = early_memremap(initial_dtb, map_len);
+-	size = be32_to_cpu(dt->totalsize);
++	initial_boot_params = dt = early_memremap(initial_dtb, map_len);
++	size = of_get_flat_dt_size();
+ 	if (map_len < size) {
+ 		early_iounmap(dt, map_len);
+-		dt = early_memremap(initial_dtb, size);
++		initial_boot_params = dt = early_memremap(initial_dtb, size);
+ 		map_len = size;
+ 	}
+ 
+-	initial_boot_params = dt;
+ 	unflatten_and_copy_device_tree();
+ 	early_iounmap(dt, map_len);
+ }
 -- 
 1.9.1
