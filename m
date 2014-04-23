@@ -1,68 +1,58 @@
-From: Dave Gerlach <d-gerlach@ti.com>
-Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Boot fixes
-Date: Wed, 23 Apr 2014 12:25:30 -0500
-Message-ID: <5357F78A.5000406@ti.com>
-References: <1398192739-8901-1-git-send-email-d-gerlach@ti.com> <20140422190132.GA12204@atomide.com> <5356C8AE.3090907@ti.com> <20140423145904.GB4833@atomide.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: berlin: enable SD card reader and eMMC
+ for the BG2Q DMP
+Date: Wed, 23 Apr 2014 19:26:23 +0200
+Message-ID: <5357F7BF.8000703@gmail.com>
+References: <1398155248-1659-1-git-send-email-antoine.tenart@free-electrons.com> <1398155248-1659-3-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140423145904.GB4833@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, bcousson@baylibre.com, Sekhar Nori <nsekhar@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398155248-1659-3-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>
+Cc: alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2014 09:59 AM, Tony Lindgren wrote:
-> * Dave Gerlach <d-gerlach@ti.com> [140422 12:53]:
->> On 04/22/2014 02:01 PM, Tony Lindgren wrote:
->>> * Dave Gerlach <d-gerlach@ti.com> [140422 11:52]:
->>>> This patch, along with patch here [1], fixes boot for am437x-gp-evm. The
->>>> bootloader configures gpio5_7 to control the DDR3 termination regulator,
->>>> the linked patch prevents that gpio bank from being reset and losing
->>>> the previously configured state, and this patch binds the gpio to a
->>>> regulator so the kernel is aware of the state of the gpio.
->>>>
->>>> [1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg102941.html
->>>
->>> Setting up the GPIO regulator makes sense to me. But the hack in the
->>> link above is potentially a nasty time bomb for anybody trying to
->>> use GPIO bank 5 on that board.
->>>
->>> What tests have been done that the GPIO bank behaves properly when
->>> it's not reset?
->>
->> We've been using this configuration on this board for a while without any
->> apparent issues. Also, am335x-evmsk already uses the same idea for the VTT
->> regulator on board from commit 6046adb6ad701026c10adeac8d6a4138895f12e5
->> [ARM: dts: am335x-evmsk: Do not reset gpio0] and I am unaware of any issues
->> with that either.
+On 04/22/2014 10:27 AM, Antoine T=C3=A9nart wrote:
+> Enable the SD Card reader and the internal eMMC on the Berlin BG2Q DM=
+P
+> using two of the SDHCI nodes of the Berlin BG2Q.
+>=20
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
 >
-> OK. Do you have other GPIOs in use as interrupts for devices in these
-> banks and do they work fine?
+> ---
+>  arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/bo=
+ot/dts/berlin2q-marvell-dmp.dts
+> index 2da9c41e29d8..6ca8c9e52b08 100644
+> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> @@ -26,3 +26,14 @@
+>  &uart0 {
+>  	status =3D "okay";
+>  };
+> +
+> +&sdhci1 {
 
-I dont see any interrupts in use from gpio5 bank but as a quick test if 
-I add ti,no-reset-on-init to gpio3 and gpio4 I see no issue with 
-matrix-keypad operation which uses gpios from each of those banks.
+Antoine,
 
->
-> Also, can you please test to make sure this works with the most recent
-> Javier's GPIO patches that had the issue of not booting on am335x-evmsk?
->
+nit: please sort referenced nodes alphabetically.
 
-Yes, when using Javier's patches in addition to this patch [1], which 
-was found to be necessary through this discussion [2], the AM437x GP EVM 
-boots fine with linux-next with my regulator patch and gpio5 no reset 
-patch applied.
+With your comments about mmc aliases, I can take both patches
+in now (and fixup ordering) if you like.
 
-Regards,
-Dave
+Sebastian
 
-[1] https://patchwork.kernel.org/patch/4041881/
-[2] http://marc.info/?t=139817273800014&r=1&w=2
-
-> Regards,
->
-> Tony
->
-
+> +	broken-cd;
+> +	sdhci,wp-inverted;
+> +	status =3D "okay";
+> +};
+> +
+> +&sdhci2 {
+> +	non-removable;
+> +	status =3D "okay";
+> +};
+>=20
