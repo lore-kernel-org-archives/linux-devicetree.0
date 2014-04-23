@@ -1,218 +1,151 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v2 3/4] regulator: bcm590xx: add support for regulators on secondary I2C slave
-Date: Wed, 23 Apr 2014 19:21:32 -0400
-Message-ID: <1398295293-11033-4-git-send-email-mporter@linaro.org>
-References: <1398295293-11033-1-git-send-email-mporter@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398295293-11033-1-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
+Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
+Date: Wed, 23 Apr 2014 16:36:22 -0700
+Message-ID: <20140423233621.GM17066@sonymobile.com>
+References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+ <20140423214626.GA3215@joshc.qualcomm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140423214626.GA3215@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-The bcm590xx MFD driver now exposes a secondary regmap descriptor
-making the registers for regulators on the secondary I2C slave address
-available.  Add support for GPLDO1-6 and VBUS regulators found within
-this register range.
+On Wed, Apr 23, 2014 at 11:46:26PM +0200, Josh Cartwright wrote:
+> On Tue, Apr 22, 2014 at 05:31:49PM -0700, Courtney Cavin wrote:
+> > From: Josh Cartwright <joshc@codeaurora.org>
+> > 
+> > The Qualcomm 8941 and 8841 PMICs are components used with the Snapdragon
+> > 800 series SoC family.  This driver exists largely as a glue mfd component,
+> > it exists to be an owner of an SPMI regmap for children devices
+> > described in device tree.
+> > 
+> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> > Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+> 
+> Hey Courtney-
+> 
+> Thanks for picking this up!
 
-Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- drivers/regulator/bcm590xx-regulator.c | 92 ++++++++++++++++++++++++++++++----
- 1 file changed, 82 insertions(+), 10 deletions(-)
+Well, I've been poking you about it for months now, so I figured I'd
+stop being annoying, and start being productive.
 
-diff --git a/drivers/regulator/bcm590xx-regulator.c b/drivers/regulator/bcm590xx-regulator.c
-index c3750c5..57544e2 100644
---- a/drivers/regulator/bcm590xx-regulator.c
-+++ b/drivers/regulator/bcm590xx-regulator.c
-@@ -22,7 +22,7 @@
- #include <linux/regulator/of_regulator.h>
- #include <linux/slab.h>
- 
--/* Register defs */
-+/* I2C slave 0 registers */
- #define BCM590XX_RFLDOPMCTRL1	0x60
- #define BCM590XX_IOSR1PMCTRL1	0x7a
- #define BCM590XX_IOSR2PMCTRL1	0x7c
-@@ -31,13 +31,34 @@
- #define BCM590XX_SDSR2PMCTRL1	0x86
- #define BCM590XX_MSRPMCTRL1	0x8a
- #define BCM590XX_VSRPMCTRL1	0x8e
--#define BCM590XX_REG_ENABLE	BIT(7)
--
- #define BCM590XX_RFLDOCTRL	0x96
- #define BCM590XX_CSRVOUT1	0xc0
-+
-+/* I2C slave 1 registers */
-+#define BCM590XX_GPLDO5PMCTRL1	0x16
-+#define BCM590XX_GPLDO6PMCTRL1	0x18
-+#define BCM590XX_GPLDO1CTRL	0x1a
-+#define BCM590XX_GPLDO2CTRL	0x1b
-+#define BCM590XX_GPLDO3CTRL	0x1c
-+#define BCM590XX_GPLDO4CTRL	0x1d
-+#define BCM590XX_GPLDO5CTRL	0x1e
-+#define BCM590XX_GPLDO6CTRL	0x1f
-+#define BCM590XX_OTG_CTRL	0x40
-+#define BCM590XX_GPLDO1PMCTRL1	0x57
-+#define BCM590XX_GPLDO2PMCTRL1	0x59
-+#define BCM590XX_GPLDO3PMCTRL1	0x5b
-+#define BCM590XX_GPLDO4PMCTRL1	0x5d
-+
-+#define BCM590XX_REG_ENABLE	BIT(7)
-+#define BCM590XX_VBUS_ENABLE	BIT(2)
- #define BCM590XX_LDO_VSEL_MASK	GENMASK(5, 3)
- #define BCM590XX_SR_VSEL_MASK	GENMASK(5, 0)
- 
-+/*
-+ * RFLDO to VSR regulators are
-+ * accessed via I2C slave 0
-+ */
-+
- /* LDO regulator IDs */
- #define BCM590XX_REG_RFLDO	0
- #define BCM590XX_REG_CAMLDO1	1
-@@ -62,9 +83,25 @@
- #define BCM590XX_REG_SDSR2	18
- #define BCM590XX_REG_VSR	19
- 
--#define BCM590XX_NUM_REGS	20
-+/*
-+ * GPLDO1 to VBUS regulators are
-+ * accessed via I2C slave 1
-+ */
-+
-+#define BCM590XX_REG_GPLDO1	20
-+#define BCM590XX_REG_GPLDO2	21
-+#define BCM590XX_REG_GPLDO3	22
-+#define BCM590XX_REG_GPLDO4	23
-+#define BCM590XX_REG_GPLDO5	24
-+#define BCM590XX_REG_GPLDO6	25
-+#define BCM590XX_REG_VBUS	26
-+
-+#define BCM590XX_NUM_REGS	27
- 
- #define BCM590XX_REG_IS_LDO(n)	(n < BCM590XX_REG_CSR)
-+#define BCM590XX_REG_IS_GPLDO(n) \
-+	((n > BCM590XX_REG_VSR) && (n < BCM590XX_REG_VBUS))
-+#define BCM590XX_REG_IS_VBUS(n)	(n == BCM590XX_REG_VBUS)
- 
- struct bcm590xx_board {
- 	struct regulator_init_data *bcm590xx_pmu_init_data[BCM590XX_NUM_REGS];
-@@ -149,6 +186,12 @@ static struct bcm590xx_info bcm590xx_regs[] = {
- 	BCM590XX_REG_RANGES(sdsr1, dcdc_sdsr1_ranges),
- 	BCM590XX_REG_RANGES(sdsr2, dcdc_iosr1_ranges),
- 	BCM590XX_REG_RANGES(vsr, dcdc_iosr1_ranges),
-+	BCM590XX_REG_TABLE(gpldo1, ldo_a_table),
-+	BCM590XX_REG_TABLE(gpldo2, ldo_a_table),
-+	BCM590XX_REG_TABLE(gpldo3, ldo_a_table),
-+	BCM590XX_REG_TABLE(gpldo4, ldo_a_table),
-+	BCM590XX_REG_TABLE(gpldo5, ldo_a_table),
-+	BCM590XX_REG_TABLE(gpldo6, ldo_a_table),
- };
- 
- struct bcm590xx_reg {
-@@ -161,6 +204,8 @@ static int bcm590xx_get_vsel_register(int id)
- {
- 	if (BCM590XX_REG_IS_LDO(id))
- 		return BCM590XX_RFLDOCTRL + id;
-+	else if (BCM590XX_REG_IS_GPLDO(id))
-+		return BCM590XX_GPLDO1CTRL + id;
- 	else
- 		return BCM590XX_CSRVOUT1 + (id - BCM590XX_REG_CSR) * 3;
- }
-@@ -171,6 +216,8 @@ static int bcm590xx_get_enable_register(int id)
- 
- 	if (BCM590XX_REG_IS_LDO(id))
- 		reg = BCM590XX_RFLDOPMCTRL1 + id * 2;
-+	else if (BCM590XX_REG_IS_GPLDO(id))
-+		reg = BCM590XX_GPLDO1PMCTRL1 + id * 2;
- 	else
- 		switch (id) {
- 		case BCM590XX_REG_CSR:
-@@ -191,8 +238,11 @@ static int bcm590xx_get_enable_register(int id)
- 		case BCM590XX_REG_SDSR2:
- 			reg = BCM590XX_SDSR2PMCTRL1;
- 			break;
-+		case BCM590XX_REG_VBUS:
-+			reg = BCM590XX_OTG_CTRL;
- 		};
- 
-+
- 	return reg;
- }
- 
-@@ -216,6 +266,12 @@ static struct regulator_ops bcm590xx_ops_dcdc = {
- 	.map_voltage		= regulator_map_voltage_linear_range,
- };
- 
-+static struct regulator_ops bcm590xx_ops_vbus = {
-+	.is_enabled		= regulator_is_enabled_regmap,
-+	.enable			= regulator_enable_regmap,
-+	.disable		= regulator_disable_regmap,
-+};
-+
- #define BCM590XX_MATCH(_name, _id) \
- 	{ \
- 		.name = #_name, \
-@@ -243,6 +299,13 @@ static struct of_regulator_match bcm590xx_matches[] = {
- 	BCM590XX_MATCH(sdsr1, SDSR1),
- 	BCM590XX_MATCH(sdsr2, SDSR2),
- 	BCM590XX_MATCH(vsr, VSR),
-+	BCM590XX_MATCH(gpldo1, GPLDO1),
-+	BCM590XX_MATCH(gpldo2, GPLDO2),
-+	BCM590XX_MATCH(gpldo3, GPLDO3),
-+	BCM590XX_MATCH(gpldo4, GPLDO4),
-+	BCM590XX_MATCH(gpldo5, GPLDO5),
-+	BCM590XX_MATCH(gpldo6, GPLDO6),
-+	BCM590XX_MATCH(vbus, VBUS),
- };
- 
- static struct bcm590xx_board *bcm590xx_parse_dt_reg_data(
-@@ -353,17 +416,23 @@ static int bcm590xx_probe(struct platform_device *pdev)
- 		pmu->desc[i].linear_ranges = info->linear_ranges;
- 		pmu->desc[i].n_linear_ranges = info->n_linear_ranges;
- 
--		if (BCM590XX_REG_IS_LDO(i)) {
-+		if ((BCM590XX_REG_IS_LDO(i)) || (BCM590XX_REG_IS_GPLDO(i))) {
- 			pmu->desc[i].ops = &bcm590xx_ops_ldo;
- 			pmu->desc[i].vsel_mask = BCM590XX_LDO_VSEL_MASK;
--		} else {
-+		} else if (BCM590XX_REG_IS_VBUS(i))
-+			pmu->desc[i].ops = &bcm590xx_ops_vbus;
-+		else {
- 			pmu->desc[i].ops = &bcm590xx_ops_dcdc;
- 			pmu->desc[i].vsel_mask = BCM590XX_SR_VSEL_MASK;
- 		}
- 
--		pmu->desc[i].vsel_reg = bcm590xx_get_vsel_register(i);
--		pmu->desc[i].enable_is_inverted = true;
--		pmu->desc[i].enable_mask = BCM590XX_REG_ENABLE;
-+		if (BCM590XX_REG_IS_VBUS(i))
-+			pmu->desc[i].enable_mask = BCM590XX_VBUS_ENABLE;
-+		else {
-+			pmu->desc[i].vsel_reg = bcm590xx_get_vsel_register(i);
-+			pmu->desc[i].enable_is_inverted = true;
-+			pmu->desc[i].enable_mask = BCM590XX_REG_ENABLE;
-+		}
- 		pmu->desc[i].enable_reg = bcm590xx_get_enable_register(i);
- 		pmu->desc[i].type = REGULATOR_VOLTAGE;
- 		pmu->desc[i].owner = THIS_MODULE;
-@@ -371,7 +440,10 @@ static int bcm590xx_probe(struct platform_device *pdev)
- 		config.dev = bcm590xx->dev;
- 		config.init_data = reg_data;
- 		config.driver_data = pmu;
--		config.regmap = bcm590xx->regmap;
-+		if (BCM590XX_REG_IS_GPLDO(i) || BCM590XX_REG_IS_VBUS(i))
-+			config.regmap = bcm590xx->regmap_sec;
-+		else
-+			config.regmap = bcm590xx->regmap_pri;
- 
- 		if (bcm590xx_reg_matches)
- 			config.of_node = bcm590xx_reg_matches[i].of_node;
--- 
-1.8.4
+> 
+> One thing that I had meant to do is rename this thing.  Nothing about
+> this is PM8841/PM8941 specific at all.  It should apply equally to all
+> Qualcomm's PMICs which implement QPNP.
+> 
+> Perhaps a better name would be "qcom-pmic-qpnp".
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+What's a QPNP?  Really.  I've heard you speak about it before as being a
+definition of the register layout for interrupts, but I have no
+documentation on it.
+
+I would argue here from my understanding that this driver isn't specific
+to QPNP either.  With that in mind we could just go with
+"qcom-pmic-spmi".  In fact just "spmi-ext" would not be incorrect, as
+this driver has little to do with PMICs at all.
+
+My point here is that we can easily make this into something very
+generic, but that only causes problems in the future when it's not
+"generic enough", and we have to add quirks.  If in the future Qualcomm
+releases a pm8A41, and it's qpnp, but not spmi, or spmi, but not 'ext',
+then we need to either change this driver dramatically, or write a new
+one.  I like keeping this driver name specific to what we know it
+supports.  We can rename it in the future if deemed appropriate, but I'd
+rather not make it something that which turns out to be wrong at some
+later point.
+
+Having said all of this, I have no doubt that your HW engineers will
+find a way to break our interpretation of their naming scheme... once
+again.
+
+> 
+> [..]
+> > +++ b/drivers/mfd/pm8x41.c
+> > @@ -0,0 +1,63 @@
+> > +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 and
+> > + * only version 2 as published by the Free Software Foundation.
+> > + *
+> > + * This program is distributed in the hope that it will be useful,
+> > + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> > + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> > + * GNU General Public License for more details.
+> > + */
+> > +#include <linux/kernel.h>
+> > +#include <linux/module.h>
+> > +#include <linux/spmi.h>
+> > +#include <linux/regmap.h>
+> > +#include <linux/of_platform.h>
+> > +
+> > +static const struct regmap_config pm8x41_regmap_config = {
+> > +	.reg_bits	= 16,
+> > +	.val_bits	= 8,
+> > +	.max_register	= 0xFFFF,
+> > +};
+> 
+> This reminds me.  David Collins (CC'd) noticed that there are usecases
+> where peripheral drivers will need to be accessing registers from atomic
+> context, so we should probably be setting .fast_io in the SPMI
+> regmap_bus structures, but we can tackle that when we get there.
+
+Hrm.  Please comment on this David.  I would like to see a solid
+use-case before even considering that.
+
+> > +
+> > +static int pm8x41_remove_child(struct device *dev, void *unused)
+> > +{
+> > +	platform_device_unregister(to_platform_device(dev));
+> > +	return 0;
+> > +}
+> > +
+> > +static void pm8x41_remove(struct spmi_device *sdev)
+> > +{
+> > +	device_for_each_child(&sdev->dev, NULL, pm8x41_remove_child);
+> > +}
+> > +
+> > +static int pm8x41_probe(struct spmi_device *sdev)
+> > +{
+> > +	struct regmap *regmap;
+> > +
+> > +	regmap = devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
+> > +	if (IS_ERR(regmap)) {
+> > +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
+> > +		return PTR_ERR(regmap);
+> > +	}
+> > +
+> > +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+> > +}
+> > +
+> > +static const struct of_device_id pm8x41_id_table[] = {
+> > +	{ .compatible = "qcom,pm8841", },
+> > +	{ .compatible = "qcom,pm8941", },
+> > +	{},
+> > +};
+> > +MODULE_DEVICE_TABLE(of, pm8x41_id_table);
+> 
+> I'm thinking we should probably have a generic compatible entry as well,
+> "qcom,pmic-qpnp" or similar.  We should still specify in the binding
+> that PMIC slaves specify a version-specific string as well as the
+> generic string.  That is, a slave should have:
+> 
+> 	compatible = "qcom,pm8841", "qcom,pmic-qpnp";
+> 
+> ...in case we would ever need to differentiate in the future.
+> 
+> (I recall that in a previous version I had done this, but I don't
+> remember why I had changed it..)
+
+I gave this some thought but came to the conclusion that there is no
+benefit of adding a generic compatible to a new binding.  Please clarify
+a use-case where this would be ... useful.
+
+Thanks for the review!
+
+-Courtney
