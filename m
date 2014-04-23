@@ -1,109 +1,44 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm: exynos: Add MCPM call-back functions
-Date: Wed, 23 Apr 2014 17:13:25 +0100
-Message-ID: <20140423161325.GB1243@e102568-lin.cambridge.arm.com>
-References: <1397239311-27717-6-git-send-email-a.kesavan@samsung.com>
- <1398147435-3122-1-git-send-email-a.kesavan@samsung.com>
- <535650AE.90501@linaro.org>
- <alpine.LFD.2.11.1404221129150.980@knanqh.ubzr>
- <5356C134.8070707@linaro.org>
- <alpine.LFD.2.11.1404221540540.980@knanqh.ubzr>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2 0/7] Add cros_ec changes for newer boards
+Date: Wed, 23 Apr 2014 10:20:02 -0600
+Message-ID: <5357E832.1000806@wwwdotorg.org>
+References: <1398185154-19404-1-git-send-email-dianders@chromium.org> <20140423123240.GA640@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.11.1404221540540.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
-Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140423123240.GA640@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Doug Anderson <dianders@chromium.org>
+Cc: swarren@nvidia.com, wsa@the-dreams.de, abrestic@chromium.org, dgreid@chromium.org, olof@lixom.net, sjg@chromium.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, mark.rutland@arm.com, andrew@lunn.ch, thierry.reding@gmail.com, linux-i2c@vger.kernel.org, matt.porter@linaro.org, jdelvare@suse.de, laurent.pinchart+renesas@ideasonboard.com, vpalatin@chromium.org, sameo@linux.intel.com, linux-doc@vger.kernel.org, bjorn.andersson@sonymobile.com, u.kleine-koenig@pengutronix.de, kevin.strasser@linux.intel.com, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, linux@arm.linux.org.uk, andriy.shevchenko@linux.intel.com, ch.naveen@samsung.com, linux-arm-kernel@lists.infradead.org, shane.huang@amd.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, linux@prisktech.co.nz, galak@codeaurora.org, schwidefsky@de.ib
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 08:56:23PM +0100, Nicolas Pitre wrote:
+On 04/23/2014 06:32 AM, Lee Jones wrote:
+> On Tue, 22 Apr 2014, Doug Anderson wrote:
 > 
-> [ Moved Lorenzo up in the addressee list to get his attention ]
+>> This series adds the most critical cros_ec changes for newer boards
+>> using cros_ec.  Specifically:
+>> * Fixes timing/locking issues with the previously upstreamed (but
+>>   never used upstream) cros_ec_spi driver.
+>> * Updates the cros_ec header file to the latest version which allows
+>>   us to use newer EC features like i2c tunneling.
+>> * Adds an i2c tunnel driver to allow communication to the EC's i2c
+>>   devices.
+>>
+>> This _doesn't_ get the EC driver fully up to speed with what's in the
+>> current Chromium OS trees.  There are a whole slew of cleanup patches
+>> there, an addition of an LPC transport mode, and exports of functions
+>> to userspace.  Once these patches land and we have functionality we
+>> can continue to pick more cleanup patches.
+...
+> Need to wait for the ARM, DT and I2C guys to review, at which point
+> I'll be happy to take in and supply a branch for them to pull from if
+> required. If there are no _true_ dependencies and the MFD changes can
+> be added independently without fear of build breakages, let me know
+> and I'll apply them separately.
 
-Sorry for the delay in replying.
-
-> On Tue, 22 Apr 2014, Daniel Lezcano wrote:
-> 
-> > On 04/22/2014 05:40 PM, Nicolas Pitre wrote:
-> > > On Tue, 22 Apr 2014, Daniel Lezcano wrote:
-> > >
-> > > > On 04/22/2014 08:17 AM, Abhilash Kesavan wrote:
-> > > > > +/*
-> > > > > + * The common v7_exit_coherency_flush API could not be used because of the
-> > > > > + * Erratum 799270 workaround. This macro is the same as the common one (in
-> > > > > + * arch/arm/include/asm/cacheflush.h) except for the erratum handling.
-> > > > > + */
-> > > > > +#define exynos_v7_exit_coherency_flush(level) \
-> > > > > +	asm volatile( \
-> > > > > +	"stmfd	sp!, {fp, ip}\n\t"\
-> > > > > +	"mrc	p15, 0, r0, c1, c0, 0	@ get SCTLR\n\t" \
-> > > > > +	"bic	r0, r0, #"__stringify(CR_C)"\n\t" \
-> > > > > +	"mcr	p15, 0, r0, c1, c0, 0	@ set SCTLR\n\t" \
-> > > > > +	"isb\n\t"\
-> > > > > +	"bl	v7_flush_dcache_"__stringify(level)"\n\t" \
-> > > > > +	"clrex\n\t"\
-> > > > > +	"mrc	p15, 0, r0, c1, c0, 1	@ get ACTLR\n\t" \
-> > > > > +	"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t" \
-> > > > > +	/* Dummy Load of a device register to avoid Erratum 799270 */ \
-> > > >
-> > > > Wouldn't make sense to add the erratum in the Kconfig and re-use it in the
-> > > > generic v7_exit_coherency_flush macro instead of redefining it ?
-> > >
-> > > The implementation of the erratum (the dummy device register load) is
-> > > platform specific I'm afraid.
-> > >
-> > > Is TC2 also concerned by this erratum, or is this Samsung specific?
-> > 
-> > Sounds like it is ARM Cortex-A15MP specific:
-> > 
-> > http://infocenter.arm.com/help/topic/com.arm.doc.epm028090/cortex_a15_mpcore_software_developers_errata_notice_r2_v12.pdf
-> > 
-> > Page 31.
-> 
-> The condition for hitting the erratum is: "The L2 cache block has been 
-> idle for 256 or more cycles with no memory requests from any core, no 
-> external snoops, and no ACP requests".
-> 
-> Given that the operation that almost immediately precedes the 
-> problematic mcr is a call to v7_flush_dcache_louis or 
-> v7_flush_dcache_all, is this possible that the condition for the erratum 
-> could ever be met?
-
-Yes, if we execute out of the I-cache (no-data accesses) I think this might be
-triggered.
-
-On a side note, the errata affects also the setting of SMP bit
-(__v7_ca15mp_setup and cpu_v7_do_resume) but we do nothing there (it
-is a different situation though, MMU there is off and D-cache off...but
-I-cache is allowed to be on, so I am actually checking if we should be doing
-something there too).
-
-> If no then we should document that v7_exit_coherency_flush(() is safe 
-> against erratum 799270 and use it here.
-
-Eh, I wish we could use it safely, I am currently investigating and will get
-back to you asap.
-
-Lorenzo
-
-> > > > > +	"ldr	r4, [%0]\n\t" \
-> > > > > +	"and	r4, r4, #0\n\t" \
-> > > > > +	"orr	r0, r0, r4\n\t" \
-> > > > > +	"mcr	p15, 0, r0, c1, c0, 1	@ set ACTLR\n\t" \
-> > > > > +	"isb\n\t" \
-> > > > > +	"dsb\n\t" \
-> > > > > +	"ldmfd	sp!, {fp, ip}" \
-> > > > > +	: \
-> > > > > +	: "Ir" (S5P_INFORM0) \
-> > > > > +	: "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", \
-> > > > > +	  "r9", "r10", "lr", "memory")
-> > > >
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I believe there aren't direct dependencies between the patches. So, the
+MFD patches can be applied to the MFD tree and the DT patch applied to
+the Tegra tree. I'm simply waiting for the MFD patches to be applied
+before applying the DT patch so that I know the DT binding definition is
+fully accepted before applying a patch that uses it.
