@@ -1,53 +1,73 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 20/21] of/fdt: convert initial_boot_params to opaque pointer
-Date: Tue, 22 Apr 2014 20:18:20 -0500
-Message-ID: <1398215901-25609-21-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 04/21] mips: ralink: convert to use unflatten_and_copy_device_tree
+Date: Tue, 22 Apr 2014 20:18:04 -0500
+Message-ID: <1398215901-25609-5-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-Now that all accesses to FDT header data has been converted to accessor
-helpers, initial_boot_params can become an opaque pointer.
+The ralink FDT code can be simplified by using
+unflatten_and_copy_device_tree function. This removes all accesses to
+FDT header data by the arch code.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
 ---
 v2: no change
 
- drivers/of/fdt.c       | 2 +-
- include/linux/of_fdt.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/mips/ralink/of.c | 25 +------------------------
+ 1 file changed, 1 insertion(+), 24 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 358bcf0..a6f83ea 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -372,7 +372,7 @@ EXPORT_SYMBOL_GPL(of_fdt_unflatten_tree);
- int __initdata dt_root_addr_cells;
- int __initdata dt_root_size_cells;
+diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
+index eccc552..0170d82 100644
+--- a/arch/mips/ralink/of.c
++++ b/arch/mips/ralink/of.c
+@@ -52,30 +52,7 @@ __iomem void *plat_of_remap_node(const char *node)
  
--struct boot_param_header *initial_boot_params;
-+void *initial_boot_params;
+ void __init device_tree_init(void)
+ {
+-	unsigned long base, size;
+-	void *fdt_copy;
+-
+-	if (!initial_boot_params)
+-		return;
+-
+-	base = virt_to_phys((void *)initial_boot_params);
+-	size = be32_to_cpu(initial_boot_params->totalsize);
+-
+-	/* Before we do anything, lets reserve the dt blob */
+-	reserve_bootmem(base, size, BOOTMEM_DEFAULT);
+-
+-	/* The strings in the flattened tree are referenced directly by the
+-	 * device tree, so copy the flattened device tree from init memory
+-	 * to regular memory.
+-	 */
+-	fdt_copy = alloc_bootmem(size);
+-	memcpy(fdt_copy, initial_boot_params, size);
+-	initial_boot_params = fdt_copy;
+-
+-	unflatten_device_tree();
+-
+-	/* free the space reserved for the dt blob */
+-	free_bootmem(base, size);
++	unflatten_and_copy_device_tree();
+ }
  
- #ifdef CONFIG_OF_EARLY_FLATTREE
- 
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index e10099c..1f882e1 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -78,7 +78,7 @@ extern void of_fdt_unflatten_tree(unsigned long *blob,
- /* TBD: Temporary export of fdt globals - remove when code fully merged */
- extern int __initdata dt_root_addr_cells;
- extern int __initdata dt_root_size_cells;
--extern struct boot_param_header *initial_boot_params;
-+extern void *initial_boot_params;
- 
- extern char __dtb_start[];
- extern char __dtb_end[];
+ void __init plat_mem_setup(void)
 -- 
 1.9.1
