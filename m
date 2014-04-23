@@ -1,68 +1,42 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] sysfs, device-tree: aid for debugging device tree boot
- problems
-Date: Wed, 23 Apr 2014 15:48:15 -0700
-Message-ID: <5358432F.8040202@gmail.com>
-References: <53571685.5060403@gmail.com> <20140423032044.GA26233@kroah.com> <20140423115418.A8C0EC40969@trevor.secretlab.ca>
-Reply-To: frowand.list@gmail.com
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140423115418.A8C0EC40969@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/2] DT irq deferred probe support
+Date: Wed, 23 Apr 2014 17:57:39 -0500
+Message-ID: <1398293861-7682-1-git-send-email-robherring2@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/23/2014 4:54 AM, Grant Likely wrote:
-> On Tue, 22 Apr 2014 20:20:44 -0700, Greg Kroah-Hartman <gregkh@linuxfoundation.org> wrote:
->> On Tue, Apr 22, 2014 at 06:25:25PM -0700, Frank Rowand wrote:
->>> Create some infrastructure to aid trouble shooting device tree related
->>> boot issues.
->>>
->>> Add a %driver_name file to each device tree node sysfs directory which has had
->>> a driver bound to it.  This allows detecting device tree nodes which failed
->>> to be bound to any driver.
->>
->> Why is this needed, shouldn't there already be a "driver" symlink in
->> sysfs for these devices when a driver binds to them?  The rest of the
->> driver model works that way, why is of devices any different?
->>
-> 
-> Because it hasn't been added yet! I only just committed the change to
-> convert device_nodes into kobjects in v3.14. The next step is to add
-> driver symlinks.
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-No need to add a "driver" symlink.  The device directories in sysfs already
-have a driver symlink.
+This is atleast the 4th attempt to fix a long standing issue with DT 
+irq resolution needing to support deferred probe when irq parent is not 
+yet initialized. This version implements Russell King's suggestion to do 
+irq resolution when platform_get_irq is called. 
 
-> 
-> That said, the devicetree node is already exposed in the uevent for a
-> device. It should already be possible to find all device tree nodes that
-> don't have a device, or devices without a driver:
-> 
-> To get a list of all nodes:
-> 
-> find /proc/device-tree/ -type d | sed -e 's/\/proc\/device-tree//'
-> 
-> or a little more nuanced, only choosing nodes with a compatible property:
-> 
-> for k in `find /proc/device-tree/ -name compatible`; do
-> 	echo $(dirname $k) | sed -e 's/\/proc\/device-tree//'
-> done | sort
-> 
-> It can get even more refined than that if need be.
-> 
-> To get a list of all nodes with a device that has been created:
-> 
-> for k in `find devices -name uevent`; do
-> 	grep '^OF_FULLNAME' $k | sed -e 's/OF_FULLNAME=//'
-> done | sort
+Tony, I squashed your warning fix (dropping the other part) and stole 
+much of your commit message. Let me know if you have any issues with 
+that.
 
-< snip >
+Rob
 
-Thanks Grant!  I did not realize that uevent contained that
-information.
+Rob Herring (2):
+  of: selftest: add deferred probe interrupt test
+  of/irq: do irq resolution in platform_get_irq
 
--Frank
+ drivers/base/platform.c                        |  7 +++++-
+ drivers/of/irq.c                               | 26 +++++++++++++++++++++
+ drivers/of/platform.c                          |  4 +++-
+ drivers/of/selftest.c                          | 32 ++++++++++++++++++++++++++
+ drivers/of/testcase-data/tests-interrupts.dtsi | 12 ++++++++++
+ include/linux/of_irq.h                         |  7 +++++-
+ 6 files changed, 85 insertions(+), 3 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
