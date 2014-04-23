@@ -1,11 +1,14 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 00/21] FDT clean-ups and libfdt support
-Date: Tue, 22 Apr 2014 20:18:00 -0500
-Message-ID: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 08/21] of/fdt: consolidate built-in dtb section
+	variables
+Date: Tue, 22 Apr 2014 20:18:08 -0500
+Message-ID: <1398215901-25609-9-git-send-email-robherring2@gmail.com>
+References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
 List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
 	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
 List-Archive: <http://lists.openrisc.net/pipermail/linux>
@@ -16,98 +19,151 @@ List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
 Sender: linux-bounces@lists.openrisc.net
 Errors-To: linux-bounces@lists.openrisc.net
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-mips@linux-mips.org, Aurelien Jacquiot <a-jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "H. Peter Anvin" <hpa@zytor.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, linux@lists.openrisc.net, Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Salter <msalter@redhat.com>, linux-xtensa@linux-xtensa.org, James Hogan <james.hogan@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, linux-metag@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, Vineet Gupta <vgupta@synopsys.com>, Ralf Baechle <ralf@linux-mips.org>, linuxppc-dev@lists.ozlabs.org
+Cc: Rob Herring <robh@kernel.org>, Chris Zankel <chris@zankel.net>, linux-xtensa@linux-xtensa.org, Ralf Baechle <ralf@linux-mips.org>, Max Filippov <jcmvbkbc@gmail.com>, linux-mips@linux-mips.org, linux@lists.openrisc.net, linux-metag@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-This is a series of clean-ups of architecture FDT code and converts the
-core FDT code over to using libfdt functions. This is in preparation
-to add FDT based address translation parsing functions for early
-console support. This series removes direct access to FDT data from all
-arches except powerpc.
+Unify the various architectures __dtb_start and __dtb_end definitions
+moving them into of_fdt.h.
 
-The current MIPS lantiq and xlp DT code is buggy as built-in DTBs need
-to be copied out of init section. Patches 2 and 3 should be applied to
-3.15.
+Signed-off-by: Rob Herring <robh@kernel.org>
+Acked-by: Vineet Gupta <vgupta@synopsys.com>
+Acked-by: James Hogan <james.hogan@imgtec.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Jonas Bonn <jonas@southpole.se>
+Cc: Chris Zankel <chris@zankel.net>
+Cc: Max Filippov <jcmvbkbc@gmail.com>
+Cc: linux-metag@vger.kernel.org
+Cc: linux-mips@linux-mips.org
+Cc: linux@lists.openrisc.net
+Cc: linux-xtensa@linux-xtensa.org
+---
+v2: no change
 
-Changes in v2 are relatively minor. There was a bug in the unflattening
-code where walking up the tree was not being handled correctly (thanks
-to Michal Simek). I re-worked things a bit to avoid globally adding
-libfdt include paths.
+ arch/arc/include/asm/sections.h             | 1 -
+ arch/metag/kernel/setup.c                   | 4 ----
+ arch/mips/include/asm/mips-boards/generic.h | 2 --
+ arch/mips/lantiq/prom.h                     | 2 --
+ arch/mips/netlogic/xlp/dt.c                 | 2 +-
+ arch/mips/ralink/of.c                       | 2 --
+ arch/openrisc/kernel/vmlinux.h              | 2 --
+ arch/xtensa/kernel/setup.c                  | 1 -
+ include/linux/of_fdt.h                      | 3 +++
+ 9 files changed, 4 insertions(+), 15 deletions(-)
 
-A branch is available here[1], and I plan to put into linux-next in a few
-days. Please test! I've compiled on arm, arm64, mips, microblaze, xtensa,
-and powerpc and booted on arm and arm64.
-
-Rob
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git libfdt
-
-Rob Herring (21):
-  mips: octeon: convert to use unflatten_and_copy_device_tree
-  mips: lantiq: copy built-in DTB out of init section
-  mips: xlp: copy built-in DTB out of init section
-  mips: ralink: convert to use unflatten_and_copy_device_tree
-  ARM: dt: use default early_init_dt_alloc_memory_arch
-  c6x: convert fdt pointers to opaque pointers
-  mips: convert fdt pointers to opaque pointers
-  of/fdt: consolidate built-in dtb section variables
-  of/fdt: remove some unneeded includes
-  of/fdt: remove unused of_scan_flat_dt_by_path
-  of/fdt: update of_get_flat_dt_prop in prep for libfdt
-  of/fdt: Convert FDT functions to use libfdt
-  of/fdt: use libfdt accessors for header data
-  of/fdt: create common debugfs
-  of/fdt: move memreserve and dtb memory reservations into core
-  of/fdt: fix phys_addr_t related print size warnings
-  of/fdt: introduce of_get_flat_dt_size
-  powerpc: use libfdt accessors for header data
-  x86: use FDT accessors for FDT blob header data
-  of/fdt: convert initial_boot_params to opaque pointer
-  of: push struct boot_param_header and defines into powerpc
-
- arch/arc/include/asm/sections.h             |   1 -
- arch/arc/kernel/devtree.c                   |   2 +-
- arch/arm/include/asm/prom.h                 |   2 -
- arch/arm/kernel/devtree.c                   |  34 +--
- arch/arm/mach-exynos/exynos.c               |   2 +-
- arch/arm/mach-vexpress/platsmp.c            |   2 +-
- arch/arm/mm/init.c                          |   1 -
- arch/arm/plat-samsung/s5p-dev-mfc.c         |   4 +-
- arch/arm64/mm/init.c                        |  21 --
- arch/c6x/kernel/setup.c                     |   4 +-
- arch/metag/kernel/setup.c                   |   4 -
- arch/microblaze/kernel/prom.c               |  39 +--
- arch/mips/cavium-octeon/setup.c             |  20 +-
- arch/mips/include/asm/mips-boards/generic.h |   4 -
- arch/mips/include/asm/prom.h                |   6 +-
- arch/mips/kernel/prom.c                     |   2 +-
- arch/mips/lantiq/prom.c                     |  15 +-
- arch/mips/lantiq/prom.h                     |   2 -
- arch/mips/mti-sead3/sead3-setup.c           |   8 +-
- arch/mips/netlogic/xlp/dt.c                 |  19 +-
- arch/mips/ralink/of.c                       |  29 +-
- arch/openrisc/kernel/vmlinux.h              |   2 -
- arch/powerpc/include/asm/prom.h             |  39 +++
- arch/powerpc/kernel/Makefile                |   1 +
- arch/powerpc/kernel/epapr_paravirt.c        |   2 +-
- arch/powerpc/kernel/fadump.c                |   4 +-
- arch/powerpc/kernel/prom.c                  |  78 ++----
- arch/powerpc/kernel/rtas.c                  |   2 +-
- arch/powerpc/mm/hash_utils_64.c             |  22 +-
- arch/powerpc/platforms/52xx/efika.c         |   4 +-
- arch/powerpc/platforms/chrp/setup.c         |   4 +-
- arch/powerpc/platforms/powernv/opal.c       |  12 +-
- arch/powerpc/platforms/pseries/setup.c      |   4 +-
- arch/x86/kernel/devicetree.c                |  12 +-
- arch/xtensa/kernel/setup.c                  |   3 +-
- drivers/of/Kconfig                          |   1 +
- drivers/of/Makefile                         |   2 +
- drivers/of/fdt.c                            | 398 ++++++++++------------------
- drivers/of/of_reserved_mem.c                |   4 +-
- include/linux/of_fdt.h                      |  63 +----
- 40 files changed, 280 insertions(+), 598 deletions(-)
-
+diff --git a/arch/arc/include/asm/sections.h b/arch/arc/include/asm/sections.h
+index 764f1e3..09db952 100644
+--- a/arch/arc/include/asm/sections.h
++++ b/arch/arc/include/asm/sections.h
+@@ -12,6 +12,5 @@
+ #include <asm-generic/sections.h>
+ 
+ extern char __arc_dccm_base[];
+-extern char __dtb_start[];
+ 
+ #endif
+diff --git a/arch/metag/kernel/setup.c b/arch/metag/kernel/setup.c
+index 129c7cd..31cf53d 100644
+--- a/arch/metag/kernel/setup.c
++++ b/arch/metag/kernel/setup.c
+@@ -105,10 +105,6 @@
+ 
+ extern char _heap_start[];
+ 
+-#ifdef CONFIG_METAG_BUILTIN_DTB
+-extern u32 __dtb_start[];
+-#endif
+-
+ #ifdef CONFIG_DA_CONSOLE
+ /* Our early channel based console driver */
+ extern struct console dash_console;
+diff --git a/arch/mips/include/asm/mips-boards/generic.h b/arch/mips/include/asm/mips-boards/generic.h
+index b969491..c904c24 100644
+--- a/arch/mips/include/asm/mips-boards/generic.h
++++ b/arch/mips/include/asm/mips-boards/generic.h
+@@ -67,8 +67,6 @@
+ 
+ extern int mips_revision_sconid;
+ 
+-extern char __dtb_start[];
+-
+ #ifdef CONFIG_PCI
+ extern void mips_pcibios_init(void);
+ #else
+diff --git a/arch/mips/lantiq/prom.h b/arch/mips/lantiq/prom.h
+index 69a4c58..bfd2d58 100644
+--- a/arch/mips/lantiq/prom.h
++++ b/arch/mips/lantiq/prom.h
+@@ -26,6 +26,4 @@ struct ltq_soc_info {
+ extern void ltq_soc_detect(struct ltq_soc_info *i);
+ extern void ltq_soc_init(void);
+ 
+-extern char __dtb_start[];
+-
+ #endif
+diff --git a/arch/mips/netlogic/xlp/dt.c b/arch/mips/netlogic/xlp/dt.c
+index 7f9615a..bdde331 100644
+--- a/arch/mips/netlogic/xlp/dt.c
++++ b/arch/mips/netlogic/xlp/dt.c
+@@ -42,7 +42,7 @@
+ #include <asm/prom.h>
+ 
+ extern u32 __dtb_xlp_evp_begin[], __dtb_xlp_svp_begin[],
+-	__dtb_xlp_fvp_begin[], __dtb_xlp_gvp_begin[], __dtb_start[];
++	__dtb_xlp_fvp_begin[], __dtb_xlp_gvp_begin[];
+ static void *xlp_fdt_blob;
+ 
+ void __init *xlp_dt_init(void *fdtp)
+diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
+index 91d7060..2513952 100644
+--- a/arch/mips/ralink/of.c
++++ b/arch/mips/ralink/of.c
+@@ -28,8 +28,6 @@
+ __iomem void *rt_sysc_membase;
+ __iomem void *rt_memc_membase;
+ 
+-extern char __dtb_start[];
+-
+ __iomem void *plat_of_remap_node(const char *node)
+ {
+ 	struct resource res;
+diff --git a/arch/openrisc/kernel/vmlinux.h b/arch/openrisc/kernel/vmlinux.h
+index 70b9ce4..bbcdf21 100644
+--- a/arch/openrisc/kernel/vmlinux.h
++++ b/arch/openrisc/kernel/vmlinux.h
+@@ -5,6 +5,4 @@
+ extern char __initrd_start, __initrd_end;
+ #endif
+ 
+-extern u32 __dtb_start[];
+-
+ #endif
+diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
+index 84fe931..89986e5 100644
+--- a/arch/xtensa/kernel/setup.c
++++ b/arch/xtensa/kernel/setup.c
+@@ -73,7 +73,6 @@ extern int initrd_below_start_ok;
+ #endif
+ 
+ #ifdef CONFIG_OF
+-extern u32 __dtb_start[];
+ void *dtb_start = __dtb_start;
+ #endif
+ 
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index ddd7219..d4d0efe 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -80,6 +80,9 @@ extern int __initdata dt_root_addr_cells;
+ extern int __initdata dt_root_size_cells;
+ extern struct boot_param_header *initial_boot_params;
+ 
++extern char __dtb_start[];
++extern char __dtb_end[];
++
+ /* For scanning the flat device-tree at boot time */
+ extern char *find_flat_dt_string(u32 offset);
+ extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
 -- 
 1.9.1
