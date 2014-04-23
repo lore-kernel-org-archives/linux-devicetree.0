@@ -1,40 +1,133 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH 5/6] ARM: berlin: add the AHCI node for the BG2
-Date: Wed, 23 Apr 2014 10:58:02 +0200
-Message-ID: <20140423085802.GF24355@kwain>
-References: <1398181105-19714-1-git-send-email-antoine.tenart@free-electrons.com>
- <1398181105-19714-6-git-send-email-antoine.tenart@free-electrons.com>
- <20140423104539.37c9366f@xhacker>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC v2 PATCH v4 09/14] ARM: dts: s6e3fa0: add DT bindings
+Date: Wed, 23 Apr 2014 11:02:21 +0200
+Message-ID: <5357819D.7050802@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140423104539.37c9366f@xhacker>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jisheng Zhang <jszhang@marvell.com>
-Cc: "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "tj@kernel.org" <tj@kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, Jimmy Xu <zmxu@marvell.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Jisheng,
+On 04/21/2014 02:28 PM, YoungJun Cho wrote:
+> This patch adds DT bindings for s6e3fa0 panel.
+> The bindings describes panel resources, display timings and cpu timings.
+> 
+> Changelog v2:
+> - Adds unit address (commented by Sachin Kamat)
+> Changelog v3:
+> - Removes optional delay, size properties (commented by Laurent Pinchart)
+> - Adds OLED detection, TE gpio properties
+> Changelog v4:
+> - Moves CPU timings relevant properties from FIMD DT
+>   (commeted by Laurent Pinchart, Andrzej Hajda)
+> 
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   63 ++++++++++++++++++++
+>  1 file changed, 63 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> new file mode 100644
+> index 0000000..9eeb38b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> @@ -0,0 +1,63 @@
+> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
+> +
+> +Required properties:
+> +  - compatible: "samsung,s6e3fa0"
+> +  - reg: the virtual channel number of a DSI peripheral
+> +  - vdd3-supply: core voltage supply
+> +  - vci-supply: voltage supply for analog circuits
+> +  - reset-gpio: a GPIO spec for the reset pin
+> +  - det-gpio: a GPIO spec for the OLED detection pin
+> +  - te-gpio: a GPIO spec for the TE pin
+> +  - display-timings: timings for the connected panel as described by [1]
 
-On Wed, Apr 23, 2014 at 10:45:39AM +0800, Jisheng Zhang wrote:
-> On Tue, 22 Apr 2014 08:38:24 -0700
-> Antoine T=E9nart <antoine.tenart@free-electrons.com> wrote:
->=20
-> > The BG2 has an AHCI SATA controller. Add the corresponding node
-> > in its device tree.
->=20
-> The AHCI IP of BG2 is different with BG2Q, so the driver in the serie=
-s of patch
-> doesn't work on BG2.
+Which properties of display-timings are relevant for CPU mode?
+I guess width and height. Anything more?
 
-Thanks for the info! I'll drop BG2 and BG2CD nodes in the v2.
+> +  - cpu-timings: CPU interface timings for the connected panel, and it contains
+> +        following optional properties.
+> +          - cs-setup: clock cycles for the active period of address signal
+> +                enable until chip select is enable in CPU interface
+> +          - wr-setup: clock cycles for the active period of CS signal enable
+> +                until write signal is enable in CPU interface
+> +          - wr-act: clock cycles for the active period of CS enable in CPU
+> +                interface
+> +          - wr-hold: clock cycles for the active period of CS disable until
+> +                write signal is disable in CPU interface
 
-Antoine
+cpu-timings name does not sound to be related to display.
+I wonder if it would not be better to merge cpu-timings into
+display-timings but this will require more discussion I guess.
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+If you want to stay with separate node please consider to make it
+optional as whole node or make some properties required. Making node
+required with all sub-properties optional is weird.
+By the way I hope all timings properties are generic for CPU mode,
+if not they should be prefixed by vendor or model.
+
+Regards
+Andrzej
+
+> +
+> +Optional properties:
+> +
+> +The device node can contain one 'port' child node with one child
+> +'endpoint' node, according to the bindings defined in [2]. This
+> +node should describe panel's video bus.
+> +
+> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
+> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +
+> +	panel@0 {
+> +		compatible = "samsung,s6e3fa0";
+> +		reg = <0>;
+> +		vdd3-supply = <&vcclcd_reg>;
+> +		vci-supply = <&vlcd_reg>;
+> +		reset-gpio = <&gpy7 4 0>;
+> +		det-gpio = <&gpg0 6 0>;
+> +		te-gpio = <&gpd1 7 0>;
+> +
+> +		display-timings {
+> +			timing0: timing-0 {
+> +				clock-frequency = <0>;
+> +				hactive = <1080>;
+> +				vactive = <1920>;
+> +				hfront-porch = <2>;
+> +				hback-porch = <2>;
+> +				hsync-len = <1>;
+> +				vfront-porch = <1>;
+> +				vback-porch = <4>;
+> +				vsync-len = <1>;
+> +			};
+> +		};
+> +
+> +		cpu-timings {
+> +			cs-setup = <0>;
+> +			wr-setup = <0>;
+> +			wr-act = <1>;
+> +			wr-hold = <0>;
+> +		};
+> +	};
+> 
