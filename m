@@ -1,18 +1,18 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v5 7/7] ARM: sun6i: dt: Add A31 DMA
- controller to DTSI
-Date: Wed, 23 Apr 2014 15:10:08 +0200
-Message-ID: <20140423131008.GQ24905@lukather>
-References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
- <1394723659-4995-8-git-send-email-maxime.ripard@free-electrons.com>
- <201404231435.03920.arnd@arndb.de>
+Subject: Re: [PATCH v6 6/8] ARM: sun6i: Sort the NMI node by
+ physical address
+Date: Wed, 23 Apr 2014 15:11:42 +0200
+Message-ID: <20140423131142.GR24905@lukather>
+References: <1397724379-15398-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1397724379-15398-7-git-send-email-maxime.ripard@free-electrons.com>
+ <201404231439.26549.arnd@arndb.de>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FmdPcZLZZW6lDAYm"
+	protocol="application/pgp-signature"; boundary="DzFMwNuU1QL7hgxO"
 Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWHZ32NAKGQEOMBHCRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201404231435.03920.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <201404231439.26549.arnd-r2nGTMty4D4@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -24,29 +24,25 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Emilio L
 List-Id: devicetree@vger.kernel.org
 
 
---FmdPcZLZZW6lDAYm
+--DzFMwNuU1QL7hgxO
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 23, 2014 at 02:35:03PM +0200, Arnd Bergmann wrote:
-> On Thursday 13 March 2014, Maxime Ripard wrote:
-> > Now that we have a DMA driver, we can add the DMA bindings in the DTSI =
-for the
-> > controller and the devices supported that can use DMA.
+On Wed, Apr 23, 2014 at 02:39:26PM +0200, Arnd Bergmann wrote:
+> On Thursday 17 April 2014, Maxime Ripard wrote:
+> > The DT are supposed to be ordered by physical address. Move the NMI nod=
+e where
+> > it belongs.
 > >=20
 > > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 >=20
 > Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->=20
-> But why does this patch have to wait for the driver to get merged?
-
-I wanted to make sure that my bindings were ok, and at least reviewed
-by someone, but I guess it's done now.
-
-Just applied it.
 
 Thanks!
+
+Just applied.
+
 Maxime
 
 --=20
@@ -54,26 +50,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---FmdPcZLZZW6lDAYm
+--DzFMwNuU1QL7hgxO
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTV7uwAAoJEBx+YmzsjxAgzDUP/2HNoM1zbu27X+uPIH1nBFOz
-pwolbeWkpcULq1yGMx+mTh0tt8wQWXWK1PlRzR3zW1AkQOmaLgvYLUR/sQQafQMK
-HmEhudiOreFktV/+qb4g1wsWCTXzpgfuDDj7j7Q55iycVhfRhscsJMb6K5EEgat/
-K5209taRjZ+NxLwpGLuRONSumBKOt1AX8H2XRUxqWRYJTAJEnpZvOaPH1y4ZvP+w
-E5WProhQ9+gybrxG+kU9CYU/JcujqMAiSLzQZ25SNcMGPBewDkyRTVR2qgik1v/k
-9UeS+NJ3vcqYM28DHbri3F9BTTMn6Qc2h4gxRKx4K4GXmPD2YgQCGr0UGorA8kUp
-oeOIcCVT4PoUtJ0BjEC7325CP8vGHHZUuPOqYPMlONO3loQhMTvfffg5aOe9kjia
-04EO/JTLvhNxrwl+w/Ur+5ihRddCDJK9bybAH4HOnLO6JDsIx2XChEoZVPyGyZDH
-Eh3wwCPjNX27dhZo9jsCiXYDNNbP/Tq+Y88sCLwU+YpSXS6HUtz4GxXCC2cbYB0G
-9+zuo/TisumEXjFCe5ZjMjVQKcMs0ftnc+d4n4OFNbd0vyXyHwifUNWrnhoujbo0
-KHPeLc9LZOvwUj1KHqyKVASI232XChWucwS0F5GA08zTg7HEIAR2/J8KGmuRwQMz
-ifUC8fig8uq9gSIF/w2U
-=O/3f
+iQIcBAEBAgAGBQJTV7wOAAoJEBx+YmzsjxAgnIwP/RoS5ePrSE58YIbkgXI9bw/a
+XOVHEk5vul8XGhOAUp3FL1O2Ux19wk+VGmUzXOH426tXJn7FBmrJiKZuBt7ulAwh
+j7kUKtHRV6zvkHcNnRStruCY8zSTxHo7DfgPGWCDJ7B6jUOQHk27ftOOWDZYGoLZ
+MQmEukdSVvSIgNpZ09zpHrUwrvDFYPnLak1eKBV1sHb8o3BGk2aexRDNZZ/OU4ut
+3+346wgHBp5In1q1HrrNAn+gtXHDTWyWgzf5PXdCnqMJFLzVfG/xAAk6Ktoco1SJ
+81m9sot+r67bHSc4edHhMp2CjPz0XVbWE/O2lifcBIOCGOhYasPCaBrlrIg1Qmim
+1O0plBUJKsZ/41tDH/LuK+fbyYLY7LBes7dUojCl0r/X8s+gHEE8WEdda+C1jPez
+QH15fBbALtrr5gtHDzW62hlOzBiwpgE1DZ8wvcpsI5QKm1dCCj0ajF6Nowx9bUis
+PcJDjiKDT4r5GShTtRQesQde5sze7tkoDYmL/dYr9qq3Gu7x+VMVR8UH9C0rPm+Q
+k+XBg/oKCdEvGOSqLOrYpIUaUuoiJ9mrKzuoFnQrLEXBV5/nIaCUu0F9y7D2ls07
+Zw17eslEBJt0Xk1YnS6BHUX4d4Pn/9sxH56rYh9Hg7jasOnWkecvXJe8/IB1eTuS
+n7dprVEfVDhtTonxqQz8
+=lqrT
 -----END PGP SIGNATURE-----
 
---FmdPcZLZZW6lDAYm--
+--DzFMwNuU1QL7hgxO--
