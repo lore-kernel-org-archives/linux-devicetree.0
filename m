@@ -1,55 +1,130 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 05/21] ARM: dt: use default early_init_dt_alloc_memory_arch
-Date: Tue, 22 Apr 2014 20:18:05 -0500
-Message-ID: <1398215901-25609-6-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 21/21] of: push struct boot_param_header and defines into powerpc
+Date: Tue, 22 Apr 2014 20:18:21 -0500
+Message-ID: <1398215901-25609-22-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-Now that ARM is using memblock instead of bootmem, the default version
-of early_init_dt_alloc_memory_arch can be used.
+Now powerpc is the only user of struct boot_param_header and FDT defines,
+so they can be moved into the powerpc architecture code.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: linuxppc-dev@lists.ozlabs.org
 ---
 v2: no change
 
- arch/arm/kernel/devtree.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/powerpc/include/asm/prom.h | 39 +++++++++++++++++++++++++++++++++++++++
+ include/linux/of_fdt.h          | 37 -------------------------------------
+ 2 files changed, 39 insertions(+), 37 deletions(-)
 
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index c7419a5..dff9cc0 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -32,11 +32,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 	arm_add_memory(base, size);
- }
+diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+index d977b9b..74b79f0 100644
+--- a/arch/powerpc/include/asm/prom.h
++++ b/arch/powerpc/include/asm/prom.h
+@@ -26,6 +26,45 @@
+ #include <linux/of_irq.h>
+ #include <linux/platform_device.h>
  
--void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
--{
--	return memblock_virt_alloc(size, align);
--}
++#define OF_DT_BEGIN_NODE	0x1		/* Start of node, full name */
++#define OF_DT_END_NODE		0x2		/* End node */
++#define OF_DT_PROP		0x3		/* Property: name off, size,
++						 * content */
++#define OF_DT_NOP		0x4		/* nop */
++#define OF_DT_END		0x9
++
++#define OF_DT_VERSION		0x10
++
++/*
++ * This is what gets passed to the kernel by prom_init or kexec
++ *
++ * The dt struct contains the device tree structure, full pathes and
++ * property contents. The dt strings contain a separate block with just
++ * the strings for the property names, and is fully page aligned and
++ * self contained in a page, so that it can be kept around by the kernel,
++ * each property name appears only once in this page (cheap compression)
++ *
++ * the mem_rsvmap contains a map of reserved ranges of physical memory,
++ * passing it here instead of in the device-tree itself greatly simplifies
++ * the job of everybody. It's just a list of u64 pairs (base/size) that
++ * ends when size is 0
++ */
++struct boot_param_header {
++	__be32	magic;			/* magic word OF_DT_HEADER */
++	__be32	totalsize;		/* total size of DT block */
++	__be32	off_dt_struct;		/* offset to structure */
++	__be32	off_dt_strings;		/* offset to strings */
++	__be32	off_mem_rsvmap;		/* offset to memory reserve map */
++	__be32	version;		/* format version */
++	__be32	last_comp_version;	/* last compatible version */
++	/* version 2 fields below */
++	__be32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
++	/* version 3 fields below */
++	__be32	dt_strings_size;	/* size of the DT strings block */
++	/* version 17 fields below */
++	__be32	dt_struct_size;		/* size of the DT structure block */
++};
++
+ /*
+  * OF address retreival & translation
+  */
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 1f882e1..5c0ab05 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -17,45 +17,8 @@
+ 
+ /* Definitions used by the flattened device tree */
+ #define OF_DT_HEADER		0xd00dfeed	/* marker */
+-#define OF_DT_BEGIN_NODE	0x1		/* Start of node, full name */
+-#define OF_DT_END_NODE		0x2		/* End node */
+-#define OF_DT_PROP		0x3		/* Property: name off, size,
+-						 * content */
+-#define OF_DT_NOP		0x4		/* nop */
+-#define OF_DT_END		0x9
 -
- void __init arm_dt_memblock_reserve(void)
- {
- 	u64 *reserve_map, base, size;
+-#define OF_DT_VERSION		0x10
+ 
+ #ifndef __ASSEMBLY__
+-/*
+- * This is what gets passed to the kernel by prom_init or kexec
+- *
+- * The dt struct contains the device tree structure, full pathes and
+- * property contents. The dt strings contain a separate block with just
+- * the strings for the property names, and is fully page aligned and
+- * self contained in a page, so that it can be kept around by the kernel,
+- * each property name appears only once in this page (cheap compression)
+- *
+- * the mem_rsvmap contains a map of reserved ranges of physical memory,
+- * passing it here instead of in the device-tree itself greatly simplifies
+- * the job of everybody. It's just a list of u64 pairs (base/size) that
+- * ends when size is 0
+- */
+-struct boot_param_header {
+-	__be32	magic;			/* magic word OF_DT_HEADER */
+-	__be32	totalsize;		/* total size of DT block */
+-	__be32	off_dt_struct;		/* offset to structure */
+-	__be32	off_dt_strings;		/* offset to strings */
+-	__be32	off_mem_rsvmap;		/* offset to memory reserve map */
+-	__be32	version;		/* format version */
+-	__be32	last_comp_version;	/* last compatible version */
+-	/* version 2 fields below */
+-	__be32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
+-	/* version 3 fields below */
+-	__be32	dt_strings_size;	/* size of the DT strings block */
+-	/* version 17 fields below */
+-	__be32	dt_struct_size;		/* size of the DT structure block */
+-};
+ 
+ #if defined(CONFIG_OF_FLATTREE)
+ 
 -- 
 1.9.1
