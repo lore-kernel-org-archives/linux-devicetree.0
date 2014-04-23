@@ -1,83 +1,73 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 0/7] Add cros_ec changes for newer boards
-Date: Wed, 23 Apr 2014 09:32:55 -0700
-Message-ID: <CAD=FV=XbjeOR+A-ZVYgOT69gsdp-YrjbkGrjL2Vf4F31ZkGXTA@mail.gmail.com>
-References: <1398185154-19404-1-git-send-email-dianders@chromium.org>
- <20140423123240.GA640@lee--X1> <5357E832.1000806@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5357E832.1000806@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, andrew@lunn.ch, Wolfram Sang <wsa@the-dreams.de>, Andrew Bresticker <abrestic@chromium.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Matt Porter <matt.porter@linaro.org>, Lee Jones <lee.jones@linaro.org>, jdelvare@suse.de, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-doc@vger.kernel.org, Bjorn Andersson <bjorn.andersson@sonymobile.com>, u.kleine-koenig@pengutronix.de, kevin.strasser@linux.intel.com, Dylan Reid <dgreid@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, schwidefsky@de.ibm.com, laurent.pinchart+renesas@ideasonboard.com, linux-tegra@
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH v3 0/3] Generic Device Tree based power domain look-up
+Date: Wed, 23 Apr 2014 18:46:55 +0200
+Message-ID: <1398271618-28932-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Mark Brown <broonie@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Ke
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Up till now there was no single generic method to bind devices to their
+power domains using Device Tree. Each platform has been doing this using
+its own way, example of which are Exynos power domain bindings [1] and
+look-up code [2].
 
-On Wed, Apr 23, 2014 at 9:20 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/23/2014 06:32 AM, Lee Jones wrote:
->> On Tue, 22 Apr 2014, Doug Anderson wrote:
->>
->>> This series adds the most critical cros_ec changes for newer boards
->>> using cros_ec.  Specifically:
->>> * Fixes timing/locking issues with the previously upstreamed (but
->>>   never used upstream) cros_ec_spi driver.
->>> * Updates the cros_ec header file to the latest version which allows
->>>   us to use newer EC features like i2c tunneling.
->>> * Adds an i2c tunnel driver to allow communication to the EC's i2c
->>>   devices.
->>>
->>> This _doesn't_ get the EC driver fully up to speed with what's in the
->>> current Chromium OS trees.  There are a whole slew of cleanup patches
->>> there, an addition of an LPC transport mode, and exports of functions
->>> to userspace.  Once these patches land and we have functionality we
->>> can continue to pick more cleanup patches.
-> ...
->> Need to wait for the ARM, DT and I2C guys to review, at which point
->> I'll be happy to take in and supply a branch for them to pull from if
->> required. If there are no _true_ dependencies and the MFD changes can
->> be added independently without fear of build breakages, let me know
->> and I'll apply them separately.
->
-> I believe there aren't direct dependencies between the patches. So, the
-> MFD patches can be applied to the MFD tree and the DT patch applied to
-> the Tegra tree. I'm simply waiting for the MFD patches to be applied
-> before applying the DT patch so that I know the DT binding definition is
-> fully accepted before applying a patch that uses it.
+This series is intended to change this and provide generic DT bindings for
+power domain specification and generic code performing look-up of power
+domains and binding them to devices.
 
-All of the MFD patches are safe to apply and in pretty much arbitrary
-order.  The strong dependencies in the chain are:
+First two patches are the most important part of this series, as they
+introduce $subject. Patch 3 converts mach-exynos to use the new generic
+method. Further patches are adding one more user of the new code,
+mach-s3c64xx, with first 3 patches (4-6) required to clean-up its power
+domain driver a bit and last 3 patches (9-11) adding display support for
+Mini6410 board, including a node for display controller (FIMD) which is
+a power domain consumer.
 
-* We need patch #5 (mfd: cros_ec: Sync to the latest
-cros_ec_commands.h from EC sources) before the i2c tunnel can compile.
+The design of DT bindings and provider code is heavily inspired by
+implementation of clock providers in Common Clock Framework, while
+the code binding devices to power domains by my Exynos power domain
+implementation (now removed by this series ;)).
 
-* As Stephen says, he shouldn't apply the device tree until we're
-confident that the bindings are right.  However there's no strong
-dependency otherwise.
+Successfully tested on Exynos4210-based Trats and Exynos4412-based Trats2
+boards using MFC, 
 
-* Patches #1 #2 and #3 are simply reliability fixes.  Those could land
-at any point in time and will improve other users of cros_ec_spi (like
-the keyboard on tegra124-venice2).
+[1] Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+[2] arch/arm/mach-exynos/pm_domains.c
 
-* Patch #4 can apply any time with no issues.  Without it large i2c
-tunnel transfers won't work, but that's not a terrible problem (all
-normal transfers are small).
+Changes since v2:
+(http://thread.gmane.org/gmane.linux.kernel/1658926)
+ - rebased onto current Rafael's linux-pm bleeding-edge branch,
+ - dropped patches for s3c64xx for now. I will send them in separate series,
+ - do not call pm_genpd_dev_need_restore(true) in genpd_bind_domain(),
+ - fixed various stylistic issues reported in review comments.
 
----
+Changes since v1 (RFC):
+[https://lkml.org/lkml/2014/1/11/141]
+ - rebased onto current Rafael's linux-pm bleeding-edge branch,
+ - reordered the patches a bit (to have the generic ones first),
+ - dropped renaming of S3C64xx power domains (as suggested by Mark Brown),
+ - added support for deferred probing (as suggested by Stephen Boyd),
+ - fixed several minor issues pointed by Stephen Boyd,
+ - replaced notifiers with direct hooks in driver core to make power domain
+   support independent from specific bus type and allow error handling.
 
-All that being said, I'd request that you merge patches #1-#4 as soon
-as you can and make sure you can provide a way that Wolfram can pull
-them (or at least patch #4) into his i2c tree to keep them applying
-when he is ready to land #5.
+Tomasz Figa (3):
+  base: power: Add generic OF-based power domain look-up
+  drivercore: Bind/unbind power domain on probe/remove
+  ARM: exynos: Move to generic power domain bindings
 
--Doug
+ .../bindings/arm/exynos/power_domain.txt           |  12 +-
+ .../devicetree/bindings/power/power_domain.txt     |  51 ++++
+ arch/arm/mach-exynos/pm_domains.c                  |  81 +-----
+ drivers/base/dd.c                                  |   9 +-
+ drivers/base/power/domain.c                        | 283 +++++++++++++++++++++
+ include/linux/pm_domain.h                          |  46 ++++
+ kernel/power/Kconfig                               |   4 +
+ 7 files changed, 398 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
+
+-- 
+1.9.2
+
