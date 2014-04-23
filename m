@@ -1,82 +1,113 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC v2 PATCH v2 06/14] drm/exynos: support MIPI DSI command mode
-Date: Wed, 23 Apr 2014 10:18:13 +0900
-Message-ID: <535714D5.6050609@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-7-git-send-email-yj44.cho@samsung.com>
- <20140422073442.GC11766@ulmo>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v2 00/21] FDT clean-ups and libfdt support
+Date: Tue, 22 Apr 2014 20:18:00 -0500
+Message-ID: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140422073442.GC11766@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, sachin.kamat@linaro.org
+Return-path: <linux-bounces@lists.openrisc.net>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-mips@linux-mips.org, Aurelien Jacquiot <a-jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "H. Peter Anvin" <hpa@zytor.com>, Max Filippov <jcmvbkbc@gmail.com>, Paul Mackerras <paulus@samba.org>, linux@lists.openrisc.net, Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Salter <msalter@redhat.com>, linux-xtensa@linux-xtensa.org, James Hogan <james.hogan@imgtec.com>, Thomas Gleixner <tglx@linutronix.de>, linux-metag@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, Vineet Gupta <vgupta@synopsys.com>, Ralf Baechle <ralf@linux-mips.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thierry
+From: Rob Herring <robh@kernel.org>
 
-Thank you for the comments.
+This is a series of clean-ups of architecture FDT code and converts the
+core FDT code over to using libfdt functions. This is in preparation
+to add FDT based address translation parsing functions for early
+console support. This series removes direct access to FDT data from all
+arches except powerpc.
 
-On 04/22/2014 04:34 PM, Thierry Reding wrote:
-> On Mon, Apr 21, 2014 at 09:28:33PM +0900, YoungJun Cho wrote:
-> [...]
->> diff --git a/include/drm/drm_mipi_dsi.h b/include/drm/drm_mipi_dsi.h
->> index 7209df1..244d197 100644
->> --- a/include/drm/drm_mipi_dsi.h
->> +++ b/include/drm/drm_mipi_dsi.h
->> @@ -49,6 +49,7 @@ struct mipi_dsi_msg {
->>    * @detach: detach DSI device from DSI host
->>    * @transfer: send and/or receive DSI packet, return number of received bytes,
->>    * 	      or error
->> + * @te_handler: call CRTC TE handler callback from DSI host
->
-> Perhaps you can explain some more what this means or why it would be
-> necessary.
+The current MIPS lantiq and xlp DT code is buggy as built-in DTBs need
+to be copied out of init section. Patches 2 and 3 should be applied to
+3.15.
 
-I'll enhance the explanation.
+Changes in v2 are relatively minor. There was a bug in the unflattening
+code where walking up the tree was not being handled correctly (thanks
+to Michal Simek). I re-worked things a bit to avoid globally adding
+libfdt include paths.
 
-For your information, the panel generates Tearing Effect signal
-to synchronize between the MCU and Frame Memory Writing when displays
-video images.
-The display controller requires this signal to trigger video images,
-and there is no way to receive this signal directly.
-So the panel receive this signal as an IRQ and calls te_handler() chain
-for the display controller to trigger video image at that time.
+A branch is available here[1], and I plan to put into linux-next in a few
+days. Please test! I've compiled on arm, arm64, mips, microblaze, xtensa,
+and powerpc and booted on arm and arm64.
 
->
->> diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
->> index c2ab77a..0ad64ed 100644
->> --- a/include/drm/drm_panel.h
->> +++ b/include/drm/drm_panel.h
->> @@ -46,6 +46,13 @@ struct drm_panel {
->>   	struct list_head list;
->>   };
->>
->> +struct drm_panel_cpu_timings {
->> +	unsigned int cs_setup;
->> +	unsigned int wr_setup;
->> +	unsigned int wr_act;
->> +	unsigned int wr_hold;
->> +};
->
-> Similarily here. What's this?
+Rob
 
-I'll enhance the explanation also.
-In panel DT bindings, I already explained them.
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git libfdt
 
-Thank you.
-Best regards YJ
+Rob Herring (21):
+  mips: octeon: convert to use unflatten_and_copy_device_tree
+  mips: lantiq: copy built-in DTB out of init section
+  mips: xlp: copy built-in DTB out of init section
+  mips: ralink: convert to use unflatten_and_copy_device_tree
+  ARM: dt: use default early_init_dt_alloc_memory_arch
+  c6x: convert fdt pointers to opaque pointers
+  mips: convert fdt pointers to opaque pointers
+  of/fdt: consolidate built-in dtb section variables
+  of/fdt: remove some unneeded includes
+  of/fdt: remove unused of_scan_flat_dt_by_path
+  of/fdt: update of_get_flat_dt_prop in prep for libfdt
+  of/fdt: Convert FDT functions to use libfdt
+  of/fdt: use libfdt accessors for header data
+  of/fdt: create common debugfs
+  of/fdt: move memreserve and dtb memory reservations into core
+  of/fdt: fix phys_addr_t related print size warnings
+  of/fdt: introduce of_get_flat_dt_size
+  powerpc: use libfdt accessors for header data
+  x86: use FDT accessors for FDT blob header data
+  of/fdt: convert initial_boot_params to opaque pointer
+  of: push struct boot_param_header and defines into powerpc
 
->
-> Thierry
->
+ arch/arc/include/asm/sections.h             |   1 -
+ arch/arc/kernel/devtree.c                   |   2 +-
+ arch/arm/include/asm/prom.h                 |   2 -
+ arch/arm/kernel/devtree.c                   |  34 +--
+ arch/arm/mach-exynos/exynos.c               |   2 +-
+ arch/arm/mach-vexpress/platsmp.c            |   2 +-
+ arch/arm/mm/init.c                          |   1 -
+ arch/arm/plat-samsung/s5p-dev-mfc.c         |   4 +-
+ arch/arm64/mm/init.c                        |  21 --
+ arch/c6x/kernel/setup.c                     |   4 +-
+ arch/metag/kernel/setup.c                   |   4 -
+ arch/microblaze/kernel/prom.c               |  39 +--
+ arch/mips/cavium-octeon/setup.c             |  20 +-
+ arch/mips/include/asm/mips-boards/generic.h |   4 -
+ arch/mips/include/asm/prom.h                |   6 +-
+ arch/mips/kernel/prom.c                     |   2 +-
+ arch/mips/lantiq/prom.c                     |  15 +-
+ arch/mips/lantiq/prom.h                     |   2 -
+ arch/mips/mti-sead3/sead3-setup.c           |   8 +-
+ arch/mips/netlogic/xlp/dt.c                 |  19 +-
+ arch/mips/ralink/of.c                       |  29 +-
+ arch/openrisc/kernel/vmlinux.h              |   2 -
+ arch/powerpc/include/asm/prom.h             |  39 +++
+ arch/powerpc/kernel/Makefile                |   1 +
+ arch/powerpc/kernel/epapr_paravirt.c        |   2 +-
+ arch/powerpc/kernel/fadump.c                |   4 +-
+ arch/powerpc/kernel/prom.c                  |  78 ++----
+ arch/powerpc/kernel/rtas.c                  |   2 +-
+ arch/powerpc/mm/hash_utils_64.c             |  22 +-
+ arch/powerpc/platforms/52xx/efika.c         |   4 +-
+ arch/powerpc/platforms/chrp/setup.c         |   4 +-
+ arch/powerpc/platforms/powernv/opal.c       |  12 +-
+ arch/powerpc/platforms/pseries/setup.c      |   4 +-
+ arch/x86/kernel/devicetree.c                |  12 +-
+ arch/xtensa/kernel/setup.c                  |   3 +-
+ drivers/of/Kconfig                          |   1 +
+ drivers/of/Makefile                         |   2 +
+ drivers/of/fdt.c                            | 398 ++++++++++------------------
+ drivers/of/of_reserved_mem.c                |   4 +-
+ include/linux/of_fdt.h                      |  63 +----
+ 40 files changed, 280 insertions(+), 598 deletions(-)
+
+-- 
+1.9.1
