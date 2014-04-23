@@ -1,51 +1,35 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH v1 5/7] mtd: fsl-quadspi: get the dummy cycles for DDR Quad read from the DT property
-Date: Wed, 23 Apr 2014 21:48:50 +0200
-Message-ID: <201404232148.51034.marex@denx.de>
-References: <a> <1398248215-26768-6-git-send-email-b32955@freescale.com>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH v2 00/13] extcon: major rework
+Date: Wed, 23 Apr 2014 23:00:04 +0300
+Message-ID: <20140423200004.GA575@drone.musicnaut.iki.fi>
+References: <1397475984-28001-1-git-send-email-r.baldyga@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398248215-26768-6-git-send-email-b32955@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Huang Shijie <b32955@freescale.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397475984-28001-1-git-send-email-r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Baldyga <r.baldyga-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rongjun.ying-kQvG35nSl+M@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, April 23, 2014 at 12:16:53 PM, Huang Shijie wrote:
-> Check the "spi-nor,ddr-quad-read-dummy" DT property to get the
-> dummy cycles for DDR quad read.
-> 
-> Signed-off-by: Huang Shijie <b32955@freescale.com>
-> ---
->  drivers/mtd/spi-nor/fsl-quadspi.c |    7 +++++++
->  1 files changed, 7 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/fsl-quadspi.c
-> b/drivers/mtd/spi-nor/fsl-quadspi.c index 8d659a2..15bdeb9 100644
-> --- a/drivers/mtd/spi-nor/fsl-quadspi.c
-> +++ b/drivers/mtd/spi-nor/fsl-quadspi.c
-> @@ -883,6 +883,7 @@ static int fsl_qspi_probe(struct platform_device *pdev)
->  	for_each_available_child_of_node(dev->of_node, np) {
->  		const struct spi_device_id *id;
->  		char modalias[40];
-> +		u32 dummy = 0;
-> 
->  		/* skip the holes */
->  		if (!has_second_chip)
-> @@ -918,6 +919,12 @@ static int fsl_qspi_probe(struct platform_device
-> *pdev) if (ret < 0)
->  			goto map_failed;
-> 
-> +		/* Set the dummy cycles for the DDR Quad Read */
-> +		ret = of_property_read_u32(np, "spi-nor,ddr-quad-read-dummy",
-> +				&dummy);
-> +		if (!ret && dummy > 0 && dummy < 8)
-> +			nor->read_dummy = dummy;
+Hi,
 
-Is there any reason for the upper limit on number of dummy cycles ?
+On Mon, Apr 14, 2014 at 01:46:11PM +0200, Robert Baldyga wrote:
+> This patchset adds many improvements to extcon class driver and extcon
+> provider drivers. It changes extcon API to faster and safer by replaceing
+> function taking extcon and cable names with functions working with
+> structures representing this objects.
 
-Best regards,
-Marek Vasut
+Given the first patch series broke even compilation on OMAP1, I think
+you should provide some test results with the next resend.
+You should at least compile-test the drivers you modify, or even better,
+ask people to test your changes if you don't have the HW available.
+
+Thanks,
+
+A.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
