@@ -1,83 +1,169 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 1/2] omapdss: panel-tpo-td028ec1: Add DT support.
-Date: Wed, 23 Apr 2014 13:44:47 +0300
-Message-ID: <5357999F.6010200@ti.com>
-References: <1398201168-25275-1-git-send-email-marek@goldelico.com> <1398201168-25275-2-git-send-email-marek@goldelico.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
+Date: Wed, 23 Apr 2014 11:50:55 +0100
+Message-ID: <20140423105055.GI21613@lee--X1>
+References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="DwPKl9r4Shf3fKlmmjVbo0Jtpl6kGSx4L"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398201168-25275-2-git-send-email-marek@goldelico.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---DwPKl9r4Shf3fKlmmjVbo0Jtpl6kGSx4L
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 23/04/14 00:12, Marek Belisko wrote:
-
->  static int td028ttec1_panel_probe(struct spi_device *spi)
->  {
->  	struct panel_drv_data *ddata;
-> @@ -418,6 +436,10 @@ static int td028ttec1_panel_probe(struct spi_devic=
-e *spi)
->  		r =3D td028ttec1_panel_probe_pdata(spi);
->  		if (r)
->  			return r;
-> +	} else if (spi->dev.of_node) {
-> +		r =3D td028ttec1_probe_of(spi);
-> +		if (r)
-> +			return r;
->  	} else {
->  		return -ENODEV;
->  	}
-> @@ -463,6 +485,13 @@ static int td028ttec1_panel_remove(struct spi_devi=
-ce *spi)
->  	return 0;
->  }
+> From: Josh Cartwright <joshc@codeaurora.org>
+>=20
+> The Qualcomm 8941 and 8841 PMICs are components used with the Snapdra=
+gon
+> 800 series SoC family.  This driver exists largely as a glue mfd comp=
+onent,
+> it exists to be an owner of an SPMI regmap for children devices
+> described in device tree.
+>=20
+> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+> ---
+>  drivers/mfd/Kconfig  | 13 +++++++++++
+>  drivers/mfd/Makefile |  1 +
+>  drivers/mfd/pm8x41.c | 63 ++++++++++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 77 insertions(+)
+>  create mode 100644 drivers/mfd/pm8x41.c
+>=20
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 3383412..f5ff799 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -502,6 +502,19 @@ config MFD_PM8921_CORE
+>  	  Say M here if you want to include support for PM8921 chip as a mo=
+dule.
+>  	  This will build a module called "pm8921-core".
 > =20
-> +static const struct of_device_id td028ttec1_of_match[] =3D {
-> +	{ .compatible =3D "toppoly,td028ttec1", },
+> +config MFD_PM8X41
+> +	bool "Qualcomm PM8x41 PMIC"
+> +	depends on ARCH_QCOM
 
-We need to hack a bit here for the time being. You need to have
-"omapdss," prefix for the compatible string in the driver, and add the
-panel's compatible string to arch/arm/mach-omap2/display.c:
-dss_compat_conv_list.
+depends on OF?
 
-The reason for this is that the drivers are omap specific, but the DT
-data is not.
+> +	select REGMAP_SPMI
+> +	help
+> +	  This enables basic support for the Qualcomm 8941 and 8841 PMICs.
+> +	  These PMICs are currently used with the Snapdragon 800 series of
+> +	  SoCs.  Note, that this will only be useful paired with descriptio=
+ns
+> +	  of the independent functions as children nodes in the device tree=
+=2E
+> +
+> +	  Say M here if you want to include support for the PM8x41 series a=
+s a
+> +	  module.  The module will be called "pm8x41".
+> +
+>  config MFD_RDC321X
+>  	tristate "RDC R-321x southbridge"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 2851275..f0df41d 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -151,6 +151,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+=3D si476x-core.o
+>  obj-$(CONFIG_MFD_CS5535)	+=3D cs5535-mfd.o
+>  obj-$(CONFIG_MFD_OMAP_USB_HOST)	+=3D omap-usb-host.o omap-usb-tll.o
+>  obj-$(CONFIG_MFD_PM8921_CORE) 	+=3D pm8921-core.o ssbi.o
+> +obj-$(CONFIG_MFD_PM8X41)	+=3D pm8x41.o
+>  obj-$(CONFIG_TPS65911_COMPARATOR)	+=3D tps65911-comparator.o
+>  obj-$(CONFIG_MFD_TPS65090)	+=3D tps65090.o
+>  obj-$(CONFIG_MFD_AAT2870_CORE)	+=3D aat2870-core.o
+> diff --git a/drivers/mfd/pm8x41.c b/drivers/mfd/pm8x41.c
+> new file mode 100644
+> index 0000000..c85e0d6
+> --- /dev/null
+> +++ b/drivers/mfd/pm8x41.c
+> @@ -0,0 +1,63 @@
+> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 an=
+d
+> + * only version 2 as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/spmi.h>
+> +#include <linux/regmap.h>
+> +#include <linux/of_platform.h>
+> +
+> +static const struct regmap_config pm8x41_regmap_config =3D {
+> +	.reg_bits	=3D 16,
+> +	.val_bits	=3D 8,
+> +	.max_register	=3D 0xFFFF,
 
-Otherwise looks good to me.
+I've never seen this many registers registered before.
 
- Tomi
+Are you sure you want to regmap the entire bank?
 
+> +};
+> +
+> +static int pm8x41_remove_child(struct device *dev, void *unused)
+> +{
+> +	platform_device_unregister(to_platform_device(dev));
+> +	return 0;
+> +}
+> +
+> +static void pm8x41_remove(struct spmi_device *sdev)
+> +{
+> +	device_for_each_child(&sdev->dev, NULL, pm8x41_remove_child);
+> +}
 
+Nit: It's strange to see the .remove above the .probe.
 
---DwPKl9r4Shf3fKlmmjVbo0Jtpl6kGSx4L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+> +static int pm8x41_probe(struct spmi_device *sdev)
+> +{
+> +	struct regmap *regmap;
+> +
+> +	regmap =3D devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+This is not debug, it's an error.
 
-iQIcBAEBAgAGBQJTV5mfAAoJEPo9qoy8lh7128IQAJrx+jxEdlDpr09EJExenS4g
-8AXWsMcK/2LWL+QMqkUTnLL797LXNxU7FwfkORfVzREbat/EmI1jXU5fJ90MwQzH
-94E16d+RCOMARWepY13H8WG70st4KZ3ApT1C5+k7kK3WsXkxxm6tovfRy75jMtFR
-7oWJRKzR/bSCveJ3deBmnWazY8Reat9zWGXZB7tTxQ8MWrn+KLJl3AnKhhCUL9mD
-fHe6rIlSrpQVAEuIh82rDBRR1m5EPIjiDHQWBz+/hhrldsd4b/A5GnykCf6USjAQ
-SFvYdtZpYdI15a4VZUkaKy88ImApsNGKQcUP45dQ+3wxfU57/OMfeUPL+yzS2CP0
-A6gTfs33qotHWIoGDpIW72w2lATfILI7LHfRavFh0GCZlwNywYhq32URJW5ZHwSk
-kt7/VT3IW9tv48p59knr0MG1czKFg8c2s4+hmCa53kuRCSMuinWt9+Sv4GpuOOkC
-j8KRK9PVl4WMAyswMRdxRQW3zota1kd7TJtjJgpSaqTaUlqR81b4qlZKnXXqDCOX
-OTB0PdGcVxNIL0NWKBtkZdvfWOKec9qkJFRWsuSheoyA1jXlNNlT/TT8mfZb+uSS
-uqP2rrbC3ZmGtTmxmsR3K9LvBZMAYFOir0nh5uzQukXrqIxdVg21pYtPzRmjFW4L
-nkGa+0zGXgkLcD/XjU2Y
-=qULE
------END PGP SIGNATURE-----
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->d=
+ev);
+> +}
+> +
+> +static const struct of_device_id pm8x41_id_table[] =3D {
+> +	{ .compatible =3D "qcom,pm8841", },
+> +	{ .compatible =3D "qcom,pm8941", },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, pm8x41_id_table);
+> +
+> +static struct spmi_driver pm8x41_driver =3D {
+> +	.probe	=3D pm8x41_probe,
+> +	.remove	=3D pm8x41_remove,
+> +	.driver	=3D {
+> +		.name		=3D "pm8x41",
+> +		.of_match_table	=3D pm8x41_id_table,
 
---DwPKl9r4Shf3fKlmmjVbo0Jtpl6kGSx4L--
+of_match_ptr()
+
+> +	},
+> +};
+> +module_spmi_driver(pm8x41_driver);
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
