@@ -1,64 +1,52 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v2 3/4] ARM: OMAP2+: Add machine entry for dra72x devices
-Date: Wed, 23 Apr 2014 16:43:11 +0530
-Message-ID: <5357A047.5030200@ti.com>
-References: <1398243775-4145-1-git-send-email-rnayak@ti.com> <1398243775-4145-4-git-send-email-rnayak@ti.com> <66310471.kybX1mlztt@wuerfel>
+From: Huang Shijie <b32955@freescale.com>
+Subject: [PATCH v1 3/7] Documentation: mtd: add a new document for SPI NOR
+ flash
+Date: Wed, 23 Apr 2014 18:16:51 +0800
+Message-ID: <1398248215-26768-4-git-send-email-b32955@freescale.com>
+References: <a>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <66310471.kybX1mlztt@wuerfel>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, nm@ti.com, bcousson@baylibre.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <a>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dwmw2@infradead.org
+Cc: marex@denx.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, Huang Shijie <b32955@freescale.com>, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 April 2014 03:21 PM, Arnd Bergmann wrote:
-> On Wednesday 23 April 2014 14:32:54 Rajendra Nayak wrote:
->>
->>  #ifdef CONFIG_SOC_DRA7XX
->> -static const char *dra7xx_boards_compat[] __initdata = {
->> +static const char *dra74x_boards_compat[] __initconst = {
->> +       "ti,dra74x",
->>         "ti,dra7xx",
->>         "ti,dra7",
->>         NULL,
->>  };
->>  
->> -DT_MACHINE_START(DRA7XX_DT, "Generic DRA7XX (Flattened Device Tree)")
->> +DT_MACHINE_START(DRA74X_DT, "Generic DRA74X (Flattened Device Tree)")
->>         .reserve        = omap_reserve,
->>         .smp            = smp_ops(omap4_smp_ops),
->>         .map_io         = omap5_map_io,
->> @@ -255,7 +256,26 @@ DT_MACHINE_START(DRA7XX_DT, "Generic DRA7XX (Flattened Device Tree)")
->>         .init_irq       = omap_gic_of_init,
->>         .init_machine   = omap_generic_init,
->>         .init_time      = omap5_realtime_timer_init,
->> -       .dt_compat      = dra7xx_boards_compat,
->> +       .dt_compat      = dra74x_boards_compat,
->> +       .restart        = omap44xx_restart,
->> +MACHINE_END
->> +
->> +static const char *dra72x_boards_compat[] __initconst = {
->> +       "ti,dra72x",
->> +       "ti,dra7xx",
->> +       "ti,dra7",
->> +       NULL,
->> +};
-> 
-> Now you have two lists that both match "ti,dra7xx" and "ti,dra7", which will
-> cause problems if you have a new machine that doesn't match the more specific
-> strings.
-> 
-> Note that we intentionally don't allow wildcards in compatible strings
-> to avoid this situation.
-> 
-> Please remove all strings with an "x" in them from the dts files and from
-> the source, and make sure you have no duplication between the lists.
+We need a DT property to store the dummy cycles for DDR Quad read.
+This is a common feature for the SPI NOR flash, such as Spansion and Micron
+chips.
 
-Okay, will fix and repost. thanks.
+Add this file to describe this specific SPI NOR flash features which will
+be referred by the SPI NOR flash drivers.
 
-> 
-> 	Arnd
-> 
+Signed-off-by: Huang Shijie <b32955@freescale.com>
+---
+ .../devicetree/bindings/mtd/spi-nor-flash.txt      |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/spi-nor-flash.txt
 
+diff --git a/Documentation/devicetree/bindings/mtd/spi-nor-flash.txt b/Documentation/devicetree/bindings/mtd/spi-nor-flash.txt
+new file mode 100644
+index 0000000..aba4d54
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/spi-nor-flash.txt
+@@ -0,0 +1,7 @@
++This file defines some DT properties for specific SPI NOR flash features.
++The SPI NOR controller drivers may refer to this file, such as fsl-quadspi.txt
++
++Optional properties:
++  - spi-nor,ddr-quad-read-dummy: The dummy cycles used by the DDR Quad read.
++                                 Please refer to the chip's datasheet. This
++                                 property can be 4 or 6 which is less then 8.
+-- 
+1.7.2.rc3
