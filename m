@@ -1,84 +1,53 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RESEND 2/5] pinctrl: berlin: add a pinctrl driver for
- Marvell Berlin SoCs
-Date: Wed, 23 Apr 2014 16:05:03 +0200
-Message-ID: <CACRpkdZ2U6vSShF8QmxZsPsKcwg4TH89xKwQMrbin4zN0xAAXA@mail.gmail.com>
-References: <1397135274-10764-1-git-send-email-antoine.tenart@free-electrons.com>
-	<1397135274-10764-3-git-send-email-antoine.tenart@free-electrons.com>
-	<5347AFF4.3050607@gmail.com>
-	<20140411123737.GA5903@kwain>
-	<5347EF8A.8040600@gmail.com>
-	<CACRpkdb1eijF-4e=KyhS=9S868NALdyJJaNnzjUubXnapWEeMg@mail.gmail.com>
-	<20140422155602.GA19762@kwain>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 18/21] powerpc: use libfdt accessors for header data
+Date: Wed, 23 Apr 2014 09:05:07 -0500
+Message-ID: <CAL_JsqKg8oAd+JmmhERa3Xb1dD9CPz1_cVM3mb=ypWhxkZJHtQ@mail.gmail.com>
+References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+	<1398215901-25609-19-git-send-email-robherring2@gmail.com>
+	<5357C4BE.3050606@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140422155602.GA19762@kwain>
+In-Reply-To: <5357C4BE.3050606-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Antoine_T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Paul Mackerras <paulus-eUNUBHrolfbYtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 5:56 PM, Antoine T=C3=A9nart
-<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Apr 22, 2014 at 02:52:10PM +0200, Linus Walleij wrote:
->> On Fri, Apr 11, 2014 at 3:35 PM, Sebastian Hesselbarth
->> <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > On 04/11/2014 02:37 PM, Antoine T=C3=A9nart wrote:
->> >> On Fri, Apr 11, 2014 at 11:03:48AM +0200, Sebastian Hesselbarth w=
-rote:
->> >>> On 04/10/2014 03:07 PM, Antoine T=C3=A9nart wrote:
+On Wed, Apr 23, 2014 at 8:48 AM, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+> On 04/23/2014 03:18 AM, Rob Herring wrote:
+>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >>
->> >>> Having said that, the above assumes that each function is unique
->> >>> but IIRC the idea of the function table was to group pins/groups
->> >>> with the same function, e.g. function "gpio", groups 1,7,25,...
->> >>
->> >> Most of the functions you can use on the Berlin they will be uniq=
-ue and
->> >> would
->> >> only be used in one group, except for the 'gpio' one.
->> >
->> > Yeah, I had a similar discussion about it back then for mvebu. IIR=
-C, the
->> > correct answer is: Have a list of functions with groups assigned t=
-o it
->> > no matter if there is only one group per function (or 40 per funct=
-ion as
->> > it will be for gpio).
->> >
->> > Maybe Linus can give an update on how to deal with it?
+>> With libfdt support, we can take advantage of helper accessors in libfdt
+>> for accessing the FDT header data. This makes the code more readable and
+>> makes the FDT blob structure more opaque to the kernel. This also
+>> prepares for removing struct boot_param_header completely.
+
+[...]
+
+>> @@ -117,14 +118,14 @@ static void __init move_device_tree(void)
+>>       DBG("-> move_device_tree\n");
 >>
->> Have you considered implementing pinmux_ops
->> .gpio_request_enable(), .gpio_set_direction() and
->> .gpio_disable_free() instead of defining groups for each
->> and every GPIO?
+>>       start = __pa(initial_boot_params);
+>> -     size = be32_to_cpu(initial_boot_params->totalsize);
+>> +     size = fdt_totalsize(initial_boot_params);
 >
-> The function 'gpio' can be found on different groups. But the Berlin =
-pin muxing
-> does not allow to configure a pin individually. It is then not possib=
-le to mux
-> GPIO pins individually. For example the 'gpio' function of group 'GSM=
-2' on the
-> BG2Q will mux GPIOs 17 *and* 18.
+> In 19/21 you use your newly introduced of_get_flat_dt_size()
+> that's why I expect you will use it here too.
+> size = of_get_flat_dt_size();
 >
-> Groups does not have more than a single 'gpio' function.
->
-> Since the gpio_request_enable() comment says 'Implement this only if =
-you can mux
-> every pin individually as GPIO', I did not considered implementing th=
-ese
-> functions.
+> The same is for 14/21 where you can use this new function too.
+> It means moving 14/21 to the end and using this new function
+> makes more sense.
 
-OK makes perfect sense.
+Really, I would prefer to just use libfdt accessors directly rather
+than have wrappers, but including libfdt.h is not the cleanest
+solution. Since x86 just needed this one function, I added a wrapper.
+Since PPC needs other header fields I prefer to use the libfdt
+accessors directly for all fields. The same goes for drivers/of/fdt.c.
 
-Then I guess the current implementation is the best alternative,
-but I may need to look closer.
-
-Yours,
-Linus Walleij
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
