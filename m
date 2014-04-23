@@ -1,124 +1,55 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
-Date: Wed, 23 Apr 2014 15:32:16 +0530
-Message-ID: <53578FA8.6040607@ti.com>
-References: <201404120415.43761.sergei.shtylyov@cogentembedded.com> <534B77E2.8060901@ti.com> <53557BFE.5020908@cogentembedded.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v8 11/17] ARM: dts: sun6i: Add mmc controller nodes
+Date: Wed, 23 Apr 2014 12:11:10 +0200
+Message-ID: <535791BE.80804@redhat.com>
+References: <1398164497-14212-1-git-send-email-hdegoede@redhat.com> <1398164497-14212-12-git-send-email-hdegoede@redhat.com> <20140423095029.GM24905@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53557BFE.5020908@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140423095029.GM24905@lukather>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, =?ISO-8859-1?Q?David_Lanzend=F6?= =?ISO-8859-1?Q?rfer?= <david.lanzendoerfer@o2s.ch>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Tuesday 22 April 2014 01:43 AM, Sergei Shtylyov wrote:
-> Hello.
+On 04/23/2014 11:50 AM, Maxime Ripard wrote:
+> On Tue, Apr 22, 2014 at 01:01:31PM +0200, Hans de Goede wrote:
+>> Add nodes for the 4 mmc controllers found on A31 SoCs to
+>> arch/arm/boot/dts/sun6i-a31.dtsi.
+>>
+>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>> ---
+>>  arch/arm/boot/dts/sun6i-a31.dtsi | 52 ++++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 52 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> index 12bcc17..a27afc8 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+>> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> @@ -269,6 +269,58 @@
+>>  		#size-cells = <1>;
+>>  		ranges;
+>>  
+>> +		mmc0: mmc@01c0f000 {
+>> +			compatible = "allwinner,sun5i-a13-mmc";
+>> +			reg = <0x01c0f000 0x1000>;
+>> +			clocks = <&ahb1_gates 8>, <&mmc0_clk>;
+>> +			clock-names = "ahb", "mod";
+>> +			resets = <&ahb1_rst 8>;
+>> +			reset-names = "ahb";
+>> +			interrupts = <0 60 4>;
+>> +			bus-width = <4>;
+>> +			cd-inverted;
 > 
-> On 04/14/2014 09:53 AM, Kishon Vijay Abraham I wrote:
-> 
->>> This PHY, though formally being a part of Renesas USBHS controller, contains
->>> the
->>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
->>> them
->>> channels) to the different USB controllers: channel 0 can be connected to
->>> either
->>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
->>> or xHCI controllers.
-> 
->>> This is a new driver for this USB PHY currently already supported under
->>> drivers/
->>> usb/phy/. The reason for writing the new driver was the requirement that the
->>> multiplexing of USB channels to the controller be dynamic, depending on what
->>> USB drivers are loaded,  rather than static as provided by the old driver.
->>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
->>> ideally. The new driver only supports device tree probing for now.
-> 
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> [...]
-> 
->>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
->>> ===================================================================
->>> --- /dev/null
->>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
->>> @@ -0,0 +1,283 @@
-> 
-> [...]
-> 
->>> +static int rcar_gen2_phy_init(struct phy *p)
->>> +{
->>> +    struct rcar_gen2_phy *phy = phy_get_drvdata(p);
->>> +    struct rcar_gen2_phy_driver *drv = phy->drv;
->>> +    unsigned long flags;
->>> +    u32 ugctrl2;
-> 
->> We can just add
->>     if (!phy->select_mask)
->>         return 0;
-> 
->    Yes, we can, if you'd prefer that.
-> 
->>> +
->>> +    if (phy->select_mask) {
->>> +        clk_prepare_enable(drv->clk);
->>> +
->>> +        spin_lock_irqsave(&drv->lock, flags);
->>> +        ugctrl2 = readl(drv->base + USBHS_UGCTRL2);
->>> +        ugctrl2 &= ~phy->select_mask;
->>> +        ugctrl2 |= phy->select_value;
->>> +        writel(ugctrl2, drv->base + USBHS_UGCTRL2);
->>> +        spin_unlock_irqrestore(&drv->lock, flags);
->>> +    }
->>> +
->>> +    return 0;
->>> +}
-> 
-> [...]
-> 
->>> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
->>> +{
-> 
-> [...]
-> 
->>> +    drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
->>> +    drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
->>> +    drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
->>> +    drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
->>> +    drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
->>> +    drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
->>> +    drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
->>> +    drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
->>> +
->>> +    for (i = 0; i < NUM_USB_CHANNELS; i++) {
-> 
->> Instead of hard coding the number of channels,
-> 
->    It's hard coded in the hardware. We can even decrease that number to 2 as
+> The two last items should be in the DTS.
 
-right, that's why thought dt should have that information.
-> for the channel #1 we have nothing to do, regardless of whether it's present or
-> not...
-> 
->> we can model the channels (PHYs) as sub-nodes of the main PHY
-> 
->    Hm, I don't think such representation would be adequate: the channels
-> themselves do not usually correspond to any particular PHY, that's why I used
-> #phy-cells = <2>.
-> 
->> in dt and use it to create individual PHYs.
-> 
->    Well, we probably can... however, I fail to see any immediate gain from
-> it here...
->    I have to ask why you've selected this particular driver for such DT
-> representation experiments, despite it not being the first one supporting
-> multiple PHYs?
+Ah, I had fixed sun4i / sun5i & sun7i but forgot about this one,
+fixed in my local tree now. I've also squashed the m9 mmc enablement
+patch into the m9 addition patch as you've requested.
 
-just that it didn't strike before.. but I think all multiple PHYs should be
-modelled this way.
+Regards,
 
-Thanks
-Kishon
+Hans
