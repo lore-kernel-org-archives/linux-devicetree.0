@@ -1,114 +1,47 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
-Date: Wed, 23 Apr 2014 16:19:28 +0300
-Message-ID: <1398259168.4724.217.camel@iivanov-dev>
-References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: pl061: get gpio base from alias id
+Date: Wed, 23 Apr 2014 15:21:54 +0200
+Message-ID: <CACRpkdbzoPNEEJ6UbisqHOiRwuxEb6XSrDL=MiUmDPgyY=rVuw@mail.gmail.com>
+References: <1398130543-19454-1-git-send-email-haojian.zhuang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+In-Reply-To: <1398130543-19454-1-git-send-email-haojian.zhuang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>, Grant Likely <grant.likely@linaro.org>
+Cc: xuwei5@hisilicon.com, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 22, 2014 at 3:35 AM, Haojian Zhuang
+<haojian.zhuang@linaro.org> wrote:
 
-Hi,
+> If gpio base number isn't specified, the gpio base will be find from
+> the end of gpio number. In order to keep with schematics, use alias
+> to get the ID of gpio chip.
+>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
 
-On Tue, 2014-04-22 at 17:31 -0700, Courtney Cavin wrote:
-> From: Josh Cartwright <joshc@codeaurora.org>
-> 
-> The Qualcomm 8941 and 8841 PMICs are components used with the Snapdragon
-> 800 series SoC family.  This driver exists largely as a glue mfd component,
-> it exists to be an owner of an SPMI regmap for children devices
-> described in device tree.
-> 
+The idea with GPIO numbers is not that these shall correspond
+to schematics or data sheets or anything like that. It's a completely
+Linux-internal number and has nothing to do with anything else.
 
-Thanks. This is exactly what I have planed to do :-)
+The same is true for IRQ numbers.
 
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> ---
->  drivers/mfd/Kconfig  | 13 +++++++++++
->  drivers/mfd/Makefile |  1 +
->  drivers/mfd/pm8x41.c | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 77 insertions(+)
->  create mode 100644 drivers/mfd/pm8x41.c
-> 
+The long term goal is to get rid of both GPIO and IRQ numbers
+and deal only with descriptors in the kernel.
 
-<snip>
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pl061.txt
 
-> +
-> +static int pm8x41_probe(struct spmi_device *sdev)
-> +{
-> +	struct regmap *regmap;
-> +
-> +	regmap = devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+A patch to add the device tree bindings is *very* welcome.
 
-I think that this will not going to work. For example in this particular
-case, both controllers have "qcom,qpnp-revid" peripheral which is
-located at offset 0x100.
+>         } else {
+> -               chip->gc.base = -1;
+> +               chip->gc.base = pl061_parse_gpio_base(dev);
+>                 irq_base = 0;
+>         }
 
-And the result is:
+I do not like a patch that changes the dynamic numbering to a
+static one, that make things worse for our goals, not better :-(
 
-[    0.963944] sysfs: cannot create duplicate filename '/bus/platform/devices/100.revid'
-
-DT looks like this:
-
-spmi {
-	compatible = "qcom,spmi-pmic-arb";
-	reg-names = "core", "intr", "cnfg";
-	reg = <0xfc4cf000 0x1000>,
-	      <0xfc4cb000 0x1000>,
-	      <0xfc4ca000 0x1000>;
-
-	interrupt-names = "periph_irq";
-	interrupts = <0 190 0>;
-
-	qcom,ee = <0>;
-	qcom,channel = <0>;
-
-	#address-cells = <2>;
-	#size-cells = <0>;
-
-	interrupt-controller;
-	#interrupt-cells = <4>;
-
-	pm8941@0 {
-		compatible = "qcom,pm8941";
-		reg = <0x0 SPMI_USID>;
-
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		revid@100 {
-			compatible = "qcom,qpnp-revid";
-			reg = <0x100 0x100>;
-		};
-	};
-
-	pm8841@4 {
-		compatible = "qcom,pm8941";
-		reg = <0x4 SPMI_USID>;
-
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		revid@100 {
-			compatible = "qcom,qpnp-revid";
-			reg = <0x100 0x100>;
-		};
-	};
-};
-
-Any suggestions?
-
-Thanks, 
-Ivan
+Yours,
+Linus Walleij
