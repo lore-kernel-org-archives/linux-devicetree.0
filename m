@@ -1,38 +1,48 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC 1/3] ARM: ux500: Initial support for power domains
-Date: Wed, 23 Apr 2014 09:18:12 +0200
-Message-ID: <CACRpkdZANqUn=_7FMO+hYLLafM4tnMTZmrj-ffGiu3=Eh=bRSQ@mail.gmail.com>
-References: <1397653511-19226-1-git-send-email-ulf.hansson@linaro.org>
-	<1397653511-19226-2-git-send-email-ulf.hansson@linaro.org>
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: Re: [PATCH v2 05/13] extcon: extcon-class: improve extcon client API
+Date: Wed, 23 Apr 2014 09:33:26 +0200
+Message-ID: <53576CC6.1010302@samsung.com>
+References: <1397475984-28001-1-git-send-email-r.baldyga@samsung.com>
+ <1397475984-28001-6-git-send-email-r.baldyga@samsung.com>
+ <20140419105225.GB976@ambient.musicnaut.iki.fi> <53560A6F.8030909@samsung.com>
+ <20140422150336.GA612@drone.musicnaut.iki.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1397653511-19226-2-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20140422150336.GA612@drone.musicnaut.iki.fi>
+Sender: linux-doc-owner@vger.kernel.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, myungjoo.ham@samsung.com, cw00.choi@samsung.com, dbaryshkov@gmail.com, dwmw2@infradead.org, balbi@ti.com, gregkh@linuxfoundation.org, grant.likely@linaro.org, ldewangan@nvidia.com, kishon@ti.com, gg@slimlogic.co.uk, anton@enomsg.org, jonghwa3.lee@samsung.com, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, m.szyprowski@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 16, 2014 at 3:05 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+On 04/22/2014 05:03 PM, Aaro Koskinen wrote:
+> Hi,
+> 
+> On Tue, Apr 22, 2014 at 08:21:35AM +0200, Robert Baldyga wrote:
+>> On 04/19/2014 12:52 PM, Aaro Koskinen wrote:
+>>> On Mon, Apr 14, 2014 at 01:46:16PM +0200, Robert Baldyga wrote:
+>>>>  	dev_info(&pdev->dev,
+>>>> -		 "OMAP USB OTG controller rev %d.%d (%s, id=%d, vbus=%d)\n",
+>>>> -		 (rev >> 4) & 0xf, rev & 0xf, config->extcon, otg_dev->id,
+>>>> +		 "OMAP USB OTG controller rev %d.%d (id=%d, vbus=%d)\n",
+>>>> +		 (rev >> 4) & 0xf, rev & 0xf, otg_dev->id,
+>>>>  		 otg_dev->vbus);
+>>>
+>>> This change is unrelated to the patch and not needed.
+>>>
+>>
+>> It's related because we no longer use config->extcon since we have
+>> cable-oriented API. We can keep displaying it, but this value is
+>> actually meaningless.
+> 
+> It's not completely meaningless, as the cable is searched using that name.
+> 
 
-> Initial support for power domains for ux500. To enable this feature we
-> require to use DT, thus we need to add bindings for the ux500 specific
-> parts as well.
->
-> The implementation of the ux500 power domains is based upon the generic
-> power domain.
->
-> Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-pm@vger.kernel.org
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Yes, I see, you're right. I have forgot that this driver doesn't use
+devicetree. I will restore displaying extcon name.
 
-This looks all right to me.
+Thanks!
+Robert Baldyga
+Samsung R&D Institute Poland
 
-But I guess we need to wait for Tomasz stuff to percolate into
-the tree before I can apply this?
-
-Also the DT people should give some hints on the bindings ideally.
-
-Yours,
-Linus Walleij
