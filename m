@@ -1,53 +1,81 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/4] dt: bindings: Typo s/interrupts-names/interrupt-names/g
-Date: Wed, 23 Apr 2014 19:35:00 +0200
-Message-ID: <CAMuHMdXO1u_Aw5BM7+a6TNM5+Rt-FCgnFLsGn9-w-nv=AKaaiQ@mail.gmail.com>
-References: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
-	<1398192025-31523-2-git-send-email-geert+renesas@glider.be>
-	<CACRpkdY4gASYR7CR64ux6QgMNdmmNYt86QQF7gvvTjK_6C7c8w@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v4 2/4] ARM: dts: omap5: add sata node
+Date: Wed, 23 Apr 2014 20:35:33 +0300
+Message-ID: <1398274533-24735-1-git-send-email-rogerq@ti.com>
+References: <1398274237-24510-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY4gASYR7CR64ux6QgMNdmmNYt86QQF7gvvTjK_6C7c8w@mail.gmail.com>
+In-Reply-To: <1398274237-24510-1-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Signed-off-by: Mark Brown" <broonie@linaro.org>
+To: tony@atomide.com
+Cc: kishon@ti.com, george.cherian@ti.com, balbi@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+From: Balaji T K <balajitk@ti.com>
 
-On Wed, Apr 23, 2014 at 4:11 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Apr 22, 2014 at 8:40 PM, Geert Uytterhoeven
-> <geert+renesas@glider.be> wrote:
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Cc: Signed-off-by: Mark Brown <broonie@linaro.org>
->> ---
->>  .../devicetree/bindings/pinctrl/pinctrl-st.txt     |    4 ++--
->>  .../bindings/sound/davinci-mcasp-audio.txt         |    2 +-
->>  2 files changed, 3 insertions(+), 3 deletions(-)
->
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Add support for sata.
 
-Thanks!
+[Roger Q] Clean up.
 
-> Maybe Mark can apply this then, as it's mostly sound related.
-> Ideally it should be two patches but who cares about such a petty
-> detail.
+CC: Benoit Cousson <bcousson@baylibre.com>
+CC: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Balaji T K <balajitk@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/boot/dts/omap5.dtsi | 40 ++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
 
-Opinions about patch granularity differ...
-Grant Likely replied to one of the other patches in the series:
-
-| Applied all, but squashed into a single patch. I'll send it up to Linus
-| as a fix for 3.15
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 6f3de22..8ab6721 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -863,6 +863,46 @@
+ 
+ 			#thermal-sensor-cells = <1>;
+ 		};
++
++		omap_control_sata: control-phy@4a002374 {
++			compatible = "ti,control-phy-pipe3";
++			reg = <0x4a002374 0x4>;
++			reg-names = "power";
++			clocks = <&sys_clkin>;
++			clock-names = "sysclk";
++		};
++
++		/* OCP2SCP3 */
++		ocp2scp@4a090000 {
++			compatible = "ti,omap-ocp2scp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			reg = <0x4a090000 0x20>;
++			ranges;
++			ti,hwmods = "ocp2scp3";
++			sata_phy: phy@4a096000 {
++				compatible = "ti,phy-pipe3-sata";
++				reg = <0x4A096000 0x80>, /* phy_rx */
++				      <0x4A096400 0x64>, /* phy_tx */
++				      <0x4A096800 0x40>; /* pll_ctrl */
++				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
++				ctrl-module = <&omap_control_sata>;
++				clocks = <&sys_clkin>;
++				clock-names = "sysclk";
++				#phy-cells = <0>;
++			};
++		};
++
++		sata: sata@4a141100 {
++			compatible = "snps,dwc-ahci";
++			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
++			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
++			phys = <&sata_phy>;
++			phy-names = "sata-phy";
++			clocks = <&sata_ref_clk>;
++			ti,hwmods = "sata";
++		};
++
+ 	};
+ };
+ 
+-- 
+1.8.3.2
