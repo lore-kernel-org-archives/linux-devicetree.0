@@ -1,169 +1,91 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
-Date: Wed, 23 Apr 2014 11:50:55 +0100
-Message-ID: <20140423105055.GI21613@lee--X1>
-References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+From: Huang Shijie <b32955@freescale.com>
+Subject: [PATCH v1 0/7] mtd: spi-nor: Add the DDR quad read support
+Date: Wed, 23 Apr 2014 18:16:48 +0800
+Message-ID: <1398248215-26768-1-git-send-email-b32955@freescale.com>
+References: <a>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <a>
+Sender: linux-doc-owner@vger.kernel.org
+To: dwmw2@infradead.org
+Cc: computersforpeace@gmail.com, marex@denx.de, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Huang Shijie <b32955@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Josh Cartwright <joshc@codeaurora.org>
->=20
-> The Qualcomm 8941 and 8841 PMICs are components used with the Snapdra=
-gon
-> 800 series SoC family.  This driver exists largely as a glue mfd comp=
-onent,
-> it exists to be an owner of an SPMI regmap for children devices
-> described in device tree.
->=20
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> ---
->  drivers/mfd/Kconfig  | 13 +++++++++++
->  drivers/mfd/Makefile |  1 +
->  drivers/mfd/pm8x41.c | 63 ++++++++++++++++++++++++++++++++++++++++++=
-++++++++++
->  3 files changed, 77 insertions(+)
->  create mode 100644 drivers/mfd/pm8x41.c
->=20
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 3383412..f5ff799 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -502,6 +502,19 @@ config MFD_PM8921_CORE
->  	  Say M here if you want to include support for PM8921 chip as a mo=
-dule.
->  	  This will build a module called "pm8921-core".
-> =20
-> +config MFD_PM8X41
-> +	bool "Qualcomm PM8x41 PMIC"
-> +	depends on ARCH_QCOM
+ (0) This patch set depends on the patch:
+	http://lists.infradead.org/pipermail/linux-mtd/2014-April/053308.html
 
-depends on OF?
+  
+ (1) This patch set tries to add the DDR quad read support for the SPI
+     NOR framework, and it also adds the DDR quad read support for FREESCALE
+     quadspi controller driver.
 
-> +	select REGMAP_SPMI
-> +	help
-> +	  This enables basic support for the Qualcomm 8941 and 8841 PMICs.
-> +	  These PMICs are currently used with the Snapdragon 800 series of
-> +	  SoCs.  Note, that this will only be useful paired with descriptio=
-ns
-> +	  of the independent functions as children nodes in the device tree=
-=2E
-> +
-> +	  Say M here if you want to include support for the PM8x41 series a=
-s a
-> +	  module.  The module will be called "pm8x41".
-> +
->  config MFD_RDC321X
->  	tristate "RDC R-321x southbridge"
->  	select MFD_CORE
-> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-> index 2851275..f0df41d 100644
-> --- a/drivers/mfd/Makefile
-> +++ b/drivers/mfd/Makefile
-> @@ -151,6 +151,7 @@ obj-$(CONFIG_MFD_SI476X_CORE)	+=3D si476x-core.o
->  obj-$(CONFIG_MFD_CS5535)	+=3D cs5535-mfd.o
->  obj-$(CONFIG_MFD_OMAP_USB_HOST)	+=3D omap-usb-host.o omap-usb-tll.o
->  obj-$(CONFIG_MFD_PM8921_CORE) 	+=3D pm8921-core.o ssbi.o
-> +obj-$(CONFIG_MFD_PM8X41)	+=3D pm8x41.o
->  obj-$(CONFIG_TPS65911_COMPARATOR)	+=3D tps65911-comparator.o
->  obj-$(CONFIG_MFD_TPS65090)	+=3D tps65090.o
->  obj-$(CONFIG_MFD_AAT2870_CORE)	+=3D aat2870-core.o
-> diff --git a/drivers/mfd/pm8x41.c b/drivers/mfd/pm8x41.c
-> new file mode 100644
-> index 0000000..c85e0d6
-> --- /dev/null
-> +++ b/drivers/mfd/pm8x41.c
-> @@ -0,0 +1,63 @@
-> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 an=
-d
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/spmi.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_platform.h>
-> +
-> +static const struct regmap_config pm8x41_regmap_config =3D {
-> +	.reg_bits	=3D 16,
-> +	.val_bits	=3D 8,
-> +	.max_register	=3D 0xFFFF,
+ (2) Test this patch set with Spansion s25fl128s, the performance with mtd_speedtest.ko:
+     =================================================
+     mtd_speedtest: MTD device: 0
+     mtd_speedtest: not NAND flash, assume page size is 512 bytes.
+     mtd_speedtest: MTD device size 16777216, eraseblock size 65536, page size 512,
+                    count of eraseblocks 256, pages per eraseblock 128, OOB size 0
+     mtd_speedtest: testing eraseblock write speed
+     mtd_speedtest: eraseblock write speed is 665 KiB/s
+     mtd_speedtest: testing eraseblock read speed
+     mtd_speedtest: eraseblock read speed is 49799 KiB/s
+     mtd_speedtest: testing page write speed
+     mtd_speedtest: page write speed is 662 KiB/s
+     mtd_speedtest: testing page read speed
+     mtd_speedtest: page read speed is 24236 KiB/s
+     mtd_speedtest: testing 2 page write speed
+     mtd_speedtest: 2 page write speed is 657 KiB/s
+     mtd_speedtest: testing 2 page read speed
+     mtd_speedtest: 2 page read speed is 32637 KiB/s
+     mtd_speedtest: Testing erase speed
+     mtd_speedtest: erase speed is 518 KiB/s
+     mtd_speedtest: Testing 2x multi-block erase speed
+     mtd_speedtest: 2x multi-block erase speed is 506 KiB/s
+     mtd_speedtest: Testing 4x multi-block erase speed
+     mtd_speedtest: 4x multi-block erase speed is 503 KiB/s
+     mtd_speedtest: Testing 8x multi-block erase speed
+     mtd_speedtest: 8x multi-block erase speed is 501 KiB/s
+     mtd_speedtest: Testing 16x multi-block erase speed
+     mtd_speedtest: 16x multi-block erase speed is 498 KiB/s
+     mtd_speedtest: Testing 32x multi-block erase speed
+     mtd_speedtest: 32x multi-block erase speed is 496 KiB/s
+     mtd_speedtest: Testing 64x multi-block erase speed
+     mtd_speedtest: 64x multi-block erase speed is 495 KiB/s
+     mtd_speedtest: finished
+     =================================================
 
-I've never seen this many registers registered before.
+  (3) Conclusion:
+     The DDR quad read could be 49799 KiB/s.
+     
+Changlog:
+  About this patch set:
+     For patch 1, please see the old discusstion:
+     http://lists.infradead.org/pipermail/linux-mtd/2014-April/053370.html
 
-Are you sure you want to regmap the entire bank?
+     For patch 2, please see the old discusstion:
+     http://lists.infradead.org/pipermail/linux-mtd/2014-April/053374.html
 
-> +};
-> +
-> +static int pm8x41_remove_child(struct device *dev, void *unused)
-> +{
-> +	platform_device_unregister(to_platform_device(dev));
-> +	return 0;
-> +}
-> +
-> +static void pm8x41_remove(struct spmi_device *sdev)
-> +{
-> +	device_for_each_child(&sdev->dev, NULL, pm8x41_remove_child);
-> +}
+     
+Huang Shijie (7):
+  mtd: spi-nor: fix the wrong dummy value
+  mtd: spi-nor: add DDR quad read support
+  Documentation: mtd: add a new document for SPI NOR flash
+  Documentation: fsl-quadspi: update the document
+  mtd: fsl-quadspi: get the dummy cycles for DDR Quad read from the DT
+    property
+  mtd: fsl-quadspi: use the information stored in spi-nor{}
+  mtd: fsl-quadspi: add the DDR quad read support
 
-Nit: It's strange to see the .remove above the .probe.
+ .../devicetree/bindings/mtd/fsl-quadspi.txt        |   16 +++
+ .../devicetree/bindings/mtd/spi-nor-flash.txt      |    7 +
+ drivers/mtd/devices/m25p80.c                       |    5 +-
+ drivers/mtd/spi-nor/fsl-quadspi.c                  |  121 +++++++++++++-------
+ drivers/mtd/spi-nor/spi-nor.c                      |   52 ++++++++-
+ include/linux/mtd/spi-nor.h                        |    8 +-
+ 6 files changed, 162 insertions(+), 47 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mtd/spi-nor-flash.txt
 
-> +static int pm8x41_probe(struct spmi_device *sdev)
-> +{
-> +	struct regmap *regmap;
-> +
-> +	regmap =3D devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
+-- 
+1.7.2.rc3
 
-This is not debug, it's an error.
-
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->d=
-ev);
-> +}
-> +
-> +static const struct of_device_id pm8x41_id_table[] =3D {
-> +	{ .compatible =3D "qcom,pm8841", },
-> +	{ .compatible =3D "qcom,pm8941", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, pm8x41_id_table);
-> +
-> +static struct spmi_driver pm8x41_driver =3D {
-> +	.probe	=3D pm8x41_probe,
-> +	.remove	=3D pm8x41_remove,
-> +	.driver	=3D {
-> +		.name		=3D "pm8x41",
-> +		.of_match_table	=3D pm8x41_id_table,
-
-of_match_ptr()
-
-> +	},
-> +};
-> +module_spmi_driver(pm8x41_driver);
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
