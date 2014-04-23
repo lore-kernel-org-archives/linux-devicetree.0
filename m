@@ -1,79 +1,85 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 4/4] ARM: dts: dra7: add OCP2SCP3 and SATA nodes
-Date: Wed, 23 Apr 2014 20:36:15 +0300
-Message-ID: <1398274575-24818-1-git-send-email-rogerq@ti.com>
-References: <1398274237-24510-1-git-send-email-rogerq@ti.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: berlin: enable SD card reader and eMMC
+ for the BG2Q DMP
+Date: Wed, 23 Apr 2014 19:36:31 +0200
+Message-ID: <20140423173631.GA10464@kwain>
+References: <1398155248-1659-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1398155248-1659-3-git-send-email-antoine.tenart@free-electrons.com>
+ <5357F7BF.8000703@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398274237-24510-1-git-send-email-rogerq@ti.com>
+Content-Disposition: inline
+In-Reply-To: <5357F7BF.8000703@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: kishon@ti.com, george.cherian@ti.com, balbi@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, Roger Quadros <rogerq@ti.com>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Balaji T K <balajitk@ti.com>
+Sebastian,
 
-Add nodes for OCP2SCP3 bus, SATA controller and SATA PHY.
+On Wed, Apr 23, 2014 at 07:26:23PM +0200, Sebastian Hesselbarth wrote:
+> On 04/22/2014 10:27 AM, Antoine T=E9nart wrote:
+> > Enable the SD Card reader and the internal eMMC on the Berlin BG2Q =
+DMP
+> > using two of the SDHCI nodes of the Berlin BG2Q.
+> >=20
+> > Signed-off-by: Antoine T=E9nart <antoine.tenart@free-electrons.com>
+> > ---
+> >  arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> >=20
+> > diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/=
+boot/dts/berlin2q-marvell-dmp.dts
+> > index 2da9c41e29d8..6ca8c9e52b08 100644
+> > --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> > +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+> > @@ -26,3 +26,14 @@
+> >  &uart0 {
+> >  	status =3D "okay";
+> >  };
+> > +
+> > +&sdhci1 {
+>=20
+> Antoine,
+>=20
+> nit: please sort referenced nodes alphabetically.
+>=20
+> With your comments about mmc aliases, I can take both patches
+> in now (and fixup ordering) if you like.
 
-[Roger Q] Clean up.
+You can take them.
 
-CC: Benoit Cousson <bcousson@baylibre.com>
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+I talked with Jisheng about this and the plan is to make a following up
+series for the aliases since it will require to modify the subsystem.
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 1c0f8e1..084f42e 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -789,6 +789,45 @@
- 			dma-names = "tx0", "rx0";
- 			status = "disabled";
- 		};
-+
-+		omap_control_sata: control-phy@4a002374 {
-+			compatible = "ti,control-phy-pipe3";
-+			reg = <0x4a002374 0x4>;
-+			reg-names = "power";
-+			clocks = <&sys_clkin1>;
-+			clock-names = "sysclk";
-+		};
-+
-+		/* OCP2SCP3 */
-+		ocp2scp@4a090000 {
-+			compatible = "ti,omap-ocp2scp";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			reg = <0x4a090000 0x20>;
-+			ti,hwmods = "ocp2scp3";
-+			sata_phy: phy@4A096000 {
-+				compatible = "ti,phy-pipe3-sata";
-+				reg = <0x4A096000 0x80>, /* phy_rx */
-+				      <0x4A096400 0x64>, /* phy_tx */
-+				      <0x4A096800 0x40>; /* pll_ctrl */
-+				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
-+				ctrl-module = <&omap_control_sata>;
-+				clocks = <&sys_clkin1>;
-+				clock-names = "sysclk";
-+				#phy-cells = <0>;
-+			};
-+		};
-+
-+		sata: sata@4a141100 {
-+			compatible = "snps,dwc-ahci";
-+			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
-+			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&sata_phy>;
-+			phy-names = "sata-phy";
-+			clocks = <&sata_ref_clk>;
-+			ti,hwmods = "sata";
-+		};
- 	};
- };
- 
--- 
-1.8.3.2
+Thanks!
+
+Antoine
+
+>=20
+> Sebastian
+>=20
+> > +	broken-cd;
+> > +	sdhci,wp-inverted;
+> > +	status =3D "okay";
+> > +};
+> > +
+> > +&sdhci2 {
+> > +	non-removable;
+> > +	status =3D "okay";
+> > +};
+> >=20
+>=20
+>=20
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
