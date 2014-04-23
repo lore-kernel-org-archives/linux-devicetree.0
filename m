@@ -1,84 +1,127 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH] sysfs, device-tree: aid for debugging device tree boot
- problems
-Date: Tue, 22 Apr 2014 20:20:44 -0700
-Message-ID: <20140423032044.GA26233@kroah.com>
-References: <53571685.5060403@gmail.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC v2 PATCH 02/14] drm/exynos: dsi: delay setting clocks after
+ reset
+Date: Wed, 23 Apr 2014 12:45:00 +0900
+Message-ID: <5357373C.5080002@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <1398083321-8668-3-git-send-email-yj44.cho@samsung.com>
+ <53565D54.1050609@samsung.com> <535710E0.40702@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53571685.5060403-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <535710E0.40702@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 06:25:25PM -0700, Frank Rowand wrote:
-> Create some infrastructure to aid trouble shooting device tree related
-> boot issues.
-> 
-> Add a %driver_name file to each device tree node sysfs directory which has had
-> a driver bound to it.  This allows detecting device tree nodes which failed
-> to be bound to any driver.
+Hi again Andrzej,
 
-Why is this needed, shouldn't there already be a "driver" symlink in
-sysfs for these devices when a driver binds to them?  The rest of the
-driver model works that way, why is of devices any different?
+On 04/23/2014 10:01 AM, YoungJun Cho wrote:
+> Hi Andrzej
+>
+> Thank you for comments.
+>
+> On 04/22/2014 09:15 PM, Andrzej Hajda wrote:
+>> Hi YoungJun,
+>>
+>> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
+>>> Some phy control registers are not kept after software reset.
+>>> So this patch makes the clocks containing phy control to be set
+>>> after software reset.
+>>>
+>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> ---
+>>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c |    2 +-
+>>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>> b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>> index 956e5f3..2cf1f0b 100644
+>>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>> @@ -946,10 +946,10 @@ static irqreturn_t exynos_dsi_irq(int irq, void
+>>> *dev_id)
+>>>
+>>>   static int exynos_dsi_init(struct exynos_dsi *dsi)
+>>>   {
+>>> -    exynos_dsi_enable_clock(dsi);
+>>>       exynos_dsi_reset(dsi);
+>>>       enable_irq(dsi->irq);
+>>>       exynos_dsi_wait_for_reset(dsi);
+>>> +    exynos_dsi_enable_clock(dsi);
+>>>       exynos_dsi_init_link(dsi);
+>>>
+>>>       return 0;
+>>
+>> I have commented it in the previous version of the patchset. I repeat it
+>> again.
+>> This is a regression, on exynos4210-trats I have 'timeout waiting for
+>> reset' message after dpms off, on.
+>
+> I'm really sorry for that. I misunderstood last time.
+>
+> I think the original codes were correct, because the reset timeout would
+> be occurred without clock activation.
 
-> Examples of using the %driver_name file (note that /proc/device-tree is a
-> link to the base of the device tree sysfs tree):
-> 
-> 
->   1) To find list of device tree nodes with no driver:
-> 
->   # A few false positives may be reported.  For example,
->   #   node_full_path of "." is the board.
->   #
->   # output is: node_full_path compatible_string
->   #
->   cd /proc/device-tree
->   for k in `find . -type d`; do
->      if [[ -f ${k}/compatible && ! -f ${k}/%driver_name ]] ; then
->         if [[ "`cat ${k}/compatible`" != "simple-bus" ]] ; then
->            echo `echo ${k} | sed -e 's|./||'` `cat ${k}/compatible`
->         fi
->      fi
->   done | sort
-> 
-> 
->   2) To find list of device tree nodes with a bound driver:
-> 
->   # output is:  node_full_path driver_name
->   #
->   cd /proc/device-tree
->   for k in `find . -name %driver_name` ; do
->      echo `echo ${k} | sed -e 's|./||' -e 's|/%driver_name$||'` `cat ${k}`
->   done | sort
-> 
-> 
->   3) To find list of device tree nodes with a bound driver:
-> 
->   # output is:  driver_name node_full_path
->   #
->   cd /proc/device-tree
->   for k in `find . -name %driver_name` ; do
->      echo `cat ${k}` `echo ${k} | sed -e 's|./||' -e 's|/%driver_name$||'`
->   done | sort
+This is not true.
 
-If we take this patch, these examples should be somewhere in the
-documentation to make it easy for others.
+>
+> I'll check and fix again.
+> (By the way, why am I ok?)
 
-> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+I have not verified with exynos4210-trats board yet(I have to get it),
+but reset timeout is occured in exynos_dsi_wait_for_reset()
+with &dsi->completed and that is completed by exynos_dsi_irq().
 
-Minor nit, your From: line doesn't match this signed-off-by: so
-something has to change (or add a new From: line, like SubmittingPatches
-decribes how to do.)
+And the regulators and clocks are enabled by exynos_dsi_poweron(),
+NOT by exynos_dsi_enable_clock().
 
-thanks,
+So I think the reset timeout is not related with this patch.
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Anyway I need more investigation.
+
+Thank you.
+Best regards YJ
+
+>
+>>
+>> I will comment your previous answer here to make the discussion easier:
+>>> As I mentioned in description, it came from phy control registers.
+>>> Fortunately Exynos4 SoCs are safe, but the DSIM_PHYCTRL_REG,
+>>> DSIM_PHYTIMING_REG, DSIM_PHYTIMING1_REG and DSIM_PHYTIMING2_REG are
+>>> affected which are used in exynos_dsi_set_pll() for Exynos5 SoCs.
+>>>
+>>> So this patch is required for Exynos5 SoCs.
+>>
+>> In the moment this patch is applied exynos_dsi_set_pll do not touch phy
+>> registers you have mentioned.
+>> Your change would be more clear if it will be merged together with the
+>> patch adding PHYCTRL settings.
+>>
+>> Anyway, solution is simple - please set PHY registers after reset and
+>> configure clocks before reset to avoid
+>> reset timeouts, is there any reason to not do it this way?
+>
+> The only reason is that the PHY control is related with PLL control and
+> that was in exynos_dsi_enable_clock() call path.
+> So I just wanted to keep current sequence.
+>
+> If there is no way to use previous one, I'll consider your approach.
+>
+> Thank you.
+> Best regards YJ
+>
+>>
+>> Regards
+>> Andrzej
+>>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
