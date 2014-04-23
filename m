@@ -1,133 +1,80 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC v2 PATCH v4 09/14] ARM: dts: s6e3fa0: add DT bindings
-Date: Wed, 23 Apr 2014 11:02:21 +0200
-Message-ID: <5357819D.7050802@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: dts: berlin: add the SDHCI nodes for the BG2Q
+Date: Wed, 23 Apr 2014 11:02:46 +0200
+Message-ID: <20140423090246.GG24355@kwain>
+References: <1398155248-1659-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1398155248-1659-2-git-send-email-antoine.tenart@free-electrons.com>
+ <5356A85F.6030708@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5356A85F.6030708-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/21/2014 02:28 PM, YoungJun Cho wrote:
-> This patch adds DT bindings for s6e3fa0 panel.
-> The bindings describes panel resources, display timings and cpu timings.
-> 
-> Changelog v2:
-> - Adds unit address (commented by Sachin Kamat)
-> Changelog v3:
-> - Removes optional delay, size properties (commented by Laurent Pinchart)
-> - Adds OLED detection, TE gpio properties
-> Changelog v4:
-> - Moves CPU timings relevant properties from FIMD DT
->   (commeted by Laurent Pinchart, Andrzej Hajda)
-> 
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   63 ++++++++++++++++++++
->  1 file changed, 63 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> new file mode 100644
-> index 0000000..9eeb38b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> @@ -0,0 +1,63 @@
-> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
-> +
-> +Required properties:
-> +  - compatible: "samsung,s6e3fa0"
-> +  - reg: the virtual channel number of a DSI peripheral
-> +  - vdd3-supply: core voltage supply
-> +  - vci-supply: voltage supply for analog circuits
-> +  - reset-gpio: a GPIO spec for the reset pin
-> +  - det-gpio: a GPIO spec for the OLED detection pin
-> +  - te-gpio: a GPIO spec for the TE pin
-> +  - display-timings: timings for the connected panel as described by [1]
+Sebastian,
 
-Which properties of display-timings are relevant for CPU mode?
-I guess width and height. Anything more?
+On Tue, Apr 22, 2014 at 07:35:27PM +0200, Sebastian Hesselbarth wrote:
+> On 04/22/2014 10:27 AM, Antoine T=C3=A9nart wrote:
 
-> +  - cpu-timings: CPU interface timings for the connected panel, and it contains
-> +        following optional properties.
-> +          - cs-setup: clock cycles for the active period of address signal
-> +                enable until chip select is enable in CPU interface
-> +          - wr-setup: clock cycles for the active period of CS signal enable
-> +                until write signal is enable in CPU interface
-> +          - wr-act: clock cycles for the active period of CS enable in CPU
-> +                interface
-> +          - wr-hold: clock cycles for the active period of CS disable until
-> +                write signal is disable in CPU interface
+[=E2=80=A6]
 
-cpu-timings name does not sound to be related to display.
-I wonder if it would not be better to merge cpu-timings into
-display-timings but this will require more discussion I guess.
+> > +		sdhci0: sdhci@ab0000 {
+> > +			compatible =3D "mrvl,pxav3-mmc";
+> > +			reg =3D <0xab0000 0x200>;
+> > +			clocks =3D <&sdio1clk>;
+> > +			interrupts =3D <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> > +			status =3D "disabled";
+> > +		};
+> > +
+> > +		sdhci1: sdhci@ab0800 {
+> > +			compatible =3D "mrvl,pxav3-mmc";
+> > +			reg =3D <0xab0800 0x200>;
+> > +			clocks =3D <&sdio1clk>;
+> > +			interrupts =3D <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
+> > +			status =3D "disabled";
+> > +		};
+> > +
+> > +		sdhci2: sdhci@ab1000 {
+>=20
+> Didn't Jisheng ask for sdhci2 being registered at mmc0?
 
-If you want to stay with separate node please consider to make it
-optional as whole node or make some properties required. Making node
-required with all sub-properties optional is weird.
-By the way I hope all timings properties are generic for CPU mode,
-if not they should be prefixed by vendor or model.
+Yes sure, but I don't know if he agreeded on this solution. I'll ask hi=
+m.
+Otherwise aliases seems ok from my point of view.
 
-Regards
-Andrzej
+> Renaming the node labels will not help, but have you tried using an:
+>=20
+> aliases {
+> 	mmc0 =3D &sdhci2;
+> 	mmc1 =3D &sdhci0;
+> 	mmc2 =3D &sdhci1;
+> };
+>=20
+> node and set the platform_device's .id field with what you get
+> from of_alias_get_id(np, "mmc")?
+>=20
+> @Chris, Ulf: Is there any generic alias, e.g. "sdhci", you prefer for
+> drivers/mmc so we can put it into sdhci_get_of_property()?
 
-> +
-> +Optional properties:
-> +
-> +The device node can contain one 'port' child node with one child
-> +'endpoint' node, according to the bindings defined in [2]. This
-> +node should describe panel's video bus.
-> +
-> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
-> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	panel@0 {
-> +		compatible = "samsung,s6e3fa0";
-> +		reg = <0>;
-> +		vdd3-supply = <&vcclcd_reg>;
-> +		vci-supply = <&vlcd_reg>;
-> +		reset-gpio = <&gpy7 4 0>;
-> +		det-gpio = <&gpg0 6 0>;
-> +		te-gpio = <&gpd1 7 0>;
-> +
-> +		display-timings {
-> +			timing0: timing-0 {
-> +				clock-frequency = <0>;
-> +				hactive = <1080>;
-> +				vactive = <1920>;
-> +				hfront-porch = <2>;
-> +				hback-porch = <2>;
-> +				hsync-len = <1>;
-> +				vfront-porch = <1>;
-> +				vback-porch = <4>;
-> +				vsync-len = <1>;
-> +			};
-> +		};
-> +
-> +		cpu-timings {
-> +			cs-setup = <0>;
-> +			wr-setup = <0>;
-> +			wr-act = <1>;
-> +			wr-hold = <0>;
-> +		};
-> +	};
-> 
+I'd also like the subsystem maintainers to give their opinion on this
+before updating.
+
+Thanks!
+
+Antoine
+
+--=20
+Antoine T=C3=A9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
