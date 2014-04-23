@@ -1,80 +1,49 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] clk: Improve clock-indices binding documentation
-Date: Wed, 23 Apr 2014 10:40:10 +0900
-Message-ID: <20140423014009.GA20199@verge.net.au>
-References: <1397494840-22420-1-git-send-email-geert@linux-m68k.org>
- <21852545.7Zg9c00i3i@avalon>
+From: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] gpiolib: gpiolib-of: Implement device
+ tree gpio-names based lookup
+Date: Wed, 23 Apr 2014 10:49:12 +0900
+Message-ID: <CAAVeFuL7B7kVw7ME=Vo_snhG27aBphKO8Uzvzen1gyD=R2ETNA@mail.gmail.com>
+References: <1397544101-18135-1-git-send-email-wens@csie.org>
+ <1397544101-18135-2-git-send-email-wens@csie.org> <CACRpkdZDjC1KxM2yJqsgpg2MxBamX1EObsuahB-2c+ShuBXm8A@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <21852545.7Zg9c00i3i@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Mike Turquette <mturquette@linaro.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDE4FPUCVULRBLFY3SNAKGQETP55HCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CACRpkdZDjC1KxM2yJqsgpg2MxBamX1EObsuahB-2c+ShuBXm8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 15, 2014 at 05:56:12PM +0200, Laurent Pinchart wrote:
-> Hi Geert,
-> 
-> Thank you for the patch.
-> 
-> On Monday 14 April 2014 19:00:40 Geert Uytterhoeven wrote:
-> > From: Geert Uytterhoeven <geert+renesas@glider.be>
-> > 
-> > Improve the wording for the clock-indices binding documentation.
-> > Also replace "empty nodes" by "empty strings", as reported before by Sergei
-> > Shtylyov.
-> > 
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> 
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+On Wed, Apr 23, 2014 at 12:02 AM, Linus Walleij
+<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Apr 15, 2014 at 8:41 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>
+>> This patch provides of_get_gpiod_flags_by_name(), which looks up GPIO
+>> phandles by name only, through gpios/gpio-names, and not by index.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>
+> Like Alexandre I have no strong opinion on this alternative scheme.
 
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
+Yeah this new lookup scheme probably does no harm, but I think it
+should be a little bit more motivated as it is, after all, introducing
+more potential confusion for DT users.
 
-Mike, could you consider picking this up?
+It does not look like this new lookup scheme is necessary to Chen-Yu's
+patchset and that he could as well have used the current one. Right
+now there is only one way to define GPIOs - if we introduce a second
+one, then which one should new DT users choose? Which one looks
+better? I can already endless fights taking place over this.
 
-> 
-> > ---
-> >  .../devicetree/bindings/clock/clock-bindings.txt   |    9 ++++-----
-> >  1 file changed, 4 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
-> > 700e7aac3717..f15787817d6b 100644
-> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
-> > @@ -44,10 +44,9 @@ For example:
-> >    clocks by index. The names should reflect the clock output signal
-> >    names for the device.
-> > 
-> > -clock-indices:	   If the identifyng number for the clocks in the node
-> > -		   is not linear from zero, then the this mapping allows
-> > -		   the mapping of identifiers into the clock-output-names
-> > -		   array.
-> > +clock-indices:	   If the identifying number for the clocks in the node
-> > +		   is not linear from zero, then this allows the mapping of
-> > +		   identifiers into the clock-output-names array.
-> > 
-> >  For example, if we have two clocks <&oscillator 1> and <&oscillator 3>:
-> > 
-> > @@ -58,7 +57,7 @@ For example, if we have two clocks <&oscillator 1> and
-> > <&oscillator 3>: clock-output-names = "clka", "clkb";
-> >  	}
-> > 
-> > -	This ensures we do not have any empty nodes in clock-output-names
-> > +	This ensures we do not have any empty strings in clock-output-names
-> > 
-> > 
-> >  ==Clock consumers==
-> 
-> -- 
-> Regards,
-> 
-> Laurent Pinchart
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Does this new lookup help with some of the existing problems we have
+like ACPI/DT lookup compatibility?
+
+I just need to be given one practical reason to give my ack.
+
+Alex.
