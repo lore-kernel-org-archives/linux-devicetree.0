@@ -1,60 +1,35 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v6 3/8] ARM: sunxi: Move the clock
- protection to machine hooks
-Date: Wed, 23 Apr 2014 15:31:06 +0200
-Message-ID: <4987444.Zp0Prbn0Y8@wuerfel>
-References: <1397724379-15398-1-git-send-email-maxime.ripard@free-electrons.com> <201404231439.02913.arnd@arndb.de> <20140423131720.GS24905@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
+ devicetree binding
+Date: Wed, 23 Apr 2014 15:32:04 +0200
+Message-ID: <CACRpkdaJM4RcMaNOoNnACfkRiQP9xxNSfNjV8nygA1GXYdJrfw@mail.gmail.com>
+References: <1393842463-5206-1-git-send-email-thloh@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDEKVJM7XAHRBI4B36NAKGQEM2OQ5ZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140423131720.GS24905@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1393842463-5206-1-git-send-email-thloh@altera.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tien Hock Loh <thloh@altera.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, "lftan@altera.com" <lftan@altera.com>, Tien Hock Loh <thloh.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 April 2014 15:17:20 Maxime Ripard wrote:
-> > > +#include <linux/clk.h>
-> > >  #include <linux/init.h>
-> > >  #include <linux/of_platform.h>
-> > >  
-> > > @@ -19,9 +20,17 @@
-> > >  
-> > >  static void __init sun4i_dt_init(void)
-> > >  {
-> > > +       struct clk *clk;
-> > > +
-> > >         sunxi_setup_restart();
-> > >  
-> > >         of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-> > > +
-> > > +       /* Make sure the clocks we absolutely need are enabled */
-> > > +       /* DDR clock */
-> > > +       clk = clk_get(NULL, "pll5_ddr");
-> > > +       if (!IS_ERR(clk))
-> > > +               clk_prepare_enable(clk);
-> > >  }
-> > 
-> > Isn't there already DT syntax to do the same? If not, should there be?
-> 
-> I don't think there is, and I gave some thought about it too. But
-> something a la regulator-always-on wouldn't work with clocks with
-> multiple outputs (like pll5), because you might need to leave only one
-> of the output enabled, but not the others, and I couldn't think of a
-> nice way to do so.
-> 
-> If you have one, I'd be happy to implement it.
+On Mon, Mar 3, 2014 at 11:27 AM,  <thloh@altera.com> wrote:
 
-We had a discussion a while ago about encoding default settings for clock
-providers in the clock provider nodes. I don't remember the details
-unfortunately.
+> From: Tien Hock Loh <thloh@altera.com>
+>
+> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
+> Tested on Altera CV SoC board using dipsw and LED using LED framework.
+>
+> Signed-off-by: Tien Hock Loh <thloh@altera.com>
 
-Mike, can you explain how this should be done?
+Some time has passed since this was posted and we now have
+GPIO irqchip helpers in the gpiolib core.
 
-	Arnd
+If you repost this, please reform this driver to use the gpiochip
+irqchip helpers in the manner of e.g. drivers/gpio/gpio-pl061.c.
+
+More examples and documentation is available on the "devel"
+branch in the gpio git tree (also in linux-next).
+
+Yours,
+Linus Walleij
