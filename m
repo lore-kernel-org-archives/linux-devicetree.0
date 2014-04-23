@@ -1,52 +1,56 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
-Date: Wed, 23 Apr 2014 18:25:23 +0100
-Message-ID: <20140423172523.GM5904@bivouac.eciton.net>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
- <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
- <20140418124821.GE5904@bivouac.eciton.net>
- <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
- <20140422130829.CA29DC4042C@trevor.secretlab.ca>
- <20140422140526.GK5904@bivouac.eciton.net>
- <20140423131508.6E53BC408D2@trevor.secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140423131508.6E53BC408D2-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 2/5] clk: berlin: add berlin clocks DT bindings documentation
+Date: Wed, 23 Apr 2014 19:21:46 +0200
+Message-ID: <5357F6AA.1010406@gmail.com>
+References: <1398261667-12621-1-git-send-email-alexandre.belloni@free-electrons.com> <1398261667-12621-3-git-send-email-alexandre.belloni@free-electrons.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398261667-12621-3-git-send-email-alexandre.belloni@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Mike Turquette <mturquette@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 02:15:08PM +0100, Grant Likely wrote:
-> > The reason for me doing that is because we (including you) agreed at
-> > the discussion held during LCU13 that this was the safest way of
-> > preventing "mischief" like userland trying to read information from
-> > /proc/device-tree...
+On 04/23/2014 04:01 PM, Alexandre Belloni wrote:
+> Document the newly added berlin clock driver
 > 
-> I'm not the most consistent of people. I often change my mind and then
-> have no recollection of ever thinking differently.
-
-And that is fine, but you were not the only person agreeing.
-
-> Userland reading from /proc/device-tree isn't so much a problem, but
-> kernel drivers doing it might be.
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> ---
+> Cc: devicetree@vger.kernel.org
+>  Documentation/devicetree/bindings/clock/berlin-clock.txt | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
-> But, regardless of whether or not the stub clears out the memory
-> nodes, it is still I think good practice for the kernel to make the
-> decision to ignore memory nodes, and not rely on them being cleared
-> correctly.
+> diff --git a/Documentation/devicetree/bindings/clock/berlin-clock.txt b/Documentation/devicetree/bindings/clock/berlin-clock.txt
+> index 49b7860bffb8..00f0053ef587 100644
+> --- a/Documentation/devicetree/bindings/clock/berlin-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/berlin-clock.txt
+> @@ -9,6 +9,8 @@ Required properties:
+>  	"marvell,berlin2-pll",
+>  	"marvell,berlin2q-pll":
+>  		CPU PLL and System PLL
+> +	"marvell,berlin2-clk":
+> +		simple clocks
+>  - reg: Address and length of the clock register set.
+>  - #clock-cells: from common clock binding; shall be set to 0.
+>  - clocks: from common clock binding
+> @@ -26,4 +28,9 @@ cpupll: cpupll@ea003c {
+>  	reg = <0xea003c 0x8>;
+>  };
+>  
+> -
+> +sdio0xinclk: sdio0xinclk@ea023c {
 
-I also remember you saying that relaxing restrictions later on is a lot
-easier than tightening them. On that basis, can we please get the UEFI
-set merged before we start redefining the stub/kernel protocol which was
-agreed at LCU (November last year) after spending a month or two trying
-to get sufficient number of interested parties in the same room?
+Yuck! ;)
 
-/
-	Leif
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Can't we just simply use "clock@<addr>" for the node name and
+have the driver compute the name like simple-bus does?
+
+Sebastian
+
+> +	compatible = "marvell,berlin-clk";
+> +	clocks = <&syspll>;
+> +	#clock-cells = <0>;
+> +	reg = <0xea023c 4>;
+> +};
+> 
