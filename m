@@ -1,169 +1,77 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: [PATCH v2 3/4] ARM: OMAP2+: Add machine entry for dra72x devices
-Date: Wed, 23 Apr 2014 14:32:54 +0530
-Message-ID: <1398243775-4145-4-git-send-email-rnayak@ti.com>
-References: <1398243775-4145-1-git-send-email-rnayak@ti.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH] ASoC: max98095: Add an explicit of_match_table
+Date: Wed, 23 Apr 2014 14:43:58 +0530
+Message-ID: <1398244438-2124-1-git-send-email-tushar.behera@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398243775-4145-1-git-send-email-rnayak@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: tony@atomide.com, bcousson@baylibre.com, nm@ti.com, Rajendra Nayak <rnayak@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: broonie@kernel.org, rdunlap@infradead.org, lgirdwood@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The only difference from the dra74x devices is the missing .smp entry.
+Create an explicit of_match_table entry for MAX98095 codec. Also
+add a binding Documentation for this compatible string.
 
-While at it, also fix the use of __initdata (across the file) and replace them
-with __initconst as reported by checkpatch
-
-ERROR: Use of const init definition must use __initconst
-+static const char *dra72x_boards_compat[] __initdata = {
-
-Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
 ---
- arch/arm/mach-omap2/board-generic.c |   46 +++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 13 deletions(-)
+ .../devicetree/bindings/sound/max98095.txt         |   16 ++++++++++++++++
+ sound/soc/codecs/max98095.c                        |    7 +++++++
+ 2 files changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/max98095.txt
 
-diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
-index b8920b6..4d1222d 100644
---- a/arch/arm/mach-omap2/board-generic.c
-+++ b/arch/arm/mach-omap2/board-generic.c
-@@ -43,7 +43,7 @@ static void __init omap_generic_init(void)
- }
- 
- #ifdef CONFIG_SOC_OMAP2420
--static const char *omap242x_boards_compat[] __initdata = {
-+static const char *omap242x_boards_compat[] __initconst = {
- 	"ti,omap2420",
- 	NULL,
- };
-@@ -62,7 +62,7 @@ MACHINE_END
- #endif
- 
- #ifdef CONFIG_SOC_OMAP2430
--static const char *omap243x_boards_compat[] __initdata = {
-+static const char *omap243x_boards_compat[] __initconst = {
- 	"ti,omap2430",
- 	NULL,
- };
-@@ -81,7 +81,7 @@ MACHINE_END
- #endif
- 
- #ifdef CONFIG_ARCH_OMAP3
--static const char *omap3_boards_compat[] __initdata = {
-+static const char *omap3_boards_compat[] __initconst = {
- 	"ti,omap3430",
- 	"ti,omap3",
- 	NULL,
-@@ -100,7 +100,7 @@ DT_MACHINE_START(OMAP3_DT, "Generic OMAP3 (Flattened Device Tree)")
- 	.restart	= omap3xxx_restart,
- MACHINE_END
- 
--static const char *omap36xx_boards_compat[] __initdata = {
-+static const char *omap36xx_boards_compat[] __initconst = {
- 	"ti,omap36xx",
- 	NULL,
- };
-@@ -118,7 +118,7 @@ DT_MACHINE_START(OMAP36XX_DT, "Generic OMAP36xx (Flattened Device Tree)")
- 	.restart	= omap3xxx_restart,
- MACHINE_END
- 
--static const char *omap3_gp_boards_compat[] __initdata = {
-+static const char *omap3_gp_boards_compat[] __initconst = {
- 	"ti,omap3-beagle",
- 	"timll,omap3-devkit8000",
- 	NULL,
-@@ -137,7 +137,7 @@ DT_MACHINE_START(OMAP3_GP_DT, "Generic OMAP3-GP (Flattened Device Tree)")
- 	.restart	= omap3xxx_restart,
- MACHINE_END
- 
--static const char *am3517_boards_compat[] __initdata = {
-+static const char *am3517_boards_compat[] __initconst = {
- 	"ti,am3517",
- 	NULL,
- };
-@@ -157,7 +157,7 @@ MACHINE_END
- #endif
- 
- #ifdef CONFIG_SOC_AM33XX
--static const char *am33xx_boards_compat[] __initdata = {
-+static const char *am33xx_boards_compat[] __initconst = {
- 	"ti,am33xx",
- 	NULL,
- };
-@@ -177,7 +177,7 @@ MACHINE_END
- #endif
- 
- #ifdef CONFIG_ARCH_OMAP4
--static const char *omap4_boards_compat[] __initdata = {
-+static const char *omap4_boards_compat[] __initconst = {
- 	"ti,omap4460",
- 	"ti,omap4430",
- 	"ti,omap4",
-@@ -199,7 +199,7 @@ MACHINE_END
- #endif
- 
- #ifdef CONFIG_SOC_OMAP5
--static const char *omap5_boards_compat[] __initdata = {
-+static const char *omap5_boards_compat[] __initconst = {
- 	"ti,omap5432",
- 	"ti,omap5430",
- 	"ti,omap5",
-@@ -221,7 +221,7 @@ MACHINE_END
- #endif
- 
- #ifdef CONFIG_SOC_AM43XX
--static const char *am43_boards_compat[] __initdata = {
-+static const char *am43_boards_compat[] __initconst = {
- 	"ti,am4372",
- 	"ti,am43",
- 	NULL,
-@@ -240,13 +240,14 @@ MACHINE_END
- #endif
- 
- #ifdef CONFIG_SOC_DRA7XX
--static const char *dra7xx_boards_compat[] __initdata = {
-+static const char *dra74x_boards_compat[] __initconst = {
-+	"ti,dra74x",
- 	"ti,dra7xx",
- 	"ti,dra7",
- 	NULL,
- };
- 
--DT_MACHINE_START(DRA7XX_DT, "Generic DRA7XX (Flattened Device Tree)")
-+DT_MACHINE_START(DRA74X_DT, "Generic DRA74X (Flattened Device Tree)")
- 	.reserve	= omap_reserve,
- 	.smp		= smp_ops(omap4_smp_ops),
- 	.map_io		= omap5_map_io,
-@@ -255,7 +256,26 @@ DT_MACHINE_START(DRA7XX_DT, "Generic DRA7XX (Flattened Device Tree)")
- 	.init_irq	= omap_gic_of_init,
- 	.init_machine	= omap_generic_init,
- 	.init_time	= omap5_realtime_timer_init,
--	.dt_compat	= dra7xx_boards_compat,
-+	.dt_compat	= dra74x_boards_compat,
-+	.restart	= omap44xx_restart,
-+MACHINE_END
+diff --git a/Documentation/devicetree/bindings/sound/max98095.txt b/Documentation/devicetree/bindings/sound/max98095.txt
+new file mode 100644
+index 0000000..bacbeaa
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/max98095.txt
+@@ -0,0 +1,16 @@
++MAX98095 audio CODEC
 +
-+static const char *dra72x_boards_compat[] __initconst = {
-+	"ti,dra72x",
-+	"ti,dra7xx",
-+	"ti,dra7",
-+	NULL,
++This device supports I2C only.
++
++Required properties:
++
++- compatible : "maxim,max98095".
++
++- reg : The I2C address of the device.
++
++Example:
++
++max98095: codec@11 {
++	compatible = "maxim,max98095";
++	reg = <0x11>;
 +};
+diff --git a/sound/soc/codecs/max98095.c b/sound/soc/codecs/max98095.c
+index 03f0536..8e548af 100644
+--- a/sound/soc/codecs/max98095.c
++++ b/sound/soc/codecs/max98095.c
+@@ -2399,10 +2399,17 @@ static const struct i2c_device_id max98095_i2c_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, max98095_i2c_id);
+ 
++static const struct of_device_id max98095_of_match[] = {
++	{ .compatible = "maxim,max98095", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, max98095_of_match);
 +
-+DT_MACHINE_START(DRA72_DT, "Generic DRA72X (Flattened Device Tree)")
-+	.reserve	= omap_reserve,
-+	.map_io		= omap5_map_io,
-+	.init_early	= dra7xx_init_early,
-+	.init_late	= dra7xx_init_late,
-+	.init_irq	= omap_gic_of_init,
-+	.init_machine	= omap_generic_init,
-+	.init_time	= omap5_realtime_timer_init,
-+	.dt_compat	= dra72x_boards_compat,
- 	.restart	= omap44xx_restart,
- MACHINE_END
- #endif
+ static struct i2c_driver max98095_i2c_driver = {
+ 	.driver = {
+ 		.name = "max98095",
+ 		.owner = THIS_MODULE,
++		.of_match_table = of_match_ptr(max98095_of_match),
+ 	},
+ 	.probe  = max98095_i2c_probe,
+ 	.remove = max98095_i2c_remove,
 -- 
 1.7.9.5
-
