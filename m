@@ -1,227 +1,79 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 14/21] of/fdt: create common debugfs
-Date: Wed, 23 Apr 2014 15:52:30 +0200
-Message-ID: <5357C59E.8080400@monstr.eu>
-References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
- <1398215901-25609-15-git-send-email-robherring2@gmail.com>
-Reply-To: monstr@monstr.eu
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6041770652368798037=="
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1398215901-25609-15-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev@lists.ozlabs.org
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC v12 7/7] dma: mpc512x: register for device tree channel lookup
+Date: Wed, 23 Apr 2014 17:53:29 +0400
+Message-ID: <1398261209-5578-8-git-send-email-a13xp0p0v88@gmail.com>
+References: <1398261209-5578-1-git-send-email-a13xp0p0v88@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398261209-5578-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============6041770652368798037==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo"
+Register the controller for device tree based lookup of DMA channels
+(non-fatal for backwards compatibility with older device trees) and
+provide the '#dma-cells' property in the shared mpc5121.dtsi file
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ arch/powerpc/boot/dts/mpc5121.dtsi |  1 +
+ drivers/dma/mpc512x_dma.c          | 13 ++++++++++++-
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-On 04/23/2014 03:18 AM, Rob Herring wrote:
-> From: Rob Herring <robh@kernel.org>
->=20
-> Both powerpc and microblaze have the same FDT blob in debugfs feature.
-> Move this to common location and remove the powerpc and microblaze
-> implementations. This feature could become more useful when FDT
-> overlay support is added.
->=20
-> This changes the path of the blob from "$arch/flat-device-tree" to
-> "device-tree/flat-device-tree".
->=20
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Michal Simek <monstr@monstr.eu>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> ---
-> v2: move to after libfdt conversion
->=20
->  arch/microblaze/kernel/prom.c | 31 -------------------------------
->  arch/powerpc/kernel/prom.c    | 21 ---------------------
->  drivers/of/fdt.c              | 24 ++++++++++++++++++++++++
->  3 files changed, 24 insertions(+), 52 deletions(-)
->=20
-> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/pro=
-m.c
-> index c766306..68f0999 100644
-> --- a/arch/microblaze/kernel/prom.c
-> +++ b/arch/microblaze/kernel/prom.c
-> @@ -114,34 +114,3 @@ void __init early_init_devtree(void *params)
-> =20
->  	pr_debug(" <- early_init_devtree()\n");
->  }
-> -
-> -/*******
-> - *
-> - * New implementation of the OF "find" APIs, return a refcounted
-> - * object, call of_node_put() when done.  The device tree and list
-> - * are protected by a rw_lock.
-> - *
-> - * Note that property management will need some locking as well,
-> - * this isn't dealt with yet.
-> - *
-> - *******/
-> -
-> -#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
-> -static struct debugfs_blob_wrapper flat_dt_blob;
-> -
-> -static int __init export_flat_device_tree(void)
-> -{
-> -	struct dentry *d;
-> -
-> -	flat_dt_blob.data =3D initial_boot_params;
-> -	flat_dt_blob.size =3D initial_boot_params->totalsize;
-> -
-> -	d =3D debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
-> -				of_debugfs_root, &flat_dt_blob);
-> -	if (!d)
-> -		return 1;
-> -
-> -	return 0;
-> -}
-> -device_initcall(export_flat_device_tree);
-> -#endif
-> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index f971134..03624ce 100644
-> --- a/arch/powerpc/kernel/prom.c
-> +++ b/arch/powerpc/kernel/prom.c
-> @@ -29,7 +29,6 @@
->  #include <linux/bitops.h>
->  #include <linux/export.h>
->  #include <linux/kexec.h>
-> -#include <linux/debugfs.h>
->  #include <linux/irq.h>
->  #include <linux/memblock.h>
->  #include <linux/of.h>
-> @@ -924,23 +923,3 @@ bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
->  {
->  	return (int)phys_id =3D=3D get_hard_smp_processor_id(cpu);
->  }
-> -
-> -#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
-> -static struct debugfs_blob_wrapper flat_dt_blob;
-> -
-> -static int __init export_flat_device_tree(void)
-> -{
-> -	struct dentry *d;
-> -
-> -	flat_dt_blob.data =3D initial_boot_params;
-> -	flat_dt_blob.size =3D be32_to_cpu(initial_boot_params->totalsize);
-> -
-> -	d =3D debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
-> -				powerpc_debugfs_root, &flat_dt_blob);
-> -	if (!d)
-> -		return 1;
-> -
-> -	return 0;
-> -}
-> -__initcall(export_flat_device_tree);
-> -#endif
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index 0b38a6a..4129f74 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -20,6 +20,7 @@
->  #include <linux/errno.h>
->  #include <linux/slab.h>
->  #include <linux/libfdt.h>
-> +#include <linux/debugfs.h>
-> =20
->  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
->  #include <asm/page.h>
-> @@ -916,4 +917,27 @@ void __init unflatten_and_copy_device_tree(void)
->  	unflatten_device_tree();
->  }
-> =20
-> +#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
-> +static struct debugfs_blob_wrapper flat_dt_blob;
-> +
-> +static int __init of_flat_dt_debugfs_export_fdt(void)
-> +{
-> +	struct dentry *d =3D debugfs_create_dir("device-tree", NULL);
-> +
-> +	if (!d)
-> +		return -ENOENT;
-> +
-> +	flat_dt_blob.data =3D initial_boot_params;
-> +	flat_dt_blob.size =3D fdt_totalsize(initial_boot_params);
+diff --git a/arch/powerpc/boot/dts/mpc5121.dtsi b/arch/powerpc/boot/dts/mpc5121.dtsi
+index 2c0e155..7f9d14f 100644
+--- a/arch/powerpc/boot/dts/mpc5121.dtsi
++++ b/arch/powerpc/boot/dts/mpc5121.dtsi
+@@ -498,6 +498,7 @@
+ 			compatible = "fsl,mpc5121-dma";
+ 			reg = <0x14000 0x1800>;
+ 			interrupts = <65 0x8>;
++			#dma-cells = <1>;
+ 		};
+ 	};
+ 
+diff --git a/drivers/dma/mpc512x_dma.c b/drivers/dma/mpc512x_dma.c
+index d2c5f79..fa0614e 100644
+--- a/drivers/dma/mpc512x_dma.c
++++ b/drivers/dma/mpc512x_dma.c
+@@ -52,6 +52,7 @@
+ #include <linux/of_address.h>
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
++#include <linux/of_dma.h>
+ #include <linux/of_platform.h>
+ 
+ #include <linux/random.h>
+@@ -1031,7 +1032,15 @@ static int mpc_dma_probe(struct platform_device *op)
+ 	if (retval)
+ 		goto err_free2;
+ 
+-	return retval;
++	/* Register with OF helpers for DMA lookups (nonfatal) */
++	if (dev->of_node) {
++		retval = of_dma_controller_register(dev->of_node,
++						of_dma_xlate_by_chan_id, mdma);
++		if (retval)
++			dev_warn(dev, "Could not register for OF lookup\n");
++	}
++
++	return 0;
+ 
+ err_free2:
+ 	if (mdma->is_mpc8308)
+@@ -1052,6 +1061,8 @@ static int mpc_dma_remove(struct platform_device *op)
+ 	struct device *dev = &op->dev;
+ 	struct mpc_dma *mdma = dev_get_drvdata(dev);
+ 
++	if (dev->of_node)
++		of_dma_controller_free(dev->of_node);
+ 	dma_async_device_unregister(&mdma->dma);
+ 	if (mdma->is_mpc8308) {
+ 		free_irq(mdma->irq2, mdma);
+-- 
+1.8.4.2
 
-As I wrote in different patch. I would move this to the end of this
-series and
-flat_dt_blob.size =3D of_get_flat_dt_size();
-
-> +
-> +	d =3D debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
-> +				d, &flat_dt_blob);
-> +	if (!d)
-> +		return -ENOENT;
-> +
-> +	return 0;
-> +}
-> +module_init(of_flat_dt_debugfs_export_fdt);
-> +#endif
-> +
->  #endif /* CONFIG_OF_EARLY_FLATTREE */
->=20
-
-Other than comment above:
-For Microblaze:
-Tested-by: Michal Simek <monstr@monstr.eu>
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlNXxZ4ACgkQykllyylKDCF3RQCfXnnWAfDfmGWypy71NoANLTHj
-ciIAniVfzjzk3tzlgxXG9bABc6s9tMI8
-=CNyh
------END PGP SIGNATURE-----
-
---88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo--
-
---===============6041770652368798037==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMt
-ZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
-c3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
-
---===============6041770652368798037==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
