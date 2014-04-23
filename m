@@ -1,60 +1,58 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v8 10/17] ARM: dts: sun6i: Add mmc clocks
-Date: Wed, 23 Apr 2014 11:49:29 +0200
-Message-ID: <53578CA9.2070703@redhat.com>
-References: <1398164497-14212-1-git-send-email-hdegoede@redhat.com>
- <1398164497-14212-11-git-send-email-hdegoede@redhat.com>
- <20140423094426.GK24905@lukather>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/4] ARM: OMAP2+: Add machine entry for dra72x devices
+Date: Wed, 23 Apr 2014 11:51:54 +0200
+Message-ID: <66310471.kybX1mlztt@wuerfel>
+References: <1398243775-4145-1-git-send-email-rnayak@ti.com> <1398243775-4145-4-git-send-email-rnayak@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140423094426.GK24905@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, linux-mmc@vger.kernel.org, Chris Ball <chris@printf.net>, =?ISO-8859-1?Q?David_Lanzend=F6?= =?ISO-8859-1?Q?rfer?= <david.lanzendoerfer@o2s.ch>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1398243775-4145-4-git-send-email-rnayak@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Rajendra Nayak <rnayak@ti.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, tony@atomide.com, nm@ti.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 04/23/2014 11:44 AM, Maxime Ripard wrote:
-> On Tue, Apr 22, 2014 at 01:01:30PM +0200, Hans de Goede wrote:
->> Add clk-nodes for the mmc clocks.
->>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  arch/arm/boot/dts/sun6i-a31.dtsi | 32 ++++++++++++++++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
->> index d45efa7..12bcc17 100644
->> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
->> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
->> @@ -198,6 +198,38 @@
->>  					"apb2_uart4", "apb2_uart5";
->>  		};
->>  
->> +		mmc0_clk: clk@01c20088 {
->> +			#clock-cells = <0>;
->> +			compatible = "allwinner,sun4i-a10-mod0-clk";
+On Wednesday 23 April 2014 14:32:54 Rajendra Nayak wrote:
 > 
-> This is simply not true.
-> 
-> module0 clocks don't have any kind of phase control, while we do here.
+>  #ifdef CONFIG_SOC_DRA7XX
+> -static const char *dra7xx_boards_compat[] __initdata = {
+> +static const char *dra74x_boards_compat[] __initconst = {
+> +       "ti,dra74x",
+>         "ti,dra7xx",
+>         "ti,dra7",
+>         NULL,
+>  };
+>  
+> -DT_MACHINE_START(DRA7XX_DT, "Generic DRA7XX (Flattened Device Tree)")
+> +DT_MACHINE_START(DRA74X_DT, "Generic DRA74X (Flattened Device Tree)")
+>         .reserve        = omap_reserve,
+>         .smp            = smp_ops(omap4_smp_ops),
+>         .map_io         = omap5_map_io,
+> @@ -255,7 +256,26 @@ DT_MACHINE_START(DRA7XX_DT, "Generic DRA7XX (Flattened Device Tree)")
+>         .init_irq       = omap_gic_of_init,
+>         .init_machine   = omap_generic_init,
+>         .init_time      = omap5_realtime_timer_init,
+> -       .dt_compat      = dra7xx_boards_compat,
+> +       .dt_compat      = dra74x_boards_compat,
+> +       .restart        = omap44xx_restart,
+> +MACHINE_END
+> +
+> +static const char *dra72x_boards_compat[] __initconst = {
+> +       "ti,dra72x",
+> +       "ti,dra7xx",
+> +       "ti,dra7",
+> +       NULL,
+> +};
 
-We've the exact same situation for all of sun4i, sun5i and sun7i. IMHO
-it would be much simpler to keep things uns sync everywhere, until we actually
-know how we want to deal with the phase control stuff, and then change
-the compatible, etc. everywhere at once.
+Now you have two lists that both match "ti,dra7xx" and "ti,dra7", which will
+cause problems if you have a new machine that doesn't match the more specific
+strings.
 
-Regards,
+Note that we intentionally don't allow wildcards in compatible strings
+to avoid this situation.
 
-Hans
+Please remove all strings with an "x" in them from the dts files and from
+the source, and make sure you have no duplication between the lists.
+
+	Arnd
