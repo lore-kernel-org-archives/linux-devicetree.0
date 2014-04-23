@@ -1,66 +1,50 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3] of: fix of_update_property again
-Date: Wed, 23 Apr 2014 15:56:07 +0100
-Message-ID: <20140423145607.C8ADDC408D2@trevor.secretlab.ca>
-References: <1397720909-24774-1-git-send-email-Li.Xiubo@freescale.com>
-	<CAL_JsqKFRLECtSL3CKE_heruO-RJh96G-C_NsEZFVRkjAOdL-Q@mail.gmail.com>
-	<20140422140605.EEA6EC40793@trevor.secretlab.ca>
-	<CAL_JsqK6O8AeSMZTv=-nOApr6rhJG=-PTnL4EiomOEGH+jjCRw@mail.gmail.com>
-	<20140422151609.GB20271@roeck-us.net>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140422151609.GB20271-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Boot fixes
+Date: Wed, 23 Apr 2014 07:59:05 -0700
+Message-ID: <20140423145904.GB4833@atomide.com>
+References: <1398192739-8901-1-git-send-email-d-gerlach@ti.com>
+ <20140422190132.GA12204@atomide.com>
+ <5356C8AE.3090907@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5356C8AE.3090907@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, bcousson@baylibre.com, Sekhar Nori <nsekhar@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Apr 2014 08:16:09 -0700, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> On Tue, Apr 22, 2014 at 09:10:35AM -0500, Rob Herring wrote:
-> > On Tue, Apr 22, 2014 at 9:06 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > > On Thu, 17 Apr 2014 09:32:16 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >> On Thu, Apr 17, 2014 at 2:48 AM, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> > >> > The of_update_property() is intented to update a property in a node
-> > >> > and if the property does not exist, will add it.
-> > >> >
-> > >> > The second search of the property is possibly won't be found, that
-> > >> > maybe removed by other thread just before the second search begain.
-> > >> >
-> > >> > Using the __of_find_property() and __of_add_property() instead and
-> > >> > move them into lock operations.
-> > >>
-> > >> I have a fix in my tree from Guenter which handles the race of the
-> > >> property being removed. However, your change will be needed when we
-> > >> have overlays and the node itself can be removed. So this is 3.16
-> > >> material and will need to be rebased on Guenter's fix.
-> > >
-> > > I didn't think Guenter's patch actually fixed a race. It only fixed a
-> > > double checking of the oldprop pointer. Do I have it wrong?
-> > 
-> > Yes, the commit message should have been clearer. The problem was that
-> > found was checked after updating the sysfs files.
-> > 
-> Fixing the race was more of a side effect. It wasn't actually clear to me
-> at the time that there was a race; I realized it only after I read above
-> exchange.
+* Dave Gerlach <d-gerlach@ti.com> [140422 12:53]:
+> On 04/22/2014 02:01 PM, Tony Lindgren wrote:
+> >* Dave Gerlach <d-gerlach@ti.com> [140422 11:52]:
+> >>This patch, along with patch here [1], fixes boot for am437x-gp-evm. The
+> >>bootloader configures gpio5_7 to control the DDR3 termination regulator,
+> >>the linked patch prevents that gpio bank from being reset and losing
+> >>the previously configured state, and this patch binds the gpio to a
+> >>regulator so the kernel is aware of the state of the gpio.
+> >>
+> >>[1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg102941.html
+> >
+> >Setting up the GPIO regulator makes sense to me. But the hack in the
+> >link above is potentially a nasty time bomb for anybody trying to
+> >use GPIO bank 5 on that board.
+> >
+> >What tests have been done that the GPIO bank behaves properly when
+> >it's not reset?
 > 
-> To clarify: My understanding is that the property could have been removed
-> after the call to of_find_property() found it. Thus, the actual search
-> for it can fail, and the check if it was found is necessary to prevent
-> action on the (now removed) old property.
-> 
-> Did I get this right ?
+> We've been using this configuration on this board for a while without any
+> apparent issues. Also, am335x-evmsk already uses the same idea for the VTT
+> regulator on board from commit 6046adb6ad701026c10adeac8d6a4138895f12e5
+> [ARM: dts: am335x-evmsk: Do not reset gpio0] and I am unaware of any issues
+> with that either.
 
-Not quite. Your change was correct for the existing code. The second
-oldprop check was not needed since there was no way to get there with it
-being NULL.
+OK. Do you have other GPIOs in use as interrupts for devices in these
+banks and do they work fine?
 
-However, your understanding of the race condition is correct. Xiubo
-fixed it by moving the of_find_property() call under the spinlock so
-there is no possibility for the property to disappear between find and
-update.
+Also, can you please test to make sure this works with the most recent
+Javier's GPIO patches that had the issue of not booting on am335x-evmsk?
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
