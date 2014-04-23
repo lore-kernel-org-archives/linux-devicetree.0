@@ -1,79 +1,108 @@
-From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2 1/2] rx51_battery: convert to iio consumer
-Date: Wed, 23 Apr 2014 18:09:37 +0200
-Message-ID: <20140423160936.GB32049@earth.universe>
-References: <1393375569-21751-1-git-send-email-sre@debian.org>
- <1393705366-32420-1-git-send-email-sre@debian.org>
- <1393705366-32420-2-git-send-email-sre@debian.org>
- <5336A9F9.4080504@kernel.org>
- <20140420120823.GB12135@amd.pavel.ucw.cz>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] arm: exynos: Add MCPM call-back functions
+Date: Wed, 23 Apr 2014 17:13:25 +0100
+Message-ID: <20140423161325.GB1243@e102568-lin.cambridge.arm.com>
+References: <1397239311-27717-6-git-send-email-a.kesavan@samsung.com>
+ <1398147435-3122-1-git-send-email-a.kesavan@samsung.com>
+ <535650AE.90501@linaro.org>
+ <alpine.LFD.2.11.1404221129150.980@knanqh.ubzr>
+ <5356C134.8070707@linaro.org>
+ <alpine.LFD.2.11.1404221540540.980@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.11.1404221540540.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140420120823.GB12135-tWAi6jLit6GreWDznjuHag@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 22, 2014 at 08:56:23PM +0100, Nicolas Pitre wrote:
+> 
+> [ Moved Lorenzo up in the addressee list to get his attention ]
 
---PmA2V3Z32TCmWXqI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Sorry for the delay in replying.
 
-On Sun, Apr 20, 2014 at 02:08:23PM +0200, Pavel Machek wrote:
-> On Sat 2014-03-29 11:09:45, Jonathan Cameron wrote:
-> > On 01/03/14 20:22, Sebastian Reichel wrote:
-> > >Update rx51-battery driver to use the new IIO API of
-> > >twl4030-madc and add DT support.
+> On Tue, 22 Apr 2014, Daniel Lezcano wrote:
+> 
+> > On 04/22/2014 05:40 PM, Nicolas Pitre wrote:
+> > > On Tue, 22 Apr 2014, Daniel Lezcano wrote:
 > > >
-> > >Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
-> > This looks fine to me.  I'd love to see a more generic solution, but
-> > we can work on that another time.
-> >=20
-> > Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->=20
-> Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
->=20
-> I don't see this patch in 3.15-rc nor -next. What is needed to push
-> this patch?
+> > > > On 04/22/2014 08:17 AM, Abhilash Kesavan wrote:
+> > > > > +/*
+> > > > > + * The common v7_exit_coherency_flush API could not be used because of the
+> > > > > + * Erratum 799270 workaround. This macro is the same as the common one (in
+> > > > > + * arch/arm/include/asm/cacheflush.h) except for the erratum handling.
+> > > > > + */
+> > > > > +#define exynos_v7_exit_coherency_flush(level) \
+> > > > > +	asm volatile( \
+> > > > > +	"stmfd	sp!, {fp, ip}\n\t"\
+> > > > > +	"mrc	p15, 0, r0, c1, c0, 0	@ get SCTLR\n\t" \
+> > > > > +	"bic	r0, r0, #"__stringify(CR_C)"\n\t" \
+> > > > > +	"mcr	p15, 0, r0, c1, c0, 0	@ set SCTLR\n\t" \
+> > > > > +	"isb\n\t"\
+> > > > > +	"bl	v7_flush_dcache_"__stringify(level)"\n\t" \
+> > > > > +	"clrex\n\t"\
+> > > > > +	"mrc	p15, 0, r0, c1, c0, 1	@ get ACTLR\n\t" \
+> > > > > +	"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t" \
+> > > > > +	/* Dummy Load of a device register to avoid Erratum 799270 */ \
+> > > >
+> > > > Wouldn't make sense to add the erratum in the Kconfig and re-use it in the
+> > > > generic v7_exit_coherency_flush macro instead of redefining it ?
+> > >
+> > > The implementation of the erratum (the dummy device register load) is
+> > > platform specific I'm afraid.
+> > >
+> > > Is TC2 also concerned by this erratum, or is this Samsung specific?
+> > 
+> > Sounds like it is ARM Cortex-A15MP specific:
+> > 
+> > http://infocenter.arm.com/help/topic/com.arm.doc.epm028090/cortex_a15_mpcore_software_developers_errata_notice_r2_v12.pdf
+> > 
+> > Page 31.
+> 
+> The condition for hitting the erratum is: "The L2 cache block has been 
+> idle for 256 or more cycles with no memory requests from any core, no 
+> external snoops, and no ACP requests".
+> 
+> Given that the operation that almost immediately precedes the 
+> problematic mcr is a call to v7_flush_dcache_louis or 
+> v7_flush_dcache_all, is this possible that the condition for the erratum 
+> could ever be met?
 
-The problem is, that the power subsystem maintainers seem to be too
-busy with real life. The last change in their git [0] was 2014-02-01
-and I haven't seen any mail from them on the mailinglist since about
-the same time. I have just queried his status @ Google+ (there were
-some life-signs there).
+Yes, if we execute out of the I-cache (no-data accesses) I think this might be
+triggered.
 
-[0] http://git.infradead.org/battery-2.6.git/
+On a side note, the errata affects also the setting of SMP bit
+(__v7_ca15mp_setup and cpu_v7_do_resume) but we do nothing there (it
+is a different situation though, MMU there is off and D-cache off...but
+I-cache is allowed to be on, so I am actually checking if we should be doing
+something there too).
 
--- Sebastian
+> If no then we should document that v7_exit_coherency_flush(() is safe 
+> against erratum 799270 and use it here.
 
---PmA2V3Z32TCmWXqI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Eh, I wish we could use it safely, I am currently investigating and will get
+back to you asap.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Lorenzo
 
-iQIcBAEBCgAGBQJTV+XAAAoJENju1/PIO/qaNJYP/1BQtRMaBOpjJRSi4wbXkTg6
-/KjOdujCzAJEPxBfMZ2jvGDLOXxY/xd44VIfyjKNvq9Om2YfO01xMgwtujMKn16w
-vAqsU9lAY1kjv8dEWjFxS7vCQ9tqttqfxaJ4/fbxJZiUiMjJZ0aUpIjUGqn0/Jeq
-L1c9tjmFVFCUT9S0dac9eNIrxq01yqAYAD9fhFeCkoL0qH0gkTZIMgDn7u3VbfWj
-45LvsuK451PeTreywl+IWBX412dgzCFLaTSIH672rKk3w/TJ4kRfue64fY3NXebi
-22/v7Pjx09lk/LCCrQGieTfktYiQtf+4nynagVc7ArscfXKuJrQ5xqxYyRStbZxl
-x0DXvvJJ8+ImhJ2XXtbmJ+HP60lMQxc1s6Km4w/4AILfJXeDGE0iWZwN/CUTTdM3
-22mx3lJrxRITaU3tWeM1FKb+wyzygFb5lMHpwrF0rStHA/DuzKP80zKSngDJE4cL
-BWrChW42vbedDPGE9gKcOvT/XeSVbJt/gEGxSwVqxbGuoEZTRQ4AbQYxutSRv5xy
-PXVWdXLoNc1tIzpELXQ8n0bPy4xI9d8tCG7xHwruDSeYWkf3r+FU1/laG1HndFvl
-uJKOUhSqQEi+lh6LHVaKB79dDlioYN0xhyZhnOGh9+M1NDap4U0QmygIhgVBS+LC
-p0LD9AKLTdmKzhfMQ246
-=5r4P
------END PGP SIGNATURE-----
+> > > > > +	"ldr	r4, [%0]\n\t" \
+> > > > > +	"and	r4, r4, #0\n\t" \
+> > > > > +	"orr	r0, r0, r4\n\t" \
+> > > > > +	"mcr	p15, 0, r0, c1, c0, 1	@ set ACTLR\n\t" \
+> > > > > +	"isb\n\t" \
+> > > > > +	"dsb\n\t" \
+> > > > > +	"ldmfd	sp!, {fp, ip}" \
+> > > > > +	: \
+> > > > > +	: "Ir" (S5P_INFORM0) \
+> > > > > +	: "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", \
+> > > > > +	  "r9", "r10", "lr", "memory")
+> > > >
+> 
 
---PmA2V3Z32TCmWXqI--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
