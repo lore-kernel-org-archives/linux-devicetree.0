@@ -1,25 +1,83 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 7/7] ARM: sun6i: dt: Add A31 DMA controller to DTSI
-Date: Wed, 23 Apr 2014 14:35:03 +0200
-Message-ID: <201404231435.03920.arnd@arndb.de>
-References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com> <1394723659-4995-8-git-send-email-maxime.ripard@free-electrons.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 6/7] i2c: ChromeOS EC tunnel driver
+Date: Wed, 23 Apr 2014 13:37:46 +0100
+Message-ID: <20140423123746.GG640@lee--X1>
+References: <1398185154-19404-1-git-send-email-dianders@chromium.org>
+ <1398185154-19404-7-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1394723659-4995-8-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Emilio Lopez <emilio@elopez.com.ar>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vinod.koul@intel.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, andriy.shevchenko@intel.com, linux-kernel@vger.kernel.org, zhuzhenhua@allwinnertech.com, shuge@allwinnertech.com, linux-sunxi@googlegroups.com, kevin.z.m.zh@gmail.com, sunny@allwinnertech.com, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398185154-19404-7-git-send-email-dianders@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: swarren@nvidia.com, wsa@the-dreams.de, abrestic@chromium.org, dgreid@chromium.org, olof@lixom.net, sjg@chromium.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sameo@linux.intel.com, jdelvare@suse.de, shane.huang@amd.com, maxime.ripard@free-electrons.com, laurent.pinchart+renesas@ideasonboard.com, u.kleine-koenig@pengutronix.de, bjorn.andersson@sonymobile.com, kevin.strasser@linux.intel.com, linux@prisktech.co.nz, andrew@lunn.ch, andriy.shevchenko@linux.intel.com, schwidefsky@de.ibm.com, matt.porter@linaro.org, ch.naveen@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 13 March 2014, Maxime Ripard wrote:
-> Now that we have a DMA driver, we can add the DMA bindings in the DTSI for the
-> controller and the devices supported that can use DMA.
-> 
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+On Tue, 22 Apr 2014, Doug Anderson wrote:
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> On ARM Chromebooks we have a few devices that are accessed by both th=
+e
+> AP (the main "Application Processor") and the EC (the Embedded
+> Controller).  These are:
+> * The battery (sbs-battery).
+> * The power management unit tps65090.
+>=20
+> On the original Samsung ARM Chromebook these devices were on an I2C
+> bus that was shared between the AP and the EC and arbitrated using
+> some extranal GPIOs (see i2c-arb-gpio-challenge).
+>=20
+> The original arbitration scheme worked well enough but had some
+> downsides:
+> * It was nonstandard (not using standard I2C multimaster)
+> * It only worked if the EC-AP communication was I2C
+> * It was relatively hard to debug problems (hard to tell if i2c issue=
+s
+>   were caused by the EC, the AP, or some device on the bus).
+>=20
+> On the HP Chromebook 11 the design was changed to:
+> * The AP/EC comms were still i2c, but the battery/tps65090 were no
+>   longer on the bus used for AP/EC communication.  The battery was
+>   exposed to the AP through a limited i2c tunnel and tps65090 was
+>   exposed to the AP through a custom Linux driver.
+>=20
+> On the Samsung ARM Chromebook 2 the scheme is changed yet again, now:
+> * The AP/EC comms are now using SPI for faster speeds.
+> * The EC's i2c bus is exposed to the AP through a full i2c tunnel.
+>=20
+> The upstream "tegra124-venice2" uses the same scheme as the Samsung
+> ARM Chromebook 2, though it has a different set of components on the
+> other side of the bus.
+>=20
+> This driver supports the scheme used by the Samsung ARM Chromebook 2.
+> Future patches to this driver could add support for the battery tunne=
+l
+> on the HP Chromebook 11 (and perhaps could even be used to access
+> tps65090 on the HP Chromebook 11 instead of using a special driver,
+> but I haven't researched that enough).
+>=20
+> Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
+> Signed-off-by: Simon Glass <sjg@chromium.org>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Tested-by: Andrew Bresticker <abrestic@chromium.org>
+> Tested-by: Stephen Warren <swarren@nvidia.com>
+> ---
+> Changes in v2:
+> - Update tunnel binding as per swarren
+>=20
+>  .../devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt |  39 +++
+>  drivers/i2c/busses/Kconfig                         |   9 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-cros-ec-tunnel.c            | 304 +++++++++++=
+++++++++++
+>  drivers/mfd/cros_ec.c                              |   5 +
 
-But why does this patch have to wait for the driver to get merged?
+=46or the MFD changes:
+  Acked-by: Lee Jones <lee.jones@linaro.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
