@@ -1,82 +1,52 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
-Date: Wed, 23 Apr 2014 18:08:21 +0100
-Message-ID: <20140423170821.GJ5649@arm.com>
-References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
- <20140422103642.GF7484@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/3] of: dts: enable memory@0 quirk for PPC32 only
+Date: Wed, 23 Apr 2014 18:25:23 +0100
+Message-ID: <20140423172523.GM5904@bivouac.eciton.net>
+References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
+ <CAL_JsqL8B2ZY7ACXKX3J8VN5ukjKWuycgfDZpp4kYzBxg6BLmQ@mail.gmail.com>
+ <20140418124821.GE5904@bivouac.eciton.net>
+ <CAL_JsqKdFyhHfkcC1E9QuKjQTrXwoELYG+CFTpgf2-jqDvxGmA@mail.gmail.com>
+ <20140422130829.CA29DC4042C@trevor.secretlab.ca>
+ <20140422140526.GK5904@bivouac.eciton.net>
+ <20140423131508.6E53BC408D2@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Zhang <zhangwm@marvell.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <20140423131508.6E53BC408D2-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 11:31:09AM +0100, Neil Zhang wrote:
->=20
-> > -----Original Message-----
-> > From: Will Deacon [mailto:will.deacon@arm.com]
-> > Sent: 2014=E5=B9=B44=E6=9C=8822=E6=97=A5 18:37
-> > To: Neil Zhang
-> > Cc: linux@arm.linux.org.uk; linux-arm-kernel@lists.infradead.org;
-> > linux-kernel@vger.kernel.org; Sudeep Holla; devicetree@vger.kernel.=
-org
-> > Subject: Re: [PATCH v4] ARM: perf: save/restore pmu registers in pm=
- notifier
-> >=20
-> > Hi Neil,
-> >=20
-> > On Tue, Apr 22, 2014 at 03:26:36AM +0100, Neil Zhang wrote:
-> > > This adds core support for saving and restoring CPU PMU registers=
- for
-> > > suspend/resume support i.e. deeper C-states in cpuidle terms.
-> > > This patch adds support only to ARMv7 PMU registers save/restore.
-> > > It needs to be extended to xscale and ARMv6 if needed.
-> > >
-> > > I made this patch because DS-5 is not working on Marvell's CA7 ba=
-sed SoCs.
-> > > And it has consulted Sudeep KarkadaNagesha's patch set for multip=
-le PMUs.
-> > >
-> > > Thanks Will and Sudeep's suggestion to only save / restore used e=
-vents.
-> >=20
-> > Whilst this is a step in the right direction, I'd still like to see=
- the save/restore
-> > predicated on something in the device-tree or otherwise. Most SoCs =
-*don't*
-> > require these registers to be preserved by software, so we need a w=
-ay to
-> > describe that the PMU is in a power-domain where its state is lost =
-when the
-> > CPU goes idle.
-> >=20
-> > This doesn't sound like a PMU-specific problem, so there's a possib=
-ility that
-> > this has been discussed elsewhere, in the context of other IP block=
-s
-> >=20
-> > [adding the devicetree list in case somebody there is aware of any =
-work in
-> > this area]
-> >=20
->=20
-> Thanks Will.
-> What should I do now?
-> Add a filed under PMU or waiting for somebody whether there are gener=
-al
-> supporting for power domain maintain.
+On Wed, Apr 23, 2014 at 02:15:08PM +0100, Grant Likely wrote:
+> > The reason for me doing that is because we (including you) agreed at
+> > the discussion held during LCU13 that this was the safest way of
+> > preventing "mischief" like userland trying to read information from
+> > /proc/device-tree...
+> 
+> I'm not the most consistent of people. I often change my mind and then
+> have no recollection of ever thinking differently.
 
-I think we need some input from the device-tree guys to see whether the=
-y
-would object to us solving this locally (in the PMU node) or not.
-Personally, I'd much prefer a general way to describe the need for
-pm-notifiers, but if that's not being looked at then we can cook someth=
-ing
-specifically for our needs.
+And that is fine, but you were not the only person agreeing.
 
-Will
+> Userland reading from /proc/device-tree isn't so much a problem, but
+> kernel drivers doing it might be.
+> 
+> But, regardless of whether or not the stub clears out the memory
+> nodes, it is still I think good practice for the kernel to make the
+> decision to ignore memory nodes, and not rely on them being cleared
+> correctly.
+
+I also remember you saying that relaxing restrictions later on is a lot
+easier than tightening them. On that basis, can we please get the UEFI
+set merged before we start redefining the stub/kernel protocol which was
+agreed at LCU (November last year) after spending a month or two trying
+to get sufficient number of interested parties in the same room?
+
+/
+	Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
