@@ -1,46 +1,28 @@
-From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Subject: [PATCH 2/5] clk: berlin: add berlin clocks DT bindings documentation
-Date: Wed, 23 Apr 2014 16:01:04 +0200
-Message-ID: <1398261667-12621-3-git-send-email-alexandre.belloni@free-electrons.com>
-References: <1398261667-12621-1-git-send-email-alexandre.belloni@free-electrons.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/3] ARM: qcom: Select PINCTRL by default for ARCH_QCOM
+Date: Wed, 23 Apr 2014 16:03:23 +0200
+Message-ID: <CACRpkdauApm8_3DGE3Q4k-xkEpcrb2nUn=UhS+xHnVn4t+g2CA@mail.gmail.com>
+References: <1397531437-9104-1-git-send-email-agross@codeaurora.org>
+	<1397531437-9104-4-git-send-email-agross@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398261667-12621-1-git-send-email-alexandre.belloni@free-electrons.com>
+In-Reply-To: <1397531437-9104-4-git-send-email-agross@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, devicetree@vger.kernel.org
+To: Andy Gross <agross@codeaurora.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document the newly added berlin clock driver
+On Tue, Apr 15, 2014 at 5:10 AM, Andy Gross <agross@codeaurora.org> wrote:
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
----
-Cc: devicetree@vger.kernel.org
- Documentation/devicetree/bindings/clock/berlin-clock.txt | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+> Add missing PINCTRL selection.  This enables selection of pinctrollers for
+> Qualcomm processors.
+>
+> Signed-off-by: Andy Gross <agross@codeaurora.org>
 
-diff --git a/Documentation/devicetree/bindings/clock/berlin-clock.txt b/Documentation/devicetree/bindings/clock/berlin-clock.txt
-index 49b7860bffb8..00f0053ef587 100644
---- a/Documentation/devicetree/bindings/clock/berlin-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/berlin-clock.txt
-@@ -9,6 +9,8 @@ Required properties:
- 	"marvell,berlin2-pll",
- 	"marvell,berlin2q-pll":
- 		CPU PLL and System PLL
-+	"marvell,berlin2-clk":
-+		simple clocks
- - reg: Address and length of the clock register set.
- - #clock-cells: from common clock binding; shall be set to 0.
- - clocks: from common clock binding
-@@ -26,4 +28,9 @@ cpupll: cpupll@ea003c {
- 	reg = <0xea003c 0x8>;
- };
- 
--
-+sdio0xinclk: sdio0xinclk@ea023c {
-+	compatible = "marvell,berlin-clk";
-+	clocks = <&syspll>;
-+	#clock-cells = <0>;
-+	reg = <0xea023c 4>;
-+};
--- 
-1.9.1
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+
+David are you picking this to the Qualcomm tree?
+
+Yours,
+Linus Walleij
