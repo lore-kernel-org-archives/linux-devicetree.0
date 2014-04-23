@@ -1,110 +1,124 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: [linux-sunxi] Re: [PATCH v8 07/17] ARM: dts: sun5i: Add mmc controller
- nodes
-Date: Wed, 23 Apr 2014 11:57:25 +0200
-Message-ID: <53578E85.9000906@redhat.com>
-References: <1398164497-14212-1-git-send-email-hdegoede@redhat.com> <1398164497-14212-8-git-send-email-hdegoede@redhat.com> <20140423094840.GL24905@lukather>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
+Date: Wed, 23 Apr 2014 15:32:16 +0530
+Message-ID: <53578FA8.6040607@ti.com>
+References: <201404120415.43761.sergei.shtylyov@cogentembedded.com> <534B77E2.8060901@ti.com> <53557BFE.5020908@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140423094840.GL24905@lukather>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, =?ISO-8859-1?Q?David_Lanzend=F6?= =?ISO-8859-1?Q?rfer?= <david.lanzendoerfer@o2s.ch>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <53557BFE.5020908@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 04/23/2014 11:48 AM, Maxime Ripard wrote:
-> On Tue, Apr 22, 2014 at 01:01:27PM +0200, Hans de Goede wrote:
->> From: David Lanzend=F6rfer <david.lanzendoerfer@o2s.ch>
->>
->> Add nodes for the 3 mmc controllers found on A10s SoCs and for the 2=
- mmc
->> controllers found on A13 SoCs.
->>
->> Signed-off-by: David Lanzend=F6rfer <david.lanzendoerfer@o2s.ch>
->> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
->> ---
->>  arch/arm/boot/dts/sun5i-a10s.dtsi | 27 +++++++++++++++++++++++++++
->>  arch/arm/boot/dts/sun5i-a13.dtsi  | 18 ++++++++++++++++++
->>  2 files changed, 45 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/s=
-un5i-a10s.dtsi
->> index 79989ed..12113f9 100644
->> --- a/arch/arm/boot/dts/sun5i-a10s.dtsi
->> +++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
->> @@ -338,6 +338,33 @@
->>  			#size-cells =3D <0>;
->>  		};
->> =20
->> +		mmc0: mmc@01c0f000 {
->> +			compatible =3D "allwinner,sun5i-a13-mmc";
->> +			reg =3D <0x01c0f000 0x1000>;
->> +			clocks =3D <&ahb_gates 8>, <&mmc0_clk>;
->> +			clock-names =3D "ahb", "mod";
->> +			interrupts =3D <32>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		mmc1: mmc@01c10000 {
->> +			compatible =3D "allwinner,sun5i-a13-mmc";
->> +			reg =3D <0x01c10000 0x1000>;
->> +			clocks =3D <&ahb_gates 9>, <&mmc1_clk>;
->> +			clock-names =3D "ahb", "mod";
->> +			interrupts =3D <33>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		mmc2: mmc@01c11000 {
->> +			compatible =3D "allwinner,sun5i-a13-mmc";
->> +			reg =3D <0x01c11000 0x1000>;
->> +			clocks =3D <&ahb_gates 10>, <&mmc2_clk>;
->> +			clock-names =3D "ahb", "mod";
->> +			interrupts =3D <34>;
->> +			status =3D "disabled";
->> +		};
->> +
->>  		usbphy: phy@01c13400 {
->>  			#phy-cells =3D <1>;
->>  			compatible =3D "allwinner,sun5i-a13-usb-phy";
->> diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/su=
-n5i-a13.dtsi
->> index f01c315..a0e55e8 100644
->> --- a/arch/arm/boot/dts/sun5i-a13.dtsi
->> +++ b/arch/arm/boot/dts/sun5i-a13.dtsi
->> @@ -320,6 +320,24 @@
->>  			#size-cells =3D <0>;
->>  		};
->> =20
->> +		mmc0: mmc@01c0f000 {
->> +			compatible =3D "allwinner,sun5i-a13-mmc";
->> +			reg =3D <0x01c0f000 0x1000>;
->> +			clocks =3D <&ahb_gates 8>, <&mmc0_clk>;
->> +			clock-names =3D "ahb", "mod";
->> +			interrupts =3D <32>;
->> +			status =3D "disabled";
->> +		};
->> +
->> +		mmc2: mmc@01c11000 {
->> +			compatible =3D "allwinner,sun5i-a13-mmc";
->> +			reg =3D <0x01c11000 0x1000>;
->> +			clocks =3D <&ahb_gates 10>, <&mmc2_clk>;
->> +			clock-names =3D "ahb", "mod";
->> +			interrupts =3D <34>;
->> +			status =3D "disabled";
->> +		};
->> +
->=20
-> The A13 user manual reports that there is 3 of them in the A13, just
-> like on the A10s. Have you forgotten one?
+On Tuesday 22 April 2014 01:43 AM, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 04/14/2014 09:53 AM, Kishon Vijay Abraham I wrote:
+> 
+>>> This PHY, though formally being a part of Renesas USBHS controller, contains
+>>> the
+>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
+>>> them
+>>> channels) to the different USB controllers: channel 0 can be connected to
+>>> either
+>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
+>>> or xHCI controllers.
+> 
+>>> This is a new driver for this USB PHY currently already supported under
+>>> drivers/
+>>> usb/phy/. The reason for writing the new driver was the requirement that the
+>>> multiplexing of USB channels to the controller be dynamic, depending on what
+>>> USB drivers are loaded,  rather than static as provided by the old driver.
+>>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
+>>> ideally. The new driver only supports device tree probing for now.
+> 
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> [...]
+> 
+>>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
+>>> @@ -0,0 +1,283 @@
+> 
+> [...]
+> 
+>>> +static int rcar_gen2_phy_init(struct phy *p)
+>>> +{
+>>> +    struct rcar_gen2_phy *phy = phy_get_drvdata(p);
+>>> +    struct rcar_gen2_phy_driver *drv = phy->drv;
+>>> +    unsigned long flags;
+>>> +    u32 ugctrl2;
+> 
+>> We can just add
+>>     if (!phy->select_mask)
+>>         return 0;
+> 
+>    Yes, we can, if you'd prefer that.
+> 
+>>> +
+>>> +    if (phy->select_mask) {
+>>> +        clk_prepare_enable(drv->clk);
+>>> +
+>>> +        spin_lock_irqsave(&drv->lock, flags);
+>>> +        ugctrl2 = readl(drv->base + USBHS_UGCTRL2);
+>>> +        ugctrl2 &= ~phy->select_mask;
+>>> +        ugctrl2 |= phy->select_value;
+>>> +        writel(ugctrl2, drv->base + USBHS_UGCTRL2);
+>>> +        spin_unlock_irqrestore(&drv->lock, flags);
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+> 
+> [...]
+> 
+>>> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
+>>> +{
+> 
+> [...]
+> 
+>>> +    drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>>> +    drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
+>>> +    drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>>> +    drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
+>>> +    drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>>> +    drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
+>>> +    drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>>> +    drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
+>>> +
+>>> +    for (i = 0; i < NUM_USB_CHANNELS; i++) {
+> 
+>> Instead of hard coding the number of channels,
+> 
+>    It's hard coded in the hardware. We can even decrease that number to 2 as
 
-mmc1 is likely there, but it is not usable as it is not routed to the o=
-utside,
-so I've left it out deliberately.
+right, that's why thought dt should have that information.
+> for the channel #1 we have nothing to do, regardless of whether it's present or
+> not...
+> 
+>> we can model the channels (PHYs) as sub-nodes of the main PHY
+> 
+>    Hm, I don't think such representation would be adequate: the channels
+> themselves do not usually correspond to any particular PHY, that's why I used
+> #phy-cells = <2>.
+> 
+>> in dt and use it to create individual PHYs.
+> 
+>    Well, we probably can... however, I fail to see any immediate gain from
+> it here...
+>    I have to ask why you've selected this particular driver for such DT
+> representation experiments, despite it not being the first one supporting
+> multiple PHYs?
 
-Regards,
+just that it didn't strike before.. but I think all multiple PHYs should be
+modelled this way.
 
-Hans
+Thanks
+Kishon
