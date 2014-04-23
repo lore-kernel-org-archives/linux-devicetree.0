@@ -1,138 +1,113 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] sysfs, device-tree: aid for debugging device tree boot
- problems
-Date: Wed, 23 Apr 2014 12:54:18 +0100
-Message-ID: <20140423115418.A8C0EC40969@trevor.secretlab.ca>
-References: <53571685.5060403@gmail.com> <20140423032044.GA26233@kroah.com>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: [PATCH 2/2] ARM: dts: hip04: add gpio pieces
+Date: Wed, 23 Apr 2014 19:51:35 +0800
+Message-ID: <5357A947.2010506@hisilicon.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140423032044.GA26233-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Apr 2014 20:20:44 -0700, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> wrote:
-> On Tue, Apr 22, 2014 at 06:25:25PM -0700, Frank Rowand wrote:
-> > Create some infrastructure to aid trouble shooting device tree related
-> > boot issues.
-> > 
-> > Add a %driver_name file to each device tree node sysfs directory which has had
-> > a driver bound to it.  This allows detecting device tree nodes which failed
-> > to be bound to any driver.
-> 
-> Why is this needed, shouldn't there already be a "driver" symlink in
-> sysfs for these devices when a driver binds to them?  The rest of the
-> driver model works that way, why is of devices any different?
-> 
+Hisilicon Soc hip04 has four gpio controllers, each one has 32
+gpios and can be configured to be an interrupt controller.
+The gpio controllers are compatible with the snps,dw-apb-gpio
+driver. This patch add the corresponding device tree nodes.
 
-Because it hasn't been added yet! I only just committed the change to
-convert device_nodes into kobjects in v3.14. The next step is to add
-driver symlinks.
+Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+---
+ arch/arm/boot/dts/hip04.dtsi |   76 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 76 insertions(+)
 
-That said, the devicetree node is already exposed in the uevent for a
-device. It should already be possible to find all device tree nodes that
-don't have a device, or devices without a driver:
-
-To get a list of all nodes:
-
-find /proc/device-tree/ -type d | sed -e 's/\/proc\/device-tree//'
-
-or a little more nuanced, only choosing nodes with a compatible property:
-
-for k in `find /proc/device-tree/ -name compatible`; do
-	echo $(dirname $k) | sed -e 's/\/proc\/device-tree//'
-done | sort
-
-It can get even more refined than that if need be.
-
-To get a list of all nodes with a device that has been created:
-
-for k in `find devices -name uevent`; do
-	grep '^OF_FULLNAME' $k | sed -e 's/OF_FULLNAME=//'
-done | sort
-
-To get a list of all nodes with a device that has been bound to a driver:
-
-for k in `find devices -name uevent`; do
-	if [[ -d $(dirname $k)/driver ]]; then
-		grep '^OF_FULLNAME' $k | sed -e 's/OF_FULLNAME=//'
-	fi
-done | sort
-
-
-The suggestions you have below would be the anything in the first list
-that isn't in the second or third:
-
-bound=$(for k in `find /sys/devices -name uevent`; do
-		if [[ -d $(dirname $k)/driver ]]; then
-			grep '^OF_FULLNAME' $k | sed -e 's/OF_FULLNAME=//'
-		fi
-	done)
-
-nodes=$(for k in `find /proc/device-tree/ -name compatible`; do
-		echo $(dirname $k) | sed -e 's/\/proc\/device-tree//'
-	done | sort)
-
-for n in $nodes; do
-	if ! echo $bound | grep -q "$n"; then
-		echo $n $(cat /proc/device-tree/$n/compatible)
-	fi
-done
-
-
-
-> > Examples of using the %driver_name file (note that /proc/device-tree is a
-> > link to the base of the device tree sysfs tree):
-> > 
-> > 
-> >   1) To find list of device tree nodes with no driver:
-> > 
-> >   # A few false positives may be reported.  For example,
-> >   #   node_full_path of "." is the board.
-> >   #
-> >   # output is: node_full_path compatible_string
-> >   #
-> >   cd /proc/device-tree
-> >   for k in `find . -type d`; do
-> >      if [[ -f ${k}/compatible && ! -f ${k}/%driver_name ]] ; then
-> >         if [[ "`cat ${k}/compatible`" != "simple-bus" ]] ; then
-> >            echo `echo ${k} | sed -e 's|./||'` `cat ${k}/compatible`
-> >         fi
-> >      fi
-> >   done | sort
-> > 
-> > 
-> >   2) To find list of device tree nodes with a bound driver:
-> > 
-> >   # output is:  node_full_path driver_name
-> >   #
-> >   cd /proc/device-tree
-> >   for k in `find . -name %driver_name` ; do
-> >      echo `echo ${k} | sed -e 's|./||' -e 's|/%driver_name$||'` `cat ${k}`
-> >   done | sort
-> > 
-> > 
-> >   3) To find list of device tree nodes with a bound driver:
-> > 
-> >   # output is:  driver_name node_full_path
-> >   #
-> >   cd /proc/device-tree
-> >   for k in `find . -name %driver_name` ; do
-> >      echo `cat ${k}` `echo ${k} | sed -e 's|./||' -e 's|/%driver_name$||'`
-> >   done | sort
-> 
-> If we take this patch, these examples should be somewhere in the
-> documentation to make it easy for others.
-> 
-> > Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> 
-> Minor nit, your From: line doesn't match this signed-off-by: so
-> something has to change (or add a new From: line, like SubmittingPatches
-> decribes how to do.)
-> 
-> thanks,
-> 
-> greg k-h
+diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+index 7e909ee..c7c1f8c 100644
+--- a/arch/arm/boot/dts/hip04.dtsi
++++ b/arch/arm/boot/dts/hip04.dtsi
+@@ -235,5 +235,81 @@
+ 			reg-shift = <2>;
+ 			status = "disabled";
+ 		};
++
++		gpio@4003000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x4003000 0x1000>;
++
++			gpio3: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 392 4>;
++			};
++		};
++
++		gpio@4002000 {
++ 			#address-cells = <1>;
++ 			#size-cells = <0>;
++ 			compatible = "snps,dw-apb-gpio";
++ 			reg = <0x4002000 0x1000>;
++
++ 			gpio2: gpio-controller@0 {
++ 				compatible = "snps,dw-apb-gpio-port";
++ 				gpio-controller;
++ 				#gpio-cells = <2>;
++ 				snps,nr-gpios = <32>;
++ 				reg = <0>;
++				interrupt-parent = <&gic>;
++ 				interrupt-controller;
++ 				#interrupt-cells = <2>;
++ 				interrupts = <0 391 4>;
++ 			};
++ 		};
++
++		gpio@4001000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x4001000 0x1000>;
++
++			gpio1: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 390 4>;
++			};
++		};
++
++		gpio@4000000 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			compatible = "snps,dw-apb-gpio";
++			reg = <0x4000000 0x1000>;
++
++			gpio0: gpio-controller@0 {
++				compatible = "snps,dw-apb-gpio-port";
++				gpio-controller;
++				#gpio-cells = <2>;
++				snps,nr-gpios = <32>;
++				reg = <0>;
++				interrupt-parent = <&gic>;
++				interrupt-controller;
++				#interrupt-cells = <2>;
++				interrupts = <0 389 4>;
++			};
++		};
+ 	};
+ };
+-- 1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
