@@ -1,102 +1,73 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
-Date: Wed, 23 Apr 2014 23:34:32 +0300
-Message-ID: <1398285272.14329.6.camel@violet>
-References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
-	 <1398259168.4724.217.camel@iivanov-dev>
-	 <20140423181614.GK17066@sonymobile.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: dra7-evm: keep TPS core control signals active
+Date: Wed, 23 Apr 2014 15:34:53 -0500
+Message-ID: <1398285293-32106-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140423181614.GK17066@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Nishanth Menon <nm@ti.com>, J Keerthy <j-keerthy@ti.com>, Subramaniam Chanderashekarapuram <subramaniam.ca@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+SYSEN1, 2 control DDR voltages and REGEN2 actually controls PLLEN
+(without which platform cannot function). We need to mark in dts that
+these are supposed to be always on.
 
-On Wed, 2014-04-23 at 11:16 -0700, Courtney Cavin wrote:
-> On Wed, Apr 23, 2014 at 03:19:28PM +0200, Ivan T. Ivanov wrote:
-> > 
-> > Hi,
-> > 
-> > On Tue, 2014-04-22 at 17:31 -0700, Courtney Cavin wrote:
-> > > From: Josh Cartwright <joshc@codeaurora.org>
-> > > 
-> > > The Qualcomm 8941 and 8841 PMICs are components used with the Snapdragon
-> > > 800 series SoC family.  This driver exists largely as a glue mfd component,
-> > > it exists to be an owner of an SPMI regmap for children devices
-> > > described in device tree.
-> > > 
-> > 
-> > Thanks. This is exactly what I have planed to do :-)
-> > 
-> 
-> Sorry if I usurped your work!
+Palmas REGEN1 and REGEN3(called REGEN2) are unused on the platform. So
+we let them auto disable themselves by not defining them.
 
-Noting to worry. I just was surprised how close it is to my vision ;-).
+Cc: J Keerthy <j-keerthy@ti.com>
+Signed-off-by: Subramaniam Chanderashekarapuram <subramaniam.ca@ti.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
 
-> 
-> > > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> > > Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
-> > > ---
-> > >  drivers/mfd/Kconfig  | 13 +++++++++++
-> > >  drivers/mfd/Makefile |  1 +
-> > >  drivers/mfd/pm8x41.c | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++++
-> > >  3 files changed, 77 insertions(+)
-> > >  create mode 100644 drivers/mfd/pm8x41.c
-> > > 
-> > 
-> > <snip>
-> > 
-> > > +
-> > > +static int pm8x41_probe(struct spmi_device *sdev)
-> > > +{
-> > > +	struct regmap *regmap;
-> > > +
-> > > +	regmap = devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
-> > > +	if (IS_ERR(regmap)) {
-> > > +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
-> > > +		return PTR_ERR(regmap);
-> > > +	}
-> > > +
-> > > +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
-> > 
-> > I think that this will not going to work. For example in this particular
-> > case, both controllers have "qcom,qpnp-revid" peripheral which is
-> > located at offset 0x100.
-> > 
-> > And the result is:
-> > 
-> > [    0.963944] sysfs: cannot create duplicate filename '/bus/platform/devices/100.revid'
-> > 
-> [...]
-> > 
-> > Any suggestions?
-> 
-> That's expected behavior actually.  You have two nodes in DT named the
-> same thing and at the same address.  This error is due to the fact that
-> all devices are put in '/bus/platform/devices/' with a name made from
-> the unit address and name specified in DT.  There's no other unique
-> information used to differentiate the devices.
-> 
-> If you simply change the names in DT, it works.  
+Patch based on v3.15-rc2, also tested on next-20140423 tag:
 
-Sure, it will work. But they are part of different address spaces. 
-Why we should add, IMHO, artificial requirement that names should
-be unique? Is it possible to prefix child nodes with parent device 
-address? As side note, why they should be registered on the platform
-bus at all? To be honest I don't have solution.
+Tested by applying [1] (auto disable unused regulator for regulators that are deferred):
+Without [1]: http://slexy.org/raw/s21MCHgeJo (no regulators are disabled)
+with [1]:  http://slexy.org/raw/s21c99YY8n (unused regulators auto disabled).
+ - DDR and board shuts off :(
 
-Regards,
-Ivan  
+With fix: http://slexy.org/raw/s2TH36cThR
 
-> [...] qcom,qpnp-revid 100.qcom,pm8841-revid: PM8841 v2.0 options: 0, 0, 2, 2
-> [...] qcom,qpnp-revid 100.qcom,pm8941-revid: PM8941 v3.0 options: 2, 0, 0, 0
-> 
-> Whether this should be "fixed" in the device/bus/sysfs core, I don't
-> know, but it isn't specifically an issue with this driver, and there's
-> little-to-nothing I can do to fix it here.
-> 
-> -Courtney
+[1] https://patchwork.kernel.org/patch/2545061/
+
+ arch/arm/boot/dts/dra7-evm.dts |   21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index 5babba0..3f94f75 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -209,6 +209,27 @@
+ 					regulator-max-microvolt = <3300000>;
+ 					regulator-boot-on;
+ 				};
++
++				sysen1: sysen1 {
++					/* SYSEN1 ->... EVM_3V3_SW -> DDR VTT */
++					regulator-name = "sysen1";
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				sysen2: sysen2 {
++					/* SYSEN2 -> ... TPS57112 1v35DDR */
++					regulator-name = "sysen2";
++					regulator-boot-on;
++					regulator-always-on;
++				};
++
++				regen2: regen2 {
++					/* Internal REGEN2 is PLLEN */
++					regulator-name = "regen2";
++					regulator-boot-on;
++					regulator-always-on;
++				};
+ 			};
+ 		};
+ 	};
+-- 
+1.7.9.5
+
