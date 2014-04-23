@@ -1,64 +1,109 @@
-From: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am33xx: Move the cppi41dma node so it's probed
- early
-Date: Wed, 23 Apr 2014 17:31:44 +0200
-Message-ID: <5357DCE0.5050204@linutronix.de>
-References: <1398176371-26468-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 10/13] tty: serial: omap: remove some dead code
+Date: Wed, 23 Apr 2014 10:35:04 -0500
+Message-ID: <5357DDA8.4040206@ti.com>
+References: <1398265117-11793-1-git-send-email-balbi@ti.com> <1398265117-11793-10-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398176371-26468-1-git-send-email-ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?windows-1252?Q?Guido_Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398265117-11793-10-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/22/2014 04:19 PM, Ezequiel Garcia wrote:
-> The DMA controller is needed for the USB controller to be correctly
-> registered. Therefore, if the DMA node is located at the end an unece=
-ssary
-> probe deferral is produced systematically.
->=20
-> This is easily fixed by moving the node at the beggining of the child=
- list,
-> so it's probed first.
-
-So you do not change anything except for the order of child nodes. So
-this should be fine and without a compatibility problem.
-
-I added them according to the memory offset so you might want to add a
-comment why you moved this because Mr. Structured & Organized might
-noticed this one day and move it back.
-
-> Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+On 04/23/2014 09:58 AM, Felipe Balbi wrote:
+> nobody passes a DTR_gpio to this driver, so
+> this code is not necessary.
+> 
+> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 > ---
-> Felipe, Sebastian:
->=20
-> I cannot see why the cppi41dma node must be placed inside the
-> "ti,am33xx-usb" compatible node. Tried to move it out
-> so it's probed just like the edma engine, but the USB doesn't work
-> properly in that case.
->=20
-> Can you enlighten me?
 
-So If I remember correctly it was a big bag of crap. If you look at the
-parent node, you notice that it has a ti,hwmods member while the other
-do not have such a property. According to the manual only the whole IP
-block as-it has this. It has to be activated if you use one of those
-devices this includes the two USB-IP cores and the DMA-IP core. I
-didn't manage to come up with something else except to make one parent
-node which creates the childs to have a proper relation here.
+Niel,
+this seems to revert the functionality introduced in
+commit 9574f36fb801035f6ab0fbb1b53ce2c12c17d100
+(OMAP/serial: Add support for driving a GPIO as DTR.)
 
-There was also something with parent - child relation in the way musb
-expected it. I think this was only glue code + musb child node and had
-nothing to do with the DMA engine. But I am not 100% sure=85
+would you like to Ack this change?
 
->=20
-> In any case, this change is good enough to remove the deferral probe.
+>  drivers/tty/serial/omap-serial.c | 39 ---------------------------------------
+>  1 file changed, 39 deletions(-)
+> 
+> diff --git a/drivers/tty/serial/omap-serial.c b/drivers/tty/serial/omap-serial.c
+> index b46aaf3..6654682 100644
+> --- a/drivers/tty/serial/omap-serial.c
+> +++ b/drivers/tty/serial/omap-serial.c
+> @@ -163,10 +163,6 @@ struct uart_omap_port {
+>  	u8			wakeups_enabled;
+>  	u32			features;
+>  
+> -	int			DTR_gpio;
+> -	int			DTR_inverted;
+> -	int			DTR_active;
+> -
+>  	struct serial_rs485	rs485;
+>  	int			rts_gpio;
+>  
+> @@ -694,16 +690,6 @@ static void serial_omap_set_mctrl(struct uart_port *port, unsigned int mctrl)
+>  	serial_out(up, UART_MCR, up->mcr);
+>  	pm_runtime_mark_last_busy(up->dev);
+>  	pm_runtime_put_autosuspend(up->dev);
+> -
+> -	if (gpio_is_valid(up->DTR_gpio) &&
+> -	    !!(mctrl & TIOCM_DTR) != up->DTR_active) {
+> -		up->DTR_active = !up->DTR_active;
+> -		if (gpio_cansleep(up->DTR_gpio))
+> -			schedule_work(&up->qos_work);
+> -		else
+> -			gpio_set_value(up->DTR_gpio,
+> -				       up->DTR_active != up->DTR_inverted);
+> -	}
+>  }
+>  
+>  static void serial_omap_break_ctl(struct uart_port *port, int break_state)
+> @@ -847,9 +833,6 @@ static void serial_omap_uart_qos_work(struct work_struct *work)
+>  						qos_work);
+>  
+>  	pm_qos_update_request(&up->pm_qos_request, up->latency);
+> -	if (gpio_is_valid(up->DTR_gpio))
+> -		gpio_set_value_cansleep(up->DTR_gpio,
+> -					up->DTR_active != up->DTR_inverted);
+>  }
+>  
+>  static void
+> @@ -1672,28 +1655,6 @@ static int serial_omap_probe(struct platform_device *pdev)
+>  	if (IS_ERR(base))
+>  		return PTR_ERR(base);
+>  
+> -	if (gpio_is_valid(omap_up_info->DTR_gpio) &&
+> -	    omap_up_info->DTR_present) {
+> -		ret = devm_gpio_request(&pdev->dev, omap_up_info->DTR_gpio,
+> -				"omap-serial");
+> -		if (ret < 0)
+> -			return ret;
+> -		ret = gpio_direction_output(omap_up_info->DTR_gpio,
+> -					    omap_up_info->DTR_inverted);
+> -		if (ret < 0)
+> -			return ret;
+> -	}
+> -
+> -	if (gpio_is_valid(omap_up_info->DTR_gpio) &&
+> -	    omap_up_info->DTR_present) {
+> -		up->DTR_gpio = omap_up_info->DTR_gpio;
+> -		up->DTR_inverted = omap_up_info->DTR_inverted;
+> -	} else {
+> -		up->DTR_gpio = -EINVAL;
+> -	}
+> -
+> -	up->DTR_active = 0;
+> -
+>  	up->dev = &pdev->dev;
+>  	up->port.dev = &pdev->dev;
+>  	up->port.type = PORT_OMAP;
+> 
 
-Sebastian
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Regards,
+Nishanth Menon
