@@ -1,175 +1,114 @@
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Subject: Generating .config from device tree [was Re: Hardware dependencies
- in Kconfig] (fwd)
-Date: Wed, 23 Apr 2014 19:46:10 +0200
-Message-ID: <20140423174610.GB24243@amd.pavel.ucw.cz>
+From: Courtney Cavin <courtney.cavin@sonymobile.com>
+Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
+Date: Wed, 23 Apr 2014 11:16:14 -0700
+Message-ID: <20140423181614.GK17066@sonymobile.com>
+References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+ <1398259168.4724.217.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1398259168.4724.217.camel@iivanov-dev>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Just heads-up. Original message with attachment should be reachable on
-lkml.
+On Wed, Apr 23, 2014 at 03:19:28PM +0200, Ivan T. Ivanov wrote:
+> 
+> Hi,
+> 
+> On Tue, 2014-04-22 at 17:31 -0700, Courtney Cavin wrote:
+> > From: Josh Cartwright <joshc@codeaurora.org>
+> > 
+> > The Qualcomm 8941 and 8841 PMICs are components used with the Snapdragon
+> > 800 series SoC family.  This driver exists largely as a glue mfd component,
+> > it exists to be an owner of an SPMI regmap for children devices
+> > described in device tree.
+> > 
+> 
+> Thanks. This is exactly what I have planed to do :-)
+> 
 
-								Pavel
+Sorry if I usurped your work!
 
------ Forwarded message from Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org> -----
+> > Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+> > Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+> > ---
+> >  drivers/mfd/Kconfig  | 13 +++++++++++
+> >  drivers/mfd/Makefile |  1 +
+> >  drivers/mfd/pm8x41.c | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 77 insertions(+)
+> >  create mode 100644 drivers/mfd/pm8x41.c
+> > 
+> 
+> <snip>
+> 
+> > +
+> > +static int pm8x41_probe(struct spmi_device *sdev)
+> > +{
+> > +	struct regmap *regmap;
+> > +
+> > +	regmap = devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
+> > +	if (IS_ERR(regmap)) {
+> > +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
+> > +		return PTR_ERR(regmap);
+> > +	}
+> > +
+> > +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+> 
+> I think that this will not going to work. For example in this particular
+> case, both controllers have "qcom,qpnp-revid" peripheral which is
+> located at offset 0x100.
+> 
+> And the result is:
+> 
+> [    0.963944] sysfs: cannot create duplicate filename '/bus/platform/devices/100.revid'
+> 
+[...]
+> 
+> Any suggestions?
 
-Date: Wed, 23 Apr 2014 19:45:14 +0200
-From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>,
-	Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>,
-	Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>,
-	Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
-Subject: Generating .config from device tree [was Re: Hardware dependencies
-	in Kconfig]
-User-Agent: Mutt/1.5.20 (2009-06-14)
+That's expected behavior actually.  You have two nodes in DT named the
+same thing and at the same address.  This error is due to the fact that
+all devices are put in '/bus/platform/devices/' with a name made from
+the unit address and name specified in DT.  There's no other unique
+information used to differentiate the devices.
 
-Hi!
+If you simply change the names in DT, it works.  Example follows:
 
-> Ideally, the arch doesn't matter at all for a driver, only the
-> infrastructure the driver depends on does.  So perhaps the
+qcom,pm8941@0 {
+	compatible = "qcom,pm8941";
+	reg = <0x0 SPMI_USID>;
 
-Actually, it would be nice if user was never asked for combination
-that can be compiled, and kernel would support them, but there's no
-such hardware.
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-For example, if I am configuring for Nokia N900, I pretty much know
-all the devices -- not even USB host is officially supported, so this
-machine is not extensible. Yet I'll have to answer about 1000
-questions about config.
+	qcom,pm8941-revid@100 {
+		compatible = "qcom,qpnp-revid";
+		reg = <0x100>;
+	};
+};
 
-And ... we already have very accurate description of what hardware
-Nokia N900 has -- in the device tree. Perhaps it would make sense to
-generate hardware-dependend parts of config from device tree? [I'll
-still need to answer questions like CONFIG_NFS but should
-not have to answer CONFIG_DISPLAY_PANEL_SONY_ACX565AKM question.]
+qcom,pm8841@4 {
+	compatible = "qcom,pm8841";
+	reg = <0x4 SPMI_USID>;
 
-Anyway, script is attached, perhaps it is useful to someone. 
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-[And yes, I believe we should build CONFIG_FOO corresponds to
-"ti,omap3-foo" database.]
-
-Run it from linux directory, and modify 
-
-        m.linux_path = "/data/l/linux-n900/"
-        m.dtb_path = "arch/arm/boot/dts/omap3-n900.dtb"
-
-to match your configuration.
-
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
-
-#!/usr/bin/python
-#
-# Scripts for automatic kernel configuration from dts
-# 
-# Copyright 2014 Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-# Distribute under GPLv2+
-#
-
-import os
-import re
-
-class DtsParser():
-    def __init__(m):
-        m.linux_path = "/data/l/linux-n900/"
-        m.dtb_path = "arch/arm/boot/dts/omap3-n900.dtb"
-
-    def find_files(m, match):
-        l = os.popen("find "+m.linux_path+" -name '"+match+"'").readlines()
-        return map(lambda s: s.rstrip(), l)
-        
-
-    def find_compatible(m):
-        dts = os.popen("dtc -I dtb "+m.dtb_path).readlines()
-        compatibles = {}
-        for line in dts:
-            match = re.match(".*compatible = ([^;]*);", line)
-            if not match:
-                continue
-            l = match.group(1)
-            for s in l.split('",'):
-                s = re.sub('^[" ]*', '', s)
-                s = re.sub('"$', '', s)
-                compatibles[s] = 1
-
-        m.compatibles = compatibles
+	qcom,pm8841-revid@100 {
+		compatible = "qcom,qpnp-revid";
+		reg = <0x100>;
+	};
+};
 
 
-    def find_drivers(m):
-        drivers = {}
-        for fname in m.find_files("*.c"):
-            for line in open(fname, "r").readlines():
-                for c in m.compatibles:
-                    if re.match('.*"'+c+'".*', line):
-                        m.compatibles[c] = 2
-                        if not fname in drivers:
-                            drivers[fname] = []
-                        drivers[fname] += [ line ]
-        m.drivers = drivers
+[...] qcom,qpnp-revid 100.qcom,pm8841-revid: PM8841 v2.0 options: 0, 0, 2, 2
+[...] qcom,qpnp-revid 100.qcom,pm8941-revid: PM8941 v3.0 options: 2, 0, 0, 0
 
-    def find_configs(m):
-        configs = {}
-        m.found_drivers = {}
-        for fname in m.drivers:
-            makefile = fname.rstrip("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-.,_")
-            makefile += "Makefile"
-            basename = re.match("^.*/([a-zA-Z0-9-_,]*).c$", fname)
-            if not basename:
-                print "Can't find basename for ", fname
-                continue
-            basename = basename.group(1)
-            print basename
+Whether this should be "fixed" in the device/bus/sysfs core, I don't
+know, but it isn't specifically an issue with this driver, and there's
+little-to-nothing I can do to fix it here.
 
-            lines = open(makefile, "r").readlines()
-            for l in lines:
-                l = l.rstrip()
-                c = re.match("^obj-\$\(([A-Z0-9_]*)\)[ 	]*\+= "+basename+".o$", l) 
-                if c:
-                    break
-            if not c:
-                print "Could not file config option for ", basename, " in ", makefile
-                continue
-            c = c.group(1)
-            print "Have config option ", c
-            configs[c] = fname
-            m.found_drivers[fname] = c
-        m.configs = configs
-
-    def run(m):
-        m.find_compatible()
-        m.find_drivers()
-        m.find_configs()
-
-    def print_configs(m):
-        for c in m.configs:
-            print c
-        for c in m.compatibles:
-            if m.compatibles[c] != 2:
-                print "Could not find driver for ", c
-        
-parser = DtsParser()
-parser.run()
-parser.print_configs()
-
-
-#print parser.find_files("*.c")
-
-
-
------ End forwarded message -----
-
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Courtney
