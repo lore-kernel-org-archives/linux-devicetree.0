@@ -1,127 +1,79 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 3/3] of: Handle memory@0 node on PPC32 only
-Date: Wed, 23 Apr 2014 14:10:58 +0100
-Message-ID: <20140423131058.D94B6C408D2@trevor.secretlab.ca>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
-	<1397756521-29387-4-git-send-email-leif.lindholm@linaro.org>
-	<CAMuHMdXBNWum7UJ95uT2hwTd1b5C8ebF2LQ4T-A+RS80p7MH=A@mail.gmail.com>
-	<20140418125924.GF5904@bivouac.eciton.net>
-	<20140422133515.E7A0BC40754@trevor.secretlab.ca>
-	<20140423104528.GD30036@e106331-lin.cambridge.arm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140423104528.GD30036@e106331-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Leif Lindholm <leif.lindholm@linaro.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robherring2@gmail.com>, Lee Jones <lee.jones@linaro.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v5 7/7] ARM: sun6i: dt: Add A31 DMA
+ controller to DTSI
+Date: Wed, 23 Apr 2014 15:10:08 +0200
+Message-ID: <20140423131008.GQ24905@lukather>
+References: <1394723659-4995-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1394723659-4995-8-git-send-email-maxime.ripard@free-electrons.com>
+ <201404231435.03920.arnd@arndb.de>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FmdPcZLZZW6lDAYm"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWHZ32NAKGQEOMBHCRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201404231435.03920.arnd-r2nGTMty4D4@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Apr 2014 11:45:28 +0100, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Apr 22, 2014 at 02:35:15PM +0100, Grant Likely wrote:
-> > On Fri, 18 Apr 2014 13:59:24 +0100, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> > > Hi Geert,
-> > > 
-> > > On Fri, Apr 18, 2014 at 10:04:15AM +0200, Geert Uytterhoeven wrote:
-> > > > On Thu, Apr 17, 2014 at 7:42 PM, Leif Lindholm <leif.lindholm@linaro.org> wrote:
-> > > > > In order to deal with an firmware bug on a specific ppc32 platform
-> > > > > (longtrail), early_init_dt_scan_memory() looks for a node called
-> > > > > memory@0 on all platforms. Restrict this quirk to ppc32 kernels only.
-> > > > 
-> > > > This breaks backwards compatibilty with old DTSes (at least on ARM/MIPS,
-> > > > where you added the missing property in patches 1 and 2 of the series)?
-> > > 
-> > > As Rob said in response to 0/3, the MIPSs would likely not be affected,
-> > > since they embed the DT.
-> > > 
-> > > > For the Longtrail, I don't care much anymore, as mine died in 2004.
-> > > > AFAIK, there have never been many users anyway.
-> > > 
-> > > There are still a few mentions of it under arch/powerpc/, so I wouldn't
-> > > want to be the one to kill it off...
-> > > 
-> > > How about the below v2 3/3 to address the ARM platform?
-> > 
-> > The problem with this approach is that selecting one board that needs it
-> > automatically makes it active for all boards. It would need to be
-> > something more like the following:
-> > 
-> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > index 399e242e1a42..55d65b2b4c74 100644
-> > --- a/drivers/of/fdt.c
-> > +++ b/drivers/of/fdt.c
-> > @@ -887,12 +887,10 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
-> >  
-> >  	/* We are scanning "memory" nodes only */
-> >  	if (type == NULL) {
-> > -		/*
-> > -		 * The longtrail doesn't have a device_type on the
-> > -		 * /memory node, so look for the node called /memory@0.
-> > -		 */
-> >  		if (depth != 1 || strcmp(uname, "memory@0") != 0)
-> >  			return 0;
-> > +		if (!of_flat_dt_match(dt_root, memory_quirk_list))
-> > +			return 0;
-> >  	} else if (strcmp(type, "memory") != 0)
-> >  		return 0;
-> >  
-> > With a list of compatible properties for affected boards.
-> 
-> That looks sane to me.
-> 
-> Does anyone have a LongTrail DT to hand, and if so does the root have a
-> compatible string? From grepping through the kernel I could only find a
-> model string ("IBM,LongTrail").
 
-Actually, on LongTrail this can be removed from the common code
-entirely. It has real open firmware and PowerPC already has the
-infrastructure for fixing up the device tree.
+--FmdPcZLZZW6lDAYm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Here's a draft patch that I've compile tested, but nothing else.
+On Wed, Apr 23, 2014 at 02:35:03PM +0200, Arnd Bergmann wrote:
+> On Thursday 13 March 2014, Maxime Ripard wrote:
+> > Now that we have a DMA driver, we can add the DMA bindings in the DTSI =
+for the
+> > controller and the devices supported that can use DMA.
+> >=20
+> > Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>=20
+> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>=20
+> But why does this patch have to wait for the driver to get merged?
 
-g.
+I wanted to make sure that my bindings were ok, and at least reviewed
+by someone, but I guess it's done now.
 
----
+Just applied it.
 
-diff --git a/arch/powerpc/kernel/prom_init.c b/arch/powerpc/kernel/prom_init.c
-index 078145acf7fb..18b2c3fee98f 100644
---- a/arch/powerpc/kernel/prom_init.c
-+++ b/arch/powerpc/kernel/prom_init.c
-@@ -2587,9 +2587,18 @@ static void __init fixup_device_tree_chrp(void)
- 	phandle ph;
- 	u32 prop[6];
- 	u32 rloc = 0x01006000; /* IO space; PCI device = 12 */
--	char *name;
-+	char *name, strprop[16];
- 	int rc;
- 
-+	/* Deal with missing device_type in LongTrail memory node */
-+	name = "/memory@0";
-+	ph = call_prom("finddevice", 1, 1, ADDR(name));
-+	rc = prom_getprop(ph, "device_type", strprop, sizeof(strprop));
-+	if (rc == PROM_ERROR || strcmp(strprop, "memory") != 0) {
-+		prom_printf("Fixing up missing device_type on /memory@0 node...\n");
-+		prom_setprop(ph, name, "device_type", "memory", sizeof("memory"));
-+	}
-+
- 	name = "/pci@80000000/isa@c";
- 	ph = call_prom("finddevice", 1, 1, ADDR(name));
- 	if (!PHANDLE_VALID(ph)) {
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 7a2ef7bb8022..7cda0d279cbe 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -886,14 +886,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 	unsigned long l;
- 
- 	/* We are scanning "memory" nodes only */
--	if (type == NULL) {
--		/*
--		 * The longtrail doesn't have a device_type on the
--		 * /memory node, so look for the node called /memory@0.
--		 */
--		if (depth != 1 || strcmp(uname, "memory@0") != 0)
--			return 0;
--	} else if (strcmp(type, "memory") != 0)
-+	if (!type || strcmp(type, "memory") != 0)
- 		return 0;
- 
- 	reg = of_get_flat_dt_prop(node, "linux,usable-memory", &l);
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--FmdPcZLZZW6lDAYm
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTV7uwAAoJEBx+YmzsjxAgzDUP/2HNoM1zbu27X+uPIH1nBFOz
+pwolbeWkpcULq1yGMx+mTh0tt8wQWXWK1PlRzR3zW1AkQOmaLgvYLUR/sQQafQMK
+HmEhudiOreFktV/+qb4g1wsWCTXzpgfuDDj7j7Q55iycVhfRhscsJMb6K5EEgat/
+K5209taRjZ+NxLwpGLuRONSumBKOt1AX8H2XRUxqWRYJTAJEnpZvOaPH1y4ZvP+w
+E5WProhQ9+gybrxG+kU9CYU/JcujqMAiSLzQZ25SNcMGPBewDkyRTVR2qgik1v/k
+9UeS+NJ3vcqYM28DHbri3F9BTTMn6Qc2h4gxRKx4K4GXmPD2YgQCGr0UGorA8kUp
+oeOIcCVT4PoUtJ0BjEC7325CP8vGHHZUuPOqYPMlONO3loQhMTvfffg5aOe9kjia
+04EO/JTLvhNxrwl+w/Ur+5ihRddCDJK9bybAH4HOnLO6JDsIx2XChEoZVPyGyZDH
+Eh3wwCPjNX27dhZo9jsCiXYDNNbP/Tq+Y88sCLwU+YpSXS6HUtz4GxXCC2cbYB0G
+9+zuo/TisumEXjFCe5ZjMjVQKcMs0ftnc+d4n4OFNbd0vyXyHwifUNWrnhoujbo0
+KHPeLc9LZOvwUj1KHqyKVASI232XChWucwS0F5GA08zTg7HEIAR2/J8KGmuRwQMz
+ifUC8fig8uq9gSIF/w2U
+=O/3f
+-----END PGP SIGNATURE-----
+
+--FmdPcZLZZW6lDAYm--
