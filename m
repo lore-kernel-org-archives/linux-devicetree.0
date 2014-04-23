@@ -1,101 +1,80 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am33xx: Move the cppi41dma node so it's probed
- early
-Date: Wed, 23 Apr 2014 13:00:42 -0300
-Message-ID: <20140423160042.GB6969@arch.cereza>
-References: <1398176371-26468-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <5357DCE0.5050204@linutronix.de>
+From: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] rx51_battery: convert to iio consumer
+Date: Wed, 23 Apr 2014 18:09:37 +0200
+Message-ID: <20140423160936.GB32049@earth.universe>
+References: <1393375569-21751-1-git-send-email-sre@debian.org>
+ <1393705366-32420-1-git-send-email-sre@debian.org>
+ <1393705366-32420-2-git-send-email-sre@debian.org>
+ <5336A9F9.4080504@kernel.org>
+ <20140420120823.GB12135@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="PmA2V3Z32TCmWXqI"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5357DCE0.5050204-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guido =?iso-8859-1?Q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+In-Reply-To: <20140420120823.GB12135-tWAi6jLit6GreWDznjuHag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Apr 23, Sebastian Andrzej Siewior wrote:
-> On 04/22/2014 04:19 PM, Ezequiel Garcia wrote:
-> > The DMA controller is needed for the USB controller to be correctly
-> > registered. Therefore, if the DMA node is located at the end an une=
-cessary
-> > probe deferral is produced systematically.
+
+--PmA2V3Z32TCmWXqI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Apr 20, 2014 at 02:08:23PM +0200, Pavel Machek wrote:
+> On Sat 2014-03-29 11:09:45, Jonathan Cameron wrote:
+> > On 01/03/14 20:22, Sebastian Reichel wrote:
+> > >Update rx51-battery driver to use the new IIO API of
+> > >twl4030-madc and add DT support.
+> > >
+> > >Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> > This looks fine to me.  I'd love to see a more generic solution, but
+> > we can work on that another time.
 > >=20
-> > This is easily fixed by moving the node at the beggining of the chi=
-ld list,
-> > so it's probed first.
+> > Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >=20
-> So you do not change anything except for the order of child nodes. So
-> this should be fine and without a compatibility problem.
+> Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
 >=20
-> I added them according to the memory offset so you might want to add =
-a
-> comment why you moved this because Mr. Structured & Organized might
-> noticed this one day and move it back.
->=20
+> I don't see this patch in 3.15-rc nor -next. What is needed to push
+> this patch?
 
-Yes, good catch. I'll prepare a v2.
+The problem is, that the power subsystem maintainers seem to be too
+busy with real life. The last change in their git [0] was 2014-02-01
+and I haven't seen any mail from them on the mailinglist since about
+the same time. I have just queried his status @ Google+ (there were
+some life-signs there).
 
-> > Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> > ---
-> > Felipe, Sebastian:
-> >=20
-> > I cannot see why the cppi41dma node must be placed inside the
-> > "ti,am33xx-usb" compatible node. Tried to move it out
-> > so it's probed just like the edma engine, but the USB doesn't work
-> > properly in that case.
-> >=20
-> > Can you enlighten me?
->=20
-> So If I remember correctly it was a big bag of crap. If you look at t=
-he
-> parent node, you notice that it has a ti,hwmods member while the othe=
-r
-> do not have such a property. According to the manual only the whole I=
-P
-> block as-it has this. It has to be activated if you use one of those
-> devices this includes the two USB-IP cores and the DMA-IP core. I
-> didn't manage to come up with something else except to make one paren=
-t
-> node which creates the childs to have a proper relation here.
->=20
+[0] http://git.infradead.org/battery-2.6.git/
 
-Ah, this could be...
+-- Sebastian
 
-> There was also something with parent - child relation in the way musb
-> expected it. I think this was only glue code + musb child node and ha=
-d
-> nothing to do with the DMA engine. But I am not 100% sure=E2=80=A6
->=20
+--PmA2V3Z32TCmWXqI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Well, from my poor and unexperienced code inspection, I could not see a=
-nything
-relating the parent of the DMA controller node to the node itself, and =
-so that's
-why it seemed possible to move it out.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Once the dma-controller is moved out of the USB devicetree node block,
-the dmaengine driver is registered correctly (apparently), and so does =
-the USB
-driver.
+iQIcBAEBCgAGBQJTV+XAAAoJENju1/PIO/qaNJYP/1BQtRMaBOpjJRSi4wbXkTg6
+/KjOdujCzAJEPxBfMZ2jvGDLOXxY/xd44VIfyjKNvq9Om2YfO01xMgwtujMKn16w
+vAqsU9lAY1kjv8dEWjFxS7vCQ9tqttqfxaJ4/fbxJZiUiMjJZ0aUpIjUGqn0/Jeq
+L1c9tjmFVFCUT9S0dac9eNIrxq01yqAYAD9fhFeCkoL0qH0gkTZIMgDn7u3VbfWj
+45LvsuK451PeTreywl+IWBX412dgzCFLaTSIH672rKk3w/TJ4kRfue64fY3NXebi
+22/v7Pjx09lk/LCCrQGieTfktYiQtf+4nynagVc7ArscfXKuJrQ5xqxYyRStbZxl
+x0DXvvJJ8+ImhJ2XXtbmJ+HP60lMQxc1s6Km4w/4AILfJXeDGE0iWZwN/CUTTdM3
+22mx3lJrxRITaU3tWeM1FKb+wyzygFb5lMHpwrF0rStHA/DuzKP80zKSngDJE4cL
+BWrChW42vbedDPGE9gKcOvT/XeSVbJt/gEGxSwVqxbGuoEZTRQ4AbQYxutSRv5xy
+PXVWdXLoNc1tIzpELXQ8n0bPy4xI9d8tCG7xHwruDSeYWkf3r+FU1/laG1HndFvl
+uJKOUhSqQEi+lh6LHVaKB79dDlioYN0xhyZhnOGh9+M1NDap4U0QmygIhgVBS+LC
+p0LD9AKLTdmKzhfMQ246
+=5r4P
+-----END PGP SIGNATURE-----
 
-However, upon connection of some USB storage device, detection begins
-but then things don't go well, although I don't have the exact error he=
-re,
-I remember this warning was hitted on dma/cppi41.c at line 602:
-
-  WARN_ON(!c->td_retry);
-
-Just in case someone want to debug this further.
-
-Thanks a lot for the feedback!
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+--PmA2V3Z32TCmWXqI--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
