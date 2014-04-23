@@ -1,58 +1,44 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 2/2] ARM: dts: berlin: enable SD card reader and eMMC
- for the BG2Q DMP
-Date: Wed, 23 Apr 2014 19:26:23 +0200
-Message-ID: <5357F7BF.8000703@gmail.com>
-References: <1398155248-1659-1-git-send-email-antoine.tenart@free-electrons.com> <1398155248-1659-3-git-send-email-antoine.tenart@free-electrons.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 0/4] ARM: OMAP: SATA support for OMAP5 & DRA7
+Date: Wed, 23 Apr 2014 20:30:33 +0300
+Message-ID: <1398274237-24510-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398155248-1659-3-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>
-Cc: alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/22/2014 10:27 AM, Antoine T=C3=A9nart wrote:
-> Enable the SD Card reader and the internal eMMC on the Berlin BG2Q DM=
-P
-> using two of the SDHCI nodes of the Berlin BG2Q.
->=20
-> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
->
-> ---
->  arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/bo=
-ot/dts/berlin2q-marvell-dmp.dts
-> index 2da9c41e29d8..6ca8c9e52b08 100644
-> --- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> +++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-> @@ -26,3 +26,14 @@
->  &uart0 {
->  	status =3D "okay";
->  };
-> +
-> +&sdhci1 {
+Hi Tony,
 
-Antoine,
+These are the pending HWMOD and DTS patches to get SATA working
+on OMAP5-uevm and DRA7-evm. Please queue them for -next. Thanks.
 
-nit: please sort referenced nodes alphabetically.
+cheers,
+-roger
 
-With your comments about mmc aliases, I can take both patches
-in now (and fixup ordering) if you like.
+---
+Balaji T K (2):
+  ARM: dts: omap5: add sata node
+  ARM: dts: dra7: add OCP2SCP3 and SATA nodes
 
-Sebastian
+Keshava Munegowda (1):
+  ARM: OMAP5: hwmod: Add ocp2scp3 and sata hwmods
 
-> +	broken-cd;
-> +	sdhci,wp-inverted;
-> +	status =3D "okay";
-> +};
-> +
-> +&sdhci2 {
-> +	non-removable;
-> +	status =3D "okay";
-> +};
->=20
+Nikhil Devshatwar (1):
+  ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
+
+ arch/arm/boot/dts/dra7.dtsi                | 39 ++++++++++++++++
+ arch/arm/boot/dts/omap5.dtsi               | 40 ++++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_54xx_data.c | 73 ++++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c  | 31 +++++++++++--
+ 4 files changed, 178 insertions(+), 5 deletions(-)
+
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
