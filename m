@@ -1,101 +1,54 @@
-From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm: exynos: Add MCPM call-back functions
-Date: Wed, 23 Apr 2014 22:56:57 +0200
-Message-ID: <53582919.1040905@linaro.org>
-References: <1397239311-27717-6-git-send-email-a.kesavan@samsung.com>	<1398147435-3122-1-git-send-email-a.kesavan@samsung.com>	<535650AE.90501@linaro.org> <CAM4voa=WJiF-9wZB29JOFhz2kEE-TC0y6h-8GVwk3_JoXxpK+A@mail.gmail.com>
+From: Max Filippov <jcmvbkbc@gmail.com>
+Subject: Re: [PATCH v2 00/21] FDT clean-ups and libfdt support
+Date: Thu, 24 Apr 2014 01:04:47 +0400
+Message-ID: <CAMo8Bf+LO-15x8vhOukskyaNMMu97NzFjmkc-inO9xqG075dkw@mail.gmail.com>
+References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAM4voa=WJiF-9wZB29JOFhz2kEE-TC0y6h-8GVwk3_JoXxpK+A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bounces@lists.openrisc.net>
+In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-mips@linux-mips.org, Aurelien Jacquiot <a-jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "H. Peter Anvin" <hpa@zytor.com>, Paul Mackerras <paulus@samba.org>, linux@lists.openrisc.net, Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-c6x-dev@linux-c6x.org, x86@kernel.org, Ingo Molnar <mingo@redhat.com>, Mark Salter <msalter@redhat.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, James Hogan <james.hogan@imgtec.com>, "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>, Thomas Gleixner <tglx@linutronix.de>, linux-metag@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chris Zankel <chris@zankel.net>, Michal Simek <monstr@monstr.eu>, Vineet Gupta <vgupta@synopsys.com>, LKML <linux-kernel@vger.kernel.org>, Ralf Baechle <ralf@linux-mips.org>, linuxp
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2014 05:31 PM, Abhilash Kesavan wrote:
-> Hi Daniel,
-> On Tue, Apr 22, 2014 at 4:51 PM, Daniel Lezcano
-> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On 04/22/2014 08:17 AM, Abhilash Kesavan wrote:
->>>
->>> Add machine-dependent MCPM call-backs for Exynos5420. These are use=
-d
->>> to power up/down the secondary CPUs during boot, shutdown, s2r and
->>> switching.
->>>
->>> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> ---
+On Wed, Apr 23, 2014 at 5:18 AM, Rob Herring <robherring2@gmail.com> wrote:
+> From: Rob Herring <robh@kernel.org>
+>
+> This is a series of clean-ups of architecture FDT code and converts the
+> core FDT code over to using libfdt functions. This is in preparation
+> to add FDT based address translation parsing functions for early
+> console support. This series removes direct access to FDT data from all
+> arches except powerpc.
+>
+> The current MIPS lantiq and xlp DT code is buggy as built-in DTBs need
+> to be copied out of init section. Patches 2 and 3 should be applied to
+> 3.15.
+>
+> Changes in v2 are relatively minor. There was a bug in the unflattening
+> code where walking up the tree was not being handled correctly (thanks
+> to Michal Simek). I re-worked things a bit to avoid globally adding
+> libfdt include paths.
+>
+> A branch is available here[1], and I plan to put into linux-next in a few
+> days. Please test! I've compiled on arm, arm64, mips, microblaze, xtensa,
+> and powerpc and booted on arm and arm64.
+>
+> Rob
+>
+> [1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git libfdt
 
-[ ... ]
+For xtensa: Tested-by: Max Filippov <jcmvbkbc@gmail.com>
 
->>> +#include <plat/cpu.h>
->>> +#include "regs-pmu.h"
->>> +
->>> +#define EXYNOS5420_CPUS_PER_CLUSTER    4
->>> +#define EXYNOS5420_NR_CLUSTERS         2
->>> +
->>> +/* Secondary CPU entry point */
->>> +#define REG_ENTRY_ADDR         (S5P_VA_SYSRAM_NS + 0x1C)
->>> +
->>> +#define EXYNOS_CORE_LOCAL_PWR_EN               0x3
->>> +#define EXYNOS_CORE_LOCAL_PWR_DIS              0x0
->>>
->>> +#define EXYNOS_ARM_COMMON_CONFIGURATION                S5P_PMUREG(=
-0x2500)
->>> +#define EXYNOS_ARM_L2_CONFIGURATION            S5P_PMUREG(0x2600)
->>> +
->>> +#define EXYNOS_ARM_CORE_CONFIGURATION(_nr)     \
->>> +                       (S5P_ARM_CORE0_CONFIGURATION + ((_nr) * 0x8=
-0))
->>> +#define EXYNOS_ARM_CORE_STATUS(_nr)            \
->>> +                       (S5P_ARM_CORE0_STATUS + ((_nr) * 0x80))
->>> +
->>> +#define EXYNOS_COMMON_CONFIGURATION(_nr)       \
->>> +                       (EXYNOS_ARM_COMMON_CONFIGURATION + ((_nr) *=
- 0x80))
->>> +#define EXYNOS_COMMON_STATUS(_nr)              \
->>> +                       (EXYNOS_COMMON_CONFIGURATION(_nr) + 0x4)
->>> +
->>> +#define EXYNOS_L2_CONFIGURATION(_nr)           \
->>> +                       (EXYNOS_ARM_L2_CONFIGURATION + ((_nr) * 0x8=
-0))
->>> +#define EXYNOS_L2_STATUS(_nr)                  \
->>> +                       (EXYNOS_L2_CONFIGURATION(_nr) + 0x4)
->>> +
->>
->>
->> Is it possible to share the definition of those macros with the rest=
- of the
->> code via functions, so they can be re-used for the other sub-systems=
- ? eg:
->> https://patches.linaro.org/27798/
-> OK..I will work on making wrapper functions for these. Would these ne=
-w
-> functions be better placed in the mcpm code or the pm code ?
-
-Hi Abhilash,
-
-yes, in the pm code. That would make more sense.
-
-Thanks
-   -- Daniel
-
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Thanks.
+-- Max
