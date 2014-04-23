@@ -1,45 +1,101 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] ARM: sunxi: update the default
- ARCH_NR_GPIO for sunxi arch
-Date: Wed, 23 Apr 2014 15:54:35 +0200
-Message-ID: <CACRpkdZAd5SqeCg7XsjXMbYxD+RoriV6x6YMR=59Aon=S7cDnA@mail.gmail.com>
-References: <1397137966-30818-1-git-send-email-boris.brezillon@free-electrons.com>
-	<1397137966-30818-8-git-send-email-boris.brezillon@free-electrons.com>
-	<CACRpkdYT9HvG6dOVOEnBSNhRt847tdCsAU6E_dZLdFQEHntpKg@mail.gmail.com>
-	<201404221620.19519.arnd@arndb.de>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDE6RCFOWIARBJUM36NAKGQE5OFNMRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <201404221620.19519.arnd-r2nGTMty4D4@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC v12 5/7] dma: of: add common xlate function for matching by channel id
+Date: Wed, 23 Apr 2014 17:53:27 +0400
+Message-ID: <1398261209-5578-6-git-send-email-a13xp0p0v88@gmail.com>
+References: <1398261209-5578-1-git-send-email-a13xp0p0v88@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398261209-5578-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 4:20 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+This patch adds a new common OF dma xlate callback function which will match a
+channel by it's id. The binding expects one integer argument which it will use to
+lookup the channel by the id.
 
->> Patch applied, and grrrr we need to get rid of these static #gpios defines
->> in the long run.
->
-> Yes, that would be nice. I guess the gpio-descriptor framework should
-> have solved this, but we can't move everything over to that soon, right?
+Unlike of_dma_simple_xlate this function is able to handle a system with
+multiple DMA controllers. When registering the of dma provider with
+of_dma_controller_register a pointer to the dma_device struct which is
+associated with the dt node needs to passed as the data parameter.
+New function will use this pointer to match only channels which belong to the
+specified DMA controller.
 
-Not really, it has to happen platform by platform.
+Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/dma/of-dma.c   | 35 +++++++++++++++++++++++++++++++++++
+ include/linux/of_dma.h |  4 ++++
+ 2 files changed, 39 insertions(+)
 
-I did consider putting all the GPIO descriptors into a radix and
-use that internally in gpiolib, but that wasn't easy to do
-when I tried it, maybe I just thought backwards.
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index e8fe9dc..d5fbeaa 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -218,3 +218,38 @@ struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+ 			&dma_spec->args[0]);
+ }
+ EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
++
++/**
++ * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
++ * @dma_spec:	pointer to DMA specifier as found in the device tree
++ * @of_dma:	pointer to DMA controller data
++ *
++ * This function can be used as the of xlate callback for DMA driver which wants
++ * to match the channel based on the channel id. When using this xlate function
++ * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
++ * The data parameter of of_dma_controller_register must be a pointer to the
++ * dma_device struct the function should match upon.
++ *
++ * Returns pointer to appropriate dma channel on success or NULL on error.
++ */
++struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
++					 struct of_dma *ofdma)
++{
++	struct dma_device *dev = ofdma->of_dma_data;
++	struct dma_chan *chan, *candidate = NULL;
++
++	if (!dev || dma_spec->args_count != 1)
++		return NULL;
++
++	list_for_each_entry(chan, &dev->channels, device_node)
++		if (chan->chan_id == dma_spec->args[0]) {
++			candidate = chan;
++			break;
++		}
++
++	if (!candidate)
++		return NULL;
++
++	return dma_get_slave_channel(candidate);
++}
++EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index ae36298..56bc026 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -41,6 +41,8 @@ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+ 						     const char *name);
+ extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+ 		struct of_dma *ofdma);
++extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
++		struct of_dma *ofdma);
+ #else
+ static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+@@ -66,6 +68,8 @@ static inline struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_s
+ 	return NULL;
+ }
+ 
++#define of_dma_xlate_by_chan_id NULL
++
+ #endif
+ 
+ #endif /* __LINUX_OF_DMA_H */
+-- 
+1.8.4.2
 
-I would appreciate if drivers for new archs like arm64 would
-use only GPIO descriptors from day one. Also if new drivers
-only apply a an entirely new machine even. They should just
-use descriptors.
-
-Yours,
-Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
