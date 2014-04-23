@@ -1,169 +1,58 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 07/21] mips: convert fdt pointers to opaque pointers
-Date: Tue, 22 Apr 2014 20:18:07 -0500
-Message-ID: <1398215901-25609-8-git-send-email-robherring2@gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [PATCH v2 17/21] of/fdt: introduce of_get_flat_dt_size
+Date: Tue, 22 Apr 2014 20:18:17 -0500
+Message-ID: <1398215901-25609-18-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398215901-25609-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Rob Herring <robh@kernel.org>
 
-The architecture code does not need to access the internals of the FDT
-blob directly, so make the pointers to it void * and use char arrays
-for section variables.
+Add a wrapper function to retrieve the FDT size from the FDT header. This
+is primarily to avoid libfdt include paths for the whole kernel.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Ralf Baechle <ralf-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-v2: no change
+v2: new patch
 
- arch/mips/include/asm/mips-boards/generic.h | 4 +---
- arch/mips/include/asm/prom.h                | 6 +++---
- arch/mips/kernel/prom.c                     | 2 +-
- arch/mips/lantiq/prom.c                     | 2 +-
- arch/mips/lantiq/prom.h                     | 2 +-
- arch/mips/mti-sead3/sead3-setup.c           | 8 ++++----
- arch/mips/ralink/of.c                       | 4 ++--
- 7 files changed, 13 insertions(+), 15 deletions(-)
+ drivers/of/fdt.c       | 8 ++++++++
+ include/linux/of_fdt.h | 1 +
+ 2 files changed, 9 insertions(+)
 
-diff --git a/arch/mips/include/asm/mips-boards/generic.h b/arch/mips/include/asm/mips-boards/generic.h
-index 4861681..b969491 100644
---- a/arch/mips/include/asm/mips-boards/generic.h
-+++ b/arch/mips/include/asm/mips-boards/generic.h
-@@ -67,9 +67,7 @@
- 
- extern int mips_revision_sconid;
- 
--#ifdef CONFIG_OF
--extern struct boot_param_header __dtb_start;
--#endif
-+extern char __dtb_start[];
- 
- #ifdef CONFIG_PCI
- extern void mips_pcibios_init(void);
-diff --git a/arch/mips/include/asm/prom.h b/arch/mips/include/asm/prom.h
-index ccd2b75..a9494c0 100644
---- a/arch/mips/include/asm/prom.h
-+++ b/arch/mips/include/asm/prom.h
-@@ -21,13 +21,13 @@ extern void device_tree_init(void);
- 
- struct boot_param_header;
- 
--extern void __dt_setup_arch(struct boot_param_header *bph);
-+extern void __dt_setup_arch(void *bph);
- 
- #define dt_setup_arch(sym)						\
- ({									\
--	extern struct boot_param_header __dtb_##sym##_begin;		\
-+	extern char __dtb_##sym##_begin[];				\
- 									\
--	__dt_setup_arch(&__dtb_##sym##_begin);				\
-+	__dt_setup_arch(__dtb_##sym##_begin);				\
- })
- 
- #else /* CONFIG_OF */
-diff --git a/arch/mips/kernel/prom.c b/arch/mips/kernel/prom.c
-index 3c3b0df..5d39bb8 100644
---- a/arch/mips/kernel/prom.c
-+++ b/arch/mips/kernel/prom.c
-@@ -47,7 +47,7 @@ void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
- 	return __alloc_bootmem(size, align, __pa(MAX_DMA_ADDRESS));
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index d9e6450..358bcf0 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -554,6 +554,14 @@ unsigned long __init of_get_flat_dt_root(void)
  }
  
--void __init __dt_setup_arch(struct boot_param_header *bph)
-+void __init __dt_setup_arch(void *bph)
- {
- 	if (!early_init_dt_scan(bph))
- 		return;
-diff --git a/arch/mips/lantiq/prom.c b/arch/mips/lantiq/prom.c
-index cdea687..7447d32 100644
---- a/arch/mips/lantiq/prom.c
-+++ b/arch/mips/lantiq/prom.c
-@@ -71,7 +71,7 @@ void __init plat_mem_setup(void)
- 	 * Load the builtin devicetree. This causes the chosen node to be
- 	 * parsed resulting in our memory appearing
- 	 */
--	__dt_setup_arch(&__dtb_start);
-+	__dt_setup_arch(__dtb_start);
- }
+ /**
++ * of_get_flat_dt_size - Return the total size of the FDT
++ */
++int __init of_get_flat_dt_size(void)
++{
++	return fdt_totalsize(initial_boot_params);
++}
++
++/**
+  * of_get_flat_dt_prop - Given a node in the flat blob, return the property ptr
+  *
+  * This function can be used within scan_flattened_dt callback to get
+diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+index 348dae2..e10099c 100644
+--- a/include/linux/of_fdt.h
++++ b/include/linux/of_fdt.h
+@@ -92,6 +92,7 @@ extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
+ extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
+ extern int of_flat_dt_match(unsigned long node, const char *const *matches);
+ extern unsigned long of_get_flat_dt_root(void);
++extern int of_get_flat_dt_size(void);
  
- void __init device_tree_init(void)
-diff --git a/arch/mips/lantiq/prom.h b/arch/mips/lantiq/prom.h
-index 8e07b5f..69a4c58 100644
---- a/arch/mips/lantiq/prom.h
-+++ b/arch/mips/lantiq/prom.h
-@@ -26,6 +26,6 @@ struct ltq_soc_info {
- extern void ltq_soc_detect(struct ltq_soc_info *i);
- extern void ltq_soc_init(void);
- 
--extern struct boot_param_header __dtb_start;
-+extern char __dtb_start[];
- 
- #endif
-diff --git a/arch/mips/mti-sead3/sead3-setup.c b/arch/mips/mti-sead3/sead3-setup.c
-index bf7fe48..e43f480 100644
---- a/arch/mips/mti-sead3/sead3-setup.c
-+++ b/arch/mips/mti-sead3/sead3-setup.c
-@@ -69,17 +69,17 @@ static void __init parse_memsize_param(void)
- 	if (!memsize)
- 		return;
- 
--	offset = fdt_path_offset(&__dtb_start, "/memory");
-+	offset = fdt_path_offset(__dtb_start, "/memory");
- 	if (offset > 0) {
- 		uint64_t new_value;
- 		/*
- 		 * reg contains 2 32-bits BE values, offset and size. We just
- 		 * want to replace the size value without affecting the offset
- 		 */
--		prop_value = fdt_getprop(&__dtb_start, offset, "reg", &prop_len);
-+		prop_value = fdt_getprop(__dtb_start, offset, "reg", &prop_len);
- 		new_value = be64_to_cpu(*prop_value);
- 		new_value =  (new_value & ~0xffffffffllu) | memsize;
--		fdt_setprop_inplace_u64(&__dtb_start, offset, "reg", new_value);
-+		fdt_setprop_inplace_u64(__dtb_start, offset, "reg", new_value);
- 	}
- }
- 
-@@ -92,7 +92,7 @@ void __init plat_mem_setup(void)
- 	 * Load the builtin devicetree. This causes the chosen node to be
- 	 * parsed resulting in our memory appearing
- 	 */
--	__dt_setup_arch(&__dtb_start);
-+	__dt_setup_arch(__dtb_start);
- }
- 
- void __init device_tree_init(void)
-diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
-index 0170d82..91d7060 100644
---- a/arch/mips/ralink/of.c
-+++ b/arch/mips/ralink/of.c
-@@ -28,7 +28,7 @@
- __iomem void *rt_sysc_membase;
- __iomem void *rt_memc_membase;
- 
--extern struct boot_param_header __dtb_start;
-+extern char __dtb_start[];
- 
- __iomem void *plat_of_remap_node(const char *node)
- {
-@@ -63,7 +63,7 @@ void __init plat_mem_setup(void)
- 	 * Load the builtin devicetree. This causes the chosen node to be
- 	 * parsed resulting in our memory appearing
- 	 */
--	__dt_setup_arch(&__dtb_start);
-+	__dt_setup_arch(__dtb_start);
- 
- 	if (soc_info.mem_size)
- 		add_memory_region(soc_info.mem_base, soc_info.mem_size * SZ_1M,
+ extern int early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 				     int depth, void *data);
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
