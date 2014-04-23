@@ -1,89 +1,96 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 18/21] powerpc: use libfdt accessors for header data
-Date: Wed, 23 Apr 2014 16:21:26 +0200
-Message-ID: <5357CC66.5080802@monstr.eu>
-References: <1398215901-25609-1-git-send-email-robherring2@gmail.com> <1398215901-25609-19-git-send-email-robherring2@gmail.com> <5357C4BE.3050606@monstr.eu> <CAL_JsqKg8oAd+JmmhERa3Xb1dD9CPz1_cVM3mb=ypWhxkZJHtQ@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: "Karicheri, Muralidharan" <m-karicheri2@ti.com>
+Subject: RE: [PATCH] serial: uart: add hw flow control support configuration
+Date: Wed, 23 Apr 2014 14:21:03 +0000
+Message-ID: <3E54258959B69E4282D79E01AB1F32B70471B198@DFLE11.ent.ti.com>
+References: <1397243877-23234-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="komXnLxXMvjrR23JtTJPhouIGKGIqmIwx"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKg8oAd+JmmhERa3Xb1dD9CPz1_cVM3mb=ypWhxkZJHtQ@mail.gmail.com>
+In-Reply-To: <1397243877-23234-1-git-send-email-m-karicheri2@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
+To: "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Cc: "Balbi, Felipe" <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---komXnLxXMvjrR23JtTJPhouIGKGIqmIwx
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Alan,
 
-On 04/23/2014 04:05 PM, Rob Herring wrote:
-> On Wed, Apr 23, 2014 at 8:48 AM, Michal Simek <monstr@monstr.eu> wrote:=
+Sorry, I had to cut-n-paste your comment as I lost your email from my inbox.
 
->> On 04/23/2014 03:18 AM, Rob Herring wrote:
->>> From: Rob Herring <robh@kernel.org>
->>>
->>> With libfdt support, we can take advantage of helper accessors in lib=
-fdt
->>> for accessing the FDT header data. This makes the code more readable =
-and
->>> makes the FDT blob structure more opaque to the kernel. This also
->>> prepares for removing struct boot_param_header completely.
->=20
-> [...]
->=20
->>> @@ -117,14 +118,14 @@ static void __init move_device_tree(void)
->>>       DBG("-> move_device_tree\n");
->>>
->>>       start =3D __pa(initial_boot_params);
->>> -     size =3D be32_to_cpu(initial_boot_params->totalsize);
->>> +     size =3D fdt_totalsize(initial_boot_params);
->>
->> In 19/21 you use your newly introduced of_get_flat_dt_size()
->> that's why I expect you will use it here too.
->> size =3D of_get_flat_dt_size();
->>
->> The same is for 14/21 where you can use this new function too.
->> It means moving 14/21 to the end and using this new function
->> makes more sense.
->=20
-> Really, I would prefer to just use libfdt accessors directly rather
-> than have wrappers, but including libfdt.h is not the cleanest
-> solution. Since x86 just needed this one function, I added a wrapper.
-> Since PPC needs other header fields I prefer to use the libfdt
-> accessors directly for all fields. The same goes for drivers/of/fdt.c.
+>-----Original Message-----
+>From: Karicheri, Muralidharan
+>Sent: Friday, April 11, 2014 3:18 PM
+>To: devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
+>linux-serial@vger.kernel.org
+>Cc: Balbi, Felipe; Karicheri, Muralidharan; Rob Herring; Mark Rutland; Ian Campbell;
+>Kumar Gala; Randy Dunlap; Greg Kroah-Hartman; Jiri Slaby
+>Subject: [PATCH] serial: uart: add hw flow control support configuration
+>
+>8250 uart driver currently supports only software assisted hw flow control. The software
+>assisted hw flow control maintains a hw_stopped flag in the tty structure to stop and start
+>transmission and use modem status interrupt for the event to drive the handshake signals.
+>This is not needed if hw has flow control capabilities. This patch adds a DT attribute for
+>enabling hw flow control for a uart port. Also skip stop and start if this flag is present in flag
+>field of the port structure.
 
-Ok. I see your point but maybe will be good to reflect that it is
-there just for x86 case and none else should use it.
+[Alan] That seems a sensible thing to add.
 
-Thanks,
-Michal
+>
+>CC: Rob Herring <robh+dt@kernel.org>
+>CC: Pawel Moll <pawel.moll@arm.com>
+>CC: Mark Rutland <mark.rutland@arm.com>
+>CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>CC: Kumar Gala <galak@codeaurora.org>
+>CC: Randy Dunlap <rdunlap@infradead.org>
+>CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>CC: Jiri Slaby <jslaby@suse.cz>
+>
+>Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>---
+> .../devicetree/bindings/serial/of-serial.txt       |    2 ++
+> drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+> drivers/tty/serial/of_serial.c                     |    4 ++++
+> drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+> 4 files changed, 19 insertions(+), 5 deletions(-)
+>
+>diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt
+>b/Documentation/devicetree/bindings/serial/of-serial.txt
+>index 1928a3e..123de01 100644
+>--- a/Documentation/devicetree/bindings/serial/of-serial.txt
+>+++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+>@@ -37,6 +37,8 @@ Optional properties:
+> - auto-flow-control: one way to enable automatic flow control support. The
+>   driver is allowed to detect support for the capability even without this
+>   property.
+>+- hw-flow-control: this enables pure hw flow control and no software
+>+  intervention needed.
+>
+> Example:
+>
+>diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+>index 81f909c..6b1b868 100644
+>--- a/drivers/tty/serial/8250/8250_core.c
+>+++ b/drivers/tty/serial/8250/8250_core.c
+>@@ -2338,9 +2338,11 @@ serial8250_do_set_termios(struct uart_port *port, struct
+>ktermios *termios,
+> 	 * the trigger, or the MCR RTS bit is cleared.  In the case where
+> 	 * the remote UART is not using CTS auto flow control, we must
+> 	 * have sufficient FIFO entries for the latency of the remote
+>-	 * UART to respond.  IOW, at least 32 bytes of FIFO.
+>+	 * UART to respond.  IOW, at least 32 bytes of FIFO. Also enable
+>+	 * AFE if hw flow control is supported
+> 	 */
+>-	if (up->capabilities & UART_CAP_AFE && port->fifosize >= 32) {
+>+	if ((up->capabilities & UART_CAP_AFE && (port->fifosize >= 32)) ||
+>+	    port->flags & UPF_HARD_FLOW) {
 
+[Alan] Surely you want brackets on the port->flags & UPF_HARD_FLOW ??
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+The C precedence table shows following order:=
+-> & ||
 
+So flags will be accessed first and then AND-ed with  UPF_HARD_FLOW and
+result will be OR-ed with left side expression value. So no need for bracket IMO.
 
-
---komXnLxXMvjrR23JtTJPhouIGKGIqmIwx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlNXzGYACgkQykllyylKDCEu4gCfSmkWv09wbuplfKeIi4WzQG7y
-cE4AmgLUtVJ2KYdPBdluuiKR3EbUS0RW
-=MWm2
------END PGP SIGNATURE-----
-
---komXnLxXMvjrR23JtTJPhouIGKGIqmIwx--
+Murali
