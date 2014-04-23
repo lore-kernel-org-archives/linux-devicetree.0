@@ -1,88 +1,193 @@
 From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 18/21] powerpc: use libfdt accessors for header data
-Date: Wed, 23 Apr 2014 15:48:46 +0200
-Message-ID: <5357C4BE.3050606@monstr.eu>
-References: <1398215901-25609-1-git-send-email-robherring2@gmail.com> <1398215901-25609-19-git-send-email-robherring2@gmail.com>
+Subject: Re: [PATCH v2 14/21] of/fdt: create common debugfs
+Date: Wed, 23 Apr 2014 15:52:30 +0200
+Message-ID: <5357C59E.8080400@monstr.eu>
+References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+ <1398215901-25609-15-git-send-email-robherring2@gmail.com>
 Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="8Q6hPNWGwIApntq6tsRaOJr1ErCv3bv24"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398215901-25609-19-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============6041770652368798037=="
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1398215901-25609-15-git-send-email-robherring2@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Grant Likely <grant.likely@linaro.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---8Q6hPNWGwIApntq6tsRaOJr1ErCv3bv24
+--===============6041770652368798037==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo"
+
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
 On 04/23/2014 03:18 AM, Rob Herring wrote:
 > From: Rob Herring <robh@kernel.org>
 >=20
-> With libfdt support, we can take advantage of helper accessors in libfd=
-t
-> for accessing the FDT header data. This makes the code more readable an=
-d
-> makes the FDT blob structure more opaque to the kernel. This also
-> prepares for removing struct boot_param_header completely.
+> Both powerpc and microblaze have the same FDT blob in debugfs feature.
+> Move this to common location and remove the powerpc and microblaze
+> implementations. This feature could become more useful when FDT
+> overlay support is added.
+>=20
+> This changes the path of the blob from "$arch/flat-device-tree" to
+> "device-tree/flat-device-tree".
 >=20
 > Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Michal Simek <monstr@monstr.eu>
 > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 > Cc: Paul Mackerras <paulus@samba.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
 > ---
-> v2: As powerpc is the only platform needing FDT header access, make
->  prom.c include libfdt directly.
-> =20
->  arch/powerpc/kernel/Makefile |  1 +
->  arch/powerpc/kernel/prom.c   | 11 ++++++-----
->  2 files changed, 7 insertions(+), 5 deletions(-)
+> v2: move to after libfdt conversion
 >=20
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefil=
-e
-> index fcc9a89..fab19ec 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -2,6 +2,7 @@
->  # Makefile for the linux kernel.
->  #
+>  arch/microblaze/kernel/prom.c | 31 -------------------------------
+>  arch/powerpc/kernel/prom.c    | 21 ---------------------
+>  drivers/of/fdt.c              | 24 ++++++++++++++++++++++++
+>  3 files changed, 24 insertions(+), 52 deletions(-)
+>=20
+> diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/pro=
+m.c
+> index c766306..68f0999 100644
+> --- a/arch/microblaze/kernel/prom.c
+> +++ b/arch/microblaze/kernel/prom.c
+> @@ -114,34 +114,3 @@ void __init early_init_devtree(void *params)
 > =20
-> +CFLAGS_prom.o		=3D -I$(src)/../../../scripts/dtc/libfdt
->  CFLAGS_ptrace.o		+=3D -DUTS_MACHINE=3D'"$(UTS_MACHINE)"'
-> =20
->  subdir-ccflags-$(CONFIG_PPC_WERROR) :=3D -Werror
+>  	pr_debug(" <- early_init_devtree()\n");
+>  }
+> -
+> -/*******
+> - *
+> - * New implementation of the OF "find" APIs, return a refcounted
+> - * object, call of_node_put() when done.  The device tree and list
+> - * are protected by a rw_lock.
+> - *
+> - * Note that property management will need some locking as well,
+> - * this isn't dealt with yet.
+> - *
+> - *******/
+> -
+> -#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
+> -static struct debugfs_blob_wrapper flat_dt_blob;
+> -
+> -static int __init export_flat_device_tree(void)
+> -{
+> -	struct dentry *d;
+> -
+> -	flat_dt_blob.data =3D initial_boot_params;
+> -	flat_dt_blob.size =3D initial_boot_params->totalsize;
+> -
+> -	d =3D debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
+> -				of_debugfs_root, &flat_dt_blob);
+> -	if (!d)
+> -		return 1;
+> -
+> -	return 0;
+> -}
+> -device_initcall(export_flat_device_tree);
+> -#endif
 > diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index b1de8e3..0239f0b 100644
+> index f971134..03624ce 100644
 > --- a/arch/powerpc/kernel/prom.c
 > +++ b/arch/powerpc/kernel/prom.c
-> @@ -33,6 +33,7 @@
+> @@ -29,7 +29,6 @@
+>  #include <linux/bitops.h>
+>  #include <linux/export.h>
+>  #include <linux/kexec.h>
+> -#include <linux/debugfs.h>
+>  #include <linux/irq.h>
 >  #include <linux/memblock.h>
 >  #include <linux/of.h>
->  #include <linux/of_fdt.h>
-> +#include <linux/libfdt.h>
+> @@ -924,23 +923,3 @@ bool arch_match_cpu_phys_id(int cpu, u64 phys_id)
+>  {
+>  	return (int)phys_id =3D=3D get_hard_smp_processor_id(cpu);
+>  }
+> -
+> -#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
+> -static struct debugfs_blob_wrapper flat_dt_blob;
+> -
+> -static int __init export_flat_device_tree(void)
+> -{
+> -	struct dentry *d;
+> -
+> -	flat_dt_blob.data =3D initial_boot_params;
+> -	flat_dt_blob.size =3D be32_to_cpu(initial_boot_params->totalsize);
+> -
+> -	d =3D debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
+> -				powerpc_debugfs_root, &flat_dt_blob);
+> -	if (!d)
+> -		return 1;
+> -
+> -	return 0;
+> -}
+> -__initcall(export_flat_device_tree);
+> -#endif
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index 0b38a6a..4129f74 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/slab.h>
+>  #include <linux/libfdt.h>
+> +#include <linux/debugfs.h>
 > =20
->  #include <asm/prom.h>
->  #include <asm/rtas.h>
-> @@ -117,14 +118,14 @@ static void __init move_device_tree(void)
->  	DBG("-> move_device_tree\n");
+>  #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+>  #include <asm/page.h>
+> @@ -916,4 +917,27 @@ void __init unflatten_and_copy_device_tree(void)
+>  	unflatten_device_tree();
+>  }
 > =20
->  	start =3D __pa(initial_boot_params);
-> -	size =3D be32_to_cpu(initial_boot_params->totalsize);
-> +	size =3D fdt_totalsize(initial_boot_params);
+> +#if defined(CONFIG_DEBUG_FS) && defined(DEBUG)
+> +static struct debugfs_blob_wrapper flat_dt_blob;
+> +
+> +static int __init of_flat_dt_debugfs_export_fdt(void)
+> +{
+> +	struct dentry *d =3D debugfs_create_dir("device-tree", NULL);
+> +
+> +	if (!d)
+> +		return -ENOENT;
+> +
+> +	flat_dt_blob.data =3D initial_boot_params;
+> +	flat_dt_blob.size =3D fdt_totalsize(initial_boot_params);
 
-In 19/21 you use your newly introduced of_get_flat_dt_size()
-that's why I expect you will use it here too.
-size =3D of_get_flat_dt_size();
+As I wrote in different patch. I would move this to the end of this
+series and
+flat_dt_blob.size =3D of_get_flat_dt_size();
 
-The same is for 14/21 where you can use this new function too.
-It means moving 14/21 to the end and using this new function
-makes more sense.
+> +
+> +	d =3D debugfs_create_blob("flat-device-tree", S_IFREG | S_IRUSR,
+> +				d, &flat_dt_blob);
+> +	if (!d)
+> +		return -ENOENT;
+> +
+> +	return 0;
+> +}
+> +module_init(of_flat_dt_debugfs_export_fdt);
+> +#endif
+> +
+>  #endif /* CONFIG_OF_EARLY_FLATTREE */
+>=20
+
+Other than comment above:
+For Microblaze:
+Tested-by: Michal Simek <monstr@monstr.eu>
 
 Thanks,
 Michal
+
 
 --=20
 Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
@@ -93,7 +198,7 @@ Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
 
 
 
---8Q6hPNWGwIApntq6tsRaOJr1ErCv3bv24
+--88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -102,9 +207,21 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.10 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iEYEARECAAYFAlNXxL4ACgkQykllyylKDCGoiACcCxoJABNUJC0gMecLM6TbeBBz
-GugAn0Y7mzNOab8bl7CBQ1Jkttj6JsOL
-=KB8/
+iEYEARECAAYFAlNXxZ4ACgkQykllyylKDCF3RQCfXnnWAfDfmGWypy71NoANLTHj
+ciIAniVfzjzk3tzlgxXG9bABc6s9tMI8
+=CNyh
 -----END PGP SIGNATURE-----
 
---8Q6hPNWGwIApntq6tsRaOJr1ErCv3bv24--
+--88UUtkXqPO4B5klRm7exJsF1Uu6jmCtbo--
+
+--===============6041770652368798037==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMt
+ZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xp
+c3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+
+--===============6041770652368798037==--
