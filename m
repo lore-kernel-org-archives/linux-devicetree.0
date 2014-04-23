@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 11/21] of/fdt: update of_get_flat_dt_prop in prep for libfdt
-Date: Tue, 22 Apr 2014 20:18:11 -0500
-Message-ID: <1398215901-25609-12-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 12/21] of/fdt: Convert FDT functions to use libfdt
+Date: Tue, 22 Apr 2014 20:18:12 -0500
+Message-ID: <1398215901-25609-13-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
@@ -12,601 +12,405 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-Make of_get_flat_dt_prop arguments compatible with libfdt fdt_getprop
-call in preparation to convert FDT code to use libfdt. Make the return
-value const and the property length ptr type an int.
+The kernel FDT functions predate libfdt and are much more limited in
+functionality. Also, the kernel functions and libfdt functions are
+not compatible with each other because they have different definitions
+of node offsets. To avoid this incompatibility and in preparation to
+add more FDT parsing functions which will need libfdt, let's first
+convert the existing code to use libfdt.
+
+The FDT unflattening, top-level FDT scanning, and property retrieval
+functions are converted to use libfdt. The scanning code should be
+re-worked to be more efficient and understandable by using libfdt to
+find nodes directly by path or compatible strings.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
-v2: fix warning on microblaze
+v2: fix bug reported by Michal Simek in unflatten_dt_node in tracking tree
+ depth.
+ 
+ drivers/of/Kconfig     |   1 +
+ drivers/of/Makefile    |   2 +
+ drivers/of/fdt.c       | 209 ++++++++++++++-----------------------------------
+ include/linux/of_fdt.h |   1 -
+ 4 files changed, 60 insertions(+), 153 deletions(-)
 
- arch/arc/kernel/devtree.c              |  2 +-
- arch/arm/kernel/devtree.c              |  2 +-
- arch/arm/mach-exynos/exynos.c          |  2 +-
- arch/arm/mach-vexpress/platsmp.c       |  2 +-
- arch/arm/plat-samsung/s5p-dev-mfc.c    |  4 ++--
- arch/microblaze/kernel/prom.c          |  8 +++----
- arch/powerpc/kernel/epapr_paravirt.c   |  2 +-
- arch/powerpc/kernel/fadump.c           |  4 ++--
- arch/powerpc/kernel/prom.c             | 24 +++++++++++----------
- arch/powerpc/kernel/rtas.c             |  2 +-
- arch/powerpc/mm/hash_utils_64.c        | 22 +++++++++----------
- arch/powerpc/platforms/52xx/efika.c    |  4 ++--
- arch/powerpc/platforms/chrp/setup.c    |  4 ++--
- arch/powerpc/platforms/powernv/opal.c  | 12 +++++------
- arch/powerpc/platforms/pseries/setup.c |  4 ++--
- arch/xtensa/kernel/setup.c             |  2 +-
- drivers/of/fdt.c                       | 39 +++++++++++++++++-----------------
- drivers/of/of_reserved_mem.c           |  4 ++--
- include/linux/of_fdt.h                 |  8 +++----
- 19 files changed, 77 insertions(+), 74 deletions(-)
-
-diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
-index b6dc4e2..0b3ef40 100644
---- a/arch/arc/kernel/devtree.c
-+++ b/arch/arc/kernel/devtree.c
-@@ -42,7 +42,7 @@ const struct machine_desc * __init setup_machine_fdt(void *dt)
- 	const struct machine_desc *mdesc;
- 	unsigned long dt_root;
- 	void *clk;
--	unsigned long len;
-+	int len;
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 889005f..2dcb054 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -20,6 +20,7 @@ config OF_SELFTEST
+ config OF_FLATTREE
+ 	bool
+ 	select DTC
++	select LIBFDT
  
- 	if (!early_init_dt_scan(dt))
- 		return NULL;
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index dff9cc0..38f4711 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -247,7 +247,7 @@ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
- 
- 	if (!mdesc) {
- 		const char *prop;
--		long size;
-+		int size;
- 		unsigned long dt_root;
- 
- 		early_print("\nError: unrecognized/unsupported "
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index b32a907..77293d3 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -250,7 +250,7 @@ static int __init exynos_fdt_map_chipid(unsigned long node, const char *uname,
- {
- 	struct map_desc iodesc;
- 	__be32 *reg;
--	unsigned long len;
-+	int len;
- 
- 	if (!of_flat_dt_is_compatible(node, "samsung,exynos4210-chipid") &&
- 		!of_flat_dt_is_compatible(node, "samsung,exynos5440-clock"))
-diff --git a/arch/arm/mach-vexpress/platsmp.c b/arch/arm/mach-vexpress/platsmp.c
-index 993c9ae..b4a5f0d 100644
---- a/arch/arm/mach-vexpress/platsmp.c
-+++ b/arch/arm/mach-vexpress/platsmp.c
-@@ -53,7 +53,7 @@ static int __init vexpress_dt_find_scu(unsigned long node,
- {
- 	if (of_flat_dt_match(node, vexpress_dt_cortex_a9_match)) {
- 		phys_addr_t phys_addr;
--		__be32 *reg = of_get_flat_dt_prop(node, "reg", NULL);
-+		const __be32 *reg = of_get_flat_dt_prop(node, "reg", NULL);
- 
- 		if (WARN_ON(!reg))
- 			return -EINVAL;
-diff --git a/arch/arm/plat-samsung/s5p-dev-mfc.c b/arch/arm/plat-samsung/s5p-dev-mfc.c
-index 98087b6..469b862 100644
---- a/arch/arm/plat-samsung/s5p-dev-mfc.c
-+++ b/arch/arm/plat-samsung/s5p-dev-mfc.c
-@@ -125,8 +125,8 @@ device_initcall(s5p_mfc_memory_init);
- int __init s5p_fdt_alloc_mfc_mem(unsigned long node, const char *uname,
- 				int depth, void *data)
- {
--	__be32 *prop;
--	unsigned long len;
-+	const __be32 *prop;
-+	int len;
- 	struct s5p_mfc_dt_meminfo mfc_mem;
- 
- 	if (!data)
-diff --git a/arch/microblaze/kernel/prom.c b/arch/microblaze/kernel/prom.c
-index abdfb10..c766306 100644
---- a/arch/microblaze/kernel/prom.c
-+++ b/arch/microblaze/kernel/prom.c
-@@ -43,13 +43,13 @@
- #include <asm/pci-bridge.h>
- 
- #ifdef CONFIG_EARLY_PRINTK
--static char *stdout;
-+static const char *stdout;
- 
- static int __init early_init_dt_scan_chosen_serial(unsigned long node,
- 				const char *uname, int depth, void *data)
- {
--	unsigned long l;
--	char *p;
-+	int l;
-+	const char *p;
- 
- 	pr_debug("%s: depth: %d, uname: %s\n", __func__, depth, uname);
- 
-@@ -80,7 +80,7 @@ static int __init early_init_dt_scan_chosen_serial(unsigned long node,
- 				(strncmp(p, "xlnx,opb-uartlite", 17) == 0) ||
- 				(strncmp(p, "xlnx,axi-uartlite", 17) == 0) ||
- 				(strncmp(p, "xlnx,mdm", 8) == 0)) {
--			unsigned int *addrp;
-+			const unsigned int *addrp;
- 
- 			*(u32 *)data = UARTLITE;
- 
-diff --git a/arch/powerpc/kernel/epapr_paravirt.c b/arch/powerpc/kernel/epapr_paravirt.c
-index 7898be9..d64e92b 100644
---- a/arch/powerpc/kernel/epapr_paravirt.c
-+++ b/arch/powerpc/kernel/epapr_paravirt.c
-@@ -36,7 +36,7 @@ static int __init early_init_dt_scan_epapr(unsigned long node,
- 					   int depth, void *data)
- {
- 	const u32 *insts;
--	unsigned long len;
-+	int len;
- 	int i;
- 
- 	insts = of_get_flat_dt_prop(node, "hcall-instructions", &len);
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 2230fd0..7213d93 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -55,9 +55,9 @@ int crash_mem_ranges;
- int __init early_init_dt_scan_fw_dump(unsigned long node,
- 			const char *uname, int depth, void *data)
- {
--	__be32 *sections;
-+	const __be32 *sections;
- 	int i, num_sections;
--	unsigned long size;
-+	int size;
- 	const int *token;
- 
- 	if (depth != 1 || strcmp(uname, "rtas") != 0)
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index 668aa47..f971134 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -163,7 +163,7 @@ static struct ibm_pa_feature {
- 	{CPU_FTR_REAL_LE, PPC_FEATURE_TRUE_LE, 5, 0, 0},
- };
- 
--static void __init scan_features(unsigned long node, unsigned char *ftrs,
-+static void __init scan_features(unsigned long node, const unsigned char *ftrs,
- 				 unsigned long tablelen,
- 				 struct ibm_pa_feature *fp,
- 				 unsigned long ft_size)
-@@ -202,8 +202,8 @@ static void __init scan_features(unsigned long node, unsigned char *ftrs,
- 
- static void __init check_cpu_pa_features(unsigned long node)
- {
--	unsigned char *pa_ftrs;
--	unsigned long tablelen;
-+	const unsigned char *pa_ftrs;
-+	int tablelen;
- 
- 	pa_ftrs = of_get_flat_dt_prop(node, "ibm,pa-features", &tablelen);
- 	if (pa_ftrs == NULL)
-@@ -216,7 +216,7 @@ static void __init check_cpu_pa_features(unsigned long node)
- #ifdef CONFIG_PPC_STD_MMU_64
- static void __init check_cpu_slb_size(unsigned long node)
- {
--	__be32 *slb_size_ptr;
-+	const __be32 *slb_size_ptr;
- 
- 	slb_size_ptr = of_get_flat_dt_prop(node, "slb-size", NULL);
- 	if (slb_size_ptr != NULL) {
-@@ -257,7 +257,7 @@ static struct feature_property {
- static inline void identical_pvr_fixup(unsigned long node)
- {
- 	unsigned int pvr;
--	char *model = of_get_flat_dt_prop(node, "model", NULL);
-+	const char *model = of_get_flat_dt_prop(node, "model", NULL);
- 
- 	/*
- 	 * Since 440GR(x)/440EP(x) processors have the same pvr,
-@@ -295,11 +295,11 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- 					  const char *uname, int depth,
- 					  void *data)
- {
--	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
- 	const __be32 *prop;
- 	const __be32 *intserv;
- 	int i, nthreads;
--	unsigned long len;
-+	int len;
- 	int found = -1;
- 	int found_thread = 0;
- 
-@@ -392,7 +392,7 @@ static int __init early_init_dt_scan_cpus(unsigned long node,
- int __init early_init_dt_scan_chosen_ppc(unsigned long node, const char *uname,
- 					 int depth, void *data)
- {
--	unsigned long *lprop; /* All these set by kernel, so no need to convert endian */
-+	const unsigned long *lprop; /* All these set by kernel, so no need to convert endian */
- 
- 	/* Use common scan routine to determine if this is the chosen node */
- 	if (early_init_dt_scan_chosen(node, uname, depth, data) == 0)
-@@ -443,8 +443,9 @@ int __init early_init_dt_scan_chosen_ppc(unsigned long node, const char *uname,
-  */
- static int __init early_init_dt_scan_drconf_memory(unsigned long node)
- {
--	__be32 *dm, *ls, *usm;
--	unsigned long l, n, flags;
-+	const __be32 *dm, *ls, *usm;
-+	int l;
-+	unsigned long n, flags;
- 	u64 base, size, memblock_size;
- 	unsigned int is_kexec_kdump = 0, rngs;
- 
-@@ -564,7 +565,8 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
- 
- static void __init early_reserve_mem_dt(void)
- {
--	unsigned long i, len, dt_root;
-+	unsigned long i, dt_root;
-+	int len;
- 	const __be32 *prop;
- 
- 	dt_root = of_get_flat_dt_root();
-diff --git a/arch/powerpc/kernel/rtas.c b/arch/powerpc/kernel/rtas.c
-index 8cd5ed0..8b4c857 100644
---- a/arch/powerpc/kernel/rtas.c
-+++ b/arch/powerpc/kernel/rtas.c
-@@ -1142,7 +1142,7 @@ void __init rtas_initialize(void)
- int __init early_init_dt_scan_rtas(unsigned long node,
- 		const char *uname, int depth, void *data)
- {
--	u32 *basep, *entryp, *sizep;
-+	const u32 *basep, *entryp, *sizep;
- 
- 	if (depth != 1 || strcmp(uname, "rtas") != 0)
- 		return 0;
-diff --git a/arch/powerpc/mm/hash_utils_64.c b/arch/powerpc/mm/hash_utils_64.c
-index d766d6e..59cc19a 100644
---- a/arch/powerpc/mm/hash_utils_64.c
-+++ b/arch/powerpc/mm/hash_utils_64.c
-@@ -265,9 +265,9 @@ static int __init htab_dt_scan_seg_sizes(unsigned long node,
- 					 const char *uname, int depth,
- 					 void *data)
- {
--	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
--	__be32 *prop;
--	unsigned long size = 0;
-+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const __be32 *prop;
-+	int size = 0;
- 
- 	/* We are scanning "cpu" nodes only */
- 	if (type == NULL || strcmp(type, "cpu") != 0)
-@@ -320,9 +320,9 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
- 					  const char *uname, int depth,
- 					  void *data)
- {
--	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
--	__be32 *prop;
--	unsigned long size = 0;
-+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const __be32 *prop;
-+	int size = 0;
- 
- 	/* We are scanning "cpu" nodes only */
- 	if (type == NULL || strcmp(type, "cpu") != 0)
-@@ -402,9 +402,9 @@ static int __init htab_dt_scan_page_sizes(unsigned long node,
- static int __init htab_dt_scan_hugepage_blocks(unsigned long node,
- 					const char *uname, int depth,
- 					void *data) {
--	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
--	__be64 *addr_prop;
--	__be32 *page_count_prop;
-+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const __be64 *addr_prop;
-+	const __be32 *page_count_prop;
- 	unsigned int expected_pages;
- 	long unsigned int phys_addr;
- 	long unsigned int block_size;
-@@ -546,8 +546,8 @@ static int __init htab_dt_scan_pftsize(unsigned long node,
- 				       const char *uname, int depth,
- 				       void *data)
- {
--	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
--	__be32 *prop;
-+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const __be32 *prop;
- 
- 	/* We are scanning "cpu" nodes only */
- 	if (type == NULL || strcmp(type, "cpu") != 0)
-diff --git a/arch/powerpc/platforms/52xx/efika.c b/arch/powerpc/platforms/52xx/efika.c
-index 18c1048..6e19b0a 100644
---- a/arch/powerpc/platforms/52xx/efika.c
-+++ b/arch/powerpc/platforms/52xx/efika.c
-@@ -199,8 +199,8 @@ static void __init efika_setup_arch(void)
- 
- static int __init efika_probe(void)
- {
--	char *model = of_get_flat_dt_prop(of_get_flat_dt_root(),
--					  "model", NULL);
-+	const char *model = of_get_flat_dt_prop(of_get_flat_dt_root(),
-+						"model", NULL);
- 
- 	if (model == NULL)
- 		return 0;
-diff --git a/arch/powerpc/platforms/chrp/setup.c b/arch/powerpc/platforms/chrp/setup.c
-index c665d7d..7044fd3 100644
---- a/arch/powerpc/platforms/chrp/setup.c
-+++ b/arch/powerpc/platforms/chrp/setup.c
-@@ -574,8 +574,8 @@ chrp_init2(void)
- 
- static int __init chrp_probe(void)
- {
-- 	char *dtype = of_get_flat_dt_prop(of_get_flat_dt_root(),
-- 					  "device_type", NULL);
-+	const char *dtype = of_get_flat_dt_prop(of_get_flat_dt_root(),
-+						"device_type", NULL);
-  	if (dtype == NULL)
-  		return 0;
-  	if (strcmp(dtype, "chrp"))
-diff --git a/arch/powerpc/platforms/powernv/opal.c b/arch/powerpc/platforms/powernv/opal.c
-index 49d2f00..c132984 100644
---- a/arch/powerpc/platforms/powernv/opal.c
-+++ b/arch/powerpc/platforms/powernv/opal.c
-@@ -61,7 +61,7 @@ int __init early_init_dt_scan_opal(unsigned long node,
- 				   const char *uname, int depth, void *data)
- {
- 	const void *basep, *entryp, *sizep;
--	unsigned long basesz, entrysz, runtimesz;
-+	int basesz, entrysz, runtimesz;
- 
- 	if (depth != 1 || strcmp(uname, "ibm,opal") != 0)
- 		return 0;
-@@ -77,11 +77,11 @@ int __init early_init_dt_scan_opal(unsigned long node,
- 	opal.entry = of_read_number(entryp, entrysz/4);
- 	opal.size = of_read_number(sizep, runtimesz/4);
- 
--	pr_debug("OPAL Base  = 0x%llx (basep=%p basesz=%ld)\n",
-+	pr_debug("OPAL Base  = 0x%llx (basep=%p basesz=%d)\n",
- 		 opal.base, basep, basesz);
--	pr_debug("OPAL Entry = 0x%llx (entryp=%p basesz=%ld)\n",
-+	pr_debug("OPAL Entry = 0x%llx (entryp=%p basesz=%d)\n",
- 		 opal.entry, entryp, entrysz);
--	pr_debug("OPAL Entry = 0x%llx (sizep=%p runtimesz=%ld)\n",
-+	pr_debug("OPAL Entry = 0x%llx (sizep=%p runtimesz=%d)\n",
- 		 opal.size, sizep, runtimesz);
- 
- 	powerpc_firmware_features |= FW_FEATURE_OPAL;
-@@ -102,7 +102,7 @@ int __init early_init_dt_scan_opal(unsigned long node,
- int __init early_init_dt_scan_recoverable_ranges(unsigned long node,
- 				   const char *uname, int depth, void *data)
- {
--	unsigned long i, psize, size;
-+	int i, psize, size;
- 	const __be32 *prop;
- 
- 	if (depth != 1 || strcmp(uname, "ibm,opal") != 0)
-@@ -359,7 +359,7 @@ int opal_get_chars(uint32_t vtermno, char *buf, int count)
- 	if ((be64_to_cpu(evt) & OPAL_EVENT_CONSOLE_INPUT) == 0)
- 		return 0;
- 	len = cpu_to_be64(count);
--	rc = opal_console_read(vtermno, &len, buf);	
-+	rc = opal_console_read(vtermno, &len, buf);
- 	if (rc == OPAL_SUCCESS)
- 		return be64_to_cpu(len);
- 	return 0;
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 2db8cc6..099d2df 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -665,7 +665,7 @@ static int __init pseries_probe_fw_features(unsigned long node,
- 					    void *data)
- {
- 	const char *prop;
--	unsigned long len;
-+	int len;
- 	static int hypertas_found;
- 	static int vec5_found;
- 
-@@ -698,7 +698,7 @@ static int __init pseries_probe_fw_features(unsigned long node,
- static int __init pSeries_probe(void)
- {
- 	unsigned long root = of_get_flat_dt_root();
-- 	char *dtype = of_get_flat_dt_prop(root, "device_type", NULL);
-+	const char *dtype = of_get_flat_dt_prop(root, "device_type", NULL);
- 
-  	if (dtype == NULL)
-  		return 0;
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 89986e5..1991a3d 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -220,7 +220,7 @@ static int __init xtensa_dt_io_area(unsigned long node, const char *uname,
- 		int depth, void *data)
- {
- 	const __be32 *ranges;
--	unsigned long len;
-+	int len;
- 
- 	if (depth > 1)
- 		return 0;
+ config OF_EARLY_FLATTREE
+ 	bool
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index ed9660a..9891232 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -10,3 +10,5 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
++
++CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
 diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 9c85352..1d1582b 100644
+index 1d1582b..8e820a2 100644
 --- a/drivers/of/fdt.c
 +++ b/drivers/of/fdt.c
-@@ -35,7 +35,7 @@ char *of_fdt_get_string(struct boot_param_header *blob, u32 offset)
-  */
- void *of_fdt_get_property(struct boot_param_header *blob,
- 		       unsigned long node, const char *name,
--		       unsigned long *size)
-+		       int *size)
- {
- 	unsigned long p = node;
+@@ -19,58 +19,11 @@
+ #include <linux/string.h>
+ #include <linux/errno.h>
+ #include <linux/slab.h>
++#include <linux/libfdt.h>
  
-@@ -85,7 +85,8 @@ int of_fdt_is_compatible(struct boot_param_header *blob,
- 		      unsigned long node, const char *compat)
- {
- 	const char *cp;
--	unsigned long cplen, l, score = 0;
-+	int cplen;
-+	unsigned long l, score = 0;
+ #include <asm/setup.h>  /* for COMMAND_LINE_SIZE */
+ #include <asm/page.h>
  
- 	cp = of_fdt_get_property(blob, node, "compatible", &cplen);
+-char *of_fdt_get_string(struct boot_param_header *blob, u32 offset)
+-{
+-	return ((char *)blob) +
+-		be32_to_cpu(blob->off_dt_strings) + offset;
+-}
+-
+-/**
+- * of_fdt_get_property - Given a node in the given flat blob, return
+- * the property ptr
+- */
+-void *of_fdt_get_property(struct boot_param_header *blob,
+-		       unsigned long node, const char *name,
+-		       int *size)
+-{
+-	unsigned long p = node;
+-
+-	do {
+-		u32 tag = be32_to_cpup((__be32 *)p);
+-		u32 sz, noff;
+-		const char *nstr;
+-
+-		p += 4;
+-		if (tag == OF_DT_NOP)
+-			continue;
+-		if (tag != OF_DT_PROP)
+-			return NULL;
+-
+-		sz = be32_to_cpup((__be32 *)p);
+-		noff = be32_to_cpup((__be32 *)(p + 4));
+-		p += 8;
+-		if (be32_to_cpu(blob->version) < 0x10)
+-			p = ALIGN(p, sz >= 8 ? 8 : 4);
+-
+-		nstr = of_fdt_get_string(blob, noff);
+-		if (nstr == NULL) {
+-			pr_warning("Can't find property index name !\n");
+-			return NULL;
+-		}
+-		if (strcmp(name, nstr) == 0) {
+-			if (size)
+-				*size = sz;
+-			return (void *)p;
+-		}
+-		p += sz;
+-		p = ALIGN(p, 4);
+-	} while (1);
+-}
+-
+ /**
+  * of_fdt_is_compatible - Return true if given node from the given blob has
+  * compat in its compatible list
+@@ -88,7 +41,7 @@ int of_fdt_is_compatible(struct boot_param_header *blob,
+ 	int cplen;
+ 	unsigned long l, score = 0;
+ 
+-	cp = of_fdt_get_property(blob, node, "compatible", &cplen);
++	cp = fdt_getprop(blob, node, "compatible", &cplen);
  	if (cp == NULL)
-@@ -444,8 +445,8 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
- {
- 	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
- 	phys_addr_t base, size;
--	unsigned long len;
--	__be32 *prop;
-+	int len;
-+	const __be32 *prop;
- 	int nomap, first = 1;
- 
- 	prop = of_get_flat_dt_prop(node, "reg", &len);
-@@ -488,7 +489,7 @@ static int __init __reserved_mem_reserve_reg(unsigned long node,
-  */
- static int __init __reserved_mem_check_root(unsigned long node)
- {
--	__be32 *prop;
-+	const __be32 *prop;
- 
- 	prop = of_get_flat_dt_prop(node, "#size-cells", NULL);
- 	if (!prop || be32_to_cpup(prop) != dt_root_size_cells)
-@@ -638,8 +639,8 @@ unsigned long __init of_get_flat_dt_root(void)
-  * This function can be used within scan_flattened_dt callback to get
-  * access to properties
-  */
--void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
--				 unsigned long *size)
-+const void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
-+				       int *size)
- {
- 	return of_fdt_get_property(initial_boot_params, node, name, size);
- }
-@@ -710,7 +711,7 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
- 	}
- 	if (!best_data) {
- 		const char *prop;
--		long size;
-+		int size;
- 
- 		pr_err("\n unrecognized device tree list:\n[ ");
- 
-@@ -739,8 +740,8 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
- static void __init early_init_dt_check_for_initrd(unsigned long node)
- {
- 	u64 start, end;
--	unsigned long len;
--	__be32 *prop;
-+	int len;
-+	const __be32 *prop;
- 
- 	pr_debug("Looking for initrd properties... ");
- 
-@@ -773,7 +774,7 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
- int __init early_init_dt_scan_root(unsigned long node, const char *uname,
- 				   int depth, void *data)
- {
--	__be32 *prop;
-+	const __be32 *prop;
- 
- 	if (depth != 0)
  		return 0;
-@@ -795,9 +796,9 @@ int __init early_init_dt_scan_root(unsigned long node, const char *uname,
- 	return 1;
+ 	while (cplen > 0) {
+@@ -147,28 +100,27 @@ static void *unflatten_dt_alloc(void **mem, unsigned long size,
+  */
+ static void * unflatten_dt_node(struct boot_param_header *blob,
+ 				void *mem,
+-				void **p,
++				int *poffset,
+ 				struct device_node *dad,
+ 				struct device_node ***allnextpp,
+ 				unsigned long fpsize)
+ {
++	const __be32 *p;
+ 	struct device_node *np;
+ 	struct property *pp, **prev_pp = NULL;
+-	char *pathp;
+-	u32 tag;
++	const char *pathp;
+ 	unsigned int l, allocl;
++	static int depth = 0;
++	int old_depth;
++	int offset;
+ 	int has_name = 0;
+ 	int new_format = 0;
+ 
+-	tag = be32_to_cpup(*p);
+-	if (tag != OF_DT_BEGIN_NODE) {
+-		pr_err("Weird tag at start of node: %x\n", tag);
++	pathp = fdt_get_name(blob, *poffset, &l);
++	if (!pathp)
+ 		return mem;
+-	}
+-	*p += 4;
+-	pathp = *p;
+-	l = allocl = strlen(pathp) + 1;
+-	*p = PTR_ALIGN(*p + l, 4);
++
++	allocl = l++;
+ 
+ 	/* version 0x10 has a more compact unit name here instead of the full
+ 	 * path. we accumulate the full path size using "fpsize", we'll rebuild
+@@ -186,7 +138,7 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
+ 			fpsize = 1;
+ 			allocl = 2;
+ 			l = 1;
+-			*pathp = '\0';
++			pathp = "";
+ 		} else {
+ 			/* account for '/' and path size minus terminal 0
+ 			 * already in 'l'
+@@ -233,32 +185,23 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
+ 		}
+ 	}
+ 	/* process properties */
+-	while (1) {
+-		u32 sz, noff;
+-		char *pname;
+-
+-		tag = be32_to_cpup(*p);
+-		if (tag == OF_DT_NOP) {
+-			*p += 4;
+-			continue;
+-		}
+-		if (tag != OF_DT_PROP)
++	for (offset = fdt_first_property_offset(blob, *poffset);
++	     (offset >= 0);
++	     (offset = fdt_next_property_offset(blob, offset))) {
++		const char *pname;
++		u32 sz;
++
++		if (!(p = fdt_getprop_by_offset(blob, offset, &pname, &sz))) {
++			offset = -FDT_ERR_INTERNAL;
+ 			break;
+-		*p += 4;
+-		sz = be32_to_cpup(*p);
+-		noff = be32_to_cpup(*p + 4);
+-		*p += 8;
+-		if (be32_to_cpu(blob->version) < 0x10)
+-			*p = PTR_ALIGN(*p, sz >= 8 ? 8 : 4);
+-
+-		pname = of_fdt_get_string(blob, noff);
++		}
++
+ 		if (pname == NULL) {
+ 			pr_info("Can't find property name in list !\n");
+ 			break;
+ 		}
+ 		if (strcmp(pname, "name") == 0)
+ 			has_name = 1;
+-		l = strlen(pname) + 1;
+ 		pp = unflatten_dt_alloc(&mem, sizeof(struct property),
+ 					__alignof__(struct property));
+ 		if (allnextpp) {
+@@ -270,26 +213,25 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
+ 			if ((strcmp(pname, "phandle") == 0) ||
+ 			    (strcmp(pname, "linux,phandle") == 0)) {
+ 				if (np->phandle == 0)
+-					np->phandle = be32_to_cpup((__be32*)*p);
++					np->phandle = be32_to_cpup(p);
+ 			}
+ 			/* And we process the "ibm,phandle" property
+ 			 * used in pSeries dynamic device tree
+ 			 * stuff */
+ 			if (strcmp(pname, "ibm,phandle") == 0)
+-				np->phandle = be32_to_cpup((__be32 *)*p);
+-			pp->name = pname;
++				np->phandle = be32_to_cpup(p);
++			pp->name = (char *)pname;
+ 			pp->length = sz;
+-			pp->value = *p;
++			pp->value = (__be32 *)p;
+ 			*prev_pp = pp;
+ 			prev_pp = &pp->next;
+ 		}
+-		*p = PTR_ALIGN((*p) + sz, 4);
+ 	}
+ 	/* with version 0x10 we may not have the name property, recreate
+ 	 * it here from the unit name if absent
+ 	 */
+ 	if (!has_name) {
+-		char *p1 = pathp, *ps = pathp, *pa = NULL;
++		const char *p1 = pathp, *ps = pathp, *pa = NULL;
+ 		int sz;
+ 
+ 		while (*p1) {
+@@ -326,19 +268,18 @@ static void * unflatten_dt_node(struct boot_param_header *blob,
+ 		if (!np->type)
+ 			np->type = "<NULL>";
+ 	}
+-	while (tag == OF_DT_BEGIN_NODE || tag == OF_DT_NOP) {
+-		if (tag == OF_DT_NOP)
+-			*p += 4;
+-		else
+-			mem = unflatten_dt_node(blob, mem, p, np, allnextpp,
+-						fpsize);
+-		tag = be32_to_cpup(*p);
+-	}
+-	if (tag != OF_DT_END_NODE) {
+-		pr_err("Weird tag at end of node: %x\n", tag);
+-		return mem;
+-	}
+-	*p += 4;
++
++	old_depth = depth;
++	*poffset = fdt_next_node(blob, *poffset, &depth);
++	if (depth < 0)
++		depth = 0;
++	while (*poffset > 0 && depth > old_depth)
++		mem = unflatten_dt_node(blob, mem, poffset, np, allnextpp,
++					fpsize);
++
++	if (*poffset < 0 && *poffset != -FDT_ERR_NOTFOUND)
++		pr_err("unflatten: error %d processing FDT\n", *poffset);
++
+ 	return mem;
  }
  
--u64 __init dt_mem_next_cell(int s, __be32 **cellp)
-+u64 __init dt_mem_next_cell(int s, const __be32 **cellp)
+@@ -359,7 +300,8 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
+ 			     void * (*dt_alloc)(u64 size, u64 align))
  {
--	__be32 *p = *cellp;
-+	const __be32 *p = *cellp;
+ 	unsigned long size;
+-	void *start, *mem;
++	int start;
++	void *mem;
+ 	struct device_node **allnextp = mynodes;
  
- 	*cellp = p + s;
- 	return of_read_number(p, s);
-@@ -809,9 +810,9 @@ u64 __init dt_mem_next_cell(int s, __be32 **cellp)
- int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 				     int depth, void *data)
+ 	pr_debug(" -> unflatten_device_tree()\n");
+@@ -380,7 +322,7 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
+ 	}
+ 
+ 	/* First pass, scan for size */
+-	start = ((void *)blob) + be32_to_cpu(blob->off_dt_struct);
++	start = 0;
+ 	size = (unsigned long)unflatten_dt_node(blob, 0, &start, NULL, NULL, 0);
+ 	size = ALIGN(size, 4);
+ 
+@@ -395,10 +337,8 @@ static void __unflatten_device_tree(struct boot_param_header *blob,
+ 	pr_debug("  unflattening %p...\n", mem);
+ 
+ 	/* Second pass, do actual unflattening */
+-	start = ((void *)blob) + be32_to_cpu(blob->off_dt_struct);
++	start = 0;
+ 	unflatten_dt_node(blob, mem, &start, NULL, &allnextp, 0);
+-	if (be32_to_cpup(start) != OF_DT_END)
+-		pr_warning("Weird tag at end of tree: %08x\n", be32_to_cpup(start));
+ 	if (be32_to_cpup(mem + size) != 0xdeadbeef)
+ 		pr_warning("End of tree marker overwritten: %08x\n",
+ 			   be32_to_cpup(mem + size));
+@@ -574,47 +514,19 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+ 				     void *data),
+ 			   void *data)
  {
--	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
--	__be32 *reg, *endp;
--	unsigned long l;
-+	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
-+	const __be32 *reg, *endp;
-+	int l;
+-	unsigned long p = ((unsigned long)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_struct);
+-	int rc = 0;
+-	int depth = -1;
+-
+-	do {
+-		u32 tag = be32_to_cpup((__be32 *)p);
+-		const char *pathp;
+-
+-		p += 4;
+-		if (tag == OF_DT_END_NODE) {
+-			depth--;
+-			continue;
+-		}
+-		if (tag == OF_DT_NOP)
+-			continue;
+-		if (tag == OF_DT_END)
+-			break;
+-		if (tag == OF_DT_PROP) {
+-			u32 sz = be32_to_cpup((__be32 *)p);
+-			p += 8;
+-			if (be32_to_cpu(initial_boot_params->version) < 0x10)
+-				p = ALIGN(p, sz >= 8 ? 8 : 4);
+-			p += sz;
+-			p = ALIGN(p, 4);
+-			continue;
+-		}
+-		if (tag != OF_DT_BEGIN_NODE) {
+-			pr_err("Invalid tag %x in flat device tree!\n", tag);
+-			return -EINVAL;
+-		}
+-		depth++;
+-		pathp = (char *)p;
+-		p = ALIGN(p + strlen(pathp) + 1, 4);
++	const void *blob = initial_boot_params;
++	const char *pathp;
++	int offset, rc = 0, depth = -1;
++
++        for (offset = fdt_next_node(blob, -1, &depth);
++             offset >= 0 && depth >= 0 && !rc;
++             offset = fdt_next_node(blob, offset, &depth)) {
++
++		pathp = fdt_get_name(blob, offset, NULL);
+ 		if (*pathp == '/')
+ 			pathp = kbasename(pathp);
+-		rc = it(p, pathp, depth, data);
+-		if (rc != 0)
+-			break;
+-	} while (1);
+-
++		rc = it(offset, pathp, depth, data);
++	}
+ 	return rc;
+ }
  
- 	/* We are scanning "memory" nodes only */
- 	if (type == NULL) {
-@@ -832,7 +833,7 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- 
- 	endp = reg + (l / sizeof(__be32));
- 
--	pr_debug("memory scan node %s, reg size %ld, data: %x %x %x %x,\n",
-+	pr_debug("memory scan node %s, reg size %d, data: %x %x %x %x,\n",
- 	    uname, l, reg[0], reg[1], reg[2], reg[3]);
- 
- 	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-@@ -855,8 +856,8 @@ int __init early_init_dt_scan_memory(unsigned long node, const char *uname,
- int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 				     int depth, void *data)
+@@ -623,14 +535,7 @@ int __init of_scan_flat_dt(int (*it)(unsigned long node,
+  */
+ unsigned long __init of_get_flat_dt_root(void)
  {
--	unsigned long l;
--	char *p;
-+	int l;
-+	const char *p;
+-	unsigned long p = ((unsigned long)initial_boot_params) +
+-		be32_to_cpu(initial_boot_params->off_dt_struct);
+-
+-	while (be32_to_cpup((__be32 *)p) == OF_DT_NOP)
+-		p += 4;
+-	BUG_ON(be32_to_cpup((__be32 *)p) != OF_DT_BEGIN_NODE);
+-	p += 4;
+-	return ALIGN(p + strlen((char *)p) + 1, 4);
++	return 0;
+ }
  
- 	pr_debug("search \"chosen\", depth: %d, uname: %s\n", depth, uname);
+ /**
+@@ -642,7 +547,7 @@ unsigned long __init of_get_flat_dt_root(void)
+ const void *__init of_get_flat_dt_prop(unsigned long node, const char *name,
+ 				       int *size)
+ {
+-	return of_fdt_get_property(initial_boot_params, node, name, size);
++	return fdt_getprop(initial_boot_params, node, name, size);
+ }
  
-diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
-index daaaf93..e420eb5 100644
---- a/drivers/of/of_reserved_mem.c
-+++ b/drivers/of/of_reserved_mem.c
-@@ -95,8 +95,8 @@ static int __init __reserved_mem_alloc_size(unsigned long node,
- 	int t_len = (dt_root_addr_cells + dt_root_size_cells) * sizeof(__be32);
- 	phys_addr_t start = 0, end = 0;
- 	phys_addr_t base = 0, align = 0, size;
--	unsigned long len;
--	__be32 *prop;
-+	int len;
-+	const __be32 *prop;
- 	int nomap;
- 	int ret;
- 
+ /**
 diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 991ec74..b36a50d 100644
+index b36a50d..26cef9a 100644
 --- a/include/linux/of_fdt.h
 +++ b/include/linux/of_fdt.h
-@@ -66,7 +66,7 @@ extern char *of_fdt_get_string(struct boot_param_header *blob, u32 offset);
- extern void *of_fdt_get_property(struct boot_param_header *blob,
- 				 unsigned long node,
- 				 const char *name,
--				 unsigned long *size);
-+				 int *size);
- extern int of_fdt_is_compatible(struct boot_param_header *blob,
- 				unsigned long node,
- 				const char *compat);
-@@ -88,8 +88,8 @@ extern char *find_flat_dt_string(u32 offset);
+@@ -84,7 +84,6 @@ extern char __dtb_start[];
+ extern char __dtb_end[];
+ 
+ /* For scanning the flat device-tree at boot time */
+-extern char *find_flat_dt_string(u32 offset);
  extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
  				     int depth, void *data),
  			   void *data);
--extern void *of_get_flat_dt_prop(unsigned long node, const char *name,
--				 unsigned long *size);
-+extern const void *of_get_flat_dt_prop(unsigned long node, const char *name,
-+				       int *size);
- extern int of_flat_dt_is_compatible(unsigned long node, const char *name);
- extern int of_flat_dt_match(unsigned long node, const char *const *matches);
- extern unsigned long of_get_flat_dt_root(void);
-@@ -103,7 +103,7 @@ extern void early_init_dt_add_memory_arch(u64 base, u64 size);
- extern int early_init_dt_reserve_memory_arch(phys_addr_t base, phys_addr_t size,
- 					     bool no_map);
- extern void * early_init_dt_alloc_memory_arch(u64 size, u64 align);
--extern u64 dt_mem_next_cell(int s, __be32 **cellp);
-+extern u64 dt_mem_next_cell(int s, const __be32 **cellp);
- 
- /* Early flat tree scan hooks */
- extern int early_init_dt_scan_root(unsigned long node, const char *uname,
 -- 
 1.9.1
