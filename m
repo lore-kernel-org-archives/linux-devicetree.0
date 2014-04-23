@@ -1,130 +1,96 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 21/21] of: push struct boot_param_header and defines into powerpc
-Date: Tue, 22 Apr 2014 20:18:21 -0500
-Message-ID: <1398215901-25609-22-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 14/21] of/fdt: create common debugfs
+Date: Tue, 22 Apr 2014 20:18:14 -0500
+Message-ID: <1398215901-25609-15-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+Cc: Rob Herring <robh@kernel.org>, Michal Simek <monstr@monstr.eu>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh@kernel.org>
-
-Now powerpc is the only user of struct boot_param_header and FDT defines,
-so they can be moved into the powerpc architecture code.
-
-Signed-off-by: Rob Herring <robh@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: linuxppc-dev@lists.ozlabs.org
----
-v2: no change
-
- arch/powerpc/include/asm/prom.h | 39 +++++++++++++++++++++++++++++++++++++++
- include/linux/of_fdt.h          | 37 -------------------------------------
- 2 files changed, 39 insertions(+), 37 deletions(-)
-
-diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
-index d977b9b..74b79f0 100644
---- a/arch/powerpc/include/asm/prom.h
-+++ b/arch/powerpc/include/asm/prom.h
-@@ -26,6 +26,45 @@
- #include <linux/of_irq.h>
- #include <linux/platform_device.h>
- 
-+#define OF_DT_BEGIN_NODE	0x1		/* Start of node, full name */
-+#define OF_DT_END_NODE		0x2		/* End node */
-+#define OF_DT_PROP		0x3		/* Property: name off, size,
-+						 * content */
-+#define OF_DT_NOP		0x4		/* nop */
-+#define OF_DT_END		0x9
-+
-+#define OF_DT_VERSION		0x10
-+
-+/*
-+ * This is what gets passed to the kernel by prom_init or kexec
-+ *
-+ * The dt struct contains the device tree structure, full pathes and
-+ * property contents. The dt strings contain a separate block with just
-+ * the strings for the property names, and is fully page aligned and
-+ * self contained in a page, so that it can be kept around by the kernel,
-+ * each property name appears only once in this page (cheap compression)
-+ *
-+ * the mem_rsvmap contains a map of reserved ranges of physical memory,
-+ * passing it here instead of in the device-tree itself greatly simplifies
-+ * the job of everybody. It's just a list of u64 pairs (base/size) that
-+ * ends when size is 0
-+ */
-+struct boot_param_header {
-+	__be32	magic;			/* magic word OF_DT_HEADER */
-+	__be32	totalsize;		/* total size of DT block */
-+	__be32	off_dt_struct;		/* offset to structure */
-+	__be32	off_dt_strings;		/* offset to strings */
-+	__be32	off_mem_rsvmap;		/* offset to memory reserve map */
-+	__be32	version;		/* format version */
-+	__be32	last_comp_version;	/* last compatible version */
-+	/* version 2 fields below */
-+	__be32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
-+	/* version 3 fields below */
-+	__be32	dt_strings_size;	/* size of the DT strings block */
-+	/* version 17 fields below */
-+	__be32	dt_struct_size;		/* size of the DT structure block */
-+};
-+
- /*
-  * OF address retreival & translation
-  */
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index 1f882e1..5c0ab05 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -17,45 +17,8 @@
- 
- /* Definitions used by the flattened device tree */
- #define OF_DT_HEADER		0xd00dfeed	/* marker */
--#define OF_DT_BEGIN_NODE	0x1		/* Start of node, full name */
--#define OF_DT_END_NODE		0x2		/* End node */
--#define OF_DT_PROP		0x3		/* Property: name off, size,
--						 * content */
--#define OF_DT_NOP		0x4		/* nop */
--#define OF_DT_END		0x9
--
--#define OF_DT_VERSION		0x10
- 
- #ifndef __ASSEMBLY__
--/*
-- * This is what gets passed to the kernel by prom_init or kexec
-- *
-- * The dt struct contains the device tree structure, full pathes and
-- * property contents. The dt strings contain a separate block with just
-- * the strings for the property names, and is fully page aligned and
-- * self contained in a page, so that it can be kept around by the kernel,
-- * each property name appears only once in this page (cheap compression)
-- *
-- * the mem_rsvmap contains a map of reserved ranges of physical memory,
-- * passing it here instead of in the device-tree itself greatly simplifies
-- * the job of everybody. It's just a list of u64 pairs (base/size) that
-- * ends when size is 0
-- */
--struct boot_param_header {
--	__be32	magic;			/* magic word OF_DT_HEADER */
--	__be32	totalsize;		/* total size of DT block */
--	__be32	off_dt_struct;		/* offset to structure */
--	__be32	off_dt_strings;		/* offset to strings */
--	__be32	off_mem_rsvmap;		/* offset to memory reserve map */
--	__be32	version;		/* format version */
--	__be32	last_comp_version;	/* last compatible version */
--	/* version 2 fields below */
--	__be32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
--	/* version 3 fields below */
--	__be32	dt_strings_size;	/* size of the DT strings block */
--	/* version 17 fields below */
--	__be32	dt_struct_size;		/* size of the DT structure block */
--};
- 
- #if defined(CONFIG_OF_FLATTREE)
- 
--- 
-1.9.1
+RnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCkJvdGggcG93ZXJwYyBhbmQgbWlj
+cm9ibGF6ZSBoYXZlIHRoZSBzYW1lIEZEVCBibG9iIGluIGRlYnVnZnMgZmVhdHVyZS4KTW92ZSB0
+aGlzIHRvIGNvbW1vbiBsb2NhdGlvbiBhbmQgcmVtb3ZlIHRoZSBwb3dlcnBjIGFuZCBtaWNyb2Js
+YXplCmltcGxlbWVudGF0aW9ucy4gVGhpcyBmZWF0dXJlIGNvdWxkIGJlY29tZSBtb3JlIHVzZWZ1
+bCB3aGVuIEZEVApvdmVybGF5IHN1cHBvcnQgaXMgYWRkZWQuCgpUaGlzIGNoYW5nZXMgdGhlIHBh
+dGggb2YgdGhlIGJsb2IgZnJvbSAiJGFyY2gvZmxhdC1kZXZpY2UtdHJlZSIgdG8KImRldmljZS10
+cmVlL2ZsYXQtZGV2aWNlLXRyZWUiLgoKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
+a2VybmVsLm9yZz4KQ2M6IE1pY2hhbCBTaW1layA8bW9uc3RyQG1vbnN0ci5ldT4KQ2M6IEJlbmph
+bWluIEhlcnJlbnNjaG1pZHQgPGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZz4KQ2M6IFBhdWwgTWFj
+a2VycmFzIDxwYXVsdXNAc2FtYmEub3JnPgpDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
+cmcKLS0tCnYyOiBtb3ZlIHRvIGFmdGVyIGxpYmZkdCBjb252ZXJzaW9uCgogYXJjaC9taWNyb2Js
+YXplL2tlcm5lbC9wcm9tLmMgfCAzMSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiBh
+cmNoL3Bvd2VycGMva2VybmVsL3Byb20uYyAgICB8IDIxIC0tLS0tLS0tLS0tLS0tLS0tLS0tLQog
+ZHJpdmVycy9vZi9mZHQuYyAgICAgICAgICAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysr
+KysKIDMgZmlsZXMgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgNTIgZGVsZXRpb25zKC0pCgpk
+aWZmIC0tZ2l0IGEvYXJjaC9taWNyb2JsYXplL2tlcm5lbC9wcm9tLmMgYi9hcmNoL21pY3JvYmxh
+emUva2VybmVsL3Byb20uYwppbmRleCBjNzY2MzA2Li42OGYwOTk5IDEwMDY0NAotLS0gYS9hcmNo
+L21pY3JvYmxhemUva2VybmVsL3Byb20uYworKysgYi9hcmNoL21pY3JvYmxhemUva2VybmVsL3By
+b20uYwpAQCAtMTE0LDM0ICsxMTQsMyBAQCB2b2lkIF9faW5pdCBlYXJseV9pbml0X2RldnRyZWUo
+dm9pZCAqcGFyYW1zKQogCiAJcHJfZGVidWcoIiA8LSBlYXJseV9pbml0X2RldnRyZWUoKVxuIik7
+CiB9Ci0KLS8qKioqKioqCi0gKgotICogTmV3IGltcGxlbWVudGF0aW9uIG9mIHRoZSBPRiAiZmlu
+ZCIgQVBJcywgcmV0dXJuIGEgcmVmY291bnRlZAotICogb2JqZWN0LCBjYWxsIG9mX25vZGVfcHV0
+KCkgd2hlbiBkb25lLiAgVGhlIGRldmljZSB0cmVlIGFuZCBsaXN0Ci0gKiBhcmUgcHJvdGVjdGVk
+IGJ5IGEgcndfbG9jay4KLSAqCi0gKiBOb3RlIHRoYXQgcHJvcGVydHkgbWFuYWdlbWVudCB3aWxs
+IG5lZWQgc29tZSBsb2NraW5nIGFzIHdlbGwsCi0gKiB0aGlzIGlzbid0IGRlYWx0IHdpdGggeWV0
+LgotICoKLSAqKioqKioqLwotCi0jaWYgZGVmaW5lZChDT05GSUdfREVCVUdfRlMpICYmIGRlZmlu
+ZWQoREVCVUcpCi1zdGF0aWMgc3RydWN0IGRlYnVnZnNfYmxvYl93cmFwcGVyIGZsYXRfZHRfYmxv
+YjsKLQotc3RhdGljIGludCBfX2luaXQgZXhwb3J0X2ZsYXRfZGV2aWNlX3RyZWUodm9pZCkKLXsK
+LQlzdHJ1Y3QgZGVudHJ5ICpkOwotCi0JZmxhdF9kdF9ibG9iLmRhdGEgPSBpbml0aWFsX2Jvb3Rf
+cGFyYW1zOwotCWZsYXRfZHRfYmxvYi5zaXplID0gaW5pdGlhbF9ib290X3BhcmFtcy0+dG90YWxz
+aXplOwotCi0JZCA9IGRlYnVnZnNfY3JlYXRlX2Jsb2IoImZsYXQtZGV2aWNlLXRyZWUiLCBTX0lG
+UkVHIHwgU19JUlVTUiwKLQkJCQlvZl9kZWJ1Z2ZzX3Jvb3QsICZmbGF0X2R0X2Jsb2IpOwotCWlm
+ICghZCkKLQkJcmV0dXJuIDE7Ci0KLQlyZXR1cm4gMDsKLX0KLWRldmljZV9pbml0Y2FsbChleHBv
+cnRfZmxhdF9kZXZpY2VfdHJlZSk7Ci0jZW5kaWYKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9r
+ZXJuZWwvcHJvbS5jIGIvYXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tLmMKaW5kZXggZjk3MTEzNC4u
+MDM2MjRjZSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tLmMKKysrIGIvYXJj
+aC9wb3dlcnBjL2tlcm5lbC9wcm9tLmMKQEAgLTI5LDcgKzI5LDYgQEAKICNpbmNsdWRlIDxsaW51
+eC9iaXRvcHMuaD4KICNpbmNsdWRlIDxsaW51eC9leHBvcnQuaD4KICNpbmNsdWRlIDxsaW51eC9r
+ZXhlYy5oPgotI2luY2x1ZGUgPGxpbnV4L2RlYnVnZnMuaD4KICNpbmNsdWRlIDxsaW51eC9pcnEu
+aD4KICNpbmNsdWRlIDxsaW51eC9tZW1ibG9jay5oPgogI2luY2x1ZGUgPGxpbnV4L29mLmg+CkBA
+IC05MjQsMjMgKzkyMywzIEBAIGJvb2wgYXJjaF9tYXRjaF9jcHVfcGh5c19pZChpbnQgY3B1LCB1
+NjQgcGh5c19pZCkKIHsKIAlyZXR1cm4gKGludClwaHlzX2lkID09IGdldF9oYXJkX3NtcF9wcm9j
+ZXNzb3JfaWQoY3B1KTsKIH0KLQotI2lmIGRlZmluZWQoQ09ORklHX0RFQlVHX0ZTKSAmJiBkZWZp
+bmVkKERFQlVHKQotc3RhdGljIHN0cnVjdCBkZWJ1Z2ZzX2Jsb2Jfd3JhcHBlciBmbGF0X2R0X2Js
+b2I7Ci0KLXN0YXRpYyBpbnQgX19pbml0IGV4cG9ydF9mbGF0X2RldmljZV90cmVlKHZvaWQpCi17
+Ci0Jc3RydWN0IGRlbnRyeSAqZDsKLQotCWZsYXRfZHRfYmxvYi5kYXRhID0gaW5pdGlhbF9ib290
+X3BhcmFtczsKLQlmbGF0X2R0X2Jsb2Iuc2l6ZSA9IGJlMzJfdG9fY3B1KGluaXRpYWxfYm9vdF9w
+YXJhbXMtPnRvdGFsc2l6ZSk7Ci0KLQlkID0gZGVidWdmc19jcmVhdGVfYmxvYigiZmxhdC1kZXZp
+Y2UtdHJlZSIsIFNfSUZSRUcgfCBTX0lSVVNSLAotCQkJCXBvd2VycGNfZGVidWdmc19yb290LCAm
+ZmxhdF9kdF9ibG9iKTsKLQlpZiAoIWQpCi0JCXJldHVybiAxOwotCi0JcmV0dXJuIDA7Ci19Ci1f
+X2luaXRjYWxsKGV4cG9ydF9mbGF0X2RldmljZV90cmVlKTsKLSNlbmRpZgpkaWZmIC0tZ2l0IGEv
+ZHJpdmVycy9vZi9mZHQuYyBiL2RyaXZlcnMvb2YvZmR0LmMKaW5kZXggMGIzOGE2YS4uNDEyOWY3
+NCAxMDA2NDQKLS0tIGEvZHJpdmVycy9vZi9mZHQuYworKysgYi9kcml2ZXJzL29mL2ZkdC5jCkBA
+IC0yMCw2ICsyMCw3IEBACiAjaW5jbHVkZSA8bGludXgvZXJybm8uaD4KICNpbmNsdWRlIDxsaW51
+eC9zbGFiLmg+CiAjaW5jbHVkZSA8bGludXgvbGliZmR0Lmg+CisjaW5jbHVkZSA8bGludXgvZGVi
+dWdmcy5oPgogCiAjaW5jbHVkZSA8YXNtL3NldHVwLmg+ICAvKiBmb3IgQ09NTUFORF9MSU5FX1NJ
+WkUgKi8KICNpbmNsdWRlIDxhc20vcGFnZS5oPgpAQCAtOTE2LDQgKzkxNywyNyBAQCB2b2lkIF9f
+aW5pdCB1bmZsYXR0ZW5fYW5kX2NvcHlfZGV2aWNlX3RyZWUodm9pZCkKIAl1bmZsYXR0ZW5fZGV2
+aWNlX3RyZWUoKTsKIH0KIAorI2lmIGRlZmluZWQoQ09ORklHX0RFQlVHX0ZTKSAmJiBkZWZpbmVk
+KERFQlVHKQorc3RhdGljIHN0cnVjdCBkZWJ1Z2ZzX2Jsb2Jfd3JhcHBlciBmbGF0X2R0X2Jsb2I7
+CisKK3N0YXRpYyBpbnQgX19pbml0IG9mX2ZsYXRfZHRfZGVidWdmc19leHBvcnRfZmR0KHZvaWQp
+Cit7CisJc3RydWN0IGRlbnRyeSAqZCA9IGRlYnVnZnNfY3JlYXRlX2RpcigiZGV2aWNlLXRyZWUi
+LCBOVUxMKTsKKworCWlmICghZCkKKwkJcmV0dXJuIC1FTk9FTlQ7CisKKwlmbGF0X2R0X2Jsb2Iu
+ZGF0YSA9IGluaXRpYWxfYm9vdF9wYXJhbXM7CisJZmxhdF9kdF9ibG9iLnNpemUgPSBmZHRfdG90
+YWxzaXplKGluaXRpYWxfYm9vdF9wYXJhbXMpOworCisJZCA9IGRlYnVnZnNfY3JlYXRlX2Jsb2Io
+ImZsYXQtZGV2aWNlLXRyZWUiLCBTX0lGUkVHIHwgU19JUlVTUiwKKwkJCQlkLCAmZmxhdF9kdF9i
+bG9iKTsKKwlpZiAoIWQpCisJCXJldHVybiAtRU5PRU5UOworCisJcmV0dXJuIDA7Cit9Cittb2R1
+bGVfaW5pdChvZl9mbGF0X2R0X2RlYnVnZnNfZXhwb3J0X2ZkdCk7CisjZW5kaWYKKwogI2VuZGlm
+IC8qIENPTkZJR19PRl9FQVJMWV9GTEFUVFJFRSAqLwotLSAKMS45LjEKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxp
+c3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
+L2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
