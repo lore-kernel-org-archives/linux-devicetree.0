@@ -1,127 +1,154 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC v2 PATCH 02/14] drm/exynos: dsi: delay setting clocks after
- reset
-Date: Wed, 23 Apr 2014 12:45:00 +0900
-Message-ID: <5357373C.5080002@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-3-git-send-email-yj44.cho@samsung.com>
- <53565D54.1050609@samsung.com> <535710E0.40702@samsung.com>
+From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
+Date: Wed, 23 Apr 2014 09:57:52 +0530
+Message-ID: <CALHRZuoq32qoh70hbb2LtVJNgkwB1j6bvzmYONmxcn3mBnGONQ@mail.gmail.com>
+References: <20140421160802.GA22794@saruman.home>
+	<Pine.LNX.4.44L0.1404211228190.1201-100000@iolanthe.rowland.org>
+	<CALHRZur7+MaYXbWOfbvjggPN7_eYAE+th5VNbcLP=ehvm0HGsA@mail.gmail.com>
+	<20140422144944.GF5524@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <535710E0.40702@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140422144944.GF5524-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi again Andrzej,
+Hi,
 
-On 04/23/2014 10:01 AM, YoungJun Cho wrote:
-> Hi Andrzej
+On Tue, Apr 22, 2014 at 8:19 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
 >
-> Thank you for comments.
->
-> On 04/22/2014 09:15 PM, Andrzej Hajda wrote:
->> Hi YoungJun,
+> On Tue, Apr 22, 2014 at 12:58:41PM +0530, sundeep subbaraya wrote:
+>> Hi,
 >>
->> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
->>> Some phy control registers are not kept after software reset.
->>> So this patch makes the clocks containing phy control to be set
->>> after software reset.
->>>
->>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->>> Acked-by: Inki Dae <inki.dae@samsung.com>
->>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>> ---
->>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c |    2 +-
->>>   1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> index 956e5f3..2cf1f0b 100644
->>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> @@ -946,10 +946,10 @@ static irqreturn_t exynos_dsi_irq(int irq, void
->>> *dev_id)
->>>
->>>   static int exynos_dsi_init(struct exynos_dsi *dsi)
->>>   {
->>> -    exynos_dsi_enable_clock(dsi);
->>>       exynos_dsi_reset(dsi);
->>>       enable_irq(dsi->irq);
->>>       exynos_dsi_wait_for_reset(dsi);
->>> +    exynos_dsi_enable_clock(dsi);
->>>       exynos_dsi_init_link(dsi);
->>>
->>>       return 0;
+>> On Mon, Apr 21, 2014 at 10:09 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+>> > On Mon, 21 Apr 2014, Felipe Balbi wrote:
+>> >
+>> >> Hi,
+>> >>
+>> >> On Fri, Apr 18, 2014 at 07:34:08PM +0530, sundeep subbaraya wrote:
+>> >>
+>> >> <snip>
+>> >>
+>> >> > >> in ep_queue driver starts dma transfer from/to IP buffer to/from req->buf.
+>> >> > >> If transfer is completed then request is not added to ep request queue
+>> >> > >> and returns from ep_queue.
+>> >> > >> If transfer is not completed (actual < length) then request is added
+>> >> > >> to queue and returns from ep_queue.
+>> >> > >
+>> >> > > This is wrong. Why wouldn't you give gadget driver the chance to decide
+>> >> > > if it needs to queue the request again or not ?
+>> >> >
+>> >> > When does gadget driver decides to queue the same request again?
+>> >> > if -EBUSY is returned from ep_queue or req.status != 0 in completion
+>> >> > routine?
+>> >>
+>> >> whenever it so decides. Different gadget drivers might have different
+>> >> requirements. The code is open and sits under drivers/usb/gadget/ why
+>> >> don't you have a read ?
+>> >
+>> > I get the impression that the two of you are arguing past each other.
+>> > It appears that Sundeep is talking about transferring data from the
+>> > gadget driver's buffer to an internal buffer in the UDC hardware, but
+>> > Felipe is talking about transferring data from the UDC to the host.
+>> >
+>> > As I understand it, Sundeep said that when the gadget driver queues a
+>> > data-IN request, the UDC driver copies as much of the data buffer as
+>> > possible into a hardware FIFO.  If it succeeds in copying all the data
+>> > into the FIFO then the request's completion routine gets called
+>> > immediately, even though the data doesn't get sent from the FIFO to the
+>> > host until the host asks for it.
+>> >
+>> > If only part of the data can be copied into the FIFO then the request
+>> > is added to the ep's request queue before the usb_ep_queue() call
+>> > returns.  When space becomes available in the FIFO, the data will be
+>> > copied and eventually sent to the host.  When all the data has been
+>> > copied to the FIFO, the request's completion routine will be called.
+>
+> there seems to be a slight problem with this approach: how will the IP
+> know that even though you copied X bytes into the FIFO, it should wait
+> for another Y bytes before shifting data to the wire ? How will it know
+> that it shouldn't generate CRC yet because there's still data to be
+> added ?
+
+No. IP does/need not know that it has to wait for Y bytes.We just
+write X bytes into
+HW buffer and count as X in buffer count register. IP generates CRC
+for bytes based
+on Count register and sends data to Host. Let us consider this
+scenario of bulk IN transfer:
+req.length = 5120 and   wMaxPacketSize = 512, ep_queue is called once
+and is returned with
+status 0. In ep_queue this code snippet,
+               if (xudc_write_fifo(ep, req) == 1)
+                        req = NULL;
+               if(req != NULL)
+                         list_add_tail(&req->queue, &ep->queue);
+
+xudc_write_fifo does the following if HW buffers not busy:
+     copies 512 bytes to HW buffer
+     set count and ready registers so that IP can start data transfer to host
+     changes req.actual to 512 and returns 0(if req.length >
+wMaxPacketSize) and 1(if req.length < wMaxPacketSize).
+Since return is zero this request is added to queue. When data
+transfer to host is completed IP generates
+an interrupt. In the interrupt handler we again call write_fifo if
+request list is not empty.
+       if (list_empty(&ep->queue))
+                req = NULL;
+        else
+                req = list_entry(ep->queue.next, struct xusb_req, queue);
+        if (!req)
+                return;
+
+        if (ep->is_in)
+                xudc_write_fifo(ep, req);
+        else
+                xudc_read_fifo(ep, req);
+
+This happens 10 times(since length 5120) and completion is called.
+
+> If there's no space in the FIFO yet, why copy data at all ?
+
+If HW buffers are busy(IP is still transferring previous data to Host
+from buffer) then xudc_write_fifo returns
+0 without changing req.actual. When previous data transfer completes
+then Interrupt then again write_fifo
+from handler.
+
+>> > Thus there never is any need for the gadget driver to queue the request
+>> > again.
+
+Yes
+
+>> >An incomplete transfer means the FIFO didn't have enough room
+>> > when the request was submitted; it doesn't mean that the data didn't
+>> > eventually get sent to the host.
 >>
->> I have commented it in the previous version of the patchset. I repeat it
->> again.
->> This is a regression, on exynos4210-trats I have 'timeout waiting for
->> reset' message after dpms off, on.
->
-> I'm really sorry for that. I misunderstood last time.
->
-> I think the original codes were correct, because the reset timeout would
-> be occurred without clock activation.
-
-This is not true.
-
->
-> I'll check and fix again.
-> (By the way, why am I ok?)
-
-I have not verified with exynos4210-trats board yet(I have to get it),
-but reset timeout is occured in exynos_dsi_wait_for_reset()
-with &dsi->completed and that is completed by exynos_dsi_irq().
-
-And the regulators and clocks are enabled by exynos_dsi_poweron(),
-NOT by exynos_dsi_enable_clock().
-
-So I think the reset timeout is not related with this patch.
-
-Anyway I need more investigation.
-
-Thank you.
-Best regards YJ
-
->
+>> Exactly Alan,this is what I was trying to say. Probably I was not
+>> clear in explaining. I didnt see any harm this way and even this
+>> implementation is same like at91_udc.c. I have been reading
+>> mas_storage to understand when does gadget driver tries to enqueue a
+>> request again. Since different gadget drivers might have different
+>> requirements (agree with Felipe), wanted to know criteria for queuing
+>> a same request again.
 >>
->> I will comment your previous answer here to make the discussion easier:
->>> As I mentioned in description, it came from phy control registers.
->>> Fortunately Exynos4 SoCs are safe, but the DSIM_PHYCTRL_REG,
->>> DSIM_PHYTIMING_REG, DSIM_PHYTIMING1_REG and DSIM_PHYTIMING2_REG are
->>> affected which are used in exynos_dsi_set_pll() for Exynos5 SoCs.
->>>
->>> So this patch is required for Exynos5 SoCs.
->>
->> In the moment this patch is applied exynos_dsi_set_pll do not touch phy
->> registers you have mentioned.
->> Your change would be more clear if it will be merged together with the
->> patch adding PHYCTRL settings.
->>
->> Anyway, solution is simple - please set PHY registers after reset and
->> configure clocks before reset to avoid
->> reset timeouts, is there any reason to not do it this way?
+>> I will change this implementation as per Felipe comments and test with
+>> some of the gadgets.
 >
-> The only reason is that the PHY control is related with PLL control and
-> that was in exynos_dsi_enable_clock() call path.
-> So I just wanted to keep current sequence.
+> Let's see, please help me understand the questions above.
+
+Hope this helps.
+
+Thanks,
+Sundeep.B.S.
+
 >
-> If there is no way to use previous one, I'll consider your approach.
->
-> Thank you.
-> Best regards YJ
->
->>
->> Regards
->> Andrzej
->>
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+> --
+> balbi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
