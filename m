@@ -1,36 +1,38 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH] ARM: sunxi: dt: list all pinctrl compatible strings
-Date: Wed, 23 Apr 2014 16:06:10 +0200
-Message-ID: <5357C8D2.3030109@free-electrons.com>
-References: <1398173886-9376-1-git-send-email-boris.brezillon@free-electrons.com> <CACRpkdaQZ2VABWpbwEZ1eeMUZuf8SkGermKhiOPPHLQudJ4iqg@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] dt: bindings: Typo s/interrupts-names/interrupt-names/g
+Date: Wed, 23 Apr 2014 16:11:54 +0200
+Message-ID: <CACRpkdY4gASYR7CR64ux6QgMNdmmNYt86QQF7gvvTjK_6C7c8w@mail.gmail.com>
+References: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
+	<1398192025-31523-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaQZ2VABWpbwEZ1eeMUZuf8SkGermKhiOPPHLQudJ4iqg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398192025-31523-2-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Signed-off-by: Mark Brown" <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Apr 22, 2014 at 8:40 PM, Geert Uytterhoeven
+<geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org> wrote:
 
-On 23/04/2014 15:48, Linus Walleij wrote:
-> On Tue, Apr 22, 2014 at 3:38 PM, Boris BREZILLON
-> <boris.brezillon@free-electrons.com> wrote:
->
->> List all sunxi pinctrl compatible strings in order to be able to grep for
->> those values.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> Patch applied, but I edited the subject to pinctrl:
-> as this is arch neutral and has nothing to do with ARM really.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Signed-off-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pinctrl/pinctrl-st.txt     |    4 ++--
+>  .../bindings/sound/davinci-mcasp-audio.txt         |    2 +-
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 
-Thanks.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> Yours,
-> Linus Walleij
+Maybe Mark can apply this then, as it's mostly sound related.
+Ideally it should be two patches but who cares about such a petty
+detail.
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
