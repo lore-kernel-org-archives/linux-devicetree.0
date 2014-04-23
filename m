@@ -1,147 +1,80 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC v2 PATCH v4 09/14] ARM: dts: s6e3fa0: add DT bindings
-Date: Wed, 23 Apr 2014 10:26:20 +0900
-Message-ID: <535716BC.2080702@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
- <53567683.1020206@samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] clk: Improve clock-indices binding documentation
+Date: Wed, 23 Apr 2014 10:40:10 +0900
+Message-ID: <20140423014009.GA20199@verge.net.au>
+References: <1397494840-22420-1-git-send-email-geert@linux-m68k.org>
+ <21852545.7Zg9c00i3i@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <53567683.1020206@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <21852545.7Zg9c00i3i@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Mike Turquette <mturquette@linaro.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej
+On Tue, Apr 15, 2014 at 05:56:12PM +0200, Laurent Pinchart wrote:
+> Hi Geert,
+> 
+> Thank you for the patch.
+> 
+> On Monday 14 April 2014 19:00:40 Geert Uytterhoeven wrote:
+> > From: Geert Uytterhoeven <geert+renesas@glider.be>
+> > 
+> > Improve the wording for the clock-indices binding documentation.
+> > Also replace "empty nodes" by "empty strings", as reported before by Sergei
+> > Shtylyov.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Thank you for comment.
+Acked-by: Simon Horman <horms+renesas@verge.net.au>
 
-On 04/22/2014 11:02 PM, Andrzej Hajda wrote:
-> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
->> This patch adds DT bindings for s6e3fa0 panel.
->> The bindings describes panel resources, display timings and cpu timings.
->>
->> Changelog v2:
->> - Adds unit address (commented by Sachin Kamat)
->> Changelog v3:
->> - Removes optional delay, size properties (commented by Laurent Pinchart)
->> - Adds OLED detection, TE gpio properties
->> Changelog v4:
->> - Moves CPU timings relevant properties from FIMD DT
->>    (commeted by Laurent Pinchart, Andrzej Hajda)
->>
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Acked-by: Inki Dae <inki.dae@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   63 ++++++++++++++++++++
->>   1 file changed, 63 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->>
->> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->> new file mode 100644
->> index 0000000..9eeb38b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->> @@ -0,0 +1,63 @@
->> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
->> +
->> +Required properties:
->> +  - compatible: "samsung,s6e3fa0"
->> +  - reg: the virtual channel number of a DSI peripheral
->> +  - vdd3-supply: core voltage supply
->> +  - vci-supply: voltage supply for analog circuits
->> +  - reset-gpio: a GPIO spec for the reset pin
->> +  - det-gpio: a GPIO spec for the OLED detection pin
->> +  - te-gpio: a GPIO spec for the TE pin
->
-> Just FYI, according to DT documentation [1] gpio spec should be in form
-> [name]-gpios, however there is plenty bindings with -gpio suffix, so I
-> am not sure if it is really enforced. On the other side it is enforced
-> by descriptor based gpio framework[2]. Integer-based gpio framework
-> used in your driver is obsolete according to [2].
+Mike, could you consider picking this up?
 
-Yes, you're right. That is my mistake.
-They should be attached 's'.
-At first I used integer-based gpio framework and replaced to descriptor
-based one, but did not updated DT bindings.
-
-I'll update again.
-
-Thank you.
-Best regards YJ
-
->
-> [1]: Documentation/devicetree/bindings/gpio/gpio.txt
-> [2]: Documentation/gpio/gpio.txt
->
-> Regards
-> Andrzej
->
->> +  - display-timings: timings for the connected panel as described by [1]
->> +  - cpu-timings: CPU interface timings for the connected panel, and it contains
->> +        following optional properties.
->> +          - cs-setup: clock cycles for the active period of address signal
->> +                enable until chip select is enable in CPU interface
->> +          - wr-setup: clock cycles for the active period of CS signal enable
->> +                until write signal is enable in CPU interface
->> +          - wr-act: clock cycles for the active period of CS enable in CPU
->> +                interface
->> +          - wr-hold: clock cycles for the active period of CS disable until
->> +                write signal is disable in CPU interface
->> +
->> +Optional properties:
->> +
->> +The device node can contain one 'port' child node with one child
->> +'endpoint' node, according to the bindings defined in [2]. This
->> +node should describe panel's video bus.
->> +
->> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
->> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +
->> +	panel@0 {
->> +		compatible = "samsung,s6e3fa0";
->> +		reg = <0>;
->> +		vdd3-supply = <&vcclcd_reg>;
->> +		vci-supply = <&vlcd_reg>;
->> +		reset-gpio = <&gpy7 4 0>;
->> +		det-gpio = <&gpg0 6 0>;
->> +		te-gpio = <&gpd1 7 0>;
->> +
->> +		display-timings {
->> +			timing0: timing-0 {
->> +				clock-frequency = <0>;
->> +				hactive = <1080>;
->> +				vactive = <1920>;
->> +				hfront-porch = <2>;
->> +				hback-porch = <2>;
->> +				hsync-len = <1>;
->> +				vfront-porch = <1>;
->> +				vback-porch = <4>;
->> +				vsync-len = <1>;
->> +			};
->> +		};
->> +
->> +		cpu-timings {
->> +			cs-setup = <0>;
->> +			wr-setup = <0>;
->> +			wr-act = <1>;
->> +			wr-hold = <0>;
->> +		};
->> +	};
->>
->
->
+> 
+> > ---
+> >  .../devicetree/bindings/clock/clock-bindings.txt   |    9 ++++-----
+> >  1 file changed, 4 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
+> > 700e7aac3717..f15787817d6b 100644
+> > --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
+> > @@ -44,10 +44,9 @@ For example:
+> >    clocks by index. The names should reflect the clock output signal
+> >    names for the device.
+> > 
+> > -clock-indices:	   If the identifyng number for the clocks in the node
+> > -		   is not linear from zero, then the this mapping allows
+> > -		   the mapping of identifiers into the clock-output-names
+> > -		   array.
+> > +clock-indices:	   If the identifying number for the clocks in the node
+> > +		   is not linear from zero, then this allows the mapping of
+> > +		   identifiers into the clock-output-names array.
+> > 
+> >  For example, if we have two clocks <&oscillator 1> and <&oscillator 3>:
+> > 
+> > @@ -58,7 +57,7 @@ For example, if we have two clocks <&oscillator 1> and
+> > <&oscillator 3>: clock-output-names = "clka", "clkb";
+> >  	}
+> > 
+> > -	This ensures we do not have any empty nodes in clock-output-names
+> > +	This ensures we do not have any empty strings in clock-output-names
+> > 
+> > 
+> >  ==Clock consumers==
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
