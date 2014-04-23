@@ -1,169 +1,54 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 08/21] of/fdt: consolidate built-in dtb section
-	variables
-Date: Tue, 22 Apr 2014 20:18:08 -0500
-Message-ID: <1398215901-25609-9-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 02/21] mips: lantiq: copy built-in DTB out of init section
+Date: Tue, 22 Apr 2014 20:18:02 -0500
+Message-ID: <1398215901-25609-3-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-bounces@lists.openrisc.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
-List-Archive: <http://lists.openrisc.net/pipermail/linux>
-List-Post: <mailto:linux@lists.openrisc.net>
-List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
-List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
-	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
-Sender: linux-bounces@lists.openrisc.net
-Errors-To: linux-bounces@lists.openrisc.net
+Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Chris Zankel <chris@zankel.net>, linux-xtensa@linux-xtensa.org, Ralf Baechle <ralf@linux-mips.org>, Max Filippov <jcmvbkbc@gmail.com>, linux-mips@linux-mips.org, linux@lists.openrisc.net, linux-metag@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-Unify the various architectures __dtb_start and __dtb_end definitions
-moving them into of_fdt.h.
+The existing code is buggy because built-in DTBs are in init memory.
+Fix this by using the unflatten_and_copy_device_tree function.
+
+This removes all accesses to FDT header data by the arch code.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
-Acked-by: Vineet Gupta <vgupta@synopsys.com>
-Acked-by: James Hogan <james.hogan@imgtec.com>
 Cc: Ralf Baechle <ralf@linux-mips.org>
-Cc: Jonas Bonn <jonas@southpole.se>
-Cc: Chris Zankel <chris@zankel.net>
-Cc: Max Filippov <jcmvbkbc@gmail.com>
-Cc: linux-metag@vger.kernel.org
 Cc: linux-mips@linux-mips.org
-Cc: linux@lists.openrisc.net
-Cc: linux-xtensa@linux-xtensa.org
 ---
 v2: no change
 
- arch/arc/include/asm/sections.h             | 1 -
- arch/metag/kernel/setup.c                   | 4 ----
- arch/mips/include/asm/mips-boards/generic.h | 2 --
- arch/mips/lantiq/prom.h                     | 2 --
- arch/mips/netlogic/xlp/dt.c                 | 2 +-
- arch/mips/ralink/of.c                       | 2 --
- arch/openrisc/kernel/vmlinux.h              | 2 --
- arch/xtensa/kernel/setup.c                  | 1 -
- include/linux/of_fdt.h                      | 3 +++
- 9 files changed, 4 insertions(+), 15 deletions(-)
+ arch/mips/lantiq/prom.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-diff --git a/arch/arc/include/asm/sections.h b/arch/arc/include/asm/sections.h
-index 764f1e3..09db952 100644
---- a/arch/arc/include/asm/sections.h
-+++ b/arch/arc/include/asm/sections.h
-@@ -12,6 +12,5 @@
- #include <asm-generic/sections.h>
+diff --git a/arch/mips/lantiq/prom.c b/arch/mips/lantiq/prom.c
+index 19686c5..cdea687 100644
+--- a/arch/mips/lantiq/prom.c
++++ b/arch/mips/lantiq/prom.c
+@@ -76,18 +76,7 @@ void __init plat_mem_setup(void)
  
- extern char __arc_dccm_base[];
--extern char __dtb_start[];
- 
- #endif
-diff --git a/arch/metag/kernel/setup.c b/arch/metag/kernel/setup.c
-index 129c7cd..31cf53d 100644
---- a/arch/metag/kernel/setup.c
-+++ b/arch/metag/kernel/setup.c
-@@ -105,10 +105,6 @@
- 
- extern char _heap_start[];
- 
--#ifdef CONFIG_METAG_BUILTIN_DTB
--extern u32 __dtb_start[];
--#endif
--
- #ifdef CONFIG_DA_CONSOLE
- /* Our early channel based console driver */
- extern struct console dash_console;
-diff --git a/arch/mips/include/asm/mips-boards/generic.h b/arch/mips/include/asm/mips-boards/generic.h
-index b969491..c904c24 100644
---- a/arch/mips/include/asm/mips-boards/generic.h
-+++ b/arch/mips/include/asm/mips-boards/generic.h
-@@ -67,8 +67,6 @@
- 
- extern int mips_revision_sconid;
- 
--extern char __dtb_start[];
--
- #ifdef CONFIG_PCI
- extern void mips_pcibios_init(void);
- #else
-diff --git a/arch/mips/lantiq/prom.h b/arch/mips/lantiq/prom.h
-index 69a4c58..bfd2d58 100644
---- a/arch/mips/lantiq/prom.h
-+++ b/arch/mips/lantiq/prom.h
-@@ -26,6 +26,4 @@ struct ltq_soc_info {
- extern void ltq_soc_detect(struct ltq_soc_info *i);
- extern void ltq_soc_init(void);
- 
--extern char __dtb_start[];
--
- #endif
-diff --git a/arch/mips/netlogic/xlp/dt.c b/arch/mips/netlogic/xlp/dt.c
-index 7f9615a..bdde331 100644
---- a/arch/mips/netlogic/xlp/dt.c
-+++ b/arch/mips/netlogic/xlp/dt.c
-@@ -42,7 +42,7 @@
- #include <asm/prom.h>
- 
- extern u32 __dtb_xlp_evp_begin[], __dtb_xlp_svp_begin[],
--	__dtb_xlp_fvp_begin[], __dtb_xlp_gvp_begin[], __dtb_start[];
-+	__dtb_xlp_fvp_begin[], __dtb_xlp_gvp_begin[];
- static void *xlp_fdt_blob;
- 
- void __init *xlp_dt_init(void *fdtp)
-diff --git a/arch/mips/ralink/of.c b/arch/mips/ralink/of.c
-index 91d7060..2513952 100644
---- a/arch/mips/ralink/of.c
-+++ b/arch/mips/ralink/of.c
-@@ -28,8 +28,6 @@
- __iomem void *rt_sysc_membase;
- __iomem void *rt_memc_membase;
- 
--extern char __dtb_start[];
--
- __iomem void *plat_of_remap_node(const char *node)
+ void __init device_tree_init(void)
  {
- 	struct resource res;
-diff --git a/arch/openrisc/kernel/vmlinux.h b/arch/openrisc/kernel/vmlinux.h
-index 70b9ce4..bbcdf21 100644
---- a/arch/openrisc/kernel/vmlinux.h
-+++ b/arch/openrisc/kernel/vmlinux.h
-@@ -5,6 +5,4 @@
- extern char __initrd_start, __initrd_end;
- #endif
- 
--extern u32 __dtb_start[];
+-	unsigned long base, size;
 -
- #endif
-diff --git a/arch/xtensa/kernel/setup.c b/arch/xtensa/kernel/setup.c
-index 84fe931..89986e5 100644
---- a/arch/xtensa/kernel/setup.c
-+++ b/arch/xtensa/kernel/setup.c
-@@ -73,7 +73,6 @@ extern int initrd_below_start_ok;
- #endif
+-	if (!initial_boot_params)
+-		return;
+-
+-	base = virt_to_phys((void *)initial_boot_params);
+-	size = be32_to_cpu(initial_boot_params->totalsize);
+-
+-	/* Before we do anything, lets reserve the dt blob */
+-	reserve_bootmem(base, size, BOOTMEM_DEFAULT);
+-
+-	unflatten_device_tree();
++	unflatten_and_copy_device_tree();
+ }
  
- #ifdef CONFIG_OF
--extern u32 __dtb_start[];
- void *dtb_start = __dtb_start;
- #endif
- 
-diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
-index ddd7219..d4d0efe 100644
---- a/include/linux/of_fdt.h
-+++ b/include/linux/of_fdt.h
-@@ -80,6 +80,9 @@ extern int __initdata dt_root_addr_cells;
- extern int __initdata dt_root_size_cells;
- extern struct boot_param_header *initial_boot_params;
- 
-+extern char __dtb_start[];
-+extern char __dtb_end[];
-+
- /* For scanning the flat device-tree at boot time */
- extern char *find_flat_dt_string(u32 offset);
- extern int of_scan_flat_dt(int (*it)(unsigned long node, const char *uname,
+ void __init prom_init(void)
 -- 
 1.9.1
