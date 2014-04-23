@@ -1,176 +1,38 @@
-From: Patrice Chotard <patrice.chotard@st.com>
-Subject: Re: [STLinux Kernel] [PATCH 3/4] ARM: dts: Typo s/interrupts-names/interrupt-names/g
-Date: Wed, 23 Apr 2014 09:03:51 +0200
-Message-ID: <535765D7.5070007@st.com>
-References: <1398192025-31523-1-git-send-email-geert+renesas@glider.be> <1398192025-31523-3-git-send-email-geert+renesas@glider.be>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC 1/3] ARM: ux500: Initial support for power domains
+Date: Wed, 23 Apr 2014 09:18:12 +0200
+Message-ID: <CACRpkdZANqUn=_7FMO+hYLLafM4tnMTZmrj-ffGiu3=Eh=bRSQ@mail.gmail.com>
+References: <1397653511-19226-1-git-send-email-ulf.hansson@linaro.org>
+	<1397653511-19226-2-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398192025-31523-3-git-send-email-geert+renesas@glider.be>
-Sender: linux-omap-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
-Cc: kernel@stlinux.com, Srinivas Kandagatla <srinivas.kandagatla@st.com>, linux-kernel@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1397653511-19226-2-git-send-email-ulf.hansson@linaro.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Acked-by : Patrice Chotard <patrice.chotard@st.com>
+On Wed, Apr 16, 2014 at 3:05 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
 
-Thanks
-
-On 04/22/2014 08:40 PM, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Benoit Cousson <bcousson@baylibre.com>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-> Cc: linux-omap@vger.kernel.org
-> Cc: kernel@stlinux.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> ---
->   arch/arm/boot/dts/am33xx.dtsi          |    4 ++--
->   arch/arm/boot/dts/am4372.dtsi          |    4 ++--
->   arch/arm/boot/dts/stih415-pinctrl.dtsi |   10 +++++-----
->   arch/arm/boot/dts/stih416-pinctrl.dtsi |   10 +++++-----
->   4 files changed, 14 insertions(+), 14 deletions(-)
+> Initial support for power domains for ux500. To enable this feature we
+> require to use DT, thus we need to add bindings for the ux500 specific
+> parts as well.
 >
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 07f283c20eb1..cb6811e5ae5a 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -802,7 +802,7 @@
->   			      <0x46000000 0x400000>;
->   			reg-names = "mpu", "dat";
->   			interrupts = <80>, <81>;
-> -			interrupts-names = "tx", "rx";
-> +			interrupt-names = "tx", "rx";
->   			status = "disabled";
->   			dmas = <&edma 8>,
->   				<&edma 9>;
-> @@ -816,7 +816,7 @@
->   			      <0x46400000 0x400000>;
->   			reg-names = "mpu", "dat";
->   			interrupts = <82>, <83>;
-> -			interrupts-names = "tx", "rx";
-> +			interrupt-names = "tx", "rx";
->   			status = "disabled";
->   			dmas = <&edma 10>,
->   				<&edma 11>;
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index 36d523a26831..d1f8707ff1df 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -691,7 +691,7 @@
->   			      <0x46000000 0x400000>;
->   			reg-names = "mpu", "dat";
->   			interrupts = <80>, <81>;
-> -			interrupts-names = "tx", "rx";
-> +			interrupt-names = "tx", "rx";
->   			status = "disabled";
->   			dmas = <&edma 8>,
->   			       <&edma 9>;
-> @@ -705,7 +705,7 @@
->   			      <0x46400000 0x400000>;
->   			reg-names = "mpu", "dat";
->   			interrupts = <82>, <83>;
-> -			interrupts-names = "tx", "rx";
-> +			interrupt-names = "tx", "rx";
->   			status = "disabled";
->   			dmas = <&edma 10>,
->   			       <&edma 11>;
-> diff --git a/arch/arm/boot/dts/stih415-pinctrl.dtsi b/arch/arm/boot/dts/stih415-pinctrl.dtsi
-> index f09fb10a3791..81df870e5ee6 100644
-> --- a/arch/arm/boot/dts/stih415-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stih415-pinctrl.dtsi
-> @@ -49,7 +49,7 @@
->   			reg 		= <0xfe61f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges 		= <0 0xfe610000 0x5000>;
->   
->   			PIO0: gpio@fe610000 {
-> @@ -187,7 +187,7 @@
->   			reg 		= <0xfee0f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges		= <0 0xfee00000 0x8000>;
->   
->   			PIO5: gpio@fee00000 {
-> @@ -282,7 +282,7 @@
->   			reg 		= <0xfe82f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges		= <0 0xfe820000 0x8000>;
->   
->   			PIO13: gpio@fe820000 {
-> @@ -423,7 +423,7 @@
->   			reg 		= <0xfd6bf080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges		= <0 0xfd6b0000 0x3000>;
->   
->   			PIO100: gpio@fd6b0000 {
-> @@ -460,7 +460,7 @@
->   			reg 		= <0xfd33f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges		= <0 0xfd330000 0x5000>;
->   
->   			PIO103: gpio@fd330000 {
-> diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-> index aeea304086eb..250d5ecc951e 100644
-> --- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-> @@ -53,7 +53,7 @@
->   			reg 		= <0xfe61f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges		= <0 0xfe610000 0x6000>;
->   
->   			PIO0: gpio@fe610000 {
-> @@ -201,7 +201,7 @@
->   			reg 		= <0xfee0f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges		= <0 0xfee00000 0x10000>;
->   
->   			PIO5: gpio@fee00000 {
-> @@ -333,7 +333,7 @@
->   			reg 		= <0xfe82f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges 		= <0 0xfe820000 0x6000>;
->   
->   			PIO13: gpio@fe820000 {
-> @@ -461,7 +461,7 @@
->   			reg 		= <0xfd6bf080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges		= <0 0xfd6b0000 0x3000>;
->   
->   			PIO100: gpio@fd6b0000 {
-> @@ -498,7 +498,7 @@
->   			reg 		= <0xfd33f080 0x4>;
->   			reg-names	= "irqmux";
->   			interrupts 	= <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
-> -			interrupts-names = "irqmux";
-> +			interrupt-names	= "irqmux";
->   			ranges			= <0 0xfd330000 0x5000>;
->   
->   			PIO103: gpio@fd330000 {
+> The implementation of the ux500 power domains is based upon the generic
+> power domain.
+>
+> Cc: Tomasz Figa <tomasz.figa@gmail.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-pm@vger.kernel.org
+> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
 
+This looks all right to me.
+
+But I guess we need to wait for Tomasz stuff to percolate into
+the tree before I can apply this?
+
+Also the DT people should give some hints on the bindings ideally.
+
+Yours,
+Linus Walleij
