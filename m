@@ -1,44 +1,34 @@
 From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH v2 0/3] Add display support for gta04 device
-Date: Wed, 23 Apr 2014 22:15:17 +0200
-Message-ID: <1398284120-4986-1-git-send-email-marek@goldelico.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH v2 3/3] omapdss: panel-tpo-td028ec1: Add module alias
+Date: Wed, 23 Apr 2014 22:15:20 +0200
+Message-ID: <1398284120-4986-4-git-send-email-marek@goldelico.com>
+References: <1398284120-4986-1-git-send-email-marek@goldelico.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398284120-4986-1-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, bcousson@baylibre.com, tony@atomide.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, tomi.valkeinen@ti.com, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-doc@vger.kernel.org, hns@goldelico.com, linux-kernel@vger.kernel.org, Marek Belisko <marek@goldelico.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-This 3 patches adding display support for openmoko gta04 device.
-First patch add DT bindings for topolly td028 panel. Second add description for
-dss + panel and third fix panel probing when panel is compiled as module.
+Add module alias string to make it working when panel is compiled as module.
+Without this change panel module is not probed thus display is not working.
 
-Changes from v1:
-- extend panel compatible string by 'omapdss'
-- add tpo-td028 panel to dss_compat_conv_list
-- add MODULE_ALIAS macro to properly probe panel when is compiled as module
+Signed-off-by: Marek Belisko <marek@goldelico.com>
+---
+ drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Marek Belisko (3):
-  omapdss: panel-tpo-td028ec1: Add DT support.
-  ARM: dts: oma3-gta04: Add display support
-  omapdss: panel-tpo-td028ec1: Add module alias
-
- .../bindings/video/toppoly,td028ttec1.txt          | 30 ++++++++
- arch/arm/boot/dts/omap3-gta04.dts                  | 86 ++++++++++++++++++++++
- arch/arm/mach-omap2/display.c                      |  1 +
- .../omap2/displays-new/panel-tpo-td028ttec1.c      | 33 ++++++++-
- 4 files changed, 149 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/video/toppoly,td028ttec1.txt
-
+diff --git a/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c b/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c
+index 5b3466e..728808b 100644
+--- a/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c
++++ b/drivers/video/fbdev/omap2/displays-new/panel-tpo-td028ttec1.c
+@@ -505,6 +505,7 @@ static struct spi_driver td028ttec1_spi_driver = {
+ 
+ module_spi_driver(td028ttec1_spi_driver);
+ 
++MODULE_ALIAS("spi:toppoly,td028ttec1");
+ MODULE_AUTHOR("H. Nikolaus Schaller <hns@goldelico.com>");
+ MODULE_DESCRIPTION("Toppoly TD028TTEC1 panel driver");
+ MODULE_LICENSE("GPL");
 -- 
 1.8.3.2
