@@ -1,41 +1,55 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 16/21] of/fdt: fix phys_addr_t related print size warnings
-Date: Tue, 22 Apr 2014 20:18:16 -0500
-Message-ID: <1398215901-25609-17-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 05/21] ARM: dt: use default early_init_dt_alloc_memory_arch
+Date: Tue, 22 Apr 2014 20:18:05 -0500
+Message-ID: <1398215901-25609-6-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-Fix warnings in early_init_dt_reserve_memory_arch when phys_addr_t is
-32-bit and memblock is not enabled.
+Now that ARM is using memblock instead of bootmem, the default version
+of early_init_dt_alloc_memory_arch can be used.
 
 Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org
 ---
-v2: New patch
+v2: no change
 
- drivers/of/fdt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/kernel/devtree.c | 5 -----
+ 1 file changed, 5 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 051be4c..d9e6450 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -852,8 +852,8 @@ void * __init __weak early_init_dt_alloc_memory_arch(u64 size, u64 align)
- int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
- 					phys_addr_t size, bool nomap)
- {
--	pr_err("Reserved memory not supported, ignoring range 0x%llx - 0x%llx%s\n",
--		  base, size, nomap ? " (nomap)" : "");
-+	pr_err("Reserved memory not supported, ignoring range 0x%pa - 0x%pa%s\n",
-+		  &base, &size, nomap ? " (nomap)" : "");
- 	return -ENOSYS;
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index c7419a5..dff9cc0 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -32,11 +32,6 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+ 	arm_add_memory(base, size);
  }
- #endif
+ 
+-void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+-{
+-	return memblock_virt_alloc(size, align);
+-}
+-
+ void __init arm_dt_memblock_reserve(void)
+ {
+ 	u64 *reserve_map, base, size;
 -- 
 1.9.1
