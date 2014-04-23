@@ -1,51 +1,50 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 3/3] of: Handle memory@0 node on PPC32 only
-Date: Wed, 23 Apr 2014 11:35:36 +0100
-Message-ID: <20140423103536.GC30036@e106331-lin.cambridge.arm.com>
-References: <1397756521-29387-1-git-send-email-leif.lindholm@linaro.org>
- <1397756521-29387-4-git-send-email-leif.lindholm@linaro.org>
- <CAMuHMdXBNWum7UJ95uT2hwTd1b5C8ebF2LQ4T-A+RS80p7MH=A@mail.gmail.com>
- <20140418125924.GF5904@bivouac.eciton.net>
- <CAL_JsqJTMWKh3gsv0TnRap82+7BM4XaT4ZAWkQmyfvzTqOq12g@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: max98095: Add an explicit of_match_table
+Date: Wed, 23 Apr 2014 11:43:33 +0100
+Message-ID: <20140423104333.GN12304@sirena.org.uk>
+References: <1398244438-2124-1-git-send-email-tushar.behera@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qPW0hKhZJZq3D5UJ"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJTMWKh3gsv0TnRap82+7BM4XaT4ZAWkQmyfvzTqOq12g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linaro Patches <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398244438-2124-1-git-send-email-tushar.behera@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, rdunlap@infradead.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-> > diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> > index 889005f..230c747 100644
-> > --- a/drivers/of/Kconfig
-> > +++ b/drivers/of/Kconfig
-> > @@ -77,4 +77,7 @@ config OF_RESERVED_MEM
-> >         help
-> >           Helpers to allow for reservation of memory regions
-> >
-> > +config OF_MEMORY_AT_0_QUIRK
-> > +       def_bool n
-> 
-> I do not like this because it would not scale to many quirks. As I
-> said,, my preference here would be to just add a WARN.
+--qPW0hKhZJZq3D5UJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I would very much like to be able to remove the quirk entirely for arm64
-if possible, which would require more than the addition of a WARN.
+On Wed, Apr 23, 2014 at 02:43:58PM +0530, Tushar Behera wrote:
+> Create an explicit of_match_table entry for MAX98095 codec. Also
+> add a binding Documentation for this compatible string.
 
-> The other option is get approval to break compatibility on the ST
-> platform. It may not be a concern on certain platforms.
+Applied, thanks.
 
-Lee, would you be able to provide an answer either way so we can get
-the discussion moving?
+--qPW0hKhZJZq3D5UJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTV5lRAAoJELSic+t+oim9fhEP/A5UBDatDCOnruQM7cVu8ftQ
+oya/NEwgMypJkkNLYaEm7HZilLl3XTv3QVYXWe2t43pcRAOP2o8Vqsm1x14QyEvi
+95xk6FEWxJ+YJGb5O87zeBPvOP2eIsiYX8n/uFSsqnC16Z3ql4mLI4kGT/5JGYeB
+/ymuPJUW0f2iUYBToKo785zQW7aVuyM41eJTGLZ2Ba7f/fy/3HI9edgfViOID4iz
+ubopCzxBNC4iHVGMMKU2zE3LRikCYZGoLMe8hlC+2prUNhFghL0MjdM8ptasB6ZY
+8clovvjS+HAjS2RyIF5Tk414QbXql1y8eaLLK23rSlAt1yB3aZy+cYLj5D5XsDx7
+N7nID6J51kpeWUxe6pX7Y9IaJYHGVOr0GNr6NMe4ji6yLvHm00llG5D+cBCQuO2Z
+qakTJst1y0aIZs//mLdVB7RCRo37SP7+WuHiLd8a174TlABVgZ1xItFIPAg+zjxx
+Tw5gIiamiRTqJhvWU0vHSZc/mgav2AqmYuU+xdigRH8BF3xj+rk/lx9NAdq0Svf7
+nzfn2p9PmJneP0yaiz1bhpLkvpJsVV1KVQk/iqMw95W3Ubk4yOzBJKKjDWzqMYjQ
+peDZmz63wvnQo/B6I+wjMtLThV8TaV6yLrxf1eZpaVx3sD3e0REHQ44AxdbuhaF+
+1qCmsPg0lK/+P85EGMvE
+=usOF
+-----END PGP SIGNATURE-----
+
+--qPW0hKhZJZq3D5UJ--
