@@ -1,99 +1,101 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Subject: [PATCH v2 7/7] ARM: dts: berlin: add the pinctrl node and muxing
- setup for uarts
-Date: Wed, 23 Apr 2014 17:51:16 +0200
-Message-ID: <1398268276-9696-8-git-send-email-antoine.tenart@free-electrons.com>
-References: <1398268276-9696-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am33xx: Move the cppi41dma node so it's probed
+ early
+Date: Wed, 23 Apr 2014 13:00:42 -0300
+Message-ID: <20140423160042.GB6969@arch.cereza>
+References: <1398176371-26468-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+ <5357DCE0.5050204@linutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398268276-9696-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org
-Cc: zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5357DCE0.5050204-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guido =?iso-8859-1?Q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHVhcnQwIHBpbm11eCBjb25maWd1cmF0aW9uIGlzIGluIHRoZSBkdHNpIGJlY2F1c2UgdWFy
-dDAgd2lsbCBhbHdheXMKdXNlIHVhcnQwLXBtdXggdG8gd29yaywgbm8gb3RoZXIgcG9zc2liaWxp
-dHkuIFNhbWUgdGhpbmcgZm9yIHVhcnQxLgoKU2lnbmVkLW9mZi1ieTogQW50b2luZSBUw6luYXJ0
-IDxhbnRvaW5lLnRlbmFydEBmcmVlLWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9k
-dHMvYmVybGluMi5kdHNpICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysrKysKIGFyY2gvYXJt
-L2Jvb3QvZHRzL2JlcmxpbjJjZC5kdHNpIHwgMTcgKysrKysrKysrKysrKysrKysKIGFyY2gvYXJt
-L2Jvb3QvZHRzL2JlcmxpbjJxLmR0c2kgIHwgMjQgKysrKysrKysrKysrKysrKysrKysrKysrCiAz
-IGZpbGVzIGNoYW5nZWQsIDY1IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9iZXJsaW4yLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kKaW5k
-ZXggNTZhMWFmMmYxMDUyLi45YTEzODkxYzM4YTMgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2JlcmxpbjIuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kKQEAg
-LTE3Niw2ICsxNzYsMTEgQEAKIAkJCX07CiAJCX07CiAKKwkJc29jX3BpbmN0cmw6IHBpbi1jb250
-cm9sbGVyQGVhMDAwMCB7CisJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYmVybGluMi1zb2MtcGlu
-Y3RybCI7CisJCQlyZWcgPSA8MHhlYTAwMDAgMHg0Yz47CisJCX07CisKIAkJYXBiQGZjMDAwMCB7
-CiAJCQljb21wYXRpYmxlID0gInNpbXBsZS1idXMiOwogCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-CkBAIC0xODQsNiArMTg5LDIxIEBACiAJCQlyYW5nZXMgPSA8MCAweGZjMDAwMCAweDEwMDAwPjsK
-IAkJCWludGVycnVwdC1wYXJlbnQgPSA8JnNpYz47CiAKKwkJCXNtX3BpbmN0cmw6IHBpbi1jb250
-cm9sbGVyQDAwMDAgeworCQkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxiZXJsaW4yLXN5c21nci1w
-aW5jdHJsIjsKKwkJCQlyZWcgPSA8MHgwMDAwIDB4NDQ+OworCisJCQkJdWFydDBfcG11eDogdWFy
-dDAtcG11eCB7CisJCQkJCW1hcnZlbGwsZ3JvdXBzID0gIkdTTTQiOworCQkJCQltYXJ2ZWxsLGZ1
-bmN0aW9uID0gInVhcnQwIjsKKwkJCQl9OworCisJCQkJdWFydDFfcG11eDogdWFydDEtcG11eCB7
-CisJCQkJCW1hcnZlbGwsZ3JvdXBzID0gIkdTTTUiOworCQkJCQltYXJ2ZWxsLGZ1bmN0aW9uID0g
-InVhcnQxIjsKKwkJCQl9OworCQkJfTsKKwogCQkJdWFydDA6IHNlcmlhbEA5MDAwIHsKIAkJCQlj
-b21wYXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQiOwogCQkJCXJlZyA9IDwweDkwMDAgMHgxMDA+
-OwpAQCAtMTkxLDYgKzIxMSw4IEBACiAJCQkJcmVnLWlvLXdpZHRoID0gPDE+OwogCQkJCWludGVy
-cnVwdHMgPSA8OD47CiAJCQkJY2xvY2tzID0gPCZzbWNsaz47CisJCQkJcGluY3RybC0wID0gPCZ1
-YXJ0MF9wbXV4PjsKKwkJCQlwaW5jdHJsLW5hbWVzID0gImRlZmF1bHQiOwogCQkJCXN0YXR1cyA9
-ICJkaXNhYmxlZCI7CiAJCQl9OwogCkBAIC0yMDEsNiArMjIzLDggQEAKIAkJCQlyZWctaW8td2lk
-dGggPSA8MT47CiAJCQkJaW50ZXJydXB0cyA9IDw5PjsKIAkJCQljbG9ja3MgPSA8JnNtY2xrPjsK
-KwkJCQlwaW5jdHJsLTAgPSA8JnVhcnQxX3BtdXg+OworCQkJCXBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7CiAJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKIAkJCX07CiAKZGlmZiAtLWdpdCBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJjZC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGlu
-MmNkLmR0c2kKaW5kZXggMDk0OTY4YzI3NTMzLi5hODAyZDNmZTVkYTYgMTAwNjQ0Ci0tLSBhL2Fy
-Y2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJjZC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2Jl
-cmxpbjJjZC5kdHNpCkBAIC0xNjksNiArMTY5LDExIEBACiAJCQl9OwogCQl9OwogCisJCXNvY19w
-aW5jdHJsOiBwaW4tY29udHJvbGxlckBhZTAwMDAgeworCQkJY29tcGF0aWJsZSA9ICJtYXJ2ZWxs
-LGJlcmxpbjJjZC1zb2MtcGluY3RybCI7CisJCQlyZWcgPSA8MHhlYTAwMDAgMHg0Yz47CisJCX07
-CisKIAkJYXBiQGZjMDAwMCB7CiAJCQljb21wYXRpYmxlID0gInNpbXBsZS1idXMiOwogCQkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47CkBAIC0xNzcsNiArMTgyLDE2IEBACiAJCQlyYW5nZXMgPSA8MCAw
-eGZjMDAwMCAweDEwMDAwPjsKIAkJCWludGVycnVwdC1wYXJlbnQgPSA8JnNpYz47CiAKKwkJCXNt
-X3BpbmN0cmw6IHBpbi1jb250cm9sbGVyQDAwMDAgeworCQkJCWNvbXBhdGlibGUgPSAibWFydmVs
-bCxiZXJsaW4yY2Qtc3lzbWdyLXBpbmN0cmwiOworCQkJCXJlZyA9IDwweDAwMDAgMHg0ND47CisK
-KwkJCQl1YXJ0MF9wbXV4OiB1YXJ0MC1wbXV4IHsKKwkJCQkJbWFydmVsbCxncm91cHMgPSAiRzYi
-OworCQkJCQltYXJ2ZWxsLGZ1bmN0aW9uID0gInVhcnQwIjsKKwkJCQl9OworCQkJfTsKKwogCQkJ
-dWFydDA6IHNlcmlhbEA5MDAwIHsKIAkJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQi
-OwogCQkJCXJlZyA9IDwweDkwMDAgMHgxMDA+OwpAQCAtMTg0LDYgKzE5OSw4IEBACiAJCQkJcmVn
-LWlvLXdpZHRoID0gPDE+OwogCQkJCWludGVycnVwdHMgPSA8OD47CiAJCQkJY2xvY2tzID0gPCZz
-bWNsaz47CisJCQkJcGluY3RybC0wID0gPCZ1YXJ0MF9wbXV4PjsKKwkJCQlwaW5jdHJsLW5hbWVz
-ID0gImRlZmF1bHQiOwogCQkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAJCQl9OwogCmRpZmYgLS1n
-aXQgYS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-YmVybGluMnEuZHRzaQppbmRleCAwNzQ1MmE3NDgzZmEuLjczNGRlYmJmMDcyZiAxMDA2NDQKLS0t
-IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMnEuZHRzaQorKysgYi9hcmNoL2FybS9ib290L2R0
-cy9iZXJsaW4ycS5kdHNpCkBAIC0xODMsNiArMTgzLDExIEBACiAJCQl9OwogCQl9OwogCisJCXNv
-Y19waW5jdHJsOiBwaW4tY29udHJvbGxlckBlYTAwMDAgeworCQkJY29tcGF0aWJsZSA9ICJtYXJ2
-ZWxsLGJlcmxpbjJxLXNvYy1waW5jdHJsIjsKKwkJCXJlZyA9IDwweGVhMDAwMCAweDRjPjsKKwkJ
-fTsKKwogCQlhcGJAZmMwMDAwIHsKIAkJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7CiAJCQkj
-YWRkcmVzcy1jZWxscyA9IDwxPjsKQEAgLTE5OCw2ICsyMDMsOCBAQAogCQkJCWludGVycnVwdHMg
-PSA8OD47CiAJCQkJY2xvY2tzID0gPCZzbWNsaz47CiAJCQkJcmVnLXNoaWZ0ID0gPDI+OworCQkJ
-CXBpbmN0cmwtMCA9IDwmdWFydDBfcG11eD47CisJCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0
-IjsKIAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCQkJfTsKIApAQCAtMjA4LDkgKzIxNSwyNiBA
-QAogCQkJCWludGVycnVwdHMgPSA8OT47CiAJCQkJY2xvY2tzID0gPCZzbWNsaz47CiAJCQkJcmVn
-LXNoaWZ0ID0gPDI+OworCQkJCXBpbmN0cmwtMCA9IDwmdWFydDFfcG11eD47CisJCQkJcGluY3Ry
-bC1uYW1lcyA9ICJkZWZhdWx0IjsKIAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwogCQkJfTsKIAor
-CQkJc21fcGluY3RybDogcGluLWNvbnRyb2xsZXJAZDAwMCB7CisJCQkJY29tcGF0aWJsZSA9ICJt
-YXJ2ZWxsLGJlcmxpbjJxLXN5c21nci1waW5jdHJsIjsKKwkJCQlyZWcgPSA8MHhkMDAwIDB4NDQ+
-OworCisJCQkJdWFydDBfcG11eDogdWFydDAtcG11eCB7CisJCQkJCW1hcnZlbGwsZ3JvdXBzID0g
-IkdTTTEyIjsKKwkJCQkJbWFydmVsbCxmdW5jdGlvbiA9ICJ1YXJ0MCI7CisJCQkJfTsKKworCQkJ
-CXVhcnQxX3BtdXg6IHVhcnQxLXBtdXggeworCQkJCQltYXJ2ZWxsLGdyb3VwcyA9ICJHU00xNCI7
-CisJCQkJCW1hcnZlbGwsZnVuY3Rpb24gPSAidWFydDEiOworCQkJCX07CisJCQl9OworCiAJCQlz
-aWM6IGludGVycnVwdC1jb250cm9sbGVyQGUwMDAgewogCQkJCWNvbXBhdGlibGUgPSAic25wcyxk
-dy1hcGItaWN0bCI7CiAJCQkJcmVnID0gPDB4ZTAwMCAweDMwPjsKLS0gCjEuOC4zLjIKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+On Apr 23, Sebastian Andrzej Siewior wrote:
+> On 04/22/2014 04:19 PM, Ezequiel Garcia wrote:
+> > The DMA controller is needed for the USB controller to be correctly
+> > registered. Therefore, if the DMA node is located at the end an une=
+cessary
+> > probe deferral is produced systematically.
+> >=20
+> > This is easily fixed by moving the node at the beggining of the chi=
+ld list,
+> > so it's probed first.
+>=20
+> So you do not change anything except for the order of child nodes. So
+> this should be fine and without a compatibility problem.
+>=20
+> I added them according to the memory offset so you might want to add =
+a
+> comment why you moved this because Mr. Structured & Organized might
+> noticed this one day and move it back.
+>=20
+
+Yes, good catch. I'll prepare a v2.
+
+> > Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+> > ---
+> > Felipe, Sebastian:
+> >=20
+> > I cannot see why the cppi41dma node must be placed inside the
+> > "ti,am33xx-usb" compatible node. Tried to move it out
+> > so it's probed just like the edma engine, but the USB doesn't work
+> > properly in that case.
+> >=20
+> > Can you enlighten me?
+>=20
+> So If I remember correctly it was a big bag of crap. If you look at t=
+he
+> parent node, you notice that it has a ti,hwmods member while the othe=
+r
+> do not have such a property. According to the manual only the whole I=
+P
+> block as-it has this. It has to be activated if you use one of those
+> devices this includes the two USB-IP cores and the DMA-IP core. I
+> didn't manage to come up with something else except to make one paren=
+t
+> node which creates the childs to have a proper relation here.
+>=20
+
+Ah, this could be...
+
+> There was also something with parent - child relation in the way musb
+> expected it. I think this was only glue code + musb child node and ha=
+d
+> nothing to do with the DMA engine. But I am not 100% sure=E2=80=A6
+>=20
+
+Well, from my poor and unexperienced code inspection, I could not see a=
+nything
+relating the parent of the DMA controller node to the node itself, and =
+so that's
+why it seemed possible to move it out.
+
+Once the dma-controller is moved out of the USB devicetree node block,
+the dmaengine driver is registered correctly (apparently), and so does =
+the USB
+driver.
+
+However, upon connection of some USB storage device, detection begins
+but then things don't go well, although I don't have the exact error he=
+re,
+I remember this warning was hitted on dma/cppi41.c at line 602:
+
+  WARN_ON(!c->td_retry);
+
+Just in case someone want to debug this further.
+
+Thanks a lot for the feedback!
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
