@@ -1,117 +1,65 @@
-From: Josh Cartwright <joshc@codeaurora.org>
-Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
-Date: Wed, 23 Apr 2014 16:46:26 -0500
-Message-ID: <20140423214626.GA3215@joshc.qualcomm.com>
-References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+From: Matt Porter <mporter@linaro.org>
+Subject: Re: [PATCH 2/4] mfd: bcm590xx: add support for second i2c slave
+ address space
+Date: Wed, 23 Apr 2014 18:01:26 -0400
+Message-ID: <20140423220126.GC4164@beef>
+References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
+ <1397501428-8857-3-git-send-email-mporter@linaro.org>
+ <20140416110603.GA19671@lee--X1>
+ <20140416213141.GD12304@sirena.org.uk>
+ <20140417065753.GC28725@lee--X1>
+ <20140417222616.GK23695@beef>
+ <20140422082139.GF17657@lee--X1>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+In-Reply-To: <20140422082139.GF17657@lee--X1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, David Collins <collinsd@codeaurora.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 05:31:49PM -0700, Courtney Cavin wrote:
-> From: Josh Cartwright <joshc@codeaurora.org>
+On Tue, Apr 22, 2014 at 09:21:39AM +0100, Lee Jones wrote:
+> > > > > s/regmap/Regmap
+> > > > 
+> > > > It's consistently written regmap in all the documentation and so on :)
+> > > 
+> > > Furry muff; but the comments still stand for the acronyms.
+> > > 
+> > > > > addmap{0,1} doesn't quite sit right with me.
+> > > > 
+> > > > > REVISIT: Ah, it's address-map, rather than add map. Okay, not as bad
+> > > > > as I first thought, but still, is there a better naming convention you
+> > > > > could use?
+> > > > 
+> > > > addrmap or something?
+> > > 
+> > > Right, that was what I was thinking. However, I prefer something along
+> > > the lines of 'i2c' and 'i2c_sec' or 'client' and 'client_slv' etc.
+> > 
+> > FWIW, the reason it's addmap{0,1} is that the datasheet has documents
+> > ADDMAP=0 and the first bank of registers and ADDMAP=1 as the second bank
+> > of registers. I adopted that to match the docs for the part.
+> > 
+> > I guess we could do i2c and i2c_sec, I'll just have to put a comment
+> > correlating it to the h/w. Calling it 'slv' implies something else
+> > so we should avoid that here. The notion of a "secondary" i2c device
+> > is completely a Linux I2C subsystem fabrication which wouldn't exist
+> > if it allowed multiple slave addresses per device. From a h/w
+> > perspective there is really no primary and secondary relationship.
+> > 
+> > I'm fine with i2c/i2c_sec or addrmap0/1 and I will just comment to
+> > correlate with the datasheet..pick one.
 > 
-> The Qualcomm 8941 and 8841 PMICs are components used with the Snapdragon
-> 800 series SoC family.  This driver exists largely as a glue mfd component,
-> it exists to be an owner of an SPMI regmap for children devices
-> described in device tree.
-> 
-> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
-> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+> Let's stick method fabricated by the I2C subsystem. It may seem strange
+> from a h/w perspective, but it is the way we (you) have coded it, as
+> the first parameter of i2c_new_dummy() is the 'managing' (primary,
+> parent, master, whatever) device, so '_sec' would suit as an
+> identifying appendage for the resultant device.
 
-Hey Courtney-
+That works, I'll also switch to addrmap_[pri|sec] which touches the
+regulator driver as well. That will keep the relationship between device
+and regmap clear.
 
-Thanks for picking this up!
-
-One thing that I had meant to do is rename this thing.  Nothing about
-this is PM8841/PM8941 specific at all.  It should apply equally to all
-Qualcomm's PMICs which implement QPNP.
-
-Perhaps a better name would be "qcom-pmic-qpnp".
-
-[..]
-> +++ b/drivers/mfd/pm8x41.c
-> @@ -0,0 +1,63 @@
-> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/spmi.h>
-> +#include <linux/regmap.h>
-> +#include <linux/of_platform.h>
-> +
-> +static const struct regmap_config pm8x41_regmap_config = {
-> +	.reg_bits	= 16,
-> +	.val_bits	= 8,
-> +	.max_register	= 0xFFFF,
-> +};
-
-This reminds me.  David Collins (CC'd) noticed that there are usecases
-where peripheral drivers will need to be accessing registers from atomic
-context, so we should probably be setting .fast_io in the SPMI
-regmap_bus structures, but we can tackle that when we get there.
-
-> +
-> +static int pm8x41_remove_child(struct device *dev, void *unused)
-> +{
-> +	platform_device_unregister(to_platform_device(dev));
-> +	return 0;
-> +}
-> +
-> +static void pm8x41_remove(struct spmi_device *sdev)
-> +{
-> +	device_for_each_child(&sdev->dev, NULL, pm8x41_remove_child);
-> +}
-> +
-> +static int pm8x41_probe(struct spmi_device *sdev)
-> +{
-> +	struct regmap *regmap;
-> +
-> +	regmap = devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_dbg(&sdev->dev, "regmap creation failed.\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
-> +}
-> +
-> +static const struct of_device_id pm8x41_id_table[] = {
-> +	{ .compatible = "qcom,pm8841", },
-> +	{ .compatible = "qcom,pm8941", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, pm8x41_id_table);
-
-I'm thinking we should probably have a generic compatible entry as well,
-"qcom,pmic-qpnp" or similar.  We should still specify in the binding
-that PMIC slaves specify a version-specific string as well as the
-generic string.  That is, a slave should have:
-
-	compatible = "qcom,pm8841", "qcom,pmic-qpnp";
-
-...in case we would ever need to differentiate in the future.
-
-(I recall that in a previous version I had done this, but I don't
-remember why I had changed it..)
-
-Thanks again,
-  Josh
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+-Matt
