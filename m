@@ -1,161 +1,193 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH RFC] ARM: dts: am335x: update USB DT references
-Date: Wed, 23 Apr 2014 07:48:22 -0700
-Message-ID: <20140423144822.GA4833@atomide.com>
-References: <1397647595-10927-1-git-send-email-leigh@solinno.co.uk>
- <5356794C.7070707@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5356794C.7070707@baylibre.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: Leigh Brown <leigh@solinno.co.uk>, Mugunthan V N <mugunthanvnm@ti.com>, devicetree@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Felipe Balbi <balbi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH part2 6/6] devicetree: mfd: max14577: Add device tree bindings
+ document
+Date: Wed, 23 Apr 2014 16:50:40 +0200
+Message-ID: <1398264640-12122-7-git-send-email-k.kozlowski@samsung.com>
+References: <1398264640-12122-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1398264640-12122-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, linux-kernel@vger.kernel.org
+Cc: Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Anton Vorontsov <anton@enomsg.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-* Benoit Cousson <bcousson@baylibre.com> [140422 07:14]:
-> Hi Leigh,
->=20
-> On 16/04/2014 13:26, Leigh Brown wrote:
-> >In "ARM: dts: am33xx: correcting dt node unit address for usb", the
-> >usb_ctrl_mod and cppi41dma nodes were updated with the correct regis=
-ter
-> >addresses.  However, the dts files that reference these nodes were n=
-ot
-> >updated, and those devices are no longer being enabled.
-> >
-> >This patch corrects the references for the affected dts files.
->=20
-> Thanks for the fix. BTW, why is it a RFC? Do you plan to send an upda=
-ted
-> version?
->=20
-> FYI, even with this fix, the BBB still does not have a working MUSB o=
-n
-> 3.15-rc2. Have you observed that as well?
->=20
-> >Signed-off-by: Leigh Brown <leigh@solinno.co.uk>
->=20
-> If this is a final version, I'll apply it for -rc3.
+Add document describing device tree bindings for MAX14577 MFD
+drivers: MFD core, extcon, regulator and charger.
 
-Looks like I already have this in omap-for-v3.15/fixes-v2, sorry
-looks like I never replied to this one.
+Both MAX14577 and MAX77836 chipsets are documented.
 
-Regards,
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+---
+ Documentation/devicetree/bindings/mfd/max14577.txt | 152 +++++++++++++++++++++
+ 1 file changed, 152 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
 
-Tony=20
-=20
-> >---
-> >  arch/arm/boot/dts/am335x-bone-common.dtsi | 4 ++--
-> >  arch/arm/boot/dts/am335x-evm.dts          | 4 ++--
-> >  arch/arm/boot/dts/am335x-evmsk.dts        | 4 ++--
-> >  arch/arm/boot/dts/am335x-igep0033.dtsi    | 4 ++--
-> >  4 files changed, 8 insertions(+), 8 deletions(-)
-> >
-> >diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/bo=
-ot/dts/am335x-bone-common.dtsi
-> >index e3f27ec..2e7d932 100644
-> >--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> >+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> >@@ -183,7 +183,7 @@
-> >  &usb {
-> >  	status =3D "okay";
-> >
-> >-	control@44e10000 {
-> >+	control@44e10620 {
-> >  		status =3D "okay";
-> >  	};
-> >
-> >@@ -204,7 +204,7 @@
-> >  		dr_mode =3D "host";
-> >  	};
-> >
-> >-	dma-controller@07402000  {
-> >+	dma-controller@47402000  {
-> >  		status =3D "okay";
-> >  	};
-> >  };
-> >diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am=
-335x-evm.dts
-> >index 28ae040..77df10d 100644
-> >--- a/arch/arm/boot/dts/am335x-evm.dts
-> >+++ b/arch/arm/boot/dts/am335x-evm.dts
-> >@@ -331,7 +331,7 @@
-> >  &usb {
-> >  	status =3D "okay";
-> >
-> >-	control@44e10000 {
-> >+	control@44e10620 {
-> >  		status =3D "okay";
-> >  	};
-> >
-> >@@ -352,7 +352,7 @@
-> >  		dr_mode =3D "host";
-> >  	};
-> >
-> >-	dma-controller@07402000  {
-> >+	dma-controller@47402000  {
-> >  		status =3D "okay";
-> >  	};
-> >  };
-> >diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/=
-am335x-evmsk.dts
-> >index ec08f6f..ab23885 100644
-> >--- a/arch/arm/boot/dts/am335x-evmsk.dts
-> >+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-> >@@ -364,7 +364,7 @@
-> >  &usb {
-> >  	status =3D "okay";
-> >
-> >-	control@44e10000 {
-> >+	control@44e10620 {
-> >  		status =3D "okay";
-> >  	};
-> >
-> >@@ -385,7 +385,7 @@
-> >  		dr_mode =3D "host";
-> >  	};
-> >
-> >-	dma-controller@07402000  {
-> >+	dma-controller@47402000  {
-> >  		status =3D "okay";
-> >  	};
-> >  };
-> >diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/=
-dts/am335x-igep0033.dtsi
-> >index 7063311..5942e7d 100644
-> >--- a/arch/arm/boot/dts/am335x-igep0033.dtsi
-> >+++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
-> >@@ -202,7 +202,7 @@
-> >  &usb {
-> >  	status =3D "okay";
-> >
-> >-	control@44e10000 {
-> >+	control@44e10620 {
-> >  		status =3D "okay";
-> >  	};
-> >
-> >@@ -223,7 +223,7 @@
-> >  		dr_mode =3D "host";
-> >  	};
-> >
-> >-	dma-controller@07402000  {
-> >+	dma-controller@47402000  {
-> >  		status =3D "okay";
-> >  	};
-> >  };
-> >
->=20
->=20
-> --=20
-> Beno=C3=AEt Cousson
-> BayLibre
-> Embedded Linux Technology Lab
-> www.baylibre.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+new file mode 100644
+index 000000000000..b235250a7b41
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+@@ -0,0 +1,152 @@
++Maxim MAX14577/77836 Multi-Function Device
++
++MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
++Battery Charger and SFOUT LDO output for powering USB devices. It is
++interfaced to host controller using I2C.
++
++MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
++
++
++Required properties:
++- compatible : Must be "maxim,max14577" or "maxim,max77836".
++- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
++- interrupts : IRQ line for the chip.
++- interrupt-parent :  The parent interrupt controller.
++
++
++Required nodes:
++ - charger :
++	Node for configuring the charger driver.
++	Required properties:
++		- compatible : "maxim,max14577-charger"
++			or "maxim,max77836-charger"
++		- maxim,fast-charge-timer : Timer in hours to trigger the
++			INT3/MBCCHGERR interrupt; Valid values:
++			- 5, 6 or 7 (hours),
++			- 0 to disable.
++		- maxim,fast-charge-uamp : Current in uA for Fast Charge;
++			Valid values:
++			- for max14577: 90000 - 950000;
++			- for max77836: 45000 - 475000;
++		- maxim,eoc-uamp : Current in uA for End-Of-Charge mode;
++			Valid values:
++			- for max14577: 50000 - 200000;
++			- for max77836: 5000 - 100000;
++		- maxim,ovp-uvolt : OverVoltage Protection Threshold in uV;
++			In an overvoltage condition, INT asserts and charging
++			stops. Valid values:
++			- 6000000, 6500000, 7000000, 7500000;
++		- maxim,constant-uvolt : Battery Constant Voltage in uV;
++			Valid values:
++			- 4000000 - 4280000 (step by 20000);
++			- 4350000;
++
++
++Optional nodes:
++- max14577-muic/max77836-muic :
++	Node used only by extcon consumers.
++	Required properties:
++		- compatible : "maxim,max14577-muic" or "maxim,max77836-muic"
++
++- regulators :
++	Required properties:
++		- compatible : "maxim,max14577-regulator"
++			or "maxim,max77836-regulator"
++
++	May contain a sub-node per regulator from the list below. Each
++	sub-node should contain the constraints and initialization information
++	for that regulator. See regulator.txt for a description of standard
++	properties for these sub-nodes.
++
++	List of valid regulator names:
++	- for max14577: CHARGER, SAFEOUT.
++	- for max77836: CHARGER, SAFEOUT, LDO1, LDO2.
++
++	The SAFEOUT is a fixed voltage regulator so there is no need to specify
++	voltages for it.
++
++
++Example:
++
++#include <dt-bindings/interrupt-controller/irq.h>
++
++max14577@25 {
++	compatible = "maxim,max14577";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
++
++	muic: max14577-muic {
++		compatible = "maxim,max14577-muic";
++	};
++
++	regulators {
++		compatible = "maxim,max14577-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max14577-charger";
++
++		maxim,fast-charge-timer = <6>;
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <450000>;
++		maxim,eoc-uamp = <50000>;
++		maxim,ovp-uvolt = <6500000>;
++	};
++};
++
++
++max77836@25 {
++	compatible = "maxim,max77836";
++	reg = <0x25>;
++	interrupt-parent = <&gpx1>;
++	interrupts = <5 IRQ_TYPE_NONE>;
++
++	muic: max77836-muic {
++		compatible = "maxim,max77836-muic";
++	};
++
++	regulators {
++		compatible = "maxim,max77836-regulator";
++
++		SAFEOUT {
++			regulator-name = "SAFEOUT";
++		};
++		CHARGER {
++			regulator-name = "CHARGER";
++			regulator-min-microamp = <90000>;
++			regulator-max-microamp = <950000>;
++			regulator-boot-on;
++		};
++		LDO1 {
++			regulator-name = "LDO1";
++			regulator-min-microvolt = <2700000>;
++			regulator-max-microvolt = <2700000>;
++		};
++		LDO2 {
++			regulator-name = "LDO2";
++			regulator-min-microvolt = <800000>;
++			regulator-max-microvolt = <3950000>;
++		};
++	};
++
++	charger {
++		compatible = "maxim,max77836-charger";
++
++		maxim,fast-charge-timer = <6>;
++		maxim,constant-uvolt = <4350000>;
++		maxim,fast-charge-uamp = <225000>;
++		maxim,eoc-uamp = <7500>;
++		maxim,ovp-uvolt = <6500000>;
++	};
++};
+-- 
+1.9.1
