@@ -1,96 +1,68 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH v2 14/21] of/fdt: create common debugfs
-Date: Tue, 22 Apr 2014 20:18:14 -0500
-Message-ID: <1398215901-25609-15-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 03/21] mips: xlp: copy built-in DTB out of init section
+Date: Tue, 22 Apr 2014 20:18:03 -0500
+Message-ID: <1398215901-25609-4-git-send-email-robherring2@gmail.com>
 References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
 In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
 To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, Michal Simek <monstr@monstr.eu>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+Cc: Rob Herring <robh@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, linux-mips@linux-mips.org
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4KCkJvdGggcG93ZXJwYyBhbmQgbWlj
-cm9ibGF6ZSBoYXZlIHRoZSBzYW1lIEZEVCBibG9iIGluIGRlYnVnZnMgZmVhdHVyZS4KTW92ZSB0
-aGlzIHRvIGNvbW1vbiBsb2NhdGlvbiBhbmQgcmVtb3ZlIHRoZSBwb3dlcnBjIGFuZCBtaWNyb2Js
-YXplCmltcGxlbWVudGF0aW9ucy4gVGhpcyBmZWF0dXJlIGNvdWxkIGJlY29tZSBtb3JlIHVzZWZ1
-bCB3aGVuIEZEVApvdmVybGF5IHN1cHBvcnQgaXMgYWRkZWQuCgpUaGlzIGNoYW5nZXMgdGhlIHBh
-dGggb2YgdGhlIGJsb2IgZnJvbSAiJGFyY2gvZmxhdC1kZXZpY2UtdHJlZSIgdG8KImRldmljZS10
-cmVlL2ZsYXQtZGV2aWNlLXRyZWUiLgoKU2lnbmVkLW9mZi1ieTogUm9iIEhlcnJpbmcgPHJvYmhA
-a2VybmVsLm9yZz4KQ2M6IE1pY2hhbCBTaW1layA8bW9uc3RyQG1vbnN0ci5ldT4KQ2M6IEJlbmph
-bWluIEhlcnJlbnNjaG1pZHQgPGJlbmhAa2VybmVsLmNyYXNoaW5nLm9yZz4KQ2M6IFBhdWwgTWFj
-a2VycmFzIDxwYXVsdXNAc2FtYmEub3JnPgpDYzogbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5v
-cmcKLS0tCnYyOiBtb3ZlIHRvIGFmdGVyIGxpYmZkdCBjb252ZXJzaW9uCgogYXJjaC9taWNyb2Js
-YXplL2tlcm5lbC9wcm9tLmMgfCAzMSAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiBh
-cmNoL3Bvd2VycGMva2VybmVsL3Byb20uYyAgICB8IDIxIC0tLS0tLS0tLS0tLS0tLS0tLS0tLQog
-ZHJpdmVycy9vZi9mZHQuYyAgICAgICAgICAgICAgfCAyNCArKysrKysrKysrKysrKysrKysrKysr
-KysKIDMgZmlsZXMgY2hhbmdlZCwgMjQgaW5zZXJ0aW9ucygrKSwgNTIgZGVsZXRpb25zKC0pCgpk
-aWZmIC0tZ2l0IGEvYXJjaC9taWNyb2JsYXplL2tlcm5lbC9wcm9tLmMgYi9hcmNoL21pY3JvYmxh
-emUva2VybmVsL3Byb20uYwppbmRleCBjNzY2MzA2Li42OGYwOTk5IDEwMDY0NAotLS0gYS9hcmNo
-L21pY3JvYmxhemUva2VybmVsL3Byb20uYworKysgYi9hcmNoL21pY3JvYmxhemUva2VybmVsL3By
-b20uYwpAQCAtMTE0LDM0ICsxMTQsMyBAQCB2b2lkIF9faW5pdCBlYXJseV9pbml0X2RldnRyZWUo
-dm9pZCAqcGFyYW1zKQogCiAJcHJfZGVidWcoIiA8LSBlYXJseV9pbml0X2RldnRyZWUoKVxuIik7
-CiB9Ci0KLS8qKioqKioqCi0gKgotICogTmV3IGltcGxlbWVudGF0aW9uIG9mIHRoZSBPRiAiZmlu
-ZCIgQVBJcywgcmV0dXJuIGEgcmVmY291bnRlZAotICogb2JqZWN0LCBjYWxsIG9mX25vZGVfcHV0
-KCkgd2hlbiBkb25lLiAgVGhlIGRldmljZSB0cmVlIGFuZCBsaXN0Ci0gKiBhcmUgcHJvdGVjdGVk
-IGJ5IGEgcndfbG9jay4KLSAqCi0gKiBOb3RlIHRoYXQgcHJvcGVydHkgbWFuYWdlbWVudCB3aWxs
-IG5lZWQgc29tZSBsb2NraW5nIGFzIHdlbGwsCi0gKiB0aGlzIGlzbid0IGRlYWx0IHdpdGggeWV0
-LgotICoKLSAqKioqKioqLwotCi0jaWYgZGVmaW5lZChDT05GSUdfREVCVUdfRlMpICYmIGRlZmlu
-ZWQoREVCVUcpCi1zdGF0aWMgc3RydWN0IGRlYnVnZnNfYmxvYl93cmFwcGVyIGZsYXRfZHRfYmxv
-YjsKLQotc3RhdGljIGludCBfX2luaXQgZXhwb3J0X2ZsYXRfZGV2aWNlX3RyZWUodm9pZCkKLXsK
-LQlzdHJ1Y3QgZGVudHJ5ICpkOwotCi0JZmxhdF9kdF9ibG9iLmRhdGEgPSBpbml0aWFsX2Jvb3Rf
-cGFyYW1zOwotCWZsYXRfZHRfYmxvYi5zaXplID0gaW5pdGlhbF9ib290X3BhcmFtcy0+dG90YWxz
-aXplOwotCi0JZCA9IGRlYnVnZnNfY3JlYXRlX2Jsb2IoImZsYXQtZGV2aWNlLXRyZWUiLCBTX0lG
-UkVHIHwgU19JUlVTUiwKLQkJCQlvZl9kZWJ1Z2ZzX3Jvb3QsICZmbGF0X2R0X2Jsb2IpOwotCWlm
-ICghZCkKLQkJcmV0dXJuIDE7Ci0KLQlyZXR1cm4gMDsKLX0KLWRldmljZV9pbml0Y2FsbChleHBv
-cnRfZmxhdF9kZXZpY2VfdHJlZSk7Ci0jZW5kaWYKZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9r
-ZXJuZWwvcHJvbS5jIGIvYXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tLmMKaW5kZXggZjk3MTEzNC4u
-MDM2MjRjZSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tLmMKKysrIGIvYXJj
-aC9wb3dlcnBjL2tlcm5lbC9wcm9tLmMKQEAgLTI5LDcgKzI5LDYgQEAKICNpbmNsdWRlIDxsaW51
-eC9iaXRvcHMuaD4KICNpbmNsdWRlIDxsaW51eC9leHBvcnQuaD4KICNpbmNsdWRlIDxsaW51eC9r
-ZXhlYy5oPgotI2luY2x1ZGUgPGxpbnV4L2RlYnVnZnMuaD4KICNpbmNsdWRlIDxsaW51eC9pcnEu
-aD4KICNpbmNsdWRlIDxsaW51eC9tZW1ibG9jay5oPgogI2luY2x1ZGUgPGxpbnV4L29mLmg+CkBA
-IC05MjQsMjMgKzkyMywzIEBAIGJvb2wgYXJjaF9tYXRjaF9jcHVfcGh5c19pZChpbnQgY3B1LCB1
-NjQgcGh5c19pZCkKIHsKIAlyZXR1cm4gKGludClwaHlzX2lkID09IGdldF9oYXJkX3NtcF9wcm9j
-ZXNzb3JfaWQoY3B1KTsKIH0KLQotI2lmIGRlZmluZWQoQ09ORklHX0RFQlVHX0ZTKSAmJiBkZWZp
-bmVkKERFQlVHKQotc3RhdGljIHN0cnVjdCBkZWJ1Z2ZzX2Jsb2Jfd3JhcHBlciBmbGF0X2R0X2Js
-b2I7Ci0KLXN0YXRpYyBpbnQgX19pbml0IGV4cG9ydF9mbGF0X2RldmljZV90cmVlKHZvaWQpCi17
-Ci0Jc3RydWN0IGRlbnRyeSAqZDsKLQotCWZsYXRfZHRfYmxvYi5kYXRhID0gaW5pdGlhbF9ib290
-X3BhcmFtczsKLQlmbGF0X2R0X2Jsb2Iuc2l6ZSA9IGJlMzJfdG9fY3B1KGluaXRpYWxfYm9vdF9w
-YXJhbXMtPnRvdGFsc2l6ZSk7Ci0KLQlkID0gZGVidWdmc19jcmVhdGVfYmxvYigiZmxhdC1kZXZp
-Y2UtdHJlZSIsIFNfSUZSRUcgfCBTX0lSVVNSLAotCQkJCXBvd2VycGNfZGVidWdmc19yb290LCAm
-ZmxhdF9kdF9ibG9iKTsKLQlpZiAoIWQpCi0JCXJldHVybiAxOwotCi0JcmV0dXJuIDA7Ci19Ci1f
-X2luaXRjYWxsKGV4cG9ydF9mbGF0X2RldmljZV90cmVlKTsKLSNlbmRpZgpkaWZmIC0tZ2l0IGEv
-ZHJpdmVycy9vZi9mZHQuYyBiL2RyaXZlcnMvb2YvZmR0LmMKaW5kZXggMGIzOGE2YS4uNDEyOWY3
-NCAxMDA2NDQKLS0tIGEvZHJpdmVycy9vZi9mZHQuYworKysgYi9kcml2ZXJzL29mL2ZkdC5jCkBA
-IC0yMCw2ICsyMCw3IEBACiAjaW5jbHVkZSA8bGludXgvZXJybm8uaD4KICNpbmNsdWRlIDxsaW51
-eC9zbGFiLmg+CiAjaW5jbHVkZSA8bGludXgvbGliZmR0Lmg+CisjaW5jbHVkZSA8bGludXgvZGVi
-dWdmcy5oPgogCiAjaW5jbHVkZSA8YXNtL3NldHVwLmg+ICAvKiBmb3IgQ09NTUFORF9MSU5FX1NJ
-WkUgKi8KICNpbmNsdWRlIDxhc20vcGFnZS5oPgpAQCAtOTE2LDQgKzkxNywyNyBAQCB2b2lkIF9f
-aW5pdCB1bmZsYXR0ZW5fYW5kX2NvcHlfZGV2aWNlX3RyZWUodm9pZCkKIAl1bmZsYXR0ZW5fZGV2
-aWNlX3RyZWUoKTsKIH0KIAorI2lmIGRlZmluZWQoQ09ORklHX0RFQlVHX0ZTKSAmJiBkZWZpbmVk
-KERFQlVHKQorc3RhdGljIHN0cnVjdCBkZWJ1Z2ZzX2Jsb2Jfd3JhcHBlciBmbGF0X2R0X2Jsb2I7
-CisKK3N0YXRpYyBpbnQgX19pbml0IG9mX2ZsYXRfZHRfZGVidWdmc19leHBvcnRfZmR0KHZvaWQp
-Cit7CisJc3RydWN0IGRlbnRyeSAqZCA9IGRlYnVnZnNfY3JlYXRlX2RpcigiZGV2aWNlLXRyZWUi
-LCBOVUxMKTsKKworCWlmICghZCkKKwkJcmV0dXJuIC1FTk9FTlQ7CisKKwlmbGF0X2R0X2Jsb2Iu
-ZGF0YSA9IGluaXRpYWxfYm9vdF9wYXJhbXM7CisJZmxhdF9kdF9ibG9iLnNpemUgPSBmZHRfdG90
-YWxzaXplKGluaXRpYWxfYm9vdF9wYXJhbXMpOworCisJZCA9IGRlYnVnZnNfY3JlYXRlX2Jsb2Io
-ImZsYXQtZGV2aWNlLXRyZWUiLCBTX0lGUkVHIHwgU19JUlVTUiwKKwkJCQlkLCAmZmxhdF9kdF9i
-bG9iKTsKKwlpZiAoIWQpCisJCXJldHVybiAtRU5PRU5UOworCisJcmV0dXJuIDA7Cit9Cittb2R1
-bGVfaW5pdChvZl9mbGF0X2R0X2RlYnVnZnNfZXhwb3J0X2ZkdCk7CisjZW5kaWYKKwogI2VuZGlm
-IC8qIENPTkZJR19PRl9FQVJMWV9GTEFUVFJFRSAqLwotLSAKMS45LjEKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxp
-c3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3Jn
-L2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+From: Rob Herring <robh@kernel.org>
+
+The existing code is buggy because built-in DTBs are in init memory.
+It is also broken because the reserved bootmem was then freed after
+unflattening, but the unflattened tree points to data in the flat tree.
+Fix this by using the unflatten_and_copy_device_tree function.
+
+This removes all accesses to FDT header data by the arch code.
+
+Signed-off-by: Rob Herring <robh@kernel.org>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org
+---
+v2: no change
+
+ arch/mips/netlogic/xlp/dt.c | 17 +----------------
+ 1 file changed, 1 insertion(+), 16 deletions(-)
+
+diff --git a/arch/mips/netlogic/xlp/dt.c b/arch/mips/netlogic/xlp/dt.c
+index 5754097..7f9615a 100644
+--- a/arch/mips/netlogic/xlp/dt.c
++++ b/arch/mips/netlogic/xlp/dt.c
+@@ -87,22 +87,7 @@ void __init xlp_early_init_devtree(void)
+ 
+ void __init device_tree_init(void)
+ {
+-	unsigned long base, size;
+-	struct boot_param_header *fdtp = xlp_fdt_blob;
+-
+-	if (!fdtp)
+-		return;
+-
+-	base = virt_to_phys(fdtp);
+-	size = be32_to_cpu(fdtp->totalsize);
+-
+-	/* Before we do anything, lets reserve the dt blob */
+-	reserve_bootmem(base, size, BOOTMEM_DEFAULT);
+-
+-	unflatten_device_tree();
+-
+-	/* free the space reserved for the dt blob */
+-	free_bootmem(base, size);
++	unflatten_and_copy_device_tree();
+ }
+ 
+ static struct of_device_id __initdata xlp_ids[] = {
+-- 
+1.9.1
