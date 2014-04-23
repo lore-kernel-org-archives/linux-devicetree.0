@@ -1,39 +1,82 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] net: via-rhine: add support for on-chip Rhine
- controllers
-Date: Wed, 23 Apr 2014 15:26:53 -0400 (EDT)
-Message-ID: <20140423.152653.2008980151348280912.davem@davemloft.net>
-References: <1390823503-24087-1-git-send-email-alchark@gmail.com>
-	<1398180489-20230-1-git-send-email-alchark@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v2 4/9] dt-bindings: add documentation for s3c2410 clock controller
+Date: Wed, 23 Apr 2014 21:36:27 +0200
+Message-ID: <2506219.ti6q3JWVMf@phil>
+References: <2104342.rkElQpXtvM@phil>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398180489-20230-1-git-send-email-alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: rl-7uj+XXdSDtwfv37vnLkPlQ@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ben-/+tVBieCtBitmTQ+vhA3Yw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2104342.rkElQpXtvM@phil>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: t.figa@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alexey Charkov <alchark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Tue, 22 Apr 2014 19:28:06 +0400
+Describe the clock controller of s3c2410, s3c2440 and s3c2442.
 
-> This series introduces platform bus (OpenFirmware) binding for 
-> via-rhine, as used in various ARM-based Systems-on-Chip by 
-> VIA/WonderMedia.
-> 
-> This has been tested in OF configuration by myself on a WM8950-based VIA 
-> APC Rock development board and on a WM8850-based netbook, and in PCI
-> configuration by Roger.
-> 
-> Please note that the initial version of these patches was signed off by
-> Roger, but some time has passed since then, so I'm not including his
-> sign-off until explicit notice.
-> 
-> David, could you please take these to net-next if appropriate?
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Tomasz Figa <t.figa@samsung.com>
+---
+ .../bindings/clock/samsung,s3c2410-clock.txt       | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
 
-Series applied to net-next, thanks Alexey.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
+new file mode 100644
+index 0000000..0b64ad8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
+@@ -0,0 +1,50 @@
++* Samsung S3C2410 Clock Controller
++
++The S3C2410 clock controller generates and supplies clock to various controllers
++within the SoC. The clock binding described here is applicable to the s3c2410,
++s3c2440 and s3c2442 SoCs in the s3c24x family.
++
++Required Properties:
++
++- compatible: should be one of the following.
++  - "samsung,s3c2410-clock" - controller compatible with S3C2410 SoC.
++  - "samsung,s3c2440-clock" - controller compatible with S3C2440 SoC.
++  - "samsung,s3c2442-clock" - controller compatible with S3C2442 SoC.
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. Some of the clocks are available only
++on a particular SoC.
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/samsung,s3c2410-clock.h header and can be used in device
++tree sources.
++
++External clocks:
++
++The xti clock used as input for the plls is generated outside the SoC. It is
++expected that is are defined using standard clock bindings with a
++clock-output-names value of "xti".
++
++Example: Clock controller node:
++
++	clocks: clock-controller@4c000000 {
++		compatible = "samsung,s3c2410-clock";
++		reg = <0x4c000000 0x20>;
++		#clock-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller (refer to the standard clock bindings for information about
++  "clocks" and "clock-names" properties):
++
++	serial@50004000 {
++		compatible = "samsung,s3c2440-uart";
++		reg = <0x50004000 0x4000>;
++		interrupts = <1 23 3 4>, <1 23 4 4>;
++		clock-names = "uart", "clk_uart_baud2";
++		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>;
++		status = "disabled";
++	};
+-- 
+1.9.0
