@@ -1,31 +1,68 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [Patch v2 1/4] soc: Placeholder files for drivers/soc
-Date: Thu, 24 Apr 2014 12:36:25 -0400
-Message-ID: <53593D89.1020703@ti.com>
-References: <1398357082-5102-1-git-send-email-agross@codeaurora.org> <1398357082-5102-2-git-send-email-agross@codeaurora.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 2/2] net: Add Keystone NetCP ethernet driver
+Date: Thu, 24 Apr 2014 12:47:44 -0400 (EDT)
+Message-ID: <20140424.124744.1296959126932595844.davem@davemloft.net>
+References: <1398201675-17379-1-git-send-email-santosh.shilimkar@ti.com>
+	<1398201675-17379-3-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398357082-5102-2-git-send-email-agross@codeaurora.org>
+In-Reply-To: <1398201675-17379-3-git-send-email-santosh.shilimkar@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: santosh.shilimkar@ti.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sandeep_n@ti.com, robh+dt@kernel.org, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 24 April 2014 12:31 PM, Andy Gross wrote:
-> Add placeholder Kconfig and linkage for driver/soc.
-> 
-> The first patch set that implemented this was authored by Santosh Shilimkar:
-> https://lkml.org/lkml/2014/2/28/567
-> 
-> Signed-off-by: Andy Gross <agross@codeaurora.org>
-> ---
-Good to see these patches on the list. Me and Kumar spoke about it
-many times before.
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Date: Tue, 22 Apr 2014 17:21:15 -0400
 
-BTW, I just posted updated version. Feel free to use the from it instead
-of 4subject one.
+> +struct netcp_tx_pipe {
+> +	struct netcp_device	*netcp_device;
+> +	void	*dma_queue;
 
-Regards,
-Santosh
+Indent *dma_queue the same as the other struct members.
+
+> +	unsigned		dma_queue_id;
+
+Use explicit "unsigned int".
+
+> +	unsigned		dma_chan_id;
+
+Likewise.
+
+> +struct netcp_addr {
+> +	struct netcp_intf	*netcp;
+> +	unsigned char		addr[MAX_ADDR_LEN];
+
+If this is just an ethernet driver, ETH_ALEN is more appropriate here.
+
+> +	unsigned		tx_compl_qid;
+
+Explicit "unsigned int" please.  I'm not going to point out all of the other
+instances, audit your entire submission for this problem please.
+
+> +static inline u32 *netcp_push_psdata(struct netcp_packet *p_info,
+> +				     unsigned bytes)
+> +{
+> +	u32		*buf;
+> +	unsigned	 words;
+
+Do not use tabs between the type and the variable name in local variable
+declarations.
+
+Please audit for and fix this in your entire submission.
+
+> +static inline u32 hwval_to_host(bool big_endian, u32 hwval)
+> +{
+> +	if (big_endian)
+> +		return be32_to_cpu(hwval);
+> +	else
+> +		return le32_to_cpu(hwval);
+> +}
+
+You're much better off having a set of methods, one for big endian and
+one for little endian, that just straight line codes the appropriate endian
+accesses.
+
+These conditionals peppered all over the place are just ugly.
