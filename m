@@ -1,46 +1,35 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V2 00/19] bus: omap_l3_noc: driver cleanups and support
- for DRA7/AM4372
-Date: Thu, 24 Apr 2014 09:19:25 -0500
-Message-ID: <53591D6D.3060507@ti.com>
-References: <1397492726-17203-1-git-send-email-nm@ti.com> <1397767775-10965-1-git-send-email-nm@ti.com> <53504041.7090906@ti.com> <5350410B.5010507@ti.com> <5358D16A.9000500@ti.com>
+From: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 06/21] c6x: convert fdt pointers to opaque pointers
+Date: Thu, 24 Apr 2014 10:21:25 -0400
+Message-ID: <1398349285.3010.63.camel@deneb.redhat.com>
+References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+	 <1398215901-25609-7-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5358D16A.9000500@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Tony Lindgren <tony@atomide.com>, Sricharan R <r.sricharan@ti.com>
-Cc: Sekhar Nori <nsekhar@ti.com>, Rajendra Nayak <rnayak@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398215901-25609-7-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>, linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/24/2014 03:55 AM, Peter Ujfalusi wrote:
-> On 04/18/2014 12:00 AM, Nishanth Menon wrote:
->> On 04/17/2014 03:57 PM, Santosh Shilimkar wrote:
->>> I looked at the series and its looks pretty good. Thanks for fixups, updates.
->>> For whole series,
->>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>>
->>
->> Thanks.
->>
->>>> Patches(including Peter's) is available here:
->>>> https://github.com/nmenon/linux-2.6-playground/commits/l3noc/driver-fixes-v2
->>>>
->>> Can Tony pull this branch for 3.16 then which includes Peter's series as well ?
->>
->> there is just an empty commit with information about peter's patches
->> that i lined up to differentiate the series.. I can drop it if Tony
->> would like me to.
+On Tue, 2014-04-22 at 20:18 -0500, Rob Herring wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> Looking at the branch I see my patches underneath so they are in the branch.
-> It would be great if Tony pulls this... Will be a great present to my patches
-> (omap_l3 patches in the branch) for their 1 year anniversary of being out on
-> the mailing list ;)
+> The architecture code does not need to access the internals of the FDT
+> blob, so make the pointer to it void *.
 > 
-Peter, can I take this as an Ack for this series? if yes, I can repost
-a v3 with all the acks, updates together.
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Cc: Aurelien Jacquiot <a-jacquiot-l0cyMroinI0@public.gmane.org>
+> Cc: linux-c6x-dev-jPsnJVOj+W6hPH1hqNUYSQ@public.gmane.org
+> ---
 
--- 
-Regards,
-Nishanth Menon
+Acked-by: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
