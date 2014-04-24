@@ -1,147 +1,101 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/2] gpio: of: Allow -gpio suffix for property names
-Date: Thu, 24 Apr 2014 20:22:44 +0200
-Message-ID: <20140424182243.GA27443@ulmo>
-References: <1398266889-17489-1-git-send-email-thierry.reding@gmail.com>
- <1398266889-17489-2-git-send-email-thierry.reding@gmail.com>
- <CACRpkdadAUXgC-K6be6SFFn2ZTvCqkTK7VRJEzpFdUbybKc3YA@mail.gmail.com>
- <CAL_Jsq+DwCBLoNYsgHnoLQgSMnSBDM5XH_xoWS-RWdmx-JBeXg@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/2] of/irq: do irq resolution in platform_get_irq
+Date: Thu, 24 Apr 2014 20:42:08 +0200
+Message-ID: <20140424184207.GC27443@ulmo>
+References: <1398293861-7682-1-git-send-email-robherring2@gmail.com>
+ <1398293861-7682-3-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
-Return-path: <linux-gpio-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="hOcCNbCCxyk/YU74"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+DwCBLoNYsgHnoLQgSMnSBDM5XH_xoWS-RWdmx-JBeXg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1398293861-7682-3-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---UugvWAfsgieZRqgk
+--hOcCNbCCxyk/YU74
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Apr 24, 2014 at 09:06:24AM -0500, Rob Herring wrote:
-> On Thu, Apr 24, 2014 at 7:47 AM, Linus Walleij <linus.walleij@linaro.org>=
- wrote:
-> > On Wed, Apr 23, 2014 at 5:28 PM, Thierry Reding
-> > <thierry.reding@gmail.com> wrote:
-> >
-> >> From: Thierry Reding <treding@nvidia.com>
-> >>
-> >> Many bindings use the -gpio suffix in property names. Support this in
-> >> addition to the -gpios suffix when requesting GPIOs using the new
-> >> descriptor-based API.
-> >>
-> >> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> >
-> > Are the DT bindings really full of such ambiguity between
-> > singular and plural? Examples?
-> >
-> > What happens in affected drivers today? It just doesn't work?
+On Wed, Apr 23, 2014 at 05:57:41PM -0500, Rob Herring wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >=20
-> They mostly seem to use of_get_named_gpio.
-
-Indeed. That has the downside of requiring manual parsing and handling
-of the GPIO polarity, though.
-
-> > Does that mean these bindings are not actively used by any
-> > drivers yet so we could augment the bindings instead, or are
-> > they already deployed so we must implement this?
-> >
-> > Would like a word from the DT people here...
+> Currently we get the following kind of errors if we try to use interrupt
+> phandles to irqchips that have not yet initialized:
 >=20
-> Interestingly, there is not a single occurrence of '-gpio ' in
-> powerpc, but a bunch in ARM. In hindsight, we should have perhaps
-> enforced using -gpios only, but that doesn't really matter now. We
-> have -gpio in use, so we need to support it.
-
-I think I also saw a proposal only recently to add support for a
-gpios/gpio-names type of binding
-
-> That doesn't necessarily mean this function has to support it. For
-> example, this function could a legacy method and some other function
-> should be used instead (of_get_named_gpio perhaps).
-
-The reason why I posted this is precisely because I wanted to convert
-over some drivers to use the new helpers (because they make things like
-polarity handling much easier). My first attempt was to fix the binding
-because I was under the impression that -gpio usage was discouraged, but
-people didn't like that because, you know, DT bindings being a stable
-ABI and all that.
-
-The downside of not allowing the gpiod API to support the -gpio suffix
-is that we'll never be able to convert drivers that use such a binding
-and will forever have a hodgepodge of GPIO APIs that we need to support.
-
-> >>  drivers/gpio/gpiolib.c | 18 ++++++++++++------
-> >>  1 file changed, 12 insertions(+), 6 deletions(-)
-> >>
-> >> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> >> index 7a0b97076374..b991462c22fb 100644
-> >> --- a/drivers/gpio/gpiolib.c
-> >> +++ b/drivers/gpio/gpiolib.c
-> >> @@ -2594,17 +2594,23 @@ static struct gpio_desc *of_find_gpio(struct d=
-evice *dev, const char *con_id,
-> >>                                       unsigned int idx,
-> >>                                       enum gpio_lookup_flags *flags)
-> >>  {
-> >> +       static const char *suffixes[] =3D { "gpios", "gpio" };
-> >>         char prop_name[32]; /* 32 is max size of property name */
-> >>         enum of_gpio_flags of_flags;
-> >>         struct gpio_desc *desc;
-> >> +       unsigned int i;
-> >>
-> >> -       if (con_id)
-> >> -               snprintf(prop_name, 32, "%s-gpios", con_id);
-> >> -       else
-> >> -               snprintf(prop_name, 32, "gpios");
-> >> +       for (i =3D 0; i < ARRAY_SIZE(suffixes); i++) {
-> >> +               if (con_id)
-> >> +                       snprintf(prop_name, 32, "%s-%s", con_id, suffi=
-xes[i]);
-> >> +               else
-> >> +                       snprintf(prop_name, 32, "%s", suffixes[i]);
+> irq: no irq domain found for /ocp/pinmux@48002030 !
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 1 at drivers/of/platform.c:171 of_device_alloc+0x144=
+/0x184()
+> Modules linked in:
+> CPU: 0 PID: 1 Comm: swapper/0 Not tainted 3.12.0-00038-g42a9708 #1012
+> (show_stack+0x14/0x1c)
+> (dump_stack+0x6c/0xa0)
+> (warn_slowpath_common+0x64/0x84)
+> (warn_slowpath_null+0x1c/0x24)
+> (of_device_alloc+0x144/0x184)
+> (of_platform_device_create_pdata+0x44/0x9c)
+> (of_platform_bus_create+0xd0/0x170)
+> (of_platform_bus_create+0x12c/0x170)
+> (of_platform_populate+0x60/0x98)
 >=20
-> This has the side effect of searching for "gpio" as property name
-> which I don't think we want to allow.
+> This is because we're wrongly trying to populate resources that are not
+> yet available. It's perfectly valid to create irqchips dynamically, so
+> let's fix up the issue by resolving the interrupt resources when
+> platform_get_irq is called.
+>=20
+> And then we also need to accept the fact that some irqdomains do not
+> exist that early on, and only get initialized later on. So we can
+> make the current WARN_ON into just into a pr_debug().
+>=20
+> We still attempt to populate irq resources when we create the devices.
+> This allows current drivers which don't use platform_get_irq to continue
+> to function. Once all drivers are fixed, this code can be removed.
+>=20
+> Suggested-by: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/base/platform.c |  7 ++++++-
+>  drivers/of/irq.c        | 26 ++++++++++++++++++++++++++
+>  drivers/of/platform.c   |  4 +++-
+>  include/linux/of_irq.h  |  7 ++++++-
+>  4 files changed, 41 insertions(+), 3 deletions(-)
 
-Why don't we want to allow a "gpio" property when we already allow
-"gpios"?
-
-> It also allows a DT with either suffix to work. While I don't
-> necessarily think the kernel's job should be DT validation, we don't
-> have any other validation today and I don't see how this change
-> simplifies the code. Between stricter DT checking (in the kernel) and
-> simpler code, I'd pick the latter.
-
-I had briefly considered adding more validation here as well, such as
-refusing to hand out any GPIO with idx > 0 for the -gpio suffix, but
-then opted not to do that in favour of code simplicity.
+Hehe... that's largely what we already had back in January[0]. Glad to
+see that people could finally agree on what to do about this.
 
 Thierry
 
---UugvWAfsgieZRqgk
+[0]: https://lkml.org/lkml/2014/1/8/240
+
+--hOcCNbCCxyk/YU74
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTWVZzAAoJEN0jrNd/PrOhhCQQAJzLZ33kQR5hcdQQkxUfC9vT
-YyiUuTU97tLYpZg3/Z3cXFwJvE4dso34T7jQMqFczexxi201iURCgRjtoOI9/WGe
-vfpPVErY86A3wi/E5o9k2bc1reZgYHHFQPYZZhZmloTqOOtqvy5WCPinoFLUhECB
-zf4ofB6wz3EdcRV4AZNBP0339Z7wFEjKKG2TtLhwJVp9mbqv6FfC1udyT1JcNkBl
-uq6x8j7btDBvKaH55rzg/ePLsHoYEvRZQDm3vN849wlGks+rgbM/Wq6BhAxL3+L7
-vP5sNwLBqyMgki4jlkHuH4IqnlqBAxhb27fe6TFslGE8lLBgrxMaVdA9V9VawafV
-kPhMWitdfuv+1G8rHU32aaCkF48lBMr2khle6VXAA+RwnS7MJ1+899VTlsCWOmt4
-FrGXJqDIBexJgDZtIRFtbWezysMT3JkkTTfb6wwqr1fyN9iKZWlxnZt4AW/3wdCx
-eM7hbNXOXlejicGJyw5gFEVbLuh5P/vCPi7UTFF+dcFRM/8p1CiEGc4NezCpk1hi
-ZCL7+LyuqO8w8YYbrVYTyn7Z/Z/xRhvWfC7ETN/QJBOPtEzMJ6sdnzdCEp58ATft
-Q85imJfF31F6k+0BTcya1nnQSuDj0a4AOZvE+uyDsFTW3EeoA/HNUCt61chI+87w
-6BacZ7/meZMeGEih4zGI
-=rPf8
+iQIcBAEBAgAGBQJTWVr/AAoJEN0jrNd/PrOhJtEP+wZj+Ee+vrblMdwiN2ok6fRy
+nBcAZQrFEKykF+NDQU/GmSDAuDdaBMpMN0dzdbxPOj+glWbTMprVlaxfDFKVdjuU
+onvbkrY/om3uLEWt++16l1q1vnpTznIBcSzSuZf8WgTzeMIt+oNivNlh1mnkFugW
+WuKRYQ11kfcIcUImnCN1vpy99+hSrkmDazvYsn6s1SAF18dUBgIe+R2zl4wbb7lo
+6RvJXj9d/FBJH1WJbCY7J3NwvfYz8zh3KY0kgTH5lRn+YoBKdGhTuP/4jAxainum
+cLguksgtBhVlSNocEYxK8OasQO2iCfc52fq2/k4So18CLflw8HlGLAzC24eTfqta
+uG6Vn1jhnFKSGhDzT5MAlsKZSBHuasEXMnzgHUdZskDj55swrFBlMIZY92nVpYFV
+il8lW5NaWjO2G7BpdSNqN4SNDZazsgkeHhtBMtHRu4ieS61g6x2BvQfDdC0yukvB
+6vsB/4SHACOLK8iaMTireksn8EKSjsFMVlrEwWuti5F3RRHt9Q9fwglxSGzNrkyl
+KSjCT8wWv87amAVenHaa99ClbNCKUkZAOjkEbFhUZ7MCjC1q0niUtsDr+4il6QYy
+nLVtfoC/IGpB8WCOSH6v4x9uCDBfC0bYntG2Zzq+XdAucRqsqElHgP3P+MqZwYAs
+ayF/FEjG0ulvhWUr1ZVZ
+=bXg4
 -----END PGP SIGNATURE-----
 
---UugvWAfsgieZRqgk--
+--hOcCNbCCxyk/YU74--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
