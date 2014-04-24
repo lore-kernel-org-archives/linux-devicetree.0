@@ -1,233 +1,178 @@
-From: Sandeepa Prabhu <sandeepa.prabhu@linaro.org>
-Subject: Re: [PATCH v7 0/3] Add support for PCI in AArch64
-Date: Thu, 24 Apr 2014 08:38:07 +0530
-Message-ID: <CA+b37P3fynru-K0rdU-py+sgy1COvEHLhWNq6jXJvK5RY-Dg0A@mail.gmail.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
-	<CA+b37P3HqMFU6kGA+GH3YpGM_Z=TwNXL6jKu+ConR3kCk-Tp4g@mail.gmail.com>
-	<20140422101112.GA865@e106497-lin.cambridge.arm.com>
-	<CA+b37P0XV81K4oBNnkXrVHYub=Bcuuw8nrFWUGVw-i8PJ8wGxQ@mail.gmail.com>
-	<CACoXjcm3wUOkD+Fh+WKXsi5Rxs8Y5G1YUHB15xUwJY7cCcZHBg@mail.gmail.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC v2 PATCH v4 09/14] ARM: dts: s6e3fa0: add DT bindings
+Date: Thu, 24 Apr 2014 12:15:54 +0900
+Message-ID: <535881EA.4010100@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
+ <5357819D.7050802@samsung.com> <1827288.zC58DZqqVB@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACoXjcm3wUOkD+Fh+WKXsi5Rxs8Y5G1YUHB15xUwJY7cCcZHBg@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@secretlab.ca>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <1827288.zC58DZqqVB@avalon>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, sachin.kamat@linaro.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 24 April 2014 02:02, Tanmay Inamdar <tinamdar@apm.com> wrote:
-> Hello Sandeepa,
+Hi Laurent,
+
+Thank you for comments.
+
+On 04/23/2014 08:34 PM, Laurent Pinchart wrote:
+> Hi Andrzej,
 >
-> On Tue, Apr 22, 2014 at 4:50 AM, Sandeepa Prabhu
-> <sandeepa.prabhu@linaro.org> wrote:
->> On 22 April 2014 15:41, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->>> On Tue, Apr 22, 2014 at 09:58:28AM +0100, Sandeepa Prabhu wrote:
->>>> On 14 March 2014 21:04, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
->>>> > Hi,
->>>> >
->>>> > This patch adds support for PCI to AArch64. It is based on my v7=
- patch
->>>> > that adds support for creating generic host bridge structure fro=
-m
->>>> > device tree. With that in place, I was able to boot a platform t=
-hat
->>>> > has PCIe host bridge support and use a PCIe network card.
->>>> Hi Liviu,
->>>>
->>>> Are these patches (including your other patchset for device tree h=
-ost
->>>> bridge support ) available on a public git repo I can checkout fro=
-m?
+> On Wednesday 23 April 2014 11:02:21 Andrzej Hajda wrote:
+>> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
+>>> This patch adds DT bindings for s6e3fa0 panel.
+>>> The bindings describes panel resources, display timings and cpu timings.
 >>>
->>> Yes, I have pushed them into git://linux-arm.org/linux-ld.git
->> Thanks Liviu,
->> Just to understand, is the X-gene PCIe
->> (https://lwn.net/Articles/589733/) verified using the same patchset?
->
-> Yes. V5 version of X-Gene PCIe patches have verified Liviu's patchset
-> on X-Gene platform.
-Thanks Tanmay!
->
+>>> Changelog v2:
+>>> - Adds unit address (commented by Sachin Kamat)
+>>> Changelog v3:
+>>> - Removes optional delay, size properties (commented by Laurent Pinchart)
+>>> - Adds OLED detection, TE gpio properties
+>>> Changelog v4:
+>>> - Moves CPU timings relevant properties from FIMD DT
+>>>
+>>>    (commeted by Laurent Pinchart, Andrzej Hajda)
+>>>
+>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> ---
+>>>
+>>>   .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   63 +++++++++++++++
+>>> 1 file changed, 63 insertions(+)
+>>>   create mode 100644
+>>>   Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt>
+>>> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+>>> b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt new file
+>>> mode 100644
+>>> index 0000000..9eeb38b
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+>>> @@ -0,0 +1,63 @@
+>>> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
+>>> +
+>>> +Required properties:
+>>> +  - compatible: "samsung,s6e3fa0"
+>>> +  - reg: the virtual channel number of a DSI peripheral
+>>> +  - vdd3-supply: core voltage supply
+>>> +  - vci-supply: voltage supply for analog circuits
+>>> +  - reset-gpio: a GPIO spec for the reset pin
+>>> +  - det-gpio: a GPIO spec for the OLED detection pin
+>>> +  - te-gpio: a GPIO spec for the TE pin
+>>> +  - display-timings: timings for the connected panel as described by [1]
 >>
->> ~Sandeepa
->>>
->>> Best regards,
->>> Liviu
->>>
->>>>
->>>> Thanks,
->>>> ~Sandeepa
->>>>
->>>> >
->>>> > I have dropped the RFC tag from the subject as I now have the am=
-bitious goal
->>>> > of trying to get it mainlined.
->>>> >
->>>> > Changes from v6:
->>>> >   - Guard the pci_domain_nr() inline implementation with #ifdef =
-CONFIG_PCI as
->>>> >     to avoid conflict with default empty version present in incl=
-ude/linux/pci.h.
->>>> >     Thanks to Jingoo Han for catching this.
->>>> >
->>>> > Changes from v5:
->>>> >   - Removed pcibios_fixup_bridge_ranges() as the week default ve=
-rsion is fine.
->>>> >   - Removed the ALIGN() call in pcibios_align_resource()
->>>> >   - Stopped exporting pcibios_align_resource()
->>>> >
->>>> > Changes from v4:
->>>> >   - Fixed the pci_domain_nr() implementation for arm64. Now we u=
-se
->>>> >     find_pci_host_bride() to find the host bridge before we retr=
-ieve
->>>> >     the domain number.
->>>> >
->>>> > Changes from v3:
->>>> >   - Added Acks accumulated so far ;)
->>>> >   - Still carrying Catalin's patch for moving the PCI_IO_BASE un=
-til it
->>>> >     lands in linux-next or mainline, in order to ease applying t=
-he series
->>>> >
->>>> > Changes from v2:
->>>> >   - Implement an arch specific version of pci_register_io_range(=
-) and
->>>> >     pci_address_to_pio().
->>>> >   - Return 1 from pci_proc_domain().
->>>> >
->>>> > Changes from v1:
->>>> >   - Added Catalin's patch for moving the PCI_IO_BASE location an=
-d extend
->>>> >     its size to 16MB
->>>> >   - Integrated Arnd's version of pci_ioremap_io that uses a bitm=
-ap for
->>>> >     keeping track of assigned IO space and returns an io_offset.=
- At the
->>>> >     moment the code is added in arch/arm64 but it can be moved i=
-n drivers/pci.
->>>> >   - Added a fix for the generic ioport_map() function when !CONF=
-IG_GENERIC_IOMAP
->>>> >     as suggested by Arnd.
->>>> >
->>>> > v6 thread here: https://lkml.org/lkml/2014/3/5/41
->>>> > v5 thread here: https://lkml.org/lkml/2014/3/4/307
->>>> > v4 thread here: https://lkml.org/lkml/2014/3/3/298
->>>> > v3 thread here: https://lkml.org/lkml/2014/2/28/211
->>>> > v2 thread here: https://lkml.org/lkml/2014/2/27/255
->>>> > v1 thread here: https://lkml.org/lkml/2014/2/3/389
->>>> >
->>>> >
->>>> > The API used is different from the one used by ARM architecture.=
- There is
->>>> > no pci_common_init_dev() function and no hw_pci structure, as th=
-at is no
->>>> > longer needed. Once the last signature is added to the legal agr=
-eement, I
->>>> > will post the host bridge driver code that I am using. Meanwhile=
-, here
->>>> > is an example of what the probe function looks like, posted as a=
-n example:
->>>> >
->>>> > static int myhostbridge_probe(struct platform_device *pdev)
->>>> > {
->>>> >         int err;
->>>> >         struct device_node *dev;
->>>> >         struct pci_host_bridge *bridge;
->>>> >         struct myhostbridge_port *pp;
->>>> >         resource_size_t lastbus;
->>>> >
->>>> >         dev =3D pdev->dev.of_node;
->>>> >
->>>> >         if (!of_device_is_available(dev)) {
->>>> >                 pr_warn("%s: disabled\n", dev->full_name);
->>>> >                 return -ENODEV;
->>>> >         }
->>>> >
->>>> >         pp =3D kzalloc(sizeof(struct myhostbridge_port), GFP_KER=
-NEL);
->>>> >         if (!pp)
->>>> >                 return -ENOMEM;
->>>> >
->>>> >         bridge =3D of_create_pci_host_bridge(&pdev->dev, &myhost=
-bridge_ops, pp);
->>>> >         if (IS_ERR(bridge)) {
->>>> >                 err =3D PTR_ERR(bridge);
->>>> >                 goto bridge_create_fail;
->>>> >         }
->>>> >
->>>> >         err =3D myhostbridge_setup(bridge->bus);
->>>> >         if (err)
->>>> >                 goto bridge_setup_fail;
->>>> >
->>>> >         /* We always enable PCI domains and we keep domain 0 bac=
-kward
->>>> >          * compatible in /proc for video cards
->>>> >          */
->>>> >         pci_add_flags(PCI_ENABLE_PROC_DOMAINS);
->>>> >         pci_add_flags(PCI_REASSIGN_ALL_BUS | PCI_REASSIGN_ALL_RS=
-RC);
->>>> >
->>>> >         lastbus =3D pci_scan_child_bus(bridge->bus);
->>>> >         pci_bus_update_busn_res_end(bridge->bus, lastbus);
->>>> >
->>>> >         pci_assign_unassigned_bus_resources(bridge->bus);
->>>> >
->>>> >         pci_bus_add_devices(bridge->bus);
->>>> >
->>>> >         return 0;
->>>> >
->>>> > bridge_setup_fail:
->>>> >         put_device(&bridge->dev);
->>>> >         device_unregister(&bridge->dev);
->>>> > bridge_create_fail:
->>>> >         kfree(pp);
->>>> >         return err;
->>>> > }
->>>> >
->>>> > Best regards,
->>>> > Liviu
->>>> >
->>>> >
->>>> > Catalin Marinas (1):
->>>> >   arm64: Extend the PCI I/O space to 16MB
->>>> >
->>>> > Liviu Dudau (2):
->>>> >   Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
->>>> >   arm64: Add architecture support for PCI
->>>> >
->>>> >  Documentation/arm64/memory.txt |  16 +--
->>>> >  arch/arm64/Kconfig             |  19 +++-
->>>> >  arch/arm64/include/asm/Kbuild  |   1 +
->>>> >  arch/arm64/include/asm/io.h    |   5 +-
->>>> >  arch/arm64/include/asm/pci.h   |  51 +++++++++
->>>> >  arch/arm64/kernel/Makefile     |   1 +
->>>> >  arch/arm64/kernel/pci.c        | 173 ++++++++++++++++++++++++++=
-+++++
->>>> >  include/asm-generic/io.h       |   2 +-
->>>> >  8 files changed, 258 insertions(+), 10 deletions(-)
->>>> >  create mode 100644 arch/arm64/include/asm/pci.h
->>>> >  create mode 100644 arch/arm64/kernel/pci.c
->>>> >
->>>> > --
->>>> > 1.9.0
->>>> >
->>>> >
->>>> > _______________________________________________
->>>> > linux-arm-kernel mailing list
->>>> > linux-arm-kernel@lists.infradead.org
->>>> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>>>
->>>
->>> --
->>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
->>> | I would like to |
->>> | fix the world,  |
->>> | but they're not |
->>> | giving me the   |
->>>  \ source code!  /
->>>   ---------------
->>>     =C2=AF\_(=E3=83=84)_/=C2=AF
->>>
+>> Which properties of display-timings are relevant for CPU mode?
+>> I guess width and height. Anything more?
+>>
+>>> +  - cpu-timings: CPU interface timings for the connected panel, and it
+>>> contains
+>>> +        following optional properties.
+>>> +          - cs-setup: clock cycles for the active period of address
+>>> signal
+>>> +                enable until chip select is enable in CPU interface
+>>> +          - wr-setup: clock cycles for the active period of CS signal
+>>> enable
+>>> +                until write signal is enable in CPU interface
+>>> +          - wr-act: clock cycles for the active period of CS enable in
+>>> CPU
+>>> +                interface
+>
+> What about calling this property wr-active ? I had called this wr-cycle in a
+> previous implementation, that could be an option as well.
+
+Okay, I'll use wr-active. It's better.
+
+>
+>>> +          - wr-hold: clock cycles for the active period of CS disable
+>>> until
+>>> +                write signal is disable in CPU interface
+>>
+>> cpu-timings name does not sound to be related to display.
+>> I wonder if it would not be better to merge cpu-timings into
+>> display-timings but this will require more discussion I guess.
+>
+> The panel has a memory-like interface with chip select, read/write and access
+> strobe, address (1 bit) and data signals. The interface is defined in the MIPI
+> DBI specification (a quick search turned up
+> http://www.scribd.com/doc/206899854/MIPI-DPI-Specification-v2, there might be
+> direct PDF downloads available), even if some panels implement a similar
+> interface that predates MIPI DBI (with names such as i80 or SYS-80 probably
+> due to the similarities with the 8051 external bus).
+>
+> The cpu-timings properties describe the read and write access timings for
+> those signals, unrelated to the display video timings. I thus believe that
+> they should be separate from the display timings. We will probably need to add
+> properties for the read signal as well, but that can be done later.
+
+Yes, as I wrote another thread before, this cpu interface timings is
+additional one. The video timings is required also.
+
+Thank you.
+Best regards YJ
+
+>
+>> If you want to stay with separate node please consider to make it
+>> optional as whole node or make some properties required. Making node
+>> required with all sub-properties optional is weird.
+>> By the way I hope all timings properties are generic for CPU mode,
+>> if not they should be prefixed by vendor or model.
+>
+> The timings description should be pretty generic I believe, especially given
+> that the interface is standardized by the MIPI alliance. Could you have a
+> quick look at the spec and share your opinion ?
+>
+>>> +
+>>> +Optional properties:
+>>> +
+>>> +The device node can contain one 'port' child node with one child
+>>> +'endpoint' node, according to the bindings defined in [2]. This
+>>> +node should describe panel's video bus.
+>>> +
+>>> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
+>>> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
+>>> +
+>>> +Example:
+>>> +
+>>> +	panel@0 {
+>>> +		compatible = "samsung,s6e3fa0";
+>>> +		reg = <0>;
+>>> +		vdd3-supply = <&vcclcd_reg>;
+>>> +		vci-supply = <&vlcd_reg>;
+>>> +		reset-gpio = <&gpy7 4 0>;
+>>> +		det-gpio = <&gpg0 6 0>;
+>>> +		te-gpio = <&gpd1 7 0>;
+>>> +
+>>> +		display-timings {
+>>> +			timing0: timing-0 {
+>>> +				clock-frequency = <0>;
+>>> +				hactive = <1080>;
+>>> +				vactive = <1920>;
+>>> +				hfront-porch = <2>;
+>>> +				hback-porch = <2>;
+>>> +				hsync-len = <1>;
+>>> +				vfront-porch = <1>;
+>>> +				vback-porch = <4>;
+>>> +				vsync-len = <1>;
+>>> +			};
+>>> +		};
+>>> +
+>>> +		cpu-timings {
+>>> +			cs-setup = <0>;
+>>> +			wr-setup = <0>;
+>>> +			wr-act = <1>;
+>>> +			wr-hold = <0>;
+>>> +		};
+>>> +	};
+>
