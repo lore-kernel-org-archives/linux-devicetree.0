@@ -1,89 +1,83 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH 1/3] ARM: dts: Add PMU reg node to exynos4210
-Date: Thu, 24 Apr 2014 21:57:33 +0900
-Message-ID: <53590A3D.1020308@samsung.com>
-References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
- <1396425778-4379-2-git-send-email-pankaj.dubey@samsung.com>
- <CAGm_ybjfxprtLUX6Vs8QVvXoMOaHez4-Og8a9n3UevibvmzbZA@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Subject: Re: [PATCHv3 19/41] OMAPDSS: panel-dpi: Add DT support
+Date: Thu, 24 Apr 2014 14:44:10 +0200
+Message-ID: <3615191.vG5AEQORWJ@avalon>
+References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com> <20140418155107.GB5354@atomide.com> <5358DEEA.1000506@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <CAGm_ybjfxprtLUX6Vs8QVvXoMOaHez4-Og8a9n3UevibvmzbZA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vikas Sajjan <sajjan.linux@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, mark.rutland@arm.com, Kukjin Kim <kgene.kim@samsung.com>, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Rob Herring <robh+dt@kernel.org>, galak@codeaurora.org, chow.kim@samsung.com, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
+Content-Type: multipart/signed; boundary="nextPart1719767.D5BMvv66GP"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5358DEEA.1000506-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Stefan Roese <stefan.roese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vikas,
 
-On 04/24/2014 08:59 PM, Vikas Sajjan wrote:
-> +Tomasz
->
->
-> On Wed, Apr 2, 2014 at 1:32 PM, Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
->> This patch adds pmu regnode to exynos4210 dtsi to handle
->> PMU register access via DT.
->>
->> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos4210.dtsi |    5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
->> index cacf614..0a2c0fe 100644
->> --- a/arch/arm/boot/dts/exynos4210.dtsi
->> +++ b/arch/arm/boot/dts/exynos4210.dtsi
->> @@ -81,6 +81,11 @@
->>                  interrupts = <2 2>, <3 2>;
->>          };
->>
->> +       pmu_system_controller: system-controller@10020000 {
->> +               compatible = "samsung,exynos4210-pmu", "syscon";
->> +               reg = <0x10020000 0x5000>;
-> Can we have 2 strings as "compatible" and these 2 strings are used by
-> 2 different driver?
->
-> Because once syscon driver gets probed, exynos-pmu.c [1] driver will
-> never be probed.
->
-> The new PMU driver [1] completely relies on this. With just
-> exynos_defconfig, you will not notice this issue, since syscon is NOT
-> enabled by exynos_defconfig. When I enabled "System Controller
-> Register R/W Based on Regmap" in menuconfig, I could see PMU driver
-> [1] is NEVER probed.
->
-> Let me know, if I am missing something.
->
->   [1] http://www.spinics.net/lists/arm-kernel/msg319750.html
+--nextPart1719767.D5BMvv66GP
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-You are correct. We also missed this because "SYSCON" option was
-not enabled in exynos_defconfig.
-I noticed this during preparation of V2 when I planned to use
-"early_syscon_init" [1] as suggested by Sylwester here [2].
+Hi Tomi,
 
-In V2 I will take care of this. I hope soon I will be able to post second
-version of this series, just waiting for testing and internal code review.
+On Thursday 24 April 2014 12:52:42 Tomi Valkeinen wrote:
+> On 18/04/14 18:51, Tony Lindgren wrote:
+> >> +=09gpio =3D of_get_gpio(node, 0);
+> >> +=09if (gpio_is_valid(gpio) || gpio =3D=3D -ENOENT) {
+> >> +=09=09ddata->enable_gpio =3D gpio;
+> >> +=09} else {
+> >> +=09=09dev_err(&pdev->dev, "failed to parse enable gpio\n");
+> >> +=09=09return gpio;
+> >> +=09}
+> >=20
+> > We should set the GPIO polarity based on the OF_GPIO_ACTIVE_LOW lik=
+e
+> > gpio_backlight_probe_dt is doing.
+>=20
+> Instead of doing it with the old gpio API, and checking the 'active'
+> flag everywhere, I think we can use the new gpiod API which handles t=
+he
+> polarity automatically.
+>=20
+> I attached prototype patches (based on -rc2) for panel dpi using that=
 
-[1] https://lkml.org/lkml/2014/4/8/239
-[2] https://lkml.org/lkml/2014/4/2/171
->
->
->> +       };
->> +
->>          pinctrl_0: pinctrl@11400000 {
->>                  compatible = "samsung,exynos4210-pinctrl";
->>                  reg = <0x11400000 0x1000>;
->> --
->> 1.7.10.4
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> approach. It's a bit messier than I'd like, because for non-DT boot w=
+e
+> need to request the gpio using the old API, and then convert it to
+> gpio_desc. We can remove that code when all the boards use DT.
 
+Just FYI, you can use the gpiod API with non-DT platforms if you regist=
+er GPIO=20
+lookup entries in board code with gpiod_add_lookup_table().
 
--- 
-Best Regards,
-Pankaj Dubey
+> I've compiled tested this only, as I don't have DPI panels I could us=
+e.
+> I did try similar approach for TFP410, and it seemed to work fine.
+
+=2D-=20
+Regards,
+
+Laurent Pinchart
+
+--nextPart1719767.D5BMvv66GP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJTWQcaAAoJEIkPb2GL7hl1dz4IAKVksmLI0n/ZbMYHnMbcP4+3
+7olrT+4pCxqzYLNZOdta1NfSV5OJ58GcieMBrsIErw5RcrIJbws6iP+QOwwSthkT
+vPYTVa8+6dLJ2PdNvg8PJIjhRYL+26fHBT/ROKmqPgSf+OqkmRkR3opGXQe+0L+2
+keq0GBhKCCVwMmJO210BjlrEdz6fOBL5ZUAhiDjXHcf1KdzzAhiEJUeUFftR85Jv
+o70ZoDrz8h/ofHNgi7W3f36TdUP0kr+s5DnwyDUted525efCdd4JgeuBc6rVT1Cf
+pWn/AJtgcx5saJZ84//IW6muJswN9yTlK2C2/FMrwUbiR5VTt/c7S7Uy+9ZkQA8=
+=G8Ke
+-----END PGP SIGNATURE-----
+
+--nextPart1719767.D5BMvv66GP--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
