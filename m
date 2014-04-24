@@ -1,83 +1,76 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCHv3 19/41] OMAPDSS: panel-dpi: Add DT support
-Date: Thu, 24 Apr 2014 14:44:10 +0200
-Message-ID: <3615191.vG5AEQORWJ@avalon>
-References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com> <20140418155107.GB5354@atomide.com> <5358DEEA.1000506@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/2] gpio: of: Allow -gpio suffix for property names
+Date: Thu, 24 Apr 2014 14:47:12 +0200
+Message-ID: <CACRpkdadAUXgC-K6be6SFFn2ZTvCqkTK7VRJEzpFdUbybKc3YA@mail.gmail.com>
+References: <1398266889-17489-1-git-send-email-thierry.reding@gmail.com>
+	<1398266889-17489-2-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart1719767.D5BMvv66GP"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5358DEEA.1000506-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Stefan Roese <stefan.roese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398266889-17489-2-git-send-email-thierry.reding@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Apr 23, 2014 at 5:28 PM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
 
---nextPart1719767.D5BMvv66GP
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="us-ascii"
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Many bindings use the -gpio suffix in property names. Support this in
+> addition to the -gpios suffix when requesting GPIOs using the new
+> descriptor-based API.
+>
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 
-Hi Tomi,
+Are the DT bindings really full of such ambiguity between
+singular and plural? Examples?
 
-On Thursday 24 April 2014 12:52:42 Tomi Valkeinen wrote:
-> On 18/04/14 18:51, Tony Lindgren wrote:
-> >> +=09gpio =3D of_get_gpio(node, 0);
-> >> +=09if (gpio_is_valid(gpio) || gpio =3D=3D -ENOENT) {
-> >> +=09=09ddata->enable_gpio =3D gpio;
-> >> +=09} else {
-> >> +=09=09dev_err(&pdev->dev, "failed to parse enable gpio\n");
-> >> +=09=09return gpio;
-> >> +=09}
-> >=20
-> > We should set the GPIO polarity based on the OF_GPIO_ACTIVE_LOW lik=
-e
-> > gpio_backlight_probe_dt is doing.
->=20
-> Instead of doing it with the old gpio API, and checking the 'active'
-> flag everywhere, I think we can use the new gpiod API which handles t=
-he
-> polarity automatically.
->=20
-> I attached prototype patches (based on -rc2) for panel dpi using that=
+What happens in affected drivers today? It just doesn't work?
 
-> approach. It's a bit messier than I'd like, because for non-DT boot w=
-e
-> need to request the gpio using the old API, and then convert it to
-> gpio_desc. We can remove that code when all the boards use DT.
+Does that mean these bindings are not actively used by any
+drivers yet so we could augment the bindings instead, or are
+they already deployed so we must implement this?
 
-Just FYI, you can use the gpiod API with non-DT platforms if you regist=
-er GPIO=20
-lookup entries in board code with gpiod_add_lookup_table().
+Would like a word from the DT people here...
 
-> I've compiled tested this only, as I don't have DPI panels I could us=
-e.
-> I did try similar approach for TFP410, and it seemed to work fine.
+>  drivers/gpio/gpiolib.c | 18 ++++++++++++------
+>  1 file changed, 12 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> index 7a0b97076374..b991462c22fb 100644
+> --- a/drivers/gpio/gpiolib.c
+> +++ b/drivers/gpio/gpiolib.c
+> @@ -2594,17 +2594,23 @@ static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
+>                                       unsigned int idx,
+>                                       enum gpio_lookup_flags *flags)
+>  {
+> +       static const char *suffixes[] = { "gpios", "gpio" };
+>         char prop_name[32]; /* 32 is max size of property name */
+>         enum of_gpio_flags of_flags;
+>         struct gpio_desc *desc;
+> +       unsigned int i;
+>
+> -       if (con_id)
+> -               snprintf(prop_name, 32, "%s-gpios", con_id);
+> -       else
+> -               snprintf(prop_name, 32, "gpios");
+> +       for (i = 0; i < ARRAY_SIZE(suffixes); i++) {
+> +               if (con_id)
+> +                       snprintf(prop_name, 32, "%s-%s", con_id, suffixes[i]);
+> +               else
+> +                       snprintf(prop_name, 32, "%s", suffixes[i]);
+>
+> -       desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
+> -                                       &of_flags);
+> +               desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
+> +                                               &of_flags);
+> +               if (!IS_ERR(desc))
+> +                       break;
+> +       }
 
-=2D-=20
-Regards,
+Code snippet left for reference on devicetree ML.
 
-Laurent Pinchart
-
---nextPart1719767.D5BMvv66GP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQEcBAABAgAGBQJTWQcaAAoJEIkPb2GL7hl1dz4IAKVksmLI0n/ZbMYHnMbcP4+3
-7olrT+4pCxqzYLNZOdta1NfSV5OJ58GcieMBrsIErw5RcrIJbws6iP+QOwwSthkT
-vPYTVa8+6dLJ2PdNvg8PJIjhRYL+26fHBT/ROKmqPgSf+OqkmRkR3opGXQe+0L+2
-keq0GBhKCCVwMmJO210BjlrEdz6fOBL5ZUAhiDjXHcf1KdzzAhiEJUeUFftR85Jv
-o70ZoDrz8h/ofHNgi7W3f36TdUP0kr+s5DnwyDUted525efCdd4JgeuBc6rVT1Cf
-pWn/AJtgcx5saJZ84//IW6muJswN9yTlK2C2/FMrwUbiR5VTt/c7S7Uy+9ZkQA8=
-=G8Ke
------END PGP SIGNATURE-----
-
---nextPart1719767.D5BMvv66GP--
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yours,
+Linus Walleij
