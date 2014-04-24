@@ -1,82 +1,114 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2 4/6] soc: ti: add Keystone Navigator QMSS driver
-Date: Thu, 24 Apr 2014 09:18:43 -0400
-Message-ID: <53590F33.6070508@ti.com>
-References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com> <1398296783-1176-5-git-send-email-santosh.shilimkar@ti.com> <20140424013053.GC13374@saruman.home>
+From: Vikas Sajjan <sajjan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: Add PMU reg node to exynos4210
+Date: Thu, 24 Apr 2014 18:56:47 +0530
+Message-ID: <CAGm_ybi+QiC95-aJtzbpY8CCv9f6+NDC4HHrC8RuCmkUHDGB5A@mail.gmail.com>
+References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
+	<1396425778-4379-2-git-send-email-pankaj.dubey@samsung.com>
+	<CAGm_ybjfxprtLUX6Vs8QVvXoMOaHez4-Og8a9n3UevibvmzbZA@mail.gmail.com>
+	<53590A3D.1020308@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140424013053.GC13374@saruman.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53590A3D.1020308-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chow.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 23 April 2014 09:30 PM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Wed, Apr 23, 2014 at 07:46:20PM -0400, Santosh Shilimkar wrote:
->> From: Sandeep Nair <sandeep_n@ti.com>
+Hi Pankaj,
+
+On Thu, Apr 24, 2014 at 6:27 PM, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Vikas,
+>
+>
+> On 04/24/2014 08:59 PM, Vikas Sajjan wrote:
 >>
->> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
->> the main hardware sub system which forms the backbone of the Keystone
->> Multi-core Navigator. QMSS consist of queue managers, packed-data structure
->> processors(PDSP), linking RAM, descriptor pools and infrastructure
->> Packet DMA.
+>> +Tomasz
 >>
->> The Queue Manager is a hardware module that is responsible for accelerating
->> management of the packet queues. Packets are queued/de-queued by writing or
->> reading descriptor address to a particular memory mapped location. The PDSPs
->> perform QMSS related functions like accumulation, QoS, or event management.
->> Linking RAM registers are used to link the descriptors which are stored in
->> descriptor RAM. Descriptor RAM is configurable as internal or external memory.
 >>
->> The QMSS driver manages the PDSP setups, linking RAM regions,
->> queue pool management (allocation, push, pop and notify) and descriptor
->> pool management. The specifics on the device tree bindings for
->> QMSS can be found in:
->> 	Documentation/devicetree/bindings/soc/keystone-navigator-qmss.txt
+>> On Wed, Apr 2, 2014 at 1:32 PM, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> wrote:
+>>>
+>>> This patch adds pmu regnode to exynos4210 dtsi to handle
+>>> PMU register access via DT.
+>>>
+>>> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/exynos4210.dtsi |    5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos4210.dtsi
+>>> b/arch/arm/boot/dts/exynos4210.dtsi
+>>> index cacf614..0a2c0fe 100644
+>>> --- a/arch/arm/boot/dts/exynos4210.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+>>> @@ -81,6 +81,11 @@
+>>>                  interrupts = <2 2>, <3 2>;
+>>>          };
+>>>
+>>> +       pmu_system_controller: system-controller@10020000 {
+>>> +               compatible = "samsung,exynos4210-pmu", "syscon";
+>>> +               reg = <0x10020000 0x5000>;
 >>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Cc: Olof Johansson <olof@lixom.net>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
->> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> ---
->>  drivers/Kconfig                  |    2 +
->>  drivers/soc/Kconfig              |    2 +
->>  drivers/soc/Makefile             |    5 +
->>  drivers/soc/ti/Kconfig           |   21 +
->>  drivers/soc/ti/Makefile          |    4 +
->>  drivers/soc/ti/knav_qmss.h       |  386 ++++++++
->>  drivers/soc/ti/knav_qmss_acc.c   |  591 +++++++++++++
->>  drivers/soc/ti/knav_qmss_queue.c | 1814 ++++++++++++++++++++++++++++++++++++++
->>  include/linux/soc/ti/knav_qmss.h |   90 ++
->>  9 files changed, 2915 insertions(+)
->>  create mode 100644 drivers/soc/Makefile
->>  create mode 100644 drivers/soc/ti/Kconfig
->>  create mode 100644 drivers/soc/ti/Makefile
->>  create mode 100644 drivers/soc/ti/knav_qmss.h
->>  create mode 100644 drivers/soc/ti/knav_qmss_acc.c
->>  create mode 100644 drivers/soc/ti/knav_qmss_queue.c
->>  create mode 100644 include/linux/soc/ti/knav_qmss.h
+>> Can we have 2 strings as "compatible" and these 2 strings are used by
+>> 2 different driver?
 >>
->> diff --git a/drivers/Kconfig b/drivers/Kconfig
->> index 0e87a34..8993913 100644
->> --- a/drivers/Kconfig
->> +++ b/drivers/Kconfig
->> @@ -148,6 +148,8 @@ source "drivers/remoteproc/Kconfig"
->>  
->>  source "drivers/rpmsg/Kconfig"
->>  
->> +source "drivers/soc/Kconfig"
-> 
-> This hunk was already in patch one but in a different offset in this
-> file.
-> 
-right.. I will drop this one... Thanks for spotting it
+>> Because once syscon driver gets probed, exynos-pmu.c [1] driver will
+>> never be probed.
+>>
+>> The new PMU driver [1] completely relies on this. With just
+>> exynos_defconfig, you will not notice this issue, since syscon is NOT
+>> enabled by exynos_defconfig. When I enabled "System Controller
+>> Register R/W Based on Regmap" in menuconfig, I could see PMU driver
+>> [1] is NEVER probed.
+>>
+>> Let me know, if I am missing something.
+>>
+>>   [1] http://www.spinics.net/lists/arm-kernel/msg319750.html
+>
+>
+> You are correct. We also missed this because "SYSCON" option was
+> not enabled in exynos_defconfig.
+> I noticed this during preparation of V2 when I planned to use
+> "early_syscon_init" [1] as suggested by Sylwester here [2].
+>
+OK.
+
+> In V2 I will take care of this. I hope soon I will be able to post second
+
+So in your V2, will you be adding new DT node altogether for PMU?
+Because with existing DT node "pmu_system_controller"  (which is
+already present in mailine for exynos 5250) and SYSCON driver enable,
+exynos PMU driver will NEVER probed.
+
+> version of this series, just waiting for testing and internal code review.
+>
+> [1] https://lkml.org/lkml/2014/4/8/239
+> [2] https://lkml.org/lkml/2014/4/2/171
+>
+>>
+>>
+>>> +       };
+>>> +
+>>>          pinctrl_0: pinctrl@11400000 {
+>>>                  compatible = "samsung,exynos4210-pinctrl";
+>>>                  reg = <0x11400000 0x1000>;
+>>> --
+>>> 1.7.10.4
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
+>
+>
+> --
+> Best Regards,
+> Pankaj Dubey
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
