@@ -1,31 +1,69 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RESEND PATCH v3 1/9] tty: xuartps: Fix kernel-doc errors in the
- driver
-Date: Thu, 24 Apr 2014 16:22:47 -0700
-Message-ID: <20140424232247.GA10457@kroah.com>
-References: <1396657425-31029-1-git-send-email-soren.brinkmann@xilinx.com>
- <c1835108-0033-4219-89e9-2f02c82b1e27@VA3EHSMHS026.ehs.local>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
+Date: Thu, 24 Apr 2014 16:21:50 -0700
+Message-ID: <CAGa+x84uPwuUC61S4Wi2ymSdxVMs14pb_kCv0RhQRi-KySxSAw@mail.gmail.com>
+References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
+	<7hiopynyt5.fsf@paris.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <c1835108-0033-4219-89e9-2f02c82b1e27@VA3EHSMHS026.ehs.local>
-Sender: linux-serial-owner@vger.kernel.org
-To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
-Cc: Jiri Slaby <jslaby@suse.cz>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <7hiopynyt5.fsf@paris.lan>
+Sender: linux-omap-owner@vger.kernel.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 18, 2014 at 09:11:28AM -0700, S=F6ren Brinkmann wrote:
-> Hi Greg,
->=20
-> did you have a chance to look at this yet?
+On Thu, Apr 24, 2014 at 3:32 PM, Kevin Hilman <khilman@linaro.org> wrote:
+> Robert Nelson <robertcnelson@gmail.com> writes:
+>
+>> BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
+>>
+>> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/Makefile               |  1 +
+>>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
+>>  2 files changed, 16 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 35c146f..0bdeba3 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+>>       omap3-sbc-t3730.dtb \
+>>       omap3-devkit8000.dtb \
+>>       omap3-beagle-xm.dtb \
+>> +     omap3-beagle-xm-ab.dtb \
+>>       omap3-evm.dtb \
+>>       omap3-evm-37xx.dtb \
+>>       omap3-ldp.dtb \
+>> diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+>> new file mode 100644
+>> index 0000000..9d81123
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+>> @@ -0,0 +1,15 @@
+>> +/*
+>> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include "omap3-beagle-xm.dts"
+>> +
+>> +/ {
+>> +     /* HS USB Port 2 Power enable was inverted with the xM C */
+>> +     hsusb2_power: hsusb2_power_reg {
+>> +             enable-active-high;
+>
+> Missing '};' here?
+>
+> This causes build breakage in linux-omap master, which now has this
+> applied.
 
-Patches 1-7 now applied, thanks.
+ignore this.  It's already been fixed, but was still lingering in
+Tony's master branch.
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kevin
