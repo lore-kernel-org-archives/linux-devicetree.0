@@ -1,71 +1,130 @@
-From: Huang Shijie <shijie8@gmail.com>
-Subject: Re: [PATCH v1 5/7] mtd: fsl-quadspi: get the dummy cycles for DDR
- Quad read from the DT property
-Date: Thu, 24 Apr 2014 22:27:46 +0800
-Message-ID: <20140424142743.GB2426@localhost.localdomain>
-References: <a>
- <201404232148.51034.marex@denx.de>
- <20140424045838.GC29664@localhost>
- <201404241541.54913.marex@denx.de>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 4/6] soc: ti: add Keystone Navigator QMSS driver
+Date: Thu, 24 Apr 2014 09:57:14 -0500
+Message-ID: <20140424145714.GM26661@saruman.home>
+References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com>
+ <1398296783-1176-5-git-send-email-santosh.shilimkar@ti.com>
+ <20140424013053.GC13374@saruman.home>
+ <53590F33.6070508@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1rguoi8KZGYj2k4L"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201404241541.54913.marex@denx.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: Huang Shijie <b32955@freescale.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-spi@vger.kernel.org, linux-mtd@lists.infradead.org, computersforpeace@gmail.com, dwmw2@infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <53590F33.6070508@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: balbi@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 24, 2014 at 03:41:54PM +0200, Marek Vasut wrote:
-> On Thursday, April 24, 2014 at 06:58:40 AM, Huang Shijie wrote:
-> > On Wed, Apr 23, 2014 at 09:48:50PM +0200, Marek Vasut wrote:
-> > > On Wednesday, April 23, 2014 at 12:16:53 PM, Huang Shijie wrote:
-> > > > Check the "spi-nor,ddr-quad-read-dummy" DT property to get the
-> > > > dummy cycles for DDR quad read.
-> > > > 
-> > > > Signed-off-by: Huang Shijie <b32955@freescale.com>
-> > > > ---
-> > > > 
-> > > >  drivers/mtd/spi-nor/fsl-quadspi.c |    7 +++++++
-> > > >  1 files changed, 7 insertions(+), 0 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/mtd/spi-nor/fsl-quadspi.c
-> > > > b/drivers/mtd/spi-nor/fsl-quadspi.c index 8d659a2..15bdeb9 100644
-> > > > --- a/drivers/mtd/spi-nor/fsl-quadspi.c
-> > > > +++ b/drivers/mtd/spi-nor/fsl-quadspi.c
-> > > > @@ -883,6 +883,7 @@ static int fsl_qspi_probe(struct platform_device
-> > > > *pdev)
-> > > > 
-> > > >  	for_each_available_child_of_node(dev->of_node, np) {
-> > > >  	
-> > > >  		const struct spi_device_id *id;
-> > > >  		char modalias[40];
-> > > > 
-> > > > +		u32 dummy = 0;
-> > > > 
-> > > >  		/* skip the holes */
-> > > >  		if (!has_second_chip)
-> > > > 
-> > > > @@ -918,6 +919,12 @@ static int fsl_qspi_probe(struct platform_device
-> > > > *pdev) if (ret < 0)
-> > > > 
-> > > >  			goto map_failed;
-> > > > 
-> > > > +		/* Set the dummy cycles for the DDR Quad Read */
-> > > > +		ret = of_property_read_u32(np, "spi-nor,ddr-quad-read-dummy",
-> > > > +				&dummy);
-> > > > +		if (!ret && dummy > 0 && dummy < 8)
-> > > > +			nor->read_dummy = dummy;
-> > > 
-> > > Is there any reason for the upper limit on number of dummy cycles ?
-> > 
-> > I actually tested two kinds of NOR flash, the Spansion s25fl128s and Micron
-> > N25q256a. The dummy cycles are all less then 8.
-> 
-> I'm all for having a limit if you can justify why number 8 is the upper limit. 
-> If there's no justification for it, let's remove it.
-ok.
+--1rguoi8KZGYj2k4L
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-thanks
-Huang Shijie
+On Thu, Apr 24, 2014 at 09:18:43AM -0400, Santosh Shilimkar wrote:
+> On Wednesday 23 April 2014 09:30 PM, Felipe Balbi wrote:
+> > Hi,
+> >=20
+> > On Wed, Apr 23, 2014 at 07:46:20PM -0400, Santosh Shilimkar wrote:
+> >> From: Sandeep Nair <sandeep_n@ti.com>
+> >>
+> >> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+> >> the main hardware sub system which forms the backbone of the Keystone
+> >> Multi-core Navigator. QMSS consist of queue managers, packed-data stru=
+cture
+> >> processors(PDSP), linking RAM, descriptor pools and infrastructure
+> >> Packet DMA.
+> >>
+> >> The Queue Manager is a hardware module that is responsible for acceler=
+ating
+> >> management of the packet queues. Packets are queued/de-queued by writi=
+ng or
+> >> reading descriptor address to a particular memory mapped location. The=
+ PDSPs
+> >> perform QMSS related functions like accumulation, QoS, or event manage=
+ment.
+> >> Linking RAM registers are used to link the descriptors which are store=
+d in
+> >> descriptor RAM. Descriptor RAM is configurable as internal or external=
+ memory.
+> >>
+> >> The QMSS driver manages the PDSP setups, linking RAM regions,
+> >> queue pool management (allocation, push, pop and notify) and descriptor
+> >> pool management. The specifics on the device tree bindings for
+> >> QMSS can be found in:
+> >> 	Documentation/devicetree/bindings/soc/keystone-navigator-qmss.txt
+> >>
+> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >> Cc: Kumar Gala <galak@codeaurora.org>
+> >> Cc: Olof Johansson <olof@lixom.net>
+> >> Cc: Arnd Bergmann <arnd@arndb.de>
+> >> Cc: Grant Likely <grant.likely@linaro.org>
+> >> Cc: Rob Herring <robh+dt@kernel.org>
+> >> Cc: Mark Rutland <mark.rutland@arm.com>
+> >> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
+> >> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> >> ---
+> >>  drivers/Kconfig                  |    2 +
+> >>  drivers/soc/Kconfig              |    2 +
+> >>  drivers/soc/Makefile             |    5 +
+> >>  drivers/soc/ti/Kconfig           |   21 +
+> >>  drivers/soc/ti/Makefile          |    4 +
+> >>  drivers/soc/ti/knav_qmss.h       |  386 ++++++++
+> >>  drivers/soc/ti/knav_qmss_acc.c   |  591 +++++++++++++
+> >>  drivers/soc/ti/knav_qmss_queue.c | 1814 +++++++++++++++++++++++++++++=
++++++++++
+> >>  include/linux/soc/ti/knav_qmss.h |   90 ++
+> >>  9 files changed, 2915 insertions(+)
+> >>  create mode 100644 drivers/soc/Makefile
+> >>  create mode 100644 drivers/soc/ti/Kconfig
+> >>  create mode 100644 drivers/soc/ti/Makefile
+> >>  create mode 100644 drivers/soc/ti/knav_qmss.h
+> >>  create mode 100644 drivers/soc/ti/knav_qmss_acc.c
+> >>  create mode 100644 drivers/soc/ti/knav_qmss_queue.c
+> >>  create mode 100644 include/linux/soc/ti/knav_qmss.h
+> >>
+> >> diff --git a/drivers/Kconfig b/drivers/Kconfig
+> >> index 0e87a34..8993913 100644
+> >> --- a/drivers/Kconfig
+> >> +++ b/drivers/Kconfig
+> >> @@ -148,6 +148,8 @@ source "drivers/remoteproc/Kconfig"
+> >> =20
+> >>  source "drivers/rpmsg/Kconfig"
+> >> =20
+> >> +source "drivers/soc/Kconfig"
+> >=20
+> > This hunk was already in patch one but in a different offset in this
+> > file.
+> >=20
+> right.. I will drop this one... Thanks for spotting it
+
+np, cheers
+
+--=20
+balbi
+
+--1rguoi8KZGYj2k4L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTWSZKAAoJEIaOsuA1yqREYp0P+wY7HCMZwhky1BvGWTpIwgqo
+7jiOZp5vo+ziJsIHzj2lTrg66mn3JMljzJYotDeSbS6OL5h+savBNcXOf8IGJOrv
++X4B0ORVUDHI3MD2AUw8f2d43bPJyKJ+s61rKSUSPZuc2yH8IO2VYQJYld9Xw+Qa
+tioYA4XaQZz8I3ylcK2YQ3GqwsSIgQJ2OkK7N+W/VkJQno9u9EeNjNihJmQjwUEO
+E8/++gzu5gFYuZrC1IItXWmTXS/iV4gGzJPP7a531dkso8Qq4UjaaIvWLtWQp+B2
+cD7WmZsZZz8F4vv6TbnS+aBmLvM0UrOtlKOO4oAelDZdyflzcxEVE7pnwFsawMaP
+FsAFsJobaCNslFjwKfUzELrV/O7jNFTlSu5exVWCln2ruMX66kIJy0i2f+1pnGqI
+bq0M76p/6xfH/oqgWy+aZe7CHlM5D9xchXAG42PaCcdEHJYP9f5wBVzCWNJGFkhp
+gpMGpKP1NEts7i5sii8YR1EgKAk8iIXTcLI04FiSDRHERGqAtjvRKviB1tgDdRrn
+CTIas1daFdGcwOuYFUzW+q9O21dGMbtG0483skldeOrfSBX8qgJwobXr6kBF642e
+sb93kOEBo7K4Hq3MZwSMp0AaAuDCV3JvpoXNEzubkOOHjZrKvSKs6NMzyJ0uEtxu
+/+NMo1LHYg9jR68+N3s6
+=fjkP
+-----END PGP SIGNATURE-----
+
+--1rguoi8KZGYj2k4L--
