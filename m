@@ -1,89 +1,54 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH 2/2] net: Add Keystone NetCP ethernet driver
-Date: Thu, 24 Apr 2014 17:04:48 -0400
-Message-ID: <53597C70.1040501@ti.com>
-References: <1398201675-17379-1-git-send-email-santosh.shilimkar@ti.com>	<1398201675-17379-3-git-send-email-santosh.shilimkar@ti.com> <20140424.124744.1296959126932595844.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140424.124744.1296959126932595844.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Nair, Sandeep" <sandeep_n@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 01/10] NFC: st21nfca: Remove few useless include.
+Date: Thu, 24 Apr 2014 23:19:30 +0200
+Message-ID: <1398374379-17133-2-git-send-email-christophe-h.ricard@st.com>
+References: <1398374379-17133-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398374379-17133-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 24 April 2014 12:47 PM, David Miller wrote:
-> From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Date: Tue, 22 Apr 2014 17:21:15 -0400
-> 
->> +struct netcp_tx_pipe {
->> +	struct netcp_device	*netcp_device;
->> +	void	*dma_queue;
-> 
-> Indent *dma_queue the same as the other struct members.
->
-sure 
->> +	unsigned		dma_queue_id;
-> 
-> Use explicit "unsigned int".
-> 
->> +	unsigned		dma_chan_id;
-> 
-> Likewise.
->
-ok
+Remove include done in i2c.c
+
+Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+---
+ drivers/nfc/st21nfca/st21nfca.c | 11 -----------
+ 1 file changed, 11 deletions(-)
+
+diff --git a/drivers/nfc/st21nfca/st21nfca.c b/drivers/nfc/st21nfca/st21nfca.c
+index d001e6a..201a3ea 100644
+--- a/drivers/nfc/st21nfca/st21nfca.c
++++ b/drivers/nfc/st21nfca/st21nfca.c
+@@ -16,23 +16,12 @@
+  * along with this program; if not, see <http://www.gnu.org/licenses/>.
+  */
  
->> +struct netcp_addr {
->> +	struct netcp_intf	*netcp;
->> +	unsigned char		addr[MAX_ADDR_LEN];
-> 
-> If this is just an ethernet driver, ETH_ALEN is more appropriate here.
-> 
-Yep. Will use ETH_ALEN
-
->> +	unsigned		tx_compl_qid;
-> 
-> Explicit "unsigned int" please.  I'm not going to point out all of the other
-> instances, audit your entire submission for this problem please.
->
-Thats true... Will fix all instances of those. 
-
+-#include <linux/crc-ccitt.h>
+ #include <linux/module.h>
+-#include <linux/delay.h>
+-#include <linux/slab.h>
+-#include <linux/miscdevice.h>
+-#include <linux/interrupt.h>
+-#include <linux/gpio.h>
+-#include <linux/i2c.h>
+-
+ #include <linux/nfc.h>
+ #include <net/nfc/hci.h>
+ #include <net/nfc/llc.h>
  
->> +static inline u32 *netcp_push_psdata(struct netcp_packet *p_info,
->> +				     unsigned bytes)
->> +{
->> +	u32		*buf;
->> +	unsigned	 words;
-> 
-> Do not use tabs between the type and the variable name in local variable
-> declarations.
-> 
-ok
-
-> Please audit for and fix this in your entire submission.
->
-Will Do.
+-#include <uapi/linux/nfc.h>
+-
+ #include "st21nfca.h"
+-#include <linux/platform_data/st21nfca.h>
  
->> +static inline u32 hwval_to_host(bool big_endian, u32 hwval)
->> +{
->> +	if (big_endian)
->> +		return be32_to_cpu(hwval);
->> +	else
->> +		return le32_to_cpu(hwval);
->> +}
-> 
-> You're much better off having a set of methods, one for big endian and
-> one for little endian, that just straight line codes the appropriate endian
-> accesses.
->
-good idea.
+ #define DRIVER_DESC "HCI NFC driver for ST21NFCA"
  
-> These conditionals peppered all over the place are just ugly.
-> 
-Agree. Will try to fit into some logical functions.
+-- 
+1.9.1
 
-Thanks for the review David !!
-
-regards,
-Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
