@@ -1,7 +1,8 @@
 From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH v3 1/7] device: introduce per device dma_pfn_offset
-Date: Thu, 24 Apr 2014 11:30:01 -0400
-Message-ID: <1398353407-2345-2-git-send-email-santosh.shilimkar@ti.com>
+Subject: [PATCH v3 7/7] ARM: dma: use phys_addr_t in
+ __dma_page_[cpu_to_dev/dev_to_cpu]
+Date: Thu, 24 Apr 2014 11:30:07 -0400
+Message-ID: <1398353407-2345-8-git-send-email-santosh.shilimkar@ti.com>
 References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -18,56 +19,44 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, devicetree@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On few architectures, there are few restrictions on DMAble area of system
-RAM. That also means that devices needs to know about this restrictions so
-that the dma_masks can be updated accordingly and dma address translation
-helpers can add/subtract the dma offset.
+On a 32 bit ARM architecture with LPAE extension physical addresses
+cannot fit into unsigned long variable.
 
-In most of cases DMA addresses can be performed using offset value of
-Bus address space relatively to physical address space as following:
+So fix it by using phys_addr_t instead of unsigned long.
 
-PFN->DMA:  __pfn_to_phys(pfn + [-]dma_pfn_offset)
-DMA->PFN:  __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
-
-So we introduce per device dma_pfn_offset which can be popullated
-by architecture init code while creating the devices.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- include/linux/device.h |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm/mm/dma-mapping.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 233bbbe..85a52d6 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -691,6 +691,7 @@ struct acpi_dev_node {
-  * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
-  * 		hardware supports 64-bit addresses for consistent allocations
-  * 		such descriptors.
-+ * @dma_pfn_offset: offset of DMA memory range relatively of RAM
-  * @dma_parms:	A low level driver may set these to teach IOMMU code about
-  * 		segment limitations.
-  * @dma_pools:	Dma pools (if dma'ble device).
-@@ -756,6 +757,7 @@ struct device {
- 					     not all hardware supports
- 					     64 bit addresses for consistent
- 					     allocations such descriptors. */
-+	unsigned long	dma_pfn_offset;
+diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
+index f62aa06..5260f43 100644
+--- a/arch/arm/mm/dma-mapping.c
++++ b/arch/arm/mm/dma-mapping.c
+@@ -885,7 +885,7 @@ static void dma_cache_maint_page(struct page *page, unsigned long offset,
+ static void __dma_page_cpu_to_dev(struct page *page, unsigned long off,
+ 	size_t size, enum dma_data_direction dir)
+ {
+-	unsigned long paddr;
++	phys_addr_t paddr;
  
- 	struct device_dma_parameters *dma_parms;
+ 	dma_cache_maint_page(page, off, size, dir, dmac_map_area);
  
+@@ -901,7 +901,7 @@ static void __dma_page_cpu_to_dev(struct page *page, unsigned long off,
+ static void __dma_page_dev_to_cpu(struct page *page, unsigned long off,
+ 	size_t size, enum dma_data_direction dir)
+ {
+-	unsigned long paddr = page_to_phys(page) + off;
++	phys_addr_t paddr = page_to_phys(page) + off;
+ 
+ 	/* FIXME: non-speculating: not required */
+ 	/* don't bother invalidating if DMA to device */
 -- 
 1.7.9.5
