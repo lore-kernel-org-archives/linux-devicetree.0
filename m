@@ -1,491 +1,324 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 1/3] base: power: Add generic OF-based power domain
- look-up
-Date: Thu, 24 Apr 2014 11:40:35 +0200
-Message-ID: <CAPDyKFpvtRpgg-Ohv2Yi--_5mnp3ghpj7_4xyM7SjJvYCFzS6Q@mail.gmail.com>
-References: <1398271618-28932-1-git-send-email-t.figa@samsung.com>
- <1398271618-28932-2-git-send-email-t.figa@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv3 19/41] OMAPDSS: panel-dpi: Add DT support
+Date: Thu, 24 Apr 2014 12:52:42 +0300
+Message-ID: <5358DEEA.1000506@ti.com>
+References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com> <1390301833-24944-20-git-send-email-tomi.valkeinen@ti.com> <20140418155107.GB5354@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398271618-28932-2-git-send-email-t.figa@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <philipp.zabel@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Len Brown <len.brown@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, Pavel Machek <pavel@ucw.cz>, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael J. Wyso
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="FfmEg9E7tL9JeBu8jCgEM6uOUI9u8uE2M"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140418155107.GB5354@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Joachim Eastwood <manabian@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, Archit Taneja <archit@ti.com>, Darren Etheridge <detheridge@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Stefan Roese <stefan.roese@gmail.com>, Sebastian Reichel <sre@debian.org>, Robert Nelson <robertcnelson@gmail.com>, "Dr . H . Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, Enric Balletbo Serra <eballetbo@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 23 April 2014 18:46, Tomasz Figa <t.figa@samsung.com> wrote:
-> This patch introduces generic code to perform power domain look-up using
-> device tree and automatically bind devices to their power domains.
-> Generic device tree binding is introduced to specify power domains of
-> devices in their device tree nodes.
->
-> Backwards compatibility with legacy Samsung-specific power domain
-> bindings is provided, but for now the new code is not compiled when
-> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
-> will change as soon as Exynos power domain code gets converted to use
-> the generic framework in further patch.
->
-> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> Reviewed-by: Mark Brown <broonie@linaro.org>
-> Reviewed-by: Kevin Hilman <khilman@linaro.org>
-> Reviewed-by: Philipp Zabel <philipp.zabel@gmail.com>
-> [on i.MX6 GK802]
-> Tested-by: Philipp Zabel <philipp.zabel@gmail.com>
-> ---
->  .../devicetree/bindings/power/power_domain.txt     |  51 ++++
->  drivers/base/power/domain.c                        | 283 +++++++++++++++++++++
->  include/linux/pm_domain.h                          |  46 ++++
->  kernel/power/Kconfig                               |   4 +
->  4 files changed, 384 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
->
-> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
-> new file mode 100644
-> index 0000000..93be5d9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/power/power_domain.txt
-> @@ -0,0 +1,51 @@
-> +* Generic power domains
-> +
-> +System on chip designs are often divided into multiple power domains that
-> +can be used for power gating of selected IP blocks for power saving by
-> +reduced leakage current.
-> +
-> +This device tree binding can be used to bind power domain consumer devices
-> +with their power domains provided by power domain providers. A power domain
-> +provider can be represented by any node in the device tree and can provide
-> +one or more power domains. A consumer node can refer to the provider by
-> +a phandle and a set of phandle arguments (so called power domain specifier)
-> +of length specified by #power-domain-cells property in the power domain
-> +provider node.
-> +
-> +==Power domain providers==
-> +
-> +Required properties:
-> + - #power-domain-cells : Number of cells in a power domain specifier;
-> +   Typically 0 for nodes representing a single power domain and 1 for nodes
-> +   providing multiple power domains (e.g. power controllers), but can be
-> +   any value as specified by device tree binding documentation of particular
-> +   provider.
-> +
-> +Example:
-> +
-> +       power: power-controller@12340000 {
-> +               compatible = "foo,power-controller";
-> +               reg = <0x12340000 0x1000>;
-> +               #power-domain-cells = <1>;
-> +       };
-> +
-> +The node above defines a power controller that is a power domain provider
-> +and expects one cell as its phandle argument.
-> +
-> +==Power domain consumers==
-> +
-> +Required properties:
-> + - power-domain : A phandle and power domain specifier as defined by bindings
-> +                  of power controller specified by phandle.
-> +
-> +Example:
-> +
-> +       leaky-device@12350000 {
-> +               compatible = "foo,i-leak-current";
-> +               reg = <0x12350000 0x1000>;
-> +               power-domain = <&power 0>;
-> +       };
-> +
-> +The node above defines a typical power domain consumer device, which is located
-> +inside power domain with index 0 of power controller represented by node with
-> +label "power".
-> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
-> index ae098a2..7677744 100644
-> --- a/drivers/base/power/domain.c
-> +++ b/drivers/base/power/domain.c
-> @@ -8,6 +8,7 @@
->
->  #include <linux/kernel.h>
->  #include <linux/io.h>
-> +#include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/pm_domain.h>
->  #include <linux/pm_qos.h>
-> @@ -2189,3 +2190,285 @@ void pm_genpd_init(struct generic_pm_domain *genpd,
->         list_add(&genpd->gpd_list_node, &gpd_list);
->         mutex_unlock(&gpd_list_lock);
->  }
-> +
-> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
+--FfmEg9E7tL9JeBu8jCgEM6uOUI9u8uE2M
+Content-Type: multipart/mixed;
+ boundary="------------000606020709000307030805"
 
-I remember we discussed this earlier, but I don't think we should add
-another Kconfig for this. CONFIG_OF should be enough.
+This is a multi-part message in MIME format.
+--------------000606020709000307030805
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I realize that we need to handle "Samsung-specific bindings", to not
-break the Exynos pm domain. Maybe adding the parsing of them into the
-generic power domain in the same patch as when we switch Exynos to the
-new API would do the trick?
+On 18/04/14 18:51, Tony Lindgren wrote:
 
-Kind regards
-Ulf Hansson
+>> +	gpio =3D of_get_gpio(node, 0);
+>> +	if (gpio_is_valid(gpio) || gpio =3D=3D -ENOENT) {
+>> +		ddata->enable_gpio =3D gpio;
+>> +	} else {
+>> +		dev_err(&pdev->dev, "failed to parse enable gpio\n");
+>> +		return gpio;
+>> +	}
+>=20
+> We should set the GPIO polarity based on the OF_GPIO_ACTIVE_LOW like
+> gpio_backlight_probe_dt is doing.=20
 
-> +/*
-> + * Device Tree based power domain providers.
-> + *
-> + * The code below implements generic device tree based power domain providers
-> + * that bind device tree nodes with generic power domains registered in the
-> + * system.
-> + *
-> + * Any driver that registers generic power domains and need to support binding
-> + * of devices to these domains is supposed to register a power domain provider,
-> + * which maps a power domain specifier retrieved from device tree to a power
-> + * domain.
-> + *
-> + * Two simple mapping functions have been provided for convenience:
-> + *  - of_genpd_xlate_simple() for 1:1 device tree node to domain mapping,
-> + *  - of_genpd_xlate_onecell() for mapping of multiple domains per node
-> + *    by index.
-> + */
-> +
-> +/**
-> + * struct of_genpd_provider - Power domain provider registration structure
-> + * @link: Entry in global list of domain providers
-> + * @node: Pointer to device tree node of domain provider
-> + * @xlate: Provider-specific xlate callback mapping a set of specifier cells
-> + *         into a power domain.
-> + * @data: context pointer to be passed into @xlate callback
-> + */
-> +struct of_genpd_provider {
-> +       struct list_head link;
-> +
-> +       struct device_node *node;
-> +       genpd_xlate_t xlate;
-> +       void *data;
-> +};
-> +
-> +/* List of registered power domain providers. */
-> +static LIST_HEAD(of_genpd_providers);
-> +/* Mutex to protect the list above. */
-> +static DEFINE_MUTEX(of_genpd_mutex);
-> +
-> +/**
-> + * of_genpd_xlate_simple() - Xlate function for direct node-domain mapping
-> + * @genpdspec: OF phandle args to map into a power domain
-> + * @data: xlate function private data - pointer to struct generic_pm_domain
-> + *
-> + * This is a generic xlate function that can be used to model power domains
-> + * that have their own device tree nodes. The private data of xlate function
-> + * needs to be a valid pointer to struct generic_pm_domain.
-> + */
-> +struct generic_pm_domain *of_genpd_xlate_simple(
-> +                                       struct of_phandle_args *genpdspec,
-> +                                       void *data)
-> +{
-> +       if (genpdspec->args_count != 0)
-> +               return ERR_PTR(-EINVAL);
-> +       return data;
-> +}
-> +EXPORT_SYMBOL_GPL(of_genpd_xlate_simple);
-> +
-> +/**
-> + * of_genpd_xlate_onecell() - Xlate function for providers using single index.
-> + * @genpdspec: OF phandle args to map into a power domain
-> + * @data: xlate function private data - pointer to struct genpd_onecell_data
-> + *
-> + * This is a generic xlate function that can be used to model simple power
-> + * domain controllers that have one device tree node and provide multiple
-> + * power domains. A single cell is used as an index to an array of power
-> + * domains specified in genpd_onecell_data struct when registering the
-> + * provider.
-> + */
-> +struct generic_pm_domain *of_genpd_xlate_onecell(
-> +                                       struct of_phandle_args *genpdspec,
-> +                                       void *data)
-> +{
-> +       struct genpd_onecell_data *genpd_data = data;
-> +       unsigned int idx = genpdspec->args[0];
-> +
-> +       if (genpdspec->args_count != 1)
-> +               return ERR_PTR(-EINVAL);
-> +
-> +       if (idx >= genpd_data->domain_num) {
-> +               pr_err("%s: invalid domain index %d\n", __func__, idx);
-> +               return ERR_PTR(-EINVAL);
-> +       }
-> +
-> +       return genpd_data->domains[idx];
-> +}
-> +EXPORT_SYMBOL_GPL(of_genpd_xlate_onecell);
-> +
-> +/**
-> + * of_genpd_add_provider() - Register a domain provider for a node
-> + * @np: Device node pointer associated with domain provider.
-> + * @xlate: Callback for decoding domain from phandle arguments.
-> + * @data: Context pointer for @genpd_src_get callback.
-> + */
-> +int of_genpd_add_provider(struct device_node *np, genpd_xlate_t xlate,
-> +                         void *data)
-> +{
-> +       struct of_genpd_provider *cp;
-> +
-> +       cp = kzalloc(sizeof(*cp), GFP_KERNEL);
-> +       if (!cp)
-> +               return -ENOMEM;
-> +
-> +       cp->node = of_node_get(np);
-> +       cp->data = data;
-> +       cp->xlate = xlate;
-> +
-> +       mutex_lock(&of_genpd_mutex);
-> +       list_add(&cp->link, &of_genpd_providers);
-> +       mutex_unlock(&of_genpd_mutex);
-> +       pr_debug("Added domain provider from %s\n", np->full_name);
-> +
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_genpd_add_provider);
-> +
-> +/**
-> + * of_genpd_del_provider() - Remove a previously registered domain provider
-> + * @np: Device node pointer associated with domain provider
-> + */
-> +void of_genpd_del_provider(struct device_node *np)
-> +{
-> +       struct of_genpd_provider *cp;
-> +
-> +       mutex_lock(&of_genpd_mutex);
-> +       list_for_each_entry(cp, &of_genpd_providers, link) {
-> +               if (cp->node == np) {
-> +                       list_del(&cp->link);
-> +                       of_node_put(cp->node);
-> +                       kfree(cp);
-> +                       break;
-> +               }
-> +       }
-> +       mutex_unlock(&of_genpd_mutex);
-> +}
-> +EXPORT_SYMBOL_GPL(of_genpd_del_provider);
-> +
-> +/**
-> + * of_genpd_get_from_provider() - Look-up power domain
-> + * @genpdspec: OF phandle args to use for look-up
-> + *
-> + * Looks for domain provider under node specified by @genpdspec and if found
-> + * uses xlate function of the provider to map phandle args to a power domain.
-> + *
-> + * Returns a valid pointer to struct generic_pm_domain on success or ERR_PTR()
-> + * on failure.
-> + */
-> +static struct generic_pm_domain *of_genpd_get_from_provider(
-> +                                       struct of_phandle_args *genpdspec)
-> +{
-> +       struct generic_pm_domain *genpd = ERR_PTR(-EPROBE_DEFER);
-> +       struct of_genpd_provider *provider;
-> +
-> +       mutex_lock(&of_genpd_mutex);
-> +
-> +       /* Check if we have such a provider in our array */
-> +       list_for_each_entry(provider, &of_genpd_providers, link) {
-> +               if (provider->node == genpdspec->np)
-> +                       genpd = provider->xlate(genpdspec, provider->data);
-> +               if (!IS_ERR(genpd))
-> +                       break;
-> +       }
-> +
-> +       mutex_unlock(&of_genpd_mutex);
-> +
-> +       return genpd;
-> +}
-> +
-> +/*
-> + * Device<->domain binding using Device Tree look-up.
-> + *
-> + * The purpose of code below is to manage assignment of devices to their
-> + * power domains in an automatic fashion, based on data read from device tree.
-> + * The two functions, genpd_bind_domain() and genpd_unbind_domain() are
-> + * intended to be called by higher level code that manages devices, i.e.
-> + * really_probe() and __device_release_driver() to respectively bind and
-> + * unbind device from its power domain.
-> + *
-> + * Both generic and legacy Samsung-specific DT bindings are supported to
-> + * keep backwards compatibility with existing DTBs.
-> + */
-> +
-> +/**
-> + * genpd_bind_domain - Bind device to its power domain using Device Tree.
-> + * @dev: Device to bind to its power domain.
-> + *
-> + * Tries to parse power domain specifier from device's OF node and if succeeds
-> + * attaches the device to retrieved power domain.
-> + *
-> + * Returns 0 on success or negative error code otherwise.
-> + */
-> +int genpd_bind_domain(struct device *dev)
-> +{
-> +       struct of_phandle_args pd_args;
-> +       struct generic_pm_domain *pd;
-> +       int ret;
-> +
-> +       if (!dev->of_node)
-> +               return 0;
-> +
-> +       ret = of_parse_phandle_with_args(dev->of_node, "power-domain",
-> +                                       "#power-domain-cells", 0, &pd_args);
-> +       if (ret < 0) {
-> +               if (ret != -ENOENT)
-> +                       return ret;
-> +
-> +               /*
-> +                * Try legacy Samsung-specific bindings
-> +                * (for backwards compatibility of DT ABI)
-> +                */
-> +               pd_args.args_count = 0;
-> +               pd_args.np = of_parse_phandle(dev->of_node,
-> +                                               "samsung,power-domain", 0);
-> +               if (!pd_args.np)
-> +                       return 0;
-> +       }
-> +
-> +       pd = of_genpd_get_from_provider(&pd_args);
-> +       if (IS_ERR(pd)) {
-> +               if (PTR_ERR(pd) != -EPROBE_DEFER)
-> +                       dev_err(dev, "failed to find power domain: %ld\n",
-> +                               PTR_ERR(pd));
-> +               return PTR_ERR(pd);
-> +       }
-> +
-> +       dev_dbg(dev, "adding to power domain %s\n", pd->name);
-> +
-> +       while (1) {
-> +               ret = pm_genpd_add_device(pd, dev);
-> +               if (ret != -EAGAIN)
-> +                       break;
-> +               cond_resched();
-> +       }
-> +
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to add to power domain %s: %d",
-> +                       pd->name, ret);
-> +               return ret;
-> +       }
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * genpd_unbind_domain - Unbind device from its power domain.
-> + * @dev: Device to unbind from its power domain.
-> + *
-> + * Unbinds device from power domain previously bound to it.
-> + *
-> + * Returns 0 on success or negative error code otherwise.
-> + */
-> +int genpd_unbind_domain(struct device *dev)
-> +{
-> +       struct generic_pm_domain *pd = dev_to_genpd(dev);
-> +       int ret;
-> +
-> +       if (!dev->of_node || IS_ERR(pd))
-> +               return 0;
-> +
-> +       dev_dbg(dev, "removing from power domain %s\n", pd->name);
-> +
-> +       while (1) {
-> +               ret = pm_genpd_remove_device(pd, dev);
-> +               if (ret != -EAGAIN)
-> +                       break;
-> +               cond_resched();
-> +       }
-> +
-> +       if (ret < 0) {
-> +               dev_err(dev, "failed to remove from power domain %s: %d",
-> +                       pd->name, ret);
-> +               return ret;
-> +       }
-> +
-> +       /* Check if domain can be powered off after removing this device. */
-> +       genpd_queue_power_off_work(pd);
-> +
-> +       return 0;
-> +}
-> +#endif
-> diff --git a/include/linux/pm_domain.h b/include/linux/pm_domain.h
-> index 7c1d252..04473d4 100644
-> --- a/include/linux/pm_domain.h
-> +++ b/include/linux/pm_domain.h
-> @@ -310,4 +310,50 @@ static inline void pm_genpd_syscore_poweron(struct device *dev)
->         pm_genpd_syscore_switch(dev, false);
->  }
->
-> +/* OF power domain providers */
-> +struct of_device_id;
-> +
-> +struct genpd_onecell_data {
-> +       struct generic_pm_domain **domains;
-> +       unsigned int domain_num;
-> +};
-> +
-> +typedef struct generic_pm_domain *(*genpd_xlate_t)(struct of_phandle_args *args,
-> +                                                  void *data);
-> +
-> +#ifdef CONFIG_PM_GENERIC_DOMAINS_OF
-> +int of_genpd_add_provider(struct device_node *np, genpd_xlate_t xlate,
-> +                         void *data);
-> +void of_genpd_del_provider(struct device_node *np);
-> +
-> +struct generic_pm_domain *of_genpd_xlate_simple(
-> +                                       struct of_phandle_args *genpdspec,
-> +                                       void *data);
-> +struct generic_pm_domain *of_genpd_xlate_onecell(
-> +                                       struct of_phandle_args *genpdspec,
-> +                                       void *data);
-> +
-> +int genpd_bind_domain(struct device *dev);
-> +int genpd_unbind_domain(struct device *dev);
-> +#else /* !CONFIG_PM_GENERIC_DOMAINS_OF */
-> +static inline int of_genpd_add_provider(struct device_node *np,
-> +                                       genpd_xlate_t xlate, void *data)
-> +{
-> +       return 0;
-> +}
-> +static inline void of_genpd_del_provider(struct device_node *np) {}
-> +
-> +#define of_genpd_xlate_simple          NULL
-> +#define of_genpd_xlate_onecell         NULL
-> +
-> +static inline int genpd_bind_domain(struct device *dev)
-> +{
-> +       return 0;
-> +}
-> +static inline int genpd_unbind_domain(struct device *dev)
-> +{
-> +       return 0;
-> +}
-> +#endif /* CONFIG_PM_GENERIC_DOMAINS_OF */
-> +
->  #endif /* _LINUX_PM_DOMAIN_H */
-> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-> index 2fac9cc..45aa98e 100644
-> --- a/kernel/power/Kconfig
-> +++ b/kernel/power/Kconfig
-> @@ -306,6 +306,10 @@ config PM_GENERIC_DOMAINS_RUNTIME
->         def_bool y
->         depends on PM_RUNTIME && PM_GENERIC_DOMAINS
->
-> +config PM_GENERIC_DOMAINS_OF
-> +       def_bool y
-> +       depends on PM_GENERIC_DOMAINS && OF && !ARCH_EXYNOS
-> +
->  config CPU_PM
->         bool
->         depends on SUSPEND || CPU_IDLE
-> --
-> 1.9.2
->
+Instead of doing it with the old gpio API, and checking the 'active'
+flag everywhere, I think we can use the new gpiod API which handles the
+polarity automatically.
+
+I attached prototype patches (based on -rc2) for panel dpi using that
+approach. It's a bit messier than I'd like, because for non-DT boot we
+need to request the gpio using the old API, and then convert it to
+gpio_desc. We can remove that code when all the boards use DT.
+
+I've compiled tested this only, as I don't have DPI panels I could use.
+I did try similar approach for TFP410, and it seemed to work fine.
+
+ Tomi
+
+
+--------------000606020709000307030805
+Content-Type: text/x-patch;
+ name="0001-panel-dpi-use-gpiod-for-enable-gpio.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="0001-panel-dpi-use-gpiod-for-enable-gpio.patch"
+
+=46rom f2280114f0eb814370664f24eba8ffee8280c840 Mon Sep 17 00:00:00 2001
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Date: Thu, 24 Apr 2014 12:36:52 +0300
+Subject: [PATCH 1/3] panel-dpi: use gpiod for enable gpio
+
+---
+ drivers/video/fbdev/omap2/displays-new/panel-dpi.c | 32 +++++++++++++---=
+------
+ 1 file changed, 19 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/video/fbdev/omap2/displays-new/panel-dpi.c b/drivers=
+/video/fbdev/omap2/displays-new/panel-dpi.c
+index 5f8f7e7c81ef..d379dec3bd4a 100644
+--- a/drivers/video/fbdev/omap2/displays-new/panel-dpi.c
++++ b/drivers/video/fbdev/omap2/displays-new/panel-dpi.c
+@@ -25,8 +25,10 @@ struct panel_drv_data {
+=20
+ 	struct omap_video_timings videomode;
+=20
++	/* used for non-DT boot, to be removed */
+ 	int backlight_gpio;
+-	int enable_gpio;
++
++	struct gpio_desc *enable_gpio;
+ };
+=20
+ #define to_panel_data(p) container_of(p, struct panel_drv_data, dssdev)
+@@ -77,8 +79,8 @@ static int panel_dpi_enable(struct omap_dss_device *dss=
+dev)
+ 	if (r)
+ 		return r;
+=20
+-	if (gpio_is_valid(ddata->enable_gpio))
+-		gpio_set_value_cansleep(ddata->enable_gpio, 1);
++	if (ddata->enable_gpio)
++		gpiod_set_value_cansleep(ddata->enable_gpio, 1);
+=20
+ 	if (gpio_is_valid(ddata->backlight_gpio))
+ 		gpio_set_value_cansleep(ddata->backlight_gpio, 1);
+@@ -96,8 +98,8 @@ static void panel_dpi_disable(struct omap_dss_device *d=
+ssdev)
+ 	if (!omapdss_device_is_enabled(dssdev))
+ 		return;
+=20
+-	if (gpio_is_valid(ddata->enable_gpio))
+-		gpio_set_value_cansleep(ddata->enable_gpio, 0);
++	if (ddata->enable_gpio)
++		gpiod_set_value_cansleep(ddata->enable_gpio, 0);
+=20
+ 	if (gpio_is_valid(ddata->backlight_gpio))
+ 		gpio_set_value_cansleep(ddata->backlight_gpio, 0);
+@@ -156,6 +158,7 @@ static int panel_dpi_probe_pdata(struct platform_devi=
+ce *pdev)
+ 	struct panel_drv_data *ddata =3D platform_get_drvdata(pdev);
+ 	struct omap_dss_device *dssdev, *in;
+ 	struct videomode vm;
++	int r;
+=20
+ 	pdata =3D dev_get_platdata(&pdev->dev);
+=20
+@@ -176,10 +179,20 @@ static int panel_dpi_probe_pdata(struct platform_de=
+vice *pdev)
+ 	dssdev =3D &ddata->dssdev;
+ 	dssdev->name =3D pdata->name;
+=20
+-	ddata->enable_gpio =3D pdata->enable_gpio;
++	r =3D devm_gpio_request_one(&pdev->dev, pdata->enable_gpio,
++					GPIOF_OUT_INIT_LOW, "panel enable");
++	if (r)
++		goto err_gpio;
++
++	ddata->enable_gpio =3D gpio_to_desc(pdata->enable_gpio);
++
+ 	ddata->backlight_gpio =3D pdata->backlight_gpio;
+=20
+ 	return 0;
++
++err_gpio:
++	omap_dss_put_device(ddata->in);
++	return r;
+ }
+=20
+ static int panel_dpi_probe(struct platform_device *pdev)
+@@ -202,13 +215,6 @@ static int panel_dpi_probe(struct platform_device *p=
+dev)
+ 		return -ENODEV;
+ 	}
+=20
+-	if (gpio_is_valid(ddata->enable_gpio)) {
+-		r =3D devm_gpio_request_one(&pdev->dev, ddata->enable_gpio,
+-				GPIOF_OUT_INIT_LOW, "panel enable");
+-		if (r)
+-			goto err_gpio;
+-	}
+-
+ 	if (gpio_is_valid(ddata->backlight_gpio)) {
+ 		r =3D devm_gpio_request_one(&pdev->dev, ddata->backlight_gpio,
+ 				GPIOF_OUT_INIT_LOW, "panel backlight");
+--=20
+1.9.1
+
+
+--------------000606020709000307030805
+Content-Type: text/x-patch;
+ name="0002-OMAPDSS-panel-dpi-Add-DT-support.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename="0002-OMAPDSS-panel-dpi-Add-DT-support.patch"
+
+=46rom fe2a85da34499fab70212c4cc5870378678da709 Mon Sep 17 00:00:00 2001
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Date: Thu, 16 May 2013 15:14:16 +0300
+Subject: [PATCH 2/3] OMAPDSS: panel-dpi: Add DT support
+
+Add DT support for panel-dpi.
+
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Reviewed-by: Archit Taneja <archit@ti.com>
+---
+ drivers/video/fbdev/omap2/displays-new/panel-dpi.c | 59 ++++++++++++++++=
++++++-
+ 1 file changed, 58 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/video/fbdev/omap2/displays-new/panel-dpi.c b/drivers=
+/video/fbdev/omap2/displays-new/panel-dpi.c
+index d379dec3bd4a..dca6b10d1157 100644
+--- a/drivers/video/fbdev/omap2/displays-new/panel-dpi.c
++++ b/drivers/video/fbdev/omap2/displays-new/panel-dpi.c
+@@ -13,9 +13,12 @@
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+=20
+ #include <video/omapdss.h>
+ #include <video/omap-panel-data.h>
++#include <video/of_display_timing.h>
+=20
+ struct panel_drv_data {
+ 	struct omap_dss_device dssdev;
+@@ -72,7 +75,8 @@ static int panel_dpi_enable(struct omap_dss_device *dss=
+dev)
+ 	if (omapdss_device_is_enabled(dssdev))
+ 		return 0;
+=20
+-	in->ops.dpi->set_data_lines(in, ddata->data_lines);
++	if (ddata->data_lines)
++		in->ops.dpi->set_data_lines(in, ddata->data_lines);
+ 	in->ops.dpi->set_timings(in, &ddata->videomode);
+=20
+ 	r =3D in->ops.dpi->enable(in);
+@@ -195,6 +199,47 @@ err_gpio:
+ 	return r;
+ }
+=20
++static int panel_dpi_probe_of(struct platform_device *pdev)
++{
++	struct panel_drv_data *ddata =3D platform_get_drvdata(pdev);
++	struct device_node *node =3D pdev->dev.of_node;
++	struct omap_dss_device *in;
++	int r;
++	struct display_timing timing;
++	struct videomode vm;
++	struct gpio_desc *gpio;
++
++	gpio =3D devm_gpiod_get(&pdev->dev, "enable");
++	if (IS_ERR(gpio)) {
++		dev_err(&pdev->dev, "failed to parse enable gpio\n");
++		return PTR_ERR(gpio);
++	} else {
++		gpiod_direction_output(gpio, 0);
++		ddata->enable_gpio =3D gpio;
++	}
++
++	ddata->backlight_gpio =3D -ENOENT;
++
++	r =3D of_get_display_timing(node, "panel-timing", &timing);
++	if (r) {
++		dev_err(&pdev->dev, "failed to get video timing\n");
++		return r;
++	}
++
++	videomode_from_timing(&timing, &vm);
++	videomode_to_omap_video_timings(&vm, &ddata->videomode);
++
++	in =3D omapdss_of_find_source_for_first_ep(node);
++	if (IS_ERR(in)) {
++		dev_err(&pdev->dev, "failed to find video source\n");
++		return PTR_ERR(in);
++	}
++
++	ddata->in =3D in;
++
++	return 0;
++}
++
+ static int panel_dpi_probe(struct platform_device *pdev)
+ {
+ 	struct panel_drv_data *ddata;
+@@ -211,6 +256,10 @@ static int panel_dpi_probe(struct platform_device *p=
+dev)
+ 		r =3D panel_dpi_probe_pdata(pdev);
+ 		if (r)
+ 			return r;
++	} else if (pdev->dev.of_node) {
++		r =3D panel_dpi_probe_of(pdev);
++		if (r)
++			return r;
+ 	} else {
+ 		return -ENODEV;
+ 	}
+@@ -260,12 +309,20 @@ static int __exit panel_dpi_remove(struct platform_=
+device *pdev)
+ 	return 0;
+ }
+=20
++static const struct of_device_id panel_dpi_of_match[] =3D {
++	{ .compatible =3D "omapdss,panel-dpi", },
++	{},
++};
++
++MODULE_DEVICE_TABLE(of, panel_dpi_of_match);
++
+ static struct platform_driver panel_dpi_driver =3D {
+ 	.probe =3D panel_dpi_probe,
+ 	.remove =3D __exit_p(panel_dpi_remove),
+ 	.driver =3D {
+ 		.name =3D "panel-dpi",
+ 		.owner =3D THIS_MODULE,
++		.of_match_table =3D panel_dpi_of_match,
+ 	},
+ };
+=20
+--=20
+1.9.1
+
+
+--------------000606020709000307030805--
+
+--FfmEg9E7tL9JeBu8jCgEM6uOUI9u8uE2M
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTWN7qAAoJEPo9qoy8lh71lOYQAJbE9JjJdSePx69ww0lV8EDL
+bH6RquyxyzrcI7wkMZVAMlt0SG0NwfXuhJRN4NsHZGbBncgpTq0Qdng74aFyxrd/
+aR3zhogE+EJdRlQxXJvn0mPbeHWJHel+omiA3YkgScvxos9pbVzAGnCAeD/iVVVp
+0sOqJuTn/v5b6K9DVDkNmRfFK/V0udMo84qzW1HkkdgeYti/NPUs1rmYTMmprvA4
+mpyhVm8WAyuqaVyBuMFyyInYFhOHHo71SS8uyuprEF/2suylWkDQjt5HkO7lBFEg
+u5tsyINbGjO2hMUcpkRzJ9Azc9o1rfYsyFYIBKbsgIwGBwT+hLCBH/nkpx1+mGy3
+xFxZ9zjpuskidY3AeaILJ5E0MnIvcFzsJh0RydLMaEwqbAAlFoXBdjsSXH8N6Lia
+ZXHvxDLzHxQH949l7/urQMM44gUk5DoxyeCUVIodCS3/cz0RJO5EBKRKYqkT0GeE
+XtvyhR72VCLoYlB/6sMkwT/UrJUUU81OJM6LxFcNwrTUAVNYh8L6dAO9OA2/nDgN
+yQ+/5lpHJ7GlAKwhY15Zjim1yBzZ8uJLn72vUDYpNEJ6tuevsNCKlV0lrNpg05Fy
+1Jtnpdrkm4ar6fcLr7ho9YMeG+dgBRTiL2Ngw2v2BC3VdMmcu3sVR8+T9HAQxSB1
+oXcMMg2ZDqSjokAGf49N
+=pLc5
+-----END PGP SIGNATURE-----
+
+--FfmEg9E7tL9JeBu8jCgEM6uOUI9u8uE2M--
