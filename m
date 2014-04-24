@@ -1,62 +1,173 @@
-From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] MAINTAINERS: Add entry for APM X-Gene SoC ethernet driver
-Date: Wed, 23 Apr 2014 17:51:38 -0700
-Message-ID: <CAKh23F=Ukhufm3XMmSmaTU3AvmeoDDMeFwodgU-B_XH09sdbOQ@mail.gmail.com>
-References: <1397702368-4846-1-git-send-email-isubramanian@apm.com>
-	<1397702368-4846-2-git-send-email-isubramanian@apm.com>
-	<1397704685.14062.14.camel@joe-AO725>
-	<CABxcv=mj+phHmyg2U2jW51mLTwBN9Au791m-GtqU5BXDPy7Gtg@mail.gmail.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC v2 PATCH 02/14] drm/exynos: dsi: delay setting clocks after
+ reset
+Date: Thu, 24 Apr 2014 09:54:01 +0900
+Message-ID: <535860A9.8030003@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <1398083321-8668-3-git-send-email-yj44.cho@samsung.com>
+ <53565D54.1050609@samsung.com> <535710E0.40702@samsung.com>
+ <5357373C.5080002@samsung.com> <53576DC9.2010601@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=mj+phHmyg2U2jW51mLTwBN9Au791m-GtqU5BXDPy7Gtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53576DC9.2010601@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Hi Andrzej,
 
-On Sun, Apr 20, 2014 at 5:56 PM, Javier Martinez Canillas
-<javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
-> Hello Lyappan,
->
-> On Thu, Apr 17, 2014 at 5:18 AM, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org> wrote:
->> On Wed, 2014-04-16 at 19:39 -0700, Iyappan Subramanian wrote:
->>> This patch adds a MAINTAINERS entry for APM X-Gene SoC
->>> ethernet driver.
->> []
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->> []
->>> @@ -686,6 +686,14 @@ S:       Maintained
->>>  F:   drivers/net/appletalk/
->>>  F:   net/appletalk/
+Thank you for the comments.
+
+On 04/23/2014 04:37 PM, Andrzej Hajda wrote:
+> On 04/23/2014 05:45 AM, YoungJun Cho wrote:
+>> Hi again Andrzej,
+>>
+>> On 04/23/2014 10:01 AM, YoungJun Cho wrote:
+>>> Hi Andrzej
 >>>
->>> +APPLIED MICRO (APM) X-GENE SOC ETHERNET DRIVER
->>> +M:   Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
->>> +M:   Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
->>> +M:   Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
->>> +S:   Maintained
->>> +F:   drivers/net/ethernet/apm/xgene
+>>> Thank you for comments.
+>>>
+>>> On 04/22/2014 09:15 PM, Andrzej Hajda wrote:
+>>>> Hi YoungJun,
+>>>>
+>>>> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
+>>>>> Some phy control registers are not kept after software reset.
+>>>>> So this patch makes the clocks containing phy control to be set
+>>>>> after software reset.
+>>>>>
+>>>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>>>>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>> ---
+>>>>>    drivers/gpu/drm/exynos/exynos_drm_dsi.c |    2 +-
+>>>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>>> b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>>> index 956e5f3..2cf1f0b 100644
+>>>>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>>>>> @@ -946,10 +946,10 @@ static irqreturn_t exynos_dsi_irq(int irq, void
+>>>>> *dev_id)
+>>>>>
+>>>>>    static int exynos_dsi_init(struct exynos_dsi *dsi)
+>>>>>    {
+>>>>> -    exynos_dsi_enable_clock(dsi);
+>>>>>        exynos_dsi_reset(dsi);
+>>>>>        enable_irq(dsi->irq);
+>>>>>        exynos_dsi_wait_for_reset(dsi);
+>>>>> +    exynos_dsi_enable_clock(dsi);
+>>>>>        exynos_dsi_init_link(dsi);
+>>>>>
+>>>>>        return 0;
+>>>>
+>>>> I have commented it in the previous version of the patchset. I repeat it
+>>>> again.
+>>>> This is a regression, on exynos4210-trats I have 'timeout waiting for
+>>>> reset' message after dpms off, on.
+>>>
+>>> I'm really sorry for that. I misunderstood last time.
+>>>
+>>> I think the original codes were correct, because the reset timeout would
+>>> be occurred without clock activation.
 >>
->> Please add a terminating slash to show this is a directory.
+>> This is not true.
 >>
->> F:      drivers/net/ethernet/apm/xgene/
+>>>
+>>> I'll check and fix again.
+>>> (By the way, why am I ok?)
 >>
+>> I have not verified with exynos4210-trats board yet(I have to get it),
+>> but reset timeout is occured in exynos_dsi_wait_for_reset()
+>> with &dsi->completed and that is completed by exynos_dsi_irq().
+>>
+>> And the regulators and clocks are enabled by exynos_dsi_poweron(),
+>> NOT by exynos_dsi_enable_clock().
+>>
+>> So I think the reset timeout is not related with this patch.
 >
-> Also if you are maintaining this driver as a part of your daily work
-> (i.e: actually being paid for it by your company) the status should be
-> "Supported" instead.
 >
-> If you are doing it on your own time but still using your company
-> email address then "Maintained" is correct.
+> As far as I remember there were at least two issues with init sequence:
+> - spurious irq storm after power on and before reset,
+> - irq reset timeouts after reset and without enabled clock.
+>
+> The current sequence is a result of tests on live hw (documentation were
+> not helpful in this case). I think it could be improved little bit more
+> by moving exynos_dsi_enable_clock just after enable_irq this will
+> eliminate possible timeout when RST_RELEASE irq is signaled but irq is
+> still disabled. The sequence should look like below:
+>
+> 	exynos_dsi_reset(dsi);
+> 	enable_irq(dsi->irq);
+> 	exynos_dsi_enable_clock(dsi);
+> 	exynos_dsi_wait_for_reset(dsi);
+> 	exynos_dsi_init_link(dsi);
+>
+> And PHY related configuration could be put somewhere after
+> exynos_dsi_wait_for_reset.
+>
+> I have tested this sequence on trats, it seems to be OK.
 
-Thanks.  I will change this to Supported.
+It also works well in Exynos5420 target.
+
+I think it would be better to remove this patch and implement new PHY
+control functions with this modification.
+
+Thank you.
+Best regards YJ
 
 >
-> Best regards,
-> Javier
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards
+> Andrzej
+>
+>
+>>
+>> Anyway I need more investigation.
+>>
+>> Thank you.
+>> Best regards YJ
+>>
+>>>
+>>>>
+>>>> I will comment your previous answer here to make the discussion easier:
+>>>>> As I mentioned in description, it came from phy control registers.
+>>>>> Fortunately Exynos4 SoCs are safe, but the DSIM_PHYCTRL_REG,
+>>>>> DSIM_PHYTIMING_REG, DSIM_PHYTIMING1_REG and DSIM_PHYTIMING2_REG are
+>>>>> affected which are used in exynos_dsi_set_pll() for Exynos5 SoCs.
+>>>>>
+>>>>> So this patch is required for Exynos5 SoCs.
+>>>>
+>>>> In the moment this patch is applied exynos_dsi_set_pll do not touch phy
+>>>> registers you have mentioned.
+>>>> Your change would be more clear if it will be merged together with the
+>>>> patch adding PHYCTRL settings.
+>>>>
+>>>> Anyway, solution is simple - please set PHY registers after reset and
+>>>> configure clocks before reset to avoid
+>>>> reset timeouts, is there any reason to not do it this way?
+>>>
+>>> The only reason is that the PHY control is related with PLL control and
+>>> that was in exynos_dsi_enable_clock() call path.
+>>> So I just wanted to keep current sequence.
+>>>
+>>> If there is no way to use previous one, I'll consider your approach.
+>>>
+>>> Thank you.
+>>> Best regards YJ
+>>>
+>>>>
+>>>> Regards
+>>>> Andrzej
+>>>>
+>>>
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>>
+>>
+>
+>
