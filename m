@@ -1,121 +1,89 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 4/6] soc: ti: add Keystone Navigator QMSS driver
-Date: Wed, 23 Apr 2014 20:30:53 -0500
-Message-ID: <20140424013053.GC13374@saruman.home>
-References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com>
- <1398296783-1176-5-git-send-email-santosh.shilimkar@ti.com>
-Reply-To: <balbi@ti.com>
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH 10/13] tty: serial: omap: remove some dead code
+Date: Thu, 24 Apr 2014 11:41:15 +1000
+Message-ID: <20140424114115.51ab3f98@notabene.brown>
+References: <1398265117-11793-1-git-send-email-balbi@ti.com>
+	<1398265117-11793-10-git-send-email-balbi@ti.com>
+	<5357DDA8.4040206@ti.com>
+	<20140424084305.20c7f301@notabene.brown>
+	<20140423230121.GC10924@saruman.home>
+	<20140424101329.02e6a62f@notabene.brown>
+	<20140424012100.GB13374@saruman.home>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IpbVkmxF4tDyP/Kb"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398296783-1176-5-git-send-email-santosh.shilimkar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/signed; micalg=PGP-SHA1;
+ boundary="Sig_/MyFDg_Y7ohVtZhnIDuTresh"; protocol="application/pgp-signature"
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140424012100.GB13374-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---IpbVkmxF4tDyP/Kb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--Sig_/MyFDg_Y7ohVtZhnIDuTresh
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Wed, 23 Apr 2014 20:21:00 -0500 Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
 
-On Wed, Apr 23, 2014 at 07:46:20PM -0400, Santosh Shilimkar wrote:
-> From: Sandeep Nair <sandeep_n@ti.com>
->=20
-> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
-> the main hardware sub system which forms the backbone of the Keystone
-> Multi-core Navigator. QMSS consist of queue managers, packed-data structu=
-re
-> processors(PDSP), linking RAM, descriptor pools and infrastructure
-> Packet DMA.
->=20
-> The Queue Manager is a hardware module that is responsible for accelerati=
-ng
-> management of the packet queues. Packets are queued/de-queued by writing =
-or
-> reading descriptor address to a particular memory mapped location. The PD=
-SPs
-> perform QMSS related functions like accumulation, QoS, or event managemen=
-t.
-> Linking RAM registers are used to link the descriptors which are stored in
-> descriptor RAM. Descriptor RAM is configurable as internal or external me=
-mory.
->=20
-> The QMSS driver manages the PDSP setups, linking RAM regions,
-> queue pool management (allocation, push, pop and notify) and descriptor
-> pool management. The specifics on the device tree bindings for
-> QMSS can be found in:
-> 	Documentation/devicetree/bindings/soc/keystone-navigator-qmss.txt
->=20
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> ---
->  drivers/Kconfig                  |    2 +
->  drivers/soc/Kconfig              |    2 +
->  drivers/soc/Makefile             |    5 +
->  drivers/soc/ti/Kconfig           |   21 +
->  drivers/soc/ti/Makefile          |    4 +
->  drivers/soc/ti/knav_qmss.h       |  386 ++++++++
->  drivers/soc/ti/knav_qmss_acc.c   |  591 +++++++++++++
->  drivers/soc/ti/knav_qmss_queue.c | 1814 ++++++++++++++++++++++++++++++++=
-++++++
->  include/linux/soc/ti/knav_qmss.h |   90 ++
->  9 files changed, 2915 insertions(+)
->  create mode 100644 drivers/soc/Makefile
->  create mode 100644 drivers/soc/ti/Kconfig
->  create mode 100644 drivers/soc/ti/Makefile
->  create mode 100644 drivers/soc/ti/knav_qmss.h
->  create mode 100644 drivers/soc/ti/knav_qmss_acc.c
->  create mode 100644 drivers/soc/ti/knav_qmss_queue.c
->  create mode 100644 include/linux/soc/ti/knav_qmss.h
->=20
-> diff --git a/drivers/Kconfig b/drivers/Kconfig
-> index 0e87a34..8993913 100644
-> --- a/drivers/Kconfig
-> +++ b/drivers/Kconfig
-> @@ -148,6 +148,8 @@ source "drivers/remoteproc/Kconfig"
-> =20
->  source "drivers/rpmsg/Kconfig"
-> =20
-> +source "drivers/soc/Kconfig"
+> I have no problem either way, just that unused code doesn't have to be
+> sitting in the tree and I'm not entirely sure this GPIO should be
+> handled by omap-serial.c, perhaps something more generic inside
+> serial-core so other UART drivers can benefit from it.
 
-This hunk was already in patch one but in a different offset in this
-file.
+Perhaps.  But there there are more people I need to convince :-)
 
---=20
-balbi
+>=20
+> > On the other hand, if you can point out to me what I'm missing, and how=
+ I can
+> > solve my problem with any virtual GPIOs, I'm all ears.
+> >=20
+> > To make my problem simple and explicit:  I have a device attached to a =
+UART
+> > which has a separate regulator.  The regulator should be powered on if =
+and
+>=20
+> So you're using DTR to power the GPIO and hoping that the regulator
+> stabilizes quickly enough so that by the time your open() finishes you
+> don't have to add nonsensical msleep() calls before writing to the
+> device. Sounds a bit fragile to me.
 
---IpbVkmxF4tDyP/Kb
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+The gpio_set call is synchronous, and the gpio-regulator driver could add a
+delay (I think).
+
+
+>=20
+> > only if the /dev/ttyXX interface to the UART is open.  The device is a
+> > bluetooth transceiver.
+>=20
+> considering this is a BTUART device, why didn't you do this at the ldisc
+> level ? hci_uart_open() sounds like a good choice from a quick thinking.
+>=20
+
+I'll have a look into that, thanks.
+
+NeilBrown
+
+
+--Sig_/MyFDg_Y7ohVtZhnIDuTresh
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTWGlNAAoJEIaOsuA1yqREpxUQAIXkhbWyzQYaxEZjeuQ8hCdf
-/k4k6NJRySt6eowfh8emS6lIx0dvZkPqx1AQ5aPJKyOGLdsy1iUcnbL378HcTqPE
-xtih1r9w/6nppPPAkZ3Z1s6+XH/IfkaBQOWvq84rlO0dv9Sx/ktmL7uup1Ic2XBU
-5Yd0+PHd5iPdte07cfJRmmvKrQCck3M3qp0xr7KV8p3mtewNyQvix8UIVXmJ8Pdd
-yyo3bongZwB0xLGsu4phAXiOXsxsOA4mucpBTjxcog2WgBn1ykJaeGMUjQD7LviI
-K8JYlIKjEGZOLJKqFAD4oihX+/2/62pBmTPSSI7ebmh9x2/K69dbpRU4sGA5eCzQ
-JZGpnieHsOmtF8IQ+plZFNRj3itwQOWyz6XXiLd67pElVVNuU9uflMBJJacTOBGX
-+oB4UhygNOYpw+87UvT3WFH9FK5iKVPiRSWW+dlYKEagy/NKtG3DZLOjxGVHQDy6
-cZ97jP4/QTSe5AofnZKC9jlIXjv5iIB1dZTzhLwDnVLj7B+1IjEupiJysBVAQBZF
-0L3NCgcNT3kI4BU5FnwSU5yAd1XJnSUkSzYzbFCTdFzITaIu7X/G598RGsoL7O/i
-lb7gEZCGqOke0FOxamwnXypZvLtC54x0VM+QC7Cdbq0rbtioMUxs1HNoru2xJp9F
-H5kLQ3FfzXQ5v8Dzk8VY
-=V5it
+iQIVAwUBU1hruznsnt1WYoG5AQIoTxAAhZtt6b9GiMtK7g4jvMTBUXXlZ3k5XCK2
+zDLI/LyVWwR9T+3fsWOGf6X/n57YWdOGlNNjlKw8TWXUOCquRI9j33LLF3XTO/8K
+772Mffn4s1NcFzn1J4OqxcX4r4LiWnS0IH+mZKa/Hg/DLGr2tijLx+qlda8wzKTV
+emq7cpHkosXpbEFFTF9seSehBiY16Xvd9iHi5La0rYFDma7nh14S6+PRjaSmmmDN
+MI+2bdOH2veU7YEcngLzv21DrF4cAnF4wTCIfD86sENrJ4ezBKRD4+fFoaeh2CBq
+jhjzC6FO9EqH//FoihiSuElEdZ22UHsaJNODdlID/tO+DjYCPzxGeimgYJbzV2eo
+X/aMEzdrKUn/Hoeif8p21ayQ1jiAra6OLuTsrzg9ylezEfVk+KO3vsWrtoaDk4K2
+q85BSzAD6SZSBCr+/vZt0ynUQLYSifG5ARbh+qWCbVkRpPWTnOIOQBvyC/+Mrkpz
+eFwTouDDgMll5Iskn4oA38tgzFEck3bYb3pPjRhK+QT7uctvB5123w49qw4llTfD
+0w2KeUWGFFLMyCEy/91I19x2qhMRBQqoLS73pVh74OGb5sfQFD/vfd0bJKmSzbsh
+HJCiDg504o0ybFl47UkWFX8ZTshfFMUW9SCz0cbtPH53/fNfaagCERYbuYhNEj8Q
+BU77UdEnt1c=
+=YzD4
 -----END PGP SIGNATURE-----
 
---IpbVkmxF4tDyP/Kb--
+--Sig_/MyFDg_Y7ohVtZhnIDuTresh--
