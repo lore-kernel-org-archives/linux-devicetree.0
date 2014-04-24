@@ -1,44 +1,41 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/6] PM / clock_ops: Add helpers combining generic runtime
- and generic clock PM
-Date: Thu, 24 Apr 2014 15:16:49 +0400
-Message-ID: <5358F2A1.40106@cogentembedded.com>
-References: <1398335198-26555-1-git-send-email-geert+renesas@glider.be> <1398335198-26555-2-git-send-email-geert+renesas@glider.be>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: "magic" handling of memory nodes
+Date: Thu, 24 Apr 2014 12:33:11 +0100
+Message-ID: <20140424113311.GR5904@bivouac.eciton.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398335198-26555-2-git-send-email-geert+renesas@glider.be>
-Sender: linux-omap-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi,
 
-On 24-04-2014 14:26, Geert Uytterhoeven wrote:
+Following on the special handling of nodes called memory@0, I went to
+have a look at the various platforms that do not actually declare a
+device_type = "memory" for their "memory" nodes.
 
-> Add helpers pm_generic_runtime_clk_suspend() and
-> pm_generic_clk_runtime_resume(), combining generic runtime PM and generic
-> clock PM.
+Firstly, we currently have 162(ish, I did a sloppy grep) such .dts{i}
+files in the kernel tree.
 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Secondly, the only reason these platforms could ever have worked is
+because they include .dtsi files that define a memory node with a
+type explicitly set. Since this node already exists, its contents get
+overridden, but the type tag remains. Of course, this only happens
+with nodes called explicitly "memory" - but it happens regardless of
+what other things they contain.
 
-[...]
+In the ARM tree, most of these seem to stem from the inclusion of
+skeleton.dtsi.
 
-> diff --git a/include/linux/pm_clock.h b/include/linux/pm_clock.h
-> index 6981aa288c45..bf1e4d09a0ca 100644
-> --- a/include/linux/pm_clock.h
-> +++ b/include/linux/pm_clock.h
-> @@ -35,6 +35,8 @@ extern int pm_clk_add_clk(struct device *dev, struct clk *clk);
->   extern void pm_clk_remove(struct device *dev, const char *con_id);
->   extern int pm_clk_suspend(struct device *dev);
->   extern int pm_clk_resume(struct device *dev);
-> +extern int pm_generic_runtime_clk_suspend(struct device *dev);
-> +extern int pm_generic_clk_runtime_resume(struct device *dev);
+I don't really know what could/should be done about this, but it
+does not feel optimal.
 
-    Shouldn't these function names be symmetric? I think '_clk' and '_runtime' 
-need swapping in one case.
-
-WBR, Sergei
-
+/
+	Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
