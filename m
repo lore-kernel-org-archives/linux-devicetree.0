@@ -1,62 +1,28 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v1 5/7] mtd: fsl-quadspi: get the dummy cycles for DDR
- Quad read from the DT property
-Date: Thu, 24 Apr 2014 12:58:40 +0800
-Message-ID: <20140424045838.GC29664@localhost>
-References: <a> <1398248215-26768-6-git-send-email-b32955@freescale.com>
- <201404232148.51034.marex@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201404232148.51034.marex-ynQEQJNshbs@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH 0/2] Add sound card node Snow/Peach-pit board
+Date: Thu, 24 Apr 2014 11:46:57 +0530
+Message-ID: <1398320219-23362-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 09:48:50PM +0200, Marek Vasut wrote:
-> On Wednesday, April 23, 2014 at 12:16:53 PM, Huang Shijie wrote:
-> > Check the "spi-nor,ddr-quad-read-dummy" DT property to get the
-> > dummy cycles for DDR quad read.
-> > 
-> > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> > ---
-> >  drivers/mtd/spi-nor/fsl-quadspi.c |    7 +++++++
-> >  1 files changed, 7 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/drivers/mtd/spi-nor/fsl-quadspi.c
-> > b/drivers/mtd/spi-nor/fsl-quadspi.c index 8d659a2..15bdeb9 100644
-> > --- a/drivers/mtd/spi-nor/fsl-quadspi.c
-> > +++ b/drivers/mtd/spi-nor/fsl-quadspi.c
-> > @@ -883,6 +883,7 @@ static int fsl_qspi_probe(struct platform_device *pdev)
-> >  	for_each_available_child_of_node(dev->of_node, np) {
-> >  		const struct spi_device_id *id;
-> >  		char modalias[40];
-> > +		u32 dummy = 0;
-> > 
-> >  		/* skip the holes */
-> >  		if (!has_second_chip)
-> > @@ -918,6 +919,12 @@ static int fsl_qspi_probe(struct platform_device
-> > *pdev) if (ret < 0)
-> >  			goto map_failed;
-> > 
-> > +		/* Set the dummy cycles for the DDR Quad Read */
-> > +		ret = of_property_read_u32(np, "spi-nor,ddr-quad-read-dummy",
-> > +				&dummy);
-> > +		if (!ret && dummy > 0 && dummy < 8)
-> > +			nor->read_dummy = dummy;
-> 
-> Is there any reason for the upper limit on number of dummy cycles ?
-I actually tested two kinds of NOR flash, the Spansion s25fl128s and Micron N25q256a.
-The dummy cycles are all less then 8.
+Related sound card driver has been posted here.
+1. [PATCH V2] ASoC: SAMSUNG: Add sound card driver for Snow board
+https://lkml.org/lkml/2014/4/23/184
 
-but i admit the upper limit here is not proper.
-I can remove it in the next version.
+Patch 2 is dependent on Arun's following patch.
+2. [PATCH v2] ARM: dts: Add peach-pit board support
+http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg29189.html
 
-thanks
-Huang Shijie
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tushar Behera (2):
+  ARM: dts: Add sound node for Snow board
+  ARM: dts: Add sound node for Peach-pit board
+
+ arch/arm/boot/dts/exynos5250-snow.dts      |   32 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |   31 +++++++++++++++++++++++++++
+ 2 files changed, 63 insertions(+)
+
+-- 
+1.7.9.5
