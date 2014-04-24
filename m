@@ -1,141 +1,77 @@
 From: Andy Gross <agross@codeaurora.org>
-Subject: [Patch v2 2/4] soc: qcom: Add device tree binding for GSBI
-Date: Thu, 24 Apr 2014 11:31:20 -0500
-Message-ID: <1398357082-5102-3-git-send-email-agross@codeaurora.org>
+Subject: [Patch v2 1/4] soc: Placeholder files for drivers/soc
+Date: Thu, 24 Apr 2014 11:31:19 -0500
+Message-ID: <1398357082-5102-2-git-send-email-agross@codeaurora.org>
 References: <1398357082-5102-1-git-send-email-agross@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1398357082-5102-1-git-send-email-agross@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <agross@codeaurora.org>
+Cc: devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-arm-msm@vger.kernel.org, Andy Gross <agross@codeaurora.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree binding support for the QCOM GSBI driver.
+Add placeholder Kconfig and linkage for driver/soc.
+
+The first patch set that implemented this was authored by Santosh Shilimkar:
+https://lkml.org/lkml/2014/2/28/567
 
 Signed-off-by: Andy Gross <agross@codeaurora.org>
 ---
- .../devicetree/bindings/soc/qcom/qcom,gsbi.txt     |   78 ++++++++++++++++++++
- include/dt-bindings/soc/qcom,gsbi.h                |   26 +++++++
- 2 files changed, 104 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
- create mode 100644 include/dt-bindings/soc/qcom,gsbi.h
+ drivers/Kconfig     |    2 ++
+ drivers/Makefile    |    4 ++++
+ drivers/soc/Kconfig |    4 ++++
+ 3 files changed, 10 insertions(+)
+ create mode 100644 drivers/soc/Kconfig
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
+diff --git a/drivers/Kconfig b/drivers/Kconfig
+index b3138fb..37f955f 100644
+--- a/drivers/Kconfig
++++ b/drivers/Kconfig
+@@ -130,6 +130,8 @@ source "drivers/staging/Kconfig"
+ 
+ source "drivers/platform/Kconfig"
+ 
++source "drivers/soc/Kconfig"
++
+ source "drivers/clk/Kconfig"
+ 
+ source "drivers/hwspinlock/Kconfig"
+diff --git a/drivers/Makefile b/drivers/Makefile
+index 8e3b8b0..ba77e7b 100644
+--- a/drivers/Makefile
++++ b/drivers/Makefile
+@@ -132,6 +132,10 @@ obj-$(CONFIG_VHOST_RING)	+= vhost/
+ obj-$(CONFIG_VLYNQ)		+= vlynq/
+ obj-$(CONFIG_STAGING)		+= staging/
+ obj-y				+= platform/
++
++# soc specific drivers
++obj-y				+= soc/
++
+ #common clk code
+ obj-y				+= clk/
+ 
+diff --git a/drivers/soc/Kconfig b/drivers/soc/Kconfig
 new file mode 100644
-index 0000000..4ce24d4
+index 0000000..58bd962
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,gsbi.txt
-@@ -0,0 +1,78 @@
-+QCOM GSBI (General Serial Bus Interface) Driver
++++ b/drivers/soc/Kconfig
+@@ -0,0 +1,4 @@
++menu "SOC specific Drivers"
 +
-+The GSBI controller is modeled as a node with zero or more child nodes, each
-+representing a serial sub-node device that is mux'd as part of the GSBI
-+configuration settings.  The mode setting will govern the input/output mode of
-+the 4 GSBI IOs.
-+
-+Required properties:
-+- compatible: must contain "qcom,gsbi-v1.0.0" for APQ8064/IPQ8064
-+- reg: Address range for GSBI registers
-+- clocks: required clock
-+- clock-names: must contain "iface" entry
-+- qcom,mode : indicates MUX value for configuration of the serial interface.
-+  Please reference dt-bindings/soc/qcom,gsbi.h for valid mux values.
-+
-+Optional properties:
-+- qcom,crci : indicates CRCI MUX value for QUP CRCI ports.  Please reference
-+  dt-bindings/soc/qcom,gsbi.h for valid CRCI mux values.
-+
-+Required properties if child node exists:
-+- #address-cells: Must be 1
-+- #size-cells: Must be 1
-+- ranges: Must be present
-+
-+Properties for children:
-+
-+A GSBI controller node can contain 0 or more child nodes representing serial
-+devices.  These serial devices can be a QCOM UART, I2C controller, spi
-+controller, or some combination of aforementioned devices.
-+
-+See the following for child node definitions:
-+Documentation/devicetree/bindings/i2c/qcom,i2c-qup.txt
-+Documentation/devicetree/bindings/spi/qcom,spi-qup.txt
-+Documentation/devicetree/bindings/serial/qcom,msm-uartdm.txt
-+
-+Example for APQ8064:
-+
-+#include <dt-bindings/soc/qcom,gsbi.h>
-+
-+	gsbi4@16300000 {
-+		compatible = "qcom,gsbi-v1.0.0";
-+		reg = <0x16300000 0x100>;
-+		clocks = <&gcc GSBI4_H_CLK>;
-+		clock-names = "iface";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+		qcom,mode = <GSBI_PROT_I2C_UART>;
-+		qcom,crci = <GSBI_CRCI_QUP>;
-+
-+		/* child nodes go under here */
-+
-+		i2c_qup4: i2c@16380000 {
-+		        compatible = "qcom,i2c-qup-v1.1.1";
-+		        reg = <0x16380000 0x1000>;
-+		        interrupts = <0 153 0>;
-+
-+		        clocks = <&gcc GSBI4_QUP_CLK>, <&gcc GSBI4_H_CLK>;
-+		        clock-names = "core", "iface";
-+
-+		        clock-frequency = <200000>;
-+
-+		        #address-cells = <1>;
-+		        #size-cells = <0>;
-+
-+		 };
-+
-+		uart4:	serial@16340000 {
-+			compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
-+			reg = <0x16340000 0x1000>,
-+				<0x16300000 0x1000>;
-+			interrupts = <0 152 0x0>;
-+			clocks = <&gcc GSBI4_UART_CLK>, <&gcc GSBI4_H_CLK>;
-+			clock-names = "core", "iface";
-+			status = "ok";
-+		};
-+	};
-+
-diff --git a/include/dt-bindings/soc/qcom,gsbi.h b/include/dt-bindings/soc/qcom,gsbi.h
-new file mode 100644
-index 0000000..7ac4292
---- /dev/null
-+++ b/include/dt-bindings/soc/qcom,gsbi.h
-@@ -0,0 +1,26 @@
-+/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#ifndef __DT_BINDINGS_QCOM_GSBI_H
-+#define __DT_BINDINGS_QCOM_GSBI_H
-+
-+#define GSBI_PROT_IDLE		0
-+#define GSBI_PROT_I2C_UIM	1
-+#define GSBI_PROT_I2C		2
-+#define GSBI_PROT_SPI		3
-+#define GSBI_PROT_UART_W_FC	4
-+#define GSBI_PROT_UIM		5
-+#define GSBI_PROT_I2C_UART	6
-+
-+#define GSBI_CRCI_QUP		0
-+#define GSBI_CRCI_UART		1
-+
-+#endif
++endmenu
++`
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 hosted by The Linux Foundation
