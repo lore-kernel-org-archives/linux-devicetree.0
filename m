@@ -1,79 +1,41 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH/RFC 0/4] of: Register clocks for Runtime PM with PM core
-Date: Thu, 24 Apr 2014 12:13:19 +0200
-Message-ID: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 00/38] MMC updates, plus CuBox-i WiFi support
+Date: Thu, 24 Apr 2014 11:17:26 +0100
+Message-ID: <20140424101726.GH26756@n2100.arm.linux.org.uk>
+References: <20140423185534.GA26756@n2100.arm.linux.org.uk> <CAPDyKFozP69yngKAkdwHYyyvi+pdLEm05udOmBiVshQFi4hnLQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFozP69yngKAkdwHYyyvi+pdLEm05udOmBiVshQFi4hnLQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Anton Vorontsov <anton@enomsg.org>, Barry Song <baohua@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Seungwon Jeon <tgih.jun@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, spear-devel@list.st.com, Stephen
 List-Id: devicetree@vger.kernel.org
 
-On SoCs like ARM/SH-mobile, gate clocks are available for modules, allowing
-Runtime PM for a device controlled by a gate clock.
+On Thu, Apr 24, 2014 at 10:25:42AM +0200, Ulf Hansson wrote:
+> I have looked though the patches up until patch 33 and this is clearly
+> a nice piece of clean-up /fixes work for sdhci. Besides my minor
+> comments per patch, I don't have any objections code-review wise to
+> proceed merging them.
+> 
+> I have also tried to applied them on Chris' mmc-next branch,
+> unfortunate it fails at patch 23, so it would be nice to get a
+> re-based patchset for the mmc-next branch.
 
-On legacy shmobile kernels, this is handled by the PM runtime code in
-drivers/sh/pm_runtime.c, which installs a clock notifier for the platform
-bus, registering the "NULL" clock of each platform device with the PM core.
-This approach is also used on davinci, keystone, and omap1.
+I /could/ rebase it but then I wouldn't be able to produce the patch
+sets/patches for others [*] (such as the Novena project) to derive
+their kernel tree from my iMX6 patch set.
 
-On multi-platform shmobile kernels, this was not handled at all, leading
-to spurious disabled clocks on drivers relying on Runtime PM, depending on
-implicit reset state, or on the bootloader.
+What I'd prefer is to keep the patch set intact, and provide Chris
+with a pull request for it up to patch 33, which would need a
+conflict fixed - and this would mean that I can be sure that what
+I'm testing, and what I'm distributing is what Chris will also be
+submitting.
 
-A first solution, enabling the PM runtime code in drivers/sh/pm_runtime.c
-in a multi-platform-safe way, was provided by the patch series
-"[PATCH v2 00/17] ARM: shmobile: Enable drivers/sh/pm_runtime.c on
-multi-platform" (http://www.spinics.net/lists/linux-sh/msg30887.html).
+* - this currently stands at 230 patches in all - mmc + l2c + fec +
+    imx-drm + other iMX6 changes.
 
-Here is an alternative approach, avoiding the reliance on C board files,
-which are being phased out.
-
-This is also related to a patch series by Felipe Balbi ("[RFC/PATCH] base:
-platform: add generic clock handling for platform-bus",
-https://lkml.org/lkml/2014/1/31/290)
-
-This series:
-  1. Lets the MSTP clock driver indicate that its clocks are suitable for
-     Runtime PM, 
-  2. Lets the DT code retrieve clock information when adding a device
-     (it already retrieves information for resources (registers, irq) ---
-     unfortunately clocks are not resources), and registering clocks
-     suitable for Runtime PM with the PM core.
-     If Runtime PM is disabled, the clocks are just enabled.
-
-Note that this works for devices instantiated from DT only.
-Fortunately the drivers for the remaining platform devices (SCI and CMT)
-handle clocks theirselves, without Runtime PM, so they get properly enabled.
-
-Patches:
-  - [1/4] clk: Add CLK_RUNTIME_PM and clk_may_runtime_pm()
-  - [2/4] PM / clock_ops: Add pm_clk_add_clk()
-  - [3/4] of/clk: Register clocks suitable for Runtime PM with the
-  - [4/4] clk: shmobile: mstp: Set CLK_RUNTIME_PM flag
-
-This series was tested on Renesas r8a7791, using the Koelsch development
-board.
-
-Thanks for your comments!
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
