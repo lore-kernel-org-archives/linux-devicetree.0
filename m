@@ -1,114 +1,60 @@
-From: Vikas Sajjan <sajjan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: Add PMU reg node to exynos4210
-Date: Thu, 24 Apr 2014 18:56:47 +0530
-Message-ID: <CAGm_ybi+QiC95-aJtzbpY8CCv9f6+NDC4HHrC8RuCmkUHDGB5A@mail.gmail.com>
-References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
-	<1396425778-4379-2-git-send-email-pankaj.dubey@samsung.com>
-	<CAGm_ybjfxprtLUX6Vs8QVvXoMOaHez4-Og8a9n3UevibvmzbZA@mail.gmail.com>
-	<53590A3D.1020308@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 0/6] PM / clock_ops: Add helpers combining generic runtime
+ and generic clock PM
+Date: Thu, 24 Apr 2014 15:26:53 +0200
+Message-ID: <CAPDyKFqi_6L48je_0cazHHDtQGzuvSPfocZT5+eLzd1egUVYXw@mail.gmail.com>
+References: <1398335198-26555-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53590A3D.1020308-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chow.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398335198-26555-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, linux-sh@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pankaj,
+On 24 April 2014 12:26, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> Several platform support codes combine pm_generic_runtime_suspend() and
+> pm_clk_suspend(), resp. pm_clk_resume() and pm_generic_runtime_resume() in
+> their .runtime_suspend resp. .runtime_resume callbacks.
+>
+> Create helpers to consolidate.
+>
+>   - [1/6] PM / clock_ops: Add helpers combining generic runtime and generic
+>           clock PM
 
-On Thu, Apr 24, 2014 at 6:27 PM, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi Vikas,
->
->
-> On 04/24/2014 08:59 PM, Vikas Sajjan wrote:
->>
->> +Tomasz
->>
->>
->> On Wed, Apr 2, 2014 at 1:32 PM, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> wrote:
->>>
->>> This patch adds pmu regnode to exynos4210 dtsi to handle
->>> PMU register access via DT.
->>>
->>> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> ---
->>>   arch/arm/boot/dts/exynos4210.dtsi |    5 +++++
->>>   1 file changed, 5 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos4210.dtsi
->>> b/arch/arm/boot/dts/exynos4210.dtsi
->>> index cacf614..0a2c0fe 100644
->>> --- a/arch/arm/boot/dts/exynos4210.dtsi
->>> +++ b/arch/arm/boot/dts/exynos4210.dtsi
->>> @@ -81,6 +81,11 @@
->>>                  interrupts = <2 2>, <3 2>;
->>>          };
->>>
->>> +       pmu_system_controller: system-controller@10020000 {
->>> +               compatible = "samsung,exynos4210-pmu", "syscon";
->>> +               reg = <0x10020000 0x5000>;
->>
->> Can we have 2 strings as "compatible" and these 2 strings are used by
->> 2 different driver?
->>
->> Because once syscon driver gets probed, exynos-pmu.c [1] driver will
->> never be probed.
->>
->> The new PMU driver [1] completely relies on this. With just
->> exynos_defconfig, you will not notice this issue, since syscon is NOT
->> enabled by exynos_defconfig. When I enabled "System Controller
->> Register R/W Based on Regmap" in menuconfig, I could see PMU driver
->> [1] is NEVER probed.
->>
->> Let me know, if I am missing something.
->>
->>   [1] http://www.spinics.net/lists/arm-kernel/msg319750.html
->
->
-> You are correct. We also missed this because "SYSCON" option was
-> not enabled in exynos_defconfig.
-> I noticed this during preparation of V2 when I planned to use
-> "early_syscon_init" [1] as suggested by Sylwester here [2].
->
-OK.
+How about adding the code from the above patch into the generic power
+domain instead?
 
-> In V2 I will take care of this. I hope soon I will be able to post second
+>   - [2/6] ARM: davinci: Use generic runtime and clock helpers
+>   - [3/6] ARM: keystone: Use generic runtime and clock helpers
+>   - [4/6] ARM: omap: Use generic runtime and clock helpers
+>   - [5/6] drivers: sh: Use generic runtime and clock helpers
 
-So in your V2, will you be adding new DT node altogether for PMU?
-Because with existing DT node "pmu_system_controller"  (which is
-already present in mailine for exynos 5250) and SYSCON driver enable,
-exynos PMU driver will NEVER probed.
+Then convert the above power domains implementations to the generic
+power domain? Would that work?
 
-> version of this series, just waiting for testing and internal code review.
+Kind regards
+Ulf Hansson
+
+>   - [6/6] of/clk: Use generic runtime and clock helpers
 >
-> [1] https://lkml.org/lkml/2014/4/8/239
-> [2] https://lkml.org/lkml/2014/4/2/171
+> Patches 5 and 6 have dependencies (listed in the individual patches),
+> but they can be postponed and handled later.
 >
->>
->>
->>> +       };
->>> +
->>>          pinctrl_0: pinctrl@11400000 {
->>>                  compatible = "samsung,exynos4210-pinctrl";
->>>                  reg = <0x11400000 0x1000>;
->>> --
->>> 1.7.10.4
->>>
->>>
->>> _______________________________________________
->>> linux-arm-kernel mailing list
->>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> Thanks!
 >
+> Gr{oetje,eeting}s,
 >
+>                                                 Geert
 >
 > --
-> Best Regards,
-> Pankaj Dubey
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                                             -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
