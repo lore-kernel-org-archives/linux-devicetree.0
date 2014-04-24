@@ -1,56 +1,47 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v8 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
-Date: Thu, 24 Apr 2014 18:01:06 +0200
-Message-ID: <53593542.9010106@samsung.com>
-References: <1397459860-21869-1-git-send-email-t.dakhran@samsung.com>
- <1397459860-21869-2-git-send-email-t.dakhran@samsung.com>
- <5617478.sn2TYu7iO3@wuerfel> <534BCD88.4020108@samsung.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V2 00/19] bus: omap_l3_noc: driver cleanups and support
+ for DRA7/AM4372
+Date: Thu, 24 Apr 2014 11:06:33 -0500
+Message-ID: <53593689.3060801@ti.com>
+References: <1397492726-17203-1-git-send-email-nm@ti.com> <1397767775-10965-1-git-send-email-nm@ti.com> <20140424155403.GA29229@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <534BCD88.4020108@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tarek Dakhran <t.dakhran@samsung.com>, Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, Chander Kashyap <chander.kashyap@linaro.org>, Romain Naour <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140424155403.GA29229@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Darren Etheridge <detheridge@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sricharan R <r.sricharan@ti.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tarek,
-
-On 14.04.2014 13:59, Tarek Dakhran wrote:
-> On 04/14/2014 03:03 PM, Arnd Bergmann wrote:
->> On Monday 14 April 2014 11:17:38 Tarek Dakhran wrote:
->>> --- a/arch/arm/mach-exynos/exynos.c
->>> +++ b/arch/arm/mach-exynos/exynos.c
->>> @@ -159,6 +159,15 @@ static struct map_desc exynos5250_iodesc[]
->>> __initdata = {
->>>          },
->>>   };
->>> +static struct map_desc exynos5410_iodesc[] __initdata = {
->>> +       {
->>> +               .virtual        = (unsigned long)S5P_VA_SYSRAM_NS,
->>> +               .pfn            =
->>> __phys_to_pfn(EXYNOS5410_PA_SYSRAM_NS),
->>> +               .length         = SZ_4K,
->>> +               .type           = MT_DEVICE,
->>> +       },
->>> +};
->>> +
->>>   static struct map_desc exynos5_iodesc[] __initdata = {
->> NAK
+On 04/24/2014 10:54 AM, Darren Etheridge wrote:
+> Nishanth,
+> 
+> Nishanth Menon <nm@ti.com> wrote on Thu [2014-Apr-17 15:49:16 -0500]:
 >>
->> Why does this keep coming up?
+>> V2 introduces the following changes:
+>> 	- Additional bug fix detected during additional testing (all tests complete now). patch #12
+>> 	- reordering of patches to order logical changes and reduce code churn.
+>> 	- interrupt handler split up and additional information now provided in log to aid debug when error occur
+>> 	- patches are marked where new (12,14,15,16).
+>> 	- DRA7 updated from master document for all DRA7 variants.
 >>
->>     Arnd
+>> This series cleansup omap_l3_noc driver and adds data to support DRA7
+>> and AM437x SoCs.
 >>
-> We need this memory region because boot address for exynos5410 located
-> here, same as for 5250.
->
+> This L3 noc driver patch series is working great for me and has already
+> flagged a very difficult to detect problem in a driver I am working on
+> with a DMA access to an invalid memory address on DRA7.
 
-Is there really no way to map this region dynamically in the entity 
-(driver, source file, whatever) that actually uses it? The goal is to 
-get rid of all the static mappings entirely, so adding new one makes us 
-further from it.
+Glad it was of use. All the more reason why this should be in upstream
+kernel and not just in "evil vendor" kernel.
 
-Best regards,
-Tomasz
+> 
+> Tested-by: Darren Etheridge <detheridge@ti.com>
+> 
+Thanks. will pick this up for v3 post.
+
+
+-- 
+Regards,
+Nishanth Menon
