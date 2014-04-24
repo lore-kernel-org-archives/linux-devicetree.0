@@ -1,7 +1,7 @@
 From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
-Date: Thu, 24 Apr 2014 11:30:03 -0400
-Message-ID: <1398353407-2345-4-git-send-email-santosh.shilimkar@ti.com>
+Subject: [PATCH v3 6/7] ARM: dma: implement set_arch_dma_coherent_ops()
+Date: Thu, 24 Apr 2014 11:30:06 -0400
+Message-ID: <1398353407-2345-7-git-send-email-santosh.shilimkar@ti.com>
 References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,12 +12,7 @@ To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The of_dma_is_coherent() helper parses the given DT device
-node to see if the "dma-coherent" property is supported and
-returns true or false accordingly.
-
-If the arch is always coherent or always noncoherent, then the default
-DMA ops has to be specified accordingly.
+Implement the set_arch_dma_coherent_ops() for ARM architecture.
 
 Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
@@ -27,69 +22,30 @@ Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 ---
- drivers/of/platform.c       |   23 +++++++++++++++++++++++
- include/linux/of_platform.h |    6 ++++++
- 2 files changed, 29 insertions(+)
+ arch/arm/include/asm/dma-mapping.h |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 404d1da..48de98f 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -485,4 +485,27 @@ int of_platform_populate(struct device_node *root,
- 	return rc;
+diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+index 424fda9..1965cd8 100644
+--- a/arch/arm/include/asm/dma-mapping.h
++++ b/arch/arm/include/asm/dma-mapping.h
+@@ -118,6 +118,13 @@ static inline unsigned long dma_max_pfn(struct device *dev)
  }
- EXPORT_SYMBOL_GPL(of_platform_populate);
-+
-+/**
-+ * of_dma_is_coherent - Check if device is coherent
-+ * @np:	device node
-+ *
-+ * It returns true if "dma-coherent" property was found
-+ * for this device in DT.
-+ */
-+bool of_dma_is_coherent(struct device_node *np)
-+{
-+	struct device_node *node = of_node_get(np);
-+
-+	while (node) {
-+		if (of_property_read_bool(node, "dma-coherent")) {
-+			of_node_put(node);
-+			return true;
-+		}
-+		node = of_get_next_parent(node);
-+	}
-+	of_node_put(node);
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(of_dma_is_coherent);
- #endif /* CONFIG_OF_ADDRESS */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..b9a3cb2 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -72,6 +72,7 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
-+extern bool of_dma_is_coherent(struct device_node *np);
- #else
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
-@@ -80,6 +81,11 @@ static inline int of_platform_populate(struct device_node *root,
- {
- 	return -ENODEV;
- }
-+
-+static inline bool of_dma_is_coherent(struct device_node *np)
-+{
-+	return false;
-+}
- #endif
+ #define dma_max_pfn(dev) dma_max_pfn(dev)
  
- #endif	/* _LINUX_OF_PLATFORM_H */
++static inline int set_arch_dma_coherent_ops(struct device *dev)
++{
++	set_dma_ops(dev, &arm_coherent_dma_ops);
++	return 0;
++}
++#define set_arch_dma_coherent_ops(dev)	set_arch_dma_coherent_ops(dev)
++
+ static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t paddr)
+ {
+ 	unsigned int offset = paddr & ~PAGE_MASK;
 -- 
 1.7.9.5
 
