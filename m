@@ -1,191 +1,271 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 10/13] tty: serial: omap: remove some dead code
-Date: Wed, 23 Apr 2014 20:21:00 -0500
-Message-ID: <20140424012100.GB13374@saruman.home>
-References: <1398265117-11793-1-git-send-email-balbi@ti.com>
- <1398265117-11793-10-git-send-email-balbi@ti.com>
- <5357DDA8.4040206@ti.com>
- <20140424084305.20c7f301@notabene.brown>
- <20140423230121.GC10924@saruman.home>
- <20140424101329.02e6a62f@notabene.brown>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC v2 PATCH 08/14] drm/exynos: dsi: add driver data to support
+ Exynos5420
+Date: Thu, 24 Apr 2014 10:23:26 +0900
+Message-ID: <5358678E.3020903@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <1398083321-8668-9-git-send-email-yj44.cho@samsung.com>
+ <535779D9.6010804@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QKdGvSO+nmPlgiQ/"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140424101329.02e6a62f-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <535779D9.6010804@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
---QKdGvSO+nmPlgiQ/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Andrzej,
 
-Hi,
+Thank you for comments.
 
-On Thu, Apr 24, 2014 at 10:13:29AM +1000, NeilBrown wrote:
-> On Wed, 23 Apr 2014 18:01:21 -0500 Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
->=20
-> > Hi,
-> >=20
-> > On Thu, Apr 24, 2014 at 08:43:05AM +1000, NeilBrown wrote:
-> > > On Wed, 23 Apr 2014 10:35:04 -0500 Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
-> > >=20
-> > > > On 04/23/2014 09:58 AM, Felipe Balbi wrote:
-> > > > > nobody passes a DTR_gpio to this driver, so
-> > > > > this code is not necessary.
-> > > > >=20
-> > > > > Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-> > > > > ---
-> > > >=20
-> > > > Niel,
-> > > > this seems to revert the functionality introduced in
-> > > > commit 9574f36fb801035f6ab0fbb1b53ce2c12c17d100
-> > > > (OMAP/serial: Add support for driving a GPIO as DTR.)
-> > > >=20
-> > > > would you like to Ack this change?
-> > >=20
-> > > I have a couple of out-of-tree drivers that use this support.
-> > >=20
-> > > I hope to get back to working on that code one day and even get those=
- drivers
-> > > upstream.  So I would really prefer this code to remain if it isn't c=
-ausing
-> > > any actual problems.
-> >=20
-> > it causes problem with DT (not really). That suport is only available on
-> > legacy platform_data-based boot, it's not available on DT. I hear Tony
-> > is pretty close to turning OMAP3 DT-only.
-> >=20
-> > > Of course, I can always re-submit it when I need it again, but that i=
-t just
-> > > extra work all around.
-> >=20
-> > I wonder how you will pass those attributes through DT considering they
-> > are *really* SW configuration. Why can't you use the real DTR pin, btw ?
-> >=20
->=20
-> This myth that DT is only about hardware is probably one of the
-> reasons that I haven't got these out-of-tree drivers upstream yet.
+On 04/23/2014 05:29 PM, Andrzej Hajda wrote:
+> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
+>> The offset of register DSIM_PLLTMR_REG in Exynos5420 is different
+>> from the one in Exynos4 SoC.
+>>
+>> In case of Exynos5420 SoC, there is no frequency band bit in DSIM_PLLCTRL_REG,
+>> and it uses DSIM_PHYCTRL_REG and DSIM_PHYTIMING*_REG instead.
+>> So this patch adds driver data to distinguish it.
+>>
+>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c |  101 ++++++++++++++++++++++++-------
+>>   1 file changed, 80 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> index 179f2fa..fcd577f 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+>> @@ -17,6 +17,7 @@
+>>
+>>   #include <linux/clk.h>
+>>   #include <linux/irq.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/phy/phy.h>
+>>   #include <linux/regulator/consumer.h>
+>>
+>> @@ -54,9 +55,12 @@
+>>
+>>   /* FIFO memory AC characteristic register */
+>>   #define DSIM_PLLCTRL_REG	0x4c	/* PLL control register */
+>> -#define DSIM_PLLTMR_REG		0x50	/* PLL timer register */
+>>   #define DSIM_PHYACCHR_REG	0x54	/* D-PHY AC characteristic register */
+>>   #define DSIM_PHYACCHR1_REG	0x58	/* D-PHY AC characteristic register1 */
+>> +#define DSIM_PHYCTRL_REG	0x5c
+>> +#define DSIM_PHYTIMING_REG	0x64
+>> +#define DSIM_PHYTIMING1_REG	0x68
+>> +#define DSIM_PHYTIMING2_REG	0x6c
+>>
+>>   /* DSIM_STATUS */
+>>   #define DSIM_STOP_STATE_DAT(x)		(((x) & 0xf) << 0)
+>> @@ -233,6 +237,12 @@ struct exynos_dsi_transfer {
+>>   #define DSIM_STATE_INITIALIZED		BIT(1)
+>>   #define DSIM_STATE_CMD_LPM		BIT(2)
+>>
+>> +struct exynos_dsi_driver_data {
+>> +	unsigned int plltmr_reg;
+>> +
+>> +	unsigned int has_freqband:1;
+>> +};
+>> +
+>>   struct exynos_dsi {
+>>   	struct mipi_dsi_host dsi_host;
+>>   	struct drm_connector connector;
+>> @@ -262,11 +272,39 @@ struct exynos_dsi {
+>>
+>>   	spinlock_t transfer_lock; /* protects transfer_list */
+>>   	struct list_head transfer_list;
+>> +
+>> +	struct exynos_dsi_driver_data *driver_data;
+>>   };
+>>
+>>   #define host_to_dsi(host) container_of(host, struct exynos_dsi, dsi_host)
+>>   #define connector_to_dsi(c) container_of(c, struct exynos_dsi, connector)
+>>
+>> +static struct exynos_dsi_driver_data exynos4_dsi_driver_data = {
+>> +	.plltmr_reg = 0x50,
+>> +	.has_freqband = 1,
+>> +};
+>> +
+>> +static struct exynos_dsi_driver_data exynos5_dsi_driver_data = {
+>> +	.plltmr_reg = 0x58,
+>> +};
+>> +
+>> +static struct of_device_id exynos_dsi_of_match[] = {
+>> +	{ .compatible = "samsung,exynos4210-mipi-dsi",
+>> +	  .data = &exynos4_dsi_driver_data },
+>> +	{ .compatible = "samsung,exynos5420-mipi-dsi",
+>> +	  .data = &exynos5_dsi_driver_data },
+>> +	{ }
+>> +};
+>
+> I wonder if it wouldn't be better to use "samsung,exynos5410-mipi-dsi"
+> compatible and distinguish 5410 and 5420 by DSIM_VERSION register.
+>
 
-take that up with DT maintainers
+That's because I have only Exynos5420 SoC based target,
+so made DT for that and tested it only.
 
-> There is no "real" DTR pin.
+But it seems to be no problem to use exynos5410 compatible at least
+for the dsi device :).
 
-heh, my bad... confused with RTS which is supported in this HW.
+I'll try.
 
-> When I open /dev/ttyWHATEVER, I need the driver for the device that is
-> permanently connected to that serial port to be told that the serial-devi=
-ce
-> has been opened so that it can "power on" or "wake up" the device.
->=20
-> I don't much care how that happens, or how I tell DT that it has to happe=
-n.
-> I just need it to happen.
->=20
-> In discrete hardware devices, the DTR line is what you would use.  The RS=
-232
-> port would raise (or lower or whatever) DTR when /dev/ttyWHATEVER was ope=
-n,
-> and  the device that was plugged in would detect the level change and do
-> stuff.
->=20
-> But I don't have discrete hardware.  I have a bunch of stuff soldered ont=
-o a
-> board with ad-hoc connections chosen to make the life of the hardware bui=
-lder
-> easy rather than chosen to make the life of the software developer easy
-> (which I think is the correct choice).
->=20
-> So I need to tell DT "This device is plugged into this UART, and there is=
- no
-> DTR line, but when the UARTs DTR line would be asserted (if it had one), =
-then
-> I need that regulator of there turned on". or maybe "I need to toggle this
-> GPIO  with exactly this pattern, while watching that GPIO to see if it is
-> working".
->=20
-> So I thought:
->=20
->  1/ give the UART a "virtual" DTR so it could drive any GPIO
->  2/ create a "gpio-to-regulator" driver which presented as a (virtual) gp=
-io
->     and responded to state changes on that GPIO by turning on or off the
->     regulator
->  3/ create a dedicated driver which knows how to toggle the magic GPIO wh=
-ile
->     watching the other GPIO to convince the silly device to wakeup, or go=
- to
->     sleep, as required, and have this appear as a (virtual) GPIO.
->=20
-> Then I can just tell DT that these (virtual) GPIOs are connected together,
-> and it will all just work.  And it does.
->=20
-> But given the whole "no no, DT is for describing hardware, and you are
-> describing software" attitude,  it seems that I lost motivation for a whi=
-le
-> (that wasn't the only reason, but it didn't help).
->=20
-> I have a patch which converts the OMAP serial driver to use DT to configu=
-re
-> these virtual DTR lines.  I'm very happy to submit that if there is some
-> chance it might be accepted and will keep the current DTR code in place.
+>
+>> +
+>> +static inline struct exynos_dsi_driver_data *exynos_dsi_get_driver_data(
+>> +						struct platform_device *pdev)
+>> +{
+>> +	const struct of_device_id *of_id =
+>> +			of_match_device(exynos_dsi_of_match, &pdev->dev);
+>> +
+>> +	return (struct exynos_dsi_driver_data *)of_id->data;
+>> +}
+>> +
+>>   static void exynos_dsi_wait_for_reset(struct exynos_dsi *dsi)
+>>   {
+>>   	if (wait_for_completion_timeout(&dsi->completed, msecs_to_jiffies(300)))
+>> @@ -340,14 +378,9 @@ static unsigned long exynos_dsi_pll_find_pms(struct exynos_dsi *dsi,
+>>   static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
+>>   					unsigned long freq)
+>>   {
+>> -	static const unsigned long freq_bands[] = {
+>> -		100 * MHZ, 120 * MHZ, 160 * MHZ, 200 * MHZ,
+>> -		270 * MHZ, 320 * MHZ, 390 * MHZ, 450 * MHZ,
+>> -		510 * MHZ, 560 * MHZ, 640 * MHZ, 690 * MHZ,
+>> -		770 * MHZ, 870 * MHZ, 950 * MHZ,
+>> -	};
+>> +	struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
+>>   	unsigned long fin, fout;
+>> -	int timeout, band;
+>> +	int timeout;
+>>   	u8 p, s;
+>>   	u16 m;
+>>   	u32 reg;
+>> @@ -368,18 +401,30 @@ static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
+>>   			"failed to find PLL PMS for requested frequency\n");
+>>   		return -EFAULT;
+>>   	}
+>> +	dev_dbg(dsi->dev, "PLL freq %lu, (p %d, m %d, s %d)\n", fout, p, m, s);
+>>
+>> -	for (band = 0; band < ARRAY_SIZE(freq_bands); ++band)
+>> -		if (fout < freq_bands[band])
+>> -			break;
+>> +	writel(500, dsi->reg_base + driver_data->plltmr_reg);
+>> +
+>> +	reg = DSIM_PLL_EN | DSIM_PLL_P(p) | DSIM_PLL_M(m) | DSIM_PLL_S(s);
+>> +
+>> +	if (driver_data->has_freqband) {
+>> +		static const unsigned long freq_bands[] = {
+>> +			100 * MHZ, 120 * MHZ, 160 * MHZ, 200 * MHZ,
+>> +			270 * MHZ, 320 * MHZ, 390 * MHZ, 450 * MHZ,
+>> +			510 * MHZ, 560 * MHZ, 640 * MHZ, 690 * MHZ,
+>> +			770 * MHZ, 870 * MHZ, 950 * MHZ,
+>> +		};
+>> +		int band;
+>>
+>> -	dev_dbg(dsi->dev, "PLL freq %lu, (p %d, m %d, s %d), band %d\n", fout,
+>> -		p, m, s, band);
+>> +		for (band = 0; band < ARRAY_SIZE(freq_bands); ++band)
+>> +			if (fout < freq_bands[band])
+>> +				break;
+>>
+>> -	writel(500, dsi->reg_base + DSIM_PLLTMR_REG);
+>> +		dev_dbg(dsi->dev, "band %d\n", band);
+>> +
+>> +		reg |= DSIM_FREQ_BAND(band);
+>> +	}
+>>
+>> -	reg = DSIM_FREQ_BAND(band) | DSIM_PLL_EN
+>> -			| DSIM_PLL_P(p) | DSIM_PLL_M(m) | DSIM_PLL_S(s);
+>>   	writel(reg, dsi->reg_base + DSIM_PLLCTRL_REG);
+>>
+>>   	timeout = 1000;
+>> @@ -391,6 +436,24 @@ static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
+>>   		reg = readl(dsi->reg_base + DSIM_STATUS_REG);
+>>   	} while ((reg & DSIM_PLL_STABLE) == 0);
+>>
+>> +	if (!driver_data->has_freqband) {
+>
+> Could you explain why lack of freqband determines necessity of setting PHY
+> registers, is this a kind of hardware setting dependency?
 
-I have no problem either way, just that unused code doesn't have to be
-sitting in the tree and I'm not entirely sure this GPIO should be
-handled by omap-serial.c, perhaps something more generic inside
-serial-core so other UART drivers can benefit from it.
+Yes, there is H/W dependency.
+In Exynos4 SoCs, from 24th to 26th bits of DSIM_PLLCTRL register are
+for frequency band.
+But in Exynos5410 / 5420 SoCs, those bits are used for DpDnSwap relevant
+things.
+So PHY ctrl and timing registers are required instead for it.
 
-> On the other hand, if you can point out to me what I'm missing, and how I=
- can
-> solve my problem with any virtual GPIOs, I'm all ears.
->=20
-> To make my problem simple and explicit:  I have a device attached to a UA=
-RT
-> which has a separate regulator.  The regulator should be powered on if and
+>
+>> +		/* b dphy ctrl */
+>> +		reg = 0x0af & 0x1ff;
+>> +		writel(reg, dsi->reg_base + DSIM_PHYCTRL_REG);
+>> +
+>> +		/* phy timing */
+>> +		reg = 0x06 << 8 | 0x0b;
+>> +		writel(reg, dsi->reg_base + DSIM_PHYTIMING_REG);
+>> +
+>> +		/* phy timing 1 */
+>> +		reg = 0x07 << 24 | 0x27 << 16 | 0x0d << 8 | 0x08;
+>> +		writel(reg, dsi->reg_base + DSIM_PHYTIMING1_REG);
+>> +
+>> +		/* phy timing 2 */
+>> +		reg = 0x09 << 16 | 0x0d << 8 | 0x0b;
+>> +		writel(reg, dsi->reg_base + DSIM_PHYTIMING2_REG);
+>> +	}
+>> +
+>
+> Please use macros if possible instead of magic numbers.
 
-So you're using DTR to power the GPIO and hoping that the regulator
-stabilizes quickly enough so that by the time your open() finishes you
-don't have to add nonsensical msleep() calls before writing to the
-device. Sounds a bit fragile to me.
+Right, I'll fix.
 
-> only if the /dev/ttyXX interface to the UART is open.  The device is a
-> bluetooth transceiver.
+>
+> As I wrote in comment for earlier patch it would be better to separate
+> setting PHY registers
+> from clock registers.
+>
 
-considering this is a BTUART device, why didn't you do this at the ldisc
-level ? hci_uart_open() sounds like a good choice from a quick thinking.
+Ok, I'll implement new function
+and call it just after exynos_dsi_wait_for_reset().
 
---=20
-balbi
+Thank you.
+Best regards YJ
 
---QKdGvSO+nmPlgiQ/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTWGb8AAoJEIaOsuA1yqRENNUQAIGPo+rZyQHDJvv85rm7WE/K
-P6+dbz5UN5dEIWvNNpY4mY8whp2EGz8yIdse4mVxes3BjThZlqY2e+NhxI82mG2j
-DFzVf/ZvleJ4wQL8JZ6Q9kCJ6tmiBVgvN/FuXy2PN5q89B7fVVG7YKQz9nPIGan1
-tlxh0MbFHsn0PGVbU3sryEz0M1jnJ4OTkrdgTQvC+CqqjElSjfj0IGESi85KtKn3
-19j3p/07DNaJJR/59KDBrdKxJyzqvp3e9ypbLX7p61eOx0EcWLRD7f2U5Qp8CYT4
-Fo+/pgqC6AD10E2LoFbFyispjOjkHX1d9TeOe6B5xD3bx+y0dOTb8m6ysHEMTv6M
-eYmbUzlgge2SAqmrOeyGsviHG5gtrXYBJ7vS084cZtfh35Azhgqqp5gz8htrgFLX
-eV48kWV2lh5lVyqEfY41YSy6W474Sf3cIMRF+mH8EQCrG9ZMH5UM22s+TEUZrElA
-p55NBm2uCJJy38aPdkPBbYKrwS/IQ7ule+BVO7TwBQQ8l6unv3IkjIqzO+E1ylqU
-5qzRCKnbgbq/d6S6QwHQaRFCflmVpm2j4ARjuAOBAEk5ZaS40DPknS8JwzcEbdmU
-rsDWaTiJnpl04M6URT/Az59wSxujt1gVSp4OR2Hr52sGKpSclcgngj3XkIHHxZvI
-vkiXxtGLDqfNlM3Iqh8J
-=LPHB
------END PGP SIGNATURE-----
-
---QKdGvSO+nmPlgiQ/--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>   	return fout;
+>>   }
+>>
+>> @@ -1412,6 +1475,7 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+>>   	dsi->dsi_host.dev = &pdev->dev;
+>>
+>>   	dsi->dev = &pdev->dev;
+>> +	dsi->driver_data = exynos_dsi_get_driver_data(pdev);
+>>
+>>   	ret = exynos_dsi_parse_dt(dsi);
+>>   	if (ret)
+>> @@ -1516,11 +1580,6 @@ static const struct dev_pm_ops exynos_dsi_pm_ops = {
+>>   	SET_SYSTEM_SLEEP_PM_OPS(exynos_dsi_suspend, exynos_dsi_resume)
+>>   };
+>>
+>> -static struct of_device_id exynos_dsi_of_match[] = {
+>> -	{ .compatible = "samsung,exynos4210-mipi-dsi" },
+>> -	{ }
+>> -};
+>> -
+>>   struct platform_driver dsi_driver = {
+>>   	.probe = exynos_dsi_probe,
+>>   	.remove = exynos_dsi_remove,
+>
+>
