@@ -1,69 +1,36 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
-Date: Thu, 24 Apr 2014 16:21:50 -0700
-Message-ID: <CAGa+x84uPwuUC61S4Wi2ymSdxVMs14pb_kCv0RhQRi-KySxSAw@mail.gmail.com>
-References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
-	<7hiopynyt5.fsf@paris.lan>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] serial: uart: add hw flow control support configuration
+Date: Thu, 24 Apr 2014 16:30:27 -0700
+Message-ID: <20140424233027.GA21443@kroah.com>
+References: <1397243877-23234-1-git-send-email-m-karicheri2@ti.com>
+ <3E54258959B69E4282D79E01AB1F32B70471B198@DFLE11.ent.ti.com>
+ <20140423152717.7100f604@alan.etchedpixels.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <7hiopynyt5.fsf@paris.lan>
-Sender: linux-omap-owner@vger.kernel.org
-To: Robert Nelson <robertcnelson@gmail.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140423152717.7100f604@alan.etchedpixels.co.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>
+Cc: "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Jiri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 24, 2014 at 3:32 PM, Kevin Hilman <khilman@linaro.org> wrote:
-> Robert Nelson <robertcnelson@gmail.com> writes:
->
->> BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
->>
->> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
->> ---
->>  arch/arm/boot/dts/Makefile               |  1 +
->>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
->>  2 files changed, 16 insertions(+)
->>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 35c146f..0bdeba3 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->>       omap3-sbc-t3730.dtb \
->>       omap3-devkit8000.dtb \
->>       omap3-beagle-xm.dtb \
->> +     omap3-beagle-xm-ab.dtb \
->>       omap3-evm.dtb \
->>       omap3-evm-37xx.dtb \
->>       omap3-ldp.dtb \
->> diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->> new file mode 100644
->> index 0000000..9d81123
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
->> @@ -0,0 +1,15 @@
->> +/*
->> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include "omap3-beagle-xm.dts"
->> +
->> +/ {
->> +     /* HS USB Port 2 Power enable was inverted with the xM C */
->> +     hsusb2_power: hsusb2_power_reg {
->> +             enable-active-high;
->
-> Missing '};' here?
->
-> This causes build breakage in linux-omap master, which now has this
-> applied.
+On Wed, Apr 23, 2014 at 03:27:17PM +0100, One Thousand Gnomes wrote:
+> > >-	if (up->capabilities & UART_CAP_AFE && port->fifosize >= 32) {
+> > >+	if ((up->capabilities & UART_CAP_AFE && (port->fifosize >= 32)) ||
+> > >+	    port->flags & UPF_HARD_FLOW) {
+> > 
+> > [Alan] Surely you want brackets on the port->flags & UPF_HARD_FLOW ??
+> > 
+> > The C precedence table shows following order:=
+> > -> & ||
+> > 
+> > So flags will be accessed first and then AND-ed with  UPF_HARD_FLOW and
+> > result will be OR-ed with left side expression value. So no need for bracket IMO.
+> 
+> Yep... agreed.
 
-ignore this.  It's already been fixed, but was still lingering in
-Tony's master branch.
+Perhaps, but please put them there so we all _know_ what it is doing is
+correct.
 
-Kevin
+greg k-h
