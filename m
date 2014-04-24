@@ -1,76 +1,60 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: of: Allow -gpio suffix for property names
-Date: Thu, 24 Apr 2014 14:47:12 +0200
-Message-ID: <CACRpkdadAUXgC-K6be6SFFn2ZTvCqkTK7VRJEzpFdUbybKc3YA@mail.gmail.com>
-References: <1398266889-17489-1-git-send-email-thierry.reding@gmail.com>
-	<1398266889-17489-2-git-send-email-thierry.reding@gmail.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
+Date: Thu, 24 Apr 2014 21:00:49 +0800
+Message-ID: <53590B01.8070105@linaro.org>
+References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <201404221630.07865.arnd@arndb.de> <53568398.2030800@linaro.org> <201404241428.10248.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398266889-17489-2-git-send-email-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <201404241428.10248.arnd@arndb.de>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Florian Fainelli <f.fainelli@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Eric Dumazet <eric.dumazet@gmail.com>, netdev <netdev@vger.kernel.org>, xuwei5@hisilicon.com, David Laight <David.Laight@aculab.com>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 5:28 PM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
 
-> From: Thierry Reding <treding@nvidia.com>
+
+On 04/24/2014 08:28 PM, Arnd Bergmann wrote:
+> On Tuesday 22 April 2014, zhangfei wrote:
+>> On 04/22/2014 10:30 PM, Arnd Bergmann wrote:
+>>> On Tuesday 22 April 2014, zhangfei wrote:
+>>>> On 04/22/2014 04:22 PM, Arnd Bergmann wrote:
 >
-> Many bindings use the -gpio suffix in property names. Support this in
-> addition to the -gpios suffix when requesting GPIOs using the new
-> descriptor-based API.
+>>> But it means that the hip04_mdio driver potentially won't work if connected
+>>> to something other than a Marvell PHY.
+>>>
+>>> I noticed that the marvell_of_reg_init() does this at init time:
+>>>
+>>> saved_page = phy_read(phydev, MII_MARVELL_PHY_PAGE);
+>>> ... /* perform init */
+>>> if (page_changed)
+>>>        phy_write(phydev, MII_MARVELL_PHY_PAGE, saved_page);
+>>>
+>>> Is this a bug? Maybe it should always set page 0 when leaving
+>>> this function.
+>>>
+>> It is correct behavior return to the original page.
+>>
+>> First get_phy_id, then match driver according to the id, then operation
+>> in the specific driver have the chance to run, including
+>> marvell_of_reg_init etc.
+>>
+>> Just unlucky the default value of PHY_PAGE after power on is not 0.
 >
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-
-Are the DT bindings really full of such ambiguity between
-singular and plural? Examples?
-
-What happens in affected drivers today? It just doesn't work?
-
-Does that mean these bindings are not actively used by any
-drivers yet so we could augment the bindings instead, or are
-they already deployed so we must implement this?
-
-Would like a word from the DT people here...
-
->  drivers/gpio/gpiolib.c | 18 ++++++++++++------
->  1 file changed, 12 insertions(+), 6 deletions(-)
+> Ok, so it's actually not possible to detect this case prior to having
+> to work around it.
 >
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 7a0b97076374..b991462c22fb 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -2594,17 +2594,23 @@ static struct gpio_desc *of_find_gpio(struct device *dev, const char *con_id,
->                                       unsigned int idx,
->                                       enum gpio_lookup_flags *flags)
->  {
-> +       static const char *suffixes[] = { "gpios", "gpio" };
->         char prop_name[32]; /* 32 is max size of property name */
->         enum of_gpio_flags of_flags;
->         struct gpio_desc *desc;
-> +       unsigned int i;
+> How about adding a DT property as a flag to tell the driver whether
+> to set the page to zero or not? That would let the driver work
+> with different types of PHY implementations, or skip the code if
+> there is firmware that can already set it up to page zero.
 >
-> -       if (con_id)
-> -               snprintf(prop_name, 32, "%s-gpios", con_id);
-> -       else
-> -               snprintf(prop_name, 32, "gpios");
-> +       for (i = 0; i < ARRAY_SIZE(suffixes); i++) {
-> +               if (con_id)
-> +                       snprintf(prop_name, 32, "%s-%s", con_id, suffixes[i]);
-> +               else
-> +                       snprintf(prop_name, 32, "%s", suffixes[i]);
->
-> -       desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
-> -                                       &of_flags);
-> +               desc = of_get_named_gpiod_flags(dev->of_node, prop_name, idx,
-> +                                               &of_flags);
-> +               if (!IS_ERR(desc))
-> +                       break;
-> +       }
 
-Code snippet left for reference on devicetree ML.
+Currently we suspect it maybe caused by bootloader (uefi) has accessed 
+page register and forgot to recover, still in double confirm.
+Even it not caused by uefi, we can set to page 0 in uefi, and let mdio 
+driver common to other phy.
+So we may remove the bus->reset, and let uefi do the preparation.
 
-Yours,
-Linus Walleij
+Thanks
