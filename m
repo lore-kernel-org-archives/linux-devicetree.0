@@ -1,66 +1,99 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and dma-coherent
-Date: Thu, 24 Apr 2014 11:30:00 -0400
-Message-ID: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
+Date: Thu, 24 Apr 2014 11:30:03 -0400
+Message-ID: <1398353407-2345-4-git-send-email-santosh.shilimkar@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398353407-2345-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Here is an updated v3 of the series. Series introduces support for setting up
-dma parameters based on device tree properties like 'dma-ranges' and
-'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
-series can be found here [3], [2] and [1].
+The of_dma_is_coherent() helper parses the given DT device
+node to see if the "dma-coherent" property is supported and
+returns true or false accordingly.
 
-The 'dma-ranges' helps to take care of few DMAable system memory restrictions
-by use of dma_pfn_offset which we maintain now per device. Arch code then
-uses it for dma address translations for such cases. We update the
-dma_pfn_offset accordingly during DT the device creation process.The
-'dma-coherent' property is used to setup arch's coherent dma_ops.
+If the arch is always coherent or always noncoherent, then the default
+DMA ops has to be specified accordingly.
 
-Hopefully with acks, tested-by this version can get into 3.16 queue. I will
-post a followup series for Keystone SOC which will use this infrastructure.
-Linus W also wants to use this for ARM integrator platform dma offset issue.
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ drivers/of/platform.c       |   23 +++++++++++++++++++++++
+ include/linux/of_platform.h |    6 ++++++
+ 2 files changed, 29 insertions(+)
 
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grygorii Strashko <grygorii.strashko@ti.com>
-
-Grygorii Strashko (2):
-  of: introduce of_dma_get_range() helper
-  ARM: dma: Use dma_pfn_offset for dma address translation
-
-Santosh Shilimkar (5):
-  device: introduce per device dma_pfn_offset
-  of: introduce of_dma_is_coherent() helper
-  of: configure the platform device dma parameters
-  ARM: dma: implement set_arch_dma_coherent_ops()
-  ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
-
- arch/arm/include/asm/dma-mapping.h |   28 ++++++++++--
- arch/arm/mm/dma-mapping.c          |    4 +-
- drivers/of/address.c               |   87 ++++++++++++++++++++++++++++++++++++
- drivers/of/platform.c              |   71 +++++++++++++++++++++++++++--
- include/linux/device.h             |    2 +
- include/linux/dma-mapping.h        |    7 +++
- include/linux/of_address.h         |    8 ++++
- include/linux/of_platform.h        |    6 +++
- 8 files changed, 204 insertions(+), 9 deletions(-)
-
-Regards,
-Santosh
-
-[1] http://www.spinics.net/lists/arm-kernel/msg311678.html
-[2] https://lkml.org/lkml/2014/3/6/186
-[3] https://lkml.org/lkml/2014/4/19/80
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 404d1da..48de98f 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -485,4 +485,27 @@ int of_platform_populate(struct device_node *root,
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(of_platform_populate);
++
++/**
++ * of_dma_is_coherent - Check if device is coherent
++ * @np:	device node
++ *
++ * It returns true if "dma-coherent" property was found
++ * for this device in DT.
++ */
++bool of_dma_is_coherent(struct device_node *np)
++{
++	struct device_node *node = of_node_get(np);
++
++	while (node) {
++		if (of_property_read_bool(node, "dma-coherent")) {
++			of_node_put(node);
++			return true;
++		}
++		node = of_get_next_parent(node);
++	}
++	of_node_put(node);
++	return false;
++}
++EXPORT_SYMBOL_GPL(of_dma_is_coherent);
+ #endif /* CONFIG_OF_ADDRESS */
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 05cb4a9..b9a3cb2 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -72,6 +72,7 @@ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
+ 				const struct of_dev_auxdata *lookup,
+ 				struct device *parent);
++extern bool of_dma_is_coherent(struct device_node *np);
+ #else
+ static inline int of_platform_populate(struct device_node *root,
+ 					const struct of_device_id *matches,
+@@ -80,6 +81,11 @@ static inline int of_platform_populate(struct device_node *root,
+ {
+ 	return -ENODEV;
+ }
++
++static inline bool of_dma_is_coherent(struct device_node *np)
++{
++	return false;
++}
+ #endif
+ 
+ #endif	/* _LINUX_OF_PLATFORM_H */
 -- 
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
