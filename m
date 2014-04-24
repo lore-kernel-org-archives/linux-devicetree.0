@@ -1,130 +1,66 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 4/6] soc: ti: add Keystone Navigator QMSS driver
-Date: Thu, 24 Apr 2014 09:57:14 -0500
-Message-ID: <20140424145714.GM26661@saruman.home>
-References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com>
- <1398296783-1176-5-git-send-email-santosh.shilimkar@ti.com>
- <20140424013053.GC13374@saruman.home>
- <53590F33.6070508@ti.com>
-Reply-To: <balbi@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and dma-coherent
+Date: Thu, 24 Apr 2014 11:30:00 -0400
+Message-ID: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1rguoi8KZGYj2k4L"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53590F33.6070508@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: balbi@ti.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---1rguoi8KZGYj2k4L
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Here is an updated v3 of the series. Series introduces support for setting up
+dma parameters based on device tree properties like 'dma-ranges' and
+'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
+series can be found here [3], [2] and [1].
 
-On Thu, Apr 24, 2014 at 09:18:43AM -0400, Santosh Shilimkar wrote:
-> On Wednesday 23 April 2014 09:30 PM, Felipe Balbi wrote:
-> > Hi,
-> >=20
-> > On Wed, Apr 23, 2014 at 07:46:20PM -0400, Santosh Shilimkar wrote:
-> >> From: Sandeep Nair <sandeep_n@ti.com>
-> >>
-> >> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
-> >> the main hardware sub system which forms the backbone of the Keystone
-> >> Multi-core Navigator. QMSS consist of queue managers, packed-data stru=
-cture
-> >> processors(PDSP), linking RAM, descriptor pools and infrastructure
-> >> Packet DMA.
-> >>
-> >> The Queue Manager is a hardware module that is responsible for acceler=
-ating
-> >> management of the packet queues. Packets are queued/de-queued by writi=
-ng or
-> >> reading descriptor address to a particular memory mapped location. The=
- PDSPs
-> >> perform QMSS related functions like accumulation, QoS, or event manage=
-ment.
-> >> Linking RAM registers are used to link the descriptors which are store=
-d in
-> >> descriptor RAM. Descriptor RAM is configurable as internal or external=
- memory.
-> >>
-> >> The QMSS driver manages the PDSP setups, linking RAM regions,
-> >> queue pool management (allocation, push, pop and notify) and descriptor
-> >> pool management. The specifics on the device tree bindings for
-> >> QMSS can be found in:
-> >> 	Documentation/devicetree/bindings/soc/keystone-navigator-qmss.txt
-> >>
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Cc: Kumar Gala <galak@codeaurora.org>
-> >> Cc: Olof Johansson <olof@lixom.net>
-> >> Cc: Arnd Bergmann <arnd@arndb.de>
-> >> Cc: Grant Likely <grant.likely@linaro.org>
-> >> Cc: Rob Herring <robh+dt@kernel.org>
-> >> Cc: Mark Rutland <mark.rutland@arm.com>
-> >> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
-> >> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> >> ---
-> >>  drivers/Kconfig                  |    2 +
-> >>  drivers/soc/Kconfig              |    2 +
-> >>  drivers/soc/Makefile             |    5 +
-> >>  drivers/soc/ti/Kconfig           |   21 +
-> >>  drivers/soc/ti/Makefile          |    4 +
-> >>  drivers/soc/ti/knav_qmss.h       |  386 ++++++++
-> >>  drivers/soc/ti/knav_qmss_acc.c   |  591 +++++++++++++
-> >>  drivers/soc/ti/knav_qmss_queue.c | 1814 +++++++++++++++++++++++++++++=
-+++++++++
-> >>  include/linux/soc/ti/knav_qmss.h |   90 ++
-> >>  9 files changed, 2915 insertions(+)
-> >>  create mode 100644 drivers/soc/Makefile
-> >>  create mode 100644 drivers/soc/ti/Kconfig
-> >>  create mode 100644 drivers/soc/ti/Makefile
-> >>  create mode 100644 drivers/soc/ti/knav_qmss.h
-> >>  create mode 100644 drivers/soc/ti/knav_qmss_acc.c
-> >>  create mode 100644 drivers/soc/ti/knav_qmss_queue.c
-> >>  create mode 100644 include/linux/soc/ti/knav_qmss.h
-> >>
-> >> diff --git a/drivers/Kconfig b/drivers/Kconfig
-> >> index 0e87a34..8993913 100644
-> >> --- a/drivers/Kconfig
-> >> +++ b/drivers/Kconfig
-> >> @@ -148,6 +148,8 @@ source "drivers/remoteproc/Kconfig"
-> >> =20
-> >>  source "drivers/rpmsg/Kconfig"
-> >> =20
-> >> +source "drivers/soc/Kconfig"
-> >=20
-> > This hunk was already in patch one but in a different offset in this
-> > file.
-> >=20
-> right.. I will drop this one... Thanks for spotting it
+The 'dma-ranges' helps to take care of few DMAable system memory restrictions
+by use of dma_pfn_offset which we maintain now per device. Arch code then
+uses it for dma address translations for such cases. We update the
+dma_pfn_offset accordingly during DT the device creation process.The
+'dma-coherent' property is used to setup arch's coherent dma_ops.
 
-np, cheers
+Hopefully with acks, tested-by this version can get into 3.16 queue. I will
+post a followup series for Keystone SOC which will use this infrastructure.
+Linus W also wants to use this for ARM integrator platform dma offset issue.
 
---=20
-balbi
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grygorii Strashko <grygorii.strashko@ti.com>
 
---1rguoi8KZGYj2k4L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Grygorii Strashko (2):
+  of: introduce of_dma_get_range() helper
+  ARM: dma: Use dma_pfn_offset for dma address translation
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Santosh Shilimkar (5):
+  device: introduce per device dma_pfn_offset
+  of: introduce of_dma_is_coherent() helper
+  of: configure the platform device dma parameters
+  ARM: dma: implement set_arch_dma_coherent_ops()
+  ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
 
-iQIcBAEBAgAGBQJTWSZKAAoJEIaOsuA1yqREYp0P+wY7HCMZwhky1BvGWTpIwgqo
-7jiOZp5vo+ziJsIHzj2lTrg66mn3JMljzJYotDeSbS6OL5h+savBNcXOf8IGJOrv
-+X4B0ORVUDHI3MD2AUw8f2d43bPJyKJ+s61rKSUSPZuc2yH8IO2VYQJYld9Xw+Qa
-tioYA4XaQZz8I3ylcK2YQ3GqwsSIgQJ2OkK7N+W/VkJQno9u9EeNjNihJmQjwUEO
-E8/++gzu5gFYuZrC1IItXWmTXS/iV4gGzJPP7a531dkso8Qq4UjaaIvWLtWQp+B2
-cD7WmZsZZz8F4vv6TbnS+aBmLvM0UrOtlKOO4oAelDZdyflzcxEVE7pnwFsawMaP
-FsAFsJobaCNslFjwKfUzELrV/O7jNFTlSu5exVWCln2ruMX66kIJy0i2f+1pnGqI
-bq0M76p/6xfH/oqgWy+aZe7CHlM5D9xchXAG42PaCcdEHJYP9f5wBVzCWNJGFkhp
-gpMGpKP1NEts7i5sii8YR1EgKAk8iIXTcLI04FiSDRHERGqAtjvRKviB1tgDdRrn
-CTIas1daFdGcwOuYFUzW+q9O21dGMbtG0483skldeOrfSBX8qgJwobXr6kBF642e
-sb93kOEBo7K4Hq3MZwSMp0AaAuDCV3JvpoXNEzubkOOHjZrKvSKs6NMzyJ0uEtxu
-/+NMo1LHYg9jR68+N3s6
-=fjkP
------END PGP SIGNATURE-----
+ arch/arm/include/asm/dma-mapping.h |   28 ++++++++++--
+ arch/arm/mm/dma-mapping.c          |    4 +-
+ drivers/of/address.c               |   87 ++++++++++++++++++++++++++++++++++++
+ drivers/of/platform.c              |   71 +++++++++++++++++++++++++++--
+ include/linux/device.h             |    2 +
+ include/linux/dma-mapping.h        |    7 +++
+ include/linux/of_address.h         |    8 ++++
+ include/linux/of_platform.h        |    6 +++
+ 8 files changed, 204 insertions(+), 9 deletions(-)
 
---1rguoi8KZGYj2k4L--
+Regards,
+Santosh
+
+[1] http://www.spinics.net/lists/arm-kernel/msg311678.html
+[2] https://lkml.org/lkml/2014/3/6/186
+[3] https://lkml.org/lkml/2014/4/19/80
+-- 
+1.7.9.5
