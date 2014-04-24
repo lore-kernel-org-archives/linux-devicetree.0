@@ -1,7 +1,7 @@
 From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 03/10] NFC: st21nfca: Fix incorrect byte stuffing revocation.
-Date: Thu, 24 Apr 2014 23:19:32 +0200
-Message-ID: <1398374379-17133-4-git-send-email-christophe-h.ricard@st.com>
+Subject: [PATCH 05/10] NFC: st21nfca: Add mutex to force a successful i2c transaction.
+Date: Thu, 24 Apr 2014 23:19:34 +0200
+Message-ID: <1398374379-17133-6-git-send-email-christophe-h.ricard@st.com>
 References: <1398374379-17133-1-git-send-email-christophe-h.ricard@st.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1398374379-17133-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
@@ -10,34 +10,63 @@ To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9
 Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Byte stuffing was not correctly removed after a i2c read operation.
-This was causing improper crc calculation when byte stuffing was
-applied to more than 1 byte.
+Stabilize communication in case of i2c transaction failure.
+This avoid a write transaction during a read retry or a read
+transaction during a write retry.
 
 Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
 ---
- drivers/nfc/st21nfca/i2c.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+ drivers/nfc/st21nfca/i2c.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
 diff --git a/drivers/nfc/st21nfca/i2c.c b/drivers/nfc/st21nfca/i2c.c
-index 5535d02..e29351c 100644
+index dece61f..ef5e648 100644
 --- a/drivers/nfc/st21nfca/i2c.c
 +++ b/drivers/nfc/st21nfca/i2c.c
-@@ -312,11 +312,10 @@ static int st21nfca_hci_i2c_repack(struct sk_buff *skb)
- 		skb_trim(skb, size);
- 		/* remove ST21NFCA byte stuffing for upper layer */
- 		for (i = 1, j = 0; i < skb->len; i++) {
--			if (skb->data[i] ==
-+			if (skb->data[i + j] ==
- 					(u8) ST21NFCA_ESCAPE_BYTE_STUFFING) {
--				skb->data[i] =
--				    skb->data[i +
--					      1] | ST21NFCA_BYTE_STUFFING_MASK;
-+				skb->data[i] = skb->data[i + j + 1]
-+						| ST21NFCA_BYTE_STUFFING_MASK;
- 				i++;
- 				j++;
- 			}
+@@ -89,6 +89,7 @@ struct st21nfca_i2c_phy {
+ 	 * and prevents normal operation.
+ 	 */
+ 	int hard_fault;
++	struct mutex phy_lock;
+ };
+ static u8 len_seq[] = { 13, 24, 15, 29 };
+ static u16 wait_tab[] = { 2, 3, 5, 15, 20, 40};
+@@ -245,11 +246,13 @@ static int st21nfca_hci_i2c_write(void *phy_id, struct sk_buff *skb)
+ 	 * Manage sleep mode
+ 	 * Try 3 times to send data with delay between each
+ 	 */
++	mutex_lock(&phy->phy_lock);
+ 	for (i = 0; i < ARRAY_SIZE(wait_tab) && r < 0; i++) {
+ 		r = i2c_master_send(client, tmp, j);
+ 		if (r < 0)
+ 			msleep(wait_tab[i]);
+ 	}
++	mutex_unlock(&phy->phy_lock);
+ 
+ 	if (r >= 0) {
+ 		if (r != j)
+@@ -375,11 +378,13 @@ static int st21nfca_hci_i2c_read(struct st21nfca_i2c_phy *phy,
+ 		 * RF or SWP interface
+ 		 */
+ 		r = 0;
++		mutex_lock(&phy->phy_lock);
+ 		for (i = 0; i < ARRAY_SIZE(wait_tab) && r <= 0; i++) {
+ 			r = i2c_master_recv(client, buf, len);
+ 			if (r < 0)
+ 				msleep(wait_tab[i]);
+ 		}
++		mutex_unlock(&phy->phy_lock);
+ 
+ 		if (r != len) {
+ 			phy->current_read_len = 0;
+@@ -574,6 +579,7 @@ static int st21nfca_hci_i2c_probe(struct i2c_client *client,
+ 
+ 	phy->current_read_len = 0;
+ 	phy->crc_trials = 0;
++	mutex_init(&phy->phy_lock);
+ 	i2c_set_clientdata(client, phy);
+ 
+ 	pdata = client->dev.platform_data;
 -- 
 1.9.1
 
