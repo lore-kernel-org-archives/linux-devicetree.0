@@ -1,7 +1,8 @@
 From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Thu, 24 Apr 2014 11:30:04 -0400
-Message-ID: <1398353407-2345-5-git-send-email-santosh.shilimkar@ti.com>
+Subject: [PATCH v3 5/7] ARM: dma: Use dma_pfn_offset for dma address
+ translation
+Date: Thu, 24 Apr 2014 11:30:05 -0400
+Message-ID: <1398353407-2345-6-git-send-email-santosh.shilimkar@ti.com>
 References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,16 +22,16 @@ To: linux-kernel@vger.kernel.org
 Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Retrieve DMA configuration from DT and setup platform device's DMA
-parameters. The DMA configuration in DT has to be specified using
-"dma-ranges" and "dma-coherent" properties if supported.
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-We setup dma_pfn_offset using "dma-ranges" and dma_coherent_ops
-using "dma-coherent" device tree properties.
+In most of cases DMA addresses can be performed using offset value of
+ Bus address space relatively to physical address space as following:
 
-The set_arch_dma_coherent_ops macro has to be defined by arch if
-it supports coherent dma_ops. Otherwise, set_arch_dma_coherent_ops() is
-declared as nop.
+PFN->DMA:
+ __pfn_to_phys(pfn + [-]dma_pfn_offset)
+
+DMA->PFN:
+ __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
 
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Cc: Russell King <linux@arm.linux.org.uk>
@@ -43,93 +44,52 @@ Cc: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- drivers/of/platform.c       |   48 ++++++++++++++++++++++++++++++++++++++++---
- include/linux/dma-mapping.h |    7 +++++++
- 2 files changed, 52 insertions(+), 3 deletions(-)
+ arch/arm/include/asm/dma-mapping.h |   21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 48de98f..270c0b9 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -187,6 +187,50 @@ struct platform_device *of_device_alloc(struct device_node *np,
- EXPORT_SYMBOL(of_device_alloc);
- 
- /**
-+ * of_dma_configure - Setup DMA configuration
-+ * @dev:	Device to apply DMA configuration
-+ *
-+ * Try to get devices's DMA configuration from DT and update it
-+ * accordingly.
-+ *
-+ * In case if platform code need to use own special DMA configuration,it
-+ * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
-+ * to fix up DMA configuration.
-+ */
-+static void of_dma_configure(struct device *dev)
-+{
-+	u64 dma_addr, paddr, size;
-+	int ret;
-+
-+	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-+	if (!dev->dma_mask)
-+		dev->dma_mask = &dev->coherent_dma_mask;
-+
-+	/*
-+	 * if dma-coherent property exist, call arch hook to setup
-+	 * dma coherent operations.
-+	 */
-+	if (of_dma_is_coherent(dev->of_node)) {
-+		set_arch_dma_coherent_ops(dev);
-+		dev_dbg(dev, "device is dma coherent\n");
-+	}
-+
-+	/*
-+	 * if dma-ranges property doesn't exist - just return else
-+	 * setup the dma offset
-+	 */
-+	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-+	if ((ret == -ENODEV) || (ret < 0)) {
-+		dev_dbg(dev, "no dma range information to setup\n");
-+		return;
-+	}
-+
-+	/* DMA ranges found. Calculate and set dma_pfn_offset */
-+	dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-+	dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
-+}
-+
-+/**
-  * of_platform_device_create_pdata - Alloc, initialize and register an of_device
-  * @np: pointer to node to create device for
-  * @bus_id: name to assign device
-@@ -214,9 +258,7 @@ static struct platform_device *of_platform_device_create_pdata(
- #if defined(CONFIG_MICROBLAZE)
- 	dev->archdata.dma_mask = 0xffffffffUL;
- #endif
--	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
--	if (!dev->dev.dma_mask)
--		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-+	of_dma_configure(&dev->dev);
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
- 
-diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-index fd4aee2..c7d9b1b 100644
---- a/include/linux/dma-mapping.h
-+++ b/include/linux/dma-mapping.h
-@@ -123,6 +123,13 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
- 
- extern u64 dma_get_required_mask(struct device *dev);
- 
-+#ifndef set_arch_dma_coherent_ops
-+static inline int set_arch_dma_coherent_ops(struct device *dev)
-+{
-+	return 0;
-+}
-+#endif
-+
- static inline unsigned int dma_get_max_seg_size(struct device *dev)
+diff --git a/arch/arm/include/asm/dma-mapping.h b/arch/arm/include/asm/dma-mapping.h
+index e701a4d..424fda9 100644
+--- a/arch/arm/include/asm/dma-mapping.h
++++ b/arch/arm/include/asm/dma-mapping.h
+@@ -58,22 +58,35 @@ static inline int dma_set_mask(struct device *dev, u64 mask)
+ #ifndef __arch_pfn_to_dma
+ static inline dma_addr_t pfn_to_dma(struct device *dev, unsigned long pfn)
  {
- 	return dev->dma_parms ? dev->dma_parms->max_segment_size : 65536;
+-	return (dma_addr_t)__pfn_to_bus(pfn);
++	if (!dev)
++		return (dma_addr_t)__pfn_to_bus(pfn);
++	else
++		return (dma_addr_t)__pfn_to_bus(pfn - dev->dma_pfn_offset);
+ }
+ 
+ static inline unsigned long dma_to_pfn(struct device *dev, dma_addr_t addr)
+ {
+-	return __bus_to_pfn(addr);
++	if (!dev)
++		return __bus_to_pfn(addr);
++	else
++		return __bus_to_pfn(addr) + dev->dma_pfn_offset;
+ }
+ 
+ static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+ {
+-	return (void *)__bus_to_virt((unsigned long)addr);
++	if (!dev)
++		return (void *)__bus_to_virt((unsigned long)addr);
++	else
++		return (void *)__bus_to_virt(__pfn_to_bus(dma_to_pfn(dev, addr)));
+ }
+ 
+ static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+ {
+-	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
++	if (!dev)
++		return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
++	else
++		return pfn_to_dma(dev,
++				__bus_to_pfn(__virt_to_bus((unsigned long)(addr))));
+ }
+ 
+ #else
 -- 
 1.7.9.5
