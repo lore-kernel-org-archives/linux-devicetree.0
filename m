@@ -1,84 +1,83 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add sound card driver for Snow board
-Date: Thu, 24 Apr 2014 14:39:20 +0100
-Message-ID: <20140424133920.GA12304@sirena.org.uk>
-References: <1398243705-31151-1-git-send-email-tushar.behera@linaro.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v1 2/7] mtd: spi-nor: add DDR quad read support
+Date: Thu, 24 Apr 2014 15:43:51 +0200
+Message-ID: <201404241543.51752.marex@denx.de>
+References: <a> <201404232145.57404.marex@denx.de> <20140424045332.GB29664@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fqxOrU+oVxTp8sLK"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398243705-31151-1-git-send-email-tushar.behera@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, sbkim73@samsung.com, rdunlap@infradead.org, dianders@chromium.org
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140424045332.GB29664@localhost>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thursday, April 24, 2014 at 06:53:34 AM, Huang Shijie wrote:
+> On Wed, Apr 23, 2014 at 09:45:57PM +0200, Marek Vasut wrote:
+> > On Wednesday, April 23, 2014 at 12:16:50 PM, Huang Shijie wrote:
+> > > This patch adds the DDR quad read support by the following:
+> > >   [1] add SPI_NOR_DDR_QUAD read mode.
+> > >   
+> > >   [2] add DDR Quad read opcodes:
+> > >        SPINOR_OP_READ_1_4_4_D / SPINOR_OP_READ4_1_4_4_D
+> > >   
+> > >   [3] add set_ddr_quad_mode() to initialize for the DDR quad read.
+> > >   
+> > >       Currently it only works for Spansion NOR.
+> > >   
+> > >   [3] set the dummy with 8 for DDR quad read.
+> > >   
+> > >       The m25p80.c can not support the DDR quad read, the SPI NOR
+> > > 
+> > > controller can set the dummy value in its driver, such as
+> > > fsl-quadspi.c.
+> > > 
+> > > Test this patch for Spansion s25fl128s NOR flash.
+> > > 
+> > > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > > ---
+> > > 
+> > >  drivers/mtd/spi-nor/spi-nor.c |   50
+> > > 
+> > > +++++++++++++++++++++++++++++++++++++++- include/linux/mtd/spi-nor.h  
+> > > |
+> > > 
+> > >  8 +++++-
+> > >  2 files changed, 54 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/mtd/spi-nor/spi-nor.c
+> > > b/drivers/mtd/spi-nor/spi-nor.c index 1a12f81..e2f69db 100644
+> > > --- a/drivers/mtd/spi-nor/spi-nor.c
+> > > +++ b/drivers/mtd/spi-nor/spi-nor.c
+> > > @@ -74,6 +74,15 @@ static int read_cr(struct spi_nor *nor)
+> > > 
+> > >  static inline int spi_nor_read_dummy_cycles(struct spi_nor *nor)
+> > >  {
+> > >  
+> > >  	switch (nor->flash_read) {
+> > > 
+> > > +	case SPI_NOR_DDR_QUAD:
+> > > +		/*
+> > > +		 * The m25p80.c can not support the DDR quad read.
+> > > +		 * We set the dummy cycles to 8 by default. If the SPI NOR
+> > > +		 * controller driver has already set it before call the
+> > > +		 * spi_nor_scan(), we just keep it as it is.
+> > > +		 */
+> > > +		if (nor->read_dummy)
+> > > +			return nor->read_dummy;
+> > 
+> > Can the controller set this variable to zero ?
+> 
+> The default value of this variable is zero.  It it meaningless to set zero.
+> The DDR Quad read definitely will use a non-zero dummy.
 
---fqxOrU+oVxTp8sLK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Can you back this by some documentation please ?
 
-On Wed, Apr 23, 2014 at 02:31:45PM +0530, Tushar Behera wrote:
-
-> +Required properties:
-> +- compatible : Can be one of the following,
-> +			"google,snow-audio-max98090" or
-> +			"google,snow-audio-max98095"
-> +- samsung,i2s-controller: The phandle of the Samsung I2S0 controller
-
-This should be any I2S controller, not just I2S0?
-
-> +- samsung,audio-codec: The phandle of the audio codec
-
-This binding only has one I2S controller and CODEC.  However...
-
-> +static struct snd_soc_dai_link snow_dai[] = {
-> +	{ /* Playback DAI i/f */
-> +		.name = "Playback",
-> +		.stream_name = "Playback",
-> +		.codec_dai_name = "HiFi",
-> +		.dai_fmt = SND_SOC_DAIFMT_I2S |
-> +				SND_SOC_DAIFMT_NB_NF |
-> +				SND_SOC_DAIFMT_CBS_CFS,
-> +	}, { /* Capture DAI i/f */
-> +		.name = "Capture",
-> +		.stream_name = "Capture",
-> +		.codec_dai_name = "HiFi",
-> +		.dai_fmt = SND_SOC_DAIFMT_I2S |
-> +				SND_SOC_DAIFMT_NB_NF |
-> +				SND_SOC_DAIFMT_CBS_CFS,
-> +	},
-> +};
-
-...for some reason we have separate capture and playback DAI links
-defined.  Why is that?  Also, why is the secondary I2S playback stream
-not supported (this may be a reason to restrict to only the one I2S
-interface)?
-
-Please also use subject lines consistent with the subsystem - NO NEED TO
-SHOUT.
-
---fqxOrU+oVxTp8sLK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTWRQFAAoJELSic+t+oim9FLEP/2a7HlgBLyAyhlBpVVq4cudI
-UXXiPqrnYEprtqB+UouodnWQDLcn7EuEIa2YiE9Z9YbzUmn/0rNusq1UBgzkgTZo
-OOSiKknpOqJmwHig39tXdoyW+Q3Gf2FP945rcHI38ogXDqYt6OVNCJ93wOutYBpf
-tKgejkbuSYLLB7ypk+x0xtmipWA6/0TLwf06CBGtICzWk7SoGdZP54rFtjacTEYJ
-x4XXlGMJX1Wp8vrRopSSHFWSMXet8m2lFvRgv8PIvHyQZsrvSGNS4v1hdSiqSoyH
-Vl0tp68YPcoK25RJojB0n4gPKoXi2ysqv1U3yvPtCXee+cUmaHv2P/HvR4VtVkMh
-uAaiDab6fbisJOPL3iSrZKgZulzLac9mUpO4Tqe09E7OdwJK4ffLXt/mBaPxh79A
-g+eScceRhWEpfy8nW5Kxe8/blRy8E/QX2H9Ray5e9k17tLCtfvnQ51uXM2bHt1EI
-bCDNz8wxJSRBWyU2UwjLqRTSAUYiC2HVEoYksDyIzycUZ+fyZyP1ryiPtEKZixgb
-fnRFyEeO5pn+HFH4ANxGp6UK2doZMLSFAvap6KSaIsHm4usZ9gLsgarMzdKCcLcL
-tmPea5SImfWgqKzh41Zy1pFmwzlyUhfoAD3AQgtcMQbkJHgFa1qFdRR53UApOyoh
-ncpz8pHpV7F85EYSLPwM
-=3Q3e
------END PGP SIGNATURE-----
-
---fqxOrU+oVxTp8sLK--
+I mean, I know I am a hardass here, but please understand I'd like to understand 
+the decisions that are being made.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
