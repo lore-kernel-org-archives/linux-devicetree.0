@@ -1,69 +1,67 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 09/10] NFC: st21nfca: Improve load_session in order to create pipe when it does not exists
-Date: Thu, 24 Apr 2014 23:19:38 +0200
-Message-ID: <1398374379-17133-10-git-send-email-christophe-h.ricard@st.com>
-References: <1398374379-17133-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398374379-17133-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
+Date: Thu, 24 Apr 2014 15:32:38 -0700
+Message-ID: <7hiopynyt5.fsf@paris.lan>
+References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
+	(Robert Nelson's message of "Tue, 15 Apr 2014 10:09:59 -0500")
+Sender: linux-omap-owner@vger.kernel.org
+To: Robert Nelson <robertcnelson@gmail.com>
+Cc: bcousson@baylibre.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In case anybody uses previous patchset with the CLF, add a check to make sure
-missing pipe are created.
-st21nfca returns its pipe list in the creation order (most recent latest).
+Robert Nelson <robertcnelson@gmail.com> writes:
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- drivers/nfc/st21nfca/st21nfca.c | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+> BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
+>
+> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> ---
+>  arch/arm/boot/dts/Makefile               |  1 +
+>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
+>  2 files changed, 16 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 35c146f..0bdeba3 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+>  	omap3-sbc-t3730.dtb \
+>  	omap3-devkit8000.dtb \
+>  	omap3-beagle-xm.dtb \
+> +	omap3-beagle-xm-ab.dtb \
+>  	omap3-evm.dtb \
+>  	omap3-evm-37xx.dtb \
+>  	omap3-ldp.dtb \
+> diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+> new file mode 100644
+> index 0000000..9d81123
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+> @@ -0,0 +1,15 @@
+> +/*
+> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include "omap3-beagle-xm.dts"
+> +
+> +/ {
+> +	/* HS USB Port 2 Power enable was inverted with the xM C */
+> +	hsusb2_power: hsusb2_power_reg {
+> +		enable-active-high;
 
-diff --git a/drivers/nfc/st21nfca/st21nfca.c b/drivers/nfc/st21nfca/st21nfca.c
-index 201a3ea..d9ee3d0 100644
---- a/drivers/nfc/st21nfca/st21nfca.c
-+++ b/drivers/nfc/st21nfca/st21nfca.c
-@@ -61,10 +61,10 @@
- static DECLARE_BITMAP(dev_mask, ST21NFCA_NUM_DEVICES);
- 
- static struct nfc_hci_gate st21nfca_gates[] = {
--	{NFC_HCI_ADMIN_GATE, NFC_HCI_INVALID_PIPE},
-+	{NFC_HCI_ADMIN_GATE, NFC_HCI_ADMIN_PIPE},
- 	{NFC_HCI_LOOPBACK_GATE, NFC_HCI_INVALID_PIPE},
- 	{NFC_HCI_ID_MGMT_GATE, NFC_HCI_INVALID_PIPE},
--	{NFC_HCI_LINK_MGMT_GATE, NFC_HCI_INVALID_PIPE},
-+	{NFC_HCI_LINK_MGMT_GATE, NFC_HCI_LINK_MGMT_PIPE},
- 	{NFC_HCI_RF_READER_B_GATE, NFC_HCI_INVALID_PIPE},
- 	{NFC_HCI_RF_READER_A_GATE, NFC_HCI_INVALID_PIPE},
- 	{ST21NFCA_DEVICE_MGNT_GATE, ST21NFCA_DEVICE_MGNT_PIPE},
-@@ -170,6 +170,23 @@ static int st21nfca_hci_load_session(struct nfc_hci_dev *hdev)
- 				st21nfca_gates[j].pipe;
- 		}
- 	}
-+
-+	/*
-+	 * 3 gates have a well known pipe ID.
-+	 * They will never appear in the pipe list
-+	 */
-+	if (skb_pipe_list->len + 3 < ARRAY_SIZE(st21nfca_gates)) {
-+		for (i = skb_pipe_list->len + 3;
-+				i < ARRAY_SIZE(st21nfca_gates); i++) {
-+			r = nfc_hci_connect_gate(hdev,
-+					NFC_HCI_HOST_CONTROLLER_ID,
-+					st21nfca_gates[i].gate,
-+					st21nfca_gates[i].pipe);
-+			if (r < 0)
-+				goto free_info;
-+		}
-+	}
-+
- 	memcpy(hdev->init_data.gates, st21nfca_gates, sizeof(st21nfca_gates));
- free_info:
- 	kfree_skb(skb_pipe_info);
--- 
-1.9.1
+Missing '};' here?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This causes build breakage in linux-omap master, which now has this
+applied.
+
+> +};
+
+Kevin
