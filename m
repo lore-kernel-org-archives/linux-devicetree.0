@@ -1,42 +1,191 @@
-From: Tien Hock Loh <thloh@altera.com>
-Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
- devicetree binding
-Date: Thu, 24 Apr 2014 08:55:31 +0800
-Message-ID: <CAOLUe6bP-kBx9U3Kmfgu5iAUDkryCDubyJybDTpSCFkBd8RvMA@mail.gmail.com>
-References: <1393842463-5206-1-git-send-email-thloh@altera.com>
-	<CACRpkdaJM4RcMaNOoNnACfkRiQP9xxNSfNjV8nygA1GXYdJrfw@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 10/13] tty: serial: omap: remove some dead code
+Date: Wed, 23 Apr 2014 20:21:00 -0500
+Message-ID: <20140424012100.GB13374@saruman.home>
+References: <1398265117-11793-1-git-send-email-balbi@ti.com>
+ <1398265117-11793-10-git-send-email-balbi@ti.com>
+ <5357DDA8.4040206@ti.com>
+ <20140424084305.20c7f301@notabene.brown>
+ <20140423230121.GC10924@saruman.home>
+ <20140424101329.02e6a62f@notabene.brown>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaJM4RcMaNOoNnACfkRiQP9xxNSfNjV8nygA1GXYdJrfw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tien Hock Loh <thloh@altera.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Dinh Nguyen <dinguyen@altera.com>, "lftan@altera.com" <lftan@altera.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QKdGvSO+nmPlgiQ/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140424101329.02e6a62f-wvvUuzkyo1EYVZTmpyfIwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 9:32 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Mar 3, 2014 at 11:27 AM,  <thloh@altera.com> wrote:
->
->> From: Tien Hock Loh <thloh@altera.com>
->>
->> Add driver support for Altera GPIO soft IP, including interrupts and I/O.
->> Tested on Altera CV SoC board using dipsw and LED using LED framework.
->>
->> Signed-off-by: Tien Hock Loh <thloh@altera.com>
->
-> Some time has passed since this was posted and we now have
-> GPIO irqchip helpers in the gpiolib core.
->
-> If you repost this, please reform this driver to use the gpiochip
-> irqchip helpers in the manner of e.g. drivers/gpio/gpio-pl061.c.
->
-> More examples and documentation is available on the "devel"
-> branch in the gpio git tree (also in linux-next).
+--QKdGvSO+nmPlgiQ/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-OK noted. I'll do that.
+Hi,
 
-Thanks for the info.
+On Thu, Apr 24, 2014 at 10:13:29AM +1000, NeilBrown wrote:
+> On Wed, 23 Apr 2014 18:01:21 -0500 Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+>=20
+> > Hi,
+> >=20
+> > On Thu, Apr 24, 2014 at 08:43:05AM +1000, NeilBrown wrote:
+> > > On Wed, 23 Apr 2014 10:35:04 -0500 Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
+> > >=20
+> > > > On 04/23/2014 09:58 AM, Felipe Balbi wrote:
+> > > > > nobody passes a DTR_gpio to this driver, so
+> > > > > this code is not necessary.
+> > > > >=20
+> > > > > Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> > > > > ---
+> > > >=20
+> > > > Niel,
+> > > > this seems to revert the functionality introduced in
+> > > > commit 9574f36fb801035f6ab0fbb1b53ce2c12c17d100
+> > > > (OMAP/serial: Add support for driving a GPIO as DTR.)
+> > > >=20
+> > > > would you like to Ack this change?
+> > >=20
+> > > I have a couple of out-of-tree drivers that use this support.
+> > >=20
+> > > I hope to get back to working on that code one day and even get those=
+ drivers
+> > > upstream.  So I would really prefer this code to remain if it isn't c=
+ausing
+> > > any actual problems.
+> >=20
+> > it causes problem with DT (not really). That suport is only available on
+> > legacy platform_data-based boot, it's not available on DT. I hear Tony
+> > is pretty close to turning OMAP3 DT-only.
+> >=20
+> > > Of course, I can always re-submit it when I need it again, but that i=
+t just
+> > > extra work all around.
+> >=20
+> > I wonder how you will pass those attributes through DT considering they
+> > are *really* SW configuration. Why can't you use the real DTR pin, btw ?
+> >=20
+>=20
+> This myth that DT is only about hardware is probably one of the
+> reasons that I haven't got these out-of-tree drivers upstream yet.
 
->
-> Yours,
-> Linus Walleij
+take that up with DT maintainers
+
+> There is no "real" DTR pin.
+
+heh, my bad... confused with RTS which is supported in this HW.
+
+> When I open /dev/ttyWHATEVER, I need the driver for the device that is
+> permanently connected to that serial port to be told that the serial-devi=
+ce
+> has been opened so that it can "power on" or "wake up" the device.
+>=20
+> I don't much care how that happens, or how I tell DT that it has to happe=
+n.
+> I just need it to happen.
+>=20
+> In discrete hardware devices, the DTR line is what you would use.  The RS=
+232
+> port would raise (or lower or whatever) DTR when /dev/ttyWHATEVER was ope=
+n,
+> and  the device that was plugged in would detect the level change and do
+> stuff.
+>=20
+> But I don't have discrete hardware.  I have a bunch of stuff soldered ont=
+o a
+> board with ad-hoc connections chosen to make the life of the hardware bui=
+lder
+> easy rather than chosen to make the life of the software developer easy
+> (which I think is the correct choice).
+>=20
+> So I need to tell DT "This device is plugged into this UART, and there is=
+ no
+> DTR line, but when the UARTs DTR line would be asserted (if it had one), =
+then
+> I need that regulator of there turned on". or maybe "I need to toggle this
+> GPIO  with exactly this pattern, while watching that GPIO to see if it is
+> working".
+>=20
+> So I thought:
+>=20
+>  1/ give the UART a "virtual" DTR so it could drive any GPIO
+>  2/ create a "gpio-to-regulator" driver which presented as a (virtual) gp=
+io
+>     and responded to state changes on that GPIO by turning on or off the
+>     regulator
+>  3/ create a dedicated driver which knows how to toggle the magic GPIO wh=
+ile
+>     watching the other GPIO to convince the silly device to wakeup, or go=
+ to
+>     sleep, as required, and have this appear as a (virtual) GPIO.
+>=20
+> Then I can just tell DT that these (virtual) GPIOs are connected together,
+> and it will all just work.  And it does.
+>=20
+> But given the whole "no no, DT is for describing hardware, and you are
+> describing software" attitude,  it seems that I lost motivation for a whi=
+le
+> (that wasn't the only reason, but it didn't help).
+>=20
+> I have a patch which converts the OMAP serial driver to use DT to configu=
+re
+> these virtual DTR lines.  I'm very happy to submit that if there is some
+> chance it might be accepted and will keep the current DTR code in place.
+
+I have no problem either way, just that unused code doesn't have to be
+sitting in the tree and I'm not entirely sure this GPIO should be
+handled by omap-serial.c, perhaps something more generic inside
+serial-core so other UART drivers can benefit from it.
+
+> On the other hand, if you can point out to me what I'm missing, and how I=
+ can
+> solve my problem with any virtual GPIOs, I'm all ears.
+>=20
+> To make my problem simple and explicit:  I have a device attached to a UA=
+RT
+> which has a separate regulator.  The regulator should be powered on if and
+
+So you're using DTR to power the GPIO and hoping that the regulator
+stabilizes quickly enough so that by the time your open() finishes you
+don't have to add nonsensical msleep() calls before writing to the
+device. Sounds a bit fragile to me.
+
+> only if the /dev/ttyXX interface to the UART is open.  The device is a
+> bluetooth transceiver.
+
+considering this is a BTUART device, why didn't you do this at the ldisc
+level ? hci_uart_open() sounds like a good choice from a quick thinking.
+
+--=20
+balbi
+
+--QKdGvSO+nmPlgiQ/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTWGb8AAoJEIaOsuA1yqRENNUQAIGPo+rZyQHDJvv85rm7WE/K
+P6+dbz5UN5dEIWvNNpY4mY8whp2EGz8yIdse4mVxes3BjThZlqY2e+NhxI82mG2j
+DFzVf/ZvleJ4wQL8JZ6Q9kCJ6tmiBVgvN/FuXy2PN5q89B7fVVG7YKQz9nPIGan1
+tlxh0MbFHsn0PGVbU3sryEz0M1jnJ4OTkrdgTQvC+CqqjElSjfj0IGESi85KtKn3
+19j3p/07DNaJJR/59KDBrdKxJyzqvp3e9ypbLX7p61eOx0EcWLRD7f2U5Qp8CYT4
+Fo+/pgqC6AD10E2LoFbFyispjOjkHX1d9TeOe6B5xD3bx+y0dOTb8m6ysHEMTv6M
+eYmbUzlgge2SAqmrOeyGsviHG5gtrXYBJ7vS084cZtfh35Azhgqqp5gz8htrgFLX
+eV48kWV2lh5lVyqEfY41YSy6W474Sf3cIMRF+mH8EQCrG9ZMH5UM22s+TEUZrElA
+p55NBm2uCJJy38aPdkPBbYKrwS/IQ7ule+BVO7TwBQQ8l6unv3IkjIqzO+E1ylqU
+5qzRCKnbgbq/d6S6QwHQaRFCflmVpm2j4ARjuAOBAEk5ZaS40DPknS8JwzcEbdmU
+rsDWaTiJnpl04M6URT/Az59wSxujt1gVSp4OR2Hr52sGKpSclcgngj3XkIHHxZvI
+vkiXxtGLDqfNlM3Iqh8J
+=LPHB
+-----END PGP SIGNATURE-----
+
+--QKdGvSO+nmPlgiQ/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
