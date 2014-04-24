@@ -1,60 +1,91 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 3/4] of/clk: Register clocks suitable for Runtime PM
- with the PM core
-Date: Thu, 24 Apr 2014 16:09:00 +0200
-Message-ID: <CAMuHMdV=g13MnhhUDk9CFT+J5QPEryzO9HRSJFALJMfKi1Dn8w@mail.gmail.com>
-References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
-	<1398334403-26181-4-git-send-email-geert+renesas@glider.be>
-	<CAPDyKFr02yyhGNncYX2AgBXTA3Sc0AGQcExjtLvQ5QU0_=YJwg@mail.gmail.com>
+From: One Thousand Gnomes <gnomes-qBU/x9rampVanCEyBjwyrvXRex20P6io@public.gmane.org>
+Subject: Re: [PATCH 10/13] tty: serial: omap: remove some dead code
+Date: Thu, 24 Apr 2014 15:19:14 +0100
+Message-ID: <20140424151914.6bc6463a@alan.etchedpixels.co.uk>
+References: <1398265117-11793-1-git-send-email-balbi@ti.com>
+	<1398265117-11793-10-git-send-email-balbi@ti.com>
+	<5357DDA8.4040206@ti.com>
+	<20140424084305.20c7f301@notabene.brown>
+	<20140423230121.GC10924@saruman.home>
+	<20140424101329.02e6a62f@notabene.brown>
+	<20140424012100.GB13374@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFr02yyhGNncYX2AgBXTA3Sc0AGQcExjtLvQ5QU0_=YJwg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140424012100.GB13374-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: linux-bluetooth-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, marcel-kz+m5ild9QBg9hUCZPvPmw@public.gmane.org, gustavo-THi1TnShQwVAfugRpC6u6w@public.gmane.org, johan.hedberg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-bluetooth-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
+> > But I don't have discrete hardware.  I have a bunch of stuff soldered onto a
+> > board with ad-hoc connections chosen to make the life of the hardware builder
+> > easy rather than chosen to make the life of the software developer easy
+> > (which I think is the correct choice).
+> > 
+> > So I need to tell DT "This device is plugged into this UART, and there is no
+> > DTR line, but when the UARTs DTR line would be asserted (if it had one), then
+> > I need that regulator of there turned on". or maybe "I need to toggle this
+> > GPIO  with exactly this pattern, while watching that GPIO to see if it is
+> > working".
+> > 
+> > So I thought:
+> > 
+> >  1/ give the UART a "virtual" DTR so it could drive any GPIO
+> >  2/ create a "gpio-to-regulator" driver which presented as a (virtual) gpio
+> >     and responded to state changes on that GPIO by turning on or off the
+> >     regulator
+> >  3/ create a dedicated driver which knows how to toggle the magic GPIO while
+> >     watching the other GPIO to convince the silly device to wakeup, or go to
+> >     sleep, as required, and have this appear as a (virtual) GPIO.
 
-On Thu, Apr 24, 2014 at 3:11 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> +static int of_clk_register(struct device *dev, struct clk *clk)
->> +{
->> +       int error;
->> +
->> +       if (!dev->pm_domain) {
->> +               error = pm_clk_create(dev);
->> +               if (error)
->> +                       return error;
->> +
->> +               dev->pm_domain = &of_clk_pm_domain;
->
-> I am concerned about how this will work in conjunction with the
-> generic power domain.
->
-> A device can't reside in more than one pm_domain; thus I think it
-> would be better to always use the generic power domain and not have a
-> specific one for clocks. Typically the genpd should invoke
-> pm_clk_resume|suspend from it's runtime PM callbacks.
+Unless you are using it as a "real' DTR line then I think this is the
+wrong approach. This problem actually is turning up in both PC class and
+ARM boxes now all over the place for three reasons I am seeing.
 
-On shmobile SoCs supporting power domains, the power domain is
-overridden later by calling rmobile_add_devices_to_domains() and friends.
+1. We are getting a lot of hardware moving to serial attached
+bluetooth/gps/etc because of the power win. In addition ACPI can describe
+power relationships and what is on the other end of a UART embedded in
+the device
 
-My patch doesn't change that: the code behaved the same in the
-non-multi-platform case before: dev->pm_domain as set from
-drivers/sh/pm_runtime.c was overridden later.
+2. We've got cheap hardware with modem lines being "retrofitted" via gpio
 
-I'll have a deeper look into the power domain code later anyway.
+3. There are a subset of devices that have extra control lines beyond the
+usual serial port ones. These range from additional control lines for
+things like smartcard programmers to port muxing.
 
-Thanks!
+> I have no problem either way, just that unused code doesn't have to be
+> sitting in the tree and I'm not entirely sure this GPIO should be
+> handled by omap-serial.c, perhaps something more generic inside
+> serial-core so other UART drivers can benefit from it.
 
-Gr{oetje,eeting}s,
+serial-core provides power hooks. If the goal is that this comes on when
+you power up the uart and goes away on the last close then the hooks are
+there already. If its ldisc specific then the tty layer also calls the
+device on ldisc changes precisely so it can make hardware specific
+twiddles in such cases.
 
-                        Geert
+A set of gpios on the tty_port object would not go amiss and would also
+address the PC case.
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> considering this is a BTUART device, why didn't you do this at the ldisc
+> level ? hci_uart_open() sounds like a good choice from a quick thinking.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+ldiscs are hardware independent. Nothing about hardware belongs in an
+ldisc. Any ldisc should within reason work on any port.
+
+What I propsed when it came up ages ago was to expose some gpio settings
+in the tty, to provide ways for them to be set by default and also ioctls
+to configure them. I still think this (but moved into the tty_port as its
+a persistent hardware property) is a good idea now that we are starting
+to see more use cases than weird dongles and muxes on pre-production
+reference boards.
+
+With my tty and serial hat on I think a power gpio is a no-brainer even
+without doing the other work and therefore it should probably be described
+generically for a serial port in the DT as well as in the ACPI data. If
+you should also be able to give it a regulator to use as well that also
+seems to make complete sense.
+
+Alan
