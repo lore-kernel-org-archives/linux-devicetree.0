@@ -1,68 +1,52 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 2/2] net: Add Keystone NetCP ethernet driver
-Date: Thu, 24 Apr 2014 12:47:44 -0400 (EDT)
-Message-ID: <20140424.124744.1296959126932595844.davem@davemloft.net>
-References: <1398201675-17379-1-git-send-email-santosh.shilimkar@ti.com>
-	<1398201675-17379-3-git-send-email-santosh.shilimkar@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: "magic" handling of memory nodes
+Date: Thu, 24 Apr 2014 10:57:03 -0600
+Message-ID: <5359425F.9090200@wwwdotorg.org>
+References: <20140424113311.GR5904@bivouac.eciton.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398201675-17379-3-git-send-email-santosh.shilimkar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: santosh.shilimkar@ti.com
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, sandeep_n@ti.com, robh+dt@kernel.org, grant.likely@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140424113311.GR5904-t77nlHhSwNqAroYi2ySoxKxOck334EZe@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Date: Tue, 22 Apr 2014 17:21:15 -0400
+On 04/24/2014 05:33 AM, Leif Lindholm wrote:
+> Hi,
+> 
+> Following on the special handling of nodes called memory@0, I went to
+> have a look at the various platforms that do not actually declare a
+> device_type = "memory" for their "memory" nodes.
+> 
+> Firstly, we currently have 162(ish, I did a sloppy grep) such .dts{i}
+> files in the kernel tree.
+> 
+> Secondly, the only reason these platforms could ever have worked is
+> because they include .dtsi files that define a memory node with a
+> type explicitly set. Since this node already exists, its contents get
+> overridden, but the type tag remains. Of course, this only happens
+> with nodes called explicitly "memory" - but it happens regardless of
+> what other things they contain.
 
-> +struct netcp_tx_pipe {
-> +	struct netcp_device	*netcp_device;
-> +	void	*dma_queue;
+That's precisely how DT includes/overrides are supposed to work, and is
+entirely expected and normal.
 
-Indent *dma_queue the same as the other struct members.
+Since skeleton.dtsi already says:
 
-> +	unsigned		dma_queue_id;
+        memory { device_type = "memory"; reg = <0 0>; };
 
-Use explicit "unsigned int".
+... then any .dts which includes that already has the device_type
+property set, so there's no need to repeat that property. Subsequent
+changes to /memory/reg have no impact on /memory/device_type; any new
+node definitions simply over-write any previous definitions of a
+redefined property, but leave unmentioned properties unchanged (unless
+you /delete-property/).
 
-> +	unsigned		dma_chan_id;
-
-Likewise.
-
-> +struct netcp_addr {
-> +	struct netcp_intf	*netcp;
-> +	unsigned char		addr[MAX_ADDR_LEN];
-
-If this is just an ethernet driver, ETH_ALEN is more appropriate here.
-
-> +	unsigned		tx_compl_qid;
-
-Explicit "unsigned int" please.  I'm not going to point out all of the other
-instances, audit your entire submission for this problem please.
-
-> +static inline u32 *netcp_push_psdata(struct netcp_packet *p_info,
-> +				     unsigned bytes)
-> +{
-> +	u32		*buf;
-> +	unsigned	 words;
-
-Do not use tabs between the type and the variable name in local variable
-declarations.
-
-Please audit for and fix this in your entire submission.
-
-> +static inline u32 hwval_to_host(bool big_endian, u32 hwval)
-> +{
-> +	if (big_endian)
-> +		return be32_to_cpu(hwval);
-> +	else
-> +		return le32_to_cpu(hwval);
-> +}
-
-You're much better off having a set of methods, one for big endian and
-one for little endian, that just straight line codes the appropriate endian
-accesses.
-
-These conditionals peppered all over the place are just ugly.
+If skeleton.dtsi were changed to remove that property then yes a lot of
+files would then need to set it, but why would it be removed?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
