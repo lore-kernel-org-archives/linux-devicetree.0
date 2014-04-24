@@ -1,109 +1,75 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC] serial: sh-sci: Add device tree support for r8a7779
-Date: Fri, 25 Apr 2014 01:33:29 +0200
-Message-ID: <1418731.YSFS18bIMD@avalon>
-References: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
+Date: Thu, 24 Apr 2014 16:37:32 -0700
+Message-ID: <20140424233731.GA4811@atomide.com>
+References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
+ <7hiopynyt5.fsf@paris.lan>
+ <CAGa+x84uPwuUC61S4Wi2ymSdxVMs14pb_kCv0RhQRi-KySxSAw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
-Sender: linux-serial-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGa+x84uPwuUC61S4Wi2ymSdxVMs14pb_kCv0RhQRi-KySxSAw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Robert Nelson <robertcnelson@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
-
-Thank you for the patch.
-
-On Thursday 24 April 2014 15:54:44 Simon Horman wrote:
-> According to the platform data for the legacy-C initialisation of sh-sci
-> for the r8a7779 SoC and my own testing the SCIx_SH4_SCIF_REGTYPE bit of
-> scscr needs to be set.
+* Kevin Hilman <khilman@linaro.org> [140424 16:22]:
+> On Thu, Apr 24, 2014 at 3:32 PM, Kevin Hilman <khilman@linaro.org> wrote:
+> > Robert Nelson <robertcnelson@gmail.com> writes:
+> >
+> >> BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
+> >>
+> >> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
+> >> ---
+> >>  arch/arm/boot/dts/Makefile               |  1 +
+> >>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
+> >>  2 files changed, 16 insertions(+)
+> >>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+> >>
+> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> >> index 35c146f..0bdeba3 100644
+> >> --- a/arch/arm/boot/dts/Makefile
+> >> +++ b/arch/arm/boot/dts/Makefile
+> >> @@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+> >>       omap3-sbc-t3730.dtb \
+> >>       omap3-devkit8000.dtb \
+> >>       omap3-beagle-xm.dtb \
+> >> +     omap3-beagle-xm-ab.dtb \
+> >>       omap3-evm.dtb \
+> >>       omap3-evm-37xx.dtb \
+> >>       omap3-ldp.dtb \
+> >> diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+> >> new file mode 100644
+> >> index 0000000..9d81123
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
+> >> @@ -0,0 +1,15 @@
+> >> +/*
+> >> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> + * it under the terms of the GNU General Public License version 2 as
+> >> + * published by the Free Software Foundation.
+> >> + */
+> >> +
+> >> +#include "omap3-beagle-xm.dts"
+> >> +
+> >> +/ {
+> >> +     /* HS USB Port 2 Power enable was inverted with the xM C */
+> >> +     hsusb2_power: hsusb2_power_reg {
+> >> +             enable-active-high;
+> >
+> > Missing '};' here?
+> >
+> > This causes build breakage in linux-omap master, which now has this
+> > applied.
 > 
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> 
-> ---
-> 
-> With the approach taken by this patch sh-sci may be initialised using the
-> "renesas,scif-r8a7779" compat string but not the generic "renesas,scif"
-> compat string.  An alternate approach would be to add a binding to allow
-> setting of this bit to be controlled directly from DT.
+> ignore this.  It's already been fixed, but was still lingering in
+> Tony's master branch.
 
-Handling the SCSCR bits properly with DT has been on my to-do list for some 
-time. Thank you for volunteering to implement that :-D
+Oops, sorry yeah looks like I forgot to remerge the updated fixes
+branch. Will update it today.
 
-The CKE bits control both the behaviour of the SCK pin and the SCIF input 
-clock selection. The SCIF can use various internal and external clocks, with 
-up to two baud rate generators (programmable dividers) chained. Whether the 
-SoC is provided with an external clock for its serial ports is a board 
-property, not an SoC property. I would thus like to implement support for this 
-feature properly and avoid hardcoding the CKE bits like done below.
-
-The Marzen board has an external clock generator connected to the SCIF_SCK pin 
-that can be used as a clock source, but I don't really see a reason why we 
-couldn't use the internal P clock instead. I don't want to delay integration 
-of SCIF DT support until we have a proper solution to handle clock 
-configuration, but couldn't we use the internal P clock on the Marzen board in 
-the meantime ?
-
-> ---
->  .../devicetree/bindings/serial/renesas,sci-serial.txt      |  1 +
->  drivers/tty/serial/sh-sci.c                                | 10  +++++++++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt index
-> 53e6c17..bba86de 100644
-> --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
-> @@ -12,6 +12,7 @@ Required properties:
->      - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2) SCIFA compatible UART.
-> - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2) SCIFB compatible UART. -
-> "renesas,hscif-r8a7791" for R8A7791 (R-Car M2) HSCIF compatible UART. +   
-> - "renesas,scif-r8a7779" for R8A7779 (R-Car H1) SCIF compatible UART. -
-> "renesas,scif" for generic SCIF compatible UART.
->      - "renesas,scifa" for generic SCIFA compatible UART.
->      - "renesas,scifb" for generic SCIFB compatible UART.
-> diff --git a/drivers/tty/serial/sh-sci.c b/drivers/tty/serial/sh-sci.c
-> index 88236da..3b5d2f6 100644
-> --- a/drivers/tty/serial/sh-sci.c
-> +++ b/drivers/tty/serial/sh-sci.c
-> @@ -2419,6 +2419,7 @@ static int sci_remove(struct platform_device *dev)
->  struct sci_port_info {
->  	unsigned int type;
->  	unsigned int regtype;
-> +	unsigned int scscr_extra;
->  };
-> 
->  static const struct of_device_id of_sci_match[] = {
-> @@ -2429,6 +2430,13 @@ static const struct of_device_id of_sci_match[] = {
->  			.regtype = SCIx_SH4_SCIF_REGTYPE,
->  		},
->  	}, {
-> +		.compatible = "renesas,scif-r8a7779",
-> +		.data = (void *)&(const struct sci_port_info) {
-> +			.type = PORT_SCIF,
-> +			.regtype = SCIx_SH4_SCIF_REGTYPE,
-> +			.scscr_extra = SCSCR_CKE1,
-> +		},
-> +	}, {
->  		.compatible = "renesas,scifa",
->  		.data = &(const struct sci_port_info) {
->  			.type = PORT_SCIFA,
-> @@ -2488,7 +2496,7 @@ sci_parse_dt(struct platform_device *pdev, unsigned
-> int *dev_id) p->flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
->  	p->type = info->type;
->  	p->regtype = info->regtype;
-> -	p->scscr = SCSCR_RE | SCSCR_TE;
-> +	p->scscr = SCSCR_RE | SCSCR_TE | info->scscr_extra;
-> 
->  	return p;
->  }
-
--- 
-Regards,
-
-Laurent Pinchart
-
+Tony
