@@ -1,75 +1,31 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 2/2] ARM: shmobile: henninger: add Ether DT support
-Date: Fri, 25 Apr 2014 02:44:12 +0400
-Message-ID: <201404250244.13232.sergei.shtylyov@cogentembedded.com>
-References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [RESEND PATCH v3 1/9] tty: xuartps: Fix kernel-doc errors in the
+ driver
+Date: Thu, 24 Apr 2014 16:22:47 -0700
+Message-ID: <20140424232247.GA10457@kroah.com>
+References: <1396657425-31029-1-git-send-email-soren.brinkmann@xilinx.com>
+ <c1835108-0033-4219-89e9-2f02c82b1e27@VA3EHSMHS026.ehs.local>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c1835108-0033-4219-89e9-2f02c82b1e27@VA3EHSMHS026.ehs.local>
+Sender: linux-serial-owner@vger.kernel.org
+To: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>
+Cc: Jiri Slaby <jslaby@suse.cz>, Peter Crosthwaite <peter.crosthwaite@xilinx.com>, One Thousand Gnomes <gnomes@lxorguk.ukuu.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the Henninger board dependent part of the Ether device node.
-Enable DHCP and NFS root for the kernel booting.
+On Fri, Apr 18, 2014 at 09:11:28AM -0700, S=F6ren Brinkmann wrote:
+> Hi Greg,
+>=20
+> did you have a chance to look at this yet?
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Patches 1-7 now applied, thanks.
 
----
- arch/arm/boot/dts/r8a7791-henninger.dts |   28 +++++++++++++++++++++++++++-
- 1 file changed, 27 insertions(+), 1 deletion(-)
-
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -21,7 +21,7 @@
- 	};
- 
- 	chosen {
--		bootargs = "console=ttySC0,38400 ignore_loglevel";
-+		bootargs = "console=ttySC0,38400 ignore_loglevel rw root=/dev/nfs ip=dhcp";
- 	};
- 
- 	memory@40000000 {
-@@ -40,6 +40,16 @@
- 		renesas,groups = "scif0_data_d";
- 		renesas,function = "scif0";
- 	};
-+
-+	ether_pins: ether {
-+		renesas,groups = "eth_link", "eth_mdio", "eth_rmii";
-+		renesas,function = "eth";
-+	};
-+
-+	phy1_pins: phy1 {
-+		renesas,groups = "intc_irq0";
-+		renesas,function = "intc";
-+	};
- };
- 
- &scif0 {
-@@ -48,3 +58,19 @@
- 
- 	status = "okay";
- };
-+
-+&ether {
-+	pinctrl-0 = <&ether_pins &phy1_pins>;
-+	pinctrl-names = "default";
-+
-+	phy-handle = <&phy1>;
-+	renesas,ether-link-active-low;
-+	status = "ok";
-+
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+		interrupt-parent = <&irqc0>;
-+		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		micrel,led-mode = <1>;
-+	};
-+};
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
