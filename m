@@ -1,55 +1,89 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v8 2/3] net: hisilicon: new hip04 MDIO driver
-Date: Thu, 24 Apr 2014 14:28:09 +0200
-Message-ID: <201404241428.10248.arnd@arndb.de>
-References: <1397869980-21187-1-git-send-email-zhangfei.gao@linaro.org> <201404221630.07865.arnd@arndb.de> <53568398.2030800@linaro.org>
+From: Pankaj Dubey <pankaj.dubey@samsung.com>
+Subject: Re: [PATCH 1/3] ARM: dts: Add PMU reg node to exynos4210
+Date: Thu, 24 Apr 2014 21:57:33 +0900
+Message-ID: <53590A3D.1020308@samsung.com>
+References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
+ <1396425778-4379-2-git-send-email-pankaj.dubey@samsung.com>
+ <CAGm_ybjfxprtLUX6Vs8QVvXoMOaHez4-Og8a9n3UevibvmzbZA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53568398.2030800-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Eric Dumazet <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org, David Laight <David.Laight-JxhZ9S5GRejQT0dZR+AlfA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <CAGm_ybjfxprtLUX6Vs8QVvXoMOaHez4-Og8a9n3UevibvmzbZA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vikas Sajjan <sajjan.linux@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, mark.rutland@arm.com, Kukjin Kim <kgene.kim@samsung.com>, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Rob Herring <robh+dt@kernel.org>, galak@codeaurora.org, chow.kim@samsung.com, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 April 2014, zhangfei wrote:
-> On 04/22/2014 10:30 PM, Arnd Bergmann wrote:
-> > On Tuesday 22 April 2014, zhangfei wrote:
-> >> On 04/22/2014 04:22 PM, Arnd Bergmann wrote:
+Hi Vikas,
 
-> > But it means that the hip04_mdio driver potentially won't work if connected
-> > to something other than a Marvell PHY.
-> >
-> > I noticed that the marvell_of_reg_init() does this at init time:
-> >
-> > saved_page = phy_read(phydev, MII_MARVELL_PHY_PAGE);
-> > ... /* perform init */
-> > if (page_changed)
-> >       phy_write(phydev, MII_MARVELL_PHY_PAGE, saved_page);
-> >
-> > Is this a bug? Maybe it should always set page 0 when leaving
-> > this function.
-> >
-> It is correct behavior return to the original page.
-> 
-> First get_phy_id, then match driver according to the id, then operation 
-> in the specific driver have the chance to run, including 
-> marvell_of_reg_init etc.
-> 
-> Just unlucky the default value of PHY_PAGE after power on is not 0.
+On 04/24/2014 08:59 PM, Vikas Sajjan wrote:
+> +Tomasz
+>
+>
+> On Wed, Apr 2, 2014 at 1:32 PM, Pankaj Dubey <pankaj.dubey@samsung.com> wrote:
+>> This patch adds pmu regnode to exynos4210 dtsi to handle
+>> PMU register access via DT.
+>>
+>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos4210.dtsi |    5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+>> index cacf614..0a2c0fe 100644
+>> --- a/arch/arm/boot/dts/exynos4210.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+>> @@ -81,6 +81,11 @@
+>>                  interrupts = <2 2>, <3 2>;
+>>          };
+>>
+>> +       pmu_system_controller: system-controller@10020000 {
+>> +               compatible = "samsung,exynos4210-pmu", "syscon";
+>> +               reg = <0x10020000 0x5000>;
+> Can we have 2 strings as "compatible" and these 2 strings are used by
+> 2 different driver?
+>
+> Because once syscon driver gets probed, exynos-pmu.c [1] driver will
+> never be probed.
+>
+> The new PMU driver [1] completely relies on this. With just
+> exynos_defconfig, you will not notice this issue, since syscon is NOT
+> enabled by exynos_defconfig. When I enabled "System Controller
+> Register R/W Based on Regmap" in menuconfig, I could see PMU driver
+> [1] is NEVER probed.
+>
+> Let me know, if I am missing something.
+>
+>   [1] http://www.spinics.net/lists/arm-kernel/msg319750.html
 
-Ok, so it's actually not possible to detect this case prior to having
-to work around it.
+You are correct. We also missed this because "SYSCON" option was
+not enabled in exynos_defconfig.
+I noticed this during preparation of V2 when I planned to use
+"early_syscon_init" [1] as suggested by Sylwester here [2].
 
-How about adding a DT property as a flag to tell the driver whether
-to set the page to zero or not? That would let the driver work
-with different types of PHY implementations, or skip the code if
-there is firmware that can already set it up to page zero.
+In V2 I will take care of this. I hope soon I will be able to post second
+version of this series, just waiting for testing and internal code review.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1] https://lkml.org/lkml/2014/4/8/239
+[2] https://lkml.org/lkml/2014/4/2/171
+>
+>
+>> +       };
+>> +
+>>          pinctrl_0: pinctrl@11400000 {
+>>                  compatible = "samsung,exynos4210-pinctrl";
+>>                  reg = <0x11400000 0x1000>;
+>> --
+>> 1.7.10.4
+>>
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+-- 
+Best Regards,
+Pankaj Dubey
