@@ -1,7 +1,7 @@
 From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/4] ARM: dts: keystone: Use dma-ranges property
-Date: Thu, 24 Apr 2014 11:42:21 -0400
-Message-ID: <1398354142-2767-4-git-send-email-santosh.shilimkar@ti.com>
+Subject: [PATCH 4/4] ARM: dts: keystone: Update USB node for dma properties
+Date: Thu, 24 Apr 2014 11:42:22 -0400
+Message-ID: <1398354142-2767-5-git-send-email-santosh.shilimkar@ti.com>
 References: <1398354142-2767-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,39 +9,36 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1398354142-2767-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-
-The dma-ranges property has to be specified per bus and has format:
- < DMA addr > - Base DMA address for Bus (Bus format 32-bits)
- < CPU addr > - Corresponding base CPU address (CPU format 64-bits)
- < DMA range size > - Size of supported DMA range
+Keystone supports dma-coherent on USB master and also needs
+dma-ranges to specify the hardware alias memory range in which DMA
+can be operational.
 
 Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/keystone.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/keystone.dtsi |    2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 90823eb..404ff1f 100644
+index 404ff1f..5d16e4d 100644
 --- a/arch/arm/boot/dts/keystone.dtsi
 +++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -66,6 +66,7 @@
- 		compatible = "ti,keystone","simple-bus";
- 		interrupt-parent = <&gic>;
- 		ranges = <0x0 0x0 0x0 0xc0000000>;
-+		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+@@ -170,6 +170,8 @@
+ 			clock-names = "usb";
+ 			interrupts = <GIC_SPI 393 IRQ_TYPE_EDGE_RISING>;
+ 			ranges;
++			dma-coherent;
++			dma-ranges;
+ 			status = "disabled";
  
- 		rstctrl: reset-controller {
- 			compatible = "ti,keystone-reset";
+ 			dwc3@2690000 {
 -- 
 1.7.9.5
 
