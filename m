@@ -1,62 +1,150 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v3 7/7] ARM: dma: use phys_addr_t in
- __dma_page_[cpu_to_dev/dev_to_cpu]
-Date: Thu, 24 Apr 2014 16:45:19 +0100
-Message-ID: <20140424154519.GE14110@arm.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
- <1398353407-2345-8-git-send-email-santosh.shilimkar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398353407-2345-8-git-send-email-santosh.shilimkar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Nicolas Pitre <nicolas.pitre@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Catalin Marinas <Catalin.Marinas@arm.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: [PATCH v7 19/20] usb: phy: msm: Vote for corner of VDD CX instead of voltage of VDD CX
+Date: Thu, 24 Apr 2014 18:48:14 +0300
+Message-ID: <1398354495-20782-20-git-send-email-iivanov@mm-sol.com>
+References: <1398354495-20782-1-git-send-email-iivanov@mm-sol.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1398354495-20782-1-git-send-email-iivanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@linaro.org>
+Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-arm-msm@vger.kernel.org, Mayank Rana <mrana@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 24, 2014 at 04:30:07PM +0100, Santosh Shilimkar wrote:
-> On a 32 bit ARM architecture with LPAE extension physical addresses
-> cannot fit into unsigned long variable.
-> 
-> So fix it by using phys_addr_t instead of unsigned long.
-> 
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> ---
->  arch/arm/mm/dma-mapping.c |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
 
-Acked-by: Will Deacon <will.deacon@arm.com>
+New platform uses RBCPR hardware feature, with that voting for
+absolute voltage of VDD CX is not required. Hence vote for corner of
+VDD CX which uses nominal corner voltage on VDD CX.
 
-Will
+Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+Cc: Mayank Rana <mrana@codeaurora.org>
+---
+ .../devicetree/bindings/usb/msm-hsusb.txt          |  5 ++++
+ drivers/usb/phy/phy-msm-usb.c                      | 35 +++++++++++++++++-----
+ include/linux/usb/msm_hsusb.h                      |  1 +
+ 3 files changed, 33 insertions(+), 8 deletions(-)
 
-> diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-> index f62aa06..5260f43 100644
-> --- a/arch/arm/mm/dma-mapping.c
-> +++ b/arch/arm/mm/dma-mapping.c
-> @@ -885,7 +885,7 @@ static void dma_cache_maint_page(struct page *page, unsigned long offset,
->  static void __dma_page_cpu_to_dev(struct page *page, unsigned long off,
->  	size_t size, enum dma_data_direction dir)
->  {
-> -	unsigned long paddr;
-> +	phys_addr_t paddr;
->  
->  	dma_cache_maint_page(page, off, size, dir, dmac_map_area);
->  
-> @@ -901,7 +901,7 @@ static void __dma_page_cpu_to_dev(struct page *page, unsigned long off,
->  static void __dma_page_dev_to_cpu(struct page *page, unsigned long off,
->  	size_t size, enum dma_data_direction dir)
->  {
-> -	unsigned long paddr = page_to_phys(page) + off;
-> +	phys_addr_t paddr = page_to_phys(page) + off;
->  
->  	/* FIXME: non-speculating: not required */
->  	/* don't bother invalidating if DMA to device */
-> -- 
-> 1.7.9.5
-> 
-> 
+diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+index 0669667..2826f2a 100644
+--- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
++++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+@@ -65,6 +65,10 @@ Optional properties:
+                 Some platforms may have configuration to allow USB
+                 controller work with any of the two HSPHYs present.
+
++- qcom,vdd-levels: This property must be a list of three integer values
++                (no, min, max) where each value represents either a voltage
++                in microvolts or a value corresponding to voltage corner.
++
+ Example HSUSB OTG controller device node:
+
+     usb@f9a55000 {
+@@ -87,4 +91,5 @@ Example HSUSB OTG controller device node:
+
+         qcom,otg-control = <1>;
+         qcom,phy-init-sequence = < -1 0x63 >;
++        qcom,vdd-levels = <1 5 7>;
+ 	};
+diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+index 602e6c8..9240f5b 100644
+--- a/drivers/usb/phy/phy-msm-usb.c
++++ b/drivers/usb/phy/phy-msm-usb.c
+@@ -62,6 +62,13 @@
+
+ #define USB_PHY_VDD_DIG_VOL_MIN	1000000 /* uV */
+ #define USB_PHY_VDD_DIG_VOL_MAX	1320000 /* uV */
++#define USB_PHY_SUSP_DIG_VOL	500000  /* uV */
++
++enum vdd_levels {
++	VDD_LEVEL_NONE = 0,
++	VDD_LEVEL_MIN,
++	VDD_LEVEL_MAX,
++};
+
+ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+ {
+@@ -69,8 +76,8 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+
+ 	if (init) {
+ 		ret = regulator_set_voltage(motg->vddcx,
+-				USB_PHY_VDD_DIG_VOL_MIN,
+-				USB_PHY_VDD_DIG_VOL_MAX);
++				motg->vdd_levels[VDD_LEVEL_MIN],
++				motg->vdd_levels[VDD_LEVEL_MAX]);
+ 		if (ret) {
+ 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
+ 			return ret;
+@@ -81,7 +88,7 @@ static int msm_hsusb_init_vddcx(struct msm_otg *motg, int init)
+ 			dev_err(motg->phy.dev, "unable to enable hsusb vddcx\n");
+ 	} else {
+ 		ret = regulator_set_voltage(motg->vddcx, 0,
+-			USB_PHY_VDD_DIG_VOL_MAX);
++				motg->vdd_levels[VDD_LEVEL_MAX]);
+ 		if (ret)
+ 			dev_err(motg->phy.dev, "Cannot set vddcx voltage\n");
+ 		ret = regulator_disable(motg->vddcx);
+@@ -435,17 +442,16 @@ static int msm_phy_init(struct usb_phy *phy)
+
+ #ifdef CONFIG_PM
+
+-#define USB_PHY_SUSP_DIG_VOL  500000
+ static int msm_hsusb_config_vddcx(struct msm_otg *motg, int high)
+ {
+-	int max_vol = USB_PHY_VDD_DIG_VOL_MAX;
++	int max_vol = motg->vdd_levels[VDD_LEVEL_MAX];
+ 	int min_vol;
+ 	int ret;
+
+ 	if (high)
+-		min_vol = USB_PHY_VDD_DIG_VOL_MIN;
++		min_vol = motg->vdd_levels[VDD_LEVEL_MIN];
+ 	else
+-		min_vol = USB_PHY_SUSP_DIG_VOL;
++		min_vol = motg->vdd_levels[VDD_LEVEL_NONE];
+
+ 	ret = regulator_set_voltage(motg->vddcx, min_vol, max_vol);
+ 	if (ret) {
+@@ -1441,7 +1447,7 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+ 	struct device_node *node = pdev->dev.of_node;
+ 	struct property *prop;
+ 	int len, ret, words;
+-	u32 val;
++	u32 val, tmp[3];
+
+ 	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+ 	if (!pdata)
+@@ -1472,6 +1478,19 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
+ 	if (!of_property_read_u32(node, "qcom,phy-num", &val) && val < 2)
+ 		motg->phy_number = val;
+
++	motg->vdd_levels[VDD_LEVEL_NONE] = USB_PHY_SUSP_DIG_VOL;
++	motg->vdd_levels[VDD_LEVEL_MIN] = USB_PHY_VDD_DIG_VOL_MIN;
++	motg->vdd_levels[VDD_LEVEL_MAX] = USB_PHY_VDD_DIG_VOL_MAX;
++
++	if (of_get_property(node, "qcom,vdd-levels", &len) &&
++	    len == sizeof(tmp)) {
++		of_property_read_u32_array(node, "qcom,vdd-levels",
++					   tmp, len / sizeof(*tmp));
++		motg->vdd_levels[VDD_LEVEL_NONE] = tmp[VDD_LEVEL_NONE];
++		motg->vdd_levels[VDD_LEVEL_MIN] = tmp[VDD_LEVEL_MIN];
++		motg->vdd_levels[VDD_LEVEL_MAX] = tmp[VDD_LEVEL_MAX];
++	}
++
+ 	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
+ 	if (!prop || !len)
+ 		return 0;
+diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
+index 4628f1a..b0a3924 100644
+--- a/include/linux/usb/msm_hsusb.h
++++ b/include/linux/usb/msm_hsusb.h
+@@ -169,6 +169,7 @@ struct msm_otg {
+
+ 	struct reset_control *phy_rst;
+ 	struct reset_control *link_rst;
++	int vdd_levels[3];
+ };
+
+ #endif
+--
+1.8.3.2
+
