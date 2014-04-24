@@ -1,59 +1,232 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH v3 16/16] clk: exynos5420: add more registers to restore list
-Date: Thu, 24 Apr 2014 18:33:52 +0530
-Message-ID: <1398344632-18623-17-git-send-email-shaik.ameer@samsung.com>
-References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH/RFC 3/4] of/clk: Register clocks suitable for Runtime PM
+ with the PM core
+Date: Thu, 24 Apr 2014 15:11:24 +0200
+Message-ID: <CAPDyKFr02yyhGNncYX2AgBXTA3Sc0AGQcExjtLvQ5QU0_=YJwg@mail.gmail.com>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+	<1398334403-26181-4-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1398334403-26181-4-git-send-email-geert+renesas@glider.be>
+Sender: linux-pm-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-sh@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds more register offsets to the restore list.
+On 24 April 2014 12:13, Geert Uytterhoeven <geert+renesas@glider.be> wrote:
+> When adding a device from DT, check if its clocks are suitable for Runtime
+> PM, and register them with the PM core.
+> If Runtime PM is disabled, just enable the clock.
+>
+> This allows the PM core to automatically manage gate clocks of devices for
+> Runtime PM.
 
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Normally I don't think it's a good idea to "automatically" manage
+clocks from PM core or any other place but from the driver (and
+possibly the subsystem).
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 33a48d2..6dfd3fd 100755
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -27,6 +27,7 @@
- #define DIV_CPU1		0x504
- #define GATE_BUS_CPU		0x700
- #define GATE_SCLK_CPU		0x800
-+#define CLKOUT_CMU_CPU		0xa00
- #define GATE_IP_G2D		0x8800
- #define CPLL_LOCK		0x10020
- #define DPLL_LOCK		0x10030
-@@ -39,7 +40,11 @@
- #define CPLL_CON0		0x10120
- #define DPLL_CON0		0x10128
- #define EPLL_CON0		0x10130
-+#define EPLL_CON1		0x10134
-+#define EPLL_CON2		0x10138
- #define RPLL_CON0		0x10140
-+#define RPLL_CON1		0x10144
-+#define RPLL_CON2		0x10148
- #define IPLL_CON0		0x10150
- #define SPLL_CON0		0x10160
- #define VPLL_CON0		0x10170
-@@ -139,6 +144,13 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
- 	DIV_CPU1,
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
-+	CLKOUT_CMU_CPU,
-+	EPLL_CON0,
-+	EPLL_CON1,
-+	EPLL_CON2,
-+	RPLL_CON0,
-+	RPLL_CON1,
-+	RPLL_CON2,
- 	SRC_TOP0,
- 	SRC_TOP1,
- 	SRC_TOP2,
--- 
-1.7.9.5
+The reason is simply that we hide things that normally is supposed to
+be handled by the driver. Typically a cross SOC driver should work
+fine both with and without a pm_domain. It should also not rely on
+CONFIG_PM_RUNTIME.
+
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  drivers/of/Makefile    |    1 +
+>  drivers/of/of_clk.c    |  103 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/of/platform.c  |    3 ++
+>  include/linux/of_clk.h |   18 +++++++++
+>  4 files changed, 125 insertions(+)
+>  create mode 100644 drivers/of/of_clk.c
+>  create mode 100644 include/linux/of_clk.h
+>
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index ed9660adad77..49bcd413906f 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -10,3 +10,4 @@ obj-$(CONFIG_OF_PCI)  += of_pci.o
+>  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+>  obj-$(CONFIG_OF_MTD)   += of_mtd.o
+>  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
+> +obj-$(CONFIG_COMMON_CLK) += of_clk.o
+> diff --git a/drivers/of/of_clk.c b/drivers/of/of_clk.c
+> new file mode 100644
+> index 000000000000..35f5e9f3dd42
+> --- /dev/null
+> +++ b/drivers/of/of_clk.c
+> @@ -0,0 +1,103 @@
+> +/*
+> + *  Copyright (C) 2014 Glider bvba
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/of.h>
+> +#include <linux/of_clk.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_clock.h>
+> +#include <linux/pm_runtime.h>
+> +
+> +
+> +#ifdef CONFIG_PM_RUNTIME
+> +
+> +static int of_clk_pm_runtime_suspend(struct device *dev)
+> +{
+> +       int ret;
+> +
+> +       ret = pm_generic_runtime_suspend(dev);
+> +       if (ret)
+> +               return ret;
+> +
+> +       ret = pm_clk_suspend(dev);
+> +       if (ret) {
+> +               pm_generic_runtime_resume(dev);
+> +               return ret;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +static int of_clk_pm_runtime_resume(struct device *dev)
+> +{
+> +       pm_clk_resume(dev);
+> +       return pm_generic_runtime_resume(dev);
+> +}
+> +
+> +static struct dev_pm_domain of_clk_pm_domain = {
+> +       .ops = {
+> +               .runtime_suspend = of_clk_pm_runtime_suspend,
+> +               .runtime_resume = of_clk_pm_runtime_resume,
+> +               USE_PLATFORM_PM_SLEEP_OPS
+> +       },
+> +};
+> +
+> +static int of_clk_register(struct device *dev, struct clk *clk)
+> +{
+> +       int error;
+> +
+> +       if (!dev->pm_domain) {
+> +               error = pm_clk_create(dev);
+> +               if (error)
+> +                       return error;
+> +
+> +               dev->pm_domain = &of_clk_pm_domain;
+
+I am concerned about how this will work in conjunction with the
+generic power domain.
+
+A device can't reside in more than one pm_domain; thus I think it
+would be better to always use the generic power domain and not have a
+specific one for clocks. Typically the genpd should invoke
+pm_clk_resume|suspend from it's runtime PM callbacks.
+
+> +       }
+> +
+> +       dev_dbg(dev, "Setting up clock for runtime PM management\n");
+> +       return pm_clk_add_clk(dev, clk);
+> +}
+> +
+> +#else /* !CONFIG_PM_RUNTIME */
+> +
+> +static int of_clk_register(struct device *dev, struct clk *clk)
+> +{
+> +       dev_dbg(dev, "Runtime PM disabled, enabling clock\n");
+> +       return clk_prepare_enable(clk);
+> +}
+> +
+> +#endif /* !CONFIG_PM_RUNTIME */
+> +
+> +
+> +/**
+> + * of_clk_register_runtime_pm_clocks - Register clocks suitable for Runtime PM
+> + *                                     with the PM core
+> + * @np: pointer to device tree node
+> + * @pdev: pointer to corresponding device to register suitable clocks for
+> + *
+> + * Returns an error code
+> + */
+> +int of_clk_register_runtime_pm_clocks(struct device_node *np,
+> +                                     struct device *dev)
+> +{
+> +       unsigned int i;
+> +       struct clk *clk;
+> +       int error;
+> +
+> +       for (i = 0; (clk = of_clk_get(np, i)) && !IS_ERR(clk); i++) {
+> +               if (!clk_may_runtime_pm(clk)) {
+> +                       clk_put(clk);
+> +                       continue;
+> +               }
+> +
+> +               error = of_clk_register(dev, clk);
+> +               if (error) {
+> +                       clk_put(clk);
+> +                       return error;
+> +               }
+> +       }
+> +
+> +       return 0;
+> +}
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 404d1daebefa..29145302b6f8 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/dma-mapping.h>
+>  #include <linux/slab.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_clk.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+> @@ -182,6 +183,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>         else
+>                 of_device_make_bus_id(&dev->dev);
+>
+> +       of_clk_register_runtime_pm_clocks(np, &dev->dev);
+> +
+
+What about other device than platform devices? Could we handle the DT
+binding at driver core at probe instead?
+
+Kind regards
+Ulf Hansson
+
+
+>         return dev;
+>  }
+>  EXPORT_SYMBOL(of_device_alloc);
+> diff --git a/include/linux/of_clk.h b/include/linux/of_clk.h
+> new file mode 100644
+> index 000000000000..b9b15614e39b
+> --- /dev/null
+> +++ b/include/linux/of_clk.h
+> @@ -0,0 +1,18 @@
+> +#ifndef _LINUX_OF_CLK_H
+> +#define _LINUX_OF_CLK_H
+> +
+> +struct device_node;
+> +struct device;
+> +
+> +#if defined(CONFIG_OF) && defined(CONFIG_COMMON_CLK)
+> +int of_clk_register_runtime_pm_clocks(struct device_node *np,
+> +                                     struct device *dev);
+> +#else
+> +static inline int of_clk_register_runtime_pm_clocks(struct device_node *np,
+> +                                                   struct device *dev)
+> +{
+> +       return 0;
+> +}
+> +#endif /* CONFIG_OF && CONFIG_COMMON_CLK */
+> +
+> +#endif /* _LINUX_OF_CLK_H */
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
