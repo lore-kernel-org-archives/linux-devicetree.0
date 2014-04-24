@@ -1,151 +1,121 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC v2 PATCH v4 09/14] ARM: dts: s6e3fa0: add DT bindings
-Date: Thu, 24 Apr 2014 10:31:29 +0900
-Message-ID: <53586971.8050102@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-10-git-send-email-yj44.cho@samsung.com>
- <5357819D.7050802@samsung.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 4/6] soc: ti: add Keystone Navigator QMSS driver
+Date: Wed, 23 Apr 2014 20:30:53 -0500
+Message-ID: <20140424013053.GC13374@saruman.home>
+References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com>
+ <1398296783-1176-5-git-send-email-santosh.shilimkar@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <5357819D.7050802@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IpbVkmxF4tDyP/Kb"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398296783-1176-5-git-send-email-santosh.shilimkar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sandeep Nair <sandeep_n@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej,
+--IpbVkmxF4tDyP/Kb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thank you for comments.
+Hi,
 
-On 04/23/2014 06:02 PM, Andrzej Hajda wrote:
-> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
->> This patch adds DT bindings for s6e3fa0 panel.
->> The bindings describes panel resources, display timings and cpu timings.
->>
->> Changelog v2:
->> - Adds unit address (commented by Sachin Kamat)
->> Changelog v3:
->> - Removes optional delay, size properties (commented by Laurent Pinchart)
->> - Adds OLED detection, TE gpio properties
->> Changelog v4:
->> - Moves CPU timings relevant properties from FIMD DT
->>    (commeted by Laurent Pinchart, Andrzej Hajda)
->>
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Acked-by: Inki Dae <inki.dae@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   63 ++++++++++++++++++++
->>   1 file changed, 63 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->>
->> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->> new file mode 100644
->> index 0000000..9eeb38b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->> @@ -0,0 +1,63 @@
->> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
->> +
->> +Required properties:
->> +  - compatible: "samsung,s6e3fa0"
->> +  - reg: the virtual channel number of a DSI peripheral
->> +  - vdd3-supply: core voltage supply
->> +  - vci-supply: voltage supply for analog circuits
->> +  - reset-gpio: a GPIO spec for the reset pin
->> +  - det-gpio: a GPIO spec for the OLED detection pin
->> +  - te-gpio: a GPIO spec for the TE pin
->> +  - display-timings: timings for the connected panel as described by [1]
->
-> Which properties of display-timings are relevant for CPU mode?
-> I guess width and height. Anything more?
+On Wed, Apr 23, 2014 at 07:46:20PM -0400, Santosh Shilimkar wrote:
+> From: Sandeep Nair <sandeep_n@ti.com>
+>=20
+> The QMSS (Queue Manager Sub System) found on Keystone SOCs is one of
+> the main hardware sub system which forms the backbone of the Keystone
+> Multi-core Navigator. QMSS consist of queue managers, packed-data structu=
+re
+> processors(PDSP), linking RAM, descriptor pools and infrastructure
+> Packet DMA.
+>=20
+> The Queue Manager is a hardware module that is responsible for accelerati=
+ng
+> management of the packet queues. Packets are queued/de-queued by writing =
+or
+> reading descriptor address to a particular memory mapped location. The PD=
+SPs
+> perform QMSS related functions like accumulation, QoS, or event managemen=
+t.
+> Linking RAM registers are used to link the descriptors which are stored in
+> descriptor RAM. Descriptor RAM is configurable as internal or external me=
+mory.
+>=20
+> The QMSS driver manages the PDSP setups, linking RAM regions,
+> queue pool management (allocation, push, pop and notify) and descriptor
+> pool management. The specifics on the device tree bindings for
+> QMSS can be found in:
+> 	Documentation/devicetree/bindings/soc/keystone-navigator-qmss.txt
+>=20
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Olof Johansson <olof@lixom.net>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Sandeep Nair <sandeep_n@ti.com>
+> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> ---
+>  drivers/Kconfig                  |    2 +
+>  drivers/soc/Kconfig              |    2 +
+>  drivers/soc/Makefile             |    5 +
+>  drivers/soc/ti/Kconfig           |   21 +
+>  drivers/soc/ti/Makefile          |    4 +
+>  drivers/soc/ti/knav_qmss.h       |  386 ++++++++
+>  drivers/soc/ti/knav_qmss_acc.c   |  591 +++++++++++++
+>  drivers/soc/ti/knav_qmss_queue.c | 1814 ++++++++++++++++++++++++++++++++=
+++++++
+>  include/linux/soc/ti/knav_qmss.h |   90 ++
+>  9 files changed, 2915 insertions(+)
+>  create mode 100644 drivers/soc/Makefile
+>  create mode 100644 drivers/soc/ti/Kconfig
+>  create mode 100644 drivers/soc/ti/Makefile
+>  create mode 100644 drivers/soc/ti/knav_qmss.h
+>  create mode 100644 drivers/soc/ti/knav_qmss_acc.c
+>  create mode 100644 drivers/soc/ti/knav_qmss_queue.c
+>  create mode 100644 include/linux/soc/ti/knav_qmss.h
+>=20
+> diff --git a/drivers/Kconfig b/drivers/Kconfig
+> index 0e87a34..8993913 100644
+> --- a/drivers/Kconfig
+> +++ b/drivers/Kconfig
+> @@ -148,6 +148,8 @@ source "drivers/remoteproc/Kconfig"
+> =20
+>  source "drivers/rpmsg/Kconfig"
+> =20
+> +source "drivers/soc/Kconfig"
 
-The CPU interface panel also requires hfront-porch, hback-porch,
-hsync-len, vfront-porch, vback-porch and vsync-len.
+This hunk was already in patch one but in a different offset in this
+file.
 
->
->> +  - cpu-timings: CPU interface timings for the connected panel, and it contains
->> +        following optional properties.
->> +          - cs-setup: clock cycles for the active period of address signal
->> +                enable until chip select is enable in CPU interface
->> +          - wr-setup: clock cycles for the active period of CS signal enable
->> +                until write signal is enable in CPU interface
->> +          - wr-act: clock cycles for the active period of CS enable in CPU
->> +                interface
->> +          - wr-hold: clock cycles for the active period of CS disable until
->> +                write signal is disable in CPU interface
->
-> cpu-timings name does not sound to be related to display.
-> I wonder if it would not be better to merge cpu-timings into
-> display-timings but this will require more discussion I guess.
->
-> If you want to stay with separate node please consider to make it
-> optional as whole node or make some properties required. Making node
-> required with all sub-properties optional is weird.
+--=20
+balbi
 
-Yes, I'll fix.
+--IpbVkmxF4tDyP/Kb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thank you.
-Best regards YJ
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> By the way I hope all timings properties are generic for CPU mode,
-> if not they should be prefixed by vendor or model.
->
-> Regards
-> Andrzej
->
->> +
->> +Optional properties:
->> +
->> +The device node can contain one 'port' child node with one child
->> +'endpoint' node, according to the bindings defined in [2]. This
->> +node should describe panel's video bus.
->> +
->> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
->> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
->> +
->> +Example:
->> +
->> +	panel@0 {
->> +		compatible = "samsung,s6e3fa0";
->> +		reg = <0>;
->> +		vdd3-supply = <&vcclcd_reg>;
->> +		vci-supply = <&vlcd_reg>;
->> +		reset-gpio = <&gpy7 4 0>;
->> +		det-gpio = <&gpg0 6 0>;
->> +		te-gpio = <&gpd1 7 0>;
->> +
->> +		display-timings {
->> +			timing0: timing-0 {
->> +				clock-frequency = <0>;
->> +				hactive = <1080>;
->> +				vactive = <1920>;
->> +				hfront-porch = <2>;
->> +				hback-porch = <2>;
->> +				hsync-len = <1>;
->> +				vfront-porch = <1>;
->> +				vback-porch = <4>;
->> +				vsync-len = <1>;
->> +			};
->> +		};
->> +
->> +		cpu-timings {
->> +			cs-setup = <0>;
->> +			wr-setup = <0>;
->> +			wr-act = <1>;
->> +			wr-hold = <0>;
->> +		};
->> +	};
->>
->
->
+iQIcBAEBAgAGBQJTWGlNAAoJEIaOsuA1yqREpxUQAIXkhbWyzQYaxEZjeuQ8hCdf
+/k4k6NJRySt6eowfh8emS6lIx0dvZkPqx1AQ5aPJKyOGLdsy1iUcnbL378HcTqPE
+xtih1r9w/6nppPPAkZ3Z1s6+XH/IfkaBQOWvq84rlO0dv9Sx/ktmL7uup1Ic2XBU
+5Yd0+PHd5iPdte07cfJRmmvKrQCck3M3qp0xr7KV8p3mtewNyQvix8UIVXmJ8Pdd
+yyo3bongZwB0xLGsu4phAXiOXsxsOA4mucpBTjxcog2WgBn1ykJaeGMUjQD7LviI
+K8JYlIKjEGZOLJKqFAD4oihX+/2/62pBmTPSSI7ebmh9x2/K69dbpRU4sGA5eCzQ
+JZGpnieHsOmtF8IQ+plZFNRj3itwQOWyz6XXiLd67pElVVNuU9uflMBJJacTOBGX
++oB4UhygNOYpw+87UvT3WFH9FK5iKVPiRSWW+dlYKEagy/NKtG3DZLOjxGVHQDy6
+cZ97jP4/QTSe5AofnZKC9jlIXjv5iIB1dZTzhLwDnVLj7B+1IjEupiJysBVAQBZF
+0L3NCgcNT3kI4BU5FnwSU5yAd1XJnSUkSzYzbFCTdFzITaIu7X/G598RGsoL7O/i
+lb7gEZCGqOke0FOxamwnXypZvLtC54x0VM+QC7Cdbq0rbtioMUxs1HNoru2xJp9F
+H5kLQ3FfzXQ5v8Dzk8VY
+=V5it
+-----END PGP SIGNATURE-----
+
+--IpbVkmxF4tDyP/Kb--
