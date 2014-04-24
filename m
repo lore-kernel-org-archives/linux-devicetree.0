@@ -1,27 +1,93 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 0/2] Add R8A7791/Henninger board DT support
-Date: Fri, 25 Apr 2014 02:39:38 +0400
-Message-ID: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 1/2] ARM: shmobile: henninger: initial device tree
+Date: Fri, 25 Apr 2014 02:42:41 +0400
+Message-ID: <201404250242.42725.sergei.shtylyov@cogentembedded.com>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add the initial device tree for the R8A7791 SoC based Henninger board. SCIF0
+serial port support is included, so that the serial console can work. 
 
-   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-v3.15-rc2-20140421' tag. Here we add support for the R8A7791-
-based Henninger board AKA R-Car M2 Low Cost Development Platform (M2-LCDP);
-this board is very like already supported Koelsch board, although some
-differences do exist. The board can be booted using the device tree only, with
-no pre-requisites...
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/2] ARM: shmobile: Henninger: initial device tree
-[2/2] ARM: shmobile: Henninger: add Ether DT support
+---
+ arch/arm/boot/dts/Makefile              |    1 
+ arch/arm/boot/dts/r8a7791-henninger.dts |   50 ++++++++++++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
-WBR, Sergei
+Index: renesas/arch/arm/boot/dts/Makefile
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/Makefile
++++ renesas/arch/arm/boot/dts/Makefile
+@@ -321,6 +321,7 @@ dtb-$(CONFIG_ARCH_SHMOBILE_LEGACY) += r7
+ 	sh7372-mackerel.dtb
+ dtb-$(CONFIG_ARCH_SHMOBILE_MULTI) += emev2-kzm9d.dtb \
+ 	r7s72100-genmai-reference.dtb \
++	r8a7791-henninger.dtb \
+ 	r8a7791-koelsch.dtb \
+ 	r8a7790-lager.dtb
+ dtb-$(CONFIG_ARCH_SOCFPGA) += socfpga_arria5_socdk.dtb \
+Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+===================================================================
+--- /dev/null
++++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+@@ -0,0 +1,50 @@
++/*
++ * Device Tree Source for the Henninger board
++ *
++ * Copyright (C) 2014 Renesas Solutions Corp.
++ * Copyright (C) 2014 Cogent Embedded, Inc.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++#include "r8a7791.dtsi"
++
++/ {
++	model = "Henninger";
++	compatible = "renesas,henninger", "renesas,r8a7791";
++
++	aliases {
++		serial0 = &scif0;
++	};
++
++	chosen {
++		bootargs = "console=ttySC0,38400 ignore_loglevel";
++	};
++
++	memory@40000000 {
++		device_type = "memory";
++		reg = <0 0x40000000 0 0x40000000>;
++	};
++
++	memory@200000000 {
++		device_type = "memory";
++		reg = <2 0x00000000 0 0x40000000>;
++	};
++};
++
++&pfc {
++	scif0_pins: serial0 {
++		renesas,groups = "scif0_data_d";
++		renesas,function = "scif0";
++	};
++};
++
++&scif0 {
++	pinctrl-0 = <&scif0_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++};
