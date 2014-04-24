@@ -1,41 +1,128 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 00/38] MMC updates, plus CuBox-i WiFi support
-Date: Thu, 24 Apr 2014 11:17:26 +0100
-Message-ID: <20140424101726.GH26756@n2100.arm.linux.org.uk>
-References: <20140423185534.GA26756@n2100.arm.linux.org.uk> <CAPDyKFozP69yngKAkdwHYyyvi+pdLEm05udOmBiVshQFi4hnLQ@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH 23/23] Doc/DT: Add OMAP5 DSS DT bindings
+Date: Thu, 24 Apr 2014 13:17:19 +0300
+Message-ID: <1398334639-14172-24-git-send-email-tomi.valkeinen@ti.com>
+References: <1398334639-14172-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFozP69yngKAkdwHYyyvi+pdLEm05udOmBiVshQFi4hnLQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Anton Vorontsov <anton@enomsg.org>, Barry Song <baohua@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Seungwon Jeon <tgih.jun@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, spear-devel@list.st.com, Stephen
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1398334639-14172-1-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Archit Taneja <archit@ti.com>, linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 24, 2014 at 10:25:42AM +0200, Ulf Hansson wrote:
-> I have looked though the patches up until patch 33 and this is clearly
-> a nice piece of clean-up /fixes work for sdhci. Besides my minor
-> comments per patch, I don't have any objections code-review wise to
-> proceed merging them.
-> 
-> I have also tried to applied them on Chris' mmc-next branch,
-> unfortunate it fails at patch 23, so it would be nice to get a
-> re-based patchset for the mmc-next branch.
+Add DT binding documentation for OMAP5 Display Subsystem.
 
-I /could/ rebase it but then I wouldn't be able to produce the patch
-sets/patches for others [*] (such as the Novena project) to derive
-their kernel tree from my iMX6 patch set.
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/video/ti,omap5-dss.txt     | 96 ++++++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/ti,omap5-dss.txt
 
-What I'd prefer is to keep the patch set intact, and provide Chris
-with a pull request for it up to patch 33, which would need a
-conflict fixed - and this would mean that I can be sure that what
-I'm testing, and what I'm distributing is what Chris will also be
-submitting.
-
-* - this currently stands at 230 patches in all - mmc + l2c + fec +
-    imx-drm + other iMX6 changes.
-
+diff --git a/Documentation/devicetree/bindings/video/ti,omap5-dss.txt b/Documentation/devicetree/bindings/video/ti,omap5-dss.txt
+new file mode 100644
+index 000000000000..38ffc8fcd816
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/ti,omap5-dss.txt
+@@ -0,0 +1,96 @@
++Texas Instruments OMAP5 Display Subsystem
++=========================================
++
++See Documentation/devicetree/bindings/video/ti,omap-dss.txt for generic
++description about OMAP Display Subsystem bindings.
++
++DSS Core
++--------
++
++Required properties:
++- compatible: "ti,omap5-dss"
++- reg: address and length of the register space
++- ti,hwmods: "dss_core"
++- clocks: handle to fclk
++- clock-names: "fck"
++
++Required nodes:
++- DISPC
++
++Optional nodes:
++- DSS Submodules: RFBI, DSI, HDMI
++- Video port for DPI output
++
++DPI Endpoint required properties:
++- data-lines: number of lines used
++
++
++DISPC
++-----
++
++Required properties:
++- compatible: "ti,omap5-dispc"
++- reg: address and length of the register space
++- ti,hwmods: "dss_dispc"
++- interrupts: the DISPC interrupt
++- clocks: handle to fclk
++- clock-names: "fck"
++
++
++RFBI
++----
++
++Required properties:
++- compatible: "ti,omap5-rfbi"
++- reg: address and length of the register space
++- ti,hwmods: "dss_rfbi"
++- clocks: handles to fclk and iclk
++- clock-names: "fck", "ick"
++
++Optional nodes:
++- Video port for RFBI output
++- RFBI controlled peripherals
++
++
++DSI
++---
++
++Required properties:
++- compatible: "ti,omap5-dsi"
++- reg: addresses and lengths of the register spaces for 'proto', 'phy' and 'pll'
++- reg-names: "proto", "phy", "pll"
++- interrupts: the DSI interrupt line
++- ti,hwmods: "dss_dsi1" or "dss_dsi2"
++- vdd-supply: power supply for DSI
++- clocks: handles to fclk and pll clock
++- clock-names: "fck", "sys_clk"
++
++Optional nodes:
++- Video port for DSI output
++- DSI controlled peripherals
++
++DSI Endpoint required properties:
++- lanes: list of pin numbers for the DSI lanes: CLK+, CLK-, DATA0+, DATA0-,
++  DATA1+, DATA1-, ...
++
++
++HDMI
++----
++
++Required properties:
++- compatible: "ti,omap5-hdmi"
++- reg: addresses and lengths of the register spaces for 'wp', 'pll', 'phy',
++       'core'
++- reg-names: "wp", "pll", "phy", "core"
++- interrupts: the HDMI interrupt line
++- ti,hwmods: "dss_hdmi"
++- vdda-supply: vdda power supply
++- clocks: handles to fclk and pll clock
++- clock-names: "fck", "sys_clk"
++
++Optional nodes:
++- Video port for HDMI output
++
++HDMI Endpoint optional properties:
++- lanes: list of 8 pin numbers for the HDMI lanes: CLK+, CLK-, D0+, D0-,
++  D1+, D1-, D2+, D2-. (default: 0,1,2,3,4,5,6,7)
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+1.9.1
+
