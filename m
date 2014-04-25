@@ -1,94 +1,33 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv4 6/7] dt-bindings: add documentation for Exynos3250 clock
- controller
-Date: Fri, 25 Apr 2014 10:16:11 +0900
-Message-ID: <1398388572-30239-7-git-send-email-cw00.choi@samsung.com>
-References: <1398388572-30239-1-git-send-email-cw00.choi@samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] Add R8A7791/Henninger board DT support
+Date: Fri, 25 Apr 2014 10:31:17 +0900
+Message-ID: <20140425013107.GD12641@verge.net.au>
+References: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1398388572-30239-1-git-send-email-cw00.choi@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: kgene.kim@samsung.com, t.figa@samsung.com
-Cc: Mark Rutland <mark.rutland@arm.com>, Randy Dunlap <rdunlap@infradead.org>, tushar.behera@linaro.org, sajjan.linux@gmail.com, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, Pawel Moll <pawel.moll@arm.com>, sachin.kamat@linaro.org, cw00.choi@samsung.com, thomas.abraham@linaro.org, devicetree@vger.kernel.org, arnd@arndb.de, Ian Campbell <ijc+devicetree@hellion.org.uk>, marc.zyngier@arm.com, inki.dae@samsung.com, Rob Herring <robh+dt@kernel.org>, ben-linux@fluff.org, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, hyunhee.kim@samsung.com, sw0312.kim@samsung.com, linux-kernel@vger.kernel.org, yj44.cho@samsung.com, kyungmin.park@samsung.com, Kumar Gala <galak@codeaurora.org>, olof@lixom.net, chanho61.park@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201404250239.39150.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Exynos3250 clocks are statically listed and registered using the
-Samsung specific common clock helper functions. Both device tree based
-clock lookup and clkdev based clock lookups are supported.
+On Fri, Apr 25, 2014 at 02:39:38AM +0400, Sergei Shtylyov wrote:
+> Hello.
+> 
+>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> 'renesas-devel-v3.15-rc2-20140421' tag. Here we add support for the R8A7791-
+> based Henninger board AKA R-Car M2 Low Cost Development Platform (M2-LCDP);
+> this board is very like already supported Koelsch board, although some
+> differences do exist. The board can be booted using the device tree only, with
+> no pre-requisites...
+> 
+> [1/2] ARM: shmobile: Henninger: initial device tree
+> [2/2] ARM: shmobile: Henninger: add Ether DT support
 
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- .../devicetree/bindings/clock/exynos3250-clock.txt | 41 ++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/exynos3250-clock.txt
+Thanks, I have queued these up.
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos3250-clock.txt b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
-new file mode 100644
-index 0000000..aadc9c5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
-@@ -0,0 +1,41 @@
-+* Samsung Exynos3250 Clock Controller
-+
-+The Exynos3250 clock controller generates and supplies clock to various
-+controllers within the Exynos3250 SoC.
-+
-+Required Properties:
-+
-+- compatible: should be one of the following.
-+  - "samsung,exynos3250-cmu" - controller compatible with Exynos3250 SoC.
-+
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume.
-+
-+All available clocks are defined as preprocessor macros in
-+dt-bindings/clock/exynos3250.h header and can be used in device
-+tree sources.
-+
-+Example 1: An example of a clock controller node is listed below.
-+
-+	cmu: clock-controller@10030000 {
-+		compatible = "samsung,exynos3250-cmu";
-+		reg = <0x10030000 0x20000>;
-+		#clock-cells = <1>;
-+	};
-+
-+Example 2: UART controller node that consumes the clock generated by the clock
-+	   controller. Refer to the standard clock bindings for information
-+	   about 'clocks' and 'clock-names' property.
-+
-+	serial@13800000 {
-+		compatible = "samsung,exynos4210-uart";
-+		reg = <0x13800000 0x100>;
-+		interrupts = <0 109 0>;
-+		clocks = <&cmu CLK_UART0>, <&cmu CLK_SCLK_UART0>;
-+		clock-names = "uart", "clk_uart_baud0";
-+	};
--- 
-1.8.0
+N.B: I do not currently have access to a Henninger board.
+     So unlike other boards for ARM-based Renesas SoCs that are present in
+     mainline I will not be boot-testing patches for this board.
