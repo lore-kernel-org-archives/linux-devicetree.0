@@ -1,54 +1,74 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v2 02/18] usb: host: xhci-plat: Add clocks support
-Date: Fri, 25 Apr 2014 15:20:49 +0100
-Message-ID: <20140425142049.GR26756@n2100.arm.linux.org.uk>
-References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com> <1398434836-18908-3-git-send-email-gregory.clement@free-electrons.com>
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v2 1/2] usb: ohci-exynos: Add facility to use phy provided
+ by the generic phy framework
+Date: Fri, 25 Apr 2014 10:36:48 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1404251031260.1140-100000@iolanthe.rowland.org>
+References: <1398424683-20168-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398434836-18908-3-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398424683-20168-2-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, k.debski@samsung.com, jg1.han@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 25, 2014 at 04:07:00PM +0200, Gregory CLEMENT wrote:
-> +#if defined(CONFIG_HAVE_CLK)
-> +static int try_enable_clk(struct platform_device *pdev)
+On Fri, 25 Apr 2014, Vivek Gautam wrote:
+
+> Add support to consume phy provided by Generic phy framework.
+> Keeping the support for older usb-phy intact right now, in order
+> to prevent any functionality break in absence of relevant
+> device tree side change for ohci-exynos.
+> Once we move to new phy in the device nodes for ohci, we can
+> remove the support for older phys.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Cc: Jingoo Han <jg1.han@samsung.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
+
+
+> +static int exynos_ohci_phyg_on(struct phy *phy[])
 > +{
-> +	struct clk *clk = devm_clk_get(&pdev->dev, NULL);
+> +	int i;
+> +	int ret = 0;
 > +
-> +	/* Not all platforms have a clk so it is not an error if the clock
-> +	   does not exists. */
-> +	if (!IS_ERR(clk))
-> +		if (clk_prepare_enable(clk))
-> +			return  -ENODEV;
-> +	return 0;
+> +	for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
+> +		if (phy[i])
+> +			ret = phy_power_on(phy[i]);
+> +	if (ret)
+> +		for (i--; i >= 0; i--)
+> +			if (phy[i])
+> +				phy_power_off(phy[i]);
+> +
+> +	return ret;
 > +}
 > +
-> +static int try_disable_clk(struct platform_device *pdev)
+> +static int exynos_ohci_phyg_off(struct phy *phy[])
 > +{
-> +	struct clk *clk = devm_clk_get(&pdev->dev, NULL);
+> +	int i;
+> +	int ret = 0;
 > +
-> +	/* Not all platforms have a clk so it is not an error if the clock
-> +	   does not exists. */
-> +	if (!IS_ERR(clk))
-> +		clk_disable_unprepare(clk);
+> +	for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
+> +		if (phy[i])
+> +			ret = phy_power_off(phy[i]);
 > +
-> +	return 0;
+> +	return ret;
 > +}
 
-OMG.
+You probably shouldn't break out of this loop if ret is nonzero; you
+should continue to power off the remaining phys.
 
-You do realise that clk_get() ref-counts against the module which
-provided the clock, so this is akin to an explicit leaking module
-ref-counts.
+I'd be inclined to put these two routines directly into 
+exynos_ohci_phy_enable() and exynos_ohci_phy_disable(), since they 
+aren't used anywhere else.
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> @@ -151,6 +253,7 @@ skip_phy:
+>  
+>  fail_add_hcd:
+>  	exynos_ohci_phy_disable(pdev);
+> +	exynos_ohci_phyg_off(exynos_ohci->phy_g);
+
+Why did you add this line?  It doesn't do anything useful, because 
+exynos_ohci_phy_disable() already calls exynos_ohci_phyg_off().
+
+Alan Stern
