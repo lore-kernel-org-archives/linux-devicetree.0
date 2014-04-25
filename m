@@ -1,117 +1,200 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Fri, 25 Apr 2014 15:10:00 +0300
-Message-ID: <535A5098.6040107@ti.com>
-References: <1398416142-7174-1-git-send-email-sourav.poddar@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v3 3/3] ARM: exynos: Move to generic power domain bindings
+Date: Fri, 25 Apr 2014 13:47:34 +0200
+Message-ID: <CAPDyKFog0_8DKrzXcXT8Ztj3eY92EqY4YdKrsP7jkm59=XbKzA@mail.gmail.com>
+References: <1398271618-28932-1-git-send-email-t.figa@samsung.com>
+ <1398271618-28932-4-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398416142-7174-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>, mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, balbi@ti.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1398271618-28932-4-git-send-email-t.figa@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <philipp.zabel@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Len Brown <len.brown@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, Pavel Machek <pavel@ucw.cz>, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Mark Brown <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael J. Wyso
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/2014 11:55 AM, Sourav Poddar wrote:
-> We need "tbclk" clock data for the functioning of ehrpwm
-> module. Hence, populating the required clock information
-> in clock dts file.
+On 23 April 2014 18:46, Tomasz Figa <t.figa@samsung.com> wrote:
+> This patch moves Exynos power domain code to use the new generic power
+> domain look-up framework introduced by previous patch, allowing the new
+> code to be compiled with CONFIG_ARCH_EXYNOS selected as well.
 >
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+
+Besides that I don't like new Kconfig CONFIG_PM_GENERIC_DOMAINS_OF,
+this looks good to me.
+
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+
 > ---
->   arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
->   drivers/clk/ti/clk-43xx.c            |    6 +++++
->   2 files changed, 54 insertions(+)
+>  .../bindings/arm/exynos/power_domain.txt           | 12 ++--
+>  arch/arm/mach-exynos/pm_domains.c                  | 81 +---------------------
+>  kernel/power/Kconfig                               |  2 +-
+>  3 files changed, 7 insertions(+), 88 deletions(-)
 >
-> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> index 142009c..54f68e8 100644
-> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> @@ -87,6 +87,54 @@
->   		clock-mult = <1>;
->   		clock-div = <1>;
->   	};
-> +
-> +	ehrpwm0_tbclk: ehrpwm0_tbclk@44e10664 {
-> +		#clock-cells = <0>;
-> +		compatible = "gate-clock";
-
-Should be ti,gate-clock.
-
-> +		clocks = <&dpll_per_m2_ck>;
-> +		bit-shift = <0>;
-
-Should be ti,bit-shift.
-
-> +		reg = <0x44e10664 0x4>;
-
-Should be reg = <0x664>. Mainline kernel uses offsets for clock data, 
-not absolute register addresses.
-
-Similar comments for the rest of the patch.
-
--Tero
-
-> +	};
-> +
-> +	ehrpwm1_tbclk: ehrpwm1_tbclk@44e10664 {
-> +		#clock-cells = <0>;
-> +		compatible = "gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		bit-shift = <1>;
-> +		reg = <0x44e10664 0x4>;
-> +	};
-> +
-> +	ehrpwm2_tbclk: ehrpwm2_tbclk@44e10664 {
-> +		#clock-cells = <0>;
-> +		compatible = "gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		bit-shift = <2>;
-> +		reg = <0x44e10664 0x4>;
-> +	};
-> +
-> +	ehrpwm3_tbclk: ehrpwm3_tbclk@44e10664 {
-> +		#clock-cells = <0>;
-> +		compatible = "gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		bit-shift = <3>;
-> +		reg = <0x44e10664 0x4>;
-> +	};
-> +
-> +	ehrpwm4_tbclk: ehrpwm4_tbclk@44e10664 {
-> +		#clock-cells = <0>;
-> +		compatible = "gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		bit-shift = <4>;
-> +		reg = <0x44e10664 0x4>;
-> +	};
-> +
-> +	ehrpwm5_tbclk: ehrpwm5_tbclk@44e10664 {
-> +		#clock-cells = <0>;
-> +		compatible = "gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		bit-shift = <5>;
-> +		reg = <0x44e10664 0x4>;
-> +	};
->   };
->   &prcm_clocks {
->   	clk_32768_ck: clk_32768_ck {
-> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-> index 67c8de5..527a43d 100644
-> --- a/drivers/clk/ti/clk-43xx.c
-> +++ b/drivers/clk/ti/clk-43xx.c
-> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
->   	DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
->   	DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
->   	DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
-> +	DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
-> +	DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
-> +	DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
-> +	DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
-> +	DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
-> +	DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
->   	{ .node_name = NULL },
->   };
+> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> index 5216b41..60f26a8 100644
+> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> @@ -8,6 +8,8 @@ Required Properties:
+>      * samsung,exynos4210-pd - for exynos4210 type power domain.
+>  - reg: physical base address of the controller and length of memory mapped
+>      region.
+> +- #power-domain-cells: number of cells in power domain specifier;
+> +    must be 0.
 >
+>  Node of a device using power domains must have a samsung,power-domain property
+>  defined with a phandle to respective power domain.
+> @@ -17,12 +19,8 @@ Example:
+>         lcd0: power-domain-lcd0 {
+>                 compatible = "samsung,exynos4210-pd";
+>                 reg = <0x10023C00 0x10>;
+> +               #power-domain-cells = <0>;
+>         };
 >
-
+> -Example of the node using power domain:
+> -
+> -       node {
+> -               /* ... */
+> -               samsung,power-domain = <&lcd0>;
+> -               /* ... */
+> -       };
+> +See Documentation/devicetree/bindings/power/power_domain.txt for description
+> +of consumer-side bindings.
+> diff --git a/arch/arm/mach-exynos/pm_domains.c b/arch/arm/mach-exynos/pm_domains.c
+> index fe6570e..9cad3c6 100644
+> --- a/arch/arm/mach-exynos/pm_domains.c
+> +++ b/arch/arm/mach-exynos/pm_domains.c
+> @@ -73,89 +73,14 @@ static int exynos_pd_power_off(struct generic_pm_domain *domain)
+>         return exynos_pd_power(domain, false);
+>  }
+>
+> -static void exynos_add_device_to_domain(struct exynos_pm_domain *pd,
+> -                                        struct device *dev)
+> -{
+> -       int ret;
+> -
+> -       dev_dbg(dev, "adding to power domain %s\n", pd->pd.name);
+> -
+> -       while (1) {
+> -               ret = pm_genpd_add_device(&pd->pd, dev);
+> -               if (ret != -EAGAIN)
+> -                       break;
+> -               cond_resched();
+> -       }
+> -
+> -       pm_genpd_dev_need_restore(dev, true);
+> -}
+> -
+> -static void exynos_remove_device_from_domain(struct device *dev)
+> -{
+> -       struct generic_pm_domain *genpd = dev_to_genpd(dev);
+> -       int ret;
+> -
+> -       dev_dbg(dev, "removing from power domain %s\n", genpd->name);
+> -
+> -       while (1) {
+> -               ret = pm_genpd_remove_device(genpd, dev);
+> -               if (ret != -EAGAIN)
+> -                       break;
+> -               cond_resched();
+> -       }
+> -}
+> -
+> -static void exynos_read_domain_from_dt(struct device *dev)
+> -{
+> -       struct platform_device *pd_pdev;
+> -       struct exynos_pm_domain *pd;
+> -       struct device_node *node;
+> -
+> -       node = of_parse_phandle(dev->of_node, "samsung,power-domain", 0);
+> -       if (!node)
+> -               return;
+> -       pd_pdev = of_find_device_by_node(node);
+> -       if (!pd_pdev)
+> -               return;
+> -       pd = platform_get_drvdata(pd_pdev);
+> -       exynos_add_device_to_domain(pd, dev);
+> -}
+> -
+> -static int exynos_pm_notifier_call(struct notifier_block *nb,
+> -                                   unsigned long event, void *data)
+> -{
+> -       struct device *dev = data;
+> -
+> -       switch (event) {
+> -       case BUS_NOTIFY_BIND_DRIVER:
+> -               if (dev->of_node)
+> -                       exynos_read_domain_from_dt(dev);
+> -
+> -               break;
+> -
+> -       case BUS_NOTIFY_UNBOUND_DRIVER:
+> -               exynos_remove_device_from_domain(dev);
+> -
+> -               break;
+> -       }
+> -       return NOTIFY_DONE;
+> -}
+> -
+> -static struct notifier_block platform_nb = {
+> -       .notifier_call = exynos_pm_notifier_call,
+> -};
+> -
+>  static __init int exynos4_pm_init_power_domain(void)
+>  {
+> -       struct platform_device *pdev;
+>         struct device_node *np;
+>
+>         for_each_compatible_node(np, NULL, "samsung,exynos4210-pd") {
+>                 struct exynos_pm_domain *pd;
+>                 int on;
+>
+> -               pdev = of_find_device_by_node(np);
+> -
+>                 pd = kzalloc(sizeof(*pd), GFP_KERNEL);
+>                 if (!pd) {
+>                         pr_err("%s: failed to allocate memory for domain\n",
+> @@ -168,17 +93,13 @@ static __init int exynos4_pm_init_power_domain(void)
+>                 pd->base = of_iomap(np, 0);
+>                 pd->pd.power_off = exynos_pd_power_off;
+>                 pd->pd.power_on = exynos_pd_power_on;
+> -               pd->pd.of_node = np;
+> -
+> -               platform_set_drvdata(pdev, pd);
+>
+>                 on = __raw_readl(pd->base + 0x4) & S5P_INT_LOCAL_PWR_EN;
+>
+>                 pm_genpd_init(&pd->pd, NULL, !on);
+> +               of_genpd_add_provider(np, of_genpd_xlate_simple, &pd->pd);
+>         }
+>
+> -       bus_register_notifier(&platform_bus_type, &platform_nb);
+> -
+>         return 0;
+>  }
+>  arch_initcall(exynos4_pm_init_power_domain);
+> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
+> index 45aa98e..b17588c 100644
+> --- a/kernel/power/Kconfig
+> +++ b/kernel/power/Kconfig
+> @@ -308,7 +308,7 @@ config PM_GENERIC_DOMAINS_RUNTIME
+>
+>  config PM_GENERIC_DOMAINS_OF
+>         def_bool y
+> -       depends on PM_GENERIC_DOMAINS && OF && !ARCH_EXYNOS
+> +       depends on PM_GENERIC_DOMAINS && OF
+>
+>  config CPU_PM
+>         bool
+> --
+> 1.9.2
+>
