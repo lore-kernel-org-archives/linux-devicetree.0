@@ -1,101 +1,47 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Fri, 25 Apr 2014 14:25:42 +0530
-Message-ID: <1398416142-7174-1-git-send-email-sourav.poddar@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCHv2 0/4] Enable usbphy and hsotg for exynos4
+Date: Fri, 25 Apr 2014 11:03:27 +0200
+Message-ID: <535A24DF.2040201@samsung.com>
+References: <1398409152-14770-1-git-send-email-chanho61.park@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: t-kristo@ti.com, mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, balbi@ti.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1398409152-14770-1-git-send-email-chanho61.park@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanho Park <chanho61.park@samsung.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: k.debski@samsung.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We need "tbclk" clock data for the functioning of ehrpwm
-module. Hence, populating the required clock information
-in clock dts file.
+Hi Chanho,
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
- arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
- drivers/clk/ti/clk-43xx.c            |    6 +++++
- 2 files changed, 54 insertions(+)
+On 25.04.2014 08:59, Chanho Park wrote:
+> This patchset enables a exynos4 usbphy and hsotg DT node for exynos4. The usb
+> phy node uses generic exynos phy driver. The driver uses PMU syscon and SYSREG
+> syscon phandles.
+> 
+> Changes from v1: Applied Tomasz Figa's comments
+>  - Document PMU syscon compatibles for exynos4210/4x12
+>  - Use clock macro instead of raw clock number
+>  - Correct phy name to "usb2-phy"
+> 
+> Chanho Park (4):
+>   ARM: dts: exynos4: add PMU syscon node
+>   ARM: dts: exynos4: add exynos_usbphy node
+>   ARM: dts: exynos4: add hsotg device node
+>   ARM: dts: exynos4412-trats2: enable usb nodes
+> 
+>  .../devicetree/bindings/arm/samsung/pmu.txt        |  2 ++
+>  arch/arm/boot/dts/exynos4.dtsi                     | 26 ++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos4412-trats2.dts            | 10 +++++++++
+>  arch/arm/boot/dts/exynos4x12.dtsi                  |  9 ++++++++
+>  4 files changed, 47 insertions(+)
+> 
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 142009c..54f68e8 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -87,6 +87,54 @@
- 		clock-mult = <1>;
- 		clock-div = <1>;
- 	};
-+
-+	ehrpwm0_tbclk: ehrpwm0_tbclk@44e10664 {
-+		#clock-cells = <0>;
-+		compatible = "gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		bit-shift = <0>;
-+		reg = <0x44e10664 0x4>;
-+	};
-+
-+	ehrpwm1_tbclk: ehrpwm1_tbclk@44e10664 {
-+		#clock-cells = <0>;
-+		compatible = "gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		bit-shift = <1>;
-+		reg = <0x44e10664 0x4>;
-+	};
-+
-+	ehrpwm2_tbclk: ehrpwm2_tbclk@44e10664 {
-+		#clock-cells = <0>;
-+		compatible = "gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		bit-shift = <2>;
-+		reg = <0x44e10664 0x4>;
-+	};
-+
-+	ehrpwm3_tbclk: ehrpwm3_tbclk@44e10664 {
-+		#clock-cells = <0>;
-+		compatible = "gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		bit-shift = <3>;
-+		reg = <0x44e10664 0x4>;
-+	};
-+
-+	ehrpwm4_tbclk: ehrpwm4_tbclk@44e10664 {
-+		#clock-cells = <0>;
-+		compatible = "gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		bit-shift = <4>;
-+		reg = <0x44e10664 0x4>;
-+	};
-+
-+	ehrpwm5_tbclk: ehrpwm5_tbclk@44e10664 {
-+		#clock-cells = <0>;
-+		compatible = "gate-clock";
-+		clocks = <&dpll_per_m2_ck>;
-+		bit-shift = <5>;
-+		reg = <0x44e10664 0x4>;
-+	};
- };
- &prcm_clocks {
- 	clk_32768_ck: clk_32768_ck {
-diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-index 67c8de5..527a43d 100644
---- a/drivers/clk/ti/clk-43xx.c
-+++ b/drivers/clk/ti/clk-43xx.c
-@@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
- 	DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
- 	DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
- 	DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
-+	DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
-+	DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
-+	DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
-+	DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
-+	DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
-+	DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
- 	{ .node_name = NULL },
- };
- 
--- 
-1.7.9.5
+For the whole series:
 
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+
+--
+Best regards,
+Tomasz
