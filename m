@@ -1,336 +1,197 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
- controller support
-Date: Fri, 25 Apr 2014 09:58:58 +0200
-Message-ID: <535A15C2.5080909@free-electrons.com>
-References: <1398340516-29547-1-git-send-email-boris.brezillon@free-electrons.com> <1398340516-29547-3-git-send-email-boris.brezillon@free-electrons.com> <20140424132912.GA24905@lukather> <535A13AE.4090103@free-electrons.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 2/2] arc_emac: add clock handling
+Date: Fri, 25 Apr 2014 10:06:13 +0200
+Message-ID: <5262035.54Ti8h2BVg@phil>
+References: <1712306.TSJMmGq3uZ@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <535A13AE.4090103@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Randy Dunlap <rdunlap@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1712306.TSJMmGq3uZ@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This adds ability for the arc_emac to really handle its supplying clock.
+To get the needed clock-frequency either a real clock or the previous
+clock-frequency property must be provided.
 
-On 25/04/2014 09:50, Boris BREZILLON wrote:
-> Hi Maxime,
->
-> On 24/04/2014 15:29, Maxime Ripard wrote:
->> On Thu, Apr 24, 2014 at 01:55:16PM +0200, Boris BREZILLON wrote:
->>> The P2WI looks like an SMBus controller which only supports byte data
->>> transfers. But, it differs from standard SMBus protocol on several
->>> aspects:
->>> - it supports only one slave device, and thus drop the address field
->>> - it adds a parity bit every 8bits of data
->>> - only one read access is required to read a byte (instead of a read
->>>   followed by a write access in standard SMBus protocol)
->>> - there's no Ack bit after each byte transfer
->>>
->>> This means this bus cannot be used to interface with standard SMBus
->>> devices (the only known device to support this interface is the AXP221
->>> PMIC).
->>>
->>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->>> ---
->>>  drivers/i2c/busses/Kconfig          |  12 ++
->>>  drivers/i2c/busses/Makefile         |   1 +
->>>  drivers/i2c/busses/i2c-sunxi-p2wi.c | 317 ++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 330 insertions(+)
->>>  create mode 100644 drivers/i2c/busses/i2c-sunxi-p2wi.c
->>>
->>> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
->>> index c94db1c..37e53d6 100644
->>> --- a/drivers/i2c/busses/Kconfig
->>> +++ b/drivers/i2c/busses/Kconfig
->>> @@ -771,6 +771,18 @@ config I2C_STU300
->>>  	  This driver can also be built as a module. If so, the module
->>>  	  will be called i2c-stu300.
->>>  
->>> +config I2C_SUNXI_P2WI
->>> +	tristate "Allwinner sunxi internal P2WI controller"
->> Since the A31 is the only SoC that uses it, maybe you can drop the
->> sunxi and use either sun6i or A31 here?
-> It makes sense, I'll change the config option into I2C_SUNXI_P2WI and
-> the source file name into i2c-sun6i-p2wi.c.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+---
+changes since v1:
+- fix wrong clk error check found by Max Schwarz
 
-I meant I2C_SUN6I_P2WI ;-).
+ Documentation/devicetree/bindings/net/arc_emac.txt | 12 +++++-
+ drivers/net/ethernet/arc/emac.h                    |  2 +
+ drivers/net/ethernet/arc/emac_main.c               | 46 ++++++++++++++++------
+ 3 files changed, 47 insertions(+), 13 deletions(-)
 
->
->>> +	depends on ARCH_SUNXI
->>> +	help
->>> +	  If you say yes to this option, support will be included for the
->>> +	  P2WI (Push/Pull 2 Wire Interface) controller embedded in some sunxi
->>> +	  SOCs.
->>> +	  The P2WI looks like an SMBus controller (which supports only byte
->>> +	  accesses), except that it only supports one slave device.
->>> +	  This interface is used to connect to specific PMIC devices (like the
->>> +	  AXP221).
->>> +
->>>  config I2C_TEGRA
->>>  	tristate "NVIDIA Tegra internal I2C controller"
->>>  	depends on ARCH_TEGRA
->>> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
->>> index 18d18ff..c63d2ec 100644
->>> --- a/drivers/i2c/busses/Makefile
->>> +++ b/drivers/i2c/busses/Makefile
->>> @@ -75,6 +75,7 @@ obj-$(CONFIG_I2C_SIMTEC)	+= i2c-simtec.o
->>>  obj-$(CONFIG_I2C_SIRF)		+= i2c-sirf.o
->>>  obj-$(CONFIG_I2C_ST)		+= i2c-st.o
->>>  obj-$(CONFIG_I2C_STU300)	+= i2c-stu300.o
->>> +obj-$(CONFIG_I2C_SUNXI_P2WI)	+= i2c-sunxi-p2wi.o
->>>  obj-$(CONFIG_I2C_TEGRA)		+= i2c-tegra.o
->>>  obj-$(CONFIG_I2C_VERSATILE)	+= i2c-versatile.o
->>>  obj-$(CONFIG_I2C_WMT)		+= i2c-wmt.o
->>> diff --git a/drivers/i2c/busses/i2c-sunxi-p2wi.c b/drivers/i2c/busses/i2c-sunxi-p2wi.c
->>> new file mode 100644
->>> index 0000000..e3fdd76
->>> --- /dev/null
->>> +++ b/drivers/i2c/busses/i2c-sunxi-p2wi.c
->>> @@ -0,0 +1,317 @@
->>> +/*
->>> + * P2WI (Push-Pull Two Wire Interface) bus driver.
->>> + *
->>> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
->>> + *
->>> + * This file is licensed under the terms of the GNU General Public License
->>> + * version 2.  This program is licensed "as is" without any warranty of any
->>> + * kind, whether express or implied.
->>> + */
->>> +#include <linux/kernel.h>
->>> +#include <linux/slab.h>
->>> +#include <linux/module.h>
->>> +#include <linux/spinlock.h>
->>> +#include <linux/i2c.h>
->>> +#include <linux/interrupt.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/io.h>
->>> +#include <linux/of.h>
->>> +#include <linux/of_device.h>
->>> +#include <linux/of_irq.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/err.h>
->>> +#include <linux/delay.h>
->>> +#include <linux/clk.h>
->>> +#include <linux/reset.h>
->>> +
->>> +
->>> +/* P2WI registers */
->>> +#define P2WI_CTRL		0x0
->>> +#define P2WI_CCR		0x4
->>> +#define P2WI_INTE		0x8
->>> +#define P2WI_INTS		0xc
->>> +#define P2WI_DADDR0		0x10
->>> +#define P2WI_DADDR1		0x14
->>> +#define P2WI_DLEN		0x18
->>> +#define P2WI_DATA0		0x1c
->>> +#define P2WI_DATA1		0x20
->>> +#define P2WI_LCR		0x24
->>> +#define P2WI_PMCR		0x28
->>> +
->>> +/* CTRL fields */
->>> +#define P2WI_START_TRANS	(1 << 7)
->>> +#define P2WI_ABORT_TRANS	(1 << 6)
->>> +#define P2WI_GLOBAL_INT_ENB	(1 << 1)
->>> +#define P2WI_SOFT_RST		(1 << 0)
->> BIT() ?
-> Sure, I'll make use of the BIT macro wherever possible.
->
->>> +/* CLK CTRL fields */
->>> +#define P2WI_SDA_OUT_DELAY(v)	(((v) & 0x7) << 8)
->>> +#define P2WI_CLK_DIV(v)		((v) & 0xff)
->>> +
->>> +/* STATUS fields */
->>> +#define P2WI_TRANS_ERR_ID(v)	(((v) >> 8) & 0xff)
->>> +#define P2WI_LOAD_BSY		(1 << 2)
->>> +#define P2WI_TRANS_ERR		(1 << 1)
->>> +#define P2WI_TRANS_OVER		(1 << 0)
->>> +
->>> +/* DATA LENGTH fields*/
->>> +#define P2WI_READ		(1 << 4)
->>> +#define P2WI_DATA_LENGTH(v)	((v - 1) & 0x7)
->>> +
->>> +/* LINE CTRL fields*/
->>> +#define P2WI_SCL_STATE		(1 << 5)
->>> +#define P2WI_SDA_STATE		(1 << 4)
->>> +#define P2WI_SCL_CTL		(1 << 3)
->>> +#define P2WI_SCL_CTL_EN		(1 << 2)
->>> +#define P2WI_SDA_CTL		(1 << 1)
->>> +#define P2WI_SDA_CTL_EN		(1 << 0)
->>> +
->>> +/* PMU MODE CTRL fields */
->>> +#define P2WI_PMU_INIT_SEND	(1 << 31)
->>> +#define P2WI_PMU_INIT_DATA(v)	(((v) & 0xff) << 16)
->>> +#define P2WI_PMU_MODE_REG(v)	(((v) & 0xff) << 8)
->>> +#define P2WI_PMU_DEV_ADDR(v)	((v) & 0xff)
->> I'd very much prefer if your bits were prefixed by the register
->> name. That way, you directly know in which register that bit belong,
->> without having to scroll across the whole driver.
-> Okay.
->
->>> +
->>> +struct p2wi {
->>> +	struct i2c_adapter adapter;
->>> +	struct completion complete;
->>> +	unsigned int irq;
->>> +	unsigned int status;
->>> +	void __iomem *regs;
->>> +	struct clk *clk;
->>> +	struct reset_control *rstc;
->>> +};
->>> +
->>> +static irqreturn_t p2wi_interrupt(int irq, void *dev_id)
->>> +{
->>> +	struct p2wi *p2wi = dev_id;
->>> +	unsigned long status;
->>> +
->>> +	status = readl(p2wi->regs + P2WI_INTS);
->>> +	p2wi->status = status;
->>> +
->>> +	/* Clear interrupts */
->>> +	status &= (P2WI_LOAD_BSY | P2WI_TRANS_ERR | P2WI_TRANS_OVER);
->>> +	writel(status, p2wi->regs + P2WI_INTS);
->>> +
->>> +	complete(&p2wi->complete);
->>> +
->>> +	return IRQ_HANDLED;
->>> +}
->>> +
->>> +static u32 p2wi_functionality(struct i2c_adapter *adap)
->>> +{
->>> +	return I2C_FUNC_SMBUS_BYTE_DATA;
->>> +}
->>> +
->>> +static int p2wi_smbus_xfer(struct i2c_adapter *adap, u16 addr,
->>> +			   unsigned short flags, char read_write,
->>> +			   u8 command, int size, union i2c_smbus_data *data)
->>> +{
->>> +	struct p2wi *p2wi = i2c_get_adapdata(adap);
->>> +	unsigned long dlen = P2WI_DATA_LENGTH(1);
->>> +
->>> +	/*
->>> +	 * TODO: check address consistency.
->>> +	 * The P2WI bus only support one slave. As a result it does not use
->>> +	 * the I2C address except when you're switching the slave device from
->>> +	 * I2C to P2WI mode.
->>> +	 * We should at least verify that the addr argument is consistent with
->>> +	 * the slave device address.
->>> +	 */
->>> +
->>> +	if (addr > 0xff) {
->>> +		dev_err(&adap->dev, "invalid P2WI address\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	/*
->>> +	 * TODO: handle switch to P2WI mode.
->>> +	 * At the moment, we're considering the slave device as already
->>> +	 * switchedto P2WI (which means the bootloader has to switch the slave
->>                    ^ you need a space here
->>
->>> +	 * device from I2C to P2WI mode).
->>> +	 * We need at least 3 informations to launch the switch process:
->>> +	 * - the slave device address (addr argument)
->>> +	 * - the mode register
->>> +	 * - the P2WI mode value (to write in the mode register)
->>> +	 */
->>> +
->>> +	if (!data)
->>> +		return -EINVAL;
->>> +
->>> +	writel(command, p2wi->regs + P2WI_DADDR0);
->>> +
->>> +	if (read_write == I2C_SMBUS_READ)
->>> +		dlen |= P2WI_READ;
->>> +	else
->>> +		writel(data->byte, p2wi->regs + P2WI_DATA0);
->>> +
->>> +	writel(dlen, p2wi->regs + P2WI_DLEN);
->>> +
->>> +	if (readl(p2wi->regs + P2WI_CTRL) & P2WI_START_TRANS) {
->>> +		dev_err(&adap->dev, "P2WI bus busy\n");
->>> +		return -EBUSY;
->>> +	}
->>> +
->>> +	reinit_completion(&p2wi->complete);
->>> +
->>> +	writel(P2WI_LOAD_BSY | P2WI_TRANS_ERR | P2WI_TRANS_OVER,
->>> +	       p2wi->regs + P2WI_INTE);
->>> +
->>> +	writel(P2WI_START_TRANS | P2WI_GLOBAL_INT_ENB, p2wi->regs + P2WI_CTRL);
->>> +
->>> +	wait_for_completion(&p2wi->complete);
->>> +
->>> +	if (p2wi->status & P2WI_LOAD_BSY) {
->>> +		dev_err(&adap->dev, "P2WI bus busy\n");
->>> +		return -EBUSY;
->>> +	}
->>> +
->>> +
->> You can drop the extra line here.
->>
->>> +	if (p2wi->status & P2WI_TRANS_ERR) {
->>> +		dev_err(&adap->dev, "P2WI bus xfer error\n");
->>> +		return -ENXIO;
->>> +	}
->>> +
->>> +	if (read_write == I2C_SMBUS_READ)
->>> +		data->byte = readl(p2wi->regs + P2WI_DATA0);
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static const struct i2c_algorithm p2wi_algo = {
->>> +	.smbus_xfer = p2wi_smbus_xfer,
->>> +	.functionality = p2wi_functionality,
->>> +};
->>> +
->>> +static const struct of_device_id p2wi_of_match_table[] = {
->>> +	{ .compatible = "allwinner,sun6i-a31-p2wi" },
->>> +	{}
->>> +};
->>> +MODULE_DEVICE_TABLE(of, p2wi_of_match_table);
->>> +
->>> +static int p2wi_probe(struct platform_device *pdev)
->>> +{
->>> +	struct device *dev = &pdev->dev;
->>> +	struct resource *r;
->>> +	struct p2wi *p2wi;
->>> +	int ret;
->>> +
->>> +	p2wi = devm_kzalloc(dev, sizeof(struct p2wi), GFP_KERNEL);
->>> +	if (!p2wi) {
->>> +		dev_err(dev, "failed to allocate p2wi struct\n");
->>> +		return -ENOMEM;
->>> +	}
->>> +
->>> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	p2wi->regs = devm_request_and_ioremap(dev, r);
->>> +	if (IS_ERR(p2wi->regs)) {
->>> +		ret = PTR_ERR(p2wi->regs);
->>> +		dev_err(dev, "failed to retrieve iomem resource: %d\n",
->>> +			ret);
->>> +		return ret;
->>> +	}
->> I don't see how it can work, since, when it fails,
->> devm_request_and_ioremap returns NULL. You probably meant
->> devm_ioremap_resource.
-> Oops, just forgot devm_request_and_ioremap is returning NULL when it fails.
-> I'll fix it.
->
-> Thanks.
->
-> Best Regards,
->
-> Boris
->> Thanks!
->> Maxime
->>
-
+diff --git a/Documentation/devicetree/bindings/net/arc_emac.txt b/Documentation/devicetree/bindings/net/arc_emac.txt
+index 7fbb027..a1d71eb 100644
+--- a/Documentation/devicetree/bindings/net/arc_emac.txt
++++ b/Documentation/devicetree/bindings/net/arc_emac.txt
+@@ -4,11 +4,15 @@ Required properties:
+ - compatible: Should be "snps,arc-emac"
+ - reg: Address and length of the register set for the device
+ - interrupts: Should contain the EMAC interrupts
+-- clock-frequency: CPU frequency. It is needed to calculate and set polling
+-period of EMAC.
+ - max-speed: see ethernet.txt file in the same directory.
+ - phy: see ethernet.txt file in the same directory.
+ 
++Clock handling:
++The clock frequency is needed to calculate and set polling period of EMAC.
++It must be provided by one of:
++- clock-frequency: CPU frequency.
++- clocks: reference to the clock supplying the EMAC.
++
+ Child nodes of the driver are the individual PHY devices connected to the
+ MDIO bus. They must have a "reg" property given the PHY address on the MDIO bus.
+ 
+@@ -19,7 +23,11 @@ Examples:
+ 		reg = <0xc0fc2000 0x3c>;
+ 		interrupts = <6>;
+ 		mac-address = [ 00 11 22 33 44 55 ];
++
+ 		clock-frequency = <80000000>;
++		/* or */
++		clocks = <&emac_clock>;
++
+ 		max-speed = <100>;
+ 		phy = <&phy0>;
+ 
+diff --git a/drivers/net/ethernet/arc/emac.h b/drivers/net/ethernet/arc/emac.h
+index 928fac6..53f85bf 100644
+--- a/drivers/net/ethernet/arc/emac.h
++++ b/drivers/net/ethernet/arc/emac.h
+@@ -11,6 +11,7 @@
+ #include <linux/dma-mapping.h>
+ #include <linux/netdevice.h>
+ #include <linux/phy.h>
++#include <linux/clk.h>
+ 
+ /* STATUS and ENABLE Register bit masks */
+ #define TXINT_MASK	(1<<0)	/* Transmit interrupt */
+@@ -131,6 +132,7 @@ struct arc_emac_priv {
+ 	struct mii_bus *bus;
+ 
+ 	void __iomem *regs;
++	struct clk *clk;
+ 
+ 	struct napi_struct napi;
+ 	struct net_device_stats stats;
+diff --git a/drivers/net/ethernet/arc/emac_main.c b/drivers/net/ethernet/arc/emac_main.c
+index 9747dda..d647a7d 100644
+--- a/drivers/net/ethernet/arc/emac_main.c
++++ b/drivers/net/ethernet/arc/emac_main.c
+@@ -649,13 +649,6 @@ static int arc_emac_probe(struct platform_device *pdev)
+ 		return -ENODEV;
+ 	}
+ 
+-	/* Get CPU clock frequency from device tree */
+-	if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
+-				 &clock_frequency)) {
+-		dev_err(&pdev->dev, "failed to retrieve <clock-frequency> from device tree\n");
+-		return -EINVAL;
+-	}
+-
+ 	/* Get IRQ from device tree */
+ 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+ 	if (!irq) {
+@@ -687,13 +680,32 @@ static int arc_emac_probe(struct platform_device *pdev)
+ 	}
+ 	dev_dbg(&pdev->dev, "Registers base address is 0x%p\n", priv->regs);
+ 
++	priv->clk = of_clk_get(pdev->dev.of_node, 0);
++	if (IS_ERR(priv->clk)) {
++		/* Get CPU clock frequency from device tree */
++		if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
++					&clock_frequency)) {
++			dev_err(&pdev->dev, "failed to retrieve <clock-frequency> from device tree\n");
++			err = -EINVAL;
++			goto out_netdev;
++		}
++	} else {
++		err = clk_prepare_enable(priv->clk);
++		if (err) {
++			dev_err(&pdev->dev, "failed to enable clock\n");
++			goto out_clkget;
++		}
++
++		clock_frequency = clk_get_rate(priv->clk);
++	}
++
+ 	id = arc_reg_get(priv, R_ID);
+ 
+ 	/* Check for EMAC revision 5 or 7, magic number */
+ 	if (!(id == 0x0005fd02 || id == 0x0007fd02)) {
+ 		dev_err(&pdev->dev, "ARC EMAC not detected, id=0x%x\n", id);
+ 		err = -ENODEV;
+-		goto out_netdev;
++		goto out_clken;
+ 	}
+ 	dev_info(&pdev->dev, "ARC EMAC detected with id: 0x%x\n", id);
+ 
+@@ -708,7 +720,7 @@ static int arc_emac_probe(struct platform_device *pdev)
+ 			       ndev->name, ndev);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "could not allocate IRQ\n");
+-		goto out_netdev;
++		goto out_clken;
+ 	}
+ 
+ 	/* Get MAC address from device tree */
+@@ -729,7 +741,7 @@ static int arc_emac_probe(struct platform_device *pdev)
+ 	if (!priv->rxbd) {
+ 		dev_err(&pdev->dev, "failed to allocate data buffers\n");
+ 		err = -ENOMEM;
+-		goto out_netdev;
++		goto out_clken;
+ 	}
+ 
+ 	priv->txbd = priv->rxbd + RX_BD_NUM;
+@@ -741,7 +753,7 @@ static int arc_emac_probe(struct platform_device *pdev)
+ 	err = arc_mdio_probe(pdev, priv);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "failed to probe MII bus\n");
+-		goto out_netdev;
++		goto out_clken;
+ 	}
+ 
+ 	priv->phy_dev = of_phy_connect(ndev, phy_node, arc_emac_adjust_link, 0,
+@@ -771,6 +783,12 @@ out_netif_api:
+ 	priv->phy_dev = NULL;
+ out_mdio:
+ 	arc_mdio_remove(priv);
++out_clken:
++	if (!IS_ERR(priv->clk))
++		clk_disable_unprepare(priv->clk);
++out_clkget:
++	if (!IS_ERR(priv->clk))
++		clk_put(priv->clk);
+ out_netdev:
+ 	free_netdev(ndev);
+ 	return err;
+@@ -786,6 +804,12 @@ static int arc_emac_remove(struct platform_device *pdev)
+ 	arc_mdio_remove(priv);
+ 	unregister_netdev(ndev);
+ 	netif_napi_del(&priv->napi);
++
++	if (!IS_ERR(priv->clk)) {
++		clk_disable_unprepare(priv->clk);
++		clk_put(priv->clk);
++	}
++
+ 	free_netdev(ndev);
+ 
+ 	return 0;
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.0
 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
