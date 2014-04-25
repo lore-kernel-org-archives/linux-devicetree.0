@@ -1,73 +1,58 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
-Date: Fri, 25 Apr 2014 12:21:05 +0200
-Message-ID: <1398421265.4657.25.camel@weser.hi.pengutronix.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
-	 <20140424175844.GD29593@google.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: "magic" handling of memory nodes
+Date: Fri, 25 Apr 2014 11:44:50 +0100
+Message-ID: <20140425104450.GS5904@bivouac.eciton.net>
+References: <20140424113311.GR5904@bivouac.eciton.net>
+ <5359425F.9090200@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140424175844.GD29593@google.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@linaro.org>
-Cc: linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Sean Cross <xobs@kosagi.com>, Marek Vasut <marex@denx.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5359425F.9090200-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 24.04.2014, 11:58 -0600 schrieb Bjorn Helgaas:
-> On Fri, Mar 28, 2014 at 05:52:51PM +0100, Lucas Stach wrote:
-> > While working on MSI support for the i.MX6 PCIe host driver
-> > it has been discovered that the binding for this host controller
-> > is broken in many ways (refer to the patch descriptions for more
-> > info) and was introduced without proper discussion about what
-> > should/should not be in the binding.
-> > 
-> > This series fixes this and minimizes the difference of the
-> > i.MX6 binding to the common designware PCIe binding. I'm aware
-> > that this is a quite radical change, but I think it's justified
-> > to do this as long as there aren't many user of the old binding
-> > (most of the optional properties in the binding aren't even
-> > implemented).
-> > 
-> > Looking forward to your feedback.
-> > 
-> > Lucas Stach (8):
-> >   ARM: imx6q-clk: parent lvds_gate from lvds_sel
-This one is already applied.
-
-> >   PCI: designware: split Exynos and i.MX bindings
-> >   ARM: dts: imx6: update pcie to bring in line with new binding
-> >   PCI: imx6: use new clock names
-> >   PCI: imx6: drop old irq mapping
-> >   PCI: imx6: rip out optional (and unused) irqs
-> >   PCI: designware: make MSI isr shared irq aware
-> >   PCI: imx6: add support for MSI
+On Thu, Apr 24, 2014 at 10:57:03AM -0600, Stephen Warren wrote:
+> > Secondly, the only reason these platforms could ever have worked is
+> > because they include .dtsi files that define a memory node with a
+> > type explicitly set. Since this node already exists, its contents get
+> > overridden, but the type tag remains. Of course, this only happens
+> > with nodes called explicitly "memory" - but it happens regardless of
+> > what other things they contain.
 > 
-> What's the status of all these?  I would normally apply patches 4-8 of this
-> series through my tree, given the appropriate acks, but I haven't seen
-> those yet.  And I'm not sure what dependencies there are between the
-> non-PCI patches and the PCI ones.
+> That's precisely how DT includes/overrides are supposed to work, and is
+> entirely expected and normal.
+
+Understood.
+
+> Since skeleton.dtsi already says:
 > 
-It's a complete binding change, so applying one part without the other
-is going to horribly break things.
+>         memory { device_type = "memory"; reg = <0 0>; };
+> 
+> ... then any .dts which includes that already has the device_type
+> property set, so there's no need to repeat that property. Subsequent
+> changes to /memory/reg have no impact on /memory/device_type; any new
+> node definitions simply over-write any previous definitions of a
+> redefined property, but leave unmentioned properties unchanged (unless
+> you /delete-property/).
+> 
+> If skeleton.dtsi were changed to remove that property then yes a lot of
+> files would then need to set it, but why would it be removed?
 
-So I would at least want to see an ack for the binding change on the
-i.MX side from Shawn and Richard. This will need some follow on patches,
-as some boards adding PCIe using the old binding have cropped up in
-linux-next, but I can do the patches on short notice if everyone agrees
-to merge this patchset.
+Thank you for the explanation.
 
-The designware part is pretty simple and doesn't change anything for
-other users than i.MX. Though I would like to see an ack from Jingoo for
-those.
+All of the device trees with memory@ nodes do explicitly specify the
+device_type.
 
-I have some more stuff in the pipes regarding multiple MSI irqs, that
-depend on this series and also the Keystone people are waiting for this
-to be applied in order to consolidate the clock handling of the
-designware core driver, so it would be nice to get this moving again.
+I do still find the setup (as opposed to the mechanism) somewhat
+counterintuituve. The effect is pretty much that of a potentially
+architecture-specific magic keyword.
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+/
+    Leif
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
