@@ -1,46 +1,88 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 04/18] xhci-platform: Add a new controller using xhci:
- Armada 38x
-Date: Fri, 25 Apr 2014 21:55:15 +0400
-Message-ID: <535AA183.3070009@cogentembedded.com>
-References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com> <1398434836-18908-5-git-send-email-gregory.clement@free-electrons.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv3 07/14] HSI: Add common DT binding for HSI client devices
+Date: Fri, 25 Apr 2014 20:25:36 +0200
+Message-ID: <20140425182535.GB22721@earth.universe>
+References: <1396053110-21639-1-git-send-email-sre@kernel.org>
+ <1396053110-21639-8-git-send-email-sre@kernel.org>
+ <20140419191612.GG5148@amd.pavel.ucw.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398434836-18908-5-git-send-email-gregory.clement@free-electrons.com>
+Content-Disposition: inline
+In-Reply-To: <20140419191612.GG5148@amd.pavel.ucw.cz>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 04/25/2014 06:07 PM, Gregory CLEMENT wrote:
+--Pd0ReVV5GZGQvF3a
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Extend the compatible string list with armada-380-xhci. It is used to
-> describe xhci controller which is in the Armada 38x SoCs.
+On Sat, Apr 19, 2014 at 09:16:12PM +0200, Pavel Machek wrote:
+> On Sat 2014-03-29 01:31:43, Sebastian Reichel wrote:
+> > Implement and document generic DT bindings for HSI clients.
+> >=20
+> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+>=20
+> Reviewed-by: Pavel Machek <pavel@ucw.cz>
+>=20
+> > diff --git a/drivers/hsi/hsi.c b/drivers/hsi/hsi.c
+> > index 07e1639..5973906 100644
+> > --- a/drivers/hsi/hsi.c
+> > +++ b/drivers/hsi/hsi.c
+> > @@ -26,8 +26,14 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/string.h>
+> >  #include <linux/notifier.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_device.h>
+> >  #include "hsi_core.h"
+>=20
+>=20
+> > +	err =3D hsi_of_property_parse_mode(client, "hsi-mode", &mode);
+> > +	if (err) {
+> > +		err =3D hsi_of_property_parse_mode(client, "hsi-rx-mode",
+> > +						 &cl->rx_cfg.mode);
+> > +		if (err)
+> > +			goto err;
+> > +
+> > +		err =3D hsi_of_property_parse_mode(client, "hsi-tx-mode",
+> > +						 &cl->tx_cfg.mode);
+> > +		if (err)
+> > +			goto err;
+>=20
+> Will this need some #ifdef CONFIG_OF?
 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->   Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
+It would only be needed to reduce the amount of kernel code for
+disabled Device Tree. I don't think its worth it, since there is no
+platform in the mainline kernel, which uses HSI without DT.
 
-> diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> index 90f8f607d125..cbc91414fd59 100644
-> --- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> +++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-> @@ -1,7 +1,8 @@
->   USB xHCI controllers
->
->   Required properties:
-> -  - compatible: should be "generic-xhci" (deprecated: "xhci-platform").
-> +  - compatible: should be on of "generic-xhci",
+-- Sebastian
 
-    s/on/one/
+--Pd0ReVV5GZGQvF3a
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +    "marvell,armada-380-xhci" (deprecated: "xhci-platform").
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-    What's the difference of "marvell,armada-380-xhci" to "generic-xhci"?
+iQIcBAEBCgAGBQJTWqifAAoJENju1/PIO/qaqTMP/RurK4MvmYaf+TBeEsZY1QWN
+Kxb4+o8O6hWkhAhNIrXEVNunJ/TwgR2tYo+fyhYS5HSzngs8uDo5qqDnXVHsSDnm
+LXbXfnpBduhpYZ4v74XCQ09eeX/dyYaJRFQi22wP3E3PUZqNMFIHK7zAC2Ggdocd
+6rz+f+NZrW/BEEx079UYb4DSq4x4vZ/H5CWfncsKVdxZnh5tO6ixfx0XlXJ0U/T3
+b1Qpl55zNheVih5uiDyW0XDurrbfcquCpt90FDhNueWGnz59UGMfbke1W/7UU3vG
++d7Xk8PP/ZqyvHjRXvXr34WAXK7mS5LnP0ewO2ta6XnU3xMOwgyef1dYtKqRPf2R
+qTLea7uOnmqdyKGiHqrKW47okWA4sueJHp4khy8f9E2mWOD7Xq7gfYMGBDD62M1z
+3jjJG4TCF0smONNh/b3kgPn8ayVaL7l7eJazWEzk6AOMWigQyXQ6sAyM99vuPunU
+jzswVHEwEDBnUxz2009/5KjA3R1H4ll9V61p7WDiiGMd/BBRHpySJB6ueAvNsJOV
+3cJhCzbKNlpxM5afVOOM/sAZ/2Wgu6nZxDJU7warnaCTYRzOuMXUsOXICw5MEDlo
+yYj9m3eECT7G4BtU9ugCs/VZ1yJPJyDOIwNbUa2NQeXb7hZtIoTcQHD7h3nlOboP
+f1WojDKwCjBc3C/CrpEF
+=cMrF
+-----END PGP SIGNATURE-----
 
-WBR, Sergei
+--Pd0ReVV5GZGQvF3a--
