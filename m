@@ -1,82 +1,50 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v2 02/18] usb: host: xhci-plat: Add clocks support
-Date: Fri, 25 Apr 2014 16:15:17 +0200
-Message-ID: <20140425161517.20821c65@skate>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 03/18] usb: host: xhci-plat: Add support for the
+ Armada 38x
+Date: Fri, 25 Apr 2014 16:18:49 +0200
+Message-ID: <20140425161849.5616821e@skate>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
-	<1398434836-18908-3-git-send-email-gregory.clement@free-electrons.com>
+	<1398434836-18908-4-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398434836-18908-3-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398434836-18908-4-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Dear Gregory CLEMENT,
 
-On Fri, 25 Apr 2014 16:07:00 +0200, Gregory CLEMENT wrote:
-> Some platform (such as the Armada 38x ones) can gate the clock of
-> their USB controller. This patch add the support for the clock, by
-> enabling them during probe and disabling them on remove.
-> 
-> As not all platforms have clock support then enabling and disabling
-> the clocks have been placed in separate functions. Then if the clocks
-> are not supported we still can use the same calls, and there is no
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  drivers/usb/host/xhci-plat.c | 52 ++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 50 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index f5351af4b2c5..bb5d563f729c 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -11,6 +11,7 @@
->   * version 2 as published by the Free Software Foundation.
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -85,6 +86,42 @@ static const struct hc_driver xhci_plat_xhci_driver = {
->  	.bus_resume =		xhci_bus_resume,
->  };
->  
-> +#if defined(CONFIG_HAVE_CLK)
-> +static int try_enable_clk(struct platform_device *pdev)
-> +{
-> +	struct clk *clk = devm_clk_get(&pdev->dev, NULL);
+On Fri, 25 Apr 2014 16:07:01 +0200, Gregory CLEMENT wrote:
+
+> +#define USB3_MAX_WINDOWS	4
+> +#define USB3_WIN_CTRL(w)	(0x0 + ((w) * 8))
+> +#define USB3_WIN_BASE(w)	(0x4 + ((w) * 8))
 > +
-> +	/* Not all platforms have a clk so it is not an error if the clock
-> +	   does not exists. */
-> +	if (!IS_ERR(clk))
+> +static void __init mv_usb3_conf_mbus_windows(void __iomem *base,
+> +			const struct mbus_dram_target_info *dram)
 
-Instead, do:
+That's a nitpick, but the name of this function looks like it was
+copy/pasted from the Marvell LSP, and isn't very consistent with the
+other function name. What about:
 
-	if (IS_ERR(clk))
-		return 0;
+	xhci_mvebu_mbus_config()
 
-	return clk_prepare_enable(clk);
+instead, or something like that?
 
-> +		if (clk_prepare_enable(clk))
-> +			return  -ENODEV;
-> +	return 0;
-> +}
-> +
-> +static int try_disable_clk(struct platform_device *pdev)
-> +{
-> +	struct clk *clk = devm_clk_get(&pdev->dev, NULL);
+> +int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev)
 
-No, this isn't correct: you shouldn't be getting the clock to
-disable/unprepare it, otherwise you have an unbalanced number of
-get()/put() calls on the clocks.
+I believe this should give you a warning about section mismatch: you
+have a non-init function calling an __init function, no?
 
 Thomas
 -- 
 Thomas Petazzoni, CTO, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
