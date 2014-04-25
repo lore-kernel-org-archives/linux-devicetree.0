@@ -1,93 +1,43 @@
-From: Felipe Balbi <balbi@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Subject: Re: [PATCH v2 03/18] usb: host: xhci-plat: Add support for the
  Armada 38x
-Date: Fri, 25 Apr 2014 15:10:42 -0500
-Message-ID: <20140425201042.GK29632@saruman.home>
+Date: Fri, 25 Apr 2014 22:25:36 +0200
+Message-ID: <20140425222536.430d5c4d@skate>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
- <1398434836-18908-4-git-send-email-gregory.clement@free-electrons.com>
- <5392399.GiPjM0CIZ0@wuerfel>
-Reply-To: <balbi@ti.com>
+	<1398434836-18908-4-git-send-email-gregory.clement@free-electrons.com>
+	<5392399.GiPjM0CIZ0@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GSmKOs+wxh1Tqap7"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <5392399.GiPjM0CIZ0@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---GSmKOs+wxh1Tqap7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Dear Arnd Bergmann,
 
-Hi,
+On Fri, 25 Apr 2014 22:01:51 +0200, Arnd Bergmann wrote:
 
-On Fri, Apr 25, 2014 at 10:01:51PM +0200, Arnd Bergmann wrote:
-> On Friday 25 April 2014 16:07:01 Gregory CLEMENT wrote:
-> > @@ -148,6 +149,9 @@ static int xhci_plat_probe(struct platform_device *=
-pdev)
-> >         if (ret)
-> >                 return ret;
-> > =20
-> > +       if (of_device_is_compatible(pdev->dev.of_node, "marvell,armada-=
-380-xhci"))
-> > +               xhci_mvebu_mbus_init_quirk(pdev);
-> > +
-> >         /* Initialize dma_mask and coherent_dma_mask to 32-bits */
-> >         ret =3D dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
-> >         if (ret)
->=20
 > I think you're doing it the wrong way around: You have a specialized
-
-no, it's the correct way around.
-
 > version of the generic xhci-plat driver. The normal way to handle this
 > is to have a loadable module that contains all the Armada specific
 > code and that registers a platform_driver. In the probe() function of
-
-no, that'll cause too much duplication of boilerplate code. I asked him
-to write it as a quirk because then we won't end up with and xhci
-platform_driver for each of the ARM licensees when all they have are
-small quirks here and there.
-
-Imagine if you had one PCI driver for each possible XHCI PCI controller
-out there.
-
-It's pointless maintainenance burden.
-
 > that driver, you can do the platform specific setup and then call
 > the generic xhci_plat_probe() function, which of course has to
 > be provided using EXPORT_SYMBOL_GPL.
 
-yeah, that sucks. Exposing a probe() function like that. I rather have
-probe() actually *probe* for the HW differences.
+You should have a look at the v1 Gregory sent: it was implementing
+exactly what you suggest here, but Felipe explicitly requested the
+patches to be changed like is now proposed in v2.
 
---=20
-balbi
-
---GSmKOs+wxh1Tqap7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTWsFCAAoJEIaOsuA1yqREGSMQAKxgO/ItTx0EA0UGOeaaQWfS
-IJ9Ifx/7ZwE0S5SMtnkB8XWQfSQnQarfaOPwXTvJYUGQLBIX3nwHcRY6VFrFZm8m
-D6OMNycd7B0OedwtdfTIuco7MW2OyyEAqbPZtVd6eJhWAz+l15xQhekkjdJXisMY
-rZ/aUE9YNvE0utDvXJOjSK2xUNeH9sEKGB2vjEKcVEh3/zW38yfc9w6g6rW7lBrt
-XCf75Kpo5TmsS2VA5EUl8k598mPwQqEtFhIFHdU/LRtM9skIalwRDbCzwE732uKq
-IsXJxiPHU1F9IeSM6Nu65/wgj9tF2oTAj2tZCuZfyNKAbjCoz4iJsPfP4lWH/2ko
-5GaIt9ajymRxPysiYtf4suUksS3vqCSRTuo+e7UQeJtA06MQGpH5rBNtrmIun+8p
-QBdkeCU6lUlHGp+en26Qrwlgg2/93B8uWjNStPK1afeXqvqvCziwi+mKWp/yWx+K
-B46zw4Ac0wwN66Ce68Kly8hpE1aKc3bMW9+HSsyULKicYzJWhQHnTjkVuE4JTjq7
-xHuFEBPBv/HaTfq3B/edo4T4BAQ0YT47eybP570876RBszH6oETJK4XGuDnkqIio
-Xdj69wY8WqVn1DK3VJ5PMjGOAvknVtiecn2XWBlof4Mft15tO2o8TUMFXF8xb8az
-cwDHI2D7o1JgKbtz25cM
-=I0M9
------END PGP SIGNATURE-----
-
---GSmKOs+wxh1Tqap7--
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
