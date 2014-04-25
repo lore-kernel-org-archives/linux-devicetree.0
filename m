@@ -1,197 +1,88 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 2/2] arc_emac: add clock handling
-Date: Fri, 25 Apr 2014 10:06:13 +0200
-Message-ID: <5262035.54Ti8h2BVg@phil>
-References: <1712306.TSJMmGq3uZ@phil>
+From: Vikas Sajjan <sajjan.linux@gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: exynos4: add PMU syscon node
+Date: Fri, 25 Apr 2014 13:35:06 +0530
+Message-ID: <CAGm_ybjhcAqX7biOvqLMgzHPQK=-EtaHtXpCtcJ1rcdRsxN_Og@mail.gmail.com>
+References: <1397479700-15864-1-git-send-email-chanho61.park@samsung.com>
+ <1397479700-15864-2-git-send-email-chanho61.park@samsung.com>
+ <535936A7.9050003@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1712306.TSJMmGq3uZ@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <535936A7.9050003@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree@vger.kernel.org, k.debski@samsung.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, sunil joshi <joshi@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Chanho Park <chanho61.park@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds ability for the arc_emac to really handle its supplying clock.
-To get the needed clock-frequency either a real clock or the previous
-clock-frequency property must be provided.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
----
-changes since v1:
-- fix wrong clk error check found by Max Schwarz
-
- Documentation/devicetree/bindings/net/arc_emac.txt | 12 +++++-
- drivers/net/ethernet/arc/emac.h                    |  2 +
- drivers/net/ethernet/arc/emac_main.c               | 46 ++++++++++++++++------
- 3 files changed, 47 insertions(+), 13 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/arc_emac.txt b/Documentation/devicetree/bindings/net/arc_emac.txt
-index 7fbb027..a1d71eb 100644
---- a/Documentation/devicetree/bindings/net/arc_emac.txt
-+++ b/Documentation/devicetree/bindings/net/arc_emac.txt
-@@ -4,11 +4,15 @@ Required properties:
- - compatible: Should be "snps,arc-emac"
- - reg: Address and length of the register set for the device
- - interrupts: Should contain the EMAC interrupts
--- clock-frequency: CPU frequency. It is needed to calculate and set polling
--period of EMAC.
- - max-speed: see ethernet.txt file in the same directory.
- - phy: see ethernet.txt file in the same directory.
- 
-+Clock handling:
-+The clock frequency is needed to calculate and set polling period of EMAC.
-+It must be provided by one of:
-+- clock-frequency: CPU frequency.
-+- clocks: reference to the clock supplying the EMAC.
-+
- Child nodes of the driver are the individual PHY devices connected to the
- MDIO bus. They must have a "reg" property given the PHY address on the MDIO bus.
- 
-@@ -19,7 +23,11 @@ Examples:
- 		reg = <0xc0fc2000 0x3c>;
- 		interrupts = <6>;
- 		mac-address = [ 00 11 22 33 44 55 ];
-+
- 		clock-frequency = <80000000>;
-+		/* or */
-+		clocks = <&emac_clock>;
-+
- 		max-speed = <100>;
- 		phy = <&phy0>;
- 
-diff --git a/drivers/net/ethernet/arc/emac.h b/drivers/net/ethernet/arc/emac.h
-index 928fac6..53f85bf 100644
---- a/drivers/net/ethernet/arc/emac.h
-+++ b/drivers/net/ethernet/arc/emac.h
-@@ -11,6 +11,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/netdevice.h>
- #include <linux/phy.h>
-+#include <linux/clk.h>
- 
- /* STATUS and ENABLE Register bit masks */
- #define TXINT_MASK	(1<<0)	/* Transmit interrupt */
-@@ -131,6 +132,7 @@ struct arc_emac_priv {
- 	struct mii_bus *bus;
- 
- 	void __iomem *regs;
-+	struct clk *clk;
- 
- 	struct napi_struct napi;
- 	struct net_device_stats stats;
-diff --git a/drivers/net/ethernet/arc/emac_main.c b/drivers/net/ethernet/arc/emac_main.c
-index 9747dda..d647a7d 100644
---- a/drivers/net/ethernet/arc/emac_main.c
-+++ b/drivers/net/ethernet/arc/emac_main.c
-@@ -649,13 +649,6 @@ static int arc_emac_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 	}
- 
--	/* Get CPU clock frequency from device tree */
--	if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
--				 &clock_frequency)) {
--		dev_err(&pdev->dev, "failed to retrieve <clock-frequency> from device tree\n");
--		return -EINVAL;
--	}
--
- 	/* Get IRQ from device tree */
- 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
- 	if (!irq) {
-@@ -687,13 +680,32 @@ static int arc_emac_probe(struct platform_device *pdev)
- 	}
- 	dev_dbg(&pdev->dev, "Registers base address is 0x%p\n", priv->regs);
- 
-+	priv->clk = of_clk_get(pdev->dev.of_node, 0);
-+	if (IS_ERR(priv->clk)) {
-+		/* Get CPU clock frequency from device tree */
-+		if (of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-+					&clock_frequency)) {
-+			dev_err(&pdev->dev, "failed to retrieve <clock-frequency> from device tree\n");
-+			err = -EINVAL;
-+			goto out_netdev;
-+		}
-+	} else {
-+		err = clk_prepare_enable(priv->clk);
-+		if (err) {
-+			dev_err(&pdev->dev, "failed to enable clock\n");
-+			goto out_clkget;
-+		}
-+
-+		clock_frequency = clk_get_rate(priv->clk);
-+	}
-+
- 	id = arc_reg_get(priv, R_ID);
- 
- 	/* Check for EMAC revision 5 or 7, magic number */
- 	if (!(id == 0x0005fd02 || id == 0x0007fd02)) {
- 		dev_err(&pdev->dev, "ARC EMAC not detected, id=0x%x\n", id);
- 		err = -ENODEV;
--		goto out_netdev;
-+		goto out_clken;
- 	}
- 	dev_info(&pdev->dev, "ARC EMAC detected with id: 0x%x\n", id);
- 
-@@ -708,7 +720,7 @@ static int arc_emac_probe(struct platform_device *pdev)
- 			       ndev->name, ndev);
- 	if (err) {
- 		dev_err(&pdev->dev, "could not allocate IRQ\n");
--		goto out_netdev;
-+		goto out_clken;
- 	}
- 
- 	/* Get MAC address from device tree */
-@@ -729,7 +741,7 @@ static int arc_emac_probe(struct platform_device *pdev)
- 	if (!priv->rxbd) {
- 		dev_err(&pdev->dev, "failed to allocate data buffers\n");
- 		err = -ENOMEM;
--		goto out_netdev;
-+		goto out_clken;
- 	}
- 
- 	priv->txbd = priv->rxbd + RX_BD_NUM;
-@@ -741,7 +753,7 @@ static int arc_emac_probe(struct platform_device *pdev)
- 	err = arc_mdio_probe(pdev, priv);
- 	if (err) {
- 		dev_err(&pdev->dev, "failed to probe MII bus\n");
--		goto out_netdev;
-+		goto out_clken;
- 	}
- 
- 	priv->phy_dev = of_phy_connect(ndev, phy_node, arc_emac_adjust_link, 0,
-@@ -771,6 +783,12 @@ out_netif_api:
- 	priv->phy_dev = NULL;
- out_mdio:
- 	arc_mdio_remove(priv);
-+out_clken:
-+	if (!IS_ERR(priv->clk))
-+		clk_disable_unprepare(priv->clk);
-+out_clkget:
-+	if (!IS_ERR(priv->clk))
-+		clk_put(priv->clk);
- out_netdev:
- 	free_netdev(ndev);
- 	return err;
-@@ -786,6 +804,12 @@ static int arc_emac_remove(struct platform_device *pdev)
- 	arc_mdio_remove(priv);
- 	unregister_netdev(ndev);
- 	netif_napi_del(&priv->napi);
-+
-+	if (!IS_ERR(priv->clk)) {
-+		clk_disable_unprepare(priv->clk);
-+		clk_put(priv->clk);
-+	}
-+
- 	free_netdev(ndev);
- 
- 	return 0;
--- 
-1.9.0
+Hi,
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Apr 24, 2014 at 9:37 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Chanho,
+>
+>
+> On 14.04.2014 14:48, Chanho Park wrote:
+>>
+>> This patch adds a PMU(Power Management Unit) syscon node. This
+>> should be required for USB Phy syscon regmap I/F.
+>>
+>> Cc: Tomasz Figa <t.figa@samsung.com>
+>> Cc: Kamil Debski <k.debski@samsung.com>
+>> Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos4.dtsi | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4.dtsi
+>> b/arch/arm/boot/dts/exynos4.dtsi
+>> index 2f8bcd0..e565b86 100644
+>> --- a/arch/arm/boot/dts/exynos4.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>> @@ -110,6 +110,11 @@
+>>                 reg = <0x10010000 0x400>;
+>>         };
+>>
+>> +       pmu_reg: syscon@10020000 {
+>> +               compatible = "samsung,exynos4-pmureg", "syscon";
+>
+
+ Assume a case where exynos PMU is made as platform driver [1] and we
+need use the compatible  "samsung,exynos4-pmureg" in the driver.
+But since syscon driver uses compatible "syscon" and once the syscon
+driver is probed, the  exynos PMU platform driver [1] will NEVER be
+probed.
+So my question is, can we have 2 compatible strings for a DT node, and
+both the compatible strings are used for probing purpose?
+Recently I faced this issue on exynos5250, where i was testing PMU
+driver [1] and I noticed that  PMU driver [1] was NEVER probed, if I
+enable syscon driver in menuconfig.
+
+[1] http://www.spinics.net/lists/linux-samsung-soc/msg28038.html
+
+>
+> This compatible string doesn't seem to be defined in [1], please add it
+> there,
+>
+> [1] Documentation/devicetree/bindings/arm/samsung/pmu.txt
+>
+> Otherwise looks good, so after fixing that you may add my
+>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+>
+> Best regards,
+> Tomasz
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
