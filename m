@@ -1,8 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 04/18] xhci-platform: Add a new controller using xhci:
- Armada 38x
-Date: Fri, 25 Apr 2014 16:07:02 +0200
-Message-ID: <1398434836-18908-5-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 07/18] ARM: mvebu: Add USB3 support for Armada 38x
+Date: Fri, 25 Apr 2014 16:07:05 +0200
+Message-ID: <1398434836-18908-8-git-send-email-gregory.clement@free-electrons.com>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,27 +21,25 @@ To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfou
 Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Extend the compatible string list with armada-380-xhci. It is used to
-describe xhci controller which is in the Armada 38x SoCs.
+This patch add the selection of the config symbol to build the USB3
+support for Armada 38x.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/mach-mvebu/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 90f8f607d125..cbc91414fd59 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -1,7 +1,8 @@
- USB xHCI controllers
- 
- Required properties:
--  - compatible: should be "generic-xhci" (deprecated: "xhci-platform").
-+  - compatible: should be on of "generic-xhci",
-+    "marvell,armada-380-xhci" (deprecated: "xhci-platform").
-   - reg: should contain address and length of the standard XHCI
-     register set for the device.
-   - interrupts: one XHCI interrupt should be described here.
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index 3f73eecbcfb0..7960f218702b 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -54,6 +54,7 @@ config MACH_ARMADA_38X
+ 	select CPU_V7
+ 	select MACH_MVEBU_V7
+ 	select PINCTRL_ARMADA_38X
++	select USB_ARCH_HAS_XHCI
+ 	help
+ 	  Say 'Y' here if you want your kernel to support boards based
+ 	  on the Marvell Armada 380/385 SoC with device tree.
 -- 
 1.8.1.2
