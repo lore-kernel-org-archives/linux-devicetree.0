@@ -1,75 +1,100 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 02/18] usb: host: xhci-plat: Add clocks support
-Date: Fri, 25 Apr 2014 17:47:46 +0200
-Message-ID: <20140425154746.GB12472@lunn.ch>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v2 05/18] ARM: mvebu: Add Device Tree description of xHCI
+ hosts on Armada 38x
+Date: Fri, 25 Apr 2014 17:53:40 +0200
+Message-ID: <20140425155340.GC12472@lunn.ch>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
- <1398434836-18908-3-git-send-email-gregory.clement@free-electrons.com>
+ <1398434836-18908-6-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398434836-18908-3-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1398434836-18908-6-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 25, 2014 at 04:07:00PM +0200, Gregory CLEMENT wrote:
-> Some platform (such as the Armada 38x ones) can gate the clock of
-> their USB controller. This patch add the support for the clock, by
-> enabling them during probe and disabling them on remove.
+On Fri, Apr 25, 2014 at 04:07:03PM +0200, Gregory CLEMENT wrote:
+> The Marvell Armada 38x SoCs contain two xHCI host. This commit adds
+> the Device Tree description of those interfaces at the SoC level, and
+> also enables the two USB3 ports on the Armada 385 DB platform and one
+> USB3 port on the Armada 385 RD platforms.
 > 
-> As not all platforms have clock support then enabling and disabling
-> the clocks have been placed in separate functions. Then if the clocks
-> are not supported we still can use the same calls, and there is no
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 > ---
->  drivers/usb/host/xhci-plat.c | 52 ++++++++++++++++++++++++++++++++++++++++++--
->  1 file changed, 50 insertions(+), 2 deletions(-)
+>  arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
+>  arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
+>  arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
+>  3 files changed, 29 insertions(+)
 > 
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index f5351af4b2c5..bb5d563f729c 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -11,6 +11,7 @@
->   * version 2 as published by the Free Software Foundation.
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -85,6 +86,42 @@ static const struct hc_driver xhci_plat_xhci_driver = {
->  	.bus_resume =		xhci_bus_resume,
->  };
->  
-> +#if defined(CONFIG_HAVE_CLK)
-
-Hi Gregory
-
-You probably don't need to do this conditional on CONFIG_HAVE_CLK.
-There are stub functions in clk.h for when CONFIG_HAVE_CLK is not
-defined. So the compiler knows devm_clk_get() will return NULL, it can
-evaluate IS_ERR is false, clk_prepare() returns 0 and so the whole
-function collapses to "return 0;"
-
-> +static int try_enable_clk(struct platform_device *pdev)
-> +{
-> +	struct clk *clk = devm_clk_get(&pdev->dev, NULL);
+> diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
+> index 6828d77696a6..d5db1466da82 100644
+> --- a/arch/arm/boot/dts/armada-385-db.dts
+> +++ b/arch/arm/boot/dts/armada-385-db.dts
+> @@ -101,6 +101,14 @@
+>  					reg = <0x1000000 0x3f000000>;
+>  				};
+>  			};
 > +
-> +	/* Not all platforms have a clk so it is not an error if the clock
-> +	   does not exists. */
-> +	if (!IS_ERR(clk))
-> +		if (clk_prepare_enable(clk))
-> +			return  -ENODEV;
+> +			usb3@f0000 {
+> +				status = "okay";
+> +			};
+> +
+> +			usb3@f8000 {
+> +				status = "okay";
+> +			};
+>  		};
+>  
+>  		pcie-controller {
+> diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
+> index 45250c88814b..a505fe94ff37 100644
+> --- a/arch/arm/boot/dts/armada-385-rd.dts
+> +++ b/arch/arm/boot/dts/armada-385-rd.dts
+> @@ -77,6 +77,10 @@
+>  					reg = <1>;
+>  				};
+>  			};
+> +
+> +			usb3@f0000 {
+> +				status = "okay";
+> +			};
+>  		};
+>  
+>  		pcie-controller {
+> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+> index a064f59da02d..5913ce1cc601 100644
+> --- a/arch/arm/boot/dts/armada-38x.dtsi
+> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> @@ -355,6 +355,23 @@
+>  				clocks = <&coredivclk 0>;
+>  				status = "disabled";
+>  			};
+> +
+> +			usb3@f0000 {
+> +				compatible = "marvell,armada-380-xhci";
+> +				reg = <0xf0000 0x3fff>,<0xf4000 0x3fff>;
 
-Is ENODEV the correct error code? It would probably be better to
-return the return value of clk_prepare_enable()
+s/0x3fff/0x4000/g  ?
 
-> +	return 0;
-> +}
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Andrew		   
+
+> +				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&gateclk 9>;
+> +				status = "disabled";
+> +			};
+> +
+> +			usb3@f8000 {
+> +				compatible = "marvell,armada-380-xhci";
+> +				reg = <0xf8000 0x3fff>,<0xfc000 0x3fff>;
+> +				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks = <&gateclk 10>;
+> +				status = "disabled";
+> +			};
+> +
+>  		};
+>  	};
+>  
+> -- 
+> 1.8.1.2
+> 
