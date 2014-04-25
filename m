@@ -1,88 +1,177 @@
 From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv3 08/14] HSI: Introduce OMAP SSI driver
-Date: Fri, 25 Apr 2014 20:36:05 +0200
-Message-ID: <20140425183604.GD22721@earth.universe>
+Subject: Re: [PATCHv3 09/14] Documentation: DT: omap-ssi binding documentation
+Date: Fri, 25 Apr 2014 20:38:33 +0200
+Message-ID: <20140425183832.GE22721@earth.universe>
 References: <1396053110-21639-1-git-send-email-sre@kernel.org>
- <1396053110-21639-9-git-send-email-sre@kernel.org>
- <20140419193050.GH5148@amd.pavel.ucw.cz>
+ <1396053110-21639-10-git-send-email-sre@kernel.org>
+ <CAL_Jsq+jGeuM+Vmb8uzz3-ZUvKQu=kDv3RqVY0Dudmc9XTm-BA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="n/aVsWSeQ4JHkrmm"
-Return-path: <linux-omap-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="WK3l2KTTmXPVedZ6"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140419193050.GH5148@amd.pavel.ucw.cz>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Carlos Chinea <carlos.chinea@nokia.com>
+In-Reply-To: <CAL_Jsq+jGeuM+Vmb8uzz3-ZUvKQu=kDv3RqVY0Dudmc9XTm-BA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
 
---n/aVsWSeQ4JHkrmm
+--WK3l2KTTmXPVedZ6
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Sat, Apr 19, 2014 at 09:30:51PM +0200, Pavel Machek wrote:
-> > Add OMAP SSI driver to the HSI subsystem.
-> >=20
-> > The Synchronous Serial Interface (SSI) is a legacy version
-> > of HSI. As in the case of HSI, it is mainly used to connect
-> > Application engines (APE) with cellular modem engines (CMT)
-> > in cellular handsets.
-> >=20
-> > It provides a multichannel, full-duplex, multi-core communication
-> > with no reference clock. The OMAP SSI block is capable of reaching
-> > speeds of 110 Mbit/s.
-> >=20
-> > Signed-off-by: Carlos Chinea <carlos.chinea@nokia.com>
+Hi,
+
+On Mon, Apr 21, 2014 at 11:43:47AM -0500, Rob Herring wrote:
+> On Fri, Mar 28, 2014 at 7:31 PM, Sebastian Reichel <sre@kernel.org> wrote:
+> > Create device tree binding documentation for
+> > OMAP Synchronous Serial Interface (SSI) device.
+> >
 > > Signed-off-by: Sebastian Reichel <sre@kernel.org>
->=20
-> > +	bool			wktest:1; /* FIXME: HACK to be removed */
-> > +	bool			wkin_cken:1; /* Workaround */
->=20
-> There is more thanone FIXME in the code. It may be better to fix after
-> merge...
-
-I would prefer to keep them in there and have a look after the
-merge. Most FIXMEs in the code are for the wakeline test and some
-concern the timings. Since the current code works I would prefer
-to add it to the mainline kernel and tackle this afterwards.
-
-> > +DEFINE_SIMPLE_ATTRIBUTE(ssi_sst_div_fops, ssi_div_get, ssi_div_set, "%=
-llu\n");
+> > ---
+> >  Documentation/devicetree/bindings/hsi/omap-ssi.txt | 85 ++++++++++++++=
+++++++++
+> >  1 file changed, 85 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/hsi/omap-ssi.txt b/Docum=
+entation/devicetree/bindings/hsi/omap-ssi.txt
+> > new file mode 100644
+> > index 0000000..709419b
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/hsi/omap-ssi.txt
+> > @@ -0,0 +1,85 @@
+> > +OMAP SSI controller bindings
 > > +
-> > +static int __init ssi_debug_add_port(struct omap_ssi_port *omap_port,
-> > +							struct dentry *dir)
-> > +{
+> > +OMAP Synchronous Serial Interface (SSI) controller implements a legacy
+> > +variant of MIPI's High Speed Synchronous Serial Interface (HSI).
+> > +
+> > +Required properties:
+> > +- compatible:          Should include "ti,omap3-ssi".
+> > +- reg-names:           Contains the values "sys" and "gdd".
+> > +- reg:                 Contains a register specifier for each entry in
+> > +                       reg-names.
 >=20
-> A little strange indentation. Is it intentional?
->
-> [...] (more ugly indentation cases)
+> You need to define the order here unless you have a strong
+> argument why you can't.
 
-Fixed in v4.
+ok.
+
+> > +- interrupt-names:      Contains the value "gdd_mpu".
+> > +- interrupts:          Contains interrupt information for each entry in
+> > +                       interrupt-names.
+> > +- ranges:              Represents the bus address mapping between the =
+main
+> > +                       controller node and the child nodes below.
+> > +- clocks:              Contains clock specifiers for each entry in
+> > +                        clock-names.
+> > +- clock-names:         Must include the following entries:
+> > +  "ssi_ssr_fck": The OMAP clock of that name
+> > +  "ssi_sst_fck": The OMAP clock of that name
+> > +  "ssi_ick": The OMAP clock of that name
+> > +- #address-cells:      Should be set to <1>
+> > +- #size-cells:         Should be set to <1>
+> > +
+> > +Each port is represented as a sub-node of the ti,omap3-ssi device.
+> > +
+> > +Required Port sub-node properties:
+> > +- compatible:          Should be set to the following value
+> > +                        ti,omap3-ssi-port (applicable to OMAP34xx devi=
+ces)
+> > +- reg-names:           Contains the values "rx" and "tx".
+> > +- reg:                 Contains a register specifier for each entry in
+> > +                       reg-names.
+>=20
+> You need to define the order here unless you have a strong argument
+> why you can't.
+
+ok.
+
+> > +- interrupt-parent     Should be a phandle for the interrupt controller
+> > +- interrupt-names:     Contains the values "mpu_irq0" and "mpu_irq1".
+>=20
+> Those names aren't exactly useful.
+
+I removed interrupt-names in PATCHv4.
+
+> > +- interrupts:          Contains interrupt information for each entry in
+> > +                       interrupt-names.
+>=20
+> You need to define the order here unless you have a strong argument
+> why you can't.
+
+ok.
+
+> > +- ti,ssi-cawake-gpio:  Defines which GPIO pin is used to signify CAWAKE
+> > +                       events for the port. This is an optional board-=
+specific
+> > +                       property. If it's missing the port will not be
+> > +                       enabled.
+> > +
+> > +Example for Nokia N900:
+> > +
+> > +ssi-controller@48058000 {
+> > +       compatible =3D "ti,omap3-ssi";
+> > +
+> > +       /* needed until hwmod is updated to use the compatible string */
+> > +       ti,hwmods =3D "ssi";
+> > +
+> > +       reg =3D <0x48058000 0x1000>,
+> > +             <0x48059000 0x1000>;
+> > +       reg-names =3D "sys",
+> > +                   "gdd";
+> > +
+> > +       interrupts =3D <55>;
+> > +       interrupt-names =3D "gdd_mpu";
+> > +
+> > +       clocks =3D <&ssi_ssr_fck>,
+> > +                <&ssi_sst_fck>,
+> > +                <&ssi_ick>;
+> > +       clock-names =3D "ssi_ssr_fck",
+> > +                     "ssi_sst_fck",
+> > +                     "ssi_ick";
+> > +
+> > +       #address-cells =3D <1>;
+> > +       #size-cells =3D <1>;
+> > +       ranges;
+> > +
+> > +       ssi-port@0 {
+>=20
+> Does this h/w really have more than 1 port?
+
+Yes. I added this to the example in PATCHv4.
+
+> This should really be "ssi-port@4805a800" Or you need to fill in
+> ranges to have a local offset.
+
+ok.
+
+>> [...]
 
 -- Sebastian
 
---n/aVsWSeQ4JHkrmm
+--WK3l2KTTmXPVedZ6
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBCgAGBQJTWqsUAAoJENju1/PIO/qafbEQAIWovOVXSwiNOeKwa6F9qtU3
-xkLB2zQePMGabDicRZjL3r19c0mCFDmDfcpsyK3NZ9ig9kXdk+daV/W6SAh1Ve9A
-LcTahmgl1RSQoud7Rcb/y1RJMtWlu+rDtXiEJ77GC69/rTxHNAHsB8++iCH7+xhD
-wzDokHQeV0JSiYQ6x0P5sYVaZJHatGd6kNpie6Fw4lVfv/0Y6kw2NIw81pNq04UD
-E3c3P8WnWDVB72odTxaiwRDsN7fquZODKMnbnWXPneG9UsZpngOQa4qvzEViu4Hj
-vDbyUpHLXfMG0q19HoSPqEm0yKA2eu6JFj2Nd0facgmOJunai7YNYtdi0E/xzu5d
-h+Gz4z9C5B2JAy1n4PLltAsK+qIn1AO9BOLJnf+eotCltrK1FcXMsOCI9uwD/6Hg
-TucfPRTiqsjSddaMPbmBRkHnkjUwG0y4gQwhgEgaJFOQj+bLx1GOiA2o8zMV2QXT
-9h0edib86J8ypgvuLEXhFCRfKezoC+tBtzG5k5N7NKgPeYAASA1MUlBTCFKhcSFi
-DJia4Dgww8BT+klgCzPLRsBf1sLSoM8wMs6t0PqJm7EUmeN2Nw+b/yjP+V9FztsI
-n+rmw5OZvd5iNCASZr41+XdquzZq0VfJxYJObQNBA5rHn6tAAstCkNfadIKcLGTs
-2YFUMtaWzh4im2mthVpt
-=gbdb
+iQIcBAEBCgAGBQJTWquoAAoJENju1/PIO/qaFDIP/j+LmisTdmEr9ZsOjgBGa8Ka
+wGY4/UKwJvWFYETSkxuVxCeuM0Ndd88OSc2uEf748/Q3c4WoB+7ugIt/PyxngFYc
+yMTtU8MQg3QVlWWb7OXjRgAzmUlV4W2p8qLB6VZuRsPpi8k9hYMw4/hoD/PxTew8
+AeXCU/mIGkdKaUm3qhd5uCW76Iovw/11xC+ZY+lma7vVnwq44dU1ZNHRgXz9YxG2
+Xa5Tx+M158ORCxyiSoNAqck/jKG3NOz8SFhsoM+XKotrD6uWPkxfZIKbrIuIhHE3
+NkmMmP6SNc2TibT5W6n6PploQW75k98P/Qw4PTS0Vu7I4JENIPEs1vcXbpqZDXC/
+OXu1JdVxI8ckNc0CAcOeoMURkqEJEYa573CWjkTpa6U/eciVfDpjqy2a8MM3gneh
+i/pxl6vBwUjx2HUpaxc3Y9fgs1us9VrERIcQ2Q0UT3RnKYax1Igf9f+PeQpTDfio
+4SVb904iVxEFdgmedb4/zujsIYad8mdcw0BrJ5yi9RsB7pcm3QtKohe0kecmsCcF
+YO9pP0dYWUwzSpD0uQSnvBBATl9QRYOyAjqcbq4GnVMDmoOE/Jz5aDs0ceD115jM
+dWVr7YiuUzu+tRSBrNLC84vUkcbo47eUBDW+UT4eymo8UfQ8OOZGu79+BLTXo2NG
+KjCVFngZCjZauDLwdVVZ
+=WwJN
 -----END PGP SIGNATURE-----
 
---n/aVsWSeQ4JHkrmm--
+--WK3l2KTTmXPVedZ6--
