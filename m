@@ -1,42 +1,54 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 00/38] MMC updates, plus CuBox-i WiFi support
-Date: Fri, 25 Apr 2014 10:03:43 +0100
-Message-ID: <20140425090343.GH26756@n2100.arm.linux.org.uk>
-References: <20140423185534.GA26756@n2100.arm.linux.org.uk> <CAPDyKFozP69yngKAkdwHYyyvi+pdLEm05udOmBiVshQFi4hnLQ@mail.gmail.com> <20140424101726.GH26756@n2100.arm.linux.org.uk> <CAPDyKFrGReKF0ucer7D195boEoQW26=4vDXT+=Wn6BO-p_B1gQ@mail.gmail.com> <20140424105745.GM26756@n2100.arm.linux.org.uk> <CAPDyKFr=2=dg1NTYb1_EAgxXZq2Rd+o2Q2B5TE+GZwr8MUU1_Q@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: pl061: get gpio base from alias id
+Date: Fri, 25 Apr 2014 11:29:49 +0200
+Message-ID: <CACRpkdb5bRK6n_-Rpr1WDG5H_C9WDVuLT+sop2_9hR8TW4N3fg@mail.gmail.com>
+References: <1398130543-19454-1-git-send-email-haojian.zhuang@linaro.org>
+	<CACRpkdbzoPNEEJ6UbisqHOiRwuxEb6XSrDL=MiUmDPgyY=rVuw@mail.gmail.com>
+	<CAD6h2NQ4XdpE+HnTVpuSE4jW3-5_UqJmEJJcAkpD3xxqJKy3aA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPDyKFr=2=dg1NTYb1_EAgxXZq2Rd+o2Q2B5TE+GZwr8MUU1_Q@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Chris Ball <chris@printf.net>, Anton Vorontsov <anton@enomsg.org>, Barry Song <baohua@kernel.org>, Ben Dooks <ben-linux@fluff.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-doc@vger.kernel.org, linux-mmc <linux-mmc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Seungwon Jeon <tgih.jun@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, spear-devel@list.st.com, Stephe
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAD6h2NQ4XdpE+HnTVpuSE4jW3-5_UqJmEJJcAkpD3xxqJKy3aA@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 24, 2014 at 01:13:05PM +0200, Ulf Hansson wrote:
-> On 24 April 2014 12:57, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-> > This is nothing new or unexpected - it was last posted back in February,
-> > and I elected that it should be held off until after the last merge
-> > window.
-> >
-> > Unfortunately, I didn't have time to post it immediately after the merge
-> > window closed, partly because it needed to be rebased on top of tglx's
-> > IRQ changes on which it depends.  I was carrying those as separate commits
-> > to the ones Thomas was carrying in his tree - and in the event, Thomas had
-> > modified his patches slightly between sending me copies of them and the
-> > versions he sent during the merge window.
-> 
-> Okay, so let's keep up the frequency here then. I only had some minor
-> comments, please fix them and send a v2.
+On Fri, Apr 25, 2014 at 2:27 AM, Haojian Zhuang
+<haojian.zhuang@linaro.org> wrote:
 
-Right, so I've updated the patches, and added one ack to one patch.
-That seems insufficient to me - the only platform these have been
-tested on is iMX6, which is sdhci-esdhc-imx.c.
+> Go it. But the gpio sysfs interface is using the gpio name with an
+> internal number. It'll make developer confusion since it's different
+> from datasheet
+> or schematics. Is there any plan to remove the confusion?
 
-They _really_ need testing elsewhere too.  Or is the plan to merge
-them and then see about getting people to test them and fix them up
-afterwards?
+First I am as always very suspicious about the sysfs interface
+since it is often used for madness like reimplementing
+leds-gpio.c, gpio_keys.c, extcon-gpio.c, gpio-regulator.c
+spi-gpio.c, w1-gpio.c or gpio_wdt.c in userspace for no
+good reason when the kernel should handle it.
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+Yet there are exceptions where it's actually warranted.
+
+There is a possibility to set a label on the gpio line,
+so this should be used.
+
+C.f.
+commit 781f6d710d4482eab05cfaad50060a0ea8c0e4e0
+"gpio: generic: Add label to platform data"
+
+Something like this is needed in this and other drivers
+needing to label its GPIO lines. It's much like how we name
+all pins in a pin controller really.
+
+I don't exactly know how we should achieve the same
+for labels to offsets in any given gpio_chip using
+some generic device tree labels for example, but I
+imagine it could be implemented in a generic fashion?
+
+Describing the names of gpio lines should be quite
+obvious hardware description suitable for the device
+tree.
+
+Yours,
+Linus Walleij
