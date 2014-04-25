@@ -1,100 +1,26 @@
 From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 05/18] ARM: mvebu: Add Device Tree description of xHCI
- hosts on Armada 38x
-Date: Fri, 25 Apr 2014 17:53:40 +0200
-Message-ID: <20140425155340.GC12472@lunn.ch>
+Subject: Re: [PATCH v2 14/18] ARM: mvebu: Add support for USB cluster on the
+ Armada 375 SoC
+Date: Fri, 25 Apr 2014 17:59:23 +0200
+Message-ID: <20140425155923.GD12472@lunn.ch>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
- <1398434836-18908-6-git-send-email-gregory.clement@free-electrons.com>
+ <1398434836-18908-15-git-send-email-gregory.clement@free-electrons.com>
+ <20140425154320.GA20801@arch.cereza>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398434836-18908-6-git-send-email-gregory.clement@free-electrons.com>
+In-Reply-To: <20140425154320.GA20801@arch.cereza>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 25, 2014 at 04:07:03PM +0200, Gregory CLEMENT wrote:
-> The Marvell Armada 38x SoCs contain two xHCI host. This commit adds
-> the Device Tree description of those interfaces at the SoC level, and
-> also enables the two USB3 ports on the Armada 385 DB platform and one
-> USB3 port on the Armada 385 RD platforms.
+> > +			 * We can't use usb2 and usb3 in the same time, so let's
+> > +			 * disbale usb2 and complain about it to the user askinf
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
->  arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
->  arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
->  3 files changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-> index 6828d77696a6..d5db1466da82 100644
-> --- a/arch/arm/boot/dts/armada-385-db.dts
-> +++ b/arch/arm/boot/dts/armada-385-db.dts
-> @@ -101,6 +101,14 @@
->  					reg = <0x1000000 0x3f000000>;
->  				};
->  			};
-> +
-> +			usb3@f0000 {
-> +				status = "okay";
-> +			};
-> +
-> +			usb3@f8000 {
-> +				status = "okay";
-> +			};
->  		};
->  
->  		pcie-controller {
-> diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
-> index 45250c88814b..a505fe94ff37 100644
-> --- a/arch/arm/boot/dts/armada-385-rd.dts
-> +++ b/arch/arm/boot/dts/armada-385-rd.dts
-> @@ -77,6 +77,10 @@
->  					reg = <1>;
->  				};
->  			};
-> +
-> +			usb3@f0000 {
-> +				status = "okay";
-> +			};
->  		};
->  
->  		pcie-controller {
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index a064f59da02d..5913ce1cc601 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -355,6 +355,23 @@
->  				clocks = <&coredivclk 0>;
->  				status = "disabled";
->  			};
-> +
-> +			usb3@f0000 {
-> +				compatible = "marvell,armada-380-xhci";
-> +				reg = <0xf0000 0x3fff>,<0xf4000 0x3fff>;
+> typos: disable, asking
 
-s/0x3fff/0x4000/g  ?
+And it should be "at the same time", not in.
 
-	Andrew		   
-
-> +				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&gateclk 9>;
-> +				status = "disabled";
-> +			};
-> +
-> +			usb3@f8000 {
-> +				compatible = "marvell,armada-380-xhci";
-> +				reg = <0xf8000 0x3fff>,<0xfc000 0x3fff>;
-> +				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks = <&gateclk 10>;
-> +				status = "disabled";
-> +			};
-> +
->  		};
->  	};
->  
-> -- 
-> 1.8.1.2
-> 
+    Andrew
