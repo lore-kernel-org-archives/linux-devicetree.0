@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 11/18] xhci-platform: Add a new controller using xhci: Armada 375
-Date: Fri, 25 Apr 2014 16:07:09 +0200
-Message-ID: <1398434836-18908-12-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 18/18] ARM: mvebu: Add Device Tree description of EHCI hosts on Armada 375
+Date: Fri, 25 Apr 2014 16:07:16 +0200
+Message-ID: <1398434836-18908-19-git-send-email-gregory.clement@free-electrons.com>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
@@ -10,27 +10,42 @@ To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfou
 Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Extend the compatible string list with armada-375-xhci. It is used to
-describe xhci controller which is in the Armada 375 SoC.
+The Marvell Armada 375 SoC contains one EHCI host. This commit adds
+the Device Tree description of this interface at the SoC level.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/armada-375.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index cbc91414fd59..87d150ca58cc 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -2,7 +2,8 @@ USB xHCI controllers
+diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+index cbe64ba9eb65..349b9635bf3a 100644
+--- a/arch/arm/boot/dts/armada-375.dtsi
++++ b/arch/arm/boot/dts/armada-375.dtsi
+@@ -320,6 +320,24 @@
+ 				clocks = <&coreclk 0>;
+ 			};
  
- Required properties:
-   - compatible: should be on of "generic-xhci",
--    "marvell,armada-380-xhci" (deprecated: "xhci-platform").
-+    "marvell,armada-375-xhci", "marvell,armada-380-xhci" (deprecated:
-+    "xhci-platform").
-   - reg: should contain address and length of the standard XHCI
-     register set for the device.
-   - interrupts: one XHCI interrupt should be described here.
++			/*
++			 * On Armada 375, USB2 host controller and
++			 * USB3 host controller are incompatible. That
++			 * means that in the dts of your board, you
++			 * can either select the USB2 controller:
++			 * marvell,orion-ehci or the USB3 controller:
++			 * marvell,armada-375-xhci, but not both. If
++			 * both controllers are selected, then the
++			 * kernel will select the USB3 by default.
++			 */
++			usb@50000 {
++				compatible = "marvell,orion-ehci";
++				reg = <0x50000 0x500>;
++				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 18>;
++				status = "disabled";
++			};
++
+ 			usb-cluster@18400 {
+ 				compatible = "marvell,armada-375-usb-cluster";
+ 				reg = <0x18400 0x4>;
 -- 
 1.8.1.2
