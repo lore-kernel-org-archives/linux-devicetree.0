@@ -1,97 +1,103 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv3 07/14] HSI: Add common DT binding for HSI client devices
-Date: Fri, 25 Apr 2014 22:59:27 +0200
-Message-ID: <20140425205926.GA30032@earth.universe>
-References: <1396053110-21639-1-git-send-email-sre@kernel.org>
- <1396053110-21639-8-git-send-email-sre@kernel.org>
- <20140419191612.GG5148@amd.pavel.ucw.cz>
- <20140425182535.GB22721@earth.universe>
+From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
+Date: Fri, 25 Apr 2014 14:04:41 -0700
+Message-ID: <CAKh23Fn2LvhNt_ZMQcDwu3W5Gw_ZJ1NUAcjDexDCKtkR1Ww-YQ@mail.gmail.com>
+References: <1397702368-4846-1-git-send-email-isubramanian@apm.com>
+	<1397702368-4846-5-git-send-email-isubramanian@apm.com>
+	<1398431623.3010.76.camel@deneb.redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140425182535.GB22721-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+In-Reply-To: <1398431623.3010.76.camel-PDpCo7skNiwAicBL8TP8PQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+To: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Apr 25, 2014 at 6:13 AM, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> On Wed, 2014-04-16 at 19:39 -0700, Iyappan Subramanian wrote:
+>> +static int xgene_enet_refill_bufpool(struct xgene_enet_desc_ring *buf_pool,
+>> +                                    u32 nbuf)
+>> +{
+>> +       struct sk_buff *skb;
+>> +       struct xgene_enet_desc16 *desc;
+>> +       struct net_device *ndev;
+>> +       struct device *dev;
+>> +       dma_addr_t dma_addr;
+>> +       u32 tail = buf_pool->tail;
+>> +       u32 slots = buf_pool->slots - 1;
+>> +       int i, ret = 0;
+>> +       u16 bufdatalen = BUF_LEN_CODE_2K | (SKB_BUFFER_SIZE & GENMASK(11, 0));
+>> +
+>> +       ndev = buf_pool->ndev;
+>> +       dev = ndev_to_dev(buf_pool->ndev);
+>> +
+>> +       for (i = 0; i < nbuf; i++) {
+>> +               desc = &buf_pool->desc16[tail];
+>> +
+>> +               skb = netdev_alloc_skb_ip_align(ndev, XGENE_ENET_MAX_MTU);
+>> +               if (unlikely(!skb)) {
+>> +                       netdev_err(ndev, "Could not allocate skb");
+>> +                       ret = -ENOMEM;
+>> +                       goto out;
+>> +               }
+>> +               buf_pool->rx_skb[tail] = skb;
+>> +
+>> +               dma_addr = dma_map_single(dev, skb->data, skb->len,
+>> +                                         DMA_TO_DEVICE);
+>
+> Shouldn't this be:
+>
+>                dma_addr = dma_map_single(dev, skb->data, XGENE_ENET_MAX_MTU,
+>                                          DMA_TO_DEVICE);
+>
+> You just allocated the skb and nothing is in it, so ->len is zero.
 
---ew6BAiZeqk4r7MaW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks Mark.  I will fix the code.
 
-On Fri, Apr 25, 2014 at 08:25:36PM +0200, Sebastian Reichel wrote:
-> On Sat, Apr 19, 2014 at 09:16:12PM +0200, Pavel Machek wrote:
-> > On Sat 2014-03-29 01:31:43, Sebastian Reichel wrote:
-> > > Implement and document generic DT bindings for HSI clients.
-> > >=20
-> > > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >=20
-> > Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
-> >=20
-> > > diff --git a/drivers/hsi/hsi.c b/drivers/hsi/hsi.c
-> > > index 07e1639..5973906 100644
-> > > --- a/drivers/hsi/hsi.c
-> > > +++ b/drivers/hsi/hsi.c
-> > > @@ -26,8 +26,14 @@
-> > >  #include <linux/slab.h>
-> > >  #include <linux/string.h>
-> > >  #include <linux/notifier.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/of_device.h>
-> > >  #include "hsi_core.h"
-> >=20
-> >=20
-> > > +	err =3D hsi_of_property_parse_mode(client, "hsi-mode", &mode);
-> > > +	if (err) {
-> > > +		err =3D hsi_of_property_parse_mode(client, "hsi-rx-mode",
-> > > +						 &cl->rx_cfg.mode);
-> > > +		if (err)
-> > > +			goto err;
-> > > +
-> > > +		err =3D hsi_of_property_parse_mode(client, "hsi-tx-mode",
-> > > +						 &cl->tx_cfg.mode);
-> > > +		if (err)
-> > > +			goto err;
-> >=20
-> > Will this need some #ifdef CONFIG_OF?
->=20
-> It would only be needed to reduce the amount of kernel code for
-> disabled Device Tree. I don't think its worth it, since there is no
-> platform in the mainline kernel, which uses HSI without DT.
+>
+>> +
+>> +static int xgene_enet_rx_frame(struct xgene_enet_desc_ring *rx_ring,
+>> +                               struct xgene_enet_desc *desc)
+>> +{
+>> +       struct net_device *ndev = rx_ring->ndev;
+>> +       struct device *dev = ndev_to_dev(rx_ring->ndev);
+>> +       struct xgene_enet_desc_ring *buf_pool = rx_ring->buf_pool;
+>> +       u32 datalen, skb_index;
+>> +       struct sk_buff *skb;
+>> +       dma_addr_t pa;
+>> +       size_t len;
+>> +       int ret = 0;
+>> +
+>> +       skb_index = get_desc(desc, USERINFO);
+>> +       skb = buf_pool->rx_skb[skb_index];
+>> +       prefetch(skb->data - NET_IP_ALIGN);
+>> +
+>> +       /* Strip off CRC as HW isn't doing this */
+>> +       datalen = get_desc(desc, BUFDATALEN);
+>> +       datalen -= 4;
+>> +       skb_put(skb, datalen);
+>> +
+>> +       pa = (dma_addr_t)get_desc(desc, DATAADDR);
+>> +       len = get_desc(desc, BUFDATALEN);
+>> +       dma_unmap_single(dev, pa, len, DMA_TO_DEVICE);
+>> +
+>
+> And here, should be:
+>
+>         dma_unmap_single(dev, pa, XGENE_ENET_MAX_MTU, DMA_TO_DEVICE);
+>
+> You want to unmap the whole buffer, not just the part actually used.
+>
+> The underlying code works with pages, so the existing code may work by
+> chance, but you get err_printks is you turn on dma debug.
 
-mh actually it is needed, since there is no stub provided for
-of_modalias_node in non DT mode (there are stubs for all other
-of_* methods used). I will include the ifdef in PATCHv5.
+I will fix the code.  DMA_API_DEBUG option is very handy.  Thanks.
 
--- Sebastian
-
---ew6BAiZeqk4r7MaW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTWsyuAAoJENju1/PIO/qakcEP/j+5K9uSIBjRtbyAKjaLqIqK
-AqH+qlv5IfUo8pI06LmIqAfno2BOvTN8SGjG8vPaJB6ObA4q34LRhmWwyIZxP9fX
-7pGY+ELRoICAIgRatVmAO/Qf2+cNhcfXkLh0fYTBJwOxq+qo+9FQWXmTp3VeI23o
-3kTLorhBq4PrO7zpay3H9FllclvwUxZ27iIajku5+Hofe38joWqYtfhBow9/0LsL
-wk5xL7rEhqJudgiOjBm+SBx0kTssxLXaUTV3fUeII2L9997TQzJ8TjdiCQBGsqQg
-NZuHy18wpaFwcPH9qVein1A9CqKCko9fr9AEE03366c4yO6rJWeoIj7t2XQZtGwG
-JoAFvtlxq2kNWvAnfM3RGZqxHSDF2Azofm9wqZZSSJCojzwZ1JrURJ+nJlmFZQnM
-KXq/+e5Pnmsuy5AzLyG5diIclBgcTKW+fd2vycaaB8rC546xjQwN+VWalgApGylV
-nT7OG3m93Ytw9+XClz4oPPxIiaCiH05iMIUVkebk0BWKJwUvZDyMepR2WzGMHqSs
-CXsKPCu8ElOFQWaZuvlXiVUJN6MB6lJxjdXqcAXgzEJKm2LKTG27NpY1kt2JhiYz
-7qOO1MUUOsGzXEp3S9l+bkJ7NXGLByMoLuyCRfBVd6kqm37vCH2UijNICsaC06JR
-mmQrl5kcwqYgxyCbU5wI
-=XRjv
------END PGP SIGNATURE-----
-
---ew6BAiZeqk4r7MaW--
+>
+> --Mark
+>
+>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
