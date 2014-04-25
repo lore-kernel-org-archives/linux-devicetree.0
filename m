@@ -1,55 +1,75 @@
-From: Dinh Nguyen <dinguyen@altera.com>
-Subject: Re: [PATCH 1/4] dt: bindings: Typo s/clocks-names/clock-names/g
-Date: Fri, 25 Apr 2014 10:47:30 -0500
-Message-ID: <1398440850.389.0.camel@linux-builds1>
-References: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 02/18] usb: host: xhci-plat: Add clocks support
+Date: Fri, 25 Apr 2014 17:47:46 +0200
+Message-ID: <20140425154746.GB12472@lunn.ch>
+References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
+ <1398434836-18908-3-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398434836-18908-3-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-04-22 at 20:40 +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Cc: Dinh Nguyen <dinguyen@altera.com>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: netdev@vger.kernel.org
-> ---
->  .../devicetree/bindings/net/socfpga-dwmac.txt      |    2 +-
->  Documentation/devicetree/bindings/net/stmmac.txt   |    2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
+On Fri, Apr 25, 2014 at 04:07:00PM +0200, Gregory CLEMENT wrote:
+> Some platform (such as the Armada 38x ones) can gate the clock of
+> their USB controller. This patch add the support for the clock, by
+> enabling them during probe and disabling them on remove.
 > 
-> diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> index 636f0ac4e223..2a60cd3e8d5d 100644
-> --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
-> @@ -23,5 +23,5 @@ gmac0: ethernet@ff700000 {
->  	interrupt-names = "macirq";
->  	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
->  	clocks = <&emac_0_clk>;
-> -	clocks-names = "stmmaceth";
-> +	clock-names = "stmmaceth";
->  };
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index 80c1fb8bfbb8..a2acd2b26baf 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -33,7 +33,7 @@ Optional properties:
->  - max-frame-size: See ethernet.txt file in the same directory
->  - clocks: If present, the first clock should be the GMAC main clock,
->    further clocks may be specified in derived bindings.
-> -- clocks-names: One name for each entry in the clocks property, the
-> +- clock-names: One name for each entry in the clocks property, the
->    first one should be "stmmaceth".
+> As not all platforms have clock support then enabling and disabling
+> the clocks have been placed in separate functions. Then if the clocks
+> are not supported we still can use the same calls, and there is no
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/usb/host/xhci-plat.c | 52 ++++++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 50 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index f5351af4b2c5..bb5d563f729c 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -11,6 +11,7 @@
+>   * version 2 as published by the Free Software Foundation.
+>   */
 >  
->  Examples:
+> +#include <linux/clk.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -85,6 +86,42 @@ static const struct hc_driver xhci_plat_xhci_driver = {
+>  	.bus_resume =		xhci_bus_resume,
+>  };
+>  
+> +#if defined(CONFIG_HAVE_CLK)
 
-I've applied this patch to git.rocketboards.org/linux-socfpga-next.git
-next-dt.
+Hi Gregory
 
-Thanks,
-Dinh
+You probably don't need to do this conditional on CONFIG_HAVE_CLK.
+There are stub functions in clk.h for when CONFIG_HAVE_CLK is not
+defined. So the compiler knows devm_clk_get() will return NULL, it can
+evaluate IS_ERR is false, clk_prepare() returns 0 and so the whole
+function collapses to "return 0;"
+
+> +static int try_enable_clk(struct platform_device *pdev)
+> +{
+> +	struct clk *clk = devm_clk_get(&pdev->dev, NULL);
+> +
+> +	/* Not all platforms have a clk so it is not an error if the clock
+> +	   does not exists. */
+> +	if (!IS_ERR(clk))
+> +		if (clk_prepare_enable(clk))
+> +			return  -ENODEV;
+
+Is ENODEV the correct error code? It would probably be better to
+return the return value of clk_prepare_enable()
+
+> +	return 0;
+> +}
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
