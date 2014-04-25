@@ -1,82 +1,97 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/5] ARM: dts: Add syscon handle in pmu node for exynos5250
-Date: Fri, 25 Apr 2014 22:55:36 +0200
-Message-ID: <535ACBC8.5090703@gmail.com>
-References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com> <1398426857-5097-1-git-send-email-pankaj.dubey@samsung.com> <1398426857-5097-2-git-send-email-pankaj.dubey@samsung.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv3 07/14] HSI: Add common DT binding for HSI client devices
+Date: Fri, 25 Apr 2014 22:59:27 +0200
+Message-ID: <20140425205926.GA30032@earth.universe>
+References: <1396053110-21639-1-git-send-email-sre@kernel.org>
+ <1396053110-21639-8-git-send-email-sre@kernel.org>
+ <20140419191612.GG5148@amd.pavel.ucw.cz>
+ <20140425182535.GB22721@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398426857-5097-2-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140425182535.GB22721-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chow.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yg1004.jang-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pankaj,
 
-On 25.04.2014 13:54, Pankaj Dubey wrote:
-> Add "samsung,syscon-phandle" property pointing to PMU node
-> to access PMU register via PMU regmap handle.
->
-> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->   arch/arm/boot/dts/exynos5250.dtsi |    1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 3742331..52801af 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -173,6 +173,7 @@
->   	pmu_system_controller: system-controller@10040000 {
->   		compatible = "samsung,exynos5250-pmu", "syscon";
->   		reg = <0x10040000 0x5000>;
-> +		samsung,syscon-phandle = <&pmu_system_controller>;
->   	};
->
->   	watchdog@101D0000 {
->
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This looks strange. A node that refers back to itself. If I understand 
-correctly, you are relying on the fact that if you don't use 
-platform_driver model for the PMU driver, it won't bind to this node and 
-instead the generic syscon driver will. I'm afraid this is incorrect, 
-because the PMU driver should normally use the driver model.
+On Fri, Apr 25, 2014 at 08:25:36PM +0200, Sebastian Reichel wrote:
+> On Sat, Apr 19, 2014 at 09:16:12PM +0200, Pavel Machek wrote:
+> > On Sat 2014-03-29 01:31:43, Sebastian Reichel wrote:
+> > > Implement and document generic DT bindings for HSI clients.
+> > >=20
+> > > Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> >=20
+> > Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> >=20
+> > > diff --git a/drivers/hsi/hsi.c b/drivers/hsi/hsi.c
+> > > index 07e1639..5973906 100644
+> > > --- a/drivers/hsi/hsi.c
+> > > +++ b/drivers/hsi/hsi.c
+> > > @@ -26,8 +26,14 @@
+> > >  #include <linux/slab.h>
+> > >  #include <linux/string.h>
+> > >  #include <linux/notifier.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_device.h>
+> > >  #include "hsi_core.h"
+> >=20
+> >=20
+> > > +	err =3D hsi_of_property_parse_mode(client, "hsi-mode", &mode);
+> > > +	if (err) {
+> > > +		err =3D hsi_of_property_parse_mode(client, "hsi-rx-mode",
+> > > +						 &cl->rx_cfg.mode);
+> > > +		if (err)
+> > > +			goto err;
+> > > +
+> > > +		err =3D hsi_of_property_parse_mode(client, "hsi-tx-mode",
+> > > +						 &cl->tx_cfg.mode);
+> > > +		if (err)
+> > > +			goto err;
+> >=20
+> > Will this need some #ifdef CONFIG_OF?
+>=20
+> It would only be needed to reduce the amount of kernel code for
+> disabled Device Tree. I don't think its worth it, since there is no
+> platform in the mainline kernel, which uses HSI without DT.
 
-I see two possible options to solve this problem:
+mh actually it is needed, since there is no stub provided for
+of_modalias_node in non DT mode (there are stubs for all other
+of_* methods used). I will include the ifdef in PATCHv5.
 
-1) Instead, the PMU driver should bind to this node and become a syscon 
-provider. This will require a small change in the syscon API, which 
-would be reasonable anyway:
+-- Sebastian
 
-  a) instead of using driver_find_device() and dev_get_drvdata() in 
-syscon_node_to_regmap(), a local list of syscon structs should be kept 
-in this driver and then the look-up would just iterate over this list, 
-that could contain external syscon implementations as well,
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-  b) syscon_register() function should be provided to register an 
-external syscon provider from other drivers, like Exynos PMU driver.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Another solution would be:
+iQIcBAEBCgAGBQJTWsyuAAoJENju1/PIO/qakcEP/j+5K9uSIBjRtbyAKjaLqIqK
+AqH+qlv5IfUo8pI06LmIqAfno2BOvTN8SGjG8vPaJB6ObA4q34LRhmWwyIZxP9fX
+7pGY+ELRoICAIgRatVmAO/Qf2+cNhcfXkLh0fYTBJwOxq+qo+9FQWXmTp3VeI23o
+3kTLorhBq4PrO7zpay3H9FllclvwUxZ27iIajku5+Hofe38joWqYtfhBow9/0LsL
+wk5xL7rEhqJudgiOjBm+SBx0kTssxLXaUTV3fUeII2L9997TQzJ8TjdiCQBGsqQg
+NZuHy18wpaFwcPH9qVein1A9CqKCko9fr9AEE03366c4yO6rJWeoIj7t2XQZtGwG
+JoAFvtlxq2kNWvAnfM3RGZqxHSDF2Azofm9wqZZSSJCojzwZ1JrURJ+nJlmFZQnM
+KXq/+e5Pnmsuy5AzLyG5diIclBgcTKW+fd2vycaaB8rC546xjQwN+VWalgApGylV
+nT7OG3m93Ytw9+XClz4oPPxIiaCiH05iMIUVkebk0BWKJwUvZDyMepR2WzGMHqSs
+CXsKPCu8ElOFQWaZuvlXiVUJN6MB6lJxjdXqcAXgzEJKm2LKTG27NpY1kt2JhiYz
+7qOO1MUUOsGzXEp3S9l+bkJ7NXGLByMoLuyCRfBVd6kqm37vCH2UijNICsaC06JR
+mmQrl5kcwqYgxyCbU5wI
+=XRjv
+-----END PGP SIGNATURE-----
 
-2) Register a static platform device from Exynos PMU driver, with 
-.of_node set to PMU node and .name to "syscon" to instantiate the syscon 
-device and create a syscon provider, even though the PMU driver would be 
-bound to the node.
-
-The change mentioned in point 1.a) should be implemented regardless of 
-which solution is chosen, as iterating over all devices in the system 
-and relying on their driver_data is rather a poor practice. A local list 
-would be faster - all syscons to iterate over, instead of all devices in 
-the system, and more flexible - a single device could be a provider of 
-multiple resources.
-
-As for the solution for Exynos PMU itself, I tend to prefer 2), as it 
-wouldn't require additional functions exported from the syscon driver.
-
-Best regards,
-Tomasz
+--ew6BAiZeqk4r7MaW--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
