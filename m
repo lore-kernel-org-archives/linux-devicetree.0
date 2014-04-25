@@ -1,336 +1,64 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
- controller support
-Date: Fri, 25 Apr 2014 09:50:06 +0200
-Message-ID: <535A13AE.4090103@free-electrons.com>
-References: <1398340516-29547-1-git-send-email-boris.brezillon@free-electrons.com> <1398340516-29547-3-git-send-email-boris.brezillon@free-electrons.com> <20140424132912.GA24905@lukather>
+From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 1/5] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Fri, 25 Apr 2014 13:27:35 +0530
+Message-ID: <535A156F.6060004@linaro.org>
+References: <1396967803-28868-1-git-send-email-gautam.vivek@samsung.com> <1396967803-28868-2-git-send-email-gautam.vivek@samsung.com> <534BF28E.7040906@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140424132912.GA24905@lukather>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Randy Dunlap <rdunlap@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <534BF28E.7040906-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Maxime,
-
-On 24/04/2014 15:29, Maxime Ripard wrote:
-> On Thu, Apr 24, 2014 at 01:55:16PM +0200, Boris BREZILLON wrote:
->> The P2WI looks like an SMBus controller which only supports byte data
->> transfers. But, it differs from standard SMBus protocol on several
->> aspects:
->> - it supports only one slave device, and thus drop the address field
->> - it adds a parity bit every 8bits of data
->> - only one read access is required to read a byte (instead of a read
->>   followed by a write access in standard SMBus protocol)
->> - there's no Ack bit after each byte transfer
->>
->> This means this bus cannot be used to interface with standard SMBus
->> devices (the only known device to support this interface is the AXP221
->> PMIC).
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> ---
->>  drivers/i2c/busses/Kconfig          |  12 ++
->>  drivers/i2c/busses/Makefile         |   1 +
->>  drivers/i2c/busses/i2c-sunxi-p2wi.c | 317 ++++++++++++++++++++++++++++++++++++
->>  3 files changed, 330 insertions(+)
->>  create mode 100644 drivers/i2c/busses/i2c-sunxi-p2wi.c
->>
->> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
->> index c94db1c..37e53d6 100644
->> --- a/drivers/i2c/busses/Kconfig
->> +++ b/drivers/i2c/busses/Kconfig
->> @@ -771,6 +771,18 @@ config I2C_STU300
->>  	  This driver can also be built as a module. If so, the module
->>  	  will be called i2c-stu300.
+On 04/14/2014 08:07 PM, Sylwester Nawrocki wrote:
+> On 08/04/14 16:36, Vivek Gautam wrote:
+>> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> index 28f9edb..6d99ba9 100644
+>> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>> @@ -74,3 +74,45 @@ phy-consumer@12340000 {
 >>  
->> +config I2C_SUNXI_P2WI
->> +	tristate "Allwinner sunxi internal P2WI controller"
-> Since the A31 is the only SoC that uses it, maybe you can drop the
-> sunxi and use either sun6i or A31 here?
+>>  Refer to DT bindings documentation of particular PHY consumer devices for more
+>>  information about required PHYs and the way of specification.
+>> +
+>> +Samsung Exynos5 SoC series USB DRD PHY controller
+>> +--------------------------------------------------
+>> +
+>> +Required properties:
+>> +- compatible : Should be set to one of the following supported values:
+>> +	- "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
+>> +	- "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
+>> +- reg : Register offset and length of USB DRD PHY register set;
+>> +- clocks: Clock IDs array as required by the controller
+>> +- clock-names: names of clocks correseponding to IDs in the clock property;
+>> +	       Required clocks:
+>> +	- phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
+>> +	       used for register access.
+>> +	- ref: PHY's reference clock (usually crystal clock), associated by
+>> +	       phy name, used to determine bit values for clock settings
+>> +	       register.
+>> +	Additional clock required for Exynos5420:
+>> +	- usb30_sclk_100m: Additional special clock used for PHY operation
+>> +			   depicted as 'sclk_usbphy30' in CMU of Exynos5420.
+>> +- samsung,syscon-phandle: phandle for syscon interface, which is used to
+>> +			  control pmu registers for power isolation.
+> 
+> Why to append "-phandle" to the property's name ? If this is for PMU
+> perhaps make it more explicit and name it: samsung,pmu-syscon or
+> samsung,pmureg ?
+> 
 
-It makes sense, I'll change the config option into I2C_SUNXI_P2WI and
-the source file name into i2c-sun6i-p2wi.c.
-
->> +	depends on ARCH_SUNXI
->> +	help
->> +	  If you say yes to this option, support will be included for the
->> +	  P2WI (Push/Pull 2 Wire Interface) controller embedded in some sunxi
->> +	  SOCs.
->> +	  The P2WI looks like an SMBus controller (which supports only byte
->> +	  accesses), except that it only supports one slave device.
->> +	  This interface is used to connect to specific PMIC devices (like the
->> +	  AXP221).
->> +
->>  config I2C_TEGRA
->>  	tristate "NVIDIA Tegra internal I2C controller"
->>  	depends on ARCH_TEGRA
->> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
->> index 18d18ff..c63d2ec 100644
->> --- a/drivers/i2c/busses/Makefile
->> +++ b/drivers/i2c/busses/Makefile
->> @@ -75,6 +75,7 @@ obj-$(CONFIG_I2C_SIMTEC)	+= i2c-simtec.o
->>  obj-$(CONFIG_I2C_SIRF)		+= i2c-sirf.o
->>  obj-$(CONFIG_I2C_ST)		+= i2c-st.o
->>  obj-$(CONFIG_I2C_STU300)	+= i2c-stu300.o
->> +obj-$(CONFIG_I2C_SUNXI_P2WI)	+= i2c-sunxi-p2wi.o
->>  obj-$(CONFIG_I2C_TEGRA)		+= i2c-tegra.o
->>  obj-$(CONFIG_I2C_VERSATILE)	+= i2c-versatile.o
->>  obj-$(CONFIG_I2C_WMT)		+= i2c-wmt.o
->> diff --git a/drivers/i2c/busses/i2c-sunxi-p2wi.c b/drivers/i2c/busses/i2c-sunxi-p2wi.c
->> new file mode 100644
->> index 0000000..e3fdd76
->> --- /dev/null
->> +++ b/drivers/i2c/busses/i2c-sunxi-p2wi.c
->> @@ -0,0 +1,317 @@
->> +/*
->> + * P2WI (Push-Pull Two Wire Interface) bus driver.
->> + *
->> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> + *
->> + * This file is licensed under the terms of the GNU General Public License
->> + * version 2.  This program is licensed "as is" without any warranty of any
->> + * kind, whether express or implied.
->> + */
->> +#include <linux/kernel.h>
->> +#include <linux/slab.h>
->> +#include <linux/module.h>
->> +#include <linux/spinlock.h>
->> +#include <linux/i2c.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/io.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/clk.h>
->> +#include <linux/err.h>
->> +#include <linux/delay.h>
->> +#include <linux/clk.h>
->> +#include <linux/reset.h>
->> +
->> +
->> +/* P2WI registers */
->> +#define P2WI_CTRL		0x0
->> +#define P2WI_CCR		0x4
->> +#define P2WI_INTE		0x8
->> +#define P2WI_INTS		0xc
->> +#define P2WI_DADDR0		0x10
->> +#define P2WI_DADDR1		0x14
->> +#define P2WI_DLEN		0x18
->> +#define P2WI_DATA0		0x1c
->> +#define P2WI_DATA1		0x20
->> +#define P2WI_LCR		0x24
->> +#define P2WI_PMCR		0x28
->> +
->> +/* CTRL fields */
->> +#define P2WI_START_TRANS	(1 << 7)
->> +#define P2WI_ABORT_TRANS	(1 << 6)
->> +#define P2WI_GLOBAL_INT_ENB	(1 << 1)
->> +#define P2WI_SOFT_RST		(1 << 0)
-> BIT() ?
-
-Sure, I'll make use of the BIT macro wherever possible.
-
->
->> +/* CLK CTRL fields */
->> +#define P2WI_SDA_OUT_DELAY(v)	(((v) & 0x7) << 8)
->> +#define P2WI_CLK_DIV(v)		((v) & 0xff)
->> +
->> +/* STATUS fields */
->> +#define P2WI_TRANS_ERR_ID(v)	(((v) >> 8) & 0xff)
->> +#define P2WI_LOAD_BSY		(1 << 2)
->> +#define P2WI_TRANS_ERR		(1 << 1)
->> +#define P2WI_TRANS_OVER		(1 << 0)
->> +
->> +/* DATA LENGTH fields*/
->> +#define P2WI_READ		(1 << 4)
->> +#define P2WI_DATA_LENGTH(v)	((v - 1) & 0x7)
->> +
->> +/* LINE CTRL fields*/
->> +#define P2WI_SCL_STATE		(1 << 5)
->> +#define P2WI_SDA_STATE		(1 << 4)
->> +#define P2WI_SCL_CTL		(1 << 3)
->> +#define P2WI_SCL_CTL_EN		(1 << 2)
->> +#define P2WI_SDA_CTL		(1 << 1)
->> +#define P2WI_SDA_CTL_EN		(1 << 0)
->> +
->> +/* PMU MODE CTRL fields */
->> +#define P2WI_PMU_INIT_SEND	(1 << 31)
->> +#define P2WI_PMU_INIT_DATA(v)	(((v) & 0xff) << 16)
->> +#define P2WI_PMU_MODE_REG(v)	(((v) & 0xff) << 8)
->> +#define P2WI_PMU_DEV_ADDR(v)	((v) & 0xff)
-> I'd very much prefer if your bits were prefixed by the register
-> name. That way, you directly know in which register that bit belong,
-> without having to scroll across the whole driver.
-
-Okay.
-
->> +
->> +struct p2wi {
->> +	struct i2c_adapter adapter;
->> +	struct completion complete;
->> +	unsigned int irq;
->> +	unsigned int status;
->> +	void __iomem *regs;
->> +	struct clk *clk;
->> +	struct reset_control *rstc;
->> +};
->> +
->> +static irqreturn_t p2wi_interrupt(int irq, void *dev_id)
->> +{
->> +	struct p2wi *p2wi = dev_id;
->> +	unsigned long status;
->> +
->> +	status = readl(p2wi->regs + P2WI_INTS);
->> +	p2wi->status = status;
->> +
->> +	/* Clear interrupts */
->> +	status &= (P2WI_LOAD_BSY | P2WI_TRANS_ERR | P2WI_TRANS_OVER);
->> +	writel(status, p2wi->regs + P2WI_INTS);
->> +
->> +	complete(&p2wi->complete);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static u32 p2wi_functionality(struct i2c_adapter *adap)
->> +{
->> +	return I2C_FUNC_SMBUS_BYTE_DATA;
->> +}
->> +
->> +static int p2wi_smbus_xfer(struct i2c_adapter *adap, u16 addr,
->> +			   unsigned short flags, char read_write,
->> +			   u8 command, int size, union i2c_smbus_data *data)
->> +{
->> +	struct p2wi *p2wi = i2c_get_adapdata(adap);
->> +	unsigned long dlen = P2WI_DATA_LENGTH(1);
->> +
->> +	/*
->> +	 * TODO: check address consistency.
->> +	 * The P2WI bus only support one slave. As a result it does not use
->> +	 * the I2C address except when you're switching the slave device from
->> +	 * I2C to P2WI mode.
->> +	 * We should at least verify that the addr argument is consistent with
->> +	 * the slave device address.
->> +	 */
->> +
->> +	if (addr > 0xff) {
->> +		dev_err(&adap->dev, "invalid P2WI address\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	/*
->> +	 * TODO: handle switch to P2WI mode.
->> +	 * At the moment, we're considering the slave device as already
->> +	 * switchedto P2WI (which means the bootloader has to switch the slave
->                    ^ you need a space here
->
->> +	 * device from I2C to P2WI mode).
->> +	 * We need at least 3 informations to launch the switch process:
->> +	 * - the slave device address (addr argument)
->> +	 * - the mode register
->> +	 * - the P2WI mode value (to write in the mode register)
->> +	 */
->> +
->> +	if (!data)
->> +		return -EINVAL;
->> +
->> +	writel(command, p2wi->regs + P2WI_DADDR0);
->> +
->> +	if (read_write == I2C_SMBUS_READ)
->> +		dlen |= P2WI_READ;
->> +	else
->> +		writel(data->byte, p2wi->regs + P2WI_DATA0);
->> +
->> +	writel(dlen, p2wi->regs + P2WI_DLEN);
->> +
->> +	if (readl(p2wi->regs + P2WI_CTRL) & P2WI_START_TRANS) {
->> +		dev_err(&adap->dev, "P2WI bus busy\n");
->> +		return -EBUSY;
->> +	}
->> +
->> +	reinit_completion(&p2wi->complete);
->> +
->> +	writel(P2WI_LOAD_BSY | P2WI_TRANS_ERR | P2WI_TRANS_OVER,
->> +	       p2wi->regs + P2WI_INTE);
->> +
->> +	writel(P2WI_START_TRANS | P2WI_GLOBAL_INT_ENB, p2wi->regs + P2WI_CTRL);
->> +
->> +	wait_for_completion(&p2wi->complete);
->> +
->> +	if (p2wi->status & P2WI_LOAD_BSY) {
->> +		dev_err(&adap->dev, "P2WI bus busy\n");
->> +		return -EBUSY;
->> +	}
->> +
->> +
-> You can drop the extra line here.
->
->> +	if (p2wi->status & P2WI_TRANS_ERR) {
->> +		dev_err(&adap->dev, "P2WI bus xfer error\n");
->> +		return -ENXIO;
->> +	}
->> +
->> +	if (read_write == I2C_SMBUS_READ)
->> +		data->byte = readl(p2wi->regs + P2WI_DATA0);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct i2c_algorithm p2wi_algo = {
->> +	.smbus_xfer = p2wi_smbus_xfer,
->> +	.functionality = p2wi_functionality,
->> +};
->> +
->> +static const struct of_device_id p2wi_of_match_table[] = {
->> +	{ .compatible = "allwinner,sun6i-a31-p2wi" },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, p2wi_of_match_table);
->> +
->> +static int p2wi_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct resource *r;
->> +	struct p2wi *p2wi;
->> +	int ret;
->> +
->> +	p2wi = devm_kzalloc(dev, sizeof(struct p2wi), GFP_KERNEL);
->> +	if (!p2wi) {
->> +		dev_err(dev, "failed to allocate p2wi struct\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	p2wi->regs = devm_request_and_ioremap(dev, r);
->> +	if (IS_ERR(p2wi->regs)) {
->> +		ret = PTR_ERR(p2wi->regs);
->> +		dev_err(dev, "failed to retrieve iomem resource: %d\n",
->> +			ret);
->> +		return ret;
->> +	}
-> I don't see how it can work, since, when it fails,
-> devm_request_and_ioremap returns NULL. You probably meant
-> devm_ioremap_resource.
-
-Oops, just forgot devm_request_and_ioremap is returning NULL when it fails.
-I'll fix it.
-
-Thanks.
-
-Best Regards,
-
-Boris
-> Thanks!
-> Maxime
->
+There are already a couple of nodes (watchdog and sata) using
+samsung,syscon-phandle. IMHO, we should keep only property string for
+syscon node. Either we keep syscon-phandle here or change sata/watchdog
+driver to use the modified property name.
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
+Tushar Behera
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
