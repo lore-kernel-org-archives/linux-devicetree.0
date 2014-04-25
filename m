@@ -1,100 +1,72 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 05/18] ARM: mvebu: Add Device Tree description of xHCI
- hosts on Armada 38x
-Date: Fri, 25 Apr 2014 16:07:03 +0200
-Message-ID: <1398434836-18908-6-git-send-email-gregory.clement@free-electrons.com>
-References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 01/13] Documentation: add extcon devicetree bindings
+Date: Fri, 25 Apr 2014 15:11:52 +0100
+Message-ID: <20140425141152.GN12304@sirena.org.uk>
+References: <20140422195117.GG12304@sirena.org.uk>
+ <535A60FF.4000806@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7rtRVl0c8BaOhjic"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <535A60FF.4000806@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Baldyga <r.baldyga@samsung.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, myungjoo.ham@samsung.com, cw00.choi@samsung.com, dbaryshkov@gmail.com, dwmw2@infradead.org, balbi@ti.com, gregkh@linuxfoundation.org, grant.likely@linaro.org, ldewangan@nvidia.com, kishon@ti.com, gg@slimlogic.co.uk, anton@enomsg.org, jonghwa3.lee@samsung.com, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, aaro.koskinen@iki.fi, m.szyprowski@samsung.com, t.figa@samsung.com, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 38x SoCs contain two xHCI host. This commit adds
-the Device Tree description of those interfaces at the SoC level, and
-also enables the two USB3 ports on the Armada 385 DB platform and one
-USB3 port on the Armada 385 RD platforms.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
- arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
- arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
- 3 files changed, 29 insertions(+)
+--7rtRVl0c8BaOhjic
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-index 6828d77696a6..d5db1466da82 100644
---- a/arch/arm/boot/dts/armada-385-db.dts
-+++ b/arch/arm/boot/dts/armada-385-db.dts
-@@ -101,6 +101,14 @@
- 					reg = <0x1000000 0x3f000000>;
- 				};
- 			};
-+
-+			usb3@f0000 {
-+				status = "okay";
-+			};
-+
-+			usb3@f8000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		pcie-controller {
-diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
-index 45250c88814b..a505fe94ff37 100644
---- a/arch/arm/boot/dts/armada-385-rd.dts
-+++ b/arch/arm/boot/dts/armada-385-rd.dts
-@@ -77,6 +77,10 @@
- 					reg = <1>;
- 				};
- 			};
-+
-+			usb3@f0000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		pcie-controller {
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index a064f59da02d..5913ce1cc601 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -355,6 +355,23 @@
- 				clocks = <&coredivclk 0>;
- 				status = "disabled";
- 			};
-+
-+			usb3@f0000 {
-+				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf0000 0x3fff>,<0xf4000 0x3fff>;
-+				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 9>;
-+				status = "disabled";
-+			};
-+
-+			usb3@f8000 {
-+				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf8000 0x3fff>,<0xfc000 0x3fff>;
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 10>;
-+				status = "disabled";
-+			};
-+
- 		};
- 	};
- 
--- 
-1.8.1.2
+On Fri, Apr 25, 2014 at 03:19:59PM +0200, Robert Baldyga wrote:
+> On 04/22/2014 09:51 PM, Mark Brown wrote:
+
+> >>  .../devicetree/bindings/extcon/extcon-adc-jack.txt |   60 +++++++++++++++++++
+> >>  .../devicetree/bindings/extcon/extcon-arizona.txt  |   47 +++++++++++++++
+> >>  .../devicetree/bindings/extcon/extcon-bindings.txt |   36 +++++++++++
+> >>  .../devicetree/bindings/extcon/extcon-gpio.txt     |   63 ++++++++++++++++++++
+> >>  .../devicetree/bindings/extcon/extcon-max14577.txt |   49 +++++++++++++++
+> >>  .../devicetree/bindings/extcon/extcon-max77693.txt |   56 +++++++++++++++++
+> >>  .../devicetree/bindings/extcon/extcon-max8997.txt  |   49 +++++++++++++++
+> >>  .../devicetree/bindings/extcon/extcon-palmas.txt   |   37 ++++++++++--
+
+> > This is creating device tree bindings for MFD components as devices when
+> > those MFD components aren't well isolated from the rest of the device.
+> > If we need to add extcon bindings the device should have the flexibility
+> > to decide where to add the properties, and really things should be set
+> > up so there's less duplication in the documentation.
+
+> Those components has their own addresses on i2c bus, so they are,
+> technically, separate devices, and they can (should?) be described by
+> separate nodes. And I think it doesn't matter if they are grouped in one
+> chip.
+
+That's definitely not true for the arizona devices, I haven't
+specifically checked for any of the others.  It's all one device and the
+isolation isn't particularly solid.
+
+--7rtRVl0c8BaOhjic
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTWm0lAAoJELSic+t+oim9rOwP/0l7mLXKpdC7+yBteXfwE57V
+yt7BifQyiA62MsrexOSCDp4TQ7HqnmEHLPScjEXkxuUCg5bXZgxI0Gdaa0/2vB7J
+g2pIBKf5jWUGS2hHNr42B5pYZh3DUhtl+uYEnU20B/XRzbm6Hpeb1QFIxgYTKLf4
+kiKztazR0eWZnD4YZB0H2CIc3ge0MV7zNB1JDK56w5HgSB8cRAHvVgssUA0sWImo
+YOWcuFiN2RjvH3LIHNIO8ijj5BGBYdTFF4kiIeTnsI0QXoG4OSMF3jKXOjRTzjx0
+QEbbcHulTh8moD9o9cVWAMGg5CT+HRWEvLPk8XcXV6kr9hT6MBlujhDrXuGkrQsJ
+xwcflny1dBsBt151gpRyBEuPYLKWqnx4HtQ8P12K8LMIiAyeV5VFzcsqksdackOT
+acVy6VJDphOCQLFlv7+UKMo8t/bcvJNcZ9unV+kUnlecZHqE+EXaC6Z1zA6Ht9YQ
++wozelPJEpuOTMYX1VLr3BKEruEs/h8d+umwJ58RUI0yxY1hxYnO50dCAhE/AFg+
+j4lEAy6WqYFP3ILCAtW4kQx0iR9aQV9v85jRpg9gDYKPZM3ZNWPqGPQJybgjDEZO
+Fu4PugVPrEzaYwY4VysGYk6IasEiWnRnVpL3c/IG6gDptcyQO+8oYArxePdZZ5vG
+uyveuA3Y8FhHOFh7QSec
+=f60H
+-----END PGP SIGNATURE-----
+
+--7rtRVl0c8BaOhjic--
