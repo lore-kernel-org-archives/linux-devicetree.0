@@ -1,50 +1,58 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 17/18] ARM: mvebu: dts: Enable USB3 in Armada 375 DB
-Date: Fri, 25 Apr 2014 16:07:15 +0200
-Message-ID: <1398434836-18908-18-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 13/18] dt: binding: Armada 375 USB cluster
+Date: Fri, 25 Apr 2014 16:07:11 +0200
+Message-ID: <1398434836-18908-14-git-send-email-gregory.clement@free-electrons.com>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In order to enable the USB3 host controller on the Armada 375 DB
-platform, we need to create a ranges at the soc node level to describe
-the special static window for USB3.
+Armada 375 comes with an USB2 host and device controller and an USB3
+controller. The USB cluster control register allows to manage common
+features of both USB controllers.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-375-db.dts | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/arm/armada-375-usb-cluster.txt  | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/armada-375-usb-cluster.txt
 
-diff --git a/arch/arm/boot/dts/armada-375-db.dts b/arch/arm/boot/dts/armada-375-db.dts
-index 9378d3136b41..928de536a0ff 100644
---- a/arch/arm/boot/dts/armada-375-db.dts
-+++ b/arch/arm/boot/dts/armada-375-db.dts
-@@ -30,8 +30,9 @@
- 	};
- 
- 	soc {
--		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000
--			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000>;
-+		ranges = <MBUS_ID(0xf0, 0x01) 0 0xf1000000 0x100000 /* internal regs */
-+			  MBUS_ID(0x05, 0x00) 0 0xff100000 0x20000  /* USB3 XHCI */
-+			  MBUS_ID(0x01, 0x1d) 0 0xfff00000 0x100000 /* bootrom */>;
- 
- 		internal-regs {
- 			spi@10600 {
-@@ -126,5 +127,10 @@
- 				status = "okay";
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/armada-375-usb-cluster.txt b/Documentation/devicetree/bindings/arm/armada-375-usb-cluster.txt
+new file mode 100644
+index 000000000000..71feb8fb4434
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/armada-375-usb-cluster.txt
+@@ -0,0 +1,17 @@
++Armada 375 USB cluster
++----------------------
 +
-+		usb3-controller {
-+			status = "okay";
-+		};
++Armada 375 comes with an USB2 host and device controller and an USB3
++controller. The USB cluster control register allows to manage common
++features of both USB controllers.
 +
- 	};
- };
++Required properties:
++
++- compatible: "marvell,armada-375-usb-cluster"
++- reg: Should contain usb cluster register location and length.
++
++Example:
++	usb-cluster@18400 {
++		compatible = "marvell,armada-375-usb-cluster";
++		reg = <0x18400 0x4>;
++	};
 -- 
 1.8.1.2
