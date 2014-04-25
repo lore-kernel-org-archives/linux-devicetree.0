@@ -1,88 +1,41 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv3 07/14] HSI: Add common DT binding for HSI client devices
-Date: Fri, 25 Apr 2014 20:25:36 +0200
-Message-ID: <20140425182535.GB22721@earth.universe>
-References: <1396053110-21639-1-git-send-email-sre@kernel.org>
- <1396053110-21639-8-git-send-email-sre@kernel.org>
- <20140419191612.GG5148@amd.pavel.ucw.cz>
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: [PATCH v6 RESEND 4/5] ARM: dts: Enable the PWM for bcm28155 AP board
+Date: Fri, 25 Apr 2014 11:31:14 -0700
+Message-ID: <1398450675-19609-5-git-send-email-tim.kryger@linaro.org>
+References: <1398450675-19609-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="Pd0ReVV5GZGQvF3a"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140419191612.GG5148@amd.pavel.ucw.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+Content-Type: text/plain
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <1398450675-19609-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Tim Kryger <tim.kryger@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Mark the PWM as enabled on the bcm28155 AP board.
 
---Pd0ReVV5GZGQvF3a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Tim Kryger <tim.kryger@linaro.org>
+Reviewed-by: Alex Elder <elder@linaro.org>
+Reviewed-by: Markus Mayer <markus.mayer@linaro.org>
+---
+ arch/arm/boot/dts/bcm28155-ap.dts |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-On Sat, Apr 19, 2014 at 09:16:12PM +0200, Pavel Machek wrote:
-> On Sat 2014-03-29 01:31:43, Sebastian Reichel wrote:
-> > Implement and document generic DT bindings for HSI clients.
-> >=20
-> > Signed-off-by: Sebastian Reichel <sre@kernel.org>
->=20
-> Reviewed-by: Pavel Machek <pavel@ucw.cz>
->=20
-> > diff --git a/drivers/hsi/hsi.c b/drivers/hsi/hsi.c
-> > index 07e1639..5973906 100644
-> > --- a/drivers/hsi/hsi.c
-> > +++ b/drivers/hsi/hsi.c
-> > @@ -26,8 +26,14 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/string.h>
-> >  #include <linux/notifier.h>
-> > +#include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  #include "hsi_core.h"
->=20
->=20
-> > +	err =3D hsi_of_property_parse_mode(client, "hsi-mode", &mode);
-> > +	if (err) {
-> > +		err =3D hsi_of_property_parse_mode(client, "hsi-rx-mode",
-> > +						 &cl->rx_cfg.mode);
-> > +		if (err)
-> > +			goto err;
-> > +
-> > +		err =3D hsi_of_property_parse_mode(client, "hsi-tx-mode",
-> > +						 &cl->tx_cfg.mode);
-> > +		if (err)
-> > +			goto err;
->=20
-> Will this need some #ifdef CONFIG_OF?
+diff --git a/arch/arm/boot/dts/bcm28155-ap.dts b/arch/arm/boot/dts/bcm28155-ap.dts
+index af3da55..9ce91dd 100644
+--- a/arch/arm/boot/dts/bcm28155-ap.dts
++++ b/arch/arm/boot/dts/bcm28155-ap.dts
+@@ -69,6 +69,10 @@
+ 		status = "okay";
+ 	};
+ 
++	pwm: pwm@3e01a000 {
++		status = "okay";
++	};
++
+ 	usbotg: usb@3f120000 {
+ 		vusb_d-supply = <&usbldo_reg>;
+ 		vusb_a-supply = <&iosr1_reg>;
+-- 
+1.7.9.5
 
-It would only be needed to reduce the amount of kernel code for
-disabled Device Tree. I don't think its worth it, since there is no
-platform in the mainline kernel, which uses HSI without DT.
-
--- Sebastian
-
---Pd0ReVV5GZGQvF3a
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTWqifAAoJENju1/PIO/qaqTMP/RurK4MvmYaf+TBeEsZY1QWN
-Kxb4+o8O6hWkhAhNIrXEVNunJ/TwgR2tYo+fyhYS5HSzngs8uDo5qqDnXVHsSDnm
-LXbXfnpBduhpYZ4v74XCQ09eeX/dyYaJRFQi22wP3E3PUZqNMFIHK7zAC2Ggdocd
-6rz+f+NZrW/BEEx079UYb4DSq4x4vZ/H5CWfncsKVdxZnh5tO6ixfx0XlXJ0U/T3
-b1Qpl55zNheVih5uiDyW0XDurrbfcquCpt90FDhNueWGnz59UGMfbke1W/7UU3vG
-+d7Xk8PP/ZqyvHjRXvXr34WAXK7mS5LnP0ewO2ta6XnU3xMOwgyef1dYtKqRPf2R
-qTLea7uOnmqdyKGiHqrKW47okWA4sueJHp4khy8f9E2mWOD7Xq7gfYMGBDD62M1z
-3jjJG4TCF0smONNh/b3kgPn8ayVaL7l7eJazWEzk6AOMWigQyXQ6sAyM99vuPunU
-jzswVHEwEDBnUxz2009/5KjA3R1H4ll9V61p7WDiiGMd/BBRHpySJB6ueAvNsJOV
-3cJhCzbKNlpxM5afVOOM/sAZ/2Wgu6nZxDJU7warnaCTYRzOuMXUsOXICw5MEDlo
-yYj9m3eECT7G4BtU9ugCs/VZ1yJPJyDOIwNbUa2NQeXb7hZtIoTcQHD7h3nlOboP
-f1WojDKwCjBc3C/CrpEF
-=cMrF
------END PGP SIGNATURE-----
-
---Pd0ReVV5GZGQvF3a--
