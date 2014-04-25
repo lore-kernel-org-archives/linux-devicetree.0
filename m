@@ -1,40 +1,161 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv4 7/7] ARM: dts: Add device tree sources for Exynos3250
-Date: Fri, 25 Apr 2014 14:03:21 +0900
-Message-ID: <5359EC99.2010107@samsung.com>
-References: <1398388572-30239-1-git-send-email-cw00.choi@samsung.com>
- <1398388572-30239-8-git-send-email-cw00.choi@samsung.com>
- <5359E6DD.6000608@linaro.org>
+From: sourav <sourav.poddar@ti.com>
+Subject: Re: [PATCH] arm: dts: am43x-clock: add tbclk data for ehrpwm.
+Date: Fri, 25 Apr 2014 11:12:39 +0530
+Message-ID: <5359F5CF.6020408@ti.com>
+References: <1398162345-3163-1-git-send-email-sourav.poddar@ti.com> <53566374.3070609@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5359E6DD.6000608@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: kgene.kim@samsung.com, t.figa@samsung.com, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, arnd@arndb.de, olof@lixom.net, marc.zyngier@arm.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, hyunhee.kim@samsung.com, yj44.cho@samsung.com, chanho61.park@samsung.com, sajjan.linux@gmail.com, sachin.kamat@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53566374.3070609@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 04/25/2014 01:38 PM, Tushar Behera wrote:
-> On 04/25/2014 06:46 AM, Chanwoo Choi wrote:
->> From: Tomasz Figa <t.figa@samsung.com>
+Hi Tero,
+
+On Tuesday 22 April 2014 06:11 PM, Tero Kristo wrote:
+> On 04/22/2014 01:25 PM, Sourav Poddar wrote:
+>> We need "tblclk" clock data for the functioning of ehrpwm
+>> module. Hence, populating the required clock information
+>> in clock dts file.
 >>
->> This patch add new exynos3250.dtsi to support Exynos3250 SoC based on Cortex-A7
->> dual core and includes following dt nodes:
->>
-> 
-> [ ... ]
-> 
+>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
 >> ---
->>  arch/arm/boot/dts/exynos3250-pinctrl.dtsi | 477 +++++++++++++++
->>  arch/arm/boot/dts/exynos3250.dtsi         | 405 +++++++++++++
->>  arch/arm/boot/dts/exynos4212-tizenw.dts   | 926 ++++++++++++++++++++++++++++++
-> 
-> exynos4412-tizenw.dts related changes are unrelated.
+>>   arch/arm/boot/dts/am43xx-clocks.dtsi |   84 
+>> ++++++++++++++++++++++++++++++++++
+>>   drivers/clk/ti/clk-43xx.c            |    6 +++
+>>   2 files changed, 90 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi 
+>> b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>> index 142009c..869f9a5 100644
+>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>> @@ -87,6 +87,90 @@
+>>           clock-mult = <1>;
+>>           clock-div = <1>;
+>>       };
+>> +
+>> +    ehrpwm0_gate_tbclk: ehrpwm0_gate_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-no-wait-gate-clock";
+>> +        clocks = <&dpll_per_m2_ck>;
+>> +        ti,bit-shift = <0>;
+>> +        reg = <0x0664>;
+>> +    };
+>> +
+>> +    ehrpwm0_tbclk: ehrpwm0_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-clock";
+>> +        clocks = <&ehrpwm0_gate_tbclk>;
+>> +    };
+>
+> Why do you use composite-clock type here? I see only add one sub-clock 
+> to the composite, thus the composite part is unused. How about using a 
+> gate-clock type only? Same question applies for the rest of the patch 
+> also.
+>
 
+Yes, I though of doing so and I think it should be fine to use 
+gate-clock only. I did this following the ehrpwm clock data in
+"am33xx-clock.dtsi" file, where we use composite clock for ehrpwm. I 
+think it needs to be changed there also.?
 
-Right, It is may mistake.
-I'll resend this patch.
+-Sourav
+> -Tero
+>
+>> +
+>> +    ehrpwm1_gate_tbclk: ehrpwm1_gate_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-no-wait-gate-clock";
+>> +        clocks = <&dpll_per_m2_ck>;
+>> +        ti,bit-shift = <1>;
+>> +        reg = <0x0664>;
+>> +    };
+>> +
+>> +    ehrpwm1_tbclk: ehrpwm1_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-clock";
+>> +        clocks = <&ehrpwm1_gate_tbclk>;
+>> +    };
+>> +
+>> +    ehrpwm2_gate_tbclk: ehrpwm2_gate_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-no-wait-gate-clock";
+>> +        clocks = <&dpll_per_m2_ck>;
+>> +        ti,bit-shift = <2>;
+>> +        reg = <0x0664>;
+>> +    };
+>> +
+>> +    ehrpwm2_tbclk: ehrpwm2_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-clock";
+>> +        clocks = <&ehrpwm2_gate_tbclk>;
+>> +    };
+>> +
+>> +    ehrpwm3_gate_tbclk: ehrpwm3_gate_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-no-wait-gate-clock";
+>> +        clocks = <&dpll_per_m2_ck>;
+>> +        ti,bit-shift = <2>;
+>> +        reg = <0x0664>;
+>> +    };
+>> +
+>> +    ehrpwm3_tbclk: ehrpwm3_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-clock";
+>> +        clocks = <&ehrpwm3_gate_tbclk>;
+>> +    };
+>> +
+>> +    ehrpwm4_gate_tbclk: ehrpwm4_gate_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-no-wait-gate-clock";
+>> +        clocks = <&dpll_per_m2_ck>;
+>> +        ti,bit-shift = <2>;
+>> +        reg = <0x0664>;
+>> +    };
+>> +
+>> +    ehrpwm4_tbclk: ehrpwm4_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-clock";
+>> +        clocks = <&ehrpwm4_gate_tbclk>;
+>> +    };
+>> +
+>> +    ehrpwm5_gate_tbclk: ehrpwm5_gate_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-no-wait-gate-clock";
+>> +        clocks = <&dpll_per_m2_ck>;
+>> +        ti,bit-shift = <2>;
+>> +        reg = <0x0664>;
+>> +    };
+>> +
+>> +    ehrpwm5_tbclk: ehrpwm5_tbclk {
+>> +        #clock-cells = <0>;
+>> +        compatible = "ti,composite-clock";
+>> +        clocks = <&ehrpwm5_gate_tbclk>;
+>> +    };
+>>   };
+>> &prcm_clocks {
+>>       clk_32768_ck: clk_32768_ck {
+>> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
+>> index 67c8de5..5413a6a 100644
+>> --- a/drivers/clk/ti/clk-43xx.c
+>> +++ b/drivers/clk/ti/clk-43xx.c
+>> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
+>>       DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
+>>       DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
+>>       DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
+>> +    DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
+>> +    DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
+>> +    DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
+>> +    DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
+>> +    DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
+>> +    DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
+>>       { .node_name = NULL },
+>>   };
+>>
+>>
+>
 
-Thanks,
-Chanwoo Choi
