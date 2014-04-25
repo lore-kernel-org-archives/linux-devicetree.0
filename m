@@ -1,82 +1,79 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v5 1/5] doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue
-Date: Fri, 25 Apr 2014 11:17:52 -0500
-Message-ID: <20140425161752.GT29632@saruman.home>
-References: <1395223803-4714-1-git-send-email-george.cherian@ti.com>
- <1395223803-4714-2-git-send-email-george.cherian@ti.com>
-Reply-To: <balbi@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Boot fixes
+Date: Fri, 25 Apr 2014 09:41:41 -0700
+Message-ID: <20140425164141.GD20807@atomide.com>
+References: <1398192739-8901-1-git-send-email-d-gerlach@ti.com>
+ <20140422190132.GA12204@atomide.com>
+ <5356C8AE.3090907@ti.com>
+ <20140423145904.GB4833@atomide.com>
+ <5357F78A.5000406@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VvnGyWaJ9JuxX38U"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1395223803-4714-2-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com
+In-Reply-To: <5357F78A.5000406@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, bcousson@baylibre.com, Sekhar Nori <nsekhar@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---VvnGyWaJ9JuxX38U
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+* Dave Gerlach <d-gerlach@ti.com> [140423 10:25]:
+> On 04/23/2014 09:59 AM, Tony Lindgren wrote:
+> >* Dave Gerlach <d-gerlach@ti.com> [140422 12:53]:
+> >>On 04/22/2014 02:01 PM, Tony Lindgren wrote:
+> >>>* Dave Gerlach <d-gerlach@ti.com> [140422 11:52]:
+> >>>>This patch, along with patch here [1], fixes boot for am437x-gp-evm. The
+> >>>>bootloader configures gpio5_7 to control the DDR3 termination regulator,
+> >>>>the linked patch prevents that gpio bank from being reset and losing
+> >>>>the previously configured state, and this patch binds the gpio to a
+> >>>>regulator so the kernel is aware of the state of the gpio.
+> >>>>
+> >>>>[1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg102941.html
+> >>>
+> >>>Setting up the GPIO regulator makes sense to me. But the hack in the
+> >>>link above is potentially a nasty time bomb for anybody trying to
+> >>>use GPIO bank 5 on that board.
+> >>>
+> >>>What tests have been done that the GPIO bank behaves properly when
+> >>>it's not reset?
+> >>
+> >>We've been using this configuration on this board for a while without any
+> >>apparent issues. Also, am335x-evmsk already uses the same idea for the VTT
+> >>regulator on board from commit 6046adb6ad701026c10adeac8d6a4138895f12e5
+> >>[ARM: dts: am335x-evmsk: Do not reset gpio0] and I am unaware of any issues
+> >>with that either.
+> >
+> >OK. Do you have other GPIOs in use as interrupts for devices in these
+> >banks and do they work fine?
+> 
+> I dont see any interrupts in use from gpio5 bank but as a quick test if I
+> add ti,no-reset-on-init to gpio3 and gpio4 I see no issue with matrix-keypad
+> operation which uses gpios from each of those banks.
 
-On Wed, Mar 19, 2014 at 03:39:59PM +0530, George Cherian wrote:
-> Add the compatible "ti,am437x-dwc3" for dwc3 glue driver.
->=20
-> Signed-off-by: George Cherian <george.cherian@ti.com>
-> Acked-by: Roger Quadros <rogerq@ti.com>
+OK thanks for testing. I'll apply the ti,no-reset-on-init patch from [1]
+above into omap-for-v3.15/fixes-v2.
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+The regulator patch can wait for v3.16, and should be also implemented
+for the am335x-evmsk the same way, so maybe add that too to your patch?
 
-> ---
->  Documentation/devicetree/bindings/usb/omap-usb.txt | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documen=
-tation/devicetree/bindings/usb/omap-usb.txt
-> index 38b2fae..38d9bb8 100644
-> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> @@ -44,7 +44,9 @@ Board specific device node entry
->  };
-> =20
->  OMAP DWC3 GLUE
-> - - compatible : Should be "ti,dwc3"
-> + - compatible : Should be
-> +	* "ti,dwc3" for OMAP5 and DRA7
-> +	* "ti,am437x-dwc3" for AM437x
->   - ti,hwmods : Should be "usb_otg_ss"
->   - reg : Address and length of the register set for the device.
->   - interrupts : The irq number of this device that is used to interrupt =
-the
-> --=20
-> 1.8.3.1
->=20
+> >Also, can you please test to make sure this works with the most recent
+> >Javier's GPIO patches that had the issue of not booting on am335x-evmsk?
+> >
+> 
+> Yes, when using Javier's patches in addition to this patch [1], which was
+> found to be necessary through this discussion [2], the AM437x GP EVM boots
+> fine with linux-next with my regulator patch and gpio5 no reset patch
+> applied.
 
---=20
-balbi
+OK good to hear.
 
---VvnGyWaJ9JuxX38U
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTWoqwAAoJEIaOsuA1yqREw0sP/RIe0e385OvMangWEneBGIQn
-cIVW46l/8ofsG1h/AUBBSjMgBAyiGXcuAq4xsM+PH1rhl9/ypeQ81JTC9OcWgtfX
-Vuz1qABiWwAGDJlrn6LcBgXWrTXzl7l6kOs3eHUFTGPDUlDSB6XAb/3VcpRUT2ap
-WclwTVjR9/SqIqmpJtOkQX2VfFpaoj5qHlNmYfK8etCq08uVeLdvk2FG6AeU6mpd
-VEvupHuxDww244HflPUoFcut1dudXPwegdHVqPqXZeALT0iUR5gqnDe89HmIPug2
-WxqWUVLQ/lVMkXnHfWeSrV/Mrwrt9yyAzC3BMplMfl8wAk8jnj9tBnhC4T/tGjZ4
-z9jT5qwy0VpH8vGv3KrSO2DWyb51Wr6t7FlKs7nGWcIyFGYNfX+m7ZoZul1atP6E
-0jDRpAwErjKB6+niDgvyao/KGGq3n96FUOA6ImmqKKHIbpuU6gjJ8cOcEqiEsciF
-2jryzZHHPF+DOB98Tte5hOI42v5CewAANxiOxk9kBUaQKgv7nOrtEREJJYCou7I+
-l6zqz5TOw8skbIIlUtxr7rzZPgcLOXcmXpA5JEB+gEl4cPNaEmBu76BBLfjKGPKE
-3rQeBfoamQLcvtDTSIj2UByF48C5QjGtg/FfQKINFU/sPDwsG9FUuwLqWg3Fh1Qk
-AUFjsebfIxGBmWJ5ANkV
-=NdTo
------END PGP SIGNATURE-----
-
---VvnGyWaJ9JuxX38U--
+Tony
+ 
+> [1] https://patchwork.kernel.org/patch/4041881/
+> [2] http://marc.info/?t=139817273800014&r=1&w=2
+> 
+> >Regards,
+> >
+> >Tony
+> >
+> 
