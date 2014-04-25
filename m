@@ -1,75 +1,132 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: dts: Add support for the BeagleBoard xM A/B
-Date: Thu, 24 Apr 2014 16:37:32 -0700
-Message-ID: <20140424233731.GA4811@atomide.com>
-References: <1397574599-29573-1-git-send-email-robertcnelson@gmail.com>
- <7hiopynyt5.fsf@paris.lan>
- <CAGa+x84uPwuUC61S4Wi2ymSdxVMs14pb_kCv0RhQRi-KySxSAw@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC] serial: sh-sci: Add device tree support for r8a7779
+Date: Fri, 25 Apr 2014 09:26:42 +0900
+Message-ID: <20140425002641.GB31164@verge.net.au>
+References: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
+ <1418731.YSFS18bIMD@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAGa+x84uPwuUC61S4Wi2ymSdxVMs14pb_kCv0RhQRi-KySxSAw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Robert Nelson <robertcnelson@gmail.com>, Benoit Cousson <bcousson@baylibre.com>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1418731.YSFS18bIMD@avalon>
+Sender: linux-serial-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Kevin Hilman <khilman@linaro.org> [140424 16:22]:
-> On Thu, Apr 24, 2014 at 3:32 PM, Kevin Hilman <khilman@linaro.org> wrote:
-> > Robert Nelson <robertcnelson@gmail.com> writes:
-> >
-> >> BeagleBoard xM A/B has an inverted usb hub enable line vs the xM C
-> >>
-> >> Signed-off-by: Robert Nelson <robertcnelson@gmail.com>
-> >> ---
-> >>  arch/arm/boot/dts/Makefile               |  1 +
-> >>  arch/arm/boot/dts/omap3-beagle-xm-ab.dts | 15 +++++++++++++++
-> >>  2 files changed, 16 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/omap3-beagle-xm-ab.dts
-> >>
-> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >> index 35c146f..0bdeba3 100644
-> >> --- a/arch/arm/boot/dts/Makefile
-> >> +++ b/arch/arm/boot/dts/Makefile
-> >> @@ -246,6 +246,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
-> >>       omap3-sbc-t3730.dtb \
-> >>       omap3-devkit8000.dtb \
-> >>       omap3-beagle-xm.dtb \
-> >> +     omap3-beagle-xm-ab.dtb \
-> >>       omap3-evm.dtb \
-> >>       omap3-evm-37xx.dtb \
-> >>       omap3-ldp.dtb \
-> >> diff --git a/arch/arm/boot/dts/omap3-beagle-xm-ab.dts b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
-> >> new file mode 100644
-> >> index 0000000..9d81123
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/omap3-beagle-xm-ab.dts
-> >> @@ -0,0 +1,15 @@
-> >> +/*
-> >> + * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com/
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or modify
-> >> + * it under the terms of the GNU General Public License version 2 as
-> >> + * published by the Free Software Foundation.
-> >> + */
-> >> +
-> >> +#include "omap3-beagle-xm.dts"
-> >> +
-> >> +/ {
-> >> +     /* HS USB Port 2 Power enable was inverted with the xM C */
-> >> +     hsusb2_power: hsusb2_power_reg {
-> >> +             enable-active-high;
-> >
-> > Missing '};' here?
-> >
-> > This causes build breakage in linux-omap master, which now has this
-> > applied.
+On Fri, Apr 25, 2014 at 01:33:29AM +0200, Laurent Pinchart wrote:
+> Hi Simon,
 > 
-> ignore this.  It's already been fixed, but was still lingering in
-> Tony's master branch.
+> Thank you for the patch.
+> 
+> On Thursday 24 April 2014 15:54:44 Simon Horman wrote:
+> > According to the platform data for the legacy-C initialisation of sh-sci
+> > for the r8a7779 SoC and my own testing the SCIx_SH4_SCIF_REGTYPE bit of
+> > scscr needs to be set.
+> > 
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > 
+> > ---
+> > 
+> > With the approach taken by this patch sh-sci may be initialised using the
+> > "renesas,scif-r8a7779" compat string but not the generic "renesas,scif"
+> > compat string.  An alternate approach would be to add a binding to allow
+> > setting of this bit to be controlled directly from DT.
+> 
+> Handling the SCSCR bits properly with DT has been on my to-do list for some 
+> time. Thank you for volunteering to implement that :-D
+> 
+> The CKE bits control both the behaviour of the SCK pin and the SCIF input 
+> clock selection. The SCIF can use various internal and external clocks, with 
+> up to two baud rate generators (programmable dividers) chained. Whether the 
+> SoC is provided with an external clock for its serial ports is a board 
+> property, not an SoC property. I would thus like to implement support for this 
+> feature properly and avoid hardcoding the CKE bits like done below.
+> 
+> The Marzen board has an external clock generator connected to the SCIF_SCK pin 
+> that can be used as a clock source, but I don't really see a reason why we 
+> couldn't use the internal P clock instead. I don't want to delay integration 
+> of SCIF DT support until we have a proper solution to handle clock 
+> configuration, but couldn't we use the internal P clock on the Marzen board in 
+> the meantime ?
 
-Oops, sorry yeah looks like I forgot to remerge the updated fixes
-branch. Will update it today.
+I think that approach sounds reasonable and I seem to have it working
+without any driver changes. Could you confirm that the following
+DT snippet is what you have in mind? (I intend to update it as per any
+relevant changes you make when reposting your DT sci patch for the
+r8a7791.)
 
-Tony
+
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index e924f96..3e9cca4 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -203,6 +203,66 @@
+ 		status = "disabled";
+ 	};
+ 
++	scif0: serial@ffe40000 {
++		compatible = "renesas,scif", "renesas,scif-r8a7779";
++		reg = <0xffe40000 265>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 88 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg_clocks R8A7779_CLK_P>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
++	scif1: serial@ffe41000 {
++		compatible = "renesas,scif", "renesas,scif-r8a7779";
++		reg = <0xffe41000 265>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg_clocks R8A7779_CLK_P>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
++	scif2: serial@ffe42000 {
++		compatible = "renesas,scif", "renesas,scif-r8a7779";
++		reg = <0xffe42000 265>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg_clocks R8A7779_CLK_P>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
++	scif3: serial@ffe43000 {
++		compatible = "renesas,scif", "renesas,scif-r8a7779";
++		reg = <0xffe43000 265>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg_clocks R8A7779_CLK_P>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
++	scif4: serial@ffe44000 {
++		compatible = "renesas,scif", "renesas,scif-r8a7779";
++		reg = <0xffe44000 265>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 92 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg_clocks R8A7779_CLK_P>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
++	scif5: serial@ffe45000 {
++		compatible = "renesas,scif", "renesas,scif-r8a7779";
++		reg = <0xffe45000 265>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 93 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cpg_clocks R8A7779_CLK_P>;
++		clock-names = "sci_ick";
++		status = "disabled";
++	};
++
+ 	pfc: pfc@fffc0000 {
+ 		compatible = "renesas,pfc-r8a7779";
+ 		reg = <0xfffc0000 0x23c>;
+
+
