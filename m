@@ -1,47 +1,63 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv2 1/4] ARM: dts: exynos4: add PMU syscon node
-Date: Sat, 26 Apr 2014 01:55:16 +0200
-Message-ID: <535AF5E4.1080708@gmail.com>
-References: <1398409152-14770-1-git-send-email-chanho61.park@samsung.com> <1398409152-14770-2-git-send-email-chanho61.park@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398409152-14770-2-git-send-email-chanho61.park@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanho Park <chanho61.park@samsung.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv3 0/5] tsc2005 DT binding
+Date: Sat, 26 Apr 2014 01:56:14 +0200
+Message-ID: <1398470179-20880-1-git-send-email-sre@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanho,
+Hi,
 
-On 25.04.2014 08:59, Chanho Park wrote:
-> This patch adds a PMU(Power Management Unit) syscon node. This
-> should be required for USB Phy syscon regmap I/F.
->
-> Cc: Kamil Debski <k.debski@samsung.com>
-> Signed-off-by: Chanho Park <chanho61.park@samsung.com>
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> ---
->   Documentation/devicetree/bindings/arm/samsung/pmu.txt | 2 ++
->   arch/arm/boot/dts/exynos4.dtsi                        | 5 +++++
->   arch/arm/boot/dts/exynos4x12.dtsi                     | 4 ++++
->   3 files changed, 11 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> index f1f1552..e2797d1 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-> @@ -2,6 +2,8 @@ SAMSUNG Exynos SoC series PMU Registers
->
->   Properties:
->    - compatible : should contain two values. First value must be one from following list:
-> +		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
-> +		   - "samsung,exynos4x12-pmu" - for Exynos4212/4412 SoC,
+This adds device tree support for the tsc2005 touchscreen
+controller, which is currently only used by the Nokia N900
+board.
 
-Actually there are differences between PMUs of 4212 and 4412 (mostly 
-count of CPU-related registers), so they should have separate compatible 
-strings. I have missed this in previous version of this patch, sorry.
+The patch does not update the reset pin handling for platform
+data based probe to avoid merge conflicts. The n900 platform
+code will be removed in the near future (3.16?) and the driver
+can be simplified once that has happened.
 
-Best regards,
-Tomasz
+Changes since v2 [0]:
+ * rename "ti,x-plate-resistance" to "ti,x-plate-ohms", so that
+   the same property name is used for tsc2005 and tsc2007
+ * document "x-size" and "y-size" as deprecated form of
+   touchscreen-size-x and touchscreen-size-y
+ * add documentation for "touchscreen-inverted-x" and
+   "touchscreen-inverted-y" to the common touchscreen binding
+   and mark "x-invert" and "y-invert" as deprecated.
+ * add units to the property descriptions in the common
+   touchscreen binding Documentation
+ * document "moving-threshold" as deprecated form of
+   "touchscreen-fuzz-x" and "touchscreen-fuzz-y" combination
+ * document "contact-threshold" as deprecated form of
+   "touchscreen-fuzz-pressure"
+
+[0] https://lkml.org/lkml/2014/4/5/103
+
+-- Sebastian
+
+Sebastian Reichel (5):
+  Input: add common DT binding for touchscreens
+  Input: tsc2005: use dev_err for error messages
+  Input: tsc2005: convert driver to use devm_*
+  Input: tsc2005: add DT support
+  Documentation: dt: Document TSC2005 DT binding
+
+ .../bindings/input/touchscreen/touchscreen.txt     |  27 +++++
+ .../bindings/input/touchscreen/tsc2005.txt         |  39 +++++++
+ drivers/input/input.c                              |  34 ++++++
+ drivers/input/touchscreen/tsc2005.c                | 130 ++++++++++++++-------
+ include/linux/input.h                              |   8 ++
+ 5 files changed, 197 insertions(+), 41 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
+
+-- 
+1.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
