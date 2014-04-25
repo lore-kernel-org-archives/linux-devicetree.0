@@ -1,132 +1,41 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC] serial: sh-sci: Add device tree support for r8a7779
-Date: Fri, 25 Apr 2014 09:26:42 +0900
-Message-ID: <20140425002641.GB31164@verge.net.au>
-References: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
- <1418731.YSFS18bIMD@avalon>
+From: Haojian Zhuang <haojian.zhuang@linaro.org>
+Subject: Re: [PATCH 1/2] gpio: pl061: get gpio base from alias id
+Date: Fri, 25 Apr 2014 08:27:40 +0800
+Message-ID: <CAD6h2NQ4XdpE+HnTVpuSE4jW3-5_UqJmEJJcAkpD3xxqJKy3aA@mail.gmail.com>
+References: <1398130543-19454-1-git-send-email-haojian.zhuang@linaro.org>
+	<CACRpkdbzoPNEEJ6UbisqHOiRwuxEb6XSrDL=MiUmDPgyY=rVuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1418731.YSFS18bIMD@avalon>
-Sender: linux-serial-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbzoPNEEJ6UbisqHOiRwuxEb6XSrDL=MiUmDPgyY=rVuw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@linaro.org>, Xu Wei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 25, 2014 at 01:33:29AM +0200, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> Thank you for the patch.
-> 
-> On Thursday 24 April 2014 15:54:44 Simon Horman wrote:
-> > According to the platform data for the legacy-C initialisation of sh-sci
-> > for the r8a7779 SoC and my own testing the SCIx_SH4_SCIF_REGTYPE bit of
-> > scscr needs to be set.
-> > 
-> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
-> > 
-> > ---
-> > 
-> > With the approach taken by this patch sh-sci may be initialised using the
-> > "renesas,scif-r8a7779" compat string but not the generic "renesas,scif"
-> > compat string.  An alternate approach would be to add a binding to allow
-> > setting of this bit to be controlled directly from DT.
-> 
-> Handling the SCSCR bits properly with DT has been on my to-do list for some 
-> time. Thank you for volunteering to implement that :-D
-> 
-> The CKE bits control both the behaviour of the SCK pin and the SCIF input 
-> clock selection. The SCIF can use various internal and external clocks, with 
-> up to two baud rate generators (programmable dividers) chained. Whether the 
-> SoC is provided with an external clock for its serial ports is a board 
-> property, not an SoC property. I would thus like to implement support for this 
-> feature properly and avoid hardcoding the CKE bits like done below.
-> 
-> The Marzen board has an external clock generator connected to the SCIF_SCK pin 
-> that can be used as a clock source, but I don't really see a reason why we 
-> couldn't use the internal P clock instead. I don't want to delay integration 
-> of SCIF DT support until we have a proper solution to handle clock 
-> configuration, but couldn't we use the internal P clock on the Marzen board in 
-> the meantime ?
+On 23 April 2014 21:21, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Apr 22, 2014 at 3:35 AM, Haojian Zhuang
+> <haojian.zhuang@linaro.org> wrote:
+>
+>> If gpio base number isn't specified, the gpio base will be find from
+>> the end of gpio number. In order to keep with schematics, use alias
+>> to get the ID of gpio chip.
+>>
+>> Signed-off-by: Haojian Zhuang <haojian.zhuang@linaro.org>
+>
+> The idea with GPIO numbers is not that these shall correspond
+> to schematics or data sheets or anything like that. It's a completely
+> Linux-internal number and has nothing to do with anything else.
+>
+> The same is true for IRQ numbers.
+>
+> The long term goal is to get rid of both GPIO and IRQ numbers
+> and deal only with descriptors in the kernel.
 
-I think that approach sounds reasonable and I seem to have it working
-without any driver changes. Could you confirm that the following
-DT snippet is what you have in mind? (I intend to update it as per any
-relevant changes you make when reposting your DT sci patch for the
-r8a7791.)
+Go it. But the gpio sysfs interface is using the gpio name with an
+internal number. It'll make developer confusion since it's different
+from datasheet
+or schematics. Is there any plan to remove the confusion?
 
-
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index e924f96..3e9cca4 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -203,6 +203,66 @@
- 		status = "disabled";
- 	};
- 
-+	scif0: serial@ffe40000 {
-+		compatible = "renesas,scif", "renesas,scif-r8a7779";
-+		reg = <0xffe40000 265>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 88 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg_clocks R8A7779_CLK_P>;
-+		clock-names = "sci_ick";
-+		status = "disabled";
-+	};
-+
-+	scif1: serial@ffe41000 {
-+		compatible = "renesas,scif", "renesas,scif-r8a7779";
-+		reg = <0xffe41000 265>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 89 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg_clocks R8A7779_CLK_P>;
-+		clock-names = "sci_ick";
-+		status = "disabled";
-+	};
-+
-+	scif2: serial@ffe42000 {
-+		compatible = "renesas,scif", "renesas,scif-r8a7779";
-+		reg = <0xffe42000 265>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 90 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg_clocks R8A7779_CLK_P>;
-+		clock-names = "sci_ick";
-+		status = "disabled";
-+	};
-+
-+	scif3: serial@ffe43000 {
-+		compatible = "renesas,scif", "renesas,scif-r8a7779";
-+		reg = <0xffe43000 265>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 91 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg_clocks R8A7779_CLK_P>;
-+		clock-names = "sci_ick";
-+		status = "disabled";
-+	};
-+
-+	scif4: serial@ffe44000 {
-+		compatible = "renesas,scif", "renesas,scif-r8a7779";
-+		reg = <0xffe44000 265>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 92 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg_clocks R8A7779_CLK_P>;
-+		clock-names = "sci_ick";
-+		status = "disabled";
-+	};
-+
-+	scif5: serial@ffe45000 {
-+		compatible = "renesas,scif", "renesas,scif-r8a7779";
-+		reg = <0xffe45000 265>;
-+		interrupt-parent = <&gic>;
-+		interrupts = <0 93 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&cpg_clocks R8A7779_CLK_P>;
-+		clock-names = "sci_ick";
-+		status = "disabled";
-+	};
-+
- 	pfc: pfc@fffc0000 {
- 		compatible = "renesas,pfc-r8a7779";
- 		reg = <0xfffc0000 0x23c>;
-
-
+Regards
+Haojian
