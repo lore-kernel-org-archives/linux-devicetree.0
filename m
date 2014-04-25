@@ -1,183 +1,79 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 02/18] usb: host: xhci-plat: Add clocks support
-Date: Fri, 25 Apr 2014 10:02:19 -0500
-Message-ID: <20140425150218.GC29632@saruman.home>
-References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
- <1398434836-18908-3-git-send-email-gregory.clement@free-electrons.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: "Hong-Xing.Zhu@freescale.com" <Hong-Xing.Zhu@freescale.com>
+Subject: RE: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
+Date: Fri, 25 Apr 2014 15:04:28 +0000
+Message-ID: <0e2b9e103e54467a9f0d0ee44d5763bf@BLUPR03MB136.namprd03.prod.outlook.com>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
+ <20140424175844.GD29593@google.com>
+ <1398421265.4657.25.camel@weser.hi.pengutronix.de>
+ <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JWEK1jqKZ6MHAcjA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398434836-18908-3-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Lucas Stach <l.stach@pengutronix.de>
+Cc: Jingoo Han <jg1.han@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Cross <xobs@kosagi.com>, Marek Vasut <marex@denx.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Tim Harvey <tharvey@gateworks.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
---JWEK1jqKZ6MHAcjA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Fri, Apr 25, 2014 at 04:07:00PM +0200, Gregory CLEMENT wrote:
-> Some platform (such as the Armada 38x ones) can gate the clock of
-> their USB controller. This patch add the support for the clock, by
-> enabling them during probe and disabling them on remove.
->=20
-> As not all platforms have clock support then enabling and disabling
-> the clocks have been placed in separate functions. Then if the clocks
-> are not supported we still can use the same calls, and there is no
->=20
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/usb/host/xhci-plat.c | 52 ++++++++++++++++++++++++++++++++++++++=
-++++--
->  1 file changed, 50 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index f5351af4b2c5..bb5d563f729c 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -11,6 +11,7 @@
->   * version 2 as published by the Free Software Foundation.
->   */
-> =20
-> +#include <linux/clk.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -85,6 +86,42 @@ static const struct hc_driver xhci_plat_xhci_driver =
-=3D {
->  	.bus_resume =3D		xhci_bus_resume,
->  };
-> =20
-> +#if defined(CONFIG_HAVE_CLK)
-
-I don't think this ifdef is necessary, clk api provides stubs.
-
-> +static int try_enable_clk(struct platform_device *pdev)
-
-prepend this with xhci_plat_ as all other definitions here.
-
-> +{
-> +	struct clk *clk =3D devm_clk_get(&pdev->dev, NULL);
-
-you need to create a private xhci_plat structure and save a clock
-pointer there.
-
-> +
-> +	/* Not all platforms have a clk so it is not an error if the clock
-> +	   does not exists. */
-
-comment style is wrong.
-
-> +	if (!IS_ERR(clk))
-
-even though some don't like it, the clk API is safe against NULL
-pointers, one trick you could use is to set the clk pointer to NULL when
-you fail to get it, then you'll have a single place where you check for
-IS_ERR().
-
-> +		if (clk_prepare_enable(clk))
-> +			return  -ENODEV;
-> +	return 0;
-
-these three lines could be rewritten as:
-
-	return clk_prepare_enable(clk);
-
-> +}
-> +
-> +static int try_disable_clk(struct platform_device *pdev)
-> +{
-> +	struct clk *clk =3D devm_clk_get(&pdev->dev, NULL);
-> +
-> +	/* Not all platforms have a clk so it is not an error if the clock
-> +	   does not exists. */
-> +	if (!IS_ERR(clk))
-> +		clk_disable_unprepare(clk);
-
-similar comments to previous function.
-
->  static int xhci_plat_probe(struct platform_device *pdev)
->  {
->  	const struct hc_driver	*driver;
-> @@ -107,6 +144,10 @@ static int xhci_plat_probe(struct platform_device *p=
-dev)
->  	if (!res)
->  		return -ENODEV;
-> =20
-> +	ret =3D try_enable_clk(pdev);
-> +	if (ret)
-> +		return ret;
-> +
->  	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
->  	ret =3D dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
->  	if (ret)
-> @@ -117,8 +158,10 @@ static int xhci_plat_probe(struct platform_device *p=
-dev)
->  		dma_set_mask(&pdev->dev, DMA_BIT_MASK(32));
-> =20
->  	hcd =3D usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
-> -	if (!hcd)
-> -		return -ENOMEM;
-> +	if (!hcd) {
-> +		ret =3D -ENOMEM;
-> +		goto disable_clk;
-> +	}
-> =20
->  	hcd->rsrc_start =3D res->start;
->  	hcd->rsrc_len =3D resource_size(res);
-> @@ -182,6 +225,9 @@ release_mem_region:
->  put_hcd:
->  	usb_put_hcd(hcd);
-> =20
-> +disable_clk:
-> +	try_disable_clk(pdev);
-> +
->  	return ret;
->  }
-> =20
-> @@ -199,6 +245,8 @@ static int xhci_plat_remove(struct platform_device *d=
-ev)
->  	usb_put_hcd(hcd);
->  	kfree(xhci);
-> =20
-> +	try_disable_clk(dev);
-
-you never call clk_put(). what gives ?
-
---=20
-balbi
-
---JWEK1jqKZ6MHAcjA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTWnj6AAoJEIaOsuA1yqRE4x0QAJN26xw3ki4U8m8lZPvdfuaj
-DzReoLh3XbAOo3iXg8t5hJtI1ZidsG1XMGgEtVAw72XZdOhwbvfAucSKtSCD1Zyl
-rLYA5G4UKzsSxENpkl/mlJxKNAtYJNPNKU+dFeUkjk3GMZM+ZUQzlyKRGzDbI69q
-I2+7CqvDOwAAZ9nPPczoA9e8qkSmF6Jz42Xay7CS2EzD0pc73PusT7mBiyVAJfS8
-rxDLtHUVqqIk1SYDq8Sov/9XowntPKck4Cz+ZL98F/mVZMOBamfUegAz9MgQqcKM
-hvFGhbuVNXNEBL5mYEB0QWa6S4s9IOXxJ2KO1SfS5G8IPzHdLRE57ezBZLJakt5A
-0DSNMxEtY3hgRtNGJVDcTBHbsyEevlf1QxmAyCDX9mJlY7wfBXvanmYTwlXpwYoe
-8iHky/tsRJLajsQK4BiZ4dD91QkDiZOml4EBMlwELpOb3DoN3Upnagjad4HCqrFR
-fEkVAFic3PDtPMR3IN41xT8L98aXa3wFYNcHS8QQ9Zwyvj/5BREZdo0tzoCzAzAj
-CgfjFf5K1PA18dH/cl8hQf++v5eJiVLnGhOCqdVdHF2fj2/BI7v9ny+IZY+N7lcG
-Wjo/XqwwJzI7P+J/LGQIwSTACMWbvm0V5mvjGIKvW0GObE45vtvbd1tp7WVG6Z3n
-sZA6y5NlWY0G7pcY0X52
-=+Gig
------END PGP SIGNATURE-----
-
---JWEK1jqKZ6MHAcjA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEJqb3JuIEhlbGdhYXMgW21h
+aWx0bzpiaGVsZ2Fhc0Bnb29nbGUuY29tXQ0KPiBTZW50OiBGcmlkYXksIEFwcmlsIDI1LCAyMDE0
+IDEwOjQwIFBNDQo+IFRvOiBMdWNhcyBTdGFjaA0KPiBDYzogWmh1IFJpY2hhcmQtUjY1MDM3OyBK
+aW5nb28gSGFuOyBTaGF3biBHdW87IGxpbnV4LXBjaUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4
+LWFybTsgbGludXgtc2Ftc3VuZy1zb2NAdmdlci5rZXJuZWwub3JnOyBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsgU2Vhbg0KPiBDcm9zczsgTWFyZWsgVmFzdXQ7IElhbiBDYW1wYmVsbDsgTWFy
+ayBSdXRsYW5kOyBQYXdlbCBNb2xsOyBSb2IgSGVycmluZzsgQXJuZA0KPiBCZXJnbWFubjsgVGlt
+IEhhcnZleTsga2VybmVsQHBlbmd1dHJvbml4LmRlDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggMC84
+XSBpLk1YNiBQQ0llIGJpbmRpbmcgY2hhbmdlIGFuZCBNU0kgc3VwcG9ydA0KPiANCj4gT24gRnJp
+LCBBcHIgMjUsIDIwMTQgYXQgNDoyMSBBTSwgTHVjYXMgU3RhY2ggPGwuc3RhY2hAcGVuZ3V0cm9u
+aXguZGU+IHdyb3RlOg0KPiA+IEFtIERvbm5lcnN0YWcsIGRlbiAyNC4wNC4yMDE0LCAxMTo1OCAt
+MDYwMCBzY2hyaWViIEJqb3JuIEhlbGdhYXM6DQo+ID4+IE9uIEZyaSwgTWFyIDI4LCAyMDE0IGF0
+IDA1OjUyOjUxUE0gKzAxMDAsIEx1Y2FzIFN0YWNoIHdyb3RlOg0KPiA+PiA+IFdoaWxlIHdvcmtp
+bmcgb24gTVNJIHN1cHBvcnQgZm9yIHRoZSBpLk1YNiBQQ0llIGhvc3QgZHJpdmVyIGl0IGhhcw0K
+PiA+PiA+IGJlZW4gZGlzY292ZXJlZCB0aGF0IHRoZSBiaW5kaW5nIGZvciB0aGlzIGhvc3QgY29u
+dHJvbGxlciBpcyBicm9rZW4NCj4gPj4gPiBpbiBtYW55IHdheXMgKHJlZmVyIHRvIHRoZSBwYXRj
+aCBkZXNjcmlwdGlvbnMgZm9yIG1vcmUNCj4gPj4gPiBpbmZvKSBhbmQgd2FzIGludHJvZHVjZWQg
+d2l0aG91dCBwcm9wZXIgZGlzY3Vzc2lvbiBhYm91dCB3aGF0DQo+ID4+ID4gc2hvdWxkL3Nob3Vs
+ZCBub3QgYmUgaW4gdGhlIGJpbmRpbmcuDQo+ID4+ID4NCj4gPj4gPiBUaGlzIHNlcmllcyBmaXhl
+cyB0aGlzIGFuZCBtaW5pbWl6ZXMgdGhlIGRpZmZlcmVuY2Ugb2YgdGhlDQo+ID4+ID4gaS5NWDYg
+YmluZGluZyB0byB0aGUgY29tbW9uIGRlc2lnbndhcmUgUENJZSBiaW5kaW5nLiBJJ20gYXdhcmUg
+dGhhdA0KPiA+PiA+IHRoaXMgaXMgYSBxdWl0ZSByYWRpY2FsIGNoYW5nZSwgYnV0IEkgdGhpbmsg
+aXQncyBqdXN0aWZpZWQgdG8gZG8NCj4gPj4gPiB0aGlzIGFzIGxvbmcgYXMgdGhlcmUgYXJlbid0
+IG1hbnkgdXNlciBvZiB0aGUgb2xkIGJpbmRpbmcgKG1vc3Qgb2YNCj4gPj4gPiB0aGUgb3B0aW9u
+YWwgcHJvcGVydGllcyBpbiB0aGUgYmluZGluZyBhcmVuJ3QgZXZlbiBpbXBsZW1lbnRlZCkuDQo+
+ID4+ID4NCj4gPj4gPiBMb29raW5nIGZvcndhcmQgdG8geW91ciBmZWVkYmFjay4NCj4gPj4gPg0K
+PiA+PiA+IEx1Y2FzIFN0YWNoICg4KToNCj4gPj4gPiAgIEFSTTogaW14NnEtY2xrOiBwYXJlbnQg
+bHZkc19nYXRlIGZyb20gbHZkc19zZWwNCj4gPiBUaGlzIG9uZSBpcyBhbHJlYWR5IGFwcGxpZWQu
+DQo+ID4NCj4gPj4gPiAgIFBDSTogZGVzaWdud2FyZTogc3BsaXQgRXh5bm9zIGFuZCBpLk1YIGJp
+bmRpbmdzDQo+ID4+ID4gICBBUk06IGR0czogaW14NjogdXBkYXRlIHBjaWUgdG8gYnJpbmcgaW4g
+bGluZSB3aXRoIG5ldyBiaW5kaW5nDQo+ID4+ID4gICBQQ0k6IGlteDY6IHVzZSBuZXcgY2xvY2sg
+bmFtZXMNCj4gPj4gPiAgIFBDSTogaW14NjogZHJvcCBvbGQgaXJxIG1hcHBpbmcNCj4gPj4gPiAg
+IFBDSTogaW14NjogcmlwIG91dCBvcHRpb25hbCAoYW5kIHVudXNlZCkgaXJxcw0KPiA+PiA+ICAg
+UENJOiBkZXNpZ253YXJlOiBtYWtlIE1TSSBpc3Igc2hhcmVkIGlycSBhd2FyZQ0KPiA+PiA+ICAg
+UENJOiBpbXg2OiBhZGQgc3VwcG9ydCBmb3IgTVNJDQo+ID4+DQo+ID4+IFdoYXQncyB0aGUgc3Rh
+dHVzIG9mIGFsbCB0aGVzZT8gIEkgd291bGQgbm9ybWFsbHkgYXBwbHkgcGF0Y2hlcyA0LTgNCj4g
+Pj4gb2YgdGhpcyBzZXJpZXMgdGhyb3VnaCBteSB0cmVlLCBnaXZlbiB0aGUgYXBwcm9wcmlhdGUg
+YWNrcywgYnV0IEkNCj4gPj4gaGF2ZW4ndCBzZWVuIHRob3NlIHlldC4gIEFuZCBJJ20gbm90IHN1
+cmUgd2hhdCBkZXBlbmRlbmNpZXMgdGhlcmUgYXJlDQo+ID4+IGJldHdlZW4gdGhlIG5vbi1QQ0kg
+cGF0Y2hlcyBhbmQgdGhlIFBDSSBvbmVzLg0KPiA+Pg0KPiA+IEl0J3MgYSBjb21wbGV0ZSBiaW5k
+aW5nIGNoYW5nZSwgc28gYXBwbHlpbmcgb25lIHBhcnQgd2l0aG91dCB0aGUgb3RoZXINCj4gPiBp
+cyBnb2luZyB0byBob3JyaWJseSBicmVhayB0aGluZ3MuDQo+ID4NCj4gPiBTbyBJIHdvdWxkIGF0
+IGxlYXN0IHdhbnQgdG8gc2VlIGFuIGFjayBmb3IgdGhlIGJpbmRpbmcgY2hhbmdlIG9uIHRoZQ0K
+PiA+IGkuTVggc2lkZSBmcm9tIFNoYXduIGFuZCBSaWNoYXJkLiBUaGlzIHdpbGwgbmVlZCBzb21l
+IGZvbGxvdyBvbg0KPiA+IHBhdGNoZXMsIGFzIHNvbWUgYm9hcmRzIGFkZGluZyBQQ0llIHVzaW5n
+IHRoZSBvbGQgYmluZGluZyBoYXZlIGNyb3BwZWQNCj4gPiB1cCBpbiBsaW51eC1uZXh0LCBidXQg
+SSBjYW4gZG8gdGhlIHBhdGNoZXMgb24gc2hvcnQgbm90aWNlIGlmIGV2ZXJ5b25lDQo+ID4gYWdy
+ZWVzIHRvIG1lcmdlIHRoaXMgcGF0Y2hzZXQuDQo+ID4NCj4gPiBUaGUgZGVzaWdud2FyZSBwYXJ0
+IGlzIHByZXR0eSBzaW1wbGUgYW5kIGRvZXNuJ3QgY2hhbmdlIGFueXRoaW5nIGZvcg0KPiA+IG90
+aGVyIHVzZXJzIHRoYW4gaS5NWC4gVGhvdWdoIEkgd291bGQgbGlrZSB0byBzZWUgYW4gYWNrIGZy
+b20gSmluZ29vDQo+ID4gZm9yIHRob3NlLg0KPiA+DQo+ID4gSSBoYXZlIHNvbWUgbW9yZSBzdHVm
+ZiBpbiB0aGUgcGlwZXMgcmVnYXJkaW5nIG11bHRpcGxlIE1TSSBpcnFzLCB0aGF0DQo+ID4gZGVw
+ZW5kIG9uIHRoaXMgc2VyaWVzIGFuZCBhbHNvIHRoZSBLZXlzdG9uZSBwZW9wbGUgYXJlIHdhaXRp
+bmcgZm9yDQo+ID4gdGhpcyB0byBiZSBhcHBsaWVkIGluIG9yZGVyIHRvIGNvbnNvbGlkYXRlIHRo
+ZSBjbG9jayBoYW5kbGluZyBvZiB0aGUNCj4gPiBkZXNpZ253YXJlIGNvcmUgZHJpdmVyLCBzbyBp
+dCB3b3VsZCBiZSBuaWNlIHRvIGdldCB0aGlzIG1vdmluZyBhZ2Fpbi4NCltSaWNoYXJkXSBIaSBM
+dWNhcywgdGhhbmtzLiBJJ20gb2sgZm9yIHRoaXMgcGF0Y2gtc2V0Lg0KQWNrZWQtYnk6IFJpY2hh
+cmQgWmh1IDxyNjUwMzdAZnJlZXNjYWxlLmNvbT4NCg0KPiANCj4gT0ssIGp1c3QgcG9rZSBtZSBh
+Z2FpbiB3aGVuIHlvdSdyZSByZWFkeSBmb3IgbWUgdG8gZG8gc29tZXRoaW5nIHdpdGggdGhlc2Uu
+DQo+IA0KPiBCam9ybg0KPiANCg0KDQpCZXN0IFJlZ2FyZHMNClJpY2hhcmQgWmh1DQoNCg==
