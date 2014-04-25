@@ -1,75 +1,83 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv3 05/14] HSI: Add channel resource support to HSI clients
-Date: Fri, 25 Apr 2014 19:32:47 +0200
-Message-ID: <20140425173247.GA22721@earth.universe>
-References: <1396053110-21639-1-git-send-email-sre@kernel.org>
- <1396053110-21639-6-git-send-email-sre@kernel.org>
- <20140419191126.GE5148@amd.pavel.ucw.cz>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140419191126.GE5148@amd.pavel.ucw.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH 3/3] arm64: Mark the Applied Micro X-Gene SATA controller as DMA coherent
+Date: Fri, 25 Apr 2014 18:34:14 +0100
+Message-ID: <1398447254-18527-4-git-send-email-catalin.marinas@arm.com>
+References: <1398447254-18527-1-git-send-email-catalin.marinas@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398447254-18527-1-git-send-email-catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Since the default DMA ops for arm64 are non-coherent, mark the X-Gene
+controller explicitly as dma-coherent to avoid additional cache
+maintenance.
 
---6c2NcOVqGQ03X4Wi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+---
+ Documentation/devicetree/bindings/ata/apm-xgene.txt | 3 +++
+ arch/arm64/boot/dts/apm-storm.dtsi                  | 3 +++
+ 2 files changed, 6 insertions(+)
 
-On Sat, Apr 19, 2014 at 09:11:26PM +0200, Pavel Machek wrote:
-> Hi!
->=20
-> > Make HSI channel ids platform data, which can be provided
-> > by platform data.
-> >
->=20
-> >  static void hsi_client_release(struct device *dev)
-> >  {
-> > -	kfree(to_hsi_client(dev));
-> > +	struct hsi_client *cl =3D to_hsi_client(dev);
-> > +
-> > +	if (cl->tx_cfg.channels)
-> > +		kfree(cl->tx_cfg.channels);
-> > +	if (cl->rx_cfg.channels && cl->rx_cfg.channels !=3D cl->tx_cfg.channe=
-ls)
-> > +		kfree(cl->rx_cfg.channels);
-> > +
-> > +	kfree(cl);
->=20
-> Can cl->rx_cfg.channels =3D=3D cl->tx_cfg.channels happen? That seems
-> like quite a hack :-(.
-
-Yes it could happen. I have updated this for PATCHv4 (so that it can
-no longer happen).
-
--- Sebastian
-
---6c2NcOVqGQ03X4Wi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTWpw/AAoJENju1/PIO/qaxVkP/0CXhPFJ+8E9LhSZubCzLzxu
-4J+2sW1a9WEDlOwdO+8CUtms7sBsAmWqMjc/WbUH8cV7ItiBrIgKaUOIZFWQKHkm
-wJW57BOciOf9+Fm3bj5/+BVesJUPF17uYX2RpJwE/yvRixtLVA6ls3MaHZSNo1E8
-5WrkuyxEPIyti8je5RK9i/g72rAcFUZ+/6VmBr8H8DBqN2WX+C02BXaZeM1vTfAw
-RgaVlOszn/9PVO6LrY0FgLywxny8UECnJl6oEvtDas9EJzJ8bdmdFm6CptIvLtsI
-eoRibCW4uxNvUwJIlcnm/qSI4dVH/qtZZMNY1G4en3mqvE1uwqxycVRVefoBRGBM
-7zI4TbViFPpQOyhBRqzGZxkuu3BvZHB4sD0VnHcxRk1w4S2fxv+x+SvJLt36/PZO
-aIfUSI+e8q0hqNf6HU5a1mUP5bDs7n+ysTRLprotdTbahamdmEsB36cPT0oC9ypt
-gdo10k9pBy8WIEBSonKeeMmRU93KrphNq59rKZ8vjd0ubaHnu3AOvXcANUpYrnIZ
-5GEc37ITlsu1Pk9mnz4HP/1zVR2zMP0lmKshQ7oba+Rx4RydI4y8BKUFwGdM4/1T
-qhZzz9jEiaqHkSqihq7SOVsKy/5paMcRYsxp1CQuFXg2LbI1CwFrq4HJxYWBXomb
-z38L07/gFnggjwYQHgYe
-=Cf+p
------END PGP SIGNATURE-----
-
---6c2NcOVqGQ03X4Wi--
+diff --git a/Documentation/devicetree/bindings/ata/apm-xgene.txt b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+index 7bcfbf59810e..a668f0e7d001 100644
+--- a/Documentation/devicetree/bindings/ata/apm-xgene.txt
++++ b/Documentation/devicetree/bindings/ata/apm-xgene.txt
+@@ -24,6 +24,7 @@ Required properties:
+   * "sata-phy" for the SATA 6.0Gbps PHY
+ 
+ Optional properties:
++- dma-coherent		: Present if dma operations are coherent
+ - status		: Shall be "ok" if enabled or "disabled" if disabled.
+ 			  Default is "ok".
+ 
+@@ -55,6 +56,7 @@ Example:
+ 			      <0x0 0x1f22e000 0x0 0x1000>,
+ 			      <0x0 0x1f227000 0x0 0x1000>;
+ 			interrupts = <0x0 0x87 0x4>;
++			dma-coherent;
+ 			status = "ok";
+ 			clocks = <&sataclk 0>;
+ 			phys = <&phy2 0>;
+@@ -69,6 +71,7 @@ Example:
+ 			      <0x0 0x1f23e000 0x0 0x1000>,
+ 			      <0x0 0x1f237000 0x0 0x1000>;
+ 			interrupts = <0x0 0x88 0x4>;
++			dma-coherent;
+ 			status = "ok";
+ 			clocks = <&sataclk 0>;
+ 			phys = <&phy3 0>;
+diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+index 93f4b2dd9248..f8c40a66e65d 100644
+--- a/arch/arm64/boot/dts/apm-storm.dtsi
++++ b/arch/arm64/boot/dts/apm-storm.dtsi
+@@ -307,6 +307,7 @@
+ 			      <0x0 0x1f21e000 0x0 0x1000>,
+ 			      <0x0 0x1f217000 0x0 0x1000>;
+ 			interrupts = <0x0 0x86 0x4>;
++			dma-coherent;
+ 			status = "disabled";
+ 			clocks = <&sata01clk 0>;
+ 			phys = <&phy1 0>;
+@@ -321,6 +322,7 @@
+ 			      <0x0 0x1f22e000 0x0 0x1000>,
+ 			      <0x0 0x1f227000 0x0 0x1000>;
+ 			interrupts = <0x0 0x87 0x4>;
++			dma-coherent;
+ 			status = "ok";
+ 			clocks = <&sata23clk 0>;
+ 			phys = <&phy2 0>;
+@@ -334,6 +336,7 @@
+ 			      <0x0 0x1f23d000 0x0 0x1000>,
+ 			      <0x0 0x1f23e000 0x0 0x1000>;
+ 			interrupts = <0x0 0x88 0x4>;
++			dma-coherent;
+ 			status = "ok";
+ 			clocks = <&sata45clk 0>;
+ 			phys = <&phy3 0>;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
