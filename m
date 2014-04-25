@@ -1,103 +1,97 @@
-From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
-Date: Fri, 25 Apr 2014 14:04:41 -0700
-Message-ID: <CAKh23Fn2LvhNt_ZMQcDwu3W5Gw_ZJ1NUAcjDexDCKtkR1Ww-YQ@mail.gmail.com>
-References: <1397702368-4846-1-git-send-email-isubramanian@apm.com>
-	<1397702368-4846-5-git-send-email-isubramanian@apm.com>
-	<1398431623.3010.76.camel@deneb.redhat.com>
+From: Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH RFC 00/17] Rework OMAP4+ HDMI audio support
+Date: Sat, 26 Apr 2014 00:16:38 +0300
+Message-ID: <cover.1398453425.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398431623.3010.76.camel-PDpCo7skNiwAicBL8TP8PQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, liam.r.girdwood-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, peter.ujfalusi-l0cyMroinI0@public.gmane.org, detheridge-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, tomi.valkeinen-l0cyMroinI0@public.gmane.org, Jyri Sarha <jsarha-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 25, 2014 at 6:13 AM, Mark Salter <msalter-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> On Wed, 2014-04-16 at 19:39 -0700, Iyappan Subramanian wrote:
->> +static int xgene_enet_refill_bufpool(struct xgene_enet_desc_ring *buf_pool,
->> +                                    u32 nbuf)
->> +{
->> +       struct sk_buff *skb;
->> +       struct xgene_enet_desc16 *desc;
->> +       struct net_device *ndev;
->> +       struct device *dev;
->> +       dma_addr_t dma_addr;
->> +       u32 tail = buf_pool->tail;
->> +       u32 slots = buf_pool->slots - 1;
->> +       int i, ret = 0;
->> +       u16 bufdatalen = BUF_LEN_CODE_2K | (SKB_BUFFER_SIZE & GENMASK(11, 0));
->> +
->> +       ndev = buf_pool->ndev;
->> +       dev = ndev_to_dev(buf_pool->ndev);
->> +
->> +       for (i = 0; i < nbuf; i++) {
->> +               desc = &buf_pool->desc16[tail];
->> +
->> +               skb = netdev_alloc_skb_ip_align(ndev, XGENE_ENET_MAX_MTU);
->> +               if (unlikely(!skb)) {
->> +                       netdev_err(ndev, "Could not allocate skb");
->> +                       ret = -ENOMEM;
->> +                       goto out;
->> +               }
->> +               buf_pool->rx_skb[tail] = skb;
->> +
->> +               dma_addr = dma_map_single(dev, skb->data, skb->len,
->> +                                         DMA_TO_DEVICE);
->
-> Shouldn't this be:
->
->                dma_addr = dma_map_single(dev, skb->data, XGENE_ENET_MAX_MTU,
->                                          DMA_TO_DEVICE);
->
-> You just allocated the skb and nothing is in it, so ->len is zero.
+This set of patches fixes OMAP4+ HDMI audio. The structure of the
+implementatin looks a bit different than before. Instead of creating a
+driver specific API for a separate ASoC component driver to connect
+to, this implementation integrates an the component driver into the
+HDMI driver.
 
-Thanks Mark.  I will fix the code.
+The idea is to use an existing ASoC component driver API instead of
+creating a new custom API for each HDMI IP and to avoid splitting the
+driver to half for separate video and audio parts connected with the
+API.
 
->
->> +
->> +static int xgene_enet_rx_frame(struct xgene_enet_desc_ring *rx_ring,
->> +                               struct xgene_enet_desc *desc)
->> +{
->> +       struct net_device *ndev = rx_ring->ndev;
->> +       struct device *dev = ndev_to_dev(rx_ring->ndev);
->> +       struct xgene_enet_desc_ring *buf_pool = rx_ring->buf_pool;
->> +       u32 datalen, skb_index;
->> +       struct sk_buff *skb;
->> +       dma_addr_t pa;
->> +       size_t len;
->> +       int ret = 0;
->> +
->> +       skb_index = get_desc(desc, USERINFO);
->> +       skb = buf_pool->rx_skb[skb_index];
->> +       prefetch(skb->data - NET_IP_ALIGN);
->> +
->> +       /* Strip off CRC as HW isn't doing this */
->> +       datalen = get_desc(desc, BUFDATALEN);
->> +       datalen -= 4;
->> +       skb_put(skb, datalen);
->> +
->> +       pa = (dma_addr_t)get_desc(desc, DATAADDR);
->> +       len = get_desc(desc, BUFDATALEN);
->> +       dma_unmap_single(dev, pa, len, DMA_TO_DEVICE);
->> +
->
-> And here, should be:
->
->         dma_unmap_single(dev, pa, XGENE_ENET_MAX_MTU, DMA_TO_DEVICE);
->
-> You want to unmap the whole buffer, not just the part actually used.
->
-> The underlying code works with pages, so the existing code may work by
-> chance, but you get err_printks is you turn on dma debug.
+The new implementation also uses simple-audio-card for a machine
+driver instead of having its own HW specific machine driver.
 
-I will fix the code.  DMA_API_DEBUG option is very handy.  Thanks.
+The patches are based on 3.15-rc2 merged with
+git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
+and
+git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt-omap5
 
->
-> --Mark
->
->
+Everything is pushed here here:
+git://git.ti.com/~jyrisarha/ti-linux-kernel/jyrisarhas-audio-video-linux-feature-tree.git omap-hdmi-audio
+
+Best regards,
+Jyri
+
+Jyri Sarha (17):
+  ASoC: omap-pcm: Move omap-pcm under include/sound
+  OMAPDSS: hdmi-common: Add hdmi_dss_audio_from_hw_params()
+  OMAPDSS: hdmi4: Integrated ASoC DAI component driver implementation
+  OMAPDSS: Kconfig: Add depencies and help section to
+    OMAP4_DSS_HDMI_AUDIO
+  OMAPDSS: hdmi.h: Add HDMI_AUDIO_LAYOUT_6CH enum value
+  OMAPDSS: hdmi5_core: Fix compilation with OMAP5_DSS_HDMI_AUDIO
+  OMAPDSS: hdmi5: Integrated ASoC DAI component driver implementation
+  OMAPDSS: Kconfig: Add depencies and help section to
+    OMAP5_DSS_HDMI_AUDIO
+  ASoC: omap: Remove obsolete HDMI audio code and Kconfig options
+  OMAPDSS: Remove obsolete audio code
+  ARM: omap4.dtsi: Add audio related parametes to hdmi node
+  ARM: omap4-panda-common.dtsi: Add HDMI audio nodes
+  ARM: omap5.dtsi: Add audio related parameters to hdmi node
+  ARM: omap5-uevm.dts: Add hdmi audio related nodes
+  ARM: omap2plus_defconfig: Build DSS HDMI support for OMAP4 in kernel
+  ARM: omap2plus_defconfig: Enable OMAP5 HDMI support
+  ARM: omap2plus_defconfig: Enable OMAP4+ HDMI audio support
+
+ .../devicetree/bindings/video/ti,omap4-dss.txt     |    4 +
+ arch/arm/boot/dts/omap4-panda-common.dtsi          |   21 +-
+ arch/arm/boot/dts/omap4.dtsi                       |    2 +
+ arch/arm/boot/dts/omap5-uevm.dts                   |   19 +
+ arch/arm/boot/dts/omap5.dtsi                       |    2 +
+ arch/arm/configs/omap2plus_defconfig               |   20 +-
+ .../fbdev/omap2/displays-new/connector-hdmi.c      |   99 ------
+ .../fbdev/omap2/displays-new/encoder-tpd12s015.c   |   56 ---
+ drivers/video/fbdev/omap2/dss/Kconfig              |   19 +-
+ drivers/video/fbdev/omap2/dss/hdmi.h               |    8 +-
+ drivers/video/fbdev/omap2/dss/hdmi4.c              |  216 ++++++++----
+ drivers/video/fbdev/omap2/dss/hdmi5.c              |  216 ++++++++----
+ drivers/video/fbdev/omap2/dss/hdmi5_core.c         |    2 +-
+ drivers/video/fbdev/omap2/dss/hdmi_common.c        |  117 ++++++-
+ include/sound/omap-pcm.h                           |   30 ++
+ include/video/omapdss.h                            |   31 --
+ sound/soc/davinci/davinci-mcasp.c                  |    2 +-
+ sound/soc/omap/Kconfig                             |   13 -
+ sound/soc/omap/Makefile                            |    4 -
+ sound/soc/omap/omap-dmic.c                         |    2 +-
+ sound/soc/omap/omap-hdmi-card.c                    |   87 -----
+ sound/soc/omap/omap-hdmi.c                         |  364 --------------------
+ sound/soc/omap/omap-hdmi.h                         |   38 --
+ sound/soc/omap/omap-mcbsp.c                        |    2 +-
+ sound/soc/omap/omap-mcpdm.c                        |    2 +-
+ sound/soc/omap/omap-pcm.h                          |   30 --
+ 26 files changed, 536 insertions(+), 870 deletions(-)
+ create mode 100644 include/sound/omap-pcm.h
+ delete mode 100644 sound/soc/omap/omap-hdmi-card.c
+ delete mode 100644 sound/soc/omap/omap-hdmi.c
+ delete mode 100644 sound/soc/omap/omap-hdmi.h
+ delete mode 100644 sound/soc/omap/omap-pcm.h
+
+-- 
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
