@@ -1,105 +1,75 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv4 01/13] Documentation: HSI: Add some general description for the HSI subsystem
-Date: Fri, 25 Apr 2014 21:06:04 +0200
-Message-ID: <1398452776-28638-2-git-send-email-sre@kernel.org>
-References: <1398452776-28638-1-git-send-email-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398452776-28638-1-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?=D0=98=D0=B2=D0=B0=D0=B9=D0=BB=D0=BE=20=D0=94=D0=B8=D0=BC=D0=B8=D1=82=D1=80=D0=BE=D0=B2?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>
+From: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [RFC 2/5] clk: berlin: add berlin clock groups DT bindings documentation
+Date: Fri, 25 Apr 2014 22:00:21 +0200
+Message-ID: <1398456024-27876-4-git-send-email-alexandre.belloni@free-electrons.com>
+References: <1398456024-27876-1-git-send-email-alexandre.belloni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398456024-27876-1-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a document, which gives a rough introduction about what HSI
-is and how its handled by the Linux kernel.
+Document the device tree for the clocks sharing a common set of registers
 
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
+Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/hsi.txt | 75 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/hsi.txt
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+ .../devicetree/bindings/clock/berlin-clock.txt     | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/Documentation/hsi.txt b/Documentation/hsi.txt
-new file mode 100644
-index 0000000..6ac6cd5
---- /dev/null
-+++ b/Documentation/hsi.txt
-@@ -0,0 +1,75 @@
-+HSI - High-speed Synchronous Serial Interface
+diff --git a/Documentation/devicetree/bindings/clock/berlin-clock.txt b/Documentation/devicetree/bindings/clock/berlin-clock.txt
+index 49bc229827a0..6d374066d6b9 100644
+--- a/Documentation/devicetree/bindings/clock/berlin-clock.txt
++++ b/Documentation/devicetree/bindings/clock/berlin-clock.txt
+@@ -11,10 +11,18 @@ Required properties:
+ 		CPU PLL and System PLL
+ 	"marvell,berlin2-clk":
+ 		simple clocks
++	"marvell,berlin2-clkgrp":
++		clocks sharing a common set of registers
+ - reg: Address and length of the clock register set.
+ - #clock-cells: from common clock binding; shall be set to 0.
+ - clocks: from common clock binding
+ 
++For the clock groups:
++- marvell,clk-switch-offset: offset in bits to the first bit related to the
++  clock in the switch registers
++- marvell,clk-select-offset: offset in bits to the first bit related to the
++  clock in the selection registers.
 +
-+1. Introduction
-+~~~~~~~~~~~~~~~
+ smclk: sysmgr-clock {
+ 	compatible = "fixed-clock";
+ 	#clock-cells = <0>;
+@@ -34,3 +42,24 @@ sdio0xinclk: sdio0xinclk@ea023c {
+ 	#clock-cells = <0>;
+ 	reg = <0xea023c 0x4>;
+ };
 +
-+High Speed Syncronous Interface (HSI) is a fullduplex, low latency protocol,
-+that is optimized for die-level interconnect between an Application Processor
-+and a Baseband chipset. It has been specified by the MIPI alliance in 2003 and
-+implemented by multiple vendors since then.
 +
-+The HSI interface supports full duplex communication over multiple channels
-+(typically 8) and is capable of reaching speeds up to 200 Mbit/s.
++grpclk: grpclk@ea00ec {
++	compatible = "marvell,berlin-clkgrp";
++	clocks = <&syspll>;
++	reg = <0xea00f8 0x4>, <0xea00ec 0xc>;
 +
-+The serial protocol uses two signals, DATA and FLAG as combined data and clock
-+signals and an additional READY signal for flow control. An additional WAKE
-+signal can be used to wakeup the chips from standby modes. The signals are
-+commonly prefixed by AC for signals going from the application die to the
-+cellular die and CA for signals going the other way around.
++	cfgclk: cfgclk {
++		#clock-cells = <0>;
++		marvell,clk-switch-offset = <9>;
++		marvell,clk-select-offset = <12>;
++	};
 +
-++------------+                                 +---------------+
-+|  Cellular  |                                 |  Application  |
-+|    Die     |                                 |      Die      |
-+|            | - - - - - - CAWAKE - - - - - - >|               |
-+|           T|------------ CADATA ------------>|R              |
-+|           X|------------ CAFLAG ------------>|X              |
-+|            |<----------- ACREADY ------------|               |
-+|            |                                 |               |
-+|            |                                 |               |
-+|            |< - - - - -  ACWAKE - - - - - - -|               |
-+|           R|<----------- ACDATA -------------|T              |
-+|           X|<----------- ACFLAG -------------|X              |
-+|            |------------ CAREADY ----------->|               |
-+|            |                                 |               |
-+|            |                                 |               |
-++------------+                                 +---------------+
++	nfcecccclk: nfcecccclk {
++		#clock-cells = <0>;
++		marvell,clk-switch-offset = <27>;
++		marvell,clk-select-offset = <50>;
++	};
++};
 +
-+2. HSI Subsystem in Linux
-+~~~~~~~~~~~~~~~~~~~~~~~~~
 +
-+In the Linux kernel the hsi subsystem is supposed to be used for HSI devices.
-+The hsi subsystem contains drivers for hsi controllers including support for
-+multi-port controllers and provides a generic API for using the HSI ports.
-+
-+It also contains HSI client drivers, which make use of the generic API to
-+implement a protocol used on the HSI interface. These client drivers can
-+use an arbitrary number of channels.
-+
-+3. hsi-char Device
-+~~~~~~~~~~~~~~~~~~
-+
-+Each port automatically registers a generic client driver called hsi_char,
-+which provides a charecter device for userspace representing the HSI port.
-+It can be used to communicate via HSI from userspace. Userspace may
-+configure the hsi_char device using the following ioctl commands:
-+
-+* HSC_RESET:
-+ - flush the HSI port
-+
-+* HSC_SET_PM
-+ - enable or disable the client.
-+
-+* HSC_SEND_BREAK
-+ - send break
-+
-+* HSC_SET_RX
-+ - set RX configuration
-+
-+* HSC_GET_RX
-+ - get RX configuration
-+
-+* HSC_SET_TX
-+ - set TX configuration
-+
-+* HSC_GET_TX
-+ - get TX configuration
 -- 
-1.9.2
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
