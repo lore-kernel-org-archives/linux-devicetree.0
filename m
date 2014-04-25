@@ -1,47 +1,60 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 09/18] ARM: configs: Add usb_xhci_mvebu to
- multi_v7_defconfig
-Date: Fri, 25 Apr 2014 16:07:07 +0200
-Message-ID: <1398434836-18908-10-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 16/18] ARM: mvebu: add USB3 controller Device Tree details for Armada 375
+Date: Fri, 25 Apr 2014 16:07:14 +0200
+Message-ID: <1398434836-18908-17-git-send-email-gregory.clement@free-electrons.com>
 References: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1398434836-18908-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 38x platform needs the xhci_mvebu driver enabled
-for the xHCI USB hosts, so this commit enables the corresponding
-Kconfig option in multi_v7_defconfig.
+This commit adds the support for the USB3 controller in the Armada 375
+SoC. The following things have been taken in consideration:
+
+ - The usb3-controller node has to be *outside* of the internal-regs{}
+   node, because this device needs to access special windows.
+
+ - The usb3-controller node has one ranges to describe the special
+   window to be created but it must be done at the board level in the
+   dts.
+
+ - The usb3-controller node has two entries in the reg property, the
+   first for XHCI, the second for the internal registers
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/armada-375.dtsi | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index d4e8a47a2f7c..820cc35d40cf 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -254,6 +254,7 @@ CONFIG_SND_SOC_TEGRA_ALC5632=y
- CONFIG_SND_SOC_TEGRA_MAX98090=y
- CONFIG_USB=y
- CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_MVEBU=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_TEGRA=y
- CONFIG_USB_EHCI_HCD_PLATFORM=y
+diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+index 0e0036800071..cbe64ba9eb65 100644
+--- a/arch/arm/boot/dts/armada-375.dtsi
++++ b/arch/arm/boot/dts/armada-375.dtsi
+@@ -465,5 +465,23 @@
+ 			};
+ 
+ 		};
++
++		/*
++		 * On Armada 375, USB2 host controller and USB3 host
++		 * controller are incompatible. That means that in the
++		 * dts of your board, you can either select the USB2
++		 * controller: marvell,orion-ehci or the USB3
++		 * controller: marvell,armada-375-xhci, but not
++		 * both. If both controllers are selected, then the
++		 * kernel will select the USB3 by default.
++		 */
++		usb3-controller {
++			compatible = "marvell,armada-375-xhci";
++			reg = <MBUS_ID(0x05, 0x00) 0 0x20000>,
++				<MBUS_ID(0xf0, 0x01) 0x5ff80 0x80>;
++			interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&gateclk 16>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
 1.8.1.2
