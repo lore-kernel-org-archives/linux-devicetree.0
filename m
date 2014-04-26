@@ -1,110 +1,117 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2 7/7] ARM: dts: berlin: add the pinctrl node and muxing
- setup for uarts
-Date: Sat, 26 Apr 2014 11:51:44 +0200
-Message-ID: <535B81B0.8020302@gmail.com>
-References: <1398268276-9696-1-git-send-email-antoine.tenart@free-electrons.com>
- <1398268276-9696-8-git-send-email-antoine.tenart@free-electrons.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v9 00/17] ARM: sunxi: Add driver for SD/MMC
+ hosts found on Allwinner sunxi SoCs
+Date: Sat, 26 Apr 2014 12:16:04 +0200
+Message-ID: <1398507381-5614-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398268276-9696-8-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, linus.walleij@linaro.org
-Cc: zmxu@marvell.com, jszhang@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBAMP52NAKGQE5HJCP4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: =?UTF-8?q?David=20Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMDQvMjMvMjAxNCAwNTo1MSBQTSwgQW50b2luZSBUw6luYXJ0IHdyb3RlOgo+IFRoZSB1YXJ0
-MCBwaW5tdXggY29uZmlndXJhdGlvbiBpcyBpbiB0aGUgZHRzaSBiZWNhdXNlIHVhcnQwIHdpbGwg
-YWx3YXlzCj4gdXNlIHVhcnQwLXBtdXggdG8gd29yaywgbm8gb3RoZXIgcG9zc2liaWxpdHkuIFNh
-bWUgdGhpbmcgZm9yIHVhcnQxLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEFudG9pbmUgVMOpbmFydCA8
-YW50b2luZS50ZW5hcnRAZnJlZS1lbGVjdHJvbnMuY29tPgo+IC0tLQo+ICBhcmNoL2FybS9ib290
-L2R0cy9iZXJsaW4yLmR0c2kgICB8IDI0ICsrKysrKysrKysrKysrKysrKysrKysrKwo+ICBhcmNo
-L2FybS9ib290L2R0cy9iZXJsaW4yY2QuZHRzaSB8IDE3ICsrKysrKysrKysrKysrKysrCj4gIGFy
-Y2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLmR0c2kgIHwgMjQgKysrKysrKysrKysrKysrKysrKysr
-KysrCj4gIDMgZmlsZXMgY2hhbmdlZCwgNjUgaW5zZXJ0aW9ucygrKQo+IAo+IGRpZmYgLS1naXQg
-YS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9iZXJs
-aW4yLmR0c2kKPiBpbmRleCA1NmExYWYyZjEwNTIuLjlhMTM4OTFjMzhhMyAxMDA2NDQKPiAtLS0g
-YS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0
-cy9iZXJsaW4yLmR0c2kKPiBAQCAtMTc2LDYgKzE3NiwxMSBAQAo+ICAJCQl9Owo+ICAJCX07Cj4g
-IAo+ICsJCXNvY19waW5jdHJsOiBwaW4tY29udHJvbGxlckBlYTAwMDAgewo+ICsJCQljb21wYXRp
-YmxlID0gIm1hcnZlbGwsYmVybGluMi1zb2MtcGluY3RybCI7Cj4gKwkJCXJlZyA9IDwweGVhMDAw
-MCAweDRjPjsKPiArCQl9Owo+ICsKPiAgCQlhcGJAZmMwMDAwIHsKPiAgCQkJY29tcGF0aWJsZSA9
-ICJzaW1wbGUtYnVzIjsKPiAgCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gQEAgLTE4NCw2ICsx
-ODksMjEgQEAKPiAgCQkJcmFuZ2VzID0gPDAgMHhmYzAwMDAgMHgxMDAwMD47Cj4gIAkJCWludGVy
-cnVwdC1wYXJlbnQgPSA8JnNpYz47Cj4gIAo+ICsJCQlzbV9waW5jdHJsOiBwaW4tY29udHJvbGxl
-ckAwMDAwIHsKPiArCQkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxiZXJsaW4yLXN5c21nci1waW5j
-dHJsIjsKPiArCQkJCXJlZyA9IDwweDAwMDAgMHg0ND47Cj4gKwo+ICsJCQkJdWFydDBfcG11eDog
-dWFydDAtcG11eCB7Cj4gKwkJCQkJbWFydmVsbCxncm91cHMgPSAiR1NNNCI7Cj4gKwkJCQkJbWFy
-dmVsbCxmdW5jdGlvbiA9ICJ1YXJ0MCI7Cj4gKwkJCQl9Owo+ICsKPiArCQkJCXVhcnQxX3BtdXg6
-IHVhcnQxLXBtdXggewo+ICsJCQkJCW1hcnZlbGwsZ3JvdXBzID0gIkdTTTUiOwo+ICsJCQkJCW1h
-cnZlbGwsZnVuY3Rpb24gPSAidWFydDEiOwo+ICsJCQkJfTsKClRoZXJlIGlzIHRocmVlIHVhcnRz
-IGluIEJHMiwgd2UgaGF2ZSB0aGUgbm9kZSBhbHJlYWR5LiBQbGVhc2UgYWRkCgp1YXJ0Ml9wbXV4
-OiB1YXJ0Mi1wbXV4IHsKCW1hcnZlbGwsZ3JvdXBzID0gIkdTTTMiOwoJbWFydmVsbCxmdW5jdGlv
-biA9ICJ1YXJ0MiI7Cn07CgpoZXJlIGFuZCBpbiB0aGUgY29ycmVzcG9uZGluZyBub2RlOgoKcGlu
-Y3RybC0wID0gPCZ1YXJ0Ml9wbXV4PjsKcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKClNlYmFz
-dGlhbgoKPiArCQkJfTsKPiArCj4gIAkJCXVhcnQwOiBzZXJpYWxAOTAwMCB7Cj4gIAkJCQljb21w
-YXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQiOwo+ICAJCQkJcmVnID0gPDB4OTAwMCAweDEwMD47
-Cj4gQEAgLTE5MSw2ICsyMTEsOCBAQAo+ICAJCQkJcmVnLWlvLXdpZHRoID0gPDE+Owo+ICAJCQkJ
-aW50ZXJydXB0cyA9IDw4PjsKPiAgCQkJCWNsb2NrcyA9IDwmc21jbGs+Owo+ICsJCQkJcGluY3Ry
-bC0wID0gPCZ1YXJ0MF9wbXV4PjsKPiArCQkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4g
-IAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAJCQl9Owo+ICAKPiBAQCAtMjAxLDYgKzIyMyw4
-IEBACj4gIAkJCQlyZWctaW8td2lkdGggPSA8MT47Cj4gIAkJCQlpbnRlcnJ1cHRzID0gPDk+Owo+
-ICAJCQkJY2xvY2tzID0gPCZzbWNsaz47Cj4gKwkJCQlwaW5jdHJsLTAgPSA8JnVhcnQxX3BtdXg+
-Owo+ICsJCQkJcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiAgCQkJCXN0YXR1cyA9ICJkaXNh
-YmxlZCI7Cj4gIAkJCX07Cj4gIAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iZXJs
-aW4yY2QuZHRzaSBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJjZC5kdHNpCj4gaW5kZXggMDk0
-OTY4YzI3NTMzLi5hODAyZDNmZTVkYTYgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMv
-YmVybGluMmNkLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yY2QuZHRzaQo+
-IEBAIC0xNjksNiArMTY5LDExIEBACj4gIAkJCX07Cj4gIAkJfTsKPiAgCj4gKwkJc29jX3BpbmN0
-cmw6IHBpbi1jb250cm9sbGVyQGFlMDAwMCB7Cj4gKwkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxi
-ZXJsaW4yY2Qtc29jLXBpbmN0cmwiOwo+ICsJCQlyZWcgPSA8MHhlYTAwMDAgMHg0Yz47Cj4gKwkJ
-fTsKPiArCj4gIAkJYXBiQGZjMDAwMCB7Cj4gIAkJCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7
-Cj4gIAkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+IEBAIC0xNzcsNiArMTgyLDE2IEBACj4gIAkJ
-CXJhbmdlcyA9IDwwIDB4ZmMwMDAwIDB4MTAwMDA+Owo+ICAJCQlpbnRlcnJ1cHQtcGFyZW50ID0g
-PCZzaWM+Owo+ICAKPiArCQkJc21fcGluY3RybDogcGluLWNvbnRyb2xsZXJAMDAwMCB7Cj4gKwkJ
-CQljb21wYXRpYmxlID0gIm1hcnZlbGwsYmVybGluMmNkLXN5c21nci1waW5jdHJsIjsKPiArCQkJ
-CXJlZyA9IDwweDAwMDAgMHg0ND47Cj4gKwo+ICsJCQkJdWFydDBfcG11eDogdWFydDAtcG11eCB7
-Cj4gKwkJCQkJbWFydmVsbCxncm91cHMgPSAiRzYiOwo+ICsJCQkJCW1hcnZlbGwsZnVuY3Rpb24g
-PSAidWFydDAiOwo+ICsJCQkJfTsKPiArCQkJfTsKPiArCj4gIAkJCXVhcnQwOiBzZXJpYWxAOTAw
-MCB7Cj4gIAkJCQljb21wYXRpYmxlID0gInNucHMsZHctYXBiLXVhcnQiOwo+ICAJCQkJcmVnID0g
-PDB4OTAwMCAweDEwMD47Cj4gQEAgLTE4NCw2ICsxOTksOCBAQAo+ICAJCQkJcmVnLWlvLXdpZHRo
-ID0gPDE+Owo+ICAJCQkJaW50ZXJydXB0cyA9IDw4PjsKPiAgCQkJCWNsb2NrcyA9IDwmc21jbGs+
-Owo+ICsJCQkJcGluY3RybC0wID0gPCZ1YXJ0MF9wbXV4PjsKPiArCQkJCXBpbmN0cmwtbmFtZXMg
-PSAiZGVmYXVsdCI7Cj4gIAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAJCQl9Owo+ICAKPiBk
-aWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMnEuZHRzaSBiL2FyY2gvYXJtL2Jv
-b3QvZHRzL2JlcmxpbjJxLmR0c2kKPiBpbmRleCAwNzQ1MmE3NDgzZmEuLjczNGRlYmJmMDcyZiAx
-MDA2NDQKPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS5kdHNpCj4gKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvYmVybGluMnEuZHRzaQo+IEBAIC0xODMsNiArMTgzLDExIEBACj4gIAkJ
-CX07Cj4gIAkJfTsKPiAgCj4gKwkJc29jX3BpbmN0cmw6IHBpbi1jb250cm9sbGVyQGVhMDAwMCB7
-Cj4gKwkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxiZXJsaW4ycS1zb2MtcGluY3RybCI7Cj4gKwkJ
-CXJlZyA9IDwweGVhMDAwMCAweDRjPjsKPiArCQl9Owo+ICsKPiAgCQlhcGJAZmMwMDAwIHsKPiAg
-CQkJY29tcGF0aWJsZSA9ICJzaW1wbGUtYnVzIjsKPiAgCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-Cj4gQEAgLTE5OCw2ICsyMDMsOCBAQAo+ICAJCQkJaW50ZXJydXB0cyA9IDw4PjsKPiAgCQkJCWNs
-b2NrcyA9IDwmc21jbGs+Owo+ICAJCQkJcmVnLXNoaWZ0ID0gPDI+Owo+ICsJCQkJcGluY3RybC0w
-ID0gPCZ1YXJ0MF9wbXV4PjsKPiArCQkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gIAkJ
-CQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ICAJCQl9Owo+ICAKPiBAQCAtMjA4LDkgKzIxNSwyNiBA
-QAo+ICAJCQkJaW50ZXJydXB0cyA9IDw5PjsKPiAgCQkJCWNsb2NrcyA9IDwmc21jbGs+Owo+ICAJ
-CQkJcmVnLXNoaWZ0ID0gPDI+Owo+ICsJCQkJcGluY3RybC0wID0gPCZ1YXJ0MV9wbXV4PjsKPiAr
-CQkJCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gIAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQi
-Owo+ICAJCQl9Owo+ICAKPiArCQkJc21fcGluY3RybDogcGluLWNvbnRyb2xsZXJAZDAwMCB7Cj4g
-KwkJCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYmVybGluMnEtc3lzbWdyLXBpbmN0cmwiOwo+ICsJ
-CQkJcmVnID0gPDB4ZDAwMCAweDQ0PjsKPiArCj4gKwkJCQl1YXJ0MF9wbXV4OiB1YXJ0MC1wbXV4
-IHsKPiArCQkJCQltYXJ2ZWxsLGdyb3VwcyA9ICJHU00xMiI7Cj4gKwkJCQkJbWFydmVsbCxmdW5j
-dGlvbiA9ICJ1YXJ0MCI7Cj4gKwkJCQl9Owo+ICsKPiArCQkJCXVhcnQxX3BtdXg6IHVhcnQxLXBt
-dXggewo+ICsJCQkJCW1hcnZlbGwsZ3JvdXBzID0gIkdTTTE0IjsKPiArCQkJCQltYXJ2ZWxsLGZ1
-bmN0aW9uID0gInVhcnQxIjsKPiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICAJCQlzaWM6IGludGVy
-cnVwdC1jb250cm9sbGVyQGUwMDAgewo+ICAJCQkJY29tcGF0aWJsZSA9ICJzbnBzLGR3LWFwYi1p
-Y3RsIjsKPiAgCQkJCXJlZyA9IDwweGUwMDAgMHgzMD47Cj4gCgoKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxp
-c3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi All,
+
+Here is v9 of the sunxi-mmc patch-set David Lanzend=C3=B6rfer and I have be=
+en
+working on, this has some minor changes since v8, the plan for upstreaming =
+is
+still the same:
+
+The first 2 patches are depenencies which should go in through the clk tree=
+,
+Mike can you pick these 2 up please ?  :
+
+"clk: sunxi: factors: automatic reparenting support"
+Is uncontroversial and has been favorably reviewed by various people.
+
+"clk: sunxi: Implement MMC phase control"
+Is somewhat more controversial as there has been lots of discussion about
+adding a generic phase control method to the clk framework. The problem is
+that there has been a lot of talk about such a generic phase control method
+but not a single patch. Therefor I would like to move forwards with using
+a platform specific method for now. I hereby promise that once we've a gene=
+ric
+method I'll write patches to convert the sunxi code to that method.
+
+The third patch is the patch adding the actual mmc driver and should go in
+through the mmc tree.
+
+All the other patches are devicetree patches hooking things up, and should
+go upstream through Maxime's sunxi-dt tree.
+
+Changes since v1:
+-Using mmc_of_parse instead of diy dt parsing
+-Adding nodes for all mmc controller to the dtsi files,
+ including sofar unused controllers
+-Using generic GPIO slot library for WP/CD
+-Adding additional MMC device nodes into DTSI files
+
+Changes since v2:
+-Add missing Signed-off-by tags
+-Stop using __raw_readl / __raw_writel so that barriers are properly used
+-Adding missing new lines
+-Adding missing patch for automatic reparenting of clocks
+
+Changes since v3:
+-Move clk_enable / disable into host_init / exit (Hans)
+-Fix hang on boot caused by irq storm (Hans)
+
+Changes since v4:
+-moving sunxi-mci.{c/h} to sunxi-mmc.{c/h}
+-removing camel cases from the defines in  sunxi-mmc.h
+-moving defines out of the struct definition
+ since this is bad coding style
+-adding documentation for the device tree binding
+Changes since v5:
+-adding host initialization for when the sdio irq is enabled
+ (just to make sure having a defined state at all time)
+-add mmc support fixup: set pullup on cd pins
+-fixup: Don't set MMC_CAP_NEEDS_POLL /  MMC_CAP_4_BIT_DATA
+
+Changes since v6:
+-fixing copyright info in sunxi-mmc.*
+-s/__SUNXI_MCI_H__/__SUNXI_MMC_H__/g
+-s/SDXC_RESPONSE_/SDXC_RESP_/g
+-s/define/definitions <- Comment from Priit Laes
+
+Changes since v7:
+-Merge sunxi-mmc.h into sunxi-mmc.c
+-Various style fixes / cleanups based on Maxime's review
+-sun6i support
+-Fix a race condition in interrupt / tasklet interaction
+-Split the dts patches into 3 per platform:
+ 1) Add mmc nodes to the dtsi
+ 2) Add mmc pinmux to the dtsi
+ 3) Add mmc nodes to the various board files
+-Moved setting of bus-width and cd gpio polarity from .dtsi to the board-fi=
+les
+-Added sun6i dts patches
+
+Changes since v8:
+-Don't claim MMC_CAP_SDIO_IRQ by default, sdio-irq support appears to not
+ always be reliable. Can be re-added to the caps on a per board basis
+ through dts
+-Added EXPORT_SYMBOL(clk_sunxi_mmc_phase_control)
+-Moved bus-width and cd-inverted dts attributes for sun6i from dtsi to dts
+-Squashed patches adding sun6i-a31-m9.dts and mmc support for m9 together
+-Added a patch enabling the sdio wifi on the cubietruck in dts
+
+Regards,
+
+Hans
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
