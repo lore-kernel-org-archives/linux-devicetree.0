@@ -1,105 +1,243 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v8 1/3] ARM: EXYNOS: initial board support for exynos5260
- SoC
-Date: Sat, 26 Apr 2014 20:01:47 +0900
-Message-ID: <0b4101cf613e$eb2d87d0$c1889770$@samsung.com>
-References: <1397620738-14431-1-git-send-email-rahul.sharma@samsung.com>
- <1397620738-14431-2-git-send-email-rahul.sharma@samsung.com>
- <534E3803.5010404@gmail.com>
- <CAK9yfHztqGWhUJ=PNc7L-epu48PkEM6=v6JFDZ1n52NBeOUB8w@mail.gmail.com>
- <534E3AE7.10907@gmail.com> <00eb01cf5e7b$4eb9edf0$ec2dc9d0$@samsung.com>
- <CAPdUM4O3imVNv3A3K1uEkfohc-r668SC6mVZQRCO8N+waxyb4w@mail.gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: Add peach-pit board support
+Date: Sat, 26 Apr 2014 13:32:20 +0200
+Message-ID: <535B9944.8090503@gmail.com>
+References: <1398313031-14848-1-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAPdUM4O3imVNv3A3K1uEkfohc-r668SC6mVZQRCO8N+waxyb4w@mail.gmail.com>
-Content-language: ko
+In-Reply-To: <1398313031-14848-1-git-send-email-arun.kk@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rahul Sharma' <r.sh.open@gmail.com>
-Cc: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Sachin Kamat' <sachin.kamat@linaro.org>, 'Rahul Sharma' <rahul.sharma@samsung.com>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, 'linux-arm-kernel' <linux-arm-kernel@lists.infradead.org>, 'sunil joshi' <joshi@samsung.com>, 'Pankaj Dubey' <pankaj.dubey@samsung.com>, 'Arnd Bergmann' <arnd@arndb.de>, 'Olof Johansson' <olof@lixom.net>
+To: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, dianders@chromium.org, olofj@google.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, arunkk.samsung@gmail.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Rahul Sharma wrote:
-> 
-> Hi Kukjin,
-> 
-Hi,
+Hi Arun,
 
-> Need this macro to enable build for clock driver.
-> 
-I found it in your patch, "clk/exynos5260: add clock file for exynos5260".
-For consistency, I'm fine on this, if Tomasz has no objection me to pick
-this into samsung tree for the 5260 clock stuff
-"drivers/clk/samsung/Makefile".
+On 24.04.2014 06:17, Arun Kumar K wrote:
+> Adds the google peach-pit board dts file which uses
+> exynos5420 SoC.
+>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> ---
+> Changes from v1
+> ---------------
+> - Addressed review comments from Doug, Sachin & Tushar
+> - Removed adc and lid-switch nodes
+> ---
+>   arch/arm/boot/dts/Makefile                 |    1 +
+>   arch/arm/boot/dts/exynos5420-peach-pit.dts |  182 ++++++++++++++++++++++++++++
+>   2 files changed, 183 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 35c146f..3220e29 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>   	exynos5250-smdk5250.dtb \
+>   	exynos5250-snow.dtb \
+>   	exynos5420-arndale-octa.dtb \
+> +	exynos5420-peach-pit.dtb \
+>   	exynos5420-smdk5420.dtb \
+>   	exynos5440-sd5v1.dtb \
+>   	exynos5440-ssdk5440.dtb
+> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> new file mode 100644
+> index 0000000..fbb0469
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> @@ -0,0 +1,182 @@
+> +/*
+> + * Google Peach Pit Rev 6+ board device tree source
+> + *
+> + * Copyright (c) 2014 Google, Inc
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "exynos5420.dtsi"
+> +
+> +/ {
+> +	model = "Google Peach Pit Rev 6+";
+> +
+> +	compatible = "google,pit-rev16",
+> +		"google,pit-rev15", "google,pit-rev14",
+> +		"google,pit-rev13", "google,pit-rev12",
+> +		"google,pit-rev11", "google,pit-rev10",
+> +		"google,pit-rev9", "google,pit-rev8",
+> +		"google,pit-rev7", "google,pit-rev6",
+> +		"google,pit", "google,peach","samsung,exynos5420",
+> +		"samsung,exynos5";
 
-Thanks,
-Kukjin
+Do you really need so many compatible strings here? Furthermore, are all 
+the newer revisions really fully backwards compatible with older ones?
 
-> Regards,
-> Rahul Sharma.
-> 
-> 
-> On 22 April 2014 15:36, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> > Tomasz Figa wrote:
-> >>
-> >> On 16.04.2014 10:08, Sachin Kamat wrote:
-> >> > Hi Tomasz,
-> >> >
-> >> > On 16 April 2014 13:27, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> >> >> Hi Rahul,
-> >> >>
-> >> >>
-> >> >> On 16.04.2014 05:58, Rahul Sharma wrote:
-> >> >>>
-> >> >>> From: Pankaj Dubey <pankaj.dubey@samsung.com>
-> >> >>>
-> >> >>> This patch add basic arch side support for exynos5260 SoC.
-> >> >>>
-> >> >>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> >> >>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> >> >>> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> >> >>> ---
-> >> >>>    arch/arm/mach-exynos/Kconfig |    5 +++++
-> >> >>>    1 file changed, 5 insertions(+)
-> >> >>>
-> >> >>> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-
-> >> exynos/Kconfig
-> >> >>> index fc8bf18..bf4ed87 100644
-> >> >>> --- a/arch/arm/mach-exynos/Kconfig
-> >> >>> +++ b/arch/arm/mach-exynos/Kconfig
-> >> >>> @@ -84,6 +84,11 @@ config SOC_EXYNOS5250
-> >> >>>          help
-> >> >>>            Enable EXYNOS5250 SoC support
-> >> >>>
-> >> >>> +config SOC_EXYNOS5260
-> >> >>> +       bool "SAMSUNG EXYNOS5260"
-> >> >>> +       default y
-> >> >>> +       depends on ARCH_EXYNOS5
-> >> >>> +
-> >> >>>    config SOC_EXYNOS5420
-> >> >>>          bool "SAMSUNG EXYNOS5420"
-> >> >>>          default y
-> >> >>>
-> >> >>
-> >> >> Is this patch necessary now? After Sachin's consolidation series
-> there
-> >> are
-> >> >> no per SoC entries anymore.
-> >> >
-> >> > Kukjin still wanted individual SoCs to be selectable. Please refer
-> [1].
-> >> >
-> >> > [1] http://www.spinics.net/lists/devicetree/msg27040.html
-> >>
-> >> I don't think any valid reason was presented there. Features in code
-> >> should not be selected using #ifdef CONFIG_ anymore, so I don't really
-> >> see any reason to not proceed with this consolidation. Olof, Arnd?
-> >>
-> > Hi,
-> >
-> > Yeah, in this case, nothing happened with adding SOC_EXYNOS5260. So I
-> don't have any idea why this is required.
-> >
-> > - Kukjin
-> >
+Also, do you have a way to check the revision in hardware, e.g. by some 
+GPIO pins? If so, I don't think there would be any need to revision 
+number as a part of compatible string.
+
+> +
+> +	memory {
+> +		reg = <0x20000000 0x80000000>;
+> +	};
+> +
+> +	fixed-rate-clocks {
+> +		oscclk {
+> +			compatible = "samsung,exynos5420-oscclk";
+> +			clock-frequency = <24000000>;
+> +		};
+> +	};
+> +
+> +	pinctrl@13400000 {
+
+Please convert this dts file into reference-based syntax. It has 
+multiple advantages over the legacy way of replicating full paths every 
+time a node needs to be updated.
+
+You can see other dts files for examples how this can be used, e.g. 
+s3c64*.dts* (for a quite simple setup), imx6*.dts* (for more complex 
+things), etc.
+
+> +		tpm_irq: tpm-irq {
+> +			samsung,pins = "gpx1-0";
+> +			samsung,pin-function = <0>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <0>;
+> +		};
+> +
+> +		power_key_irq: power-key-irq {
+> +			samsung,pins = "gpx1-2";
+> +			samsung,pin-function = <0>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <0>;
+> +		};
+> +	};
+> +
+> +	pinctrl@14010000 {
+> +		spi_flash_cs: spi-flash-cs {
+> +			samsung,pins = "gpa2-5";
+> +			samsung,pin-function = <1>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <3>;
+> +		};
+> +
+> +		backlight_pwm: backlight-pwm {
+> +			samsung,pins = "gpb2-0";
+> +			samsung,pin-function = <2>;
+> +			samsung,pin-pud = <0>;
+> +			samsung,pin-drv = <0>;
+> +		};
+> +	};
+> +
+> +	gpio-keys {
+> +		compatible = "gpio-keys";
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&power_key_irq>;
+> +
+> +		power {
+> +			label = "Power";
+> +			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
+> +			linux,code = <KEY_POWER>;
+> +			gpio-key,wakeup;
+> +		};
+> +	};
+> +
+> +	rtc@101E0000 {
+> +		status = "okay";
+> +	};
+> +
+> +	serial@12C30000 {
+> +		status = "okay";
+> +	};
+> +
+> +	mmc@12200000 {
+> +		status = "okay";
+> +		num-slots = <1>;
+> +		broken-cd;
+> +		caps2-mmc-hs200-1_8v;
+> +		supports-highspeed;
+> +		non-removable;
+> +		card-detect-delay = <200>;
+> +		clock-frequency = <400000000>;
+> +		samsung,dw-mshc-ciu-div = <3>;
+> +		samsung,dw-mshc-sdr-timing = <0 4>;
+> +		samsung,dw-mshc-ddr-timing = <0 2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> +
+> +		slot@0 {
+> +			reg = <0>;
+> +			bus-width = <8>;
+> +		};
+> +	};
+> +
+> +	mmc@12220000 {
+> +		status = "okay";
+> +		num-slots = <1>;
+> +		supports-highspeed;
+> +		card-detect-delay = <200>;
+> +		clock-frequency = <400000000>;
+> +		samsung,dw-mshc-ciu-div = <3>;
+> +		samsung,dw-mshc-sdr-timing = <2 3>;
+> +		samsung,dw-mshc-ddr-timing = <1 2>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> +
+> +		slot@0 {
+> +			reg = <0>;
+> +			bus-width = <4>;
+> +		};
+> +	};
+> +
+> +	i2c@12E10000 {
+> +		status = "okay";
+> +		clock-frequency = <400000>;
+> +
+> +		tpm@20 {
+> +			/* Unused irq; but still need to configure the pins */
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&tpm_irq>;
+
+nit: Please move the pinctrl properties below compatible and reg, as 
+this is more readable and consistent with other nodes.
+
+> +
+> +			compatible = "infineon,slb9645tt";
+> +			reg = <0x20>;
+> +		};
+> +	};
+> +
+> +	spi@12d30000 {
+> +		status = "okay";
+> +		samsung,spi-src-clk = <0>;
+> +		num-cs = <1>;
+> +
+> +		spidev@0 {
+> +			compatible = "spidev";
+> +			reg = <0>;
+> +			spi-max-frequency = <50000000>;
+> +			pinctrl-names = "default";
+> +			pinctrl-0 = <&spi_flash_cs>;
+> +
+> +			controller-data {
+> +				cs-gpio = <&gpa2 5 0>;
+> +				samsung,spi-feedback-delay = <2>;
+> +			};
+
+Hmm, is this really a physical device? Shouldn't this have some kind of 
+real compatible string first? Also I'm not even sure if "spidev" is 
+supposed to be used like this, especially considering that this 
+compatible string isn't even documented in 
+Documentation/devicetree/bindings. (Rob, Mark, Grant, any opinions on this?)
+
+Best regards,
+Tomasz
