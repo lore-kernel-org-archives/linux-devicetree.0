@@ -1,131 +1,75 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv3 1/5] Input: add common DT binding for touchscreens
-Date: Sat, 26 Apr 2014 01:56:15 +0200
-Message-ID: <1398470179-20880-2-git-send-email-sre@kernel.org>
-References: <1398470179-20880-1-git-send-email-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398470179-20880-1-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 RESEND 0/5] clk: bcm21664: add common clock support
+Date: Fri, 25 Apr 2014 17:09:15 -0700
+Message-ID: <20140426000915.7224.11265@quantum>
+References: <1398115587-32529-1-git-send-email-elder@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398115587-32529-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add common DT binding documentation for touchscreen devices and
-implement input_parse_touchscreen_of_params, which parses the common
-properties and configures the input device accordingly.
+Quoting Alex Elder (2014-04-21 14:26:22)
+> This is series has two parts.  The first two patches are changes
+> to the existing Broadcom Kona family clock code to prepare for the
+> addition of support for another SoC, bcm21664.
+> 
+> The remaining three define the binding and code for bcm21664, and
+> replace the use of "fake" clocks in the device tree with the real
+> ones.  This ends up being a fairly straightforward definition of
+> the clocks on this SoC; the rest of the clock code is shared with
+> other SoCs that use the Kona style clock system.
 
-The method currently does not interpret the axis inversion properties,
-since there is no matching flag in the generic linux input device.
+Hi Alex,
 
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
- .../bindings/input/touchscreen/touchscreen.txt     | 27 +++++++++++++++++
- drivers/input/input.c                              | 34 ++++++++++++++++++++++
- include/linux/input.h                              |  8 +++++
- 3 files changed, 69 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+I'm happy to take only the clk patches or I can take the DT stuff as
+well if it gets some Acks. Let me know how you want it handled.
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-new file mode 100644
-index 0000000..d8e0616
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-@@ -0,0 +1,27 @@
-+General Touchscreen Properties:
-+
-+Optional properties for Touchscreens:
-+ - touchscreen-size-x		: horizontal resolution of touchscreen
-+				  (in pixels)
-+ - touchscreen-size-y		: vertical resolution of touchscreen
-+				  (in pixels)
-+ - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
-+				  dependent on the controller)
-+ - touchscreen-fuzz-x		: horizontal noise value of the absolute input
-+				  device (in pixels)
-+ - touchscreen-fuzz-y		: vertical noise value of the absolute input
-+				  device (in pixels)
-+ - touchscreen-fuzz-pressure	: pressure noise value of the absolute input
-+				  device (arbitrary range dependent on the
-+				  controller)
-+ - touchscreen-inverted-x	: X axis is inverted (boolean)
-+ - touchscreen-inverted-y	: Y axis is inverted (boolean)
-+
-+Deprecated properties for Touchscreens:
-+ - x-size			: deprecated name for touchscreen-size-x
-+ - y-size			: deprecated name for touchscreen-size-y
-+ - moving-threshold		: deprecated name for a combination of
-+				  touchscreen-fuzz-x and touchscreen-fuzz-y
-+ - contact-threshold		: deprecated name for touchscreen-fuzz-pressure
-+ - x-invert			: deprecated name for touchscreen-inverted-x
-+ - y-invert			: deprecated name for touchscreen-inverted-y
-diff --git a/drivers/input/input.c b/drivers/input/input.c
-index 1c4c0db..97966d93 100644
---- a/drivers/input/input.c
-+++ b/drivers/input/input.c
-@@ -27,6 +27,7 @@
- #include <linux/device.h>
- #include <linux/mutex.h>
- #include <linux/rcupdate.h>
-+#include <linux/of.h>
- #include "input-compat.h"
- 
- MODULE_AUTHOR("Vojtech Pavlik <vojtech@suse.cz>");
-@@ -2398,6 +2399,39 @@ void input_free_minor(unsigned int minor)
- }
- EXPORT_SYMBOL(input_free_minor);
- 
-+#if defined(CONFIG_OF)
-+/**
-+ * input_parse_touchscreen_of_params - parse common touchscreen DT properties
-+ * @dev: device that should be parsed
-+ *
-+ * This function parses common DT properties for touchscreens and setups the
-+ * input device accordingly. The function keeps previously setuped default
-+ * values if no value is specified via DT.
-+ */
-+void input_parse_touchscreen_of_params(struct input_dev *dev)
-+{
-+	struct device_node *np = dev->dev.parent->of_node;
-+	struct input_absinfo *absinfo;
-+
-+	input_alloc_absinfo(dev);
-+	if (!dev->absinfo)
-+		return;
-+
-+	absinfo = &dev->absinfo[ABS_X];
-+	of_property_read_u32(np, "touchscreen-size-x", &absinfo->maximum);
-+	of_property_read_u32(np, "touchscreen-fuzz-x", &absinfo->fuzz);
-+
-+	absinfo = &dev->absinfo[ABS_Y];
-+	of_property_read_u32(np, "touchscreen-size-y", &absinfo->maximum);
-+	of_property_read_u32(np, "touchscreen-fuzz-y", &absinfo->fuzz);
-+
-+	absinfo = &dev->absinfo[ABS_PRESSURE];
-+	of_property_read_u32(np, "touchscreen-max-pressure", &absinfo->maximum);
-+	of_property_read_u32(np, "touchscreen-fuzz-pressure", &absinfo->fuzz);
-+}
-+EXPORT_SYMBOL(input_parse_touchscreen_of_params);
-+#endif
-+
- static int __init input_init(void)
- {
- 	int err;
-diff --git a/include/linux/input.h b/include/linux/input.h
-index 82ce323..3dc3b1e 100644
---- a/include/linux/input.h
-+++ b/include/linux/input.h
-@@ -531,4 +531,12 @@ int input_ff_erase(struct input_dev *dev, int effect_id, struct file *file);
- int input_ff_create_memless(struct input_dev *dev, void *data,
- 		int (*play_effect)(struct input_dev *, void *, struct ff_effect *));
- 
-+#if defined(CONFIG_OF)
-+void input_parse_touchscreen_of_params(struct input_dev *dev);
-+#else
-+static inline void input_parse_touchscreen_of_params(struct input_dev *dev) {
-+	return;
-+}
-+#endif
-+
- #endif
--- 
-1.9.2
+Regards,
+Mike
+
+> 
+> This series depends on the following patch, which has been taken
+> into the clk-fixes tree:
+>     clk: bcm281xx: don't use unnamed structs or unions
+>     https://lkml.org/lkml/2014/4/7/322
+> 
+> In addition, it depends on the version 4 of the following series,
+> just (re)posted for review:
+>     clk: bcm281xx: updates
+>     https://lkml.org/lkml/2014/4/8/485
+> 
+> The patches in this series--based on the current linus/master branch
+> plus the patches mentioned above--are available here:
+>     http://git.linaro.org/git/landing-teams/working/broadcom/kernel.git
+>     Branch review/bcm21664-clock-v2
+> 
+> Alex Elder (5):
+>   clk: bcm281xx: move compatible string definitions
+>   ARM: dts: revise kona clock binding document
+>   ARM: dts: define clock binding for bcm21664
+>   clk: bcm21664: use common clock framework
+>   ARM: dts: use real clocks for bcm21664
+> 
+>  .../devicetree/bindings/clock/bcm-kona-clock.txt   | 116 ++++++---
+>  arch/arm/boot/dts/bcm21664.dtsi                    | 190 +++++++++-----
+>  drivers/clk/bcm/Kconfig                            |   2 +-
+>  drivers/clk/bcm/Makefile                           |   1 +
+>  drivers/clk/bcm/clk-bcm21664.c                     | 290 +++++++++++++++++++++
+>  drivers/clk/bcm/clk-bcm281xx.c                     |  12 -
+>  include/dt-bindings/clock/bcm21664.h               |  62 +++++
+>  include/dt-bindings/clock/bcm281xx.h               |  12 +
+>  8 files changed, 565 insertions(+), 120 deletions(-)
+>  create mode 100644 drivers/clk/bcm/clk-bcm21664.c
+>  create mode 100644 include/dt-bindings/clock/bcm21664.h
+> 
+> -- 
+> 1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
