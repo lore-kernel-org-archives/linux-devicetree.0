@@ -1,81 +1,88 @@
-From: David Collins <collinsd@codeaurora.org>
-Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
-Date: Fri, 25 Apr 2014 18:38:39 -0700
-Message-ID: <535B0E1F.8000405@codeaurora.org>
-References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com> <20140423214626.GA3215@joshc.qualcomm.com> <20140423233621.GM17066@sonymobile.com>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 RESEND 0/5] clk: bcm21664: add common clock support
+Date: Fri, 25 Apr 2014 20:43:57 -0500
+Message-ID: <535B0F5D.4020905@linaro.org>
+References: <1398115587-32529-1-git-send-email-elder@linaro.org> <20140426000915.7224.11265@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20140423233621.GM17066@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Josh Cartwright <joshc@codeaurora.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140426000915.7224.11265@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2014 04:36 PM, Courtney Cavin wrote:
-> On Wed, Apr 23, 2014 at 11:46:26PM +0200, Josh Cartwright wrote:
->> On Tue, Apr 22, 2014 at 05:31:49PM -0700, Courtney Cavin wrote:
-[..]
->>> +++ b/drivers/mfd/pm8x41.c
->>> @@ -0,0 +1,63 @@
->>> +/* Copyright (c) 2013, The Linux Foundation. All rights reserved.
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 and
->>> + * only version 2 as published by the Free Software Foundation.
->>> + *
->>> + * This program is distributed in the hope that it will be useful,
->>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->>> + * GNU General Public License for more details.
->>> + */
->>> +#include <linux/kernel.h>
->>> +#include <linux/module.h>
->>> +#include <linux/spmi.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/of_platform.h>
->>> +
->>> +static const struct regmap_config pm8x41_regmap_config = {
->>> +	.reg_bits	= 16,
->>> +	.val_bits	= 8,
->>> +	.max_register	= 0xFFFF,
->>> +};
+On 04/25/2014 07:09 PM, Mike Turquette wrote:
+> Quoting Alex Elder (2014-04-21 14:26:22)
+>> This is series has two parts.  The first two patches are changes
+>> to the existing Broadcom Kona family clock code to prepare for the
+>> addition of support for another SoC, bcm21664.
 >>
->> This reminds me.  David Collins (CC'd) noticed that there are usecases
->> where peripheral drivers will need to be accessing registers from atomic
->> context, so we should probably be setting .fast_io in the SPMI
->> regmap_bus structures, but we can tackle that when we get there.
+>> The remaining three define the binding and code for bcm21664, and
+>> replace the use of "fake" clocks in the device tree with the real
+>> ones.  This ends up being a fairly straightforward definition of
+>> the clocks on this SoC; the rest of the clock code is shared with
+>> other SoCs that use the Kona style clock system.
 > 
-> Hrm.  Please comment on this David.  I would like to see a solid
-> use-case before even considering that.
+> Hi Alex,
+> 
+> I'm happy to take only the clk patches or I can take the DT stuff as
+> well if it gets some Acks. Let me know how you want it handled.
 
-Several drivers in the downstream msm-3.10 tree [1] are currently making
-SPMI read and write calls from atomic context.  For the most part this
-corresponds to non-threaded interrupt handlers.  Some examples of that are
-qpnp-charger [2] and qpnp-adc-tm [3].
+If all you need is an ack from Matt or Christian I'm
+sure they'll provide it.  I don't care much but if
+you'll take it all I can just consider it done, so
+that would be my slight preference.  The DT stuff has
+been out there for way past the requisite few weeks...
 
-Another case in which atomic SPMI read and write calls are needed is when
-very tight timing constraints must be ensured between successive SPMI
-transactions.  An example of this can be found in the qpnp-bsi MIPI-BIF
-smart battery driver [4].  It disables interrupts when performing BIF
-burst reads because the data register must be read within 10's of
-microseconds after the status register indicates that data is ready.  If
-the data read is too slow, then next word in the burst read overrides the
-current one.
+Thanks Mike.
 
-- David
+					-Alex
 
-[1]: git://codeaurora.org/quic/la/kernel/msm-3.10#msm-3.10
 
-[2]:
-https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/power/qpnp-charger.c?h=msm-3.10&id=77ea4f2d70056169a80519fc9c7dd7156469ef11#n4173
+> Regards,
+> Mike
+> 
+>>
+>> This series depends on the following patch, which has been taken
+>> into the clk-fixes tree:
+>>     clk: bcm281xx: don't use unnamed structs or unions
+>>     https://lkml.org/lkml/2014/4/7/322
+>>
+>> In addition, it depends on the version 4 of the following series,
+>> just (re)posted for review:
+>>     clk: bcm281xx: updates
+>>     https://lkml.org/lkml/2014/4/8/485
+>>
+>> The patches in this series--based on the current linus/master branch
+>> plus the patches mentioned above--are available here:
+>>     http://git.linaro.org/git/landing-teams/working/broadcom/kernel.git
+>>     Branch review/bcm21664-clock-v2
+>>
+>> Alex Elder (5):
+>>   clk: bcm281xx: move compatible string definitions
+>>   ARM: dts: revise kona clock binding document
+>>   ARM: dts: define clock binding for bcm21664
+>>   clk: bcm21664: use common clock framework
+>>   ARM: dts: use real clocks for bcm21664
+>>
+>>  .../devicetree/bindings/clock/bcm-kona-clock.txt   | 116 ++++++---
+>>  arch/arm/boot/dts/bcm21664.dtsi                    | 190 +++++++++-----
+>>  drivers/clk/bcm/Kconfig                            |   2 +-
+>>  drivers/clk/bcm/Makefile                           |   1 +
+>>  drivers/clk/bcm/clk-bcm21664.c                     | 290 +++++++++++++++++++++
+>>  drivers/clk/bcm/clk-bcm281xx.c                     |  12 -
+>>  include/dt-bindings/clock/bcm21664.h               |  62 +++++
+>>  include/dt-bindings/clock/bcm281xx.h               |  12 +
+>>  8 files changed, 565 insertions(+), 120 deletions(-)
+>>  create mode 100644 drivers/clk/bcm/clk-bcm21664.c
+>>  create mode 100644 include/dt-bindings/clock/bcm21664.h
+>>
+>> -- 
+>> 1.9.1
 
-[3]:
-https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/thermal/qpnp-adc-tm.c?h=msm-3.10&id=77ea4f2d70056169a80519fc9c7dd7156469ef11#n2076
-
-[4]:
-https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/bif/qpnp-bsi.c?h=msm-3.10&id=77ea4f2d70056169a80519fc9c7dd7156469ef11#n943
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
