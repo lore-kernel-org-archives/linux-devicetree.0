@@ -1,107 +1,61 @@
 From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 6/6] arm: exynos: Add /dev/bL_status user interface on Exynos5420
-Date: Sat, 26 Apr 2014 21:35:48 +0530
-Message-ID: <1398528348-21214-7-git-send-email-a.kesavan@samsung.com>
-References: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com>
+Subject: [PATCH RFC 0/8] Devfreq support for Exynos5250/5420
+Date: Sun, 27 Apr 2014 02:08:40 +0530
+Message-ID: <1398544728-2075-1-git-send-email-a.kesavan@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398528348-21214-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add a user interface to check the core and cluster status on
-Exynos5420. This can be utilized while debugging mcpm issues.
-cat /dev/bL_status will show the current power status of all
-the 8 cores along with the cluster.
+This patchset adds devfreq support on Exynos5250 and Exynos5420.
+The patches add the missing INT clock support for exynos5250 and
+also add a new 5420 driver. We also have patches which add the PPMU
+node and fix a typo in the exynos5250 driver.
 
-Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/mach-exynos/mcpm-exynos.c | 64 ++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+The patches have been tested on Exynos5250 based Snow board and SMDK5420
+EVT1 boards. They have been prepared on linux-next(20140424) with the
+devfreq for-next branch and Shaik Ameer Basha's clock cleanup patches
+merged (http://www.spinics.net/lists/arm-kernel/msg325313.html).
 
-diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-index f9977bf..83428b0 100644
---- a/arch/arm/mach-exynos/mcpm-exynos.c
-+++ b/arch/arm/mach-exynos/mcpm-exynos.c
-@@ -269,6 +269,53 @@ static void __init exynos_mcpm_usage_count_init(void)
- 	cpu_use_count[cpu][cluster] = 1;
- }
- 
-+static size_t bL_check_status(char *info)
-+{
-+	size_t len = 0;
-+	int i;
-+
-+	len += sprintf(&info[len], "\t0 1 2 3 L2\n");
-+	len += sprintf(&info[len], "[A15]   ");
-+	for (i = 0; i < 4; i++) {
-+		len += sprintf(&info[len], "%d ",
-+			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
-+	}
-+	len += sprintf(&info[len], "%d\n",
-+			(readl(EXYNOS_COMMON_STATUS(0)) & 0x3) == 3 ? 1 : 0);
-+
-+	len += sprintf(&info[len], "[A7]    ");
-+	for (i = 4; i < 8; i++)
-+		len += sprintf(&info[len], "%d ",
-+			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
-+	len += sprintf(&info[len], "%d\n\n",
-+			(readl(EXYNOS_COMMON_STATUS(1)) & 0x3) == 3 ? 1 : 0);
-+
-+	return len;
-+}
-+
-+static ssize_t bL_status_read(struct file *file, char __user *buf,
-+			size_t len, loff_t *pos)
-+{
-+	size_t count = 0;
-+	char info[100];
-+
-+	count = bL_check_status(info);
-+	if (count < 0)
-+		return -EINVAL;
-+
-+	return simple_read_from_buffer(buf, len, pos, info, count);
-+}
-+
-+static const struct file_operations bL_status_fops = {
-+	.read		= bL_status_read,
-+};
-+
-+static struct miscdevice bL_status_device = {
-+	MISC_DYNAMIC_MINOR,
-+	"bL_status",
-+	&bL_status_fops
-+};
-+
- /*
-  * Enable cluster-level coherency, in preparation for turning on the MMU.
-  */
-@@ -319,3 +366,20 @@ static int __init exynos_mcpm_init(void)
- }
- 
- early_initcall(exynos_mcpm_init);
-+
-+static int __init exynos_bl_status_init(void)
-+{
-+	int ret;
-+
-+	if (!soc_is_exynos5420())
-+		return -ENODEV;
-+
-+	ret = misc_register(&bL_status_device);
-+	if (ret) {
-+		pr_info("bl_status not available\n");
-+		return ret;
-+	}
-+	return 0;
-+}
-+
-+late_initcall(exynos_bl_status_init);
+There are a couple of concerns with these patches:
+1) The patches are using clock aliases to expose the required clocks to the
+devfreq driver.
+2) The patches are making use of different compatible strings for the PPMU
+node to differentiate between multiple SoCs even though the PPMU is the same.
+
+Kindly suggest a way to move forward with respect to the above.
+
+Abhilash Kesavan (4):
+  ARM: dts: Add PPMU device tree support for Exynos5250
+  ARM: dts: Add PPMU device tree support for Exynos5420
+  PM / devfreq: exynos: Fix typo in macro
+  PM / devfreq: Rename the exynos5250 devfreq driver
+
+Andrew Bresticker (2):
+  clk: exynos5250: add aliases for clocks used by devfreq
+  PM / devfreq: exynos5250: migrate to common-clock
+
+Arjun.K.V (2):
+  clk: exynos5420: Add aliases for clocks used by devfreq
+  PM / devfreq: Add devfreq driver for Exynos5420
+
+ .../bindings/arm/exynos/ppmu-exynos5.txt           |  29 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |   9 +
+ arch/arm/boot/dts/exynos5420.dtsi                  |   7 +
+ drivers/clk/samsung/clk-exynos5250.c               |  30 +-
+ drivers/clk/samsung/clk-exynos5420.c               |  77 ++-
+ drivers/devfreq/Kconfig                            |  13 +-
+ drivers/devfreq/Makefile                           |   3 +-
+ drivers/devfreq/exynos/Makefile                    |   6 +-
+ .../exynos/{exynos5_bus.c => exynos5250_bus.c}     | 131 +++-
+ drivers/devfreq/exynos/exynos5420_bus.c            | 706 +++++++++++++++++++++
+ drivers/devfreq/exynos/exynos_ppmu.h               |   2 +-
+ 11 files changed, 961 insertions(+), 52 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/exynos/ppmu-exynos5.txt
+ rename drivers/devfreq/exynos/{exynos5_bus.c => exynos5250_bus.c} (80%)
+ create mode 100644 drivers/devfreq/exynos/exynos5420_bus.c
+
 -- 
 1.8.3.2
 
