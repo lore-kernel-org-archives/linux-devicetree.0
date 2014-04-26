@@ -1,7 +1,7 @@
 From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 4/6] ARM: dts: exynos5420: add CCI node
-Date: Sat, 26 Apr 2014 21:35:46 +0530
-Message-ID: <1398528348-21214-5-git-send-email-a.kesavan@samsung.com>
+Subject: [PATCH v3 6/6] arm: exynos: Add /dev/bL_status user interface on Exynos5420
+Date: Sat, 26 Apr 2014 21:35:48 +0530
+Message-ID: <1398528348-21214-7-git-send-email-a.kesavan@samsung.com>
 References: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1398528348-21214-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
@@ -10,105 +10,98 @@ To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIg
 Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Add a user interface to check the core and cluster status on
+Exynos5420. This can be utilized while debugging mcpm issues.
+cat /dev/bL_status will show the current power status of all
+the 8 cores along with the cluster.
 
-Add device-tree bindings for the ARM CCI-400 on Exynos5420.  There
-are two slave interfaces: one for the A15 cluster and one for the
-A7 cluster.
-
+Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos5420.dtsi | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+ arch/arm/mach-exynos/mcpm-exynos.c | 64 ++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 64 insertions(+)
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 217376f..43e7b25 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -58,6 +58,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <0x0>;
- 			clock-frequency = <1800000000>;
-+			cci-control-port = <&cci_control1>;
- 		};
+diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
+index f9977bf..83428b0 100644
+--- a/arch/arm/mach-exynos/mcpm-exynos.c
++++ b/arch/arm/mach-exynos/mcpm-exynos.c
+@@ -269,6 +269,53 @@ static void __init exynos_mcpm_usage_count_init(void)
+ 	cpu_use_count[cpu][cluster] = 1;
+ }
  
- 		cpu1: cpu@1 {
-@@ -65,6 +66,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <0x1>;
- 			clock-frequency = <1800000000>;
-+			cci-control-port = <&cci_control1>;
- 		};
- 
- 		cpu2: cpu@2 {
-@@ -72,6 +74,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <0x2>;
- 			clock-frequency = <1800000000>;
-+			cci-control-port = <&cci_control1>;
- 		};
- 
- 		cpu3: cpu@3 {
-@@ -79,6 +82,7 @@
- 			compatible = "arm,cortex-a15";
- 			reg = <0x3>;
- 			clock-frequency = <1800000000>;
-+			cci-control-port = <&cci_control1>;
- 		};
- 
- 		cpu4: cpu@100 {
-@@ -86,6 +90,7 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x100>;
- 			clock-frequency = <1000000000>;
-+			cci-control-port = <&cci_control0>;
- 		};
- 
- 		cpu5: cpu@101 {
-@@ -93,6 +98,7 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x101>;
- 			clock-frequency = <1000000000>;
-+			cci-control-port = <&cci_control0>;
- 		};
- 
- 		cpu6: cpu@102 {
-@@ -100,6 +106,7 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x102>;
- 			clock-frequency = <1000000000>;
-+			cci-control-port = <&cci_control0>;
- 		};
- 
- 		cpu7: cpu@103 {
-@@ -107,6 +114,26 @@
- 			compatible = "arm,cortex-a7";
- 			reg = <0x103>;
- 			clock-frequency = <1000000000>;
-+			cci-control-port = <&cci_control0>;
-+		};
-+	};
++static size_t bL_check_status(char *info)
++{
++	size_t len = 0;
++	int i;
 +
-+	cci@10d20000 {
-+		compatible = "arm,cci-400";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <0x10d20000 0x1000>;
-+		ranges = <0x0 0x10d20000 0x6000>;
++	len += sprintf(&info[len], "\t0 1 2 3 L2\n");
++	len += sprintf(&info[len], "[A15]   ");
++	for (i = 0; i < 4; i++) {
++		len += sprintf(&info[len], "%d ",
++			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
++	}
++	len += sprintf(&info[len], "%d\n",
++			(readl(EXYNOS_COMMON_STATUS(0)) & 0x3) == 3 ? 1 : 0);
 +
-+		cci_control0: slave-if@4000 {
-+			compatible = "arm,cci-400-ctrl-if";
-+			interface-type = "ace";
-+			reg = <0x4000 0x1000>;
-+		};
-+		cci_control1: slave-if@5000 {
-+			compatible = "arm,cci-400-ctrl-if";
-+			interface-type = "ace";
-+			reg = <0x5000 0x1000>;
- 		};
- 	};
++	len += sprintf(&info[len], "[A7]    ");
++	for (i = 4; i < 8; i++)
++		len += sprintf(&info[len], "%d ",
++			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
++	len += sprintf(&info[len], "%d\n\n",
++			(readl(EXYNOS_COMMON_STATUS(1)) & 0x3) == 3 ? 1 : 0);
++
++	return len;
++}
++
++static ssize_t bL_status_read(struct file *file, char __user *buf,
++			size_t len, loff_t *pos)
++{
++	size_t count = 0;
++	char info[100];
++
++	count = bL_check_status(info);
++	if (count < 0)
++		return -EINVAL;
++
++	return simple_read_from_buffer(buf, len, pos, info, count);
++}
++
++static const struct file_operations bL_status_fops = {
++	.read		= bL_status_read,
++};
++
++static struct miscdevice bL_status_device = {
++	MISC_DYNAMIC_MINOR,
++	"bL_status",
++	&bL_status_fops
++};
++
+ /*
+  * Enable cluster-level coherency, in preparation for turning on the MMU.
+  */
+@@ -319,3 +366,20 @@ static int __init exynos_mcpm_init(void)
+ }
  
+ early_initcall(exynos_mcpm_init);
++
++static int __init exynos_bl_status_init(void)
++{
++	int ret;
++
++	if (!soc_is_exynos5420())
++		return -ENODEV;
++
++	ret = misc_register(&bL_status_device);
++	if (ret) {
++		pr_info("bl_status not available\n");
++		return ret;
++	}
++	return 0;
++}
++
++late_initcall(exynos_bl_status_init);
 -- 
 1.8.3.2
 
