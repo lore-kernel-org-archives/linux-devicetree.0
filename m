@@ -1,61 +1,95 @@
 From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH RFC 0/8] Devfreq support for Exynos5250/5420
-Date: Sun, 27 Apr 2014 02:08:40 +0530
-Message-ID: <1398544728-2075-1-git-send-email-a.kesavan@samsung.com>
+Subject: [PATCH RFC 1/8] clk: exynos5250: add aliases for clocks used by devfreq
+Date: Sun, 27 Apr 2014 02:08:41 +0530
+Message-ID: <1398544728-2075-2-git-send-email-a.kesavan@samsung.com>
+References: <1398544728-2075-1-git-send-email-a.kesavan@samsung.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398544728-2075-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds devfreq support on Exynos5250 and Exynos5420.
-The patches add the missing INT clock support for exynos5250 and
-also add a new 5420 driver. We also have patches which add the PPMU
-node and fix a typo in the exynos5250 driver.
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-The patches have been tested on Exynos5250 based Snow board and SMDK5420
-EVT1 boards. They have been prepared on linux-next(20140424) with the
-devfreq for-next branch and Shaik Ameer Basha's clock cleanup patches
-merged (http://www.spinics.net/lists/arm-kernel/msg325313.html).
+Devfreq does not support DT-based lookup of these peripheral clocks,
+so add aliases for them.
 
-There are a couple of concerns with these patches:
-1) The patches are using clock aliases to expose the required clocks to the
-devfreq driver.
-2) The patches are making use of different compatible strings for the PPMU
-node to differentiate between multiple SoCs even though the PPMU is the same.
+Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/clk/samsung/clk-exynos5250.c | 30 +++++++++++++++++++++++++-----
+ 1 file changed, 25 insertions(+), 5 deletions(-)
 
-Kindly suggest a way to move forward with respect to the above.
-
-Abhilash Kesavan (4):
-  ARM: dts: Add PPMU device tree support for Exynos5250
-  ARM: dts: Add PPMU device tree support for Exynos5420
-  PM / devfreq: exynos: Fix typo in macro
-  PM / devfreq: Rename the exynos5250 devfreq driver
-
-Andrew Bresticker (2):
-  clk: exynos5250: add aliases for clocks used by devfreq
-  PM / devfreq: exynos5250: migrate to common-clock
-
-Arjun.K.V (2):
-  clk: exynos5420: Add aliases for clocks used by devfreq
-  PM / devfreq: Add devfreq driver for Exynos5420
-
- .../bindings/arm/exynos/ppmu-exynos5.txt           |  29 +
- arch/arm/boot/dts/exynos5250.dtsi                  |   9 +
- arch/arm/boot/dts/exynos5420.dtsi                  |   7 +
- drivers/clk/samsung/clk-exynos5250.c               |  30 +-
- drivers/clk/samsung/clk-exynos5420.c               |  77 ++-
- drivers/devfreq/Kconfig                            |  13 +-
- drivers/devfreq/Makefile                           |   3 +-
- drivers/devfreq/exynos/Makefile                    |   6 +-
- .../exynos/{exynos5_bus.c => exynos5250_bus.c}     | 131 +++-
- drivers/devfreq/exynos/exynos5420_bus.c            | 706 +++++++++++++++++++++
- drivers/devfreq/exynos/exynos_ppmu.h               |   2 +-
- 11 files changed, 961 insertions(+), 52 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/arm/exynos/ppmu-exynos5.txt
- rename drivers/devfreq/exynos/{exynos5_bus.c => exynos5250_bus.c} (80%)
- create mode 100644 drivers/devfreq/exynos/exynos5420_bus.c
-
+diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+index d1d16cf..f44fb2e 100644
+--- a/drivers/clk/samsung/clk-exynos5250.c
++++ b/drivers/clk/samsung/clk-exynos5250.c
+@@ -37,6 +37,7 @@
+ #define VPLL_CON0		0x10140
+ #define GPLL_CON0		0x10150
+ #define SRC_TOP0		0x10210
++#define SRC_TOP1		0x10214
+ #define SRC_TOP2		0x10218
+ #define SRC_TOP3		0x1021c
+ #define SRC_GSCL		0x10220
+@@ -100,6 +101,7 @@ static unsigned long exynos5250_clk_regs[] __initdata = {
+ 	DIV_CPU0,
+ 	SRC_CORE1,
+ 	SRC_TOP0,
++	SRC_TOP1,
+ 	SRC_TOP2,
+ 	SRC_TOP3,
+ 	SRC_GSCL,
+@@ -196,6 +198,11 @@ PNAME(mout_aclk200_p)	= { "mout_mpll_user", "mout_bpll_user" };
+ PNAME(mout_aclk200_sub_p) = { "fin_pll", "div_aclk200" };
+ PNAME(mout_aclk266_sub_p) = { "fin_pll", "div_aclk266" };
+ PNAME(mout_aclk333_sub_p) = { "fin_pll", "div_aclk333" };
++PNAME(mout_aclk300_disp1_p) = { "mout_aclk300_disp1_mid",
++				"mout_aclk300_disp1_mid1" };
++PNAME(mout_aclk300_gscl_p) = { "mout_aclk300_gscl_mid",
++				"mout_aclk300_gscl_mid1" };
++PNAME(mout_aclk300_gscl_mid1_p) = { "mout_vpll", "mout_cpll" };
+ PNAME(mout_hdmi_p)	= { "div_hdmi_pixel", "sclk_hdmiphy" };
+ PNAME(mout_usb3_p)	= { "mout_mpll_user", "mout_cpll" };
+ PNAME(mout_group1_p)	= { "fin_pll", "fin_pll", "sclk_hdmi27m",
+@@ -273,6 +280,15 @@ static struct samsung_mux_clock exynos5250_mux_clks[] __initdata = {
+ 	MUX(0, "mout_aclk166", mout_aclk166_p, SRC_TOP0, 8, 1),
+ 	MUX(0, "mout_aclk200", mout_aclk200_p, SRC_TOP0, 12, 1),
+ 	MUX(0, "mout_aclk333", mout_aclk166_p, SRC_TOP0, 16, 1),
++	MUX(0, "mout_aclk300_disp1_mid", mout_aclk200_p, SRC_TOP0, 14, 1),
++	MUX(0, "mout_aclk300_disp1", mout_aclk300_disp1_p, SRC_TOP0, 15, 1),
++	MUX(0, "mout_aclk300_gscl", mout_aclk300_gscl_p, SRC_TOP0, 25, 2),
++	MUX(0, "mout_aclk300_gscl_mid", mout_aclk200_p, SRC_TOP0, 24, 1),
++
++	MUX(0, "mout_aclk300_disp1_mid1", mout_aclk300_gscl_mid1_p,
++					SRC_TOP1, 8, 1),
++	MUX(0, "mout_aclk300_gscl_mid1", mout_aclk300_gscl_mid1_p,
++					SRC_TOP1, 12, 1),
+ 
+ 	MUX(0, "mout_cpll", mout_cpll_p, SRC_TOP2, 8, 1),
+ 	MUX(0, "mout_epll", mout_epll_p, SRC_TOP2, 12, 1),
+@@ -347,11 +363,15 @@ static struct samsung_div_clock exynos5250_div_clks[] __initdata = {
+ 	 * CMU_TOP
+ 	 */
+ 	DIV(0, "div_aclk66", "div_aclk66_pre", DIV_TOP0, 0, 3),
+-	DIV(0, "div_aclk166", "mout_aclk166", DIV_TOP0, 8, 3),
+-	DIV(0, "div_aclk200", "mout_aclk200", DIV_TOP0, 12, 3),
+-	DIV(0, "div_aclk266", "mout_mpll_user", DIV_TOP0, 16, 3),
+-	DIV(0, "div_aclk333", "mout_aclk333", DIV_TOP0, 20, 3),
+-
++	DIV_A(0, "div_aclk166", "mout_aclk166", DIV_TOP0, 8, 3, "aclk166_d"),
++	DIV_A(0, "div_aclk200", "mout_aclk200", DIV_TOP0, 12, 3, "aclk200_d"),
++	DIV_A(0, "div_aclk266", "mout_mpll_user", DIV_TOP0, 16, 3, "aclk266_d"),
++	DIV_A(0, "div_aclk333", "mout_aclk333", DIV_TOP0, 20, 3, "aclk333_d"),
++	DIV_A(0, "div_aclk300_disp1", "mout_aclk300_disp1",
++					DIV_TOP0, 28, 3, "aclk300_disp1_d"),
++
++	DIV_A(0, "div_aclk300_gscl", "mout_aclk300_gscl",
++					DIV_TOP1, 12, 3, "aclk300_gscl_d"),
+ 	DIV(0, "div_aclk66_pre", "mout_mpll_user", DIV_TOP1, 24, 3),
+ 
+ 	DIV(0, "div_cam_bayer", "mout_cam_bayer", DIV_GSCL, 12, 4),
 -- 
 1.8.3.2
 
