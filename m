@@ -1,109 +1,101 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 7/7] dts: dra7-evm: add USB support
-Date: Mon, 28 Apr 2014 11:07:05 -0500
-Message-ID: <20140428160705.GK30292@saruman.home>
-References: <1398693687-13967-1-git-send-email-rogerq@ti.com>
- <1398693687-13967-8-git-send-email-rogerq@ti.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [RFC 2/5] clk: berlin: add berlin clock groups DT bindings
+ documentation
+Date: Sat, 26 Apr 2014 18:03:51 +0200
+Message-ID: <20140426160351.GE24905@lukather>
+References: <1398456024-27876-1-git-send-email-alexandre.belloni@free-electrons.com>
+ <1398456024-27876-4-git-send-email-alexandre.belloni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Jtds+vpI57xq70EV"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="H7BnLk9CMipoMykF"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1398693687-13967-8-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1398456024-27876-4-git-send-email-alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---Jtds+vpI57xq70EV
+
+--H7BnLk9CMipoMykF
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2014 at 05:01:27PM +0300, Roger Quadros wrote:
-> Add USB pinmux information and USB modes
-> for the USB controllers.
+On Fri, Apr 25, 2014 at 10:00:21PM +0200, Alexandre Belloni wrote:
+> Document the device tree for the clocks sharing a common set of registers
 >=20
-> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-
-Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-
+> Signed-off-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/boot/dts/dra7-evm.dts | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>  .../devicetree/bindings/clock/berlin-clock.txt     | 29 ++++++++++++++++=
+++++++
+>  1 file changed, 29 insertions(+)
 >=20
-> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.=
-dts
-> index 5babba0..1d77815 100644
-> --- a/arch/arm/boot/dts/dra7-evm.dts
-> +++ b/arch/arm/boot/dts/dra7-evm.dts
-> @@ -93,6 +93,18 @@
->  			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
->  		>;
->  	};
-> +
-> +	usb1_pins: pinmux_usb1_pins {
-> +                pinctrl-single,pins =3D <
-> +			0x280	0xc0000	/* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
-> +                >;
-> +        };
-> +
-> +	usb2_pins: pinmux_usb2_pins {
-> +                pinctrl-single,pins =3D <
-> +			0x284	0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
-> +                >;
-> +        };
->  };
+> diff --git a/Documentation/devicetree/bindings/clock/berlin-clock.txt b/D=
+ocumentation/devicetree/bindings/clock/berlin-clock.txt
+> index 49bc229827a0..6d374066d6b9 100644
+> --- a/Documentation/devicetree/bindings/clock/berlin-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/berlin-clock.txt
+> @@ -11,10 +11,18 @@ Required properties:
+>  		CPU PLL and System PLL
+>  	"marvell,berlin2-clk":
+>  		simple clocks
+> +	"marvell,berlin2-clkgrp":
+> +		clocks sharing a common set of registers
+>  - reg: Address and length of the clock register set.
+
+Judging from your code, you expect two arrays in reg. You should
+document it and in which order you expect them.
+
+Also, you'd probably want to use reg-names, which is much more
+flexible from a DT point of view.
+
+>  - #clock-cells: from common clock binding; shall be set to 0.
+>  - clocks: from common clock binding
 > =20
->  &i2c1 {
-> @@ -273,3 +285,15 @@
->  &cpu0 {
->  	cpu0-supply =3D <&smps123_reg>;
->  };
-> +
-> +&usb1 {
-> +	dr_mode =3D "peripheral";
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&usb1_pins>;
-> +};
-> +
-> +&usb2 {
-> +	dr_mode =3D "host";
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&usb2_pins>;
-> +};
-> --=20
-> 1.8.3.2
->=20
+> +For the clock groups:
+> +- marvell,clk-switch-offset: offset in bits to the first bit related to =
+the
+> +  clock in the switch registers
+> +- marvell,clk-select-offset: offset in bits to the first bit related to =
+the
+> +  clock in the selection registers.
+
+Encoding bit offsets and/or register addresses in the DT is usually a
+bad idea. You should more likely use different compatibles here.
+
+Maxime
 
 --=20
-balbi
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
---Jtds+vpI57xq70EV
+--H7BnLk9CMipoMykF
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTXnypAAoJEIaOsuA1yqREjO0P/3exr+z5ORWJedwGGSGdjlAu
-pg5RHN3tpumJoqNV0LCfaQuTRhCCGEymD5YwPpkIQWrvKihCIHyb/A5hfIMNjG9A
-DTC/JZ4e32mn036V3tP2PKY8qugHj/U/POrSJe0Q+My5Dfq7hwBOOT3eaaIMnSTR
-3mZjkkJbxbVOdbbMALrW/0+U4ZcCTpnTKGj3NKUHOnDYidUG4memEyT7I+tO983A
-0jV8ufu9H7ZUkGYoISxyXbcmy0Zr8i9aW27WoOBXTSymu7Pv0wB3Onyoy01q8T1M
-Lppw8rkt6SlVSpph5zYlsfsFaWxgV2pIlK72AwEPTmvYSglTd7XRky2+mKrCbVYl
-SFDfC64pZ29hupG2YBgsFIV9WhgjakbCKDNuozj5krxgZb/K6EabYVo2RILFLYTl
-8yLT9Fjz3z6GQ97bi3jkfaXVr9gM5kZNBsMsKn4jCBO/ZLI7O9x6rzo8fOabrB6g
-JpIDsuqgWR0KcAI2rm9gvmmm55y11FRaCNF4CCtfzi/wQYvJaXY24LaGRipF0wgC
-zmL8jXYeLPNDE3TrR0uB6Vcqq0T/o18n+iLlVQ4qLhSb1ENnfmUC0TFkwQzc5JJD
-dIX6Cn0ytkgDzkTd2e+2TnfS0v+GTw0nlkUGM0buiOCbPeVkpLCrhBddBU5sxPf0
-UjKkwtHlyhLWvA/zhPBO
-=UGeP
+iQIcBAEBAgAGBQJTW9jnAAoJEBx+YmzsjxAglUEQAIH2QZBbqyPjhjuFNOgm7gmy
+aeIelJqKXmr8lKUhtys5DCzjjthno4qOzF6T+0mqRZm61f1Sr7bVc3watTCgQ4bJ
+jlMaPK0//SQxFR+4R3Wy8a63tT2vVBv2ldwQaixeBoFjzoc3PcQymjfNQ/K2uw1l
+oh+tsX4w2u3PZ3PRNXf/babtUTnsjm1t/Lt5ywGgzS8IKk6L8I1A5Ue+RngBCmWQ
+MuRASO9JfoQqr9aMdvoCiMTZ9OJD5hfPfW2w/QJfPzxTsxOsdKszPezbuvKF+keQ
+2HjcmPV6W+Pp60EhmAjKzaoCoEIZmBL6yRllH3pZt+5iVkfygP92RyHl8B9xL/NG
+FeelNeyYyi852K2H46V+frnW8+JNM8IzAR9GGFWZwSaSqQ3+5f1ZRShLyvV3XWZ1
+cXekUosXJU5LagNqTrGI4lp5GswQ4HVKxd+pVNRAHED7WH3CewqwFBrZDw2zW/Qh
+huQUG19W9WUrvXfA+cPzjju3k4qU4hBg6mptBQsMdz5+4tRtGV0l5Odw3aov7Lfh
+fwdjd8+NQOC0RVk/jhAcIKF+rSB+FhpxUa7ZxDYy/cI2ExR0k7Gm8sXKyXARWWdI
+81w2BDcukECCu/uuq22RF5Fr+wHaHVIr6nnfS2haTIv+5g0m69ghkr/cO43Wy1l2
+TyfDNSxR+S1ynufOFNaG
+=MGCX
 -----END PGP SIGNATURE-----
 
---Jtds+vpI57xq70EV--
+--H7BnLk9CMipoMykF--
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
