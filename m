@@ -1,82 +1,38 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 RESEND 0/5] clk: bcm21664: add common clock support
-Date: Fri, 25 Apr 2014 23:02:12 -0400
-Message-ID: <20140426030212.GI1127@beef>
-References: <1398115587-32529-1-git-send-email-elder@linaro.org>
- <20140426000915.7224.11265@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH RESEND] input: dts: Add commonly used event types
+Date: Sat, 26 Apr 2014 09:37:19 +0400
+Message-ID: <1398490639-18411-1-git-send-email-shc_work@mail.ru>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140426000915.7224.11265@quantum>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Apr 25, 2014 at 05:09:15PM -0700, Mike Turquette wrote:
-> Quoting Alex Elder (2014-04-21 14:26:22)
-> > This is series has two parts.  The first two patches are changes
-> > to the existing Broadcom Kona family clock code to prepare for the
-> > addition of support for another SoC, bcm21664.
-> > 
-> > The remaining three define the binding and code for bcm21664, and
-> > replace the use of "fake" clocks in the device tree with the real
-> > ones.  This ends up being a fairly straightforward definition of
-> > the clocks on this SoC; the rest of the clock code is shared with
-> > other SoCs that use the Kona style clock system.
-> 
-> Hi Alex,
-> 
-> I'm happy to take only the clk patches or I can take the DT stuff as
-> well if it gets some Acks. Let me know how you want it handled.
+Patch adds commonly used event types (EV_KEY and EV_SW) to
+devicetree bindings header for input subsystem.
 
-Hi Mike,
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ include/dt-bindings/input/input.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Since there's a strict ordering requirement in this series (due to
-shared use of a DT include by the driver and dts) I'd like it if you
-could take the entire series through your tree to keep these together.
-I've acked the dts patch.
+diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
+index 042e7b3..3a141d92 100644
+--- a/include/dt-bindings/input/input.h
++++ b/include/dt-bindings/input/input.h
+@@ -9,6 +9,9 @@
+ #ifndef _DT_BINDINGS_INPUT_INPUT_H
+ #define _DT_BINDINGS_INPUT_INPUT_H
+ 
++#define EV_KEY			0x01
++#define EV_SW			0x05
++
+ #define KEY_RESERVED		0
+ #define KEY_ESC			1
+ #define KEY_1			2
+-- 
+1.8.3.2
 
-Thanks,
-Matt
-
-> > This series depends on the following patch, which has been taken
-> > into the clk-fixes tree:
-> >     clk: bcm281xx: don't use unnamed structs or unions
-> >     https://lkml.org/lkml/2014/4/7/322
-> > 
-> > In addition, it depends on the version 4 of the following series,
-> > just (re)posted for review:
-> >     clk: bcm281xx: updates
-> >     https://lkml.org/lkml/2014/4/8/485
-> > 
-> > The patches in this series--based on the current linus/master branch
-> > plus the patches mentioned above--are available here:
-> >     http://git.linaro.org/git/landing-teams/working/broadcom/kernel.git
-> >     Branch review/bcm21664-clock-v2
-> > 
-> > Alex Elder (5):
-> >   clk: bcm281xx: move compatible string definitions
-> >   ARM: dts: revise kona clock binding document
-> >   ARM: dts: define clock binding for bcm21664
-> >   clk: bcm21664: use common clock framework
-> >   ARM: dts: use real clocks for bcm21664
-> > 
-> >  .../devicetree/bindings/clock/bcm-kona-clock.txt   | 116 ++++++---
-> >  arch/arm/boot/dts/bcm21664.dtsi                    | 190 +++++++++-----
-> >  drivers/clk/bcm/Kconfig                            |   2 +-
-> >  drivers/clk/bcm/Makefile                           |   1 +
-> >  drivers/clk/bcm/clk-bcm21664.c                     | 290 +++++++++++++++++++++
-> >  drivers/clk/bcm/clk-bcm281xx.c                     |  12 -
-> >  include/dt-bindings/clock/bcm21664.h               |  62 +++++
-> >  include/dt-bindings/clock/bcm281xx.h               |  12 +
-> >  8 files changed, 565 insertions(+), 120 deletions(-)
-> >  create mode 100644 drivers/clk/bcm/clk-bcm21664.c
-> >  create mode 100644 include/dt-bindings/clock/bcm21664.h
-> > 
-> > -- 
-> > 1.9.1
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
