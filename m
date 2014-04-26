@@ -1,53 +1,94 @@
-From: Tarek Dakhran <t.dakhran@gmail.com>
-Subject: Re: [PATCH v8 3/3] ARM: dts: Add initial device tree support for EXYNOS5410
-Date: Sat, 26 Apr 2014 19:31:17 +0400
-Message-ID: <CANhyOUdPwFL1fjCtrSkzfkG0uWi4Ke7tTg1__cXhjLc8Dvu3jQ@mail.gmail.com>
-References: <1397459860-21869-1-git-send-email-t.dakhran@samsung.com>
-	<1397459860-21869-4-git-send-email-t.dakhran@samsung.com>
-	<535B9B7E.4090802@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <535B9B7E.4090802@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tarek Dakhran <t.dakhran@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrad>
+From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/6] MCPM backend for Exynos5420
+Date: Sat, 26 Apr 2014 21:35:42 +0530
+Message-ID: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This is v3 of the series adding MCPM backend support for SMP secondary boot
+and core switching on Samsung's Exynos5420. The patches are based on the mcpm
+support added for Exynos5420 in the Chromium kernel repository here:
+https://chromium.googlesource.com/chromiumos/third_party/kernel-next/+/chromeos-3.8
 
-Will be done in next version.
+This patchset depends on:
+- ARM: EXYNOS: Map SYSRAM address through DT
+(http://www.spinics.net/lists/arm-kernel/msg323011.html)
 
-Best regards,
-    Tarek
+The patches have been prepared on linux-next(20140424) and tested on SMDK5420
+EVT1 using the "/dev/b.L_switcher" user interface. Secondary core bring-up has
+also been tested on an Exynos5420-based chromebook.
 
-On Sat, Apr 26, 2014 at 3:41 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi,
->
-> Since I've started enforcing reference-based DT syntax due to multiple
-> advantages over the plain full-tree based one, you should do the same for
-> your dts/i files. You can take the series adding support for Exynos5260 as
-> an example:
->
-> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/29360
->
-> Best regards,
-> Tomasz
->
-> On 14.04.2014 09:17, Tarek Dakhran wrote:
->>
->> Add initial device tree nodes for EXYNOS5410 SoC and SMDK5410 board.
->>
->> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
->> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
->> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
->> ---
->>   arch/arm/boot/dts/Makefile                |    1 +
->>   arch/arm/boot/dts/exynos5410-smdk5410.dts |   65 ++++++++++++++
->>   arch/arm/boot/dts/exynos5410.dtsi         |  140
->> +++++++++++++++++++++++++++++
->>   3 files changed, 206 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
->>   create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
->>
->
+Changes since v2:
+Addressed the following comments from Nicolas Pitre and Daniel Lezcano
+	- Added generic common (cluster) configuration functions to pm.c
+	  which may be used by other subsystems.
+	- Removed unused "cpumask" variable in mcpm code.
+	- Re-worked exynos_power_down_finish() referencing the tc2_pm code.
+	- Removed the status checks in core and cluster power functions. We
+	  just set the power control bit and do not check the previous state
+	  anymore.
+	- Removed incorrect jiffies timeout usage in path where IRQs are
+	  disabled.
+
+Changes since v1:
+Addressed the following comments from Dave Martin and Nicolas Pitre:
+	- Fixed help text for EXYNOS5420_MCPM symbol.
+	- Removed mcpm-exynos-setup.S file and added similar code from tc2_pm.c.
+	- Changed the spinlock name from "bl_lock" to "exynos_mcpm_lock".
+	- Removed snoop enable/disable calls due to possible cpuidle issue and
+	  not having numbers proving a significant power savings. Dropped the
+	  "drivers/bus: arm-cci: Add common control interface for ACE ports"
+	  patch from v1 as it was no longer needed.
+	- Created a macro for exynos-specific v7_exit_coherency_flush which
+	  handles an erratum. This was done to prevent duplication of code.
+	- Removed "outer_flush_all" call.
+	- Removed redundant dsb in power_down function.
+	- Removed unnecessary initialization of global variables to zero.
+	- Split the /dev/bL_status debug interface into another patch.
+	- Fixed error handling in exynos_mcpm_init().
+	- Called mcpm_smp_set_ops directly from exynos_mcpm_init().
+	- Added a TODO for supporting cluster down on exynos5420.
+
+NOTE:
+- Have added Leela Krishna's generic cpu power control function series
+  as part of this patchset.
+- There is no change in the patch "ARM: dts: exynos5420: add CCI node"
+  and "arm: exynos: Add /dev/bL_status user interface on Exynos5420"
+  from v2.
+- I have tested with and without the erratum 799270 workaround and both
+  work fine. I have kept the erratum fix for the time being.
+
+Abhilash Kesavan (3):
+  arm: exynos: Add generic cluster power control functions
+  arm: exynos: Add MCPM call-back functions
+  arm: exynos: Add /dev/bL_status user interface on Exynos5420
+
+Andrew Bresticker (1):
+  ARM: dts: exynos5420: add CCI node
+
+Leela Krishna Amudala (2):
+  ARM: EXYNOS: Add generic cpu power control functions for all exynos
+    based SoCs
+  ARM: EXYNOS: use generic exynos cpu power control functions
+
+ arch/arm/boot/dts/exynos5420.dtsi  |  27 +++
+ arch/arm/mach-exynos/Kconfig       |   8 +
+ arch/arm/mach-exynos/Makefile      |   2 +
+ arch/arm/mach-exynos/common.h      |   6 +
+ arch/arm/mach-exynos/mcpm-exynos.c | 385 +++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-exynos/platsmp.c     |   9 +-
+ arch/arm/mach-exynos/pm.c          |  66 +++++++
+ arch/arm/mach-exynos/regs-pmu.h    |  15 ++
+ 8 files changed, 512 insertions(+), 6 deletions(-)
+ create mode 100644 arch/arm/mach-exynos/mcpm-exynos.c
+
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
