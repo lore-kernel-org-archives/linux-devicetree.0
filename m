@@ -1,299 +1,225 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC v2 PATCH 08/14] drm/exynos: dsi: add driver data to support
- Exynos5420
-Date: Sun, 27 Apr 2014 10:53:09 +0900
-Message-ID: <535C6305.1030004@samsung.com>
-References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
- <1398083321-8668-9-git-send-email-yj44.cho@samsung.com>
- <535779D9.6010804@samsung.com> <5358678E.3020903@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v12 00/31] iommu/exynos: Fixes and Enhancements of System MMU
+ driver with DT
+Date: Sun, 27 Apr 2014 13:07:32 +0530
+Message-ID: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5358678E.3020903@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sachin.kamat@linaro.org, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc: kgene.kim@samsung.com, tomasz.figa@gmail.com, pullip.cho@samsung.com, a.motakis@virtualopensystems.com, grundler@chromium.org, joro@8bytes.org, prathyush.k@samsung.com, rahul.sharma@samsung.com, sachin.kamat@linaro.org, supash.ramaswamy@linaro.org, Varun.Sethi@freescale.com, s.nawrocki@samsung.com, t.figa@samsung.com, joshi@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrzej,
+The current exynos-iommu(System MMU) driver does not work autonomously
+since it is lack of support for power management of peripheral blocks.
+For example, MFC device driver must ensure that its System MMU is disabled
+before MFC block is power-down not to invalidate IOTLB in the System MMU
+when I/O memory mapping is changed. Because a System MMU resides in the
+same H/W block, access to control registers of System MMU while the H/W
+block is turned off must be prohibited.
 
-On 04/24/2014 10:23 AM, YoungJun Cho wrote:
-> Hi Andrzej,
->
-> Thank you for comments.
->
-> On 04/23/2014 05:29 PM, Andrzej Hajda wrote:
->> On 04/21/2014 02:28 PM, YoungJun Cho wrote:
->>> The offset of register DSIM_PLLTMR_REG in Exynos5420 is different
->>> from the one in Exynos4 SoC.
->>>
->>> In case of Exynos5420 SoC, there is no frequency band bit in
->>> DSIM_PLLCTRL_REG,
->>> and it uses DSIM_PHYCTRL_REG and DSIM_PHYTIMING*_REG instead.
->>> So this patch adds driver data to distinguish it.
->>>
->>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->>> Acked-by: Inki Dae <inki.dae@samsung.com>
->>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>> ---
->>>   drivers/gpu/drm/exynos/exynos_drm_dsi.c |  101
->>> ++++++++++++++++++++++++-------
->>>   1 file changed, 80 insertions(+), 21 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> index 179f2fa..fcd577f 100644
->>> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->>> @@ -17,6 +17,7 @@
->>>
->>>   #include <linux/clk.h>
->>>   #include <linux/irq.h>
->>> +#include <linux/of_device.h>
->>>   #include <linux/phy/phy.h>
->>>   #include <linux/regulator/consumer.h>
->>>
->>> @@ -54,9 +55,12 @@
->>>
->>>   /* FIFO memory AC characteristic register */
->>>   #define DSIM_PLLCTRL_REG    0x4c    /* PLL control register */
->>> -#define DSIM_PLLTMR_REG        0x50    /* PLL timer register */
->>>   #define DSIM_PHYACCHR_REG    0x54    /* D-PHY AC characteristic
->>> register */
->>>   #define DSIM_PHYACCHR1_REG    0x58    /* D-PHY AC characteristic
->>> register1 */
->>> +#define DSIM_PHYCTRL_REG    0x5c
->>> +#define DSIM_PHYTIMING_REG    0x64
->>> +#define DSIM_PHYTIMING1_REG    0x68
->>> +#define DSIM_PHYTIMING2_REG    0x6c
->>>
->>>   /* DSIM_STATUS */
->>>   #define DSIM_STOP_STATE_DAT(x)        (((x) & 0xf) << 0)
->>> @@ -233,6 +237,12 @@ struct exynos_dsi_transfer {
->>>   #define DSIM_STATE_INITIALIZED        BIT(1)
->>>   #define DSIM_STATE_CMD_LPM        BIT(2)
->>>
->>> +struct exynos_dsi_driver_data {
->>> +    unsigned int plltmr_reg;
->>> +
->>> +    unsigned int has_freqband:1;
->>> +};
->>> +
->>>   struct exynos_dsi {
->>>       struct mipi_dsi_host dsi_host;
->>>       struct drm_connector connector;
->>> @@ -262,11 +272,39 @@ struct exynos_dsi {
->>>
->>>       spinlock_t transfer_lock; /* protects transfer_list */
->>>       struct list_head transfer_list;
->>> +
->>> +    struct exynos_dsi_driver_data *driver_data;
->>>   };
->>>
->>>   #define host_to_dsi(host) container_of(host, struct exynos_dsi,
->>> dsi_host)
->>>   #define connector_to_dsi(c) container_of(c, struct exynos_dsi,
->>> connector)
->>>
->>> +static struct exynos_dsi_driver_data exynos4_dsi_driver_data = {
->>> +    .plltmr_reg = 0x50,
->>> +    .has_freqband = 1,
->>> +};
->>> +
->>> +static struct exynos_dsi_driver_data exynos5_dsi_driver_data = {
->>> +    .plltmr_reg = 0x58,
->>> +};
->>> +
->>> +static struct of_device_id exynos_dsi_of_match[] = {
->>> +    { .compatible = "samsung,exynos4210-mipi-dsi",
->>> +      .data = &exynos4_dsi_driver_data },
->>> +    { .compatible = "samsung,exynos5420-mipi-dsi",
->>> +      .data = &exynos5_dsi_driver_data },
->>> +    { }
->>> +};
->>
->> I wonder if it wouldn't be better to use "samsung,exynos5410-mipi-dsi"
->> compatible and distinguish 5410 and 5420 by DSIM_VERSION register.
->>
->
-> That's because I have only Exynos5420 SoC based target,
-> so made DT for that and tested it only.
->
-> But it seems to be no problem to use exynos5410 compatible at least
-> for the dsi device :).
->
-> I'll try.
+This set of changes solves the above problem with setting each System MMUs
+as the parent of the device which owns the System MMU to receive the
+information when the device is turned off or turned on.
 
-I posted RFC v3 without this try.
+Another big change to the driver is the support for devicetree.
+The bindings for System MMU is described in
+Documentation/devicetree/bindings/arm/samsung/system-mmu.txt
 
-Because there is no exynos5410 relevant DTS yet,
-and making exynos5410 DTS is out of scope for this RFC.
+In addition, this patchset also includes several bug fixes and enhancements
+of the current driver.
 
-Thank you.
+Change log:
+v12:
+- Rebased to the latest 3.15-rc2 master branch
+  git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/master (3.15-rc2)
+- Addressed v11 review comments from
+	'Sachin Kamat', 'Tomasz Figa' and 'Shaik Ameer Basha'
+- Uses macro names instead of magic numbers for clock description in DT
+- Moved DT binding document to seperate patch
+- dtsi changes are separated into multiple patches
+- patch description of some patches are updated according to the review comments
+- removed the macros which hides the clock operations
+- review comments related to compatible strings will be fixed in followup patches
 
-Best regards YJ
+v11:
+- Rebased on the latest works on clock, arm/samsung, iommu branches
+- Change the property to link System MMU and its master H/W
+  'iommu' in the master's node -> 'mmu-masters' in the System MMU's node
+- Changed compatible string:
+  "samsung,sysmmu-v1"
+  "samsung,sysmmu-v2"
+  "samsung,sysmmu-v3.1"
+  "samsung,sysmmu-v3.2"
+  "samsung,sysmmu-v3.3"
+- Change the implementation of retrieving System MMU version -> simpler
+- Check NULL pointer before call to clk_enable() and clk_disable()
+- Allow a single master to link to multiple System MMUs.
+  (fimc-is, fimd/g2d/Scaler in Exynos5420)
+- Workarounds of known problems of System MMU
+- Code enhancements:
+  * Compilable for 64-bit
+  * Enhanced error messages
 
->
->>
->>> +
->>> +static inline struct exynos_dsi_driver_data
->>> *exynos_dsi_get_driver_data(
->>> +                        struct platform_device *pdev)
->>> +{
->>> +    const struct of_device_id *of_id =
->>> +            of_match_device(exynos_dsi_of_match, &pdev->dev);
->>> +
->>> +    return (struct exynos_dsi_driver_data *)of_id->data;
->>> +}
->>> +
->>>   static void exynos_dsi_wait_for_reset(struct exynos_dsi *dsi)
->>>   {
->>>       if (wait_for_completion_timeout(&dsi->completed,
->>> msecs_to_jiffies(300)))
->>> @@ -340,14 +378,9 @@ static unsigned long
->>> exynos_dsi_pll_find_pms(struct exynos_dsi *dsi,
->>>   static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
->>>                       unsigned long freq)
->>>   {
->>> -    static const unsigned long freq_bands[] = {
->>> -        100 * MHZ, 120 * MHZ, 160 * MHZ, 200 * MHZ,
->>> -        270 * MHZ, 320 * MHZ, 390 * MHZ, 450 * MHZ,
->>> -        510 * MHZ, 560 * MHZ, 640 * MHZ, 690 * MHZ,
->>> -        770 * MHZ, 870 * MHZ, 950 * MHZ,
->>> -    };
->>> +    struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
->>>       unsigned long fin, fout;
->>> -    int timeout, band;
->>> +    int timeout;
->>>       u8 p, s;
->>>       u16 m;
->>>       u32 reg;
->>> @@ -368,18 +401,30 @@ static unsigned long exynos_dsi_set_pll(struct
->>> exynos_dsi *dsi,
->>>               "failed to find PLL PMS for requested frequency\n");
->>>           return -EFAULT;
->>>       }
->>> +    dev_dbg(dsi->dev, "PLL freq %lu, (p %d, m %d, s %d)\n", fout, p,
->>> m, s);
->>>
->>> -    for (band = 0; band < ARRAY_SIZE(freq_bands); ++band)
->>> -        if (fout < freq_bands[band])
->>> -            break;
->>> +    writel(500, dsi->reg_base + driver_data->plltmr_reg);
->>> +
->>> +    reg = DSIM_PLL_EN | DSIM_PLL_P(p) | DSIM_PLL_M(m) | DSIM_PLL_S(s);
->>> +
->>> +    if (driver_data->has_freqband) {
->>> +        static const unsigned long freq_bands[] = {
->>> +            100 * MHZ, 120 * MHZ, 160 * MHZ, 200 * MHZ,
->>> +            270 * MHZ, 320 * MHZ, 390 * MHZ, 450 * MHZ,
->>> +            510 * MHZ, 560 * MHZ, 640 * MHZ, 690 * MHZ,
->>> +            770 * MHZ, 870 * MHZ, 950 * MHZ,
->>> +        };
->>> +        int band;
->>>
->>> -    dev_dbg(dsi->dev, "PLL freq %lu, (p %d, m %d, s %d), band %d\n",
->>> fout,
->>> -        p, m, s, band);
->>> +        for (band = 0; band < ARRAY_SIZE(freq_bands); ++band)
->>> +            if (fout < freq_bands[band])
->>> +                break;
->>>
->>> -    writel(500, dsi->reg_base + DSIM_PLLTMR_REG);
->>> +        dev_dbg(dsi->dev, "band %d\n", band);
->>> +
->>> +        reg |= DSIM_FREQ_BAND(band);
->>> +    }
->>>
->>> -    reg = DSIM_FREQ_BAND(band) | DSIM_PLL_EN
->>> -            | DSIM_PLL_P(p) | DSIM_PLL_M(m) | DSIM_PLL_S(s);
->>>       writel(reg, dsi->reg_base + DSIM_PLLCTRL_REG);
->>>
->>>       timeout = 1000;
->>> @@ -391,6 +436,24 @@ static unsigned long exynos_dsi_set_pll(struct
->>> exynos_dsi *dsi,
->>>           reg = readl(dsi->reg_base + DSIM_STATUS_REG);
->>>       } while ((reg & DSIM_PLL_STABLE) == 0);
->>>
->>> +    if (!driver_data->has_freqband) {
->>
->> Could you explain why lack of freqband determines necessity of setting
->> PHY
->> registers, is this a kind of hardware setting dependency?
->
-> Yes, there is H/W dependency.
-> In Exynos4 SoCs, from 24th to 26th bits of DSIM_PLLCTRL register are
-> for frequency band.
-> But in Exynos5410 / 5420 SoCs, those bits are used for DpDnSwap relevant
-> things.
-> So PHY ctrl and timing registers are required instead for it.
->
->>
->>> +        /* b dphy ctrl */
->>> +        reg = 0x0af & 0x1ff;
->>> +        writel(reg, dsi->reg_base + DSIM_PHYCTRL_REG);
->>> +
->>> +        /* phy timing */
->>> +        reg = 0x06 << 8 | 0x0b;
->>> +        writel(reg, dsi->reg_base + DSIM_PHYTIMING_REG);
->>> +
->>> +        /* phy timing 1 */
->>> +        reg = 0x07 << 24 | 0x27 << 16 | 0x0d << 8 | 0x08;
->>> +        writel(reg, dsi->reg_base + DSIM_PHYTIMING1_REG);
->>> +
->>> +        /* phy timing 2 */
->>> +        reg = 0x09 << 16 | 0x0d << 8 | 0x0b;
->>> +        writel(reg, dsi->reg_base + DSIM_PHYTIMING2_REG);
->>> +    }
->>> +
->>
->> Please use macros if possible instead of magic numbers.
->
-> Right, I'll fix.
->
->>
->> As I wrote in comment for earlier patch it would be better to separate
->> setting PHY registers
->> from clock registers.
->>
->
-> Ok, I'll implement new function
-> and call it just after exynos_dsi_wait_for_reset().
->
-> Thank you.
-> Best regards YJ
->
->>>       return fout;
->>>   }
->>>
->>> @@ -1412,6 +1475,7 @@ static int exynos_dsi_probe(struct
->>> platform_device *pdev)
->>>       dsi->dsi_host.dev = &pdev->dev;
->>>
->>>       dsi->dev = &pdev->dev;
->>> +    dsi->driver_data = exynos_dsi_get_driver_data(pdev);
->>>
->>>       ret = exynos_dsi_parse_dt(dsi);
->>>       if (ret)
->>> @@ -1516,11 +1580,6 @@ static const struct dev_pm_ops
->>> exynos_dsi_pm_ops = {
->>>       SET_SYSTEM_SLEEP_PM_OPS(exynos_dsi_suspend, exynos_dsi_resume)
->>>   };
->>>
->>> -static struct of_device_id exynos_dsi_of_match[] = {
->>> -    { .compatible = "samsung,exynos4210-mipi-dsi" },
->>> -    { }
->>> -};
->>> -
->>>   struct platform_driver dsi_driver = {
->>>       .probe = exynos_dsi_probe,
->>>       .remove = exynos_dsi_remove,
->>
->>
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+v10:
+- Rebased on the following branches
+  git.linaro.org/git-ro/people/mturquette/linux.git/clk-next
+  git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git/for-next
+  git.kernel.org/pub/scm/linux/kernel/git/joro/iommu.git/next
+  git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/master (3.12-rc3)
+- Set parent clock to all System MMU clocks.
+- Add clock and DT descriptos for Exynos5420
+- Modified error handling in exynos_iommu_init()
+- Split "iommu/exynos: support for device tree" patch into the following 6 patches
+  iommu/exynos: handle only one instance of System MMU
+  iommu/exynos: always enable runtime PM
+  iommu/exynos: always use a single clock descriptor
+  iommu/exynos: remove dbgname from drvdata of a System MMU
+  iommu/exynos: use managed driver helper functions
+  iommu/exynos: support for device tree
+- Remove 'interrupt-names' and 'status' properties from DT
+- Change n:1 relationship between master:System MMU into 1:1 relationship.
+- Removed custom fault handler and print the status of System MMU
+  whenever System MMU fault is occurred.
+- Post Antonios Motakis's commit together:
+  "iommu/exynos: add devices attached to the System MMU to an IOMMU group"
+
+v9:
+- Rebased on the following branches
+  git.linaro.org/git-ro/people/mturquette/linux.git/clk-next
+  git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git/samsung-next
+  git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/master (3.11-rc4)
+- Split "add bus notifier for registering System MMU" into 5 patches
+- Call clk_prepare() that was missing in v8.
+- Fixed base address of sysmmu_tv in exynos4210.dtsi
+- BUG_ON() instead of return -EADDRINUSE when trying mapping on an mapped area
+- Moved camif_top to 317 in drivers/clk/samsung/clk-exynos5250.c
+- Removed 'iommu' property from 'codec'(mfc) node
+- Does not make 'master' clock to be the parent of 'sysmmu' clock.
+   'master' clock is enabled before accessing control registers of System MMU
+   and disabled after the access.
+
+v8:
+- Reordered patch list: moved "change rwloc to spinlock" to the last.
+- Fixed remained bug in "fix page table maintenance".
+- Always return 0 from exynos_iommu_attach_device().
+- Removed prefetch buffer setting when System MMU is enabled
+  due to the restriction of prefetch buffers:
+  A prefetch buffer must not hit from more than one DMA.
+  For instance with GScalers, if a single prefetch buffer is initialized
+  with 0x0 ~ 0xFFFFFFFF and a GScaler works on source buffer at 0x10000000
+  and target buffer @ 0x20000000, the System MMU may be got deadlock.
+  Clients must initialize prefetch buffers with custom function defined
+  in exynos-iommu drivers whenever they need to enable prefetch buffers.
+- The clock of System MMU has no relationship with the clock of its master H/W.
+  The clock of master H/W is always enabled when exynos-iommu driver needs to
+  access MMIO area and disabled as soon as the access finishes.
+- Removed err_page variable used in exynos_iommu_unmap() in the previous patch
+  "fix page table maintenance".
+- Split a big patch "add bus notifier for registering System MMU".
+   Extracted the following 2 patches: 9/12 and 10/12.
+- And some additional fixes...
+
+v7:
+- Rebased on the stable 3.10
+- Registered PM domains and gate clocks with DT
+- Changed connection method between a System MMU and its master H/W
+   'mmu-master' property in the node of System MMU
+   --> 'iommu' property in the node of master H/W
+- Marking device descriptor of master H/W of a System MMU with bus notifier.
+- Power management (PM_RUNTIME, PM_SLEEP) of System MMUs with gpd_dev_ops
+   of Generic IO Powerdomain. gpd_dev_ops are set to the master H/Ws
+   before they are probed in the bus notifier.
+- Removed additional debugging features like debugfs entries and
+   version names.
+- Removed support for advanced features of System MMU 3.2 and 3.3
+   the current IOMMU API cannot handle the feature
+  (A kind of L2 TLB that fetches several consequence page table entries.
+   It must be initialized by the driver of master H/W whenever it works.)
+
+v6:
+- Rebased on the branch, next/iommu-exynos of
+  git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+
+v5:
+- new bugfix: patch 01
+- Reordered patches
+  * patch 01 ~ 05: Bugfix and enhancements of the existing driver
+  * patch 06 ~ 10: Device Tree support and callbacks for power management
+  * patch 11     : System MMU 3.2 and 3.3 support
+  * patch 12 ~ 14: Debugging features
+- Additional code compaction
+
+v4:
+- Remove Change-Id from v3 patches
+- Change the order of the third and the first patch
+  Thanks to Kukjin Kim.
+- Fix memory leak when allocating and assigning exynos_iommu_owner to client
+  device if the client device has multiple System MMUs.
+  Thanks to Rahul Sharma.
+
+v3:
+- Fix prefetch buffer flag definition for System MMU 3.3 (patch 10/12)
+- Fix incorrect setting for SET_RUNTIME_PM_OPS (patch 09/12)
+  Thanks to Prathyush.
+
+v2:
+- Split the patch to iommu/exynos into 9 patches
+- Support for System MMU 3.3
+- Some code compaction
+
+Antonios Motakis (1):
+  iommu/exynos: add devices attached to the System MMU to an IOMMU
+    group
+
+Cho KyongHo (30):
+  iommu/exynos: do not include removed header
+  iommu/exynos: add missing cache flush for removed page table entries
+  iommu/exynos: change error handling when page table update is failed
+  iommu/exynos: fix L2TLB invalidation
+  iommu/exynos: remove prefetch buffer setting
+  iommu/exynos: allocate lv2 page table from own slab
+  iommu/exynos: always enable runtime PM
+  iommu/exynos: handle one instance of sysmmu with a device descriptor
+  iommu/exynos: remove dbgname from drvdata of a System MMU
+  iommu/exynos: use managed device helper functions
+  documentation: iommu: add binding document of Exynos System MMU
+  iommu/exynos: support for device tree
+  iommu/exynos: gating clocks of master H/W
+  iommu/exynos: remove custom fault handler
+  iommu/exynos: handle 'mmu-masters' property of DT and improve
+    handling sysmmu
+  iommu/exynos: turn on useful configuration options
+  iommu/exynos: add support for power management subsystems.
+  iommu/exynos: allow having multiple System MMUs for a master H/W
+  iommu/exynos: change rwlock to spinlock
+  iommu/exynos: fix address handling
+  iommu/exynos: use exynos-iommu specific typedef
+  iommu/exynos: use simpler function to get MMU version
+  iommu/exynos: apply workaround of caching fault page table entries
+  iommu/exynos: enhanced error messages
+  clk: exynos: add gate clock descriptions of System MMU
+  ARM: dts: add System MMU nodes of exynos4 series
+  ARM: dts: add System MMU nodes of exynos4210
+  ARM: dts: add System MMU nodes of exynos4x12
+  ARM: dts: add System MMU nodes of exynos5250
+  ARM: dts: add System MMU nodes of exynos5420
+
+ .../devicetree/bindings/iommu/samsung,sysmmu.txt   |   79 ++
+ arch/arm/Kconfig                                   |    2 +
+ arch/arm/boot/dts/exynos4.dtsi                     |  107 ++
+ arch/arm/boot/dts/exynos4210.dtsi                  |   23 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |   78 +-
+ arch/arm/boot/dts/exynos5250.dtsi                  |  270 +++-
+ arch/arm/boot/dts/exynos5420.dtsi                  |  209 ++-
+ drivers/clk/samsung/clk-exynos5250.c               |   36 +
+ drivers/clk/samsung/clk-exynos5420.c               |   13 +-
+ drivers/iommu/Kconfig                              |    8 +-
+ drivers/iommu/exynos-iommu.c                       | 1436 ++++++++++++++------
+ include/dt-bindings/clock/exynos5250.h             |   17 +
+ include/dt-bindings/clock/exynos5420.h             |    6 +-
+ 13 files changed, 1852 insertions(+), 432 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+ mode change 100644 => 100755 drivers/iommu/exynos-iommu.c
+
+-- 
+1.7.9.5
