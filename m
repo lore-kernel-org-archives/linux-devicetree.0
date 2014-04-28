@@ -1,42 +1,82 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH 5/6] ARM: AM43xx: clk: Change the cpts ref clock source
- to dpll_core_m5 clk
-Date: Mon, 28 Apr 2014 09:10:36 +0200
-Message-ID: <20140428071034.GB4380@netboy>
-References: <1398658225-25873-1-git-send-email-george.cherian@ti.com>
- <1398658225-25873-6-git-send-email-george.cherian@ti.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
+Date: Mon, 28 Apr 2014 10:11:00 +0300
+Message-ID: <1398669060.5214.8.camel@iivanov-dev>
+References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+	 <1398259168.4724.217.camel@iivanov-dev> <535AFD96.90505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398658225-25873-6-git-send-email-george.cherian@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, davem@davemloft.net, jeffrey.t.kirsher@intel.com, dborkman@redhat.com, ast@plumgrid.com, tklauser@distanz.ch, mpa@pengutronix.de, bhutchings@solarflare.com, zonque@gmail.com, balbi@ti.com, mugunthanvnm@ti.com, t-kristo@ti.com, mturquette@linaro.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <535AFD96.90505@gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 09:40:24AM +0530, George Cherian wrote:
-> cpsw_cpts_rft_clk has got the choice of 3 clocksources
->  -dpll_core_m4_ck
->  -dpll_core_m5_ck
->  -dpll_disp_m2_ck
+
+Hi Frank,
+
+On Fri, 2014-04-25 at 17:28 -0700, Frank Rowand wrote:
+> On 4/23/2014 6:19 AM, Ivan T. Ivanov wrote:
+
+<snip>
+
+> > spmi {
+> > 	compatible = "qcom,spmi-pmic-arb";
+> > 	reg-names = "core", "intr", "cnfg";
+> > 	reg = <0xfc4cf000 0x1000>,
+> > 	      <0xfc4cb000 0x1000>,
+> > 	      <0xfc4ca000 0x1000>;
+> > 
+> > 	interrupt-names = "periph_irq";
+> > 	interrupts = <0 190 0>;
+> > 
+> > 	qcom,ee = <0>;
+> > 	qcom,channel = <0>;
+> > 
+> > 	#address-cells = <2>;
+> > 	#size-cells = <0>;
+> > 
+> > 	interrupt-controller;
+> > 	#interrupt-cells = <4>;
+> > 
+> > 	pm8941@0 {
+> > 		compatible = "qcom,pm8941";
+> > 		reg = <0x0 SPMI_USID>;
+> > 
+> > 		#address-cells = <1>;
+> > 		#size-cells = <0>;
+> > 
+> > 		revid@100 {
+> > 			compatible = "qcom,qpnp-revid";
+> > 			reg = <0x100 0x100>;
+
+This should be just reg = <0x100>;
+
+> > 		};
+> > 	};
+> > 
+> > 	pm8841@4 {
 > 
-> By default dpll_core_m4_ck is selected, witn this as clock
-> source the CPTS doesnot work properly. It gives clockcheck errors
-> while running PTP.
+>         ^^^^^^^^  typo nit - that should be pm8941@4.
+>                   The nit does not change what you reported though.
 > 
->  clockcheck: clock jumped backward or running slower than expected!
+> > 		compatible = "qcom,pm8941";
 
-It is strange that I have never seen this error, since I have often
-tested linuxptp on a beagle bone white.
+Actually this one is incorrect, it should be "qcom,pm8841", 
+but as you say it doesn't make difference in the end result.
 
-Can you please explain why this clock doesn't work correctly?
+> > 		reg = <0x4 SPMI_USID>;
+> > 
+> > 		#address-cells = <1>;
+> > 		#size-cells = <0>;
+> > 
+> > 		revid@100 {
+> > 			compatible = "qcom,qpnp-revid";
+> > 			reg = <0x100 0x100>;
 
-> By selecting dpll_core_m5_ck as the clocksource fixes this issue.
-> In AM335x dpll_core_m5_ck is the default clocksource.
+also here.
 
-The choice of clock source in the CPTS driver originally came from
-TI. It would be nice to know why that was the wrong choice.
-
-Thanks,
-Richard
+Regards,
+Ivan
