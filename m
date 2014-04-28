@@ -1,63 +1,105 @@
-From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Subject: Re: [PATCH 5/7] clk: sunxi: add PRCM (Power/Reset/Clock
- Management) clks support
-Date: Mon, 28 Apr 2014 12:25:10 -0300
-Message-ID: <535E72D6.6060206@elopez.com.ar>
-References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com> <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alan Stern <stern@rowland.harvard.edu>
+Subject: Re: [PATCH v3 3/4] usb: ohci-exynos: Add facility to use phy provided
+ by the generic phy framework
+Date: Mon, 28 Apr 2014 11:41:36 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1404281136440.1270-100000@iolanthe.rowland.org>
+References: <1398677132-30600-4-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBD73XIMS3EHBBTXG7GNAKGQEZKUNCCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1398697130-8338-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398677132-30600-4-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, k.debski@samsung.com, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Mon, 28 Apr 2014, Vivek Gautam wrote:
 
-El 28/04/14 11:58, Boris BREZILLON escribi=F3:
-> The PRCM (Power/Reset/Clock Management) unit provides several clock
-> devices:
-> - AR100 clk: used to clock the Power Management co-processor
-> - AHB0 clk: used to clock the AHB0 bus
-> - APB0 clk and gates: used to clk
->
-> Add support for these clks in a separate driver so that they can be probe=
-d
-> as platform devices instead of registered during early init.
-> We need this to be able to probe PRCM MFD subdevices.
->
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Add support to consume phy provided by Generic phy framework.
+> Keeping the support for older usb-phy intact right now, in order
+> to prevent any functionality break in absence of relevant
+> device tree side change for ohci-exynos.
+> Once we move to new phy in the device nodes for ohci, we can
+> remove the support for older phys.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Cc: Jingoo Han <jg1.han@samsung.com>
+> Cc: Alan Stern <stern@rowland.harvard.edu>
 > ---
-(..)
+
+> +static int exynos_ohci_phy_enable(struct device *dev)
+>  {
+>  	struct usb_hcd *hcd = dev_get_drvdata(dev);
+>  	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
+> +	int i;
+> +	int ret = 0;
+>  
+> -	if (exynos_ohci->phy)
+> -		usb_phy_init(exynos_ohci->phy);
+> +	if (exynos_ohci->phy) {
+> +		ret = usb_phy_init(exynos_ohci->phy);
+> +		if (ret)
+> +			return ret;
+> +	}
 > +
-> +MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org");
+> +	for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
+> +		if (exynos_ohci->phy_g[i])
+> +			ret = phy_power_on(exynos_ohci->phy_g[i]);
+> +	if (ret)
+> +		for (i--; i >= 0; i--)
+> +			if (exynos_ohci->phy_g[i])
+> +				phy_power_off(exynos_ohci->phy_g[i]);
 
-There's a missing >
+Do you want to call usb_phy_shutdown() at this point?
 
-> +MODULE_DESCRIPTION("Allwinner Reset Controller Driver");
+> +
+> +	return ret;
+>  }
+>  
+> -static void exynos_ohci_phy_disable(struct device *dev)
+> +static int exynos_ohci_phy_disable(struct device *dev)
+>  {
+>  	struct usb_hcd *hcd = dev_get_drvdata(dev);
+>  	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
+> +	int i;
+> +	int ret = 0;
+>  
+>  	if (exynos_ohci->phy)
+>  		usb_phy_shutdown(exynos_ohci->phy);
+> +
+> +	for (i = 0; i < PHY_NUMBER; i++)
+> +		if (exynos_ohci->phy_g[i])
+> +			ret = phy_power_off(exynos_ohci->phy_g[i]);
+> +
+> +	return ret;
+>  }
 
-Copy/paste leftover?
+This return value is practically meaningless.  It is the status from 
+the last PHY only; any errors involving the other PHYs have been lost.
 
-> +MODULE_LICENSE("GPL v2");
+You may as well make this function return void.
 
-I just skimmed through this now, I'll have a more detailed look later.=20
-Thanks for working on sun6i support :)
+> @@ -210,13 +302,18 @@ static int exynos_ohci_resume(struct device *dev)
+>  {
+>  	struct usb_hcd *hcd			= dev_get_drvdata(dev);
+>  	struct exynos_ohci_hcd *exynos_ohci	= to_exynos_ohci(hcd);
+> +	int ret;
+>  
+>  	clk_prepare_enable(exynos_ohci->clk);
+>  
+>  	if (exynos_ohci->otg)
+>  		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
+>  
+> -	exynos_ohci_phy_enable(dev);
+> +	ret = exynos_ohci_phy_enable(dev);
+> +	if (ret) {
+> +		dev_err(dev, "Failed to enable USB phy\n");
 
-Cheers,
+Do you want to call clk_disable_unprepare() here?
 
-Emilio
+> +		return ret;
+> +	}
+>  
+>  	ohci_resume(hcd, false);
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Alan Stern
