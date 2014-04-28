@@ -1,131 +1,53 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [Resend/PATCH] arm: dts: am43x-epos: Add qspi device.
-Date: Mon, 28 Apr 2014 19:12:30 +0530
-Message-ID: <1398692550-31758-1-git-send-email-sourav.poddar@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v2] mtd: davinci-nand: disable subpage write for keystone-nand
+Date: Mon, 28 Apr 2014 09:43:17 -0400
+Message-ID: <535E5AF5.2020203@ti.com>
+References: <1395346112-13350-1-git-send-email-ivan.khoronzhuk@ti.com> <532B4C36.8060405@ti.com> <5343F0D6.2010804@ti.com> <20140416070833.GA5512@norris-Latitude-E6410> <534E51BF.9050508@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <534E51BF.9050508@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, tony@atomide.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, m-karicheri2@ti.com, Warner Losh <imp@bsdimp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds qspi nodes for am43xx SOC devices.
+Brian,
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
-Note,
-checpatch gives 1 warning on flash compatible string
-"mx66l51235l". This flash is supported in m25p80 driver and
-the driver is used for other flash devices also. Hence, each
-flash compatible is not described in[1], but a genric example 
-is shown using spansion flash device. 
-[1]:
-Documentation/devicetree/bindings/mtd/m25p80.txt
+On Wednesday 16 April 2014 05:47 AM, Ivan Khoronzhuk wrote:
+> 
+> On 04/16/2014 10:08 AM, Brian Norris wrote:
+>> On Tue, Apr 08, 2014 at 03:51:34PM +0300, Ivan Khoronzhuk wrote:
+>>> On 03/20/2014 10:14 PM, Santosh Shilimkar wrote:
+>>>> On Thursday 20 March 2014 04:08 PM, Ivan Khoronzhuk wrote:
+>>>>> From: Murali Karicheri <m-karicheri2@ti.com>
+>>>>> Sub page write doesn't work because of hw issue in controller found on
+>>>>> Keystone SOCs. AEMIF controller is also used on DaVinci SOCs which
+>>>>> don't seems to have any issue. So add "ti,keysone-nand" compatible
+>>>>> to nand driver in order to set NAND_NO_SUBPAGE_WRITE option.
+>>>>>
+>>>>> Cc: Brian Norris <computersforpeace@gmail.com>
+>>>>> Cc: Warner Losh <imp@bsdimp.com>
+>>>>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>>>>
+>>>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+>>>>> ---
+>>>>>
+>>>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> Brian,
+>>> Could you pick up subj patch?
+>> Pushed to l2-mtd.git. Is it critical this goes in for 3.15? It's
+>> currently queued for -next (3.16).
+>>
 
- arch/arm/boot/dts/am4372.dtsi        |   11 ++++++
- arch/arm/boot/dts/am43x-epos-evm.dts |   63 ++++++++++++++++++++++++++++++++++
- 2 files changed, 74 insertions(+)
+[..]
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 36d523a..49633ff 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -735,6 +735,17 @@
- 			#size-cells = <1>;
- 			status = "disabled";
- 		};
-+
-+		qspi: qspi@47900000 {
-+			compatible = "ti,am4372-qspi";
-+			reg = <0x47900000 0x100>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			ti,hwmods = "qspi";
-+			interrupts = <0 138 0x4>;
-+			num-cs = <4>;
-+			status = "disabled";
-+		};
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
-index 167dbc8..25cd07c 100644
---- a/arch/arm/boot/dts/am43x-epos-evm.dts
-+++ b/arch/arm/boot/dts/am43x-epos-evm.dts
-@@ -138,6 +138,17 @@
- 				0x160 (PIN_INPUT | MUX_MODE7) /* spi0_cs1.gpio0_6 */
- 			>;
- 		};
-+
-+		qspi1_default: qspi1_default {
-+			pinctrl-single,pins = <
-+				0x7c (PIN_INPUT_PULLUP | MUX_MODE3)
-+				0x88 (PIN_INPUT_PULLUP | MUX_MODE2)
-+				0x90 (PIN_INPUT_PULLUP | MUX_MODE3)
-+				0x94 (PIN_INPUT_PULLUP | MUX_MODE3)
-+				0x98 (PIN_INPUT_PULLUP | MUX_MODE3)
-+				0x9c (PIN_INPUT_PULLUP | MUX_MODE3)
-+			>;
-+		};
- 	};
- 
- 	matrix_keypad: matrix_keypad@0 {
-@@ -367,3 +378,55 @@
- 	pinctrl-0 = <&spi1_pins>;
- 	status = "okay";
- };
-+
-+&qspi {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&qspi1_default>;
-+
-+	spi-max-frequency = <48000000>;
-+	m25p80@0 {
-+		compatible = "mx66l51235l";
-+		spi-max-frequency = <48000000>;
-+		reg = <0>;
-+		spi-cpol;
-+		spi-cpha;
-+		spi-tx-bus-width = <1>;
-+		spi-rx-bus-width = <4>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		/* MTD partition table.
-+		 * The ROM checks the first 512KiB
-+		 * for a valid file to boot(XIP).
-+		 */
-+		partition@0 {
-+			label = "QSPI.U_BOOT";
-+			reg = <0x00000000 0x000080000>;
-+		};
-+		partition@1 {
-+			label = "QSPI.U_BOOT.backup";
-+			reg = <0x00080000 0x00080000>;
-+		};
-+		partition@2 {
-+			label = "QSPI.U-BOOT-SPL_OS";
-+			reg = <0x00100000 0x00010000>;
-+		};
-+		partition@3 {
-+			label = "QSPI.U_BOOT_ENV";
-+			reg = <0x00110000 0x00010000>;
-+		};
-+		partition@4 {
-+			label = "QSPI.U-BOOT-ENV.backup";
-+			reg = <0x00120000 0x00010000>;
-+		};
-+		partition@5 {
-+			label = "QSPI.KERNEL";
-+			reg = <0x00130000 0x0800000>;
-+		};
-+		partition@6 {
-+			label = "QSPI.FILESYSTEM";
-+			reg = <0x00930000 0x36D0000>;
-+		};
-+	};
-+};
--- 
-1.7.9.5
+> 
+> This is a critical fix and it should be for 3.15.
+Ping. 3.15-rc3 is already out and I still see this fix merged
+yet.
+
+Regards,
+Santosh
