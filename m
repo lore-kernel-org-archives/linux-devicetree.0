@@ -1,102 +1,136 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
-	Exynos System MMU
-Date: Mon, 28 Apr 2014 20:30:56 +0100
-Message-ID: <20140428193056.GD22135@arm.com>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<6544270.ddFBoY6LMm@wuerfel> <20140428111802.GI19455@ulmo>
-	<4780885.JaktFvJeC7@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4780885.JaktFvJeC7@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dave.martin-5wv7dgnIgG8@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org" <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, "pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: [PATCH 65/97] ARM: l2c: prima2: convert to generic l2c initialisation
+Date: Mon, 28 Apr 2014 20:31:44 +0100
+Message-ID: <E1WerHE-0001Y8-2Z@rmk-PC.arm.linux.org.uk>
+References: <20140428192419.GV26756@n2100.arm.linux.org.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140428192419.GV26756-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-0qwDCntBQCZpWr+L1FloEB2eb7JE58TQ@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Along with this change, we can delete l2x0.c from prima2.
 
-[and thanks Thierry for CCing me -- I have been tangled up with this before
-:)]
+Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+---
+ arch/arm/boot/dts/marco.dtsi  |  2 +-
+ arch/arm/boot/dts/prima2.dtsi |  2 +-
+ arch/arm/mach-prima2/Makefile |  1 -
+ arch/arm/mach-prima2/common.c |  6 ++++++
+ arch/arm/mach-prima2/l2x0.c   | 30 ------------------------------
+ 5 files changed, 8 insertions(+), 33 deletions(-)
+ delete mode 100644 arch/arm/mach-prima2/l2x0.c
 
-On Mon, Apr 28, 2014 at 01:05:30PM +0100, Arnd Bergmann wrote:
-> On Monday 28 April 2014 13:18:03 Thierry Reding wrote:
-> > There still has to be one cell to specify which master. Unless perhaps
-> > if they can be arbitrarily assigned. I guess even if there's a fixed
-> > mapping that applies to one SoC generation, it might be good to still
-> > employ a specifier and have the mapping in DT for flexibility.
-> 
-> let me clarify by example:
-> 
-> 	iommu@1 {
-> 		compatible = "some,simple-iommu";
-> 		reg = <1>;
-> 		#iommu-cells = <0>; /* supports only one master */
-> 	};
-> 
-> 	iommu@2 {
-> 		compatible = "some,other-iommu";
-> 		reg = <3>;
-> 		#iommu-cells = <1>; /* contains master ID */
-> 	};
-> 
-> 	iommu@3 {
-> 		compatible = "some,windowed-iommu";
-> 		reg = <2>;
-> 		#iommu-cells = <2>; /* contains dma-window */
-> 	};
-> 
-> 	device@4 {
-> 		compatible = "some,ethernet";
-> 		iommus = <&/iommu@1>;
-> 	};
-> 
-> 	device@5 {
-> 		compatible = "some,dmaengine";
-> 		iommus = <&/iommu@2 0x40000000 0x1000000>,
-> 			 <&/iommu@3 0x101>;
-> 	};
-> 
-> The device at address 4 has a one-one relationship with iommu@1, so there
-> is no need for any data. device@5 has two master ports. One is connected to
-> an IOMMU that has a per-device aperture, device@5 can only issue transfers
-> to the 256MB area at 0x40000000, and the IOMMU will have to put entries for
-> this device into that address. The second master port is connected to
-> iommu@3, which uses a master ID that gets passed along with each transfer,
-> so that needs to be put into the IOTLBs.
+diff --git a/arch/arm/boot/dts/marco.dtsi b/arch/arm/boot/dts/marco.dtsi
+index 0c9647d28765..fb354225740a 100644
+--- a/arch/arm/boot/dts/marco.dtsi
++++ b/arch/arm/boot/dts/marco.dtsi
+@@ -36,7 +36,7 @@
+ 		ranges = <0x40000000 0x40000000 0xa0000000>;
+ 
+ 		l2-cache-controller@c0030000 {
+-			compatible = "sirf,marco-pl310-cache", "arm,pl310-cache";
++			compatible = "arm,pl310-cache";
+ 			reg = <0xc0030000 0x1000>;
+ 			interrupts = <0 59 0>;
+ 			arm,tag-latency = <1 1 1>;
+diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
+index 1e82571d6823..0d6588d549bf 100644
+--- a/arch/arm/boot/dts/prima2.dtsi
++++ b/arch/arm/boot/dts/prima2.dtsi
+@@ -48,7 +48,7 @@
+ 		ranges = <0x40000000 0x40000000 0x80000000>;
+ 
+ 		l2-cache-controller@80040000 {
+-			compatible = "arm,pl310-cache", "sirf,prima2-pl310-cache";
++			compatible = "arm,pl310-cache";
+ 			reg = <0x80040000 0x1000>;
+ 			interrupts = <59>;
+ 			arm,tag-latency = <1 1 1>;
+diff --git a/arch/arm/mach-prima2/Makefile b/arch/arm/mach-prima2/Makefile
+index 7a6b4a323125..8846e7d87ea5 100644
+--- a/arch/arm/mach-prima2/Makefile
++++ b/arch/arm/mach-prima2/Makefile
+@@ -2,7 +2,6 @@ obj-y += rstc.o
+ obj-y += common.o
+ obj-y += rtciobrg.o
+ obj-$(CONFIG_DEBUG_LL) += lluart.o
+-obj-$(CONFIG_CACHE_L2X0) += l2x0.o
+ obj-$(CONFIG_SUSPEND) += pm.o sleep.o
+ obj-$(CONFIG_SMP) += platsmp.o headsmp.o
+ obj-$(CONFIG_HOTPLUG_CPU)  += hotplug.o
+diff --git a/arch/arm/mach-prima2/common.c b/arch/arm/mach-prima2/common.c
+index 47c7819edb9b..a860ea27e8ae 100644
+--- a/arch/arm/mach-prima2/common.c
++++ b/arch/arm/mach-prima2/common.c
+@@ -34,6 +34,8 @@ static const char *atlas6_dt_match[] __initconst = {
+ 
+ DT_MACHINE_START(ATLAS6_DT, "Generic ATLAS6 (Flattened Device Tree)")
+ 	/* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
++	.l2c_aux_val	= 0,
++	.l2c_aux_mask	= ~0,
+ 	.map_io         = sirfsoc_map_io,
+ 	.init_late	= sirfsoc_init_late,
+ 	.dt_compat      = atlas6_dt_match,
+@@ -48,6 +50,8 @@ static const char *prima2_dt_match[] __initconst = {
+ 
+ DT_MACHINE_START(PRIMA2_DT, "Generic PRIMA2 (Flattened Device Tree)")
+ 	/* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
++	.l2c_aux_val	= 0,
++	.l2c_aux_mask	= ~0,
+ 	.map_io         = sirfsoc_map_io,
+ 	.dma_zone_size	= SZ_256M,
+ 	.init_late	= sirfsoc_init_late,
+@@ -63,6 +67,8 @@ static const char *marco_dt_match[] __initconst = {
+ 
+ DT_MACHINE_START(MARCO_DT, "Generic MARCO (Flattened Device Tree)")
+ 	/* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
++	.l2c_aux_val	= 0,
++	.l2c_aux_mask	= ~0,
+ 	.smp            = smp_ops(sirfsoc_smp_ops),
+ 	.map_io         = sirfsoc_map_io,
+ 	.init_late	= sirfsoc_init_late,
+diff --git a/arch/arm/mach-prima2/l2x0.c b/arch/arm/mach-prima2/l2x0.c
+deleted file mode 100644
+index dbd837bdb7f7..000000000000
+--- a/arch/arm/mach-prima2/l2x0.c
++++ /dev/null
+@@ -1,30 +0,0 @@
+-/*
+- * l2 cache initialization for CSR SiRFprimaII
+- *
+- * Copyright (c) 2011 Cambridge Silicon Radio Limited, a CSR plc group company.
+- *
+- * Licensed under GPLv2 or later.
+- */
+-
+-#include <linux/init.h>
+-#include <linux/kernel.h>
+-#include <linux/of.h>
+-#include <asm/hardware/cache-l2x0.h>
+-
+-static const struct of_device_id sirf_l2x0_ids[] __initconst = {
+-	{ .compatible = "sirf,prima2-pl310-cache", .data = &prima2_l2x0_aux, },
+-	{ .compatible = "sirf,marco-pl310-cache", .data = &marco_l2x0_aux, },
+-	{},
+-};
+-
+-static int __init sirfsoc_l2x0_init(void)
+-{
+-	struct device_node *np;
+-
+-	np = of_find_matching_node(NULL, sirf_l2x0_ids);
+-	if (np)
+-		return l2x0_of_init(0, ~0);
+-
+-	return 0;
+-}
+-early_initcall(sirfsoc_l2x0_init);
+-- 
+1.8.3.1
 
-I think this is definitely going in the right direction, but it's not clear
-to me how the driver for device@5 knows how to configure the two ports.
-We're still lacking topology information (unless that's implicit in the
-ordering of the properties) to say how the mastering capabilities of the
-device are actually routed and configured.
-
-> A variation would be to not use #iommu-cells at all, but provide a
-> #address-cells / #size-cells pair in the IOMMU, and have a translation
-> as we do for dma-ranges. This is probably most flexible.
-
-That would also allow us to describe ranges of master IDs, which we need for
-things like PCI RCs on the ARM SMMU. Furthermore, basic transformations of
-these ranges could also be described like this, although I think Dave (CC'd)
-has some similar ideas in this area.
-
-> One completely open question that I just noticed is how the kernel should
-> deal with the case of multiple IOMMUs attached to one master: the
-> data structures we have assume that we know exactly how to do DMA by
-> setting the per-device dma_map_ops (iommu or not, coherent or not),
-> and by setting a pointer to at most one IOMMU.
-
-Agreed.
-
-Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
