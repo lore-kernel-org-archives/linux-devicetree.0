@@ -1,91 +1,38 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 7/7] ARM: sunxi: dt: add PRCM clk and reset
- controller subdevices
-Date: Mon, 28 Apr 2014 16:58:50 +0200
-Message-ID: <1398697130-8338-8-git-send-email-boris.brezillon@free-electrons.com>
-References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tim Kryger <tim.kryger@linaro.org>
+Subject: Re: [PATCH v6 RESEND 0/5] Add Broadcom Kona PWM Support
+Date: Mon, 28 Apr 2014 08:00:39 -0700
+Message-ID: <CAAYSxhpOP78EQAM0cWM2RwLu29-0eRVgLCFX3Hob8q=J==5wUA@mail.gmail.com>
+References: <1398450675-19609-1-git-send-email-tim.kryger@linaro.org>
+	<20140428110731.GH19455@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBBW27GNAKGQERC5QHGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1398697130-8338-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140428110731.GH19455@ulmo>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT definitions for PRCM (Power/Reset/Clock Management) clock and reset
-controller subdevices.
+On Mon, Apr 28, 2014 at 4:07 AM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Fri, Apr 25, 2014 at 11:31:10AM -0700, Tim Kryger wrote:
+>> This series introduces the driver for the Kona PWM controller found in
+>> Broadcom mobile SoCs like bcm281xx and updates the device tree and the
+>> defconfig to enable use of this hardware on the bcm28155 AP board.
+>>
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 49 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 49 insertions(+)
+>> Tim Kryger (5):
+>>   Documentation: dt: Add Kona PWM binding
+>>   pwm: kona: Introduce Kona PWM controller support
+>>   ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
+>>   ARM: dts: Enable the PWM for bcm28155 AP board
+>>   ARM: bcm_defconfig: Enable PWM and Backlight
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index ec3253a..83a1634 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -501,6 +501,55 @@
- 		prcm@01f01c00 {
- 			compatible = "allwinner,sun6i-a31-prcm";
- 			reg = <0x01f01400 0x200>;
-+
-+			ar100_mux: ar100_mux {
-+				compatible = "allwinner,sun6i-a31-ar100-mux-clk";
-+				#clock-cells = <0>;
-+				clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
-+			};
-+
-+			ar100: ar100 {
-+				compatible = "allwinner,sun6i-a31-ar100-clk";
-+				#clock-cells = <0>;
-+				clocks = <&ar100_mux>;
-+			};
-+
-+			ar100_div: ar100_div {
-+				compatible = "allwinner,sun6i-a31-ar100-div-clk";
-+				#clock-cells = <0>;
-+				clocks = <&ar100>;
-+			};
-+
-+			ahb0: ahb0 {
-+				compatible = "fixed-factor-clock";
-+				#clock-cells = <0>;
-+				clock-div = <1>;
-+				clock-mult = <1>;
-+				clocks = <&ar100_div>;
-+				clock-output-names = "ahb0";
-+			};
-+
-+			apb0: apb0 {
-+				compatible = "allwinner,sun6i-a31-apb0-clk";
-+				#clock-cells = <0>;
-+				clocks = <&ahb0>;
-+				clock-output-names = "apb0";
-+			};
-+
-+			apb0_gates: apb0_gates {
-+				compatible = "allwinner,sun6i-a31-apb0-gates-clk";
-+				#clock-cells = <1>;
-+				clocks = <&apb0>;
-+				clock-output-names = "apb0_pio", "apb0_ir",
-+						"apb0_timer01", "apb0_p2wi",
-+						"apb0_uart", "apb0_1wire",
-+						"apb0_i2c";
-+			};
-+
-+			apb0_rst: apb0_rst {
-+				compatible = "allwinner,sun6i-a31-clock-reset";
-+				#reset-cells = <1>;
-+			};
- 		};
- 	};
- };
--- 
-1.8.3.2
+> I've applied patches 1 and 2 (with two tiny whitespace cleanups) to my
+> for-next branch.
+
+Sounds good.  Thank you.
+
+Matt and Christian, are you okay taking patches 3-5 through your tree?
+
+-Tim
