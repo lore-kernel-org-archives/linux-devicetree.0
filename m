@@ -1,87 +1,63 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: Re: [PATCH v8 2/2] usb: ehci-exynos: Change to use phy provided by
- the generic phy framework
-Date: Mon, 28 Apr 2014 09:38:47 +0530
-Message-ID: <CAFp+6iH_HyMk8Y53kUPcySDJHhCNdSfXfp1h9F-398spnQwp4A@mail.gmail.com>
-References: <1398424873-20257-1-git-send-email-gautam.vivek@samsung.com>
-	<Pine.LNX.4.44L0.1404251039210.1140-100000@iolanthe.rowland.org>
+From: George Cherian <george.cherian@ti.com>
+Subject: [PATCH 1/6] drivers: net: cpts: Remove hardcoded clock name for CPTS
+Date: Mon, 28 Apr 2014 09:40:20 +0530
+Message-ID: <1398658225-25873-2-git-send-email-george.cherian@ti.com>
+References: <1398658225-25873-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.44L0.1404251039210.1140-100000@iolanthe.rowland.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Alan Stern <stern@rowland.harvard.edu>
-Cc: Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg KH <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Kamil Debski <k.debski@samsung.com>, Jingoo Han <jg1.han@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1398658225-25873-1-git-send-email-george.cherian@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: davem@davemloft.net, richardcochran@gmail.com, jeffrey.t.kirsher@intel.com, dborkman@redhat.com, ast@plumgrid.com, tklauser@distanz.ch, mpa@pengutronix.de, bhutchings@solarflare.com, zonque@gmail.com, balbi@ti.com, mugunthanvnm@ti.com, george.cherian@ti.com, t-kristo@ti.com, mturquette@linaro.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+CPTS refclk name is hardcoded, which makes it fail in case of DRA7x
+Remove the hardcoded clock name for CPTS refclk and get the same from DT.
 
+Signed-off-by: George Cherian <george.cherian@ti.com>
+---
+ drivers/net/ethernet/ti/cpts.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-On Fri, Apr 25, 2014 at 8:11 PM, Alan Stern <stern@rowland.harvard.edu> wrote:
-> On Fri, 25 Apr 2014, Vivek Gautam wrote:
->
->> From: Kamil Debski <k.debski@samsung.com>
->>
->> Add the phy provider, supplied by new Exynos-usb2phy using
->> Generic phy framework.
->> Keeping the support for older USB phy intact right now, in order
->> to prevent any functionality break in absence of relevant
->> device tree side change for ehci-exynos.
->> Once we move to new phy in the device nodes for ehci, we can
->> remove the support for older phys.
->>
->> Signed-off-by: Kamil Debski <k.debski@samsung.com>
->> [gautam.vivek@samsung.com: Addressed review comments from mailing list]
->> [gautam.vivek@samsung.com: Kept the code for old usb-phy, and just
->> added support for new exynos5-usb2phy in generic phy framework]
->> [gautam.vivek@samsung.com: Edited the commit message]
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->
->> +static int exynos_ehci_phyg_off(struct phy *phy[])
->> +{
->> +     int i;
->> +     int ret = 0;
->> +
->> +     for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
->> +             if (phy[i])
->> +                     ret = phy_power_off(phy[i]);
->> +
->> +     return ret;
->> +}
->
-> Same comment as in the OHCI driver about ret.
-
-Ok, will change this.
-
->
->> @@ -175,6 +269,7 @@ skip_phy:
->>  fail_add_hcd:
->>       if (exynos_ehci->phy)
->>               usb_phy_shutdown(exynos_ehci->phy);
->> +     exynos_ehci_phyg_off(exynos_ehci->phy_g);
->>  fail_io:
->>       clk_disable_unprepare(exynos_ehci->clk);
->>  fail_clk:
->> @@ -195,6 +290,8 @@ static int exynos_ehci_remove(struct platform_device *pdev)
->>       if (exynos_ehci->phy)
->>               usb_phy_shutdown(exynos_ehci->phy);
->>
->> +     exynos_ehci_phyg_off(exynos_ehci->phy_g);
->> +
->
-> In both these places, you need to test exynos_ehci->phyg before calling
-> exynos_ehci_phyg_off().
->
-> Maybe it would help to add exynos_ehci_phy_enable/disable routines,
-> like in the OHCI driver.
-
-Will move these statements as a part of enable()/disable() routines,
-put necessary check there.
-
-
-
+diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
+index 2435139..0b6f6f7 100644
+--- a/drivers/net/ethernet/ti/cpts.c
++++ b/drivers/net/ethernet/ti/cpts.c
+@@ -236,13 +236,11 @@ static void cpts_overflow_check(struct work_struct *work)
+ 	schedule_delayed_work(&cpts->overflow_work, CPTS_OVERFLOW_PERIOD);
+ }
+ 
+-#define CPTS_REF_CLOCK_NAME "cpsw_cpts_rft_clk"
+-
+-static void cpts_clk_init(struct cpts *cpts)
++static void cpts_clk_init(struct device *dev, struct cpts *cpts)
+ {
+-	cpts->refclk = clk_get(NULL, CPTS_REF_CLOCK_NAME);
++	cpts->refclk = devm_clk_get(dev, "cpts");
+ 	if (IS_ERR(cpts->refclk)) {
+-		pr_err("Failed to clk_get %s\n", CPTS_REF_CLOCK_NAME);
++		pr_err("Failed to get cpts refclk\n");
+ 		cpts->refclk = NULL;
+ 		return;
+ 	}
+@@ -252,7 +250,6 @@ static void cpts_clk_init(struct cpts *cpts)
+ static void cpts_clk_release(struct cpts *cpts)
+ {
+ 	clk_disable(cpts->refclk);
+-	clk_put(cpts->refclk);
+ }
+ 
+ static int cpts_match(struct sk_buff *skb, unsigned int ptp_class,
+@@ -390,7 +387,7 @@ int cpts_register(struct device *dev, struct cpts *cpts,
+ 	for (i = 0; i < CPTS_MAX_EVENTS; i++)
+ 		list_add(&cpts->pool_data[i].list, &cpts->pool);
+ 
+-	cpts_clk_init(cpts);
++	cpts_clk_init(dev, cpts);
+ 	cpts_write32(cpts, CPTS_EN, control);
+ 	cpts_write32(cpts, TS_PEND_EN, int_enable);
+ 
 -- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+1.8.3.1
+
