@@ -1,38 +1,55 @@
-From: Tim Kryger <tim.kryger@linaro.org>
-Subject: Re: [PATCH v6 RESEND 0/5] Add Broadcom Kona PWM Support
-Date: Mon, 28 Apr 2014 08:00:39 -0700
-Message-ID: <CAAYSxhpOP78EQAM0cWM2RwLu29-0eRVgLCFX3Hob8q=J==5wUA@mail.gmail.com>
-References: <1398450675-19609-1-git-send-email-tim.kryger@linaro.org>
-	<20140428110731.GH19455@ulmo>
+From: Phil Edworthy <phil.edworthy@renesas.com>
+Subject: RE: [PATCH v2] mmc: add a driver for the Renesas usdhi6rol0 SD/SDIO
+ host controller
+Date: Mon, 28 Apr 2014 15:02:46 +0000
+Message-ID: <a3075651ae064d2fb70073eb3472ede4@HKXPR06MB168.apcprd06.prod.outlook.com>
+References: <Pine.LNX.4.64.1404261404030.21367@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140428110731.GH19455@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1404261404030.21367@axis700.grange>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Cc: Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 4:07 AM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> On Fri, Apr 25, 2014 at 11:31:10AM -0700, Tim Kryger wrote:
->> This series introduces the driver for the Kona PWM controller found in
->> Broadcom mobile SoCs like bcm281xx and updates the device tree and the
->> defconfig to enable use of this hardware on the bcm28155 AP board.
->>
+Hi Guennadi,
 
->> Tim Kryger (5):
->>   Documentation: dt: Add Kona PWM binding
->>   pwm: kona: Introduce Kona PWM controller support
->>   ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
->>   ARM: dts: Enable the PWM for bcm28155 AP board
->>   ARM: bcm_defconfig: Enable PWM and Backlight
+On 26 April 2014 13:06, Guennadi wrote:
+> Subject: [PATCH v2] mmc: add a driver for the Renesas usdhi6rol0 SD/SDIO
+> host controller
+> 
+> This patch adds a driver for the Renesas usdhi6rol0 SD/SDIO host controller
+> in both PIO and DMA modes.
 
-> I've applied patches 1 and 2 (with two tiny whitespace cleanups) to my
-> for-next branch.
+...
+> +static void usdhi6_dma_stop_unmap(struct usdhi6_host *host)
+> +{
+> +	struct mmc_data *data = host->mrq->data;
+> +
+> +	if (!host->dma_active)
+> +		return;
+> +
+> +	usdhi6_write(host, USDHI6_CC_EXT_MODE, 0);
+> +	host->dma_active = false;
+> +
+> +	if (data->flags & MMC_DATA_READ)
+> +		/* TODO: do we have to synchronise? */
+> +		dma_unmap_sg(host->chan_rx->device->dev, data->sg,
+> +			     data->sg_len, DMA_FROM_DEVICE);
+Yes, you have to sync, so you can remove this TODO comment.
 
-Sounds good.  Thank you.
+...
+> +static int usdhi6_probe(struct platform_device *pdev)
+> +{
+...
+> +	host		= mmc_priv(mmc);
+> +	host->mmc	= mmc;
+> +	host->wait	= USDHI6_WAIT_FOR_REQUEST;
+> +	host->timeout	= msecs_to_jiffies(1000);
+In all places you use host->timeout, the code uses host->timeout * 4. Wouldn't it better to just set it here to 4 seconds?
 
-Matt and Christian, are you okay taking patches 3-5 through your tree?
-
--Tim
+Thanks
+Phil
