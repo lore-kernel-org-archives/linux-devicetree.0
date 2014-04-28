@@ -1,385 +1,72 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/7] clk: sunxi: add PRCM (Power/Reset/Clock
- Management) clks support
-Date: Mon, 28 Apr 2014 20:19:42 +0200
-Message-ID: <535E9BBE.8000609@free-electrons.com>
-References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com> <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com> <CAGb2v65aTQozFRVWU5QekK623i4-mLReaAiWC=4pFqWWPcC_Pw@mail.gmail.com> <535E8C8A.6000702@free-electrons.com> <CAGb2v66iLhq58pwYGn-VV01vVXgynYrR0ivatWux1NM+z3Q+9Q@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v2 10/10] ARM: mvebu: Enable the thermal sensor in
+ Armada 380/385 SoC
+Date: Mon, 28 Apr 2014 14:33:27 -0400
+Message-ID: <20140428183327.GA28159@titan.lakedaemon.net>
+References: <1398371004-15807-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1398371004-15807-11-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140428164403.GA17824@arch.cereza>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBS5X7KNAKGQEP3O5FTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v66iLhq58pwYGn-VV01vVXgynYrR0ivatWux1NM+z3Q+9Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20140428164403.GA17824@arch.cereza>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Tawfik Bayouk <tawfik@marvell.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Zhang Rui <rui.zhang@intel.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Apr 28, 2014 at 01:44:03PM -0300, Ezequiel Garcia wrote:
+> On Apr 24, Ezequiel Garcia wrote:
+> > This commit enables the thermal sensor found in Armada 380/385 SoCs.
+> > 
+> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> > ---
+> >  arch/arm/boot/dts/armada-38x.dtsi | 6 ++++++
+> >  1 file changed, 6 insertions(+)
+> > 
+> > diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+> > index a064f59..02c6139 100644
+> > --- a/arch/arm/boot/dts/armada-38x.dtsi
+> > +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> > @@ -346,6 +346,12 @@
+> >  				clock-output-names = "nand";
+> >  			};
+> >  
+> > +			thermal@e8078 {
+> > +				compatible = "marvell,armada380-thermal";
+> > +				reg = <0xe4078 0x4>, <0xe404 0x4>;
+> 
+> Dammit, there's a stupid typo in the register offset. I never noticed this, because
+> the initialization sequence does not do much, and this register is not really used
+> (for now). The fix is this:
+> 
+> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+> index 02c6139..370220f 100644
+> --- a/arch/arm/boot/dts/armada-38x.dtsi
+> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> @@ -348,7 +348,7 @@
+>  
+>  			thermal@e8078 {
+>  				compatible = "marvell,armada380-thermal";
+> -				reg = <0xe4078 0x4>, <0xe404 0x4>;
+> +				reg = <0xe4078 0x4>, <0xe4074 0x4>;
+>  				status = "okay";
+>  			};
+>  
+> Want me to send a follow-up patch?
 
-On 28/04/2014 20:03, Chen-Yu Tsai wrote:
-> On Tue, Apr 29, 2014 at 1:14 AM, Boris BREZILLON
-> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> Hi Chen-Yu,
->>
->> On 28/04/2014 17:59, Chen-Yu Tsai wrote:
->>> Hi,
->>>
->>> On Mon, Apr 28, 2014 at 10:58 PM, Boris BREZILLON
->>> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>>> The PRCM (Power/Reset/Clock Management) unit provides several clock
->>>> devices:
->>>> - AR100 clk: used to clock the Power Management co-processor
->>>> - AHB0 clk: used to clock the AHB0 bus
->>>> - APB0 clk and gates: used to clk
->>>>
->>>> Add support for these clks in a separate driver so that they can be probed
->>>> as platform devices instead of registered during early init.
->>>> We need this to be able to probe PRCM MFD subdevices.
->>>>
->>>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>> ---
->>>>  drivers/clk/sunxi/Makefile         |   2 +
->>>>  drivers/clk/sunxi/clk-sun6i-prcm.c | 253 +++++++++++++++++++++++++++++++++++++
->>>>  2 files changed, 255 insertions(+)
->>>>  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm.c
->>>>
->>>> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
->>>> index b5bac91..ef8cdc9 100644
->>>> --- a/drivers/clk/sunxi/Makefile
->>>> +++ b/drivers/clk/sunxi/Makefile
->>>> @@ -3,3 +3,5 @@
->>>>  #
->>>>
->>>>  obj-y += clk-sunxi.o clk-factors.o
->>>> +
->>>> +obj-$(CONFIG_MFD_SUN6I_PRCM) += clk-sun6i-prcm.o
->>>> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm.c b/drivers/clk/sunxi/clk-sun6i-prcm.c
->>>> new file mode 100644
->>>> index 0000000..bb7b25a
->>>> --- /dev/null
->>>> +++ b/drivers/clk/sunxi/clk-sun6i-prcm.c
->>>> @@ -0,0 +1,253 @@
->>>> +/*
->>>> + * Copyright (C) 2014 Free Electrons
->>>> + *
->>>> + * License Terms: GNU General Public License v2
->>>> + * Author: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>> + *
->>>> + * Allwinner PRCM (Power/Reset/Clock Management) driver
->>>> + *
->>>> + */
->>>> +
->>>> +#include <linux/clk-provider.h>
->>>> +#include <linux/module.h>
->>>> +#include <linux/of.h>
->>>> +#include <linux/platform_device.h>
->>>> +
->>>> +#define SUN6I_APB0_GATES_MAX_SIZE      32
->>>> +#define SUN6I_AR100_MAX_PARENTS                4
->>>> +
->>>> +static int sun6i_a31_ar100_mux_clk_register(struct platform_device *pdev)
->>>> +{
->>>> +       const char *parents[SUN6I_AR100_MAX_PARENTS];
->>>> +       struct device_node *np = pdev->dev.of_node;
->>>> +       const char *clk_name = np->name;
->>>> +       struct resource *r;
->>>> +       void __iomem *reg;
->>>> +       struct clk *clk;
->>>> +       int nparents;
->>>> +       int i;
->>>> +
->>>> +       r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +       reg = devm_ioremap(&pdev->dev, r->start, resource_size(r));
->>>> +       if (IS_ERR(reg))
->>>> +               return PTR_ERR(reg);
->>>> +
->>>> +       nparents = of_clk_get_parent_count(np);
->>>> +       if (nparents > SUN6I_AR100_MAX_PARENTS)
->>>> +               nparents = SUN6I_AR100_MAX_PARENTS;
->>>> +
->>>> +       for (i = 0; i < nparents; i++)
->>>> +               parents[i] = of_clk_get_parent_name(np, i);
->>>> +
->>>> +       of_property_read_string(np, "clock-output-names", &clk_name);
->>>> +
->>>> +       clk = clk_register_mux(&pdev->dev, clk_name, parents, nparents,
->>>> +                              CLK_SET_RATE_NO_REPARENT, reg,
->>>> +                              16, 2, 0, NULL);
->>>> +       if (IS_ERR(clk))
->>>> +               return PTR_ERR(clk);
->>>> +
->>>> +       return of_clk_add_provider(np, of_clk_src_simple_get, clk);
->>>> +}
->>>> +
->>>> +static int sun6i_a31_ar100_clk_register(struct platform_device *pdev)
->>>> +{
->>>> +       struct device_node *np = pdev->dev.of_node;
->>>> +       const char *clk_name = np->name;
->>>> +       const char *clk_parent;
->>>> +       struct resource *r;
->>>> +       void __iomem *reg;
->>>> +       struct clk *clk;
->>>> +
->>>> +       r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +       reg = devm_ioremap(&pdev->dev, r->start, resource_size(r));
->>>> +       if (IS_ERR(reg))
->>>> +               return PTR_ERR(reg);
->>>> +
->>>> +       clk_parent = of_clk_get_parent_name(np, 0);
->>>> +       if (!clk_parent)
->>>> +               return -EINVAL;
->>>> +
->>>> +       of_property_read_string(np, "clock-output-names", &clk_name);
->>>> +
->>>> +       clk = clk_register_divider(&pdev->dev, clk_name, clk_parent,
->>>> +                                  0, reg, 4, 2, CLK_DIVIDER_POWER_OF_TWO,
->>>> +                                  NULL);
->>>> +       if (IS_ERR(clk))
->>>> +               return PTR_ERR(clk);
->>>> +
->>>> +       return of_clk_add_provider(np, of_clk_src_simple_get, clk);
->>>> +}
->>>> +
->>>> +static int sun6i_a31_ar100_div_clk_register(struct platform_device *pdev)
->>>> +{
->>>> +       struct device_node *np = pdev->dev.of_node;
->>>> +       const char *clk_name = np->name;
->>>> +       const char *clk_parent;
->>>> +       struct resource *r;
->>>> +       void __iomem *reg;
->>>> +       struct clk *clk;
->>>> +
->>>> +       r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +       reg = devm_ioremap(&pdev->dev, r->start, resource_size(r));
->>>> +       if (IS_ERR(reg))
->>>> +               return PTR_ERR(reg);
->>>> +
->>>> +       clk_parent = of_clk_get_parent_name(np, 0);
->>>> +       if (!clk_parent)
->>>> +               return -EINVAL;
->>>> +
->>>> +       of_property_read_string(np, "clock-output-names", &clk_name);
->>>> +
->>>> +       clk = clk_register_divider(&pdev->dev, clk_name, clk_parent,
->>>> +                                  0, reg, 8, 5, 0, NULL);
->>>> +       if (IS_ERR(clk))
->>>> +               return PTR_ERR(clk);
->>>> +
->>>> +       return of_clk_add_provider(np, of_clk_src_simple_get, clk);
->>>> +}
->>> Would it be possible to merge the 3 ar100 clocks into 1 composite clock?
->>> They do share the same register, and are related to each other.
->> Okay, I'll take a look at composite clocks.
->>
->>> It might be possible to re-use some code from the sunxi clock driver
->>> for this, though I'm not sure if that's a good idea, sharing code
->>> between modules. Emilio?
->> Actually, this is what I tried in the first place, but then I realized
->> it would require exporting some functions declared as static in clk-sunxi.c.
->> Moreover, these functions do not make use of devm functions (because all
->> the clks declared in clk-sunxi.c are initiliazed during early), and I'd
->> like to uses devm function when clks are declared as platform devices.
-> Yeah, that's why I was uncertain about it.
->
->> Anyway, I'll wait for Emilio's review ;-).
->>
->>>> +
->>>> +static int sun6i_a31_apb0_clk_register(struct platform_device *pdev)
->>>> +{
->>>> +       struct device_node *np = pdev->dev.of_node;
->>>> +       const char *clk_name = np->name;
->>>> +       const char *clk_parent;
->>>> +       struct resource *r;
->>>> +       void __iomem *reg;
->>>> +       struct clk *clk;
->>>> +
->>>> +       r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +       reg = devm_ioremap_resource(&pdev->dev, r);
->>>> +       if (IS_ERR(reg))
->>>> +               return PTR_ERR(reg);
->>>> +
->>>> +       clk_parent = of_clk_get_parent_name(np, 0);
->>>> +       if (!clk_parent)
->>>> +               return -EINVAL;
->>>> +
->>>> +       of_property_read_string(np, "clock-output-names", &clk_name);
->>>> +
->>>> +       clk = clk_register_divider(&pdev->dev, clk_name, clk_parent,
->>>> +                                  0, reg, 0, 2, CLK_DIVIDER_POWER_OF_TWO,
->>>> +                                  NULL);
->>> I just looked at the sun6i kernel code again.
->>>
->>>   http://git.rhombus-tech.net/?p=linux.git;a=blob;f=arch/arm/mach-sun6i/clock/ccm_i.h;hb=refs/heads/allwinner-sunxi-a31#l376
->>>
->>> and
->>>
->>>   http://git.rhombus-tech.net/?p=linux.git;a=blob;f=arch/arm/mach-sun6i/clock/sys_clk.c;hb=refs/heads/allwinner-sunxi-a31#l882
->>>
->>> The divider on the A31 is /2, /2, /4, /8. You might need a table for that.
->> I saw that in the datasheet, but I just thought it was a mistake (that's
->> weird to have 2 times the same divisor).
-> Oh, you have the datasheet?
+Nope, I squashed it in and pushed it out.
 
-No, I said datasheet, but I meant the code you point out last time
-(otherwise I would have no problem to do the clk tree implementation) :-(
+thx,
 
->
-> We also have muxes with 2 PLL6's. And Allwinner's u-boot p2wi driver also
-> assumes 12 MHz, instead of 24 MHz, as the source clock rate. Either they
-> messed up twice, or they had some reason to do it like this. The p2wi
-> driver in u-boot-sunxi also assumes 12 MHz, and I assume it works for
-> everyone with A31 hardware.
-
-Okay, I'll take a look at the output signal (on the P2WI clk pin) and
-see if it matches your assumptions ;-).
-
->
->>> This is different from the A23 manual I used to document most of the PRCM.
->>> I apologize for not catching this earlier. I have updated the wiki.
->> No problem.
->>
->>>> +       if (IS_ERR(clk))
->>>> +               return PTR_ERR(clk);
->>>> +
->>>> +       return of_clk_add_provider(np, of_clk_src_simple_get, clk);
->>>> +}
->>>> +
->>>> +static int sun6i_a31_apb0_gates_clk_register(struct platform_device *pdev)
->>>> +{
->>>> +       struct device_node *np = pdev->dev.of_node;
->>>> +       struct clk_onecell_data *clk_data;
->>>> +       const char *clk_parent;
->>>> +       const char *clk_name;
->>>> +       struct resource *r;
->>>> +       void __iomem *reg;
->>>> +       int gate_id;
->>>> +       int ngates;
->>>> +       int i;
->>>> +
->>>> +       r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>> +       reg = devm_ioremap_resource(&pdev->dev, r);
->>>> +       if (!reg)
->>>> +               return PTR_ERR(reg);
->>>> +
->>>> +       clk_parent = of_clk_get_parent_name(np, 0);
->>>> +       if (!clk_parent)
->>>> +               return -EINVAL;
->>>> +
->>>> +       ngates = of_property_count_strings(np, "clock-output-names");
->>>> +       if (ngates < 0)
->>>> +               return ngates;
->>>> +
->>>> +       if (!ngates || ngates > SUN6I_APB0_GATES_MAX_SIZE)
->>>> +               return -EINVAL;
->>>> +
->>>> +       clk_data = devm_kzalloc(&pdev->dev, sizeof(struct clk_onecell_data),
->>>> +                               GFP_KERNEL);
->>>> +       if (!clk_data)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       clk_data->clks = devm_kzalloc(&pdev->dev,
->>>> +                                     SUN6I_APB0_GATES_MAX_SIZE *
->>>> +                                     sizeof(struct clk *),
->>>> +                                     GFP_KERNEL);
->>>> +       if (!clk_data->clks)
->>>> +               return -ENOMEM;
->>>> +
->>>> +       for (i = 0; i < ngates; i++) {
->>>> +               of_property_read_string_index(np, "clock-output-names",
->>>> +                                             i, &clk_name);
->>>> +
->>>> +               gate_id = i;
->>>> +               of_property_read_u32_index(np, "clock-indices", i, &gate_id);
->>>> +
->>>> +               WARN_ON(gate_id >= SUN6I_APB0_GATES_MAX_SIZE);
->>>> +               if (gate_id >= SUN6I_APB0_GATES_MAX_SIZE)
->>>> +                       continue;
->>>> +
->>>> +               clk_data->clks[gate_id] = clk_register_gate(&pdev->dev,
->>>> +                                                           clk_name,
->>>> +                                                           clk_parent, 0,
->>>> +                                                           reg, gate_id,
->>>> +                                                           0, NULL);
->>>> +               WARN_ON(IS_ERR(clk_data->clks[gate_id]));
->>>> +       }
->>>> +
->>>> +       clk_data->clk_num = ngates;
->>>> +
->>>> +       return of_clk_add_provider(np, of_clk_src_onecell_get, clk_data);
->>>> +}
->>>> +
->>>> +const struct of_device_id sun6i_a31_prcm_clk_dt_ids[] = {
->>>> +       {
->>>> +               .compatible = "allwinner,sun6i-a31-ar100-mux-clk",
->>>> +               .data = sun6i_a31_ar100_mux_clk_register,
->>>> +       },
->>>> +       {
->>>> +               .compatible = "allwinner,sun6i-a31-ar100-clk",
->>>> +               .data = sun6i_a31_ar100_clk_register,
->>>> +       },
->>>> +       {
->>>> +               .compatible = "allwinner,sun6i-a31-ar100-div-clk",
->>>> +               .data = sun6i_a31_ar100_div_clk_register,
->>>> +       },
->>>> +       {
->>>> +               .compatible = "allwinner,sun6i-a31-apb0-clk",
->>>> +               .data = sun6i_a31_apb0_clk_register,
->>>> +       },
->>>> +       {
->>>> +               .compatible = "allwinner,sun6i-a31-apb0-gates-clk",
->>>> +               .data = sun6i_a31_apb0_gates_clk_register,
->>>> +       },
->>>> +       { /* sentinel */ }
->>>> +};
->>>> +
->>>> +static int sun6i_a31_prcm_clk_probe(struct platform_device *pdev)
->>>> +{
->>>> +       struct device_node *np = pdev->dev.of_node;
->>>> +       int (*register_func)(struct platform_device *pdev);
->>>> +       const struct of_device_id *match;
->>>> +
->>>> +       match = of_match_node(sun6i_a31_prcm_clk_dt_ids, np);
->>>> +       if (!match)
->>>> +               return -EINVAL;
->>>> +
->>>> +       register_func = match->data;
->>>> +       return register_func(pdev);
->>>> +}
->>>> +
->>>> +static struct platform_driver sun6i_a31_prcm_clk_driver = {
->>>> +       .driver = {
->>>> +               .name = "sun6i-a31-prcm-clk",
->>>> +               .owner = THIS_MODULE,
->>>> +               .of_match_table = sun6i_a31_prcm_clk_dt_ids,
->>>> +       },
->>>> +       .probe = sun6i_a31_prcm_clk_probe,
->>>> +};
->>>> +module_platform_driver(sun6i_a31_prcm_clk_driver);
->>>> +
->>>> +MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org");
->>>> +MODULE_DESCRIPTION("Allwinner Reset Controller Driver");
->>>> +MODULE_LICENSE("GPL v2");
->>> The rest looks good to me, but Emilio should be able to give you more feedback.
->>>
->>> Thanks for all the sun6i support you've done!
->> Thanks for your review.
->>
->> Best Regards,
->>
->> Boris
->>> Cheers
->>> ChenYu
->> --
->> Boris Brezillon, Free Electrons
->> Embedded Linux and Kernel engineering
->> http://free-electrons.com
->>
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Jason.
