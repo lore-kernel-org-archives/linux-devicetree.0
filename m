@@ -1,113 +1,29 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v8 1/3] ARM: EXYNOS: initial board support for exynos5260 SoC
-Date: Mon, 28 Apr 2014 12:03:21 +0530
-Message-ID: <CAPdUM4McJD92rp77fkAho9oEDH8sv4LKm9y9Vfv1pbbRKT-vqw@mail.gmail.com>
-References: <1397620738-14431-1-git-send-email-rahul.sharma@samsung.com>
-	<1397620738-14431-2-git-send-email-rahul.sharma@samsung.com>
-	<534E3803.5010404@gmail.com>
-	<CAK9yfHztqGWhUJ=PNc7L-epu48PkEM6=v6JFDZ1n52NBeOUB8w@mail.gmail.com>
-	<534E3AE7.10907@gmail.com>
-	<00eb01cf5e7b$4eb9edf0$ec2dc9d0$@samsung.com>
-	<CAPdUM4O3imVNv3A3K1uEkfohc-r668SC6mVZQRCO8N+waxyb4w@mail.gmail.com>
-	<0b4101cf613e$eb2d87d0$c1889770$@samsung.com>
+From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/6] drivers: net: cpts: Remove hardcoded clock name for
+ CPTS
+Date: Mon, 28 Apr 2014 08:55:29 +0200
+Message-ID: <20140428065529.GA4380@netboy>
+References: <1398658225-25873-1-git-send-email-george.cherian@ti.com>
+ <1398658225-25873-2-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <0b4101cf613e$eb2d87d0$c1889770$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Sachin Kamat <sachin.kamat@linaro.org>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, sunil joshi <joshi@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398658225-25873-2-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, jeffrey.t.kirsher-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dborkman-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ast-uqk4Ao+rVK5Wk0Htik3J/w@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, bhutchings-s/n/eUQHGBpZroRs9YW3xA@public.gmane.org, zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, t-kristo-l0cyMroinI0@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Mon, Apr 28, 2014 at 09:40:20AM +0530, George Cherian wrote:
+> CPTS refclk name is hardcoded, which makes it fail in case of DRA7x
+> Remove the hardcoded clock name for CPTS refclk and get the same from DT.
 
-Please share your opinion.
+Patch ordering - doesn't this patch depend on patch #2?
 
-Regards,
-Rahul Sharma
-
-On 26 April 2014 16:31, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Rahul Sharma wrote:
->>
->> Hi Kukjin,
->>
-> Hi,
->
->> Need this macro to enable build for clock driver.
->>
-> I found it in your patch, "clk/exynos5260: add clock file for exynos5260".
-> For consistency, I'm fine on this, if Tomasz has no objection me to pick
-> this into samsung tree for the 5260 clock stuff
-> "drivers/clk/samsung/Makefile".
->
-> Thanks,
-> Kukjin
->
->> Regards,
->> Rahul Sharma.
->>
->>
->> On 22 April 2014 15:36, Kukjin Kim <kgene.kim@samsung.com> wrote:
->> > Tomasz Figa wrote:
->> >>
->> >> On 16.04.2014 10:08, Sachin Kamat wrote:
->> >> > Hi Tomasz,
->> >> >
->> >> > On 16 April 2014 13:27, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> >> >> Hi Rahul,
->> >> >>
->> >> >>
->> >> >> On 16.04.2014 05:58, Rahul Sharma wrote:
->> >> >>>
->> >> >>> From: Pankaj Dubey <pankaj.dubey@samsung.com>
->> >> >>>
->> >> >>> This patch add basic arch side support for exynos5260 SoC.
->> >> >>>
->> >> >>> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->> >> >>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->> >> >>> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
->> >> >>> ---
->> >> >>>    arch/arm/mach-exynos/Kconfig |    5 +++++
->> >> >>>    1 file changed, 5 insertions(+)
->> >> >>>
->> >> >>> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-
->> >> exynos/Kconfig
->> >> >>> index fc8bf18..bf4ed87 100644
->> >> >>> --- a/arch/arm/mach-exynos/Kconfig
->> >> >>> +++ b/arch/arm/mach-exynos/Kconfig
->> >> >>> @@ -84,6 +84,11 @@ config SOC_EXYNOS5250
->> >> >>>          help
->> >> >>>            Enable EXYNOS5250 SoC support
->> >> >>>
->> >> >>> +config SOC_EXYNOS5260
->> >> >>> +       bool "SAMSUNG EXYNOS5260"
->> >> >>> +       default y
->> >> >>> +       depends on ARCH_EXYNOS5
->> >> >>> +
->> >> >>>    config SOC_EXYNOS5420
->> >> >>>          bool "SAMSUNG EXYNOS5420"
->> >> >>>          default y
->> >> >>>
->> >> >>
->> >> >> Is this patch necessary now? After Sachin's consolidation series
->> there
->> >> are
->> >> >> no per SoC entries anymore.
->> >> >
->> >> > Kukjin still wanted individual SoCs to be selectable. Please refer
->> [1].
->> >> >
->> >> > [1] http://www.spinics.net/lists/devicetree/msg27040.html
->> >>
->> >> I don't think any valid reason was presented there. Features in code
->> >> should not be selected using #ifdef CONFIG_ anymore, so I don't really
->> >> see any reason to not proceed with this consolidation. Olof, Arnd?
->> >>
->> > Hi,
->> >
->> > Yeah, in this case, nothing happened with adding SOC_EXYNOS5260. So I
->> don't have any idea why this is required.
->> >
->> > - Kukjin
->> >
->
+Thanks,
+Richard
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
