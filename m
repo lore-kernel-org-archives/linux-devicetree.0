@@ -1,123 +1,57 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 7/7] ARM: sunxi: dt: add PRCM clk and reset
- controller subdevices
-Date: Mon, 28 Apr 2014 19:27:04 +0200
-Message-ID: <535E8F68.7040206@free-electrons.com>
-References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com> <1398697130-8338-8-git-send-email-boris.brezillon@free-electrons.com> <CAGb2v67GnW_ziDMjg6zObCAHZrHppGzP=+-VhpWet-NaAzx-Fg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3 1/3] base: power: Add generic OF-based power domain
+ look-up
+Date: Mon, 28 Apr 2014 11:35:31 -0600
+Message-ID: <535E9163.3070305@wwwdotorg.org>
+References: <1398271618-28932-1-git-send-email-t.figa@samsung.com>
+ <1398271618-28932-2-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB4467KNAKGQEVY5PPOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v67GnW_ziDMjg6zObCAHZrHppGzP=+-VhpWet-NaAzx-Fg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1398271618-28932-2-git-send-email-t.figa@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>, linux-pm@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Philipp Zabel <philipp.zabel@gmail.com>, Len Brown <len.brown@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <tomasz.figa@gmail.com>, Pavel Machek <pavel@ucw.cz>, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar
 List-Id: devicetree@vger.kernel.org
 
+On 04/23/2014 10:46 AM, Tomasz Figa wrote:
+> This patch introduces generic code to perform power domain look-up using
+> device tree and automatically bind devices to their power domains.
+> Generic device tree binding is introduced to specify power domains of
+> devices in their device tree nodes.
+> 
+> Backwards compatibility with legacy Samsung-specific power domain
+> bindings is provided, but for now the new code is not compiled when
+> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
+> will change as soon as Exynos power domain code gets converted to use
+> the generic framework in further patch.
 
-On 28/04/2014 18:02, Chen-Yu Tsai wrote:
-> Hi,
->
-> On Mon, Apr 28, 2014 at 10:58 PM, Boris BREZILLON
-> <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> Add DT definitions for PRCM (Power/Reset/Clock Management) clock and reset
->> controller subdevices.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun6i-a31.dtsi | 49 ++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 49 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
->> index ec3253a..83a1634 100644
->> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
->> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
->> @@ -501,6 +501,55 @@
->>                 prcm@01f01c00 {
-> Seems the address here was wrong to start with.
+> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
 
-Absolutely, I'll fix it.
+> +==Power domain consumers==
+> +
+> +Required properties:
+> + - power-domain : A phandle and power domain specifier as defined by bindings
+> +                  of power controller specified by phandle.
 
->
->>                         compatible = "allwinner,sun6i-a31-prcm";
->>                         reg = <0x01f01400 0x200>;
->> +
->> +                       ar100_mux: ar100_mux {
-> Might we use clk@01f01XXX for the names of the clock nodes?
+It seems quite likely that a single logical device could have components
+in multiple power domains. Consider an HDMI controller with different
+power domains for the HDMI core, CEC communication, DDC/I2C
+communication, and the I/O pads, with no clear separation between those
+two components of the module (no separate register spaces, but the
+bits/registers are interleaved all together).
 
-Actually, I had a discussion with Maxime, and we decided to remove the
-address suffix because the PRCM block is not a bus, and thus should not
-have child node with addresses.
-But I'm not a DT binding expert (it might be acceptable to define child
-nodes with addresses even when the parent is not a bus :-)).
-Advices from DT maintainers on that specific point would be great.
-
-Best Regards,
-
-Boris
-
->> +                               compatible = "allwinner,sun6i-a31-ar100-mux-clk";
->> +                               #clock-cells = <0>;
->> +                               clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
->> +                       };
->> +
->> +                       ar100: ar100 {
->> +                               compatible = "allwinner,sun6i-a31-ar100-clk";
->> +                               #clock-cells = <0>;
->> +                               clocks = <&ar100_mux>;
->> +                       };
->> +
->> +                       ar100_div: ar100_div {
->> +                               compatible = "allwinner,sun6i-a31-ar100-div-clk";
->> +                               #clock-cells = <0>;
->> +                               clocks = <&ar100>;
->> +                       };
->> +
->> +                       ahb0: ahb0 {
->> +                               compatible = "fixed-factor-clock";
->> +                               #clock-cells = <0>;
->> +                               clock-div = <1>;
->> +                               clock-mult = <1>;
->> +                               clocks = <&ar100_div>;
->> +                               clock-output-names = "ahb0";
->> +                       };
->> +
->> +                       apb0: apb0 {
->> +                               compatible = "allwinner,sun6i-a31-apb0-clk";
->> +                               #clock-cells = <0>;
->> +                               clocks = <&ahb0>;
->> +                               clock-output-names = "apb0";
->> +                       };
->> +
->> +                       apb0_gates: apb0_gates {
->> +                               compatible = "allwinner,sun6i-a31-apb0-gates-clk";
->> +                               #clock-cells = <1>;
->> +                               clocks = <&apb0>;
->> +                               clock-output-names = "apb0_pio", "apb0_ir",
->> +                                               "apb0_timer01", "apb0_p2wi",
->> +                                               "apb0_uart", "apb0_1wire",
->> +                                               "apb0_i2c";
->> +                       };
->> +
->> +                       apb0_rst: apb0_rst {
-> Also use reset@01f01XXX here?
->
->> +                               compatible = "allwinner,sun6i-a31-clock-reset";
->> +                               #reset-cells = <1>;
->> +                       };
->>                 };
->>         };
->>  };
-> Thanks!
->
-> ChenYu
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+As such, I think that rather than a "power-domain" property, we need a
+pair of "power-domains", and "power-domain-names" properties, and
+preferably with mandatory usage of name-based lookups, rather than
+allowing a random mix of name-based and index-based lookups like we have
+with some existing resource bindings.
