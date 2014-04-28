@@ -1,100 +1,97 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 7/7] ARM: sunxi: dt: add PRCM clk and reset controller subdevices
-Date: Tue, 29 Apr 2014 00:02:27 +0800
-Message-ID: <CAGb2v67GnW_ziDMjg6zObCAHZrHppGzP=+-VhpWet-NaAzx-Fg@mail.gmail.com>
-References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com>
- <1398697130-8338-8-git-send-email-boris.brezillon@free-electrons.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] phy: omap-usb2: Use generic clock names "wkupclk"
+ and "refclk"
+Date: Mon, 28 Apr 2014 11:03:47 -0500
+Message-ID: <20140428160347.GG30292@saruman.home>
+References: <1398693687-13967-1-git-send-email-rogerq@ti.com>
+ <1398693687-13967-4-git-send-email-rogerq@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398697130-8338-8-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin <kevin@allwinnertech.com>, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, dev <dev@linux-sunxi.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="TmwHKJoIRFM7Mu/A"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398693687-13967-4-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
+
+--TmwHKJoIRFM7Mu/A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On Mon, Apr 28, 2014 at 10:58 PM, Boris BREZILLON
-<boris.brezillon@free-electrons.com> wrote:
-> Add DT definitions for PRCM (Power/Reset/Clock Management) clock and reset
-> controller subdevices.
->
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+On Mon, Apr 28, 2014 at 05:01:23PM +0300, Roger Quadros wrote:
+> As clocks might be named differently on multiple platforms, use a generic
+> name in the driver and allow device tree node to specify the platform
+> specific clock name.
+>=20
+> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 > ---
->  arch/arm/boot/dts/sun6i-a31.dtsi | 49 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-> index ec3253a..83a1634 100644
-> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> @@ -501,6 +501,55 @@
->                 prcm@01f01c00 {
+>  drivers/phy/phy-omap-usb2.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
+> index a2205a8..fb5e515 100644
+> --- a/drivers/phy/phy-omap-usb2.c
+> +++ b/drivers/phy/phy-omap-usb2.c
+> @@ -275,16 +275,16 @@ static int omap_usb2_probe(struct platform_device *=
+pdev)
+>  	if (IS_ERR(phy_provider))
+>  		return PTR_ERR(phy_provider);
+> =20
+> -	phy->wkupclk =3D devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
+> +	phy->wkupclk =3D devm_clk_get(phy->dev, "wkupclk");
 
-Seems the address here was wrong to start with.
+doesn't this patch cause a regression ? I mean, you're changing the
+clock name before fixing DTS. Also, that DTS has been in a major version
+of the kernel, so we need to maintain compatibility with it. How about:
 
->                         compatible = "allwinner,sun6i-a31-prcm";
->                         reg = <0x01f01400 0x200>;
-> +
-> +                       ar100_mux: ar100_mux {
+	phy->wkupclk =3D devm_clk_get(phy->dev, "wkupclk");
+	if (IS_ERR(phy->wkupclk)) {
+		dev_err(&pdev->dev, "unable to get wkupclk, trying old name\n");
+		phy->wkupclk =3D devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
+		if (IS_ERR(phy->wkupclk)) {
+			dev_err(&pdev->dev, "unable to get usb_phy_cm_clk32k\n");
+			return PTR_ERR(phy->wkupclk);
+		} else {
+			dev_warn(&pdev->dev, "found usb_phy_cm_clk32k, please fix your DTS\n");
+		}
+	}
 
-Might we use clk@01f01XXX for the names of the clock nodes?
+a bit ugly, but at least we don't cause any regressions. Likewise for
+other clocks.
 
-> +                               compatible = "allwinner,sun6i-a31-ar100-mux-clk";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
-> +                       };
-> +
-> +                       ar100: ar100 {
-> +                               compatible = "allwinner,sun6i-a31-ar100-clk";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&ar100_mux>;
-> +                       };
-> +
-> +                       ar100_div: ar100_div {
-> +                               compatible = "allwinner,sun6i-a31-ar100-div-clk";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&ar100>;
-> +                       };
-> +
-> +                       ahb0: ahb0 {
-> +                               compatible = "fixed-factor-clock";
-> +                               #clock-cells = <0>;
-> +                               clock-div = <1>;
-> +                               clock-mult = <1>;
-> +                               clocks = <&ar100_div>;
-> +                               clock-output-names = "ahb0";
-> +                       };
-> +
-> +                       apb0: apb0 {
-> +                               compatible = "allwinner,sun6i-a31-apb0-clk";
-> +                               #clock-cells = <0>;
-> +                               clocks = <&ahb0>;
-> +                               clock-output-names = "apb0";
-> +                       };
-> +
-> +                       apb0_gates: apb0_gates {
-> +                               compatible = "allwinner,sun6i-a31-apb0-gates-clk";
-> +                               #clock-cells = <1>;
-> +                               clocks = <&apb0>;
-> +                               clock-output-names = "apb0_pio", "apb0_ir",
-> +                                               "apb0_timer01", "apb0_p2wi",
-> +                                               "apb0_uart", "apb0_1wire",
-> +                                               "apb0_i2c";
-> +                       };
-> +
-> +                       apb0_rst: apb0_rst {
+--=20
+balbi
 
-Also use reset@01f01XXX here?
+--TmwHKJoIRFM7Mu/A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +                               compatible = "allwinner,sun6i-a31-clock-reset";
-> +                               #reset-cells = <1>;
-> +                       };
->                 };
->         };
->  };
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Thanks!
+iQIcBAEBAgAGBQJTXnvjAAoJEIaOsuA1yqREVVUP/jOXH9w40xHCHrKEBH7jF5+h
+w/BiiiqX1YSrUHe2H5PtbVTJCOSBfHkct/t7TJTOZerIN7zIdwnw5lI5T30/WHS8
+0l6mv/JPJZGzPmLHCrZm4gd5C8nGeePvP+KB+1+1RuCRM6gBoUhLPTDLo+7twzDI
+1owzKtYO1vZ8MEGgZVpxVtAnGJkc07BgJR/WqnnRIIxsr9XvjSRqdZmQRxBII6//
+SKYPpHxspepfepYAUCmHS2c8kAVzL0TP+TXbbUFeeP/NFFKFTYVR89MM55E820Q3
+MzZA+ITOasFvE4DJmdns6mF2CZfUbeihbS2Bqq3m9XqC6uYyNK0bYvQIDtVf/SJA
+XPz2n/F+wB7DT6sK0PrI1ZCNDbO1Zc+D5fCkpvye8gs2BqJkxNedZqcZV+t3b6OB
+REwKNDh7ljnu99Hp2b0HDLD+OjoHqlIvfQfhdbgT8+rXwuOcDTsLrJP4TlyIU+GQ
+3mNdEa7nIlu5nfHMT8AkRgYMmzMJXjeKuXbcSp+aiImh2PUGChwQeRUipbQUEg4l
+H2XG6/G4zYB1zIIhkQiCLjQ965k4m6ywjY2JMsm5BrjX1HRDxNAoE7jP/Q7anyih
+RFFFQV9ici7D1VYei4sWcPMDOIgp+Mqbq3xDYy4u76vJwRvkBCMr1eDZEqyFCbOM
+Om8laT6bPqg69i0vZcPr
+=radd
+-----END PGP SIGNATURE-----
 
-ChenYu
+--TmwHKJoIRFM7Mu/A--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
