@@ -1,71 +1,88 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v12 30/31] ARM: dts: add System MMU nodes of exynos5250
-Date: Mon, 28 Apr 2014 16:13:19 -0700
-Message-ID: <CAD=FV=UCpQRg9nWu5EfuzWmBpee9N3X6yCmtpRaNQxitfFZkMQ@mail.gmail.com>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<1398584283-22846-31-git-send-email-shaik.ameer@samsung.com>
-	<CAGm_ybhTEN9QxFBd1Su8NGP32KeYTF8d_Z8gXKo7cYpapZrA9w@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/7] reset: sunxi: document sunxi's reset controllers
+ bindings
+Date: Mon, 28 Apr 2014 16:22:32 -0700
+Message-ID: <20140428232232.GP3134@lukather>
+References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1398697130-8338-2-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGm_ybhTEN9QxFBd1Su8NGP32KeYTF8d_Z8gXKo7cYpapZrA9w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <sajjan.linux@gmail.com>
-Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux-foundation.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Grant Grundler <grundler@chromium.org>, joro@8bytes.org, supash.ramaswamy@linaro.org, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun.Sethi@freescale.com, a.motakis@virtualopensystems.com, pullip.cho@samsung.com, Tomasz Figa <t.figa@samsung.com>, RAHUL SHARMA <rahul.sharma@samsung.com>, Abhilash Kesavan <a.kesavan@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PT0wT86ZVVq2zanE"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398697130-8338-2-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-Vikas,
 
+--PT0wT86ZVVq2zanE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 27, 2014 at 10:39 AM, Vikas Sajjan <sajjan.linux@gmail.com> wrote:
-> Hi shaik,
->
-> +Doug, Abhilash,
->
-> On Sun, Apr 27, 2014 at 1:08 PM, Shaik Ameer Basha
-> <shaik.ameer@samsung.com> wrote:
->> From: Cho KyongHo <pullip.cho@samsung.com>
->>
->> Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5250.dtsi |  270 ++++++++++++++++++++++++++++++++++++-
->>  1 file changed, 267 insertions(+), 3 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index 3742331..eebd397 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -82,6 +82,16 @@
->>                 reg = <0x10044040 0x20>;
->>         };
->>
->> +       pd_isp: isp-power-domain@0x10044020 {
->> +               compatible = "samsung,exynos4210-pd";
->> +               reg = <0x10044020 0x20>;
->> +       };
->> +
->> +       pd_disp1: disp1-power-domain@0x100440A0 {
->> +               compatible = "samsung,exynos4210-pd";
->> +               reg = <0x100440A0 0x20>;
->> +       };
->> +
->
-> As per subject "add System MMU nodes of exynos5250", it should only
-> add SysMMU node.
-> So, I think adding power domain nodes should go in a separate patch.
->
-> Adding power domain nodes can break the system, if powering ON/OFF of
-> the given power domain is NOT taken care well.
-> I can see ISP is one such case. With this series I can see S2R breaks
-> [1] on 5250 chromebook with current mainline kernel (same applies for
-> arndale and smdk5250, but I have tested on these boards yet)
+Hi Boris,
 
-Thanks for catching that!  Let's make sure not to break suspend/resume.
+On Mon, Apr 28, 2014 at 04:58:44PM +0200, Boris BREZILLON wrote:
+> Add DT bindings documentation for sunxi's reset controllers.
+>=20
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>  .../bindings/reset/allwinner,sunxi-clock-reset.txt  | 21 +++++++++++++++=
+++++++
+>  1 file changed, 21 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sun=
+xi-clock-reset.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/reset/allwinner,sunxi-cloc=
+k-reset.txt b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock=
+-reset.txt
+> new file mode 100644
+> index 0000000..a582804
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset=
+=2Etxt
+> @@ -0,0 +1,21 @@
+> +Allwinner sunxi Peripheral Reset Controller
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Please also refer to reset.txt in this directory for common reset
+> +controller binding usage.
+> +
+> +Required properties:
+> +- compatible: Should be one of the following depending on your SoC:
 
-Given that these power domains are actually used as the domains for
-some of the System MMU nodes I don't totally object to adding them in
-the same patch, but if they're breaking things then I agree that we
-could leave them out and add them in a later patch (once issues are
-sorted out).
+It doesn't really depend on the SoC.
 
--Doug
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--PT0wT86ZVVq2zanE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTXuK3AAoJEBx+YmzsjxAgXm0QAJJ6/VEJWiU+QTD8r/JkX2Ie
+4/K2KEmVjNw5VgE7BeNaeAp7hHLS259J6+PRh5In3TPJpWeoC67EGRG9fnNy9pln
+midbq9eQ4hOYXAfad0XqNJm9vwvEV1Hl8eMSvYgQJiDkpZ91/iiL1xNGtOXKv7AK
+OZQOL9oAb23lCsSMaSPvBfSRkHG8rlPIEXcOWrLMloyQjxQKwb+K4egA5vRftM5k
+g1D/lMKihQ9eE0niI3sM8vZy9EISbhEq0Z9NRgWeKsw80D01CYeZEVzeekBYZIv0
+Sib4GGnjjI8v7QFwH+5uD5otLxwdW04C+REMIk/xSEzcWnCn5+u8+lBr7g0xmkOe
+oL2Z6oaESD9/jXcDhV5z7/YDMlIArcWROFa8eD0yEdwYp6gtVKrzRGIHs+7NkkcH
+fi44tGE/6vO7XeaKkNBeohDIjpvSz/ubhjXwtIEDiFI2Lsk64zm3z0jPoJZod5Gz
+N9VF1hLskt+7VsiYNKn5KY4mNrDVcIWrxDDxoi2teIqiRuzTPSE1ae/1NRcSA2Lt
+mwN/z7S1YQdg7By2EIwMP0rccIJ1Nx1dlWFCL8eH1PGBqdnHuSTVaOyHjL4kC5w7
+fH1uvifczRwXb21jaOOoZEtqZloZiONEVQZ3VpI4zpWq8Z59w/wcYk63clY9tPlg
+p4RW1Te91K6BJOptQEqV
+=aZ/j
+-----END PGP SIGNATURE-----
+
+--PT0wT86ZVVq2zanE--
