@@ -1,13 +1,13 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 3/7] mfd: add support for sun6i PRCM
- (Power/Reset/Clock Management) unit
-Date: Mon, 28 Apr 2014 16:58:46 +0200
-Message-ID: <1398697130-8338-4-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH 5/7] clk: sunxi: add PRCM (Power/Reset/Clock
+ Management) clks support
+Date: Mon, 28 Apr 2014 16:58:48 +0200
+Message-ID: <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com>
 References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBZWZ7GNAKGQEVS2IFTY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBB4WZ7GNAKGQEKDC7IEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1398697130-8338-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,59 +19,39 @@ To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PRCM (Power/Reset/Clock Management) block exposes several subdevices
-in different subsystems (clk, reset ...)
+The PRCM (Power/Reset/Clock Management) unit provides several clock
+devices:
+- AR100 clk: used to clock the Power Management co-processor
+- AHB0 clk: used to clock the AHB0 bus
+- APB0 clk and gates: used to clk
 
-Add basic support for the PRCM unit with clk (AR100, AHB0, and APB0 clks)
-and reset controller subdevices.
-
-Other subdevices might be added later (if needed).
+Add support for these clks in a separate driver so that they can be probed
+as platform devices instead of registered during early init.
+We need this to be able to probe PRCM MFD subdevices.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/mfd/Kconfig      |   8 +++
- drivers/mfd/Makefile     |   1 +
- drivers/mfd/sun6i-prcm.c | 163 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 172 insertions(+)
- create mode 100644 drivers/mfd/sun6i-prcm.c
+ drivers/clk/sunxi/Makefile         |   2 +
+ drivers/clk/sunxi/clk-sun6i-prcm.c | 253 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 255 insertions(+)
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm.c
 
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 2d347c9..0a9220d 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -731,6 +731,14 @@ config MFD_STA2X11
- 	select MFD_CORE
- 	select REGMAP_MMIO
+diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
+index b5bac91..ef8cdc9 100644
+--- a/drivers/clk/sunxi/Makefile
++++ b/drivers/clk/sunxi/Makefile
+@@ -3,3 +3,5 @@
+ #
  
-+config MFD_SUN6I_PRCM
-+	bool "Allwinner PRCM controller"
-+	depends on ARCH_SUNXI
-+	select MFD_CORE
-+	help
-+	  Support for the PRCM (Power/Reset/Clock Management) unit available
-+	  in A31 SoC.
+ obj-y += clk-sunxi.o clk-factors.o
 +
- config MFD_SYSCON
- 	bool "System Controller Register R/W Based on Regmap"
- 	select REGMAP_MMIO
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index 1efecf2..df7823c 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -29,6 +29,7 @@ obj-$(CONFIG_MFD_STA2X11)	+= sta2x11-mfd.o
- obj-$(CONFIG_MFD_STMPE)		+= stmpe.o
- obj-$(CONFIG_STMPE_I2C)		+= stmpe-i2c.o
- obj-$(CONFIG_STMPE_SPI)		+= stmpe-spi.o
-+obj-$(CONFIG_MFD_SUN6I_PRCM)	+= sun6i-prcm.o
- obj-$(CONFIG_MFD_TC3589X)	+= tc3589x.o
- obj-$(CONFIG_MFD_T7L66XB)	+= t7l66xb.o tmio_core.o
- obj-$(CONFIG_MFD_TC6387XB)	+= tc6387xb.o tmio_core.o
-diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
++obj-$(CONFIG_MFD_SUN6I_PRCM) += clk-sun6i-prcm.o
+diff --git a/drivers/clk/sunxi/clk-sun6i-prcm.c b/drivers/clk/sunxi/clk-sun6i-prcm.c
 new file mode 100644
-index 0000000..e05d92d
+index 0000000..bb7b25a
 --- /dev/null
-+++ b/drivers/mfd/sun6i-prcm.c
-@@ -0,0 +1,163 @@
++++ b/drivers/clk/sunxi/clk-sun6i-prcm.c
+@@ -0,0 +1,253 @@
 +/*
 + * Copyright (C) 2014 Free Electrons
 + *
@@ -82,158 +62,248 @@ index 0000000..e05d92d
 + *
 + */
 +
++#include <linux/clk-provider.h>
 +#include <linux/module.h>
-+#include <linux/kernel.h>
-+#include <linux/errno.h>
-+#include <linux/err.h>
-+#include <linux/spinlock.h>
-+#include <linux/io.h>
-+#include <linux/slab.h>
-+#include <linux/mutex.h>
-+#include <linux/completion.h>
-+#include <linux/irq.h>
-+#include <linux/jiffies.h>
-+#include <linux/bitops.h>
-+#include <linux/fs.h>
 +#include <linux/of.h>
-+#include <linux/of_irq.h>
 +#include <linux/platform_device.h>
-+#include <linux/uaccess.h>
-+#include <linux/mfd/core.h>
 +
-+struct prcm_data {
-+	int nsubdevs;
-+	const struct mfd_cell *subdevs;
-+};
++#define SUN6I_APB0_GATES_MAX_SIZE	32
++#define SUN6I_AR100_MAX_PARENTS		4
 +
-+static const struct resource sun6i_a31_ar100_clk_res[] = {
-+	{
-+		.start = 0x0,
-+		.end = 0x3,
-+		.flags = IORESOURCE_MEM,
-+	},
-+};
++static int sun6i_a31_ar100_mux_clk_register(struct platform_device *pdev)
++{
++	const char *parents[SUN6I_AR100_MAX_PARENTS];
++	struct device_node *np = pdev->dev.of_node;
++	const char *clk_name = np->name;
++	struct resource *r;
++	void __iomem *reg;
++	struct clk *clk;
++	int nparents;
++	int i;
 +
-+static const struct resource sun6i_a31_apb0_clk_res[] = {
-+	{
-+		.start = 0xc,
-+		.end = 0xf,
-+		.flags = IORESOURCE_MEM,
-+	},
-+};
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap(&pdev->dev, r->start, resource_size(r));
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
 +
-+static const struct resource sun6i_a31_apb0_gates_clk_res[] = {
-+	{
-+		.start = 0x28,
-+		.end = 0x2b,
-+		.flags = IORESOURCE_MEM,
-+	},
-+};
++	nparents = of_clk_get_parent_count(np);
++	if (nparents > SUN6I_AR100_MAX_PARENTS)
++		nparents = SUN6I_AR100_MAX_PARENTS;
 +
-+static const struct resource sun6i_a31_apb0_rstc_res[] = {
-+	{
-+		.start = 0xb0,
-+		.end = 0xb3,
-+		.flags = IORESOURCE_MEM,
-+	},
-+};
++	for (i = 0; i < nparents; i++)
++		parents[i] = of_clk_get_parent_name(np, i);
 +
-+static const struct mfd_cell sun6i_a31_prcm_subdevs[] = {
-+	{
-+		.name = "sun6i-a31-ar100-mux-clk",
-+		.of_compatible = "allwinner,sun6i-a31-ar100-mux-clk",
-+		.num_resources = ARRAY_SIZE(sun6i_a31_ar100_clk_res),
-+		.resources = sun6i_a31_ar100_clk_res,
-+	},
-+	{
-+		.name = "sun6i-a31-ar100-clk",
-+		.of_compatible = "allwinner,sun6i-a31-ar100-clk",
-+		.num_resources = ARRAY_SIZE(sun6i_a31_ar100_clk_res),
-+		.resources = sun6i_a31_ar100_clk_res,
-+	},
-+	{
-+		.name = "sun6i-a31-ar100-div-clk",
-+		.of_compatible = "allwinner,sun6i-a31-ar100-div-clk",
-+		.num_resources = ARRAY_SIZE(sun6i_a31_ar100_clk_res),
-+		.resources = sun6i_a31_ar100_clk_res,
-+	},
-+	{
-+		.name = "sun6i-a31-apb0-clk",
-+		.of_compatible = "allwinner,sun6i-a31-apb0-clk",
-+		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_clk_res),
-+		.resources = sun6i_a31_apb0_clk_res,
-+	},
-+	{
-+		.name = "sun6i-a31-apb0-gates-clk",
-+		.of_compatible = "allwinner,sun6i-a31-apb0-gates-clk",
-+		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_gates_clk_res),
-+		.resources = sun6i_a31_apb0_gates_clk_res,
-+	},
-+	{
-+		.name = "sun6i-a31-apb0-clock-reset",
-+		.of_compatible = "allwinner,sun6i-a31-clock-reset",
-+		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_rstc_res),
-+		.resources = sun6i_a31_apb0_rstc_res,
-+	},
-+};
++	of_property_read_string(np, "clock-output-names", &clk_name);
 +
-+static const struct prcm_data sun6i_a31_prcm_data = {
-+	.nsubdevs = ARRAY_SIZE(sun6i_a31_prcm_subdevs),
-+	.subdevs = sun6i_a31_prcm_subdevs,
-+};
++	clk = clk_register_mux(&pdev->dev, clk_name, parents, nparents,
++			       CLK_SET_RATE_NO_REPARENT, reg,
++			       16, 2, 0, NULL);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
 +
-+static const struct of_device_id sun6i_prcm_dt_ids[] = {
-+	{
-+		.compatible = "allwinner,sun6i-a31-prcm",
-+		.data = &sun6i_a31_prcm_data,
-+	},
-+	{ /* sentinel */ },
-+};
++	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
 +
-+static int sun6i_prcm_probe(struct platform_device *pdev)
++static int sun6i_a31_ar100_clk_register(struct platform_device *pdev)
 +{
 +	struct device_node *np = pdev->dev.of_node;
-+	const struct of_device_id *match;
-+	const struct prcm_data *data;
-+	struct resource *res;
-+	int ret;
++	const char *clk_name = np->name;
++	const char *clk_parent;
++	struct resource *r;
++	void __iomem *reg;
++	struct clk *clk;
 +
-+	match = of_match_node(sun6i_prcm_dt_ids, np);
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap(&pdev->dev, r->start, resource_size(r));
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
++
++	clk_parent = of_clk_get_parent_name(np, 0);
++	if (!clk_parent)
++		return -EINVAL;
++
++	of_property_read_string(np, "clock-output-names", &clk_name);
++
++	clk = clk_register_divider(&pdev->dev, clk_name, clk_parent,
++				   0, reg, 4, 2, CLK_DIVIDER_POWER_OF_TWO,
++				   NULL);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
++
++static int sun6i_a31_ar100_div_clk_register(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	const char *clk_name = np->name;
++	const char *clk_parent;
++	struct resource *r;
++	void __iomem *reg;
++	struct clk *clk;
++
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap(&pdev->dev, r->start, resource_size(r));
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
++
++	clk_parent = of_clk_get_parent_name(np, 0);
++	if (!clk_parent)
++		return -EINVAL;
++
++	of_property_read_string(np, "clock-output-names", &clk_name);
++
++	clk = clk_register_divider(&pdev->dev, clk_name, clk_parent,
++				   0, reg, 8, 5, 0, NULL);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
++
++static int sun6i_a31_apb0_clk_register(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	const char *clk_name = np->name;
++	const char *clk_parent;
++	struct resource *r;
++	void __iomem *reg;
++	struct clk *clk;
++
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap_resource(&pdev->dev, r);
++	if (IS_ERR(reg))
++		return PTR_ERR(reg);
++
++	clk_parent = of_clk_get_parent_name(np, 0);
++	if (!clk_parent)
++		return -EINVAL;
++
++	of_property_read_string(np, "clock-output-names", &clk_name);
++
++	clk = clk_register_divider(&pdev->dev, clk_name, clk_parent,
++				   0, reg, 0, 2, CLK_DIVIDER_POWER_OF_TWO,
++				   NULL);
++	if (IS_ERR(clk))
++		return PTR_ERR(clk);
++
++	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
++}
++
++static int sun6i_a31_apb0_gates_clk_register(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	struct clk_onecell_data *clk_data;
++	const char *clk_parent;
++	const char *clk_name;
++	struct resource *r;
++	void __iomem *reg;
++	int gate_id;
++	int ngates;
++	int i;
++
++	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	reg = devm_ioremap_resource(&pdev->dev, r);
++	if (!reg)
++		return PTR_ERR(reg);
++
++	clk_parent = of_clk_get_parent_name(np, 0);
++	if (!clk_parent)
++		return -EINVAL;
++
++	ngates = of_property_count_strings(np, "clock-output-names");
++	if (ngates < 0)
++		return ngates;
++
++	if (!ngates || ngates > SUN6I_APB0_GATES_MAX_SIZE)
++		return -EINVAL;
++
++	clk_data = devm_kzalloc(&pdev->dev, sizeof(struct clk_onecell_data),
++				GFP_KERNEL);
++	if (!clk_data)
++		return -ENOMEM;
++
++	clk_data->clks = devm_kzalloc(&pdev->dev,
++				      SUN6I_APB0_GATES_MAX_SIZE *
++				      sizeof(struct clk *),
++				      GFP_KERNEL);
++	if (!clk_data->clks)
++		return -ENOMEM;
++
++	for (i = 0; i < ngates; i++) {
++		of_property_read_string_index(np, "clock-output-names",
++					      i, &clk_name);
++
++		gate_id = i;
++		of_property_read_u32_index(np, "clock-indices", i, &gate_id);
++
++		WARN_ON(gate_id >= SUN6I_APB0_GATES_MAX_SIZE);
++		if (gate_id >= SUN6I_APB0_GATES_MAX_SIZE)
++			continue;
++
++		clk_data->clks[gate_id] = clk_register_gate(&pdev->dev,
++							    clk_name,
++							    clk_parent, 0,
++							    reg, gate_id,
++							    0, NULL);
++		WARN_ON(IS_ERR(clk_data->clks[gate_id]));
++	}
++
++	clk_data->clk_num = ngates;
++
++	return of_clk_add_provider(np, of_clk_src_onecell_get, clk_data);
++}
++
++const struct of_device_id sun6i_a31_prcm_clk_dt_ids[] = {
++	{
++		.compatible = "allwinner,sun6i-a31-ar100-mux-clk",
++		.data = sun6i_a31_ar100_mux_clk_register,
++	},
++	{
++		.compatible = "allwinner,sun6i-a31-ar100-clk",
++		.data = sun6i_a31_ar100_clk_register,
++	},
++	{
++		.compatible = "allwinner,sun6i-a31-ar100-div-clk",
++		.data = sun6i_a31_ar100_div_clk_register,
++	},
++	{
++		.compatible = "allwinner,sun6i-a31-apb0-clk",
++		.data = sun6i_a31_apb0_clk_register,
++	},
++	{
++		.compatible = "allwinner,sun6i-a31-apb0-gates-clk",
++		.data = sun6i_a31_apb0_gates_clk_register,
++	},
++	{ /* sentinel */ }
++};
++
++static int sun6i_a31_prcm_clk_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	int (*register_func)(struct platform_device *pdev);
++	const struct of_device_id *match;
++
++	match = of_match_node(sun6i_a31_prcm_clk_dt_ids, np);
 +	if (!match)
 +		return -EINVAL;
 +
-+	data = match->data;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res) {
-+		dev_err(&pdev->dev, "no prcm memory region provided\n");
-+		return -ENOENT;
-+	}
-+
-+	ret = mfd_add_devices(&pdev->dev, 0, data->subdevs, data->nsubdevs,
-+			      res, -1, NULL);
-+	if (ret) {
-+		dev_err(&pdev->dev, "failed to add subdevices\n");
-+		return ret;
-+	}
-+
-+	dev_info(&pdev->dev, "PRCM initialized\n");
-+
-+	return 0;
++	register_func = match->data;
++	return register_func(pdev);
 +}
 +
-+static struct platform_driver sun6i_prcm_driver = {
++static struct platform_driver sun6i_a31_prcm_clk_driver = {
 +	.driver = {
-+		.name = "sun6i-prcm",
++		.name = "sun6i-a31-prcm-clk",
 +		.owner = THIS_MODULE,
-+		.of_match_table = sun6i_prcm_dt_ids,
++		.of_match_table = sun6i_a31_prcm_clk_dt_ids,
 +	},
-+	.probe = sun6i_prcm_probe,
++	.probe = sun6i_a31_prcm_clk_probe,
 +};
-+module_platform_driver(sun6i_prcm_driver);
++module_platform_driver(sun6i_a31_prcm_clk_driver);
 +
-+MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-+MODULE_DESCRIPTION("Allwinner sun6i PRCM driver");
++MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org");
++MODULE_DESCRIPTION("Allwinner Reset Controller Driver");
 +MODULE_LICENSE("GPL v2");
 -- 
 1.8.3.2
