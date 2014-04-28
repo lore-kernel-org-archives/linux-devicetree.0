@@ -1,166 +1,105 @@
-From: Pankaj Dubey <pankaj.dubey@samsung.com>
-Subject: Re: [PATCH v2 1/5] ARM: dts: Add syscon handle in pmu node for
- exynos5250
-Date: Mon, 28 Apr 2014 20:22:53 +0900
-Message-ID: <535E3A0D.4000501@samsung.com>
-References: <1396425778-4379-1-git-send-email-pankaj.dubey@samsung.com>
- <1398426857-5097-1-git-send-email-pankaj.dubey@samsung.com>
- <1398426857-5097-2-git-send-email-pankaj.dubey@samsung.com>
- <535ACBC8.5090703@gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v6 RESEND 0/5] Add Broadcom Kona PWM Support
+Date: Mon, 28 Apr 2014 13:07:32 +0200
+Message-ID: <20140428110731.GH19455@ulmo>
+References: <1398450675-19609-1-git-send-email-tim.kryger@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <535ACBC8.5090703@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, robh+dt@kernel.org, t.figa@samsung.com, chow.kim@samsung.com, yg1004.jang@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q6STzHxy03qt/hK9"
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398450675-19609-1-git-send-email-tim.kryger@linaro.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Tim Kryger <tim.kryger@linaro.org>
+Cc: Matt Porter <mporter@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Christian Daudt <bcm@fixthebug.org>, Grant Likely <grant.likely@linaro.org>, Linux PWM List <linux-pwm@vger.kernel.org>, Device Tree List <devicetree@vger.kernel.org>, Linux Doc List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Broadcom Kernel Feedback List <bcm-kernel-feedback-list@broadcom.com>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
 
-On 04/26/2014 05:55 AM, Tomasz Figa wrote:
-> Hi Pankaj,
->
-> On 25.04.2014 13:54, Pankaj Dubey wrote:
->> Add "samsung,syscon-phandle" property pointing to PMU node
->> to access PMU register via PMU regmap handle.
->>
->> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos5250.dtsi |    1 +
->>   1 file changed, 1 insertion(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi 
->> b/arch/arm/boot/dts/exynos5250.dtsi
->> index 3742331..52801af 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -173,6 +173,7 @@
->>       pmu_system_controller: system-controller@10040000 {
->>           compatible = "samsung,exynos5250-pmu", "syscon";
->>           reg = <0x10040000 0x5000>;
->> +        samsung,syscon-phandle = <&pmu_system_controller>;
->>       };
->>
->>       watchdog@101D0000 {
->>
->
-> This looks strange. A node that refers back to itself. If I understand 
-> correctly, you are relying on the fact that if you don't use platform_driver 
-> model for the PMU driver, it won't bind to this node and instead the generic 
-> syscon driver will. I'm afraid this is incorrect, because the PMU driver 
-> should normally use the driver model.
+--Q6STzHxy03qt/hK9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-No, let me explain you, property "samsung, syscon-phandle" referring back to 
-it's own node
-and I am not using platform_driver model for PMU driver are not related with 
-each other.
+On Fri, Apr 25, 2014 at 11:31:10AM -0700, Tim Kryger wrote:
+> This series introduces the driver for the Kona PWM controller found in
+> Broadcom mobile SoCs like bcm281xx and updates the device tree and the
+> defconfig to enable use of this hardware on the bcm28155 AP board.
+>=20
+> Changes since v5:
+>   - Rebased on v3.15-rc1
+>=20
+> Changes since v4:
+>   - Added in real polarity support
+>   - Labeled trigger bits as such rather than use the name from hw docs
+>   - Listed unsual hardware characteristics at the top of the file
+>   - Removed default from Kconfig and update defconfig accordingly
+>   - Always use unsigned int for temporary register values
+>=20
+> Changes since v3:
+>   - Removed polarity support for now
+>   - Cleaned up whitespace issues, shortened some variable names
+>   - Use container_of instead of dev_get_drvdata to get private data
+>   - Removed workaround for PWM framework bug
+>   - Reworded some binding documentation
+>=20
+> Changes since v2:
+>   - SoC DTS file updated to use real clock's phandle + specifier
+>   - Toggle smooth mode off during apply so new settings take immediately
+>=20
+> Changes since v1:
+>   - Fixed up macros to be clearer and more complete
+>   - Corrected spelling and punctuation mistakes
+>   - Added support for polarity
+>   - Made peripheral clock use more efficient
+>   - Made prescale and duty computation clearer
+>   - Moved Makefile addition to keep alphabetical
+>   - Split complex lines into multiple steps
+>=20
+>=20
+> Tim Kryger (5):
+>   Documentation: dt: Add Kona PWM binding
+>   pwm: kona: Introduce Kona PWM controller support
+>   ARM: dts: Declare the PWM for bcm11351 (bcm281xx)
+>   ARM: dts: Enable the PWM for bcm28155 AP board
+>   ARM: bcm_defconfig: Enable PWM and Backlight
+>=20
+>  .../devicetree/bindings/pwm/bcm-kona-pwm.txt       |   21 ++
+>  arch/arm/boot/dts/bcm11351.dtsi                    |    8 +
+>  arch/arm/boot/dts/bcm28155-ap.dts                  |    4 +
+>  arch/arm/configs/bcm_defconfig                     |    3 +
+>  drivers/pwm/Kconfig                                |    9 +
+>  drivers/pwm/Makefile                               |    1 +
+>  drivers/pwm/pwm-bcm-kona.c                         |  319 ++++++++++++++=
+++++++
+>  7 files changed, 365 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/bcm-kona-pwm.txt
+>  create mode 100644 drivers/pwm/pwm-bcm-kona.c
 
-We added "samsung, syscon-phandle" property to PMU node, as current syscon API's 
-to get regmap
-such as "syscon_regmap_lookup_by_phandle" expects "property_name" to lookup for 
-proper device_node
-which has regmap. So if we are passing PMU device_node to such API we should 
-have that property under
-PMU device node. So even though it's looking strange I do not think it's wrong.
+I've applied patches 1 and 2 (with two tiny whitespace cleanups) to my
+for-next branch.
 
-But still since, you pointed out I checked syscon APIs carefully and found that 
-we can avoid such property
-which refers back to itself if we modify syscon APIs and allow them to accept 
-"property" parameter as NULL,
-assuming that device_node passed itself has regmap handle, following 
-modification worked for me and if
-it is acceptable I do not need to add such property in PMU device node.
+Thanks,
+Thierry
 
-==========
-struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
-                      const char *property)
-  {
-      struct device_node *syscon_np;
-      struct regmap *regmap;
--
--    syscon_np = of_parse_phandle(np, property, 0);
--    if (!syscon_np)
--        return ERR_PTR(-ENODEV);
--
--    regmap = syscon_node_to_regmap(syscon_np);
--    of_node_put(syscon_np);
--
-+
-+    if (property) {
-+        syscon_np = of_parse_phandle(np, property, 0);
-+        if (!syscon_np)
-+            return ERR_PTR(-ENODEV);
-+
-+        regmap = syscon_node_to_regmap(syscon_np);
-+        of_node_put(syscon_np);
-+    } else {
-+        regmap = syscon_node_to_regmap(np);
-+    }
-      return regmap;
-  }
-=============
+--Q6STzHxy03qt/hK9
+Content-Type: application/pgp-signature
 
-Other problem as you are seeing that current patch does not uses platform_driver 
-model for PMU
-is because PMU device node has two compatibility string and "syscon" driver is 
-getting registered as
-core_initcall, much before PMU registration. So only "syscon" driver's probe is 
-getting called. So it does
-not depend whether we have this property in PMU device node or we do not have.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
->
-> I see two possible options to solve this problem:
->
-> 1) Instead, the PMU driver should bind to this node and become a syscon 
-> provider. This will require a small change in the syscon API, which would be 
-> reasonable anyway:
->
->  a) instead of using driver_find_device() and dev_get_drvdata() in 
-> syscon_node_to_regmap(), a local list of syscon structs should be kept in this 
-> driver and then the look-up would just iterate over this list, that could 
-> contain external syscon implementations as well,
->
->  b) syscon_register() function should be provided to register an external 
-> syscon provider from other drivers, like Exynos PMU driver.
->
-> Another solution would be:
->
-> 2) Register a static platform device from Exynos PMU driver, with .of_node set 
-> to PMU node and .name to "syscon" to instantiate the syscon device and create 
-> a syscon provider, even though the PMU driver would be bound to the node.
+iQIcBAEBAgAGBQJTXjZzAAoJEN0jrNd/PrOhkLsP/29qxlKh/dhTfb4gSR+V5t9a
+WwdhhsZNLlNSgQ03c40DwV8DtEHD2Z4BbxeF+ElCYq0xeDU79erEDVIjonu9939v
+jL1FyE0UHU9sLvwU03R7Sjcco3ljbuAG8H1TEsPyw7OKGBmcjrSEBJcgLlcHqXrg
+/z2cOdgOkrBWplxqMUNVr6sh5ErT1584DceUWfJsrD6M3g6Bd39FnKhZrcPPRQAM
+CN8dRcBIXsrelEpJHkLenxgb93ADFZSR1N1tU1UexQn0ufZnDJmAwRFHeTnmPtd3
+kreSGOphiZwvUOy7cNC3Sxj5irCzn8vGcWiixy50SkvRwnCe5C6G+4OBwHKaj+36
+FmdpP/un3AYaZ53pMoCXSYnxiMS/LboMNmXLh70VM/N1tx2j+hAL10u5LzOqFJNU
+WyujvbYAs9e6FwTyLTi24j3BbPRCFJmj/cEWzuqqaMOnVnwq20Z9xFkmfBgkZlV1
+WjPNRq9B1WkV/arbk5SBM7BHrylSEneo4pOl+bgEVVnes2LnL4lhWCMP4G2KAhMa
+KR6vtDpVbzILz2jQbCRC4W93emOv/w+ZnkG9UmOOECf3gLDSzhiE5QPnW5AvIH/s
+4LjuLg9PBCzz5ZykOZVmRPG461nRuUR+oCwuKelFs0gqvmYofa8jZ6e8Rp7Ikgoy
+pHvmyR4lXBY5+KdSgkqU
+=nxgn
+-----END PGP SIGNATURE-----
 
-I do not understand you here. Will you please explain a bit more here?
-
-How come two driver with same ".name" can be registered? I can see if "syscon" 
-driver
-registration comes first, static registration from PMU driver, with same .name 
-will fail.
-Please correct me if I am wrong.
-
-
->
-> The change mentioned in point 1.a) should be implemented regardless of which 
-> solution is chosen, as iterating over all devices in the system and relying on 
-> their driver_data is rather a poor practice. A local list would be faster - 
-> all syscons to iterate over, instead of all devices in the system, and more 
-> flexible - a single device could be a provider of multiple resources.
-
-Your suggestion 1.a) worked well and I modified and tested it also.
-So probably I can send that patch separately. Even though I can't see this 
-helping me to convert PMU
-as platform_driver model.
-
->
-> As for the solution for Exynos PMU itself, I tend to prefer 2), as it wouldn't 
-> require additional functions exported from the syscon driver.
->
-> Best regards,
-> Tomasz
->
-
-
--- 
-Best Regards,
-Pankaj Dubey
+--Q6STzHxy03qt/hK9--
