@@ -1,354 +1,123 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 5/7] clk: sunxi: add PRCM (Power/Reset/Clock Management)
- clks support
-Date: Mon, 28 Apr 2014 16:40:39 -0700
-Message-ID: <20140428234039.GT3134@lukather>
-References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com>
- <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v18 3/4] ata: Add APM X-Gene SoC AHCI SATA host
+ controller driver
+Date: Mon, 28 Apr 2014 18:58:16 -0500
+Message-ID: <20140428235816.GC18010@saruman.home>
+References: <1394841201-29495-1-git-send-email-lho@apm.com>
+ <1394841201-29495-3-git-send-email-lho@apm.com>
+ <1394841201-29495-4-git-send-email-lho@apm.com>
+ <201403151019.49316.arnd@arndb.de>
+ <CAPw-ZTksg3z8GY55jb7-yP1wfq2BF6apB9KBgbokpshKbiiAaw@mail.gmail.com>
+ <CAPw-ZTmGA5rtVmHx5jZedkey2iJD7L+3-905W=4G4rAJ=BeWgA@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J9YdZykiGPT3Jhx7"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="pZs/OQEoSSbxGlYw"
+Return-path: <linux-scsi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
+In-Reply-To: <CAPw-ZTmGA5rtVmHx5jZedkey2iJD7L+3-905W=4G4rAJ=BeWgA@mail.gmail.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Loc Ho <lho@apm.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Kishon Vijay Abraham I <kishon@ti.com>, balbi@ti.com, Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>, Tuan Phan <tphan@apm.com>, Suman Tripathi <stripathi@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-
---J9YdZykiGPT3Jhx7
+--pZs/OQEoSSbxGlYw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2014 at 04:58:48PM +0200, Boris BREZILLON wrote:
-> The PRCM (Power/Reset/Clock Management) unit provides several clock
-> devices:
-> - AR100 clk: used to clock the Power Management co-processor
-> - AHB0 clk: used to clock the AHB0 bus
-> - APB0 clk and gates: used to clk
-
-Used to clk?
-
+On Mon, Apr 28, 2014 at 04:12:02PM -0700, Loc Ho wrote:
+> Hi Kishon/Felipe,
 >=20
-> Add support for these clks in a separate driver so that they can be probed
-> as platform devices instead of registered during early init.
-> We need this to be able to probe PRCM MFD subdevices.
+> > >> This patch adds support for the APM X-Gene SoC AHCI SATA host contro=
+ller
+> > >> driver. It requires the corresponding APM X-Gene SoC PHY driver. This
+> > >> initial version only supports Gen3 speed.
+> > >
+> > > This version seems workable, thanks for the quick follow-up.
+> > >
+> > > The comment about Gen3 speed above reminds me that you took some
+> > > shortcuts to get here and you removed support for some features
+> > > as well as some bug workarounds in the process. I'm guessing some
+> > > of them won't be necessary because they are only for prototype
+> > > hardware or for early boot loader versions that don't yet set up
+> > > the hardware right, but others actually need to come back.
+> > >
+> > > That is usually a good approach, but I'd also like to make sure we can
+> > > deal with them nicely when you have to add them back later, and don't
+> > > have to add ugly extensions to the DT binding to support the old dtb
+> > > files.
+> > >
+> > > Can you list (also in the changelog) the parts of the driver that you
+> > > have taken out for now and that you expect to add back at later
+> > > stage? I think that would be helpful for perspective.
+> > >
+> >
+> > Here is an list of patches that we will be preparing for once the
+> > basic driver is completed. Do you want me to re-generate the patch
+> > change log with this info?
+> >
+> > 1. Support for Gen1/Gen2/Gen3
+> > Solution: The simplest solution is to have the PHY framework support
+> > setting the desire speed. I had argued with the TI folks but they are
+> > reluctant to add this function to the framework. They argued that this
+> > is still not generic enough. I will start the discussion again later
+> > on. The other possibility (but not sure if this is doable) is to have
+> > the PHY init function to be smarter and do the necessary operation
+> > assuming the underlying PHY is capable in detecting the link up speed.
+> > I will need to check the spec of this.
 >=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> ---
->  drivers/clk/sunxi/Makefile         |   2 +
->  drivers/clk/sunxi/clk-sun6i-prcm.c | 253 +++++++++++++++++++++++++++++++=
-++++++
->  2 files changed, 255 insertions(+)
->  create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm.c
 >=20
-> diff --git a/drivers/clk/sunxi/Makefile b/drivers/clk/sunxi/Makefile
-> index b5bac91..ef8cdc9 100644
-> --- a/drivers/clk/sunxi/Makefile
-> +++ b/drivers/clk/sunxi/Makefile
-> @@ -3,3 +3,5 @@
->  #
-> =20
->  obj-y +=3D clk-sunxi.o clk-factors.o
-> +
-> +obj-$(CONFIG_MFD_SUN6I_PRCM) +=3D clk-sun6i-prcm.o
-> diff --git a/drivers/clk/sunxi/clk-sun6i-prcm.c b/drivers/clk/sunxi/clk-s=
-un6i-prcm.c
-> new file mode 100644
-> index 0000000..bb7b25a
-> --- /dev/null
-> +++ b/drivers/clk/sunxi/clk-sun6i-prcm.c
-> @@ -0,0 +1,253 @@
-> +/*
-> + * Copyright (C) 2014 Free Electrons
-> + *
-> + * License Terms: GNU General Public License v2
-> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> + *
-> + * Allwinner PRCM (Power/Reset/Clock Management) driver
-> + *
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +
-> +#define SUN6I_APB0_GATES_MAX_SIZE	32
-> +#define SUN6I_AR100_MAX_PARENTS		4
-> +
-> +static int sun6i_a31_ar100_mux_clk_register(struct platform_device *pdev)
-> +{
-> +	const char *parents[SUN6I_AR100_MAX_PARENTS];
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	const char *clk_name =3D np->name;
-> +	struct resource *r;
-> +	void __iomem *reg;
-> +	struct clk *clk;
-> +	int nparents;
-> +	int i;
-> +
-> +	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg =3D devm_ioremap(&pdev->dev, r->start, resource_size(r));
-> +	if (IS_ERR(reg))
-> +		return PTR_ERR(reg);
+> In order for the X-Gene SATA PHY to support SATA Gen1 and Gen2 speed,
+> we need an method to instruct the underlying PHY driver to switch to
+> an specified setting after link up. For this errata, Suman Tripathi
+> had submitted the patch [1]. It is not possible to hide this within
+> the PHY driver. Each instance of the PHY driver controls two ports. By
+> calling the exit function and then init function, it will affect the
+> other ports - which is not the correct behavior. At this point, we
+> don't see any solution besides introduce an PHY framework function
+> set_rate. Can you let us know if this solution is acceptable?
+>=20
+> [1] https://lkml.org/lkml/2014/4/18/491
 
-devm_ioremap returns NULL on error, and not an error pointer.
+that 'lane' argument isn't acceptable. If one PHY talks to two Links,
+your PHY driver should register two providers, then the lane argument
+can be ignored.
 
-> +
-> +	nparents =3D of_clk_get_parent_count(np);
-> +	if (nparents > SUN6I_AR100_MAX_PARENTS)
-> +		nparents =3D SUN6I_AR100_MAX_PARENTS;
-> +
-> +	for (i =3D 0; i < nparents; i++)
-> +		parents[i] =3D of_clk_get_parent_name(np, i);
-> +
-> +	of_property_read_string(np, "clock-output-names", &clk_name);
-> +
-> +	clk =3D clk_register_mux(&pdev->dev, clk_name, parents, nparents,
-> +			       CLK_SET_RATE_NO_REPARENT, reg,
-> +			       16, 2, 0, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> +
-> +static int sun6i_a31_ar100_clk_register(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	const char *clk_name =3D np->name;
-> +	const char *clk_parent;
-> +	struct resource *r;
-> +	void __iomem *reg;
-> +	struct clk *clk;
-> +
-> +	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg =3D devm_ioremap(&pdev->dev, r->start, resource_size(r));
-> +	if (IS_ERR(reg))
-> +		return PTR_ERR(reg);
+Rate can be reused for different things depending on the underlying Bus;
+in case of USB, it could be for switching among
+Superspeed10/Superspeed5Highspeed; or 1Gbit/100Mbit switch on Networking
+interfaces; or Gen1/2/3 selection for PCI controllers and so on. The
+only thing I can't find a way to abstract is that 'lane' argument which
+isn't even specific to SATA, it's particular to how you guys wrote your
+driver. Should you have one PHY per SATA link, you wouldn't have added
+that 'lane' argument at all.
 
-Ditto.
-
-And you'll probably want to use devm_ioremap_resource when you'll have
-a single clock for the AR100.
-
-> +
-> +	clk_parent =3D of_clk_get_parent_name(np, 0);
-> +	if (!clk_parent)
-> +		return -EINVAL;
-> +
-> +	of_property_read_string(np, "clock-output-names", &clk_name);
-> +
-> +	clk =3D clk_register_divider(&pdev->dev, clk_name, clk_parent,
-> +				   0, reg, 4, 2, CLK_DIVIDER_POWER_OF_TWO,
-> +				   NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> +
-> +static int sun6i_a31_ar100_div_clk_register(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	const char *clk_name =3D np->name;
-> +	const char *clk_parent;
-> +	struct resource *r;
-> +	void __iomem *reg;
-> +	struct clk *clk;
-> +
-> +	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg =3D devm_ioremap(&pdev->dev, r->start, resource_size(r));
-> +	if (IS_ERR(reg))
-> +		return PTR_ERR(reg);
-> +
-> +	clk_parent =3D of_clk_get_parent_name(np, 0);
-> +	if (!clk_parent)
-> +		return -EINVAL;
-> +
-> +	of_property_read_string(np, "clock-output-names", &clk_name);
-> +
-> +	clk =3D clk_register_divider(&pdev->dev, clk_name, clk_parent,
-> +				   0, reg, 8, 5, 0, NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> +
-> +static int sun6i_a31_apb0_clk_register(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	const char *clk_name =3D np->name;
-> +	const char *clk_parent;
-> +	struct resource *r;
-> +	void __iomem *reg;
-> +	struct clk *clk;
-> +
-> +	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg =3D devm_ioremap_resource(&pdev->dev, r);
-> +	if (IS_ERR(reg))
-> +		return PTR_ERR(reg);
-> +
-> +	clk_parent =3D of_clk_get_parent_name(np, 0);
-> +	if (!clk_parent)
-> +		return -EINVAL;
-> +
-> +	of_property_read_string(np, "clock-output-names", &clk_name);
-> +
-> +	clk =3D clk_register_divider(&pdev->dev, clk_name, clk_parent,
-> +				   0, reg, 0, 2, CLK_DIVIDER_POWER_OF_TWO,
-> +				   NULL);
-> +	if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
-> +
-> +	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> +}
-> +
-> +static int sun6i_a31_apb0_gates_clk_register(struct platform_device *pde=
-v)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	struct clk_onecell_data *clk_data;
-> +	const char *clk_parent;
-> +	const char *clk_name;
-> +	struct resource *r;
-> +	void __iomem *reg;
-> +	int gate_id;
-> +	int ngates;
-> +	int i;
-> +
-> +	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	reg =3D devm_ioremap_resource(&pdev->dev, r);
-> +	if (!reg)
-> +		return PTR_ERR(reg);
-> +
-> +	clk_parent =3D of_clk_get_parent_name(np, 0);
-> +	if (!clk_parent)
-> +		return -EINVAL;
-> +
-> +	ngates =3D of_property_count_strings(np, "clock-output-names");
-> +	if (ngates < 0)
-> +		return ngates;
-> +
-> +	if (!ngates || ngates > SUN6I_APB0_GATES_MAX_SIZE)
-> +		return -EINVAL;
-> +
-> +	clk_data =3D devm_kzalloc(&pdev->dev, sizeof(struct clk_onecell_data),
-> +				GFP_KERNEL);
-> +	if (!clk_data)
-> +		return -ENOMEM;
-> +
-> +	clk_data->clks =3D devm_kzalloc(&pdev->dev,
-> +				      SUN6I_APB0_GATES_MAX_SIZE *
-> +				      sizeof(struct clk *),
-> +				      GFP_KERNEL);
-> +	if (!clk_data->clks)
-> +		return -ENOMEM;
-> +
-> +	for (i =3D 0; i < ngates; i++) {
-> +		of_property_read_string_index(np, "clock-output-names",
-> +					      i, &clk_name);
-> +
-> +		gate_id =3D i;
-> +		of_property_read_u32_index(np, "clock-indices", i, &gate_id);
-> +
-> +		WARN_ON(gate_id >=3D SUN6I_APB0_GATES_MAX_SIZE);
-> +		if (gate_id >=3D SUN6I_APB0_GATES_MAX_SIZE)
-> +			continue;
-> +
-> +		clk_data->clks[gate_id] =3D clk_register_gate(&pdev->dev,
-> +							    clk_name,
-> +							    clk_parent, 0,
-> +							    reg, gate_id,
-> +							    0, NULL);
-> +		WARN_ON(IS_ERR(clk_data->clks[gate_id]));
-> +	}
-> +
-> +	clk_data->clk_num =3D ngates;
-> +
-> +	return of_clk_add_provider(np, of_clk_src_onecell_get, clk_data);
-> +}
-> +
-> +const struct of_device_id sun6i_a31_prcm_clk_dt_ids[] =3D {
-> +	{
-> +		.compatible =3D "allwinner,sun6i-a31-ar100-mux-clk",
-> +		.data =3D sun6i_a31_ar100_mux_clk_register,
-> +	},
-> +	{
-> +		.compatible =3D "allwinner,sun6i-a31-ar100-clk",
-> +		.data =3D sun6i_a31_ar100_clk_register,
-> +	},
-> +	{
-> +		.compatible =3D "allwinner,sun6i-a31-ar100-div-clk",
-> +		.data =3D sun6i_a31_ar100_div_clk_register,
-> +	},
-> +	{
-> +		.compatible =3D "allwinner,sun6i-a31-apb0-clk",
-> +		.data =3D sun6i_a31_apb0_clk_register,
-> +	},
-> +	{
-> +		.compatible =3D "allwinner,sun6i-a31-apb0-gates-clk",
-> +		.data =3D sun6i_a31_apb0_gates_clk_register,
-> +	},
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static int sun6i_a31_prcm_clk_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np =3D pdev->dev.of_node;
-> +	int (*register_func)(struct platform_device *pdev);
-> +	const struct of_device_id *match;
-> +
-> +	match =3D of_match_node(sun6i_a31_prcm_clk_dt_ids, np);
-> +	if (!match)
-> +		return -EINVAL;
-> +
-> +	register_func =3D match->data;
-> +	return register_func(pdev);
-> +}
-> +
-> +static struct platform_driver sun6i_a31_prcm_clk_driver =3D {
-> +	.driver =3D {
-> +		.name =3D "sun6i-a31-prcm-clk",
-> +		.owner =3D THIS_MODULE,
-> +		.of_match_table =3D sun6i_a31_prcm_clk_dt_ids,
-> +	},
-> +	.probe =3D sun6i_a31_prcm_clk_probe,
-
-You're not calling the of_clk_del_provider, and you should probably
-unregister your clocks too.
-
-Maxime
+cheers
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+balbi
 
---J9YdZykiGPT3Jhx7
+--pZs/OQEoSSbxGlYw
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTXub3AAoJEBx+YmzsjxAgbT4QAJnCKwRvvqsxGlvyiDU7PCVl
-yDI0XT1nFQ3nHWD0EnRUhotA98Mv1/UPkoLzAS6GF97Q7vXZbeIWBSQyVcC4D5Lq
-e5eTAiIehG8vvkPYmmc1Z058y9zOGYHjeljc2hJ59bVw1HQkRgqGrKGtl6zD4a92
-gVejlKQh+DLE6h9h9uMWvOlUFGWoRkhplNOd4B3/rv5Y4D1tbXLWBVM+EyvRVD0S
-jD6D1WebpE+AJZuahldi2/CmBZliM2iKDWHR8WrYviwo5nofH5SJmqNFUiohLWy8
-K4+pJKWbac/PjxkAA8e1wql8qvpyfTN7VOrVMiKpIsMYoOl3wgj4JHlND0eYbZ8L
-aDElKRJvMphAd9gonz2x23LGPoKITw/RGDNc0xrKLs0lhaN6HG2p0rJZXDp4iDPx
-p8ULBGSYuiK7vSLU4ZJG6ygwOnJzgaijCqcg/LmYf53OzRZS1ed9mfMsn5JHjJMp
-BQUv2v1FDBoWonjpYnxKOdknAV0eVU5CJKvfAoi34EDxqQq3VIOLqXtk8nFWHY3q
-IKp730t+FyAmLbyprPg46lH3Yijm36gsjNx53dcrYLpiKvBxphqhq9UNyU+Nocwe
-dG+W9OUW6rC015D3U5VAAqjyYCF3GxYYNbXiT9FebcKjA8Px3t4Ab0ilC5k4Tq4s
-NTcG43nrAHVTQYdULoBP
-=oBQL
+iQIcBAEBAgAGBQJTXusYAAoJEIaOsuA1yqREZBoP/jmLJISjL0BuMykMfvJHVHhl
+kyufGnZs7Q861jG5yzrqpxcZeyX51gZBMp/0/x5mNsvduugPvD2CI+gSRDMwGnV1
+2XGt/bK+PfM40wkiCA06JmrwHE3hOraJr8ZBpzwzUtbzVQyVy3BYhqzOR6K5z9L5
+K3dz93UIfXi7qUDeAsGBbbkUMbzT7nJh3V+0PrblV1ZFXMhS/VbaGV/7215ejV5t
+kXCThHtPiWR0hFv5Eikw9NA2QiA7x31wi3hNfK2kgmQkNLcGaVIMhz8KiCEWin2x
+tc5QCfInCg1gpWSV9rfekyV/UQFYWZl91i1CXQi2Wt9Ilu0ttH12nkZODvO+ve9D
+wpfACDz3wY3YJE8ZFMjBe34H3+07lHrJJnNbp2+NG9uE06vmFVvWaml4r6iLJoBj
+DJtWpMFnLgs3oiIr3B7P+FZThe42bUrIj6TjMeKrPFlJlDv6n5CrPINit5jH5ESg
+9D8cuUBMqe9afVIXhQWVM1dxIOYw5Q3f+Elsxka1eQxffUKRObPuT+vpuzamXsyk
+YR5bT2r34pjUN/cMQgqrlb3iMtRypEwThVnhNS5Bltes4Uph3x6BjWweXrawJOgb
+biWRQGsftq4DwHxrwt3/WYyiAWHvMwPelfHRZdeYKL16BD0NuWsVD1nByWL9R6RH
+wR/xUyegG9NK+eZGqxnP
+=EvXF
 -----END PGP SIGNATURE-----
 
---J9YdZykiGPT3Jhx7--
+--pZs/OQEoSSbxGlYw--
