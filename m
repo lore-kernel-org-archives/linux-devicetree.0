@@ -1,67 +1,46 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH] pwm: imx: Support very long period lengths
-Date: Mon, 28 Apr 2014 11:22:55 +0200
-Message-ID: <20140428092255.GO5858@pengutronix.de>
-References: <1398675331-10980-1-git-send-email-xobs@kosagi.com>
- <1398675331-10980-2-git-send-email-xobs@kosagi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398675331-10980-2-git-send-email-xobs@kosagi.com>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Sean Cross <xobs@kosagi.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3 0/4] usb: ehci/ohci-exynos: Move to generic phy framework
+Date: Mon, 28 Apr 2014 14:54:36 +0530
+Message-ID: <1398677080-30555-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 04:55:31PM +0800, Sean Cross wrote:
-> The IMX PWM block supports using both the system clock and a 32 kHz
-> clock for driving PWM events.  For very long period lengths, use the
-> 32 kHz clock instead of the high-speed clock.
-> 
-> Signed-off-by: Sean Cross <xobs@kosagi.com>
-> ---
->  drivers/pwm/pwm-imx.c | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-imx.c b/drivers/pwm/pwm-imx.c
-> index cc47733..8410455 100644
-> --- a/drivers/pwm/pwm-imx.c
-> +++ b/drivers/pwm/pwm-imx.c
-> @@ -36,9 +36,11 @@
->  #define MX3_PWMCR_DOZEEN                (1 << 24)
->  #define MX3_PWMCR_WAITEN                (1 << 23)
->  #define MX3_PWMCR_DBGEN			(1 << 22)
-> +#define MX3_PWMCR_CLKSRC_IPG_32K  (3 << 16)
->  #define MX3_PWMCR_CLKSRC_IPG_HIGH (2 << 16)
->  #define MX3_PWMCR_CLKSRC_IPG      (1 << 16)
->  #define MX3_PWMCR_EN              (1 << 0)
-> +#define MX3_SLOW_THRESHOLD_NS	100000
->  
->  struct imx_chip {
->  	struct clk	*clk_per;
-> @@ -107,7 +109,13 @@ static int imx_pwm_config_v2(struct pwm_chip *chip,
->  	unsigned long period_cycles, duty_cycles, prescale;
->  	u32 cr;
->  
-> -	c = clk_get_rate(imx->clk_per);
-> +	if (duty_ns > MX3_SLOW_THRESHOLD_NS) {
+Based and tested on 'usb-next' branch of Greg's usb tree, with relevant
+device tree patches[1]
 
-If anything you have to check the period_cycles, not the duty_cycles.
+Changes from v2:
+ - Added two patches in the series for some cleanup.
+   usb: ohci-exynos: Use struct device instead of platform_device
+   usb: ehci-exynos: Use struct device instead of platform_device
+ - Addressed review comments.
+   -- Moved exynos_ohci_phyg_on()/off routines inside
+      exynos_ohci_phy_enable()/disable.
+   -- Added functions exynos_ehci_phy_enable() and exynos_ehci_phy_disable()
+      and moved exynos_ehci_phyg_on()/off routines respectively in them.
+   -- Added necessary checks.
 
-100000 seems to be some arbitrary value suitable for some unspecified
-ipg clock rate. I think you should use it when the period_cycles
-register overflows.
+Kamil Debski (1):
+  usb: ehci-exynos: Change to use phy provided by the generic phy
+    framework
 
-> +		cr = MX3_PWMCR_CLKSRC_IPG_32K;
-> +		c = 32768;
+Vivek Gautam (3):
+  usb: ohci-exynos: Use struct device instead of platform_device
+  usb: ehci-exynos: Use struct device instead of platform_device
+  usb: ohci-exynos: Add facility to use phy provided by the generic phy
+    framework
 
-How about providing a proper clock instead of hardcoding this?
-
-Sascha
+ .../devicetree/bindings/usb/exynos-usb.txt         |   37 +++++
+ drivers/usb/host/ehci-exynos.c                     |  148 +++++++++++++++++---
+ drivers/usb/host/ohci-exynos.c                     |  141 ++++++++++++++++---
+ 3 files changed, 280 insertions(+), 46 deletions(-)
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
