@@ -1,38 +1,36 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v3 2/4] ARM: dts: Add support for DRA72x family of devices
-Date: Mon, 28 Apr 2014 14:25:37 +0530
-Message-ID: <535E1789.5020001@ti.com>
-References: <1398333987-19454-1-git-send-email-rnayak@ti.com> <201404241513.54380.arnd@arndb.de> <535DF092.7000307@ti.com> <5761706.QaRvAizEZ2@wuerfel>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [RFC PATCH v2 1/9] crypto: qce: Add core driver implementation
+Date: Mon, 28 Apr 2014 16:59:28 +0800
+Message-ID: <20140428085928.GA16310@gondor.apana.org.au>
+References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
+ <1397479725-20954-2-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5761706.QaRvAizEZ2@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, nm@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1397479725-20954-2-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 28 April 2014 02:20 PM, Arnd Bergmann wrote:
-> On Monday 28 April 2014 11:39:22 Rajendra Nayak wrote:
->>
->> DRA742 EVM:  Software Developement Board for DRA742
->> compatible = "ti,dra7-evm", "ti,dra742", "ti,dra74", "ti,dra7"
->> DRA722 EVM: Software Development Board for DRA722
->> compatible = "ti,dra72-evm", "ti,dra722", "ti,dra72", "ti,dra7"
->>
->> I was also calling the .dtsi files as dra72x.dtsi and dra74x.dtsi, do you suggest I call
->> them dra742.dtsi and dra722.dtsi instead? Just that if we end up with a dra745 which is
->> fully compatible with dra742, as you mentioned above, we would be using a dra742.dtsi for a dra745
->> device which could be a little confusing.
-> 
-> For the file names, wildcards are ok. Alternatively you could have
-> a dra745.dtsi that does nothing but include dra752.dtsi and override
-> the compatible string (if there is one to start with).
+On Mon, Apr 14, 2014 at 03:48:37PM +0300, Stanimir Varbanov wrote:
+>
+> +#define QCE_MAJOR_VERSION5	0x05
+> +#define QCE_QUEUE_LENGTH	50
 
-Okay, thanks.
+What is the purpose of this software queue? Why can't you directly
+feed the requests to the hardware?
 
-> 
-> 	Arnd
-> 
+If the hardware can't handle more than 50 requests in-flight,
+then your software queue has failed to handle this since you're
+taking requests off the queue before you touch the hardware so
+you're not really limiting it to 50.  That is, for users that
+can wait you're potentially dropping their requests instead
+of letting them wait through the backlog mechanism.
 
+Cheers,
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
