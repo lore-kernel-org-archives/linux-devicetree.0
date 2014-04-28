@@ -1,28 +1,36 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [RFC PATCH v2 1/9] crypto: qce: Add core driver implementation
-Date: Mon, 28 Apr 2014 16:50:16 +0800
-Message-ID: <20140428085016.GA16275@gondor.apana.org.au>
-References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
- <1397479725-20954-2-git-send-email-svarbanov@mm-sol.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 2/4] ARM: dts: Add support for DRA72x family of devices
+Date: Mon, 28 Apr 2014 10:50:51 +0200
+Message-ID: <5761706.QaRvAizEZ2@wuerfel>
+References: <1398333987-19454-1-git-send-email-rnayak@ti.com> <201404241513.54380.arnd@arndb.de> <535DF092.7000307@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1397479725-20954-2-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <535DF092.7000307-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 14, 2014 at 03:48:37PM +0300, Stanimir Varbanov wrote:
->
-> +	if (backlog)
-> +		backlog->complete(backlog, -EINPROGRESS);
+On Monday 28 April 2014 11:39:22 Rajendra Nayak wrote:
+> 
+> DRA742 EVM:  Software Developement Board for DRA742
+> compatible = "ti,dra7-evm", "ti,dra742", "ti,dra74", "ti,dra7"
+> DRA722 EVM: Software Development Board for DRA722
+> compatible = "ti,dra72-evm", "ti,dra722", "ti,dra72", "ti,dra7"
+> 
+> I was also calling the .dtsi files as dra72x.dtsi and dra74x.dtsi, do you suggest I call
+> them dra742.dtsi and dra722.dtsi instead? Just that if we end up with a dra745 which is
+> fully compatible with dra742, as you mentioned above, we would be using a dra742.dtsi for a dra745
+> device which could be a little confusing.
 
-The completion function needs to be called with BH disabled.
+For the file names, wildcards are ok. Alternatively you could have
+a dra745.dtsi that does nothing but include dra752.dtsi and override
+the compatible string (if there is one to start with).
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
