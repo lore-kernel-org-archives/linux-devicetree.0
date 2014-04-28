@@ -1,67 +1,47 @@
-From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 09/10] mtd: spi-nor: add DDR quad read support for Micron
-Date: Mon, 28 Apr 2014 11:53:46 +0800
-Message-ID: <1398657227-20721-10-git-send-email-b32955@freescale.com>
-References: <1398657227-20721-1-git-send-email-b32955@freescale.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/2] TPS65917: Drivers for TPS65917 PMIC
+Date: Mon, 28 Apr 2014 10:58:24 +0530
+Message-ID: <1398662906-4398-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398657227-20721-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
-Cc: computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, lgirdwood@gmail.com, broonie@kernel.org, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DDR(or DTR) quad read support for the Micron
-SPI NOR flash.
+The TPS65917 chip is a power management IC for Portable Navigation Systems
+and Tablet Computing devices. It contains the following components:
 
-Tested with n25q256a.
+ - Regulators.
+ - GPADC.
+ - Over Temperature warning and Shut down.
 
-Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/mtd/spi-nor/spi-nor.c |    5 +++++
- include/linux/mtd/spi-nor.h   |    1 +
- 2 files changed, 6 insertions(+), 0 deletions(-)
+This patch series adds support for TPS65917 mfd device. At this time only
+the regulator functionality is made available.
 
-diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-index 07d249c..c5ea969 100644
---- a/drivers/mtd/spi-nor/spi-nor.c
-+++ b/drivers/mtd/spi-nor/spi-nor.c
-@@ -873,6 +873,9 @@ static int set_ddr_quad_mode(struct spi_nor *nor, u32 jedec_id)
- 			return status;
- 		}
- 		return status;
-+	case CFI_MFR_ST: /* Micron, actually */
-+		/* DTR quad read works with the Extended SPI protocol. */
-+		return 0;
- 	default:
- 		return -EINVAL;
- 	}
-@@ -1072,6 +1075,8 @@ int spi_nor_scan(struct spi_nor *nor, const struct spi_device_id *id,
- 	case SPI_NOR_DDR_QUAD:
- 		if (JEDEC_MFR(info->jedec_id) == CFI_MFR_AMD) { /* Spansion */
- 			nor->read_opcode = SPINOR_OP_READ_1_4_4_D;
-+		} else if (JEDEC_MFR(info->jedec_id) == CFI_MFR_ST) {
-+			nor->read_opcode = SPINOR_OP_READ_1_1_4_D;
- 		} else {
- 			dev_err(dev, "DDR Quad Read is not supported.\n");
- 			return -EINVAL;
-diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-index d191a6b..2fb40b6 100644
---- a/include/linux/mtd/spi-nor.h
-+++ b/include/linux/mtd/spi-nor.h
-@@ -27,6 +27,7 @@
- #define SPINOR_OP_READ_FAST	0x0b	/* Read data bytes (high frequency) */
- #define SPINOR_OP_READ_1_1_2	0x3b	/* Read data bytes (Dual SPI) */
- #define SPINOR_OP_READ_1_1_4	0x6b	/* Read data bytes (Quad SPI) */
-+#define SPINOR_OP_READ_1_1_4_D	0x6d	/* Read data bytes (DDR Quad SPI) */
- #define SPINOR_OP_READ_1_4_4_D	0xed	/* Read data bytes (DDR Quad SPI) */
- #define SPINOR_OP_PP		0x02	/* Page program (up to 256 bytes) */
- #define SPINOR_OP_BE_4K		0x20	/* Erase 4KiB block */
+The closest drivers are PALMAS series drivers.
+The register set is changed. Bit-field defenitions are changed.
+Hence based on the PALMAS drivers and created a new set of drivers
+with code changes as required.
+
+The patches are boot tested on DRA7-EVM.
+
+Keerthy (2):
+  MFD: TPS65917: Add driver for the TPS65917 PMIC
+  Regulators: TPS65917: Add Regulator driver for TPS65917 PMIC
+
+ drivers/mfd/Kconfig                    |   10 +
+ drivers/mfd/Makefile                   |    1 +
+ drivers/mfd/tps65917.c                 |  542 ++++++++++++
+ drivers/regulator/Kconfig              |   12 +
+ drivers/regulator/Makefile             |    1 +
+ drivers/regulator/tps65917-regulator.c |  903 +++++++++++++++++++
+ include/linux/mfd/tps65917.h           | 1508 ++++++++++++++++++++++++++++++++
+ 7 files changed, 2977 insertions(+)
+ create mode 100644 drivers/mfd/tps65917.c
+ create mode 100644 drivers/regulator/tps65917-regulator.c
+ create mode 100644 include/linux/mfd/tps65917.h
+
 -- 
-1.7.2.rc3
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
