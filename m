@@ -1,60 +1,38 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 1/7] gpiolib: gpiolib-of: Implement
- device tree gpio-names based lookup
-Date: Tue, 29 Apr 2014 00:19:34 +0800
-Message-ID: <CAGb2v64rs4UYMbQ--i=pcuuORVneozDpucCeHQKE4Qn7+qSCdA@mail.gmail.com>
-References: <1397544101-18135-1-git-send-email-wens@csie.org>
- <1397544101-18135-2-git-send-email-wens@csie.org> <CACRpkdZDjC1KxM2yJqsgpg2MxBamX1EObsuahB-2c+ShuBXm8A@mail.gmail.com>
- <CAAVeFuL7B7kVw7ME=Vo_snhG27aBphKO8Uzvzen1gyD=R2ETNA@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 00/38] MMC updates, plus CuBox-i WiFi support
+Date: Mon, 28 Apr 2014 10:42:35 -0600
+Message-ID: <535E84FB.4080305@wwwdotorg.org>
+References: <20140423185534.GA26756@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBK777GNAKGQE3WNOVKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAAVeFuL7B7kVw7ME=Vo_snhG27aBphKO8Uzvzen1gyD=R2ETNA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Johannes Berg <johannes-cdvu00un1VgdHxzADdlk8Q@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Heikki Krogerus <heikki.krogerus-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140423185534.GA26756@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Anton Vorontsov <anton@enomsg.org>, Barry Song <baohua@kernel.org>, Ben Dooks <ben-linux@fluff.org>, Chris Ball <chris@printf.net>, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jaehoon Chung <jh80.chung@samsung.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Michal Simek <michal.simek@xilinx.com>, Pawel Moll <pawel.moll@arm.com>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Seungwon Jeon <tgih.jun@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, spear-devel@list.st.com, Thierry Reding <thierry.reding@gmail.com>, Ulf Hansson <ulf.hansson@linar>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 9:49 AM, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Apr 23, 2014 at 12:02 AM, Linus Walleij
-> <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Tue, Apr 15, 2014 at 8:41 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->>
->>> This patch provides of_get_gpiod_flags_by_name(), which looks up GPIO
->>> phandles by name only, through gpios/gpio-names, and not by index.
->>>
->>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->>
->> Like Alexandre I have no strong opinion on this alternative scheme.
->
-> Yeah this new lookup scheme probably does no harm, but I think it
-> should be a little bit more motivated as it is, after all, introducing
-> more potential confusion for DT users.
->
-> It does not look like this new lookup scheme is necessary to Chen-Yu's
-> patchset and that he could as well have used the current one. Right
-> now there is only one way to define GPIOs - if we introduce a second
-> one, then which one should new DT users choose? Which one looks
-> better? I can already endless fights taking place over this.
+On 04/23/2014 12:55 PM, Russell King - ARM Linux wrote:
+> All,
+> 
+> This is where I'm at with trying to clean up the SDHCI mess, and sort out
+> issues I've noticed when trying to get UHS support working on CuBoxes.
+> This is my full patch set, but I recommend not applying patch 37 as there
+> appears to be a hardware issue preventing it working reliably.
+> 
+> In any case, patches 0-33 inclusive are the SDHCI clean up, based against
+> v3.15-rc1.  Patches 34 and 35 are Olof's Wifi support, 36 is my fix against
+> those, and 38 adds the Broadcom Wifi and BT support for CuBox.
+> 
+> The questions over how to handle these devices were never properly settled,
+> so I recommend against merging patch 34 onwards.  As for the rest, I'm not
+> planning on any further work, so it may be a good idea for people to
+> consider testing them with a view to getting them merged.
 
-I will pull out the two patches.
+The series,
+Tested-by: Stephen Warren <swarren@nvidia.com>
 
-> Does this new lookup help with some of the existing problems we have
-> like ACPI/DT lookup compatibility?
-
-I hope they will be compatible with ACPI named gpios, whenever support
-for ACPI named properties extension lands. But that really depends on
-the ACPI implementation. For now I think it's best that I just hold on
-to these. We can revisit the discussion later if needed.
-
-> I just need to be given one practical reason to give my ack.
-
-
-Thanks
-ChenYu
+(On an NVIDIA Tegra "Jetson TK1" board, with the patches applied on top
+of next-20140428, also with Andrew Bresticker's Tegra SDHCI patches
+"mmc: tegra: disable UHS modes" and "mmc: tegra: fix reporting of base
+clock frequency" applied)
