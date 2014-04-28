@@ -1,98 +1,64 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] mfd: bcm590xx: add support for second i2c slave
- address space
-Date: Mon, 28 Apr 2014 10:29:48 +0100
-Message-ID: <20140428092947.GN6264@lee--X1>
-References: <1397501428-8857-1-git-send-email-mporter@linaro.org>
- <1397501428-8857-3-git-send-email-mporter@linaro.org>
- <20140416110603.GA19671@lee--X1>
- <20140416213141.GD12304@sirena.org.uk>
- <20140417065753.GC28725@lee--X1>
- <20140417222616.GK23695@beef>
- <20140422082139.GF17657@lee--X1>
- <20140423220126.GC4164@beef>
- <20140423220500.GA1127@beef>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] usb: ehci/ohci-exynos: Move to generic phy framework
+Date: Mon, 28 Apr 2014 15:02:09 +0530
+Message-ID: <CAFp+6iE67ikwj7QU4vwJ8RZKhQo5WFTFb297WiD_Ej3SZ2u+gQ@mail.gmail.com>
+References: <1398677132-30600-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140423220500.GA1127@beef>
+In-Reply-To: <1398677132-30600-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > > > > > s/regmap/Regmap
-> > > > > >=20
-> > > > > > It's consistently written regmap in all the documentation a=
-nd so on :)
-> > > > >=20
-> > > > > Furry muff; but the comments still stand for the acronyms.
-> > > > >=20
-> > > > > > > addmap{0,1} doesn't quite sit right with me.
-> > > > > >=20
-> > > > > > > REVISIT: Ah, it's address-map, rather than add map. Okay,=
- not as bad
-> > > > > > > as I first thought, but still, is there a better naming c=
-onvention you
-> > > > > > > could use?
-> > > > > >=20
-> > > > > > addrmap or something?
-> > > > >=20
-> > > > > Right, that was what I was thinking. However, I prefer someth=
-ing along
-> > > > > the lines of 'i2c' and 'i2c_sec' or 'client' and 'client_slv'=
- etc.
-> > > >=20
-> > > > FWIW, the reason it's addmap{0,1} is that the datasheet has doc=
-uments
-> > > > ADDMAP=3D0 and the first bank of registers and ADDMAP=3D1 as th=
-e second bank
-> > > > of registers. I adopted that to match the docs for the part.
-> > > >=20
-> > > > I guess we could do i2c and i2c_sec, I'll just have to put a co=
-mment
-> > > > correlating it to the h/w. Calling it 'slv' implies something e=
-lse
-> > > > so we should avoid that here. The notion of a "secondary" i2c d=
-evice
-> > > > is completely a Linux I2C subsystem fabrication which wouldn't =
-exist
-> > > > if it allowed multiple slave addresses per device. From a h/w
-> > > > perspective there is really no primary and secondary relationsh=
-ip.
-> > > >=20
-> > > > I'm fine with i2c/i2c_sec or addrmap0/1 and I will just comment=
- to
-> > > > correlate with the datasheet..pick one.
-> > >=20
-> > > Let's stick method fabricated by the I2C subsystem. It may seem s=
-trange
-> > > from a h/w perspective, but it is the way we (you) have coded it,=
- as
-> > > the first parameter of i2c_new_dummy() is the 'managing' (primary=
-,
-> > > parent, master, whatever) device, so '_sec' would suit as an
-> > > identifying appendage for the resultant device.
-> >=20
-> > That works, I'll also switch to addrmap_[pri|sec] which touches the
-> > regulator driver as well. That will keep the relationship  between =
-device
-> > and regmap clear.
->=20
-> Misspoke...I'm switching regmap[0|1] to regmap_[pri|sec] to keep that
-> synced with i2c_[pri|sec]
+On Mon, Apr 28, 2014 at 2:55 PM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Based and tested on 'usb-next' branch of Greg's usb tree, with relevant
+> device tree patches[1]
 
-Sounds good, thanks Matt.
+[1] [PATCH v7 0/2] dts: Add usb2phy to Exynos 5250
+     http://www.spinics.net/lists/linux-usb/msg106427.html
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+
+>
+> Changes from v2:
+>  - Added two patches in the series for some cleanup.
+>    usb: ohci-exynos: Use struct device instead of platform_device
+>    usb: ehci-exynos: Use struct device instead of platform_device
+>  - Addressed review comments.
+>    -- Moved exynos_ohci_phyg_on()/off routines inside
+>       exynos_ohci_phy_enable()/disable.
+>    -- Added functions exynos_ehci_phy_enable() and exynos_ehci_phy_disable()
+>       and moved exynos_ehci_phyg_on()/off routines respectively in them.
+>    -- Added necessary checks.
+>
+> Kamil Debski (1):
+>   usb: ehci-exynos: Change to use phy provided by the generic phy
+>     framework
+>
+> Vivek Gautam (3):
+>   usb: ohci-exynos: Use struct device instead of platform_device
+>   usb: ehci-exynos: Use struct device instead of platform_device
+>   usb: ohci-exynos: Add facility to use phy provided by the generic phy
+>     framework
+>
+>  .../devicetree/bindings/usb/exynos-usb.txt         |   37 +++++
+>  drivers/usb/host/ehci-exynos.c                     |  148 +++++++++++++++++---
+>  drivers/usb/host/ohci-exynos.c                     |  141 ++++++++++++++++---
+>  3 files changed, 280 insertions(+), 46 deletions(-)
+>
+> --
+> 1.7.10.4
+>
+
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
