@@ -1,64 +1,44 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] usb: ehci/ohci-exynos: Move to generic phy framework
-Date: Mon, 28 Apr 2014 15:02:09 +0530
-Message-ID: <CAFp+6iE67ikwj7QU4vwJ8RZKhQo5WFTFb297WiD_Ej3SZ2u+gQ@mail.gmail.com>
-References: <1398677132-30600-1-git-send-email-gautam.vivek@samsung.com>
+From: Robert Baldyga <r.baldyga@samsung.com>
+Subject: Re: [PATCH v2 00/13] extcon: major rework
+Date: Mon, 28 Apr 2014 11:34:02 +0200
+Message-ID: <535E208A.4050305@samsung.com>
+References: <1397475984-28001-1-git-send-email-r.baldyga@samsung.com>
+ <20140424195203.GG12809@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398677132-30600-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <20140424195203.GG12809@kroah.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, myungjoo.ham@samsung.com, cw00.choi@samsung.com, dbaryshkov@gmail.com, dwmw2@infradead.org, balbi@ti.com, grant.likely@linaro.org, ldewangan@nvidia.com, kishon@ti.com, gg@slimlogic.co.uk, anton@enomsg.org, jonghwa3.lee@samsung.com, rongjun.ying@csr.com, linux@roeck-us.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.wolfsonmicro.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, aaro.koskinen@iki.fi, m.szyprowski@samsung.com, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 2:55 PM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Based and tested on 'usb-next' branch of Greg's usb tree, with relevant
-> device tree patches[1]
+On 04/24/2014 09:52 PM, Greg KH wrote:
+> On Mon, Apr 14, 2014 at 01:46:11PM +0200, Robert Baldyga wrote:
+>> This patchset adds many improvements to extcon class driver and extcon
+>> provider drivers. It changes extcon API to faster and safer by replaceing
+>> function taking extcon and cable names with functions working with
+>> structures representing this objects.
+> 
+> What is "faster" exactly?  How did you measure this?  What benchmarks
+> can be run to test this claim?
+> 
 
-[1] [PATCH v7 0/2] dts: Add usb2phy to Exynos 5250
-     http://www.spinics.net/lists/linux-usb/msg106427.html
+Most of new API functions are O(1), because they take as argument
+pointer to struct extcon_cable, and operates on it. In contrast,
+previous API functions needed to compare given cable name with name of
+each cable specified in extcon controller. This solution was also prone
+to errors - when you make typo in extcon name or cable name it will not
+be detected at compilation time. The new API uses names only at
+initialization, and after that each function takes pointer to struct
+extcon_cable.
 
+The old API is also fragile because defined list of cables could be
+different in each extcon provider (the same cable could have different
+name in each extcon provider), so using different extcon providers with
+different drivers would need doing modifications in drivers.
 
->
-> Changes from v2:
->  - Added two patches in the series for some cleanup.
->    usb: ohci-exynos: Use struct device instead of platform_device
->    usb: ehci-exynos: Use struct device instead of platform_device
->  - Addressed review comments.
->    -- Moved exynos_ohci_phyg_on()/off routines inside
->       exynos_ohci_phy_enable()/disable.
->    -- Added functions exynos_ehci_phy_enable() and exynos_ehci_phy_disable()
->       and moved exynos_ehci_phyg_on()/off routines respectively in them.
->    -- Added necessary checks.
->
-> Kamil Debski (1):
->   usb: ehci-exynos: Change to use phy provided by the generic phy
->     framework
->
-> Vivek Gautam (3):
->   usb: ohci-exynos: Use struct device instead of platform_device
->   usb: ehci-exynos: Use struct device instead of platform_device
->   usb: ohci-exynos: Add facility to use phy provided by the generic phy
->     framework
->
->  .../devicetree/bindings/usb/exynos-usb.txt         |   37 +++++
->  drivers/usb/host/ehci-exynos.c                     |  148 +++++++++++++++++---
->  drivers/usb/host/ohci-exynos.c                     |  141 ++++++++++++++++---
->  3 files changed, 280 insertions(+), 46 deletions(-)
->
-> --
-> 1.7.10.4
->
-
-
-
--- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards
+Robert Baldyga
+Samsung R&D Institute Poland
