@@ -1,110 +1,25 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] Regulators: TPS65917: Add Regulator driver for
- TPS65917 PMIC
-Date: Mon, 28 Apr 2014 10:03:45 +0100
-Message-ID: <20140428090345.GD15125@sirena.org.uk>
-References: <1398662906-4398-1-git-send-email-j-keerthy@ti.com>
- <1398662906-4398-3-git-send-email-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398662906-4398-3-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sameo@linux.intel.com, lee.jones@linaro.org, grant.likely@linaro.org, robh+dt@kernel.org, lgirdwood@gmail.com
+From: Sean Cross <xobs@kosagi.com>
+Subject: [PATCH] pwm: imx: Add support for low-speed PWM
+Date: Mon, 28 Apr 2014 16:55:30 +0800
+Message-ID: <1398675331-10980-1-git-send-email-xobs@kosagi.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Sean Cross <xobs@kosagi.com>
 List-Id: devicetree@vger.kernel.org
 
+The i.MX PWM driver has a selectable clock source.  In order to get very
+long period lengths, the driver must select the 32.768 kHz clock.
 
---xB0nW4MQa6jZONgY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's unclear what the threshold should be to switch clocks, so set it
+arbitrarily to 100 usecs.
 
-On Mon, Apr 28, 2014 at 10:58:26AM +0530, Keerthy wrote:
+Sean Cross (1):
+  pwm: imx: Support very long period lengths
 
-> index 6a79328..5ddb220 100644
-> --- a/drivers/regulator/Kconfig
-> +++ b/drivers/regulator/Kconfig
-> @@ -384,6 +384,18 @@ config REGULATOR_PALMAS
->  	  on the muxing. This is handled automatically in the driver by
->  	  reading the mux info from OTP.
-> =20
-> +config REGULATOR_TPS65917
-> +	tristate "TI TPS65917 PMIC Regulators"
-> +	depends on MFD_TPS65917
+ drivers/pwm/pwm-imx.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-Please keep the Kconfig and Makefile sorted.
+-- 
+1.9.2
 
-> +static const struct regs_info tps65917_regs_info[] =3D {
-> +	{
-> +		.name		=3D "SMPS1",
-> +		.sname		=3D "smps1-in",
-> +		.vsel_addr	=3D TPS65917_SMPS1_VOLTAGE,
-> +		.ctrl_addr	=3D TPS65917_SMPS1_CTRL,
-> +		.sleep_id	=3D TPS65917_EXTERNAL_REQSTR_ID_SMPS1,
-> +	},
-
-> +static int tps65917_is_enabled_smps(struct regulator_dev *dev)
-> +{
-> +	struct tps65917_pmic *pmic =3D rdev_get_drvdata(dev);
-> +	int id =3D rdev_get_id(dev);
-> +	unsigned int reg;
-> +
-> +	tps65917_smps_read(pmic->tps65917,
-> +			   tps65917_regs_info[id].ctrl_addr, &reg);
-> +
-> +	reg &=3D TPS65917_SMPS1_CTRL_STATUS_MASK;
-> +	reg >>=3D TPS65917_SMPS1_CTRL_STATUS_SHIFT;
-> +
-> +	return !!(reg);
-> +}
-
-A lot of these functions look like they could be implemented using the
-standard helpers rather than open coded - the helpers now support
-multi-bit enable fields.
-
-> +	if (selector =3D=3D 0)
-> +		return 0;
-> +	else if (selector < 6)
-> +		return 500000 * mult;
-> +	else
-> +		/* Voltage is linear mapping starting from selector 6,
-> +		 * volt =3D (0.49V + ((selector - 5) * 0.01V)) * RANGE
-> +		 * RANGE is either x1 or x2
-> +		 */
-> +		return (490000 + ((selector - 5) * 10000)) * mult;
-> +}
-
-This looks like the driver could just use linear ranges.
-
-> +static struct of_device_id of_tps65917_match_tbl[] =3D {
-> +	{ .compatible =3D "ti,tps65917-pmic", },
-> +};
-
-Missing null entry at the end of the table here.
-
---xB0nW4MQa6jZONgY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTXhluAAoJELSic+t+oim9I7oP/2pUPLf/OOqO32ZbQQrrR+3u
-BH13w5qj54pULhI4IEOumANTyGRicGTiprpO/VHrtk4ql6dPXbST4kQtJPDvAScs
-Q5SS7fSt0gv8McdtKx4XUXTicOTKK/gOvWrHBYGdGXTBNiM9fit8oDF2ULjrtIz3
-nrGXS8dX/hfmKyYreta5diKR7Yi/fBU4Wj6iqhUlHNdzn4Ej7tfjTZicuHLp2yO3
-gqcvOszkUfaKdC4PxpJQlyHMEIh1ZkYCRV6bd004CcuIO1s0oEEaguI7F5hOX+IN
-lP/Tm6hKfaFvCEOTNW2irKMcSIIHgelfetWPxlyaolQ4qITTTFGC0K4cr6JIpGOi
-j4QRsj4KabjaURVc+lGlZsz/jvTOBew5gBI5CN0azmtxmIRdyEGGRilESisJh4OR
-1nbO6Xp+UEdeY/iUTEz8QllUYN2errNTGpWZMyKZvBT8zzkBcm2zwGxkouCXBwcA
-HXvvMm+yf2i7rs+lQ8mM2oCsi+U+2hXFcwRR+wTMPD4opcif9R7jmm+SsSPdnuCq
-92+XGlxPZUGLZwznTooSveERAj/LW39W5iKSWQYXAWcDz8tuPjcW4+l6ltWRdhxG
-qsKJnrKUMbFxg+I7o3zoF00i7kIqKX99ERAXDB0QhqaioO0Pa2pGhvkqP40vz/+E
-TDgcY5dvzoTaWsN3KuSK
-=4Tls
------END PGP SIGNATURE-----
-
---xB0nW4MQa6jZONgY--
