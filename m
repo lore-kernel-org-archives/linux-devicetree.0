@@ -1,136 +1,50 @@
-From: Anil Kumar <anilk4.v@gmail.com>
-Subject: Re: [PATCH 1/5] ASoC: alc5623: Add device tree binding
-Date: Mon, 28 Apr 2014 12:31:57 +0530
-Message-ID: <CABYxbz4fM_oEFvxcKCn71kan1HBNv2V+EvE+7CgQE2A8CzUtuw@mail.gmail.com>
-References: <1397749994-24983-1-git-send-email-andrew@lunn.ch>
- <1397749994-24983-2-git-send-email-andrew@lunn.ch>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v12 00/31] iommu/exynos: Fixes and Enhancements of System
+	MMU driver with DT
+Date: Mon, 28 Apr 2014 10:34:41 +0200
+Message-ID: <26065037.GxQQuIURPg@wuerfel>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1397749994-24983-2-git-send-email-andrew@lunn.ch>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree@vger.kernel.org, Alsa Devel List <alsa-devel@alsa-project.org>, broonie@kernel.org, Jason Cooper <jason@lakedaemon.net>, linux ARM <linux-arm-kernel@lists.infradead.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1398584283-22846-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Sunday 27 April 2014 13:07:32 Shaik Ameer Basha wrote:
+> The current exynos-iommu(System MMU) driver does not work autonomously
+> since it is lack of support for power management of peripheral blocks.
+> For example, MFC device driver must ensure that its System MMU is disabled
+> before MFC block is power-down not to invalidate IOTLB in the System MMU
+> when I/O memory mapping is changed. Because a System MMU resides in the
+> same H/W block, access to control registers of System MMU while the H/W
+> block is turned off must be prohibited.
+> 
+> This set of changes solves the above problem with setting each System MMUs
+> as the parent of the device which owns the System MMU to receive the
+> information when the device is turned off or turned on.
+> 
+> Another big change to the driver is the support for devicetree.
+> The bindings for System MMU is described in
+> Documentation/devicetree/bindings/arm/samsung/system-mmu.txt
 
-Please find my comment below.
+Sorry I've been absent from the review so far. Most of the patches
+seem entirely reasonable to me, but I'm worried about the DT binding
+aspect. We are going to see more systems shipping with IOMMUs now,
+and we are seeing an increasing number of submissions for 64-bit
+systems. We really have to work out what the DT representation for
+IOMMUs should look like in general before adding another ad-hod
+implementation that is private to one driver.
 
-
-On Thu, Apr 17, 2014 at 9:23 PM, Andrew Lunn <andrew@lunn.ch> wrote:
-
-> Let the ALC5623 codec be instantiated from DT. Add a simple binding
-> for the additional control register and the jack detect register.
->
-> Signed-off-by: Andrew Lunn <andrew@lunn.ch>
-> ---
-> I followed the example of the WM8903 binding which allows register
-> values to be placed into DT.
-> ---
->  .../devicetree/bindings/sound/alc5623.txt          | 23
-> ++++++++++++++++++++++
->  sound/soc/codecs/alc5623.c                         | 13 ++++++++++++
->  2 files changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/alc5623.txt
->
-> diff --git a/Documentation/devicetree/bindings/sound/alc5623.txt
-> b/Documentation/devicetree/bindings/sound/alc5623.txt
-> new file mode 100644
-> index 000000000000..f7f71346e338
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/alc5623.txt
-> @@ -0,0 +1,23 @@
-> +ALC5621/ALC5622/ALC5623 audio Codec
-> +
-> +Required properties:
-> +
-> + - compatible: "realtek,alc5623"
-> + - reg:                the I2C address of the device.
-> +
-> +Optional properties:
-> +
-> +  - add-ctrl:  Default register value for Reg-40h, Additional Control
-> Register.
-> +               If absent, the default is 0.
-> +
-> +  - jack-det-ctrl:     Default register value for Reg-5Ah, Jack Detect
-> +                       Control Register. If absent, the default is 0.
-> +
-> +Example:
-> +
-> +                       alc5621: alc5621@1a {
-> +                               compatible = "alc5621";
-> +                               reg = <0x1a>;
-> +                               add-ctrl = <0x3700>;
-> +                               jack-det-ctrl = <0x4810>;
-> +                       };
-> diff --git a/sound/soc/codecs/alc5623.c b/sound/soc/codecs/alc5623.c
-> index 2acf82f4a08a..1f9273d20b39 100644
-> --- a/sound/soc/codecs/alc5623.c
-> +++ b/sound/soc/codecs/alc5623.c
-> @@ -23,6 +23,7 @@
->  #include <linux/i2c.h>
->  #include <linux/regmap.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  #include <sound/core.h>
->  #include <sound/pcm.h>
->  #include <sound/pcm_params.h>
-> @@ -998,8 +999,10 @@ static int alc5623_i2c_probe(struct i2c_client
-> *client,
->  {
->         struct alc5623_platform_data *pdata;
->         struct alc5623_priv *alc5623;
-> +       struct device_node *np;
->         unsigned int vid1, vid2;
->         int ret;
-> +       u32 val32;
->
->         alc5623 = devm_kzalloc(&client->dev, sizeof(struct alc5623_priv),
->                                GFP_KERNEL);
-> @@ -1040,6 +1043,16 @@ static int alc5623_i2c_probe(struct i2c_client
-> *client,
->         if (pdata) {
->                 alc5623->add_ctrl = pdata->add_ctrl;
->                 alc5623->jack_det_ctrl = pdata->jack_det_ctrl;
-> +       } else {
-> +               if (client->dev.of_node) {
-> +                       np = client->dev.of_node;
-> +                       ret = of_property_read_u32(np, "add-ctrl", &val32);
-> +                       if (ret >= 0)
->
-of_property_read_u32 returns 0 on success, why  "if (ret >= 0)" check ?
-
-
-> +                               alc5623->add_ctrl = val32;
-> +                       ret = of_property_read_u32(np, "jack-det-ctrl",
-> &val32);
->
-+                       if (ret >= 0)
->
- same as above
-
-> +                               alc5623->jack_det_ctrl = val32;
-> +               }
->         }
->
->         alc5623->id = vid2;
-> --
-> 1.9.2
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
+	Arnd
