@@ -1,53 +1,69 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2] mtd: davinci-nand: disable subpage write for keystone-nand
-Date: Mon, 28 Apr 2014 09:43:17 -0400
-Message-ID: <535E5AF5.2020203@ti.com>
-References: <1395346112-13350-1-git-send-email-ivan.khoronzhuk@ti.com> <532B4C36.8060405@ti.com> <5343F0D6.2010804@ti.com> <20140416070833.GA5512@norris-Latitude-E6410> <534E51BF.9050508@ti.com>
+From: =?UTF-8?q?Guido=20Mart=C3=ADnez?= <guido@vanguardiasur.com.ar>
+Subject: [PATCH 1/4] ARM: dts: am335x-bone-common: use phandles for USB and DMA refs
+Date: Mon, 28 Apr 2014 10:58:29 -0300
+Message-ID: <1398693512-5355-1-git-send-email-guido@vanguardiasur.com.ar>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <534E51BF.9050508@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, galak@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, rob@landley.net, linux@arm.linux.org.uk, grygorii.strashko@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, m-karicheri2@ti.com, Warner Losh <imp@bsdimp.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>, bcousson@baylibre.com, tony@atomide.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Ezequiel=20Garc=C3=ADa?= <ezequiel@vanguardiasur.com.ar>, =?UTF-8?q?Guido=20Mart=C3=ADnez?= <guido@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-Brian,
+Use phandles instead of unit adresses to reference usb and dma nodes.
+This makes the DT more robust and readable.
 
-On Wednesday 16 April 2014 05:47 AM, Ivan Khoronzhuk wrote:
-> 
-> On 04/16/2014 10:08 AM, Brian Norris wrote:
->> On Tue, Apr 08, 2014 at 03:51:34PM +0300, Ivan Khoronzhuk wrote:
->>> On 03/20/2014 10:14 PM, Santosh Shilimkar wrote:
->>>> On Thursday 20 March 2014 04:08 PM, Ivan Khoronzhuk wrote:
->>>>> From: Murali Karicheri <m-karicheri2@ti.com>
->>>>> Sub page write doesn't work because of hw issue in controller found on
->>>>> Keystone SOCs. AEMIF controller is also used on DaVinci SOCs which
->>>>> don't seems to have any issue. So add "ti,keysone-nand" compatible
->>>>> to nand driver in order to set NAND_NO_SUBPAGE_WRITE option.
->>>>>
->>>>> Cc: Brian Norris <computersforpeace@gmail.com>
->>>>> Cc: Warner Losh <imp@bsdimp.com>
->>>>> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>>>>
->>>>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->>>>> ---
->>>>>
->>>> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>> Brian,
->>> Could you pick up subj patch?
->> Pushed to l2-mtd.git. Is it critical this goes in for 3.15? It's
->> currently queued for -next (3.16).
->>
+Signed-off-by: Guido Mart=C3=ADnez <guido@vanguardiasur.com.ar>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-[..]
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/=
+dts/am335x-bone-common.dtsi
+index 2e7d932..b95bc9a 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -183,28 +183,28 @@
+ &usb {
+ 	status =3D "okay";
+=20
+-	control@44e10620 {
++	&usb_ctrl_mod {
+ 		status =3D "okay";
+ 	};
+=20
+-	usb-phy@47401300 {
++	&usb0_phy {
+ 		status =3D "okay";
+ 	};
+=20
+-	usb-phy@47401b00 {
++	&usb1_phy {
+ 		status =3D "okay";
+ 	};
+=20
+-	usb@47401000 {
++	&usb0 {
+ 		status =3D "okay";
+ 	};
+=20
+-	usb@47401800 {
++	&usb1 {
+ 		status =3D "okay";
+ 		dr_mode =3D "host";
+ 	};
+=20
+-	dma-controller@47402000  {
++	&cppi41dma  {
+ 		status =3D "okay";
+ 	};
+ };
+--=20
+1.9.2
 
-> 
-> This is a critical fix and it should be for 3.15.
-Ping. 3.15-rc3 is already out and I still see this fix merged
-yet.
-
-Regards,
-Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
