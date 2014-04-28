@@ -1,64 +1,56 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: keystone: add cell's information to spi nodes
-Date: Mon, 28 Apr 2014 15:20:22 +0300
-Message-ID: <1398687622-29880-1-git-send-email-grygorii.strashko@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/4] dt: bindings: Typo s/clocks-names/clock-names/g
+Date: Mon, 28 Apr 2014 12:42:13 +0100
+Message-ID: <20140428114213.D81B5C40AAE@trevor.secretlab.ca>
+References: <1398192025-31523-1-git-send-email-geert+renesas@glider.be>
+	<1398440850.389.0.camel@linux-builds1>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398440850.389.0.camel@linux-builds1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dinh Nguyen <dinguyen@altera.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SPI nodes should always have #address-cells and #size-cells defined,
-otherwise warnings will be produced in case of adding any child
-nodes to the SPI bus in DT:
-Warning (avoid_default_addr_size): Relying on default #address-cells value for /soc/spi@21000400/n25q128a11@0
-Warning (avoid_default_addr_size): Relying on default #size-cells value for /soc/spi@21000400/n25q128a11@0
+On Fri, 25 Apr 2014 10:47:30 -0500, Dinh Nguyen <dinguyen@altera.com> wrote:
+> On Tue, 2014-04-22 at 20:40 +0200, Geert Uytterhoeven wrote:
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > Cc: Dinh Nguyen <dinguyen@altera.com>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: netdev@vger.kernel.org
+> > ---
+> >  .../devicetree/bindings/net/socfpga-dwmac.txt      |    2 +-
+> >  Documentation/devicetree/bindings/net/stmmac.txt   |    2 +-
+> >  2 files changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > index 636f0ac4e223..2a60cd3e8d5d 100644
+> > --- a/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > +++ b/Documentation/devicetree/bindings/net/socfpga-dwmac.txt
+> > @@ -23,5 +23,5 @@ gmac0: ethernet@ff700000 {
+> >  	interrupt-names = "macirq";
+> >  	mac-address = [00 00 00 00 00 00];/* Filled in by U-Boot */
+> >  	clocks = <&emac_0_clk>;
+> > -	clocks-names = "stmmaceth";
+> > +	clock-names = "stmmaceth";
+> >  };
+> > diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> > index 80c1fb8bfbb8..a2acd2b26baf 100644
+> > --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> > +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> > @@ -33,7 +33,7 @@ Optional properties:
+> >  - max-frame-size: See ethernet.txt file in the same directory
+> >  - clocks: If present, the first clock should be the GMAC main clock,
+> >    further clocks may be specified in derived bindings.
+> > -- clocks-names: One name for each entry in the clocks property, the
+> > +- clock-names: One name for each entry in the clocks property, the
+> >    first one should be "stmmaceth".
+> >  
+> >  Examples:
+> 
+> I've applied this patch to git.rocketboards.org/linux-socfpga-next.git
+> next-dt.
 
-Hence, ensure that all SPIx nodes have #address-cells and #size-cells
-properties defined.
+I've already got it in my tree which is in linux-next and will be asking
+Linus to pull shortly.
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/keystone.dtsi |    6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-index 7563934..905227f 100644
---- a/arch/arm/boot/dts/keystone.dtsi
-+++ b/arch/arm/boot/dts/keystone.dtsi
-@@ -131,6 +131,8 @@
- 			ti,davinci-spi-intr-line = <0>;
- 			interrupts = <GIC_SPI 292 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkspi>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		spi1: spi@21000600 {
-@@ -140,6 +142,8 @@
- 			ti,davinci-spi-intr-line = <0>;
- 			interrupts = <GIC_SPI 296 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkspi>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		spi2: spi@21000800 {
-@@ -149,6 +153,8 @@
- 			ti,davinci-spi-intr-line = <0>;
- 			interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
- 			clocks = <&clkspi>;
-+			#address-cells = <1>;
-+			#size-cells = <0>;
- 		};
- 
- 		usb_phy: usb_phy@2620738 {
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
