@@ -1,39 +1,33 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] mfd: twl6040: Optional clk32k clock handling
-Date: Mon, 28 Apr 2014 13:51:16 +0100
-Message-ID: <20140428125116.GL21279@lee--X1>
-References: <1396522482-32036-1-git-send-email-peter.ujfalusi@ti.com>
+From: George Cherian <george.cherian@ti.com>
+Subject: Re: [PATCH 4/6] drivers: net: cpsw: Enable Annexe F Time sync
+Date: Mon, 28 Apr 2014 18:28:07 +0530
+Message-ID: <535E505F.3010302@ti.com>
+References: <1398658225-25873-1-git-send-email-george.cherian@ti.com> <1398658225-25873-5-git-send-email-george.cherian@ti.com> <20140428075530.GA8371@netboy>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1396522482-32036-1-git-send-email-peter.ujfalusi@ti.com>
+In-Reply-To: <20140428075530.GA8371@netboy>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, davem@davemloft.net, jeffrey.t.kirsher@intel.com, dborkman@redhat.com, ast@plumgrid.com, tklauser@distanz.ch, mpa@pengutronix.de, bhutchings@solarflare.com, zonque@gmail.com, balbi@ti.com, mugunthanvnm@ti.com, t-kristo@ti.com, mturquette@linaro.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-> In certain boards the source for the clk32k clock can be gated. In th=
-ese
-> boards the clk32k clock can be provided to the driver and it is going=
- to be
-> enabled/disabled when it is needed.
-> If the clk32k clock is not provided the driver will assume that it is=
- always
-> running.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  Documentation/devicetree/bindings/mfd/twl6040.txt |  2 ++
->  drivers/mfd/twl6040.c                             | 10 ++++++++++
->  include/linux/mfd/twl6040.h                       |  2 ++
->  3 files changed, 14 insertions(+)
+On 4/28/2014 1:25 PM, Richard Cochran wrote:
+> On Mon, Apr 28, 2014 at 09:40:23AM +0530, George Cherian wrote:
+>> Enable the Annex F Time Sync explicitly for DRA7x and AM4372.
+>> With this enabled the L2 PTP is working.
+> L2 works fine without this bit. If this is needed for V3 hardware,
+> then it should have its own code variant.
+okay
+>   
+>> while at that rename TS_BIT8 to TS_TTL_NONZERO
+> Is this bit finally documented for am335x?
+Not for am335x, but for other SoC's it s documented.
+> Thanks,
+> Richard
+>
 
-Applied, thanks.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+-George
