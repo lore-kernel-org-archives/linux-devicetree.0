@@ -1,179 +1,225 @@
-From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] arm: exynos: Add /dev/bL_status user interface on Exynos5420
-Date: Mon, 28 Apr 2014 18:19:25 +0530
-Message-ID: <CAM4voak-oXToBK=owO=jmpwk3rDkg71JS=8YOTz1HfiQvZa5Vw@mail.gmail.com>
-References: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com>
-	<1398528348-21214-7-git-send-email-a.kesavan@samsung.com>
-	<535E3A8C.6070304@linaro.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
+	Exynos System MMU
+Date: Mon, 28 Apr 2014 14:49:14 +0200
+Message-ID: <20140428124912.GL19455@ulmo>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
+	<6544270.ddFBoY6LMm@wuerfel> <20140428111802.GI19455@ulmo>
+	<4780885.JaktFvJeC7@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <535E3A8C.6070304-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1879648532245944921=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4780885.JaktFvJeC7@wuerfel>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 4:55 PM, Daniel Lezcano
-<daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On 04/26/2014 06:05 PM, Abhilash Kesavan wrote:
->>
->> Add a user interface to check the core and cluster status on
->> Exynos5420. This can be utilized while debugging mcpm issues.
->> cat /dev/bL_status will show the current power status of all
->> the 8 cores along with the cluster.
->>
->> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->
->
-> Hi Abhilash,
 
-Hi Daniel,
->
-> I don't think you should add this file.
->
-> 1. big Little is not exynos specific
-But the core control/status bits that I am accessing are exynos
-specific and currently it is being enabled only on 5420.
-> 2. /dev is not for the purpose of your patch
-OK.
->
-> So I would recommend:
->
-> 1. create a generic infra-structure for all the big.Little
-> 2. and/or use debugfs
->
-> Furthermore, how is it usable ? Will you read the file every 2ms to c=
-heck
-> the cluster status, knowing it will be woken up by the read operation=
- ?
-This was just a quick way to check the power status of the
-cores/cluster during cpufreq controlled core switching. Maybe not as
-useful in case of cpuidle.
->
-> Frankly speaking, it would make sense to add traces in mcpm.c (if the=
-y
-> aren't already there - did not check).
-=46air enough, the core bL_switcher code does have code for trace
-events. I can check more on that.
+--===============1879648532245944921==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RD6GsZsdEJvsf78O"
+Content-Disposition: inline
 
-Regards,
-Abhilash
->
->
->>   arch/arm/mach-exynos/mcpm-exynos.c | 64
->> ++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 64 insertions(+)
->>
->> diff --git a/arch/arm/mach-exynos/mcpm-exynos.c
->> b/arch/arm/mach-exynos/mcpm-exynos.c
->> index f9977bf..83428b0 100644
->> --- a/arch/arm/mach-exynos/mcpm-exynos.c
->> +++ b/arch/arm/mach-exynos/mcpm-exynos.c
->> @@ -269,6 +269,53 @@ static void __init exynos_mcpm_usage_count_init=
-(void)
->>         cpu_use_count[cpu][cluster] =3D 1;
->>   }
->>
->> +static size_t bL_check_status(char *info)
->> +{
->> +       size_t len =3D 0;
->> +       int i;
->> +
->> +       len +=3D sprintf(&info[len], "\t0 1 2 3 L2\n");
->> +       len +=3D sprintf(&info[len], "[A15]   ");
->> +       for (i =3D 0; i < 4; i++) {
->> +               len +=3D sprintf(&info[len], "%d ",
->> +                       (readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) =3D=
-=3D 3 ? 1
->> : 0);
->> +       }
->> +       len +=3D sprintf(&info[len], "%d\n",
->> +                       (readl(EXYNOS_COMMON_STATUS(0)) & 0x3) =3D=3D=
- 3 ? 1 :
->> 0);
->> +
->> +       len +=3D sprintf(&info[len], "[A7]    ");
->> +       for (i =3D 4; i < 8; i++)
->> +               len +=3D sprintf(&info[len], "%d ",
->> +                       (readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) =3D=
-=3D 3 ? 1
->> : 0);
->> +       len +=3D sprintf(&info[len], "%d\n\n",
->> +                       (readl(EXYNOS_COMMON_STATUS(1)) & 0x3) =3D=3D=
- 3 ? 1 :
->> 0);
->> +
->> +       return len;
->> +}
->> +
->> +static ssize_t bL_status_read(struct file *file, char __user *buf,
->> +                       size_t len, loff_t *pos)
->> +{
->> +       size_t count =3D 0;
->> +       char info[100];
->> +
->> +       count =3D bL_check_status(info);
->> +       if (count < 0)
->> +               return -EINVAL;
->> +
->> +       return simple_read_from_buffer(buf, len, pos, info, count);
->> +}
->> +
->> +static const struct file_operations bL_status_fops =3D {
->> +       .read           =3D bL_status_read,
->> +};
->> +
->> +static struct miscdevice bL_status_device =3D {
->> +       MISC_DYNAMIC_MINOR,
->> +       "bL_status",
->> +       &bL_status_fops
->> +};
->> +
->>   /*
->>    * Enable cluster-level coherency, in preparation for turning on t=
-he
->> MMU.
->>    */
->> @@ -319,3 +366,20 @@ static int __init exynos_mcpm_init(void)
->>   }
->>
->>   early_initcall(exynos_mcpm_init);
->> +
->> +static int __init exynos_bl_status_init(void)
->> +{
->> +       int ret;
->> +
->> +       if (!soc_is_exynos5420())
->> +               return -ENODEV;
->> +
->> +       ret =3D misc_register(&bL_status_device);
->> +       if (ret) {
->> +               pr_info("bl_status not available\n");
->> +               return ret;
->> +       }
->> +       return 0;
->> +}
->> +
->> +late_initcall(exynos_bl_status_init);
->>
->
->
-> --
->  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software f=
-or ARM SoCs
->
-> Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-> <http://twitter.com/#!/linaroorg> Twitter |
-> <http://www.linaro.org/linaro-blog/> Blog
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--RD6GsZsdEJvsf78O
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 28, 2014 at 02:05:30PM +0200, Arnd Bergmann wrote:
+> On Monday 28 April 2014 13:18:03 Thierry Reding wrote:
+> > On Mon, Apr 28, 2014 at 12:56:03PM +0200, Arnd Bergmann wrote:
+> > > On Monday 28 April 2014 12:39:20 Thierry Reding wrote:
+> > > > And possibly with a iommu-names property to go along with that. The=
+ idea
+> > > > being that a device can be a master on possibly multiple IOMMUs. Us=
+ing
+> > > > the above it would also be possible to have one device be multiple
+> > > > masters on the same IOMMU.
+> > >=20
+> > > Yes, that seems reasonable. Just one question: How would you represen=
+t a
+> > > device that has multiple masters, with at least one connected to an I=
+OMMU
+> > > and another one connected to memory directly, without going to the IO=
+MMU?
+> >=20
+> > Heh, I don't think I've ever thought about that use-case. I guess I was
+> > always assuming that in the absence of an IOMMU the device would simply
+> > access memory directly. From what I can tell that's how Tegra works at
+> > least. If the IOMMU is not enabled for a given client, that client will
+> > access physical memory untranslated.
+> >=20
+> > I suppose if that really must be represented then a global dummy IOMMU
+> > could be introduced to help with these cases.
+>=20
+> It's actually not too uncommon: you can have e.g. the lower 2GB mapped
+> directly from the device address space into the host memory, but have
+> an iommu that translates accesses from some range in the upper 2GB of
+> the 32-bit address space into full 64-bit addresses.
+>=20
+> This use case makes no sense if you use the IOMMU for isolation
+> or virtualization, but it gives better performance for lowmem access
+> when the only reason to have the IOMMU is to map highmem addresses.
+
+Thinking about this some more, isn't the non-IOMMU master something we
+can completely ignore in the DT? Or at least it shouldn't be handled by
+the IOMMU bindings because, well, it's not an IOMMU to begin with.
+
+Perhaps it's something that should be described using dma-ranges?
+
+> > > A lot of drivers probably only support one
+> > > master, so they can just set #iommu-cells=3D<0>, others might require
+> > > IDs that do not fit into one cell.
+> >=20
+> > You mean "#iommu-cells =3D <1>" for devices that only require one maste=
+r?
+>=20
+> I meant an IOMMU device that acts as the slave for exactly one device,
+> even if that device has multiple master ports.
+
+Okay, makes sense. I guess depending on the nature of the IOMMU it might
+make sense not to expose it as an IOMMU at all. For example if it lives
+completely within the register space of its master device. In that case
+it could be directly programmed from the device's driver.
+
+> > There still has to be one cell to specify which master. Unless perhaps
+> > if they can be arbitrarily assigned. I guess even if there's a fixed
+> > mapping that applies to one SoC generation, it might be good to still
+> > employ a specifier and have the mapping in DT for flexibility.
+>=20
+> let me clarify by example:
+>=20
+> 	iommu@1 {
+> 		compatible =3D "some,simple-iommu";
+> 		reg =3D <1>;
+> 		#iommu-cells =3D <0>; /* supports only one master */
+> 	};
+>=20
+> 	iommu@2 {
+> 		compatible =3D "some,other-iommu";
+> 		reg =3D <3>;
+> 		#iommu-cells =3D <1>; /* contains master ID */
+> 	};
+>=20
+> 	iommu@3 {
+> 		compatible =3D "some,windowed-iommu";
+> 		reg =3D <2>;
+> 		#iommu-cells =3D <2>; /* contains dma-window */
+> 	};
+>=20
+> 	device@4 {
+> 		compatible =3D "some,ethernet";
+> 		iommus =3D <&/iommu@1>;
+> 	};
+>=20
+> 	device@5 {
+> 		compatible =3D "some,dmaengine";
+> 		iommus =3D <&/iommu@2 0x40000000 0x1000000>,
+> 			 <&/iommu@3 0x101>;
+> 	};
+>=20
+> The device at address 4 has a one-one relationship with iommu@1, so there
+> is no need for any data. device@5 has two master ports. One is connected =
+to
+> an IOMMU that has a per-device aperture, device@5 can only issue transfers
+> to the 256MB area at 0x40000000, and the IOMMU will have to put entries f=
+or
+> this device into that address. The second master port is connected to
+> iommu@3, which uses a master ID that gets passed along with each transfer,
+> so that needs to be put into the IOTLBs.
+
+The above sounds reasonable to me with the exception of the DMA window
+specifier. Isn't that precisely the information that we currently
+describe using the dma-ranges property?
+
+> A variation would be to not use #iommu-cells at all, but provide a
+> #address-cells / #size-cells pair in the IOMMU, and have a translation
+> as we do for dma-ranges. This is probably most flexible.
+
+I'm not sure I follow. Wouldn't that require masters to be children of
+the IOMMU DT nodes for that to work out? Also how would that work for
+cases where more data than the address ranges (such as the master ID) is
+needed to operate the IOMMU?
+
+> One completely open question that I just noticed is how the kernel should
+> deal with the case of multiple IOMMUs attached to one master: the
+> data structures we have assume that we know exactly how to do DMA by
+> setting the per-device dma_map_ops (iommu or not, coherent or not),
+> and by setting a pointer to at most one IOMMU.
+
+Perhaps we need something more fine-grained than what we currently have.
+I can imagine that rather than having it all abstracted away and handled
+transparently (which undoubtedly has a lot of advantages), we need to
+expose a client API of sorts that drivers can use.
+
+I'm mostly brainstorming here and not thinking of any concrete use-case:
+
+	struct iommu_master *master =3D iommu_get(dev, "foo");
+
+	iommu_master_set_range(master, 0, SZ_256M);
+
+	pages =3D alloc_pages(...);
+
+	iova =3D iommu_master_map(master, pages);
+
+The above would essentially obtain a handle to the "foo" IOMMUs master,
+set the valid DMA range (hard-coded in the driver or obtained from a
+dma-ranges property), allocates some pages of memory and then maps them
+into the device's address space via the IOMMU.
+
+The reason why I think what we have isn't going to work is that it is
+assumed that either there is an IOMMU or there isn't. So memory gets
+either mapped through an IOMMU or it doesn't. Furthermore IOMMU usage is
+likely very use-case dependent and it's probably not easy to determine
+automatically which IOMMU is to be used for individual allocations.
+
+Allowing more fine-grained control of the IOMMU from drivers should
+increase the flexibility of users since they have more context to make
+the right decisions.
+
+But then again, I have only a very sketchy idea of what an IOMMU needs
+to be able to do, so maybe the above doesn't make sense at all.
+
+Thierry
+
+--RD6GsZsdEJvsf78O
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTXk5IAAoJEN0jrNd/PrOhezEP/3C7xzBZWcJrzPQ9qV6KAnRe
+DVxWfqnADwh6v4tgSU5QGGaKlRofh799/Du9RkSlbKMoONFOBAIR7NgnRBEHx4kk
+sh5EYPrF3FVD55ISVDuTMksM4d5onMR9zR4/y0W0mUWgpekLIjCRbFSaimbc6Xkq
+w2eQVUQftjtwCJKqnuMWlrbz51aMo+6PGK07NQzHzq7CUhr+jQiCjOTRXp7tO83q
+5EkuA9O4vFPLjfBV9QZaS+7HALNGB2GjnrvWV7ZpUZnhECIvYZuVrzd4w+27hE6j
+oELjQSz5zT9tWWg7nwKkVMKhXhNgAiQ2lB+Y0Od3CRSeYe99VPbuPmNXNhwzVw5L
+ICaMx2elWE6oE+8OCPLxRWIEzHoIPIWEBTZJm1NfoiMHVfRQSouUrl0/PLZofcIu
+gqf16cFwUC8P6dxQIvYUzZy4ZLfYtwnujRY0hLlFL+YxLJ2t9csKcLE2PYx6vfRl
+khms5FaPRjFli4sOqnKxMT9U4+b4CxBQ4ZV7gxSJmwx3gSEsebZwiNax38XFEtF1
+fJb56ZMLnPKi+7Hp3BSXrpA4j2ob0W1eJECMOL2+kr5Dv03x2APYFL20m46fG/q0
+VTqGWvvFSXJQA4J4rm1rdH7uEmWW6jnjeC1IfaAzebHk2UaecCpUuwiz9BRCVW0p
+NzkWGbVXOXIuzpZb871M
+=ULBi
+-----END PGP SIGNATURE-----
+
+--RD6GsZsdEJvsf78O--
+
+--===============1879648532245944921==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1879648532245944921==--
