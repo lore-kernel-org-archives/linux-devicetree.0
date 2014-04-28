@@ -1,94 +1,86 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] mfd: twl6040: Optional clk32k clock handling
-Date: Mon, 28 Apr 2014 13:46:50 +0300
-Message-ID: <535E319A.9050104@ti.com>
-References: <1396522482-32036-1-git-send-email-peter.ujfalusi@ti.com> <20140428103629.GI21279@lee--X1>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
+	Exynos System MMU
+Date: Mon, 28 Apr 2014 12:56:03 +0200
+Message-ID: <6544270.ddFBoY6LMm@wuerfel>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
+	<4447051.OnJtcFSqFV@wuerfel> <20140428103919.GF19455@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140428103629.GI21279@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sameo@linux.intel.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140428103919.GF19455@ulmo>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/28/2014 01:36 PM, Lee Jones wrote:
->> In certain boards the source for the clk32k clock can be gated. In t=
-hese
->> boards the clk32k clock can be provided to the driver and it is goin=
-g to be
->> enabled/disabled when it is needed.
->> If the clk32k clock is not provided the driver will assume that it i=
-s always
->> running.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mfd/twl6040.txt |  2 ++
->>  drivers/mfd/twl6040.c                             | 10 ++++++++++
->>  include/linux/mfd/twl6040.h                       |  2 ++
->>  3 files changed, 14 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/twl6040.txt b/Doc=
-umentation/devicetree/bindings/mfd/twl6040.txt
->> index 0f5dd709d752..a41157b5d930 100644
->> --- a/Documentation/devicetree/bindings/mfd/twl6040.txt
->> +++ b/Documentation/devicetree/bindings/mfd/twl6040.txt
->> @@ -19,6 +19,8 @@ Required properties:
->> =20
->>  Optional properties, nodes:
->>  - enable-active-high: To power on the twl6040 during boot.
->> +- clocks: phandle to the clk32k clock provider
->> +- clock-names: Must be "clk32k"
->> =20
->>  Vibra functionality
->>  Required properties:
->> diff --git a/drivers/mfd/twl6040.c b/drivers/mfd/twl6040.c
->> index 2e6504a8e1e3..12b314ea48dc 100644
->> --- a/drivers/mfd/twl6040.c
->> +++ b/drivers/mfd/twl6040.c
->> @@ -291,6 +291,8 @@ int twl6040_power(struct twl6040 *twl6040, int o=
-n)
->>  		if (twl6040->power_count++)
->>  			goto out;
->> =20
->> +		clk_prepare_enable(twl6040->clk32k);
->> +
->>  		/* Allow writes to the chip */
->>  		regcache_cache_only(twl6040->regmap, false);
->> =20
->> @@ -346,6 +348,8 @@ int twl6040_power(struct twl6040 *twl6040, int o=
-n)
->> =20
->>  		twl6040->sysclk =3D 0;
->>  		twl6040->mclk =3D 0;
->> +
->> +		clk_disable_unprepare(twl6040->clk32k);
->>  	}
->> =20
->>  out:
->> @@ -644,6 +648,12 @@ static int twl6040_probe(struct i2c_client *cli=
-ent,
->> =20
->>  	i2c_set_clientdata(client, twl6040);
->> =20
->> +	twl6040->clk32k =3D devm_clk_get(&client->dev, "clk32k");
->> +	if (IS_ERR(twl6040->clk32k)) {
->> +		dev_info(&client->dev, "clk32k is not handled\n");
->> +		twl6040->clk32k =3D NULL;
->=20
-> So what happens if you pass a NULL clk reference to clk_prepare_enabl=
-e()?
+On Monday 28 April 2014 12:39:20 Thierry Reding wrote:
+> On Sun, Apr 27, 2014 at 08:23:06PM +0200, Arnd Bergmann wrote:
+> > On Sunday 27 April 2014 13:07:43 Shaik Ameer Basha wrote:
+> > > +- mmu-masters: A phandle to device nodes representing the master for which
+> > > +               the System MMU can provide a translation. Any additional values
+> > > +              after the phandle will be ignored because a System MMU never
+> > > +              have two or more masters. "#stream-id-cells" specified in the
+> > > +              master's node will be also ignored.
+> > > +              If more than one phandle is specified, only the first phandle
+> > > +              will be treated.
+> > 
+> > This seems completely backwards: Why would you list the masters for an IOMMU
+> > in the IOMMU node?
+> > 
+> > The master should have a standard property pointing to the IOMMU instead.
+> > 
+> > We don't have a generic binding for IOMMUs yet it seems, but the time is
+> > overdue to make one.
+> > 
+> > Consider this NAKed until there is a generic binding for IOMMUs that all
+> > relevant developers have agreed to.
+> 
+> I'd like to take this opportunity and revive one of the hibernating
+> patch sets that we have for Tegra. The last effort to get things merged
+> was back in January I think. I haven't bothered to look up the reference
+> since it's probably good to start from scratch anyway.
+> 
+> The latest version of the binding that was under discussion back then I
+> think looked something like this:
+> 
+> 	device@... {
+> 		iommus = <&iommu [spec]>[, <&other_iommu [other_spec]>...];
+> 	};
+> 
+> And possibly with a iommu-names property to go along with that. The idea
+> being that a device can be a master on possibly multiple IOMMUs. Using
+> the above it would also be possible to have one device be multiple
+> masters on the same IOMMU.
 
-We have checks for !clk in all cases within the clk_* API. If we pass N=
-ULL,
-nothing will happen and from the calling driver point of view it will l=
-ook
-like a success.
-AFAIK this is the way to handle non esential/optional clocks without if=
-()s in
-the driver code around the clock handling.
+Yes, that seems reasonable. Just one question: How would you represent a
+device that has multiple masters, with at least one connected to an IOMMU
+and another one connected to memory directly, without going to the IOMMU?
 
---=20
-P=C3=A9ter
+> On Tegra the specifier would be used to encode a memory controller's
+> client ID. One discussion point back at the time was to encode the ID as
+> a bitmask to allow more than a single master per entry. Another solution
+> which I think is a little cleaner and more generic, would be to use one
+> entry per master and use a single cell to encode the client ID. Devices
+> with multiple clients to the same IOMMU could then use multiple entries
+> referencing the same IOMMU.
+
+I'm not completely following here. Are you talking about the generic
+binding, or the part that is tegra specific for the specifier?
+
+My first impression is that the generic binding should just allow an
+arbitrary specifier with a variable #iommu-cells, and leave the format
+up to the IOMMU driver. A lot of drivers probably only support one
+master, so they can just set #iommu-cells=<0>, others might require
+IDs that do not fit into one cell.
+
+	Arnd
