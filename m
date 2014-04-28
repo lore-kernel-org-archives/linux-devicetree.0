@@ -1,166 +1,151 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
-	Exynos System MMU
-Date: Mon, 28 Apr 2014 13:18:03 +0200
-Message-ID: <20140428111802.GI19455@ulmo>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<4447051.OnJtcFSqFV@wuerfel> <20140428103919.GF19455@ulmo>
-	<6544270.ddFBoY6LMm@wuerfel>
+From: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] arm: exynos: Add /dev/bL_status user interface
+ on Exynos5420
+Date: Mon, 28 Apr 2014 13:25:00 +0200
+Message-ID: <535E3A8C.6070304@linaro.org>
+References: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com> <1398528348-21214-7-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6358302904948906807=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <6544270.ddFBoY6LMm@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398528348-21214-7-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/26/2014 06:05 PM, Abhilash Kesavan wrote:
+> Add a user interface to check the core and cluster status on
+> Exynos5420. This can be utilized while debugging mcpm issues.
+> cat /dev/bL_status will show the current power status of all
+> the 8 cores along with the cluster.
+>
+> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
 
---===============6358302904948906807==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7SrMUQONj8Rl9QNG"
-Content-Disposition: inline
+Hi Abhilash,
 
+I don't think you should add this file.
 
---7SrMUQONj8Rl9QNG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+1. big Little is not exynos specific
+2. /dev is not for the purpose of your patch
 
-On Mon, Apr 28, 2014 at 12:56:03PM +0200, Arnd Bergmann wrote:
-> On Monday 28 April 2014 12:39:20 Thierry Reding wrote:
-> > On Sun, Apr 27, 2014 at 08:23:06PM +0200, Arnd Bergmann wrote:
-> > > On Sunday 27 April 2014 13:07:43 Shaik Ameer Basha wrote:
-> > > > +- mmu-masters: A phandle to device nodes representing the master f=
-or which
-> > > > +               the System MMU can provide a translation. Any addit=
-ional values
-> > > > +              after the phandle will be ignored because a System M=
-MU never
-> > > > +              have two or more masters. "#stream-id-cells" specifi=
-ed in the
-> > > > +              master's node will be also ignored.
-> > > > +              If more than one phandle is specified, only the firs=
-t phandle
-> > > > +              will be treated.
-> > >=20
-> > > This seems completely backwards: Why would you list the masters for a=
-n IOMMU
-> > > in the IOMMU node?
-> > >=20
-> > > The master should have a standard property pointing to the IOMMU inst=
-ead.
-> > >=20
-> > > We don't have a generic binding for IOMMUs yet it seems, but the time=
- is
-> > > overdue to make one.
-> > >=20
-> > > Consider this NAKed until there is a generic binding for IOMMUs that =
-all
-> > > relevant developers have agreed to.
-> >=20
-> > I'd like to take this opportunity and revive one of the hibernating
-> > patch sets that we have for Tegra. The last effort to get things merged
-> > was back in January I think. I haven't bothered to look up the reference
-> > since it's probably good to start from scratch anyway.
-> >=20
-> > The latest version of the binding that was under discussion back then I
-> > think looked something like this:
-> >=20
-> > 	device@... {
-> > 		iommus =3D <&iommu [spec]>[, <&other_iommu [other_spec]>...];
-> > 	};
-> >=20
-> > And possibly with a iommu-names property to go along with that. The idea
-> > being that a device can be a master on possibly multiple IOMMUs. Using
-> > the above it would also be possible to have one device be multiple
-> > masters on the same IOMMU.
->=20
-> Yes, that seems reasonable. Just one question: How would you represent a
-> device that has multiple masters, with at least one connected to an IOMMU
-> and another one connected to memory directly, without going to the IOMMU?
+So I would recommend:
 
-Heh, I don't think I've ever thought about that use-case. I guess I was
-always assuming that in the absence of an IOMMU the device would simply
-access memory directly. From what I can tell that's how Tegra works at
-least. If the IOMMU is not enabled for a given client, that client will
-access physical memory untranslated.
+1. create a generic infra-structure for all the big.Little
+2. and/or use debugfs
 
-I suppose if that really must be represented then a global dummy IOMMU
-could be introduced to help with these cases.
+=46urthermore, how is it usable ? Will you read the file every 2ms to=20
+check the cluster status, knowing it will be woken up by the read=20
+operation ?
 
-> > On Tegra the specifier would be used to encode a memory controller's
-> > client ID. One discussion point back at the time was to encode the ID as
-> > a bitmask to allow more than a single master per entry. Another solution
-> > which I think is a little cleaner and more generic, would be to use one
-> > entry per master and use a single cell to encode the client ID. Devices
-> > with multiple clients to the same IOMMU could then use multiple entries
-> > referencing the same IOMMU.
->=20
-> I'm not completely following here. Are you talking about the generic
-> binding, or the part that is tegra specific for the specifier?
->=20
-> My first impression is that the generic binding should just allow an
-> arbitrary specifier with a variable #iommu-cells, and leave the format
-> up to the IOMMU driver.
+=46rankly speaking, it would make sense to add traces in mcpm.c (if the=
+y=20
+aren't already there - did not check).
 
-Yes, I was getting ahead of myself. The idea was to have #iommu-cells
-and allow the specifier to be IOMMU-specific. On Tegra that would
-translate to the memory controller client ID, on other devices I suspect
-something similar might exist, but for the generic binding it should be
-completely opaque and hence irrelevant.
-
-Really just like any of the other bindings that have foos and #foo-cells
-properties.
-
-> A lot of drivers probably only support one
-> master, so they can just set #iommu-cells=3D<0>, others might require
-> IDs that do not fit into one cell.
-
-You mean "#iommu-cells =3D <1>" for devices that only require one master?
-There still has to be one cell to specify which master. Unless perhaps
-if they can be arbitrarily assigned. I guess even if there's a fixed
-mapping that applies to one SoC generation, it might be good to still
-employ a specifier and have the mapping in DT for flexibility.
-
-Thierry
-
---7SrMUQONj8Rl9QNG
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTXjjqAAoJEN0jrNd/PrOh694P/0oLJF8Cc/zfMQ9l+N3j/YZf
-uGkUbAFZGRUomXEiHUzBp7tAsefrIs5RQnAlKm1LL6GYYrSTrWYcPAdOv3z9s/0V
-JjbXQ+XpPuyuJMYPa1S6HZhm2BixKS21ValCHz8ubEjsDsMHIgL7MXeiCoou5Y3M
-Qv66zIB60jrhnUJ12B3xbQQ2wJOE0XBGDc2Vofq9y6uqKAbkNGkTZGd9TbMn05fl
-IGr9jhnHlkxCBHjB48cg28nxrnG5PuxQDBX3GCQy1gId21MceEglmBvcF69mTrup
-F8pDrT6vUzQ22ieX6RPc5YKRwF32QmCntMY9NhBFdIEJP3IxQa22EN6pn7etx7IK
-dPeAw9GOb4RTiLIdeGWHj+pZ7PXBQCbyVBA7uqCsiVIuuuNB4OvKcUCa5D1llKAQ
-9VDnpSPqCRHEB4BMgw1ISGNDC76WTtZWSzrNZt6nLCjirxYpt3z6osvOoH/XauWL
-6NsYQGPCRjH3OJNOR/RWB9OrUfJK/6R/TxVSwkNqLq89qINX3nGfQvRptiThfsxD
-Jk2a/iFe7gAlNlMwGHDv6A7h12OSbYkMUzksXggxBDo/Kup6nTOWgK2l+sTqt+Ah
-Nrlc/+LWwqi63dc1jlsSCvd2772yncnS06E10j8OUYp7H/CRRULY/HPMQ+uvxOuA
-TDDJvh/X71we9QM4yE9/
-=0JBD
------END PGP SIGNATURE-----
-
---7SrMUQONj8Rl9QNG--
-
---===============6358302904948906807==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+>   arch/arm/mach-exynos/mcpm-exynos.c | 64 +++++++++++++++++++++++++++=
++++++++++++
+>   1 file changed, 64 insertions(+)
+>
+> diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exyno=
+s/mcpm-exynos.c
+> index f9977bf..83428b0 100644
+> --- a/arch/arm/mach-exynos/mcpm-exynos.c
+> +++ b/arch/arm/mach-exynos/mcpm-exynos.c
+> @@ -269,6 +269,53 @@ static void __init exynos_mcpm_usage_count_init(=
+void)
+>   	cpu_use_count[cpu][cluster] =3D 1;
+>   }
+>
+> +static size_t bL_check_status(char *info)
+> +{
+> +	size_t len =3D 0;
+> +	int i;
+> +
+> +	len +=3D sprintf(&info[len], "\t0 1 2 3 L2\n");
+> +	len +=3D sprintf(&info[len], "[A15]   ");
+> +	for (i =3D 0; i < 4; i++) {
+> +		len +=3D sprintf(&info[len], "%d ",
+> +			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) =3D=3D 3 ? 1 : 0);
+> +	}
+> +	len +=3D sprintf(&info[len], "%d\n",
+> +			(readl(EXYNOS_COMMON_STATUS(0)) & 0x3) =3D=3D 3 ? 1 : 0);
+> +
+> +	len +=3D sprintf(&info[len], "[A7]    ");
+> +	for (i =3D 4; i < 8; i++)
+> +		len +=3D sprintf(&info[len], "%d ",
+> +			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) =3D=3D 3 ? 1 : 0);
+> +	len +=3D sprintf(&info[len], "%d\n\n",
+> +			(readl(EXYNOS_COMMON_STATUS(1)) & 0x3) =3D=3D 3 ? 1 : 0);
+> +
+> +	return len;
+> +}
+> +
+> +static ssize_t bL_status_read(struct file *file, char __user *buf,
+> +			size_t len, loff_t *pos)
+> +{
+> +	size_t count =3D 0;
+> +	char info[100];
+> +
+> +	count =3D bL_check_status(info);
+> +	if (count < 0)
+> +		return -EINVAL;
+> +
+> +	return simple_read_from_buffer(buf, len, pos, info, count);
+> +}
+> +
+> +static const struct file_operations bL_status_fops =3D {
+> +	.read		=3D bL_status_read,
+> +};
+> +
+> +static struct miscdevice bL_status_device =3D {
+> +	MISC_DYNAMIC_MINOR,
+> +	"bL_status",
+> +	&bL_status_fops
+> +};
+> +
+>   /*
+>    * Enable cluster-level coherency, in preparation for turning on th=
+e MMU.
+>    */
+> @@ -319,3 +366,20 @@ static int __init exynos_mcpm_init(void)
+>   }
+>
+>   early_initcall(exynos_mcpm_init);
+> +
+> +static int __init exynos_bl_status_init(void)
+> +{
+> +	int ret;
+> +
+> +	if (!soc_is_exynos5420())
+> +		return -ENODEV;
+> +
+> +	ret =3D misc_register(&bL_status_device);
+> +	if (ret) {
+> +		pr_info("bl_status not available\n");
+> +		return ret;
+> +	}
+> +	return 0;
+> +}
+> +
+> +late_initcall(exynos_bl_status_init);
+>
 
 
---===============6358302904948906807==--
+--=20
+  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
+r ARM SoCs
+
+=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
