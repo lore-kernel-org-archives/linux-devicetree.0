@@ -1,13 +1,12 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/7] reset: sunxi: document sunxi's reset
- controllers bindings
-Date: Mon, 28 Apr 2014 16:58:44 +0200
-Message-ID: <1398697130-8338-2-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH 2/7] reset: sunxi: allow MFD subdevices probe
+Date: Mon, 28 Apr 2014 16:58:45 +0200
+Message-ID: <1398697130-8338-3-git-send-email-boris.brezillon@free-electrons.com>
 References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBWGZ7GNAKGQES3F3DCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBYOZ7GNAKGQE4X7R56I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1398697130-8338-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,40 +18,49 @@ To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings documentation for sunxi's reset controllers.
+The current implementation uses sunxi_reset_init function for both early
+init and platform device probe.
+
+The sunxi_reset_init function uses DT to retrieve device resources, which
+will be an issue if reset controllers are registered from an MFD device
+that define resources from mfd_cell definition.
+
+Moreover, we can make use of devm functions when we're in probe context.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../bindings/reset/allwinner,sunxi-clock-reset.txt  | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+ drivers/reset/reset-sunxi.c | 19 ++++++++++++++++++-
+ 1 file changed, 18 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
-new file mode 100644
-index 0000000..a582804
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
-@@ -0,0 +1,21 @@
-+Allwinner sunxi Peripheral Reset Controller
-+===========================================
+diff --git a/drivers/reset/reset-sunxi.c b/drivers/reset/reset-sunxi.c
+index 695bd34..115fbb1 100644
+--- a/drivers/reset/reset-sunxi.c
++++ b/drivers/reset/reset-sunxi.c
+@@ -145,7 +145,24 @@ MODULE_DEVICE_TABLE(of, sunxi_reset_dt_ids);
+ 
+ static int sunxi_reset_probe(struct platform_device *pdev)
+ {
+-	return sunxi_reset_init(pdev->dev.of_node);
++	struct sunxi_reset_data *data;
++	struct resource *res;
 +
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
++	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return -ENOMEM;
 +
-+Required properties:
-+- compatible: Should be one of the following depending on your SoC:
-+  "allwinner,sun6i-a31-ahb1-reset"
-+  "allwinner,sun6i-a31-clock-reset"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- #reset-cells: 1, see below
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	data->membase = devm_request_and_ioremap(&pdev->dev, res);
++	if (!data->membase)
++		return -ENOMEM;
 +
-+example:
++	data->rcdev.owner = THIS_MODULE;
++	data->rcdev.nr_resets = resource_size(res) * 32;
++	data->rcdev.ops = &sunxi_reset_ops;
++	data->rcdev.of_node = pdev->dev.of_node;
 +
-+ahb1_rst: reset@01c202c0 {
-+	#reset-cells = <1>;
-+	compatible = "allwinner,sun6i-a31-ahb1-reset";
-+	reg = <0x01c202c0 0xc>;
-+};
++	return reset_controller_register(&data->rcdev);
+ }
+ 
+ static int sunxi_reset_remove(struct platform_device *pdev)
 -- 
 1.8.3.2
