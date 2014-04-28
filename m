@@ -1,61 +1,59 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: Re: [PATCH 1/6] drivers: net: cpts: Remove hardcoded clock name for
- CPTS
-Date: Mon, 28 Apr 2014 20:15:35 +0530
-Message-ID: <535E698F.7060104@ti.com>
-References: <1398658225-25873-1-git-send-email-george.cherian@ti.com>
- <1398658225-25873-2-git-send-email-george.cherian@ti.com>
- <20140428143115.GC30292@saruman.home>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/7] mfd: add basic sun6i A31 PRCM support
+Date: Mon, 28 Apr 2014 16:58:43 +0200
+Message-ID: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140428143115.GC30292@saruman.home>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: balbi@ti.com
-Cc: mark.rutland@arm.com, mugunthanvnm@ti.com, tony@atomide.com, ast@plumgrid.com, mturquette@linaro.org, jeffrey.t.kirsher@intel.com, tklauser@distanz.ch, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, richardcochran@gmail.com, robh+dt@kernel.org, bhutchings@solarflare.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, zonque@gmail.com, t-kristo@ti.com, dborkman@redhat.com, bcousson@baylibre.com, galak@codeaurora.org, mpa@pengutronix.de, davem@davemloft.net
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBRWZ7GNAKGQEVU3K4XQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 4/28/2014 8:01 PM, Felipe Balbi wrote:
-> On Mon, Apr 28, 2014 at 09:40:20AM +0530, George Cherian wrote:
->> CPTS refclk name is hardcoded, which makes it fail in case of DRA7x
->> Remove the hardcoded clock name for CPTS refclk and get the same from DT.
->>
->> Signed-off-by: George Cherian <george.cherian@ti.com>
->> ---
->>   drivers/net/ethernet/ti/cpts.c | 11 ++++-------
->>   1 file changed, 4 insertions(+), 7 deletions(-)
->>
->> diff --git a/drivers/net/ethernet/ti/cpts.c b/drivers/net/ethernet/ti/cpts.c
->> index 2435139..0b6f6f7 100644
->> --- a/drivers/net/ethernet/ti/cpts.c
->> +++ b/drivers/net/ethernet/ti/cpts.c
->> @@ -236,13 +236,11 @@ static void cpts_overflow_check(struct work_struct *work)
->>   	schedule_delayed_work(&cpts->overflow_work, CPTS_OVERFLOW_PERIOD);
->>   }
->>   
->> -#define CPTS_REF_CLOCK_NAME "cpsw_cpts_rft_clk"
->> -
->> -static void cpts_clk_init(struct cpts *cpts)
->> +static void cpts_clk_init(struct device *dev, struct cpts *cpts)
->>   {
->> -	cpts->refclk = clk_get(NULL, CPTS_REF_CLOCK_NAME);
->> +	cpts->refclk = devm_clk_get(dev, "cpts");
->>   	if (IS_ERR(cpts->refclk)) {
->> -		pr_err("Failed to clk_get %s\n", CPTS_REF_CLOCK_NAME);
->> +		pr_err("Failed to get cpts refclk\n");
-> now you have a dev pointer as argument, how about converting this to
-> dev_err() ?
-Yep will do.. in next version.
+Hello,
 
+This patch series adds support for some functions provided by the PRCM
+(Power/Reset/Clock Management) unit:
+- AR100, AHB0 and APB0 clocks
+- APB0 reset controller
+
+These functions are needed to get the P2WI driver working, but more
+subdevices might be added later.
+
+Best Regards,
+
+Boris
+
+Boris BREZILLON (7):
+  reset: sunxi: document sunxi's reset controllers bindings
+  reset: sunxi: allow MFD subdevices probe
+  mfd: add support for sun6i PRCM (Power/Reset/Clock Management) unit
+  mfd: sun6i-prcm: document DT bindings
+  clk: sunxi: add PRCM (Power/Reset/Clock Management) clks support
+  clk: sunxi: document PRCM clock compatible strings
+  ARM: sunxi: dt: add PRCM clk and reset controller subdevices
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   6 +
+ .../devicetree/bindings/mfd/sun6i-prcm.txt         |  71 ++++++
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 ++
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |  49 ++++
+ drivers/clk/sunxi/Makefile                         |   2 +
+ drivers/clk/sunxi/clk-sun6i-prcm.c                 | 253 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sun6i-prcm.c                           | 163 +++++++++++++
+ drivers/reset/reset-sunxi.c                        |  19 +-
+ 10 files changed, 592 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm.c
+ create mode 100644 drivers/mfd/sun6i-prcm.c
 
 -- 
--George
+1.8.3.2
