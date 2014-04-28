@@ -1,125 +1,63 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH V3 17/20] bus: omap_l3_noc: Add information about the context
- of operation
-Date: Mon, 28 Apr 2014 10:14:57 -0500
-Message-ID: <1398698101-25513-18-git-send-email-nm@ti.com>
-References: <1397492726-17203-1-git-send-email-nm@ti.com>
- <1398698101-25513-1-git-send-email-nm@ti.com>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Subject: Re: [PATCH 5/7] clk: sunxi: add PRCM (Power/Reset/Clock
+ Management) clks support
+Date: Mon, 28 Apr 2014 12:25:10 -0300
+Message-ID: <535E72D6.6060206@elopez.com.ar>
+References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com> <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398698101-25513-1-git-send-email-nm@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sricharan R <r.sricharan@ti.com>, Sekhar Nori <nsekhar@ti.com>, Rajendra Nayak <rnayak@ti.com>
-Cc: nm@ti.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBD73XIMS3EHBBTXG7GNAKGQEZKUNCCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1398697130-8338-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-L3 error may be triggered using Debug interface (example JTAG) or
-due to other errors, for example an opcode fetch (due to function
-pointer or stack corruption) or a data access (due to some other
-failure). NOC registers contain additional information to help aid
-debug information.
+Hi Boris,
 
-With this, we can enhance the error information to more detailed form:
-"
-L3 Custom Error: MASTER MPU TARGET L4PER2 (Read): Data Access in User mode
-during Functional access
-"
+El 28/04/14 11:58, Boris BREZILLON escribi=F3:
+> The PRCM (Power/Reset/Clock Management) unit provides several clock
+> devices:
+> - AR100 clk: used to clock the Power Management co-processor
+> - AHB0 clk: used to clock the AHB0 bus
+> - APB0 clk and gates: used to clk
+>
+> Add support for these clks in a separate driver so that they can be probe=
+d
+> as platform devices instead of registered during early init.
+> We need this to be able to probe PRCM MFD subdevices.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+(..)
+> +
+> +MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org");
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Tested-by: Darren Etheridge <detheridge@ti.com>
----
-V3: no change
- drivers/bus/omap_l3_noc.c |   18 ++++++++++++++----
- drivers/bus/omap_l3_noc.h |    2 ++
- 2 files changed, 16 insertions(+), 4 deletions(-)
+There's a missing >
 
-diff --git a/drivers/bus/omap_l3_noc.c b/drivers/bus/omap_l3_noc.c
-index 9d021d0..08344b0 100644
---- a/drivers/bus/omap_l3_noc.c
-+++ b/drivers/bus/omap_l3_noc.c
-@@ -60,15 +60,16 @@ static int l3_handle_target(struct omap_l3 *l3, void __iomem *base,
- {
- 	int k;
- 	u32 std_err_main, clear, masterid;
--	u8 op_code;
-+	u8 op_code, m_req_info;
- 	void __iomem *l3_targ_base;
- 	void __iomem *l3_targ_stderr, *l3_targ_slvofslsb, *l3_targ_mstaddr;
--	void __iomem *l3_targ_hdr;
-+	void __iomem *l3_targ_hdr, *l3_targ_info;
- 	struct l3_target_data *l3_targ_inst;
- 	struct l3_masters_data *master;
- 	char *target_name, *master_name = "UN IDENTIFIED";
- 	char *err_description;
- 	char err_string[30] = { 0 };
-+	char info_string[60] = { 0 };
- 
- 	/* We DONOT expect err_src to go out of bounds */
- 	BUG_ON(err_src > MAX_CLKDM_TARGETS);
-@@ -99,6 +100,7 @@ static int l3_handle_target(struct omap_l3 *l3, void __iomem *base,
- 
- 		l3_targ_mstaddr = l3_targ_base + L3_TARG_STDERRLOG_MSTADDR;
- 		l3_targ_hdr = l3_targ_base + L3_TARG_STDERRLOG_HDR;
-+		l3_targ_info = l3_targ_base + L3_TARG_STDERRLOG_INFO;
- 		break;
- 
- 	case CUSTOM_ERROR:
-@@ -107,6 +109,7 @@ static int l3_handle_target(struct omap_l3 *l3, void __iomem *base,
- 		l3_targ_mstaddr = l3_targ_base +
- 				  L3_TARG_STDERRLOG_CINFO_MSTADDR;
- 		l3_targ_hdr = l3_targ_base + L3_TARG_STDERRLOG_CINFO_OPCODE;
-+		l3_targ_info = l3_targ_base + L3_TARG_STDERRLOG_CINFO_INFO;
- 		break;
- 
- 	default:
-@@ -128,13 +131,20 @@ static int l3_handle_target(struct omap_l3 *l3, void __iomem *base,
- 
- 	op_code = readl_relaxed(l3_targ_hdr) & 0x7;
- 
-+	m_req_info = readl_relaxed(l3_targ_info) & 0xF;
-+	snprintf(info_string, sizeof(info_string),
-+		 ": %s in %s mode during %s access",
-+		 (m_req_info & BIT(0)) ? "Opcode Fetch" : "Data Access",
-+		 (m_req_info & BIT(1)) ? "Supervisor" : "User",
-+		 (m_req_info & BIT(3)) ? "Debug" : "Functional");
-+
- 	WARN(true,
--	     "%s:L3 %s Error: MASTER %s TARGET %s (%s)%s\n",
-+	     "%s:L3 %s Error: MASTER %s TARGET %s (%s)%s%s\n",
- 	     dev_name(l3->dev),
- 	     err_description,
- 	     master_name, target_name,
- 	     l3_transaction_type[op_code],
--	     err_string);
-+	     err_string, info_string);
- 
- 	/* clear the std error log*/
- 	clear = std_err_main | CLEAR_STDERR_LOG;
-diff --git a/drivers/bus/omap_l3_noc.h b/drivers/bus/omap_l3_noc.h
-index 6670fd9..36dc48b 100644
---- a/drivers/bus/omap_l3_noc.h
-+++ b/drivers/bus/omap_l3_noc.h
-@@ -31,7 +31,9 @@
- #define L3_TARG_STDERRLOG_MAIN		0x48
- #define L3_TARG_STDERRLOG_HDR		0x4c
- #define L3_TARG_STDERRLOG_MSTADDR	0x50
-+#define L3_TARG_STDERRLOG_INFO		0x58
- #define L3_TARG_STDERRLOG_SLVOFSLSB	0x5c
-+#define L3_TARG_STDERRLOG_CINFO_INFO	0x64
- #define L3_TARG_STDERRLOG_CINFO_MSTADDR	0x68
- #define L3_TARG_STDERRLOG_CINFO_OPCODE	0x6c
- #define L3_FLAGMUX_REGERR0		0xc
--- 
-1.7.9.5
+> +MODULE_DESCRIPTION("Allwinner Reset Controller Driver");
+
+Copy/paste leftover?
+
+> +MODULE_LICENSE("GPL v2");
+
+I just skimmed through this now, I'll have a more detailed look later.=20
+Thanks for working on sun6i support :)
+
+Cheers,
+
+Emilio
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
