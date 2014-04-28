@@ -1,54 +1,45 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC] serial: sh-sci: Add device tree support for r8a7779
-Date: Mon, 28 Apr 2014 10:13:55 +0900
-Message-ID: <20140428011354.GA13324@verge.net.au>
-References: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
- <CAMuHMdWB4ZnwyNFXMK_rdCKAMOXt+HRMZKG+j4O-tdfiP_-PLg@mail.gmail.com>
- <20140428000314.GK32087@verge.net.au>
- <2068512.62K6gPl1LN@avalon>
+From: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH RFC 0/8] Devfreq support for Exynos5250/5420
+Date: Mon, 28 Apr 2014 01:34:16 +0000 (GMT)
+Message-ID: <22969683.196701398648855165.JavaMail.weblogic@epv6ml10>
+Reply-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2068512.62K6gPl1LN@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=euc-kr
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+MIME-version: 1.0
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: ABHILASH KESAVAN <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?euc-kr?Q?=B1=E8=B1=B9=C1=F8?= <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org" <linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: =?euc-kr?Q?=C3=D6=C2=F9=BF=EC?= <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 02:08:16AM +0200, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> On Monday 28 April 2014 09:03:14 Simon Horman wrote:
-> > On Fri, Apr 25, 2014 at 09:11:06AM +0200, Geert Uytterhoeven wrote:
-> > > On Fri, Apr 25, 2014 at 9:05 AM, Laurent Pinchart wrote:
-> > > >> +     scif0: serial@ffe40000 {
-> > > >> +             compatible = "renesas,scif", "renesas,scif-r8a7779";
-> > > >> +             reg = <0xffe40000 265>;
-> > > >> +             interrupt-parent = <&gic>;
-> > > >> +             interrupts = <0 88 IRQ_TYPE_LEVEL_HIGH>;
-> > > >> +             clocks = <&cpg_clocks R8A7779_CLK_P>;
-> > > >> +             clock-names = "sci_ick";
-> > > > 
-> > > > Clock handling in the sh-sci driver should probably be improved. The
-> > > > driver currently requires an "sci_ick" interface clock and supports an
-> > > > optional "sci_fck" functional clock. In practice, as far as I can see,
-> > > > platforms that provide both sci_ick and sci_fck set the two clocks to
-> > > > the same source.
-> >
-> > > That's right. As a consequence, the clock's enable count is incremented
-> > > 
-> > > 3 times:
-> > >   - once for fck,
-> > >   - once for ick,
-> > >   - once for generic Runtime PM using the "NULL" clock.
-> > 
-> > This approach is fine by me.
-> > But I think you need to maintain compatibility with the old
-> > binding ("sci_ick" required, "sci_fsk") as it seems that
-> > was included in v3.14.
-> 
-> sci_fck isn't part of the DT bindings, so we can at least drop that one.
+PiBUaGlzIHBhdGNoc2V0IGFkZHMgZGV2ZnJlcSBzdXBwb3J0IG9uIEV4eW5vczUyNTAgYW5kIEV4
+eW5vczU0MjAuDQo+IFRoZSBwYXRjaGVzIGFkZCB0aGUgbWlzc2luZyBJTlQgY2xvY2sgc3VwcG9y
+dCBmb3IgZXh5bm9zNTI1MCBhbmQNCj4gYWxzbyBhZGQgYSBuZXcgNTQyMCBkcml2ZXIuIFdlIGFs
+c28gaGF2ZSBwYXRjaGVzIHdoaWNoIGFkZCB0aGUgUFBNVQ0KPiBub2RlIGFuZCBmaXggYSB0eXBv
+IGluIHRoZSBleHlub3M1MjUwIGRyaXZlci4NCj4gDQo+IFRoZSBwYXRjaGVzIGhhdmUgYmVlbiB0
+ZXN0ZWQgb24gRXh5bm9zNTI1MCBiYXNlZCBTbm93IGJvYXJkIGFuZCBTTURLNTQyMA0KPiBFVlQx
+IGJvYXJkcy4gVGhleSBoYXZlIGJlZW4gcHJlcGFyZWQgb24gbGludXgtbmV4dCgyMDE0MDQyNCkg
+d2l0aCB0aGUNCj4gZGV2ZnJlcSBmb3ItbmV4dCBicmFuY2ggYW5kIFNoYWlrIEFtZWVyIEJhc2hh
+J3MgY2xvY2sgY2xlYW51cCBwYXRjaGVzDQo+IG1lcmdlZCAoaHR0cDovL3d3dy5zcGluaWNzLm5l
+dC9saXN0cy9hcm0ta2VybmVsL21zZzMyNTMxMy5odG1sKS4NCj4gDQo+IFRoZXJlIGFyZSBhIGNv
+dXBsZSBvZiBjb25jZXJucyB3aXRoIHRoZXNlIHBhdGNoZXM6DQo+IDEpIFRoZSBwYXRjaGVzIGFy
+ZSB1c2luZyBjbG9jayBhbGlhc2VzIHRvIGV4cG9zZSB0aGUgcmVxdWlyZWQgY2xvY2tzIHRvIHRo
+ZQ0KPiBkZXZmcmVxIGRyaXZlci4NCj4gMikgVGhlIHBhdGNoZXMgYXJlIG1ha2luZyB1c2Ugb2Yg
+ZGlmZmVyZW50IGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgdGhlIFBQTVUNCj4gbm9kZSB0byBkaWZm
+ZXJlbnRpYXRlIGJldHdlZW4gbXVsdGlwbGUgU29DcyBldmVuIHRob3VnaCB0aGUgUFBNVSBpcyB0
+aGUgc2FtZS4NCj4gDQo+IEtpbmRseSBzdWdnZXN0IGEgd2F5IHRvIG1vdmUgZm9yd2FyZCB3aXRo
+IHJlc3BlY3QgdG8gdGhlIGFib3ZlLg0KDQpUaGUgRXh5bm9zIFBQTVUgZHJpdmVycyBoYXZlIGJl
+ZW4gbG9jYXRlZCBpbiBkcml2ZXJzL2RldmZyZXEvZXh5bm9zDQphcyBkZXZmcmVxIGRyaXZlcnMg
+aGF2ZSBiZWVuIHRoZSBvbmx5IHVzZXJzIG9mIFBQTVUuIFRoZXJlDQphcmUgZGV2ZWxvcGVycyB0
+cnlpbmcgdG8gZGVzaWduIGNvbW1vbiBQUE1VIGZyYW1ld29ya3MsIGluY2x1ZGluZw0KQ2hhbndv
+bywgaXQgaXMgbm90IHlldCBzdWJtaXR0ZWQuDQoNCkJlY2F1c2Ugb3RoZXIgRXh5bm9zNSBTb0Nz
+IGhhdmUgdGhlaXIgYnVzL21lbWlmIFBQTVUgZGVmaW5lZCBpbg0KZHJpdmVycy9kZXZmcmVxL2V4
+eW5vcywgYWRkaW5nIGFub3RoZXIgb250IGluIGFub3RoZXIgZGlyZWN0b3J5DQpzZWVtcyBub3Qg
+YXBwcm9wcmlhdGUuDQoNCg0KQ2hlZXJzLA0KTXl1bmdKb28uDQoNCg==
 
-So long as its not used anywhere in-tree, which I believe is the case,
-then that is fine by me.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
