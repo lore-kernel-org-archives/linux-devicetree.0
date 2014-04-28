@@ -1,153 +1,131 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: [PATCH v8 14/20] usb: phy: msm: Add support for secondary PHY control
-Date: Mon, 28 Apr 2014 16:34:17 +0300
-Message-ID: <1398692063-11372-15-git-send-email-iivanov@mm-sol.com>
-References: <1398692063-11372-1-git-send-email-iivanov@mm-sol.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [Resend/PATCH] arm: dts: am43x-epos: Add qspi device.
+Date: Mon, 28 Apr 2014 19:12:30 +0530
+Message-ID: <1398692550-31758-1-git-send-email-sourav.poddar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398692063-11372-1-git-send-email-iivanov@mm-sol.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Felipe Balbi <balbi@ti.com>
-Cc: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
+To: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com, tony@atomide.com
+Cc: Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+This patch adds qspi nodes for am43xx SOC devices.
 
-Allow support to use 2nd HSPHY with USB2 Core.
-Some platforms may have configuration to allow USB controller
-work with any of the two HSPHYs present. By default driver
-configures USB core to use primary HSPHY. Add support to allow
-user select 2nd HSPHY using DT parameter.
-
-Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-Cc: Manu Gautam <mgautam@codeaurora.org>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
 ---
- .../devicetree/bindings/usb/msm-hsusb.txt          |  6 ++++++
- drivers/usb/phy/phy-msm-usb.c                      | 24 ++++++++++++++++++++--
- include/linux/usb/msm_hsusb.h                      |  1 +
- include/linux/usb/msm_hsusb_hw.h                   |  1 +
- 4 files changed, 30 insertions(+), 2 deletions(-)
+Note,
+checpatch gives 1 warning on flash compatible string
+"mx66l51235l". This flash is supported in m25p80 driver and
+the driver is used for other flash devices also. Hence, each
+flash compatible is not described in[1], but a genric example 
+is shown using spansion flash device. 
+[1]:
+Documentation/devicetree/bindings/mtd/m25p80.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-index ee4123d..0669667 100644
---- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-+++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
-@@ -59,6 +59,12 @@ Optional properties:
-                 For example: qcom,phy-init-sequence = < -1 0x63 >;
-                 Will update only value at address ULPI_EXT_VENDOR_SPECIFIC + 1.
+ arch/arm/boot/dts/am4372.dtsi        |   11 ++++++
+ arch/arm/boot/dts/am43x-epos-evm.dts |   63 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 74 insertions(+)
 
-+- qcom,phy-num: Select number of pyco-phy to use, can be one of
-+                0 - PHY one, default
-+                1 - Second PHY
-+                Some platforms may have configuration to allow USB
-+                controller work with any of the two HSPHYs present.
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index 36d523a..49633ff 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -735,6 +735,17 @@
+ 			#size-cells = <1>;
+ 			status = "disabled";
+ 		};
 +
- Example HSUSB OTG controller device node:
-
-     usb@f9a55000 {
-diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-index a6abb1b..8d57045 100644
---- a/drivers/usb/phy/phy-msm-usb.c
-+++ b/drivers/usb/phy/phy-msm-usb.c
-@@ -314,6 +314,9 @@ static int msm_otg_phy_reset(struct msm_otg *motg)
- 	if (!retries)
- 		return -ETIMEDOUT;
-
-+	if (motg->phy_number)
-+		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
++		qspi: qspi@47900000 {
++			compatible = "ti,am4372-qspi";
++			reg = <0x47900000 0x100>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			ti,hwmods = "qspi";
++			interrupts = <0 138 0x4>;
++			num-cs = <4>;
++			status = "disabled";
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index 167dbc8..25cd07c 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -138,6 +138,17 @@
+ 				0x160 (PIN_INPUT | MUX_MODE7) /* spi0_cs1.gpio0_6 */
+ 			>;
+ 		};
 +
- 	dev_info(motg->phy.dev, "phy_reset: success\n");
- 	return 0;
- }
-@@ -368,6 +371,9 @@ static int msm_otg_reset(struct usb_phy *phy)
- 		ulpi_write(phy, ulpi_val, ULPI_USB_INT_EN_FALL);
- 	}
-
-+	if (motg->phy_number)
-+		writel(readl(USB_PHY_CTRL2) | BIT(16), USB_PHY_CTRL2);
++		qspi1_default: qspi1_default {
++			pinctrl-single,pins = <
++				0x7c (PIN_INPUT_PULLUP | MUX_MODE3)
++				0x88 (PIN_INPUT_PULLUP | MUX_MODE2)
++				0x90 (PIN_INPUT_PULLUP | MUX_MODE3)
++				0x94 (PIN_INPUT_PULLUP | MUX_MODE3)
++				0x98 (PIN_INPUT_PULLUP | MUX_MODE3)
++				0x9c (PIN_INPUT_PULLUP | MUX_MODE3)
++			>;
++		};
+ 	};
+ 
+ 	matrix_keypad: matrix_keypad@0 {
+@@ -367,3 +378,55 @@
+ 	pinctrl-0 = <&spi1_pins>;
+ 	status = "okay";
+ };
 +
- 	return 0;
- }
-
-@@ -404,6 +410,7 @@ static int msm_otg_suspend(struct msm_otg *motg)
- 	struct usb_phy *phy = &motg->phy;
- 	struct usb_bus *bus = phy->otg->host;
- 	struct msm_otg_platform_data *pdata = motg->pdata;
-+	void __iomem *addr;
- 	int cnt = 0;
-
- 	if (atomic_read(&motg->in_lpm))
-@@ -463,9 +470,13 @@ static int msm_otg_suspend(struct msm_otg *motg)
- 	 */
- 	writel(readl(USB_USBCMD) | ASYNC_INTR_CTRL | ULPI_STP_CTRL, USB_USBCMD);
-
-+	addr = USB_PHY_CTRL;
-+	if (motg->phy_number)
-+		addr = USB_PHY_CTRL2;
++&qspi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&qspi1_default>;
 +
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL)
--		writel(readl(USB_PHY_CTRL) | PHY_RETEN, USB_PHY_CTRL);
-+		writel(readl(addr) | PHY_RETEN, addr);
-
- 	clk_disable_unprepare(motg->pclk);
- 	clk_disable_unprepare(motg->clk);
-@@ -495,6 +506,7 @@ static int msm_otg_resume(struct msm_otg *motg)
- {
- 	struct usb_phy *phy = &motg->phy;
- 	struct usb_bus *bus = phy->otg->host;
-+	void __iomem *addr;
- 	int cnt = 0;
- 	unsigned temp;
-
-@@ -508,9 +520,14 @@ static int msm_otg_resume(struct msm_otg *motg)
-
- 	if (motg->pdata->phy_type == SNPS_28NM_INTEGRATED_PHY &&
- 			motg->pdata->otg_control == OTG_PMIC_CONTROL) {
++	spi-max-frequency = <48000000>;
++	m25p80@0 {
++		compatible = "mx66l51235l";
++		spi-max-frequency = <48000000>;
++		reg = <0>;
++		spi-cpol;
++		spi-cpha;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <4>;
++		#address-cells = <1>;
++		#size-cells = <1>;
 +
-+		addr = USB_PHY_CTRL;
-+		if (motg->phy_number)
-+			addr = USB_PHY_CTRL2;
-+
- 		msm_hsusb_ldo_set_mode(motg, 1);
- 		msm_hsusb_config_vddcx(motg, 1);
--		writel(readl(USB_PHY_CTRL) & ~PHY_RETEN, USB_PHY_CTRL);
-+		writel(readl(addr) & ~PHY_RETEN, addr);
- 	}
-
- 	temp = readl(USB_USBCMD);
-@@ -1399,6 +1416,9 @@ static int msm_otg_read_dt(struct platform_device *pdev, struct msm_otg *motg)
- 		if (val == OTG_PMIC_CONTROL)
- 			pdata->otg_control = val;
-
-+	if (!of_property_read_u32(node, "qcom,phy-num", &val) && val < 2)
-+		motg->phy_number = val;
-+
- 	prop = of_find_property(node, "qcom,phy-init-sequence", &len);
- 	if (!prop || !len)
- 		return 0;
-diff --git a/include/linux/usb/msm_hsusb.h b/include/linux/usb/msm_hsusb.h
-index 4e5d916..4628f1a 100644
---- a/include/linux/usb/msm_hsusb.h
-+++ b/include/linux/usb/msm_hsusb.h
-@@ -158,6 +158,7 @@ struct msm_otg {
- 	atomic_t in_lpm;
- 	int async_int;
- 	unsigned cur_power;
-+	int phy_number;
- 	struct delayed_work chg_work;
- 	enum usb_chg_state chg_state;
- 	enum usb_chg_type chg_type;
-diff --git a/include/linux/usb/msm_hsusb_hw.h b/include/linux/usb/msm_hsusb_hw.h
-index 6e97a2d..e6d7035 100644
---- a/include/linux/usb/msm_hsusb_hw.h
-+++ b/include/linux/usb/msm_hsusb_hw.h
-@@ -25,6 +25,7 @@
- #define USB_OTGSC            (MSM_USB_BASE + 0x01A4)
- #define USB_USBMODE          (MSM_USB_BASE + 0x01A8)
- #define USB_PHY_CTRL         (MSM_USB_BASE + 0x0240)
-+#define USB_PHY_CTRL2        (MSM_USB_BASE + 0x0278)
-
- #define USBCMD_RESET   2
- #define USB_USBINTR          (MSM_USB_BASE + 0x0148)
---
-1.8.3.2
++		/* MTD partition table.
++		 * The ROM checks the first 512KiB
++		 * for a valid file to boot(XIP).
++		 */
++		partition@0 {
++			label = "QSPI.U_BOOT";
++			reg = <0x00000000 0x000080000>;
++		};
++		partition@1 {
++			label = "QSPI.U_BOOT.backup";
++			reg = <0x00080000 0x00080000>;
++		};
++		partition@2 {
++			label = "QSPI.U-BOOT-SPL_OS";
++			reg = <0x00100000 0x00010000>;
++		};
++		partition@3 {
++			label = "QSPI.U_BOOT_ENV";
++			reg = <0x00110000 0x00010000>;
++		};
++		partition@4 {
++			label = "QSPI.U-BOOT-ENV.backup";
++			reg = <0x00120000 0x00010000>;
++		};
++		partition@5 {
++			label = "QSPI.KERNEL";
++			reg = <0x00130000 0x0800000>;
++		};
++		partition@6 {
++			label = "QSPI.FILESYSTEM";
++			reg = <0x00930000 0x36D0000>;
++		};
++	};
++};
+-- 
+1.7.9.5
