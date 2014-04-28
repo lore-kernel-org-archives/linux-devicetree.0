@@ -1,63 +1,96 @@
-From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC 0/8] Devfreq support for Exynos5250/5420
-Date: Mon, 28 Apr 2014 09:00:13 +0530
-Message-ID: <CAM4voa=KvyijCAU_JLZmbHEM1WFi1FsYPr0E_sLqNfC2z5DvHQ@mail.gmail.com>
-References: <22969683.196701398648855165.JavaMail.weblogic@epv6ml10>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] usb: ohci-exynos: Add facility to use phy provided
+ by the generic phy framework
+Date: Mon, 28 Apr 2014 09:36:12 +0530
+Message-ID: <CAFp+6iG2s5Ddj2F2Xfy3fm9VyW7_G-+YDpeL3iVhur3gng7KvA@mail.gmail.com>
+References: <1398424683-20168-2-git-send-email-gautam.vivek@samsung.com>
+	<Pine.LNX.4.44L0.1404251031260.1140-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <22969683.196701398648855165.JavaMail.weblogic@epv6ml10>
+In-Reply-To: <Pine.LNX.4.44L0.1404251031260.1140-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "myungjoo.ham" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?6rmA6rWt7KeE?= <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org" <linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?7LWc7LCs7Jqw?= <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Myungjoo,
+Hi,
 
-On Mon, Apr 28, 2014 at 7:04 AM, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> This patchset adds devfreq support on Exynos5250 and Exynos5420.
->> The patches add the missing INT clock support for exynos5250 and
->> also add a new 5420 driver. We also have patches which add the PPMU
->> node and fix a typo in the exynos5250 driver.
->>
->> The patches have been tested on Exynos5250 based Snow board and SMDK5420
->> EVT1 boards. They have been prepared on linux-next(20140424) with the
->> devfreq for-next branch and Shaik Ameer Basha's clock cleanup patches
->> merged (http://www.spinics.net/lists/arm-kernel/msg325313.html).
->>
->> There are a couple of concerns with these patches:
->> 1) The patches are using clock aliases to expose the required clocks to the
->> devfreq driver.
->> 2) The patches are making use of different compatible strings for the PPMU
->> node to differentiate between multiple SoCs even though the PPMU is the same.
->>
->> Kindly suggest a way to move forward with respect to the above.
->
-> The Exynos PPMU drivers have been located in drivers/devfreq/exynos
-> as devfreq drivers have been the only users of PPMU. There
-> are developers trying to design common PPMU frameworks, including
-> Chanwoo, it is not yet submitted.
->
-> Because other Exynos5 SoCs have their bus/memif PPMU defined in
-> drivers/devfreq/exynos, adding another ont in another directory
-> seems not appropriate.
-Thanks for your reply.
-I agree with you, I would like to re-use the current exynos5 devfreq
-driver code as far as possible for 5420 as well. I do see a post from
-Chanwoo Choi (https://lkml.org/lkml/2014/3/12/171) regarding adding dt
-support for exynos4. But, looks like there has not be any new patchset
-for a while now.
 
-Chanwoo, is there a plan to post a new version of your patchset ? I
-would be interested in using the same for my work on exynos5.
+On Fri, Apr 25, 2014 at 8:06 PM, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org> wrote:
+> On Fri, 25 Apr 2014, Vivek Gautam wrote:
+>
+>> Add support to consume phy provided by Generic phy framework.
+>> Keeping the support for older usb-phy intact right now, in order
+>> to prevent any functionality break in absence of relevant
+>> device tree side change for ohci-exynos.
+>> Once we move to new phy in the device nodes for ohci, we can
+>> remove the support for older phys.
+>>
+>> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+>
+>
+>> +static int exynos_ohci_phyg_on(struct phy *phy[])
+>> +{
+>> +     int i;
+>> +     int ret = 0;
+>> +
+>> +     for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
+>> +             if (phy[i])
+>> +                     ret = phy_power_on(phy[i]);
+>> +     if (ret)
+>> +             for (i--; i >= 0; i--)
+>> +                     if (phy[i])
+>> +                             phy_power_off(phy[i]);
+>> +
+>> +     return ret;
+>> +}
+>> +
+>> +static int exynos_ohci_phyg_off(struct phy *phy[])
+>> +{
+>> +     int i;
+>> +     int ret = 0;
+>> +
+>> +     for (i = 0; ret == 0 && i < PHY_NUMBER; i++)
+>> +             if (phy[i])
+>> +                     ret = phy_power_off(phy[i]);
+>> +
+>> +     return ret;
+>> +}
+>
+> You probably shouldn't break out of this loop if ret is nonzero; you
+> should continue to power off the remaining phys.
 
-Regards,
-Abhilash
+ok, will remove the 'ret' check in for loop.
+
 >
+> I'd be inclined to put these two routines directly into
+> exynos_ohci_phy_enable() and exynos_ohci_phy_disable(), since they
+> aren't used anywhere else.
+
+Sure, will make these routines as a part of exynos_ohci_phy_enable()
+and exynos_ohci_phy_disable().
+
 >
-> Cheers,
-> MyungJoo.
+>> @@ -151,6 +253,7 @@ skip_phy:
+>>
+>>  fail_add_hcd:
+>>       exynos_ohci_phy_disable(pdev);
+>> +     exynos_ohci_phyg_off(exynos_ohci->phy_g);
 >
+> Why did you add this line?  It doesn't do anything useful, because
+> exynos_ohci_phy_disable() already calls exynos_ohci_phyg_off().
+
+Ah ! my bad, will remove this.
+
+
+-- 
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
