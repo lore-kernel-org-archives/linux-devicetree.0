@@ -1,136 +1,100 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 65/97] ARM: l2c: prima2: convert to generic l2c initialisation
-Date: Mon, 28 Apr 2014 20:31:44 +0100
-Message-ID: <E1WerHE-0001Y8-2Z@rmk-PC.arm.linux.org.uk>
-References: <20140428192419.GV26756@n2100.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140428192419.GV26756-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-0qwDCntBQCZpWr+L1FloEB2eb7JE58TQ@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v9 05/17] ARM: dts: sun4i: Add pin-muxing
+ info for the mmc0 controller
+Date: Mon, 28 Apr 2014 12:32:10 -0700
+Message-ID: <20140428193210.GF3134@lukather>
+References: <1398507381-5614-1-git-send-email-hdegoede@redhat.com>
+ <1398507381-5614-6-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="f61P+fpdnY2FZS1u"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBAO37KNAKGQE6RKGO7Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398507381-5614-6-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Along with this change, we can delete l2x0.c from prima2.
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/marco.dtsi  |  2 +-
- arch/arm/boot/dts/prima2.dtsi |  2 +-
- arch/arm/mach-prima2/Makefile |  1 -
- arch/arm/mach-prima2/common.c |  6 ++++++
- arch/arm/mach-prima2/l2x0.c   | 30 ------------------------------
- 5 files changed, 8 insertions(+), 33 deletions(-)
- delete mode 100644 arch/arm/mach-prima2/l2x0.c
+--f61P+fpdnY2FZS1u
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/marco.dtsi b/arch/arm/boot/dts/marco.dtsi
-index 0c9647d28765..fb354225740a 100644
---- a/arch/arm/boot/dts/marco.dtsi
-+++ b/arch/arm/boot/dts/marco.dtsi
-@@ -36,7 +36,7 @@
- 		ranges = <0x40000000 0x40000000 0xa0000000>;
- 
- 		l2-cache-controller@c0030000 {
--			compatible = "sirf,marco-pl310-cache", "arm,pl310-cache";
-+			compatible = "arm,pl310-cache";
- 			reg = <0xc0030000 0x1000>;
- 			interrupts = <0 59 0>;
- 			arm,tag-latency = <1 1 1>;
-diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-index 1e82571d6823..0d6588d549bf 100644
---- a/arch/arm/boot/dts/prima2.dtsi
-+++ b/arch/arm/boot/dts/prima2.dtsi
-@@ -48,7 +48,7 @@
- 		ranges = <0x40000000 0x40000000 0x80000000>;
- 
- 		l2-cache-controller@80040000 {
--			compatible = "arm,pl310-cache", "sirf,prima2-pl310-cache";
-+			compatible = "arm,pl310-cache";
- 			reg = <0x80040000 0x1000>;
- 			interrupts = <59>;
- 			arm,tag-latency = <1 1 1>;
-diff --git a/arch/arm/mach-prima2/Makefile b/arch/arm/mach-prima2/Makefile
-index 7a6b4a323125..8846e7d87ea5 100644
---- a/arch/arm/mach-prima2/Makefile
-+++ b/arch/arm/mach-prima2/Makefile
-@@ -2,7 +2,6 @@ obj-y += rstc.o
- obj-y += common.o
- obj-y += rtciobrg.o
- obj-$(CONFIG_DEBUG_LL) += lluart.o
--obj-$(CONFIG_CACHE_L2X0) += l2x0.o
- obj-$(CONFIG_SUSPEND) += pm.o sleep.o
- obj-$(CONFIG_SMP) += platsmp.o headsmp.o
- obj-$(CONFIG_HOTPLUG_CPU)  += hotplug.o
-diff --git a/arch/arm/mach-prima2/common.c b/arch/arm/mach-prima2/common.c
-index 47c7819edb9b..a860ea27e8ae 100644
---- a/arch/arm/mach-prima2/common.c
-+++ b/arch/arm/mach-prima2/common.c
-@@ -34,6 +34,8 @@ static const char *atlas6_dt_match[] __initconst = {
- 
- DT_MACHINE_START(ATLAS6_DT, "Generic ATLAS6 (Flattened Device Tree)")
- 	/* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
-+	.l2c_aux_val	= 0,
-+	.l2c_aux_mask	= ~0,
- 	.map_io         = sirfsoc_map_io,
- 	.init_late	= sirfsoc_init_late,
- 	.dt_compat      = atlas6_dt_match,
-@@ -48,6 +50,8 @@ static const char *prima2_dt_match[] __initconst = {
- 
- DT_MACHINE_START(PRIMA2_DT, "Generic PRIMA2 (Flattened Device Tree)")
- 	/* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
-+	.l2c_aux_val	= 0,
-+	.l2c_aux_mask	= ~0,
- 	.map_io         = sirfsoc_map_io,
- 	.dma_zone_size	= SZ_256M,
- 	.init_late	= sirfsoc_init_late,
-@@ -63,6 +67,8 @@ static const char *marco_dt_match[] __initconst = {
- 
- DT_MACHINE_START(MARCO_DT, "Generic MARCO (Flattened Device Tree)")
- 	/* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
-+	.l2c_aux_val	= 0,
-+	.l2c_aux_mask	= ~0,
- 	.smp            = smp_ops(sirfsoc_smp_ops),
- 	.map_io         = sirfsoc_map_io,
- 	.init_late	= sirfsoc_init_late,
-diff --git a/arch/arm/mach-prima2/l2x0.c b/arch/arm/mach-prima2/l2x0.c
-deleted file mode 100644
-index dbd837bdb7f7..000000000000
---- a/arch/arm/mach-prima2/l2x0.c
-+++ /dev/null
-@@ -1,30 +0,0 @@
--/*
-- * l2 cache initialization for CSR SiRFprimaII
-- *
-- * Copyright (c) 2011 Cambridge Silicon Radio Limited, a CSR plc group company.
-- *
-- * Licensed under GPLv2 or later.
-- */
--
--#include <linux/init.h>
--#include <linux/kernel.h>
--#include <linux/of.h>
--#include <asm/hardware/cache-l2x0.h>
--
--static const struct of_device_id sirf_l2x0_ids[] __initconst = {
--	{ .compatible = "sirf,prima2-pl310-cache", .data = &prima2_l2x0_aux, },
--	{ .compatible = "sirf,marco-pl310-cache", .data = &marco_l2x0_aux, },
--	{},
--};
--
--static int __init sirfsoc_l2x0_init(void)
--{
--	struct device_node *np;
--
--	np = of_find_matching_node(NULL, sirf_l2x0_ids);
--	if (np)
--		return l2x0_of_init(0, ~0);
--
--	return 0;
--}
--early_initcall(sirfsoc_l2x0_init);
--- 
-1.8.3.1
+Hi Hans,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Sat, Apr 26, 2014 at 12:16:09PM +0200, Hans de Goede wrote:
+> mmc0 is the only controller actually being used on boards, so limit the
+> pin-muxing options to that.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun4i-a10.dtsi | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a=
+10.dtsi
+> index dce074b..29fd4f5 100644
+> --- a/arch/arm/boot/dts/sun4i-a10.dtsi
+> +++ b/arch/arm/boot/dts/sun4i-a10.dtsi
+> @@ -565,6 +565,20 @@
+>  				allwinner,drive =3D <0>;
+>  				allwinner,pull =3D <0>;
+>  			};
+> +
+> +			mmc0_pins_a: mmc0@0 {
+> +				allwinner,pins =3D "PF0","PF1","PF2","PF3","PF4","PF5";
+> +				allwinner,function =3D "mmc0";
+> +				allwinner,drive =3D <2>;
+> +				allwinner,pull =3D <0>;
+> +			};
+> +
+> +			mmc0_cd_pin_a: mmc0_cd_pin@0 {
+> +				allwinner,pins =3D "PH1";
+> +				allwinner,function =3D "gpio_in";
+> +				allwinner,drive =3D <0>;
+> +				allwinner,pull =3D <1>;
+> +			};
+
+Actually, I like very much the reference_pin mention you had in your
+bindings documentation. Could you use it for this and the other
+patches?
+
+Thanks,
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--f61P+fpdnY2FZS1u
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTXqy6AAoJEBx+YmzsjxAgqvQQAImSangXW6g9tY1n54r12xUy
+OLrPt6AKWagMhM4LBbwwAiP45aXSLkTI5uQeBNLHocy1RpqxQLhf8IjoGi11Hs7W
+vXTSMdqNvzUGUEHuCYuZJZMja1Ku8dy+V14McgdFMiZCFsunQbM90Md/4rZ4Wgh+
+nafSlUi3QMLhM5HR9YtURHzrrUgtHsb+hl9LCzVnfUtnbGulS5+ENjUbYE9jAxHM
+AoWaPyulZ9RKpVoUFXIRSI+cLshsUOtpKHLeLi3LZTnx8ToMItWA6+a8PBfQ+YVi
+Jiu+ddHRuUJ2Zt7yRZ+FbNRua5yNAvmwfm4MG9cvZZIIAekY8F9y0tylbI+BO9kK
+iHDYVaauhoRRlqgFGwoBaNuCzL2iniOmppU4eq1Wjv0yBJthsCaT5DGwB41rSCVT
+3Ia9teukwUPZ0FygvBREEyVxhC1apK46vQyDLDQgsNEeEyE3tezQDfdNlSF/XOfo
+TM8L+RSHFKwieal0YMoVqVc2yov22O5wqh8SiNtobtzBov6Ujx30PfdfuPTOCmKl
+GH1IRNMYnWXktluNFUb2C9YnQMxgaOb2+y49V2byG7TFsA+Pf35L+3PA59XN3psu
+wlkSIdebMVQ+BdTSkBIKtdxHIFVZlKeAAIX4Bz3rANpALdyLsDwaHg+JPgedtHze
+074GnMksE4KNCbQN9UzW
+=Im/d
+-----END PGP SIGNATURE-----
+
+--f61P+fpdnY2FZS1u--
