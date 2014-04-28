@@ -1,231 +1,56 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv2 6/9] ASoC: omap: rx51: get GPIO numbers via gpiod API
-Date: Mon, 28 Apr 2014 16:07:24 +0200
-Message-ID: <1398694047-28596-7-git-send-email-sre@kernel.org>
-References: <1398694047-28596-1-git-send-email-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398694047-28596-1-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Mark Brown <broonie@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org, Sebastian Reichel <sre@kernel.org>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 0/2] [media] si4713 DT binding
+Date: Mon, 28 Apr 2014 16:15:29 +0200
+Message-ID: <20140428141527.GA29509@earth.universe>
+References: <1396785125-8759-1-git-send-email-sre@kernel.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="vtzGhvizbBRQ85DL"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1396785125-8759-1-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Eduardo Valentin <edubezval-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Dinesh Ram <Dinesh.Ram-vJEk5272eHo@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Update the driver to get GPIO numbers from the
-devm gpiod API instead of requesting hardcoded
-GPIO numbers.
 
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
----
- sound/soc/omap/rx51.c | 114 ++++++++++++++++++++++++++++++++++----------------
- 1 file changed, 79 insertions(+), 35 deletions(-)
+--vtzGhvizbBRQ85DL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/sound/soc/omap/rx51.c b/sound/soc/omap/rx51.c
-index e140b1b..30cfac0 100644
---- a/sound/soc/omap/rx51.c
-+++ b/sound/soc/omap/rx51.c
-@@ -26,6 +26,7 @@
- #include <linux/delay.h>
- #include <linux/gpio.h>
- #include <linux/platform_device.h>
-+#include <linux/gpio/consumer.h>
- #include <linux/module.h>
- #include <sound/core.h>
- #include <sound/jack.h>
-@@ -38,15 +39,6 @@
- 
- #include "omap-mcbsp.h"
- 
--#define RX51_TVOUT_SEL_GPIO		40
--#define RX51_JACK_DETECT_GPIO		177
--#define RX51_ECI_SW_GPIO		182
--/*
-- * REVISIT: TWL4030 GPIO base in RX-51. Now statically defined to 192. This
-- * gpio is reserved in arch/arm/mach-omap2/board-rx51-peripherals.c
-- */
--#define RX51_SPEAKER_AMP_TWL_GPIO	(192 + 7)
--
- enum {
- 	RX51_JACK_DISABLED,
- 	RX51_JACK_TVOUT,		/* tv-out with stereo output */
-@@ -54,12 +46,21 @@ enum {
- 	RX51_JACK_HS,			/* headset: stereo output with mic */
- };
- 
-+struct rx51_audio_pdata {
-+	struct gpio_desc *tvout_selection_gpio;
-+	struct gpio_desc *jack_detection_gpio;
-+	struct gpio_desc *eci_sw_gpio;
-+	struct gpio_desc *speaker_amp_gpio;
-+};
-+
- static int rx51_spk_func;
- static int rx51_dmic_func;
- static int rx51_jack_func;
- 
- static void rx51_ext_control(struct snd_soc_dapm_context *dapm)
- {
-+	struct snd_soc_card *card = dapm->card;
-+	struct rx51_audio_pdata *pdata = snd_soc_card_get_drvdata(card);
- 	int hp = 0, hs = 0, tvout = 0;
- 
- 	switch (rx51_jack_func) {
-@@ -93,7 +94,7 @@ static void rx51_ext_control(struct snd_soc_dapm_context *dapm)
- 	else
- 		snd_soc_dapm_disable_pin_unlocked(dapm, "HS Mic");
- 
--	gpio_set_value(RX51_TVOUT_SEL_GPIO, tvout);
-+	gpiod_set_value(pdata->tvout_selection_gpio, tvout);
- 
- 	snd_soc_dapm_sync_unlocked(dapm);
- 
-@@ -154,10 +155,12 @@ static int rx51_set_spk(struct snd_kcontrol *kcontrol,
- static int rx51_spk_event(struct snd_soc_dapm_widget *w,
- 			  struct snd_kcontrol *k, int event)
- {
--	if (SND_SOC_DAPM_EVENT_ON(event))
--		gpio_set_value_cansleep(RX51_SPEAKER_AMP_TWL_GPIO, 1);
--	else
--		gpio_set_value_cansleep(RX51_SPEAKER_AMP_TWL_GPIO, 0);
-+	struct snd_soc_dapm_context *dapm = w->dapm;
-+	struct snd_soc_card *card = dapm->card;
-+	struct rx51_audio_pdata *pdata = snd_soc_card_get_drvdata(card);
-+
-+	gpiod_set_raw_value_cansleep(pdata->speaker_amp_gpio,
-+				     !!SND_SOC_DAPM_EVENT_ON(event));
- 
- 	return 0;
- }
-@@ -223,7 +226,6 @@ static struct snd_soc_jack rx51_av_jack;
- 
- static struct snd_soc_jack_gpio rx51_av_jack_gpios[] = {
- 	{
--		.gpio = RX51_JACK_DETECT_GPIO,
- 		.name = "avdet-gpio",
- 		.report = SND_JACK_HEADSET,
- 		.invert = 1,
-@@ -284,6 +286,9 @@ static const struct snd_kcontrol_new aic34_rx51_controls[] = {
- static int rx51_aic34_init(struct snd_soc_pcm_runtime *rtd)
- {
- 	struct snd_soc_codec *codec = rtd->codec;
-+	struct snd_soc_card *card = codec->card;
-+	struct rx51_audio_pdata *pdata = snd_soc_card_get_drvdata(card);
-+
- 	struct snd_soc_dapm_context *dapm = &codec->dapm;
- 	int err;
- 
-@@ -307,6 +312,11 @@ static int rx51_aic34_init(struct snd_soc_pcm_runtime *rtd)
- 			       &rx51_av_jack);
- 	if (err)
- 		return err;
-+
-+	/* prepare gpio for snd_soc_jack_add_gpios */
-+	rx51_av_jack_gpios[0].gpio = desc_to_gpio(pdata->jack_detection_gpio);
-+	devm_gpiod_put(card->dev, pdata->jack_detection_gpio);
-+
- 	err = snd_soc_jack_add_gpios(&rx51_av_jack,
- 				     ARRAY_SIZE(rx51_av_jack_gpios),
- 				     rx51_av_jack_gpios);
-@@ -365,37 +375,74 @@ static struct snd_soc_card rx51_sound_card = {
- 
- static int rx51_soc_probe(struct platform_device *pdev)
- {
-+	struct rx51_audio_pdata *pdata;
- 	struct snd_soc_card *card = &rx51_sound_card;
- 	int err;
- 
- 	if (!machine_is_nokia_rx51() && !of_machine_is_compatible("nokia,omap3-n900"))
- 		return -ENODEV;
- 
--	err = gpio_request_one(RX51_TVOUT_SEL_GPIO,
--			       GPIOF_DIR_OUT | GPIOF_INIT_LOW, "tvout_sel");
--	if (err)
--		goto err_gpio_tvout_sel;
--	err = gpio_request_one(RX51_ECI_SW_GPIO,
--			       GPIOF_DIR_OUT | GPIOF_INIT_HIGH, "eci_sw");
--	if (err)
--		goto err_gpio_eci_sw;
--
- 	card->dev = &pdev->dev;
- 
-+	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+	if (pdata == NULL) {
-+		dev_err(card->dev, "failed to create private data\n");
-+		return -ENOMEM;
-+	}
-+	snd_soc_card_set_drvdata(card, pdata);
-+
-+	pdata->tvout_selection_gpio = devm_gpiod_get(card->dev,
-+						     "tvout-selection");
-+	if (IS_ERR(pdata->tvout_selection_gpio)) {
-+		dev_err(card->dev, "could not get tvout selection gpio\n");
-+		return PTR_ERR(pdata->tvout_selection_gpio);
-+	}
-+
-+	err = gpiod_direction_output(pdata->tvout_selection_gpio, 0);
-+	if (err) {
-+		dev_err(card->dev, "could not setup tvout selection gpio\n");
-+		return err;
-+	}
-+
-+	pdata->jack_detection_gpio = devm_gpiod_get(card->dev,
-+						    "jack-detection");
-+	if (IS_ERR(pdata->jack_detection_gpio)) {
-+		dev_err(card->dev, "could not get jack detection gpio\n");
-+		return PTR_ERR(pdata->jack_detection_gpio);
-+	}
-+
-+	pdata->eci_sw_gpio = devm_gpiod_get(card->dev, "eci-switch");
-+	if (IS_ERR(pdata->eci_sw_gpio)) {
-+		dev_err(card->dev, "could not get eci switch gpio\n");
-+		return PTR_ERR(pdata->eci_sw_gpio);
-+	}
-+
-+	err = gpiod_direction_output(pdata->eci_sw_gpio, 1);
-+	if (err) {
-+		dev_err(card->dev, "could not setup eci switch gpio\n");
-+		return err;
-+	}
-+
-+	pdata->speaker_amp_gpio = devm_gpiod_get(card->dev,
-+						 "speaker-amplifier");
-+	if (IS_ERR(pdata->speaker_amp_gpio)) {
-+		dev_err(card->dev, "could not get speaker enable gpio\n");
-+		return PTR_ERR(pdata->speaker_amp_gpio);
-+	}
-+
-+	err = gpiod_direction_output(pdata->speaker_amp_gpio, 0);
-+	if (err) {
-+		dev_err(card->dev, "could not setup speaker enable gpio\n");
-+		return err;
-+	}
-+
- 	err = devm_snd_soc_register_card(card->dev, card);
- 	if (err) {
- 		dev_err(&pdev->dev, "snd_soc_register_card failed (%d)\n", err);
--		goto err_snd;
-+		return err;
- 	}
- 
- 	return 0;
--err_snd:
--	gpio_free(RX51_ECI_SW_GPIO);
--err_gpio_eci_sw:
--	gpio_free(RX51_TVOUT_SEL_GPIO);
--err_gpio_tvout_sel:
--
--	return err;
- }
- 
- static int rx51_soc_remove(struct platform_device *pdev)
-@@ -403,9 +450,6 @@ static int rx51_soc_remove(struct platform_device *pdev)
- 	snd_soc_jack_free_gpios(&rx51_av_jack, ARRAY_SIZE(rx51_av_jack_gpios),
- 				rx51_av_jack_gpios);
- 
--	gpio_free(RX51_ECI_SW_GPIO);
--	gpio_free(RX51_TVOUT_SEL_GPIO);
--
- 	return 0;
- }
- 
--- 
-1.9.2
+On Sun, Apr 06, 2014 at 01:52:03PM +0200, Sebastian Reichel wrote:
+> This is an RFC patch adding DT support to the si4713 radio
+> transmitter i2c driver.
+
+ping?
+
+-- Sebastian
+
+--vtzGhvizbBRQ85DL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTXmJ/AAoJENju1/PIO/qa1KkP/1dDXOZJigLquQCPJrq1Dw4T
+ZK4uSXEA7/pkNF6AbZ855JLVDpGifke6lH8VPmJFXGjYS/qCNGycthvAXtLIG24/
+2JWVCpDi1NE38cZUqGXeFo4f3AzY4go8DRNHdY1NRZoNMh5Rx8Du6rJxHoYwNghS
+xvNdS5G9AH1YHHwXLfQJkrCMGvBA09D/DYXz3ATi8D53gQiSq7Zr8ZGtSK+/UTFl
+aSkc9aFXPjPqQsrDcmgx/iZbb1ZJd0CvYT3fIQwYl4mqb4e+dgyfkunTi1WkS3xI
+RW0ny2IAJSar68STvrAhT0Zav91dzXULzrx0daHg9+AR0JfOdtcW9L6pfSPTZ/wN
+kcwN5BB6LxJn3chgzN/MoSBpkzr3X/0E3XIJBzN5aepe/mYvij0JRES6RkcVTErB
+hpnUyPGNW/ryUPq4hWpn81CAx8C23WWAbECt5kcBkv37TBuzdzDPF4y11HuB6aJt
+UmtqFx0og+qCNaCJr7fyHK1S8T8uSOim3XiFKehByJYS1O0KTWWvzRsour2xajgU
+FpFTE92ReJda+0WLBX58Nbdc/1p831Yzr0XbEpVFgUAHELJ1t8d4vfikVTG7IfFo
+Wvr2iRlp4USUs0Mou5oXEOja4op14jPNssZBn6bhC0TP9s4VRP3jGF8k/K3bZCQX
+SrtcaPbFr+cF4MVSdrYT
+=7nd5
+-----END PGP SIGNATURE-----
+
+--vtzGhvizbBRQ85DL--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
