@@ -1,28 +1,57 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 2/2] arc_emac: add clock handling
-Date: Sun, 27 Apr 2014 19:54:23 -0400 (EDT)
-Message-ID: <20140427.195423.788429574120983614.davem@davemloft.net>
-References: <1712306.TSJMmGq3uZ@phil>
-	<5262035.54Ti8h2BVg@phil>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC] serial: sh-sci: Add device tree support for r8a7779
+Date: Mon, 28 Apr 2014 09:03:14 +0900
+Message-ID: <20140428000314.GK32087@verge.net.au>
+References: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
+ <1418731.YSFS18bIMD@avalon>
+ <20140425002641.GB31164@verge.net.au>
+ <1922942.7jvlviEDpf@avalon>
+ <CAMuHMdWB4ZnwyNFXMK_rdCKAMOXt+HRMZKG+j4O-tdfiP_-PLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5262035.54Ti8h2BVg@phil>
-Sender: netdev-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: Alexey.Brodkin@synopsys.com, netdev@vger.kernel.org, max.schwarz@online.de, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWB4ZnwyNFXMK_rdCKAMOXt+HRMZKG+j4O-tdfiP_-PLg@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-=46rom: Heiko St=FCbner <heiko@sntech.de>
-Date: Fri, 25 Apr 2014 10:06:13 +0200
+On Fri, Apr 25, 2014 at 09:11:06AM +0200, Geert Uytterhoeven wrote:
+> On Fri, Apr 25, 2014 at 9:05 AM, Laurent Pinchart
+> <laurent.pinchart@ideasonboard.com> wrote:
+> >> +     scif0: serial@ffe40000 {
+> >> +             compatible = "renesas,scif", "renesas,scif-r8a7779";
+> >> +             reg = <0xffe40000 265>;
+> >> +             interrupt-parent = <&gic>;
+> >> +             interrupts = <0 88 IRQ_TYPE_LEVEL_HIGH>;
+> >> +             clocks = <&cpg_clocks R8A7779_CLK_P>;
+> >> +             clock-names = "sci_ick";
+> >
+> > Clock handling in the sh-sci driver should probably be improved. The driver
+> > currently requires an "sci_ick" interface clock and supports an optional
+> > "sci_fck" functional clock. In practice, as far as I can see, platforms that
+> > provide both sci_ick and sci_fck set the two clocks to the same source.
+> 
+> That's right. As a consequence, the clock's enable count is incremented
+> 3 times:
+>   - once for fck,
+>   - once for ick,
+>   - once for generic Runtime PM using the "NULL" clock.
 
-> This adds ability for the arc_emac to really handle its supplying clo=
-ck.
-> To get the needed clock-frequency either a real clock or the previous
-> clock-frequency property must be provided.
->=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-> Tested-by: Max Schwarz <max.schwarz@online.de>
+This approach is fine by me.
+But I think you need to maintain compatibility with the old
+binding ("sci_ick" required, "sci_fsk") as it seems that
+was included in v3.14.
 
-Applied.
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> 
