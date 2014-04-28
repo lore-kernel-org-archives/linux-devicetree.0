@@ -1,135 +1,132 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
-	Exynos System MMU
-Date: Mon, 28 Apr 2014 12:39:20 +0200
-Message-ID: <20140428103919.GF19455@ulmo>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<1398584283-22846-12-git-send-email-shaik.ameer@samsung.com>
-	<4447051.OnJtcFSqFV@wuerfel>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv3 19/41] OMAPDSS: panel-dpi: Add DT support
+Date: Mon, 28 Apr 2014 13:43:57 +0300
+Message-ID: <535E30ED.10903@ti.com>
+References: <1390301833-24944-1-git-send-email-tomi.valkeinen@ti.com> <1390301833-24944-20-git-send-email-tomi.valkeinen@ti.com> <20140418155107.GB5354@atomide.com> <5358DEEA.1000506@ti.com> <20140425235348.GH20807@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0802941332163357946=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <4447051.OnJtcFSqFV@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="t8imHDvSfoAr83HxPtWE4FSV2PhBWC3Sd"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140425235348.GH20807-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <archit-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Stefan Roese <stefan.roese-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Dr . H . Nikolaus Schaller" <hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Enric Balletbo Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0802941332163357946==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OzxllxdKGCiKxUZM"
-Content-Disposition: inline
-
-
---OzxllxdKGCiKxUZM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+--t8imHDvSfoAr83HxPtWE4FSV2PhBWC3Sd
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Sun, Apr 27, 2014 at 08:23:06PM +0200, Arnd Bergmann wrote:
-> On Sunday 27 April 2014 13:07:43 Shaik Ameer Basha wrote:
-> > +- mmu-masters: A phandle to device nodes representing the master for w=
-hich
-> > +               the System MMU can provide a translation. Any additiona=
-l values
-> > +              after the phandle will be ignored because a System MMU n=
-ever
-> > +              have two or more masters. "#stream-id-cells" specified i=
-n the
-> > +              master's node will be also ignored.
-> > +              If more than one phandle is specified, only the first ph=
-andle
-> > +              will be treated.
+On 26/04/14 02:53, Tony Lindgren wrote:
+> * Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [140424 02:53]:
+>> On 18/04/14 18:51, Tony Lindgren wrote:
+>>
+>>>> +	gpio =3D of_get_gpio(node, 0);
+>>>> +	if (gpio_is_valid(gpio) || gpio =3D=3D -ENOENT) {
+>>>> +		ddata->enable_gpio =3D gpio;
+>>>> +	} else {
+>>>> +		dev_err(&pdev->dev, "failed to parse enable gpio\n");
+>>>> +		return gpio;
+>>>> +	}
+>>>
+>>> We should set the GPIO polarity based on the OF_GPIO_ACTIVE_LOW like
+>>> gpio_backlight_probe_dt is doing.=20
+>>
+>> Instead of doing it with the old gpio API, and checking the 'active'
+>> flag everywhere, I think we can use the new gpiod API which handles th=
+e
+>> polarity automatically.
+>>
+>> I attached prototype patches (based on -rc2) for panel dpi using that
+>> approach. It's a bit messier than I'd like, because for non-DT boot we=
+
+>> need to request the gpio using the old API, and then convert it to
+>> gpio_desc. We can remove that code when all the boards use DT.
+>>
+>> I've compiled tested this only, as I don't have DPI panels I could use=
+=2E
+>> I did try similar approach for TFP410, and it seemed to work fine.
 >=20
-> This seems completely backwards: Why would you list the masters for an IO=
-MMU
-> in the IOMMU node?
+> Got these working by updating my test patch to use enable-gpios instead=
+
+> of gpios, and had to change from GPIO_ACTIVE_LOW to GPIO_ACTIVE_HIGH.
+> Are we now also breaking legacy booting by reversing the polarity?
+
+I don't think so. The GPIOs should be active-high by default, if I'm not
+mistaken, so the polarities should be the same for legacy boot with or
+without those patches. Of course, I don't have the boards so I have no
+idea if the polarities have been correct even before.
+
+debugfs/gpio shows the actual value of the gpio, so you could check from
+there what it is.
+
+> In any case, looks like we have some duplicate panel code.. Turns
+> out most panel dpi users for omap3 board-*.c files are just
+> sharp-ls037v7dw01 panels but configured in QVGA mode. At least for
+> EVM and and LDP based on looking at the pictures and the configuration
+
+Hmm, true, board-ldp.c's panel looks very much like sharp-ls037v7dw01.
+
+Which EVM are you talking about?
+
+> pins (using the names kernel):
 >=20
-> The master should have a standard property pointing to the IOMMU instead.
+> QVGA =3D lcd MO
+> reset =3D lcd RESB
+> ...
 >=20
-> We don't have a generic binding for IOMMUs yet it seems, but the time is
-> overdue to make one.
->=20
-> Consider this NAKed until there is a generic binding for IOMMUs that all
-> relevant developers have agreed to.
+> Then the enable_gpio should be just a GPIO controlled 3.3V regulator
+> in most cases. I suggest we move them over to ls037v7dw01 and allow
+> configuring them both for VGA and QVGA depending on the orientation.
 
-I'd like to take this opportunity and revive one of the hibernating
-patch sets that we have for Tegra. The last effort to get things merged
-was back in January I think. I haven't bothered to look up the reference
-since it's probably good to start from scratch anyway.
+Looking at the panel spec, it has the following pins:
 
-The latest version of the binding that was under discussion back then I
-think looked something like this:
+RESB - reset
+MO - VGA/QVGA
+UD - vertical scanning direction
+LR - horizontal scanning direction
+INI - power on control
 
-	device@... {
-		iommus =3D <&iommu [spec]>[, <&other_iommu [other_spec]>...];
-	};
+And it needs 3.3V power.
 
-And possibly with a iommu-names property to go along with that. The idea
-being that a device can be a master on possibly multiple IOMMUs. Using
-the above it would also be possible to have one device be multiple
-masters on the same IOMMU.
+Are you saying that on some boards the gpio used for enable_gpio is
+actually used to switch on a 3.3V regulator?
 
-On Tegra the specifier would be used to encode a memory controller's
-client ID. One discussion point back at the time was to encode the ID as
-a bitmask to allow more than a single master per entry. Another solution
-which I think is a little cleaner and more generic, would be to use one
-entry per master and use a single cell to encode the client ID. Devices
-with multiple clients to the same IOMMU could then use multiple entries
-referencing the same IOMMU.
+> I guess you do have some device with ls037v7dw01 since you've been
+> patching it?
 
-I've added Hiroshi Doyu on Cc since he knows the Tegra IOMMU best.
-Hiroshi, can you summarize exactly what the proposed bindings were. If
-my memory serves me well they were mostly along the lines of what Arnd
-proposes here, and perhaps they are something that can also be used for
-Exynos.
+No, I don't have any boards with that panel.
 
-Will Deacon (I think) had some comments on the earlier discussion as
-well, so I've added him on Cc for visibility. Sorry if I'm confusing you
-with someone else, Will. In that case perhaps you know who to include in
-the discussion from the ARM side.
+ Tomi
 
-Also adding Stephen Warren for visibility.
 
-Thierry
 
---OzxllxdKGCiKxUZM
-Content-Type: application/pgp-signature
+--t8imHDvSfoAr83HxPtWE4FSV2PhBWC3Sd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTXi/XAAoJEN0jrNd/PrOhC9kQAJhNUI7/j97xgFjGVeB2IPkl
-z1FZYXz4/0HagUOZ3sd2thCn3YhiGTggEYAEmXymyUIhaPXD9dzUMw2H9ZAab4CW
-ONWI1pPbv6QowSVlvsEC4bZCTt8wpamsLeuS7C0rjqaw4bkK8TQ15oDfD5Rfv27g
-KM2YiURjiKcEm7mkdpwa8hBgz5hvO7N5ulV2n1E52D7YGhA/e4IGQYzp/RkOj0s+
-byzfA9edGiZA0c7y19uR5+TrmRcaH5ERR1+fvOdl1jMw54rYdolkm857BrbFlKEN
-EO79HCcQaSFY71fR/EqPWO6M5ZJ2LLVNNIZw6hD8dBCiX8Nu8Z6obsnMEkzFNx48
-YBxHhZT2lngtIGVpEeoNJfn4V8E9q2/RnzxKN3lZh1P9eQ7uTWOUROaCgqKfETL0
-Nqd8bcvsOFtHwjI5/JCeUvP8e6DtrnIhDDur8x+29wVeiKyDNEQ4g2EOIxeDjqhy
-maRYRal2u643H6cFAnYnuZFdkJy5zrHG6ZwF/BoKwib+2mZKpveOP494ybgAF7h7
-DiqbwyviutAqZ2hfKjdzYZB9VkSSGV2M+dhOkfet4sEEhMq8gbAcwxP2i/fllDN5
-qjOQ8wG3rmu2GsncbOtF54oZCT2O5mP7MTGtFkgBUDwK605Hml0QRo6+GsU8qNhT
-2c+7sqiN3FnrwF8QpcYA
-=TPNI
+iQIcBAEBAgAGBQJTXjDxAAoJEPo9qoy8lh71K/0P/j45RpOfYpttQqnNAo8Ckrgq
+I3LE9IYii2grpSxrA/JB/Ye2uOYsg2XkTnQW0rjHx2vTjCoxbwH/2RFKr2zrn21f
+6FPNLJSkCpgRO8G2ZgtKwGgsMpriC3lgusltArslowewq/RXkVORIdbnGGLGtn9V
+ZbsHo1luYRSMu6ik1/Fp+uHEtX9J9ujYp9gzkzIAhUhU5MqtNZ+bCTYfgXPxjbh4
+de6Bq1NdgAALpLjS8tfSZo9v11hl6cvCdqG9BVrOvJYbl/3cpmN3nDYSm5K8x1Aj
+VtnlFy9mEEWIPaiLxz510CGBKe7ZUF0HU7h/4aDtTF0BPqIKn1k/8eNU4wjebCdg
+JuV9mCGVpC6M9iOzRFo04ElsyshPd5LmQRZ/tMXoUPrCuMnJt/tV3LFsimzwfl5G
+Vjxah/LkllFbC1VYpWZyrkZGSYeugsT4onc9tBML6tYo4pXVGzY7I6ll3kcLuiub
+ymA+fKT+beh+/AoI8zRqzNF4esDKiLUi+CDMUlqGsGTkgLFv8w1sbNXVZk+LU33q
+JoMSbgg1VYlBPSFCLoteHN6qypSzo4NEEHMQyLhzgdoBrdSWC71xl9b3Qblo7rXI
+G9QsedhAPEzFLfSOOIe2IFJxO8JLizsmfgvMgevs9y99/HY7oyh+ReLJWKk2c0YR
+okoYrJUBXAYgBBYcIxSB
+=L5fc
 -----END PGP SIGNATURE-----
 
---OzxllxdKGCiKxUZM--
-
---===============0802941332163357946==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0802941332163357946==--
+--t8imHDvSfoAr83HxPtWE4FSV2PhBWC3Sd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
