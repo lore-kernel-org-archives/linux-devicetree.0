@@ -1,17 +1,16 @@
-From: Pawel Moll <pawel.moll@arm.com>
-Subject: Re: [PATCH 1/3] driver core & of: Mark of_nodes of added device as
- populated
-Date: Mon, 28 Apr 2014 18:50:51 +0100
-Message-ID: <1398707451.20390.14.camel@hornet>
-References: <1392137610-27842-1-git-send-email-pawel.moll@arm.com>
- <1392137610-27842-2-git-send-email-pawel.moll@arm.com>
- <CAL_JsqJQy7ob87=wPOLxn3X0fTrt2QhAEJ2nPTAmCMZqNZp+sw@mail.gmail.com>
- <1398706660.20390.5.camel@hornet>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document
+ of Exynos System MMU
+Date: Mon, 28 Apr 2014 11:52:24 -0600
+Message-ID: <535E9558.8010803@wwwdotorg.org>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
+ <4447051.OnJtcFSqFV@wuerfel> <20140428103919.GF19455@ulmo>
+ <6544270.ddFBoY6LMm@wuerfel> <20140428111802.GI19455@ulmo>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398706660.20390.5.camel@hornet>
+In-Reply-To: <20140428111802.GI19455@ulmo>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,36 +20,30 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Guenter Roeck <linux@roeck-us.net>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, lm-sensors@lm-sensors.org, "arm@kernel.org" <arm@kernel.org>, David Woodhouse <dwmw2@infradead.org>, Jean Delvare <jdelvare@suse.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: t.figa@samsung.com, Will Deacon <will.deacon@arm.com>, tomasz.figa@gmail.com, joshi@samsung.com, s.nawrocki@samsung.com, Varun.Sethi@freescale.com, kgene.kim@samsung.com, prathyush.k@samsung.com, sachin.kamat@linaro.org, joro@8bytes.org, devicetree@vger.kernel.org, grundler@chromium.org, linux-samsung-soc@vger.kernel.org, a.motakis@virtualopensystems.com, pullip.cho@samsung.com, linux-arm-kernel@lists.infradead.org, rahul.sharma@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, supash.ramaswamy@linaro.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-04-28 at 18:37 +0100, Pawel Moll wrote:
-> On Thu, 2014-02-13 at 13:15 -0600, Rob Herring wrote:
-> > On Tue, Feb 11, 2014 at 10:53 AM, Pawel Moll <pawel.moll@arm.com> wrote:
-> > > In "Device Tree powered" systems, platform devices are usually
-> > > massively populated with of_platform_populate() call, executed
-> > > at some level of initcalls, either by generic architecture
-> > > or by platform-specific code.
-> >
-> > Go read Grant's and my comments from your last posting.
+On 04/28/2014 05:18 AM, Thierry Reding wrote:
+> On Mon, Apr 28, 2014 at 12:56:03PM +0200, Arnd Bergmann wrote:
+...
+>> A lot of drivers probably only support one
+>> master, so they can just set #iommu-cells=<0>, others might require
+>> IDs that do not fit into one cell.
 > 
-> Right, I can't explain why I missed those. Will do right now.
+> You mean "#iommu-cells = <1>" for devices that only require one master?
+> There still has to be one cell to specify which master. Unless perhaps
+> if they can be arbitrarily assigned. I guess even if there's a fixed
+> mapping that applies to one SoC generation, it might be good to still
+> employ a specifier and have the mapping in DT for flexibility.
 
-Actually I can't seem to find it in my mail archive, but I remember you
-were saying that it shouldn't spoil into the driver base code. You're
-probably right, so the updated patch will be limited to of_platform_*
-API.
+#iommu-cells doesn't include the phandle, so if you want the client
+references to be:
 
-Grant was suggesting that I shouldn't be using the device model if I
-have to initialize some early stuff. The thing is that my stuff is not
-that early at all. The device model works for me perfectly, as long as I
-can initialize 3 crucial devices in a correct order (and *then* do mass
-population). And the init levels are perfect for this job. The only
-thing I need is a small refinement in the way DT-based devices are
-populated and this is exactly what I propose. Hope it makes more sense
-now.
+property = <&iommu>;
 
-Cheers!
+then that's #iommu-cells=<0>, whereas:
 
-Pawel
+property = <&iommu N>;
+
+is #iommu-cells=<1>.
