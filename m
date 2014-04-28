@@ -1,45 +1,144 @@
-From: MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 0/8] Devfreq support for Exynos5250/5420
-Date: Mon, 28 Apr 2014 01:34:16 +0000 (GMT)
-Message-ID: <22969683.196701398648855165.JavaMail.weblogic@epv6ml10>
-Reply-To: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH v2 21/21] of: push struct boot_param_header and defines
+ into powerpc
+Date: Mon, 28 Apr 2014 11:37:46 +1000
+Message-ID: <1398649066.30694.2.camel@pasglop>
+References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+	 <1398215901-25609-22-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=euc-kr
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-MIME-version: 1.0
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: ABHILASH KESAVAN <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?euc-kr?Q?=B1=E8=B1=B9=C1=F8?= <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org" <linux-pm-u79uwXL29TaqPxH82wqD4g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: =?euc-kr?Q?=C3=D6=C2=F9=BF=EC?= <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398215901-25609-22-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-PiBUaGlzIHBhdGNoc2V0IGFkZHMgZGV2ZnJlcSBzdXBwb3J0IG9uIEV4eW5vczUyNTAgYW5kIEV4
-eW5vczU0MjAuDQo+IFRoZSBwYXRjaGVzIGFkZCB0aGUgbWlzc2luZyBJTlQgY2xvY2sgc3VwcG9y
-dCBmb3IgZXh5bm9zNTI1MCBhbmQNCj4gYWxzbyBhZGQgYSBuZXcgNTQyMCBkcml2ZXIuIFdlIGFs
-c28gaGF2ZSBwYXRjaGVzIHdoaWNoIGFkZCB0aGUgUFBNVQ0KPiBub2RlIGFuZCBmaXggYSB0eXBv
-IGluIHRoZSBleHlub3M1MjUwIGRyaXZlci4NCj4gDQo+IFRoZSBwYXRjaGVzIGhhdmUgYmVlbiB0
-ZXN0ZWQgb24gRXh5bm9zNTI1MCBiYXNlZCBTbm93IGJvYXJkIGFuZCBTTURLNTQyMA0KPiBFVlQx
-IGJvYXJkcy4gVGhleSBoYXZlIGJlZW4gcHJlcGFyZWQgb24gbGludXgtbmV4dCgyMDE0MDQyNCkg
-d2l0aCB0aGUNCj4gZGV2ZnJlcSBmb3ItbmV4dCBicmFuY2ggYW5kIFNoYWlrIEFtZWVyIEJhc2hh
-J3MgY2xvY2sgY2xlYW51cCBwYXRjaGVzDQo+IG1lcmdlZCAoaHR0cDovL3d3dy5zcGluaWNzLm5l
-dC9saXN0cy9hcm0ta2VybmVsL21zZzMyNTMxMy5odG1sKS4NCj4gDQo+IFRoZXJlIGFyZSBhIGNv
-dXBsZSBvZiBjb25jZXJucyB3aXRoIHRoZXNlIHBhdGNoZXM6DQo+IDEpIFRoZSBwYXRjaGVzIGFy
-ZSB1c2luZyBjbG9jayBhbGlhc2VzIHRvIGV4cG9zZSB0aGUgcmVxdWlyZWQgY2xvY2tzIHRvIHRo
-ZQ0KPiBkZXZmcmVxIGRyaXZlci4NCj4gMikgVGhlIHBhdGNoZXMgYXJlIG1ha2luZyB1c2Ugb2Yg
-ZGlmZmVyZW50IGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgdGhlIFBQTVUNCj4gbm9kZSB0byBkaWZm
-ZXJlbnRpYXRlIGJldHdlZW4gbXVsdGlwbGUgU29DcyBldmVuIHRob3VnaCB0aGUgUFBNVSBpcyB0
-aGUgc2FtZS4NCj4gDQo+IEtpbmRseSBzdWdnZXN0IGEgd2F5IHRvIG1vdmUgZm9yd2FyZCB3aXRo
-IHJlc3BlY3QgdG8gdGhlIGFib3ZlLg0KDQpUaGUgRXh5bm9zIFBQTVUgZHJpdmVycyBoYXZlIGJl
-ZW4gbG9jYXRlZCBpbiBkcml2ZXJzL2RldmZyZXEvZXh5bm9zDQphcyBkZXZmcmVxIGRyaXZlcnMg
-aGF2ZSBiZWVuIHRoZSBvbmx5IHVzZXJzIG9mIFBQTVUuIFRoZXJlDQphcmUgZGV2ZWxvcGVycyB0
-cnlpbmcgdG8gZGVzaWduIGNvbW1vbiBQUE1VIGZyYW1ld29ya3MsIGluY2x1ZGluZw0KQ2hhbndv
-bywgaXQgaXMgbm90IHlldCBzdWJtaXR0ZWQuDQoNCkJlY2F1c2Ugb3RoZXIgRXh5bm9zNSBTb0Nz
-IGhhdmUgdGhlaXIgYnVzL21lbWlmIFBQTVUgZGVmaW5lZCBpbg0KZHJpdmVycy9kZXZmcmVxL2V4
-eW5vcywgYWRkaW5nIGFub3RoZXIgb250IGluIGFub3RoZXIgZGlyZWN0b3J5DQpzZWVtcyBub3Qg
-YXBwcm9wcmlhdGUuDQoNCg0KQ2hlZXJzLA0KTXl1bmdKb28uDQoNCg==
+On Tue, 2014-04-22 at 20:18 -0500, Rob Herring wrote:
+> From: Rob Herring <robh@kernel.org>
+> 
+> Now powerpc is the only user of struct boot_param_header and FDT defines,
+> so they can be moved into the powerpc architecture code.
+> 
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> ---
 
+I assume we want to get rid of that too eventually ? :-)
 
+We should be able to get the definitions from libfdt too....
+
+In the meantime:
+
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> v2: no change
+> 
+>  arch/powerpc/include/asm/prom.h | 39 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_fdt.h          | 37 -------------------------------------
+>  2 files changed, 39 insertions(+), 37 deletions(-)
+> 
+> diff --git a/arch/powerpc/include/asm/prom.h b/arch/powerpc/include/asm/prom.h
+> index d977b9b..74b79f0 100644
+> --- a/arch/powerpc/include/asm/prom.h
+> +++ b/arch/powerpc/include/asm/prom.h
+> @@ -26,6 +26,45 @@
+>  #include <linux/of_irq.h>
+>  #include <linux/platform_device.h>
+>  
+> +#define OF_DT_BEGIN_NODE	0x1		/* Start of node, full name */
+> +#define OF_DT_END_NODE		0x2		/* End node */
+> +#define OF_DT_PROP		0x3		/* Property: name off, size,
+> +						 * content */
+> +#define OF_DT_NOP		0x4		/* nop */
+> +#define OF_DT_END		0x9
+> +
+> +#define OF_DT_VERSION		0x10
+> +
+> +/*
+> + * This is what gets passed to the kernel by prom_init or kexec
+> + *
+> + * The dt struct contains the device tree structure, full pathes and
+> + * property contents. The dt strings contain a separate block with just
+> + * the strings for the property names, and is fully page aligned and
+> + * self contained in a page, so that it can be kept around by the kernel,
+> + * each property name appears only once in this page (cheap compression)
+> + *
+> + * the mem_rsvmap contains a map of reserved ranges of physical memory,
+> + * passing it here instead of in the device-tree itself greatly simplifies
+> + * the job of everybody. It's just a list of u64 pairs (base/size) that
+> + * ends when size is 0
+> + */
+> +struct boot_param_header {
+> +	__be32	magic;			/* magic word OF_DT_HEADER */
+> +	__be32	totalsize;		/* total size of DT block */
+> +	__be32	off_dt_struct;		/* offset to structure */
+> +	__be32	off_dt_strings;		/* offset to strings */
+> +	__be32	off_mem_rsvmap;		/* offset to memory reserve map */
+> +	__be32	version;		/* format version */
+> +	__be32	last_comp_version;	/* last compatible version */
+> +	/* version 2 fields below */
+> +	__be32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
+> +	/* version 3 fields below */
+> +	__be32	dt_strings_size;	/* size of the DT strings block */
+> +	/* version 17 fields below */
+> +	__be32	dt_struct_size;		/* size of the DT structure block */
+> +};
+> +
+>  /*
+>   * OF address retreival & translation
+>   */
+> diff --git a/include/linux/of_fdt.h b/include/linux/of_fdt.h
+> index 1f882e1..5c0ab05 100644
+> --- a/include/linux/of_fdt.h
+> +++ b/include/linux/of_fdt.h
+> @@ -17,45 +17,8 @@
+>  
+>  /* Definitions used by the flattened device tree */
+>  #define OF_DT_HEADER		0xd00dfeed	/* marker */
+> -#define OF_DT_BEGIN_NODE	0x1		/* Start of node, full name */
+> -#define OF_DT_END_NODE		0x2		/* End node */
+> -#define OF_DT_PROP		0x3		/* Property: name off, size,
+> -						 * content */
+> -#define OF_DT_NOP		0x4		/* nop */
+> -#define OF_DT_END		0x9
+> -
+> -#define OF_DT_VERSION		0x10
+>  
+>  #ifndef __ASSEMBLY__
+> -/*
+> - * This is what gets passed to the kernel by prom_init or kexec
+> - *
+> - * The dt struct contains the device tree structure, full pathes and
+> - * property contents. The dt strings contain a separate block with just
+> - * the strings for the property names, and is fully page aligned and
+> - * self contained in a page, so that it can be kept around by the kernel,
+> - * each property name appears only once in this page (cheap compression)
+> - *
+> - * the mem_rsvmap contains a map of reserved ranges of physical memory,
+> - * passing it here instead of in the device-tree itself greatly simplifies
+> - * the job of everybody. It's just a list of u64 pairs (base/size) that
+> - * ends when size is 0
+> - */
+> -struct boot_param_header {
+> -	__be32	magic;			/* magic word OF_DT_HEADER */
+> -	__be32	totalsize;		/* total size of DT block */
+> -	__be32	off_dt_struct;		/* offset to structure */
+> -	__be32	off_dt_strings;		/* offset to strings */
+> -	__be32	off_mem_rsvmap;		/* offset to memory reserve map */
+> -	__be32	version;		/* format version */
+> -	__be32	last_comp_version;	/* last compatible version */
+> -	/* version 2 fields below */
+> -	__be32	boot_cpuid_phys;	/* Physical CPU id we're booting on */
+> -	/* version 3 fields below */
+> -	__be32	dt_strings_size;	/* size of the DT strings block */
+> -	/* version 17 fields below */
+> -	__be32	dt_struct_size;		/* size of the DT structure block */
+> -};
+>  
+>  #if defined(CONFIG_OF_FLATTREE)
+>  
