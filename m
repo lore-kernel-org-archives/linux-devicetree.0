@@ -1,122 +1,64 @@
-From: sourav <sourav.poddar@ti.com>
-Subject: Re: [PATCHv2] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Tue, 29 Apr 2014 18:25:52 +0530
-Message-ID: <535FA158.3060900@ti.com>
-References: <1398760447-10504-1-git-send-email-sourav.poddar@ti.com> <535F9F1A.2090103@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <535F9F1A.2090103@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/10] of: Keep track of populated platform devices
+Date: Tue, 29 Apr 2014 13:56:57 +0100
+Message-ID: <20140429125657.65910C4089D@trevor.secretlab.ca>
+References: <1398707877-22596-1-git-send-email-pawel.moll@arm.com>
+	<1398707877-22596-2-git-send-email-pawel.moll@arm.com>
+	<CAL_JsqJxWoxNL=P0SJm+Q1rTRGTpMkzmzTJDbFq2P1vPH4XxZQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJxWoxNL=P0SJm+Q1rTRGTpMkzmzTJDbFq2P1vPH4XxZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tero,
+On Mon, 28 Apr 2014 13:02:28 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Mon, Apr 28, 2014 at 12:57 PM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
+> > In "Device Tree powered" systems, platform devices are usually
+> > massively populated with of_platform_populate() call, executed
+> > at some level of initcalls, either by generic architecture
+> > or by platform-specific code.
+> >
+> > There are situations though where certain devices must be
+> > created (and bound with drivers) before all the others.
+> > This presents a challenge, as devices created explicitly
+> > would be created again by of_platform_populate().
+> >
+> > This patch tries to solve that issue in a generic way,
+> > adding a "populated" flag for a DT node description.
+> > Once set, this device will never be created again via
+> > of_* API, so of_platform_populate() will skip such nodes
+> > (and its children) in a similar way to the non-available
+> > ones.
+> >
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> > ---
+> >  drivers/of/platform.c | 10 ++++++++--
+> >  include/linux/of.h    |  1 +
+> >  2 files changed, 9 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > index 404d1da..0ae757a 100644
+> > --- a/drivers/of/platform.c
+> > +++ b/drivers/of/platform.c
+> > @@ -204,7 +204,8 @@ static struct platform_device *of_platform_device_create_pdata(
+> >  {
+> >         struct platform_device *dev;
+> >
+> > -       if (!of_device_is_available(np))
+> > +       if (!of_device_is_available(np) ||
+> > +                       of_node_check_flag(np, OF_POPULATED))
+> 
+> This and the amba case should be a test_and_set operation to avoid a
+> race condition.
 
-On Tuesday 29 April 2014 06:16 PM, Tero Kristo wrote:
-> On 04/29/2014 11:34 AM, Sourav Poddar wrote:
->> We need "tbclk" clock data for the functioning of ehrpwm
->> module. Hence, populating the required clock information
->> in clock dts file.
->>
->> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->> ---
->> v1->v2:
->> change compatible according to mainline.
->>   arch/arm/boot/dts/am43xx-clocks.dtsi |   48 
->> ++++++++++++++++++++++++++++++++++
->>   drivers/clk/ti/clk-43xx.c            |    6 +++++
->>   2 files changed, 54 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi 
->> b/arch/arm/boot/dts/am43xx-clocks.dtsi
->> index 142009c..4044441 100644
->> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
->> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
->> @@ -87,6 +87,54 @@
->>           clock-mult = <1>;
->>           clock-div = <1>;
->>       };
->> +
->> +    ehrpwm0_tbclk: ehrpwm0_tbclk@44e10664 {
->> +        #clock-cells = <0>;
->> +        compatible = "ti,gate-clock";
->> +        clocks = <&dpll_per_m2_ck>;
->> +        ti,bit-shift = <0>;
->> +        reg = <0x0664>;
->> +    };
->> +
->> +    ehrpwm1_tbclk: ehrpwm1_tbclk@44e10664 {
->> +        #clock-cells = <0>;
->> +        compatible = "ti,gate-clock";
->> +        clocks = <&dpll_per_m2_ck>;
->> +        ti,bit-shift = <1>;
->> +        reg = <0x0664>;
->> +    };
->> +
->> +    ehrpwm2_tbclk: ehrpwm2_tbclk@44e10664 {
->> +        #clock-cells = <0>;
->> +        compatible = "ti,gate-clock";
->> +        clocks = <&dpll_per_m2_ck>;
->> +        ti,bit-shift = <2>;
->> +        reg = <0x0664>;
->> +    };
->> +
->> +    ehrpwm3_tbclk: ehrpwm3_tbclk@44e10664 {
->> +        #clock-cells = <0>;
->> +        compatible = "ti,gate-clock";
->> +        clocks = <&dpll_per_m2_ck>;
->> +        ti,bit-shift = <3>;
->> +        reg = <0x0664>;
->> +    };
->> +
->> +    ehrpwm4_tbclk: ehrpwm4_tbclk@44e10664 {
->> +        #clock-cells = <0>;
->> +        compatible = "ti,gate-clock";
->> +        clocks = <&dpll_per_m2_ck>;
->> +        ti,bit-shift = <4>;
->> +        reg = <0x0664>;
->> +    };
->> +
->> +    ehrpwm5_tbclk: ehrpwm5_tbclk@44e10664 {
->> +        #clock-cells = <0>;
->> +        compatible = "ti,gate-clock";
->> +        clocks = <&dpll_per_m2_ck>;
->> +        ti,bit-shift = <5>;
->> +        reg = <0x0664>;
->> +    };
->
-> Looking at the TRM, I guess pwm3, pwm4 and pwm5 bit-shifts are wrong? 
-> Namely, bit 3 of the register is used for PWM_SYNCSEL instead of PWM3 
-> clock enable. Is this correct and these should be fixed?
+Yes. It is an unlikely condition at the time that Pawel is handling, but
+it should also work for later calls to of_platform_populate() which may
+happen at runtime and in parallel.
 
-Yups, my bad. Used the bit shifts in continuation. Will send an updated 
-patch.
->
-> -Tero
->
->>   };
->> &prcm_clocks {
->>       clk_32768_ck: clk_32768_ck {
->> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
->> index 67c8de5..527a43d 100644
->> --- a/drivers/clk/ti/clk-43xx.c
->> +++ b/drivers/clk/ti/clk-43xx.c
->> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
->>       DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
->>       DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
->>       DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
->> +    DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
->> +    DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
->> +    DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
->> +    DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
->> +    DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
->> +    DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
->>       { .node_name = NULL },
->>   };
->>
->>
->
-
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
