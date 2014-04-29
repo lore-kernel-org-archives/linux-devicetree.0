@@ -1,55 +1,57 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: qcom: Various fixes for MSM8960's global clock
- controller
-Date: Mon, 28 Apr 2014 23:51:14 -0700
-Message-ID: <20140429065114.7224.13620@quantum>
-References: <1396629176-7413-1-git-send-email-galak@codeaurora.org>
+From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] mtd: spi-nor: add a new field for spi_nor{}
+Date: Tue, 29 Apr 2014 08:54:24 +0200
+Message-ID: <201404290854.25116.marex@denx.de>
+References: <1398657227-20721-1-git-send-email-b32955@freescale.com> <201404282223.26174.marex@denx.de> <20140429051832.GC21064@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1396629176-7413-1-git-send-email-galak@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140429051832.GC21064@localhost>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "dzu-ynQEQJNshbs@public.gmane.org" <dzu-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kumar Gala (2014-04-04 09:32:56)
-> * Remove CE2_SLEEP_CLK, doesn't exist on 8960 family SoCs
-> * Fix incorrect offset for PMIC_SSBI2_RESET
-> * Fix typo:
->         SIC_TIC -> SPS_TIC_H
->         SFAB_ADM0_M2_A_CLK -> SFAB_ADM0_M2_H_CLK
-> * Fix naming convention:
->         SFAB_CFPB_S_HCLK -> SFAB_CFPB_S_H_CLK
->         SATA_SRC_CLK -> SATA_CLK_SRC
+On Tuesday, April 29, 2014 at 07:18:34 AM, Huang Shijie wrote:
+> On Mon, Apr 28, 2014 at 10:23:26PM +0200, Marek Vasut wrote:
+> > On Monday, April 28, 2014 at 05:53:39 AM, Huang Shijie wrote:
+> > > We need the SPI NOR child node to store some specific features, such as
+> > > the dummy cycles for the DDR Quad read.
+> > > 
+> > > But now, we only have the @dev field in the spi_nor{}. The @dev may
+> > > points to a spi_device{} for m25p80, while it may points to a
+> > > platform_deivice{} for the SPI NOR controller, such as fsl_quadspi.c.
+> > > 
+> > > It is not convenient for us to get come information from the SPI NOR
+> > > flash.
+> > > 
+> > > This patch adds a new field @np to spi_nor{}, it points to the child
+> > > node for the SPI NOR flash.
+> > > 
+> > > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > 
+> > Just handle the case where dev->of_node == NULL instead ?
+> 
+> It is not enough.
+> 
+> For the m25p80.c, @dev stands for a child node for the SPI master,
+> and it points to a spi_device{}. Yes, in this case, the dev->of_node is
+> NULL.
+> 
+> But for the fsl_quadspi or other SPI NOR drivers, the @dev stands for the
+> controller itself, the @dev->of_node is a list of the child nodes, so we
+> can _NOT_ know which child node we are working at now.
 
-I'll take these through clk-next instead of clk-fixes since there is no
-mention of a regression.
+Huh ? The dev is being recycled for two different kind of things ?
 
-<snip>
+> So it's better to add a new field @np for the spi-nor{} which points the
+> child node we are working at.
 
-> diff --git a/include/dt-bindings/clock/qcom,gcc-msm8960.h b/include/dt-bindings/clock/qcom,gcc-msm8960.h
-> index 03bbf49..f9f5471 100644
-> --- a/include/dt-bindings/clock/qcom,gcc-msm8960.h
-> +++ b/include/dt-bindings/clock/qcom,gcc-msm8960.h
-> @@ -51,7 +51,7 @@
->  #define QDSS_TSCTR_CLK                         34
->  #define SFAB_ADM0_M0_A_CLK                     35
->  #define SFAB_ADM0_M1_A_CLK                     36
-> -#define SFAB_ADM0_M2_A_CLK                     37
-> +#define SFAB_ADM0_M2_H_CLK                     37
-
-Technically these changes break backwards compatibility, but I guess
-that field updates to newer kernel images for this SoC are not a
-concern?
-
-Thanks,
-Mike
+Best regards,
+Marek Vasut
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
