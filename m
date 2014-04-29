@@ -1,105 +1,70 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
-	Exynos System MMU
-Date: Tue, 29 Apr 2014 23:00:29 +0200
-Message-ID: <7044616.kdaKNu3Qet@wuerfel>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<20140429181601.GE3582@e103592.cambridge.arm.com>
-	<CANEJEGs6TXNzE8cWYgEKfFSsD2w5XiYvwSbhQ_+gtfzfs+6udA@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH/RFC] serial: sh-sci: Add device tree support for r8a7779
+Date: Wed, 30 Apr 2014 06:48:50 +0900
+Message-ID: <20140429214846.GA27566@verge.net.au>
+References: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
+ <20140428011354.GA13324@verge.net.au>
+ <20140428070748.GA24537@verge.net.au>
+ <1986104.5bpNkKVN8D@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <CANEJEGs6TXNzE8cWYgEKfFSsD2w5XiYvwSbhQ_+gtfzfs+6udA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org" <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, "pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1986104.5bpNkKVN8D@avalon>
+Sender: linux-serial-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 April 2014 13:07:54 Grant Grundler wrote:
-> On Tue, Apr 29, 2014 at 11:16 AM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
-> ...
-> > An IOMMU is really a specialised bridge
+On Tue, Apr 29, 2014 at 03:44:46PM +0200, Laurent Pinchart wrote:
+> Hi Simon,
 > 
-> Is a GART a bridge?
+> On Monday 28 April 2014 16:07:49 Simon Horman wrote:
+> > On Mon, Apr 28, 2014 at 10:13:55AM +0900, Simon Horman wrote:
+> > > On Mon, Apr 28, 2014 at 02:08:16AM +0200, Laurent Pinchart wrote:
+> > > > On Monday 28 April 2014 09:03:14 Simon Horman wrote:
+> > > > > On Fri, Apr 25, 2014 at 09:11:06AM +0200, Geert Uytterhoeven wrote:
+> > > > > > On Fri, Apr 25, 2014 at 9:05 AM, Laurent Pinchart wrote:
+> > > > > > >> +     scif0: serial@ffe40000 {
+> > > > > > >> +             compatible = "renesas,scif",
+> > > > > > >> "renesas,scif-r8a7779";
+> > > > > > >> +             reg = <0xffe40000 265>;
+> > > > > > >> +             interrupt-parent = <&gic>;
+> > > > > > >> +             interrupts = <0 88 IRQ_TYPE_LEVEL_HIGH>;
+> > > > > > >> +             clocks = <&cpg_clocks R8A7779_CLK_P>;
+> > > > > > >> +             clock-names = "sci_ick";
+> > > > > > > 
+> > > > > > > Clock handling in the sh-sci driver should probably be improved.
+> > > > > > > The driver currently requires an "sci_ick" interface clock and
+> > > > > > > supports an optional "sci_fck" functional clock. In practice, as
+> > > > > > > far as I can see, platforms that provide both sci_ick and sci_fck
+> > > > > > > set the two clocks to the same source.
+> > > > > > 
+> > > > > > That's right. As a consequence, the clock's enable count is
+> > > > > > incremented
+> > > > > > 
+> > > > > > 3 times:
+> > > > > >   - once for fck,
+> > > > > >   - once for ick,
+> > > > > >   - once for generic Runtime PM using the "NULL" clock.
+> > > > > 
+> > > > > This approach is fine by me.
+> > > > > But I think you need to maintain compatibility with the old
+> > > > > binding ("sci_ick" required, "sci_fsk") as it seems that
+> > > > > was included in v3.14.
+> > > > 
+> > > > sci_fck isn't part of the DT bindings, so we can at least drop that one.
+> > > 
+> > > So long as its not used anywhere in-tree, which I believe is the case,
+> > > then that is fine by me.
+> > 
+> > BTW, are you planning to make the above mentioned driver update
+> > before or after re-posting enablement patches for Koelsch and/or Lager?
+> > I ask because I would like to make such patches the basis for
+> > a patch for Marzen.
 > 
-> IOMMUs can provide three basic functions:
-> 1) remap address space to reach phys mem ranges that the device is
-> otherwise not capable of accessing (classic 32-bit DMA to reach 64-bit
-> Phys address)
-> 
-> 2) implement scatter-gather (page level granularity) so the device
-> doesn't have to
-> 
-> 3) provide some level of system protection against "rogue" DMA by
-> forcing everything through a DMA mapping interface and faulting when
-> encountering unmapped DMA transactions.
+> I'll try to do so today, after my talk at the ELC :-)
 
-[ 4) provide isolation between multiple contexts, typically for purposes
-     of virtualization]
-
-> I summarize IOMMUs as: "participate in the routing of MMIO
-> transactions in the system fabric."
-> In this sense, IOMMUs are sort of a bridge. Defining what kind of
-> routing they can do (coalesce transactions? remapping MMIO domains?)
-> and which address ranges they route would describe most of that
-> functionality.
-> 
-> This "remapping" of MMIO transaction is also usually asymmetric.
-> Meaning routing of "downstream" transactions *might* be completely
-> different than the routing + remapping of transactions heading
-> upstream. DMA mappings services are designed to handle only the
-> transactions generated (aka "mastered") by a downstream device.
-
-For the purposes of the DT binding, we have a 'ranges' property
-that defines the downstream translation (CPU-to-MMIO) and a
-'dma-ranges' property for the opposite address translation
-(device-to-memory).
-
-> >, so it may be cleaner to describe
-> > an IOMMU using a real bus node in the DT, if we also define a way to make
-> > master/slave linkages explicit where it matters.
-> 
-> "where it matters" is a bit vague.  Is the goal to just enable DMA
-> mapping services to "do the right thing" for a device that can
-> generate DMA?
-
-Yes. It's very complicated unfortunately, because we have to be
-able to deal with arbitrary combinations of a lot of oddball cases
-that can show up in random SoCs:
-
-- device can only do DMA to a limited address range
-- DMA is noncoherent and needs manual cache management
-- DMA address is at an offset from physical address
-- some devices have an IOMMU
-- some IOMMUs are shared between devices
-- some devices with IOMMU can have multiple simultaneous contexts
-- a device may access some memory directly and some other memory through IOMMU
-- a device may have DMA access to a bus that is invisible to the CPU
-- DMA on some device is only coherent if the IOMMU is enabled
-- DMA on some device is only coherent if the IOMMU is disabled
-- the IOVA range to an IOMMU is device dependent
-
-> > I've been hacking around some proposals on these areas which are a bit
-> > different from the approach suggested here -- I'll try to summarise some
-> > of it intelligibly and post something tomorrow so that we can discuss.
-> 
-> Are you planning on consolidating Documentation/devicetree/bindings/iommu/ ?
-> Do you care about Documentation/Intel-IOMMU.txt?
-
-I think we can ignore the Intel-IOMMU because that is specialized on PCI
-devices, which we don't normally represent in DT. It is also a special
-case because the Intel IOMMU is a single-instance device. If it's present
-and enabled, it will be used by every device. The case we do need to describe
-is when we don't know which IOMMU is used for which master, or how to
-configure it.
-
-	Arnd
+I thought you might be a bit busy with ELC so I went
+ahead and made my Marzen patches. Hopefully they aren't
+too far away from what you have in mind for the Koelsch and Lager.
