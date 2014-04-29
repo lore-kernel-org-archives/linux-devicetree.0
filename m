@@ -1,59 +1,47 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] pci/of: Remove dead code
-Date: Tue, 29 Apr 2014 13:58:22 +0100
-Message-ID: <20140429125822.CF71EC4094A@trevor.secretlab.ca>
-References: <1398695541-25921-1-git-send-email-ian.molton@codethink.co.uk>
-	<1398695541-25921-2-git-send-email-ian.molton@codethink.co.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398695541-25921-2-git-send-email-ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH/RFC 3/4] of/clk: Register clocks suitable for Runtime PM
+ with the PM core
+Date: Tue, 29 Apr 2014 14:16:10 +0100
+Message-ID: <20140429131610.29859C4094A@trevor.secretlab.ca>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+	<1398334403-26181-4-git-send-email-geert+renesas@glider.be>
+	<7hoazpdldx.fsf@paris.lan>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7hoazpdldx.fsf@paris.lan>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Apr 2014 15:32:21 +0100, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> 	Commit 98d9f30c820d509145757e6ecbc36013aa02f7bc
-> "pci/of: Match PCI devices to OF nodes dynamically" introduced a lot of code
-> derived from the PPC PCI code, including some likes which were redundant.
+On Fri, 25 Apr 2014 16:44:58 -0700, Kevin Hilman <khilman@linaro.org> wrote:
+> Geert Uytterhoeven <geert+renesas@glider.be> writes:
 > 
-> Remove these lines.
+> > When adding a device from DT, check if its clocks are suitable for Runtime
+> > PM, and register them with the PM core.
+> > If Runtime PM is disabled, just enable the clock.
+> >
+> > This allows the PM core to automatically manage gate clocks of devices for
+> > Runtime PM.
 > 
-> Reviewed-by: William Towle <william.towle-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-> Signed-off-by: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> ...unless the device is already in an existing pm_domain, right?
+> 
+> I like this approach, and it extends nicely what we already do on
+> platforms using drivers/base/power/clock_ops.c into DT land.
+> 
+> My only concern is how this will interact if it's used along with
+> devices that have existing pm_domains.  I don't have any specific
+> concerns (yet, because it's Friday, and my brain is turing off), but it
+> just made me wonder if this will be potentially confusing.
 
-Good catch. Applied.
+I have big concerns about this approach. First, it will only work if
+a clock is available at deivce creation time. The conversion of irq
+controllers to normal device drivers has already shown that is a bad
+idea.
+
+I also don't like that it tries to set up every clock, but there is no
+guarantee that the driver will even use it. I would rather see this
+behaviour linked into the function that obtains the clock at driver
+.probe() time. That way it can handle deferred probe correctly and it
+only sets up clocks that are actually used by the driver.
 
 g.
-
-> ---
->  drivers/of/of_pci_irq.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
-> index 8736bc7..7e4e214 100644
-> --- a/drivers/of/of_pci_irq.c
-> +++ b/drivers/of/of_pci_irq.c
-> @@ -19,7 +19,6 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
->  	struct device_node *dn, *ppnode;
->  	struct pci_dev *ppdev;
->  	u32 lspec;
-> -	__be32 lspec_be;
->  	__be32 laddr[3];
->  	u8 pin;
->  	int rc;
-> @@ -87,7 +86,6 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
->  	out_irq->np = ppnode;
->  	out_irq->args_count = 1;
->  	out_irq->args[0] = lspec;
-> -	lspec_be = cpu_to_be32(lspec);
->  	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
->  	laddr[1] = laddr[2] = cpu_to_be32(0);
->  	return of_irq_parse_raw(laddr, out_irq);
-> -- 
-> 1.9.1
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
