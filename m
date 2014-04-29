@@ -1,141 +1,39 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] arm: exynos: Add /dev/bL_status user interface on
- Exynos5420
-Date: Tue, 29 Apr 2014 19:59:23 +0100
-Message-ID: <20140429185923.GG3582@e103592.cambridge.arm.com>
-References: <1398147457-3186-1-git-send-email-a.kesavan@samsung.com>
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v6 3/5] devicetree: bindings: Document Krait cache error
+ interrupts
+Date: Tue, 29 Apr 2014 21:02:01 +0200
+Message-ID: <20140429190200.GD22062@pd.tnic>
+References: <1396641450-12854-1-git-send-email-sboyd@codeaurora.org>
+ <1396641450-12854-4-git-send-email-sboyd@codeaurora.org>
+ <20140408153925.GJ30077@pd.tnic>
+ <20140429103400.GB22015@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398147457-3186-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+In-Reply-To: <20140429103400.GB22015@e102568-lin.cambridge.arm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 11:47:37AM +0530, Abhilash Kesavan wrote:
-> Add a user interface to check the core and cluster status on
-> Exynos5420. This can be utilized while debugging mcpm issues.
-> cat /dev/bL_status will show the current power status of all
-> the 8 cores along with the cluster.
+On Tue, Apr 29, 2014 at 11:34:00AM +0100, Lorenzo Pieralisi wrote:
+> Sorry for the delay in replying. Those cache bindings need an ACK
+> to get merged, and were introduced so that idle states can retrieve
+> power domain information for caches. I am going to revive the idle
+> bindings thread to see what we can/should merge of these bindings as
+> things stand, I really hope this won't block the series any further,
+> otherwise we can rework the patches so that this series can get in
+> first, or simplify my series to allow both to get merged as soon as
+> possible without compromising future requirements.
 
-You might want to make this conditional on some Kconfig option.
-Like any debug interface, there is a risk that it will be misused if
-people assume it will always be available.
+Right, I think this is Stephen's call. AFAIR, the current state of
+affairs is for a followup patchset to come up which I can ack for the
+EDAC bits and then another maintainer picks the whole thing up.
 
-I think debugfs is better for this kind of thing rather than creating a
-new misc device.
+-- 
+Regards/Gruss,
+    Boris.
 
-
-If the SoC-specific parts can be factored out, maybe this would be
-usable on other SoCs too.  The information can also be made richer,
-with displaying the MCPM state of each CPU and cluster as well as
-the hardware state of each.
-
-Just a thought.
-
-Cheers
----Dave
-
-
-> 
-> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/mach-exynos/mcpm-exynos.c |   64 ++++++++++++++++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
-> 
-> diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
-> index 49b9031..6c74c82 100644
-> --- a/arch/arm/mach-exynos/mcpm-exynos.c
-> +++ b/arch/arm/mach-exynos/mcpm-exynos.c
-> @@ -293,6 +293,53 @@ static void __init exynos_mcpm_usage_count_init(void)
->  	cpu_use_count[cpu][cluster] = 1;
->  }
->  
-> +static size_t bL_check_status(char *info)
-> +{
-> +	size_t len = 0;
-> +	int i;
-> +
-> +	len += sprintf(&info[len], "\t0 1 2 3 L2\n");
-> +	len += sprintf(&info[len], "[A15]   ");
-> +	for (i = 0; i < 4; i++) {
-> +		len += sprintf(&info[len], "%d ",
-> +			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
-> +	}
-> +	len += sprintf(&info[len], "%d\n",
-> +			(readl(EXYNOS_COMMON_STATUS(0)) & 0x3) == 3 ? 1 : 0);
-> +
-> +	len += sprintf(&info[len], "[A7]    ");
-> +	for (i = 4; i < 8; i++)
-> +		len += sprintf(&info[len], "%d ",
-> +			(readl(EXYNOS_ARM_CORE_STATUS(i)) & 0x3) == 3 ? 1 : 0);
-> +	len += sprintf(&info[len], "%d\n\n",
-> +			(readl(EXYNOS_COMMON_STATUS(1)) & 0x3) == 3 ? 1 : 0);
-> +
-> +	return len;
-> +}
-> +
-> +static ssize_t bL_status_read(struct file *file, char __user *buf,
-> +			size_t len, loff_t *pos)
-> +{
-> +	size_t count = 0;
-> +	char info[100];
-> +
-> +	count = bL_check_status(info);
-> +	if (count < 0)
-> +		return -EINVAL;
-> +
-> +	return simple_read_from_buffer(buf, len, pos, info, count);
-> +}
-> +
-> +static const struct file_operations bL_status_fops = {
-> +	.read		= bL_status_read,
-> +};
-> +
-> +static struct miscdevice bL_status_device = {
-> +	MISC_DYNAMIC_MINOR,
-> +	"bL_status",
-> +	&bL_status_fops
-> +};
-> +
->  /*
->   * Enable cluster-level coherency, in preparation for turning on the MMU.
->   */
-> @@ -343,3 +390,20 @@ static int __init exynos_mcpm_init(void)
->  }
->  
->  early_initcall(exynos_mcpm_init);
-> +
-> +static int __init exynos_bl_status_init(void)
-> +{
-> +	int ret;
-> +
-> +	if (!soc_is_exynos5420())
-> +		return -ENODEV;
-> +
-> +	ret = misc_register(&bL_status_device);
-> +	if (ret) {
-> +		pr_info("bl_status not available\n");
-> +		return ret;
-> +	}
-> +	return 0;
-> +}
-> +
-> +late_initcall(exynos_bl_status_init);
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Sent from a fat crate under my desk. Formatting is fine.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
