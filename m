@@ -1,66 +1,55 @@
-From: Yegor Yefremov <yegorslists@googlemail.com>
-Subject: Re: [PATCH] ARM: dts: am33xx: fix DMA support for the second USB interface
-Date: Tue, 29 Apr 2014 08:16:15 +0200
-Message-ID: <CAGm1_kvBbT6bjUMitwP5jLYjFfT-yAixUEQu6u7AudOJgAXSMQ@mail.gmail.com>
-References: <1398674237-4129-1-git-send-email-yegorslists@googlemail.com>
- <535E64EF.2020108@ti.com> <CAGm1_kt_yQZowthaFq=imM5J6=1FkJX_1LtRV7eEiqeursbDZQ@mail.gmail.com>
- <535F2B19.7020300@ti.com>
+From: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2 02/10] mtd: spi-nor: add a new field for spi_nor{}
+Date: Tue, 29 Apr 2014 13:18:34 +0800
+Message-ID: <20140429051832.GC21064@localhost>
+References: <1398657227-20721-1-git-send-email-b32955@freescale.com>
+ <1398657227-20721-3-git-send-email-b32955@freescale.com>
+ <201404282223.26174.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <535F2B19.7020300@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201404282223.26174.marex-ynQEQJNshbs@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 29, 2014 at 6:31 AM, George Cherian <george.cherian@ti.com> wrote:
-> On 4/28/2014 9:47 PM, Yegor Yefremov wrote:
->>
->> On Mon, Apr 28, 2014 at 4:25 PM, George Cherian <george.cherian@ti.com>
->> wrote:
->>>
->>> On 4/28/2014 2:07 PM, yegorslists@googlemail.com wrote:
->>>>
->>>> From: Yegor Yefremov <yegorslists@googlemail.com>
->>>>
->>>> This patch creates unique DMA channels for the second USB
->>>> interface, otherwise the second USB interface is not usable
->>>> at all.
->>>
->>> MUSB_DMA_NUM_CHANNELS is 15, so if you pass  any dma-names > 15 (>
->>> rx15/tx15),
->>> the dma_controller_create in musb_core.c fails and it falls back to PIO
->>> mode.
->>
->> What's the proper fix for the DMA issue?
->
-> I could not understand what issue you are referring to.
-> In my setup I use both BBB and BBW (Beagle Bone Black/White)with one USB in
-> host (USB1)
-> and one USB in gadget (USB0). I dont see any issues with DMA.
->
-> Can you be more specific?
+On Mon, Apr 28, 2014 at 10:23:26PM +0200, Marek Vasut wrote:
+> On Monday, April 28, 2014 at 05:53:39 AM, Huang Shijie wrote:
+> > We need the SPI NOR child node to store some specific features, such as the
+> > dummy cycles for the DDR Quad read.
+> > 
+> > But now, we only have the @dev field in the spi_nor{}. The @dev may points
+> > to a spi_device{} for m25p80, while it may points to a platform_deivice{}
+> > for the SPI NOR controller, such as fsl_quadspi.c.
+> > 
+> > It is not convenient for us to get come information from the SPI NOR flash.
+> > 
+> > This patch adds a new field @np to spi_nor{}, it points to the child node
+> > for the SPI NOR flash.
+> > 
+> > Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Just handle the case where dev->of_node == NULL instead ?
+It is not enough. 
 
-I've totally overlooked the DMA channel allocation errors (though usb0
-in host mode was working, usb1 in OTG not).
+For the m25p80.c, @dev stands for a child node for the SPI master,
+and it points to a spi_device{}. Yes, in this case, the dev->of_node is NULL.
 
-of_get_named_gpiod_flags: can't parse gpios property of node
-'/ocp/usb@47400000/usb-phy@47401300[0]'
-47401300.usb-phy supply vcc not found, using dummy regulator
-musb-hdrc musb-hdrc.0.auto: Failed to request rx1.
-musb-hdrc musb-hdrc.0.auto: musb_init_controller failed with status -517
-platform musb-hdrc.0.auto: Driver musb-hdrc requests probe deferral
-of_get_named_gpiod_flags: can't parse gpios property of node
-'/ocp/usb@47400000/usb-phy@47401b00[0]'
-47401b00.usb-phy supply vcc not found, using dummy regulator
-musb-hdrc musb-hdrc.1.auto: Failed to request rx1.
-musb-hdrc musb-hdrc.1.auto: musb_init_controller failed with status -517
-platform musb-hdrc.1.auto: Driver musb-hdrc requests probe deferral
+But for the fsl_quadspi or other SPI NOR drivers, the @dev stands for the controller
+itself, the @dev->of_node is a list of the child nodes, so we can _NOT_ know which
+child node we are working at now.
 
-This patch fixes the issue: "ARM: dts: am33xx: Move the cppi41dma node
-so it's probed early"
 
-Thanks.
+So it's better to add a new field @np for the spi-nor{} which points the
+child node we are working at.
 
-Yegor
+thanks
+Huang Shijie
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
