@@ -1,53 +1,73 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
-Date: Tue, 29 Apr 2014 15:25:22 -0700
-Message-ID: <20140429222522.GS15125@sirena.org.uk>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v1] serial: uart: add hw flow control support
+ configuration
+Date: Tue, 29 Apr 2014 15:27:57 -0700
+Message-ID: <20140429222756.GA2382@flaeskesteg>
+References: <1398792122-18592-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1IOPqZ3f1xe/JZlz"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398495423-2223-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1398792122-18592-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---1IOPqZ3f1xe/JZlz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Tue, Apr 29, 2014 at 06:22:02PM +0100, Murali Karicheri wrote:
+> 8250 uart driver currently supports only software assisted hw flow
+> control. The software assisted hw flow control maintains a hw_stopped
+> flag in the tty structure to stop and start transmission and use modem
+> status interrupt for the event to drive the handshake signals. This is
+> not needed if hw has flow control capabilities. This patch adds a
+> DT attribute for enabling hw flow control for a uart port. Also skip
+> stop and start if this flag is present in flag field of the port
+> structure.
+> 
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> 
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Pawel Moll <pawel.moll@arm.com> 
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> CC: Kumar Gala <galak@codeaurora.org>
+> CC: Randy Dunlap <rdunlap@infradead.org>
+> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> CC: Jiri Slaby <jslaby@suse.cz>
+> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> ---
+>  - Fixed brackets around port->flags & UPF_HARD_FLOW as per comments 
+>  .../devicetree/bindings/serial/of-serial.txt       |    2 ++
+>  drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+>  drivers/tty/serial/of_serial.c                     |    4 ++++
+>  drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+>  4 files changed, 19 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+> index 1928a3e..123de01 100644
+> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+> @@ -37,6 +37,8 @@ Optional properties:
+>  - auto-flow-control: one way to enable automatic flow control support. The
+>    driver is allowed to detect support for the capability even without this
+>    property.
+> +- hw-flow-control: this enables pure hw flow control and no software
+> +  intervention needed.
 
-On Sat, Apr 26, 2014 at 10:57:03AM +0400, Alexander Shiyan wrote:
-> This patch adds devicetree support for mc13783-codec.
+>From the wording of the commit message, I believe this would be better worded
+something like:
 
-Applied, thanks.
+- hw-flow-control: the hardware has flow control capability.
 
---1IOPqZ3f1xe/JZlz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+While the OS needs to know that flow control is present if it wishes to make
+use of it, whether or not the OS does so is not a matter for the binding.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+It might also be better worded as "has-hw-flow-control", which would make that
+distinction clearer.
 
-iQIcBAEBAgAGBQJTYCbPAAoJELSic+t+oim90k8P/3BwyIQm+cGXX0pAlEmbzqQJ
-8DYrUte6nu0yTCU5ioZEsppP8LeFV7Kw0BIOUyejuNae57Za9DNmq7aI1td9wDej
-bYNGmP8/rKxY967JLdsXO9G0VWoMC6MBP22n4IWCUY1rXqq8ukGqknTELOUXsadM
-ziTnEzsOWg3g/lddgeA1zxy3g5r4M1TNnGKkfrricdl5sjvfP6aJfOn+zvsI8tvM
-ie0K7p/KKhIYa89so5vlIlZVGzLGpoNPN/2k14fsWScR/kzktj6s5WafcM2yX2wO
-wh7FgwS+p3tiFa1/GIkDWSSoj4jIFdLoagAF1Waj3t7nz3mFEfrj3XjtCfxEfj/c
-1vGcMEL/r/NM3BLf08hRUdgW4NkxvHQ9bANyEvXFSwjhmdQxsELogfjwM/F8hDI9
-2vxR5nxzxw0MosLdAw/4twT5hc2jJPMp02f/ykNnxmaIMf/sIXUceMjmt/C8nqaE
-VTKQYoJ722J/W+59BpVhqQZoCw/8MaRbu4VjYcY0M7pfzWwHXbExScpFDWQp6Xic
-B/xOqom8TI3fdyFE7r8x1SyLAKsCj4M2WQZLlmzux3bqD/FGhBgz31cXdeg63+QA
-SbSVqFPGmJSl8WJxbjdUgvQxkYXGHDtFOTr8g5hOfQI4bOljGu64pXP0nYa9wPCu
-ZM/tzCNecEGGHiz3SEdo
-=syAF
------END PGP SIGNATURE-----
+Otherwise this looks fine to me.
 
---1IOPqZ3f1xe/JZlz--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Mark.
