@@ -1,50 +1,104 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH V7 1/1] drivers/gpio: Altera soft IP GPIO driver and
- devicetree binding
-Date: Tue, 29 Apr 2014 15:14:14 +0100
-Message-ID: <20140429141414.BDD82C40992@trevor.secretlab.ca>
-References: <1393842463-5206-1-git-send-email-thloh@altera.com>
-	<20140307151455.GI18529@joshc.qualcomm.com>
-	<CAOLUe6aspffO1PUjKWW7ejpbxnYtb+RKRQrK=y30kuF7KXUUhA@mail.gmail.com>
-	<CAOLUe6aPWmkJJSiBLL8tmw2MNfpaeLpSp3CSwP1u7q+qXxCh9Q@mail.gmail.com>
-	<20140407171115.GA3956@joshc.qualcomm.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140407171115.GA3956@joshc.qualcomm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>, Tien Hock Loh <thloh@altera.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, dinguyen@altera.com, "lftan@altera.com" <lftan@altera.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
+Date: Tue, 29 Apr 2014 19:45:46 +0530
+Message-ID: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: t-kristo@ti.com, mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+Cc: Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Apr 2014 12:11:15 -0500, Josh Cartwright <joshc@codeaurora.org> wrote:
-> On Mon, Apr 07, 2014 at 04:00:43PM +0800, Tien Hock Loh wrote:
-> > On Wed, Mar 19, 2014 at 6:09 PM, Tien Hock Loh <thloh@altera.com> wrote:
-> > > On Fri, Mar 7, 2014 at 11:14 PM, Josh Cartwright <joshc@codeaurora.org> wrote:
-> > >> On Mon, Mar 03, 2014 at 06:27:43PM +0800, thloh@altera.com wrote:
-> > >>> From: Tien Hock Loh <thloh@altera.com>
-> [..]
-> > >>> +     altera_gc->mapped_irq = irq_of_parse_and_map(node, 0);
-> > >>>
-> > >>
-> > >> platform_get_irq(pdev, 0);
-> > >>
-> > > OK.
-> > >
-> >
-> > platform_get_irq doesn't create the irq mapping which is needed by the
-> > driver. Since this driver is targeted at using of, should I be using
-> > irq_of_parse_and_map or should I still redo the codes with
-> > platform_get_irq and irq_create_mapping? I think the latter would be
-> > introducing code redundancy. Please advice.
-> 
-> Yes, it is technically true that platform_get_irq() doesn't do the
-> mapping directly, but that's because the mapping is setup earlier, when
-> of_device_alloc() (drivers/of/platform.c) allocates resources for your
-> platform device.
-> 
-> Calling irq_of_parse_and_map() should be unnecessary.
+We need "tbclk" clock data for the functioning of ehrpwm
+module. Hence, populating the required clock information
+in clock dts file.
 
-In the latest mainline, platform_get_irq() now does the mapping when
-using an IRQ specified in the device tree.
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+---
+v2->v3
+- correct bitshifting
 
-g.
+ arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
+ drivers/clk/ti/clk-43xx.c            |    6 +++++
+ 2 files changed, 54 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index 142009c..42d7b1f 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -87,6 +87,54 @@
+ 		clock-mult = <1>;
+ 		clock-div = <1>;
+ 	};
++
++	ehrpwm0_tbclk: ehrpwm0_tbclk {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <0>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm1_tbclk: ehrpwm1_tbclk {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <1>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm2_tbclk: ehrpwm2_tbclk {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <2>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm3_tbclk: ehrpwm3_tbclk {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <4>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm4_tbclk: ehrpwm4_tbclk {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <5>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm5_tbclk: ehrpwm5_tbclk {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <6>;
++		reg = <0x0664>;
++	};
+ };
+ &prcm_clocks {
+ 	clk_32768_ck: clk_32768_ck {
+diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
+index 67c8de5..527a43d 100644
+--- a/drivers/clk/ti/clk-43xx.c
++++ b/drivers/clk/ti/clk-43xx.c
+@@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
+ 	DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
+ 	DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
+ 	DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
++	DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
++	DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
++	DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
++	DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
++	DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
++	DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
+ 	{ .node_name = NULL },
+ };
+ 
+-- 
+1.7.9.5
 
