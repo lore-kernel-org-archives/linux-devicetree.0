@@ -1,62 +1,103 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v9 10/17] ARM: dts: sun6i: Add mmc clocks
-Date: Tue, 29 Apr 2014 10:29:02 +0200
-Message-ID: <535F62CE.20606@redhat.com>
-References: <1398507381-5614-1-git-send-email-hdegoede@redhat.com> <1398507381-5614-11-git-send-email-hdegoede@redhat.com> <20140428193753.GJ3134@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCHv2] arm: dts: am43x-clock: add tbclk data for ehrpwm.
+Date: Tue, 29 Apr 2014 14:04:07 +0530
+Message-ID: <1398760447-10504-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBV6F7WNAKGQEOO42BAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140428193753.GJ3134@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: t-kristo@ti.com, mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+Cc: Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+We need "tbclk" clock data for the functioning of ehrpwm
+module. Hence, populating the required clock information
+in clock dts file.
 
-On 04/28/2014 09:37 PM, Maxime Ripard wrote:
-> On Sat, Apr 26, 2014 at 12:16:14PM +0200, Hans de Goede wrote:
->> Add clk-nodes for the mmc clocks.
->>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/sun6i-a31.dtsi | 32 ++++++++++++++++++++++++++++++++
->>  1 file changed, 32 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
->> index d45efa7..12bcc17 100644
->> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
->> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
->> @@ -198,6 +198,38 @@
->>  					"apb2_uart4", "apb2_uart5";
->>  		};
->>  
->> +		mmc0_clk: clk@01c20088 {
->> +			#clock-cells = <0>;
->> +			compatible = "allwinner,sun4i-a10-mod0-clk";
-> 
-> And this is not misleading but wrong. The MMC clocks have the phase
-> control feature that mod0 clock don't have, so they should have a
-> compatible of their own.
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+---
+v1->v2:
+change compatible according to mainline.
+ arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
+ drivers/clk/ti/clk-43xx.c            |    6 +++++
+ 2 files changed, 54 insertions(+)
 
-You said the same thing when I posted v8, and I replied to that, that
-this is the exact same construction used as with sun4i, sun5i and sun7i.
+diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+index 142009c..4044441 100644
+--- a/arch/arm/boot/dts/am43xx-clocks.dtsi
++++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+@@ -87,6 +87,54 @@
+ 		clock-mult = <1>;
+ 		clock-div = <1>;
+ 	};
++
++	ehrpwm0_tbclk: ehrpwm0_tbclk@44e10664 {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <0>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm1_tbclk: ehrpwm1_tbclk@44e10664 {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <1>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm2_tbclk: ehrpwm2_tbclk@44e10664 {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <2>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm3_tbclk: ehrpwm3_tbclk@44e10664 {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <3>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm4_tbclk: ehrpwm4_tbclk@44e10664 {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <4>;
++		reg = <0x0664>;
++	};
++
++	ehrpwm5_tbclk: ehrpwm5_tbclk@44e10664 {
++		#clock-cells = <0>;
++		compatible = "ti,gate-clock";
++		clocks = <&dpll_per_m2_ck>;
++		ti,bit-shift = <5>;
++		reg = <0x0664>;
++	};
+ };
+ &prcm_clocks {
+ 	clk_32768_ck: clk_32768_ck {
+diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
+index 67c8de5..527a43d 100644
+--- a/drivers/clk/ti/clk-43xx.c
++++ b/drivers/clk/ti/clk-43xx.c
+@@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
+ 	DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
+ 	DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
+ 	DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
++	DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
++	DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
++	DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
++	DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
++	DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
++	DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
+ 	{ .node_name = NULL },
+ };
+ 
+-- 
+1.7.9.5
 
-I agree this needs to be fixed, but it needs to be fixed for *all* of
-them, and IMHO it is best to be consistently "wrong" for now and then
-fix them all in one go (and all in the same way) when we've landed a
-generic way of dealing with phase-control.
-
-So for now I'm going to keep this as is, iow the same as the clock
-bindings for mmc which we already have for sun4i, sun5i and sun7i
-which all have the same issue.
-
-Regards,
-
-Hans
