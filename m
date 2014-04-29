@@ -1,59 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH RFC 1/2] Documentation: add Device tree bindings for QCA7000
-Date: Tue, 29 Apr 2014 09:57:24 +0200
-Message-ID: <110350591.Or1QOkkWy1@wuerfel>
-References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <4257797.n2vaSiS5NN@wuerfel> <535F4717.6030907@i2se.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v2 5/7] phy: omap-usb2: Add clock names to Documentation
+ binding
+Date: Tue, 29 Apr 2014 10:57:34 +0300
+Message-ID: <535F5B6E.4050401@ti.com>
+References: <1398693687-13967-1-git-send-email-rogerq@ti.com> <1398693687-13967-6-git-send-email-rogerq@ti.com> <535E8E97.7040809@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <535F4717.6030907@i2se.com>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <535E8E97.7040809@cogentembedded.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, balbi@ti.com, kishon@ti.com, tony@atomide.com
+Cc: george.cherian@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 April 2014 08:30:47 Stefan Wahren wrote:
-> Am 28.04.2014 21:57, schrieb Arnd Bergmann:
-> > On Monday 28 April 2014 19:54:56 Stefan Wahren wrote:
-> >> This patch adds the Device tree bindings for the Ethernet over SPI
-> >> protocol driver of the Qualcomm QCA7000 HomePlug GreenPHY.
-> >>
-> >> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> >> ---
-> >>  .../devicetree/bindings/net/qca-qca7000-spi.txt    |   51 ++++++++++++++++++++
-> >>  1 file changed, 51 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
-> >> new file mode 100644
-> >> index 0000000..132c10f
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
-> >> @@ -0,0 +1,51 @@
-> >> +* Qualcomm QCA7000 (Ethernet over SPI protocol)
-> >> +
-> >> +Note: The QCA7000 is useable as a SPI device. In this case it must be defined
-> >> +as a child of a spi master in the device tree.
-> >> +
-> >> +Required properties:
-> >> +- compatible : Should be "qca,qca7000"
-> >> +- reg : Should specify the SPI chip select
-> >> +- intr-gpios : Should specify the GPIO for SPI interrupt
-> >> +- spi-cpha : Must be set
-> >> +- spi-cpol: Must be set
-> > Why specify the interrupt as a GPIO line, rather than an 'interrupts' property?
-> >
-> >       Arnd
-> >
+Hi Sergei,
+
+On 04/28/2014 08:23 PM, Sergei Shtylyov wrote:
+> Hello.
 > 
-> i thought the extra interrupt line must be defined as a GPIO. I will fix
-> that.
+> On 04/28/2014 06:01 PM, Roger Quadros wrote:
+> 
+>> Add "wkupclk" and "refclk" information to DT binding information.
+> 
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>   Documentation/devicetree/bindings/phy/ti-phy.txt | 7 +++++++
+>>   1 file changed, 7 insertions(+)
+> 
+>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> index 788fb0f..9ce458f 100644
+>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> @@ -32,6 +32,11 @@ Required properties:
+>>    - reg : Address and length of the register set for the device.
+>>    - #phy-cells: determine the number of cells that should be given in the
+>>      phandle while referencing this phy.
+>> + - clocks: a list of phandles and clock-specifier pairs, one for each entry in
+>> +   clock-names.
+> 
+>    I thought clock specifier includes phandle. Anyway, this description doesn't seem to match your example...
 
-If all you need is an interrupt, it's better to define it that way.
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n64
 
-> Is the rest of the bindings ok?
+The example was taken from real world where the clock doesn't need specifier.
+Examples can always be a subset of supported bindings.
 
-Looks ok to me. Other reviewers may have more comments.
+cheers,
+-roger
 
-	Arnd
+> 
+>> + - clock-names: should include:
+>> +   * "wkupclk" - wakeup clock.
+>> +   * "refclk" - reference clock (optional).
+>>
+>>   Optional properties:
+>>    - ctrl-module : phandle of the control module used by PHY driver to power on
+>> @@ -44,6 +49,8 @@ usb2phy@4a0ad080 {
+>>       reg = <0x4a0ad080 0x58>;
+>>       ctrl-module = <&omap_control_usb>;
+>>       #phy-cells = <0>;
+>> +    clocks = <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
+>> +    clock-names = "wkupclk", "refclk";
+>>   };
+> 
+> WBR, Sergei
+> 
+
