@@ -1,63 +1,58 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 01/10] of: Keep track of populated platform devices
-Date: Tue, 29 Apr 2014 13:56:57 +0100
-Message-ID: <20140429125657.65910C4089D@trevor.secretlab.ca>
-References: <1398707877-22596-1-git-send-email-pawel.moll@arm.com>
-	<1398707877-22596-2-git-send-email-pawel.moll@arm.com>
-	<CAL_JsqJxWoxNL=P0SJm+Q1rTRGTpMkzmzTJDbFq2P1vPH4XxZQ@mail.gmail.com>
+Subject: Re: [PATCH] pci/of: Remove dead code
+Date: Tue, 29 Apr 2014 13:58:22 +0100
+Message-ID: <20140429125822.CF71EC4094A@trevor.secretlab.ca>
+References: <1398695541-25921-1-git-send-email-ian.molton@codethink.co.uk>
+	<1398695541-25921-2-git-send-email-ian.molton@codethink.co.uk>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJxWoxNL=P0SJm+Q1rTRGTpMkzmzTJDbFq2P1vPH4XxZQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1398695541-25921-2-git-send-email-ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Apr 2014 13:02:28 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Mon, Apr 28, 2014 at 12:57 PM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
-> > In "Device Tree powered" systems, platform devices are usually
-> > massively populated with of_platform_populate() call, executed
-> > at some level of initcalls, either by generic architecture
-> > or by platform-specific code.
-> >
-> > There are situations though where certain devices must be
-> > created (and bound with drivers) before all the others.
-> > This presents a challenge, as devices created explicitly
-> > would be created again by of_platform_populate().
-> >
-> > This patch tries to solve that issue in a generic way,
-> > adding a "populated" flag for a DT node description.
-> > Once set, this device will never be created again via
-> > of_* API, so of_platform_populate() will skip such nodes
-> > (and its children) in a similar way to the non-available
-> > ones.
-> >
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  drivers/of/platform.c | 10 ++++++++--
-> >  include/linux/of.h    |  1 +
-> >  2 files changed, 9 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index 404d1da..0ae757a 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -204,7 +204,8 @@ static struct platform_device *of_platform_device_create_pdata(
-> >  {
-> >         struct platform_device *dev;
-> >
-> > -       if (!of_device_is_available(np))
-> > +       if (!of_device_is_available(np) ||
-> > +                       of_node_check_flag(np, OF_POPULATED))
+On Mon, 28 Apr 2014 15:32:21 +0100, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
+> 	Commit 98d9f30c820d509145757e6ecbc36013aa02f7bc
+> "pci/of: Match PCI devices to OF nodes dynamically" introduced a lot of code
+> derived from the PPC PCI code, including some likes which were redundant.
 > 
-> This and the amba case should be a test_and_set operation to avoid a
-> race condition.
+> Remove these lines.
+> 
+> Reviewed-by: William Towle <william.towle-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> Signed-off-by: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 
-Yes. It is an unlikely condition at the time that Pawel is handling, but
-it should also work for later calls to of_platform_populate() which may
-happen at runtime and in parallel.
+Good catch. Applied.
 
 g.
+
+> ---
+>  drivers/of/of_pci_irq.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/drivers/of/of_pci_irq.c b/drivers/of/of_pci_irq.c
+> index 8736bc7..7e4e214 100644
+> --- a/drivers/of/of_pci_irq.c
+> +++ b/drivers/of/of_pci_irq.c
+> @@ -19,7 +19,6 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+>  	struct device_node *dn, *ppnode;
+>  	struct pci_dev *ppdev;
+>  	u32 lspec;
+> -	__be32 lspec_be;
+>  	__be32 laddr[3];
+>  	u8 pin;
+>  	int rc;
+> @@ -87,7 +86,6 @@ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq
+>  	out_irq->np = ppnode;
+>  	out_irq->args_count = 1;
+>  	out_irq->args[0] = lspec;
+> -	lspec_be = cpu_to_be32(lspec);
+>  	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
+>  	laddr[1] = laddr[2] = cpu_to_be32(0);
+>  	return of_irq_parse_raw(laddr, out_irq);
+> -- 
+> 1.9.1
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
