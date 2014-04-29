@@ -1,38 +1,51 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH RFC 0/5] Dove PMU support
-Date: Tue, 29 Apr 2014 11:15:27 +0200
-Message-ID: <535F6DAF.1010400@gmail.com>
-References: <20140427132312.GC26756@n2100.arm.linux.org.uk> <535E079B.6010701@gmail.com> <20140428083144.GB6650@lunn.ch>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140428083144.GB6650@lunn.ch>
-Sender: linux-pm-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCHv2 2/4] ARM: dts: exynos4: add exynos_usbphy node
+Date: Tue, 29 Apr 2014 14:53:24 +0530
+Message-ID: <CAK9yfHx-m0+znU+pt7emqNtop4Y4wKEOcCQBXmw2akusavtUzA@mail.gmail.com>
+References: <1398409152-14770-1-git-send-email-chanho61.park@samsung.com>
+	<1398409152-14770-3-git-send-email-chanho61.park@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398409152-14770-3-git-send-email-chanho61.park@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanho Park <chanho61.park@samsung.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Kamil Debski <k.debski@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/28/2014 10:31 AM, Andrew Lunn wrote:
->> Russell,
->>
->> thanks for dropping those patches. I know you are packed with a bunch
->> of other patch sets, so if you agree, I can pick up your Dove related
->> patches and finish them.
->>
->> One thing that comes into my mind is, that we moved Dove DT to
->> mach-mvebu starting with v3.15-rc1 so we need to find a better place
->> for the driver than mach-dove.
+Hi Chanho,
+
+On 25 April 2014 12:29, Chanho Park <chanho61.park@samsung.com> wrote:
+> This patch enables a exynos_usbphy node for exynos4 SoCs.
+> A exynos4x12 usb phy node is almost same with 4210's one
+> except compatible string and pmu syscon.
 >
-> Create drivers/pmu ?
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> Cc: Kamil Debski <k.debski@samsung.com>
+> Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi    | 10 ++++++++++
+>  arch/arm/boot/dts/exynos4x12.dtsi |  5 +++++
+>  2 files changed, 15 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index 264066f..5f9b23b 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -278,6 +278,16 @@
+>                 status = "disabled";
+>         };
+>
+> +       exynos_usbphy: exynos-usbphy@125B0000 {
+> +               compatible = "samsung,exynos4210-usb2-phy";
+> +               reg = <0x125B0000 0x100>;
+> +               samsung,pmureg-phandle = <&pmu_system_controller>;
+> +               clocks = <&clock CLK_USB_DEVICE>, <&clock CLK_XUSBXTI>;
+> +               clock-names = "phy", "ref";
+> +               status = "disabled";
 
-Hmm, I see no other folder it could sit in. Maybe, yes.
+For readability it is better if status line is the last entry of the node.
 
-> The cpufreq driver also needs access to registers within the pmu
-> range. Should it be part of pmu.c, or should we export a regmap which
-> cpufreq can use?
-
-Not only cpufreq but also pinctrl as the first 16 mpps can have PMU
-related functions mapped to them. Syscon should do the trick.
-
-Sebastian
-
+---
+With warm regards,
+Sachin
