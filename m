@@ -1,76 +1,43 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC 1/2] Documentation: add Device tree bindings for
- QCA7000
-Date: Tue, 29 Apr 2014 15:36:38 -0700
-Message-ID: <20140429223638.GB2382@flaeskesteg>
-References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com>
- <1398707697-43785-2-git-send-email-stefan.wahren@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398707697-43785-2-git-send-email-stefan.wahren@i2se.com>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.org" <pawel.moll@arm.org>, "mark.rutland@arm.org" <mark.rutland@arm.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: [PATCH 0/4] OMAPDSS: Add support for panel ls037v7dw01
+Date: Tue, 29 Apr 2014 16:52:38 -0700
+Message-ID: <1398815562-24113-1-git-send-email-tony@atomide.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: tomi.valkeinen@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 06:54:56PM +0100, Stefan Wahren wrote:
-> This patch adds the Device tree bindings for the Ethernet over SPI
-> protocol driver of the Qualcomm QCA7000 HomePlug GreenPHY.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  .../devicetree/bindings/net/qca-qca7000-spi.txt    |   51 ++++++++++++++++++++
->  1 file changed, 51 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
-> new file mode 100644
-> index 0000000..132c10f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
-> @@ -0,0 +1,51 @@
-> +* Qualcomm QCA7000 (Ethernet over SPI protocol)
-> +
-> +Note: The QCA7000 is useable as a SPI device. In this case it must be defined
-> +as a child of a spi master in the device tree.
-> +
-> +Required properties:
-> +- compatible : Should be "qca,qca7000"
-> +- reg : Should specify the SPI chip select
-> +- intr-gpios : Should specify the GPIO for SPI interrupt
+Hi all,
 
-As Arnd mentioned, this should be described as an interrupt if it's an
-interrupt from the point of view of the QCA7000.
+Here are few patches to add devicetree support for panel ls037v7dw01
+that's found on many omap3 boards. They seem to be often mis-configured
+as various panel dpi entries, but really should be move to use panel
+ls037v7dw01 instead. This panel is found at least on the omap3 sdp,
+ldp, omap3 evm and few other development boards.
 
-> +- spi-cpha : Must be set
-> +- spi-cpol: Must be set
-> +
-> +Optional properties:
-> +- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
-> +  Numbers smaller than 1000000 or greater than 16000000 are invalid. Missing
-> +  the property will set the SPI frequency to 8000000 Hertz.
-> +- local-mac-address: 6 bytes, mac address
-> +- qca,legacy-mode : Should specify the data transfer mode of the QCA7000
-> +  (0 = burst mode, 1 = legacy mode). Missing the property will use the
-> +  burst mode.
+Regards,
 
-This sounds like it could be a boolean property (one with no value, like
-cpi-cpha). When is this necessary?
+Tony
 
-> +- linux,burst-length : Number of data bytes per burst. Numbers smaller than 1
-> +  or greater than 5000 are invalid. Missing the property will set the
-> +  burst length to 5000 bytes. This property has only an effect in burst mode.
+Tony Lindgren (4):
+  OMAPDSS: Fix DSS clock multiplier issue on 3703 and probably 3630
+  OMAPDSS: panel-sharp-ls037v7dw01: update to use gpiod
+  OMAPDSS: panel-sharp-ls037v7dw01: add device tree support
+  ARM: dts: Add LCD panel sharp ls037v7dw01 support for omap3-evm and
+    ldp
 
-When is this needed?
+ .../bindings/panel/sharp,ls037v7dw01.txt           |  53 +++++++
+ .../arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi |  82 ++++++++++
+ arch/arm/boot/dts/omap3-evm-37xx.dts               |  50 ++++++
+ arch/arm/boot/dts/omap3-evm-common.dtsi            |  47 ++++++
+ arch/arm/boot/dts/omap3-ldp.dts                    |  31 +++-
+ .../omap2/displays-new/panel-sharp-ls037v7dw01.c   | 176 ++++++++++++++-------
+ drivers/video/fbdev/omap2/dss/dss.c                |   5 +-
+ 7 files changed, 379 insertions(+), 65 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
+ create mode 100644 arch/arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi
 
-> +- linux,pluggable-connection : Should be set to skip signature check while
-> +  probing. This property is useful if the SPI master and QCA7000 are not on the
-> +  same board.
+-- 
+1.8.1.1
 
-This does not sounds like it belongs in the DT, as it's strongly tied to the
-implementation of the driver. Why is this necessary?
-
-Cheers,
-Mark.
