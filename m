@@ -1,83 +1,153 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCHv2] arm: dts: am33xx-clock: Fix ehrpwm tbclk data.
-Date: Tue, 29 Apr 2014 14:04:20 +0530
-Message-ID: <1398760460-10539-1-git-send-email-sourav.poddar@ti.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC v2 PATCH v3 10/14] drm/panel: add S6E3FA0 driver
+Date: Tue, 29 Apr 2014 17:35:20 +0900
+Message-ID: <535F6448.6000005@samsung.com>
+References: <1398083321-8668-1-git-send-email-yj44.cho@samsung.com>
+ <5275422.8CoHT7g51N@avalon> <5355C4D7.7010109@samsung.com>
+ <1852265.JnliZKqXKk@avalon> <535F4080.5070208@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: t-kristo@ti.com, mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <535F4080.5070208@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, sachin.kamat@linaro.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-tbclk does not need to be a composite clock, we can simply
-use gate clock for this purpose.
+On 04/29/2014 03:02 PM, YoungJun Cho wrote:
+> Hi Laurent,
+>
+> Thank you for sharing your idea.
+>
+> On 04/29/2014 12:05 AM, Laurent Pinchart wrote:
+>> Hi YoungJun,
+>>
+>> On Tuesday 22 April 2014 10:24:39 YoungJun Cho wrote:
+>>> On 04/22/2014 08:00 AM, Laurent Pinchart wrote:
+>>>> Hi YoungJun,
+>>>>
+>>>> Thank you for the patch.
+>>>>
+>>>> On Monday 21 April 2014 21:28:37 YoungJun Cho wrote:
+>>>>> This patch adds MIPI-DSI command mode based S6E3FA0 AMOLED LCD Panel
+>>>>> driver.
+>>>>>
+>>>>> Changelog v2:
+>>>>> - Declares delay, size properties in probe routine instead of DT
+>>>>> Changelog v3:
+>>>>> - Moves CPU timings relevant properties from FIMD DT
+>>>>>
+>>>>>     (commented by Laurent Pinchart, Andrzej Hajda)
+>>>>>
+>>>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>>>>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>> ---
+>>>>>
+>>>>>    drivers/gpu/drm/panel/Kconfig         |    7 +
+>>>>>    drivers/gpu/drm/panel/Makefile        |    1 +
+>>>>>    drivers/gpu/drm/panel/panel-s6e3fa0.c |  569
+>>>>> ++++++++++++++++++++++++++
+>>>>>    3 files changed, 577 insertions(+)
+>>>>>    create mode 100644 drivers/gpu/drm/panel/panel-s6e3fa0.c
+>>>>
+>>>> [snip]
+>>>>
+>>>>> diff --git a/drivers/gpu/drm/panel/panel-s6e3fa0.c
+>>>>> b/drivers/gpu/drm/panel/panel-s6e3fa0.c new file mode 100644
+>>>>> index 0000000..1282678
+>>>>> --- /dev/null
+>>>>> +++ b/drivers/gpu/drm/panel/panel-s6e3fa0.c
+>>>>> @@ -0,0 +1,569 @@
+>>>>
+>>>> [snip]
+>>>>
+>>>>> +static int s6e3fa0_get_modes(struct drm_panel *panel)
+>>>>> +{
+>>>>> +    struct drm_connector *connector = panel->connector;
+>>>>> +    struct s6e3fa0 *ctx = panel_to_s6e3fa0(panel);
+>>>>> +    struct drm_display_mode *mode;
+>>>>> +
+>>>>> +    mode = drm_mode_create(connector->dev);
+>>>>> +    if (!mode) {
+>>>>> +        DRM_ERROR("failed to create a new display mode\n");
+>>>>> +        return 0;
+>>>>> +    }
+>>>>> +
+>>>>> +    drm_display_mode_from_videomode(&ctx->vm, mode);
+>>>>> +    mode->width_mm = ctx->width_mm;
+>>>>> +    mode->height_mm = ctx->height_mm;
+>>>>> +    connector->display_info.width_mm = mode->width_mm;
+>>>>> +    connector->display_info.height_mm = mode->height_mm;
+>>>>> +
+>>>>> +    mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+>>>>> +    mode->private = (void *)&ctx->cpu_timings;
+>>>>
+>>>> Wouldn't it make sense to create a new get_interface_params (or
+>>>> similar)
+>>>> operation for drm_panel to query interface configuration parameters
+>>>> instead of shoving it in the mode private field ?
+>>>
+>>> You mean "new get_interface_params operation" is different from
+>>> get_modes() ?
+>>>
+>>> Till now, struct drm_display_mode and most of mode relevant APIs are
+>>> only for video interface.
+>>> And CPU interface also needs video mode configurations.
+>>>
+>>> I have a plan to implement the CPU interface relevant APIs like video
+>>> mode ones, but I think they should be used under current DRM mode APIs
+>>> like fill_modes, get_modes and so on.
+>>> So after that implementation, this private field will be replaced by
+>>> new ones.
+>>>
+>>> Could you explain it in more detail?
+>>
+>> The idea is that the interface parameters (RD/WR signals timings in
+>> this case,
+>> but this could also include MIPI DSI lane configuration or any other
+>> kind of
+>> physical interface parameters) are distinct from the video modes.
+>
+> Yes. The RD/WR signals timings are distinct from the video modes,
+> but in my opinion, others are covered by video mode already.
+>
+>>
+>> Do you see a need to tie tie interface parameters with
+>> drm_display_mode ? Can
+>> they be mode-specific ? In any case I'd like not to use the private
+>> field of
+>> drm_display_mode. If we need to tie both information together then it
+>> should
+>> be done in a standard way.
+>
+> I think this cpu-mode-timings is in struct drm_display_mode
+> (NOT by *private) and requires drm_display_mode_from_cpumode()
+> because the drm_display_mode_from_videomode() covers only video mode.
+>
+> I'll try implement it as soon as possible.
+>
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
-v1->v2:
-change compatible string according to mainline.
- arch/arm/boot/dts/am33xx-clocks.dtsi |   30 ++++++------------------------
- 1 file changed, 6 insertions(+), 24 deletions(-)
+For your information, there are two modes in MIPI DSI specification,
+which are video mode and command mode.
+And CS, RD/WR timings are related with MIPI DBI specification,
+VSYNC, HSYNC timings are related with MIPI DPI specification.
 
-diff --git a/arch/arm/boot/dts/am33xx-clocks.dtsi b/arch/arm/boot/dts/am33xx-clocks.dtsi
-index 9ccfe50..712edce 100644
---- a/arch/arm/boot/dts/am33xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am33xx-clocks.dtsi
-@@ -96,47 +96,29 @@
- 		clock-div = <1>;
- 	};
- 
--	ehrpwm0_gate_tbclk: ehrpwm0_gate_tbclk {
-+	ehrpwm0_tbclk: ehrpwm0_tbclk@44e10664 {
- 		#clock-cells = <0>;
--		compatible = "ti,composite-no-wait-gate-clock";
-+		compatible = "ti,gate-clock";
- 		clocks = <&dpll_per_m2_ck>;
- 		ti,bit-shift = <0>;
- 		reg = <0x0664>;
- 	};
- 
--	ehrpwm0_tbclk: ehrpwm0_tbclk {
--		#clock-cells = <0>;
--		compatible = "ti,composite-clock";
--		clocks = <&ehrpwm0_gate_tbclk>;
--	};
--
--	ehrpwm1_gate_tbclk: ehrpwm1_gate_tbclk {
-+	ehrpwm1_tbclk: ehrpwm1_tbclk@44e10664 {
- 		#clock-cells = <0>;
--		compatible = "ti,composite-no-wait-gate-clock";
-+		compatible = "ti,gate-clock";
- 		clocks = <&dpll_per_m2_ck>;
- 		ti,bit-shift = <1>;
- 		reg = <0x0664>;
- 	};
- 
--	ehrpwm1_tbclk: ehrpwm1_tbclk {
--		#clock-cells = <0>;
--		compatible = "ti,composite-clock";
--		clocks = <&ehrpwm1_gate_tbclk>;
--	};
--
--	ehrpwm2_gate_tbclk: ehrpwm2_gate_tbclk {
-+	ehrpwm2_tbclk: ehrpwm2_tbclk@44e10664 {
- 		#clock-cells = <0>;
--		compatible = "ti,composite-no-wait-gate-clock";
-+		compatible = "ti,gate-clock";
- 		clocks = <&dpll_per_m2_ck>;
- 		ti,bit-shift = <2>;
- 		reg = <0x0664>;
- 	};
--
--	ehrpwm2_tbclk: ehrpwm2_tbclk {
--		#clock-cells = <0>;
--		compatible = "ti,composite-clock";
--		clocks = <&ehrpwm2_gate_tbclk>;
--	};
- };
- &prcm_clocks {
- 	clk_32768_ck: clk_32768_ck {
--- 
-1.7.9.5
+So I think all things relevant with command mode should be arranged
+the name of command mode(NOT CPU mode, like video mode NOT RGB mode)
+in MIPI DSI, and we don't need to consider MIPI DBI like we do MIPI DPI 
+for video mode.
 
+Thank you.
+Best regards YJ
+
+> Thank you,
+> Best regards YJ.
+>>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
