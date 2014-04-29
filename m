@@ -1,69 +1,105 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 5/7] phy: omap-usb2: Add clock names to Documentation
- binding
-Date: Tue, 29 Apr 2014 10:57:34 +0300
-Message-ID: <535F5B6E.4050401@ti.com>
-References: <1398693687-13967-1-git-send-email-rogerq@ti.com> <1398693687-13967-6-git-send-email-rogerq@ti.com> <535E8E97.7040809@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RFC 2/2] net: qualcomm: new Ethernet over SPI driver for QCA7000
+Date: Tue, 29 Apr 2014 10:14:08 +0200
+Message-ID: <4860368.6Apskanc4s@wuerfel>
+References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <5020765.3GuR21cUpi@wuerfel> <535F4BEE.4080300@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <535E8E97.7040809@cogentembedded.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, balbi@ti.com, kishon@ti.com, tony@atomide.com
-Cc: george.cherian@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <535F4BEE.4080300@i2se.com>
+Sender: netdev-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Tuesday 29 April 2014 08:51:26 Stefan Wahren wrote:
+> Am 28.04.2014 22:09, schrieb Arnd Bergmann:
+> > On Monday 28 April 2014 19:54:57 Stefan Wahren wrote:
+> >> +/*   Dumps the contents of all SPI slave registers.        */
+> >> +static int
+> >> +qcaspi_regs_dump(struct seq_file *s, void *what)
+> >> +{
+> >> +    struct reg {
+> >> +            char *name;
+> >> +            u32 address;
+> >> +    };
+> >> +
+> >> +    static struct reg regs[] = {
+> >> +            { "SPI_REG_BFR_SIZE", SPI_REG_BFR_SIZE },
+> >> +            { "SPI_REG_WRBUF_SPC_AVA", SPI_REG_WRBUF_SPC_AVA },
+> >> +            { "SPI_REG_RDBUF_BYTE_AVA", SPI_REG_RDBUF_BYTE_AVA },
+> >> +            { "SPI_REG_SPI_CONFIG", SPI_REG_SPI_CONFIG },
+> >> +            { "SPI_REG_SPI_STATUS", SPI_REG_SPI_STATUS },
+> >> +            { "SPI_REG_INTR_CAUSE", SPI_REG_INTR_CAUSE },
+> >> +            { "SPI_REG_INTR_ENABLE", SPI_REG_INTR_ENABLE },
+> >> +            { "SPI_REG_RDBUF_WATERMARK", SPI_REG_RDBUF_WATERMARK },
+> >> +            { "SPI_REG_WRBUF_WATERMARK", SPI_REG_WRBUF_WATERMARK },
+> >> +            { "SPI_REG_SIGNATURE", SPI_REG_SIGNATURE },
+> >> +            { "SPI_REG_ACTION_CTRL", SPI_REG_ACTION_CTRL }
+> >> +    };
+> >> +
+> >> +    struct qcaspi *qca = s->private;
+> >> +    int i;
+> >> +
+> >> +    for (i = 0; i < (sizeof(regs) / sizeof(struct reg)); i++) {
+> >> +            u16 value;
+> >> +
+> >> +            qcaspi_read_register(qca, regs[i].address, &value);
+> >> +            seq_printf(s, "%-25s(0x%04x): 0x%04x\n",
+> >> +                    regs[i].name, regs[i].address, value);
+> >> +    }
+> >> +
+> >> +    return 0;
+> >> +}
+> > Shouldn't these just come through ethtool --register-dump ?
+> 
+> yes, that's right. But from my point of view this have 2 disadvantages:
+> 
+> - the interface to ethtool needs to be maintained (i'm not sure if i
+> have all debug information)
+> - the target platform needs ethtool
 
-On 04/28/2014 08:23 PM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 04/28/2014 06:01 PM, Roger Quadros wrote:
-> 
->> Add "wkupclk" and "refclk" information to DT binding information.
-> 
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>   Documentation/devicetree/bindings/phy/ti-phy.txt | 7 +++++++
->>   1 file changed, 7 insertions(+)
-> 
->> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> index 788fb0f..9ce458f 100644
->> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> @@ -32,6 +32,11 @@ Required properties:
->>    - reg : Address and length of the register set for the device.
->>    - #phy-cells: determine the number of cells that should be given in the
->>      phandle while referencing this phy.
->> + - clocks: a list of phandles and clock-specifier pairs, one for each entry in
->> +   clock-names.
-> 
->    I thought clock specifier includes phandle. Anyway, this description doesn't seem to match your example...
+i think it's more important to use standard interfaces here. A random
+user trying to debug a problem with this hardware may know about ethtool
+or find that documented somewhere, but wouldn't know about the debugfs
+interfaces without reading the driver source code.
 
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/clock/clock-bindings.txt#n64
+The ethtool interface is also easier to maintain than the debugfs
+files.
 
-The example was taken from real world where the clock doesn't need specifier.
-Examples can always be a subset of supported bindings.
-
-cheers,
--roger
-
+> >> +static irqreturn_t
+> >> +qcaspi_intr_handler(int irq, void *data)
+> >> +{
+> >> +    struct qcaspi *qca = (struct qcaspi *) data;
+> >> +    qca->intr_req++;
+> >> +    if (qca->spi_thread &&
+> >> +            qca->spi_thread->state != TASK_RUNNING)
+> >> +            wake_up_process(qca->spi_thread);
+> >> +
+> >> +    return IRQ_HANDLED;
+> >> +}
+> > What is the advantage of using your own thread mechanism for receiving
+> > data instead of the normal NAPI method?
 > 
->> + - clock-names: should include:
->> +   * "wkupclk" - wakeup clock.
->> +   * "refclk" - reference clock (optional).
->>
->>   Optional properties:
->>    - ctrl-module : phandle of the control module used by PHY driver to power on
->> @@ -44,6 +49,8 @@ usb2phy@4a0ad080 {
->>       reg = <0x4a0ad080 0x58>;
->>       ctrl-module = <&omap_control_usb>;
->>       #phy-cells = <0>;
->> +    clocks = <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
->> +    clock-names = "wkupclk", "refclk";
->>   };
-> 
-> WBR, Sergei
-> 
+> This mechanism comes from Qualcomm and was originally designed for
+> Kernel 2.6.35. I never
+> talked to them.  Currently i don't know how to port this driver to NAPI.
+> It sounds to me, that's a lot of work and i need more knowledge.
 
+As far as I know it's also not mandatory.
+
+If the hardware interfaces require calling sleeping functions, it
+may not actually be possible, but if you can use it, it normally
+provides better performance.
+
+> Is there a porting guide for NAPI?
+
+Google points me to
+http://www.linuxfoundation.org/collaborate/workgroups/networking/napi
+
+> Does this mean the current state of the driver should better go to staging?
+
+Probably not, the driver doesn't look bad overall.
+
+	Arnd
