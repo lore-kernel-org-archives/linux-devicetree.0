@@ -1,149 +1,94 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: qcom: Add basic support for APQ8064 global clock
- controller clocks
-Date: Mon, 28 Apr 2014 23:41:36 -0700
-Message-ID: <20140429064136.7224.85307@quantum>
-References: <1396629089-7358-1-git-send-email-galak@codeaurora.org>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 2/2] net: qualcomm: new Ethernet over SPI driver for
+ QCA7000
+Date: Tue, 29 Apr 2014 08:51:26 +0200
+Message-ID: <535F4BEE.4080300@i2se.com>
+References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <1398707697-43785-3-git-send-email-stefan.wahren@i2se.com> <5020765.3GuR21cUpi@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1396629089-7358-1-git-send-email-galak@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <5020765.3GuR21cUpi@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kumar Gala (2014-04-04 09:31:29)
-> The APQ8064 and MSM8960 share a significant amount of clock data and
-> code between the two SoCs.  Rather than duplicating the data we just add
-> support for a unqiue APQ8064 clock table into the MSM8960 code.
-> 
-> For now add just enough clocks to get a basic serial port going on an
-> APQ8064 device.
-> 
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+Hi,
 
-Taken into clk-next. I don't have ipq8064 support in my tree so there
-was a trivial conflict in the first stanza of the patch.
+Am 28.04.2014 22:09, schrieb Arnd Bergmann:
+> On Monday 28 April 2014 19:54:57 Stefan Wahren wrote:
+>> +/*   Dumps the contents of all SPI slave registers.        */
+>> +static int
+>> +qcaspi_regs_dump(struct seq_file *s, void *what)
+>> +{
+>> +	struct reg {
+>> +		char *name;
+>> +		u32 address;
+>> +	};
+>> +
+>> +	static struct reg regs[] = {
+>> +		{ "SPI_REG_BFR_SIZE", SPI_REG_BFR_SIZE },
+>> +		{ "SPI_REG_WRBUF_SPC_AVA", SPI_REG_WRBUF_SPC_AVA },
+>> +		{ "SPI_REG_RDBUF_BYTE_AVA", SPI_REG_RDBUF_BYTE_AVA },
+>> +		{ "SPI_REG_SPI_CONFIG", SPI_REG_SPI_CONFIG },
+>> +		{ "SPI_REG_SPI_STATUS", SPI_REG_SPI_STATUS },
+>> +		{ "SPI_REG_INTR_CAUSE", SPI_REG_INTR_CAUSE },
+>> +		{ "SPI_REG_INTR_ENABLE", SPI_REG_INTR_ENABLE },
+>> +		{ "SPI_REG_RDBUF_WATERMARK", SPI_REG_RDBUF_WATERMARK },
+>> +		{ "SPI_REG_WRBUF_WATERMARK", SPI_REG_WRBUF_WATERMARK },
+>> +		{ "SPI_REG_SIGNATURE", SPI_REG_SIGNATURE },
+>> +		{ "SPI_REG_ACTION_CTRL", SPI_REG_ACTION_CTRL }
+>> +	};
+>> +
+>> +	struct qcaspi *qca = s->private;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < (sizeof(regs) / sizeof(struct reg)); i++) {
+>> +		u16 value;
+>> +
+>> +		qcaspi_read_register(qca, regs[i].address, &value);
+>> +		seq_printf(s, "%-25s(0x%04x): 0x%04x\n",
+>> +			regs[i].name, regs[i].address, value);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+> Shouldn't these just come through ethtool --register-dump ?
 
-Regards,
-Mike
+yes, that's right. But from my point of view this have 2 disadvantages:
 
-> ---
-> 
-> This patch is based on Stephen's qcom common clk init conslidation patch
-> 
->  .../devicetree/bindings/clock/qcom,gcc.txt         |  1 +
->  drivers/clk/qcom/Kconfig                           |  4 +--
->  drivers/clk/qcom/gcc-msm8960.c                     | 30 +++++++++++++++++++---
->  3 files changed, 30 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gcc.txt b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> index 74974d6..25ae79c 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gcc.txt
-> @@ -4,6 +4,7 @@ Qualcomm Global Clock & Reset Controller Binding
->  Required properties :
->  - compatible : shall contain only one of the following:
->  
-> +                       "qcom,gcc-apq8064"
->                         "qcom,gcc-ipq8064"
->                         "qcom,gcc-msm8660"
->                         "qcom,gcc-msm8960"
-> diff --git a/drivers/clk/qcom/Kconfig b/drivers/clk/qcom/Kconfig
-> index 5d81f7d..4b1f2d7 100644
-> --- a/drivers/clk/qcom/Kconfig
-> +++ b/drivers/clk/qcom/Kconfig
-> @@ -21,10 +21,10 @@ config MSM_GCC_8660
->           i2c, USB, SD/eMMC, etc.
->  
->  config MSM_GCC_8960
-> -       tristate "MSM8960 Global Clock Controller"
-> +       tristate "APQ8064/MSM8960 Global Clock Controller"
->         depends on COMMON_CLK_QCOM
->         help
-> -         Support for the global clock controller on msm8960 devices.
-> +         Support for the global clock controller on apq8064/msm8960 devices.
->           Say Y if you want to use peripheral devices such as UART, SPI,
->           i2c, USB, SD/eMMC, SATA, PCIe, etc.
->  
-> diff --git a/drivers/clk/qcom/gcc-msm8960.c b/drivers/clk/qcom/gcc-msm8960.c
-> index 633b019..8e2b6dd 100644
-> --- a/drivers/clk/qcom/gcc-msm8960.c
-> +++ b/drivers/clk/qcom/gcc-msm8960.c
-> @@ -1,5 +1,5 @@
->  /*
-> - * Copyright (c) 2013, The Linux Foundation. All rights reserved.
-> + * Copyright (c) 2013-2014, The Linux Foundation. All rights reserved.
->   *
->   * This software is licensed under the terms of the GNU General Public
->   * License version 2, as published by the Free Software Foundation, and
-> @@ -2868,6 +2868,16 @@ static const struct qcom_reset_map gcc_msm8960_resets[] = {
->         [RIVA_RESET] = { 0x35e0 },
->  };
->  
-> +static struct clk_regmap *gcc_apq8064_clks[] = {
-> +       [PLL8] = &pll8.clkr,
-> +       [PLL8_VOTE] = &pll8_vote,
-> +       [GSBI7_UART_SRC] = &gsbi7_uart_src.clkr,
-> +       [GSBI7_UART_CLK] = &gsbi7_uart_clk.clkr,
-> +       [GSBI7_QUP_SRC] = &gsbi7_qup_src.clkr,
-> +       [GSBI7_QUP_CLK] = &gsbi7_qup_clk.clkr,
-> +       [GSBI7_H_CLK] = &gsbi7_h_clk.clkr,
-> +};
-> +
->  static const struct regmap_config gcc_msm8960_regmap_config = {
->         .reg_bits       = 32,
->         .reg_stride     = 4,
-> @@ -2884,8 +2894,17 @@ static const struct qcom_cc_desc gcc_msm8960_desc = {
->         .num_resets = ARRAY_SIZE(gcc_msm8960_resets),
->  };
->  
-> +static const struct qcom_cc_desc gcc_apq8064_desc = {
-> +       .config = &gcc_msm8960_regmap_config,
-> +       .clks = gcc_apq8064_clks,
-> +       .num_clks = ARRAY_SIZE(gcc_apq8064_clks),
-> +       .resets = gcc_msm8960_resets,
-> +       .num_resets = ARRAY_SIZE(gcc_msm8960_resets),
-> +};
-> +
->  static const struct of_device_id gcc_msm8960_match_table[] = {
-> -       { .compatible = "qcom,gcc-msm8960" },
-> +       { .compatible = "qcom,gcc-msm8960", .data = &gcc_msm8960_desc },
-> +       { .compatible = "qcom,gcc-apq8064", .data = &gcc_apq8064_desc },
->         { }
->  };
->  MODULE_DEVICE_TABLE(of, gcc_msm8960_match_table);
-> @@ -2894,6 +2913,11 @@ static int gcc_msm8960_probe(struct platform_device *pdev)
->  {
->         struct clk *clk;
->         struct device *dev = &pdev->dev;
-> +       const struct of_device_id *match;
-> +
-> +       match = of_match_device(gcc_msm8960_match_table, &pdev->dev);
-> +       if (!match)
-> +               return -EINVAL;
->  
->         /* Temporary until RPM clocks supported */
->         clk = clk_register_fixed_rate(dev, "cxo", NULL, CLK_IS_ROOT, 19200000);
-> @@ -2904,7 +2928,7 @@ static int gcc_msm8960_probe(struct platform_device *pdev)
->         if (IS_ERR(clk))
->                 return PTR_ERR(clk);
->  
-> -       return qcom_cc_probe(pdev, &gcc_msm8960_desc);
-> +       return qcom_cc_probe(pdev, match->data);
->  }
->  
->  static int gcc_msm8960_remove(struct platform_device *pdev)
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
+- the interface to ethtool needs to be maintained (i'm not sure if i
+have all debug information)
+- the target platform needs ethtool
+
+>
+>> +static irqreturn_t
+>> +qcaspi_intr_handler(int irq, void *data)
+>> +{
+>> +	struct qcaspi *qca = (struct qcaspi *) data;
+>> +	qca->intr_req++;
+>> +	if (qca->spi_thread &&
+>> +		qca->spi_thread->state != TASK_RUNNING)
+>> +		wake_up_process(qca->spi_thread);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+> What is the advantage of using your own thread mechanism for receiving
+> data instead of the normal NAPI method?
+>
+> 	Arnd
+>
+
+This mechanism comes from Qualcomm and was originally designed for
+Kernel 2.6.35. I never
+talked to them.  Currently i don't know how to port this driver to NAPI.
+It sounds to me,
+that's a lot of work and i need more knowledge.
+
+Is there a porting guide for NAPI?
+
+Does this mean the current state of the driver should better go to staging?
+
+Kind regards,
+Stefan
