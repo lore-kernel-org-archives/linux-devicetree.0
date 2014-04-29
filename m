@@ -1,68 +1,59 @@
-From: Chanho Park <chanho61.park@samsung.com>
-Subject: RE: [PATCHv2 2/4] ARM: dts: exynos4: add exynos_usbphy node
-Date: Tue, 29 Apr 2014 19:21:10 +0900
-Message-ID: <012c01cf6394$bdb4dc10$391e9430$@samsung.com>
-References: <1398409152-14770-1-git-send-email-chanho61.park@samsung.com>
- <1398409152-14770-3-git-send-email-chanho61.park@samsung.com>
- <CAK9yfHx-m0+znU+pt7emqNtop4Y4wKEOcCQBXmw2akusavtUzA@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 3/5] devicetree: bindings: Document Krait cache error
+ interrupts
+Date: Tue, 29 Apr 2014 11:34:00 +0100
+Message-ID: <20140429103400.GB22015@e102568-lin.cambridge.arm.com>
+References: <1396641450-12854-1-git-send-email-sboyd@codeaurora.org>
+ <1396641450-12854-4-git-send-email-sboyd@codeaurora.org>
+ <20140408153925.GJ30077@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHx-m0+znU+pt7emqNtop4Y4wKEOcCQBXmw2akusavtUzA@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Kamil Debski' <k.debski@samsung.com>, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140408153925.GJ30077-fF5Pk5pvG8Y@public.gmane.org>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
-
-> -----Original Message-----
-> From: Sachin Kamat [mailto:sachin.kamat@linaro.org]
-> Sent: Tuesday, April 29, 2014 6:23 PM
-> To: Chanho Park
-> Cc: Kukjin Kim; linux-samsung-soc; Tomasz Figa; Kamil Debski;
-> devicetree@vger.kernel.org
-> Subject: Re: [PATCHv2 2/4] ARM: dts: exynos4: add exynos_usbphy node
-> 
-> Hi Chanho,
-> 
-> On 25 April 2014 12:29, Chanho Park <chanho61.park@samsung.com> wrote:
-> > This patch enables a exynos_usbphy node for exynos4 SoCs.
-> > A exynos4x12 usb phy node is almost same with 4210's one
-> > except compatible string and pmu syscon.
-> >
-> > Cc: Tomasz Figa <t.figa@samsung.com>
-> > Cc: Kamil Debski <k.debski@samsung.com>
-> > Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+On Tue, Apr 08, 2014 at 04:39:25PM +0100, Borislav Petkov wrote:
+> On Fri, Apr 04, 2014 at 12:57:28PM -0700, Stephen Boyd wrote:
+> > The Krait L1/L2 error reporting hardware is made up a per-CPU
+> > interrupt for the L1 cache and a SPI interrupt for the L2.
+> > 
+> > Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Cc: <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+> > Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 > > ---
-> >  arch/arm/boot/dts/exynos4.dtsi    | 10 ++++++++++
-> >  arch/arm/boot/dts/exynos4x12.dtsi |  5 +++++
-> >  2 files changed, 15 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos4.dtsi
-> b/arch/arm/boot/dts/exynos4.dtsi
-> > index 264066f..5f9b23b 100644
-> > --- a/arch/arm/boot/dts/exynos4.dtsi
-> > +++ b/arch/arm/boot/dts/exynos4.dtsi
-> > @@ -278,6 +278,16 @@
-> >                 status = "disabled";
-> >         };
-> >
-> > +       exynos_usbphy: exynos-usbphy@125B0000 {
-> > +               compatible = "samsung,exynos4210-usb2-phy";
-> > +               reg = <0x125B0000 0x100>;
-> > +               samsung,pmureg-phandle = <&pmu_system_controller>;
-> > +               clocks = <&clock CLK_USB_DEVICE>, <&clock CLK_XUSBXTI>;
-> > +               clock-names = "phy", "ref";
-> > +               status = "disabled";
+> >  Documentation/devicetree/bindings/arm/cache.txt | 48 ++++++++++++++++++++++++-
+> >  1 file changed, 47 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/cache.txt b/Documentation/devicetree/bindings/arm/cache.txt
+> > index b90fcc7c53cf..d7357e777399 100644
+> > --- a/Documentation/devicetree/bindings/arm/cache.txt
+> > +++ b/Documentation/devicetree/bindings/arm/cache.txt
 > 
-> For readability it is better if status line is the last entry of the
-> node.
+> Right, that's http://www.spinics.net/lists/arm-kernel/msg308540.html
+> 
+> So whoever picks those patches up, Lorenzo's doc needs to be in his tree
+> first too.
 
-Yes. It could be more readable it is in the last line. I'll update it in next patch.
-Thanks.
+Sorry for the delay in replying. Those cache bindings need an ACK to get
+merged, and were introduced so that idle states can retrieve power domain
+information for caches. I am going to revive the idle bindings thread
+to see what we can/should merge of these bindings as things stand, I
+really hope this won't block the series any further, otherwise we can
+rework the patches so that this series can get in first, or simplify my
+series to allow both to get merged as soon as possible without compromising
+future requirements.
 
-Best Regards,
-Chanho Park
+Thanks,
+Lorenzo
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
