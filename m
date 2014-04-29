@@ -1,41 +1,36 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv3 4/5] Input: tsc2005: add DT support
-Date: Tue, 29 Apr 2014 11:24:15 +0200
-Message-ID: <20140429092415.GG19146@xo-6d-61-c0.localdomain>
-References: <1398470179-20880-1-git-send-email-sre@kernel.org>
- <1398470179-20880-5-git-send-email-sre@kernel.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Hubert Chaumette <hchaumette@adeneo-embedded.com>
+Subject: [PATCH v3 0/2] net/phy: micrel: Add DT configuration support and
+Date: Tue, 29 Apr 2014 11:33:23 +0200
+Message-ID: <1398764005-23855-1-git-send-email-hchaumette@adeneo-embedded.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398470179-20880-5-git-send-email-sre@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: f.fainelli@gmail.com
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, xobs@kosagi.com, davem@davemloft.net, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat 2014-04-26 01:56:18, Sebastian Reichel wrote:
-> This adds DT support to the tsc2005 touchscreen
-> driver.
-> 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+ - Adds DT configuration support for ksz9031
+ - Renames micrel-ksz9021.txt to micrel-ksz90x1.txt and adds ksz9031 binding
+   documentation
 
-> @@ -100,6 +102,11 @@
->  					 TSC2005_CFR2_AVG_7)
->  
->  #define MAX_12BIT			0xfff
-> +#define TSC2005_DEF_X_FUZZ		4
-> +#define TSC2005_DEF_Y_FUZZ		8
-> +#define TSC2005_DEF_P_FUZZ		2
-> +#define TSC2005_DEF_RESISTOR		280
-> 
+Changes since v2:
+ - Merged together ksz9031_load_{clk,data,ctrl}_skew_values()
+ - Added field length and number of fields prameter to account for registers
+  specificities
+ - Added binding documentation
 
-IMO using defines insteaed of plain numbers does not help readability much,
-but ....
+Changes since v1:
+ - Removed ksz9021 and ksz9031 fixup deletions from arch/arm/mach-imx/mach-imx6q.c
 
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
+Hubert Chaumette (2):
+  Add support for ksz9031 PAD skew configuration over devicetree.
+  Update Micrel KSZ90x1 binding documentation
 
+ .../devicetree/bindings/net/micrel-ksz9021.txt     |  49 ------
+ .../devicetree/bindings/net/micrel-ksz90x1.txt     |  83 ++++++++++
+ drivers/net/phy/micrel.c                           | 167 ++++++---------------
+ 3 files changed, 127 insertions(+), 172 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/net/micrel-ksz9021.txt
+ create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.9.2
