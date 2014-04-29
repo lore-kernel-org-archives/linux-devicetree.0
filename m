@@ -1,73 +1,61 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v1] serial: uart: add hw flow control support
- configuration
-Date: Tue, 29 Apr 2014 15:27:57 -0700
-Message-ID: <20140429222756.GA2382@flaeskesteg>
-References: <1398792122-18592-1-git-send-email-m-karicheri2@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add sound card driver for Snow board
+Date: Tue, 29 Apr 2014 15:29:15 -0700
+Message-ID: <20140429222915.GU15125@sirena.org.uk>
+References: <1398243705-31151-1-git-send-email-tushar.behera@linaro.org>
+ <20140424133920.GA12304@sirena.org.uk>
+ <5359E18B.60600@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="dXvu6+ixFx2ZffE8"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398792122-18592-1-git-send-email-m-karicheri2@ti.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+In-Reply-To: <5359E18B.60600@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, sbkim73@samsung.com, rdunlap@infradead.org, dianders@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Tue, Apr 29, 2014 at 06:22:02PM +0100, Murali Karicheri wrote:
-> 8250 uart driver currently supports only software assisted hw flow
-> control. The software assisted hw flow control maintains a hw_stopped
-> flag in the tty structure to stop and start transmission and use modem
-> status interrupt for the event to drive the handshake signals. This is
-> not needed if hw has flow control capabilities. This patch adds a
-> DT attribute for enabling hw flow control for a uart port. Also skip
-> stop and start if this flag is present in flag field of the port
-> structure.
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> 
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Pawel Moll <pawel.moll@arm.com> 
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> CC: Kumar Gala <galak@codeaurora.org>
-> CC: Randy Dunlap <rdunlap@infradead.org>
-> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> CC: Jiri Slaby <jslaby@suse.cz>
-> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> ---
->  - Fixed brackets around port->flags & UPF_HARD_FLOW as per comments 
->  .../devicetree/bindings/serial/of-serial.txt       |    2 ++
->  drivers/tty/serial/8250/8250_core.c                |    6 ++++--
->  drivers/tty/serial/of_serial.c                     |    4 ++++
->  drivers/tty/serial/serial_core.c                   |   12 +++++++++---
->  4 files changed, 19 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
-> index 1928a3e..123de01 100644
-> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
-> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
-> @@ -37,6 +37,8 @@ Optional properties:
->  - auto-flow-control: one way to enable automatic flow control support. The
->    driver is allowed to detect support for the capability even without this
->    property.
-> +- hw-flow-control: this enables pure hw flow control and no software
-> +  intervention needed.
+--dXvu6+ixFx2ZffE8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->From the wording of the commit message, I believe this would be better worded
-something like:
+On Fri, Apr 25, 2014 at 09:46:11AM +0530, Tushar Behera wrote:
+> On 04/24/2014 07:09 PM, Mark Brown wrote:
 
-- hw-flow-control: the hardware has flow control capability.
+> > defined.  Why is that?  Also, why is the secondary I2S playback stream
+> > not supported (this may be a reason to restrict to only the one I2S
+> > interface)?
 
-While the OS needs to know that flow control is present if it wishes to make
-use of it, whether or not the OS does so is not a matter for the binding.
+> AFAICS, I2S driver doesn't support secondary DAI with DT (dai type is
+> always TYPE_PRI in case of DT). Hence I could not find a setup to test
+> secondary dai with this board.
 
-It might also be better worded as "has-hw-flow-control", which would make that
-distinction clearer.
+OK, that should be fixed at some point.  I will hopefully be able to
+look at this myself on the Arndale Octa though (or Chromebook or Arndale
+once XCLKOUT is implemented).
 
-Otherwise this looks fine to me.
+--dXvu6+ixFx2ZffE8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks,
-Mark.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTYCe3AAoJELSic+t+oim9/nwP/1MmemJBQprVgaUGU/1sJ5V0
+xffa7Isk0NJTlgsP2doO1yjfuYUu4mCnkgxw/NR6AKVLgTJsu3PPC8tghdf7rTLQ
+FQiUOAqhPkjot2DGRXf+2H5TpVKFP/cRWFoBEe4Lvz+XKRYTOBg39OkfLadw4i8T
+w33BMwTCqOBsaUgs363z/ZLWcEXPMKGmxecI20Fepb4GUP2bv+/+Vj8uwZxPcrLE
+J/MTlffkc/m+9cWU729kKHIklrcrwcpez5CiUN9/KSN9TwfAHyP07cuvhfs1A1Ep
+33dPJwijghJeK4fXZ4mFxwzXQ+wINazC3njLRCnYGCD3M7RnpQiRX68ImuNCh4z0
+oYE4R4U2BCzC2EQOb45AJgkhEbaZYy5mmoZygADKy29Ext7CIs+HYsRlht74MznX
+OnBDmdBiAXRSyYqpnhBjL48zLjI85E9/tc2SmdKHDF+OBs96u9Fy+i519gyzwRwb
+zVvq9fsrjbnQP3cxovUKwiH02/5D0xQGacON4C5xJdzbDez5gaYcAMhwbAygiYDD
+x9cIpO4qXnlkLS7DBtAbEAuQww/cKQv+FBsSoF1TOyA2JFPw46AI+ANVtXeR5tPb
+GwZ4PuIsQtARAbOnd2mqwCxTFkJ46K6jl7Vh1UuDk/ZvjJgf4Wvh7EKZ/Lp3+1r6
+4AB+gPNuYWxk/8xMAy4m
+=zPmG
+-----END PGP SIGNATURE-----
+
+--dXvu6+ixFx2ZffE8--
