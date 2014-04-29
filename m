@@ -1,95 +1,52 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 8/8] ARM: dts: rockchip: convert pinctrl nodes to new bindings
-Date: Wed, 30 Apr 2014 00:10:41 +0200
-Message-ID: <6633845.bKvtTVmUrN@diego>
-References: <1414506.B4e2jZujVm@diego>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 1/9] ASoC: omap: rx51: Use static const char * const
+ arrays
+Date: Tue, 29 Apr 2014 15:22:46 -0700
+Message-ID: <20140429222246.GP15125@sirena.org.uk>
+References: <1398694047-28596-1-git-send-email-sre@kernel.org>
+ <1398694047-28596-2-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1414506.B4e2jZujVm@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="U+NfgObvpQT1Q9Yq"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398694047-28596-2-git-send-email-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Introduce the grf syscon and convert the pinctrl drivers for rk3066 and rk3188
-to use it, instead of mapping the grf registers themselfs.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- arch/arm/boot/dts/rk3066a.dtsi | 2 +-
- arch/arm/boot/dts/rk3188.dtsi  | 9 ++++-----
- arch/arm/boot/dts/rk3xxx.dtsi  | 9 +++++++--
- 3 files changed, 12 insertions(+), 8 deletions(-)
+--U+NfgObvpQT1Q9Yq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 4d4dfbb..048c5de 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -79,7 +79,7 @@
- 
- 		pinctrl@20008000 {
- 			compatible = "rockchip,rk3066a-pinctrl";
--			reg = <0x20008000 0x150>;
-+			rockchip,grf = <&grf>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index ed9a70a..a494fb0 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -75,17 +75,16 @@
- 
- 		pinctrl@20008000 {
- 			compatible = "rockchip,rk3188-pinctrl";
--			reg = <0x20008000 0xa0>,
--			      <0x20008164 0x1a0>;
--			reg-names = "base", "pull";
-+			rockchip,grf = <&grf>;
-+			rockchip,pmu = <&pmu>;
-+
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
- 
- 			gpio0: gpio0@0x2000a000 {
- 				compatible = "rockchip,rk3188-gpio-bank0";
--				reg = <0x2000a000 0x100>,
--				      <0x20004064 0x8>;
-+				reg = <0x2000a000 0x100>;
- 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk_gates8 9>;
- 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 26e5a96..2adf1cc9e 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -31,11 +31,16 @@
- 			reg = <0x1013c000 0x100>;
- 		};
- 
--		pmu@20004000 {
--			compatible = "rockchip,rk3066-pmu";
-+		pmu: pmu@20004000 {
-+			compatible = "rockchip,rk3066-pmu", "syscon";
- 			reg = <0x20004000 0x100>;
- 		};
- 
-+		grf: grf@20008000 {
-+			compatible = "syscon";
-+			reg = <0x20008000 0x200>;
-+		};
-+
- 		gic: interrupt-controller@1013d000 {
- 			compatible = "arm,cortex-a9-gic";
- 			interrupt-controller;
--- 
-1.9.0
+On Mon, Apr 28, 2014 at 04:07:19PM +0200, Sebastian Reichel wrote:
+> Mark the array and the string const by using "static const char * const
+> foo[]" instead of "static const char* foo[]".
 
+Applied, thanks.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--U+NfgObvpQT1Q9Yq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTYCYzAAoJELSic+t+oim9h+MP/jfm2/mAEUyhGm9ZNpF8maQB
+8AbfyBZmRwmBvdf8RS9d9tywsTluRlBlOjzjUEbSU39y7fScOejhsxfnwAwaW6/B
+Wk9MICUtCM/Dxrf8TgOMdY6IT9kNZbjsRmOfmda5P5YYA2UOinPcDoV7x/JeZ+pF
+bSO10AjJ9mKeKBp7YCO5DA6fHpK7V7v4ICP+8Ue+wuhaAlLWgUV4p8tAgel8hgES
+ndRwQeSmSMVbzoB5VxBogj5BtJ23NoKDYXqZPdaqk90K3clKUsF4SjcpnDFhuxpU
+wUkPjwB2gsiwDnlQYQtn32asyjPbS9dQR64Ehw1qRPD5cCwTDFmYYV8hK3CPMqWM
+vnUOtPPoq08RoAp9dexm0ukS9DyWpu+X5026vAijRncsAsfcxt/DoS2CmdtZe1Ey
+RlcXuwaMgCM7z0g/JS5MJZ09n1t1hPWaTvIclAjuN9HhTNheXOt7+7pSWVfFZJ3h
+m/S+OL4AN/0pNAncOsvb9/MYNgwubCZCTQfDzIjQ/M5Mh7GqqqVDd+kNV9FyvqmV
+EwUyy4Oppc4hhVk4aSlmkNb/O372KLgysg/W6ubcKUOwRG/t8v/z+ny64+Pg4Xy4
+40SQ4gHMe8xXxLP8xl5Pi6q1GgCkge7pOi5VI7lFdoTpj1rO2HAEJtVFFFy6DWTE
+Vkca6Qqn4F85w16jJvKV
+=832Z
+-----END PGP SIGNATURE-----
+
+--U+NfgObvpQT1Q9Yq--
