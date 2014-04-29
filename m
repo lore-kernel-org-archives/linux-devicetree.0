@@ -1,45 +1,69 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v4 5/5] ARM: DRA7: Add support for soc_is_dra74x() and
- soc_is_dra72x() varients
-Date: Tue, 29 Apr 2014 16:49:59 +0530
-Message-ID: <535F8ADF.6090702@ti.com>
-References: <1398769513-8736-1-git-send-email-rnayak@ti.com> <1398769513-8736-6-git-send-email-rnayak@ti.com> <4792826.emf6IohHd6@wuerfel>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
+Date: Tue, 29 Apr 2014 14:31:26 +0200
+Message-ID: <1398774686.4677.12.camel@weser.hi.pengutronix.de>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
+	 <20140424175844.GD29593@google.com>
+	 <1398421265.4657.25.camel@weser.hi.pengutronix.de>
+	 <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4792826.emf6IohHd6@wuerfel>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com, nm@ti.com, s-anna@ti.com
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawn.guo@linaro.org>
+Cc: Richard Zhu <r65037@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, linux-samsung-soc@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Sean Cross <xobs@kosagi.com>, Tim Harvey <tharvey@gateworks.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 April 2014 04:48 PM, Arnd Bergmann wrote:
-> On Tuesday 29 April 2014 16:35:13 Rajendra Nayak wrote:
->> @@ -393,7 +395,12 @@ IS_OMAP_TYPE(3430, 0x3430)
->>  
->>  #if defined(CONFIG_SOC_DRA7XX)
->>  #undef soc_is_dra7xx
->> +#undef soc_is_dra74x
->> +#undef soc_is_dra72x
->>  #define soc_is_dra7xx()        (of_machine_is_compatible("ti,dra7"))
->> +#define soc_is_dra74x()        (of_machine_is_compatible("ti,dra74"))
->> +#define soc_is_dra72x()        (of_machine_is_compatible("ti,dra72"))
->> +
-> 
-> You shouldn't normally have to define these. Why are they needed?
-> 
-> Maybe it's better to wait for a user to show up, and then we can decide
-> whether we actually want to have them this way, or if there is a better
-> solution for the particular use case.
-> 
-> Normally, we'd want to make run-time decisions based on properties
-> of the nodes a driver is working on, not the global machine compatible
-> string.
+Hi Bjorn,
 
-Yeah, actually this can be dropped. There is no user for it now.
-
+Am Freitag, den 25.04.2014, 08:39 -0600 schrieb Bjorn Helgaas:
+[...]
+> >> >   PCI: designware: split Exynos and i.MX bindings
+> >> >   ARM: dts: imx6: update pcie to bring in line with new binding
+> >> >   PCI: imx6: use new clock names
+> >> >   PCI: imx6: drop old irq mapping
+> >> >   PCI: imx6: rip out optional (and unused) irqs
+> >> >   PCI: designware: make MSI isr shared irq aware
+> >> >   PCI: imx6: add support for MSI
+> >>
+> >> What's the status of all these?  I would normally apply patches 4-8 of this
+> >> series through my tree, given the appropriate acks, but I haven't seen
+> >> those yet.  And I'm not sure what dependencies there are between the
+> >> non-PCI patches and the PCI ones.
+> >>
+> > It's a complete binding change, so applying one part without the other
+> > is going to horribly break things.
+> >
+> > So I would at least want to see an ack for the binding change on the
+> > i.MX side from Shawn and Richard. This will need some follow on patches,
+> > as some boards adding PCIe using the old binding have cropped up in
+> > linux-next, but I can do the patches on short notice if everyone agrees
+> > to merge this patchset.
+> >
+> > The designware part is pretty simple and doesn't change anything for
+> > other users than i.MX. Though I would like to see an ack from Jingoo for
+> > those.
+> >
+> > I have some more stuff in the pipes regarding multiple MSI irqs, that
+> > depend on this series and also the Keystone people are waiting for this
+> > to be applied in order to consolidate the clock handling of the
+> > designware core driver, so it would be nice to get this moving again.
 > 
-> 	Arnd
+> OK, just poke me again when you're ready for me to do something with these.
 > 
 
+As both Richard and Jingoo gave their ack for the respective patches I
+think this is good to go in and I would expect all the PCI patches to go
+through your tree for 3.16.
+
+Shawn, if you are not okay with this change, please speak up now.
+Otherwise please pick the dts change for 3.16. I'll go over linux-next
+and prepare the patches to fix up the boards there.
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
