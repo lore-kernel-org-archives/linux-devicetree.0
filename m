@@ -1,110 +1,120 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Tue, 29 Apr 2014 17:51:14 +0300
-Message-ID: <535FBC62.9050902@ti.com>
-References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [RFC v3 PATCH v2 10/16] drm/exynos: dsi: add driver data to
+ support Exynos5420
+Date: Tue, 29 Apr 2014 20:56:57 +0530
+Message-ID: <CAK9yfHwY85FuMvTQo-HUKocyXkjjK9=5-oXVd9CL8hS7B5++=A@mail.gmail.com>
+References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
+	<1398563412-21781-11-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>, mturquette@linaro.org, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398563412-21781-11-git-send-email-yj44.cho@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: Dave Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Inki Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/29/2014 05:15 PM, Sourav Poddar wrote:
-> We need "tbclk" clock data for the functioning of ehrpwm
-> module. Hence, populating the required clock information
-> in clock dts file.
+On 27 April 2014 07:20, YoungJun Cho <yj44.cho@samsung.com> wrote:
+> The offset of register DSIM_PLLTMR_REG in Exynos5420 is different
+> from the one in Exynos4 SoC.
 >
-> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-
-Acked-by: Tero Kristo <t-kristo@ti.com>
-
-
+> In case of Exynos5420 SoC, there is no frequency band bit in DSIM_PLLCTRL_REG,
+> and it uses DSIM_PHYCTRL_REG and DSIM_PHYTIMING*_REG instead.
+> So this patch adds driver data to distinguish it.
+>
+> Changelog v2:
+> - Moves exynos_dsi_enable_clocks() after exynos_dsi_reset()
+>   (commented by Andrzej Hajda)
+> - Splits D-PHY control setting routines from PLL setting one
+>   (commented by Andrzej Hajda)
+>
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
-> v2->v3
-> - correct bitshifting
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c |  154 ++++++++++++++++++++++++++-----
+>  1 file changed, 132 insertions(+), 22 deletions(-)
 >
->   arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
->   drivers/clk/ti/clk-43xx.c            |    6 +++++
->   2 files changed, 54 insertions(+)
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index 4a918ec..c18dba3 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -17,6 +17,7 @@
 >
-> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> index 142009c..42d7b1f 100644
-> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> @@ -87,6 +87,54 @@
->   		clock-mult = <1>;
->   		clock-div = <1>;
->   	};
-> +
-> +	ehrpwm0_tbclk: ehrpwm0_tbclk {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		ti,bit-shift = <0>;
-> +		reg = <0x0664>;
-> +	};
-> +
-> +	ehrpwm1_tbclk: ehrpwm1_tbclk {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		ti,bit-shift = <1>;
-> +		reg = <0x0664>;
-> +	};
-> +
-> +	ehrpwm2_tbclk: ehrpwm2_tbclk {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		ti,bit-shift = <2>;
-> +		reg = <0x0664>;
-> +	};
-> +
-> +	ehrpwm3_tbclk: ehrpwm3_tbclk {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		ti,bit-shift = <4>;
-> +		reg = <0x0664>;
-> +	};
-> +
-> +	ehrpwm4_tbclk: ehrpwm4_tbclk {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		ti,bit-shift = <5>;
-> +		reg = <0x0664>;
-> +	};
-> +
-> +	ehrpwm5_tbclk: ehrpwm5_tbclk {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&dpll_per_m2_ck>;
-> +		ti,bit-shift = <6>;
-> +		reg = <0x0664>;
-> +	};
->   };
->   &prcm_clocks {
->   	clk_32768_ck: clk_32768_ck {
-> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-> index 67c8de5..527a43d 100644
-> --- a/drivers/clk/ti/clk-43xx.c
-> +++ b/drivers/clk/ti/clk-43xx.c
-> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
->   	DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
->   	DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
->   	DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
-> +	DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
-> +	DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
-> +	DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
-> +	DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
-> +	DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
-> +	DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
->   	{ .node_name = NULL },
->   };
+>  #include <linux/clk.h>
+>  #include <linux/irq.h>
+> +#include <linux/of_device.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/regulator/consumer.h>
 >
+> @@ -54,9 +55,12 @@
 >
+>  /* FIFO memory AC characteristic register */
+>  #define DSIM_PLLCTRL_REG       0x4c    /* PLL control register */
+> -#define DSIM_PLLTMR_REG                0x50    /* PLL timer register */
+>  #define DSIM_PHYACCHR_REG      0x54    /* D-PHY AC characteristic register */
+>  #define DSIM_PHYACCHR1_REG     0x58    /* D-PHY AC characteristic register1 */
+> +#define DSIM_PHYCTRL_REG       0x5c
+> +#define DSIM_PHYTIMING_REG     0x64
+> +#define DSIM_PHYTIMING1_REG    0x68
+> +#define DSIM_PHYTIMING2_REG    0x6c
+>
+>  /* DSIM_STATUS */
+>  #define DSIM_STOP_STATE_DAT(x)         (((x) & 0xf) << 0)
+> @@ -200,6 +204,21 @@
+>  #define DSIM_PLL_M(x)                  ((x) << 4)
+>  #define DSIM_PLL_S(x)                  ((x) << 1)
+>
+> +/* DSIM_PHYTIMING */
+> +#define DSIM_PHYTIMING_LPX(x)          ((x) << 8)
+> +#define DSIM_PHYTIMING_HS_EXIT(x)      ((x) << 0)
+> +
+> +/* DSIM_PHYTIMING1 */
+> +#define DSIM_PHYTIMING1_CLK_PREPARE(x) ((x) << 24)
+> +#define DSIM_PHYTIMING1_CLK_ZERO(x)    ((x) << 16)
+> +#define DSIM_PHYTIMING1_CLK_POST(x)    ((x) << 8)
+> +#define DSIM_PHYTIMING1_CLK_TRAIL(x)   ((x) << 0)
+> +
+> +/* DSIM_PHYTIMING2 */
+> +#define DSIM_PHYTIMING2_HS_PREPARE(x)  ((x) << 16)
+> +#define DSIM_PHYTIMING2_HS_ZERO(x)     ((x) << 8)
+> +#define DSIM_PHYTIMING2_HS_TRAIL(x)    ((x) << 0)
+> +
+>  #define DSI_MAX_BUS_WIDTH              4
+>  #define DSI_NUM_VIRTUAL_CHANNELS       4
+>  #define DSI_TX_FIFO_SIZE               2048
+> @@ -233,6 +252,12 @@ struct exynos_dsi_transfer {
+>  #define DSIM_STATE_INITIALIZED         BIT(1)
+>  #define DSIM_STATE_CMD_LPM             BIT(2)
+>
+> +struct exynos_dsi_driver_data {
 
+Shouldn't this be static?
+
+> +       unsigned int plltmr_reg;
+> +
+
+nit: stray blank line
+
+> +       unsigned int has_freqband:1;
+> +};
+> +
+
+<snip>
+
+> +static void exynos_dsi_set_phy_ctrl(struct exynos_dsi *dsi)
+> +{
+> +       struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
+> +       u32 reg;
+> +
+> +       if (driver_data->has_freqband)
+> +               return;
+> +
+> +       /* B D-PHY */
+> +       reg = 0x0af & 0x1ff;
+
+Please use macros instead of magic numbers.
+
+-- 
+With warm regards,
+Sachin
