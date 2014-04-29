@@ -1,55 +1,77 @@
-From: David =?ISO-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-Subject: Re: [PATCH v9 05/17] ARM: dts: sun4i: Add pin-muxing
- info for the mmc0 controller
-Date: Tue, 29 Apr 2014 23:55:19 +0200
-Message-ID: <1470138.BWEKSClG2D@dizzy-6.o2s.ch>
-References: <1398507381-5614-1-git-send-email-hdegoede@redhat.com> <20140428193210.GF3134@lukather> <535F60D7.1080500@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [RFC/PATCH 0/8] pinctrl-rockchip: Change wrong initial assumptions
+Date: Wed, 30 Apr 2014 00:07:12 +0200
+Message-ID: <1414506.B4e2jZujVm@diego>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart4727379.C8zGM6Drrq"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Return-path: <linux-sunxi+bncBD2JL37LXEKRBVF7QCNQKGQE35T22FQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <535F60D7.1080500-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+>From the "wet behind the ears" files:
 
---nextPart4727379.C8zGM6Drrq
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"
+Initially due to lack of documentation and (personal) understanding
+I assumed that the area holding the iomux settings would be separate
+from everything else, while in fact the grf registers contain not only
+pinctrl stuff but also dma, usb-phy and general soc-status settings.
+Also things like drive-strength we do not support currently are intermixed.
 
-Hi
-> Ok will fix this up for the next version.
-Be carefull!
-I removed redundancies on all the boards I've seen so far, which all ha=
-d the
-same pin assignment, based on the reference design of Allwinners.
-Please make sure the boards pin muxing fits onto your board.
-Certain boards differ within their muxing.
+The same is true for the pmu, which does not only contain power domains
+but also the system reset as well as well as general registers surviving
+system-resets. Additionally the rk3188 moved parts of the pull-setting
+registers into the pmu space.
 
-br
-=2D-=20
-David Lanzend=F6rfer
-OpenSourceSupport GmbH
-System engineer and supporter
-http://www.o2s.ch/
---nextPart4727379.C8zGM6Drrq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
+While this wasn't a problem until now, the upcoming rk3288 introduces
+additional changes to both the grf and pmu areas. On it even part of
+the pinmux registers move into the pmu space.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+For this my current gut-feeling is, that providing both the grf and pmu
+as syscons to the pinctrl driver might be more future proof for the next
+socs. But as I'm not sure on this, I'd like of course comments :-)
 
-iEYEABECAAYFAlNgH9EACgkQAeZw77btGjr61QCeKxAv1J/zIKs+j2UC/NIOzzlF
-C9kAn0PAS4gJuLxMOxnep7UfSZJdnW1+
-=x+ZT
------END PGP SIGNATURE-----
+The code in it's current form supports both the old as well as the
+changed binding.
 
---nextPart4727379.C8zGM6Drrq--
+The other option would be to leave the grf as it is and create separate
+syscons for real small individual parts like the soc-conf and usb-phys.
+But apart from creating these real small syscons that would
+also make it necessary to introduce another register map for the
+drive-strength settings of the pin-controller, which are sitting in the
+middle of everything at least on rk3066 and rk3188.
+
+
+So I'd really like comments here :-)
+
+
+@Max: sorry to come up with this now, but I feel this should be resolved
+(in whatever direction) before we introduce any grf syscon. Because due
+to dt being an API we will be tied for a long time to it.
+
+
+Heiko Stuebner (8):
+  pinctrl: rockchip: do not require 2nd register area
+  pinctrl: rockchip: use regmaps instead of raw mappings
+  pinctrl: rockchip: rockchip_pinctrl in rockchip_get_bank_data
+  pinctrl: rockchip: let pmu registers be supplied by a syscon
+  pinctrl: rockchip: only map bank0-pull-region when pmu regmap missing
+  pinctrl: rockchip: base regmap supplied by a syscon
+  dt-bindings: adapt rockchip-pinctrl documentation to changed bindings
+  ARM: dts: rockchip: convert pinctrl nodes to new bindings
+
+ .../bindings/pinctrl/rockchip,pinctrl.txt          |  28 +++-
+ arch/arm/boot/dts/rk3066a.dtsi                     |   2 +-
+ arch/arm/boot/dts/rk3188.dtsi                      |   9 +-
+ arch/arm/boot/dts/rk3xxx.dtsi                      |   9 +-
+ drivers/pinctrl/pinctrl-rockchip.c                 | 178 +++++++++++++++------
+ 5 files changed, 164 insertions(+), 62 deletions(-)
+
+-- 
+1.9.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
