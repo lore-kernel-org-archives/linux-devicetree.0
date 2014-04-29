@@ -1,140 +1,83 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Tue, 29 Apr 2014 15:41:46 +0100
-Message-ID: <20140429144147.004EEC40992@trevor.secretlab.ca>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
-	<1398353407-2345-5-git-send-email-santosh.shilimkar@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398353407-2345-5-git-send-email-santosh.shilimkar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Santosh Shilimkar <santosh.shilimkar@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+From: Dave Gerlach <d-gerlach@ti.com>
+Subject: Re: [PATCH] ARM: dts: am437x-gp-evm: Boot fixes
+Date: Tue, 29 Apr 2014 09:47:25 -0500
+Message-ID: <535FBB7D.9000807@ti.com>
+References: <1398192739-8901-1-git-send-email-d-gerlach@ti.com> <20140422190132.GA12204@atomide.com> <5356C8AE.3090907@ti.com> <20140423145904.GB4833@atomide.com> <5357F78A.5000406@ti.com> <20140425164141.GD20807@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140425164141.GD20807@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, bcousson@baylibre.com, Sekhar Nori <nsekhar@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Apr 2014 11:30:04 -0400, Santosh Shilimkar <santosh.shilimkar@ti.com> wrote:
-> Retrieve DMA configuration from DT and setup platform device's DMA
-> parameters. The DMA configuration in DT has to be specified using
-> "dma-ranges" and "dma-coherent" properties if supported.
-> 
-> We setup dma_pfn_offset using "dma-ranges" and dma_coherent_ops
-> using "dma-coherent" device tree properties.
-> 
-> The set_arch_dma_coherent_ops macro has to be defined by arch if
-> it supports coherent dma_ops. Otherwise, set_arch_dma_coherent_ops() is
-> declared as nop.
-> 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> ---
->  drivers/of/platform.c       |   48 ++++++++++++++++++++++++++++++++++++++++---
->  include/linux/dma-mapping.h |    7 +++++++
->  2 files changed, 52 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 48de98f..270c0b9 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -187,6 +187,50 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  EXPORT_SYMBOL(of_device_alloc);
->  
->  /**
-> + * of_dma_configure - Setup DMA configuration
-> + * @dev:	Device to apply DMA configuration
-> + *
-> + * Try to get devices's DMA configuration from DT and update it
-> + * accordingly.
-> + *
-> + * In case if platform code need to use own special DMA configuration,it
-> + * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
-> + * to fix up DMA configuration.
-> + */
-> +static void of_dma_configure(struct device *dev)
-> +{
-> +	u64 dma_addr, paddr, size;
-> +	int ret;
-> +
-> +	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +	if (!dev->dma_mask)
-> +		dev->dma_mask = &dev->coherent_dma_mask;
-> +
-> +	/*
-> +	 * if dma-coherent property exist, call arch hook to setup
-> +	 * dma coherent operations.
-> +	 */
-> +	if (of_dma_is_coherent(dev->of_node)) {
-> +		set_arch_dma_coherent_ops(dev);
-> +		dev_dbg(dev, "device is dma coherent\n");
-> +	}
-> +
-> +	/*
-> +	 * if dma-ranges property doesn't exist - just return else
-> +	 * setup the dma offset
-> +	 */
-> +	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> +	if ((ret == -ENODEV) || (ret < 0)) {
-> +		dev_dbg(dev, "no dma range information to setup\n");
-> +		return;
-> +	}
-> +
-> +	/* DMA ranges found. Calculate and set dma_pfn_offset */
-> +	dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-> +	dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
+On 04/25/2014 11:41 AM, Tony Lindgren wrote:
+> * Dave Gerlach <d-gerlach@ti.com> [140423 10:25]:
+>> On 04/23/2014 09:59 AM, Tony Lindgren wrote:
+>>> * Dave Gerlach <d-gerlach@ti.com> [140422 12:53]:
+>>>> On 04/22/2014 02:01 PM, Tony Lindgren wrote:
+>>>>> * Dave Gerlach <d-gerlach@ti.com> [140422 11:52]:
+>>>>>> This patch, along with patch here [1], fixes boot for am437x-gp-evm. The
+>>>>>> bootloader configures gpio5_7 to control the DDR3 termination regulator,
+>>>>>> the linked patch prevents that gpio bank from being reset and losing
+>>>>>> the previously configured state, and this patch binds the gpio to a
+>>>>>> regulator so the kernel is aware of the state of the gpio.
+>>>>>>
+>>>>>> [1] https://www.mail-archive.com/linux-omap@vger.kernel.org/msg102941.html
+>>>>>
+>>>>> Setting up the GPIO regulator makes sense to me. But the hack in the
+>>>>> link above is potentially a nasty time bomb for anybody trying to
+>>>>> use GPIO bank 5 on that board.
+>>>>>
+>>>>> What tests have been done that the GPIO bank behaves properly when
+>>>>> it's not reset?
+>>>>
+>>>> We've been using this configuration on this board for a while without any
+>>>> apparent issues. Also, am335x-evmsk already uses the same idea for the VTT
+>>>> regulator on board from commit 6046adb6ad701026c10adeac8d6a4138895f12e5
+>>>> [ARM: dts: am335x-evmsk: Do not reset gpio0] and I am unaware of any issues
+>>>> with that either.
+>>>
+>>> OK. Do you have other GPIOs in use as interrupts for devices in these
+>>> banks and do they work fine?
+>>
+>> I dont see any interrupts in use from gpio5 bank but as a quick test if I
+>> add ti,no-reset-on-init to gpio3 and gpio4 I see no issue with matrix-keypad
+>> operation which uses gpios from each of those banks.
+>
+> OK thanks for testing. I'll apply the ti,no-reset-on-init patch from [1]
+> above into omap-for-v3.15/fixes-v2.
+>
+> The regulator patch can wait for v3.16, and should be also implemented
+> for the am335x-evmsk the same way, so maybe add that too to your patch?
 
-I've got two concerns here. of_dma_get_range() retrieves only the first
-tuple from the dma-ranges property, but it is perfectly valid for
-dma-ranges to contain multiple tuples. How should we handle it if a
-device has multiple ranges it can DMA from?
+Alright thanks, yes I can do that as well for v2.
 
-Second, while the pfn offset is being determined, I don't see anything
-making use of either the base address or size. How is the device
-constrained to only getting DMA buffers from within that range? Is the
-driver expected to manage that directly?
+Regards,
+Dave
 
-g.
+>
+>>> Also, can you please test to make sure this works with the most recent
+>>> Javier's GPIO patches that had the issue of not booting on am335x-evmsk?
+>>>
+>>
+>> Yes, when using Javier's patches in addition to this patch [1], which was
+>> found to be necessary through this discussion [2], the AM437x GP EVM boots
+>> fine with linux-next with my regulator patch and gpio5 no reset patch
+>> applied.
+>
+> OK good to hear.
+>
+> Tony
+>
+>> [1] https://patchwork.kernel.org/patch/4041881/
+>> [2] http://marc.info/?t=139817273800014&r=1&w=2
+>>
+>>> Regards,
+>>>
+>>> Tony
+>>>
+>>
 
-> +}
-> +
-> +/**
->   * of_platform_device_create_pdata - Alloc, initialize and register an of_device
->   * @np: pointer to node to create device for
->   * @bus_id: name to assign device
-> @@ -214,9 +258,7 @@ static struct platform_device *of_platform_device_create_pdata(
->  #if defined(CONFIG_MICROBLAZE)
->  	dev->archdata.dma_mask = 0xffffffffUL;
->  #endif
-> -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> -	if (!dev->dev.dma_mask)
-> -		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-> +	of_dma_configure(&dev->dev);
->  	dev->dev.bus = &platform_bus_type;
->  	dev->dev.platform_data = platform_data;
->  
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index fd4aee2..c7d9b1b 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -123,6 +123,13 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
->  
->  extern u64 dma_get_required_mask(struct device *dev);
->  
-> +#ifndef set_arch_dma_coherent_ops
-> +static inline int set_arch_dma_coherent_ops(struct device *dev)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  static inline unsigned int dma_get_max_seg_size(struct device *dev)
->  {
->  	return dev->dma_parms ? dev->dma_parms->max_segment_size : 65536;
-> -- 
-> 1.7.9.5
-> 
