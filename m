@@ -1,37 +1,50 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [RFC v3 PATCH 08/16] drm/exynos: fimd: support I80 interface
-Date: Tue, 29 Apr 2014 21:05:09 +0530
-Message-ID: <CAK9yfHwAqguttVZRD5BymBhS9LRpnCJoVp6JZm76XjVrkEDygQ@mail.gmail.com>
-References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
-	<1398563412-21781-9-git-send-email-yj44.cho@samsung.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 2/2] net: qualcomm: new Ethernet over SPI driver for
+ QCA7000
+Date: Tue, 29 Apr 2014 17:54:12 +0200
+Message-ID: <535FCB24.2010507@i2se.com>
+References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <5020765.3GuR21cUpi@wuerfel> <535F4BEE.4080300@i2se.com> <4860368.6Apskanc4s@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398563412-21781-9-git-send-email-yj44.cho@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: Dave Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Inki Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4860368.6Apskanc4s@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi YoungJun,
+Hi,
 
-On 27 April 2014 07:20, YoungJun Cho <yj44.cho@samsung.com> wrote:
-> To support MIPI DSI command mode interface, FIMD should do followings:
-> - Sets LCD block configuration for I80 interface.
-> - Uses "lcd_sys" as an IRQ resource and sets relevant IRQ configuration.
-> - Implements trigger feature which transfers image date if there is
->   page flip request, and implements TE handler to call trigger function.
-> - Sets CPU mode timings configuration.
-> - Sets ideal(pixel) clock is 2 times faster than the original one to
->   generate frame done IRQ prior to the next TE signal.
+Am 29.04.2014 10:14, schrieb Arnd Bergmann:
+> i think it's more important to use standard interfaces here. A random
+> user trying to debug a problem with this hardware may know about
+> ethtool or find that documented somewhere, but wouldn't know about the
+> debugfs interfaces without reading the driver source code. The ethtool
+> interface is also easier to maintain than the debugfs files. 
 
-<...>
-> +
-> +       reg = readl(timing_base + TRIGCON);
-> +       reg |= 1 << 0 | 1 << 1;
+okay, i'll try it.
 
-What does this signify? Can't this be OR'd directly with 3?
+> As far as I know it's also not mandatory.
+>
+> If the hardware interfaces require calling sleeping functions, it
+> may not actually be possible, but if you can use it, it normally
+> provides better performance.
 
--- 
-With warm regards,
-Sachin
+As i understood NAPI is good for high load on 1000 MBit ethernet, but
+the QCA7000 has
+in best case only a 10 MBit powerline connection. Additionally these
+packets must be transfered
+over a half duplex SPI. So i think the current driver implementation
+isn't a bottle neck.
+
+>
+>> Does this mean the current state of the driver should better go to staging?
+> Probably not, the driver doesn't look bad overall.
+>
+> 	Arnd
+>
+
+I'm relieved to hear that. Thanks for your comments.
+
+Stefan<http://dict.leo.org/#/search=that.&searchLoc=0&resultOrder=basic&multiwordShowSingle=on>
