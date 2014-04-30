@@ -1,116 +1,48 @@
-From: Alim Akhtar <alim.akhtar@gmail.com>
-Subject: Re: [PATCH v3 09/16] clk: exynos5420: update clocks for WCORE block
-Date: Wed, 30 Apr 2014 17:15:08 +0530
-Message-ID: <CAGOxZ51cUq74B5pCEg6HRNxMbkTA20MqPBy2LtHzGiHog4U_Rg@mail.gmail.com>
-References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-10-git-send-email-shaik.ameer@samsung.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 01/10] of: Keep track of populated platform devices
+Date: Wed, 30 Apr 2014 12:48:49 +0100
+Message-ID: <1398858529.24255.3.camel@hornet>
+References: <1398707877-22596-1-git-send-email-pawel.moll@arm.com>
+	 <1398707877-22596-2-git-send-email-pawel.moll@arm.com>
+	 <CAL_JsqJxWoxNL=P0SJm+Q1rTRGTpMkzmzTJDbFq2P1vPH4XxZQ@mail.gmail.com>
+	 <20140429125657.65910C4089D@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398344632-18623-10-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Ameer Basha Shaik <shaik.samsung@gmail.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140429125657.65910C4089D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
+On Tue, 2014-04-29 at 13:56 +0100, Grant Likely wrote:
+> > > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> > > index 404d1da..0ae757a 100644
+> > > --- a/drivers/of/platform.c
+> > > +++ b/drivers/of/platform.c
+> > > @@ -204,7 +204,8 @@ static struct platform_device *of_platform_device_create_pdata(
+> > >  {
+> > >         struct platform_device *dev;
+> > >
+> > > -       if (!of_device_is_available(np))
+> > > +       if (!of_device_is_available(np) ||
+> > > +                       of_node_check_flag(np, OF_POPULATED))
+> > 
+> > This and the amba case should be a test_and_set operation to avoid a
+> > race condition.
+> 
+> Yes. It is an unlikely condition at the time that Pawel is handling, but
+> it should also work for later calls to of_platform_populate() which may
+> happen at runtime and in parallel.
 
-On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
-<shaik.ameer@samsung.com> wrote:
-> This patch adds missing clocks from WCORE block.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> ---
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+Sure thing, will fix.
 
->  drivers/clk/samsung/clk-exynos5420.c |   28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 6ad87d1..d9996dd 100755
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -89,6 +89,7 @@
->  #define GATE_BUS_PERIC1                0x10754
->  #define GATE_BUS_PERIS0                0x10760
->  #define GATE_BUS_PERIS1                0x10764
-> +#define GATE_BUS_NOC           0x10770
->  #define GATE_TOP_SCLK_ISP      0x10870
->  #define GATE_IP_GSCL0          0x10910
->  #define GATE_IP_GSCL1          0x10920
-> @@ -180,6 +181,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
->         GATE_BUS_PERIC1,
->         GATE_BUS_PERIS0,
->         GATE_BUS_PERIS1,
-> +       GATE_BUS_NOC,
->         GATE_TOP_SCLK_ISP,
->         GATE_IP_GSCL0,
->         GATE_IP_GSCL1,
-> @@ -271,6 +273,13 @@ PNAME(mout_user_aclk200_fsys_p)    = {"fin_pll", "mout_sw_aclk200_fsys"};
->
->  PNAME(mout_sw_aclk200_fsys2_p) = {"dout_aclk200_fsys2", "mout_sclk_spll"};
->  PNAME(mout_user_aclk200_fsys2_p) = {"fin_pll", "mout_sw_aclk200_fsys2"};
-> +PNAME(mout_sw_aclk100_noc_p) = {"dout_aclk100_noc", "mout_sclk_spll"};
-> +PNAME(mout_user_aclk100_noc_p) = {"fin_pll", "mout_sw_aclk100_noc"};
-> +
-> +PNAME(mout_sw_aclk400_wcore_p) = {"dout_aclk400_wcore", "mout_sclk_spll"};
-> +PNAME(mout_aclk400_wcore_bpll_p) = {"mout_aclk400_wcore", "sclk_bpll"};
-> +PNAME(mout_user_aclk400_wcore_p) = {"fin_pll", "mout_sw_aclk400_wcore"};
-> +
->  PNAME(mout_sw_aclk400_isp_p) = {"dout_aclk400_isp", "mout_sclk_spll"};
->  PNAME(mout_user_aclk400_isp_p) = {"fin_pll", "mout_sw_aclk400_isp"};
->
-> @@ -486,6 +495,18 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
->         MUX(0, "mout_spi0", mout_group2_p, SRC_PERIC1, 20, 3),
->         MUX(0, "mout_spi1", mout_group2_p, SRC_PERIC1, 24, 3),
->         MUX(0, "mout_spi2", mout_group2_p, SRC_PERIC1, 28, 3),
-> +       MUX(0, "mout_aclk100_noc", mout_group1_p, SRC_TOP0, 20, 2),
-> +       MUX(0, "mout_sw_aclk100_noc", mout_sw_aclk100_noc_p,
-> +               SRC_TOP10, 20, 1),
-> +       MUX(0, "mout_user_aclk100_noc", mout_user_aclk100_noc_p,
-> +               SRC_TOP3, 20, 1),
-> +       MUX(0, "mout_aclk400_wcore", mout_group1_p, SRC_TOP0, 16, 2),
-> +       MUX(0, "mout_aclk400_wcore_bpll", mout_aclk400_wcore_bpll_p,
-> +               TOP_SPARE2, 4, 1),
-> +       MUX(0, "mout_sw_aclk400_wcore", mout_sw_aclk400_wcore_p,
-> +               SRC_TOP10, 16, 1),
-> +       MUX(0, "mout_user_aclk400_wcore", mout_user_aclk400_wcore_p,
-> +               SRC_TOP3, 16, 1),
->         MUX(0, "mout_aclk400_isp", mout_group1_p, SRC_TOP0, 0, 2),
->         MUX(0, "mout_sw_aclk400_isp", mout_sw_aclk400_isp_p,
->                 SRC_TOP10, 0, 1),
-> @@ -553,6 +574,10 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
->         DIV(0, "dout_disp1_blk", "aclk200_disp1", DIV2_RATIO0, 16, 2),
->         DIV(0, "dout_aclk400_disp1", "mout_aclk400_disp1", DIV_TOP2, 4, 3),
->
-> +       DIV(0, "dout_aclk100_noc", "mout_aclk100_noc", DIV_TOP0, 20, 3),
-> +       DIV(0, "dout_aclk400_wcore", "mout_aclk400_wcore_bpll",
-> +               DIV_TOP0, 16, 3),
-> +
->         /* Audio Block */
->         DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
->         DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
-> @@ -867,6 +892,9 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
->                         GATE_IP_MSCL, 10, 0, 0),
->         GATE(CLK_SMMU_MIXER, "smmu_mixer", "aclk200_disp1",
->                         GATE_IP_DISP1, 9, 0, 0),
-> +       /* aclk266 also gates other IPs in psgen. It should not be gated. */
-> +       GATE(0, "aclk266", "mout_user_aclk266",
-> +                       GATE_BUS_NOC, 22, CLK_IGNORE_UNUSED, 0),
->         GATE(0, "aclk200_disp1", "mout_user_aclk200_disp1",
->                         GATE_BUS_TOP, 18, CLK_IGNORE_UNUSED, 0),
->         GATE(0, "aclk300_disp1", "mout_user_aclk300_disp1",
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks!
 
+Pawel
 
-
--- 
-Regards,
-Alim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
