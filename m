@@ -1,89 +1,114 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
-Date: Wed, 30 Apr 2014 11:06:53 -0700
-Message-ID: <20140430180653.GB3245@sirena.org.uk>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
- <20140429222522.GS15125@sirena.org.uk>
- <20140430140849.GR29462@lee--X1>
- <1398867073.695596467@f224.i.mail.ru>
- <20140430141708.GS29462@lee--X1>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC 08/11] ARM: dts: am33xx: Add prcm_resets node
+Date: Wed, 30 Apr 2014 11:10:43 -0700
+Message-ID: <20140430181042.GC12362@atomide.com>
+References: <1398802790-29287-1-git-send-email-dmurphy@ti.com>
+ <1398802790-29287-9-git-send-email-dmurphy@ti.com>
+ <6286135.g77D4pMffU@wuerfel>
+ <20140430002211.GC27571@atomide.com>
+ <53613A29.8080803@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140430141708.GS29462@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <53613A29.8080803@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, s-anna@ti.com, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
+* Dan Murphy <dmurphy@ti.com> [140430 11:00]:
+> Tony and Arnd
+> 
+> Thanks for the comments
+> 
+> On 04/29/2014 07:22 PM, Tony Lindgren wrote:
+> > * Arnd Bergmann <arnd@arndb.de> [140429 13:35]:
+> >> On Tuesday 29 April 2014 15:19:47 Dan Murphy wrote:
+> >>> + * AM33xx reset index for PRCM Module
+> >>> + *
+> >>> + * Copyright 2014 Texas Instruments Inc.
+> >>> + *
+> >>> + * This program is free software; you can redistribute it and/or modify
+> >>> + * it under the terms of the GNU General Public License version 2 as
+> >>> + * published by the Free Software Foundation.
+> >>> + */
+> >>> +
+> >>> +#ifndef _DT_BINDINGS_RESET_TI_AM33XX_H
+> >>> +#define _DT_BINDINGS_RESET_TI_AM33XX_H
+> >>> +
+> >>> +#define RESET_DEVICE_RESET                     0
+> >>> +#define RESET_GFX_RESET                                1
+> >>> +#define RESET_PER_RESET                                2
+> >>> +
+> >>> +#endif
+> >> Interfaces like this should only be used if you can't use hardware
+> >> numbers, in general. If these numbers are in the data sheet, just
+> >> put them directly into the dts file, as we do for interrupt numbers,
+> >> gpio numbers, register offsets etc.
+> >>
+> >> If you have made them up to define an interface between the driver
+> >> and DT because there is no usable hardare ID, I'd suggest just using
+> >> a single file across all SoCs that have this driver, and have
+> >> a unified name space.
+> > Also, it's a bit unclear how the reset controller phandle is used
+> > referenced and used by the consumer device.. Maybe setting that up
+> > first in a Linux generic way is a good point starting point.
+> >
+> > Maybe something like this along the same way as clocks are set up
+> > (completely untested):
+> >
+> > &reset1 {
+> > 	iva_reset: reset1 {
+> > 		reg = /bits/ 8 <0>;
+> > 	};
+> > 	gfx_reset: reset1 {
+> > 		reg = /bits/ 8 <1>;
+> > 	};
+> > 	...
+> > };
+> >
+> > &iva {
+> > 	compatible = "ti,ivahd";
+> > 	resets = <&reset1 1>;
+> > 	...
+> > };
+> 
+> I had something very similar to this when I was developing this driver but moved away from this.
+> 
+> Following the clocks implementation I had a separate dtsi for resets for each device and had the data defined like so
+> for each SoC.
+> 
+> &prcm_resets {
+>        device_reset: device_reset {
+>                rstctrl_offs = <0x1104>;
+>                ctrl_bit-shift = <0>;
+>                rstst_offs      = <0x1114>;
+>                sts_bit-shift   = <0>;
+>        };
+> 
+>        gpu_reset: gpu_reset {
+>                rstctrl_offs = <0x0D00>;
+>                ctrl_bit-shift = <3>;
+>                rstst_offs      = <0x0D0C>;
+>                sts_bit-shift = <5>;
+>        };
+> };
+> 
+> And then any client interested in a specific reset driver would include this
+> 
+> resets = <&prcm_resets &gpu_reset>;
+> reset-names = "gpu_reset";
+> 
+> Our reset code would then retrieve the register data through the phandle instead of an index.
+> 
+> Thoughts?
 
---IrhDeMKUP4DT/M7F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Using phandles makes sense here because it avoids the indexing. Indexing
+has a problem of needing to be in sync with the .dts files and the
+device driver(s). Using an index also easily causes misuse of virtual
+indexes being added that no longer describe the hardware at all.
 
-On Wed, Apr 30, 2014 at 03:17:08PM +0100, Lee Jones wrote:
+Regards,
 
-> Neither Mark, nor I can apply this patch independently, we need to
-> create a shared branch somewhere, or we'll risk conflicts at merge
-> time.
-
-You acked it without saying you didn't want me to apply it...  usually
-that means someone is OK with things getting applied.  In any case, as
-ever it's on a branch by itself so you can pull it in easily.  I just
-tagged it.
-
-The following changes since commit c9eaa447e77efe77b7fa4c953bd62de8297fd6c5:
-
-  Linux 3.15-rc1 (2014-04-13 14:18:35 -0700)
-
-are available in the git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git tags/mc13783-asoc
-
-for you to fetch changes up to 780aaeff96819ca58e0cad830bfbe6eee9aef82c:
-
-  ASoC: mc13783: Add devicetree support (2014-04-29 15:24:54 -0700)
-
-----------------------------------------------------------------
-ASoC: mc13783 DT support
-
-Tagged since it updates the MFD as well.
-
-----------------------------------------------------------------
-Alexander Shiyan (1):
-      ASoC: mc13783: Add devicetree support
-
- Documentation/devicetree/bindings/mfd/mc13xxx.txt |  3 +++
- drivers/mfd/mc13xxx-core.c                        | 10 +++++++---
- sound/soc/codecs/mc13783.c                        | 14 +++++++++++++-
- 3 files changed, 23 insertions(+), 4 deletions(-)
-
---IrhDeMKUP4DT/M7F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTYTu6AAoJELSic+t+oim9Vh0P/jYa1eG8S1qWD2CwLbOj5Dqi
-oWjI0D2qQrIOp9xZcoFfi5Qhov6eRPkVLrthcXKaJymz5BbpuA1GzXmMRzbm5+Gr
-96LWV46zSmJ7u4I/sdgd7UCQ6uLiZjeblTn7KOlvi0Hff6BWnvlmT6dkFTJNY7rF
-66e8JU7Y+pALqgpQPwjNyCOqk/NtI0YSQmLXSn/M+uCAt4eHHHRDgkMtf2rK8q8L
-ng1I2UFBGSUXKCvtMn9+KCtcgfiMMOdLTYczTDBJzR5xTVyB4fpAxs0A4AD+0waY
-YhLHTveCkbWPNY9O+RUKBaSs8ZK3xVvkx6aCHswF/Aoi7wiAQhJXGH5QtrZqJrGk
-pMTCyNgvHjmeqLdmOSg82R4um9WAZbhUEbAUXdI6kWxQwxrnQD0j3EkMz+6V/moW
-0PYKNdMt6LmU3411SjjtvkOhhkxnCWm+BmYXwz8LLwiHc+/7YMjFyz2awR5Wl3ZV
-fKO0t28nGyFzX9dAtgyVHPXW+vDsWb+0CmE4rbDsRUq0TATi9nLRRe6m1jb8VyNn
-9bLmB5X290t7MbPmYRQjHaNzErfbGx5KIL1AxnZWH3+4r27G7Y9xV2XvJgARRZOx
-u5X3MvIa+9vH2Ou+MeS9mbAksemn6+JuDTPOvjLJwqjilm4jZsMKEawHiVpKYBBP
-Sd7pIIUQc4kcS/2ymM+9
-=XeyG
------END PGP SIGNATURE-----
-
---IrhDeMKUP4DT/M7F--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
