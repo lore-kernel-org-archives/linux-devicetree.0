@@ -1,46 +1,116 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 2/2] ARM: DTS: omap54xx-clocks: Correct abe_iclk clock node
-Date: Wed, 30 Apr 2014 14:41:36 +0300
-Message-ID: <1398858096-32144-2-git-send-email-peter.ujfalusi@ti.com>
-References: <1398858096-32144-1-git-send-email-peter.ujfalusi@ti.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v3 09/16] clk: exynos5420: update clocks for WCORE block
+Date: Wed, 30 Apr 2014 17:15:08 +0530
+Message-ID: <CAGOxZ51cUq74B5pCEg6HRNxMbkTA20MqPBy2LtHzGiHog4U_Rg@mail.gmail.com>
+References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-10-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398858096-32144-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com, t-kristo@ti.com
-Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398344632-18623-10-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Ameer Basha Shaik <shaik.samsung@gmail.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-abe_iclk's parent is aess_fclk and not abe_clk.
-Also correct the parameters for clock rate calculation as used for OMAP4
-since in PRCM level there's no difference between the two platform
-regarding to AESS/ABE clocking.
+Hi Shaik,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/omap54xx-clocks.dtsi | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
+<shaik.ameer@samsung.com> wrote:
+> This patch adds missing clocks from WCORE block.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
-diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
-index d784ff5d3904..86fc507a0567 100644
---- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
-@@ -143,10 +143,11 @@
- 
- 	abe_iclk: abe_iclk {
- 		#clock-cells = <0>;
--		compatible = "fixed-factor-clock";
--		clocks = <&abe_clk>;
--		clock-mult = <1>;
--		clock-div = <2>;
-+		compatible = "ti,divider-clock";
-+		clocks = <&aess_fclk>;
-+		ti,bit-shift = <24>;
-+		reg = <0x0528>;
-+		ti,dividers = <2>, <1>;
- 	};
- 
- 	abe_lp_clk_div: abe_lp_clk_div {
+>  drivers/clk/samsung/clk-exynos5420.c |   28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 6ad87d1..d9996dd 100755
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -89,6 +89,7 @@
+>  #define GATE_BUS_PERIC1                0x10754
+>  #define GATE_BUS_PERIS0                0x10760
+>  #define GATE_BUS_PERIS1                0x10764
+> +#define GATE_BUS_NOC           0x10770
+>  #define GATE_TOP_SCLK_ISP      0x10870
+>  #define GATE_IP_GSCL0          0x10910
+>  #define GATE_IP_GSCL1          0x10920
+> @@ -180,6 +181,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+>         GATE_BUS_PERIC1,
+>         GATE_BUS_PERIS0,
+>         GATE_BUS_PERIS1,
+> +       GATE_BUS_NOC,
+>         GATE_TOP_SCLK_ISP,
+>         GATE_IP_GSCL0,
+>         GATE_IP_GSCL1,
+> @@ -271,6 +273,13 @@ PNAME(mout_user_aclk200_fsys_p)    = {"fin_pll", "mout_sw_aclk200_fsys"};
+>
+>  PNAME(mout_sw_aclk200_fsys2_p) = {"dout_aclk200_fsys2", "mout_sclk_spll"};
+>  PNAME(mout_user_aclk200_fsys2_p) = {"fin_pll", "mout_sw_aclk200_fsys2"};
+> +PNAME(mout_sw_aclk100_noc_p) = {"dout_aclk100_noc", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk100_noc_p) = {"fin_pll", "mout_sw_aclk100_noc"};
+> +
+> +PNAME(mout_sw_aclk400_wcore_p) = {"dout_aclk400_wcore", "mout_sclk_spll"};
+> +PNAME(mout_aclk400_wcore_bpll_p) = {"mout_aclk400_wcore", "sclk_bpll"};
+> +PNAME(mout_user_aclk400_wcore_p) = {"fin_pll", "mout_sw_aclk400_wcore"};
+> +
+>  PNAME(mout_sw_aclk400_isp_p) = {"dout_aclk400_isp", "mout_sclk_spll"};
+>  PNAME(mout_user_aclk400_isp_p) = {"fin_pll", "mout_sw_aclk400_isp"};
+>
+> @@ -486,6 +495,18 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+>         MUX(0, "mout_spi0", mout_group2_p, SRC_PERIC1, 20, 3),
+>         MUX(0, "mout_spi1", mout_group2_p, SRC_PERIC1, 24, 3),
+>         MUX(0, "mout_spi2", mout_group2_p, SRC_PERIC1, 28, 3),
+> +       MUX(0, "mout_aclk100_noc", mout_group1_p, SRC_TOP0, 20, 2),
+> +       MUX(0, "mout_sw_aclk100_noc", mout_sw_aclk100_noc_p,
+> +               SRC_TOP10, 20, 1),
+> +       MUX(0, "mout_user_aclk100_noc", mout_user_aclk100_noc_p,
+> +               SRC_TOP3, 20, 1),
+> +       MUX(0, "mout_aclk400_wcore", mout_group1_p, SRC_TOP0, 16, 2),
+> +       MUX(0, "mout_aclk400_wcore_bpll", mout_aclk400_wcore_bpll_p,
+> +               TOP_SPARE2, 4, 1),
+> +       MUX(0, "mout_sw_aclk400_wcore", mout_sw_aclk400_wcore_p,
+> +               SRC_TOP10, 16, 1),
+> +       MUX(0, "mout_user_aclk400_wcore", mout_user_aclk400_wcore_p,
+> +               SRC_TOP3, 16, 1),
+>         MUX(0, "mout_aclk400_isp", mout_group1_p, SRC_TOP0, 0, 2),
+>         MUX(0, "mout_sw_aclk400_isp", mout_sw_aclk400_isp_p,
+>                 SRC_TOP10, 0, 1),
+> @@ -553,6 +574,10 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
+>         DIV(0, "dout_disp1_blk", "aclk200_disp1", DIV2_RATIO0, 16, 2),
+>         DIV(0, "dout_aclk400_disp1", "mout_aclk400_disp1", DIV_TOP2, 4, 3),
+>
+> +       DIV(0, "dout_aclk100_noc", "mout_aclk100_noc", DIV_TOP0, 20, 3),
+> +       DIV(0, "dout_aclk400_wcore", "mout_aclk400_wcore_bpll",
+> +               DIV_TOP0, 16, 3),
+> +
+>         /* Audio Block */
+>         DIV(0, "dout_maudio0", "mout_maudio0", DIV_MAU, 20, 4),
+>         DIV(0, "dout_maupcm0", "dout_maudio0", DIV_MAU, 24, 8),
+> @@ -867,6 +892,9 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>                         GATE_IP_MSCL, 10, 0, 0),
+>         GATE(CLK_SMMU_MIXER, "smmu_mixer", "aclk200_disp1",
+>                         GATE_IP_DISP1, 9, 0, 0),
+> +       /* aclk266 also gates other IPs in psgen. It should not be gated. */
+> +       GATE(0, "aclk266", "mout_user_aclk266",
+> +                       GATE_BUS_NOC, 22, CLK_IGNORE_UNUSED, 0),
+>         GATE(0, "aclk200_disp1", "mout_user_aclk200_disp1",
+>                         GATE_BUS_TOP, 18, CLK_IGNORE_UNUSED, 0),
+>         GATE(0, "aclk300_disp1", "mout_user_aclk300_disp1",
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
 -- 
-1.9.2
+Regards,
+Alim
