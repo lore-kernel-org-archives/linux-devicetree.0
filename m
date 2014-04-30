@@ -1,53 +1,90 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 07/15] ARM: dts: kirkwood: consolidate common pinctrl
- settings
-Date: Wed, 30 Apr 2014 18:44:41 +0200
-Message-ID: <20140430164441.GB3082@lunn.ch>
-References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1398862602-29595-8-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140430164236.GC12944@obsidianresearch.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] ARM: dts: Add peach-pit board support
+Date: Wed, 30 Apr 2014 09:48:33 -0700
+Message-ID: <CAD=FV=VTdi8o+_t+6fY4DqRT_VZDMKeFo3UNxi1UD7HAyHYNCQ@mail.gmail.com>
+References: <1398313031-14848-1-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140430164236.GC12944-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398313031-14848-1-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olofj@google.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tushar Behera <tushar.behera@linaro.org>, Arun Kumar <arunkk.samsung@gmail.com>, Tom Rini <trini@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 30, 2014 at 10:42:36AM -0600, Jason Gunthorpe wrote:
-> On Wed, Apr 30, 2014 at 02:56:34PM +0200, Sebastian Hesselbarth wrote:
-> > All SoCs have the same pinctrl setting for NAND, UART0/1, SPI, TWSI0,
-> > and GBE1. Move it to the common pinctrl node that we now have.
-> 
-> There are two possible choices for UART0, UART1, and SPI on kirkwood..
-> 
-> For instance I use this on my board:
-> 
->                                 pmx_spi0: pmx-spi0 {
->                                         marvell,pins = "mpp7", "mpp10", "mpp11", "mpp12";
->                                         marvell,function = "spi";
->                                 };
-> 
-> vs
-> 
-> > +
-> > +			pmx_spi: pmx-spi {
-> > +				marvell,pins = "mpp0", "mpp1", "mpp2", "mpp3";
-> > +				marvell,function = "spi";
-> > +			};
-> 
-> It looks like all the boards in the kernel use the same choice, so it
-> makes some sense to consolidate, but I assume a board file can
-> override the marvell,pins?
+Arun,
 
-Hi Jason
+On Wed, Apr 23, 2014 at 9:17 PM, Arun Kumar K <arun.kk@samsung.com> wrote:
+> Adds the google peach-pit board dts file which uses
+> exynos5420 SoC.
+>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> ---
+> Changes from v1
+> ---------------
+> - Addressed review comments from Doug, Sachin & Tushar
+> - Removed adc and lid-switch nodes
+> ---
+>  arch/arm/boot/dts/Makefile                 |    1 +
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts |  182 ++++++++++++++++++++++++++++
+>  2 files changed, 183 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 35c146f..3220e29 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>         exynos5250-smdk5250.dtb \
+>         exynos5250-snow.dtb \
+>         exynos5420-arndale-octa.dtb \
+> +       exynos5420-peach-pit.dtb \
+>         exynos5420-smdk5420.dtb \
+>         exynos5440-sd5v1.dtb \
+>         exynos5440-ssdk5440.dtb
+> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> new file mode 100644
+> index 0000000..fbb0469
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> @@ -0,0 +1,182 @@
+> +/*
+> + * Google Peach Pit Rev 6+ board device tree source
+> + *
+> + * Copyright (c) 2014 Google, Inc
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/dts-v1/;
+> +#include <dt-bindings/input/input.h>
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "exynos5420.dtsi"
+> +
+> +/ {
+> +       model = "Google Peach Pit Rev 6+";
+> +
+> +       compatible = "google,pit-rev16",
+> +               "google,pit-rev15", "google,pit-rev14",
+> +               "google,pit-rev13", "google,pit-rev12",
+> +               "google,pit-rev11", "google,pit-rev10",
+> +               "google,pit-rev9", "google,pit-rev8",
+> +               "google,pit-rev7", "google,pit-rev6",
+> +               "google,pit", "google,peach","samsung,exynos5420",
+> +               "samsung,exynos5";
+> +
+> +       memory {
+> +               reg = <0x20000000 0x80000000>;
+> +       };
 
-Yes, the board can override it, see patch 10/15 for an example.
+One other thing that came up at ELC: it might not be so wise to
+include actual values here.  We're expecting that the bootloader will
+probe memory and tell you whether you're on a 2GB board or a 4GB
+board.  IIRC the proper thing to do here is to use 0 for both, so:
 
-     Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+reg = <0 0>;
+
+-Doug
