@@ -1,22 +1,55 @@
 From: Toby Smith <toby@tismith.id.au>
-Subject: [PATCH 0/2] gpio: pca953x: allow shared interrupts
-Date: Wed, 30 Apr 2014 18:01:39 +1000
-Message-ID: <cover.1398844809.git.toby@tismith.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Subject: [PATCH 1/2] gpio: pca953x: return IRQ_NONE when appropriate
+Date: Wed, 30 Apr 2014 18:01:40 +1000
+Message-ID: <5ca82b7dd4c17ea358a1ea30bb34a3e31828b2b2.1398844809.git.toby@tismith.id.au>
+References: <cover.1398844809.git.toby@tismith.id.au>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <cover.1398844809.git.toby@tismith.id.au>
+In-Reply-To: <cover.1398844809.git.toby@tismith.id.au>
+References: <cover.1398844809.git.toby@tismith.id.au>
+Sender: linux-gpio-owner@vger.kernel.org
 To: linus.walleij@linaro.org, gnurou@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org
 Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Toby Smith <toby@tismith.id.au>
 List-Id: devicetree@vger.kernel.org
 
-These patches allow the pca953x family of chips to use a 
-shared interrupt.
+The irq handler should return IRQ_NONE or IRQ_HANDLED to report
+if we have handled the interrupt.
 
-Toby Smith (2):
-  gpio: pca953x: return IRQ_NONE when appropriate
-  gpio: pca953x: request a shared interrupt
+Signed-off-by: Toby Smith <toby@tismith.id.au>
+---
+ drivers/gpio/gpio-pca953x.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
- drivers/gpio/gpio-pca953x.c | 9 ++++++---
- 1 file changed, 6 insertions(+), 3 deletions(-)
-
+diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+index d550d8e..83cc2c8 100644
+--- a/drivers/gpio/gpio-pca953x.c
++++ b/drivers/gpio/gpio-pca953x.c
+@@ -503,10 +503,11 @@ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
+ 	struct pca953x_chip *chip = devid;
+ 	u8 pending[MAX_BANK];
+ 	u8 level;
++	unsigned nhandled = 0;
+ 	int i;
+ 
+ 	if (!pca953x_irq_pending(chip, pending))
+-		return IRQ_HANDLED;
++		return IRQ_NONE;
+ 
+ 	for (i = 0; i < NBANK(chip); i++) {
+ 		while (pending[i]) {
+@@ -514,10 +515,11 @@ static irqreturn_t pca953x_irq_handler(int irq, void *devid)
+ 			handle_nested_irq(irq_find_mapping(chip->domain,
+ 							level + (BANK_SZ * i)));
+ 			pending[i] &= ~(1 << level);
++			nhandled++;
+ 		}
+ 	}
+ 
+-	return IRQ_HANDLED;
++	return (nhandled > 0) ? IRQ_HANDLED : IRQ_NONE;
+ }
+ 
+ static int pca953x_gpio_irq_map(struct irq_domain *d, unsigned int irq,
 -- 
 1.8.3.2
+
