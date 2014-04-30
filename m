@@ -1,39 +1,162 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 0/2] ARM: dts: AM43xx: Touchscreen support
-Date: Wed, 30 Apr 2014 15:43:23 +0300
-Message-ID: <1398861805-9229-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, bcousson@baylibre.com
-Cc: mugunthanvnm@ti.com, nsekhar@ti.com, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/15] Kirkwood DT fix and cleanup round 1
+Date: Wed, 30 Apr 2014 14:56:27 +0200
+Message-ID: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit & Tony,
+This is a patch set starting Kirkwood DT cleanup since over time some
+cleanup potential piled up on it. Also, now that Barebox is going to
+reuse the same DT code basis, we need some lowlevel property
+improvements, that we ignore(d) on Linux up to now.
 
-These patches add I2C touch screen support for am43x-epos-evm
-and am437x-gp-evm.
+The patches are based on recent mvebu/dt to ease integration by Jason
+since there are some Kirkwood dts related patches already queued up
+for v3.16.
 
-Relevant driver side changes are here.
-http://thread.gmane.org/gmane.linux.kernel.input/35803
+The first patch is a real fix and should be treated accordingly. We
+moved pcie-controller nodes to mbus node a while ago. Somehow, we missed
+two boards that should have broken pcie since then. A formal Tested-by
+would be nice by someone who has one of the affected boards.
 
-Please queue this for -next (3.16). Thanks.
+Basically, cleanup patches 2-13 up to now comprise:
+- Patch 2 adds node labels for all common and SoC-specific nodes to ease
+  further cleanup series I have in mind:
+  MVEBU maintainers will know, current ocp@f1000000 isn't really correct
+  but should be moved to mbus/internal-regs instead. Unfortunately, there
+  are some 40+ boards replaying ocp bus node. 
+  I _plan_ to convert boards ocp nodes to node label references in
+  subsequent patch sets to finally move the ocp bus nodes to
+  mbus/internal-regs more easily.
+- Patch 3 adds stdout-path to all boards with ttyS0 bootargs:
+  Linux currently doesn't really care about stdout-path property set, but
+  Barebox does. ePAPR explicitly names it, so set it now and ease Barebox
+  progress at least.
+- Patch 4 removes clock-frequency from UART nodes:
+  Back when we didn't have DT clock providers for Kirkwood, TCLK was
+  spread over UART nodes in board files. Just remove the now unnecessary
+  clock-frequency property, as we reference TCLK in the SoCs UART nodes.
+- Patches 5-7 consolidate common pinctrl settings:
+  First, rename the pinctrl node to a more appropriate name as recommended
+  by ePAPR, then add a minimal stub to the toplevel SoC DT include. That
+  stub then gets filled with common pinctrl settings that are currently
+  spead over SoC-specific includes or even board files. Again, this also
+  eases Barebox progress, as pinctrl for a bootloader is a really
+  important property.
+- Patches 8-13 set default pinctrl properties for some nodes:
+  With pinctrl settings in common SoC DT, we can now reference them in the
+  device nodes also located there. If there are other possible pinctrl
+  settings, put a note in front of the corresponding pinctrl node and
+  overwrite the pinctrl setting in the board file.
+- Patches 14 and 15 set some lowlevel properties for Guruplug ethernet:
+  While working with Barebox, I noticed missing phy-connection-type
+  and non-standard PHY's compatible on Guruplug. This also applies to
+  most of the other boards, but Guruplug is the only board I use Barebox
+  on and have the required information.
 
-cheers,
--roger
+Overall commit stats aren't as bad as I initially thought:
+218 insertions and 300 deletions still is ~25% less LOC :)
+
+Sebastian
+
+Sebastian Hesselbarth (15):
+  ARM: dts: kirkwood: fix mislocated pcie-controller nodes
+  ARM: dts: kirkwood: add node labels
+  ARM: dts: kirkwood: add stdout-path property to all boards
+  ARM: dts: kirkwood: remove clock-frequency properties from UART nodes
+  ARM: dts: kirkwood: rename pin-controller nodes
+  ARM: dts: kirkwood: add pinctrl node to common SoC include
+  ARM: dts: kirkwood: consolidate common pinctrl settings
+  ARM: dts: kirkwood: set default pinctrl for GBE1
+  ARM: dts: kirkwood: set default pinctrl for UART0/1
+  ARM: dts: kirkwood: set default pinctrl for SPI0
+  ARM: dts: kirkwood: set default pinctrl for NAND
+  ARM: dts: kirkwood: set default pinctrl for I2C0
+  ARM: dts: kirkwood: set default pinctrl for I2C1 on 6282
+  ARM: dts: kirkwood: set Guruplug ethernet PHY compatible
+  ARM: dts: kirkwood: set Guruplug phy-connection-type to rgmii-id
+
+ arch/arm/boot/dts/kirkwood-6192.dtsi               | 35 ++--------
+ arch/arm/boot/dts/kirkwood-6281.dtsi               | 35 ++--------
+ arch/arm/boot/dts/kirkwood-6282.dtsi               | 48 +++++---------
+ arch/arm/boot/dts/kirkwood-98dx4122.dtsi           | 25 +-------
+ arch/arm/boot/dts/kirkwood-b3.dts                  |  7 +-
+ arch/arm/boot/dts/kirkwood-cloudbox.dts            |  8 +--
+ arch/arm/boot/dts/kirkwood-db.dtsi                 | 10 +--
+ arch/arm/boot/dts/kirkwood-dns320.dts              |  3 +-
+ arch/arm/boot/dts/kirkwood-dns325.dts              |  1 +
+ arch/arm/boot/dts/kirkwood-dnskw.dtsi              |  4 +-
+ arch/arm/boot/dts/kirkwood-dockstar.dts            |  3 +-
+ arch/arm/boot/dts/kirkwood-dreamplug.dts           |  5 +-
+ arch/arm/boot/dts/kirkwood-ds109.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds110jv10.dts           |  1 +
+ arch/arm/boot/dts/kirkwood-ds111.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds112.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds209.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds210.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds212.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds212j.dts              |  1 +
+ arch/arm/boot/dts/kirkwood-ds409.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds409slim.dts           |  1 +
+ arch/arm/boot/dts/kirkwood-ds411.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-ds411j.dts              |  1 +
+ arch/arm/boot/dts/kirkwood-ds411slim.dts           |  1 +
+ arch/arm/boot/dts/kirkwood-goflexnet.dts           |  3 +-
+ .../arm/boot/dts/kirkwood-guruplug-server-plus.dts | 14 ++--
+ arch/arm/boot/dts/kirkwood-ib62x0.dts              |  5 +-
+ arch/arm/boot/dts/kirkwood-iconnect.dts            |  3 +-
+ arch/arm/boot/dts/kirkwood-iomega_ix2_200.dts      |  3 +-
+ arch/arm/boot/dts/kirkwood-km_kirkwood.dts         |  7 +-
+ arch/arm/boot/dts/kirkwood-laplug.dts              |  8 +--
+ arch/arm/boot/dts/kirkwood-lsxl.dtsi               |  3 +-
+ arch/arm/boot/dts/kirkwood-mplcec4.dts             | 19 +++---
+ arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts     | 28 ++++----
+ .../boot/dts/kirkwood-netgear_readynas_duo_v2.dts  |  5 +-
+ .../boot/dts/kirkwood-netgear_readynas_nv+_v2.dts  |  5 +-
+ arch/arm/boot/dts/kirkwood-ns2-common.dtsi         |  9 +--
+ arch/arm/boot/dts/kirkwood-nsa310.dts              |  3 +-
+ arch/arm/boot/dts/kirkwood-nsa310a.dts             |  3 +-
+ arch/arm/boot/dts/kirkwood-nsa320.dts              |  3 +-
+ arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi      | 20 +++---
+ arch/arm/boot/dts/kirkwood-openblocks_a6.dts       | 15 ++---
+ arch/arm/boot/dts/kirkwood-openblocks_a7.dts       | 24 ++-----
+ arch/arm/boot/dts/kirkwood-rd88f6192.dts           |  5 +-
+ arch/arm/boot/dts/kirkwood-rd88f6281.dtsi          |  3 +-
+ arch/arm/boot/dts/kirkwood-rs212.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-rs409.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-rs411.dts               |  1 +
+ arch/arm/boot/dts/kirkwood-sheevaplug-common.dtsi  |  7 +-
+ arch/arm/boot/dts/kirkwood-synology.dtsi           | 10 +--
+ arch/arm/boot/dts/kirkwood-t5325.dts               |  9 +--
+ arch/arm/boot/dts/kirkwood-topkick.dts             | 13 ++--
+ arch/arm/boot/dts/kirkwood-ts219-6281.dts          |  2 +-
+ arch/arm/boot/dts/kirkwood-ts219-6282.dts          |  2 +-
+ arch/arm/boot/dts/kirkwood-ts219.dtsi              | 11 +---
+ arch/arm/boot/dts/kirkwood-ts419.dtsi              |  2 +-
+ arch/arm/boot/dts/kirkwood.dtsi                    | 74 +++++++++++++++++++---
+ 58 files changed, 218 insertions(+), 300 deletions(-)
 
 ---
-Roger Quadros (1):
-  ARM: dts: am43x-epos-evm: Correct Touch controller info
-
-Sekhar Nori (1):
-  ARM: dts: AM437x: Add touchscreen support for GP EVM
-
- arch/arm/boot/dts/am437x-gp-evm.dts  | 20 ++++++++++++++++++++
- arch/arm/boot/dts/am43x-epos-evm.dts | 12 ++++++++++--
- 2 files changed, 30 insertions(+), 2 deletions(-)
-
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 -- 
-1.8.3.2
+1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
