@@ -1,80 +1,137 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 3/7] phy: omap-usb2: Use generic clock names "wkupclk"
- and "refclk"
-Date: Wed, 30 Apr 2014 10:20:26 -0500
-Message-ID: <CAGo_u6oAJZvUBvOWMtkn8pEXO1Q=A+CrQ1kcWGWLobFza65sbA@mail.gmail.com>
-References: <1398693687-13967-1-git-send-email-rogerq@ti.com>
-	<1398693687-13967-4-git-send-email-rogerq@ti.com>
-	<20140428160347.GG30292@saruman.home>
-	<535F59CF.6050002@ti.com>
-	<20140429161420.GH633@saruman.home>
-	<20140429161616.GI633@saruman.home>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] of: Keep track of populated platform devices
+Date: Wed, 30 Apr 2014 10:22:25 -0500
+Message-ID: <CAL_JsqL=mxqEKpAsXm7Du0vEDpKk4n+dp5-DyvbuGhTA6bP5Lg@mail.gmail.com>
+References: <1398858529.24255.3.camel@hornet>
+	<1398866717-20268-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140429161616.GI633@saruman.home>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Balbi, Felipe" <balbi@ti.com>
-Cc: Roger Quadros <rogerq@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, Tony Lindgren <tony@atomide.com>, george.cherian@ti.com, linux-omap <linux-omap@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398866717-20268-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 29, 2014 at 11:16 AM, Felipe Balbi <balbi@ti.com> wrote:
-> On Tue, Apr 29, 2014 at 11:14:20AM -0500, Felipe Balbi wrote:
->> On Tue, Apr 29, 2014 at 10:50:39AM +0300, Roger Quadros wrote:
->> > +Nishant
->> >
->> > Hi,
->> >
->> > On 04/28/2014 07:03 PM, Felipe Balbi wrote:
->> > > Hi,
->> > >
->> > > On Mon, Apr 28, 2014 at 05:01:23PM +0300, Roger Quadros wrote:
->> > >> As clocks might be named differently on multiple platforms, use a generic
->> > >> name in the driver and allow device tree node to specify the platform
->> > >> specific clock name.
->> > >>
->> > >> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> > >> ---
->> > >>  drivers/phy/phy-omap-usb2.c | 8 ++++----
->> > >>  1 file changed, 4 insertions(+), 4 deletions(-)
->> > >>
->> > >> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
->> > >> index a2205a8..fb5e515 100644
->> > >> --- a/drivers/phy/phy-omap-usb2.c
->> > >> +++ b/drivers/phy/phy-omap-usb2.c
->> > >> @@ -275,16 +275,16 @@ static int omap_usb2_probe(struct platform_device *pdev)
->> > >>          if (IS_ERR(phy_provider))
->> > >>                  return PTR_ERR(phy_provider);
->> > >>
->> > >> -        phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
->> > >> +        phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
->> > >
->> > > doesn't this patch cause a regression ? I mean, you're changing the
->> > > clock name before fixing DTS. Also, that DTS has been in a major version
->> > > of the kernel, so we need to maintain compatibility with it. How about:
->> >
->> > I'm changing the DTS in Patch 4, but I prefer to do it in this patch
->> > to prevent synchronization issues in -next.
->> >
->> > About backward compatibility, I agree with you but at the same time I
->> > don't think anyone using TI SoCs burns the DTB to ROM and needs
->> > backward compatibility. We supply our BSPs/SDKs with the updated DTBs.
->> > Do you feel strict backward compatibility is worth the effort for TI
->> > specific blocks?
->>
->> dunno, but it would, at least, avoid "synchronization issues with
->> linux-next" :-)
+On Wed, Apr 30, 2014 at 9:05 AM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
+> In "Device Tree powered" systems, platform devices are usually
+> massively populated with of_platform_populate() call, executed
+> at some level of initcalls, either by generic architecture
+> or by platform-specific code.
 >
-> and the bisectability issue.
+> There are situations though where certain devices must be
+> created (and bound with drivers) before all the others.
+> This presents a challenge, as devices created explicitly
+> would be created again by of_platform_populate().
+>
+> This patch tries to solve that issue in a generic way,
+> adding a "populated" flag for a DT node description.
+> Once set, this device will never be created again via
+> of_* API, so of_platform_populate() will skip such nodes
+> (and its children) in a similar way to the non-available
+> ones.
+>
+> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 
-I agree - we cannot drop backward compatibility for DTBs
-http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=2a9330010bea5982a5c6593824bc036bf62d67b7
-"
-+
-+ 3) Bindings can be augmented, but the driver shouldn't break when given
-+ the old binding. ie. add additional properties, but don't change the
-+ meaning of an existing property. For drivers, default to the original
-+ behaviour when a newly added property is missing.
-"
-Regards,
-Nishanth Menon
+One pondering and one minor change below, otherwise:
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+
+> ---
+>
+> Changes since v1:
+>
+> - added of_node_check_and_set_flag()... (atomic test and set)
+> - ... used it to atomically mark a node...
+> - ... clearing the bit on error path.
+>
+>  drivers/of/platform.c | 18 +++++++++++++-----
+>  include/linux/of.h    |  7 +++++++
+>  2 files changed, 20 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 404d1da..b33927a 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -204,12 +204,13 @@ static struct platform_device *of_platform_device_create_pdata(
+>  {
+>         struct platform_device *dev;
+>
+> -       if (!of_device_is_available(np))
+> +       if (!of_device_is_available(np) ||
+> +                       of_node_check_and_set_flag(np, OF_POPULATED))
+>                 return NULL;
+>
+>         dev = of_device_alloc(np, bus_id, parent);
+>         if (!dev)
+> -               return NULL;
+> +               goto err_clear_flag;
+
+I wonder if leaving it set would be the right behavior. I can't see
+that we would want to process the node again. But this is the
+exceptional case, so its probably not too important and can stay like
+this.
+
+>
+>  #if defined(CONFIG_MICROBLAZE)
+>         dev->archdata.dma_mask = 0xffffffffUL;
+> @@ -227,10 +228,14 @@ static struct platform_device *of_platform_device_create_pdata(
+>
+>         if (of_device_add(dev) != 0) {
+>                 platform_device_put(dev);
+> -               return NULL;
+> +               goto err_clear_flag;
+>         }
+>
+>         return dev;
+> +
+> +err_clear_flag:
+> +       of_node_clear_flag(np, OF_POPULATED);
+> +       return NULL;
+>  }
+>
+>  /**
+> @@ -262,14 +267,15 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>
+>         pr_debug("Creating amba device %s\n", node->full_name);
+>
+> -       if (!of_device_is_available(node))
+> +       if (!of_device_is_available(node) ||
+> +                       of_node_check_and_set_flag(node, OF_POPULATED))
+>                 return NULL;
+>
+>         dev = amba_device_alloc(NULL, 0, 0);
+>         if (!dev) {
+>                 pr_err("%s(): amba_device_alloc() failed for %s\n",
+>                        __func__, node->full_name);
+> -               return NULL;
+> +               goto err_clear_flag;
+>         }
+>
+>         /* setup generic device info */
+> @@ -309,6 +315,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+>
+>  err_free:
+>         amba_device_put(dev);
+> +err_clear_flag:
+> +       of_node_clear_flag(node, OF_POPULATED);
+>         return NULL;
+>  }
+>  #else /* CONFIG_ARM_AMBA */
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 3bad8d1..534cab8 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -130,6 +130,12 @@ static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
+>         return test_bit(flag, &n->_flags);
+>  }
+>
+> +static inline int of_node_check_and_set_flag(struct device_node *n,
+
+Please keep the well known naming convention of the called function:
+of_node_test_and_set_flag
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
