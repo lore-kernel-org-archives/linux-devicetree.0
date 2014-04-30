@@ -1,73 +1,46 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC 08/11] ARM: dts: am33xx: Add prcm_resets node
-Date: Tue, 29 Apr 2014 17:22:11 -0700
-Message-ID: <20140430002211.GC27571@atomide.com>
-References: <1398802790-29287-1-git-send-email-dmurphy@ti.com>
- <1398802790-29287-9-git-send-email-dmurphy@ti.com>
- <6286135.g77D4pMffU@wuerfel>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC v3 PATCH 08/16] drm/exynos: fimd: support I80 interface
+Date: Wed, 30 Apr 2014 09:36:28 +0900
+Message-ID: <5360458C.6010500@samsung.com>
+References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
+ <1398563412-21781-9-git-send-email-yj44.cho@samsung.com>
+ <CAK9yfHwAqguttVZRD5BymBhS9LRpnCJoVp6JZm76XjVrkEDygQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6286135.g77D4pMffU@wuerfel>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Murphy <dmurphy@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, s-anna@ti.com, p.zabel@pengutronix.de
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAK9yfHwAqguttVZRD5BymBhS9LRpnCJoVp6JZm76XjVrkEDygQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Dave Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, Inki Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-* Arnd Bergmann <arnd@arndb.de> [140429 13:35]:
-> On Tuesday 29 April 2014 15:19:47 Dan Murphy wrote:
-> > + * AM33xx reset index for PRCM Module
-> > + *
-> > + * Copyright 2014 Texas Instruments Inc.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + */
-> > +
-> > +#ifndef _DT_BINDINGS_RESET_TI_AM33XX_H
-> > +#define _DT_BINDINGS_RESET_TI_AM33XX_H
-> > +
-> > +#define RESET_DEVICE_RESET                     0
-> > +#define RESET_GFX_RESET                                1
-> > +#define RESET_PER_RESET                                2
-> > +
-> > +#endif
-> 
-> Interfaces like this should only be used if you can't use hardware
-> numbers, in general. If these numbers are in the data sheet, just
-> put them directly into the dts file, as we do for interrupt numbers,
-> gpio numbers, register offsets etc.
-> 
-> If you have made them up to define an interface between the driver
-> and DT because there is no usable hardare ID, I'd suggest just using
-> a single file across all SoCs that have this driver, and have
-> a unified name space.
+Hi Sachin,
 
-Also, it's a bit unclear how the reset controller phandle is used
-referenced and used by the consumer device.. Maybe setting that up
-first in a Linux generic way is a good point starting point.
+Thank you for comment.
 
-Maybe something like this along the same way as clocks are set up
-(completely untested):
+I'll fix.
 
-&reset1 {
-	iva_reset: reset1 {
-		reg = /bits/ 8 <0>;
-	};
-	gfx_reset: reset1 {
-		reg = /bits/ 8 <1>;
-	};
-	...
-};
+Thank you.
+Best regards YJ
 
-&iva {
-	compatible = "ti,ivahd";
-	resets = <&reset1 1>;
-	...
-};
-
-Regards,
-
-Tony
+On 04/30/2014 12:35 AM, Sachin Kamat wrote:
+> Hi YoungJun,
+>
+> On 27 April 2014 07:20, YoungJun Cho <yj44.cho@samsung.com> wrote:
+>> To support MIPI DSI command mode interface, FIMD should do followings:
+>> - Sets LCD block configuration for I80 interface.
+>> - Uses "lcd_sys" as an IRQ resource and sets relevant IRQ configuration.
+>> - Implements trigger feature which transfers image date if there is
+>>    page flip request, and implements TE handler to call trigger function.
+>> - Sets CPU mode timings configuration.
+>> - Sets ideal(pixel) clock is 2 times faster than the original one to
+>>    generate frame done IRQ prior to the next TE signal.
+>
+> <...>
+>> +
+>> +       reg = readl(timing_base + TRIGCON);
+>> +       reg |= 1 << 0 | 1 << 1;
+>
+> What does this signify? Can't this be OR'd directly with 3?
+>
