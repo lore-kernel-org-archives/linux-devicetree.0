@@ -1,42 +1,97 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSF0gQVNvQzogbWMxMzc4MzogQWRkIGRldmljZXRyZWUgc3Vw?=
- =?UTF-8?B?cG9ydA==?=
-Date: Wed, 30 Apr 2014 22:12:36 +0400
-Message-ID: <1398881556.141711961@f232.i.mail.ru>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
- <20140430141708.GS29462@lee--X1>
- <20140430180653.GB3245@sirena.org.uk>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 00/11] ARM: at91: rework main and slow clk implementation
+Date: Wed, 30 Apr 2014 11:12:51 -0700
+Message-ID: <53613D23.3020503@atmel.com>
+References: <1398172360-7837-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140430180653.GB3245-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1398172360-7837-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?TWFyayBCcm93bg==?= <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, =?UTF-8?B?U2FtdWVsIE9ydGl6?= <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, =?UTF-8?B?TGlhbSBHaXJkd29vZA==?= <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?SmFyb3NsYXYgS3lzZWxh?= <perex-/Fr2/VpizcU@public.gmane.org>, =?UTF-8?B?VGFrYXNoaSBJd2Fp?= <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?TGVlIEpvbmVz?= <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jean-Jacques Hiblot <jjhiblot-dLKeG7h1OhBDOHtkgc7UlQ@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-V2VkLCAzMCBBcHIgMjAxNCAxMTowNjo1MyAtMDcwMCDQvtGCIE1hcmsgQnJvd24gPGJyb29uaWVA
-a2VybmVsLm9yZz46Cj4gT24gV2VkLCBBcHIgMzAsIDIwMTQgYXQgMDM6MTc6MDhQTSArMDEwMCwg
-TGVlIEpvbmVzIHdyb3RlOgo+IAo+ID4gTmVpdGhlciBNYXJrLCBub3IgSSBjYW4gYXBwbHkgdGhp
-cyBwYXRjaCBpbmRlcGVuZGVudGx5LCB3ZSBuZWVkIHRvCj4gPiBjcmVhdGUgYSBzaGFyZWQgYnJh
-bmNoIHNvbWV3aGVyZSwgb3Igd2UnbGwgcmlzayBjb25mbGljdHMgYXQgbWVyZ2UKPiA+IHRpbWUu
-Cj4gCj4gWW91IGFja2VkIGl0IHdpdGhvdXQgc2F5aW5nIHlvdSBkaWRuJ3Qgd2FudCBtZSB0byBh
-cHBseSBpdC4uLiAgdXN1YWxseQo+IHRoYXQgbWVhbnMgc29tZW9uZSBpcyBPSyB3aXRoIHRoaW5n
-cyBnZXR0aW5nIGFwcGxpZWQuICBJbiBhbnkgY2FzZSwgYXMKPiBldmVyIGl0J3Mgb24gYSBicmFu
-Y2ggYnkgaXRzZWxmIHNvIHlvdSBjYW4gcHVsbCBpdCBpbiBlYXNpbHkuICBJIGp1c3QKPiB0YWdn
-ZWQgaXQuCj4gCj4gVGhlIGZvbGxvd2luZyBjaGFuZ2VzIHNpbmNlIGNvbW1pdCBjOWVhYTQ0N2U3
-N2VmZTc3YjdmYTRjOTUzYmQ2MmRlODI5N2ZkNmM1Ogo+IAo+ICAgTGludXggMy4xNS1yYzEgKDIw
-MTQtMDQtMTMgMTQ6MTg6MzUgLTA3MDApCj4gCj4gYXJlIGF2YWlsYWJsZSBpbiB0aGUgZ2l0IHJl
-cG9zaXRvcnkgYXQ6Cj4gCj4gICBnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tl
-cm5lbC9naXQvYnJvb25pZS9zb3VuZC5naXQgdGFncy9tYzEzNzgzLWFzb2MKPiAKPiBmb3IgeW91
-IHRvIGZldGNoIGNoYW5nZXMgdXAgdG8gNzgwYWFlZmY5NjgxOWNhNThlMGNhZDgzMGJmYmU2ZWVl
-OWFlZjgyYzoKPiAKPiAgIEFTb0M6IG1jMTM3ODM6IEFkZCBkZXZpY2V0cmVlIHN1cHBvcnQgKDIw
-MTQtMDQtMjkgMTU6MjQ6NTQgLTA3MDApCj4gCj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+IEFTb0M6IG1jMTM3ODMgRFQg
-c3VwcG9ydAoKU29ycnksIHRoaXMgbWVhbnMgdGhhdCBJIHNob3VsZCBub3QgY3JlYXRlIHYyPyAK
-Ci0tLQoK
+On 22/04/2014 06:12, Boris BREZILLON :
+> Hello,
+> 
+> This series introduce the real clock model (as described in atmel datasheets)
+> for slow and main clocks.
+> 
+> The modifications introduced by this series break the DT compat, but, as the
+> at91 CCF based implementation is pretty new (introduced in 3.14 only for sama5
+> eval boards) I think it won't impact a lot of users.
+> 
+> Nicolas, Mike, if this series is accepted, I'd like to get it merged as soon as
+> possible to prevent other developpers from using a deprecated DT binding.
+> Moreover, I think this series should go through the same path for both clk
+> and DT changes (whatever path is chosen: either at91 or clk tree) because the
+> changes are tightly coupled.
+
+Boris,
+
+First of all, well...
+Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+
+I didn't find something to add but the little comment about the
+documentation that you already fixed in this v3 version.
+
+Mike,
+
+I would like to merge this whole series through my tree and then the
+arm-soc tree. If it is okay for you, can you give your acknowledgement
+before that I build a pull-request for the arm-soc guys?
+
+Thanks a lot, bye,
+
+> Changes since v2:
+>  - add missing compatible in pmc.c
+>  - fix sam9261 slow clock definition
+>  - move xtal nodes out of /clocks node
+>  - fix DT bindings documentation
+>  - fix main RC oscillator initilization
+> 
+> Changes since v1:
+> - fix sam9rl main clk definition
+> Boris BREZILLON (11):
+>   clk: at91: rework main clk implementation
+>   clk: at91: update main clk documentation
+>   clk: at91: add slow clks driver
+>   clk: at91: add slow clk documentation
+>   ARM: at91/dt: move sama5d3 SoC to the new main/slow clk model
+>   ARM: at91/dt: add xtal frequencies to sama5d3xcm boards
+>   ARM: at91/dt: add xtal frequencies to sama5d3 xplained board
+>   ARM: at91/dt: move at91sam9261 SoC to the new main clock model
+>   ARM: at91/dt: define main xtal frequency of the at91sam9261ek board
+>   ARM: at91/dt: move at91sam9rl SoC to the new slow/main clock models
+>   ARM: at91/dt: define sam9rlek crystal frequencies
+> 
+>  .../devicetree/bindings/clock/at91-clock.txt       | 128 ++++-
+>  arch/arm/boot/dts/at91-sama5d3_xplained.dts        |   8 +
+>  arch/arm/boot/dts/at91sam9261.dtsi                 |  23 +-
+>  arch/arm/boot/dts/at91sam9261ek.dts                |   4 +
+>  arch/arm/boot/dts/at91sam9rl.dtsi                  |  46 +-
+>  arch/arm/boot/dts/at91sam9rlek.dts                 |   9 +
+>  arch/arm/boot/dts/sama5d3.dtsi                     |  61 ++-
+>  arch/arm/boot/dts/sama5d3xcm.dtsi                  |   8 +
+>  drivers/clk/at91/Makefile                          |   4 +-
+>  drivers/clk/at91/clk-main.c                        | 577 ++++++++++++++++++---
+>  drivers/clk/at91/clk-slow.c                        | 467 +++++++++++++++++
+>  drivers/clk/at91/pmc.c                             |  17 +
+>  drivers/clk/at91/pmc.h                             |   9 +
+>  drivers/clk/at91/sckc.c                            |  57 ++
+>  drivers/clk/at91/sckc.h                            |  22 +
+>  include/linux/clk/at91_pmc.h                       |   1 +
+>  16 files changed, 1352 insertions(+), 89 deletions(-)
+>  create mode 100644 drivers/clk/at91/clk-slow.c
+>  create mode 100644 drivers/clk/at91/sckc.c
+>  create mode 100644 drivers/clk/at91/sckc.h
+> 
+
+
+-- 
+Nicolas Ferre
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
