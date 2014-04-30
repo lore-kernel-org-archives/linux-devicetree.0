@@ -1,137 +1,62 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [RFC v3 PATCH v2 10/16] drm/exynos: dsi: add driver data to
- support Exynos5420
-Date: Wed, 30 Apr 2014 09:36:51 +0900
-Message-ID: <536045A3.5020604@samsung.com>
-References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
- <1398563412-21781-11-git-send-email-yj44.cho@samsung.com>
- <CAK9yfHwY85FuMvTQo-HUKocyXkjjK9=5-oXVd9CL8hS7B5++=A@mail.gmail.com>
+From: Stephen N Chivers <schivers@csc.com.au>
+Subject: Re: [PATCH v2 00/21] FDT clean-ups and libfdt support
+Date: Wed, 30 Apr 2014 11:33:53 +1100
+Message-ID: <OFAA1D4E52.AF067B90-ONCA257CCA.0001CA91-CA257CCA.00031A7A@csc.com>
+References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAK9yfHwY85FuMvTQo-HUKocyXkjjK9=5-oXVd9CL8hS7B5++=A@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Seung-Woo Kim <sw0312.kim@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: text/plain; charset="US-ASCII"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Aurelien Jacquiot <a-jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Chris Zankel <chris@zankel.net>, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>, James Hogan <james.hogan@imgtec.co>, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
+> From: Rob Herring <robherring2@gmail.com>
+> To: Grant Likely <grant.likely@linaro.org>, linux-
+> kernel@vger.kernel.org, devicetree@vger.kernel.org
+> Cc: Rob Herring <robh@kernel.org>, Aurelien Jacquiot <a-
+> jacquiot@ti.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+> Chris Zankel <chris@zankel.net>, "H. Peter Anvin" <hpa@zytor.com>, 
+> Ingo Molnar <mingo@redhat.com>, James Hogan <james.hogan@imgtec.co>
+> Date: 04/30/2014 09:45 AM
+> Subject: [PATCH v2 00/21] FDT clean-ups and libfdt support
+> Sent by: linux-kernel-owner@vger.kernel.org
+> 
+> From: Rob Herring <robh@kernel.org>
+> 
+> This is a series of clean-ups of architecture FDT code and converts the
+> core FDT code over to using libfdt functions. This is in preparation
+> to add FDT based address translation parsing functions for early
+> console support. This series removes direct access to FDT data from all
+> arches except powerpc.
+> 
+> The current MIPS lantiq and xlp DT code is buggy as built-in DTBs need
+> to be copied out of init section. Patches 2 and 3 should be applied to
+> 3.15.
+> 
+> Changes in v2 are relatively minor. There was a bug in the unflattening
+> code where walking up the tree was not being handled correctly (thanks
+> to Michal Simek). I re-worked things a bit to avoid globally adding
+> libfdt include paths.
+> 
+> A branch is available here[1], and I plan to put into linux-next in a 
+few
+> days. Please test! I've compiled on arm, arm64, mips, microblaze, 
+xtensa,
+> and powerpc and booted on arm and arm64.
+I have tested this for PowerPC using a snapshot of libfdt[1] collected 
+from
+the today (30/04/2014).
 
-Thank you for comment.
+The computers used were 32 bit, Freescale and IBM/AMCC CPUs:
 
-I'll fix.
+        MVME5100 - Motorola/Fresscale CPU - PPCBug firmware
+        SAM440EP - IBM/AMCC - U-Boot firmware
 
-Thank you.
-Best regards YJ
+Tested-by: Stephen Chivers <schivers@csc.com>
 
-On 04/30/2014 12:26 AM, Sachin Kamat wrote:
-> On 27 April 2014 07:20, YoungJun Cho <yj44.cho@samsung.com> wrote:
->> The offset of register DSIM_PLLTMR_REG in Exynos5420 is different
->> from the one in Exynos4 SoC.
->>
->> In case of Exynos5420 SoC, there is no frequency band bit in DSIM_PLLCTRL_REG,
->> and it uses DSIM_PHYCTRL_REG and DSIM_PHYTIMING*_REG instead.
->> So this patch adds driver data to distinguish it.
->>
->> Changelog v2:
->> - Moves exynos_dsi_enable_clocks() after exynos_dsi_reset()
->>    (commented by Andrzej Hajda)
->> - Splits D-PHY control setting routines from PLL setting one
->>    (commented by Andrzej Hajda)
->>
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Acked-by: Inki Dae <inki.dae@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   drivers/gpu/drm/exynos/exynos_drm_dsi.c |  154 ++++++++++++++++++++++++++-----
->>   1 file changed, 132 insertions(+), 22 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> index 4a918ec..c18dba3 100644
->> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
->> @@ -17,6 +17,7 @@
->>
->>   #include <linux/clk.h>
->>   #include <linux/irq.h>
->> +#include <linux/of_device.h>
->>   #include <linux/phy/phy.h>
->>   #include <linux/regulator/consumer.h>
->>
->> @@ -54,9 +55,12 @@
->>
->>   /* FIFO memory AC characteristic register */
->>   #define DSIM_PLLCTRL_REG       0x4c    /* PLL control register */
->> -#define DSIM_PLLTMR_REG                0x50    /* PLL timer register */
->>   #define DSIM_PHYACCHR_REG      0x54    /* D-PHY AC characteristic register */
->>   #define DSIM_PHYACCHR1_REG     0x58    /* D-PHY AC characteristic register1 */
->> +#define DSIM_PHYCTRL_REG       0x5c
->> +#define DSIM_PHYTIMING_REG     0x64
->> +#define DSIM_PHYTIMING1_REG    0x68
->> +#define DSIM_PHYTIMING2_REG    0x6c
->>
->>   /* DSIM_STATUS */
->>   #define DSIM_STOP_STATE_DAT(x)         (((x) & 0xf) << 0)
->> @@ -200,6 +204,21 @@
->>   #define DSIM_PLL_M(x)                  ((x) << 4)
->>   #define DSIM_PLL_S(x)                  ((x) << 1)
->>
->> +/* DSIM_PHYTIMING */
->> +#define DSIM_PHYTIMING_LPX(x)          ((x) << 8)
->> +#define DSIM_PHYTIMING_HS_EXIT(x)      ((x) << 0)
->> +
->> +/* DSIM_PHYTIMING1 */
->> +#define DSIM_PHYTIMING1_CLK_PREPARE(x) ((x) << 24)
->> +#define DSIM_PHYTIMING1_CLK_ZERO(x)    ((x) << 16)
->> +#define DSIM_PHYTIMING1_CLK_POST(x)    ((x) << 8)
->> +#define DSIM_PHYTIMING1_CLK_TRAIL(x)   ((x) << 0)
->> +
->> +/* DSIM_PHYTIMING2 */
->> +#define DSIM_PHYTIMING2_HS_PREPARE(x)  ((x) << 16)
->> +#define DSIM_PHYTIMING2_HS_ZERO(x)     ((x) << 8)
->> +#define DSIM_PHYTIMING2_HS_TRAIL(x)    ((x) << 0)
->> +
->>   #define DSI_MAX_BUS_WIDTH              4
->>   #define DSI_NUM_VIRTUAL_CHANNELS       4
->>   #define DSI_TX_FIFO_SIZE               2048
->> @@ -233,6 +252,12 @@ struct exynos_dsi_transfer {
->>   #define DSIM_STATE_INITIALIZED         BIT(1)
->>   #define DSIM_STATE_CMD_LPM             BIT(2)
->>
->> +struct exynos_dsi_driver_data {
->
-> Shouldn't this be static?
->
->> +       unsigned int plltmr_reg;
->> +
->
-> nit: stray blank line
->
->> +       unsigned int has_freqband:1;
->> +};
->> +
->
-> <snip>
->
->> +static void exynos_dsi_set_phy_ctrl(struct exynos_dsi *dsi)
->> +{
->> +       struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
->> +       u32 reg;
->> +
->> +       if (driver_data->has_freqband)
->> +               return;
->> +
->> +       /* B D-PHY */
->> +       reg = 0x0af & 0x1ff;
->
-> Please use macros instead of magic numbers.
->
+Stephen Chivers,
+CSC Australia Pty. Ltd.
+
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git libfdt
