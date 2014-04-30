@@ -1,46 +1,71 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC] serial: sh-sci: Add device tree support for r8a7779
-Date: Wed, 30 Apr 2014 10:45:09 +0900
-Message-ID: <20140430014508.GF24989@verge.net.au>
-References: <1398322484-3630-1-git-send-email-horms+renesas@verge.net.au>
- <1986104.5bpNkKVN8D@avalon>
- <20140429214846.GA27566@verge.net.au>
- <48241008.smQVDtv0CD@avalon>
+From: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Tue, 29 Apr 2014 19:21:22 -0700
+Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
+References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
+ <20140422103642.GF7484@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
+ <20140423170821.GJ5649@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <48241008.smQVDtv0CD@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140423170821.GJ5649-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 30, 2014 at 02:59:46AM +0200, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> On Wednesday 30 April 2014 06:48:50 Simon Horman wrote:
-> > On Tue, Apr 29, 2014 at 03:44:46PM +0200, Laurent Pinchart wrote:
-> > > On Monday 28 April 2014 16:07:49 Simon Horman wrote:
-> 
-> [snip]
-> 
-> > > > BTW, are you planning to make the above mentioned driver update
-> > > > before or after re-posting enablement patches for Koelsch and/or Lager?
-> > > > I ask because I would like to make such patches the basis for
-> > > > a patch for Marzen.
-> > > 
-> > > I'll try to do so today, after my talk at the ELC :-)
-> > 
-> > I thought you might be a bit busy with ELC so I went
-> > ahead and made my Marzen patches. Hopefully they aren't
-> > too far away from what you have in mind for the Koelsch and Lager.
-> 
-> I was busy, but I've just sent the patches :-) Could you please test them ? If 
-> no problem is found I'd like the SCI patch to go in before this series, to 
-> avoid adding a dependency on sci_ick in the marzen DT.
-
-Sure, will do.
-
-As mentioned else where I'd prefer not do depend
-on the SCI patch. But lets continue that discussion elsewhere.
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdpbGwgRGVhY29uIFttYWls
+dG86d2lsbC5kZWFjb25AYXJtLmNvbV0NCj4gU2VudDogMjAxNOW5tDTmnIgyNOaXpSAxOjA4DQo+
+IFRvOiBOZWlsIFpoYW5nDQo+IENjOiBsaW51eEBhcm0ubGludXgub3JnLnVrOyBsaW51eC1hcm0t
+a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7IFN1ZGVlcCBIb2xsYTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDog
+UmU6IFtQQVRDSCB2NF0gQVJNOiBwZXJmOiBzYXZlL3Jlc3RvcmUgcG11IHJlZ2lzdGVycyBpbiBw
+bSBub3RpZmllcg0KPiANCj4gT24gV2VkLCBBcHIgMjMsIDIwMTQgYXQgMTE6MzE6MDlBTSArMDEw
+MCwgTmVpbCBaaGFuZyB3cm90ZToNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
+LS0NCj4gPiA+IEZyb206IFdpbGwgRGVhY29uIFttYWlsdG86d2lsbC5kZWFjb25AYXJtLmNvbV0N
+Cj4gPiA+IFNlbnQ6IDIwMTTlubQ05pyIMjLml6UgMTg6MzcNCj4gPiA+IFRvOiBOZWlsIFpoYW5n
+DQo+ID4gPiBDYzogbGludXhAYXJtLmxpbnV4Lm9yZy51azsgbGludXgtYXJtLWtlcm5lbEBsaXN0
+cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU3Vk
+ZWVwIEhvbGxhOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1Ympl
+Y3Q6IFJlOiBbUEFUQ0ggdjRdIEFSTTogcGVyZjogc2F2ZS9yZXN0b3JlIHBtdSByZWdpc3RlcnMg
+aW4gcG0NCj4gPiA+IG5vdGlmaWVyDQo+ID4gPg0KPiA+ID4gSGkgTmVpbCwNCj4gPiA+DQo+ID4g
+PiBPbiBUdWUsIEFwciAyMiwgMjAxNCBhdCAwMzoyNjozNkFNICswMTAwLCBOZWlsIFpoYW5nIHdy
+b3RlOg0KPiA+ID4gPiBUaGlzIGFkZHMgY29yZSBzdXBwb3J0IGZvciBzYXZpbmcgYW5kIHJlc3Rv
+cmluZyBDUFUgUE1VIHJlZ2lzdGVycw0KPiA+ID4gPiBmb3Igc3VzcGVuZC9yZXN1bWUgc3VwcG9y
+dCBpLmUuIGRlZXBlciBDLXN0YXRlcyBpbiBjcHVpZGxlIHRlcm1zLg0KPiA+ID4gPiBUaGlzIHBh
+dGNoIGFkZHMgc3VwcG9ydCBvbmx5IHRvIEFSTXY3IFBNVSByZWdpc3RlcnMgc2F2ZS9yZXN0b3Jl
+Lg0KPiA+ID4gPiBJdCBuZWVkcyB0byBiZSBleHRlbmRlZCB0byB4c2NhbGUgYW5kIEFSTXY2IGlm
+IG5lZWRlZC4NCj4gPiA+ID4NCj4gPiA+ID4gSSBtYWRlIHRoaXMgcGF0Y2ggYmVjYXVzZSBEUy01
+IGlzIG5vdCB3b3JraW5nIG9uIE1hcnZlbGwncyBDQTcgYmFzZWQNCj4gU29Dcy4NCj4gPiA+ID4g
+QW5kIGl0IGhhcyBjb25zdWx0ZWQgU3VkZWVwIEthcmthZGFOYWdlc2hhJ3MgcGF0Y2ggc2V0IGZv
+ciBtdWx0aXBsZQ0KPiBQTVVzLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGFua3MgV2lsbCBhbmQgU3Vk
+ZWVwJ3Mgc3VnZ2VzdGlvbiB0byBvbmx5IHNhdmUgLyByZXN0b3JlIHVzZWQgZXZlbnRzLg0KPiA+
+ID4NCj4gPiA+IFdoaWxzdCB0aGlzIGlzIGEgc3RlcCBpbiB0aGUgcmlnaHQgZGlyZWN0aW9uLCBJ
+J2Qgc3RpbGwgbGlrZSB0byBzZWUNCj4gPiA+IHRoZSBzYXZlL3Jlc3RvcmUgcHJlZGljYXRlZCBv
+biBzb21ldGhpbmcgaW4gdGhlIGRldmljZS10cmVlIG9yDQo+ID4gPiBvdGhlcndpc2UuIE1vc3Qg
+U29DcyAqZG9uJ3QqIHJlcXVpcmUgdGhlc2UgcmVnaXN0ZXJzIHRvIGJlIHByZXNlcnZlZA0KPiA+
+ID4gYnkgc29mdHdhcmUsIHNvIHdlIG5lZWQgYSB3YXkgdG8gZGVzY3JpYmUgdGhhdCB0aGUgUE1V
+IGlzIGluIGENCj4gPiA+IHBvd2VyLWRvbWFpbiB3aGVyZSBpdHMgc3RhdGUgaXMgbG9zdCB3aGVu
+IHRoZSBDUFUgZ29lcyBpZGxlLg0KPiA+ID4NCj4gPiA+IFRoaXMgZG9lc24ndCBzb3VuZCBsaWtl
+IGEgUE1VLXNwZWNpZmljIHByb2JsZW0sIHNvIHRoZXJlJ3MgYQ0KPiA+ID4gcG9zc2liaWxpdHkg
+dGhhdCB0aGlzIGhhcyBiZWVuIGRpc2N1c3NlZCBlbHNld2hlcmUsIGluIHRoZSBjb250ZXh0DQo+
+ID4gPiBvZiBvdGhlciBJUCBibG9ja3MNCj4gPiA+DQo+ID4gPiBbYWRkaW5nIHRoZSBkZXZpY2V0
+cmVlIGxpc3QgaW4gY2FzZSBzb21lYm9keSB0aGVyZSBpcyBhd2FyZSBvZiBhbnkNCj4gPiA+IHdv
+cmsgaW4gdGhpcyBhcmVhXQ0KPiA+ID4NCj4gPg0KPiA+IFRoYW5rcyBXaWxsLg0KPiA+IFdoYXQg
+c2hvdWxkIEkgZG8gbm93Pw0KPiA+IEFkZCBhIGZpbGVkIHVuZGVyIFBNVSBvciB3YWl0aW5nIGZv
+ciBzb21lYm9keSB3aGV0aGVyIHRoZXJlIGFyZQ0KPiA+IGdlbmVyYWwgc3VwcG9ydGluZyBmb3Ig
+cG93ZXIgZG9tYWluIG1haW50YWluLg0KPiANCj4gSSB0aGluayB3ZSBuZWVkIHNvbWUgaW5wdXQg
+ZnJvbSB0aGUgZGV2aWNlLXRyZWUgZ3V5cyB0byBzZWUgd2hldGhlciB0aGV5DQo+IHdvdWxkIG9i
+amVjdCB0byB1cyBzb2x2aW5nIHRoaXMgbG9jYWxseSAoaW4gdGhlIFBNVSBub2RlKSBvciBub3Qu
+DQo+IFBlcnNvbmFsbHksIEknZCBtdWNoIHByZWZlciBhIGdlbmVyYWwgd2F5IHRvIGRlc2NyaWJl
+IHRoZSBuZWVkIGZvciBwbS1ub3RpZmllcnMsDQo+IGJ1dCBpZiB0aGF0J3Mgbm90IGJlaW5nIGxv
+b2tlZCBhdCB0aGVuIHdlIGNhbiBjb29rIHNvbWV0aGluZyBzcGVjaWZpY2FsbHkgZm9yDQo+IG91
+ciBuZWVkcy4NCj4gDQoNCk5vIGlucHV0IGZyb20gZGV2aWNlLXRyZWUgZ3V5cyA6KA0KDQo+IFdp
+bGwNCg0KQmVzdCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
