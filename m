@@ -1,46 +1,66 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] mtd: davinci-nand: disable subpage write for
- keystone-nand
-Date: Wed, 30 Apr 2014 15:33:39 -0700
-Message-ID: <20140430223339.GF2497@norris-Latitude-E6410>
-References: <1395346112-13350-1-git-send-email-ivan.khoronzhuk@ti.com>
- <532B4C36.8060405@ti.com>
- <5343F0D6.2010804@ti.com>
- <20140416070833.GA5512@norris-Latitude-E6410>
- <534E51BF.9050508@ti.com>
- <535E5AF5.2020203@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 2/4] clk: exynos4: export sclk_hdmiphy clock
+Date: Thu, 01 May 2014 00:49:28 +0200
+Message-ID: <53617DF8.4060609@gmail.com>
+References: <1396623201-26000-1-git-send-email-t.stanislaws@samsung.com>
+ <1396623201-26000-3-git-send-email-t.stanislaws@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <535E5AF5.2020203-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, Warner Losh <imp-uzTCJ5RojNnQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1396623201-26000-3-git-send-email-t.stanislaws@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomasz Stanislawski <t.stanislaws@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: kgene.kim@samsung.com, mturquette@linaro.org, sw0312.kim@samsung.com, rob.herring@calxeda.com, kishon@ti.com, a.hajda@samsung.com, kyungmin.park@samsung.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Apr 28, 2014 at 09:43:17AM -0400, Santosh Shilimkar wrote:
-> On Wednesday 16 April 2014 05:47 AM, Ivan Khoronzhuk wrote:
-> > On 04/16/2014 10:08 AM, Brian Norris wrote:
-> >> On Tue, Apr 08, 2014 at 03:51:34PM +0300, Ivan Khoronzhuk wrote:
-> >>> Could you pick up subj patch?
-> >> Pushed to l2-mtd.git. Is it critical this goes in for 3.15? It's
-> >> currently queued for -next (3.16).
-> >>
-> 
-> [..]
-> 
-> > 
-> > This is a critical fix and it should be for 3.15.
-> Ping. 3.15-rc3 is already out and I still see this fix merged
-> yet.
 
-OK, cherry-picked to linux-mtd.git with the intention of sending to
-Linus soon.
 
-Regards,
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 04.04.2014 16:53, Tomasz Stanislawski wrote:
+> Export sclk_hdmiphy clock to be usable from DT.
+>
+> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
+> ---
+>   drivers/clk/samsung/clk-exynos4.c   |    2 +-
+>   include/dt-bindings/clock/exynos4.h |    1 +
+>   2 files changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
+> index b4f9672..528f8eb 100644
+> --- a/drivers/clk/samsung/clk-exynos4.c
+> +++ b/drivers/clk/samsung/clk-exynos4.c
+> @@ -428,7 +428,7 @@ static struct samsung_fixed_rate_clock exynos4_fixed_rate_ext_clks[] __initdata
+>   /* fixed rate clocks generated inside the soc */
+>   static struct samsung_fixed_rate_clock exynos4_fixed_rate_clks[] __initdata = {
+>   	FRATE(0, "sclk_hdmi24m", NULL, CLK_IS_ROOT, 24000000),
+> -	FRATE(0, "sclk_hdmiphy", NULL, CLK_IS_ROOT, 27000000),
+> +	FRATE(CLK_SCLK_HDMIPHY, "sclk_hdmiphy", NULL, CLK_IS_ROOT, 27000000),
+>   	FRATE(0, "sclk_usbphy0", NULL, CLK_IS_ROOT, 48000000),
+>   };
+>
+> diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
+> index 75aff33..0e245eb 100644
+> --- a/include/dt-bindings/clock/exynos4.h
+> +++ b/include/dt-bindings/clock/exynos4.h
+> @@ -33,6 +33,7 @@
+>   #define CLK_MOUT_MPLL_USER_C	18 /* Exynos4x12 only */
+>   #define CLK_MOUT_CORE		19
+>   #define CLK_MOUT_APLL		20
+> +#define CLK_SCLK_HDMIPHY	22
+>
+>   /* gate for special clocks (sclk) */
+>   #define CLK_SCLK_FIMC0		128
+>
+
+Applied.
+
+Best regards,
+Tomasz
