@@ -1,195 +1,74 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7] DMA: sun6i: Add driver for the Allwinner A31 DMA
- controller
-Date: Wed, 30 Apr 2014 12:34:08 +0530
-Message-ID: <20140430070408.GR32284@intel.com>
-References: <1398349364-10726-1-git-send-email-maxime.ripard@free-electrons.com>
- <1398349364-10726-2-git-send-email-maxime.ripard@free-electrons.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] phy: omap-usb2: Use generic clock names "wkupclk"
+ and "refclk"
+Date: Wed, 30 Apr 2014 10:16:13 +0300
+Message-ID: <5360A33D.3040207@ti.com>
+References: <1398693687-13967-1-git-send-email-rogerq@ti.com> <1398693687-13967-4-git-send-email-rogerq@ti.com> <20140428160347.GG30292@saruman.home> <535F59CF.6050002@ti.com> <20140429161420.GH633@saruman.home> <20140429161616.GI633@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398349364-10726-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140429161616.GI633-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 24, 2014 at 04:22:44PM +0200, Maxime Ripard wrote:
-> The Allwinner A31 has a 16 channels DMA controller that it shares with the
-> newer A23. Although sharing some similarities with the DMA controller of the
-> older Allwinner SoCs, it's significantly different, I don't expect it to be
-> possible to share the driver for these two.
+On 04/29/2014 07:16 PM, Felipe Balbi wrote:
+> On Tue, Apr 29, 2014 at 11:14:20AM -0500, Felipe Balbi wrote:
+>> On Tue, Apr 29, 2014 at 10:50:39AM +0300, Roger Quadros wrote:
+>>> +Nishant
+>>>
+>>> Hi,
+>>>
+>>> On 04/28/2014 07:03 PM, Felipe Balbi wrote:
+>>>> Hi,
+>>>>
+>>>> On Mon, Apr 28, 2014 at 05:01:23PM +0300, Roger Quadros wrote:
+>>>>> As clocks might be named differently on multiple platforms, use a generic
+>>>>> name in the driver and allow device tree node to specify the platform
+>>>>> specific clock name.
+>>>>>
+>>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>>>> ---
+>>>>>  drivers/phy/phy-omap-usb2.c | 8 ++++----
+>>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
+>>>>>
+>>>>> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
+>>>>> index a2205a8..fb5e515 100644
+>>>>> --- a/drivers/phy/phy-omap-usb2.c
+>>>>> +++ b/drivers/phy/phy-omap-usb2.c
+>>>>> @@ -275,16 +275,16 @@ static int omap_usb2_probe(struct platform_device *pdev)
+>>>>>  	if (IS_ERR(phy_provider))
+>>>>>  		return PTR_ERR(phy_provider);
+>>>>>  
+>>>>> -	phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
+>>>>> +	phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
+>>>>
+>>>> doesn't this patch cause a regression ? I mean, you're changing the
+>>>> clock name before fixing DTS. Also, that DTS has been in a major version
+>>>> of the kernel, so we need to maintain compatibility with it. How about:
+>>>
+>>> I'm changing the DTS in Patch 4, but I prefer to do it in this patch
+>>> to prevent synchronization issues in -next.
+>>>
+>>> About backward compatibility, I agree with you but at the same time I
+>>> don't think anyone using TI SoCs burns the DTB to ROM and needs
+>>> backward compatibility. We supply our BSPs/SDKs with the updated DTBs.
+>>> Do you feel strict backward compatibility is worth the effort for TI
+>>> specific blocks?
+>>
+>> dunno, but it would, at least, avoid "synchronization issues with
+>> linux-next" :-)
 > 
-> The A31 Controller is able to memory-to-memory or memory-to-device transfers on
-> the 16 channels in parallel.
+> and the bisectability issue.
+> 
+If backward compatibility is not the real worry then we could avoid the
+synchronization/bisectability issue by squashing the dts changes with this patch.
 
-Overall driver looks in good shape, few comments though...
-
-> +This driver follows the generic DMA bindings defined in dma.txt.
-> +
-> +Required properties:
-> +
-> +- compatible:	Must be "allwinner,sun6i-a31-dma"
-> +- reg:		Should contain the registers base address and length
-> +- interrupts:	Should contain a reference to the interrupt used by this device
-> +- clocks:	Should contain a reference to the parent AHB clock
-> +- resets:	Should contain a reference to the reset controller asserting
-> +	  	this device in reset
-> +- #dma-cells :	Should be 1, a single cell holding a line request number
-> +
-> +Example:
-> +	dma: dma-controller@01c02000 {
-> +		compatible = "allwinner,sun6i-a31-dma";
-> +		reg = <0x01c02000 0x1000>;
-> +		interrupts = <0 50 4>;
-> +		clocks = <&ahb1_gates 6>;
-> +		resets = <&ahb1_rst 6>;
-> +		#dma-cells = <1>;
-> +	};
-> +
-> +Clients:
-> +
-> +DMA clients connected to the A31 DMA controller must use the format
-> +described in the dma.txt file, using a two-cell specifier for each
-> +channel: a phandle plus one integer cells.
-> +The two cells in order are:
-> +
-> +1. A phandle pointing to the DMA controller.
-> +2. The port ID as specified in the datasheet
-> +
-> +Example:
-> +spi2: spi@01c6a000 {
-> +	compatible = "allwinner,sun6i-a31-spi";
-> +	reg = <0x01c6a000 0x1000>;
-> +	interrupts = <0 67 4>;
-> +	clocks = <&ahb1_gates 22>, <&spi2_clk>;
-> +	clock-names = "ahb", "mod";
-> +	dmas = <&dma 25>, <&dma 25>;
-> +	dma-names = "rx", "tx";
-> +	resets = <&ahb1_rst 22>;
-> +};
-Ideally binding should be a separate patch
-
-> +static inline u8 convert_burst(u8 maxburst)
-> +{
-> +	if (maxburst == 1 || maxburst > 16)
-> +		return 0;
-are these valid configurations?
-
-> +
-> +	return fls(maxburst) - 1;
-> +}
-> +
-> +static inline u8 convert_buswidth(enum dma_slave_buswidth addr_width)
-> +{
-> +	switch (addr_width) {
-> +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> +		return 1;
-> +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> +		return 2;
-return (addr_width >> 1); ..??
-since DMA_SLAVE_BUSWIDTH_2_BYTES is numeric 2 and DMA_SLAVE_BUSWIDTH_4_BYTES
-numeric 4. 
-> +	default:
-> +		return 0;
-error?
-
-> +static inline void sun6i_dma_cfg_lli(struct sun6i_dma_lli *lli,
-> +				     dma_addr_t src,
-> +				     dma_addr_t dst, u32 len,
-> +				     struct dma_slave_config *config)
-> +{
-> +	u32 src_width, dst_width, src_burst, dst_burst;
-> +
-> +	if (!config)
-> +		return;
-> +
-> +	src_burst = convert_burst(config->src_maxburst);
-> +	dst_burst = convert_burst(config->dst_maxburst);
-> +
-> +	src_width = convert_buswidth(config->src_addr_width);
-> +	dst_width = convert_buswidth(config->dst_addr_width);
-is 0 a valid case then?
-
-> +
-> +static int sun6i_dma_terminate_all(struct sun6i_vchan *vchan)
-> +{
-> +	struct sun6i_dma_dev *sdev = to_sun6i_dma_dev(vchan->vc.chan.device);
-> +	struct sun6i_pchan *pchan = vchan->phy;
-> +	unsigned long flags;
-> +	LIST_HEAD(head);
-> +
-> +	spin_lock(&sdev->lock);
-> +	list_del_init(&vchan->node);
-> +	spin_unlock(&sdev->lock);
-> +
-> +	spin_lock_irqsave(&vchan->vc.lock, flags);
-> +
-> +	vchan_get_all_descriptors(&vchan->vc, &head);
-> +
-> +	if (pchan) {
-> +		writel(DMA_CHAN_ENABLE_STOP, pchan->base + DMA_CHAN_ENABLE);
-> +		writel(DMA_CHAN_PAUSE_RESUME, pchan->base + DMA_CHAN_PAUSE);
-> +
-> +		vchan->phy = NULL;
-> +		pchan->vchan = NULL;
-> +		pchan->desc = NULL;
-> +		pchan->done = NULL;
-> +	}
-> +
-> +	spin_unlock_irqrestore(&vchan->vc.lock, flags);
-> +
-> +	vchan_dma_desc_free_list(&vchan->vc, &head);
-
-shouldn't you kill the tasklet as well here?
-
-> +static inline void sun6i_dma_free(struct sun6i_dma_dev *sdc)
-> +{
-> +	int i;
-> +
-> +	for (i = 0; i < NR_MAX_VCHANS; i++) {
-> +		struct sun6i_vchan *vchan = &sdc->vchans[i];
-> +
-> +		list_del(&vchan->vc.chan.device_node);
-> +		tasklet_kill(&vchan->vc.task);
-> +	}
-> +
-> +	tasklet_kill(&sdc->task);
-This is again not good. see http://lwn.net/Articles/588457/
-At this point HW can still generate interrupts or you can have irq running!
-
-> +
-> +static int sun6i_dma_probe(struct platform_device *pdev)
-> +{
-> +	struct sun6i_dma_dev *sdc;
-> +	struct resource *res;
-> +	struct clk *mux, *pll6;
-> +	int irq;
-> +	int ret, i;
-> +
-> +	sdc = devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
-> +	if (!sdc)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	sdc->base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(sdc->base))
-> +		return PTR_ERR(sdc->base);
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	ret = devm_request_irq(&pdev->dev, irq, sun6i_dma_interrupt, 0,
-> +			       dev_name(&pdev->dev), sdc);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Cannot request IRQ\n");
-> +		return ret;
-> +	}
-this is not good. You have registered for irq, so your irq handlers can be
-invoked but you initialization is not complete yet.
-
--- 
-~Vinod
+cheers,
+-roger
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
