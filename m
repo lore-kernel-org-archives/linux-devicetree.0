@@ -1,100 +1,300 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add sound card driver for Snow board
-Date: Wed, 30 Apr 2014 17:30:39 +0530
-Message-ID: <5360E5E7.8090807@linaro.org>
-References: <1398243705-31151-1-git-send-email-tushar.behera@linaro.org> <20140424133920.GA12304@sirena.org.uk> <5359E18B.60600@linaro.org> <20140429222915.GU15125@sirena.org.uk>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 1/2] ARM: DTS: omap54xx-clocks: remove the autoidle properties
+ for clock nodes
+Date: Wed, 30 Apr 2014 15:30:45 +0300
+Message-ID: <5360ECF5.6080801@ti.com>
+References: <1398858096-32144-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140429222915.GU15125@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, robh+dt@kernel.org, sbkim73@samsung.com, rdunlap@infradead.org, dianders@chromium.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398858096-32144-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, bcousson@baylibre.com, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 04/30/2014 03:59 AM, Mark Brown wrote:
-> On Fri, Apr 25, 2014 at 09:46:11AM +0530, Tushar Behera wrote:
->> On 04/24/2014 07:09 PM, Mark Brown wrote:
-> 
->>> defined.  Why is that?  Also, why is the secondary I2S playback stream
->>> not supported (this may be a reason to restrict to only the one I2S
->>> interface)?
-> 
->> AFAICS, I2S driver doesn't support secondary DAI with DT (dai type is
->> always TYPE_PRI in case of DT). Hence I could not find a setup to test
->> secondary dai with this board.
-> 
-> OK, that should be fixed at some point.  I will hopefully be able to
-> look at this myself on the Arndale Octa though (or Chromebook or Arndale
-> once XCLKOUT is implemented).
-> 
+On 04/30/2014 02:41 PM, Peter Ujfalusi wrote:
+> In OMAP5 bit 8 in PRCM registers are not defined (Reserved) unlike their
+> counterpart in OMAP4.
+> It is better to not write to these bits.
 
-XCLKOUT mux register (0x10040a00) is not part of core clock SFR range,
-rather it is part of pmu-system-controller node.
+Yeah, looks like this bug was copied over from the legacy clock data.
 
-One option would be to add a clock provider for XCLKOUT. That would
-require me to extend current clock driver to get the
-pmu-system-controller phandle which in turn is dependent on the patch to
-early initialize syscon driver.[1]
+Acked-by: Tero Kristo <t-kristo@ti.com>
 
-Will it be okay to configure XCLKOUT in snow sound-card driver by taking
-the phandle of pmu-system-controller from device tree? The
-implementation is provided below.
-
-[1] article.gmane.org/gmane.linux.kernel/1679446
-
-diff --git a/sound/soc/samsung/snow.c b/sound/soc/samsung/snow.c
-index 0fa89a4..d7fe7a0 100644
---- a/sound/soc/samsung/snow.c
-+++ b/sound/soc/samsung/snow.c
-@@ -15,6 +15,7 @@
- #include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/mfd/syscon.h>
-
- #include <sound/soc.h>
-
-@@ -22,6 +23,10 @@
-
- #define FIN_PLL_RATE           24000000
-
-+#define XCLKOUT_OFFSET                 0x0a00
-+#define XCLKOUT_PARENT_MASK            0x1f00
-+#define XCLKOUT_PARENT_XXTI            0x1000
-+
- static struct snd_soc_dai_link snow_dai[] = {
-        {
-                .name = "Primary",
-@@ -66,6 +71,7 @@ static int snow_probe(struct platform_device *pdev)
- {
-        struct snd_soc_card *card = &snow_snd;
-        struct device_node *i2s_node, *codec_node;
-+       struct regmap *pmureg;
-        int i, ret;
-
-        i2s_node = of_parse_phandle(pdev->dev.of_node,
-@@ -84,6 +90,19 @@ static int snow_probe(struct platform_device *pdev)
-                return -EINVAL;
-        }
-
-+       /*
-+        * On Snow board, SoC XCLKOUT line is connected to codec MCLK.
-+        * One option would be to add another clock provider to configure
-+        * XCLKOUT mux register. Else we can get pmu-syscon phandle from
-+        * device tree and update the register here.
-+        */
-+       pmureg = syscon_regmap_lookup_by_phandle(pdev->dev.of_node,
-+                       "samsung,pmu-syscon");
-+       if (!IS_ERR(pmureg)) {
-+               regmap_update_bits(pmureg, XCLKOUT_OFFSET,
-+                               XCLKOUT_PARENT_MASK, XCLKOUT_PARENT_XXTI);
-+       }
-+
-        for (i = 0; i < ARRAY_SIZE(snow_dai); i++) {
-                snow_dai[i].codec_of_node = codec_node;
-                snow_dai[i].cpu_of_node = i2s_node;
-
--- 
-Tushar Behera
+>
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>   arch/arm/boot/dts/omap54xx-clocks.dtsi | 48 ----------------------------------
+>   1 file changed, 48 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+> index d487fdab3921..d784ff5d3904 100644
+> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+> @@ -120,10 +120,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_abe_x2_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x01f0>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	abe_24m_fclk: abe_24m_fclk {
+> @@ -164,10 +162,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_abe_x2_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x01f4>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_ck: dpll_core_ck {
+> @@ -188,10 +184,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0150>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	c2c_fclk: c2c_fclk {
+> @@ -215,10 +209,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0138>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_h12x2_ck: dpll_core_h12x2_ck {
+> @@ -226,10 +218,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x013c>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_h13x2_ck: dpll_core_h13x2_ck {
+> @@ -237,10 +227,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0140>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_h14x2_ck: dpll_core_h14x2_ck {
+> @@ -248,10 +236,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0144>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_h22x2_ck: dpll_core_h22x2_ck {
+> @@ -259,10 +245,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0154>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_h23x2_ck: dpll_core_h23x2_ck {
+> @@ -270,10 +254,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0158>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_h24x2_ck: dpll_core_h24x2_ck {
+> @@ -281,10 +263,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x015c>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_m2_ck: dpll_core_m2_ck {
+> @@ -292,10 +272,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0130>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_core_m3x2_ck: dpll_core_m3x2_ck {
+> @@ -303,10 +281,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_core_x2_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0134>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	iva_dpll_hs_clk_div: iva_dpll_hs_clk_div {
+> @@ -335,10 +311,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_iva_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x01b8>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_iva_h12x2_ck: dpll_iva_h12x2_ck {
+> @@ -346,10 +320,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_iva_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x01bc>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	mpu_dpll_hs_clk_div: mpu_dpll_hs_clk_div {
+> @@ -372,10 +344,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_mpu_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0170>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	per_dpll_hs_clk_div: per_dpll_hs_clk_div {
+> @@ -642,10 +612,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_per_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0158>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_per_h12x2_ck: dpll_per_h12x2_ck {
+> @@ -653,10 +621,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_per_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x015c>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_per_h14x2_ck: dpll_per_h14x2_ck {
+> @@ -664,10 +630,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_per_x2_ck>;
+>   		ti,max-div = <63>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0164>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_per_m2_ck: dpll_per_m2_ck {
+> @@ -675,10 +639,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_per_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0150>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_per_m2x2_ck: dpll_per_m2x2_ck {
+> @@ -686,10 +648,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_per_x2_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0150>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_per_m3x2_ck: dpll_per_m3x2_ck {
+> @@ -697,10 +657,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_per_x2_ck>;
+>   		ti,max-div = <31>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0154>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_unipro1_ck: dpll_unipro1_ck {
+> @@ -723,10 +681,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_unipro1_ck>;
+>   		ti,max-div = <127>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0210>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_unipro2_ck: dpll_unipro2_ck {
+> @@ -749,10 +705,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_unipro2_ck>;
+>   		ti,max-div = <127>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x01d0>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	dpll_usb_ck: dpll_usb_ck {
+> @@ -775,10 +729,8 @@
+>   		compatible = "ti,divider-clock";
+>   		clocks = <&dpll_usb_ck>;
+>   		ti,max-div = <127>;
+> -		ti,autoidle-shift = <8>;
+>   		reg = <0x0190>;
+>   		ti,index-starts-at-one;
+> -		ti,invert-autoidle-bit;
+>   	};
+>
+>   	func_128m_clk: func_128m_clk {
+>
