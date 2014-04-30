@@ -1,64 +1,244 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
-Date: Wed, 30 Apr 2014 12:07:19 +0530
-Message-ID: <CAPdUM4OOaaP2byJa+MgksAaDtsffwqTYT-obfVEBsRxjy_vKrg@mail.gmail.com>
-References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
- <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
- <534506B1.4040908@samsung.com> <5345333D.4080505@saftware.de>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: Re: [PATCHv3 2/2] regmap: add DT endianness binding support.
+Date: Wed, 30 Apr 2014 08:56:55 +0200
+Message-ID: <20140430065655.GE15179@pengutronix.de>
+References: <1398833029-29546-1-git-send-email-Li.Xiubo@freescale.com>
+ <1398833029-29546-3-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5345333D.4080505@saftware.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andreas Oberritter <obi@saftware.de>
-Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="KuLpqunXa7jZSBt+"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398833029-29546-3-git-send-email-Li.Xiubo@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Xiubo Li <Li.Xiubo@freescale.com>
+Cc: mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
 
-I have tested your patches for exynos5250 and 5420. Works fine. Are
-you planning to post v3? If you want I can share hand with you for v3.
+--KuLpqunXa7jZSBt+
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Wed, Apr 30, 2014 at 12:43:49PM +0800, Xiubo Li wrote:
+[...]
+> diff --git a/drivers/base/regmap/regmap.c b/drivers/base/regmap/regmap.c
+> index 8e8cea1..946e901 100644
+> --- a/drivers/base/regmap/regmap.c
+> +++ b/drivers/base/regmap/regmap.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/export.h>
+>  #include <linux/mutex.h>
+>  #include <linux/err.h>
+> +#include <linux/of.h>
+>  #include <linux/rbtree.h>
+>  #include <linux/sched.h>
+> =20
+> @@ -422,6 +423,132 @@ static void regmap_range_exit(struct regmap *map)
+>  	kfree(map->selector_work_buf);
+>  }
+> =20
+> +enum regmap_endian_type {
+> +	REGMAP_ENDIAN_REG,
+> +	REGMAP_ENDIAN_VAL,
+> +};
+> +
+> +/**
+> + * of_regmap_endian_by_type() - Parse and lookup the endian referenced
+> + * by a device node
+> + * @np: pointer to clock consumer node
+
+This is not the clock consumer, right?
+
+> + * @type: type of consumer's endian input
+> + *
+> + * This function parses the device endian property, and uses them to
+> + * determine the endian of the registers and values.
+> + */
+> +static int of_regmap_endian_by_type(struct device_node *np,
+> +					enum regmap_endian_type type,
+> +					enum regmap_endian *endian)
+> +{
+> +	if (!endian)
+> +		return -EINVAL;
+> +
+> +	switch (type) {
+> +	case REGMAP_ENDIAN_REG:
+> +		if (of_property_read_bool(np, "big-endian-reg"))
+> +			*endian =3D REGMAP_ENDIAN_BIG;
+> +		else if (of_property_read_bool(np, "little-endian-reg"))
+> +			*endian =3D REGMAP_ENDIAN_LITTLE;
+> +		else
+> +			*endian =3D REGMAP_ENDIAN_NATIVE;
+
+You could also return an error code here as there was no DT property
+found. This doesn't change to much in the code, just an idea.
 
 Regards,
-Rahul Sharma
 
-On 9 April 2014 17:17, Andreas Oberritter <obi@saftware.de> wrote:
-> Hello Andrzej,
->
-> On 09.04.2014 10:37, Andrzej Hajda wrote:
->>> +static int exynos_phy_probe(struct platform_device *pdev)
->>> +{
->>> +    const struct of_device_id *of_id = of_match_device(
->>> +            of_match_ptr(exynos_phy_of_match), &pdev->dev);
->>> +    const u32 *offsets = of_id->data;
->>> +    int count;
->>> +    struct device *dev = &pdev->dev;
->>> +    struct phy **phys;
->>> +    struct resource *res;
->>> +    void __iomem *regs;
->>> +    int i;
->>> +    struct phy_provider *phy_provider;
->>> +
->>> +    /* count number of phys to create */
->>> +    for (count = 0; offsets[count] != ~0; ++count)
->>> +            ;
->>
->> count = ARRAY_SIZE(offsets) - 1;
->
-> u32 *offsets is not an array.
->
-> Regards,
-> Andreas
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Markus
+
+> +		break;
+> +	case REGMAP_ENDIAN_VAL:
+> +		if (of_property_read_bool(np, "big-endian-val"))
+> +			*endian =3D REGMAP_ENDIAN_BIG;
+> +		else if (of_property_read_bool(np, "little-endian-val"))
+> +			*endian =3D REGMAP_ENDIAN_LITTLE;
+> +		else
+> +			*endian =3D REGMAP_ENDIAN_NATIVE;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int of_regmap_get_endian(struct device *dev,
+> +				const struct regmap_bus *bus,
+> +				const struct regmap_config *config,
+> +				enum regmap_endian_type type,
+> +				enum regmap_endian *endian)
+> +{
+> +	int ret;
+> +
+> +	if (!endian || !config)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Firstly, try to parse the endian from driver's config,
+> +	 * this is to be compatible with the none DT or the old drivers.
+> +	 * From the driver's config the endian value maybe:
+> +	 *   REGMAP_ENDIAN_BIG,
+> +	 *   REGMAP_ENDIAN_LITTLE,
+> +	 *   REGMAP_ENDIAN_NATIVE,
+> +	 *   REGMAP_ENDIAN_DEFAULT.
+> +	 */
+> +	switch (type) {
+> +	case REGMAP_ENDIAN_REG:
+> +		*endian =3D config->reg_format_endian;
+> +		break;
+> +	case REGMAP_ENDIAN_VAL:
+> +		*endian =3D config->val_format_endian;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	/*
+> +	 * If the endian parsing from driver's config is REGMAP_ENDIAN_DEFAULT,
+> +	 * that means maybe we are using the DT node to specify the endianness.
+> +	 */
+> +	if (*endian !=3D REGMAP_ENDIAN_DEFAULT)
+> +		return 0;
+> +
+> +	/*
+> +	 * Secondly, try to parse the endian from DT node if the
+> +	 * driver config does not specify it.
+> +	 * From the DT node the endian value maybe:
+> +	 *   REGMAP_ENDIAN_BIG,
+> +	 *   REGMAP_ENDIAN_LITTLE,
+> +	 *   REGMAP_ENDIAN_NATIVE,
+> +	 */
+> +	if (dev) {
+> +		ret =3D of_regmap_endian_by_type(dev->of_node, type, endian);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	/*
+> +	 * If the endian parsing from DT node is REGMAP_ENDIAN_NATIVE, that
+> +	 * maybe means the DT does not care the endianness or it should use
+> +	 * the regmap bus's default endianness, then we should try to check
+> +	 * whether the regmap bus has specified the default endianess.
+> +	 */
+> +	if (*endian !=3D REGMAP_ENDIAN_NATIVE)
+> +		return 0;
+> +
+> +	/*
+> +	 * Finally, try to parse the endian from regmap bus config
+> +	 * if in device's DT node the endian property is absent.
+> +	 */
+> +	switch (type) {
+> +	case REGMAP_ENDIAN_REG:
+> +		if (bus && bus->reg_format_endian_default)
+> +			*endian =3D bus->reg_format_endian_default;
+> +		break;
+> +	case REGMAP_ENDIAN_VAL:
+> +		if (bus && bus->val_format_endian_default)
+> +			*endian =3D bus->val_format_endian_default;
+> +		break;
+> +	default:
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  /**
+>   * regmap_init(): Initialise register map
+>   *
+> @@ -518,17 +645,15 @@ struct regmap *regmap_init(struct device *dev,
+>  		map->reg_read  =3D _regmap_bus_read;
+>  	}
+> =20
+> -	reg_endian =3D config->reg_format_endian;
+> -	if (reg_endian =3D=3D REGMAP_ENDIAN_DEFAULT)
+> -		reg_endian =3D bus->reg_format_endian_default;
+> -	if (reg_endian =3D=3D REGMAP_ENDIAN_DEFAULT)
+> -		reg_endian =3D REGMAP_ENDIAN_BIG;
+> -
+> -	val_endian =3D config->val_format_endian;
+> -	if (val_endian =3D=3D REGMAP_ENDIAN_DEFAULT)
+> -		val_endian =3D bus->val_format_endian_default;
+> -	if (val_endian =3D=3D REGMAP_ENDIAN_DEFAULT)
+> -		val_endian =3D REGMAP_ENDIAN_BIG;
+> +	ret =3D of_regmap_get_endian(dev, bus, config, REGMAP_ENDIAN_REG,
+> +				   &reg_endian);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> +
+> +	ret =3D of_regmap_get_endian(dev, bus, config, REGMAP_ENDIAN_VAL,
+> +				   &val_endian);
+> +	if (ret)
+> +		return ERR_PTR(ret);
+> =20
+>  	switch (config->reg_bits + map->reg_shift) {
+>  	case 2:
+> --=20
+> 1.8.4
+>=20
+>=20
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--KuLpqunXa7jZSBt+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTYJ62AAoJEEpcgKtcEGQQxr4P/05/9efvgXzcnzeMq25ZnswO
+uj85QAvwiaVRD+4YeMoGAlv9N4McWi2o5239BC5odUK30GD5tNPtvXgqadDWYyCr
+XhWF6cPEicphPc71gZnQNYYPqSLmvNCA88BkTkaz/CBHZQ5VgmUB/kaLRPWdJDSx
+UPSiNWc3nfloJ4nsqGGQukvZAumUOsnjHlhac65c9SggehYjimX72XWbgcdAFAdZ
+9S4g9r5Ro71b+/BQGpMhO15n0O78eAHPFuHoZU3l7SAwLe7oD+lu34B6etD/mssA
+DyGclcchnDjItYs25g3WWOU9HY3H8W0tPHrHRPXOrc0Q67w4KWyuYq86wF2Vam7a
+X3TzLi5owGFaxFtGLlipHWLm/nO+t0pjBDrZiXheeym/fmtXfu+J/KaK2RHAxOda
+AdLpluiXECymqjRDXKiZVLx2ETOSAATGjg1n1FvUYU+gWaqAo3liZ2g57YIPpBFc
+hzN7eyypy/wlDek6jrd5HiW7g2uH6CMHvC6K2+ByBa81HBvD0MAj6aTrAgmfUtkC
+et9+Ze9uCY99R8spGpMaCgXYeKyr5dJ2OCn6792o3VHnyJ6a95NwNYY0i1lGzQnd
+oQ2StHEhwPYqUWfDgq572gOKg8E5oZQLoV8p2mdvPkDnJRC0+7RKGG7QfytehlGw
+l9cl3I2Xbj/4lID4FT62
+=B5Up
+-----END PGP SIGNATURE-----
+
+--KuLpqunXa7jZSBt+--
