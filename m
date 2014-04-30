@@ -1,20 +1,36 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 12/15] ARM: dts: kirkwood: set default pinctrl for I2C0
-Date: Wed, 30 Apr 2014 14:56:39 +0200
-Message-ID: <1398862602-29595-13-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 01/15] ARM: dts: kirkwood: fix mislocated pcie-controller nodes
+Date: Wed, 30 Apr 2014 14:56:28 +0200
+Message-ID: <1398862602-29595-2-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-There is only one valid pinctrl setting for I2C0 on Kirkwood. Now that we
-have the setting in the common SoC pinctrl, move it to the I2C0 controller
-node directly and remove it from the individual boards.
+Commit 54397d85349f
+ ("ARM: kirkwood: Relocate PCIe device tree nodes")
 
-While at it, also fix up status = "okay" to "ok" on one board's I2C0 node.
+moved the pcie-controller nodes for the Kirkwood SoCs to the mbus
+bus node. For some reason, two boards were not properly converted
+and have their pci-controller nodes still in the ocp bus node.
+
+As the corresponding SoC pcie-controller does not exist anymore,
+it is likely that pcie is broken on those boards since above commit.
+Fix it by moving the pcie related nodes to the correct location.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
@@ -32,93 +48,81 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/kirkwood-laplug.dts      | 2 --
- arch/arm/boot/dts/kirkwood-ns2-common.dtsi | 2 --
- arch/arm/boot/dts/kirkwood-synology.dtsi   | 2 --
- arch/arm/boot/dts/kirkwood-topkick.dts     | 4 +---
- arch/arm/boot/dts/kirkwood-ts219.dtsi      | 2 --
- arch/arm/boot/dts/kirkwood.dtsi            | 2 ++
- 6 files changed, 3 insertions(+), 11 deletions(-)
+ arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 18 ++++++++++--------
+ arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi  | 18 ++++++++++--------
+ 2 files changed, 20 insertions(+), 16 deletions(-)
 
-diff --git a/arch/arm/boot/dts/kirkwood-laplug.dts b/arch/arm/boot/dts/kirkwood-laplug.dts
-index 642755acf2fe..92c2d3c16546 100644
---- a/arch/arm/boot/dts/kirkwood-laplug.dts
-+++ b/arch/arm/boot/dts/kirkwood-laplug.dts
-@@ -42,8 +42,6 @@
- 		};
+diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+index 2cb0dc529165..4bf358c28be2 100644
+--- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
++++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+@@ -30,6 +30,16 @@
+ 		bootargs = "console=ttyS0,115200n8 earlyprintk";
+ 	};
  
- 		i2c@11000 {
--			pinctrl-0 = <&pmx_twsi0>;
--			pinctrl-names = "default";
- 			status = "okay";
- 
- 			eeprom@50 {
-diff --git a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-index c10ff0f5290b..e6863ed87d76 100644
---- a/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-ns2-common.dtsi
-@@ -42,8 +42,6 @@
- 		};
- 
- 		i2c@11000 {
--			pinctrl-0 = <&pmx_twsi0>;
--			pinctrl-names = "default";
- 			status = "okay";
- 
- 			eeprom@50 {
-diff --git a/arch/arm/boot/dts/kirkwood-synology.dtsi b/arch/arm/boot/dts/kirkwood-synology.dtsi
-index a21419f78bee..811e0971fc58 100644
---- a/arch/arm/boot/dts/kirkwood-synology.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-synology.dtsi
-@@ -257,8 +257,6 @@
- 		i2c@11000 {
- 			status = "okay";
- 			clock-frequency = <400000>;
--			pinctrl-0 = <&pmx_twsi0>;
--			pinctrl-names = "default";
- 
- 			rs5c372: rs5c372@32 {
- 				status = "disabled";
-diff --git a/arch/arm/boot/dts/kirkwood-topkick.dts b/arch/arm/boot/dts/kirkwood-topkick.dts
-index a4dd47acf98a..f5c8c0dd41dc 100644
---- a/arch/arm/boot/dts/kirkwood-topkick.dts
-+++ b/arch/arm/boot/dts/kirkwood-topkick.dts
-@@ -95,9 +95,7 @@
- 		};
- 
- 		i2c@11000 {
--			status = "ok";
--			pinctrl-0 = <&pmx_twsi0>;
--			pinctrl-names = "default";
++	mbus {
++		pcie-controller {
 +			status = "okay";
- 		};
- 
- 		mvsdio@90000 {
-diff --git a/arch/arm/boot/dts/kirkwood-ts219.dtsi b/arch/arm/boot/dts/kirkwood-ts219.dtsi
-index 539a2f80a3ad..df7f15276575 100644
---- a/arch/arm/boot/dts/kirkwood-ts219.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-ts219.dtsi
-@@ -26,8 +26,6 @@
- 		i2c@11000 {
++
++			pcie@1,0 {
++				status = "okay";
++			};
++		};
++        };
++
+ 	ocp@f1000000 {
+ 		pinctrl@10000 {
+ 			pmx_usb_led: pmx-usb-led {
+@@ -73,14 +83,6 @@
+ 		ehci@50000 {
  			status = "okay";
- 			clock-frequency = <400000>;
--			pinctrl-0 = <&pmx_twsi0>;
--			pinctrl-names = "default";
- 
- 			s35390a: s35390a@30 {
- 				compatible = "s35390a";
-diff --git a/arch/arm/boot/dts/kirkwood.dtsi b/arch/arm/boot/dts/kirkwood.dtsi
-index caafcde88f67..0399a096e324 100644
---- a/arch/arm/boot/dts/kirkwood.dtsi
-+++ b/arch/arm/boot/dts/kirkwood.dtsi
-@@ -170,6 +170,8 @@
- 			interrupts = <29>;
- 			clock-frequency = <100000>;
- 			clocks = <&gate_clk 7>;
-+			pinctrl-0 = <&pmx_twsi0>;
-+			pinctrl-names = "default";
- 			status = "disabled";
  		};
+-
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
  
+ 	gpio-leds {
+diff --git a/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi b/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
+index 843b8b561e5e..b88810df7ca2 100644
+--- a/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
++++ b/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
+@@ -4,6 +4,16 @@
+ / {
+ 	model = "ZyXEL NSA310";
+ 
++	mbus {
++		pcie-controller {
++			status = "okay";
++
++			pcie@1,0 {
++				status = "okay";
++			};
++		};
++	};
++
+ 	ocp@f1000000 {
+ 		pinctrl: pinctrl@10000 {
+ 
+@@ -51,14 +61,6 @@
+ 			status = "okay";
+ 			nr-ports = <2>;
+ 		};
+-
+-		pcie-controller {
+-			status = "okay";
+-
+-			pcie@1,0 {
+-				status = "okay";
+-			};
+-		};
+ 	};
+ 
+ 	gpio_poweroff {
 -- 
 1.9.1
