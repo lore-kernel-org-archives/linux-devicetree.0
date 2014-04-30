@@ -1,61 +1,171 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
-Date: Wed, 30 Apr 2014 15:33:52 +0100
-Message-ID: <20140430143352.GV29462@lee--X1>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
- <1398867618.574635813@f224.i.mail.ru>
- <20140430142456.GT29462@lee--X1>
- <1398868130.411182088@f224.i.mail.ru>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] arm: exynos: Add MCPM call-back functions
+Date: Wed, 30 Apr 2014 10:43:16 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1404301021270.980@knanqh.ubzr>
+References: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com> <1398528348-21214-6-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398868130.411182088-rKA3owyty39sdVUOrk1QfQ@public.gmane.org>
+In-Reply-To: <1398528348-21214-6-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Dave.Martin-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Apr 2014, Alexander Shiyan wrote:
+On Sat, 26 Apr 2014, Abhilash Kesavan wrote:
 
-> Wed, 30 Apr 2014 15:24:56 +0100 =D0=BE=D1=82 Lee Jones <lee.jones@lin=
-aro.org>:
-> > > > > > > > This patch adds devicetree support for mc13783-codec.
-> > > > > > >=20
-> > > > > > > Applied, thanks.
-> > > > > >=20
-> > > > > > No Mark, no!
-> > > > >=20
-> > > > > What a problem, Lee?
-> > > >=20
-> > > > There's no problem with the patch, don't worry.
-> > > >=20
-> > > > Neither Mark, nor I can apply this patch independently, we need=
- to
-> > > > create a shared branch somewhere, or we'll risk conflicts at me=
-rge
-> > > > time.
-> > >=20
-> > > I can separate this patch for ASoC and MFD if need.
-> > > But this will work only if both is applied.
-> >=20
-> > Are there build dependencies, or only functional ones?
->=20
-> Functional only.
-> At this time "fsl,mc13xxx-uses-codec" option for PMIC produce a kerne=
-l crash :)
+> Add machine-dependent MCPM call-backs for Exynos5420. These are used
+> to power up/down the secondary CPUs during boot, shutdown, s2r and
+> switching.
+> 
+> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-If patches can be broken up notwithstanding build errors, they should
-be.  It makes things sooo much easier.
+Small comments below.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> +static int exynos_cluster_power_control(unsigned int cluster, int enable)
+> +{
+> +	unsigned int tries = 100;
+> +	unsigned int val = 0;
+> +
+> +	if (enable) {
+> +		exynos_cluster_powerup(cluster);
+> +		val = S5P_CORE_LOCAL_PWR_EN;
+> +	} else {
+> +		exynos_cluster_powerdown(cluster);
+
+It would be clearer if you have "val = 0" here instead so it looks 
+symetric.
+
+> +	}
+> +
+> +	/* Wait until cluster power control is applied */
+> +	while (tries--) {
+> +		if (exynos_cluster_power_state(cluster) == val)
+> +			return 0;
+> +
+> +		cpu_relax();
+> +	}
+> +	pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
+> +		enable ? "on" : "off");
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
+> +{
+> +	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
+> +	unsigned int err;
+> +
+> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+> +	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
+> +		cluster >= EXYNOS5420_NR_CLUSTERS)
+> +		return -EINVAL;
+> +
+> +	/*
+> +	 * Since this is called with IRQs enabled, and no arch_spin_lock_irq
+> +	 * variant exists, we need to disable IRQs manually here.
+> +	 */
+> +	local_irq_disable();
+> +	arch_spin_lock(&exynos_mcpm_lock);
+> +
+> +	cpu_use_count[cpu][cluster]++;
+> +	if (cpu_use_count[cpu][cluster] == 1) {
+> +		bool was_cluster_down =
+> +			__mcpm_cluster_state(cluster) == CLUSTER_DOWN;
+> +
+> +		/*
+> +		 * Turn on the cluster (L2/COMMON) and then power on the cores.
+> +		 * TODO: Turn off the clusters when all cores in the cluster
+> +		 * are down to achieve significant power savings.
+> +		 */
+
+This TODO comment should be moved in exynos_power_down() were last_man 
+is determined to be true.
+
+> +		if (was_cluster_down) {
+> +			err = exynos_cluster_power_control(cluster, 1);
+> +			if (err) {
+> +				exynos_cluster_power_control(cluster, 0);
+> +				return err;
+
+The lock is still held.
+
+To make the code clearer, you should do:
+
+			if (!err)
+				exynos_cpu_powerup(cpunr);
+
+and return err at the end.
+
+> +			}
+> +		}
+> +
+> +		exynos_cpu_powerup(cpunr);
+> +
+> +		/* CPU should be powered up there */
+> +		/* Also setup Cluster Power Sequence here */
+
+Both comments are wrong.  The CPU is not necessarily powered up yet at 
+this point, and "Cluster Power Sequence" (whatever that is) should not 
+happen here but in the callback provided to mcpm_sync_init().
+
+> +	} else if (cpu_use_count[cpu][cluster] != 2) {
+> +		/*
+> +		 * The only possible values are:
+> +		 * 0 = CPU down
+> +		 * 1 = CPU (still) up
+> +		 * 2 = CPU requested to be up before it had a chance
+> +		 *     to actually make itself down.
+> +		 * Any other value is a bug.
+> +		 */
+> +		BUG();
+> +	}
+> +
+> +	arch_spin_unlock(&exynos_mcpm_lock);
+> +	local_irq_enable();
+> +
+> +	return 0;
+> +}
+> +
+> +static void exynos_power_down(void)
+> +{
+> +	unsigned int mpidr, cpu, cluster;
+> +	bool last_man = false, skip_wfi = false;
+> +	unsigned int cpunr;
+> +
+> +	mpidr = read_cpuid_mpidr();
+> +	cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+> +	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+> +	cpunr =  cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
+> +
+> +	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+> +	BUG_ON(cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
+> +			cluster >= EXYNOS5420_NR_CLUSTERS);
+> +
+> +	__mcpm_cpu_going_down(cpu, cluster);
+> +
+> +	arch_spin_lock(&exynos_mcpm_lock);
+> +	BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
+> +	cpu_use_count[cpu][cluster]--;
+> +	if (cpu_use_count[cpu][cluster] == 0) {
+> +		int cnt = 0, i;
+> +
+> +		exynos_cpu_powerdown(cpunr);
+> +		for (i = 0; i < EXYNOS5420_CPUS_PER_CLUSTER; i++)
+> +			cnt += cpu_use_count[i][cluster];
+> +		if (cnt == 0)
+> +			last_man = true;
+
+I think Lorenzo commented on this code block already.
+
+Otherwise it is almost there.
+
+
+Nicolas
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
