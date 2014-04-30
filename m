@@ -1,58 +1,72 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 2/2] net: qualcomm: new Ethernet over SPI driver for
- QCA7000
-Date: Wed, 30 Apr 2014 17:36:18 +0200
-Message-ID: <53611872.2070001@i2se.com>
-References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <4860368.6Apskanc4s@wuerfel> <535FCB24.2010507@i2se.com> <4693879.NBTVQb29rJ@wuerfel>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH v3 12/16] clk: exynos5420: fix register offset for sclk_bpll
+Date: Wed, 30 Apr 2014 21:07:58 +0530
+Message-ID: <CAK9yfHz-=rOuVakyttVaNnFpnF+WFckU+zyWjVwYPQ8BggHX0A@mail.gmail.com>
+References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com>
+	<1398344632-18623-13-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <4693879.NBTVQb29rJ@wuerfel>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398344632-18623-13-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, shaik.samsung@gmail.com, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Shaik,
 
-Am 29.04.2014 20:14, schrieb Arnd Bergmann:
-> On a related note, there is one part I don't understand:
+On 24 April 2014 18:33, Shaik Ameer Basha <shaik.ameer@samsung.com> wrote:
+> This patch fixes the wrong register offset for sclk_bpll clock.
+
+Since this patch is a fix, it is better to send it separately so that
+it gets into one of
+the upcoming RCs (and if needed to stable).
+
 >
-> +netdev_tx_t
-> +qcaspi_netdev_xmit(struct sk_buff *skb, struct net_device *dev)
-> +{
-> +       u32 frame_len;
-> +       u8 *ptmp;
-> +       struct qcaspi *qca = netdev_priv(dev);
-> +       u32 new_tail;
-> +       struct sk_buff *tskb;
-> +       u8 pad_len = 0;
-> +
-> +       if (skb->len < QCAFRM_ETHMINLEN)
-> +               pad_len = QCAFRM_ETHMINLEN - skb->len;
-> +
-> +       if (qca->txq.skb[qca->txq.tail]) {
-> +               netdev_warn(qca->net_dev, "queue was unexpectedly full!\n");
-> +               netif_stop_queue(qca->net_dev);
-> +               qca->stats.queue_full++;
-> +               return NETDEV_TX_BUSY;
-> +       }
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos5420.c |    4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
 >
-> You print a 'netdev_warn' message here when the queue is full, expecting
-> this to be rare. If the device is so slow, why doesn't this happen
-> all the time?
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 6daf739..3afc112 100755
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -111,7 +111,6 @@
+>  #define TOP_SPARE2             0x10b08
+>  #define BPLL_LOCK              0x20010
+>  #define BPLL_CON0              0x20110
+> -#define SRC_CDREX              0x20200
+>  #define KPLL_LOCK              0x28000
+>  #define KPLL_CON0              0x28100
+>  #define SRC_KFC                        0x28200
+> @@ -204,7 +203,6 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+>         GATE_TOP_SCLK_FSYS,
+>         GATE_TOP_SCLK_PERIC,
+>         TOP_SPARE2,
+> -       SRC_CDREX,
+>         SRC_KFC,
+>         DIV_KFC0,
+>  };
+> @@ -380,7 +378,7 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+>         MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
+>         MUX(0, "mout_kfc", mout_kfc_p, SRC_KFC, 16, 1),
 >
-> 	Arnd
+> -       MUX(0, "sclk_bpll", mout_bpll_p, SRC_CDREX, 0, 1),
+> +       MUX(0, "sclk_bpll", mout_bpll_p, TOP_SPARE2, 0, 1),
+>
+>         MUX_A(0, "mout_aclk400_mscl", mout_group1_p,
+>                         SRC_TOP0, 4, 2, "aclk400_mscl"),
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-i think i've found it. A little bit later in the function the "expected"
-queue full condition is handled.
-After the new skb is added to the buffer, the new tail is checked. In
-the case the tx queue is now full, netif_stop_queue is called. I've
-forgot to increment the queue_full counter for that case.
 
-After the skb has been transmitted to the QCA7000 over spi, the function
-netif_wake_queue is called. If i'm right, the message "queue was
-unexpectedly full" should never appear under normal condition.
 
-Stefan
+-- 
+With warm regards,
+Sachin
