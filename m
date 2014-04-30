@@ -1,81 +1,136 @@
-From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 16/16] clk: exynos5420: add more registers to restore list
-Date: Wed, 30 Apr 2014 19:26:10 +0530
-Message-ID: <CAGOxZ52zupKFk444ZEue_SinsiaUxchYGfEvH7BamT=zue_RvA@mail.gmail.com>
-References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-17-git-send-email-shaik.ameer@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2] of: Keep track of populated platform devices
+Date: Wed, 30 Apr 2014 15:05:17 +0100
+Message-ID: <1398866717-20268-1-git-send-email-pawel.moll@arm.com>
+References: <1398858529.24255.3.camel@hornet>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398344632-18623-17-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1398858529.24255.3.camel@hornet>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ameer Basha Shaik <shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik
+In "Device Tree powered" systems, platform devices are usually
+massively populated with of_platform_populate() call, executed
+at some level of initcalls, either by generic architecture
+or by platform-specific code.
 
-On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
-<shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch adds more register offsets to the restore list.
->
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
-Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->  drivers/clk/samsung/clk-exynos5420.c |   12 ++++++++++++
->  1 file changed, 12 insertions(+)
->
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 33a48d2..6dfd3fd 100755
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -27,6 +27,7 @@
->  #define DIV_CPU1               0x504
->  #define GATE_BUS_CPU           0x700
->  #define GATE_SCLK_CPU          0x800
-> +#define CLKOUT_CMU_CPU         0xa00
->  #define GATE_IP_G2D            0x8800
->  #define CPLL_LOCK              0x10020
->  #define DPLL_LOCK              0x10030
-> @@ -39,7 +40,11 @@
->  #define CPLL_CON0              0x10120
->  #define DPLL_CON0              0x10128
->  #define EPLL_CON0              0x10130
-> +#define EPLL_CON1              0x10134
-> +#define EPLL_CON2              0x10138
->  #define RPLL_CON0              0x10140
-> +#define RPLL_CON1              0x10144
-> +#define RPLL_CON2              0x10148
->  #define IPLL_CON0              0x10150
->  #define SPLL_CON0              0x10160
->  #define VPLL_CON0              0x10170
-> @@ -139,6 +144,13 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
->         DIV_CPU1,
->         GATE_BUS_CPU,
->         GATE_SCLK_CPU,
-> +       CLKOUT_CMU_CPU,
-> +       EPLL_CON0,
-> +       EPLL_CON1,
-> +       EPLL_CON2,
-> +       RPLL_CON0,
-> +       RPLL_CON1,
-> +       RPLL_CON2,
->         SRC_TOP0,
->         SRC_TOP1,
->         SRC_TOP2,
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+There are situations though where certain devices must be
+created (and bound with drivers) before all the others.
+This presents a challenge, as devices created explicitly
+would be created again by of_platform_populate().
 
+This patch tries to solve that issue in a generic way,
+adding a "populated" flag for a DT node description.
+Once set, this device will never be created again via
+of_* API, so of_platform_populate() will skip such nodes
+(and its children) in a similar way to the non-available
+ones.
 
+Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+---
 
+Changes since v1:
+
+- added of_node_check_and_set_flag()... (atomic test and set)
+- ... used it to atomically mark a node...
+- ... clearing the bit on error path.
+
+ drivers/of/platform.c | 18 +++++++++++++-----
+ include/linux/of.h    |  7 +++++++
+ 2 files changed, 20 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 404d1da..b33927a 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -204,12 +204,13 @@ static struct platform_device *of_platform_device_create_pdata(
+ {
+ 	struct platform_device *dev;
+ 
+-	if (!of_device_is_available(np))
++	if (!of_device_is_available(np) ||
++			of_node_check_and_set_flag(np, OF_POPULATED))
+ 		return NULL;
+ 
+ 	dev = of_device_alloc(np, bus_id, parent);
+ 	if (!dev)
+-		return NULL;
++		goto err_clear_flag;
+ 
+ #if defined(CONFIG_MICROBLAZE)
+ 	dev->archdata.dma_mask = 0xffffffffUL;
+@@ -227,10 +228,14 @@ static struct platform_device *of_platform_device_create_pdata(
+ 
+ 	if (of_device_add(dev) != 0) {
+ 		platform_device_put(dev);
+-		return NULL;
++		goto err_clear_flag;
+ 	}
+ 
+ 	return dev;
++
++err_clear_flag:
++	of_node_clear_flag(np, OF_POPULATED);
++	return NULL;
+ }
+ 
+ /**
+@@ -262,14 +267,15 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 
+ 	pr_debug("Creating amba device %s\n", node->full_name);
+ 
+-	if (!of_device_is_available(node))
++	if (!of_device_is_available(node) ||
++			of_node_check_and_set_flag(node, OF_POPULATED))
+ 		return NULL;
+ 
+ 	dev = amba_device_alloc(NULL, 0, 0);
+ 	if (!dev) {
+ 		pr_err("%s(): amba_device_alloc() failed for %s\n",
+ 		       __func__, node->full_name);
+-		return NULL;
++		goto err_clear_flag;
+ 	}
+ 
+ 	/* setup generic device info */
+@@ -309,6 +315,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 
+ err_free:
+ 	amba_device_put(dev);
++err_clear_flag:
++	of_node_clear_flag(node, OF_POPULATED);
+ 	return NULL;
+ }
+ #else /* CONFIG_ARM_AMBA */
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 3bad8d1..534cab8 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -130,6 +130,12 @@ static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
+ 	return test_bit(flag, &n->_flags);
+ }
+ 
++static inline int of_node_check_and_set_flag(struct device_node *n,
++		unsigned long flag)
++{
++	return test_and_set_bit(flag, &n->_flags);
++}
++
+ static inline void of_node_set_flag(struct device_node *n, unsigned long flag)
+ {
+ 	set_bit(flag, &n->_flags);
+@@ -197,6 +203,7 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ /* flag descriptions */
+ #define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+ #define OF_DETACHED	2 /* node has been detached from the device tree */
++#define OF_POPULATED	3 /* device already created for the node */
+ 
+ #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+ #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
 -- 
-Regards,
-Alim
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
