@@ -1,104 +1,140 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH RFC 1/2] Documentation: add Device tree bindings for QCA7000
-Date: Wed, 30 Apr 2014 09:30:18 +0200
-Message-ID: <5360A68A.1080408@i2se.com>
-References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <1398707697-43785-2-git-send-email-stefan.wahren@i2se.com> <20140429223638.GB2382@flaeskesteg>
+From: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [U-Boot] [Ac100] [PATCH v2 5/6] ARM: tegra: paz00: add dtbindings for nvec
+Date: Wed, 30 Apr 2014 09:52:42 +0200
+Message-ID: <2004470.cHRJ0azkU4@fb07-iapwap2>
+References: <535EDE6D.2050505@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140429223638.GB2382@flaeskesteg>
-Sender: netdev-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.org" <pawel.moll@arm.org>, "mark.rutland@arm.org" <mark.rutland@arm.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; boundary="nextPart2768739.26gN9j9u5C"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <535EDE6D.2050505-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
+
+
+--nextPart2768739.26gN9j9u5C
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
 Hi,
 
-Am 30.04.2014 00:36, schrieb Mark Rutland:
-> On Mon, Apr 28, 2014 at 06:54:56PM +0100, Stefan Wahren wrote:
->> This patch adds the Device tree bindings for the Ethernet over SPI
->> protocol driver of the Qualcomm QCA7000 HomePlug GreenPHY.
->>
->> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
->> ---
->>  .../devicetree/bindings/net/qca-qca7000-spi.txt    |   51 ++++++++++++++++++++
->>  1 file changed, 51 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
->> new file mode 100644
->> index 0000000..132c10f
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
->> @@ -0,0 +1,51 @@
->> +* Qualcomm QCA7000 (Ethernet over SPI protocol)
->> +
->> +Note: The QCA7000 is useable as a SPI device. In this case it must be defined
->> +as a child of a spi master in the device tree.
->> +
->> +Required properties:
->> +- compatible : Should be "qca,qca7000"
->> +- reg : Should specify the SPI chip select
->> +- intr-gpios : Should specify the GPIO for SPI interrupt
-> As Arnd mentioned, this should be described as an interrupt if it's an
-> interrupt from the point of view of the QCA7000.
-
-yes, i will fix that. I think i've an idea how to handle the case a
-interrupt appear
-before the device comes up without fetching the GPIO value.
-
->> +- spi-cpha : Must be set
->> +- spi-cpol: Must be set
->> +
->> +Optional properties:
->> +- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
->> +  Numbers smaller than 1000000 or greater than 16000000 are invalid. Missing
->> +  the property will set the SPI frequency to 8000000 Hertz.
->> +- local-mac-address: 6 bytes, mac address
->> +- qca,legacy-mode : Should specify the data transfer mode of the QCA7000
->> +  (0 = burst mode, 1 = legacy mode). Missing the property will use the
->> +  burst mode.
-> This sounds like it could be a boolean property (one with no value, like
-> cpi-cpha). When is this necessary?
-
-You're right. I could make it a boolean property.
-
-The SPI interface of the QCA7000 supports 2 different transfer modes:
-* legacy mode (spi chip select toogle after each word, cs gaps)
-* burst mode (spi chip select toogle after complete data, no cs gaps)
-
-This mode must be configured on the QCA7000 and the driver must also
-know the setting. The
-burst mode is preferred because of better performance. I think this
-parameter is for spi host
-controller, which doesn't support burst mode.
-
->> +- linux,burst-length : Number of data bytes per burst. Numbers smaller than 1
->> +  or greater than 5000 are invalid. Missing the property will set the
->> +  burst length to 5000 bytes. This property has only an effect in burst mode.
-> When is this needed?
-
-This parameter makes only sense in case of burst mode and specify the
-maximum length of a
-spi burst. I think this parameter has an influence on the latency of the
-system. Higher values
-means higher performance but worse system latency. I think that make
-sense on embedded system.
-
->> +- linux,pluggable-connection : Should be set to skip signature check while
->> +  probing. This property is useful if the SPI master and QCA7000 are not on the
->> +  same board.
-> This does not sounds like it belongs in the DT, as it's strongly tied to the
-> implementation of the driver. Why is this necessary?
+Am Montag, 28. April 2014, 17:04:13 schrieb Stephen Warren:
+> On 04/26/2014 07:14 PM, Andrey Danin wrote:
+> 
+> This patch isn't adding DT bindings for NVEC, but rather add DT nodes.
+> The binding is the schema, not the content.
 >
-> Cheers,
-> Mark.
+> We need a DT binding document that's been reviewed by the DT binding
+> maintainers. Can you please first submit a patch to the Linux kernel
+> that modifies the existing I2C core and Tegra I2C controller binding
+> documentation to add slave mode support. Once that's fully reviewed and
+> ack'd, this patch series can implement support for it in U-Boot.
 
-I introduce this parameter to handle a scenario where spi host
-controller and QCA7000 are
-not on the same board and connected via cable. So in this case the
-driver skips a device probe
-and wait until the QCA7000 becomes ready.
+I'm sorry that I didn't came up with a proper kernel implementation, but while 
+we are discussion the binding I just want to give some coins.
 
-Stefan
+> > diff --git a/arch/arm/dts/tegra20-paz00.dts
+> > b/arch/arm/dts/tegra20-paz00.dts> 
+> >  	i2c@7000c500 {
+> > 
+> > -		status = "disabled";
+> > +		status = "okay";
+> > +		clock-frequency = <40000>;
+> > +		slave-addr = <138>;
+> > +		nvec {
+> > +			compatible = "nvidia,tegra20-nvec";
+> > +			request-gpios = <&gpio 170 0>; /* gpio PV2 */
+> 
+> The reg property is missing here. Since the i2c node has
+> #address-cells/#size-cells, there must be a reg property in the children.
+> 
+> There's nothing here to indicate that this node is a slave device rather
+> than a master device, and doesn't seem to be any allowance for a single
+> I2C controller to support both master and slave nodes at the same time
+> (which I think Tegra's controller can IIRC).
+> 
+> IIRC, I had previously suggested something like encoding master/slave
+> into the reg property of the I2C child nodes. We could either do:
+> 
+> a) Set some top-bit to indicate a slave device.
+> 
+> b) If #address-cells=<1>, only master devices are present. If
+> #address-cells=<2>, either master or slave devices could be present.
+> Cell 0 could be 0==master, 1==slave, and cell 1 the actual I2C bus address.
+
+I'm not sure if this is really needed. NVEC knows it has to configure the 
+tegra controller as slave. I don't see a reason to double this fact in the 
+device tree. I like the idea of how the downstream kernel does it. The driver 
+calls something like tegra_i2c_init_slave with the slave address as an 
+parameter. This means that the slave address is not a property of the i2c 
+(slave-) controller, but of the master because it has the address hard coded 
+in its firmware. So reg = <138>; would be sufficient here and it also enables 
+multi-slave configs.
+
+i2c-tegra must take care that only one transaction (slave or master) is 
+running at a time. The client (e.g. nvec) is free to drop the excluse usage by 
+calling tegra_i2c_stop_slave so master mode can be used again or another 
+client (master device) can be started where the slave controller gets a 
+different address.
+
+Multi-master would require that only one master can hold the lock enabling 
+slave mode, but that's all software stuff and not related to the binding.
+
+Also the kernel binding would require that nvec node itself has subdevices for 
+e.g. keyboard, mouse, power, ... which are connected to the internal ec bus. 
+We can use the nvec protocol identifiers to assign an address here.
+
+Ok, lets take a look at the binding now:
+
+i2c@7000c500 {
+		status = "okay";
+		clock-frequency = <40000>;
+		nvec@138 {
+			compatible = "nvidia,nvec, simple-bus";
+			#address-cells = <1>
+			#size-cells = <0>;
+			reg = <138>;
+			request-gpios = <&gpio 170 0>; /* gpio PV2 */
+
+			keyboard@5 {
+				compatible = "nvidia,nvec-kbd";						
+				reg = <5>;
+			};
+			mouse@6 {
+				compatible = "nvidia,nvec-aux";
+				reg = <6>;
+				packet-size = <6>;
+			};
+		};
+};
+
+Only thing I'm not sure is where to put the clock-frequency because it really 
+depends on the i2c clients and if we have multiple masters, we could use 
+multiple frequencies. Or maybe the lowest supported must be used instead, in 
+which case the clock-frequency is better placed in the controller node.
+
+Marc
+--nextPart2768739.26gN9j9u5C
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJTYKvKAAoJEKyeR39HFBto4WYH/As7tluf8nggvhaK91AS6lG8
+uXeN2wUaQLOthwl6TYTNSULJ1doap9ltntfN06WG0plk3icw2DXzrKQnh2Sp14Rj
+uoY/zZmX4vLtketkZzgcSfek3a715aZrNp9ul90wdKVOvq6QUUkPXAoeYSmSkKT7
+aFBE5W2iWmCdzjMxP41tDW1UIj4Tmysh6TNo6LlrcZ820lZ+A5JtYsY/mukNGL8o
+uIOz/9K7hnOl424YO40FRJWLo161v6UdPPQIJBugxwjyl6PNRhcCS4xZbLBjNWEn
+MXokUGXYntBVSpu7dIq5TOoPVfe0skTYNgYAp0qFP2H26N1IRFK2e3nrgVvzWDE=
+=ZOej
+-----END PGP SIGNATURE-----
+
+--nextPart2768739.26gN9j9u5C--
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
