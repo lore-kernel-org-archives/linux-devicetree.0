@@ -1,270 +1,449 @@
-From: =?UTF-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCR0LXRgNGB0LXQvdC10LI=?= <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Subject: Re: [PATCH v4 03/03] ARM: sunxi: Add IR controller
- support in DT on A20
-Date: Wed, 30 Apr 2014 04:02:05 -0700 (PDT)
-Message-ID: <a792e87c-0676-409d-a8a2-2d4635598f2f@googlegroups.com>
-References: <d641a69a-01b4-443d-b121-48d13f46ee03@googlegroups.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v3 01/16] clk: exynos5420: rename parent clocks
+Date: Wed, 30 Apr 2014 16:38:08 +0530
+Message-ID: <CAGOxZ537-qSncHk3ZdT+zyvw08=TN7cQOCm7f80s-m5ugp4umA@mail.gmail.com>
+References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-2-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/alternative;
-	boundary="----=_Part_4850_27522045.1398855725315"
-Return-path: <linux-sunxi+bncBCLIFP6QZ4HRBLVQQONQKGQELPFMTMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <d641a69a-01b4-443d-b121-48d13f46ee03-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398344632-18623-2-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Ameer Basha Shaik <shaik.samsung@gmail.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-------=_Part_4850_27522045.1398855725315
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Hi Shaik
 
-This patch adds IR controller in A20 Device-Tree:
-- Two IR devices found in A20 user manual
-- Pins for two devices
-- One IR device physically found on Cubieboard 2=20
-- One IR device physically found on Cubietruck=20
-
-Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts=20
-b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index feeff64..2564e8c 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -164,6 +164,12 @@
-  reg =3D <1>;
-  };
-  };
-+
-+ ir0: ir@01c21800 {
-+ pinctrl-names =3D "default";
-+ pinctrl-0 =3D <&ir0_pins_a>;
-+ status =3D "okay";
-+ };
-  };
-=20
-  leds {
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts=20
-b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index e288562..e375e89 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -232,6 +232,12 @@
-  reg =3D <1>;
-  };
-  };
-+
-+ ir0: ir@01c21800 {
-+ pinctrl-names =3D "default";
-+ pinctrl-0 =3D <&ir0_pins_a>;
-+ status =3D "okay";
-+ };
-  };
-=20
-  leds {
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi=20
-b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 0ae2b77..bb655a5 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -724,6 +724,19 @@
-  allwinner,drive =3D <2>;
-  allwinner,pull =3D <0>;
-  };
-+
-+ ir0_pins_a: ir0@0 {
-+    allwinner,pins =3D "PB3","PB4";
-+    allwinner,function =3D "ir0";
-+    allwinner,drive =3D <0>;
-+    allwinner,pull =3D <0>;
-+ };
-+ ir1_pins_a: ir1@0 {
-+    allwinner,pins =3D "PB22","PB23";
-+    allwinner,function =3D "ir1";
-+    allwinner,drive =3D <0>;
-+    allwinner,pull =3D <0>;
-+ };
-  };
-=20
-  timer@01c20c00 {
-@@ -937,5 +950,23 @@
-  #interrupt-cells =3D <3>;
-  interrupts =3D <1 9 0xf04>;
-  };
-+
-+       ir0: ir@01c21800 {
-+     compatible =3D "allwinner,sun7i-a20-ir";
-+ clocks =3D <&apb0_gates 6>, <&ir0_clk>;
-+ clock-names =3D "apb", "ir";
-+ interrupts =3D <0 5 4>;
-+ reg =3D <0x01c21800 0x40>;
-+ status =3D "disabled";
-+ };
-+
-+       ir1: ir@01c21c00 {
-+     compatible =3D "allwinner,sun7i-a20-ir";
-+ clocks =3D <&apb0_gates 7>, <&ir1_clk>;
-+ clock-names =3D "apb", "ir";
-+ interrupts =3D <0 6 4>;
-+ reg =3D <0x01C21c00 0x40>;
-+ status =3D "disabled";
-+ };
-  };
- };
-
-
-=D1=81=D1=80=D0=B5=D0=B4=D0=B0, 30 =D0=B0=D0=BF=D1=80=D0=B5=D0=BB=D1=8F 201=
-4 =D0=B3., 16:51:12 UTC+6 =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=
-=D1=82=D0=B5=D0=BB=D1=8C =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=D0=B4=
-=D1=80 =D0=91=D0=B5=D1=80=D1=81=D0=B5=D0=BD=D0=B5=D0=B2=20
-=D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:
+On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
+<shaik.ameer@samsung.com> wrote:
+> This patch modifies the defined parent clock names as per the
+> exynos5420 datasheet.
 >
-> This patch introduces Consumer IR(CIR) support for sunxi boards.
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+This looks good. Mostly renaming is done here.
+For this you have my
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+
+>  drivers/clk/samsung/clk-exynos5420.c |  359 ++++++++++++++++++----------------
+>  1 file changed, 187 insertions(+), 172 deletions(-)
+>  mode change 100644 => 100755 drivers/clk/samsung/clk-exynos5420.c
 >
-> This is based on Alexsey Shestacov's work based on the original driver=20
-> supplied by Allwinner.
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> old mode 100644
+> new mode 100755
+> index 35311e1..389d4b1
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -217,85 +217,92 @@ static void exynos5420_clk_sleep_init(void) {}
+>  #endif
+>
+>  /* list of all parent clocks */
+> -PNAME(mspll_cpu_p)     = { "sclk_cpll", "sclk_dpll",
+> -                               "sclk_mpll", "sclk_spll" };
+> -PNAME(cpu_p)           = { "mout_apll" , "mout_mspll_cpu" };
+> -PNAME(kfc_p)           = { "mout_kpll" , "mout_mspll_kfc" };
+> -PNAME(apll_p)          = { "fin_pll", "fout_apll", };
+> -PNAME(bpll_p)          = { "fin_pll", "fout_bpll", };
+> -PNAME(cpll_p)          = { "fin_pll", "fout_cpll", };
+> -PNAME(dpll_p)          = { "fin_pll", "fout_dpll", };
+> -PNAME(epll_p)          = { "fin_pll", "fout_epll", };
+> -PNAME(ipll_p)          = { "fin_pll", "fout_ipll", };
+> -PNAME(kpll_p)          = { "fin_pll", "fout_kpll", };
+> -PNAME(mpll_p)          = { "fin_pll", "fout_mpll", };
+> -PNAME(rpll_p)          = { "fin_pll", "fout_rpll", };
+> -PNAME(spll_p)          = { "fin_pll", "fout_spll", };
+> -PNAME(vpll_p)          = { "fin_pll", "fout_vpll", };
+> -
+> -PNAME(group1_p)                = { "sclk_cpll", "sclk_dpll", "sclk_mpll" };
+> -PNAME(group2_p)                = { "fin_pll", "sclk_cpll", "sclk_dpll", "sclk_mpll",
+> -                         "sclk_spll", "sclk_ipll", "sclk_epll", "sclk_rpll" };
+> -PNAME(group3_p)                = { "sclk_rpll", "sclk_spll" };
+> -PNAME(group4_p)                = { "sclk_ipll", "sclk_dpll", "sclk_mpll" };
+> -PNAME(group5_p)                = { "sclk_vpll", "sclk_dpll" };
+> -
+> -PNAME(sw_aclk66_p)     = { "dout_aclk66", "sclk_spll" };
+> -PNAME(aclk66_peric_p)  = { "fin_pll", "mout_sw_aclk66" };
+> -
+> -PNAME(sw_aclk200_fsys_p) = { "dout_aclk200_fsys", "sclk_spll"};
+> -PNAME(user_aclk200_fsys_p)     = { "fin_pll", "mout_sw_aclk200_fsys" };
+> -
+> -PNAME(sw_aclk200_fsys2_p) = { "dout_aclk200_fsys2", "sclk_spll"};
+> -PNAME(user_aclk200_fsys2_p)    = { "fin_pll", "mout_sw_aclk200_fsys2" };
+> -
+> -PNAME(sw_aclk200_p) = { "dout_aclk200", "sclk_spll"};
+> -PNAME(aclk200_disp1_p) = { "fin_pll", "mout_sw_aclk200" };
+> -
+> -PNAME(sw_aclk400_mscl_p) = { "dout_aclk400_mscl", "sclk_spll"};
+> -PNAME(user_aclk400_mscl_p)     = { "fin_pll", "mout_sw_aclk400_mscl" };
+> -
+> -PNAME(sw_aclk333_p) = { "dout_aclk333", "sclk_spll"};
+> -PNAME(user_aclk333_p)  = { "fin_pll", "mout_sw_aclk333" };
+> -
+> -PNAME(sw_aclk166_p) = { "dout_aclk166", "sclk_spll"};
+> -PNAME(user_aclk166_p)  = { "fin_pll", "mout_sw_aclk166" };
+> -
+> -PNAME(sw_aclk266_p) = { "dout_aclk266", "sclk_spll"};
+> -PNAME(user_aclk266_p)  = { "fin_pll", "mout_sw_aclk266" };
+> -
+> -PNAME(sw_aclk333_432_gscl_p) = { "dout_aclk333_432_gscl", "sclk_spll"};
+> -PNAME(user_aclk333_432_gscl_p) = { "fin_pll", "mout_sw_aclk333_432_gscl" };
+> -
+> -PNAME(sw_aclk300_gscl_p) = { "dout_aclk300_gscl", "sclk_spll"};
+> -PNAME(user_aclk300_gscl_p)     = { "fin_pll", "mout_sw_aclk300_gscl" };
+> -
+> -PNAME(sw_aclk300_disp1_p) = { "dout_aclk300_disp1", "sclk_spll"};
+> -PNAME(user_aclk300_disp1_p)    = { "fin_pll", "mout_sw_aclk300_disp1" };
+> -
+> -PNAME(sw_aclk300_jpeg_p) = { "dout_aclk300_jpeg", "sclk_spll"};
+> -PNAME(user_aclk300_jpeg_p)     = { "fin_pll", "mout_sw_aclk300_jpeg" };
+> -
+> -PNAME(sw_aclk_g3d_p) = { "dout_aclk_g3d", "sclk_spll"};
+> -PNAME(user_aclk_g3d_p) = { "fin_pll", "mout_sw_aclk_g3d" };
+> -
+> -PNAME(sw_aclk266_g2d_p) = { "dout_aclk266_g2d", "sclk_spll"};
+> -PNAME(user_aclk266_g2d_p)      = { "fin_pll", "mout_sw_aclk266_g2d" };
+> -
+> -PNAME(sw_aclk333_g2d_p) = { "dout_aclk333_g2d", "sclk_spll"};
+> -PNAME(user_aclk333_g2d_p)      = { "fin_pll", "mout_sw_aclk333_g2d" };
+> -
+> -PNAME(audio0_p)        = { "fin_pll", "cdclk0", "sclk_dpll", "sclk_mpll",
+> -                 "sclk_spll", "sclk_ipll", "sclk_epll", "sclk_rpll" };
+> -PNAME(audio1_p)        = { "fin_pll", "cdclk1", "sclk_dpll", "sclk_mpll",
+> -                 "sclk_spll", "sclk_ipll", "sclk_epll", "sclk_rpll" };
+> -PNAME(audio2_p)        = { "fin_pll", "cdclk2", "sclk_dpll", "sclk_mpll",
+> -                 "sclk_spll", "sclk_ipll", "sclk_epll", "sclk_rpll" };
+> -PNAME(spdif_p) = { "fin_pll", "dout_audio0", "dout_audio1", "dout_audio2",
+> -                 "spdif_extclk", "sclk_ipll", "sclk_epll", "sclk_rpll" };
+> -PNAME(hdmi_p)  = { "dout_hdmi_pixel", "sclk_hdmiphy" };
+> -PNAME(maudio0_p)       = { "fin_pll", "maudio_clk", "sclk_dpll", "sclk_mpll",
+> -                         "sclk_spll", "sclk_ipll", "sclk_epll", "sclk_rpll" };
+> +PNAME(mout_mspll_cpu_p) = {"mout_sclk_cpll", "mout_sclk_dpll",
+> +                               "mout_sclk_mpll", "mout_sclk_spll"};
+> +PNAME(mout_cpu_p) = {"mout_apll" , "mout_mspll_cpu"};
+> +PNAME(mout_kfc_p) = {"mout_kpll" , "mout_mspll_kfc"};
+> +PNAME(mout_apll_p) = {"fin_pll", "fout_apll"};
+> +PNAME(mout_bpll_p) = {"fin_pll", "fout_bpll"};
+> +PNAME(mout_cpll_p) = {"fin_pll", "fout_cpll"};
+> +PNAME(mout_dpll_p) = {"fin_pll", "fout_dpll"};
+> +PNAME(mout_epll_p) = {"fin_pll", "fout_epll"};
+> +PNAME(mout_ipll_p) = {"fin_pll", "fout_ipll"};
+> +PNAME(mout_kpll_p) = {"fin_pll", "fout_kpll"};
+> +PNAME(mout_mpll_p) = {"fin_pll", "fout_mpll"};
+> +PNAME(mout_rpll_p) = {"fin_pll", "fout_rpll"};
+> +PNAME(mout_spll_p) = {"fin_pll", "fout_spll"};
+> +PNAME(mout_vpll_p) = {"fin_pll", "fout_vpll"};
+> +
+> +PNAME(mout_group1_p) = {"mout_sclk_cpll", "mout_sclk_dpll",
+> +                                       "mout_sclk_mpll"};
+> +PNAME(mout_group2_p) = {"fin_pll", "mout_sclk_cpll",
+> +                       "mout_sclk_dpll", "mout_sclk_mpll", "mout_sclk_spll",
+> +                       "mout_sclk_ipll", "mout_sclk_epll", "mout_sclk_rpll"};
+> +PNAME(mout_group3_p) = {"mout_sclk_rpll", "mout_sclk_spll"};
+> +PNAME(mout_group4_p) = {"mout_sclk_ipll", "mout_sclk_dpll", "mout_sclk_mpll"};
+> +PNAME(mout_group5_p) = {"mout_sclk_vpll", "mout_sclk_dpll"};
+> +
+> +PNAME(mout_sw_aclk66_p)        = {"dout_aclk66", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk66_peric_p) = {"fin_pll", "mout_sw_aclk66"};
+> +
+> +PNAME(mout_sw_aclk200_fsys_p) = {"dout_aclk200_fsys", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk200_fsys_p)        = {"fin_pll", "mout_sw_aclk200_fsys"};
+> +
+> +PNAME(mout_sw_aclk200_fsys2_p) = {"dout_aclk200_fsys2", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk200_fsys2_p) = {"fin_pll", "mout_sw_aclk200_fsys2"};
+> +
+> +PNAME(mout_sw_aclk200_p) = {"dout_aclk200", "mout_sclk_spll"};
+> +PNAME(mout_aclk200_disp1_p) = {"fin_pll", "mout_sw_aclk200"};
+> +
+> +PNAME(mout_sw_aclk400_mscl_p) = {"dout_aclk400_mscl", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk400_mscl_p)        = {"fin_pll", "mout_sw_aclk400_mscl"};
+> +
+> +PNAME(mout_sw_aclk333_p) = {"dout_aclk333", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk333_p) = {"fin_pll", "mout_sw_aclk333"};
+> +
+> +PNAME(mout_sw_aclk166_p) = {"dout_aclk166", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk166_p) = {"fin_pll", "mout_sw_aclk166"};
+> +
+> +PNAME(mout_sw_aclk266_p) = {"dout_aclk266", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk266_p) = {"fin_pll", "mout_sw_aclk266"};
+> +
+> +PNAME(mout_sw_aclk333_432_gscl_p) = {"dout_aclk333_432_gscl", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk333_432_gscl_p) = {"fin_pll", "mout_sw_aclk333_432_gscl"};
+> +
+> +PNAME(mout_sw_aclk300_gscl_p) = {"dout_aclk300_gscl", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk300_gscl_p)        = {"fin_pll", "mout_sw_aclk300_gscl"};
+> +
+> +PNAME(mout_sw_aclk300_disp1_p) = {"dout_aclk300_disp1", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk300_disp1_p) = {"fin_pll", "mout_sw_aclk300_disp1"};
+> +
+> +PNAME(mout_sw_aclk300_jpeg_p) = {"dout_aclk300_jpeg", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk300_jpeg_p) = {"fin_pll", "mout_sw_aclk300_jpeg"};
+> +
+> +PNAME(mout_sw_aclk_g3d_p) = {"dout_aclk_g3d", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk_g3d_p) = {"fin_pll", "mout_sw_aclk_g3d"};
+> +
+> +PNAME(mout_sw_aclk266_g2d_p) = {"dout_aclk266_g2d", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk266_g2d_p) = {"fin_pll", "mout_sw_aclk266_g2d"};
+> +
+> +PNAME(mout_sw_aclk333_g2d_p) = {"dout_aclk333_g2d", "mout_sclk_spll"};
+> +PNAME(mout_user_aclk333_g2d_p) = {"fin_pll", "mout_sw_aclk333_g2d"};
+> +
+> +PNAME(mout_audio0_p) = {"fin_pll", "cdclk0", "mout_sclk_dpll",
+> +                       "mout_sclk_mpll", "mout_sclk_spll", "mout_sclk_ipll",
+> +                       "mout_sclk_epll", "mout_sclk_rpll"};
+> +PNAME(mout_audio1_p) = {"fin_pll", "cdclk1", "mout_sclk_dpll",
+> +                       "mout_sclk_mpll", "mout_sclk_spll", "mout_sclk_ipll",
+> +                       "mout_sclk_epll", "mout_sclk_rpll"};
+> +PNAME(mout_audio2_p) = {"fin_pll", "cdclk2", "mout_sclk_dpll",
+> +                       "mout_sclk_mpll", "mout_sclk_spll", "mout_sclk_ipll",
+> +                       "mout_sclk_epll", "mout_sclk_rpll"};
+> +PNAME(mout_spdif_p) = {"fin_pll", "dout_audio0", "dout_audio1",
+> +                       "dout_audio2", "spdif_extclk", "mout_sclk_ipll",
+> +                       "mout_sclk_epll", "mout_sclk_rpll"};
+> +PNAME(mout_hdmi_p) = {"dout_hdmi_pixel", "sclk_hdmiphy"};
+> +PNAME(mout_maudio0_p) = {"fin_pll", "maudio_clk", "mout_sclk_dpll",
+> +                        "mout_sclk_mpll", "mout_sclk_spll", "mout_sclk_ipll",
+> +                        "mout_sclk_epll", "mout_sclk_rpll"};
+>
+>  /* fixed rate clocks generated outside the soc */
+>  static struct samsung_fixed_rate_clock exynos5420_fixed_rate_ext_clks[] __initdata = {
+> @@ -316,123 +323,131 @@ static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[] __initda
+>  };
+>
+>  static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+> -       MUX(0, "mout_mspll_kfc", mspll_cpu_p, SRC_TOP7, 8, 2),
+> -       MUX(0, "mout_mspll_cpu", mspll_cpu_p, SRC_TOP7, 12, 2),
+> -       MUX(0, "mout_apll", apll_p, SRC_CPU, 0, 1),
+> -       MUX(0, "mout_cpu", cpu_p, SRC_CPU, 16, 1),
+> -       MUX(0, "mout_kpll", kpll_p, SRC_KFC, 0, 1),
+> -       MUX(0, "mout_cpu_kfc", kfc_p, SRC_KFC, 16, 1),
+> +       MUX(0, "mout_mspll_kfc", mout_mspll_cpu_p, SRC_TOP7, 8, 2),
+> +       MUX(0, "mout_mspll_cpu", mout_mspll_cpu_p, SRC_TOP7, 12, 2),
+> +       MUX(0, "mout_apll", mout_apll_p, SRC_CPU, 0, 1),
+> +       MUX(0, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1),
+> +       MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
+> +       MUX(0, "mout_kfc", mout_kfc_p, SRC_KFC, 16, 1),
+>
+> -       MUX(0, "sclk_bpll", bpll_p, SRC_CDREX, 0, 1),
+> +       MUX(0, "sclk_bpll", mout_bpll_p, SRC_CDREX, 0, 1),
+>
+> -       MUX_A(0, "mout_aclk400_mscl", group1_p,
+> +       MUX_A(0, "mout_aclk400_mscl", mout_group1_p,
+>                         SRC_TOP0, 4, 2, "aclk400_mscl"),
+> -       MUX(0, "mout_aclk200", group1_p, SRC_TOP0, 8, 2),
+> -       MUX(0, "mout_aclk200_fsys2", group1_p, SRC_TOP0, 12, 2),
+> -       MUX(0, "mout_aclk200_fsys", group1_p, SRC_TOP0, 28, 2),
+> -
+> -       MUX(0, "mout_aclk333_432_gscl", group4_p, SRC_TOP1, 0, 2),
+> -       MUX(0, "mout_aclk66", group1_p, SRC_TOP1, 8, 2),
+> -       MUX(0, "mout_aclk266", group1_p, SRC_TOP1, 20, 2),
+> -       MUX(0, "mout_aclk166", group1_p, SRC_TOP1, 24, 2),
+> -       MUX(0, "mout_aclk333", group1_p, SRC_TOP1, 28, 2),
+> -
+> -       MUX(0, "mout_aclk333_g2d", group1_p, SRC_TOP2, 8, 2),
+> -       MUX(0, "mout_aclk266_g2d", group1_p, SRC_TOP2, 12, 2),
+> -       MUX(0, "mout_aclk_g3d", group5_p, SRC_TOP2, 16, 1),
+> -       MUX(0, "mout_aclk300_jpeg", group1_p, SRC_TOP2, 20, 2),
+> -       MUX(0, "mout_aclk300_disp1", group1_p, SRC_TOP2, 24, 2),
+> -       MUX(0, "mout_aclk300_gscl", group1_p, SRC_TOP2, 28, 2),
+> -
+> -       MUX(0, "mout_user_aclk400_mscl", user_aclk400_mscl_p,
+> +       MUX(0, "mout_aclk200", mout_group1_p, SRC_TOP0, 8, 2),
+> +       MUX(0, "mout_aclk200_fsys2", mout_group1_p, SRC_TOP0, 12, 2),
+> +       MUX(0, "mout_aclk200_fsys", mout_group1_p, SRC_TOP0, 28, 2),
+> +
+> +       MUX(0, "mout_aclk333_432_gscl", mout_group4_p, SRC_TOP1, 0, 2),
+> +       MUX(0, "mout_aclk66", mout_group1_p, SRC_TOP1, 8, 2),
+> +       MUX(0, "mout_aclk266", mout_group1_p, SRC_TOP1, 20, 2),
+> +       MUX(0, "mout_aclk166", mout_group1_p, SRC_TOP1, 24, 2),
+> +       MUX(0, "mout_aclk333", mout_group1_p, SRC_TOP1, 28, 2),
+> +
+> +       MUX(0, "mout_aclk333_g2d", mout_group1_p, SRC_TOP2, 8, 2),
+> +       MUX(0, "mout_aclk266_g2d", mout_group1_p, SRC_TOP2, 12, 2),
+> +       MUX(0, "mout_aclk_g3d", mout_group5_p, SRC_TOP2, 16, 1),
+> +       MUX(0, "mout_aclk300_jpeg", mout_group1_p, SRC_TOP2, 20, 2),
+> +       MUX(0, "mout_aclk300_disp1", mout_group1_p, SRC_TOP2, 24, 2),
+> +       MUX(0, "mout_aclk300_gscl", mout_group1_p, SRC_TOP2, 28, 2),
+> +
+> +       MUX(0, "mout_user_aclk400_mscl", mout_user_aclk400_mscl_p,
+>                         SRC_TOP3, 4, 1),
+> -       MUX_A(0, "mout_aclk200_disp1", aclk200_disp1_p,
+> -                       SRC_TOP3, 8, 1, "aclk200_disp1"),
+> -       MUX(0, "mout_user_aclk200_fsys2", user_aclk200_fsys2_p,
+> +       MUX(0, "mout_aclk200_disp1", mout_aclk200_disp1_p, SRC_TOP3, 8, 1),
+> +       MUX(0, "mout_user_aclk200_fsys2", mout_user_aclk200_fsys2_p,
+>                         SRC_TOP3, 12, 1),
+> -       MUX(0, "mout_user_aclk200_fsys", user_aclk200_fsys_p,
+> +       MUX(0, "mout_user_aclk200_fsys", mout_user_aclk200_fsys_p,
+>                         SRC_TOP3, 28, 1),
+>
+> -       MUX(0, "mout_user_aclk333_432_gscl", user_aclk333_432_gscl_p,
+> +       MUX(0, "mout_user_aclk333_432_gscl", mout_user_aclk333_432_gscl_p,
+>                         SRC_TOP4, 0, 1),
+> -       MUX(0, "mout_aclk66_peric", aclk66_peric_p, SRC_TOP4, 8, 1),
+> -       MUX(0, "mout_user_aclk266", user_aclk266_p, SRC_TOP4, 20, 1),
+> -       MUX(0, "mout_user_aclk166", user_aclk166_p, SRC_TOP4, 24, 1),
+> -       MUX(0, "mout_user_aclk333", user_aclk333_p, SRC_TOP4, 28, 1),
+> -
+> -       MUX(0, "mout_aclk66_psgen", aclk66_peric_p, SRC_TOP5, 4, 1),
+> -       MUX(0, "mout_user_aclk333_g2d", user_aclk333_g2d_p, SRC_TOP5, 8, 1),
+> -       MUX(0, "mout_user_aclk266_g2d", user_aclk266_g2d_p, SRC_TOP5, 12, 1),
+> -       MUX_A(0, "mout_user_aclk_g3d", user_aclk_g3d_p,
+> +       MUX(0, "mout_user_aclk66_peric", mout_user_aclk66_peric_p,
+> +                       SRC_TOP4, 8, 1),
+> +       MUX(0, "mout_user_aclk266", mout_user_aclk266_p, SRC_TOP4, 20, 1),
+> +       MUX(0, "mout_user_aclk166", mout_user_aclk166_p, SRC_TOP4, 24, 1),
+> +       MUX(0, "mout_user_aclk333", mout_user_aclk333_p, SRC_TOP4, 28, 1),
+> +
+> +       MUX(0, "mout_user_aclk66_psgen", mout_user_aclk66_peric_p, SRC_TOP5,
+> +                       4, 1),
+> +       MUX(0, "mout_user_aclk333_g2d", mout_user_aclk333_g2d_p, SRC_TOP5,
+> +                       8, 1),
+> +       MUX(0, "mout_user_aclk266_g2d", mout_user_aclk266_g2d_p, SRC_TOP5,
+> +                       12, 1),
+> +       MUX_A(0, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
+>                         SRC_TOP5, 16, 1, "aclkg3d"),
+> -       MUX(0, "mout_user_aclk300_jpeg", user_aclk300_jpeg_p,
+> +       MUX(0, "mout_user_aclk300_jpeg", mout_user_aclk300_jpeg_p,
+>                         SRC_TOP5, 20, 1),
+> -       MUX(0, "mout_user_aclk300_disp1", user_aclk300_disp1_p,
+> +       MUX(0, "mout_user_aclk300_disp1", mout_user_aclk300_disp1_p,
+>                         SRC_TOP5, 24, 1),
+> -       MUX(0, "mout_user_aclk300_gscl", user_aclk300_gscl_p,
+> +       MUX(0, "mout_user_aclk300_gscl", mout_user_aclk300_gscl_p,
+>                         SRC_TOP5, 28, 1),
+>
+> -       MUX(0, "sclk_mpll", mpll_p, SRC_TOP6, 0, 1),
+> -       MUX(0, "sclk_vpll", vpll_p, SRC_TOP6, 4, 1),
+> -       MUX(0, "sclk_spll", spll_p, SRC_TOP6, 8, 1),
+> -       MUX(0, "sclk_ipll", ipll_p, SRC_TOP6, 12, 1),
+> -       MUX(0, "sclk_rpll", rpll_p, SRC_TOP6, 16, 1),
+> -       MUX(0, "sclk_epll", epll_p, SRC_TOP6, 20, 1),
+> -       MUX(0, "sclk_dpll", dpll_p, SRC_TOP6, 24, 1),
+> -       MUX(0, "sclk_cpll", cpll_p, SRC_TOP6, 28, 1),
+> -
+> -       MUX(0, "mout_sw_aclk400_mscl", sw_aclk400_mscl_p, SRC_TOP10, 4, 1),
+> -       MUX(0, "mout_sw_aclk200", sw_aclk200_p, SRC_TOP10, 8, 1),
+> -       MUX(0, "mout_sw_aclk200_fsys2", sw_aclk200_fsys2_p,
+> +       MUX(0, "mout_sclk_mpll", mout_mpll_p, SRC_TOP6, 0, 1),
+> +       MUX(0, "mout_sclk_vpll", mout_vpll_p, SRC_TOP6, 4, 1),
+> +       MUX(0, "mout_sclk_spll", mout_spll_p, SRC_TOP6, 8, 1),
+> +       MUX(0, "mout_sclk_ipll", mout_ipll_p, SRC_TOP6, 12, 1),
+> +       MUX(0, "mout_sclk_rpll", mout_rpll_p, SRC_TOP6, 16, 1),
+> +       MUX(0, "mout_sclk_epll", mout_epll_p, SRC_TOP6, 20, 1),
+> +       MUX(0, "mout_sclk_dpll", mout_dpll_p, SRC_TOP6, 24, 1),
+> +       MUX(0, "mout_sclk_cpll", mout_cpll_p, SRC_TOP6, 28, 1),
+> +
+> +       MUX(0, "mout_sw_aclk400_mscl", mout_sw_aclk400_mscl_p,
+> +                       SRC_TOP10, 4, 1),
+> +       MUX(0, "mout_sw_aclk200", mout_sw_aclk200_p, SRC_TOP10, 8, 1),
+> +       MUX(0, "mout_sw_aclk200_fsys2", mout_sw_aclk200_fsys2_p,
+>                         SRC_TOP10, 12, 1),
+> -       MUX(0, "mout_sw_aclk200_fsys", sw_aclk200_fsys_p, SRC_TOP10, 28, 1),
+> -
+> -       MUX(0, "mout_sw_aclk333_432_gscl", sw_aclk333_432_gscl_p,
+> +       MUX(0, "mout_sw_aclk200_fsys", mout_sw_aclk200_fsys_p,
+> +                       SRC_TOP10, 28, 1),
+> +       MUX(0, "mout_sw_aclk333_432_gscl", mout_sw_aclk333_432_gscl_p,
+>                         SRC_TOP11, 0, 1),
+> -       MUX(0, "mout_sw_aclk66", sw_aclk66_p, SRC_TOP11, 8, 1),
+> -       MUX(0, "mout_sw_aclk266", sw_aclk266_p, SRC_TOP11, 20, 1),
+> -       MUX(0, "mout_sw_aclk166", sw_aclk166_p, SRC_TOP11, 24, 1),
+> -       MUX(0, "mout_sw_aclk333", sw_aclk333_p, SRC_TOP11, 28, 1),
+> -
+> -       MUX(0, "mout_sw_aclk333_g2d", sw_aclk333_g2d_p, SRC_TOP12, 8, 1),
+> -       MUX(0, "mout_sw_aclk266_g2d", sw_aclk266_g2d_p, SRC_TOP12, 12, 1),
+> -       MUX(0, "mout_sw_aclk_g3d", sw_aclk_g3d_p, SRC_TOP12, 16, 1),
+> -       MUX(0, "mout_sw_aclk300_jpeg", sw_aclk300_jpeg_p, SRC_TOP12, 20, 1),
+> -       MUX(0, "mout_sw_aclk300_disp1", sw_aclk300_disp1_p,
+> +       MUX(0, "mout_sw_aclk66", mout_sw_aclk66_p, SRC_TOP11, 8, 1),
+> +       MUX(0, "mout_sw_aclk266", mout_sw_aclk266_p, SRC_TOP11, 20, 1),
+> +       MUX(0, "mout_sw_aclk166", mout_sw_aclk166_p, SRC_TOP11, 24, 1),
+> +       MUX(0, "mout_sw_aclk333", mout_sw_aclk333_p, SRC_TOP11, 28, 1),
+> +
+> +       MUX(0, "mout_sw_aclk333_g2d", mout_sw_aclk333_g2d_p,
+> +                       SRC_TOP12, 8, 1),
+> +       MUX(0, "mout_sw_aclk266_g2d", mout_sw_aclk266_g2d_p,
+> +                       SRC_TOP12, 12, 1),
+> +       MUX(0, "mout_sw_aclk_g3d", mout_sw_aclk_g3d_p, SRC_TOP12, 16, 1),
+> +       MUX(0, "mout_sw_aclk300_jpeg", mout_sw_aclk300_jpeg_p,
+> +                       SRC_TOP12, 20, 1),
+> +       MUX(0, "mout_sw_aclk300_disp1", mout_sw_aclk300_disp1_p,
+>                         SRC_TOP12, 24, 1),
+> -       MUX(0, "mout_sw_aclk300_gscl", sw_aclk300_gscl_p, SRC_TOP12, 28, 1),
+> +       MUX(0, "mout_sw_aclk300_gscl", mout_sw_aclk300_gscl_p,
+> +                       SRC_TOP12, 28, 1),
+>
+>         /* DISP1 Block */
+> -       MUX(0, "mout_fimd1", group3_p, SRC_DISP10, 4, 1),
+> -       MUX(0, "mout_mipi1", group2_p, SRC_DISP10, 16, 3),
+> -       MUX(0, "mout_dp1", group2_p, SRC_DISP10, 20, 3),
+> -       MUX(0, "mout_pixel", group2_p, SRC_DISP10, 24, 3),
+> -       MUX(CLK_MOUT_HDMI, "mout_hdmi", hdmi_p, SRC_DISP10, 28, 1),
+> +       MUX(0, "mout_fimd1", mout_group3_p, SRC_DISP10, 4, 1),
+> +       MUX(0, "mout_mipi1", mout_group2_p, SRC_DISP10, 16, 3),
+> +       MUX(0, "mout_dp1", mout_group2_p, SRC_DISP10, 20, 3),
+> +       MUX(0, "mout_pixel", mout_group2_p, SRC_DISP10, 24, 3),
+> +       MUX(CLK_MOUT_HDMI, "mout_hdmi", mout_hdmi_p, SRC_DISP10, 28, 1),
+>
+>         /* MAU Block */
+> -       MUX(0, "mout_maudio0", maudio0_p, SRC_MAU, 28, 3),
+> +       MUX(0, "mout_maudio0", mout_maudio0_p, SRC_MAU, 28, 3),
+>
+>         /* FSYS Block */
+> -       MUX(0, "mout_usbd301", group2_p, SRC_FSYS, 4, 3),
+> -       MUX(0, "mout_mmc0", group2_p, SRC_FSYS, 8, 3),
+> -       MUX(0, "mout_mmc1", group2_p, SRC_FSYS, 12, 3),
+> -       MUX(0, "mout_mmc2", group2_p, SRC_FSYS, 16, 3),
+> -       MUX(0, "mout_usbd300", group2_p, SRC_FSYS, 20, 3),
+> -       MUX(0, "mout_unipro", group2_p, SRC_FSYS, 24, 3),
+> +       MUX(0, "mout_usbd301", mout_group2_p, SRC_FSYS, 4, 3),
+> +       MUX(0, "mout_mmc0", mout_group2_p, SRC_FSYS, 8, 3),
+> +       MUX(0, "mout_mmc1", mout_group2_p, SRC_FSYS, 12, 3),
+> +       MUX(0, "mout_mmc2", mout_group2_p, SRC_FSYS, 16, 3),
+> +       MUX(0, "mout_usbd300", mout_group2_p, SRC_FSYS, 20, 3),
+> +       MUX(0, "mout_unipro", mout_group2_p, SRC_FSYS, 24, 3),
+>
+>         /* PERIC Block */
+> -       MUX(0, "mout_uart0", group2_p, SRC_PERIC0, 4, 3),
+> -       MUX(0, "mout_uart1", group2_p, SRC_PERIC0, 8, 3),
+> -       MUX(0, "mout_uart2", group2_p, SRC_PERIC0, 12, 3),
+> -       MUX(0, "mout_uart3", group2_p, SRC_PERIC0, 16, 3),
+> -       MUX(0, "mout_pwm", group2_p, SRC_PERIC0, 24, 3),
+> -       MUX(0, "mout_spdif", spdif_p, SRC_PERIC0, 28, 3),
+> -       MUX(0, "mout_audio0", audio0_p, SRC_PERIC1, 8, 3),
+> -       MUX(0, "mout_audio1", audio1_p, SRC_PERIC1, 12, 3),
+> -       MUX(0, "mout_audio2", audio2_p, SRC_PERIC1, 16, 3),
+> -       MUX(0, "mout_spi0", group2_p, SRC_PERIC1, 20, 3),
+> -       MUX(0, "mout_spi1", group2_p, SRC_PERIC1, 24, 3),
+> -       MUX(0, "mout_spi2", group2_p, SRC_PERIC1, 28, 3),
+> +       MUX(0, "mout_uart0", mout_group2_p, SRC_PERIC0, 4, 3),
+> +       MUX(0, "mout_uart1", mout_group2_p, SRC_PERIC0, 8, 3),
+> +       MUX(0, "mout_uart2", mout_group2_p, SRC_PERIC0, 12, 3),
+> +       MUX(0, "mout_uart3", mout_group2_p, SRC_PERIC0, 16, 3),
+> +       MUX(0, "mout_pwm", mout_group2_p, SRC_PERIC0, 24, 3),
+> +       MUX(0, "mout_spdif", mout_spdif_p, SRC_PERIC0, 28, 3),
+> +       MUX(0, "mout_audio0", mout_audio0_p, SRC_PERIC1, 8, 3),
+> +       MUX(0, "mout_audio1", mout_audio1_p, SRC_PERIC1, 12, 3),
+> +       MUX(0, "mout_audio2", mout_audio2_p, SRC_PERIC1, 16, 3),
+> +       MUX(0, "mout_spi0", mout_group2_p, SRC_PERIC1, 20, 3),
+> +       MUX(0, "mout_spi1", mout_group2_p, SRC_PERIC1, 24, 3),
+> +       MUX(0, "mout_spi2", mout_group2_p, SRC_PERIC1, 28, 3),
+>  };
+>
+>  static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
+> --
+> 1.7.9.5
 >
 >
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
 
-------=_Part_4850_27522045.1398855725315
-Content-Type: text/html; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div>This patch adds IR controller in A20 Device-Tree:</di=
-v><div>- Two IR devices found in A20 user manual</div><div>- Pins for two d=
-evices</div><div>- One IR device physically found on Cubieboard 2&nbsp;</di=
-v><div>- One IR device physically found on Cubietruck&nbsp;</div><div><br><=
-/div><div>Signed-off-by: Alexander Bersenev &lt;bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org&gt;</div><=
-div>Signed-off-by: Alexsey Shestacov &lt;wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org&gt;</div>=
-<div><br></div><div>diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dt=
-s b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts</div><div>index feeff64..25=
-64e8c 100644</div><div>--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts</d=
-iv><div>+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts</div><div>@@ -164=
-,6 +164,12 @@</div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"white=
--space:pre">				</span>reg =3D &lt;1&gt;;</div><div>&nbsp;<span class=3D"Ap=
-ple-tab-span" style=3D"white-space:pre">			</span>};</div><div>&nbsp;<span =
-class=3D"Apple-tab-span" style=3D"white-space:pre">		</span>};</div><div>+<=
-/div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">		</spa=
-n>ir0: ir@01c21800 {</div><div>+<span class=3D"Apple-tab-span" style=3D"whi=
-te-space:pre">			</span>pinctrl-names =3D "default";</div><div>+<span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">			</span>pinctrl-0 =3D &lt;&=
-amp;ir0_pins_a&gt;;</div><div>+<span class=3D"Apple-tab-span" style=3D"whit=
-e-space:pre">			</span>status =3D "okay";</div><div>+<span class=3D"Apple-t=
-ab-span" style=3D"white-space:pre">		</span>};</div><div>&nbsp;<span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">	</span>};</div><div>&nbsp;</=
-div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</=
-span>leds {</div><div>diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.d=
-ts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts</div><div>index e288562..e3=
-75e89 100644</div><div>--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts</di=
-v><div>+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts</div><div>@@ -232,6=
- +232,12 @@</div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"white-s=
-pace:pre">				</span>reg =3D &lt;1&gt;;</div><div>&nbsp;<span class=3D"Appl=
-e-tab-span" style=3D"white-space:pre">			</span>};</div><div>&nbsp;<span cl=
-ass=3D"Apple-tab-span" style=3D"white-space:pre">		</span>};</div><div>+</d=
-iv><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">		</span>=
-ir0: ir@01c21800 {</div><div>+<span class=3D"Apple-tab-span" style=3D"white=
--space:pre">			</span>pinctrl-names =3D "default";</div><div>+<span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">			</span>pinctrl-0 =3D &lt;&=
-amp;ir0_pins_a&gt;;</div><div>+<span class=3D"Apple-tab-span" style=3D"whit=
-e-space:pre">			</span>status =3D "okay";</div><div>+<span class=3D"Apple-t=
-ab-span" style=3D"white-space:pre">		</span>};</div><div>&nbsp;<span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">	</span>};</div><div>&nbsp;</=
-div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</=
-span>leds {</div><div>diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/=
-arm/boot/dts/sun7i-a20.dtsi</div><div>index 0ae2b77..bb655a5 100644</div><d=
-iv>--- a/arch/arm/boot/dts/sun7i-a20.dtsi</div><div>+++ b/arch/arm/boot/dts=
-/sun7i-a20.dtsi</div><div>@@ -724,6 +724,19 @@</div><div>&nbsp;<span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">				</span>allwinner,drive =
-=3D &lt;2&gt;;</div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"whit=
-e-space:pre">				</span>allwinner,pull =3D &lt;0&gt;;</div><div>&nbsp;<span=
- class=3D"Apple-tab-span" style=3D"white-space:pre">			</span>};</div><div>=
-+</div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</=
-span>ir0_pins_a: ir0@0 {</div><div>+<span class=3D"Apple-tab-span" style=3D=
-"white-space:pre">				</span> &nbsp; &nbsp;allwinner,pins =3D "PB3","PB4";<=
-/div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">				</s=
-pan> &nbsp; &nbsp;allwinner,function =3D "ir0";</div><div>+<span class=3D"A=
-pple-tab-span" style=3D"white-space:pre">				</span> &nbsp; &nbsp;allwinner=
-,drive =3D &lt;0&gt;;</div><div>+<span class=3D"Apple-tab-span" style=3D"wh=
-ite-space:pre">				</span> &nbsp; &nbsp;allwinner,pull =3D &lt;0&gt;;</div>=
-<div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</span>};=
-</div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</s=
-pan>ir1_pins_a: ir1@0 {</div><div>+<span class=3D"Apple-tab-span" style=3D"=
-white-space:pre">				</span> &nbsp; &nbsp;allwinner,pins =3D "PB22","PB23";=
-</div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">				</=
-span> &nbsp; &nbsp;allwinner,function =3D "ir1";</div><div>+<span class=3D"=
-Apple-tab-span" style=3D"white-space:pre">				</span> &nbsp; &nbsp;allwinne=
-r,drive =3D &lt;0&gt;;</div><div>+<span class=3D"Apple-tab-span" style=3D"w=
-hite-space:pre">				</span> &nbsp; &nbsp;allwinner,pull =3D &lt;0&gt;;</div=
-><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</span>}=
-;</div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"white-space:pre">=
-		</span>};</div><div>&nbsp;</div><div>&nbsp;<span class=3D"Apple-tab-span"=
- style=3D"white-space:pre">		</span>timer@01c20c00 {</div><div>@@ -937,5 +9=
-50,23 @@</div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"white-spac=
-e:pre">			</span>#interrupt-cells =3D &lt;3&gt;;</div><div>&nbsp;<span clas=
-s=3D"Apple-tab-span" style=3D"white-space:pre">			</span>interrupts =3D &lt=
-;1 9 0xf04&gt;;</div><div>&nbsp;<span class=3D"Apple-tab-span" style=3D"whi=
-te-space:pre">		</span>};</div><div>+</div><div>+ &nbsp; &nbsp; &nbsp; <spa=
-n class=3D"Apple-tab-span" style=3D"white-space:pre">		</span>ir0: ir@01c21=
-800 {</div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	=
-</span> &nbsp; &nbsp; <span class=3D"Apple-tab-span" style=3D"white-space:p=
-re">		</span>compatible =3D "allwinner,sun7i-a20-ir";</div><div>+<span clas=
-s=3D"Apple-tab-span" style=3D"white-space:pre">			</span>clocks =3D &lt;&am=
-p;apb0_gates 6&gt;, &lt;&amp;ir0_clk&gt;;</div><div>+<span class=3D"Apple-t=
-ab-span" style=3D"white-space:pre">			</span>clock-names =3D "apb", "ir";</=
-div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</spa=
-n>interrupts =3D &lt;0 5 4&gt;;</div><div>+<span class=3D"Apple-tab-span" s=
-tyle=3D"white-space:pre">			</span>reg =3D &lt;0x01c21800 0x40&gt;;</div><d=
-iv>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</span>stat=
-us =3D "disabled";</div><div>+<span class=3D"Apple-tab-span" style=3D"white=
--space:pre">		</span>};</div><div>+</div><div>+ &nbsp; &nbsp; &nbsp; <span =
-class=3D"Apple-tab-span" style=3D"white-space:pre">		</span>ir1: ir@01c21c0=
-0 {</div><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">	</=
-span> &nbsp; &nbsp; <span class=3D"Apple-tab-span" style=3D"white-space:pre=
-">		</span>compatible =3D "allwinner,sun7i-a20-ir";</div><div>+<span class=
-=3D"Apple-tab-span" style=3D"white-space:pre">			</span>clocks =3D &lt;&amp=
-;apb0_gates 7&gt;, &lt;&amp;ir1_clk&gt;;</div><div>+<span class=3D"Apple-ta=
-b-span" style=3D"white-space:pre">			</span>clock-names =3D "apb", "ir";</d=
-iv><div>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</span=
->interrupts =3D &lt;0 6 4&gt;;</div><div>+<span class=3D"Apple-tab-span" st=
-yle=3D"white-space:pre">			</span>reg =3D &lt;0x01C21c00 0x40&gt;;</div><di=
-v>+<span class=3D"Apple-tab-span" style=3D"white-space:pre">			</span>statu=
-s =3D "disabled";</div><div>+<span class=3D"Apple-tab-span" style=3D"white-=
-space:pre">		</span>};</div><div>&nbsp;<span class=3D"Apple-tab-span" style=
-=3D"white-space:pre">	</span>};</div><div>&nbsp;};</div><div><br></div><br>=
-=D1=81=D1=80=D0=B5=D0=B4=D0=B0, 30 =D0=B0=D0=BF=D1=80=D0=B5=D0=BB=D1=8F 201=
-4&nbsp;=D0=B3., 16:51:12 UTC+6 =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=
-=D0=B0=D1=82=D0=B5=D0=BB=D1=8C =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=
-=D0=B4=D1=80 =D0=91=D0=B5=D1=80=D1=81=D0=B5=D0=BD=D0=B5=D0=B2 =D0=BD=D0=B0=
-=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:<blockquote class=3D"gmail_quote" style=3D"m=
-argin: 0;margin-left: 0.8ex;border-left: 1px #ccc solid;padding-left: 1ex;"=
-><div dir=3D"ltr"><div>This patch introduces Consumer IR(CIR) support for s=
-unxi boards.</div><div><br></div><div>This is based on Alexsey Shestacov's =
-work based on the original driver&nbsp;</div><div>supplied by Allwinner.</d=
-iv><div><br></div></div></blockquote></div>
-
-<p></p>
-
--- <br />
-You received this message because you are subscribed to the Google Groups &=
-quot;linux-sunxi&quot; group.<br />
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
-unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
-For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
-s://groups.google.com/d/optout</a>.<br />
-
-------=_Part_4850_27522045.1398855725315--
+-- 
+Regards,
+Alim
