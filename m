@@ -1,32 +1,17 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 04/15] ARM: dts: kirkwood: remove clock-frequency properties
- from UART nodes
-Date: Wed, 30 Apr 2014 14:56:31 +0200
-Message-ID: <1398862602-29595-5-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 15/15] ARM: dts: kirkwood: set Guruplug phy-connection-type to rgmii-id
+Date: Wed, 30 Apr 2014 14:56:42 +0200
+Message-ID: <1398862602-29595-16-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UART devices found on Kirkwood SoCs derive their baudrate from TCLK.
-With proper clocks property in the SoCs serial node, boards do not
-need to overwrite it anymore.
-
-Remove the remaining clock-frequency property from all Kirkwood boards.
+Ethernet PHYs found on Globalscale Guruplug are connected by RGMII-ID.
+Set the corresponding phy-connection-type property accordingly.
 
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
@@ -44,78 +29,28 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/kirkwood-cloudbox.dts             | 1 -
- arch/arm/boot/dts/kirkwood-db.dtsi                  | 1 -
- arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts | 1 -
- arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts      | 1 -
- arch/arm/boot/dts/kirkwood-ts219.dtsi               | 2 --
- 5 files changed, 6 deletions(-)
+ arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/kirkwood-cloudbox.dts b/arch/arm/boot/dts/kirkwood-cloudbox.dts
-index 61212692740e..65ae6471d553 100644
---- a/arch/arm/boot/dts/kirkwood-cloudbox.dts
-+++ b/arch/arm/boot/dts/kirkwood-cloudbox.dts
-@@ -28,7 +28,6 @@
- 		serial@12000 {
- 			pinctrl-0 = <&pmx_uart0>;
- 			pinctrl-names = "default";
--			clock-frequency = <166666667>;
- 			status = "okay";
- 		};
- 
-diff --git a/arch/arm/boot/dts/kirkwood-db.dtsi b/arch/arm/boot/dts/kirkwood-db.dtsi
-index 22df970df2a1..68dfb3ad57dd 100644
---- a/arch/arm/boot/dts/kirkwood-db.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-db.dtsi
-@@ -36,7 +36,6 @@
- 		serial@12000 {
- 			pinctrl-0 = <&pmx_uart0>;
- 			pinctrl-names = "default";
--			clock-frequency = <200000000>;
- 			status = "ok";
- 		};
- 
 diff --git a/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts b/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
-index db183455ff34..3994a86f989e 100644
+index f6f15e2910ed..c5a1fc75c7a3 100644
 --- a/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
 +++ b/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
-@@ -37,7 +37,6 @@
- 			};
- 		};
- 		serial@12000 {
--			clock-frequency = <200000000>;
- 			status = "ok";
- 		};
+@@ -105,6 +105,7 @@
+ 		compatible = "ethernet-phy-id0141.0cb0",
+ 		             "ethernet-phy-ieee802.3-c22";
+ 		reg = <0>;
++		phy-connection-type = "rgmii-id";
+ 	};
  
-diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-index 9c48e827e34e..444257c08a0c 100644
---- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-+++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-@@ -77,7 +77,6 @@
- 		serial@12000 {
- 			pinctrl-0 = <&pmx_uart0>;
- 			pinctrl-names = "default";
--			clock-frequency = <200000000>;
- 			status = "ok";
- 		};
+ 	ethphy1: ethernet-phy@1 {
+@@ -112,6 +113,7 @@
+ 		compatible = "ethernet-phy-id0141.0cb0",
+ 		             "ethernet-phy-ieee802.3-c22";
+ 		reg = <1>;
++		phy-connection-type = "rgmii-id";
+ 	};
+ };
  
-diff --git a/arch/arm/boot/dts/kirkwood-ts219.dtsi b/arch/arm/boot/dts/kirkwood-ts219.dtsi
-index 8f2226b8bd3d..414d2246b37c 100644
---- a/arch/arm/boot/dts/kirkwood-ts219.dtsi
-+++ b/arch/arm/boot/dts/kirkwood-ts219.dtsi
-@@ -35,13 +35,11 @@
- 			};
- 		};
- 		serial@12000 {
--			clock-frequency = <200000000>;
- 			status = "okay";
- 			pinctrl-0 = <&pmx_uart0>;
- 			pinctrl-names = "default";
- 		};
- 		serial@12100 {
--			clock-frequency = <200000000>;
- 			status = "okay";
- 			pinctrl-0 = <&pmx_uart1>;
- 			pinctrl-names = "default";
 -- 
 1.9.1
