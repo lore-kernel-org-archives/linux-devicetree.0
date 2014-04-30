@@ -1,34 +1,73 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [RFC PATCH v2 1/9] crypto: qce: Add core driver implementation
-Date: Wed, 30 Apr 2014 08:03:40 +0800
-Message-ID: <20140430000340.GA32173@gondor.apana.org.au>
-References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
- <1397479725-20954-2-git-send-email-svarbanov@mm-sol.com>
- <20140428085016.GA16275@gondor.apana.org.au>
- <535FB956.5020600@mm-sol.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC 08/11] ARM: dts: am33xx: Add prcm_resets node
+Date: Tue, 29 Apr 2014 17:22:11 -0700
+Message-ID: <20140430002211.GC27571@atomide.com>
+References: <1398802790-29287-1-git-send-email-dmurphy@ti.com>
+ <1398802790-29287-9-git-send-email-dmurphy@ti.com>
+ <6286135.g77D4pMffU@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <535FB956.5020600@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <6286135.g77D4pMffU@wuerfel>
+Sender: linux-omap-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Murphy <dmurphy@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, s-anna@ti.com, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 29, 2014 at 05:38:14PM +0300, Stanimir Varbanov wrote:
->
-> This is new for me because I saw similar code in cryptd.c where in
-> cryptd_queue_worker() (workqueue context) the backlog->complete() is
-> called outside of local_bh_disable().
+* Arnd Bergmann <arnd@arndb.de> [140429 13:35]:
+> On Tuesday 29 April 2014 15:19:47 Dan Murphy wrote:
+> > + * AM33xx reset index for PRCM Module
+> > + *
+> > + * Copyright 2014 Texas Instruments Inc.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#ifndef _DT_BINDINGS_RESET_TI_AM33XX_H
+> > +#define _DT_BINDINGS_RESET_TI_AM33XX_H
+> > +
+> > +#define RESET_DEVICE_RESET                     0
+> > +#define RESET_GFX_RESET                                1
+> > +#define RESET_PER_RESET                                2
+> > +
+> > +#endif
+> 
+> Interfaces like this should only be used if you can't use hardware
+> numbers, in general. If these numbers are in the data sheet, just
+> put them directly into the dts file, as we do for interrupt numbers,
+> gpio numbers, register offsets etc.
+> 
+> If you have made them up to define an interface between the driver
+> and DT because there is no usable hardare ID, I'd suggest just using
+> a single file across all SoCs that have this driver, and have
+> a unified name space.
 
-That's what I thought :)
+Also, it's a bit unclear how the reset controller phandle is used
+referenced and used by the consumer device.. Maybe setting that up
+first in a Linux generic way is a good point starting point.
 
-If you dig deeper you'll find that when cryptd calls the actual
-completion functions (rather than its own) it disables BH.
+Maybe something like this along the same way as clocks are set up
+(completely untested):
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+&reset1 {
+	iva_reset: reset1 {
+		reg = /bits/ 8 <0>;
+	};
+	gfx_reset: reset1 {
+		reg = /bits/ 8 <1>;
+	};
+	...
+};
+
+&iva {
+	compatible = "ti,ivahd";
+	resets = <&reset1 1>;
+	...
+};
+
+Regards,
+
+Tony
