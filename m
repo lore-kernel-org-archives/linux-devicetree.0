@@ -1,272 +1,282 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7] DMA: sun6i: Add driver for the Allwinner
- A31 DMA controller
-Date: Wed, 30 Apr 2014 14:53:22 -0700
-Message-ID: <20140430215322.GH3000@lukather>
-References: <20140430070408.GR32284@intel.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3U8TY7m7wOx7RL1F"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBO7CQWNQKGQEJNGNQRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140430070408.GR32284-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-List-Id: devicetree@vger.kernel.org
+Return-Path: <dianders@google.com>
+MIME-Version: 1.0
+Sender: dianders@google.com
+In-Reply-To: <20140429123328.GB3640@katana>
+References: <1398185154-19404-1-git-send-email-dianders@chromium.org>
+	<1398185154-19404-7-git-send-email-dianders@chromium.org>
+	<20140429123328.GB3640@katana>
+Date: Wed, 30 Apr 2014 10:44:24 -0700
+Message-ID: <CAD=FV=Vv62Y2FouYEsvTA0U9p0qgDBDUhu2_4DmiiRLCFeJUiA@mail.gmail.com>
+Subject: Re: [PATCH v2 6/7] i2c: ChromeOS EC tunnel driver
+From: Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain; charset=UTF-8
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Lee Jones <lee.jones@linaro.org>, Stephen Warren <swarren@nvidia.com>, Andrew Bresticker <abrestic@chromium.org>, Dylan Reid <dgreid@chromium.org>, Olof Johansson <olof@lixom.net>, Simon Glass <sjg@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Vincent Palatin <vpalatin@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Samuel Ortiz <sameo@linux.intel.com>, jdelvare@suse.de, shane.huang@amd.com, maxime.ripard@free-electrons.com, laurent.pinchart+renesas@ideasonboard.com, u.kleine-koenig@pengutronix.de, Bjorn Andersson <bjorn.andersson@sonymobile.com>, kevin.strasser@linux.intel.com, Tony Prisk <linux@prisktech.co.nz>, andrew@lunn.ch, andriy.shevchenko@linux.intel.com, schwidefsky@de.ibm.com, Matt Porter <matt.porter@linaro.org>, naveen krishna <ch.naveen@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+List-ID: <devicetree@vger.kernel.org>
+
+Wolfram,
+
+On Tue, Apr 29, 2014 at 5:33 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> Hi,
+>
+> just a basic review to keep things rolling...
+
+Thanks for the review!  It sounds like other changes are blocked on
+this one landing, so hopefully we can make some good progress!  :)
+
+>> On the original Samsung ARM Chromebook these devices were on an I2C
+>> bus that was shared between the AP and the EC and arbitrated using
+>> some extranal GPIOs (see i2c-arb-gpio-challenge).
+>>
+>> The original arbitration scheme worked well enough but had some
+>> downsides:
+>> * It was nonstandard (not using standard I2C multimaster)
+>> * It only worked if the EC-AP communication was I2C
+>> * It was relatively hard to debug problems (hard to tell if i2c issues
+>>   were caused by the EC, the AP, or some device on the bus).
+>>
+>> On the HP Chromebook 11 the design was changed to:
+>
+> This paragraph would be a nice update for the gpio-arbitration docs.
+
+Done.  <https://patchwork.kernel.org/patch/4088551/>
 
 
---3U8TY7m7wOx7RL1F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+>
+> The bindings should independently be sent to the devicetree list.
+>
+>> new file mode 100644
+>> index 0000000..898f030
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+>> @@ -0,0 +1,39 @@
+>> +I2C bus that tunnels through the ChromeOS EC (cros-ec)
+>> +======================================================
+>> +On some ChromeOS board designs we've got a connection to the EC (embedded
+>> +controller) but no direct connection to some devices on the other side of
+>> +the EC (like a battery and PMIC).  To get access to those devices we need
+>> +to tunnel our i2c commands through the EC.
+>> +
+>> +The node for this device should be under a cros-ec node like google,cros-ec-spi
+>> +or google,cros-ec-i2c.
+>> +
+>> +
+>> +Required properties:
+>> +- compatible: google,cros-ec-i2c-tunnel
+>> +- google,remote-bus: The EC bus we'd like to talk to.
+>> +
+>> +Optional child nodes:
+>> +- One node per I2C device connected to the tunnelled I2C bus.
+>> +
+>> +
+>> +Example:
+>> +     cros-ec@0 {
+>> +             compatible = "google,cros-ec-spi";
+>> +
+>> +             ...
+>> +
+>> +             i2c-tunnel {
+>> +                     compatible = "google,cros-ec-i2c-tunnel";
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +
+>> +                     google,remote-bus = <0>;
+>> +
+>> +                     battery: sbs-battery@b {
+>> +                             compatible = "sbs,sbs-battery";
+>> +                             reg = <0xb>;
+>> +                             sbs,poll-retry-count = <1>;
+>> +                     };
+>> +             };
+>> +     }
+>
+> Can the tunnel have n busses? How to represent them then? I think the
+> remote-bus property should go in favor of proper sub-nodes?
 
-Hi Vinod,
+I suppose it could have n busses, though today's ECs don't.
 
-On Wed, Apr 30, 2014 at 12:34:08PM +0530, Vinod Koul wrote:
-> On Thu, Apr 24, 2014 at 04:22:44PM +0200, Maxime Ripard wrote:
-> > The Allwinner A31 has a 16 channels DMA controller that it shares with =
-the
-> > newer A23. Although sharing some similarities with the DMA controller o=
-f the
-> > older Allwinner SoCs, it's significantly different, I don't expect it t=
-o be
-> > possible to share the driver for these two.
-> >=20
-> > The A31 Controller is able to memory-to-memory or memory-to-device tran=
-sfers on
-> > the 16 channels in parallel.
->=20
-> Overall driver looks in good shape, few comments though...
->=20
-> > +This driver follows the generic DMA bindings defined in dma.txt.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible:	Must be "allwinner,sun6i-a31-dma"
-> > +- reg:		Should contain the registers base address and length
-> > +- interrupts:	Should contain a reference to the interrupt used by this=
- device
-> > +- clocks:	Should contain a reference to the parent AHB clock
-> > +- resets:	Should contain a reference to the reset controller asserting
-> > +	  	this device in reset
-> > +- #dma-cells :	Should be 1, a single cell holding a line request number
-> > +
-> > +Example:
-> > +	dma: dma-controller@01c02000 {
-> > +		compatible =3D "allwinner,sun6i-a31-dma";
-> > +		reg =3D <0x01c02000 0x1000>;
-> > +		interrupts =3D <0 50 4>;
-> > +		clocks =3D <&ahb1_gates 6>;
-> > +		resets =3D <&ahb1_rst 6>;
-> > +		#dma-cells =3D <1>;
-> > +	};
-> > +
-> > +Clients:
-> > +
-> > +DMA clients connected to the A31 DMA controller must use the format
-> > +described in the dma.txt file, using a two-cell specifier for each
-> > +channel: a phandle plus one integer cells.
-> > +The two cells in order are:
-> > +
-> > +1. A phandle pointing to the DMA controller.
-> > +2. The port ID as specified in the datasheet
-> > +
-> > +Example:
-> > +spi2: spi@01c6a000 {
-> > +	compatible =3D "allwinner,sun6i-a31-spi";
-> > +	reg =3D <0x01c6a000 0x1000>;
-> > +	interrupts =3D <0 67 4>;
-> > +	clocks =3D <&ahb1_gates 22>, <&spi2_clk>;
-> > +	clock-names =3D "ahb", "mod";
-> > +	dmas =3D <&dma 25>, <&dma 25>;
-> > +	dma-names =3D "rx", "tx";
-> > +	resets =3D <&ahb1_rst 22>;
-> > +};
-> Ideally binding should be a separate patch
+I think that the binding could later be extended to support this with:
 
-Ok
+        cros-ec@0 {
+                compatible = "google,cros-ec-spi";
 
-> > +static inline u8 convert_burst(u8 maxburst)
-> > +{
-> > +	if (maxburst =3D=3D 1 || maxburst > 16)
-> > +		return 0;
-> are these valid configurations?
+                ...
 
-The only valid burst values are 1 (0) and 8 (2).
+                i2c-tunnel0 {
+                        compatible = "google,cros-ec-i2c-tunnel";
+                        #address-cells = <1>;
+                        #size-cells = <0>;
 
-> > +
-> > +	return fls(maxburst) - 1;
-> > +}
-> > +
-> > +static inline u8 convert_buswidth(enum dma_slave_buswidth addr_width)
-> > +{
-> > +	switch (addr_width) {
-> > +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> > +		return 1;
-> > +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> > +		return 2;
-> return (addr_width >> 1); ..??
-> since DMA_SLAVE_BUSWIDTH_2_BYTES is numeric 2 and DMA_SLAVE_BUSWIDTH_4_BY=
-TES
-> numeric 4.=20
+                        google,remote-bus = <0>;
 
-Yes, it would work.
+                        battery: sbs-battery@b {
+                                compatible = "sbs,sbs-battery";
+                                reg = <0xb>;
+                                sbs,poll-retry-count = <1>;
+                        };
+                };
 
-> > +	default:
-> > +		return 0;
-> error?
+                i2c-tunnel1 {
+                        compatible = "google,cros-ec-i2c-tunnel";
+                        #address-cells = <1>;
+                        #size-cells = <0>;
 
-Ok.
+                        google,remote-bus = <1>;
 
-> > +static inline void sun6i_dma_cfg_lli(struct sun6i_dma_lli *lli,
-> > +				     dma_addr_t src,
-> > +				     dma_addr_t dst, u32 len,
-> > +				     struct dma_slave_config *config)
-> > +{
-> > +	u32 src_width, dst_width, src_burst, dst_burst;
-> > +
-> > +	if (!config)
-> > +		return;
-> > +
-> > +	src_burst =3D convert_burst(config->src_maxburst);
-> > +	dst_burst =3D convert_burst(config->dst_maxburst);
-> > +
-> > +	src_width =3D convert_buswidth(config->src_addr_width);
-> > +	dst_width =3D convert_buswidth(config->dst_addr_width);
-> is 0 a valid case then?
+                        battery: sbs-battery@b {
+                                compatible = "sbs,sbs-battery";
+                                reg = <0xb>;
+                                sbs,poll-retry-count = <1>;
+                        };
+                };
+       }
 
-Yes, it is. 0 is a burst of 1, and a width of a byte.
+...but since there's no need now, it seems like we could just leave it
+with supporting 1 for now.  If we extend it like above then old device
+trees will still work on newer kernels.
 
-> > +
-> > +static int sun6i_dma_terminate_all(struct sun6i_vchan *vchan)
-> > +{
-> > +	struct sun6i_dma_dev *sdev =3D to_sun6i_dma_dev(vchan->vc.chan.device=
-);
-> > +	struct sun6i_pchan *pchan =3D vchan->phy;
-> > +	unsigned long flags;
-> > +	LIST_HEAD(head);
-> > +
-> > +	spin_lock(&sdev->lock);
-> > +	list_del_init(&vchan->node);
-> > +	spin_unlock(&sdev->lock);
-> > +
-> > +	spin_lock_irqsave(&vchan->vc.lock, flags);
-> > +
-> > +	vchan_get_all_descriptors(&vchan->vc, &head);
-> > +
-> > +	if (pchan) {
-> > +		writel(DMA_CHAN_ENABLE_STOP, pchan->base + DMA_CHAN_ENABLE);
-> > +		writel(DMA_CHAN_PAUSE_RESUME, pchan->base + DMA_CHAN_PAUSE);
-> > +
-> > +		vchan->phy =3D NULL;
-> > +		pchan->vchan =3D NULL;
-> > +		pchan->desc =3D NULL;
-> > +		pchan->done =3D NULL;
-> > +	}
-> > +
-> > +	spin_unlock_irqrestore(&vchan->vc.lock, flags);
-> > +
-> > +	vchan_dma_desc_free_list(&vchan->vc, &head);
->=20
-> shouldn't you kill the tasklet as well here?
+Note about "google,remote-bus" instead of "reg".   The main
+"google,cros-ec-spi" generally has non-addressed sub-nodes.  It has no
+"#address-cells" or "#size-cells".  The keyboard component, for
+instance, doesn't have an "address".  You talk to it using the
+keyboard commands.
 
-Hmm, yes.
+...I don't think it's generally possible to have some sub nodes that
+have addresses and other sub nodes that don't.  I'm happy to be
+corrected, though.
 
-> > +static inline void sun6i_dma_free(struct sun6i_dma_dev *sdc)
-> > +{
-> > +	int i;
-> > +
-> > +	for (i =3D 0; i < NR_MAX_VCHANS; i++) {
-> > +		struct sun6i_vchan *vchan =3D &sdc->vchans[i];
-> > +
-> > +		list_del(&vchan->vc.chan.device_node);
-> > +		tasklet_kill(&vchan->vc.task);
-> > +	}
-> > +
-> > +	tasklet_kill(&sdc->task);
-> This is again not good. see http://lwn.net/Articles/588457/
-> At this point HW can still generate interrupts or you can have irq runnin=
-g!
 
-I'm not sure to fully understand the issue here, but what is not good?
-the first or the second tasklet_kill calls, or both?
+Note: according to the device tree stable bindings theorem, I don't
+think I'm allowed to retroactively go back and say that the keyboard
+node needs a dummy "reg = <0>;" nor can I require that
+"google,cros-ec-spi" add #address-cells and #size-cells.  Both device
+tree bindings have been in kernel since ~3.9.
 
-=46rom what I understood, the issue is only there whenever you are
-calling tasklet_disable without making sure that no one will schedule
-your tasklet before disabling it.
 
-But the point is I don't actually use either _enable/_disable. I might
-be wrong in not using those functions, but I don't really see how I
-can be impacted.
+Can you give me an example of what you mean by "proper sub nodes"?
 
-> > +static int sun6i_dma_probe(struct platform_device *pdev)
-> > +{
-> > +	struct sun6i_dma_dev *sdc;
-> > +	struct resource *res;
-> > +	struct clk *mux, *pll6;
-> > +	int irq;
-> > +	int ret, i;
-> > +
-> > +	sdc =3D devm_kzalloc(&pdev->dev, sizeof(*sdc), GFP_KERNEL);
-> > +	if (!sdc)
-> > +		return -ENOMEM;
-> > +
-> > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	sdc->base =3D devm_ioremap_resource(&pdev->dev, res);
-> > +	if (IS_ERR(sdc->base))
-> > +		return PTR_ERR(sdc->base);
-> > +
-> > +	irq =3D platform_get_irq(pdev, 0);
-> > +	ret =3D devm_request_irq(&pdev->dev, irq, sun6i_dma_interrupt, 0,
-> > +			       dev_name(&pdev->dev), sdc);
-> > +	if (ret) {
-> > +		dev_err(&pdev->dev, "Cannot request IRQ\n");
-> > +		return ret;
-> > +	}
-> this is not good. You have registered for irq, so your irq handlers can be
-> invoked but you initialization is not complete yet.
 
-Not really, the device is maintained in reset, we deassert it only
-later, and we're only deasserting it from reset later on in the
-probe. And since it was kept in reset, you will only get interrupts
-whenever you actually enable them, in the tasklet, that is only
-scheduled from _issue_pending (and the interrupt handler, which would
-not happen)
+> Wouldn't it
+> also be more generic to have the tunnel node seperate and reference the
+> tunnel-mechanism (spi here) as a phandle?
 
-Maxime
+What makes it more generic?  It's still a MFD and still only works
+atop the cros_ec, so it should be under the cros_ec device, shouldn't
+it?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+I know use a phandle for mux, but from
+<https://lkml.org/lkml/2013/2/13/517> it sounds like we were forced
+into it.
 
---3U8TY7m7wOx7RL1F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
+>> +/**
+>> + * ec_i2c_construct_message - construct a message to go to the EC
+>> + *
+>> + * This function effectively stuffs the standard i2c_msg format of Linux into
+>> + * a format that the EC understands.
+>> + *
+>> + * @buf: The buffer to fill.  Can pass NULL to count how many bytes the message
+>> + *       would be.
+>
+> I wonder about this NULL thing. That means the size is calculated twice.
+> Why not make two functions instead, one fir size calc, one for setting
+> up?
 
-iQIcBAEBAgAGBQJTYXDSAAoJEBx+YmzsjxAggCEP/RkF1Y0aaOVJKajIi0CC8tlq
-yZ/6mH8dKbTlMwlKCh9naLp880caJFYTUDd8jACJEAOeif2syBaOYlJ/InIBmiip
-GCkFP7RLJtrZJZOlaD26oePVuabZYbrWF9wP1cGVwBMChM0wTrbxXfESMuoYheIa
-kv7D+z0Lykyk1YGZO29hR+QAXOCEzpsdo+EbEWsmqxUcf34D3D8MjJJDmeOiPQNg
-zHarha90vWrZ7r0GCga8W6YWr6bvloQdoStLjCSLf/2qOiJKtwH4B+EaME4cDk6M
-B2/M8khiBczvreYAjJPsh4vspTBsKxLwUuAZCp+oj+zOhPcPvl7GsbXnCK0GnnlA
-T057EIkJjGdchlvs67uSYHRQu7rBJviGCDEbY90B+R74GnQRa1rPHBR5spaqtOjq
-cFGygXRtMsTVGPoSs7KIo7tmA+2teMfLZb4RCcdXyogUQhSUduBcrTPdgzd3yLX+
-iPzu9TmHwSHjV/4wOXQtEhlXoK6pXdTIysty6U45KFGZzO4iPE0wCTNtfD31sCHs
-klAmB1oc48e2bGtEopQef5eNGU639OkzxQ8aP3DN7tWA5n3DgLz4GL5skCl6QVOl
-YNHt9amqhkmdU1D9r/bjvsMpK/iUULuU9dsOE6EMBIJuef6zXXOJW1ZRqvxyz0aG
-7eBMpB0OJg5xZKGj5Bak
-=LxQL
------END PGP SIGNATURE-----
+Done.
 
---3U8TY7m7wOx7RL1F--
+
+>> +/**
+>> + * ec_i2c_parse_response - Parse a response from the EC
+>> + *
+>> + * We'll take the EC's response and copy it back into msgs.
+>> + *
+>> + * @buf: The buffer to parse.  Can pass NULL to count how many bytes we expect
+>> + *    the response to be. Otherwise we assume that the right number of
+>> + *    bytes are available.
+>
+> Ditto.
+
+Done.
+
+
+>> +     result = bus->ec->command_sendrecv(bus->ec, EC_CMD_I2C_PASSTHRU,
+>> +                                        request, request_len,
+>> +                                        response, response_len);
+>
+> This function pointer should be checked against NULL in probe, I
+> think.
+
+Done.
+
+
+>> +static int ec_i2c_probe(struct platform_device *pdev)
+>> +{
+>> +     struct device_node *np = pdev->dev.of_node;
+>> +     struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
+>> +     struct device *dev = &pdev->dev;
+>> +     struct ec_i2c_device *bus = NULL;
+>> +     u32 remote_bus;
+>> +     int err;
+>> +
+>> +     dev_dbg(dev, "Probing\n");
+>
+> Drop. Device core has it already.
+
+Done.
+
+
+>> +
+>> +     if (!np) {
+>> +             dev_err(dev, "no device node\n");
+>> +             return -ENOENT;
+>> +     }
+>
+> Can this happen?
+
+Not that I know of.  I assume you want me to remove this, so done.
+
+
+>> +     bus = devm_kzalloc(dev, sizeof(*bus), GFP_KERNEL);
+>> +     if (bus == NULL) {
+>> +             dev_err(dev, "cannot allocate bus device\n");
+>
+> No need for error strings when allocating.
+
+Done.
+
+
+>> +             return -ENOMEM;
+>> +     }
+>> +
+>> +     dev_dbg(dev, "ChromeOS EC I2C tunnel adapter\n");
+>
+> Drop. Device core debug has it, too.
+
+Done.
+
+
+>> +
+>> +     return err;
+>> +}
+>> +
+>> +static int ec_i2c_remove(struct platform_device *dev)
+>> +{
+>> +     struct ec_i2c_device *bus = platform_get_drvdata(dev);
+>> +
+>> +     platform_set_drvdata(dev, NULL);
+>
+> Not needed.
+
+Duh, thanks.  Done.
+
+
+>> +     i2c_del_adapter(&bus->adap);
+>> +
+>> +     return 0;
+>> +}
+>> +
+
+Sending up a v3 with fixes...
+
+-Doug
