@@ -1,103 +1,112 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3 1/9] mtd: nand: define struct nand_timings
-Date: Wed, 30 Apr 2014 10:51:57 -0700
-Message-ID: <20140430175157.GB2497@norris-Latitude-E6410>
-References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
- <1394647664-8258-2-git-send-email-b.brezillon.dev@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [RFC 08/11] ARM: dts: am33xx: Add prcm_resets node
+Date: Wed, 30 Apr 2014 13:00:09 -0500
+Message-ID: <53613A29.8080803@ti.com>
+References: <1398802790-29287-1-git-send-email-dmurphy@ti.com> <1398802790-29287-9-git-send-email-dmurphy@ti.com> <6286135.g77D4pMffU@wuerfel> <20140430002211.GC27571@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1394647664-8258-2-git-send-email-b.brezillon.dev@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robherring2@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140430002211.GC27571@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, s-anna@ti.com, p.zabel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Tony and Arnd
 
-On Wed, Mar 12, 2014 at 07:07:36PM +0100, Boris BREZILLON wrote:
-> Define a struct containing the standard NAND timings as described in =
-NAND
-> datasheets.
->=20
-> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
-> ---
->  include/linux/mtd/nand.h |   49 ++++++++++++++++++++++++++++++++++++=
-++++++++++
->  1 file changed, 49 insertions(+)
->=20
-> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
-> index 389b3c5..f3ff3a3 100644
-> --- a/include/linux/mtd/nand.h
-> +++ b/include/linux/mtd/nand.h
-> @@ -846,4 +846,53 @@ static inline bool nand_is_slc(struct nand_chip =
-*chip)
->  {
->  	return chip->bits_per_cell =3D=3D 1;
->  }
-> +
-> +/**
-> + * struct nand_sdr_timings - SDR NAND chip timings
-> + *
-> + * This struct defines the timing requirements of a SDR NAND chip.
-> + * These informations can be found in every NAND datasheets and the =
-timings
-> + * meaning are described in the ONFI specifications:
-> + * www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf=E2=80=8E (chapt=
-er 4.15 Timing
+Thanks for the comments
 
-Can you remove the unicode U+200E character?
+On 04/29/2014 07:22 PM, Tony Lindgren wrote:
+> * Arnd Bergmann <arnd@arndb.de> [140429 13:35]:
+>> On Tuesday 29 April 2014 15:19:47 Dan Murphy wrote:
+>>> + * AM33xx reset index for PRCM Module
+>>> + *
+>>> + * Copyright 2014 Texas Instruments Inc.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +#ifndef _DT_BINDINGS_RESET_TI_AM33XX_H
+>>> +#define _DT_BINDINGS_RESET_TI_AM33XX_H
+>>> +
+>>> +#define RESET_DEVICE_RESET                     0
+>>> +#define RESET_GFX_RESET                                1
+>>> +#define RESET_PER_RESET                                2
+>>> +
+>>> +#endif
+>> Interfaces like this should only be used if you can't use hardware
+>> numbers, in general. If these numbers are in the data sheet, just
+>> put them directly into the dts file, as we do for interrupt numbers,
+>> gpio numbers, register offsets etc.
+>>
+>> If you have made them up to define an interface between the driver
+>> and DT because there is no usable hardare ID, I'd suggest just using
+>> a single file across all SoCs that have this driver, and have
+>> a unified name space.
+> Also, it's a bit unclear how the reset controller phandle is used
+> referenced and used by the consumer device.. Maybe setting that up
+> first in a Linux generic way is a good point starting point.
+>
+> Maybe something like this along the same way as clocks are set up
+> (completely untested):
+>
+> &reset1 {
+> 	iva_reset: reset1 {
+> 		reg = /bits/ 8 <0>;
+> 	};
+> 	gfx_reset: reset1 {
+> 		reg = /bits/ 8 <1>;
+> 	};
+> 	...
+> };
+>
+> &iva {
+> 	compatible = "ti,ivahd";
+> 	resets = <&reset1 1>;
+> 	...
+> };
 
-> + * Parameters)
+I had something very similar to this when I was developing this driver but moved away from this.
 
-Please document the units for these fields here. It looks like you're
-using picoseconds.
+Following the clocks implementation I had a separate dtsi for resets for each device and had the data defined like so
+for each SoC.
 
-> + *
-> + */
-> +
+&prcm_resets {
+       device_reset: device_reset {
+               rstctrl_offs = <0x1104>;
+               ctrl_bit-shift = <0>;
+               rstst_offs      = <0x1114>;
+               sts_bit-shift   = <0>;
+       };
 
-Extra blank line.
+       gpu_reset: gpu_reset {
+               rstctrl_offs = <0x0D00>;
+               ctrl_bit-shift = <3>;
+               rstst_offs      = <0x0D0C>;
+               sts_bit-shift = <5>;
+       };
+};
 
-> +struct nand_sdr_timings {
-> +	u32 tALH_min;
-> +	u32 tADL_min;
-> +	u32 tALS_min;
-> +	u32 tAR_min;
-> +	u32 tCEA_max;
-> +	u32 tCEH_min;
-> +	u32 tCH_min;
-> +	u32 tCHZ_max;
-> +	u32 tCLH_min;
-> +	u32 tCLR_min;
-> +	u32 tCLS_min;
-> +	u32 tCOH_min;
-> +	u32 tCS_min;
-> +	u32 tDH_min;
-> +	u32 tDS_min;
-> +	u32 tFEAT_max;
-> +	u32 tIR_min;
-> +	u32 tITC_max;
-> +	u32 tRC_min;
-> +	u32 tREA_max;
-> +	u32 tREH_min;
-> +	u32 tRHOH_min;
-> +	u32 tRHW_min;
-> +	u32 tRHZ_max;
-> +	u32 tRLOH_min;
-> +	u32 tRP_min;
-> +	u32 tRR_min;
-> +	u64 tRST_max;
-> +	u32 tWB_max;
-> +	u32 tWC_min;
-> +	u32 tWH_min;
-> +	u32 tWHR_min;
-> +	u32 tWP_min;
-> +	u32 tWW_min;
-> +};
-> +
->  #endif /* __LINUX_MTD_NAND_H */
+And then any client interested in a specific reset driver would include this
 
-Brian
+resets = <&prcm_resets &gpu_reset>;
+reset-names = "gpu_reset";
+
+Our reset code would then retrieve the register data through the phandle instead of an index.
+
+Thoughts?
+
+Dan
+
+> Regards,
+>
+> Tony
+
+
+-- 
+------------------
+Dan Murphy
+
