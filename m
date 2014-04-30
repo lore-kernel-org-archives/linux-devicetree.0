@@ -1,76 +1,53 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: dts: Add usb 2.0 support on exynos5420
-Date: Wed, 30 Apr 2014 22:15:19 +0530
-Message-ID: <CAK9yfHzxLei60hFQges6Vk0nzRUjLDdC3io8FHrT0zkuU65vgA@mail.gmail.com>
-References: <1398848110-6152-1-git-send-email-gautam.vivek@samsung.com>
-	<1398848110-6152-5-git-send-email-gautam.vivek@samsung.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 07/15] ARM: dts: kirkwood: consolidate common pinctrl
+ settings
+Date: Wed, 30 Apr 2014 18:44:41 +0200
+Message-ID: <20140430164441.GB3082@lunn.ch>
+References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1398862602-29595-8-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20140430164236.GC12944@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398848110-6152-5-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140430164236.GC12944-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 April 2014 14:25, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Add required device node for ehci and ohci controllers to
-> enable USB 2.0 support.
->
-> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi |   36 +++++++++++++++++++++++++++++++++++-
->  1 file changed, 35 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 16b860a..392d340 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -738,7 +738,41 @@
->                 samsung,power-domain = <&g2d_pd>;
->         };
->
-> -       phy@12130000 {
-> +       usb@12110000 {
-> +               compatible = "samsung,exynos4210-ehci";
-> +               reg = <0x12110000 0x100>;
-> +               interrupts = <0 71 0>;
-> +
-> +               clocks = <&clock CLK_USBH20>;
-> +               clock-names = "usbhost";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               port@0 {
-> +                       reg = <0>;
-> +                       phys = <&usb2_phy_gen 1>;
-> +                       phy-names = "host";
-> +                       status = "ok";
-s/ok/okay
+On Wed, Apr 30, 2014 at 10:42:36AM -0600, Jason Gunthorpe wrote:
+> On Wed, Apr 30, 2014 at 02:56:34PM +0200, Sebastian Hesselbarth wrote:
+> > All SoCs have the same pinctrl setting for NAND, UART0/1, SPI, TWSI0,
+> > and GBE1. Move it to the common pinctrl node that we now have.
+> 
+> There are two possible choices for UART0, UART1, and SPI on kirkwood..
+> 
+> For instance I use this on my board:
+> 
+>                                 pmx_spi0: pmx-spi0 {
+>                                         marvell,pins = "mpp7", "mpp10", "mpp11", "mpp12";
+>                                         marvell,function = "spi";
+>                                 };
+> 
+> vs
+> 
+> > +
+> > +			pmx_spi: pmx-spi {
+> > +				marvell,pins = "mpp0", "mpp1", "mpp2", "mpp3";
+> > +				marvell,function = "spi";
+> > +			};
+> 
+> It looks like all the boards in the kernel use the same choice, so it
+> makes some sense to consolidate, but I assume a board file can
+> override the marvell,pins?
 
-> +               };
-> +       };
-> +
-> +       usb@12120000 {
-> +               compatible = "samsung,exynos4210-ohci";
-> +               reg = <0x12120000 0x100>;
-> +               interrupts = <0 71 0>;
-> +
-> +               clocks = <&clock CLK_USBH20>;
-> +               clock-names = "usbhost";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               port@0 {
-> +                       reg = <0>;
-> +                       phys = <&usb2_phy_gen 1>;
-> +                       phy-names = "host";
-> +                       status = "ok";
+Hi Jason
 
-ditto
+Yes, the board can override it, see patch 10/15 for an example.
 
--- 
-With warm regards,
-Sachin
+     Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
