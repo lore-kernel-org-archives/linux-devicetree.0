@@ -1,105 +1,76 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/4] clk: propagate parent change up one level
-Date: Thu, 01 May 2014 00:19:09 +0200
-Message-ID: <536176DD.5020507@gmail.com>
-References: <1396623201-26000-1-git-send-email-t.stanislaws@samsung.com>
- <1396623201-26000-2-git-send-email-t.stanislaws@samsung.com>
- <5344198B.2030604@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 4/6] i2c: sh_mobile: add devicetree documentation
+Date: Thu, 1 May 2014 00:32:36 +0200
+Message-ID: <CAMuHMdWP8KH=6OKmBbA5UqixV7mdKZdEhFw8Tq_XZLaJCOQ07w@mail.gmail.com>
+References: <1398896470-24663-1-git-send-email-wsa@the-dreams.de>
+	<1398896470-24663-5-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5344198B.2030604@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomasz Figa <t.figa@samsung.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, mturquette@linaro.org
-Cc: kgene.kim@samsung.com, sw0312.kim@samsung.com, rob.herring@calxeda.com, kishon@ti.com, a.hajda@samsung.com, kyungmin.park@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1398896470-24663-5-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Mike,
+Hi Wolfram,
 
-On 08.04.2014 17:45, Tomasz Figa wrote:
-> Hi,
->
-> On 04.04.2014 16:53, Tomasz Stanislawski wrote:
->> This patch adds support for propagation of setup of clock's parent one
->> level
->> up.
->>
->> This feature is helpful when a driver changes topology of its clocks
->> using
->> clk_set_parent().  The problem occurs when on one platform/SoC
->> driver's clock
->> is located at MUX output but on the other platform/SoC there is a
->> gated proxy
->> clock between the MUX and driver's clock.  In such a case, driver's
->> code has to
->> be modified to use one clock for enabling and the other clock for
->> setup of a
->> parent.
->>
->> The code updates are avoided by propagating setup of a parent up one
->> level.
->>
->> Additionally, this patch adds CLK_SET_PARENT_PARENT (sorry for naming)
->> flag to
->> inform clk-core that clk_set_parent() should be propagated.
->>
->> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
->> ---
->>   drivers/clk/clk.c            |    6 ++++++
->>   include/linux/clk-provider.h |    1 +
->>   2 files changed, 7 insertions(+)
->>
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index dff0373..53bbfda 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -1737,6 +1737,12 @@ int clk_set_parent(struct clk *clk, struct clk
->> *parent)
->>
->>       /* try finding the new parent index */
->>       if (parent) {
->> +        if ((clk->flags & CLK_SET_PARENT_PARENT)
->> +            && clk->num_parents == 1) {
->> +            ret = clk_set_parent(clk->parent, parent);
->> +            goto out;
->> +        }
->> +
->>           p_index = clk_fetch_parent_index(clk, parent);
->>           p_rate = parent->rate;
->>           if (p_index < 0) {
->> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
->> index 5119174..daa0b03 100644
->> --- a/include/linux/clk-provider.h
->> +++ b/include/linux/clk-provider.h
->> @@ -30,6 +30,7 @@
->>   #define CLK_GET_RATE_NOCACHE    BIT(6) /* do not use the cached clk
->> rate */
->>   #define CLK_SET_RATE_NO_REPARENT BIT(7) /* don't re-parent on rate
->> change */
->>   #define CLK_GET_ACCURACY_NOCACHE BIT(8) /* do not use the cached clk
->> accuracy */
->> +#define CLK_SET_PARENT_PARENT    BIT(9) /* propagate parent change up
->> one level */
->>
->>   struct clk_hw;
->>   struct dentry;
->>
->
-> This would be very useful, at least on Exynos platforms, with
-> mux-div-gate clock paths. PARENT_PARENT sounds a bit funny, though.
->
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+CC devicetree
 
-Your opinion on this would be greatly appreciated.
+On Thu, May 1, 2014 at 12:21 AM, Wolfram Sang <wsa@the-dreams.de> wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+>
+> Reported-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  .../devicetree/bindings/i2c/i2c-sh_mobile.txt      | 26 ++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
+>
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt b/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
+> new file mode 100644
+> index 000000000000..d2153ce36fa8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-sh_mobile.txt
+> @@ -0,0 +1,26 @@
+> +Device tree configuration for Renesas IIC (sh_mobile) driver
+> +
+> +Required properties:
+> +- compatible      : "renesas,iic-<soctype>". "renesas,rmobile-iic" as fallback
 
-Best regards,
-Tomasz
+Please also list all supported values, so checkpatch can validate DTS compatible
+properties against this binding document.
+
+> +- reg             : address start and address range size of device
+> +- interrupts      : interrupt of device
+> +- clocks          : clock for device
+> +- #address-cells  : should be <1>
+> +- #size-cells     : should be <0>
+> +
+> +Optional properties:
+> +- clock-frequency : frequency of bus clock in Hz. Default 100kHz if unset.
+> +
+> +Pinctrl properties might be needed, too. See there.
+> +
+> +Example:
+> +
+> +       iic0: i2c@e6500000 {
+> +               compatible = "renesas,iic-r8a7790", "renesas,rmobile-iic";
+> +               reg = <0 0xe6500000 0 0x425>;
+> +               interrupts = <0 174 IRQ_TYPE_LEVEL_HIGH>;
+> +               clocks = <&mstp3_clks R8A7790_CLK_IIC0>;
+> +               clock-frequency = <400000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <0>;
+> +       };
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
