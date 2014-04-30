@@ -1,90 +1,52 @@
-From: Boris BREZILLON <b.brezillon.dev@gmail.com>
-Subject: [RFC PATCH 2/3] of: mtd: add NAND randomizer mode retrieval
-Date: Thu,  1 May 2014 03:09:51 +0200
-Message-ID: <1398906592-24677-3-git-send-email-b.brezillon.dev@gmail.com>
-References: <1398906592-24677-1-git-send-email-b.brezillon.dev@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv3 0/2] add DT endianness binding support
+Date: Wed, 30 Apr 2014 11:25:00 -0700
+Message-ID: <20140430182500.GD3245@sirena.org.uk>
+References: <1398833029-29546-1-git-send-email-Li.Xiubo@freescale.com>
+ <20140430071011.GA7312@netboy>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="fOHHtNG4YXGJ0yqR"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398906592-24677-1-git-send-email-b.brezillon.dev@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20140430071011.GA7312@netboy>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Boris BREZILLON <b.brezillon.dev@gmail.com>
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, gregkh@linuxfoundation.org, mpa@pengutronix.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
----
- drivers/of/of_mtd.c    | 35 +++++++++++++++++++++++++++++++++++
- include/linux/of_mtd.h |  6 ++++++
- 2 files changed, 41 insertions(+)
 
-diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
-index a862c08..f941a5e 100644
---- a/drivers/of/of_mtd.c
-+++ b/drivers/of/of_mtd.c
-@@ -84,6 +84,41 @@ int of_get_nand_ecc_strength(struct device_node *np)
- EXPORT_SYMBOL_GPL(of_get_nand_ecc_strength);
- 
- /**
-+ * It maps 'enum nand_rnd_modes_t' found in include/linux/mtd/nand.h
-+ * into the device tree binding of 'nand-rnd', so that MTD
-+ * device driver can get nand rnd from device tree.
-+ */
-+static const char * const nand_rnd_modes[] = {
-+	[NAND_RND_NONE]		= "none",
-+	[NAND_RND_SOFT]		= "soft",
-+	[NAND_RND_HW]		= "hw",
-+};
-+
-+/**
-+ * of_get_nand_rnd_mode - Get nand randomizer mode for given device_node
-+ * @np:	Pointer to the given device_node
-+ *
-+ * The function gets randomizer mode string from property 'nand-rnd-mode',
-+ * and return its index in nand_rnd_modes table, or errno in error case.
-+ */
-+int of_get_nand_rnd_mode(struct device_node *np)
-+{
-+	const char *pm;
-+	int err, i;
-+
-+	err = of_property_read_string(np, "nand-rnd-mode", &pm);
-+	if (err < 0)
-+		return err;
-+
-+	for (i = 0; i < ARRAY_SIZE(nand_rnd_modes); i++)
-+		if (!strcasecmp(pm, nand_rnd_modes[i]))
-+			return i;
-+
-+	return -ENODEV;
-+}
-+EXPORT_SYMBOL_GPL(of_get_nand_rnd_mode);
-+
-+/**
-  * of_get_nand_bus_width - Get nand bus witdh for given device_node
-  * @np:	Pointer to the given device_node
-  *
-diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
-index d0145fb..2f43362 100644
---- a/include/linux/of_mtd.h
-+++ b/include/linux/of_mtd.h
-@@ -15,6 +15,7 @@
- int of_get_nand_ecc_mode(struct device_node *np);
- int of_get_nand_ecc_step_size(struct device_node *np);
- int of_get_nand_ecc_strength(struct device_node *np);
-+int of_get_nand_rnd_mode(struct device_node *np);
- int of_get_nand_bus_width(struct device_node *np);
- bool of_get_nand_on_flash_bbt(struct device_node *np);
- int of_get_nand_onfi_timing_mode(struct device_node *np);
-@@ -36,6 +37,11 @@ static inline int of_get_nand_ecc_strength(struct device_node *np)
- 	return -ENOSYS;
- }
- 
-+static inline int of_get_nand_rnd_mode(struct device_node *np)
-+{
-+	return -ENOSYS;
-+}
-+
- static inline int of_get_nand_bus_width(struct device_node *np)
- {
- 	return -ENOSYS;
--- 
-1.8.3.2
+--fOHHtNG4YXGJ0yqR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Apr 30, 2014 at 09:10:12AM +0200, Richard Cochran wrote:
+> Shouldn't this go to the arm list and rmk for review, too?
+
+Is there any particular reason for including rmk?  It's generally not
+helpful to spam people with serieses without reason, we all get quite a
+lot of mail already...
+
+--fOHHtNG4YXGJ0yqR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTYT/4AAoJELSic+t+oim90z4P/2gWqw9tczkPtuJjqyITcAv0
+1tecGCnsG15Iq3U/9E5IeyC01t3/NZMlpdpVoUJl+NvUKyczMmwHqP/fZv+nbLzd
+PpW7ojIKUhNr0cbdVhGfFbALiEnsyH15F97MYsA5Vgufo0MO2z/m9WRgZt/HgtB4
+J8Gawswg7ql0keAby2wflww1saTkDdihXYi9caOLO25JlToHkqkN7n5icGU4KSkw
+52ZvZ6HwmzT1HPbQDoQKH6+ifmaubdRSBDPL24EPLWWe6Ut9X8XT2TKrZuQ6n3qJ
+n0YduezEXRQLaf8IukGXoXwwcL6ryEIQsW21DzHTetbPwwrwhJPPLr9ADj2/Lj6u
+zq9H4z59OfuPDOjGsnmuQ2RmjmpbiC3vJ5nqCERS44/J3cSZx8fA4GWwZNyZN7GK
+agicuSDd3uA9dGFlTENEPgQDIT5qfw8w7+yQmYWyLVzx/7qnJTYwaBW7IdTSGCcz
+dy7q/JnuElgI+SfvxkaM6OIwPIU15vOUzd+C6Aakxc2Uz2ETHnznaVHmkpIJLuSQ
+v/0flOjeEf51JX2viG/ZnozPLSESr8/8MjQ/SlE5dKnJ8Qd0V/wSXr1P09+195PB
+6MYn2f3vIW+G2+u7ezuEZn8i3GTsAR6v4OPmvei73pahwd160r2rEcCB9TaNEdyG
+QZwUDRZjfMTBgwE/qUIU
+=Q5VZ
+-----END PGP SIGNATURE-----
+
+--fOHHtNG4YXGJ0yqR--
