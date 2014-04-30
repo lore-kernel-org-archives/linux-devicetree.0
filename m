@@ -1,37 +1,85 @@
-From: Toby Smith <toby@tismith.id.au>
-Subject: [PATCH 2/2] gpio: pca953x: request a shared interrupt
-Date: Wed, 30 Apr 2014 18:01:41 +1000
-Message-ID: <8d517ae1adc265643ff9de4b1a2d1b65a4bb6997.1398844809.git.toby@tismith.id.au>
-References: <cover.1398844809.git.toby@tismith.id.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1398844809.git.toby@tismith.id.au>
-In-Reply-To: <cover.1398844809.git.toby@tismith.id.au>
-References: <cover.1398844809.git.toby@tismith.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, gnurou@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org
-Cc: linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Toby Smith <toby@tismith.id.au>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 2/2] net: qualcomm: new Ethernet over SPI driver for
+ QCA7000
+Date: Wed, 30 Apr 2014 10:09:43 +0200
+Message-ID: <5360AFC7.6020107@i2se.com>
+References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <4860368.6Apskanc4s@wuerfel> <535FCB24.2010507@i2se.com> <4693879.NBTVQb29rJ@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4693879.NBTVQb29rJ@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Request a shared interrupt when requesting a pca953x GPIO interrupt
+Hi,
 
-Signed-off-by: Toby Smith <toby@tismith.id.au>
----
- drivers/gpio/gpio-pca953x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Am 29.04.2014 20:14, schrieb Arnd Bergmann:
+> On Tuesday 29 April 2014 17:54:12 Stefan Wahren wrote:
+>>> As far as I know it's also not mandatory.
+>>>
+>>> If the hardware interfaces require calling sleeping functions, it
+>>> may not actually be possible, but if you can use it, it normally
+>>> provides better performance.
+>> As i understood NAPI is good for high load on 1000 MBit ethernet, but
+>> the QCA7000 has
+>> in best case only a 10 MBit powerline connection. Additionally these
+>> packets must be transfered
+>> over a half duplex SPI. So i think the current driver implementation
+>> isn't a bottle neck.
+> Ok, makes sense. What is the slowest speed you might see then?
 
-diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
-index 83cc2c8..6398f8a 100644
---- a/drivers/gpio/gpio-pca953x.c
-+++ b/drivers/gpio/gpio-pca953x.c
-@@ -586,7 +586,8 @@ static int pca953x_irq_setup(struct pca953x_chip *chip,
- 					client->irq,
- 					   NULL,
- 					   pca953x_irq_handler,
--					   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+					   IRQF_TRIGGER_LOW | IRQF_ONESHOT |
-+						   IRQF_SHARED,
- 					   dev_name(&client->dev), chip);
- 		if (ret) {
- 			dev_err(&client->dev, "failed to request irq %d\n",
--- 
-1.8.3.2
+a typical Homeplug GreenPHY connection has nearly 8 MBit within one
+network. The more powerline
+networks exits, the slowier the connection becomes. This comes from the
+time sharing on the
+physical layer. Unfortunately i don't have the equipment to test many
+parallel networks and give
+you some precise numbers.
+
+> You already have a relatively small queue of at most 10 frames,
+> but if this goes below 10 Mbit, that can still be noticeable
+> bufferbloat. 
+>
+> Try adding calls to netdev_sent_queue, netdev_completed_queue and
+> netdev_reset_queue to let the network stack know how much data
+> is currently queued up for the tx thread.
+
+Okay, i'll try that. Thanks for the hints.
+
+>
+> On a related note, there is one part I don't understand:
+>
+> +netdev_tx_t
+> +qcaspi_netdev_xmit(struct sk_buff *skb, struct net_device *dev)
+> +{
+> +       u32 frame_len;
+> +       u8 *ptmp;
+> +       struct qcaspi *qca = netdev_priv(dev);
+> +       u32 new_tail;
+> +       struct sk_buff *tskb;
+> +       u8 pad_len = 0;
+> +
+> +       if (skb->len < QCAFRM_ETHMINLEN)
+> +               pad_len = QCAFRM_ETHMINLEN - skb->len;
+> +
+> +       if (qca->txq.skb[qca->txq.tail]) {
+> +               netdev_warn(qca->net_dev, "queue was unexpectedly full!\n");
+> +               netif_stop_queue(qca->net_dev);
+> +               qca->stats.queue_full++;
+> +               return NETDEV_TX_BUSY;
+> +       }
+>
+> You print a 'netdev_warn' message here when the queue is full, expecting
+> this to be rare. If the device is so slow, why doesn't this happen
+> all the time?
+>
+> 	Arnd
+
+Until now, i never experienced that the queue runs full. But i will do
+some tests
+to reproduce this.
+
+Stefan
