@@ -1,40 +1,70 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCHv3 0/2] add DT endianness binding support
-Date: Wed, 30 Apr 2014 15:46:28 +0200
-Message-ID: <20140430134628.GA6201@netboy>
-References: <1398833029-29546-1-git-send-email-Li.Xiubo@freescale.com>
- <20140430071011.GA7312@netboy>
- <334a9f7420ca466b9011f0c0ae53abda@BY2PR03MB505.namprd03.prod.outlook.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v3 12/16] clk: exynos5420: fix register offset for sclk_bpll
+Date: Wed, 30 Apr 2014 19:16:10 +0530
+Message-ID: <CAGOxZ51K6wcMueW3iNuZiidpuMyjZ6KVaFF-3LVnae7YCbgBWA@mail.gmail.com>
+References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-13-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <334a9f7420ca466b9011f0c0ae53abda@BY2PR03MB505.namprd03.prod.outlook.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mpa@pengutronix.de" <mpa@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398344632-18623-13-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Ameer Basha Shaik <shaik.samsung@gmail.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 30, 2014 at 07:14:08AM +0000, Li.Xiubo@freescale.com wrote:
-> 
-> > Subject: Re: [PATCHv3 0/2] add DT endianness binding support
-> > 
-> > Shouldn't this go to the arm list and rmk for review, too?
-> > 
-> 
-> Well, yes, I forgot it.
-> 
-> Should I resend them ?
+Hi shaik,
 
-What I meant was, you should put
+On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
+<shaik.ameer@samsung.com> wrote:
+> This patch fixes the wrong register offset for sclk_bpll clock.
+>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+Reviwed-by: Alim Akhtar <alim.akhtar@samsung.com>
+>  drivers/clk/samsung/clk-exynos5420.c |    4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 6daf739..3afc112 100755
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -111,7 +111,6 @@
+>  #define TOP_SPARE2             0x10b08
+>  #define BPLL_LOCK              0x20010
+>  #define BPLL_CON0              0x20110
+> -#define SRC_CDREX              0x20200
+>  #define KPLL_LOCK              0x28000
+>  #define KPLL_CON0              0x28100
+>  #define SRC_KFC                        0x28200
+> @@ -204,7 +203,6 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+>         GATE_TOP_SCLK_FSYS,
+>         GATE_TOP_SCLK_PERIC,
+>         TOP_SPARE2,
+> -       SRC_CDREX,
+>         SRC_KFC,
+>         DIV_KFC0,
+>  };
+> @@ -380,7 +378,7 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+>         MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
+>         MUX(0, "mout_kfc", mout_kfc_p, SRC_KFC, 16, 1),
+>
+> -       MUX(0, "sclk_bpll", mout_bpll_p, SRC_CDREX, 0, 1),
+> +       MUX(0, "sclk_bpll", mout_bpll_p, TOP_SPARE2, 0, 1),
+Hmmm. Nice catch
+>
+>         MUX_A(0, "mout_aclk400_mscl", mout_group1_p,
+>                         SRC_TOP0, 4, 2, "aclk400_mscl"),
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-	<linux-arm-kernel@lists.infradead.org>
 
-and
 
-	"Russell King <linux@arm.linux.org.uk>"
-
-onto CC.
-
-Thanks,
-Richard
+-- 
+Regards,
+Alim
