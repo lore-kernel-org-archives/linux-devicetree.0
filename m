@@ -1,70 +1,77 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 7/7] ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
-Date: Wed, 30 Apr 2014 10:44:10 -0700
-Message-ID: <1398879850-9111-8-git-send-email-dianders@chromium.org>
-References: <1398879850-9111-1-git-send-email-dianders@chromium.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398879850-9111-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
-Cc: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
+ for omap3-evm and ldp
+Date: Wed, 30 Apr 2014 10:47:52 -0700
+Message-ID: <20140430174751.GA12362@atomide.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com>
+ <1398815562-24113-5-git-send-email-tony@atomide.com>
+ <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds the EC i2c tunnel (and devices under it) to the
-tegra124-venice2 device tree.
+* Joachim Eastwood <manabian@gmail.com> [140429 18:08]:
+> On 30 April 2014 01:52, Tony Lindgren <tony@atomide.com> wrote:
+> > Looks like quite a few omaps have sharp ls037v7dw01 that's configured
+> > as various panel dpi entries for whatever legacy reasons. For device
+> > tree based support, let's just configure these properly for panel
+> > ls037v7dw01 instead of panel dpi.
+> >
+> > This patch creates a common file for panel ls037v7dw01, and makes
+> > boards ldp and omap3-evm to use it. The panel for ldp is configured
+> > in the qvga mode and omap3-evm panel in vga mode.
+> >
+> > The ls037v7dw01 also seems to be coupled with an ad7846 touchscreen
+> > controller for the omaps, so let's add a basic configuration for
+> > the touchscreen also using the default values.
+> >
+> > Note that we can now remove the regulator-name = "vdds_dsi"
+> > entry for ldp, that's no longer needed as we have the entry
+> > for vdds_dsi-supply = <&vpll2>.
+> >
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> >  .../arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi | 82 ++++++++++++++++++++++
+> >  arch/arm/boot/dts/omap3-evm-37xx.dts               | 50 +++++++++++++
+> >  arch/arm/boot/dts/omap3-evm-common.dtsi            | 47 +++++++++++++
+> >  arch/arm/boot/dts/omap3-ldp.dts                    | 31 ++++++--
+> >  4 files changed, 205 insertions(+), 5 deletions(-)
+> >  create mode 100644 arch/arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi
+> 
+> > diff --git a/arch/arm/boot/dts/omap3-ldp.dts b/arch/arm/boot/dts/omap3-ldp.dts
+> > index 0abe986..50fdac9 100644
+> > --- a/arch/arm/boot/dts/omap3-ldp.dts
+> > +++ b/arch/arm/boot/dts/omap3-ldp.dts
+> > @@ -164,6 +164,7 @@
+> >
+> >  #include "twl4030.dtsi"
+> >  #include "twl4030_omap3.dtsi"
+> > +#include "omap-panel-sharp-ls037v7dw01.dtsi"
+> >
+> >  &i2c2 {
+> >         clock-frequency = <400000>;
+> > @@ -173,6 +174,31 @@
+> >         clock-frequency = <400000>;
+> >  };
+> >
+> > +&lcd_3v3 {
+> > +       gpio = <&twl_gpio 7 GPIO_ACTIVE_HIGH>;
+> > +       enable-active-high;
+> > +};
+> > +
+> > +&lcd0 {
+> > +       reset-gpios = <&gpio2 23 GPIO_ACTIVE_HIGH>;     /* gpio55, lcd RESB */
+> > +       gpios = <&gpio2 24 GPIO_ACTIVE_LOW      /* gpio56, lcd MO */
+> 
+> enable-gpios ?
 
-Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes in v3: None
-Changes in v2:
-- Removed i2c20 alias for i2c tunnel
+Oops yes, changed from gpios to enable-gpios while reading the panel
+binding doc, probably forgot to commit the change, will update.
 
- arch/arm/boot/dts/tegra124-venice2.dts | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
-
-diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
-index c17283c..89cf776 100644
---- a/arch/arm/boot/dts/tegra124-venice2.dts
-+++ b/arch/arm/boot/dts/tegra124-venice2.dts
-@@ -813,6 +813,32 @@
- 
- 			google,cros-ec-spi-msg-delay = <2000>;
- 
-+			i2c-tunnel {
-+				compatible = "google,cros-ec-i2c-tunnel";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				google,remote-bus = <0>;
-+
-+				charger: bq24735@9 {
-+					compatible = "ti,bq24735";
-+					reg = <0x9>;
-+					interrupt-parent = <&gpio>;
-+					interrupts = <TEGRA_GPIO(J, 0)
-+							GPIO_ACTIVE_HIGH>;
-+					ti,ac-detect-gpios = <&gpio
-+							TEGRA_GPIO(J, 0)
-+							GPIO_ACTIVE_HIGH>;
-+				};
-+
-+				battery: sbs-battery@b {
-+					compatible = "sbs,sbs-battery";
-+					reg = <0xb>;
-+					sbs,i2c-retry-count = <2>;
-+					sbs,poll-retry-count = <1>;
-+				};
-+			};
-+
- 			cros-ec-keyb {
- 				compatible = "google,cros-ec-keyb";
- 				keypad,num-rows = <8>;
--- 
-1.9.1.423.g4596e3a
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
