@@ -1,45 +1,87 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
-Date: Wed, 30 Apr 2014 14:30:47 +0100
-Message-ID: <5360FB07.5030407@arm.com>
-References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com> <20140422103642.GF7484@arm.com> <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com> <20140423170821.GJ5649@arm.com> <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
+From: Alim Akhtar <alim.akhtar@gmail.com>
+Subject: Re: [PATCH v3 11/16] clk: exynos5420: correct sysmmu-mfc parent clocks
+Date: Wed, 30 Apr 2014 19:08:50 +0530
+Message-ID: <CAGOxZ53FSkV-ncYq2gJL7VKT4HJvvjTVRL98vS5VELWLhC7WYw@mail.gmail.com>
+References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-12-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1-r8ILAu4/owuq90oVIqnETxL4W9x8LtSr@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398344632-18623-12-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Ameer Basha Shaik <shaik.samsung@gmail.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Neil,
+Hi Shaik,
 
-On 30/04/14 03:21, Neil Zhang wrote:
-> 
->> -----Original Message-----
->> From: Will Deacon [mailto:will.deacon-5wv7dgnIgG8@public.gmane.org]
+On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
+<shaik.ameer@samsung.com> wrote:
+> This patch corrects the wrong parent-child relationship
+> between sysmmu-mfc clocks.
+>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+Hoping you have tested vedio playback with this patch, especially
+after across a suspend/resume cycles.
+This looks ok.
 
-[...]
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
 
->>
->> I think we need some input from the device-tree guys to see whether they
->> would object to us solving this locally (in the PMU node) or not.
->> Personally, I'd much prefer a general way to describe the need for pm-notifiers,
->> but if that's not being looked at then we can cook something specifically for
->> our needs.
->>
-> 
-> No input from device-tree guys :(
+>  drivers/clk/samsung/clk-exynos5420.c |    9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index d8fe6d8..6daf739 100755
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -82,6 +82,7 @@
+>  #define SCLK_DIV_ISP0          0x10580
+>  #define SCLK_DIV_ISP1          0x10584
+>  #define DIV2_RATIO0            0x10590
+> +#define DIV4_RATIO             0x105a0
+>  #define GATE_BUS_TOP           0x10700
+>  #define GATE_BUS_GEN           0x1073c
+>  #define GATE_BUS_FSYS0         0x10740
+> @@ -176,6 +177,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+>         SCLK_DIV_ISP0,
+>         SCLK_DIV_ISP1,
+>         DIV2_RATIO0,
+> +       DIV4_RATIO,
+>         GATE_BUS_TOP,
+>         GATE_BUS_GEN,
+>         GATE_BUS_FSYS0,
+> @@ -636,6 +638,9 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
+>         DIV(0, "dout_spi1_pre", "dout_spi1", DIV_PERIC4, 16, 8),
+>         DIV(0, "dout_spi2_pre", "dout_spi2", DIV_PERIC4, 24, 8),
+>
+> +       /* Mfc Blk */
+> +       DIV(0, "dout_mfc_blk", "mout_user_aclk333", DIV4_RATIO, 0, 2),
+> +
+>         /* GSCL Block */
+>         DIV(0, "dout_gscl_blk_300", "mout_user_aclk300_gscl",
+>                 DIV2_RATIO0, 4, 2),
+> @@ -873,8 +878,8 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>                         GATE_IP_DISP1, 8, 0, 0),
+>
+>         GATE(CLK_MFC, "mfc", "aclk333", GATE_IP_MFC, 0, 0, 0),
+> -       GATE(CLK_SMMU_MFCL, "smmu_mfcl", "aclk333", GATE_IP_MFC, 1, 0, 0),
+> -       GATE(CLK_SMMU_MFCR, "smmu_mfcr", "aclk333", GATE_IP_MFC, 2, 0, 0),
+> +       GATE(CLK_SMMU_MFCL, "smmu_mfcl", "dout_mfc_blk", GATE_IP_MFC, 1, 0, 0),
+> +       GATE(CLK_SMMU_MFCR, "smmu_mfcr", "dout_mfc_blk", GATE_IP_MFC, 2, 0, 0),
+>
+>         GATE(CLK_G3D, "g3d", "aclkg3d", GATE_IP_G3D, 9, 0, 0),
+>
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-The device tree bindings for power domains is under discussion [1]
 
+
+-- 
 Regards,
-Sudeep
-
-[1] https://lkml.org/lkml/2014/4/23/755
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alim
