@@ -1,29 +1,43 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v3 08/16] clk: exynos5420: update clocks for PERIS and GEN blocks
-Date: Wed, 30 Apr 2014 21:11:47 +0530
-Message-ID: <CAK9yfHx4AsW9_wgkoY+7NnY6iHMURSc=hS3_g+tSfWZgWUA8oA@mail.gmail.com>
-References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com>
-	<1398344632-18623-9-git-send-email-shaik.ameer@samsung.com>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH] clk: qcom: Various fixes for MSM8960's global clock
+ controller
+Date: Wed, 30 Apr 2014 08:53:08 -0700
+Message-ID: <20140430155308.GE20486@codeaurora.org>
+References: <1396629176-7413-1-git-send-email-galak@codeaurora.org>
+ <20140429065114.7224.13620@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398344632-18623-9-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, shaik.samsung@gmail.com, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140429065114.7224.13620@quantum>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
+On 04/28, Mike Turquette wrote:
+> Quoting Kumar Gala (2014-04-04 09:32:56)
+> > diff --git a/include/dt-bindings/clock/qcom,gcc-msm8960.h b/include/dt-bindings/clock/qcom,gcc-msm8960.h
+> > index 03bbf49..f9f5471 100644
+> > --- a/include/dt-bindings/clock/qcom,gcc-msm8960.h
+> > +++ b/include/dt-bindings/clock/qcom,gcc-msm8960.h
+> > @@ -51,7 +51,7 @@
+> >  #define QDSS_TSCTR_CLK                         34
+> >  #define SFAB_ADM0_M0_A_CLK                     35
+> >  #define SFAB_ADM0_M1_A_CLK                     36
+> > -#define SFAB_ADM0_M2_A_CLK                     37
+> > +#define SFAB_ADM0_M2_H_CLK                     37
+> 
+> Technically these changes break backwards compatibility, but I guess
+> that field updates to newer kernel images for this SoC are not a
+> concern?
 
-On 24 April 2014 18:33, Shaik Ameer Basha <shaik.ameer@samsung.com> wrote:
-> This patch fixes some parent-child relationships according
-> to the latest datasheet and adds more clocks related to
-> PERIS and GEN blocks.
-
-Again, it is better to split up the fixes from other stuff so that it
-can go in the -rc
-and can be back ported to stable if needed.
+I thought only the number was the ABI. The #defines are just here
+to make it easier to speak about the same numbers in the driver
+and the DT. Technically we could have made two #defines for 37
+but since nobody is using it so far, it seems easier to just
+rename it.
 
 -- 
-With warm regards,
-Sachin
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
