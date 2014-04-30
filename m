@@ -1,60 +1,68 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH] clk: qcom: Various fixes for MSM8960's global clock
- controller
-Date: Wed, 30 Apr 2014 12:14:23 -0700
-Message-ID: <20140430191423.5718.27549@quantum>
-References: <1396629176-7413-1-git-send-email-galak@codeaurora.org>
- <20140429065114.7224.13620@quantum> <20140430155308.GE20486@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 07/15] ARM: dts: kirkwood: consolidate common pinctrl
+ settings
+Date: Wed, 30 Apr 2014 21:39:41 +0200
+Message-ID: <5361517D.8000106@gmail.com>
+References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com> <1398862602-29595-8-git-send-email-sebastian.hesselbarth@gmail.com> <20140430164236.GC12944@obsidianresearch.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140430155308.GE20486@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kumar Gala <galak@codeaurora.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140430164236.GC12944-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd (2014-04-30 08:53:08)
-> On 04/28, Mike Turquette wrote:
-> > Quoting Kumar Gala (2014-04-04 09:32:56)
-> > > diff --git a/include/dt-bindings/clock/qcom,gcc-msm8960.h b/include/dt-bindings/clock/qcom,gcc-msm8960.h
-> > > index 03bbf49..f9f5471 100644
-> > > --- a/include/dt-bindings/clock/qcom,gcc-msm8960.h
-> > > +++ b/include/dt-bindings/clock/qcom,gcc-msm8960.h
-> > > @@ -51,7 +51,7 @@
-> > >  #define QDSS_TSCTR_CLK                         34
-> > >  #define SFAB_ADM0_M0_A_CLK                     35
-> > >  #define SFAB_ADM0_M1_A_CLK                     36
-> > > -#define SFAB_ADM0_M2_A_CLK                     37
-> > > +#define SFAB_ADM0_M2_H_CLK                     37
-> > 
-> > Technically these changes break backwards compatibility, but I guess
-> > that field updates to newer kernel images for this SoC are not a
-> > concern?
+On 04/30/2014 06:42 PM, Jason Gunthorpe wrote:
+> On Wed, Apr 30, 2014 at 02:56:34PM +0200, Sebastian Hesselbarth wrote:
+>> All SoCs have the same pinctrl setting for NAND, UART0/1, SPI, TWSI0,
+>> and GBE1. Move it to the common pinctrl node that we now have.
 > 
-> I thought only the number was the ABI. The #defines are just here
-> to make it easier to speak about the same numbers in the driver
-> and the DT. Technically we could have made two #defines for 37
-> but since nobody is using it so far, it seems easier to just
-> rename it.
-
-It makes sense for the number to be the ABI, but I've never gone digging
-into the dtb format. Either way this change was taken in yesterday so no
-big deal.
-
-Regards,
-Mike
-
+> There are two possible choices for UART0, UART1, and SPI on kirkwood..
 > 
-> -- 
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> hosted by The Linux Foundation
+> For instance I use this on my board:
+> 
+>                                 pmx_spi0: pmx-spi0 {
+>                                         marvell,pins = "mpp7", "mpp10", "mpp11", "mpp12";
+>                                         marvell,function = "spi";
+>                                 };
+> 
+> vs
+> 
+>> +
+>> +			pmx_spi: pmx-spi {
+>> +				marvell,pins = "mpp0", "mpp1", "mpp2", "mpp3";
+>> +				marvell,function = "spi";
+>> +			};
+> 
+> It looks like all the boards in the kernel use the same choice, so it
+> makes some sense to consolidate, but I assume a board file can
+> override the marvell,pins?
+
+Yes, there are already some boards (e.g. t5325 with spi0) overwriting
+pinctrl settings instead of overwriting the pinctrl-0 property. I
+thought, I keep this behavior and note it above each pinctrl node in
+some of the following patches.
+
+But your comment reminded me of something more important: there is
+one set of boards using kirkwood-lsxl.dtsi which does not explicitly
+set spi's pinctrl property. So this consolidation potentially breaks
+spi on those boards.
+
+An explicit Tested-by for Buffalo Linkstation LS-CHLv2 and/or LS-XHL
+would be good.
+
+> Otherwise the rest of your patchset looked sane to me.
+
+I count that as a
+
+Reviewed-by: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+
+Thanks!
+
+Sebastian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
