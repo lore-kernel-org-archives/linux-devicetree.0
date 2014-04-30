@@ -1,90 +1,83 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] ARM: dts: Add peach-pit board support
-Date: Wed, 30 Apr 2014 09:48:33 -0700
-Message-ID: <CAD=FV=VTdi8o+_t+6fY4DqRT_VZDMKeFo3UNxi1UD7HAyHYNCQ@mail.gmail.com>
-References: <1398313031-14848-1-git-send-email-arun.kk@samsung.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 00/15] Kirkwood DT fix and cleanup round 1
+Date: Wed, 30 Apr 2014 18:49:04 +0200
+Message-ID: <20140430164904.GC3082@lunn.ch>
+References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398313031-14848-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olofj@google.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tushar Behera <tushar.behera@linaro.org>, Arun Kumar <arunkk.samsung@gmail.com>, Tom Rini <trini@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398862602-29595-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Arun,
+On Wed, Apr 30, 2014 at 02:56:27PM +0200, Sebastian Hesselbarth wrote:
+> This is a patch set starting Kirkwood DT cleanup since over time some
+> cleanup potential piled up on it. Also, now that Barebox is going to
+> reuse the same DT code basis, we need some lowlevel property
+> improvements, that we ignore(d) on Linux up to now.
+> 
+> The patches are based on recent mvebu/dt to ease integration by Jason
+> since there are some Kirkwood dts related patches already queued up
+> for v3.16.
+> 
+> The first patch is a real fix and should be treated accordingly. We
+> moved pcie-controller nodes to mbus node a while ago. Somehow, we missed
+> two boards that should have broken pcie since then. A formal Tested-by
+> would be nice by someone who has one of the affected boards.
+> 
+> Basically, cleanup patches 2-13 up to now comprise:
+> - Patch 2 adds node labels for all common and SoC-specific nodes to ease
+>   further cleanup series I have in mind:
+>   MVEBU maintainers will know, current ocp@f1000000 isn't really correct
+>   but should be moved to mbus/internal-regs instead. Unfortunately, there
+>   are some 40+ boards replaying ocp bus node. 
+>   I _plan_ to convert boards ocp nodes to node label references in
+>   subsequent patch sets to finally move the ocp bus nodes to
+>   mbus/internal-regs more easily.
+> - Patch 3 adds stdout-path to all boards with ttyS0 bootargs:
+>   Linux currently doesn't really care about stdout-path property set, but
+>   Barebox does. ePAPR explicitly names it, so set it now and ease Barebox
+>   progress at least.
+> - Patch 4 removes clock-frequency from UART nodes:
+>   Back when we didn't have DT clock providers for Kirkwood, TCLK was
+>   spread over UART nodes in board files. Just remove the now unnecessary
+>   clock-frequency property, as we reference TCLK in the SoCs UART nodes.
+> - Patches 5-7 consolidate common pinctrl settings:
+>   First, rename the pinctrl node to a more appropriate name as recommended
+>   by ePAPR, then add a minimal stub to the toplevel SoC DT include. That
+>   stub then gets filled with common pinctrl settings that are currently
+>   spead over SoC-specific includes or even board files. Again, this also
+>   eases Barebox progress, as pinctrl for a bootloader is a really
+>   important property.
+> - Patches 8-13 set default pinctrl properties for some nodes:
+>   With pinctrl settings in common SoC DT, we can now reference them in the
+>   device nodes also located there. If there are other possible pinctrl
+>   settings, put a note in front of the corresponding pinctrl node and
+>   overwrite the pinctrl setting in the board file.
+> - Patches 14 and 15 set some lowlevel properties for Guruplug ethernet:
+>   While working with Barebox, I noticed missing phy-connection-type
+>   and non-standard PHY's compatible on Guruplug. This also applies to
+>   most of the other boards, but Guruplug is the only board I use Barebox
+>   on and have the required information.
+> 
+> Overall commit stats aren't as bad as I initially thought:
+> 218 insertions and 300 deletions still is ~25% less LOC :)
 
-On Wed, Apr 23, 2014 at 9:17 PM, Arun Kumar K <arun.kk@samsung.com> wrote:
-> Adds the google peach-pit board dts file which uses
-> exynos5420 SoC.
->
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> ---
-> Changes from v1
-> ---------------
-> - Addressed review comments from Doug, Sachin & Tushar
-> - Removed adc and lid-switch nodes
-> ---
->  arch/arm/boot/dts/Makefile                 |    1 +
->  arch/arm/boot/dts/exynos5420-peach-pit.dts |  182 ++++++++++++++++++++++++++++
->  2 files changed, 183 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 35c146f..3220e29 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->         exynos5250-smdk5250.dtb \
->         exynos5250-snow.dtb \
->         exynos5420-arndale-octa.dtb \
-> +       exynos5420-peach-pit.dtb \
->         exynos5420-smdk5420.dtb \
->         exynos5440-sd5v1.dtb \
->         exynos5440-ssdk5440.dtb
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> new file mode 100644
-> index 0000000..fbb0469
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> @@ -0,0 +1,182 @@
-> +/*
-> + * Google Peach Pit Rev 6+ board device tree source
-> + *
-> + * Copyright (c) 2014 Google, Inc
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +/dts-v1/;
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "exynos5420.dtsi"
-> +
-> +/ {
-> +       model = "Google Peach Pit Rev 6+";
-> +
-> +       compatible = "google,pit-rev16",
-> +               "google,pit-rev15", "google,pit-rev14",
-> +               "google,pit-rev13", "google,pit-rev12",
-> +               "google,pit-rev11", "google,pit-rev10",
-> +               "google,pit-rev9", "google,pit-rev8",
-> +               "google,pit-rev7", "google,pit-rev6",
-> +               "google,pit", "google,peach","samsung,exynos5420",
-> +               "samsung,exynos5";
-> +
-> +       memory {
-> +               reg = <0x20000000 0x80000000>;
-> +       };
+Hi Sebastian
 
-One other thing that came up at ELC: it might not be so wise to
-include actual values here.  We're expecting that the bootloader will
-probe memory and tell you whether you're on a 2GB board or a 4GB
-board.  IIRC the proper thing to do here is to use 0 for both, so:
+Apart from the one patch i raised a question about:
 
-reg = <0 0>;
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
--Doug
+Over the weekend i will try to do some testing with the hardware i
+have.
+
+	Thanks
+		Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
