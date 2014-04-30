@@ -1,52 +1,63 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv3 0/2] add DT endianness binding support
-Date: Wed, 30 Apr 2014 11:25:00 -0700
-Message-ID: <20140430182500.GD3245@sirena.org.uk>
-References: <1398833029-29546-1-git-send-email-Li.Xiubo@freescale.com>
- <20140430071011.GA7312@netboy>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
+Date: Wed, 30 Apr 2014 11:23:12 -0700
+Message-ID: <20140430182312.GC3245@sirena.org.uk>
+References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
+ <20140430141708.GS29462@lee--X1>
+ <20140430180653.GB3245@sirena.org.uk>
+ <1398881556.141711961@f232.i.mail.ru>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="fOHHtNG4YXGJ0yqR"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="gr/z0/N6AeWAPJVB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140430071011.GA7312@netboy>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Cochran <richardcochran@gmail.com>
-Cc: Xiubo Li <Li.Xiubo@freescale.com>, mark.rutland@arm.com, gregkh@linuxfoundation.org, mpa@pengutronix.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1398881556.141711961-JZ33oUlt0U9sdVUOrk1QfQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---fOHHtNG4YXGJ0yqR
-Content-Type: text/plain; charset=us-ascii
+--gr/z0/N6AeWAPJVB
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 30, 2014 at 09:10:12AM +0200, Richard Cochran wrote:
-> Shouldn't this go to the arm list and rmk for review, too?
+On Wed, Apr 30, 2014 at 10:12:36PM +0400, Alexander Shiyan wrote:
+> Wed, 30 Apr 2014 11:06:53 -0700 =D0=BE=D1=82 Mark Brown <broonie@kernel.o=
+rg>:
 
-Is there any particular reason for including rmk?  It's generally not
-helpful to spam people with serieses without reason, we all get quite a
-lot of mail already...
+> > ----------------------------------------------------------------
+> > ASoC: mc13783 DT support
 
---fOHHtNG4YXGJ0yqR
+> Sorry, this means that I should not create v2?=20
+
+It's probably not going to achieve an enormous amount, no.  Let's see.
+
+--gr/z0/N6AeWAPJVB
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTYT/4AAoJELSic+t+oim90z4P/2gWqw9tczkPtuJjqyITcAv0
-1tecGCnsG15Iq3U/9E5IeyC01t3/NZMlpdpVoUJl+NvUKyczMmwHqP/fZv+nbLzd
-PpW7ojIKUhNr0cbdVhGfFbALiEnsyH15F97MYsA5Vgufo0MO2z/m9WRgZt/HgtB4
-J8Gawswg7ql0keAby2wflww1saTkDdihXYi9caOLO25JlToHkqkN7n5icGU4KSkw
-52ZvZ6HwmzT1HPbQDoQKH6+ifmaubdRSBDPL24EPLWWe6Ut9X8XT2TKrZuQ6n3qJ
-n0YduezEXRQLaf8IukGXoXwwcL6ryEIQsW21DzHTetbPwwrwhJPPLr9ADj2/Lj6u
-zq9H4z59OfuPDOjGsnmuQ2RmjmpbiC3vJ5nqCERS44/J3cSZx8fA4GWwZNyZN7GK
-agicuSDd3uA9dGFlTENEPgQDIT5qfw8w7+yQmYWyLVzx/7qnJTYwaBW7IdTSGCcz
-dy7q/JnuElgI+SfvxkaM6OIwPIU15vOUzd+C6Aakxc2Uz2ETHnznaVHmkpIJLuSQ
-v/0flOjeEf51JX2viG/ZnozPLSESr8/8MjQ/SlE5dKnJ8Qd0V/wSXr1P09+195PB
-6MYn2f3vIW+G2+u7ezuEZn8i3GTsAR6v4OPmvei73pahwd160r2rEcCB9TaNEdyG
-QZwUDRZjfMTBgwE/qUIU
-=Q5VZ
+iQIcBAEBAgAGBQJTYT+NAAoJELSic+t+oim9urgQAITUcaWj7x8s3Moep+G+DgW5
+IaPvsgJDQKXbK1NbhWln+qLJoDxpkrWyieirWmzOthPDcOI1y085NMMTlpJRCXp1
+h5x5ndLxsayORL1nhNIBshlDO65VsXe39EGJu7E1rFUpOs6puZFIvi1OPXgWZIuE
+jJntR5efFw+K/R365UVsDCIS7gsiscisqhsMVEHn3AuJq+vs0LS5SKf1XtU6bY6Z
+CkCmtrvAyao2GS9xrUC2CMXZEUPpZpgxMsG4koWitC0HPrAZlCfa65xLhDme7TdS
+wOUe+a255kto7NEos/dS02OhoIZkJ9u/h87bkp1lsB8O05zzkEbVx1oSXp6UliRL
+ciObPTYSFbXisj94F4fKRgY/eCWLk1A+uDQB40v7ueEXnoPKFJmmbjq8rwBQCqvF
+vKurAJHpLJd26Xt8muVNgqNvLQ0DvxUsAgef6YpX2KmAFJ+HCzYOw8y5rcqCMelT
+gCKuy7y4aP82oFrympEfsRNb6S8tmQcMNJjTpi+3S7Os+TmWAyrtkqS5jcuyJN1W
+AJrB7M7+6g8IbS0biliolOtVNM0tlCg+GKI+gie9W744pvpalc3TGaDj++I9cugD
+W4EC/VGPtkQhXYu+h+rRt38D81hw/XNrzPOiLkaU6lXQKE6vKiaItIAj+ZD+lWmL
+OXFvK4rZfYs52POc7mg4
+=J5SM
 -----END PGP SIGNATURE-----
 
---fOHHtNG4YXGJ0yqR--
+--gr/z0/N6AeWAPJVB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
