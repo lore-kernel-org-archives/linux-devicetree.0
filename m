@@ -1,174 +1,376 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
-Date: Wed, 30 Apr 2014 11:54:37 -0500
-Message-ID: <20140430165437.GO23679@saruman.home>
-References: <20140421160802.GA22794@saruman.home>
- <Pine.LNX.4.44L0.1404211228190.1201-100000@iolanthe.rowland.org>
- <CALHRZur7+MaYXbWOfbvjggPN7_eYAE+th5VNbcLP=ehvm0HGsA@mail.gmail.com>
- <20140422144944.GF5524@saruman.home>
- <CALHRZuoq32qoh70hbb2LtVJNgkwB1j6bvzmYONmxcn3mBnGONQ@mail.gmail.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v4 10/21] mtd: support BB SRAM on ICP DAS LP-8x4x
+Date: Wed, 30 Apr 2014 10:21:14 -0700
+Message-ID: <20140430172114.GA2497@norris-Latitude-E6410>
+References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
+ <1397668667-27328-1-git-send-email-ynvich@gmail.com>
+ <1397668667-27328-4-git-send-email-ynvich@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5PFZVUeDPxlnBcQp"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALHRZuoq32qoh70hbb2LtVJNgkwB1j6bvzmYONmxcn3mBnGONQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1397668667-27328-4-git-send-email-ynvich@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sergei Ianovich <ynvich@gmail.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---5PFZVUeDPxlnBcQp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Sergei,
 
-Hi,
+A few more small comments.
 
-On Wed, Apr 23, 2014 at 09:57:52AM +0530, sundeep subbaraya wrote:
-> >> > I get the impression that the two of you are arguing past each other.
-> >> > It appears that Sundeep is talking about transferring data from the
-> >> > gadget driver's buffer to an internal buffer in the UDC hardware, but
-> >> > Felipe is talking about transferring data from the UDC to the host.
-> >> >
-> >> > As I understand it, Sundeep said that when the gadget driver queues a
-> >> > data-IN request, the UDC driver copies as much of the data buffer as
-> >> > possible into a hardware FIFO.  If it succeeds in copying all the da=
-ta
-> >> > into the FIFO then the request's completion routine gets called
-> >> > immediately, even though the data doesn't get sent from the FIFO to =
-the
-> >> > host until the host asks for it.
-> >> >
-> >> > If only part of the data can be copied into the FIFO then the request
-> >> > is added to the ep's request queue before the usb_ep_queue() call
-> >> > returns.  When space becomes available in the FIFO, the data will be
-> >> > copied and eventually sent to the host.  When all the data has been
-> >> > copied to the FIFO, the request's completion routine will be called.
-> >
-> > there seems to be a slight problem with this approach: how will the IP
-> > know that even though you copied X bytes into the FIFO, it should wait
-> > for another Y bytes before shifting data to the wire ? How will it know
-> > that it shouldn't generate CRC yet because there's still data to be
-> > added ?
->=20
-> No. IP does/need not know that it has to wait for Y bytes.We just
-> write X bytes into
-> HW buffer and count as X in buffer count register. IP generates CRC
-> for bytes based
-> on Count register and sends data to Host. Let us consider this
-> scenario of bulk IN transfer:
-> req.length =3D 5120 and   wMaxPacketSize =3D 512, ep_queue is called once
-> and is returned with
-> status 0. In ep_queue this code snippet,
->                if (xudc_write_fifo(ep, req) =3D=3D 1)
->                         req =3D NULL;
->                if(req !=3D NULL)
->                          list_add_tail(&req->queue, &ep->queue);
->=20
-> xudc_write_fifo does the following if HW buffers not busy:
->      copies 512 bytes to HW buffer
->      set count and ready registers so that IP can start data transfer to =
-host
->      changes req.actual to 512 and returns 0(if req.length >
-> wMaxPacketSize) and 1(if req.length < wMaxPacketSize).
+On Wed, Apr 16, 2014 at 09:17:15PM +0400, Sergei Ianovich wrote:
+> This provides an MTD device driver for 512kB of battery backed up SRAM
+> on ICPDAS LP-8X4X programmable automation controllers.
+> 
+> SRAM chip is connected via FPGA and is not accessible without a driver,
+> unlike flash memory which is wired to CPU MMU.
+> 
+> This SRAM becomes an excellent persisent storage of volatile process
+> data like counter values and sensor statuses. Storing those data in
+> flash or mmc card is not a viable solution.
+> 
+> Signed-off-by: Sergei Ianovich <ynvich@gmail.com>
+> Reviewed-by: Brian Norris <computersforpeace@gmail.com>
+> ---
+>    v3..v4 for Brian Norris 'Reviewed-by'
+>    * add doc file for DT binding
+>    * move DTS binding to a different patch (8/21)
+>    * drop unused include directive
+>    * drop safely unused callback
+>    * drop non-default partion probe types
+>    * drop duplicate error checks
+>    * drop duplicate error reporting
+>    * fixed error message on MTD registeration
+>    * fixed module removal routine
 
-you should return a proper error code, not 1.
+Thanks for the updates. This patch looks pretty good to me.
 
-> Since return is zero this request is added to queue. When data
-> transfer to host is completed IP generates
-> an interrupt. In the interrupt handler we again call write_fifo if
-> request list is not empty.
->        if (list_empty(&ep->queue))
->                 req =3D NULL;
->         else
->                 req =3D list_entry(ep->queue.next, struct xusb_req, queue=
-);
->         if (!req)
->                 return;
+>    v2..v3
+>    * no changes (except number 08/16 -> 10/21)
+> 
+>    v0..v2
+>    * use device tree
+>    * use devm helpers where possible
+> 
+>  .../devicetree/bindings/mtd/sram-lp8x4x.txt        |  22 +++
+>  arch/arm/configs/lp8x4x_defconfig                  |   1 +
+>  drivers/mtd/devices/Kconfig                        |  14 ++
+>  drivers/mtd/devices/Makefile                       |   1 +
+>  drivers/mtd/devices/sram_lp8x4x.c                  | 204 +++++++++++++++++++++
+>  5 files changed, 242 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/sram-lp8x4x.txt
+>  create mode 100644 drivers/mtd/devices/sram_lp8x4x.c
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/sram-lp8x4x.txt b/Documentation/devicetree/bindings/mtd/sram-lp8x4x.txt
+> new file mode 100644
+> index 0000000..8b1e864
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/sram-lp8x4x.txt
+> @@ -0,0 +1,22 @@
+> +512kB battery backed up SRAM on LP-8x4x industrial computers
+> +
+> +Required properties:
+> +- compatible : should be "icpdas,sram-lp8x4x"
+> +
+> +- reg: physical base addresses and region lengths of
+> +       * IO memory range
+> +       * SRAM page selector
 
-okay, this can be improved a bit though:
+Are these region types pretty static for this type of hardware? If not,
+it helps to have a reg-names property in the DT, when there are 2 or
+more register resources.
 
-	if (list_empty(&ep->queue))
-		return;
+> +- eeprom-gpios : should point to active-low write enable GPIO
 
-	req =3D list_first_entry(&ep->queue, struct xusb_req, queue);
+I'm curious: your driver doesn't actually utilize this binding. Is this
+intentional? Is it actually optional? (I note that the example DT below
+doesn't have this property...)
 
->         if (ep->is_in)
->                 xudc_write_fifo(ep, req);
->         else
->                 xudc_read_fifo(ep, req);
->=20
-> This happens 10 times(since length 5120) and completion is called.
+> +
+> +SRAM chip is connected via FPGA and is not accessible without a driver,
+> +unlike flash memory which is wired to CPU MMU. Driver is essentially
+> +an address translation routine.
+> +
+> +Example:
+> +
+> +	sram@a000 {
+> +		compatible = "icpdas,sram-lp8x4x";
+> +		reg = <0xa000 0x1000
+> +		       0x901e 0x1>;
+> +	};
+> diff --git a/arch/arm/configs/lp8x4x_defconfig b/arch/arm/configs/lp8x4x_defconfig
+> index d60e37a..17a4e6f 100644
+> --- a/arch/arm/configs/lp8x4x_defconfig
+> +++ b/arch/arm/configs/lp8x4x_defconfig
+> @@ -57,6 +57,7 @@ CONFIG_MTD_CFI_ADV_OPTIONS=y
+>  CONFIG_MTD_CFI_GEOMETRY=y
+>  CONFIG_MTD_CFI_INTELEXT=y
+>  CONFIG_MTD_PHYSMAP_OF=y
+> +CONFIG_MTD_SRAM_LP8X4X=y
+>  CONFIG_PROC_DEVICETREE=y
+>  CONFIG_BLK_DEV_LOOP=y
+>  CONFIG_BLK_DEV_LOOP_MIN_COUNT=2
 
-ok.
+I can't take the defconfig update via MTD; it will need to go via the
+appropriate ARM tree (arm-soc?). So this hunk needs to move to another
+patch.
 
-> > If there's no space in the FIFO yet, why copy data at all ?
->=20
-> If HW buffers are busy(IP is still transferring previous data to Host
-> from buffer) then xudc_write_fifo returns 0 without changing
-> req.actual. When previous data transfer completes then Interrupt then
-> again write_fifo from handler.
+> diff --git a/drivers/mtd/devices/Kconfig b/drivers/mtd/devices/Kconfig
+> index 1210bc2..fc8552b 100644
+> --- a/drivers/mtd/devices/Kconfig
+> +++ b/drivers/mtd/devices/Kconfig
+> @@ -225,4 +225,18 @@ config BCH_CONST_T
+>  	default 4
+>  endif
+>  
+> +config MTD_SRAM_LP8X4X
+> +	tristate "SRAM on ICPDAS LP-8X4X"
+> +	depends on OF && ARCH_PXA
+> +       ---help---
+> +	 This provides an MTD device driver for 512kiB of battery backed up SRAM
+> +	 on ICPDAS LP-8X4X programmable automation controllers.
+> +
+> +	 SRAM chip is connected via FPGA and is not accessible without a driver,
+> +	 unlike flash memory which is wired to CPU MMU.
+> +
+> +	 Say N, unless you plan to run this kernel on LP-8X4X.
+> +
+> +	 If you say M, the module will be called sram_lp8x4x.
+> +
+>  endmenu
+> diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
+> index c68868f..a7d86e2 100644
+> --- a/drivers/mtd/devices/Makefile
+> +++ b/drivers/mtd/devices/Makefile
+> @@ -17,6 +17,7 @@ obj-$(CONFIG_MTD_SPEAR_SMI)	+= spear_smi.o
+>  obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
+>  obj-$(CONFIG_MTD_BCM47XXSFLASH)	+= bcm47xxsflash.o
+>  obj-$(CONFIG_MTD_ST_SPI_FSM)    += st_spi_fsm.o
+> +obj-$(CONFIG_MTD_SRAM_LP8X4X)	+= sram_lp8x4x.o
+>  
+>  
+>  CFLAGS_docg3.o			+= -I$(src)
+> diff --git a/drivers/mtd/devices/sram_lp8x4x.c b/drivers/mtd/devices/sram_lp8x4x.c
+> new file mode 100644
+> index 0000000..4cfa70b
+> --- /dev/null
+> +++ b/drivers/mtd/devices/sram_lp8x4x.c
+> @@ -0,0 +1,204 @@
+> +/*
+> + *  linux/drivers/mtd/devices/lp8x4x_sram.c
+> + *
+> + *  MTD Driver for SRAM on ICPDAS LP-8x4x
+> + *  Copyright (C) 2013 Sergei Ianovich <ynvich@gmail.com>
+> + *
+> + *  This program is free software; you can redistribute it and/or modify
+> + *  it under the terms of the GNU General Public License version 2 as
+> + *  published by the Free Software Foundation or any later version.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/map.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/mtd/partitions.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_device.h>
+> +#include <linux/slab.h>
+> +#include <linux/string_helpers.h>
+> +#include <linux/types.h>
+> +
+> +struct lp8x4x_sram_info {
+> +	void __iomem	*bank;
+> +	void __iomem	*virt;
+> +	struct mutex	lock;
+> +	unsigned	active_bank;
+> +	struct mtd_info	mtd;
+> +};
+> +
+> +static int
+> +lp8x4x_sram_erase(struct mtd_info *mtd, struct erase_info *instr)
+> +{
+> +	struct lp8x4x_sram_info *info = mtd->priv;
+> +	unsigned bank = instr->addr >> 11;
+> +	unsigned offset = (instr->addr & 0x7ff) << 1;
+> +	loff_t i;
+> +
+> +	mutex_lock(&info->lock);
+> +	if (unlikely(bank != info->active_bank)) {
+> +		info->active_bank = bank;
+> +		iowrite8(bank, info->bank);
+> +	}
+> +	for (i = 0; i < instr->len; i++) {
+> +		iowrite8(0xff, info->virt + offset);
+> +		offset += 2;
+> +		if (unlikely(offset == 0)) {
+> +			info->active_bank++;
+> +			iowrite8(info->active_bank, info->bank);
+> +		}
+> +	}
+> +	mutex_unlock(&info->lock);
+> +	instr->state = MTD_ERASE_DONE;
+> +	mtd_erase_callback(instr);
+> +
+> +	return 0;
+> +}
+> +
+> +static int
+> +lp8x4x_sram_write(struct mtd_info *mtd, loff_t to, size_t len,
+> +		size_t *retlen, const u_char *b)
+> +{
+> +	struct lp8x4x_sram_info *info = mtd->priv;
+> +	unsigned bank = to >> 11;
+> +	unsigned offset = (to & 0x7ff) << 1;
+> +	loff_t i;
+> +
+> +	mutex_lock(&info->lock);
+> +	if (unlikely(bank != info->active_bank)) {
+> +		info->active_bank = bank;
+> +		iowrite8(bank, info->bank);
+> +	}
+> +	for (i = 0; i < len; i++) {
+> +		iowrite8(b[i], info->virt + offset);
+> +		offset += 2;
+> +		if (unlikely(offset == 0)) {
+> +			info->active_bank++;
+> +			iowrite8(info->active_bank, info->bank);
+> +		}
+> +	}
+> +	mutex_unlock(&info->lock);
+> +	*retlen = len;
+> +	return 0;
+> +}
+> +
+> +static int
+> +lp8x4x_sram_read(struct mtd_info *mtd, loff_t from, size_t len,
+> +		size_t *retlen, u_char *b)
+> +{
+> +	struct lp8x4x_sram_info *info = mtd->priv;
+> +	unsigned bank = from >> 11;
+> +	unsigned offset = (from & 0x7ff) << 1;
+> +	loff_t i;
+> +
+> +	mutex_lock(&info->lock);
+> +	if (unlikely(bank != info->active_bank)) {
+> +		info->active_bank = bank;
+> +		iowrite8(bank, info->bank);
+> +	}
+> +	for (i = 0; i < len; i++) {
+> +		b[i] = ioread8(info->virt + offset);
+> +		offset += 2;
+> +		if (unlikely(offset == 0)) {
+> +			info->active_bank++;
+> +			iowrite8(info->active_bank, info->bank);
+> +		}
+> +	}
+> +	mutex_unlock(&info->lock);
+> +	*retlen = len;
+> +	return 0;
+> +}
+> +
+> +static struct of_device_id of_flash_match[] = {
+> +	{
+> +		.compatible	= "icpdas,sram-lp8x4x",
+> +	},
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, of_flash_match);
+> +
+> +static int
+> +lp8x4x_sram_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *match;
+> +	struct lp8x4x_sram_info *info;
+> +	struct resource *res_virt, *res_bank;
+> +	char sz_str[16];
+> +	struct mtd_part_parser_data ppdata;
+> +	int err = 0;
+> +
+> +	match = of_match_device(of_flash_match, &pdev->dev);
+> +	if (!match)
+> +		return -EINVAL;
 
-ok, sounds good to me.
+Does this of_match_device() serve any particular purpose? Your driver
+already matches against these IDs, and you're not actually retrieving
+any of-data from the match, so this looks redundant.
 
-> >> > Thus there never is any need for the gadget driver to queue the requ=
-est
-> >> > again.
->=20
-> Yes
->=20
-> >> >An incomplete transfer means the FIFO didn't have enough room
-> >> > when the request was submitted; it doesn't mean that the data didn't
-> >> > eventually get sent to the host.
-> >>
-> >> Exactly Alan,this is what I was trying to say. Probably I was not
-> >> clear in explaining. I didnt see any harm this way and even this
-> >> implementation is same like at91_udc.c. I have been reading
-> >> mas_storage to understand when does gadget driver tries to enqueue a
-> >> request again. Since different gadget drivers might have different
-> >> requirements (agree with Felipe), wanted to know criteria for queuing
-> >> a same request again.
-> >>
-> >> I will change this implementation as per Felipe comments and test with
-> >> some of the gadgets.
-> >
-> > Let's see, please help me understand the questions above.
->=20
-> Hope this helps.
+> +
+> +	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
+> +	if (!info)
+> +		return -ENOMEM;
+> +
+> +	res_virt = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	info->virt =  devm_ioremap_resource(&pdev->dev, res_virt);
+> +	if (IS_ERR(info->virt))
+> +		return PTR_ERR(info->virt);
+> +
+> +	res_bank = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> +	info->bank = devm_ioremap_resource(&pdev->dev, res_bank);
+> +	if (IS_ERR(info->bank))
+> +		return PTR_ERR(info->bank);
+> +
+> +	info->mtd.priv = info;
+> +	info->mtd.name = "SRAM";
 
-it does, but please sort out the small comments I had above.
+Are you absolutely sure there is only ever a single SRAM device on a
+given system? Because otherwise, you will get redundantly-named MTD's.
+If the answer is no, you might consider a unique naming scheme.
 
-cheers
+> +	info->mtd.type = MTD_RAM;
+> +	info->mtd.flags = MTD_CAP_RAM;
+> +	info->mtd.size = resource_size(res_virt) << 7;
+> +	info->mtd.erasesize = 512;
+> +	info->mtd.writesize = 4;
+> +	info->mtd._erase = lp8x4x_sram_erase;
+> +	info->mtd._write = lp8x4x_sram_write;
+> +	info->mtd._read = lp8x4x_sram_read;
+> +	info->mtd.owner = THIS_MODULE;
+> +
+> +	mutex_init(&info->lock);
+> +	iowrite8(info->active_bank, info->bank);
+> +	platform_set_drvdata(pdev, info);
+> +
+> +	ppdata.of_node = pdev->dev.of_node;
+> +	err = mtd_device_parse_register(&info->mtd, NULL, &ppdata,
+> +			NULL, 0);
+> +
+> +	if (err < 0) {
+> +		dev_err(&pdev->dev, "failed to register MTD\n");
+> +		return err;
+> +	}
+> +
+> +	string_get_size(info->mtd.size, STRING_UNITS_2, sz_str,
+> +			sizeof(sz_str));
+> +	dev_info(&pdev->dev, "using %s SRAM on LP-8X4X as %s\n", sz_str,
+> +			dev_name(&info->mtd.dev));
+> +	return 0;
+> +}
+> +
+> +static int
+> +lp8x4x_sram_remove(struct platform_device *dev)
+> +{
+> +	struct lp8x4x_sram_info *info = platform_get_drvdata(dev);
+> +	return mtd_device_unregister(&info->mtd);
+> +}
+> +
+> +static struct platform_driver lp8x4x_sram_driver = {
+> +	.driver = {
+> +		.name		= "sram-lp8x4x",
+> +		.owner		= THIS_MODULE,
+> +		.of_match_table = of_flash_match,
+> +	},
+> +	.probe		= lp8x4x_sram_probe,
+> +	.remove		= lp8x4x_sram_remove,
+> +};
+> +
+> +module_platform_driver(lp8x4x_sram_driver);
+> +
+> +MODULE_LICENSE("GPL");
+> +MODULE_AUTHOR("Sergei Ianovich <ynvich@gmail.com>");
+> +MODULE_DESCRIPTION("MTD driver for SRAM on ICPDAS LP-8x4x");
 
---=20
-balbi
-
---5PFZVUeDPxlnBcQp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTYSrNAAoJEIaOsuA1yqREkF4P/RZSzrk6ZZO0+zhw8fAcM7Ot
-Q0beJ0VuMONNZ2IXKMovd1WDvIAMGn7orBySUFqvP1FzLxGP05NagbRr7X+8mFGl
-ulRtXkuLcmGqkzXvP8BsNwE0vTad4ND1eWOyReSuskY1HmSjkyl0c/zE0+As2IBm
-PuR2u7bgZzsoNPd0nYRdkPkYJ1f/7ezmqsbw0B6webk+LBpe3a3bHX+xpYf7oupO
-8A+hmN2QFVzZOx13erefAapJQJ7y5fs/xjGQhWnzfCn8QVWL/CD+/aipiFvbZLfz
-TuXHqGBHI1lY1d5gP5/QxUZb6CUr+evrvASHTveNmrxS5BPXMTY97WBKO2vElhj7
-md6nu5sNOm5e68QSVcELgANV2OQcgk4N1PLc2Nap7wCGo9zc2EGR6toU7M6GLVH6
-/5v+V8bUM/0GdHQ5b06VclFMNgWscbkNQdt37Y7wh93NxdEz8ZkWikcU7Vir3NUP
-Of7GR2YPn79uqJs6HPc/Yq3yZba1sota3YkElT5hMEHRXqZ2Fa3mjO5CDtJQrRok
-a8thvXHZ2vqkqwwwJItuCq+Jbxx7ZmkyzKZwhL/StwJT5zTDUb6BfOHnrJgy3GgJ
-Pk1EwZYHF3/tbLLdUOB2KiBXP39cDcJRosvhXyeRcXc6lr5DFxzAxT28UpUPNyMu
-mdUKzJoLNeFk9GRZrDYW
-=9bo9
------END PGP SIGNATURE-----
-
---5PFZVUeDPxlnBcQp--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Brian
