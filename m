@@ -1,419 +1,279 @@
-From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 02/03] ARM: sunxi: Add driver for sunxi
- IR controller
-Date: Wed, 30 Apr 2014 04:11:27 -0700
-Message-ID: <20140430041127.450b913f.m.chehab@samsung.com>
-References: <d641a69a-01b4-443d-b121-48d13f46ee03@googlegroups.com>
- <3881d16f-578a-417b-8a55-ea9bad5af206@googlegroups.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alim Akhtar <alim.akhtar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 07/16] clk: exynos5420: update clocks for PERIC block
+Date: Wed, 30 Apr 2014 16:45:50 +0530
+Message-ID: <CAGOxZ50Qw3TAX4KBjHMnGT8FHoj=vxXJWHq7+cCdE6CJKdPO9Q@mail.gmail.com>
+References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-8-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCH3HIU4XEBBBY5UQONQKGQECTSAIFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-reply-to: <3881d16f-578a-417b-8a55-ea9bad5af206-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCR0LXRgNGB0LXQvdC10LI=?= <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398344632-18623-8-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ameer Basha Shaik <shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Em Wed, 30 Apr 2014 03:58:18 -0700 (PDT)
-=D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=D0=B4=D1=80 =D0=91=D0=B5=D1=80=
-=D1=81=D0=B5=D0=BD=D0=B5=D0=B2 <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org> escreveu:
+HI shaik,
 
-> [PATCH v4 02/03] ARM: sunxi: Add driver for sunxi IR controller
->=20
-> This patch adds driver for sunxi IR controller.
-> It is based on Alexsey Shestacov's work based on the original driver=20
-> supplied by Allwinner.
->=20
-> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
->=20
-> diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
-> index 8fbd377..9427fad 100644
-> --- a/drivers/media/rc/Kconfig
-> +++ b/drivers/media/rc/Kconfig
-> @@ -343,4 +343,14 @@ config RC_ST
-> =20
->   If you're not sure, select N here.
-> =20
-> +config IR_SUNXI
-> +    tristate "SUNXI IR remote control"
-> +    depends on RC_CORE
-> +    depends on ARCH_SUNXI
-> +    ---help---
-> +      Say Y if you want to use sunXi internal IR Controller
-> +
-> +      To compile this driver as a module, choose M here: the module will
-> +      be called sunxi-ir.
-> +
->  endif #RC_DEVICES
-> diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
-> index f8b54ff..93cdbe9 100644
-> --- a/drivers/media/rc/Makefile
-> +++ b/drivers/media/rc/Makefile
-> @@ -32,4 +32,5 @@ obj-$(CONFIG_IR_GPIO_CIR) +=3D gpio-ir-recv.o
->  obj-$(CONFIG_IR_IGUANA) +=3D iguanair.o
->  obj-$(CONFIG_IR_TTUSBIR) +=3D ttusbir.o
->  obj-$(CONFIG_RC_ST) +=3D st_rc.o
-> +obj-$(CONFIG_IR_SUNXI) +=3D sunxi-ir.o
->  obj-$(CONFIG_IR_IMG) +=3D img-ir/
-> diff --git a/drivers/media/rc/sunxi-ir.c b/drivers/media/rc/sunxi-ir.c
-> new file mode 100644
-> index 0000000..f051d94
-> --- /dev/null
-> +++ b/drivers/media/rc/sunxi-ir.c
-> @@ -0,0 +1,303 @@
-> +/*
-> + * Driver for Allwinner sunXi IR controller
-> + *
-> + * Copyright (C) 2014 Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
-> + * Copyright (C) 2014 Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-> + *
-> + * Based on sun5i-ir.c:
-> + * Copyright (C) 2007-2012 Daniel Wang
-> + * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <media/rc-core.h>
-> +
-> +#define SUNXI_IR_DEV "sunxi-ir"
-> +
-> +/* Registers */
-> +/* IR Control */
-> +#define SUNXI_IR_CTL_REG      0x00
-> +/* Rx Config */
-> +#define SUNXI_IR_RXCTL_REG    0x10
-> +/* Rx Data */
-> +#define SUNXI_IR_RXFIFO_REG   0x20
-> +/* Rx Interrupt Enable */
-> +#define SUNXI_IR_RXINT_REG    0x2C
-> +/* Rx Interrupt Status */
-> +#define SUNXI_IR_RXSTA_REG    0x30
-> +/* IR Sample Config */
-> +#define SUNXI_IR_CIR_REG      0x34
-> +
-> +/* Bit Definition of IR_RXINTS_REG Register */
-> +#define SUNXI_IR_RXINTS_RXOF  BIT(0) /* Rx FIFO Overflow */
-> +#define SUNXI_IR_RXINTS_RXPE  BIT(1) /* Rx Packet End */
-> +#define SUNXI_IR_RXINTS_RXDA  BIT(4) /* Rx FIFO Data Available */
-> +/* Hardware supported fifo size */
-> +#define SUNXI_IR_FIFO_SIZE    16
-> +/* How much messages in fifo triggers IRQ */
-> +#define SUNXI_IR_FIFO_TRIG    8
-> +/* Required frequency for IR0 or IR1 clock in CIR mode */
-> +#define SUNXI_IR_BASE_CLK     8000000
-> +/* Frequency after IR internal divider  */
-> +#define SUNXI_IR_CLK          (SUNXI_IR_BASE_CLK / 64)
-> +/* Sample period in ns */
-> +#define SUNXI_IR_SAMPLE       (1000000000ul / SUNXI_IR_CLK)
-> +/* Filter threshold in samples  */
-> +#define SUNXI_IR_RXFILT       1
-> +/* Idle Threshold in samples */
-> +#define SUNXI_IR_RXIDLE       20
-> +/* Time after which device stops sending data in ms */
-> +#define SUNXI_IR_TIMEOUT      120
-> +
-> +struct sunxi_ir {
-> + spinlock_t      ir_lock;
-> + struct rc_dev   *rc;
-> + void __iomem    *base;
-> + int             irq;
-> + struct clk      *clk;
-> + struct clk      *apb_clk;
-> + const char      *map_name;
-> +};
+On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
+<shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch includes,
+>     1] renaming of the HSI2C clocks
+>     2] renaming of spi clocks according to the datasheet
+>     3] fixes for child-parent relationships
+>     4] adding of more clocks related to PERIC block
+You are also fixing the gate clock, GATE_BUS_PERIC -> GATE_IP_PERIC
+Please add them in your commit message.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/exynos5420.dtsi      |   14 +++---
+>  drivers/clk/samsung/clk-exynos5420.c   |   73 ++++++++++++++++----------------
+>  include/dt-bindings/clock/exynos5420.h |   14 +++---
+>  3 files changed, 50 insertions(+), 51 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+> index c3a9a66..67ba2c5 100644
+> --- a/arch/arm/boot/dts/exynos5420.dtsi
+> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+> @@ -549,7 +549,7 @@
+>                 #size-cells = <0>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c4_hs_bus>;
+> -               clocks = <&clock CLK_I2C4>;
+> +               clocks = <&clock CLK_USI0>;
+>                 clock-names = "hsi2c";
+>                 status = "disabled";
+>         };
+> @@ -562,7 +562,7 @@
+>                 #size-cells = <0>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c5_hs_bus>;
+> -               clocks = <&clock CLK_I2C5>;
+> +               clocks = <&clock CLK_USI1>;
+>                 clock-names = "hsi2c";
+>                 status = "disabled";
+>         };
+> @@ -575,7 +575,7 @@
+>                 #size-cells = <0>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c6_hs_bus>;
+> -               clocks = <&clock CLK_I2C6>;
+> +               clocks = <&clock CLK_USI2>;
+>                 clock-names = "hsi2c";
+>                 status = "disabled";
+>         };
+> @@ -588,7 +588,7 @@
+>                 #size-cells = <0>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c7_hs_bus>;
+> -               clocks = <&clock CLK_I2C7>;
+> +               clocks = <&clock CLK_USI3>;
+>                 clock-names = "hsi2c";
+>                 status = "disabled";
+>         };
+> @@ -601,7 +601,7 @@
+>                 #size-cells = <0>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c8_hs_bus>;
+> -               clocks = <&clock CLK_I2C8>;
+> +               clocks = <&clock CLK_USI4>;
+>                 clock-names = "hsi2c";
+>                 status = "disabled";
+>         };
+> @@ -614,7 +614,7 @@
+>                 #size-cells = <0>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c9_hs_bus>;
+> -               clocks = <&clock CLK_I2C9>;
+> +               clocks = <&clock CLK_USI5>;
+>                 clock-names = "hsi2c";
+>                 status = "disabled";
+>         };
+> @@ -627,7 +627,7 @@
+>                 #size-cells = <0>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&i2c10_hs_bus>;
+> -               clocks = <&clock CLK_I2C10>;
+> +               clocks = <&clock CLK_USI6>;
+>                 clock-names = "hsi2c";
+>                 status = "disabled";
+>         };
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index cd75661..b4cf4c1 100755
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -95,6 +95,7 @@
+>  #define GATE_IP_DISP1          0x10928
+>  #define GATE_IP_G3D            0x10930
+>  #define GATE_IP_GEN            0x10934
+> +#define GATE_IP_PERIC          0x10950
+>  #define GATE_IP_MSCL           0x10970
+>  #define GATE_TOP_SCLK_GSCL     0x10820
+>  #define GATE_TOP_SCLK_DISP1    0x10828
+> @@ -183,6 +184,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+>         GATE_IP_DISP1,
+>         GATE_IP_G3D,
+>         GATE_IP_GEN,
+> +       GATE_IP_PERIC,
+>         GATE_IP_MSCL,
+>         GATE_TOP_SCLK_GSCL,
+>         GATE_TOP_SCLK_DISP1,
+> @@ -588,9 +590,9 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
+>         DIV(0, "dout_audio2", "mout_audio2", DIV_PERIC3, 28, 4),
+>
+>         /* SPI Pre-Ratio */
+> -       DIV(0, "dout_pre_spi0", "dout_spi0", DIV_PERIC4, 8, 8),
+> -       DIV(0, "dout_pre_spi1", "dout_spi1", DIV_PERIC4, 16, 8),
+> -       DIV(0, "dout_pre_spi2", "dout_spi2", DIV_PERIC4, 24, 8),
+> +       DIV(0, "dout_spi0_pre", "dout_spi0", DIV_PERIC4, 8, 8),
+> +       DIV(0, "dout_spi1_pre", "dout_spi1", DIV_PERIC4, 16, 8),
+> +       DIV(0, "dout_spi2_pre", "dout_spi2", DIV_PERIC4, 24, 8),
+>
+>         /* GSCL Block */
+>         DIV(0, "dout_gscl_blk_300", "mout_user_aclk300_gscl",
+> @@ -641,8 +643,8 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>                         GATE_BUS_TOP, 9, CLK_IGNORE_UNUSED, 0),
+>         GATE(0, "aclk66_psgen", "mout_aclk66_psgen",
+>                         GATE_BUS_TOP, 10, CLK_IGNORE_UNUSED, 0),
+> -       GATE(0, "aclk66_peric", "mout_aclk66_peric",
+> -                       GATE_BUS_TOP, 11, 0, 0),
+> +       GATE(0, "aclk66_peric", "mout_user_aclk66_peric",
+> +               GATE_BUS_TOP, 11, CLK_IGNORE_UNUSED, 0),
+>         GATE(0, "aclk166", "mout_user_aclk166",
+>                         GATE_BUS_TOP, 14, CLK_IGNORE_UNUSED, 0),
+>         GATE(0, "aclk333", "mout_aclk333",
+> @@ -657,11 +659,11 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>                 GATE_TOP_SCLK_PERIC, 2, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_UART3, "sclk_uart3", "dout_uart3",
+>                 GATE_TOP_SCLK_PERIC, 3, CLK_SET_RATE_PARENT, 0),
+> -       GATE(CLK_SCLK_SPI0, "sclk_spi0", "dout_pre_spi0",
+> +       GATE(CLK_SCLK_SPI0, "sclk_spi0", "dout_spi0_pre",
+>                 GATE_TOP_SCLK_PERIC, 6, CLK_SET_RATE_PARENT, 0),
+> -       GATE(CLK_SCLK_SPI1, "sclk_spi1", "dout_pre_spi1",
+> +       GATE(CLK_SCLK_SPI1, "sclk_spi1", "dout_spi1_pre",
+>                 GATE_TOP_SCLK_PERIC, 7, CLK_SET_RATE_PARENT, 0),
+> -       GATE(CLK_SCLK_SPI2, "sclk_spi2", "dout_pre_spi2",
+> +       GATE(CLK_SCLK_SPI2, "sclk_spi2", "dout_spi2_pre",
+>                 GATE_TOP_SCLK_PERIC, 8, CLK_SET_RATE_PARENT, 0),
+>         GATE(CLK_SCLK_SPDIF, "sclk_spdif", "mout_spdif",
+>                 GATE_TOP_SCLK_PERIC, 9, CLK_SET_RATE_PARENT, 0),
+> @@ -732,42 +734,39 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>         GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_BUS_FSYS0, 28, 0, 0),
+>
+>         /* UART */
+> -       GATE(CLK_UART0, "uart0", "aclk66_peric", GATE_BUS_PERIC, 4, 0, 0),
+> -       GATE(CLK_UART1, "uart1", "aclk66_peric", GATE_BUS_PERIC, 5, 0, 0),
+> -       GATE_A(CLK_UART2, "uart2", "aclk66_peric",
+> -               GATE_BUS_PERIC, 6, CLK_IGNORE_UNUSED, 0, "uart2"),
+> -       GATE(CLK_UART3, "uart3", "aclk66_peric", GATE_BUS_PERIC, 7, 0, 0),
+> +       GATE(CLK_UART0, "uart0", "aclk66_peric", GATE_IP_PERIC, 0, 0, 0),
+> +       GATE(CLK_UART1, "uart1", "aclk66_peric", GATE_IP_PERIC, 1, 0, 0),
+> +       GATE(CLK_UART2, "uart2", "aclk66_peric", GATE_IP_PERIC, 2, 0, 0),
+> +       GATE(CLK_UART3, "uart3", "aclk66_peric", GATE_IP_PERIC, 3, 0, 0),
+>         /* I2C */
+> -       GATE(CLK_I2C0, "i2c0", "aclk66_peric", GATE_BUS_PERIC, 9, 0, 0),
+> -       GATE(CLK_I2C1, "i2c1", "aclk66_peric", GATE_BUS_PERIC, 10, 0, 0),
+> -       GATE(CLK_I2C2, "i2c2", "aclk66_peric", GATE_BUS_PERIC, 11, 0, 0),
+> -       GATE(CLK_I2C3, "i2c3", "aclk66_peric", GATE_BUS_PERIC, 12, 0, 0),
+> -       GATE(CLK_I2C4, "i2c4", "aclk66_peric", GATE_BUS_PERIC, 13, 0, 0),
+> -       GATE(CLK_I2C5, "i2c5", "aclk66_peric", GATE_BUS_PERIC, 14, 0, 0),
+> -       GATE(CLK_I2C6, "i2c6", "aclk66_peric", GATE_BUS_PERIC, 15, 0, 0),
+> -       GATE(CLK_I2C7, "i2c7", "aclk66_peric", GATE_BUS_PERIC, 16, 0, 0),
+> -       GATE(CLK_I2C_HDMI, "i2c_hdmi", "aclk66_peric", GATE_BUS_PERIC, 17, 0,
+> -               0),
+> -       GATE(CLK_TSADC, "tsadc", "aclk66_peric", GATE_BUS_PERIC, 18, 0, 0),
+> +       GATE(CLK_I2C0, "i2c0", "aclk66_peric", GATE_IP_PERIC, 6, 0, 0),
+> +       GATE(CLK_I2C1, "i2c1", "aclk66_peric", GATE_IP_PERIC, 7, 0, 0),
+> +       GATE(CLK_I2C2, "i2c2", "aclk66_peric", GATE_IP_PERIC, 8, 0, 0),
+> +       GATE(CLK_I2C3, "i2c3", "aclk66_peric", GATE_IP_PERIC, 9, 0, 0),
+> +       GATE(CLK_USI0, "usi0", "aclk66_peric", GATE_IP_PERIC, 10, 0, 0),
+> +       GATE(CLK_USI1, "usi1", "aclk66_peric", GATE_IP_PERIC, 11, 0, 0),
+> +       GATE(CLK_USI2, "usi2", "aclk66_peric", GATE_IP_PERIC, 12, 0, 0),
+> +       GATE(CLK_USI3, "usi3", "aclk66_peric", GATE_IP_PERIC, 13, 0, 0),
+> +       GATE(CLK_USI4, "usi4", "aclk66_peric", GATE_IP_PERIC, 28, 0, 0),
+> +       GATE(CLK_USI5, "usi5", "aclk66_peric", GATE_IP_PERIC, 30, 0, 0),
+> +       GATE(CLK_USI6, "usi6", "aclk66_peric", GATE_IP_PERIC, 31, 0, 0),
+> +       GATE(CLK_I2C_HDMI, "i2c_hdmi", "aclk66_peric", GATE_IP_PERIC, 14, 0, 0),
+> +       GATE(CLK_TSADC, "tsadc", "aclk66_peric", GATE_IP_PERIC, 15, 0, 0),
+>         /* SPI */
+> -       GATE(CLK_SPI0, "spi0", "aclk66_peric", GATE_BUS_PERIC, 19, 0, 0),
+> -       GATE(CLK_SPI1, "spi1", "aclk66_peric", GATE_BUS_PERIC, 20, 0, 0),
+> -       GATE(CLK_SPI2, "spi2", "aclk66_peric", GATE_BUS_PERIC, 21, 0, 0),
+> +       GATE(CLK_SPI0, "spi0", "aclk66_peric", GATE_IP_PERIC, 16, 0, 0),
+> +       GATE(CLK_SPI1, "spi1", "aclk66_peric", GATE_IP_PERIC, 17, 0, 0),
+> +       GATE(CLK_SPI2, "spi2", "aclk66_peric", GATE_IP_PERIC, 18, 0, 0),
+>         GATE(CLK_KEYIF, "keyif", "aclk66_peric", GATE_BUS_PERIC, 22, 0, 0),
+>         /* I2S */
+> -       GATE(CLK_I2S1, "i2s1", "aclk66_peric", GATE_BUS_PERIC, 23, 0, 0),
+> -       GATE(CLK_I2S2, "i2s2", "aclk66_peric", GATE_BUS_PERIC, 24, 0, 0),
+> +       GATE(CLK_I2S1, "i2s1", "aclk66_peric", GATE_IP_PERIC, 20, 0, 0),
+> +       GATE(CLK_I2S2, "i2s2", "aclk66_peric", GATE_IP_PERIC, 21, 0, 0),
+>         /* PCM */
+> -       GATE(CLK_PCM1, "pcm1", "aclk66_peric", GATE_BUS_PERIC, 25, 0, 0),
+> -       GATE(CLK_PCM2, "pcm2", "aclk66_peric", GATE_BUS_PERIC, 26, 0, 0),
+> +       GATE(CLK_PCM1, "pcm1", "aclk66_peric", GATE_IP_PERIC, 22, 0, 0),
+> +       GATE(CLK_PCM2, "pcm2", "aclk66_peric", GATE_IP_PERIC, 23, 0, 0),
+>         /* PWM */
+> -       GATE(CLK_PWM, "pwm", "aclk66_peric", GATE_BUS_PERIC, 27, 0, 0),
+> +       GATE(CLK_PWM, "pwm", "aclk66_peric", GATE_IP_PERIC, 24, 0, 0),
+>         /* SPDIF */
+> -       GATE(CLK_SPDIF, "spdif", "aclk66_peric", GATE_BUS_PERIC, 29, 0, 0),
+> -
+> -       GATE(CLK_I2C8, "i2c8", "aclk66_peric", GATE_BUS_PERIC1, 0, 0, 0),
+> -       GATE(CLK_I2C9, "i2c9", "aclk66_peric", GATE_BUS_PERIC1, 1, 0, 0),
+> -       GATE(CLK_I2C10, "i2c10", "aclk66_peric", GATE_BUS_PERIC1, 2, 0, 0),
+> +       GATE(CLK_SPDIF, "spdif", "aclk66_peric", GATE_IP_PERIC, 26, 0, 0),
+>
+>         GATE(CLK_CHIPID, "chipid", "aclk66_psgen",
+>                         GATE_BUS_PERIS0, 12, CLK_IGNORE_UNUSED, 0),
+> diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+> index 228cc5c..ff2e5b6 100755
+> --- a/include/dt-bindings/clock/exynos5420.h
+> +++ b/include/dt-bindings/clock/exynos5420.h
+> @@ -69,10 +69,10 @@
+>  #define CLK_I2C1               262
+>  #define CLK_I2C2               263
+>  #define CLK_I2C3               264
+> -#define CLK_I2C4               265
+> -#define CLK_I2C5               266
+> -#define CLK_I2C6               267
+> -#define CLK_I2C7               268
+> +#define CLK_USI0               265
+> +#define CLK_USI1               266
+> +#define CLK_USI2               267
+> +#define CLK_USI3               268
+>  #define CLK_I2C_HDMI           269
+>  #define CLK_TSADC              270
+>  #define CLK_SPI0               271
+> @@ -85,9 +85,9 @@
+>  #define CLK_PCM2               278
+>  #define CLK_PWM                        279
+>  #define CLK_SPDIF              280
+> -#define CLK_I2C8               281
+> -#define CLK_I2C9               282
+> -#define CLK_I2C10              283
+> +#define CLK_USI4               281
+> +#define CLK_USI5               282
+> +#define CLK_USI6               283
+>  #define CLK_ACLK66_PSGEN       300
+>  #define CLK_CHIPID             301
+>  #define CLK_SYSREG             302
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-Still badly indented. Maybe your emailer is mangling whitespaces.
 
-The best is to use git send-email to send the patches.
 
-Also, please c/c linux-media ML for the entire patch series, as, in general=
-,
-we generally merge all patches via one tree (typically, the tree to where t=
-he
-real driver will be merged - in this case, the media tree), after getting
-the needed acks from DT and arm subarch maintainers (when applicable).
-
-I'll do a better review after the whitespace fixups.
-
+-- 
 Regards,
-Mauro
-
-> +
-> +static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
-> +{
-> + unsigned long status;
-> + unsigned char dt;
-> + unsigned int cnt, rc;
-> + struct sunxi_ir *ir =3D dev_id;
-> + DEFINE_IR_RAW_EVENT(rawir);
-> +
-> + spin_lock_irq(&ir->ir_lock);
-> +
-> + status =3D readl(ir->base + SUNXI_IR_RXSTA_REG);
-> +
-> + /* clean all pending statuses */
-> + writel(status | 0xff, ir->base + SUNXI_IR_RXSTA_REG);
-> +
-> + if (status & SUNXI_IR_RXINTS_RXDA) {
-> + /* How much messages in fifo */
-> + rc  =3D (status >> 8) & 0x3f;
-> + /* Sanity check */
-> + rc =3D rc > SUNXI_IR_FIFO_SIZE ? SUNXI_IR_FIFO_SIZE : rc;
-> + /* if we have data */
-> + for (cnt =3D 0; cnt < rc; cnt++) {
-> + /* for each bit in fifo */
-> + dt =3D readb(ir->base + SUNXI_IR_RXFIFO_REG);
-> + rawir.pulse =3D (dt & 0x80) !=3D 0;
-> + rawir.duration =3D (dt & 0x7f) * SUNXI_IR_SAMPLE;
-> + ir_raw_event_store_with_filter(ir->rc, &rawir);
-> + }
-> + }
-> +
-> + if (status & SUNXI_IR_RXINTS_RXOF)
-> + ir_raw_event_reset(ir->rc);
-> + else if (status & SUNXI_IR_RXINTS_RXPE) {
-> + ir_raw_event_set_idle(ir->rc, true);
-> + ir_raw_event_handle(ir->rc);
-> + }
-> +
-> + spin_unlock_irq(&ir->ir_lock);
-> +
-> + return IRQ_HANDLED;
-> +}
-> +
-> +
-> +static int sunxi_ir_probe(struct platform_device *pdev)
-> +{
-> + int ret =3D 0;
-> + unsigned long tmp =3D 0;
-> +
-> + struct device *dev =3D &pdev->dev;
-> + struct device_node *dn =3D dev->of_node;
-> + struct resource *res;
-> + struct sunxi_ir *ir;
-> +
-> + ir =3D devm_kzalloc(dev, sizeof(struct sunxi_ir), GFP_KERNEL);
-> + if (!ir)
-> + return -ENOMEM;
-> +
-> + /* Clock */
-> + ir->apb_clk =3D devm_clk_get(dev, "apb");
-> + if (IS_ERR(ir->apb_clk)) {
-> + dev_err(dev, "failed to get a apb clock.\n");
-> + return -EINVAL;
-> + }
-> + ir->clk =3D devm_clk_get(dev, "ir");
-> + if (IS_ERR(ir->clk)) {
-> + dev_err(dev, "failed to get a ir clock.\n");
-> + return -EINVAL;
-> + }
-> +
-> + ret =3D clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
-> + if (ret) {
-> + dev_err(dev, "set ir base clock failed!\n");
-> + return -EINVAL;
-> + }
-> +
-> + if (clk_prepare_enable(ir->apb_clk)) {
-> + dev_err(dev, "try to enable apb_ir_clk failed\n");
-> + return -EINVAL;
-> + }
-> +
-> + if (clk_prepare_enable(ir->clk)) {
-> + dev_err(dev, "try to enable ir_clk failed\n");
-> + ret =3D -EINVAL;
-> + goto exit_clkdisable_apb_clk;
-> + }
-> +
-> + /* IO */
-> + res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> + ir->base =3D devm_ioremap_resource(dev, res);
-> + if (IS_ERR(ir->base)) {
-> + dev_err(dev, "failed to map registers\n");
-> + ret =3D -ENOMEM;
-> + goto exit_clkdisable_clk;
-> + }
-> +
-> + /* IRQ */
-> + ir->irq =3D platform_get_irq(pdev, 0);
-> + if (ir->irq < 0) {
-> + dev_err(dev, "no irq resource\n");
-> + ret =3D -EINVAL;
-> + goto exit_clkdisable_clk;
-> + }
-> +
-> + ret =3D devm_request_irq(dev, ir->irq, sunxi_ir_irq, 0, SUNXI_IR_DEV, i=
-r);
-> + if (ret) {
-> + dev_err(dev, "failed request irq\n");
-> + ret =3D -EINVAL;
-> + goto exit_clkdisable_clk;
-> + }
-> +
-> + ir->rc =3D rc_allocate_device();
-> +
-> + if (!ir->rc) {
-> + dev_err(dev, "failed to allocate device\n");
-> + ret =3D -ENOMEM;
-> + goto exit_clkdisable_clk;
-> + }
-> +
-> + ir->rc->priv =3D ir;
-> + ir->rc->input_name =3D SUNXI_IR_DEV;
-> + ir->rc->input_phys =3D "sunxi-ir/input0";
-> + ir->rc->input_id.bustype =3D BUS_HOST;
-> + ir->rc->input_id.vendor =3D 0x0001;
-> + ir->rc->input_id.product =3D 0x0001;
-> + ir->rc->input_id.version =3D 0x0100;
-> + ir->map_name =3D of_get_property(dn, "linux,rc-map-name", NULL);
-> + ir->rc->map_name =3D ir->map_name ?: RC_MAP_EMPTY;
-> + ir->rc->dev.parent =3D dev;
-> + ir->rc->driver_type =3D RC_DRIVER_IR_RAW;
-> + rc_set_allowed_protocols(ir->rc, RC_BIT_ALL);
-> + ir->rc->rx_resolution =3D SUNXI_IR_SAMPLE;
-> + ir->rc->timeout =3D MS_TO_NS(SUNXI_IR_TIMEOUT);
-> + ir->rc->driver_name =3D SUNXI_IR_DEV;
-> +
-> + ret =3D rc_register_device(ir->rc);
-> + if (ret) {
-> + dev_err(dev, "failed to register rc device\n");
-> + ret =3D -EINVAL;
-> + goto exit_free_dev;
-> + }
-> +
-> + platform_set_drvdata(pdev, ir);
-> +
-> + /* Enable CIR Mode */
-> + writel(0x3 << 4, ir->base+SUNXI_IR_CTL_REG);
-> +
-> + /* Config IR Sample Register */
-> + /* Fsample =3D clk */
-> + tmp =3D 0;
-> + /* Set Filter Threshold */
-> + tmp |=3D (SUNXI_IR_RXFILT & 0x3f) << 2;
-> + /* Set Idle Threshold */
-> + tmp |=3D (SUNXI_IR_RXIDLE & 0xff) << 8;
-> + writel(tmp, ir->base + SUNXI_IR_CIR_REG);
-> +
-> + /* Invert Input Signal */
-> + writel(0x1 << 2, ir->base + SUNXI_IR_RXCTL_REG);
-> +
-> + /* Clear All Rx Interrupt Status */
-> + writel(0xff, ir->base + SUNXI_IR_RXSTA_REG);
-> +
-> + /* Enable IRQ on data, overflow, packed end */
-> + tmp =3D (0x1 << 4) | 0x3;
-> +
-> + /* Rx FIFO Threshold */
-> + tmp |=3D (SUNXI_IR_FIFO_TRIG - 1) << 8;
-> +
-> + writel(tmp, ir->base + SUNXI_IR_RXINT_REG);
-> +
-> + /* Enable IR Module */
-> + tmp =3D readl(ir->base + SUNXI_IR_CTL_REG);
-> +
-> + writel(tmp | 0x3, ir->base + SUNXI_IR_CTL_REG);
-> +
-> + dev_info(dev, "initialized sunXi IR driver\n");
-> + return 0;
-> +
-> +exit_free_dev:
-> + rc_free_device(ir->rc);
-> +exit_clkdisable_clk:
-> + clk_disable_unprepare(ir->clk);
-> +exit_clkdisable_apb_clk:
-> + clk_disable_unprepare(ir->apb_clk);
-> +
-> + return ret;
-> +}
-> +
-> +static int sunxi_ir_remove(struct platform_device *pdev)
-> +{
-> + unsigned long flags;
-> + struct sunxi_ir *ir =3D platform_get_drvdata(pdev);
-> +
-> + clk_disable_unprepare(ir->clk);
-> + clk_disable_unprepare(ir->apb_clk);
-> +
-> + spin_lock_irqsave(&ir->ir_lock, flags);
-> + /* disable IR IRQ */
-> + writel(0, ir->base + SUNXI_IR_RXINT_REG);
-> + /* clear All Rx Interrupt Status */
-> + writel(0xff, ir->base + SUNXI_IR_RXSTA_REG);
-> + /* disable IR */
-> + writel(0, ir->base + SUNXI_IR_CTL_REG);
-> + spin_unlock_irqrestore(&ir->ir_lock, flags);
-> +
-> + rc_unregister_device(ir->rc);
-> + return 0;
-> +}
-> +
-> +static const struct of_device_id sunxi_ir_match[] =3D {
-> + { .compatible =3D "allwinner,sun7i-a20-ir", },
-> + {},
-> +};
-> +
-> +static struct platform_driver sunxi_ir_driver =3D {
-> + .probe          =3D sunxi_ir_probe,
-> + .remove         =3D sunxi_ir_remove,
-> + .driver =3D {
-> + .name =3D SUNXI_IR_DEV,
-> + .owner =3D THIS_MODULE,
-> + .of_match_table =3D sunxi_ir_match,
-> + },
-> +};
-> +
-> +module_platform_driver(sunxi_ir_driver);
-> +
-> +MODULE_DESCRIPTION("Allwinner sunXi IR controller driver");
-> +MODULE_AUTHOR("Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
->=20
->=20
-> =D1=81=D1=80=D0=B5=D0=B4=D0=B0, 30 =D0=B0=D0=BF=D1=80=D0=B5=D0=BB=D1=8F 2=
-014 =D0=B3., 16:51:12 UTC+6 =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=
-=B0=D1=82=D0=B5=D0=BB=D1=8C =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=D0=
-=B4=D1=80 =D0=91=D0=B5=D1=80=D1=81=D0=B5=D0=BD=D0=B5=D0=B2=20
-> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:
-> >
-> > This patch introduces Consumer IR(CIR) support for sunxi boards.
-> >
-> > This is based on Alexsey Shestacov's work based on the original driver=
-=20
-> > supplied by Allwinner.
-> >
-
-
---=20
-
-Cheers,
-Mauro
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Alim
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
