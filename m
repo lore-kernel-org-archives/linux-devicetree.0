@@ -1,87 +1,40 @@
-From: Alim Akhtar <alim.akhtar@gmail.com>
-Subject: Re: [PATCH v3 11/16] clk: exynos5420: correct sysmmu-mfc parent clocks
-Date: Wed, 30 Apr 2014 19:08:50 +0530
-Message-ID: <CAGOxZ53FSkV-ncYq2gJL7VKT4HJvvjTVRL98vS5VELWLhC7WYw@mail.gmail.com>
-References: <1398344632-18623-1-git-send-email-shaik.ameer@samsung.com> <1398344632-18623-12-git-send-email-shaik.ameer@samsung.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCHv3 0/2] add DT endianness binding support
+Date: Wed, 30 Apr 2014 15:46:28 +0200
+Message-ID: <20140430134628.GA6201@netboy>
+References: <1398833029-29546-1-git-send-email-Li.Xiubo@freescale.com>
+ <20140430071011.GA7312@netboy>
+ <334a9f7420ca466b9011f0c0ae53abda@BY2PR03MB505.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398344632-18623-12-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, Ameer Basha Shaik <shaik.samsung@gmail.com>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <334a9f7420ca466b9011f0c0ae53abda@BY2PR03MB505.namprd03.prod.outlook.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "broonie@kernel.org" <broonie@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mpa@pengutronix.de" <mpa@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
+On Wed, Apr 30, 2014 at 07:14:08AM +0000, Li.Xiubo@freescale.com wrote:
+> 
+> > Subject: Re: [PATCHv3 0/2] add DT endianness binding support
+> > 
+> > Shouldn't this go to the arm list and rmk for review, too?
+> > 
+> 
+> Well, yes, I forgot it.
+> 
+> Should I resend them ?
 
-On Thu, Apr 24, 2014 at 6:33 PM, Shaik Ameer Basha
-<shaik.ameer@samsung.com> wrote:
-> This patch corrects the wrong parent-child relationship
-> between sysmmu-mfc clocks.
->
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> ---
-Hoping you have tested vedio playback with this patch, especially
-after across a suspend/resume cycles.
-This looks ok.
+What I meant was, you should put
 
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+	<linux-arm-kernel@lists.infradead.org>
 
->  drivers/clk/samsung/clk-exynos5420.c |    9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index d8fe6d8..6daf739 100755
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -82,6 +82,7 @@
->  #define SCLK_DIV_ISP0          0x10580
->  #define SCLK_DIV_ISP1          0x10584
->  #define DIV2_RATIO0            0x10590
-> +#define DIV4_RATIO             0x105a0
->  #define GATE_BUS_TOP           0x10700
->  #define GATE_BUS_GEN           0x1073c
->  #define GATE_BUS_FSYS0         0x10740
-> @@ -176,6 +177,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
->         SCLK_DIV_ISP0,
->         SCLK_DIV_ISP1,
->         DIV2_RATIO0,
-> +       DIV4_RATIO,
->         GATE_BUS_TOP,
->         GATE_BUS_GEN,
->         GATE_BUS_FSYS0,
-> @@ -636,6 +638,9 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
->         DIV(0, "dout_spi1_pre", "dout_spi1", DIV_PERIC4, 16, 8),
->         DIV(0, "dout_spi2_pre", "dout_spi2", DIV_PERIC4, 24, 8),
->
-> +       /* Mfc Blk */
-> +       DIV(0, "dout_mfc_blk", "mout_user_aclk333", DIV4_RATIO, 0, 2),
-> +
->         /* GSCL Block */
->         DIV(0, "dout_gscl_blk_300", "mout_user_aclk300_gscl",
->                 DIV2_RATIO0, 4, 2),
-> @@ -873,8 +878,8 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
->                         GATE_IP_DISP1, 8, 0, 0),
->
->         GATE(CLK_MFC, "mfc", "aclk333", GATE_IP_MFC, 0, 0, 0),
-> -       GATE(CLK_SMMU_MFCL, "smmu_mfcl", "aclk333", GATE_IP_MFC, 1, 0, 0),
-> -       GATE(CLK_SMMU_MFCR, "smmu_mfcr", "aclk333", GATE_IP_MFC, 2, 0, 0),
-> +       GATE(CLK_SMMU_MFCL, "smmu_mfcl", "dout_mfc_blk", GATE_IP_MFC, 1, 0, 0),
-> +       GATE(CLK_SMMU_MFCR, "smmu_mfcr", "dout_mfc_blk", GATE_IP_MFC, 2, 0, 0),
->
->         GATE(CLK_G3D, "g3d", "aclkg3d", GATE_IP_G3D, 9, 0, 0),
->
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+and
 
+	"Russell King <linux@arm.linux.org.uk>"
 
+onto CC.
 
--- 
-Regards,
-Alim
+Thanks,
+Richard
