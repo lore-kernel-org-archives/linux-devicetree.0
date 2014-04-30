@@ -1,43 +1,85 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
-Date: Wed, 30 Apr 2014 15:17:08 +0100
-Message-ID: <20140430141708.GS29462@lee--X1>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
- <20140429222522.GS15125@sirena.org.uk>
- <20140430140849.GR29462@lee--X1>
- <1398867073.695596467@f224.i.mail.ru>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Wed, 30 Apr 2014 16:19:10 +0200
+Message-ID: <5361065E.80304@monstr.eu>
+References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398867073.695596467-rKA3owyty39sdVUOrk1QfQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="RRHm6IoEN7DfJnpVAh13IietsX9aHf5dv"
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Srikanth Thokala <sthokal@xilinx.com>, bhelgaas@google.com
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, jgunthorpe@obsidianresearch.com, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > > > This patch adds devicetree support for mc13783-codec.
-> > >=20
-> > > Applied, thanks.
-> >=20
-> > No Mark, no!
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--RRHm6IoEN7DfJnpVAh13IietsX9aHf5dv
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+Hi Bjorn,
+
+On 04/15/2014 01:38 PM, Srikanth Thokala wrote:
+> This is the driver for Xilinx AXI PCIe Host Bridge Soft IP
 >=20
-> What a problem, Lee?
+> Signed-off-by: Srikanth Thokala <sthokal@xilinx.com>
+> ---
+> Changes in v3:
+> - Rebased on v3.15.0-rc1
+> - Added support for interrupt-map DT functionality.
+> - Removed map_irq() wrapper, instead using of_irq_parse_and_map_pci().
+> - Modified resource mapping logic as per the series
+>   "PCI: ARM: add support for generic PCI host controller"
+> - Modified devicetree binding documentation to update with interrupt-
+>   map properties.
+> - Use devm calls wherever applicable.
+> - Fixed minor comments from Jason
+> - Thanks Jason for the review and suggestions.
+>=20
+> Changes in v2:
+> - Rebased on v3.14.0-rc8
+> - Removed IP specific DT properties like include-rc, axibar-num etc.,
+>   as suggested by Jason and Bjorn, Thanks
+> ---
+>  .../devicetree/bindings/pci/xilinx-pcie.txt        |   62 ++
+>  drivers/pci/host/Kconfig                           |    7 +
+>  drivers/pci/host/Makefile                          |    1 +
+>  drivers/pci/host/pci-xilinx.c                      |  999 ++++++++++++=
+++++++++
+>  4 files changed, 1069 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-pcie.t=
+xt
+>  create mode 100644 drivers/pci/host/pci-xilinx.c
 
-There's no problem with the patch, don't worry.
+Any comment on this patch?
 
-Neither Mark, nor I can apply this patch independently, we need to
-create a shared branch somewhere, or we'll risk conflicts at merge
-time.
+Thanks,
+Michal
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--RRHm6IoEN7DfJnpVAh13IietsX9aHf5dv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlNhBl8ACgkQykllyylKDCH49wCfWE9bLKJgU6Lc/gbyIX3o9pJT
+WuoAniVKqqaWYKicccMgCkg8MSz8En7u
+=t95h
+-----END PGP SIGNATURE-----
+
+--RRHm6IoEN7DfJnpVAh13IietsX9aHf5dv--
