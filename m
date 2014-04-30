@@ -1,77 +1,46 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support for
- omap3-evm and ldp
-Date: Wed, 30 Apr 2014 03:07:53 +0200
-Message-ID: <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
-	<1398815562-24113-5-git-send-email-tony@atomide.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 01/11] ARM: shmobile: r7s72100: document MSTP clock
+ support
+Date: Wed, 30 Apr 2014 10:41:48 +0900
+Message-ID: <20140430014148.GC24989@verge.net.au>
+References: <1398765822-2314-1-git-send-email-wsa@the-dreams.de>
+ <1398765822-2314-2-git-send-email-wsa@the-dreams.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398815562-24113-5-git-send-email-tony@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398765822-2314-2-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 April 2014 01:52, Tony Lindgren <tony@atomide.com> wrote:
-> Looks like quite a few omaps have sharp ls037v7dw01 that's configured
-> as various panel dpi entries for whatever legacy reasons. For device
-> tree based support, let's just configure these properly for panel
-> ls037v7dw01 instead of panel dpi.
->
-> This patch creates a common file for panel ls037v7dw01, and makes
-> boards ldp and omap3-evm to use it. The panel for ldp is configured
-> in the qvga mode and omap3-evm panel in vga mode.
->
-> The ls037v7dw01 also seems to be coupled with an ad7846 touchscreen
-> controller for the omaps, so let's add a basic configuration for
-> the touchscreen also using the default values.
->
-> Note that we can now remove the regulator-name = "vdds_dsi"
-> entry for ldp, that's no longer needed as we have the entry
-> for vdds_dsi-supply = <&vpll2>.
->
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+On Tue, Apr 29, 2014 at 12:03:32PM +0200, Wolfram Sang wrote:
+> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  .../arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi | 82 ++++++++++++++++++++++
->  arch/arm/boot/dts/omap3-evm-37xx.dts               | 50 +++++++++++++
->  arch/arm/boot/dts/omap3-evm-common.dtsi            | 47 +++++++++++++
->  arch/arm/boot/dts/omap3-ldp.dts                    | 31 ++++++--
->  4 files changed, 205 insertions(+), 5 deletions(-)
->  create mode 100644 arch/arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi
+>  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> index 02a25d99ca61..6c3c0847e4fd 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> @@ -10,6 +10,7 @@ index in the group, from 0 to 31.
+>  Required Properties:
+>  
+>    - compatible: Must be one of the following
+> +    - "renesas,r7s72100-mstp-clocks" for R7S72100 (RZ) MSTP gate clocks
+>      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
+>      - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
+>      - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+> -- 
+> 1.9.2
 
-> diff --git a/arch/arm/boot/dts/omap3-ldp.dts b/arch/arm/boot/dts/omap3-ldp.dts
-> index 0abe986..50fdac9 100644
-> --- a/arch/arm/boot/dts/omap3-ldp.dts
-> +++ b/arch/arm/boot/dts/omap3-ldp.dts
-> @@ -164,6 +164,7 @@
->
->  #include "twl4030.dtsi"
->  #include "twl4030_omap3.dtsi"
-> +#include "omap-panel-sharp-ls037v7dw01.dtsi"
->
->  &i2c2 {
->         clock-frequency = <400000>;
-> @@ -173,6 +174,31 @@
->         clock-frequency = <400000>;
->  };
->
-> +&lcd_3v3 {
-> +       gpio = <&twl_gpio 7 GPIO_ACTIVE_HIGH>;
-> +       enable-active-high;
-> +};
-> +
-> +&lcd0 {
-> +       reset-gpios = <&gpio2 23 GPIO_ACTIVE_HIGH>;     /* gpio55, lcd RESB */
-> +       gpios = <&gpio2 24 GPIO_ACTIVE_LOW      /* gpio56, lcd MO */
+I believe that Mike Turquette (CCed) should take this.
 
-enable-gpios ?
+I also believe that as it is relates to bindings it
+needs to be reviewed by the devicetree people (CCed).
+(Please correct me if I am wrong.)
 
-> +                0                              /* lcd LR */
-> +                0                              /* lcd UD */
-> +                0>;                            /* lcd INI */
-> +};
-
-regards
-Joachim Eastwood
