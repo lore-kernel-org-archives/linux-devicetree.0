@@ -1,137 +1,180 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] of: Keep track of populated platform devices
-Date: Wed, 30 Apr 2014 10:22:25 -0500
-Message-ID: <CAL_JsqL=mxqEKpAsXm7Du0vEDpKk4n+dp5-DyvbuGhTA6bP5Lg@mail.gmail.com>
-References: <1398858529.24255.3.camel@hornet>
-	<1398866717-20268-1-git-send-email-pawel.moll@arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Wed, 30 Apr 2014 17:34:14 +0200
+Message-ID: <201404301734.14478.arnd@arndb.de>
+References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398866717-20268-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Srikanth Thokala <sthokal@xilinx.com>, bhelgaas@google.com, michal.simek@xilinx.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, jgunthorpe@obsidianresearch.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 30, 2014 at 9:05 AM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
-> In "Device Tree powered" systems, platform devices are usually
-> massively populated with of_platform_populate() call, executed
-> at some level of initcalls, either by generic architecture
-> or by platform-specific code.
->
-> There are situations though where certain devices must be
-> created (and bound with drivers) before all the others.
-> This presents a challenge, as devices created explicitly
-> would be created again by of_platform_populate().
->
-> This patch tries to solve that issue in a generic way,
-> adding a "populated" flag for a DT node description.
-> Once set, this device will never be created again via
-> of_* API, so of_platform_populate() will skip such nodes
-> (and its children) in a similar way to the non-available
-> ones.
->
-> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+On Tuesday 15 April 2014, Srikanth Thokala wrote:
+> +Required properties:
+> +- #address-cells: Address representation for root ports, set to <3>
+> +- #size-cells: Size representation for root ports, set to <2>
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +- compatible: Should contain "xlnx,axi-pcie-host-1.00.a"
+> +- reg: Should contain AXI PCIe registers location and length
+> +- device_type: must be "pci"
+> +- interrupts: Should contain AXI PCIe interrupt
+> +- interrupt-map-mask,
+> +  interrupt-map: standard PCI properties to define the mapping of the
+> +	PCI interface to interrupt numbers.
+> +- ranges: ranges for the PCI memory regions (I/O space region is noti
 
-One pondering and one minor change below, otherwise:
+typo: noti -> not
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
-> ---
->
-> Changes since v1:
->
-> - added of_node_check_and_set_flag()... (atomic test and set)
-> - ... used it to atomically mark a node...
-> - ... clearing the bit on error path.
->
->  drivers/of/platform.c | 18 +++++++++++++-----
->  include/linux/of.h    |  7 +++++++
->  2 files changed, 20 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 404d1da..b33927a 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -204,12 +204,13 @@ static struct platform_device *of_platform_device_create_pdata(
->  {
->         struct platform_device *dev;
->
-> -       if (!of_device_is_available(np))
-> +       if (!of_device_is_available(np) ||
-> +                       of_node_check_and_set_flag(np, OF_POPULATED))
->                 return NULL;
->
->         dev = of_device_alloc(np, bus_id, parent);
->         if (!dev)
-> -               return NULL;
-> +               goto err_clear_flag;
-
-I wonder if leaving it set would be the right behavior. I can't see
-that we would want to process the node again. But this is the
-exceptional case, so its probably not too important and can stay like
-this.
-
->
->  #if defined(CONFIG_MICROBLAZE)
->         dev->archdata.dma_mask = 0xffffffffUL;
-> @@ -227,10 +228,14 @@ static struct platform_device *of_platform_device_create_pdata(
->
->         if (of_device_add(dev) != 0) {
->                 platform_device_put(dev);
-> -               return NULL;
-> +               goto err_clear_flag;
->         }
->
->         return dev;
+> +	supported by hardware)
+> +	Please refer to the standard PCI bus binding document for a more
+> +	detailed explanation
 > +
-> +err_clear_flag:
-> +       of_node_clear_flag(np, OF_POPULATED);
-> +       return NULL;
->  }
->
->  /**
-> @@ -262,14 +267,15 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->
->         pr_debug("Creating amba device %s\n", node->full_name);
->
-> -       if (!of_device_is_available(node))
-> +       if (!of_device_is_available(node) ||
-> +                       of_node_check_and_set_flag(node, OF_POPULATED))
->                 return NULL;
->
->         dev = amba_device_alloc(NULL, 0, 0);
->         if (!dev) {
->                 pr_err("%s(): amba_device_alloc() failed for %s\n",
->                        __func__, node->full_name);
-> -               return NULL;
-> +               goto err_clear_flag;
->         }
->
->         /* setup generic device info */
-> @@ -309,6 +315,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->
->  err_free:
->         amba_device_put(dev);
-> +err_clear_flag:
-> +       of_node_clear_flag(node, OF_POPULATED);
->         return NULL;
->  }
->  #else /* CONFIG_ARM_AMBA */
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 3bad8d1..534cab8 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -130,6 +130,12 @@ static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
->         return test_bit(flag, &n->_flags);
->  }
->
-> +static inline int of_node_check_and_set_flag(struct device_node *n,
+> +Optional properties:
+> +- bus-range: PCI bus numbers covered
+> +
+> +Interrupt controller child node
+> ++++++++++++++++++++++++++++++++
+> +Required properties:
+> +- interrupt-controller: identifies the node as an interrupt controller
+> +- #address-cells: specifies the number of cells needed to encode an
+> +	address. The value must be 0.
+> +- #interrupt-cells: specifies the number of cells needed to encode an
+> +	interrupt source. The value must be 1.
+> +
+> +NOTE:
+> +The core provides a single interrupt for both INTx/MSI messages. So,
+> +created a interrupt controller node to support 'interrupt-map' DT
+> +functionality.  The driver will create an IRQ domain for this map, decode
+> +the four INTx interrupts in ISR and route them to this domain.
 
-Please keep the well known naming convention of the called function:
-of_node_test_and_set_flag
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How does this work if the pci core is combined with a GIC version that
+also has MSI support. Presumably you'd want to use that for performance
+reason rather than the integrated MSI chip.
+
+Shouldn't there be a way to pick between the two?
+
+> +/**
+> + * xilinx_pcie_get_config_base - Get configuration base
+> + * @bus: Bus structure of current bus
+> + * @devfn: Device/function
+> + * @where: Offset from base
+> + *
+> + * Return: Base address of the configuration space needed to be
+> + *	   accessed.
+> + */
+> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
+> +						 unsigned int devfn,
+> +						 int where)
+> +{
+> +	struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
+> +	int relbus;
+> +
+> +	relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
+> +		 (devfn << ECAM_DEV_NUM_SHIFT);
+> +
+> +	return port->reg_base + relbus + where;
+> +}
+
+Does this mean you have an ECAM-compliant config space? Nice!
+
+Would it be possible to split the config space access out into
+a separate file? It would be nice to share that with the generic
+ECAM driver that Will Deacon has sent.
+
+> +
+> +	msg.address_hi = 0;
+> +	msg.address_lo = virt_to_phys((void *)port->msg_addr);
+> +	msg.data = irq;
+> +
+> +	write_msi_msg(irq, &msg);
+
+It seems strange to pass the msg_addr as an integer referring to
+a virtual address. I'd suggest using phys_addr_t for the type
+and converting it at the point the page gets allocated, and then
+always assigning both the high and low part here. You'll need
+that anyway for 64-bit operation.
+
+> +/**
+> + * xilinx_pcie_enable_msi - Enable MSI support
+> + * @port: PCIe port information
+> + */
+> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+> +{
+> +	port->msg_addr = __get_free_pages(GFP_KERNEL, 0);
+> +
+> +	pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+> +	pcie_write(port, virt_to_phys((void *)port->msg_addr),
+> +		   XILINX_PCIE_REG_MSIBASE2);
+> +}
+
+here too.
+
+As a general comment about the MSI implementation, I wonder if this is actually
+generic enough to be shared with other host controllers. It could be moved
+into a separate file like the config space access in that case.
+
+> +/**
+> + * xilinx_pcie_init_irq_domain - Initialize IRQ domain
+> + * @port: PCIe port information
+> + *
+> + * Return: '0' on success and error value on failure
+> + */
+> +static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+> +{
+> +	struct device *dev = port->dev;
+> +	struct device_node *node = dev->of_node;
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		/* Setup MSI */
+> +		int i;
+> +
+> +		port->irq_domain = irq_domain_add_linear(node,
+> +							 XILINX_NUM_MSI_IRQS,
+> +							 &msi_domain_ops,
+> +							 &xilinx_pcie_msi_chip);
+> +		if (!port->irq_domain) {
+> +			dev_err(dev, "Failed to get a MSI IRQ domain\n");
+> +			return PTR_ERR(port->irq_domain);
+> +		}
+> +
+> +		for (i = 0; i < XILINX_NUM_MSI_IRQS; i++)
+> +			irq_create_mapping(port->irq_domain, i);
+
+I'm still not that familiar with the irqdomain code, but shouldn't you
+do the irq_create_mapping() in xilinx_pcie_assign_msi()?
+
+It seems wasteful to create all 128 mappings upfront.
+
+> +/**
+> + * xilinx_pcie_setup - Setup memory resources
+> + * @nr: Bus number
+> + * @sys: Per controller structure
+> + *
+> + * Return: '1' on success and error value on failure
+> + */
+> +static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
+> +{
+
+I think if you move most of the code from this function into the probe()
+function, it will be easier later to add arm64 support, and you can handle
+errors better.
+
+AFAICT, the only thing you need here is to list_move() the resources
+from the xilinx_pcie_port to sys->resources. Ideally, the entire range
+parsing can go away soon, once we have generic infrastructure for that.
+
+
+> +	/* Register the device */
+> +	pci_common_init_dev(dev, &hw);
+> +
+> +	platform_set_drvdata(pdev, port);
+
+Don't you have to do the platform_set_drvdata() before pci_common_init_dev()?
+
+	Arnd
