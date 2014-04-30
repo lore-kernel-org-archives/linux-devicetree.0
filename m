@@ -1,66 +1,52 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 2/4] clk: exynos4: export sclk_hdmiphy clock
-Date: Thu, 01 May 2014 00:49:28 +0200
-Message-ID: <53617DF8.4060609@gmail.com>
-References: <1396623201-26000-1-git-send-email-t.stanislaws@samsung.com>
- <1396623201-26000-3-git-send-email-t.stanislaws@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] Linux common clock framework: device with many clocks
+Date: Thu, 1 May 2014 00:13:07 +0100
+Message-ID: <20140430231307.GA10250@e106331-lin.cambridge.arm.com>
+References: <CANCKTBuOK41=ZxHcDRthc0uc81-nDr_66veeQvUDNjsKq85OSw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1396623201-26000-3-git-send-email-t.stanislaws@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomasz Stanislawski <t.stanislaws@samsung.com>, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: kgene.kim@samsung.com, mturquette@linaro.org, sw0312.kim@samsung.com, rob.herring@calxeda.com, kishon@ti.com, a.hajda@samsung.com, kyungmin.park@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CANCKTBuOK41=ZxHcDRthc0uc81-nDr_66veeQvUDNjsKq85OSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
+On Wed, Apr 30, 2014 at 09:39:11PM +0100, Jim Quinlan wrote:
+> In most examples of .dtsi files I have perused, a device is associated with
+> typically one clock, maybe two.  In the SoC I'm working on, some devices
+> need to turn off multiple clocks for PM, as many as 13.   The driver gets
+> the clocks from the device tree, and when the driver wants to turn off
+> clocks to the device, it loops through all 13 clocks.
+> 
+> I'm wondering if is possible to abstract a group of many clocks into one
+> "software clock". Invoking clk_disable() on said software clock would
+> effect the iteration of clk_disable() on all 13 of the clocks it governs.
+>  Enabling would effect clk_enable() on all 13.  This would make the driver
+> writer's life a little simpler.
+> 
+> I've looked at the Linux Common Clock Framework, and it doesn't really
+> accommodate multiple active parents as it's somewhat contrary to its
+> design.  Also, playing with the innards of clk.c is ill-advised.  Should I
+> just stick to putting iteration over the clocks in all my drivers, or is
+> there a better way?
 
-On 04.04.2014 16:53, Tomasz Stanislawski wrote:
-> Export sclk_hdmiphy clock to be usable from DT.
->
-> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> ---
->   drivers/clk/samsung/clk-exynos4.c   |    2 +-
->   include/dt-bindings/clock/exynos4.h |    1 +
->   2 files changed, 2 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/samsung/clk-exynos4.c b/drivers/clk/samsung/clk-exynos4.c
-> index b4f9672..528f8eb 100644
-> --- a/drivers/clk/samsung/clk-exynos4.c
-> +++ b/drivers/clk/samsung/clk-exynos4.c
-> @@ -428,7 +428,7 @@ static struct samsung_fixed_rate_clock exynos4_fixed_rate_ext_clks[] __initdata
->   /* fixed rate clocks generated inside the soc */
->   static struct samsung_fixed_rate_clock exynos4_fixed_rate_clks[] __initdata = {
->   	FRATE(0, "sclk_hdmi24m", NULL, CLK_IS_ROOT, 24000000),
-> -	FRATE(0, "sclk_hdmiphy", NULL, CLK_IS_ROOT, 27000000),
-> +	FRATE(CLK_SCLK_HDMIPHY, "sclk_hdmiphy", NULL, CLK_IS_ROOT, 27000000),
->   	FRATE(0, "sclk_usbphy0", NULL, CLK_IS_ROOT, 48000000),
->   };
->
-> diff --git a/include/dt-bindings/clock/exynos4.h b/include/dt-bindings/clock/exynos4.h
-> index 75aff33..0e245eb 100644
-> --- a/include/dt-bindings/clock/exynos4.h
-> +++ b/include/dt-bindings/clock/exynos4.h
-> @@ -33,6 +33,7 @@
->   #define CLK_MOUT_MPLL_USER_C	18 /* Exynos4x12 only */
->   #define CLK_MOUT_CORE		19
->   #define CLK_MOUT_APLL		20
-> +#define CLK_SCLK_HDMIPHY	22
->
->   /* gate for special clocks (sclk) */
->   #define CLK_SCLK_FIMC0		128
->
+This doesn't strike me as a DT issue. The DT should describe all the
+clocks that a given block takes, and the representation of said clocks
+in the DT is completely separate matter from the management of said
+clocks in any given driver.
 
-Applied.
+If you want a helpful abstraction for combining clocks for management
+purposes you'd be better off talking to Mike Turquette (CC'd), as he's
+in charge of the common clock framework.
 
-Best regards,
-Tomasz
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
