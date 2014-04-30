@@ -1,199 +1,419 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH v3 2/2] ARM: dts: Add peach-pit board support
-Date: Wed, 30 Apr 2014 16:38:58 +0530
-Message-ID: <1398856138-18837-3-git-send-email-arun.kk@samsung.com>
-References: <1398856138-18837-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398856138-18837-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@chromium.org, olofj@google.com, t.figa@samsung.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, arunkk.samsung@gmail.com
+From: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 02/03] ARM: sunxi: Add driver for sunxi
+ IR controller
+Date: Wed, 30 Apr 2014 04:11:27 -0700
+Message-ID: <20140430041127.450b913f.m.chehab@samsung.com>
+References: <d641a69a-01b4-443d-b121-48d13f46ee03@googlegroups.com>
+ <3881d16f-578a-417b-8a55-ea9bad5af206@googlegroups.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBCH3HIU4XEBBBY5UQONQKGQECTSAIFA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-reply-to: <3881d16f-578a-417b-8a55-ea9bad5af206-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: =?UTF-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCR0LXRgNGB0LXQvdC10LI=?= <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds the google peach-pit board dts file which uses
-exynos5420 SoC.
+Em Wed, 30 Apr 2014 03:58:18 -0700 (PDT)
+=D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=D0=B4=D1=80 =D0=91=D0=B5=D1=80=
+=D1=81=D0=B5=D0=BD=D0=B5=D0=B2 <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org> escreveu:
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
- arch/arm/boot/dts/Makefile                 |    1 +
- arch/arm/boot/dts/exynos5420-peach-pit.dts |  156 ++++++++++++++++++++++++++++
- 2 files changed, 157 insertions(+)
- create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
+> [PATCH v4 02/03] ARM: sunxi: Add driver for sunxi IR controller
+>=20
+> This patch adds driver for sunxi IR controller.
+> It is based on Alexsey Shestacov's work based on the original driver=20
+> supplied by Allwinner.
+>=20
+> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
+>=20
+> diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
+> index 8fbd377..9427fad 100644
+> --- a/drivers/media/rc/Kconfig
+> +++ b/drivers/media/rc/Kconfig
+> @@ -343,4 +343,14 @@ config RC_ST
+> =20
+>   If you're not sure, select N here.
+> =20
+> +config IR_SUNXI
+> +    tristate "SUNXI IR remote control"
+> +    depends on RC_CORE
+> +    depends on ARCH_SUNXI
+> +    ---help---
+> +      Say Y if you want to use sunXi internal IR Controller
+> +
+> +      To compile this driver as a module, choose M here: the module will
+> +      be called sunxi-ir.
+> +
+>  endif #RC_DEVICES
+> diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
+> index f8b54ff..93cdbe9 100644
+> --- a/drivers/media/rc/Makefile
+> +++ b/drivers/media/rc/Makefile
+> @@ -32,4 +32,5 @@ obj-$(CONFIG_IR_GPIO_CIR) +=3D gpio-ir-recv.o
+>  obj-$(CONFIG_IR_IGUANA) +=3D iguanair.o
+>  obj-$(CONFIG_IR_TTUSBIR) +=3D ttusbir.o
+>  obj-$(CONFIG_RC_ST) +=3D st_rc.o
+> +obj-$(CONFIG_IR_SUNXI) +=3D sunxi-ir.o
+>  obj-$(CONFIG_IR_IMG) +=3D img-ir/
+> diff --git a/drivers/media/rc/sunxi-ir.c b/drivers/media/rc/sunxi-ir.c
+> new file mode 100644
+> index 0000000..f051d94
+> --- /dev/null
+> +++ b/drivers/media/rc/sunxi-ir.c
+> @@ -0,0 +1,303 @@
+> +/*
+> + * Driver for Allwinner sunXi IR controller
+> + *
+> + * Copyright (C) 2014 Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
+> + * Copyright (C) 2014 Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+> + *
+> + * Based on sun5i-ir.c:
+> + * Copyright (C) 2007-2012 Daniel Wang
+> + * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/module.h>
+> +#include <linux/of_platform.h>
+> +#include <media/rc-core.h>
+> +
+> +#define SUNXI_IR_DEV "sunxi-ir"
+> +
+> +/* Registers */
+> +/* IR Control */
+> +#define SUNXI_IR_CTL_REG      0x00
+> +/* Rx Config */
+> +#define SUNXI_IR_RXCTL_REG    0x10
+> +/* Rx Data */
+> +#define SUNXI_IR_RXFIFO_REG   0x20
+> +/* Rx Interrupt Enable */
+> +#define SUNXI_IR_RXINT_REG    0x2C
+> +/* Rx Interrupt Status */
+> +#define SUNXI_IR_RXSTA_REG    0x30
+> +/* IR Sample Config */
+> +#define SUNXI_IR_CIR_REG      0x34
+> +
+> +/* Bit Definition of IR_RXINTS_REG Register */
+> +#define SUNXI_IR_RXINTS_RXOF  BIT(0) /* Rx FIFO Overflow */
+> +#define SUNXI_IR_RXINTS_RXPE  BIT(1) /* Rx Packet End */
+> +#define SUNXI_IR_RXINTS_RXDA  BIT(4) /* Rx FIFO Data Available */
+> +/* Hardware supported fifo size */
+> +#define SUNXI_IR_FIFO_SIZE    16
+> +/* How much messages in fifo triggers IRQ */
+> +#define SUNXI_IR_FIFO_TRIG    8
+> +/* Required frequency for IR0 or IR1 clock in CIR mode */
+> +#define SUNXI_IR_BASE_CLK     8000000
+> +/* Frequency after IR internal divider  */
+> +#define SUNXI_IR_CLK          (SUNXI_IR_BASE_CLK / 64)
+> +/* Sample period in ns */
+> +#define SUNXI_IR_SAMPLE       (1000000000ul / SUNXI_IR_CLK)
+> +/* Filter threshold in samples  */
+> +#define SUNXI_IR_RXFILT       1
+> +/* Idle Threshold in samples */
+> +#define SUNXI_IR_RXIDLE       20
+> +/* Time after which device stops sending data in ms */
+> +#define SUNXI_IR_TIMEOUT      120
+> +
+> +struct sunxi_ir {
+> + spinlock_t      ir_lock;
+> + struct rc_dev   *rc;
+> + void __iomem    *base;
+> + int             irq;
+> + struct clk      *clk;
+> + struct clk      *apb_clk;
+> + const char      *map_name;
+> +};
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 35c146f..3220e29 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
- 	exynos5250-smdk5250.dtb \
- 	exynos5250-snow.dtb \
- 	exynos5420-arndale-octa.dtb \
-+	exynos5420-peach-pit.dtb \
- 	exynos5420-smdk5420.dtb \
- 	exynos5440-sd5v1.dtb \
- 	exynos5440-ssdk5440.dtb
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-new file mode 100644
-index 0000000..03ef094
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -0,0 +1,156 @@
-+/*
-+ * Google Peach Pit Rev 6+ board device tree source
-+ *
-+ * Copyright (c) 2014 Google, Inc
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "exynos5420.dtsi"
-+
-+/ {
-+	model = "Google Peach Pit Rev 6+";
-+
-+	compatible = "google,pit-rev16",
-+		"google,pit-rev15", "google,pit-rev14",
-+		"google,pit-rev13", "google,pit-rev12",
-+		"google,pit-rev11", "google,pit-rev10",
-+		"google,pit-rev9", "google,pit-rev8",
-+		"google,pit-rev7", "google,pit-rev6",
-+		"google,pit", "google,peach","samsung,exynos5420",
-+		"samsung,exynos5";
-+
-+	memory {
-+		reg = <0x20000000 0x80000000>;
-+	};
-+
-+	fixed-rate-clocks {
-+		oscclk {
-+			compatible = "samsung,exynos5420-oscclk";
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&power_key_irq>;
-+
-+		power {
-+			label = "Power";
-+			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 1000000 0>;
-+		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
-+		default-brightness-level = <7>;
-+		pinctrl-0 = <&backlight_pwm>;
-+		pinctrl-names = "default";
-+	};
-+};
-+
-+&pinctrl_0 {
-+	tpm_irq: tpm-irq {
-+		samsung,pins = "gpx1-0";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	power_key_irq: power-key-irq {
-+		samsung,pins = "gpx1-2";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-+
-+&pinctrl_3 {
-+	backlight_pwm: backlight-pwm {
-+		samsung,pins = "gpb2-0";
-+		samsung,pin-function = <2>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&serial_3 {
-+	status = "okay";
-+};
-+
-+&mmc_0 {
-+	status = "okay";
-+	num-slots = <1>;
-+	broken-cd;
-+	caps2-mmc-hs200-1_8v;
-+	supports-highspeed;
-+	non-removable;
-+	card-detect-delay = <200>;
-+	clock-frequency = <400000000>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 4>;
-+	samsung,dw-mshc-ddr-timing = <0 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <8>;
-+	};
-+};
-+
-+&mmc_2 {
-+	status = "okay";
-+	num-slots = <1>;
-+	supports-highspeed;
-+	card-detect-delay = <200>;
-+	clock-frequency = <400000000>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <2 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <4>;
-+	};
-+};
-+
-+&hsi2c_9 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tpm@20 {
-+		compatible = "infineon,slb9645tt";
-+		reg = <0x20>;
-+
-+		/* Unused irq; but still need to configure the pins */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tpm_irq>;
-+	};
-+};
-+
-+/*
-+ * Use longest HW watchdog in SoC (32 seconds) since the hardware
-+ * watchdog provides no debugging information (compared to soft/hard
-+ * lockup detectors) and so should be last resort.
-+ */
-+&watchdog {
-+	timeout-sec = <32>;
-+};
--- 
-1.7.9.5
+Still badly indented. Maybe your emailer is mangling whitespaces.
+
+The best is to use git send-email to send the patches.
+
+Also, please c/c linux-media ML for the entire patch series, as, in general=
+,
+we generally merge all patches via one tree (typically, the tree to where t=
+he
+real driver will be merged - in this case, the media tree), after getting
+the needed acks from DT and arm subarch maintainers (when applicable).
+
+I'll do a better review after the whitespace fixups.
+
+Regards,
+Mauro
+
+> +
+> +static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
+> +{
+> + unsigned long status;
+> + unsigned char dt;
+> + unsigned int cnt, rc;
+> + struct sunxi_ir *ir =3D dev_id;
+> + DEFINE_IR_RAW_EVENT(rawir);
+> +
+> + spin_lock_irq(&ir->ir_lock);
+> +
+> + status =3D readl(ir->base + SUNXI_IR_RXSTA_REG);
+> +
+> + /* clean all pending statuses */
+> + writel(status | 0xff, ir->base + SUNXI_IR_RXSTA_REG);
+> +
+> + if (status & SUNXI_IR_RXINTS_RXDA) {
+> + /* How much messages in fifo */
+> + rc  =3D (status >> 8) & 0x3f;
+> + /* Sanity check */
+> + rc =3D rc > SUNXI_IR_FIFO_SIZE ? SUNXI_IR_FIFO_SIZE : rc;
+> + /* if we have data */
+> + for (cnt =3D 0; cnt < rc; cnt++) {
+> + /* for each bit in fifo */
+> + dt =3D readb(ir->base + SUNXI_IR_RXFIFO_REG);
+> + rawir.pulse =3D (dt & 0x80) !=3D 0;
+> + rawir.duration =3D (dt & 0x7f) * SUNXI_IR_SAMPLE;
+> + ir_raw_event_store_with_filter(ir->rc, &rawir);
+> + }
+> + }
+> +
+> + if (status & SUNXI_IR_RXINTS_RXOF)
+> + ir_raw_event_reset(ir->rc);
+> + else if (status & SUNXI_IR_RXINTS_RXPE) {
+> + ir_raw_event_set_idle(ir->rc, true);
+> + ir_raw_event_handle(ir->rc);
+> + }
+> +
+> + spin_unlock_irq(&ir->ir_lock);
+> +
+> + return IRQ_HANDLED;
+> +}
+> +
+> +
+> +static int sunxi_ir_probe(struct platform_device *pdev)
+> +{
+> + int ret =3D 0;
+> + unsigned long tmp =3D 0;
+> +
+> + struct device *dev =3D &pdev->dev;
+> + struct device_node *dn =3D dev->of_node;
+> + struct resource *res;
+> + struct sunxi_ir *ir;
+> +
+> + ir =3D devm_kzalloc(dev, sizeof(struct sunxi_ir), GFP_KERNEL);
+> + if (!ir)
+> + return -ENOMEM;
+> +
+> + /* Clock */
+> + ir->apb_clk =3D devm_clk_get(dev, "apb");
+> + if (IS_ERR(ir->apb_clk)) {
+> + dev_err(dev, "failed to get a apb clock.\n");
+> + return -EINVAL;
+> + }
+> + ir->clk =3D devm_clk_get(dev, "ir");
+> + if (IS_ERR(ir->clk)) {
+> + dev_err(dev, "failed to get a ir clock.\n");
+> + return -EINVAL;
+> + }
+> +
+> + ret =3D clk_set_rate(ir->clk, SUNXI_IR_BASE_CLK);
+> + if (ret) {
+> + dev_err(dev, "set ir base clock failed!\n");
+> + return -EINVAL;
+> + }
+> +
+> + if (clk_prepare_enable(ir->apb_clk)) {
+> + dev_err(dev, "try to enable apb_ir_clk failed\n");
+> + return -EINVAL;
+> + }
+> +
+> + if (clk_prepare_enable(ir->clk)) {
+> + dev_err(dev, "try to enable ir_clk failed\n");
+> + ret =3D -EINVAL;
+> + goto exit_clkdisable_apb_clk;
+> + }
+> +
+> + /* IO */
+> + res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +
+> + ir->base =3D devm_ioremap_resource(dev, res);
+> + if (IS_ERR(ir->base)) {
+> + dev_err(dev, "failed to map registers\n");
+> + ret =3D -ENOMEM;
+> + goto exit_clkdisable_clk;
+> + }
+> +
+> + /* IRQ */
+> + ir->irq =3D platform_get_irq(pdev, 0);
+> + if (ir->irq < 0) {
+> + dev_err(dev, "no irq resource\n");
+> + ret =3D -EINVAL;
+> + goto exit_clkdisable_clk;
+> + }
+> +
+> + ret =3D devm_request_irq(dev, ir->irq, sunxi_ir_irq, 0, SUNXI_IR_DEV, i=
+r);
+> + if (ret) {
+> + dev_err(dev, "failed request irq\n");
+> + ret =3D -EINVAL;
+> + goto exit_clkdisable_clk;
+> + }
+> +
+> + ir->rc =3D rc_allocate_device();
+> +
+> + if (!ir->rc) {
+> + dev_err(dev, "failed to allocate device\n");
+> + ret =3D -ENOMEM;
+> + goto exit_clkdisable_clk;
+> + }
+> +
+> + ir->rc->priv =3D ir;
+> + ir->rc->input_name =3D SUNXI_IR_DEV;
+> + ir->rc->input_phys =3D "sunxi-ir/input0";
+> + ir->rc->input_id.bustype =3D BUS_HOST;
+> + ir->rc->input_id.vendor =3D 0x0001;
+> + ir->rc->input_id.product =3D 0x0001;
+> + ir->rc->input_id.version =3D 0x0100;
+> + ir->map_name =3D of_get_property(dn, "linux,rc-map-name", NULL);
+> + ir->rc->map_name =3D ir->map_name ?: RC_MAP_EMPTY;
+> + ir->rc->dev.parent =3D dev;
+> + ir->rc->driver_type =3D RC_DRIVER_IR_RAW;
+> + rc_set_allowed_protocols(ir->rc, RC_BIT_ALL);
+> + ir->rc->rx_resolution =3D SUNXI_IR_SAMPLE;
+> + ir->rc->timeout =3D MS_TO_NS(SUNXI_IR_TIMEOUT);
+> + ir->rc->driver_name =3D SUNXI_IR_DEV;
+> +
+> + ret =3D rc_register_device(ir->rc);
+> + if (ret) {
+> + dev_err(dev, "failed to register rc device\n");
+> + ret =3D -EINVAL;
+> + goto exit_free_dev;
+> + }
+> +
+> + platform_set_drvdata(pdev, ir);
+> +
+> + /* Enable CIR Mode */
+> + writel(0x3 << 4, ir->base+SUNXI_IR_CTL_REG);
+> +
+> + /* Config IR Sample Register */
+> + /* Fsample =3D clk */
+> + tmp =3D 0;
+> + /* Set Filter Threshold */
+> + tmp |=3D (SUNXI_IR_RXFILT & 0x3f) << 2;
+> + /* Set Idle Threshold */
+> + tmp |=3D (SUNXI_IR_RXIDLE & 0xff) << 8;
+> + writel(tmp, ir->base + SUNXI_IR_CIR_REG);
+> +
+> + /* Invert Input Signal */
+> + writel(0x1 << 2, ir->base + SUNXI_IR_RXCTL_REG);
+> +
+> + /* Clear All Rx Interrupt Status */
+> + writel(0xff, ir->base + SUNXI_IR_RXSTA_REG);
+> +
+> + /* Enable IRQ on data, overflow, packed end */
+> + tmp =3D (0x1 << 4) | 0x3;
+> +
+> + /* Rx FIFO Threshold */
+> + tmp |=3D (SUNXI_IR_FIFO_TRIG - 1) << 8;
+> +
+> + writel(tmp, ir->base + SUNXI_IR_RXINT_REG);
+> +
+> + /* Enable IR Module */
+> + tmp =3D readl(ir->base + SUNXI_IR_CTL_REG);
+> +
+> + writel(tmp | 0x3, ir->base + SUNXI_IR_CTL_REG);
+> +
+> + dev_info(dev, "initialized sunXi IR driver\n");
+> + return 0;
+> +
+> +exit_free_dev:
+> + rc_free_device(ir->rc);
+> +exit_clkdisable_clk:
+> + clk_disable_unprepare(ir->clk);
+> +exit_clkdisable_apb_clk:
+> + clk_disable_unprepare(ir->apb_clk);
+> +
+> + return ret;
+> +}
+> +
+> +static int sunxi_ir_remove(struct platform_device *pdev)
+> +{
+> + unsigned long flags;
+> + struct sunxi_ir *ir =3D platform_get_drvdata(pdev);
+> +
+> + clk_disable_unprepare(ir->clk);
+> + clk_disable_unprepare(ir->apb_clk);
+> +
+> + spin_lock_irqsave(&ir->ir_lock, flags);
+> + /* disable IR IRQ */
+> + writel(0, ir->base + SUNXI_IR_RXINT_REG);
+> + /* clear All Rx Interrupt Status */
+> + writel(0xff, ir->base + SUNXI_IR_RXSTA_REG);
+> + /* disable IR */
+> + writel(0, ir->base + SUNXI_IR_CTL_REG);
+> + spin_unlock_irqrestore(&ir->ir_lock, flags);
+> +
+> + rc_unregister_device(ir->rc);
+> + return 0;
+> +}
+> +
+> +static const struct of_device_id sunxi_ir_match[] =3D {
+> + { .compatible =3D "allwinner,sun7i-a20-ir", },
+> + {},
+> +};
+> +
+> +static struct platform_driver sunxi_ir_driver =3D {
+> + .probe          =3D sunxi_ir_probe,
+> + .remove         =3D sunxi_ir_remove,
+> + .driver =3D {
+> + .name =3D SUNXI_IR_DEV,
+> + .owner =3D THIS_MODULE,
+> + .of_match_table =3D sunxi_ir_match,
+> + },
+> +};
+> +
+> +module_platform_driver(sunxi_ir_driver);
+> +
+> +MODULE_DESCRIPTION("Allwinner sunXi IR controller driver");
+> +MODULE_AUTHOR("Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+>=20
+>=20
+> =D1=81=D1=80=D0=B5=D0=B4=D0=B0, 30 =D0=B0=D0=BF=D1=80=D0=B5=D0=BB=D1=8F 2=
+014 =D0=B3., 16:51:12 UTC+6 =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=
+=B0=D1=82=D0=B5=D0=BB=D1=8C =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=D0=
+=B4=D1=80 =D0=91=D0=B5=D1=80=D1=81=D0=B5=D0=BD=D0=B5=D0=B2=20
+> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:
+> >
+> > This patch introduces Consumer IR(CIR) support for sunxi boards.
+> >
+> > This is based on Alexsey Shestacov's work based on the original driver=
+=20
+> > supplied by Allwinner.
+> >
+
+
+--=20
+
+Cheers,
+Mauro
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
