@@ -1,74 +1,104 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] phy: omap-usb2: Use generic clock names "wkupclk"
- and "refclk"
-Date: Wed, 30 Apr 2014 10:16:13 +0300
-Message-ID: <5360A33D.3040207@ti.com>
-References: <1398693687-13967-1-git-send-email-rogerq@ti.com> <1398693687-13967-4-git-send-email-rogerq@ti.com> <20140428160347.GG30292@saruman.home> <535F59CF.6050002@ti.com> <20140429161420.GH633@saruman.home> <20140429161616.GI633@saruman.home>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH RFC 1/2] Documentation: add Device tree bindings for QCA7000
+Date: Wed, 30 Apr 2014 09:30:18 +0200
+Message-ID: <5360A68A.1080408@i2se.com>
+References: <1398707697-43785-1-git-send-email-stefan.wahren@i2se.com> <1398707697-43785-2-git-send-email-stefan.wahren@i2se.com> <20140429223638.GB2382@flaeskesteg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140429161616.GI633-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Menon, Nishanth" <nm-l0cyMroinI0@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140429223638.GB2382@flaeskesteg>
+Sender: netdev-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.org" <pawel.moll@arm.org>, "mark.rutland@arm.org" <mark.rutland@arm.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/29/2014 07:16 PM, Felipe Balbi wrote:
-> On Tue, Apr 29, 2014 at 11:14:20AM -0500, Felipe Balbi wrote:
->> On Tue, Apr 29, 2014 at 10:50:39AM +0300, Roger Quadros wrote:
->>> +Nishant
->>>
->>> Hi,
->>>
->>> On 04/28/2014 07:03 PM, Felipe Balbi wrote:
->>>> Hi,
->>>>
->>>> On Mon, Apr 28, 2014 at 05:01:23PM +0300, Roger Quadros wrote:
->>>>> As clocks might be named differently on multiple platforms, use a generic
->>>>> name in the driver and allow device tree node to specify the platform
->>>>> specific clock name.
->>>>>
->>>>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->>>>> ---
->>>>>  drivers/phy/phy-omap-usb2.c | 8 ++++----
->>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
->>>>> index a2205a8..fb5e515 100644
->>>>> --- a/drivers/phy/phy-omap-usb2.c
->>>>> +++ b/drivers/phy/phy-omap-usb2.c
->>>>> @@ -275,16 +275,16 @@ static int omap_usb2_probe(struct platform_device *pdev)
->>>>>  	if (IS_ERR(phy_provider))
->>>>>  		return PTR_ERR(phy_provider);
->>>>>  
->>>>> -	phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
->>>>> +	phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
->>>>
->>>> doesn't this patch cause a regression ? I mean, you're changing the
->>>> clock name before fixing DTS. Also, that DTS has been in a major version
->>>> of the kernel, so we need to maintain compatibility with it. How about:
->>>
->>> I'm changing the DTS in Patch 4, but I prefer to do it in this patch
->>> to prevent synchronization issues in -next.
->>>
->>> About backward compatibility, I agree with you but at the same time I
->>> don't think anyone using TI SoCs burns the DTB to ROM and needs
->>> backward compatibility. We supply our BSPs/SDKs with the updated DTBs.
->>> Do you feel strict backward compatibility is worth the effort for TI
->>> specific blocks?
->>
->> dunno, but it would, at least, avoid "synchronization issues with
->> linux-next" :-)
-> 
-> and the bisectability issue.
-> 
-If backward compatibility is not the real worry then we could avoid the
-synchronization/bisectability issue by squashing the dts changes with this patch.
+Hi,
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Am 30.04.2014 00:36, schrieb Mark Rutland:
+> On Mon, Apr 28, 2014 at 06:54:56PM +0100, Stefan Wahren wrote:
+>> This patch adds the Device tree bindings for the Ethernet over SPI
+>> protocol driver of the Qualcomm QCA7000 HomePlug GreenPHY.
+>>
+>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>> ---
+>>  .../devicetree/bindings/net/qca-qca7000-spi.txt    |   51 ++++++++++++++++++++
+>>  1 file changed, 51 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+>> new file mode 100644
+>> index 0000000..132c10f
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+>> @@ -0,0 +1,51 @@
+>> +* Qualcomm QCA7000 (Ethernet over SPI protocol)
+>> +
+>> +Note: The QCA7000 is useable as a SPI device. In this case it must be defined
+>> +as a child of a spi master in the device tree.
+>> +
+>> +Required properties:
+>> +- compatible : Should be "qca,qca7000"
+>> +- reg : Should specify the SPI chip select
+>> +- intr-gpios : Should specify the GPIO for SPI interrupt
+> As Arnd mentioned, this should be described as an interrupt if it's an
+> interrupt from the point of view of the QCA7000.
+
+yes, i will fix that. I think i've an idea how to handle the case a
+interrupt appear
+before the device comes up without fetching the GPIO value.
+
+>> +- spi-cpha : Must be set
+>> +- spi-cpol: Must be set
+>> +
+>> +Optional properties:
+>> +- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
+>> +  Numbers smaller than 1000000 or greater than 16000000 are invalid. Missing
+>> +  the property will set the SPI frequency to 8000000 Hertz.
+>> +- local-mac-address: 6 bytes, mac address
+>> +- qca,legacy-mode : Should specify the data transfer mode of the QCA7000
+>> +  (0 = burst mode, 1 = legacy mode). Missing the property will use the
+>> +  burst mode.
+> This sounds like it could be a boolean property (one with no value, like
+> cpi-cpha). When is this necessary?
+
+You're right. I could make it a boolean property.
+
+The SPI interface of the QCA7000 supports 2 different transfer modes:
+* legacy mode (spi chip select toogle after each word, cs gaps)
+* burst mode (spi chip select toogle after complete data, no cs gaps)
+
+This mode must be configured on the QCA7000 and the driver must also
+know the setting. The
+burst mode is preferred because of better performance. I think this
+parameter is for spi host
+controller, which doesn't support burst mode.
+
+>> +- linux,burst-length : Number of data bytes per burst. Numbers smaller than 1
+>> +  or greater than 5000 are invalid. Missing the property will set the
+>> +  burst length to 5000 bytes. This property has only an effect in burst mode.
+> When is this needed?
+
+This parameter makes only sense in case of burst mode and specify the
+maximum length of a
+spi burst. I think this parameter has an influence on the latency of the
+system. Higher values
+means higher performance but worse system latency. I think that make
+sense on embedded system.
+
+>> +- linux,pluggable-connection : Should be set to skip signature check while
+>> +  probing. This property is useful if the SPI master and QCA7000 are not on the
+>> +  same board.
+> This does not sounds like it belongs in the DT, as it's strongly tied to the
+> implementation of the driver. Why is this necessary?
+>
+> Cheers,
+> Mark.
+
+I introduce this parameter to handle a scenario where spi host
+controller and QCA7000 are
+not on the same board and connected via cable. So in this case the
+driver skips a device probe
+and wait until the QCA7000 becomes ready.
+
+Stefan
