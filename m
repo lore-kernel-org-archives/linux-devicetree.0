@@ -1,85 +1,90 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [U-Boot] [Ac100] [PATCH v2 5/6] ARM: tegra: paz00: add dtbindings
- for nvec
-Date: Wed, 30 Apr 2014 10:21:07 -0600
-Message-ID: <536122F3.4070301@wwwdotorg.org>
-References: <535EDE6D.2050505@wwwdotorg.org> <2004470.cHRJ0azkU4@fb07-iapwap2>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v8 14/20] usb: phy: msm: Add support for secondary PHY
+ control
+Date: Wed, 30 Apr 2014 11:22:28 -0500
+Message-ID: <20140430162228.GI23679@saruman.home>
+References: <1398692063-11372-1-git-send-email-iivanov@mm-sol.com>
+ <1398692063-11372-15-git-send-email-iivanov@mm-sol.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2004470.cHRJ0azkU4@fb07-iapwap2>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marc Dietrich <marvin24-Mmb7MZpHnFY@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org
-Cc: Andrey Danin <danindrey-JGs/UdohzUI@public.gmane.org>, Tom Warren <TWarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Julian Andres Klode <jak-4HMq4SXA452hPH1hqNUYSQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, ac100-oU9gvf+ajcQ97yFScArB1dHuzzzSOjJt@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zgY/UHCnsaNnNXRx"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398692063-11372-15-git-send-email-iivanov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Brown <davidb@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, Manu Gautam <mgautam@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/30/2014 01:52 AM, Marc Dietrich wrote:
-> Hi,
-> 
-> Am Montag, 28. April 2014, 17:04:13 schrieb Stephen Warren:
->> On 04/26/2014 07:14 PM, Andrey Danin wrote:
->>
->> This patch isn't adding DT bindings for NVEC, but rather add DT nodes.
->> The binding is the schema, not the content.
->>
->> We need a DT binding document that's been reviewed by the DT binding
->> maintainers. Can you please first submit a patch to the Linux kernel
->> that modifies the existing I2C core and Tegra I2C controller binding
->> documentation to add slave mode support. Once that's fully reviewed and
->> ack'd, this patch series can implement support for it in U-Boot.
-> 
-> I'm sorry that I didn't came up with a proper kernel implementation, but while 
-> we are discussion the binding I just want to give some coins.
+--zgY/UHCnsaNnNXRx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I'm not looking for a kernel driver implementation, but we do need to
-the DT binding fully reviewed and accepted.
+Hi,
 
->>> diff --git a/arch/arm/dts/tegra20-paz00.dts
->>> b/arch/arm/dts/tegra20-paz00.dts> 
->>>  	i2c@7000c500 {
->>>
->>> -		status = "disabled";
->>> +		status = "okay";
->>> +		clock-frequency = <40000>;
->>> +		slave-addr = <138>;
->>> +		nvec {
->>> +			compatible = "nvidia,tegra20-nvec";
->>> +			request-gpios = <&gpio 170 0>; /* gpio PV2 */
->>
->> The reg property is missing here. Since the i2c node has
->> #address-cells/#size-cells, there must be a reg property in the children.
->>
->> There's nothing here to indicate that this node is a slave device rather
->> than a master device, and doesn't seem to be any allowance for a single
->> I2C controller to support both master and slave nodes at the same time
->> (which I think Tegra's controller can IIRC).
->>
->> IIRC, I had previously suggested something like encoding master/slave
->> into the reg property of the I2C child nodes. We could either do:
->>
->> a) Set some top-bit to indicate a slave device.
->>
->> b) If #address-cells=<1>, only master devices are present. If
->> #address-cells=<2>, either master or slave devices could be present.
->> Cell 0 could be 0==master, 1==slave, and cell 1 the actual I2C bus address.
-> 
-> I'm not sure if this is really needed. NVEC knows it has to configure the 
-> tegra controller as slave. I don't see a reason to double this fact in the 
-> device tree. I like the idea of how the downstream kernel does it. The driver 
-> calls something like tegra_i2c_init_slave with the slave address as an 
-> parameter. This means that the slave address is not a property of the i2c 
-> (slave-) controller, but of the master because it has the address hard coded 
-> in its firmware. So reg = <138>; would be sufficient here and it also enables 
-> multi-slave configs.
+On Mon, Apr 28, 2014 at 04:34:17PM +0300, Ivan T. Ivanov wrote:
+> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+>=20
+> Allow support to use 2nd HSPHY with USB2 Core.
+> Some platforms may have configuration to allow USB controller
+> work with any of the two HSPHYs present. By default driver
+> configures USB core to use primary HSPHY. Add support to allow
+> user select 2nd HSPHY using DT parameter.
+>=20
+> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+> Cc: Manu Gautam <mgautam@codeaurora.org>
+> ---
+>  .../devicetree/bindings/usb/msm-hsusb.txt          |  6 ++++++
+>  drivers/usb/phy/phy-msm-usb.c                      | 24 ++++++++++++++++=
+++++--
+>  include/linux/usb/msm_hsusb.h                      |  1 +
+>  include/linux/usb/msm_hsusb_hw.h                   |  1 +
+>  4 files changed, 30 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/msm-hsusb.txt b/Docume=
+ntation/devicetree/bindings/usb/msm-hsusb.txt
+> index ee4123d..0669667 100644
+> --- a/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> +++ b/Documentation/devicetree/bindings/usb/msm-hsusb.txt
+> @@ -59,6 +59,12 @@ Optional properties:
+>                  For example: qcom,phy-init-sequence =3D < -1 0x63 >;
+>                  Will update only value at address ULPI_EXT_VENDOR_SPECIF=
+IC + 1.
+>=20
+> +- qcom,phy-num: Select number of pyco-phy to use, can be one of
+> +                0 - PHY one, default
+> +                1 - Second PHY
+> +                Some platforms may have configuration to allow USB
+> +                controller work with any of the two HSPHYs present.
 
-The binding in this patch is very special-cased. Instead, we need to
-create a generic binding that will work identically across arbitrary I2C
-controllers, some of which do support multiple slave addresses. The
-issue that caused Linus to blow up about ARM was because everyone went
-off and did their own HW-specific stuff without taking a look at the big
-picture. That's exactly what the binding proposed in this patch does too.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I have a feeling there's a better to do this with of alias. But it would
+be good if Kumar or any of the DT folks could pitch in.
+
+--=20
+balbi
+
+--zgY/UHCnsaNnNXRx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTYSNEAAoJEIaOsuA1yqREa7UP/1hkv/H5lWCm+Ys3nG+0zdlm
+6axlzhDEs0MPpFm7T1wfaDv21EDtMVb0ugBeUxTIVJBWDW7gV4g3QSvvauok7tJ1
+IpLgubZSf168WZZiFRTCXAnVPvXXf/ct1p0ClRNVkMnldQiWheNpy/2Ly9G0DaH7
+/Jk3hFcr543dpsaYw0kKYLT1JKrumXKPCAOtekpTeYSBbHuBNF0o1WLVxPNGHxhy
+oMNWj6Gs81iGVLJrSr6iVgVeQKZhDJFSZOMveKupKnJXoI1b2+Ez7bibjbLx7FHT
+Efr4mt/wc4ktKDAbLKXghhA7+76XQfNCs5FlcA+rLYVOjtBAH63W+QfgJwp/Yh9b
+Omgh/duXGNAVgwmjwVE/XHQYptJ29rsRkWsJwS6z1yOYtBaonXeb4Y3+uLFQ1AFX
+J46wxdAkaoojTJ4b5qw7RVYgJT/MFbldWSSEGoefgIbj7/lFCGSNbqJwY5oXiwAz
+GfgGtHzdGXEziGR53KZfr2OZMiXceRlDOYy5kDxOjH7Q6KWOomt+Upd1ZqUmmqWm
+JpoHE+bGT9TpPlt17VifaVZsmUlnvmcqxy/7sQ1k4K1dyEeo9PTO/2D9+9pFj0AA
+MFXtGP16MoAqRzWfLc5oVSdyvGONSgGtIcwx6SGFm/JV8wcEuDEzAGub64tkT08W
+7FSF4Ee6Vw9EpWFM8ltT
+=ATDK
+-----END PGP SIGNATURE-----
+
+--zgY/UHCnsaNnNXRx--
