@@ -1,52 +1,63 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] Linux common clock framework: device with many clocks
-Date: Thu, 1 May 2014 00:13:07 +0100
-Message-ID: <20140430231307.GA10250@e106331-lin.cambridge.arm.com>
-References: <CANCKTBuOK41=ZxHcDRthc0uc81-nDr_66veeQvUDNjsKq85OSw@mail.gmail.com>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 1/5] pm: domains: quieten down generic pm domains
+Date: Thu, 01 May 2014 01:46:09 +0200
+Message-ID: <10021780.rnCkCYmgZH@vostro.rjw.lan>
+References: <20140427132312.GC26756@n2100.arm.linux.org.uk> <E1WeP8U-0000Ug-RQ@rmk-PC.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CANCKTBuOK41=ZxHcDRthc0uc81-nDr_66veeQvUDNjsKq85OSw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mike.turquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <E1WeP8U-0000Ug-RQ@rmk-PC.arm.linux.org.uk>
+Sender: linux-pm-owner@vger.kernel.org
+To: Russell King <rmk+kernel@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Sunday, April 27, 2014 02:28:50 PM Russell King wrote:
+> Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 
-On Wed, Apr 30, 2014 at 09:39:11PM +0100, Jim Quinlan wrote:
-> In most examples of .dtsi files I have perused, a device is associated with
-> typically one clock, maybe two.  In the SoC I'm working on, some devices
-> need to turn off multiple clocks for PM, as many as 13.   The driver gets
-> the clocks from the device tree, and when the driver wants to turn off
-> clocks to the device, it loops through all 13 clocks.
+Acked-by: Rafael J. Wysocki <rjw@rjwysocki.net>
+
+Since you need this one and [2/5] for the rest of the patchset, please feel
+free to take them through your tree if that's convenient.
+
+> ---
+>  drivers/base/power/domain.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 > 
-> I'm wondering if is possible to abstract a group of many clocks into one
-> "software clock". Invoking clk_disable() on said software clock would
-> effect the iteration of clk_disable() on all 13 of the clocks it governs.
->  Enabling would effect clk_enable() on all 13.  This would make the driver
-> writer's life a little simpler.
+> diff --git a/drivers/base/power/domain.c b/drivers/base/power/domain.c
+> index bfb8955c406c..ea91ea0e137b 100644
+> --- a/drivers/base/power/domain.c
+> +++ b/drivers/base/power/domain.c
+> @@ -42,7 +42,7 @@
+>  	struct gpd_timing_data *__td = &dev_gpd_data(dev)->td;			\
+>  	if (!__retval && __elapsed > __td->field) {				\
+>  		__td->field = __elapsed;					\
+> -		dev_warn(dev, name " latency exceeded, new value %lld ns\n",	\
+> +		dev_dbg(dev, name " latency exceeded, new value %lld ns\n",	\
+>  			__elapsed);						\
+>  		genpd->max_off_time_changed = true;				\
+>  		__td->constraint_changed = true;				\
+> @@ -242,7 +242,7 @@ static int __pm_genpd_poweron(struct generic_pm_domain *genpd)
+>  			genpd->max_off_time_changed = true;
+>  			genpd_recalc_cpu_exit_latency(genpd);
+>  			if (genpd->name)
+> -				pr_warning("%s: Power-on latency exceeded, "
+> +				pr_debug("%s: Power-on latency exceeded, "
+>  					"new value %lld ns\n", genpd->name,
+>  					elapsed_ns);
+>  		}
+> @@ -566,7 +566,7 @@ static int pm_genpd_poweroff(struct generic_pm_domain *genpd)
+>  			genpd->power_off_latency_ns = elapsed_ns;
+>  			genpd->max_off_time_changed = true;
+>  			if (genpd->name)
+> -				pr_warning("%s: Power-off latency exceeded, "
+> +				pr_debug("%s: Power-off latency exceeded, "
+>  					"new value %lld ns\n", genpd->name,
+>  					elapsed_ns);
+>  		}
 > 
-> I've looked at the Linux Common Clock Framework, and it doesn't really
-> accommodate multiple active parents as it's somewhat contrary to its
-> design.  Also, playing with the innards of clk.c is ill-advised.  Should I
-> just stick to putting iteration over the clocks in all my drivers, or is
-> there a better way?
 
-This doesn't strike me as a DT issue. The DT should describe all the
-clocks that a given block takes, and the representation of said clocks
-in the DT is completely separate matter from the management of said
-clocks in any given driver.
-
-If you want a helpful abstraction for combining clocks for management
-purposes you'd be better off talking to Mike Turquette (CC'd), as he's
-in charge of the common clock framework.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
