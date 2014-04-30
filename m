@@ -1,104 +1,65 @@
-From: =?UTF-8?Q?=D0=9E=D0=9E=D0=9E_?=
-	 =?UTF-8?Q?=22=D0=AD=D0=BB=D0=B5=D0=BA=D1=82=D1=80=D0=BE=D0=9F=D0=BB?=
-	 =?UTF-8?Q?=D1=8E=D1=81=22?= <5172643@gmail.com>
-Subject: Re: [PATCH v4 10/21] mtd: support BB SRAM on ICP DAS LP-8x4x
-Date: Wed, 30 Apr 2014 21:35:17 +0400
-Message-ID: <1398879317.15199.15.camel@host5.omatika.ru>
-References: <1397668411-27162-7-git-send-email-ynvich@gmail.com>
-	 <1397668667-27328-1-git-send-email-ynvich@gmail.com>
-	 <1397668667-27328-4-git-send-email-ynvich@gmail.com>
-	 <20140430172114.GA2497@norris-Latitude-E6410>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140430172114.GA2497@norris-Latitude-E6410>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Robert Jarzmik <robert.jarzmik@free.fr>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:MEMORY TECHNOLOGY..." <linux-mtd@lists.infradead.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v3 0/7] Add cros_ec changes for newer boards
+Date: Wed, 30 Apr 2014 10:44:03 -0700
+Message-ID: <1398879850-9111-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org
+Cc: abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jdelvare-l3A5Bk7waGM@public.gmane.org, laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kevin.strasser-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, shane.huang-5C7GfCeVMHo@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org, galak@codeaurora
 List-Id: devicetree@vger.kernel.org
 
-Hi Brian,
+This series adds the most critical cros_ec changes for newer boards
+using cros_ec.  Specifically:
+* Fixes timing/locking issues with the previously upstreamed (but
+  never used upstream) cros_ec_spi driver.
+* Updates the cros_ec header file to the latest version which allows
+  us to use newer EC features like i2c tunneling.
+* Adds an i2c tunnel driver to allow communication to the EC's i2c
+  devices.
 
-On Wed, 2014-04-30 at 10:21 -0700, Brian Norris wrote:
-> A few more small comments.
-> 
-> On Wed, Apr 16, 2014 at 09:17:15PM +0400, Sergei Ianovich wrote:
-> > +++ b/Documentation/devicetree/bindings/mtd/sram-lp8x4x.txt
-> > @@ -0,0 +1,22 @@
-> > +512kB battery backed up SRAM on LP-8x4x industrial computers
-> > +
-> > +Required properties:
-> > +- compatible : should be "icpdas,sram-lp8x4x"
-> > +
-> > +- reg: physical base addresses and region lengths of
-> > +       * IO memory range
-> > +       * SRAM page selector
-> 
-> Are these region types pretty static for this type of hardware? If not,
-> it helps to have a reg-names property in the DT, when there are 2 or
-> more register resources.
+This _doesn't_ get the EC driver fully up to speed with what's in the
+current Chromium OS trees.  There are a whole slew of cleanup patches
+there, an addition of an LPC transport mode, and exports of functions
+to userspace.  Once these patches land and we have functionality we
+can continue to pick more cleanup patches.
 
-The regions are fixed. The addresses are hard-wired.
+Changes in v3:
+- Separate out packet sizing from packet stuffing.
+- Get rid of useless dev_dbg.
+- Check command_sendrecv against NULL.
+- Don't check np against NULL.
+- Get rid of useless error on memory alloc fail.
+- Get rid of useless platform_set_drvdata(dev, NULL);
 
-> > +- eeprom-gpios : should point to active-low write enable GPIO
-> 
-> I'm curious: your driver doesn't actually utilize this binding. Is this
-> intentional? Is it actually optional? (I note that the example DT below
-> doesn't have this property...)
+Changes in v2:
+- Update tunnel binding as per swarren
+- Removed i2c20 alias for i2c tunnel
 
-Thanks for noticing. It's an artifact of copy-paste. I'll drop this.
+Bill Richardson (1):
+  mfd: cros_ec: Sync to the latest cros_ec_commands.h from EC sources
 
-> > +++ b/arch/arm/configs/lp8x4x_defconfig
-> > @@ -57,6 +57,7 @@ CONFIG_MTD_CFI_ADV_OPTIONS=y
-> >  CONFIG_MTD_CFI_GEOMETRY=y
-> >  CONFIG_MTD_CFI_INTELEXT=y
-> >  CONFIG_MTD_PHYSMAP_OF=y
-> > +CONFIG_MTD_SRAM_LP8X4X=y
-> >  CONFIG_PROC_DEVICETREE=y
-> >  CONFIG_BLK_DEV_LOOP=y
-> >  CONFIG_BLK_DEV_LOOP_MIN_COUNT=2
-> 
-> I can't take the defconfig update via MTD; it will need to go via the
-> appropriate ARM tree (arm-soc?). So this hunk needs to move to another
-> patch.
+David Hendricks (1):
+  mfd: cros_ec: spi: calculate delay between transfers correctly
 
-Sure. I'll remove this chunk and put it into main device patch.
+Doug Anderson (5):
+  mfd: cros_ec: spi: Add mutex to cros_ec_spi
+  mfd: cros_ec: spi: Make the cros_ec_spi timeout more reliable
+  mfd: cros_ec: spi: Increase cros_ec_spi deadline from 5ms to 100ms
+  i2c: ChromeOS EC tunnel driver
+  ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
 
-> > +	match = of_match_device(of_flash_match, &pdev->dev);
-> > +	if (!match)
-> > +		return -EINVAL;
-> 
-> Does this of_match_device() serve any particular purpose? Your driver
-> already matches against these IDs, and you're not actually retrieving
-> any of-data from the match, so this looks redundant.
+ .../devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt |   39 +
+ arch/arm/boot/dts/tegra124-venice2.dts             |   26 +
+ drivers/i2c/busses/Kconfig                         |    9 +
+ drivers/i2c/busses/Makefile                        |    1 +
+ drivers/i2c/busses/i2c-cros-ec-tunnel.c            |  318 ++++++
+ drivers/mfd/cros_ec.c                              |    7 +-
+ drivers/mfd/cros_ec_spi.c                          |   67 +-
+ include/linux/mfd/cros_ec.h                        |    4 +-
+ include/linux/mfd/cros_ec_commands.h               | 1128 ++++++++++++++++++--
+ 9 files changed, 1507 insertions(+), 92 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-cros-ec-tunnel.txt
+ create mode 100644 drivers/i2c/busses/i2c-cros-ec-tunnel.c
 
-Point taken, I'll drop this.
-
-> > +
-> > +	info = devm_kzalloc(&pdev->dev, sizeof(*info), GFP_KERNEL);
-> > +	if (!info)
-> > +		return -ENOMEM;
-> > +
-> > +	res_virt = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	info->virt =  devm_ioremap_resource(&pdev->dev, res_virt);
-> > +	if (IS_ERR(info->virt))
-> > +		return PTR_ERR(info->virt);
-> > +
-> > +	res_bank = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > +	info->bank = devm_ioremap_resource(&pdev->dev, res_bank);
-> > +	if (IS_ERR(info->bank))
-> > +		return PTR_ERR(info->bank);
-> > +
-> > +	info->mtd.priv = info;
-> > +	info->mtd.name = "SRAM";
-> 
-> Are you absolutely sure there is only ever a single SRAM device on a
-> given system? Because otherwise, you will get redundantly-named MTD's.
-> If the answer is no, you might consider a unique naming scheme.
-
-Like .999999 sure. This one is hard-wired. There is no extension slots
-to plug in any memory device.
-
-I'll post a new version with the rest of the series. Thanks for
-reviewing.
+-- 
+1.9.1.423.g4596e3a
