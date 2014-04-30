@@ -1,70 +1,71 @@
-From: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
-Date: Tue, 29 Apr 2014 19:21:22 -0700
-Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
-References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
- <20140422103642.GF7484@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
- <20140423170821.GJ5649@arm.com>
+From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 5/6] arm: exynos: Add MCPM call-back functions
+Date: Wed, 30 Apr 2014 08:31:24 +0530
+Message-ID: <CAM4voa=Po9r5MpxyjQKcYhyES1UjfVaqbP_PnKCbsw5LtEkpZg@mail.gmail.com>
+References: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com>
+	<1398528348-21214-6-git-send-email-a.kesavan@samsung.com>
+	<20140428174456.GE31782@e102568-lin.cambridge.arm.com>
+	<CAM4voa=mhcZO9v7nDdrcz+T8RVN-Av3eERVErCX52k1ftUcKcQ@mail.gmail.com>
+	<alpine.LFD.2.11.1404291435450.980@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140423170821.GJ5649-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <alpine.LFD.2.11.1404291435450.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFdpbGwgRGVhY29uIFttYWls
-dG86d2lsbC5kZWFjb25AYXJtLmNvbV0NCj4gU2VudDogMjAxNOW5tDTmnIgyNOaXpSAxOjA4DQo+
-IFRvOiBOZWlsIFpoYW5nDQo+IENjOiBsaW51eEBhcm0ubGludXgub3JnLnVrOyBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IFN1ZGVlcCBIb2xsYTsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDog
-UmU6IFtQQVRDSCB2NF0gQVJNOiBwZXJmOiBzYXZlL3Jlc3RvcmUgcG11IHJlZ2lzdGVycyBpbiBw
-bSBub3RpZmllcg0KPiANCj4gT24gV2VkLCBBcHIgMjMsIDIwMTQgYXQgMTE6MzE6MDlBTSArMDEw
-MCwgTmVpbCBaaGFuZyB3cm90ZToNCj4gPg0KPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0t
-LS0NCj4gPiA+IEZyb206IFdpbGwgRGVhY29uIFttYWlsdG86d2lsbC5kZWFjb25AYXJtLmNvbV0N
-Cj4gPiA+IFNlbnQ6IDIwMTTlubQ05pyIMjLml6UgMTg6MzcNCj4gPiA+IFRvOiBOZWlsIFpoYW5n
-DQo+ID4gPiBDYzogbGludXhAYXJtLmxpbnV4Lm9yZy51azsgbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOw0KPiA+ID4gbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgU3Vk
-ZWVwIEhvbGxhOw0KPiA+ID4gZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gPiA+IFN1Ympl
-Y3Q6IFJlOiBbUEFUQ0ggdjRdIEFSTTogcGVyZjogc2F2ZS9yZXN0b3JlIHBtdSByZWdpc3RlcnMg
-aW4gcG0NCj4gPiA+IG5vdGlmaWVyDQo+ID4gPg0KPiA+ID4gSGkgTmVpbCwNCj4gPiA+DQo+ID4g
-PiBPbiBUdWUsIEFwciAyMiwgMjAxNCBhdCAwMzoyNjozNkFNICswMTAwLCBOZWlsIFpoYW5nIHdy
-b3RlOg0KPiA+ID4gPiBUaGlzIGFkZHMgY29yZSBzdXBwb3J0IGZvciBzYXZpbmcgYW5kIHJlc3Rv
-cmluZyBDUFUgUE1VIHJlZ2lzdGVycw0KPiA+ID4gPiBmb3Igc3VzcGVuZC9yZXN1bWUgc3VwcG9y
-dCBpLmUuIGRlZXBlciBDLXN0YXRlcyBpbiBjcHVpZGxlIHRlcm1zLg0KPiA+ID4gPiBUaGlzIHBh
-dGNoIGFkZHMgc3VwcG9ydCBvbmx5IHRvIEFSTXY3IFBNVSByZWdpc3RlcnMgc2F2ZS9yZXN0b3Jl
-Lg0KPiA+ID4gPiBJdCBuZWVkcyB0byBiZSBleHRlbmRlZCB0byB4c2NhbGUgYW5kIEFSTXY2IGlm
-IG5lZWRlZC4NCj4gPiA+ID4NCj4gPiA+ID4gSSBtYWRlIHRoaXMgcGF0Y2ggYmVjYXVzZSBEUy01
-IGlzIG5vdCB3b3JraW5nIG9uIE1hcnZlbGwncyBDQTcgYmFzZWQNCj4gU29Dcy4NCj4gPiA+ID4g
-QW5kIGl0IGhhcyBjb25zdWx0ZWQgU3VkZWVwIEthcmthZGFOYWdlc2hhJ3MgcGF0Y2ggc2V0IGZv
-ciBtdWx0aXBsZQ0KPiBQTVVzLg0KPiA+ID4gPg0KPiA+ID4gPiBUaGFua3MgV2lsbCBhbmQgU3Vk
-ZWVwJ3Mgc3VnZ2VzdGlvbiB0byBvbmx5IHNhdmUgLyByZXN0b3JlIHVzZWQgZXZlbnRzLg0KPiA+
-ID4NCj4gPiA+IFdoaWxzdCB0aGlzIGlzIGEgc3RlcCBpbiB0aGUgcmlnaHQgZGlyZWN0aW9uLCBJ
-J2Qgc3RpbGwgbGlrZSB0byBzZWUNCj4gPiA+IHRoZSBzYXZlL3Jlc3RvcmUgcHJlZGljYXRlZCBv
-biBzb21ldGhpbmcgaW4gdGhlIGRldmljZS10cmVlIG9yDQo+ID4gPiBvdGhlcndpc2UuIE1vc3Qg
-U29DcyAqZG9uJ3QqIHJlcXVpcmUgdGhlc2UgcmVnaXN0ZXJzIHRvIGJlIHByZXNlcnZlZA0KPiA+
-ID4gYnkgc29mdHdhcmUsIHNvIHdlIG5lZWQgYSB3YXkgdG8gZGVzY3JpYmUgdGhhdCB0aGUgUE1V
-IGlzIGluIGENCj4gPiA+IHBvd2VyLWRvbWFpbiB3aGVyZSBpdHMgc3RhdGUgaXMgbG9zdCB3aGVu
-IHRoZSBDUFUgZ29lcyBpZGxlLg0KPiA+ID4NCj4gPiA+IFRoaXMgZG9lc24ndCBzb3VuZCBsaWtl
-IGEgUE1VLXNwZWNpZmljIHByb2JsZW0sIHNvIHRoZXJlJ3MgYQ0KPiA+ID4gcG9zc2liaWxpdHkg
-dGhhdCB0aGlzIGhhcyBiZWVuIGRpc2N1c3NlZCBlbHNld2hlcmUsIGluIHRoZSBjb250ZXh0DQo+
-ID4gPiBvZiBvdGhlciBJUCBibG9ja3MNCj4gPiA+DQo+ID4gPiBbYWRkaW5nIHRoZSBkZXZpY2V0
-cmVlIGxpc3QgaW4gY2FzZSBzb21lYm9keSB0aGVyZSBpcyBhd2FyZSBvZiBhbnkNCj4gPiA+IHdv
-cmsgaW4gdGhpcyBhcmVhXQ0KPiA+ID4NCj4gPg0KPiA+IFRoYW5rcyBXaWxsLg0KPiA+IFdoYXQg
-c2hvdWxkIEkgZG8gbm93Pw0KPiA+IEFkZCBhIGZpbGVkIHVuZGVyIFBNVSBvciB3YWl0aW5nIGZv
-ciBzb21lYm9keSB3aGV0aGVyIHRoZXJlIGFyZQ0KPiA+IGdlbmVyYWwgc3VwcG9ydGluZyBmb3Ig
-cG93ZXIgZG9tYWluIG1haW50YWluLg0KPiANCj4gSSB0aGluayB3ZSBuZWVkIHNvbWUgaW5wdXQg
-ZnJvbSB0aGUgZGV2aWNlLXRyZWUgZ3V5cyB0byBzZWUgd2hldGhlciB0aGV5DQo+IHdvdWxkIG9i
-amVjdCB0byB1cyBzb2x2aW5nIHRoaXMgbG9jYWxseSAoaW4gdGhlIFBNVSBub2RlKSBvciBub3Qu
-DQo+IFBlcnNvbmFsbHksIEknZCBtdWNoIHByZWZlciBhIGdlbmVyYWwgd2F5IHRvIGRlc2NyaWJl
-IHRoZSBuZWVkIGZvciBwbS1ub3RpZmllcnMsDQo+IGJ1dCBpZiB0aGF0J3Mgbm90IGJlaW5nIGxv
-b2tlZCBhdCB0aGVuIHdlIGNhbiBjb29rIHNvbWV0aGluZyBzcGVjaWZpY2FsbHkgZm9yDQo+IG91
-ciBuZWVkcy4NCj4gDQoNCk5vIGlucHV0IGZyb20gZGV2aWNlLXRyZWUgZ3V5cyA6KA0KDQo+IFdp
-bGwNCg0KQmVzdCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
+Hi Nicolas,
+
+On Wed, Apr 30, 2014 at 12:19 AM, Nicolas Pitre
+<nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, 29 Apr 2014, Abhilash Kesavan wrote:
+>
+>> >> +/*
+>> >> + * Enable cluster-level coherency, in preparation for turning on the MMU.
+>> >> + */
+>> >> +static void __naked exynos_pm_power_up_setup(unsigned int affinity_level)
+>> >> +{
+>> >> +       asm volatile ("\n"
+>> >> +       "cmp    r0, #1\n"
+>> >> +       "bxne   lr\n"
+>> >> +       "b      cci_enable_port_for_self");
+>> >> +}
+>> >
+>> > How many times are we going to duplicate this function before we decide
+>> > to move it to a common header ?
+>> I see this being used in arch/arm/mach-vexpress/tc2_pm.c (where I
+>> copied it from for exynos) and arch/arm/mach-vexpress/dcscb.c. A
+>> common function named "mcpm_default_power_up_setup" in the mcpm header
+>> would be acceptable ?
+>
+> Not necessarily.
+>
+> First of all, this can't be a static inline as we need a pointer to it.
+> And moving this to a header would create multiple instances of the same
+> function in a multiplatform build for example.
+>
+> Furthermore, this can't be called "default_power_up_setup" as this is
+> specific to systems with a CCI.
+>
+> It is true that the code in dcscb_setup.S does the same thing as this
+> 3-line inline assembly, but the former is heavily commented and may
+> serve as an example template for platforms that may require something
+> more sophisticated here.
+>
+> There are other patterns that seem to emerge as more MCPM backends are
+> being submitted.  I'm making a list of them and I intend to address such
+> duplications after those backends do hit mainline.
+OK. I'll keep the power_up_setup code in the exynos mcpm backend as it is.
+Are there any other comments that you have or should I re-post a new
+version that handles Lorenzo's comments.
+
+Regards,
+Abhilash
+>
+>
+> Nicolas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
