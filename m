@@ -1,46 +1,69 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 01/11] ARM: shmobile: r7s72100: document MSTP clock
- support
-Date: Wed, 30 Apr 2014 10:41:48 +0900
-Message-ID: <20140430014148.GC24989@verge.net.au>
-References: <1398765822-2314-1-git-send-email-wsa@the-dreams.de>
- <1398765822-2314-2-git-send-email-wsa@the-dreams.de>
+Subject: Re: [PATCH/RFC v2] serial: sh-sci: Add device tree support for
+ r8a7779
+Date: Wed, 30 Apr 2014 10:44:15 +0900
+Message-ID: <20140430014414.GE24989@verge.net.au>
+References: <1398756011-4672-1-git-send-email-horms+renesas@verge.net.au>
+ <2737920.PNRvA9nzcM@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <linux-serial-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398765822-2314-2-git-send-email-wsa@the-dreams.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org
+In-Reply-To: <2737920.PNRvA9nzcM@avalon>
+Sender: linux-serial-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 29, 2014 at 12:03:32PM +0200, Wolfram Sang wrote:
-> From: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Wed, Apr 30, 2014 at 03:06:49AM +0200, Laurent Pinchart wrote:
+> Hi Simon,
 > 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 1 +
->  1 file changed, 1 insertion(+)
+> Thank you for the patch.
 > 
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> index 02a25d99ca61..6c3c0847e4fd 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> @@ -10,6 +10,7 @@ index in the group, from 0 to 31.
->  Required Properties:
->  
->    - compatible: Must be one of the following
-> +    - "renesas,r7s72100-mstp-clocks" for R7S72100 (RZ) MSTP gate clocks
->      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
->      - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
->      - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+> I've CC'ed the DT list which seems to have been forgotten.
+> 
+> On Tuesday 29 April 2014 16:20:11 Simon Horman wrote:
+> > Simply document a new compat string.
+> > There appears to be no need for a driver updates.
+> > 
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > 
+> > ---
+> > 
+> > v2
+> > * Do not update the driver to set SCSCR_CKE1.
+> >   Instead DT may provide the P clock as the clock for the SCIF devices.
+> > ---
+> >  Documentation/devicetree/bindings/serial/renesas,sci-serial.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> > b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt index
+> > 53e6c17..bba86de 100644
+> > --- a/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> > +++ b/Documentation/devicetree/bindings/serial/renesas,sci-serial.txt
+> > @@ -12,6 +12,7 @@ Required properties:
+> >      - "renesas,scifa-r8a7791" for R8A7791 (R-Car M2) SCIFA compatible UART.
+> >      - "renesas,scifb-r8a7791" for R8A7791 (R-Car M2) SCIFB compatible UART.
+> >      - "renesas,hscif-r8a7791" for R8A7791 (R-Car M2) HSCIF compatible UART.
+> > +    - "renesas,scif-r8a7779" for R8A7779 (R-Car H1) SCIF compatible UART.
+> 
+> What about moving this at the top of the list to keep it sorted by SoC number 
+> ?
+
+Sure, will do.
+
+> 
+> Apart from that,
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> >      - "renesas,scif" for generic SCIF compatible UART.
+> >      - "renesas,scifa" for generic SCIFA compatible UART.
+> >      - "renesas,scifb" for generic SCIFB compatible UART.
+> 
 > -- 
-> 1.9.2
-
-I believe that Mike Turquette (CCed) should take this.
-
-I also believe that as it is relates to bindings it
-needs to be reviewed by the devicetree people (CCed).
-(Please correct me if I am wrong.)
-
+> Regards,
+> 
+> Laurent Pinchart
+> 
