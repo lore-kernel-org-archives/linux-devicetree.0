@@ -1,105 +1,65 @@
 From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v3 1/7] Input: pixcir_i2c_ts: Use devres managed resource allocations
-Date: Wed, 30 Apr 2014 15:36:26 +0300
-Message-ID: <1398861392-8959-2-git-send-email-rogerq@ti.com>
-References: <1398861392-8959-1-git-send-email-rogerq@ti.com>
+Subject: [PATCH 1/2] ARM: dts: am43x-epos-evm: Correct Touch controller info
+Date: Wed, 30 Apr 2014 15:43:24 +0300
+Message-ID: <1398861805-9229-2-git-send-email-rogerq@ti.com>
+References: <1398861805-9229-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398861392-8959-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1398861805-9229-1-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, bcousson@baylibre.com
+Cc: mugunthanvnm@ti.com, nsekhar@ti.com, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Use devm_() and friends for allocating memory, input device
-and IRQ.
+Fixup Y resolution and add default pin state. Also update
+the compatible id.
 
+CC: Benoit Cousson <bcousson@baylibre.com>
+CC: Tony Lindgren <tony@atomide.com>
+CC: Mugunthan V N <mugunthanvnm@ti.com>
 Signed-off-by: Roger Quadros <rogerq@ti.com>
-Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
 ---
- drivers/input/touchscreen/pixcir_i2c_ts.c | 36 +++++++++++++------------------
- 1 file changed, 15 insertions(+), 21 deletions(-)
+ arch/arm/boot/dts/am43x-epos-evm.dts | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 02392d2..45bc2d1 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -130,6 +130,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- {
- 	const struct pixcir_ts_platform_data *pdata =
- 			dev_get_platdata(&client->dev);
-+	struct device *dev = &client->dev;
- 	struct pixcir_i2c_ts_data *tsdata;
- 	struct input_dev *input;
- 	int error;
-@@ -139,12 +140,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	tsdata = kzalloc(sizeof(*tsdata), GFP_KERNEL);
--	input = input_allocate_device();
--	if (!tsdata || !input) {
--		dev_err(&client->dev, "Failed to allocate driver data!\n");
--		error = -ENOMEM;
--		goto err_free_mem;
-+	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
-+	if (!tsdata)
-+		return -ENOMEM;
+diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+index 167dbc8..3a067e6 100644
+--- a/arch/arm/boot/dts/am43x-epos-evm.dts
++++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+@@ -138,6 +138,12 @@
+ 				0x160 (PIN_INPUT | MUX_MODE7) /* spi0_cs1.gpio0_6 */
+ 			>;
+ 		};
 +
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_err(&client->dev, "Failed to allocate input device\n");
-+		return -ENOMEM;
- 	}
++		pixcir_ts_pins: pixcir_ts_pins {
++			pinctrl-single,pins = <
++				0x44 (PIN_INPUT_PULLUP | MUX_MODE7)	/* gpmc_a1.gpio1_17 */
++			>;
++		};
+ 	};
  
- 	tsdata->client = client;
-@@ -165,29 +168,22 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	matrix_keypad: matrix_keypad@0 {
+@@ -226,7 +232,9 @@
+ 	};
  
- 	input_set_drvdata(input, tsdata);
+ 	pixcir_ts@5c {
+-		compatible = "pixcir,pixcir_ts";
++		compatible = "pixcir,pixcir_tangoc";
++		pinctrl-names = "default";
++		pinctrl-0 = <&pixcir_ts_pins>;
+ 		reg = <0x5c>;
+ 		interrupt-parent = <&gpio1>;
+ 		interrupts = <17 0>;
+@@ -234,7 +242,7 @@
+ 		attb-gpio = <&gpio1 17 GPIO_ACTIVE_HIGH>;
  
--	error = request_threaded_irq(client->irq, NULL, pixcir_ts_isr,
--				     IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--				     client->name, tsdata);
-+	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  client->name, tsdata);
- 	if (error) {
--		dev_err(&client->dev, "Unable to request touchscreen IRQ.\n");
--		goto err_free_mem;
-+		dev_err(dev, "failed to request irq %d\n", client->irq);
-+		return error;
- 	}
+ 		x-size = <1024>;
+-		y-size = <768>;
++		y-size = <600>;
+ 	};
+ };
  
- 	error = input_register_device(input);
- 	if (error)
--		goto err_free_irq;
-+		return error;
- 
- 	i2c_set_clientdata(client, tsdata);
- 	device_init_wakeup(&client->dev, 1);
- 
- 	return 0;
--
--err_free_irq:
--	free_irq(client->irq, tsdata);
--err_free_mem:
--	input_free_device(input);
--	kfree(tsdata);
--	return error;
- }
- 
- static int pixcir_i2c_ts_remove(struct i2c_client *client)
-@@ -198,10 +194,8 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
- 
- 	tsdata->exiting = true;
- 	mb();
--	free_irq(client->irq, tsdata);
- 
- 	input_unregister_device(tsdata->input);
--	kfree(tsdata);
- 
- 	return 0;
- }
 -- 
 1.8.3.2
+
