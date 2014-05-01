@@ -1,99 +1,51 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] mtd: nand: add randomizer support
-Date: Thu, 1 May 2014 20:37:43 +0200
-Message-ID: <20140501183743.GA17618@kwain>
-References: <1398906592-24677-1-git-send-email-b.brezillon.dev@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv2 8/9] ASoC: omap: rx51: Add DT support
+Date: Thu, 1 May 2014 10:58:16 -0700
+Message-ID: <20140501175816.GJ3245@sirena.org.uk>
+References: <1398694047-28596-1-git-send-email-sre@kernel.org>
+ <1398694047-28596-9-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jcZk2Ix8j3PVOBnV"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398906592-24677-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1398694047-28596-9-git-send-email-sre@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
 
-On Thu, May 01, 2014 at 03:09:49AM +0200, Boris BREZILLON wrote:
-> Hello,
->=20
-> This series is a proposal to add support for randomizers (either soft=
-ware
-> or hardware) to NAND flash controller drivers.
+--jcZk2Ix8j3PVOBnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks for providing this! I'll need these features soon and I'm happy
-to see them coming into the nand controller framework.
+On Mon, Apr 28, 2014 at 04:07:26PM +0200, Sebastian Reichel wrote:
+> This patch adds device tree support to the Nokia N900 audio driver and
+> adds documentation for the DT binding.
 
+Applied, thanks.
 
-Antoine
+--jcZk2Ix8j3PVOBnV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> The last patch is the sunxi HW randomizer implementation and is just =
-given
-> as an example (it won't apply on the MTD tree, because it depends on =
-other
-> stuff not yet posted on the MTD ML, but if you want a full overview o=
-f the
-> NAND Flash controller driver you can take a look at this series [2]).
->=20
-> I can also provide a software implementation based on LFSR (Left Feed=
-back
-> Shift Register) algorithm, thought I haven't tested it yet, hence why=
- it's
-> not part of this series. Let me know if you're interested in this
-> implementation.
->=20
-> This series depends on the "per-partition ECC" series [1], because I =
-need
-> the randomizer seed to be different depending on the partition (for t=
-he
-> same reason I needed ECC config to be different for each partition: t=
-he
-> bootrom config might not fit the NAND chip requirements).
->=20
-> I'd like to have feedback from both MTD maintainers and driver
-> developers who might need to implement (or use) a randomizer in their
-> system, so feel free to comment on this series.
->=20
-> Best Regards,
->=20
-> Boris
->=20
-> [1] https://lkml.org/lkml/2014/2/12/627
-> [2] https://groups.google.com/forum/#!msg/linux-sunxi/s3lBb01I0Js/z2N=
-oCFJ83g4J=20
->=20
->=20
-> Boris BREZILLON (3):
->   mtd: nand: introduce a randomizer layer in the NAND framework
->   of: mtd: add NAND randomizer mode retrieval
->   mtd: nand: add sunxi randomizer support
->=20
->  drivers/mtd/nand/nand_base.c  | 278 ++++++++++++++++++-----
->  drivers/mtd/nand/sunxi_nand.c | 507 ++++++++++++++++++++++++++++++++=
-+++++++++-
->  drivers/of/of_mtd.c           |  35 +++
->  include/linux/mtd/nand.h      |  98 ++++++++
->  include/linux/of_mtd.h        |   6 +
->  5 files changed, 858 insertions(+), 66 deletions(-)
->=20
-> --=20
-> 1.8.3.2
->=20
->=20
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJTYos1AAoJELSic+t+oim9WrAP/3aAA1C4A4H93H3DwSjbmDhQ
+nGYbs2aCKlXaLVSz6mpNhtdJWd0yciB1NqzbFumsk6Me3xdcT6jpV0QcBdOpcAkz
+8SpvsZAP2dFHin/uBQk70EY0DXWPNf7IgUigIlElwZSo674pGvHD9AgiJLDmQFGB
+slIFfANp5jGevGvu4siy38xFrCWrDTozOEMTjN86Oqz8RIsEjeawPdiEL0XAcW++
+b0uLV2adQCNfGiPjqSLDdamXbnLmjh2lpyJ6d6DXAntpRJ9RLZV2Ma0T1cuQfe1Z
+lQhTohHexZwA6BnuMdOG7U69tLokV369zU7woAosx7KAFgNNQ2FEFcDvlptq8dcF
+9jCiXMZyALk2CI8R6gt0McMlKKzjCWKkSBtrs5a3pJz964jzkfsZUe3iW1bfIwCS
+xnxsVW7l4DSKVcvmR0vj8o2nPpYfQSL99Qh2jPNyndLAuUY6stvLzi4xQTdPlG1h
+RSYr8v9oCr2jRjWWAv50M8Z1pmM4wpJyLB3Um/bj6H5EWU350/SH24G9HDIOG4Nb
+/mbWLa6gUGdK8mXgjefAp9C8JDhqImiPGrb6SSZuzVlcy7uCD74aMWjxfyWJ5GLe
+bSrn0wKwCowa6n7zpqWlvLGdujFOlCYbrEkGPYJ5YReVHqvjIqeYiaTErYPIy2Gt
+7sRQur6P1WULPHgTic2p
+=+egX
+-----END PGP SIGNATURE-----
+
+--jcZk2Ix8j3PVOBnV--
