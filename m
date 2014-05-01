@@ -1,42 +1,63 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Thu, 01 May 2014 15:34:09 +0200
-Message-ID: <1625238.xy1WDqNhgs@diego>
-References: <1398941085-10224-1-git-send-email-sachin.kamat@linaro.org>
- <5153376.z2oJ163pLF@wuerfel>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH/RFC 3/4] of/clk: Register clocks suitable for Runtime PM
+ with the PM core
+Date: Thu, 1 May 2014 15:41:11 +0200
+Message-ID: <CAMuHMdXbJrnNPyPmD-rcGN-M4ybFtrS3FCuvegJue1Pe-ae8SQ@mail.gmail.com>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+	<1398334403-26181-4-git-send-email-geert+renesas@glider.be>
+	<7hoazpdldx.fsf@paris.lan>
+	<20140429131610.29859C4094A@trevor.secretlab.ca>
+	<CAMuHMdUdnoah1uZbMn_xONXZ2i8wG5kY7msMzCdBwS+xt9tmDA@mail.gmail.com>
+	<20140501080331.D3CFAC409DA@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5153376.z2oJ163pLF@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Sachin Kamat <sachin.kamat@linaro.org>, t.figa@samsung.com, robh+dt@kernel.org, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140501080331.D3CFAC409DA@trevor.secretlab.ca>
+Sender: linux-sh-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, 1. Mai 2014, 15:32:14 schrieb Arnd Bergmann:
-> On Thursday 01 May 2014 16:14:44 Sachin Kamat wrote:
-> > Instead of hardcoding the SYSRAM details for each SoC,
-> > pass this information through device tree (DT) and make
-> > the code SoC agnostic. Generic SRAM bindings are used
-> > for achieving this.
-> > 
-> > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> > Cc: Heiko Stuebner <heiko@sntech.de>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> 
-> Looks good to me. Both patches
-> 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> Heiko, can you also have a look?
+Hi Grant,
 
-Already did :-)
+On Thu, May 1, 2014 at 10:03 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Wed, 30 Apr 2014 23:54:37 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+>> On Tue, Apr 29, 2014 at 3:16 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+>> > I also don't like that it tries to set up every clock, but there is no
+>> > guarantee that the driver will even use it. I would rather see this
+>> > behaviour linked into the function that obtains the clock at driver
+>> > .probe() time. That way it can handle deferred probe correctly and it
+>> > only sets up clocks that are actually used by the driver.
+>>
+>> Not every clock. Only the clocks that are advertised by the clock driver as
+>> being suitable for runtime_pm management. These are typically module
+>> clocks, that must be enabled for the module to work. The driver doesn't
+>> always want to handle these explicitly.
+>
+> Help me out here becasue I don't understand how that works with this
+> patch set. From my, admittedly naive, reading it looks like the setup is
+> being done at device creation time, but if the driver (or module) gets
+> to declare which clocks need to be enabled in order to work, then that
+> information is not available at device creation time.
+
+Setup is indeed done at registration time. Note the check calling
+clk_may_runtime_pm(), which is introduced in "[PATCH/RFC 1/4] clk: Add
+CLK_RUNTIME_PM and clk_may_runtime_pm()".
+
+Clock drivers are initialized much earlier, so they can set the CLK_RUNTIME_PM
+flag for suitable clocks before platform devices are created from DT, cfr. the
+example for shmobile MSTP clocks in "[PATCH/RFC 4/4] clk: shmobile: mstp:
+Set CLK_RUNTIME_PM flag".
+
+I hope this makes it clear.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
