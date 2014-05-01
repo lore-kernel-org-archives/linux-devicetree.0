@@ -1,137 +1,55 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [RFC 08/11] ARM: dts: am33xx: Add prcm_resets node
-Date: Thu, 1 May 2014 13:46:47 -0500
-Message-ID: <53629697.8000407@ti.com>
-References: <1398802790-29287-1-git-send-email-dmurphy@ti.com> <1398802790-29287-9-git-send-email-dmurphy@ti.com> <6286135.g77D4pMffU@wuerfel> <20140430002211.GC27571@atomide.com> <53613A29.8080803@ti.com> <20140430181042.GC12362@atomide.com> <53613D47.4000905@ti.com> <20140430223335.GB21341@atomide.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] ASoC: cirrus: clps711x: Add bindings
+ documentation for the CLPS711X DAI
+Date: Thu, 1 May 2014 11:30:00 -0700
+Message-ID: <20140501183000.GU3245@sirena.org.uk>
+References: <1397283454-684-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140430223335.GB21341@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t-kristo@ti.com, s-anna@ti.com, p.zabel@pengutronix.de
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="m3NGSFsSaj96nZIx"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1397283454-684-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony
 
-On 04/30/2014 05:33 PM, Tony Lindgren wrote:
-> * Dan Murphy <dmurphy@ti.com> [140430 11:14]:
->> On 04/30/2014 01:10 PM, Tony Lindgren wrote:
->>> * Dan Murphy <dmurphy@ti.com> [140430 11:00]:
->>>> Tony and Arnd
->>>>
->>>> Thanks for the comments
->>>>
->>>> On 04/29/2014 07:22 PM, Tony Lindgren wrote:
->>>>> * Arnd Bergmann <arnd@arndb.de> [140429 13:35]:
->>>>>> On Tuesday 29 April 2014 15:19:47 Dan Murphy wrote:
->>>>>>> + * AM33xx reset index for PRCM Module
->>>>>>> + *
->>>>>>> + * Copyright 2014 Texas Instruments Inc.
->>>>>>> + *
->>>>>>> + * This program is free software; you can redistribute it and/or modify
->>>>>>> + * it under the terms of the GNU General Public License version 2 as
->>>>>>> + * published by the Free Software Foundation.
->>>>>>> + */
->>>>>>> +
->>>>>>> +#ifndef _DT_BINDINGS_RESET_TI_AM33XX_H
->>>>>>> +#define _DT_BINDINGS_RESET_TI_AM33XX_H
->>>>>>> +
->>>>>>> +#define RESET_DEVICE_RESET                     0
->>>>>>> +#define RESET_GFX_RESET                                1
->>>>>>> +#define RESET_PER_RESET                                2
->>>>>>> +
->>>>>>> +#endif
->>>>>> Interfaces like this should only be used if you can't use hardware
->>>>>> numbers, in general. If these numbers are in the data sheet, just
->>>>>> put them directly into the dts file, as we do for interrupt numbers,
->>>>>> gpio numbers, register offsets etc.
->>>>>>
->>>>>> If you have made them up to define an interface between the driver
->>>>>> and DT because there is no usable hardare ID, I'd suggest just using
->>>>>> a single file across all SoCs that have this driver, and have
->>>>>> a unified name space.
->>>>> Also, it's a bit unclear how the reset controller phandle is used
->>>>> referenced and used by the consumer device.. Maybe setting that up
->>>>> first in a Linux generic way is a good point starting point.
->>>>>
->>>>> Maybe something like this along the same way as clocks are set up
->>>>> (completely untested):
->>>>>
->>>>> &reset1 {
->>>>> 	iva_reset: reset1 {
->>>>> 		reg = /bits/ 8 <0>;
->>>>> 	};
->>>>> 	gfx_reset: reset1 {
->>>>> 		reg = /bits/ 8 <1>;
->>>>> 	};
->>>>> 	...
->>>>> };
->>>>>
->>>>> &iva {
->>>>> 	compatible = "ti,ivahd";
->>>>> 	resets = <&reset1 1>;
->>>>> 	...
->>>>> };
->>>> I had something very similar to this when I was developing this driver but moved away from this.
->>>>
->>>> Following the clocks implementation I had a separate dtsi for resets for each device and had the data defined like so
->>>> for each SoC.
->>>>
->>>> &prcm_resets {
->>>>        device_reset: device_reset {
->>>>                rstctrl_offs = <0x1104>;
->>>>                ctrl_bit-shift = <0>;
->>>>                rstst_offs      = <0x1114>;
->>>>                sts_bit-shift   = <0>;
->>>>        };
->>>>
->>>>        gpu_reset: gpu_reset {
->>>>                rstctrl_offs = <0x0D00>;
->>>>                ctrl_bit-shift = <3>;
->>>>                rstst_offs      = <0x0D0C>;
->>>>                sts_bit-shift = <5>;
->>>>        };
->>>> };
->>>>
->>>> And then any client interested in a specific reset driver would include this
->>>>
->>>> resets = <&prcm_resets &gpu_reset>;
->>>> reset-names = "gpu_reset";
->>>>
->>>> Our reset code would then retrieve the register data through the phandle instead of an index.
->>>>
->>>> Thoughts?
->>> Using phandles makes sense here because it avoids the indexing. Indexing
->>> has a problem of needing to be in sync with the .dts files and the
->>> device driver(s). Using an index also easily causes misuse of virtual
->>> indexes being added that no longer describe the hardware at all.
->> Thanks.  What about placing register data in the dts files?  Is there any issue with this concept?
-> I don't have issues with that but others may. In this case it seems
-> like you should get away just defining few different types of reset
-> controllers without adding any any custom properties?
->
-> In your example above, the rstctrl_offs should be just standard
-> reg entry as an offset from the prcm_resets base address. Then you
-> you only really need the bit shift and the type of the reset
-> controller? And the type could be the compatible flag?
+--m3NGSFsSaj96nZIx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Well the only issue I have with declaring the reg with the standard dt entry
-is I have two register offsets here.
+On Sat, Apr 12, 2014 at 10:17:34AM +0400, Alexander Shiyan wrote:
+> This patch adds the devicetree documentation for the Cirrus Logic
+> CLPS711X Digital Audio Interface (DAI).
 
-I will have to see if I can do this per the standard.
-I may have to have children called control and status and define the reg and bits that way.
+This look good.
 
-Dan
+--m3NGSFsSaj96nZIx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> Regards,
->
-> Tony
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
+iQIbBAEBAgAGBQJTYpKkAAoJELSic+t+oim9KC0P+LL8sZRwnPzDiOTUADIlAQw6
+LsYnQzZElht+vuEIZ5bzbTRb47/+/KDoa3WjpW+QXspUHROrl/jPkKMJ+EkCyRXl
+PpDpN9uZKYHMfFC9Kl5XK+5zNo0XfM3KLBaKf7qct3CRvNo2w4iqkP1WWDfjn5XJ
+biNAariRwk9lposi8K2Z4qsksVOmHUQvsoNHOWcZ88mkaATrL45Typ8GMQ6BJIDO
+rYWVTbifSoSQQH+9Pzg5DFWJVMMzKTTMZ7FTzhNMdVApBplLWd+XHgd4klEUjrZg
++d4IQqbyfdMbGi2kU79ZokSpq+2Y5UtFKUqHpWuDF/rSsKX6YFM6SQNJtzMimz9L
+az8+voPkf94+r2QsdF+7pvhQdr/qgKLXqiQ/F10AY+OjT34s3PTLYwxgcnJbybhy
+ea8hSi8fIZ3uhuLXS2E2w/TJ4PFkqt9w5pMa0XIFKFkhktrfri8/MwzcpLfQPvOp
+8x5S+qa4+/U4cRJtK1gAXOQ5z7OZcmRs052uGbP9ZMA09ma5zQJemJJtR3Su6jFJ
+ZDS2o42mk+4wtf9NkrrlZQDTHKwlrbH5WooebJtzXt+A4tfqgCbMAyB/XLtpMDVv
+CMSZE4sTvDmX9blQAMj5gblzZklBUU4baVH6aHhluSdh12kLWmTFTeCt8LrZJRGf
+fg5KzCz9WSq1J5aJsFg=
+=Xsd5
+-----END PGP SIGNATURE-----
 
--- 
-------------------
-Dan Murphy
-
+--m3NGSFsSaj96nZIx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
