@@ -1,90 +1,122 @@
-From: "Karicheri, Muralidharan" <m-karicheri2@ti.com>
-Subject: RE: [PATCH v1] serial: uart: add hw flow control support
- configuration
-Date: Thu, 1 May 2014 18:57:18 +0000
-Message-ID: <3E54258959B69E4282D79E01AB1F32B70472A714@DFLE11.ent.ti.com>
-References: <1398792122-18592-1-git-send-email-m-karicheri2@ti.com>
- <20140429222756.GA2382@flaeskesteg>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
+Date: Thu, 01 May 2014 12:00:15 -0700
+Message-ID: <20140501190015.5739.86963@quantum>
+References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com>
+ <535FBC62.9050902@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140429222756.GA2382@flaeskesteg>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <535FBC62.9050902@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
->-----Original Message-----
->From: Mark Rutland [mailto:mark.rutland@arm.com]
->Sent: Tuesday, April 29, 2014 6:28 PM
->To: Karicheri, Muralidharan
->Cc: linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-serial@vger.kernel.org;
->devicetree@vger.kernel.org; Rob Herring; Ian Campbell; Kumar Gala; Randy Dunlap; Greg
->Kroah-Hartman; Jiri Slaby; Shilimkar, Santosh
->Subject: Re: [PATCH v1] serial: uart: add hw flow control support configuration
->
->Hi,
->
->On Tue, Apr 29, 2014 at 06:22:02PM +0100, Murali Karicheri wrote:
->> 8250 uart driver currently supports only software assisted hw flow
->> control. The software assisted hw flow control maintains a hw_stopped
->> flag in the tty structure to stop and start transmission and use modem
->> status interrupt for the event to drive the handshake signals. This is
->> not needed if hw has flow control capabilities. This patch adds a DT
->> attribute for enabling hw flow control for a uart port. Also skip stop
->> and start if this flag is present in flag field of the port structure.
->>
->> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
->>
->> CC: Rob Herring <robh+dt@kernel.org>
->> CC: Pawel Moll <pawel.moll@arm.com>
->> CC: Mark Rutland <mark.rutland@arm.com>
->> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> CC: Kumar Gala <galak@codeaurora.org>
->> CC: Randy Dunlap <rdunlap@infradead.org>
->> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> CC: Jiri Slaby <jslaby@suse.cz>
->> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> ---
->>  - Fixed brackets around port->flags & UPF_HARD_FLOW as per comments
->>  .../devicetree/bindings/serial/of-serial.txt       |    2 ++
->>  drivers/tty/serial/8250/8250_core.c                |    6 ++++--
->>  drivers/tty/serial/of_serial.c                     |    4 ++++
->>  drivers/tty/serial/serial_core.c                   |   12 +++++++++---
->>  4 files changed, 19 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt
->> b/Documentation/devicetree/bindings/serial/of-serial.txt
->> index 1928a3e..123de01 100644
->> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
->> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
->> @@ -37,6 +37,8 @@ Optional properties:
->>  - auto-flow-control: one way to enable automatic flow control support. The
->>    driver is allowed to detect support for the capability even without this
->>    property.
->> +- hw-flow-control: this enables pure hw flow control and no software
->> +  intervention needed.
->
->From the wording of the commit message, I believe this would be better worded
->something like:
->
->- hw-flow-control: the hardware has flow control capability.
->
->While the OS needs to know that flow control is present if it wishes to make use of it,
->whether or not the OS does so is not a matter for the binding.
->
->It might also be better worded as "has-hw-flow-control", which would make that
->distinction clearer.
->
->Otherwise this looks fine to me.
+Quoting Tero Kristo (2014-04-29 07:51:14)
+> On 04/29/2014 05:15 PM, Sourav Poddar wrote:
+> > We need "tbclk" clock data for the functioning of ehrpwm
+> > module. Hence, populating the required clock information
+> > in clock dts file.
+> >
+> > Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+> 
+> Acked-by: Tero Kristo <t-kristo@ti.com>
 
-Fine. Will re-send with rewording as
+Looks good to me.
 
-has-hw-flow-control: the hardware has flow control capability.
+Tero, just to be clear, are you planning on batching up OMAPish clock
+patches and sending a pull request (once they have been reviewed on the
+list)?
 
-Murali
->
->Thanks,
->Mark.
+Thanks,
+Mike
+
+> 
+> 
+> > ---
+> > v2->v3
+> > - correct bitshifting
+> >
+> >   arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
+> >   drivers/clk/ti/clk-43xx.c            |    6 +++++
+> >   2 files changed, 54 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> > index 142009c..42d7b1f 100644
+> > --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> > +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> > @@ -87,6 +87,54 @@
+> >               clock-mult = <1>;
+> >               clock-div = <1>;
+> >       };
+> > +
+> > +     ehrpwm0_tbclk: ehrpwm0_tbclk {
+> > +             #clock-cells = <0>;
+> > +             compatible = "ti,gate-clock";
+> > +             clocks = <&dpll_per_m2_ck>;
+> > +             ti,bit-shift = <0>;
+> > +             reg = <0x0664>;
+> > +     };
+> > +
+> > +     ehrpwm1_tbclk: ehrpwm1_tbclk {
+> > +             #clock-cells = <0>;
+> > +             compatible = "ti,gate-clock";
+> > +             clocks = <&dpll_per_m2_ck>;
+> > +             ti,bit-shift = <1>;
+> > +             reg = <0x0664>;
+> > +     };
+> > +
+> > +     ehrpwm2_tbclk: ehrpwm2_tbclk {
+> > +             #clock-cells = <0>;
+> > +             compatible = "ti,gate-clock";
+> > +             clocks = <&dpll_per_m2_ck>;
+> > +             ti,bit-shift = <2>;
+> > +             reg = <0x0664>;
+> > +     };
+> > +
+> > +     ehrpwm3_tbclk: ehrpwm3_tbclk {
+> > +             #clock-cells = <0>;
+> > +             compatible = "ti,gate-clock";
+> > +             clocks = <&dpll_per_m2_ck>;
+> > +             ti,bit-shift = <4>;
+> > +             reg = <0x0664>;
+> > +     };
+> > +
+> > +     ehrpwm4_tbclk: ehrpwm4_tbclk {
+> > +             #clock-cells = <0>;
+> > +             compatible = "ti,gate-clock";
+> > +             clocks = <&dpll_per_m2_ck>;
+> > +             ti,bit-shift = <5>;
+> > +             reg = <0x0664>;
+> > +     };
+> > +
+> > +     ehrpwm5_tbclk: ehrpwm5_tbclk {
+> > +             #clock-cells = <0>;
+> > +             compatible = "ti,gate-clock";
+> > +             clocks = <&dpll_per_m2_ck>;
+> > +             ti,bit-shift = <6>;
+> > +             reg = <0x0664>;
+> > +     };
+> >   };
+> >   &prcm_clocks {
+> >       clk_32768_ck: clk_32768_ck {
+> > diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
+> > index 67c8de5..527a43d 100644
+> > --- a/drivers/clk/ti/clk-43xx.c
+> > +++ b/drivers/clk/ti/clk-43xx.c
+> > @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
+> >       DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
+> >       DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
+> >       DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
+> > +     DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
+> > +     DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
+> > +     DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
+> > +     DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
+> > +     DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
+> > +     DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
+> >       { .node_name = NULL },
+> >   };
+> >
+> >
+> 
