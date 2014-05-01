@@ -1,74 +1,61 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [4/5] IBM Akebono: Add the Akebono platform
-Date: Thu, 01 May 2014 11:27:27 +0200
-Message-ID: <1398936447.4121.12.camel@x220>
-References: <1394077948-8395-5-git-send-email-alistair@popple.id.au>
+From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] arm: exynos: Add /dev/bL_status user interface on Exynos5420
+Date: Thu, 1 May 2014 15:09:29 +0530
+Message-ID: <CAM4voaktFuB4fH08QE32q=zH9p=yeNeXmf9qeTDGfZeQqu0K-g@mail.gmail.com>
+References: <1398528348-21214-1-git-send-email-a.kesavan@samsung.com>
+	<1398528348-21214-7-git-send-email-a.kesavan@samsung.com>
+	<535E3A8C.6070304@linaro.org>
+	<CAM4voak-oXToBK=owO=jmpwk3rDkg71JS=8YOTz1HfiQvZa5Vw@mail.gmail.com>
+	<alpine.LFD.2.11.1404301044280.980@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394077948-8395-5-git-send-email-alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.11.1404301044280.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-03-06 at 14:52 +1100, Alistair Popple wrote:
-> This patch adds support for the IBM Akebono board.
+Hi Nicolas,
 
-This patch just landed in linux-next (ie, in next-20140501).
+On Wed, Apr 30, 2014 at 8:19 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Mon, 28 Apr 2014, Abhilash Kesavan wrote:
+>
+>> On Mon, Apr 28, 2014 at 4:55 PM, Daniel Lezcano
+>> <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > On 04/26/2014 06:05 PM, Abhilash Kesavan wrote:
+>> >>
+>> >> Add a user interface to check the core and cluster status on
+>> >> Exynos5420. This can be utilized while debugging mcpm issues.
+>> >> cat /dev/bL_status will show the current power status of all
+>> >> the 8 cores along with the cluster.
+>> >>
+>> >> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >> Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> >> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> >> ---
+>> >
+>> >
+>> > Hi Abhilash,
+>>
+>> Hi Daniel,
+>> >
+>> > I don't think you should add this file.
+>> >
+>> > 1. big Little is not exynos specific
+>> But the core control/status bits that I am accessing are exynos
+>> specific and currently it is being enabled only on 5420.
+>
+> Maybe yt is not worth pushing this patch upstream?  Once basic debugging
+> is over, you shouldn't have to use this code anymore.
+OK, will drop this patch.
 
-> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
->[...]
-> --- a/arch/powerpc/platforms/44x/Kconfig
-> +++ b/arch/powerpc/platforms/44x/Kconfig
-> @@ -199,6 +199,32 @@ config CURRITUCK
->  	help
->  	  This option enables support for the IBM Currituck (476fpe) evaluation board
->  
-> +config AKEBONO
-> +	bool "IBM Akebono (476gtr) Support"
-> +	depends on PPC_47x
-> +	default n
-> +	select SWIOTLB
-> +	select 476FPE
-> +	select PPC4xx_PCI_EXPRESS
-> +	select I2C
-> +	select I2C_IBM_IIC
-> +	select NETDEVICES
-> +	select ETHERNET
-> +	select NET_VENDOR_IBM
-> +	select IBM_EMAC_EMAC4
-> +	select IBM_EMAC_RGMII_WOL
-
-The patch that added this symbol (and the related driver) was submitted
-in https://lkml.org/lkml/2014/2/21/25 . It's not (yet) included in
-linux-next. Is it queued somewhere else?
-
-> +	select USB
-> +	select USB_OHCI_HCD_PLATFORM
-> +	select USB_EHCI_HCD_PLATFORM
-> +	select MMC_SDHCI
-> +	select MMC_SDHCI_PLTFM
-> +	select MMC_SDHCI_OF_476GTR
-
-The plan to add MMC_SDHCI_OF_476GTR seems to have been abandoned (see
-the discussion of https://lkml.org/lkml/2014/2/21/24 ). So this select
-is not needed. Should I submit a trivial patch to drop this select?
-
-> +	select ATA
-> +	select SATA_AHCI_PLATFORM
-> +	help
-> +	  This option enables support for the IBM Akebono (476gtr) evaluation board
-> +
-> +
->  config ICON
->  	bool "Icon"
->  	depends on 44x
-
-
-Paul Bolle
-
+Regards,
+Abhilash
+>
+>
+> Nicolas
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
