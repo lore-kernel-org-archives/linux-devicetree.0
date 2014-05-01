@@ -1,69 +1,90 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
-Date: Thu, 1 May 2014 08:06:53 -0700
-Message-ID: <20140501150653.GZ3245@sirena.org.uk>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
- <20140429222522.GS15125@sirena.org.uk>
- <20140430140849.GR29462@lee--X1>
- <1398867073.695596467@f224.i.mail.ru>
- <20140430141708.GS29462@lee--X1>
- <20140430180653.GB3245@sirena.org.uk>
- <20140501074253.GA32761@lee--X1>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
+	Exynos System MMU
+Date: Thu, 01 May 2014 17:53:44 +0200
+Message-ID: <4916028.thxt7fH2bg@wuerfel>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
+	<20140501143654.GB3732@e103592.cambridge.arm.com>
+	<53626434.8000807@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="R9baxdNnpTjJ7oIU"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140501074253.GA32761@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <53626434.8000807-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
+Cc: "supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org" <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, linux-arm-kern
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 01 May 2014 16:11:48 Marc Zyngier wrote:
+> On 01/05/14 15:36, Dave Martin wrote:
+> > On Thu, May 01, 2014 at 02:29:50PM +0100, Arnd Bergmann wrote:
+> >> On Thursday 01 May 2014 12:15:35 Dave Martin wrote:
+> >>> On Tue, Apr 29, 2014 at 10:46:18PM +0200, Arnd Bergmann wrote:
+> >>>> I don't understand. An MSI controller is just an address that acts
+> >>>> as a DMA slave for a 4-byte inbound data packet. It has no way of
+> >>>> knowing who is sending data, other than by the address or the data
+> >>>> sent to it. Are you talking of something else?
+> >>>
+> >>> Oops, looks like there are a few points I failed to respond to here...
+> >>>
+> >>>
+> >>> I'm not an expert on PCI -- I'm prepared to believe it works that way.
+> >>>
+> >>> GICv3 can descriminate between different MSI senders based on ID
+> >>> signals on the bus.
+> >>
+> >> Any idea what this is good for? Do we have to use it? It probably doesn't
+> >> fit very well into the way Linux handles MSIs today.
+> > 
+> > Marc may be better placed than me to comment on this in detail.
+> 
+> As to "fitting Linux", it seems to match what Linux does fairly well
+> (see the kvm-arm64/gicv3 branch in my tree). Not saying that it does it
+> in a very simple way (far from it, actually), but it works.
 
---R9baxdNnpTjJ7oIU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ok.
 
-On Thu, May 01, 2014 at 08:42:53AM +0100, Lee Jones wrote:
+> As to "what it is good for" (and before someone bursts into an Edwin
+> Starr interpretation), it mostly has to do with isolation, and the fact
+> that you may want to let the whole MSI programming to a guest (and yet
+> ensure that the guest cannot generate interrupts that would be assigned
+> to other devices). This is done by sampling the requester-id at the ITS
+> level, and use this information to index a per-device interrupt
+> translation table (I could talk for hours about the concept and its
+> variations, mostly using expletives and possibly a hammer, but I think
+> it is the time for my pink pill).
 
-> > You acked it without saying you didn't want me to apply it...  usually
-> > that means someone is OK with things getting applied.
+So the idea is that you want to give the guest unfiltered access to the
+PCI config space of an assigned device?
 
-> Actually, that's not true:
+Is that safe?
 
-> MFD changes look sensible:
->   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+If the config space access goes through the hypervisor (as I think we
+always do today), there should be no isse.
 
-> I'm happy to create a shared branch if required.   <-----###
+> > However, I believe it's correct to say that because the GIC is not part
+> > of PCI, end-to-end MSI delivery inherently involves a non-PCI step from
+> > the PCI RC to the GIC itself.
+> > 
+> > Thus this is likely to be a fundamental requirement for MSIs on ARM SoCs
+> > using GIC, if we want to have a hope of mapping MSIs to VMs efficiently.
+> 
+> Indeed. GICv[34] is the ARM way of implementing MSI on SBSA compliant
+> systems (from level 1 onwards, if memory serves well). People are
+> actively building systems with this architecture, and relying on it to
+> provide VM isolation.
 
-Sure, but I didn't see an urgent need for that immediately so I just
-went ahead - the ack usually means that it's OK to apply.
+I don't mind it being there, but if we don't need it, we shouldn't
+have to use that isolation feature and be able to just allow any
+initiator to send an MSI.
 
---R9baxdNnpTjJ7oIU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTYmMJAAoJELSic+t+oim9eFMP/i15G/9uQ55d/595ttV+fzvj
-L1nrKboGdT31PJi2/604kRKjOvP2ZqaMq9ZkbQkgzs7mIyFDYBcQBf1+qWAqjwrJ
-YgvoeJ1FGwnATqD4jtuwaT5cqGnZbeC3Pmtg8nIVRKsYobFVnyIvrJuPguoS1AUG
-XryhV5BpdeH159LpZ3J/eRppoHuznAe0Tw8O8HPkjjrFPXAEYH+loF5BCtdmVT0u
-j0ByEd9S54Hl3oEIOuuCbIUGekhY0zGZsYkCavtsy+DfCqsbFvklo6jaDmkYC6+a
-BaVzf7AqnioNqN42eXOKxp00EgnEryO9Z6Z63jmqB2icQQzEjr2KIe5wt5LD7jMC
-cF9rcWeKj7nK4qeis1ecNzfUgzBbSI2NG7iVM/q9beriKeSJygnBKlvrqBa+03Is
-qOnU9U445quueUH0sFUNrnzjOjnFO2+Lp0+OksC6gBDZ3HSoodFfffxwJklStf6s
-JM3XsX+5wy6f29tEsP7LN+VpCHoBQxnqM+sgaHfWtFX7s3t01uzmP0bYwAR08gMt
-ML8tSpV9UQsZk6Jv1IG9I/vwAy4WdYbQe3UKwjUBddnN/1a4WJaRi+1hMBBRIhkK
-tJ/4KtYlrYNuTqXljUJNHXDpGCSJSqEWDhXxbTA/E9fy5Oa+fx0n8K5WhXx2DDbV
-FgTwSXoohVMRqBxZfWHl
-=0J0+
------END PGP SIGNATURE-----
-
---R9baxdNnpTjJ7oIU--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
