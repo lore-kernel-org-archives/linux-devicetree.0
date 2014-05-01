@@ -1,122 +1,116 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Thu, 01 May 2014 12:00:15 -0700
-Message-ID: <20140501190015.5739.86963@quantum>
-References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com>
- <535FBC62.9050902@ti.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH v2] serial: uart: add hw flow control support configuration
+Date: Thu, 1 May 2014 15:04:53 -0400
+Message-ID: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <535FBC62.9050902@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Murali Karicheri <m-karicheri2@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tero Kristo (2014-04-29 07:51:14)
-> On 04/29/2014 05:15 PM, Sourav Poddar wrote:
-> > We need "tbclk" clock data for the functioning of ehrpwm
-> > module. Hence, populating the required clock information
-> > in clock dts file.
-> >
-> > Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-> 
-> Acked-by: Tero Kristo <t-kristo@ti.com>
+8250 uart driver currently supports only software assisted hw flow
+control. The software assisted hw flow control maintains a hw_stopped
+flag in the tty structure to stop and start transmission and use modem
+status interrupt for the event to drive the handshake signals. This is
+not needed if hw has flow control capabilities. This patch adds a
+DT attribute for enabling hw flow control for a uart port. Also skip
+stop and start if this flag is present in flag field of the port
+structure.
 
-Looks good to me.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
 
-Tero, just to be clear, are you planning on batching up OMAPish clock
-patches and sending a pull request (once they have been reviewed on the
-list)?
+CC: Rob Herring <robh+dt@kernel.org>
+CC: Pawel Moll <pawel.moll@arm.com>
+CC: Mark Rutland <mark.rutland@arm.com>
+CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+CC: Kumar Gala <galak@codeaurora.org>
+CC: Randy Dunlap <rdunlap@infradead.org>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Jiri Slaby <jslaby@suse.cz>
+CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+---
+ .../devicetree/bindings/serial/of-serial.txt       |    1 +
+ drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+ drivers/tty/serial/of_serial.c                     |    4 ++++
+ drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+ 4 files changed, 18 insertions(+), 5 deletions(-)
 
-Thanks,
-Mike
-
-> 
-> 
-> > ---
-> > v2->v3
-> > - correct bitshifting
-> >
-> >   arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
-> >   drivers/clk/ti/clk-43xx.c            |    6 +++++
-> >   2 files changed, 54 insertions(+)
-> >
-> > diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> > index 142009c..42d7b1f 100644
-> > --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> > +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> > @@ -87,6 +87,54 @@
-> >               clock-mult = <1>;
-> >               clock-div = <1>;
-> >       };
-> > +
-> > +     ehrpwm0_tbclk: ehrpwm0_tbclk {
-> > +             #clock-cells = <0>;
-> > +             compatible = "ti,gate-clock";
-> > +             clocks = <&dpll_per_m2_ck>;
-> > +             ti,bit-shift = <0>;
-> > +             reg = <0x0664>;
-> > +     };
-> > +
-> > +     ehrpwm1_tbclk: ehrpwm1_tbclk {
-> > +             #clock-cells = <0>;
-> > +             compatible = "ti,gate-clock";
-> > +             clocks = <&dpll_per_m2_ck>;
-> > +             ti,bit-shift = <1>;
-> > +             reg = <0x0664>;
-> > +     };
-> > +
-> > +     ehrpwm2_tbclk: ehrpwm2_tbclk {
-> > +             #clock-cells = <0>;
-> > +             compatible = "ti,gate-clock";
-> > +             clocks = <&dpll_per_m2_ck>;
-> > +             ti,bit-shift = <2>;
-> > +             reg = <0x0664>;
-> > +     };
-> > +
-> > +     ehrpwm3_tbclk: ehrpwm3_tbclk {
-> > +             #clock-cells = <0>;
-> > +             compatible = "ti,gate-clock";
-> > +             clocks = <&dpll_per_m2_ck>;
-> > +             ti,bit-shift = <4>;
-> > +             reg = <0x0664>;
-> > +     };
-> > +
-> > +     ehrpwm4_tbclk: ehrpwm4_tbclk {
-> > +             #clock-cells = <0>;
-> > +             compatible = "ti,gate-clock";
-> > +             clocks = <&dpll_per_m2_ck>;
-> > +             ti,bit-shift = <5>;
-> > +             reg = <0x0664>;
-> > +     };
-> > +
-> > +     ehrpwm5_tbclk: ehrpwm5_tbclk {
-> > +             #clock-cells = <0>;
-> > +             compatible = "ti,gate-clock";
-> > +             clocks = <&dpll_per_m2_ck>;
-> > +             ti,bit-shift = <6>;
-> > +             reg = <0x0664>;
-> > +     };
-> >   };
-> >   &prcm_clocks {
-> >       clk_32768_ck: clk_32768_ck {
-> > diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-> > index 67c8de5..527a43d 100644
-> > --- a/drivers/clk/ti/clk-43xx.c
-> > +++ b/drivers/clk/ti/clk-43xx.c
-> > @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
-> >       DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
-> >       DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
-> >       DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
-> > +     DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
-> > +     DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
-> > +     DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
-> > +     DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
-> > +     DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
-> > +     DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
-> >       { .node_name = NULL },
-> >   };
-> >
-> >
-> 
+diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+index 1928a3e..7705477 100644
+--- a/Documentation/devicetree/bindings/serial/of-serial.txt
++++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+@@ -37,6 +37,7 @@ Optional properties:
+ - auto-flow-control: one way to enable automatic flow control support. The
+   driver is allowed to detect support for the capability even without this
+   property.
++- has-hw-flow-control: the hardware has flow control capability.
+ 
+ Example:
+ 
+diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+index 0e1bf88..b69aff2 100644
+--- a/drivers/tty/serial/8250/8250_core.c
++++ b/drivers/tty/serial/8250/8250_core.c
+@@ -2338,9 +2338,11 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+ 	 * the trigger, or the MCR RTS bit is cleared.  In the case where
+ 	 * the remote UART is not using CTS auto flow control, we must
+ 	 * have sufficient FIFO entries for the latency of the remote
+-	 * UART to respond.  IOW, at least 32 bytes of FIFO.
++	 * UART to respond.  IOW, at least 32 bytes of FIFO. Also enable
++	 * AFE if hw flow control is supported
+ 	 */
+-	if (up->capabilities & UART_CAP_AFE && port->fifosize >= 32) {
++	if ((up->capabilities & UART_CAP_AFE && (port->fifosize >= 32)) ||
++	    (port->flags & UPF_HARD_FLOW)) {
+ 		up->mcr &= ~UART_MCR_AFE;
+ 		if (termios->c_cflag & CRTSCTS)
+ 			up->mcr |= UART_MCR_AFE;
+diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+index 9924660..77ec6a1 100644
+--- a/drivers/tty/serial/of_serial.c
++++ b/drivers/tty/serial/of_serial.c
+@@ -182,6 +182,10 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+ 					  "auto-flow-control"))
+ 			port8250.capabilities |= UART_CAP_AFE;
+ 
++		if (of_property_read_bool(ofdev->dev.of_node,
++					  "has-hw-flow-control"))
++			port8250.port.flags |= UPF_HARD_FLOW;
++
+ 		ret = serial8250_register_8250_port(&port8250);
+ 		break;
+ 	}
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index b68550d..851707a 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -174,8 +174,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
+ 			if (tty->termios.c_cflag & CBAUD)
+ 				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
+ 		}
+-
+-		if (tty_port_cts_enabled(port)) {
++		/*
++		 * if hw support flow control without software intervention,
++		 * then skip the below check
++		 */
++		if (tty_port_cts_enabled(port) &&
++		    !(uport->flags & UPF_HARD_FLOW)) {
+ 			spin_lock_irq(&uport->lock);
+ 			if (!(uport->ops->get_mctrl(uport) & TIOCM_CTS))
+ 				tty->hw_stopped = 1;
+@@ -2772,7 +2776,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
+ 
+ 	uport->icount.cts++;
+ 
+-	if (tty_port_cts_enabled(port)) {
++	/* skip below code if the hw flow control is supported */
++	if (tty_port_cts_enabled(port) &&
++	    !(uport->flags & UPF_HARD_FLOW)) {
+ 		if (tty->hw_stopped) {
+ 			if (status) {
+ 				tty->hw_stopped = 0;
+-- 
+1.7.9.5
