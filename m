@@ -1,170 +1,86 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 02/47] mtd: nand: stm_nand_bch: provide Device Tree
- documentation
-Date: Thu,  1 May 2014 10:56:09 +0100
-Message-ID: <1398938214-17847-3-git-send-email-lee.jones@linaro.org>
-References: <1398938214-17847-1-git-send-email-lee.jones@linaro.org>
+From: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [RFC/PATCH 0/8] pinctrl-rockchip: Change wrong initial assumptions
+Date: Thu, 01 May 2014 12:43:13 +0200
+Message-ID: <699502106.fEF2JGVO0i@typ>
+References: <1414506.B4e2jZujVm@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1398938214-17847-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Lee Jones <lee.jones@linaro.org>, computersforpeace@gmail.com, linux-mtd@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1414506.B4e2jZujVm@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is where we describe the different new and generic options used by
-the ST BCH driver.
+On Wednesday 30 April 2014 at 00:07:12, Heiko St=FCbner wrote:
+> While this wasn't a problem until now, the upcoming rk3288 introduces
+> additional changes to both the grf and pmu areas. On it even part of
+> the pinmux registers move into the pmu space.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- Documentation/devicetree/bindings/mtd/stm-nand.txt | 123 +++++++++++++++++++++
- 1 file changed, 123 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/stm-nand.txt
+Could you give us more information on that? I tried to find details on =
+the=20
+RK3288 but came up with nothing. How are the pinmux registers divided?
 
-diff --git a/Documentation/devicetree/bindings/mtd/stm-nand.txt b/Documentation/devicetree/bindings/mtd/stm-nand.txt
-new file mode 100644
-index 0000000..9f9325f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/stm-nand.txt
-@@ -0,0 +1,123 @@
-+STM BCH NAND Support
-+--------------------
-+
-+Required properties:
-+
-+- compatible		: Should be "st,nand-bch"
-+- reg			: Should contain register's location and length
-+- reg-names		: "nand_mem" - NAND Controller register map
-+			  "nand_dma" - BCH Controller DMA configuration map
-+- interrupts		: Interrupt number
-+- interrupt-names	: "nand_irq" - NAND Controller IRQ
-+- st,nand-banks		: Subnode representing one or more "banks" of NAND
-+                          Flash, connected to an STM NAND Controller (see
-+                          description below).
-+- nand-ecc-strength	: Generic NAND property (See mtd/nand.txt)
-+- st,bch-bitflip-threshold
-+			: The threshold at which the number of corrected bit-
-+			  flips per sector is deemed to have reached an
-+			  excessive level (triggers '-EUCLEAN' to be returned
-+			  to the caller).  The value should be in the range 1
-+			  to <ecc-strength> where <ecc-strength> is 18 or 30,
-+			  depending on the BCH ECC mode in operation.  A value
-+			  of 0, or if left unspecified, is interpreted by the
-+			  driver as <ecc-strength>.
-+
-+Properties describing Bank of NAND Flash ("st,nand-banks"):
-+
-+- st,nand-csn		: Chip select associated with the Bank.
-+- st,nand-timing-spec	: [Optional] NAND Device Timing Data.  All times
-+                          expressed in ns, except where stated otherwise:
-+
-+                            tR           : Max Page Read delay [us]
-+                            tCLS         : Min CLE setup time
-+                            tCS          : Min CE setup time
-+                            tALS         : Min ALE setup time
-+                            tDS          : Min Data setup time
-+                            tWP          : Min WE pulse width
-+                            tCLH         : Min CLE hold time
-+                            tCH          : Min CE hold time
-+                            tALH         : Min ALE hold time
-+                            tDH          : Min Data hold time
-+                            tWB          : Max WE high to busy
-+                            tWH          : Min WE hold time
-+                            tWC          : Min Write cycle time
-+                            tRP          : Min RE pulse width
-+                            tREH         : Min RE high hold time
-+                            tRC          : Min Read cycle time
-+                            tREA         : Max Read access time
-+                            tRHOH        : Min RE high to output hold
-+                            tCEA         : Max CE access time
-+                            tCOH         : Min CE high to output hold
-+                            tCHZ         : Max CE high to output high Z
-+                            tCSD         : Min CE high to ALE/CLE don't care
-+
-+- st,nand-timing-relax	: [Optional] Number of IP clock cycles by which to
-+			  "relax" timing configuration.  Required on some boards
-+			  to accommodate board-level limitations. Applies to
-+			  'st,nand-timing-spec' and ONFI timing mode
-+			  configuration.
-+
-+- nand-on-flash-bbt	: Generic NAND property (See mtd/nand.txt)
-+
-+- partitions		: [Optional] Subnode describing MTD partition map
-+                          (see mtd/partition.txt)
-+
-+Note, during initialisation, the NAND Controller timing registers are configured
-+according to one of the following methods, in order of precedence:
-+
-+           1. Configuration based on "st,nand_timing_spec" if supplied.
-+
-+           2. Configuration based on ONFI timing mode, as advertised by the
-+              device during ONFI-probing (ONFI-compliant NAND only).
-+
-+           3. Use reset/safe timing values
-+
-+Example:
-+
-+	nandbch: nand-bch {
-+	        compatible = "st,nand-bch";
-+	        reg = <0xfe901000 0x1000>, <0xfef00800 0x0800>;
-+	        reg-names = "nand_mem", "nand_dma";
-+	        interrupts = <0 139 0x0>;
-+	        interrupt-names = "nand_irq";
-+		nand-ecc-strength = <30>;
-+	        st,nand-banks = <&nand_banks>;
-+
-+	        status = "okay";
-+	};
-+
-+	nand_banks: nand-banks {
-+		bank0 {
-+			/* NAND_BBT_USE_FLASH */
-+			nand-on-flash-bbt;
-+			st,nand-csn		= <0>;
-+			st,nand-timing-data	= <&nand_timing0>;
-+
-+			partitions {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+
-+				partition@0{
-+					label = "NAND Flash 1";
-+					reg = <0x00000000 0x00800000>;
-+				};
-+				partition@800000{
-+					label = "NAND Flash 2";
-+					reg = <0x00800000 0x0F800000>;
-+				};
-+			};
-+		};
-+	};
-+
-+	nand_timing0: nand-timing {
-+		sig-setup	= <10>;
-+		sig-hold	= <10>;
-+		CE-deassert	= <0>;
-+		WE-to-RBn	= <100>;
-+		wr-on		= <10>;
-+		wr-off		= <30>;
-+		rd-on		= <10>;
-+		rd-off		= <30>;
-+		chip-delay	= <30>;		/* delay in us */
-+	};
--- 
-1.8.3.2
+Would adding a third reg element for the pinmux register to the gpio su=
+bnodes=20
+suffice to fix your problem?
 
+> For this my current gut-feeling is, that providing both the grf and p=
+mu
+> as syscons to the pinctrl driver might be more future proof for the n=
+ext
+> socs. But as I'm not sure on this, I'd like of course comments :-)
 
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+I don't see the problem with the current solution. In my mind it's clea=
+ner to=20
+specify register mappings explicitly in the dt rather than map one larg=
+e block=20
+and let the drivers figure out themselves where their registers are.
+
+There are some question marks for me on the syscon solution. Regmap use=
+s=20
+locking internally, which means separate drivers can't access separate=20
+registers simultaneously. We have an SMP machine here, so that's not fa=
+r-
+fetched. And that locking is completely unnecessary, as we *know* in mo=
+st=20
+cases that the accessed areas do not overlap.
+
+> The other option would be to leave the grf as it is and create separa=
+te
+> syscons for real small individual parts like the soc-conf and usb-phy=
+s.
+> But apart from creating these real small syscons that would
+> also make it necessary to introduce another register map for the
+> drive-strength settings of the pin-controller, which are sitting in t=
+he
+> middle of everything at least on rk3066 and rk3188.
+
+Wy do we need a syscon for usb-phys? Is it shared by multiple drivers?
+My instinctive approach would be two usb-phys devices mapping the GRF_U=
+OC0/1=20
+spaces directly via reg properties. Or did I miss something?
+
+The only register space I see that is used from many drivers is the GRF=
+_SOC_*=20
+space. So in my mind that should be the only syscon device.
+
+> @Max: sorry to come up with this now, but I feel this should be resol=
+ved
+> (in whatever direction) before we introduce any grf syscon. Because d=
+ue
+> to dt being an API we will be tied for a long time to it.
+
+Yes, I agree. If we want to change something, we should change it now. =
+All in=20
+all I would vote for the current solution. But it seems you have more=20
+information than me, so my vote is somewhat uneducated ;-)
+
+Cheers,
+  Max
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
