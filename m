@@ -1,54 +1,61 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] ASoC: cirrus: clps711x: Add bindings
- documentation for the CLPS711X DAI
-Date: Thu, 1 May 2014 11:30:00 -0700
-Message-ID: <20140501183000.GU3245@sirena.org.uk>
-References: <1397283454-684-1-git-send-email-shc_work@mail.ru>
+Subject: Re: [PATCH 3/3] regulator: Add LTC3589 support
+Date: Thu, 1 May 2014 11:07:38 -0700
+Message-ID: <20140501180738.GP3245@sirena.org.uk>
+References: <1398789430-23897-1-git-send-email-p.zabel@pengutronix.de>
+ <1398789430-23897-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="m3NGSFsSaj96nZIx"
+	protocol="application/pgp-signature"; boundary="U2TwCo+MHNvvM16y"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1397283454-684-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+In-Reply-To: <1398789430-23897-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---m3NGSFsSaj96nZIx
+--U2TwCo+MHNvvM16y
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, Apr 12, 2014 at 10:17:34AM +0400, Alexander Shiyan wrote:
-> This patch adds the devicetree documentation for the Cirrus Logic
-> CLPS711X Digital Audio Interface (DAI).
+On Tue, Apr 29, 2014 at 06:37:10PM +0200, Philipp Zabel wrote:
+> This patch adds support for the Linear Technology LTC3589, LTC3589-1,
+> and LTC3589-2 8-output I2C voltage regulator ICs.
 
-This look good.
+One small nit in addition to the vendor prefix thing:
 
---m3NGSFsSaj96nZIx
+> +static const int ltc3589_12_ldo4[] = {
+> +	1200000, 1800000, 2500000, 3200000,
+> +};
+
+This could use regulator_map_voltage_ascend(), though for all practical
+purposes the table is so small it makes no meaningful difference.
+
+--U2TwCo+MHNvvM16y
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIbBAEBAgAGBQJTYpKkAAoJELSic+t+oim9KC0P+LL8sZRwnPzDiOTUADIlAQw6
-LsYnQzZElht+vuEIZ5bzbTRb47/+/KDoa3WjpW+QXspUHROrl/jPkKMJ+EkCyRXl
-PpDpN9uZKYHMfFC9Kl5XK+5zNo0XfM3KLBaKf7qct3CRvNo2w4iqkP1WWDfjn5XJ
-biNAariRwk9lposi8K2Z4qsksVOmHUQvsoNHOWcZ88mkaATrL45Typ8GMQ6BJIDO
-rYWVTbifSoSQQH+9Pzg5DFWJVMMzKTTMZ7FTzhNMdVApBplLWd+XHgd4klEUjrZg
-+d4IQqbyfdMbGi2kU79ZokSpq+2Y5UtFKUqHpWuDF/rSsKX6YFM6SQNJtzMimz9L
-az8+voPkf94+r2QsdF+7pvhQdr/qgKLXqiQ/F10AY+OjT34s3PTLYwxgcnJbybhy
-ea8hSi8fIZ3uhuLXS2E2w/TJ4PFkqt9w5pMa0XIFKFkhktrfri8/MwzcpLfQPvOp
-8x5S+qa4+/U4cRJtK1gAXOQ5z7OZcmRs052uGbP9ZMA09ma5zQJemJJtR3Su6jFJ
-ZDS2o42mk+4wtf9NkrrlZQDTHKwlrbH5WooebJtzXt+A4tfqgCbMAyB/XLtpMDVv
-CMSZE4sTvDmX9blQAMj5gblzZklBUU4baVH6aHhluSdh12kLWmTFTeCt8LrZJRGf
-fg5KzCz9WSq1J5aJsFg=
-=Xsd5
+iQIcBAEBAgAGBQJTYo1nAAoJELSic+t+oim9rzwP/2EXtJJbkfZmcc1C/+hnkKL7
+xxVzJk+NJgk2uJq4Q3S/It/TyWHPDO5v+tEr+99u/RkUNEzxpk+lsK8YQJgRFyyK
+gvmoujDy/YIXHBNVgPUVEOIDMLjYMw6Vpk1ox7SVmo6vkTYGFkJB5LLyrB0yxlUt
+fyZNP8XHsNNvUCcHGVClgOyhcQ5kZp9Y7KAANMb0Hohy1ZmD3hr0tonZPTxepYpr
+vOKEeEnZR76mQhW9LUSZDuI4WCkOq/9+OakzfBvqgSidWzbLeA+XvNtOAruD0hAK
+KOZUceZS7IlW3sXvnvj0qONlCyK57TS8OX0OjaxVk28E5oUTXgEfb2PDJS5IrmW4
+Cx1cQnoM5KazmHGUJ+4ylIGJS1uS3TdXNBf1M4gpcwRRqmuAwz+RPTDiLC5iflox
+KKvKedx0fpg5bMYq09pkvovpsXsmYc/PjOyJvO3b9JcC0vEcWpOeHlX5z4kBVXv6
+Sh4xmaZ1joFUM7qVujQ2j37LO/uzvPrN1qj85+lRPuWakvzcWwUI8l9fgxAS/rwi
+1wapgdvpGrDj/fSmQ+yeqzXmaNTM4irhSNT4WKrJ3QFaK7rrZAs9ptpvRnUXsdah
+5kvniOx5XuVRllwNKBPYu6BWm6Qq0esQbXDs6VfGbMntIUBA1vsrdKUXVsJpx4vc
+/YOqWkshwX8MZygfuWKO
+=KmH/
 -----END PGP SIGNATURE-----
 
---m3NGSFsSaj96nZIx--
+--U2TwCo+MHNvvM16y--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
