@@ -1,93 +1,92 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and
- dma-coherent
-Date: Thu, 1 May 2014 10:06:58 -0400
-Message-ID: <53625502.1040808@ti.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <536249D6.3020008@ti.com> <20140501132516.GG26756@n2100.arm.linux.org.uk>
+From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v12 15/31] iommu/exynos: handle 'mmu-masters' property of
+	DT and improve handling sysmmu
+Date: Thu, 01 May 2014 23:08:56 +0900
+Message-ID: <20140501230856.3712721d928212c2fff11c43@samsung.com>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
+	<1398584283-22846-16-git-send-email-shaik.ameer@samsung.com>
+	<13595839.WFkdpM5auQ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140501132516.GG26756-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <13595839.WFkdpM5auQ@wuerfel>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 May 2014 09:25 AM, Russell King - ARM Linux wrote:
-> On Thu, May 01, 2014 at 09:19:18AM -0400, Santosh Shilimkar wrote:
->> Rob, Russell,
->>
->> On Thursday 24 April 2014 11:30 AM, Santosh Shilimkar wrote:
->>> Here is an updated v3 of the series. Series introduces support for setting up
->>> dma parameters based on device tree properties like 'dma-ranges' and
->>> 'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
->>> series can be found here [3], [2] and [1].
->>>
->>> The 'dma-ranges' helps to take care of few DMAable system memory restrictions
->>> by use of dma_pfn_offset which we maintain now per device. Arch code then
->>> uses it for dma address translations for such cases. We update the
->>> dma_pfn_offset accordingly during DT the device creation process.The
->>> 'dma-coherent' property is used to setup arch's coherent dma_ops.
->>>
->>> Hopefully with acks, tested-by this version can get into 3.16 queue. I will
->>> post a followup series for Keystone SOC which will use this infrastructure.
->>> Linus W also wants to use this for ARM integrator platform dma offset issue.
->>>
->>> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
->>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
->>> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
->>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>> Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->>>
->>> Grygorii Strashko (2):
->>>   of: introduce of_dma_get_range() helper
->>>   ARM: dma: Use dma_pfn_offset for dma address translation
->>>
->>> Santosh Shilimkar (5):
->>>   device: introduce per device dma_pfn_offset
->>>   of: introduce of_dma_is_coherent() helper
->>>   of: configure the platform device dma parameters
->>>   ARM: dma: implement set_arch_dma_coherent_ops()
->>>   ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
->>>
->>>  arch/arm/include/asm/dma-mapping.h |   28 ++++++++++--
->>>  arch/arm/mm/dma-mapping.c          |    4 +-
->>>  drivers/of/address.c               |   87 ++++++++++++++++++++++++++++++++++++
->>>  drivers/of/platform.c              |   71 +++++++++++++++++++++++++++--
->>>  include/linux/device.h             |    2 +
->>>  include/linux/dma-mapping.h        |    7 +++
->>>  include/linux/of_address.h         |    8 ++++
->>>  include/linux/of_platform.h        |    6 +++
->>>  8 files changed, 204 insertions(+), 9 deletions(-)
->>>
->> How do we go about merging this series ? There is a dependency
->> between the patches and hence the question.
+On Sun, 27 Apr 2014 20:17:48 +0200, Arnd Bergmann wrote:
+> On Sunday 27 April 2014 13:07:47 Shaik Ameer Basha wrote:
+> > @@ -542,14 +592,41 @@ static int __init exynos_sysmmu_probe(struct platform_device *pdev)
+> >  		}
+> >  	}
+> >  
+> > +	/* Relation between master and System MMU is 1:1. */
+> > +	node = of_parse_phandle(dev->of_node, "mmu-masters", 0);
+> > +	if (node) {
+> > +		struct platform_device *master = of_find_device_by_node(node);
+> > +
+> > +		if (!master) {
+> > +			dev_err(dev, "%s: mmu-master '%s' not found\n",
+> > +				__func__, node->name);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		if (master->dev.archdata.iommu != NULL) {
+> > +			dev_err(dev, "%s: '%s' is master of other MMU\n",
+> > +				__func__, node->name);
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		/*
+> > +		 * archdata.iommu will be initialized with exynos_iommu_client
+> > +		 * in sysmmu_hook_driver_register().
+> > +		 */
+> > +		master->dev.archdata.iommu = dev;
+> > +	}
 > 
-> I don't know anymore.  People today want to assert exclusive rights over
-> parts of the kernel tree, which makes this kind of cross-patching rather
-> impossible.
+> I think parsing of generic properties like this shouldn't be done
+> by the individual driver. It belongs into core iommu code and should
+> be done when the devices are probed.
 > 
-> The only workable solution I can see is the long winded way to split the
-> series up, merge the first set of dependencies in one merge window, and
-> hold the rest back for the following merge window.  Not ideal, but it
-> stops the arguments.
+> > +
+> > +static struct notifier_block sysmmu_notifier = {
+> > +	.notifier_call = &sysmmu_hook_driver_register,
+> > +};
+> > +
+> > +static int __init exynos_iommu_prepare(void)
+> > +{
+> > +	static bool registered = false;
+> > +	int ret;
+> > +
+> > +	if (registered)
+> > +		return 0;
+> > +
+> > +	ret = bus_register_notifier(&platform_bus_type, &sysmmu_notifier);
+> > +	if (!ret)
+> > +		registered = true;
+> > +	else
+> > +		pr_err("Failed to register sysmmu_notifier\n");
+> > +
+> > +	return ret;
+> > +}
 > 
-I really hope we don't have to go this route. I think since the changes
-as such used for ARM arch for now, if we get this series via your tree
-or arm-soc which pulls your tree, things should work. I also have small
-series on the list on top of $subject series which enables coherency
-for Keystone.
+> This also means we should not have notifiers. Put it into core code to
+> make sure all IOMMUs are handled the same way.
+> 
 
-Regards,
-Santosh
+Ok.
 
+Thank you for addressing that.
+I am also very interested in the discussion about it in the different thread.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+KyongHo
