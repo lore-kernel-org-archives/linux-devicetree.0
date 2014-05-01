@@ -1,43 +1,63 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: henninger: specify EXTAL frequency
-Date: Fri, 2 May 2014 02:56:33 +0400
-Message-ID: <201405020256.34093.sergei.shtylyov@cogentembedded.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] of: add bq and radxa vendor prefixes
+Date: Fri, 02 May 2014 01:32:37 +0200
+Message-ID: <2225372.rvnmuAdhHE@phil>
+References: <1398973835-26303-1-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1398973835-26303-1-git-send-email-b.galvani@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When creating the initial device tree for the Henninger board,  I've overlooked
-that EXTAL frequency needs to be overridden there. The 'sh-sci' driver  managed
-to work somehow but the SDHI driver that I've tried to enable just hanged with
-the default EXTAL frequency of 0...
+Hi Beniamino,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Am Donnerstag, 1. Mai 2014, 21:50:34 schrieb Beniamino Galvani:
+> Add new vendor prefixes for:
+> 
+>     * bq, a company that sells multimedia devices and 3D printers
 
----
-This patch is against 'renesas-devel-v3.15-rc3-20140429' tag of Simon Horman's
-'renesas.git' repo.
+bq is actually only a brandname. The company itself is "Mundo Reader S.L.".
+I'm not sure what the actual policy is concerning the vendor prefix, i.e. if it 
+should use the visible brand name or the actual company name.
 
- arch/arm/boot/dts/r8a7791-henninger.dts |    4 ++++
- 1 file changed, 4 insertions(+)
+I.e. another possibility would be to add the vendor prefix
+	mundoreader	Mundo Reader S.L.
+and name the currie
+	mundoreader,bq-curie2
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -35,6 +35,10 @@
- 	};
- };
- 
-+&extal_clk {
-+	clock-frequency = <20000000>;
-+};
-+
- &pfc {
- 	scif0_pins: serial0 {
- 		renesas,groups = "scif0_data_d";
+
+Heiko
+
+>     * Radxa, manufacturer of ARM boards
+> 
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
+> abc3080..6f8177c 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -21,6 +21,7 @@ atmel	Atmel Corporation
+>  auo	AU Optronics Corporation
+>  avago	Avago Technologies
+>  bosch	Bosch Sensortec GmbH
+> +bq	bq
+>  brcm	Broadcom Corporation
+>  buffalo	Buffalo, Inc.
+>  calxeda	Calxeda
+> @@ -98,6 +99,7 @@ powervr	PowerVR (deprecated, use img)
+>  qca	Qualcomm Atheros, Inc.
+>  qcom	Qualcomm Technologies, Inc
+>  qnap	QNAP Systems, Inc.
+> +radxa	Radxa
+>  raidsonic	RaidSonic Technology GmbH
+>  ralink	Mediatek/Ralink Technology Corp.
+>  ramtron	Ramtron International
+
