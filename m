@@ -1,111 +1,69 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
-	Exynos System MMU
-Date: Thu, 01 May 2014 17:46:03 +0200
-Message-ID: <8052890.tELEFf8xoX@wuerfel>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<36874558.Vf2LgdL3qf@wuerfel>
-	<20140501143654.GB3732@e103592.cambridge.arm.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
+Date: Thu, 1 May 2014 08:06:53 -0700
+Message-ID: <20140501150653.GZ3245@sirena.org.uk>
+References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
+ <20140429222522.GS15125@sirena.org.uk>
+ <20140430140849.GR29462@lee--X1>
+ <1398867073.695596467@f224.i.mail.ru>
+ <20140430141708.GS29462@lee--X1>
+ <20140430180653.GB3245@sirena.org.uk>
+ <20140501074253.GA32761@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140501143654.GB3732-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org" <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, "pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel@lists.i
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="R9baxdNnpTjJ7oIU"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140501074253.GA32761@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 May 2014 15:36:54 Dave Martin wrote:
-> On Thu, May 01, 2014 at 02:29:50PM +0100, Arnd Bergmann wrote:
-> > On Thursday 01 May 2014 12:15:35 Dave Martin wrote:
-> > > > > I'm not sure whether there is actually a SoC today that is MSI-capable
-> > > > > and contains an IOMMU, but all the components to build one are out
-> > > > > there today.  GICv3 is also explicitly designed to support such
-> > > > > systems.
-> > > > 
-> > > > A lot of SoCs have MSI integrated into the PCI root complex, which
-> > > > of course is pointless from MSI perspective, as well as implying that
-> > > > the MSI won't go through the IOMMU.
-> > > > 
-> > > > We have briefly mentioned MSI in the review of the Samsung GH7 PCI
-> > > > support. It's possible that this one can either use the built-in
-> > > > MSI or the one in the GICv2m.
-> > > 
-> > > We are likely to get non-PCI MSIs in future SoC systems too, and there
-> > > are no standards governing how such systems should look.
-> > 
-> > I wouldn't call that MSI though -- using the same term in the code
-> > can be rather confusing. There are existing SoCs that use message
-> > based interrupt notification. We are probably better off modeling
-> > those are regular irqchips in Linux and DT, given that they may
-> > not be bound by the same constraints as PCI MSI.
-> 
-> We can call it what we like and maybe bury the distinction in irqchip
-> drivers for some fixed-configuration cases, but it's logically the same
-> concept.  Naming and subsystem factoring are implementation decisions
-> for Linux.
-> 
-> For full dynamic assignment of pluggable devices or buses to VMs, I'm
-> less sure that we can model that as plain irqchips.
 
-I definitely hope we won't have to deal with plugging non-PCI devices
-into VMs. Nothing good can come out of that.
+--R9baxdNnpTjJ7oIU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > Supporting this case in DT straight away is going to add a major burden.
-> > If nobody can say for sure that they are actually going to do it, I'd
-> > lean towards assuming that we won't need it and not putting the extra
-> > complexity in.
-> > 
-> > If someone actually needs it later, let's make it their problem for
-> > not participating in the design.
-> 
-> This is a fair point, but there is a difference between the bindings and
-> what kind of wacky configurations a particular version of Linux actually
-> supports.
-> 
-> DT is supposed to be a description of the hardware, not a description
-> of how Linux subsystems are structured, though if the two are not
-> reasonably well aligned that will lead to pain...
-> 
-> The key thing is to make sure the DT bindings are extensible to
-> things that we can reasonably foresee.
+On Thu, May 01, 2014 at 08:42:53AM +0100, Lee Jones wrote:
 
-Yes, defining them in an extensible way is always a good idea, but I
-think it would be better not to define the fine details until we
-actually need them in this case.
+> > You acked it without saying you didn't want me to apply it...  usually
+> > that means someone is OK with things getting applied.
 
-> > > > It would be 'dma-ranges'. Unfortunately that would imply that each DMA
-> > > > master is connected to only one IOMMU, which you say is not necessarily
-> > > > the case. The simpler case of a device is only a master on a single IOMMU
-> > > > but can use multiple contexts would however work fine with dma-ranges.
-> > > 
-> > > Partly, yes.  The concept embodied by "dma-ranges" is correct, but the
-> > > topological relationship is not: the assumption that a master device
-> > > always masters onto its parent node doesn't work for non-tree-like
-> > > topologies.
-> > 
-> > In almost all cases it will fit. When it doesn't, we can work around it by
-> > defining virtual address spaces the way that the PCI binding does. The only
-> > major exception that we know we have to handle is IOMMUs.
-> 
-> My concern here is that as new exceptions and oddball or complex systems
-> crop up, we will end up repeatedly inventing different bodges to solve
-> essentially the same problem.
-> 
-> Unlike some of the other situations we have to deal with, these are valid
-> hardware configurations rather than quirks or broken systems.
+> Actually, that's not true:
 
-Can you give an example where this would be done for a good reason?
-I can't come up with an example that doesn't involve the hardware
-design being seriously screwed.
+> MFD changes look sensible:
+>   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-	Arnd
+> I'm happy to create a shared branch if required.   <-----###
+
+Sure, but I didn't see an urgent need for that immediately so I just
+went ahead - the ack usually means that it's OK to apply.
+
+--R9baxdNnpTjJ7oIU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTYmMJAAoJELSic+t+oim9eFMP/i15G/9uQ55d/595ttV+fzvj
+L1nrKboGdT31PJi2/604kRKjOvP2ZqaMq9ZkbQkgzs7mIyFDYBcQBf1+qWAqjwrJ
+YgvoeJ1FGwnATqD4jtuwaT5cqGnZbeC3Pmtg8nIVRKsYobFVnyIvrJuPguoS1AUG
+XryhV5BpdeH159LpZ3J/eRppoHuznAe0Tw8O8HPkjjrFPXAEYH+loF5BCtdmVT0u
+j0ByEd9S54Hl3oEIOuuCbIUGekhY0zGZsYkCavtsy+DfCqsbFvklo6jaDmkYC6+a
+BaVzf7AqnioNqN42eXOKxp00EgnEryO9Z6Z63jmqB2icQQzEjr2KIe5wt5LD7jMC
+cF9rcWeKj7nK4qeis1ecNzfUgzBbSI2NG7iVM/q9beriKeSJygnBKlvrqBa+03Is
+qOnU9U445quueUH0sFUNrnzjOjnFO2+Lp0+OksC6gBDZ3HSoodFfffxwJklStf6s
+JM3XsX+5wy6f29tEsP7LN+VpCHoBQxnqM+sgaHfWtFX7s3t01uzmP0bYwAR08gMt
+ML8tSpV9UQsZk6Jv1IG9I/vwAy4WdYbQe3UKwjUBddnN/1a4WJaRi+1hMBBRIhkK
+tJ/4KtYlrYNuTqXljUJNHXDpGCSJSqEWDhXxbTA/E9fy5Oa+fx0n8K5WhXx2DDbV
+FgTwSXoohVMRqBxZfWHl
+=0J0+
+-----END PGP SIGNATURE-----
+
+--R9baxdNnpTjJ7oIU--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
