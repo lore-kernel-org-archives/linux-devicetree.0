@@ -1,52 +1,51 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv2 6/9] ASoC: omap: rx51: get GPIO numbers via gpiod API
-Date: Thu, 1 May 2014 10:55:01 -0700
-Message-ID: <20140501175501.GG3245@sirena.org.uk>
-References: <1398694047-28596-1-git-send-email-sre@kernel.org>
- <1398694047-28596-7-git-send-email-sre@kernel.org>
+Subject: Re: [PATCH 2/3] regulator: ltc3589: Add DT binding documentation
+Date: Thu, 1 May 2014 11:04:28 -0700
+Message-ID: <20140501180428.GO3245@sirena.org.uk>
+References: <1398789430-23897-1-git-send-email-p.zabel@pengutronix.de>
+ <1398789430-23897-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zgr1mbP1ee4HJQ5m"
+	protocol="application/pgp-signature"; boundary="JH9OCe1BwbSt0K9U"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398694047-28596-7-git-send-email-sre@kernel.org>
+In-Reply-To: <1398789430-23897-2-git-send-email-p.zabel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
 
---zgr1mbP1ee4HJQ5m
+--JH9OCe1BwbSt0K9U
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Apr 28, 2014 at 04:07:24PM +0200, Sebastian Reichel wrote:
-> Update the driver to get GPIO numbers from the
-> devm gpiod API instead of requesting hardcoded
-> GPIO numbers.
+On Tue, Apr 29, 2014 at 06:37:09PM +0200, Philipp Zabel wrote:
+> This patch adds the device tree binding documentation for Linear
+> Technology LTC3589, LTC3589-1, and LTC3589-2 8-port regulators.
 
-Applied, thanks.
+This is all good apart from the vendor prefix change thing.
 
---zgr1mbP1ee4HJQ5m
+--JH9OCe1BwbSt0K9U
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTYopyAAoJELSic+t+oim90ZcP/3O5HOJYq4KcSyVaAEgBATDv
-v+YXU7yPQa4/WlXy4kb6pYDuR9GInwTMQTsvNA7UwePX4kx2yuIDuf2lP8bYMIKz
-OAr8j0ePJ3Vb4GUfll8s4ZW3wtADj1d6rPnXJ7UV2ONIoZIJgEEn6bFetS1yBOxO
-dpkhdHhYYXeIE/CitU8agmZegBI2dvIpEbkpLMvlMp2L19JjWuM5O9UWkHGZj6FX
-KJxFIyd4QNZQ/+iw9xsddvq3hSi07vQ168kENC1x+0Nzov1Hb8LM1DEv9vCvX5JV
-OqZTRDeDP6RZLJmqadfq1UZZZ979DK6NBdphMaWbRBEZhIZmmkMAoC1C6hf4KDIs
-mjtGpqa799YQGsc3IhefMP7X/kvlBRNnpJekttjP6BHdTaH+aC5lgrxEE8JKjA0O
-EbEGfIDwBPnI67EpKlYZq8RVBOzZ6n3HKsUBjaAEk6Bn+a/g4MGVGgXkVM5qlXJY
-YbVgEgBJ5YFimz+RmxvA07vSpYJvWQMZutpCCRi0DjXO/MwbWEgjWr8AY2kY9S+3
-sGurHBc5MuPhGOW8LrbVonYyoaugTSdzrweHUEIxDOw1VFv0U87oU4RAoEjDyuMl
-hIqav9ui9igAOVjj8qOAGldnGg3FvInYgwk77vhwdka8nwY5WRbyT71MJ9BWRvmN
-BcKWdpcLqOcCC8lnEeaG
-=qJ/Q
+iQIcBAEBAgAGBQJTYoypAAoJELSic+t+oim9gv4P/22q0yzFD/zUAx9XDTWaaj4m
+1e0sc22kxo/aeVqYvAXU/NZwdimfhJikZJZfLcTajxk2FuvlkOcu+JlBA5psLOdU
+7D6ReTiIK1682i61x2aywP33XQd1jXM/1D3QEJaZRjtM5NTdtA373VcCf8Ju1vr0
+0enLSsg/GKzEbaXGrgt2z4Y5eN5fQ5+cX7SGEzAtrdli6n+WEDdZhNemKRmejHlL
+NzT32RfKHmGNVjtuaqgSROnblO7ZJejqSRgcqC4bfknTPa6DrJArOKYWZldMuCnD
+SYV9EC+adHRCUCoRsbndo70UZfiXUGJ6yw9scm4J9aUvSCBl5sCU/8g26JQlo7fN
+h4Zz3RqmoI/P3MlFmLJgtJcIEs0/bBdZWlZLCe3ky2/VmwjA/8quVX5rFQsfxFDl
+Mv3EHqqzdmUW4AzmHEGB0iuUlkWKzZdlYI0ZWoCCqljXc10DgQYHq2AaaqBr7ZHf
+XsVGbAaZaq4I7V8NTy9DC0k2LorYU28PNYyQoVtzbgsWcaJgB64CN0OdsAo8zsvF
+kpT34wWxtbCA75JMdiuxTnX5qweSM0pfI8JxWpwVpwTLqJhQZ93c8yFvmDGbrnfz
+0RJ/xNtSnoMiH8TuM4iFcEMMCXF0qWwM6moJdrUHtdVEOhnvf79vzuEQd6BZ/+aP
+89o4+TJdH/IYrQT024lk
+=PZLT
 -----END PGP SIGNATURE-----
 
---zgr1mbP1ee4HJQ5m--
+--JH9OCe1BwbSt0K9U--
