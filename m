@@ -1,62 +1,55 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] regulator: Add LTC3589 support
-Date: Thu, 1 May 2014 11:07:38 -0700
-Message-ID: <20140501180738.GP3245@sirena.org.uk>
-References: <1398789430-23897-1-git-send-email-p.zabel@pengutronix.de>
- <1398789430-23897-3-git-send-email-p.zabel@pengutronix.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 4/5] regulator: tps65090: Allow setting the
+ overcurrent wait time
+Date: Thu, 1 May 2014 11:49:41 -0700
+Message-ID: <20140501184941.GV3245@sirena.org.uk>
+References: <1397689950-1568-1-git-send-email-dianders@chromium.org>
+ <1397689950-1568-5-git-send-email-dianders@chromium.org>
+ <20140423115102.GO21613@lee--X1>
+ <CAD=FV=WN4hVibiK_8+mpNfO7UQnd35ZT9EXA9fuw-mnBzzb1cA@mail.gmail.com>
+ <CAOesGMiMiqk1mKcVF8SwePhUS-8cAmM3Ut3f+qRvjz27iw7CTA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="U2TwCo+MHNvvM16y"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="1c4XeR3HBwmMPD2z"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398789430-23897-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+In-Reply-To: <CAOesGMiMiqk1mKcVF8SwePhUS-8cAmM3Ut3f+qRvjz27iw7CTA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Doug Anderson <dianders@chromium.org>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, Sachin Kamat <sachin.kamat@linaro.org>, AJAY KUMAR RAMAKRISHNA SHYMALAMMA <ajaykumar.rs@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdot>
 List-Id: devicetree@vger.kernel.org
 
 
---U2TwCo+MHNvvM16y
+--1c4XeR3HBwmMPD2z
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Apr 29, 2014 at 06:37:10PM +0200, Philipp Zabel wrote:
-> This patch adds support for the Linear Technology LTC3589, LTC3589-1,
-> and LTC3589-2 8-output I2C voltage regulator ICs.
+On Thu, May 01, 2014 at 11:17:58AM -0700, Olof Johansson wrote:
 
-One small nit in addition to the vendor prefix thing:
+> so it looks like tps_pdata is NULL. Should likely be a check for it?
 
-> +static const int ltc3589_12_ldo4[] = {
-> +	1200000, 1800000, 2500000, 3200000,
-> +};
+Yes, just about to post a fix.
 
-This could use regulator_map_voltage_ascend(), though for all practical
-purposes the table is so small it makes no meaningful difference.
-
---U2TwCo+MHNvvM16y
+--1c4XeR3HBwmMPD2z
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTYo1nAAoJELSic+t+oim9rzwP/2EXtJJbkfZmcc1C/+hnkKL7
-xxVzJk+NJgk2uJq4Q3S/It/TyWHPDO5v+tEr+99u/RkUNEzxpk+lsK8YQJgRFyyK
-gvmoujDy/YIXHBNVgPUVEOIDMLjYMw6Vpk1ox7SVmo6vkTYGFkJB5LLyrB0yxlUt
-fyZNP8XHsNNvUCcHGVClgOyhcQ5kZp9Y7KAANMb0Hohy1ZmD3hr0tonZPTxepYpr
-vOKEeEnZR76mQhW9LUSZDuI4WCkOq/9+OakzfBvqgSidWzbLeA+XvNtOAruD0hAK
-KOZUceZS7IlW3sXvnvj0qONlCyK57TS8OX0OjaxVk28E5oUTXgEfb2PDJS5IrmW4
-Cx1cQnoM5KazmHGUJ+4ylIGJS1uS3TdXNBf1M4gpcwRRqmuAwz+RPTDiLC5iflox
-KKvKedx0fpg5bMYq09pkvovpsXsmYc/PjOyJvO3b9JcC0vEcWpOeHlX5z4kBVXv6
-Sh4xmaZ1joFUM7qVujQ2j37LO/uzvPrN1qj85+lRPuWakvzcWwUI8l9fgxAS/rwi
-1wapgdvpGrDj/fSmQ+yeqzXmaNTM4irhSNT4WKrJ3QFaK7rrZAs9ptpvRnUXsdah
-5kvniOx5XuVRllwNKBPYu6BWm6Qq0esQbXDs6VfGbMntIUBA1vsrdKUXVsJpx4vc
-/YOqWkshwX8MZygfuWKO
-=KmH/
+iQIcBAEBAgAGBQJTYpc+AAoJELSic+t+oim9tvEP/2SdEta4yW18xpsPeiM2ojoD
+bGPS7a3dmSTyl2Chw9qz34wKfgwTkes0utnyEhYV/7eANkfUowFTwpKWgYnENGwY
+jXdrS49N9Hp+ra7S2Ugk65woWYZYVqVhH5KyoSU4tJZNNn7NdxYr9RVuOzZzIfUW
+gs+tw2S3f5tD18Zu8cuqnDzq4iVYYzsShNfHwVAyrawMfva9iKLeUA4nHlGX4G28
+qL77d7j6kdOR/BHA5r4wkbbSj/7piNbgqI0vgD7icW9ttGWyLaCie1XFlq0UK3De
+URIyfY4RUvIwSAO3pxr+gGF/Yg7ROkbhC5urbDTlO0mNOHpYum5FiDYmmp/5tve4
+efPxwfHZfnEBChO0wuoiOHlekuvE6vB4XRXpdDFmgkXJPn9bk89SLL5MryCPt+XA
+UIaRllv87TdRyzdzDhYjM40Ha1D1n1krlta2pGChCt/nL/tzFjWASx3Koa4ONKpB
+OYe0KBWmzqLSqVMd3BNVTYd++PEstqZ12I78Pcapi2e2yWQ5xz8Q6wgdG6W+Ormj
+vTf26pK+YkeS0nzZVckLvfVXQSdOe8jJ87O420pYZh/YIkLSCJxPvOyE4hYWqi98
+qqZv48Sd3ADxaqn/GD5dLo20M9F/VtpWBHp97+vDC5cjbedp/8ET9OLNFlu6+WZE
+XwM0c8SKw3ww0M/6bJTt
+=KJbg
 -----END PGP SIGNATURE-----
 
---U2TwCo+MHNvvM16y--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--1c4XeR3HBwmMPD2z--
