@@ -1,48 +1,38 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 15/21] of/fdt: move memreserve and dtb memory
- reservations into core
-Date: Thu, 1 May 2014 17:27:29 +0100
-Message-ID: <20140501162729.GA28745@arm.com>
-References: <1398215901-25609-1-git-send-email-robherring2@gmail.com>
- <1398215901-25609-16-git-send-email-robherring2@gmail.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] mtd: nand: add randomizer support
+Date: Thu, 1 May 2014 10:34:07 -0600
+Message-ID: <20140501163407.GB3296@obsidianresearch.com>
+References: <1398906592-24677-1-git-send-email-b.brezillon.dev@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1398215901-25609-16-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
+In-Reply-To: <1398906592-24677-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Apr 22, 2014 at 08:18:15PM -0500, Rob Herring wrote:
-> From: Rob Herring <robh@kernel.org>
+On Thu, May 01, 2014 at 03:09:49AM +0200, Boris BREZILLON wrote:
+> Hello,
 > 
-> Move the /memreserve/ processing and dtb memory reservations into
-> early_init_fdt_scan_reserved_mem. This converts arm, arm64, and powerpc
-> as they are the only users of early_init_fdt_scan_reserved_mem.
-> 
-> memblock_reserve is safe to call on the same region twice, so the
-> reservation check for the dtb in powerpc 32-bit reservations is safe to
-> remove.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will.deacon@arm.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> ---
-> v2: No change
-> 
->  arch/arm/include/asm/prom.h |  2 --
->  arch/arm/kernel/devtree.c   | 27 ---------------------------
->  arch/arm/mm/init.c          |  1 -
->  arch/arm64/mm/init.c        | 21 ---------------------
->  arch/powerpc/kernel/prom.c  | 22 ----------------------
->  drivers/of/fdt.c            | 16 ++++++++++++++++
->  6 files changed, 16 insertions(+), 73 deletions(-)
+> This series is a proposal to add support for randomizers (either software
+> or hardware) to NAND flash controller drivers.
 
-For arm64:
+FWIW, I think the term for reversibly combining a PRBS with data is
+'scrambling', it is often used in communication systems for similar
+reasons - probabilisticly increasing transition density.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+randomizing is something else entirely :)
+
+BTW, there are security concerns here. The scrambler PRBS must not be
+predictable by the user, otherwise they can write data that undoes the
+scramble and defeat it, ie deliberately writing the last 2k of a 4k
+write block as all 0's after scrambling could cause the first 2k to be
+lost. That feels like something that could be scary ..
+
+Jason
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
