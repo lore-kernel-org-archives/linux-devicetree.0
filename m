@@ -1,190 +1,170 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] of: Keep track of populated platform devices
-Date: Thu, 1 May 2014 10:43:38 +0100
-Message-ID: <CACxGe6usWdey1qQT2JF=7LuE62H-_xtd1QkRT9z_Tj2pxdQEjQ@mail.gmail.com>
-References: <1398858529.24255.3.camel@hornet> <1398866717-20268-1-git-send-email-pawel.moll@arm.com>
- <CAL_JsqL=mxqEKpAsXm7Du0vEDpKk4n+dp5-DyvbuGhTA6bP5Lg@mail.gmail.com> <20140501092635.05011C409DA@trevor.secretlab.ca>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH 02/47] mtd: nand: stm_nand_bch: provide Device Tree
+ documentation
+Date: Thu,  1 May 2014 10:56:09 +0100
+Message-ID: <1398938214-17847-3-git-send-email-lee.jones@linaro.org>
+References: <1398938214-17847-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140501092635.05011C409DA-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1398938214-17847-1-git-send-email-lee.jones@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Lee Jones <lee.jones@linaro.org>, computersforpeace@gmail.com, linux-mtd@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 1, 2014 at 10:26 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, 30 Apr 2014 10:22:25 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Wed, Apr 30, 2014 at 9:05 AM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
->> > In "Device Tree powered" systems, platform devices are usually
->> > massively populated with of_platform_populate() call, executed
->> > at some level of initcalls, either by generic architecture
->> > or by platform-specific code.
->> >
->> > There are situations though where certain devices must be
->> > created (and bound with drivers) before all the others.
->> > This presents a challenge, as devices created explicitly
->> > would be created again by of_platform_populate().
->> >
->> > This patch tries to solve that issue in a generic way,
->> > adding a "populated" flag for a DT node description.
->> > Once set, this device will never be created again via
->> > of_* API, so of_platform_populate() will skip such nodes
->> > (and its children) in a similar way to the non-available
->> > ones.
->> >
->> > Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->>
->> One pondering and one minor change below, otherwise:
->>
->> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->>
->> > ---
->> >
->> > Changes since v1:
->> >
->> > - added of_node_check_and_set_flag()... (atomic test and set)
->> > - ... used it to atomically mark a node...
->> > - ... clearing the bit on error path.
->> >
->> >  drivers/of/platform.c | 18 +++++++++++++-----
->> >  include/linux/of.h    |  7 +++++++
->> >  2 files changed, 20 insertions(+), 5 deletions(-)
->> >
->> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->> > index 404d1da..b33927a 100644
->> > --- a/drivers/of/platform.c
->> > +++ b/drivers/of/platform.c
->> > @@ -204,12 +204,13 @@ static struct platform_device *of_platform_device_create_pdata(
->> >  {
->> >         struct platform_device *dev;
->> >
->> > -       if (!of_device_is_available(np))
->> > +       if (!of_device_is_available(np) ||
->> > +                       of_node_check_and_set_flag(np, OF_POPULATED))
->> >                 return NULL;
->> >
->> >         dev = of_device_alloc(np, bus_id, parent);
->> >         if (!dev)
->> > -               return NULL;
->> > +               goto err_clear_flag;
->>
->> I wonder if leaving it set would be the right behavior. I can't see
->> that we would want to process the node again. But this is the
->> exceptional case, so its probably not too important and can stay like
->> this.
->
-> That doesn't work in the case where drivers use of_platform_populate().
-> MFD devices in particular make use of it. If the driver does not get
-> cleared on removal of the devices, then all MFD users will be broken on
-> driver unbind/rebind. *
->
-> We really need to have the inverse of of_platform_populate which will
-> remove all child and child's child devices and clear all flags and such.
-> Right now moany drivers are open-coding the removal.
->
-> * most drivers are somewhat broken on unbind/rebind anyway, but I don't
->   want to make it impossible for a driver to get it right.
+This is where we describe the different new and generic options used by
+the ST BCH driver.
 
-The function shouldn't be too difficult. I would expect it to look
-something like this. You'll need to check the details.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lee Jones <lee.jones@linaro.org>
+---
+ Documentation/devicetree/bindings/mtd/stm-nand.txt | 123 +++++++++++++++++++++
+ 1 file changed, 123 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mtd/stm-nand.txt
 
-static int __of_platform_unpopulate_device(struct device *dev, void *c)
-{
-    if (!dev->of_node || !of_node_get_flag(dev->of_node, OF_POPULATED)
-        return 0;
+diff --git a/Documentation/devicetree/bindings/mtd/stm-nand.txt b/Documentation/devicetree/bindings/mtd/stm-nand.txt
+new file mode 100644
+index 0000000..9f9325f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mtd/stm-nand.txt
+@@ -0,0 +1,123 @@
++STM BCH NAND Support
++--------------------
++
++Required properties:
++
++- compatible		: Should be "st,nand-bch"
++- reg			: Should contain register's location and length
++- reg-names		: "nand_mem" - NAND Controller register map
++			  "nand_dma" - BCH Controller DMA configuration map
++- interrupts		: Interrupt number
++- interrupt-names	: "nand_irq" - NAND Controller IRQ
++- st,nand-banks		: Subnode representing one or more "banks" of NAND
++                          Flash, connected to an STM NAND Controller (see
++                          description below).
++- nand-ecc-strength	: Generic NAND property (See mtd/nand.txt)
++- st,bch-bitflip-threshold
++			: The threshold at which the number of corrected bit-
++			  flips per sector is deemed to have reached an
++			  excessive level (triggers '-EUCLEAN' to be returned
++			  to the caller).  The value should be in the range 1
++			  to <ecc-strength> where <ecc-strength> is 18 or 30,
++			  depending on the BCH ECC mode in operation.  A value
++			  of 0, or if left unspecified, is interpreted by the
++			  driver as <ecc-strength>.
++
++Properties describing Bank of NAND Flash ("st,nand-banks"):
++
++- st,nand-csn		: Chip select associated with the Bank.
++- st,nand-timing-spec	: [Optional] NAND Device Timing Data.  All times
++                          expressed in ns, except where stated otherwise:
++
++                            tR           : Max Page Read delay [us]
++                            tCLS         : Min CLE setup time
++                            tCS          : Min CE setup time
++                            tALS         : Min ALE setup time
++                            tDS          : Min Data setup time
++                            tWP          : Min WE pulse width
++                            tCLH         : Min CLE hold time
++                            tCH          : Min CE hold time
++                            tALH         : Min ALE hold time
++                            tDH          : Min Data hold time
++                            tWB          : Max WE high to busy
++                            tWH          : Min WE hold time
++                            tWC          : Min Write cycle time
++                            tRP          : Min RE pulse width
++                            tREH         : Min RE high hold time
++                            tRC          : Min Read cycle time
++                            tREA         : Max Read access time
++                            tRHOH        : Min RE high to output hold
++                            tCEA         : Max CE access time
++                            tCOH         : Min CE high to output hold
++                            tCHZ         : Max CE high to output high Z
++                            tCSD         : Min CE high to ALE/CLE don't care
++
++- st,nand-timing-relax	: [Optional] Number of IP clock cycles by which to
++			  "relax" timing configuration.  Required on some boards
++			  to accommodate board-level limitations. Applies to
++			  'st,nand-timing-spec' and ONFI timing mode
++			  configuration.
++
++- nand-on-flash-bbt	: Generic NAND property (See mtd/nand.txt)
++
++- partitions		: [Optional] Subnode describing MTD partition map
++                          (see mtd/partition.txt)
++
++Note, during initialisation, the NAND Controller timing registers are configured
++according to one of the following methods, in order of precedence:
++
++           1. Configuration based on "st,nand_timing_spec" if supplied.
++
++           2. Configuration based on ONFI timing mode, as advertised by the
++              device during ONFI-probing (ONFI-compliant NAND only).
++
++           3. Use reset/safe timing values
++
++Example:
++
++	nandbch: nand-bch {
++	        compatible = "st,nand-bch";
++	        reg = <0xfe901000 0x1000>, <0xfef00800 0x0800>;
++	        reg-names = "nand_mem", "nand_dma";
++	        interrupts = <0 139 0x0>;
++	        interrupt-names = "nand_irq";
++		nand-ecc-strength = <30>;
++	        st,nand-banks = <&nand_banks>;
++
++	        status = "okay";
++	};
++
++	nand_banks: nand-banks {
++		bank0 {
++			/* NAND_BBT_USE_FLASH */
++			nand-on-flash-bbt;
++			st,nand-csn		= <0>;
++			st,nand-timing-data	= <&nand_timing0>;
++
++			partitions {
++				#address-cells = <1>;
++				#size-cells = <1>;
++
++				partition@0{
++					label = "NAND Flash 1";
++					reg = <0x00000000 0x00800000>;
++				};
++				partition@800000{
++					label = "NAND Flash 2";
++					reg = <0x00800000 0x0F800000>;
++				};
++			};
++		};
++	};
++
++	nand_timing0: nand-timing {
++		sig-setup	= <10>;
++		sig-hold	= <10>;
++		CE-deassert	= <0>;
++		WE-to-RBn	= <100>;
++		wr-on		= <10>;
++		wr-off		= <30>;
++		rd-on		= <10>;
++		rd-off		= <30>;
++		chip-delay	= <30>;		/* delay in us */
++	};
+-- 
+1.8.3.2
 
-    // recursively remove the children too --- I'd like to find a way
-to do this non-recursively
-    device_for_each_child(dev, NULL, __of_platform_unpopulate_device);
 
-    // Need to check if the device should be explicitly unbound from
-it's driver before removing it. However, I think the driver core takes
-care of this for us.
-
-    // Remove based on the bus type
-    switch (dev->bus) {
-        case &platform_bus_type:
-            platform_device_remove(to_platform_device(dev));
-            break;
-        case &amba_bus_type:
-            amba_device_remove(to_platform_device(dev));
-            break;
-    }
-
-    // Should check here if there are any other children to the
-device. It is probably bad to remove a device that still has children.
-Need to check what the driver core will do.
-}
-
-void of_platform_unpopulate(struct device *parent)
-{
-    device_for_each_child(parent, NULL, __of_platform_unpopulate_device);
-}
-
->
->>
->> >
->> >  #if defined(CONFIG_MICROBLAZE)
->> >         dev->archdata.dma_mask = 0xffffffffUL;
->> > @@ -227,10 +228,14 @@ static struct platform_device *of_platform_device_create_pdata(
->> >
->> >         if (of_device_add(dev) != 0) {
->> >                 platform_device_put(dev);
->> > -               return NULL;
->> > +               goto err_clear_flag;
->> >         }
->> >
->> >         return dev;
->> > +
->> > +err_clear_flag:
->> > +       of_node_clear_flag(np, OF_POPULATED);
->> > +       return NULL;
->> >  }
->> >
->> >  /**
->> > @@ -262,14 +267,15 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->> >
->> >         pr_debug("Creating amba device %s\n", node->full_name);
->> >
->> > -       if (!of_device_is_available(node))
->> > +       if (!of_device_is_available(node) ||
->> > +                       of_node_check_and_set_flag(node, OF_POPULATED))
->> >                 return NULL;
->> >
->> >         dev = amba_device_alloc(NULL, 0, 0);
->> >         if (!dev) {
->> >                 pr_err("%s(): amba_device_alloc() failed for %s\n",
->> >                        __func__, node->full_name);
->> > -               return NULL;
->> > +               goto err_clear_flag;
->> >         }
->> >
->> >         /* setup generic device info */
->> > @@ -309,6 +315,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
->> >
->> >  err_free:
->> >         amba_device_put(dev);
->> > +err_clear_flag:
->> > +       of_node_clear_flag(node, OF_POPULATED);
->> >         return NULL;
->> >  }
->> >  #else /* CONFIG_ARM_AMBA */
->> > diff --git a/include/linux/of.h b/include/linux/of.h
->> > index 3bad8d1..534cab8 100644
->> > --- a/include/linux/of.h
->> > +++ b/include/linux/of.h
->> > @@ -130,6 +130,12 @@ static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
->> >         return test_bit(flag, &n->_flags);
->> >  }
->> >
->> > +static inline int of_node_check_and_set_flag(struct device_node *n,
->>
->> Please keep the well known naming convention of the called function:
->> of_node_test_and_set_flag
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
