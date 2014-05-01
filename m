@@ -1,38 +1,62 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] mtd: nand: add randomizer support
-Date: Thu, 1 May 2014 10:34:07 -0600
-Message-ID: <20140501163407.GB3296@obsidianresearch.com>
-References: <1398906592-24677-1-git-send-email-b.brezillon.dev@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add sound card driver for Snow board
+Date: Thu, 1 May 2014 09:40:03 -0700
+Message-ID: <20140501164003.GC3245@sirena.org.uk>
+References: <1398243705-31151-1-git-send-email-tushar.behera@linaro.org>
+ <20140424133920.GA12304@sirena.org.uk>
+ <5359E18B.60600@linaro.org>
+ <20140429222915.GU15125@sirena.org.uk>
+ <5360E5E7.8090807@linaro.org>
+ <20140430180314.GA3245@sirena.org.uk>
+ <53623004.5010805@linaro.org>
+ <20140501141510.GW3245@sirena.org.uk>
+ <CAD=FV=Wa4CovkxBng0SkUUAryiFqa=m63tro1Yv1jRgp4e95aw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mZSo2Zk6iB5ZAp9g"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398906592-24677-1-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <CAD=FV=Wa4CovkxBng0SkUUAryiFqa=m63tro1Yv1jRgp4e95aw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Tushar Behera <tushar.behera@linaro.org>, alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, sbkim73@samsung.com, Randy Dunlap <rdunlap@infradead.org>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 01, 2014 at 03:09:49AM +0200, Boris BREZILLON wrote:
-> Hello,
-> 
-> This series is a proposal to add support for randomizers (either software
-> or hardware) to NAND flash controller drivers.
 
-FWIW, I think the term for reversibly combining a PRBS with data is
-'scrambling', it is often used in communication systems for similar
-reasons - probabilisticly increasing transition density.
+--mZSo2Zk6iB5ZAp9g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-randomizing is something else entirely :)
+On Thu, May 01, 2014 at 08:54:14AM -0700, Doug Anderson wrote:
 
-BTW, there are security concerns here. The scrambler PRBS must not be
-predictable by the user, otherwise they can write data that undoes the
-scramble and defeat it, ie deliberately writing the last 2k of a 4k
-write block as all 0's after scrambling could cause the first 2k to be
-lost. That feels like something that could be scary ..
+> This is exactly the thing (expected clock parenting) we agreed could
+> be put in the device tree I think.  ...but I don't know that anyone
+> proposed exactly how that would work.
 
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+There's patches been posted by (IIRC) Sylvester Nawrocki for this which
+I think Mike was basically happy with - I don't immediately see them in
+-next though, but I may be looking in the wrong place.
+
+--mZSo2Zk6iB5ZAp9g
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTYnjgAAoJELSic+t+oim9lBIQAJQUra6tu0BGp+zrd8wIkiY7
+0JgXRUwJq0QOrRupH/K4PxH/RULBBklp4gWH4oLQoawfXVbSExKSWgQLNV0/HY7C
+p0oVpo18BswlaoubtacrBBaVbckxw8mz7QDIpZQWbfp+FjItbjL20yW882+IsrwR
+jll0rO6o8JtJExJqJF6Gi+VjNaXJ9qDOIDxdaS8U4BPcHW5lSCsG4HclY9JcBBLB
+L1pIdZYzZhKEaXUnu2Y0f2fvOOrODXGUBlYxbOG34w3X5oQ2MqfirU5rtymRGAe6
+e/Kyp2IE39myv/z9T8XhR/mJtl+L+MKL36NFb42N8/z2cTGIePYM7ZwVgLjq9s92
+Uz6CsAm3Xb93QsRBRnRDTtuVCxySHpXfL9fTTLllx2YUfgyRTcbL+WrSm8LO7y6D
+JGQ1Rz4nRP3tH5grdGjWvsXTsZMXkPJJcfoAYhz5y4/iA0g8uaUTovd24Zf/u4aW
+NFa5EgrvSnWbPBzdBwGzNVSBjoC/evWwkWZCNiHty9MdixQjzGbw1Di+UGTDzthQ
+AlrSGXONcpAYPl4FhFs6kACvcT3/b2VBgH+tp7joJEOWq4ljPixdeeDfSNWsL095
+Hu/1q0M37an/yWuhBgApiq8GG+24+WH4BKbbxSExLkCKWMYbSe6uB/JCs43rpJyb
+nXdVVK770BWoTnap9xRy
+=w8r/
+-----END PGP SIGNATURE-----
+
+--mZSo2Zk6iB5ZAp9g--
