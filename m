@@ -1,36 +1,90 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 4/5] regulator: tps65090: Allow setting the overcurrent
- wait time
-Date: Thu, 1 May 2014 11:52:28 -0700
-Message-ID: <CAD=FV=W3qxMqM+cu-gEKkL4kNB-Jvo6-0tdt=L2madA8RLbfkw@mail.gmail.com>
-References: <1397689950-1568-1-git-send-email-dianders@chromium.org>
-	<1397689950-1568-5-git-send-email-dianders@chromium.org>
-	<20140423115102.GO21613@lee--X1>
-	<CAD=FV=WN4hVibiK_8+mpNfO7UQnd35ZT9EXA9fuw-mnBzzb1cA@mail.gmail.com>
-	<CAOesGMiMiqk1mKcVF8SwePhUS-8cAmM3Ut3f+qRvjz27iw7CTA@mail.gmail.com>
-	<20140501184941.GV3245@sirena.org.uk>
+From: "Karicheri, Muralidharan" <m-karicheri2@ti.com>
+Subject: RE: [PATCH v1] serial: uart: add hw flow control support
+ configuration
+Date: Thu, 1 May 2014 18:57:18 +0000
+Message-ID: <3E54258959B69E4282D79E01AB1F32B70472A714@DFLE11.ent.ti.com>
+References: <1398792122-18592-1-git-send-email-m-karicheri2@ti.com>
+ <20140429222756.GA2382@flaeskesteg>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140501184941.GV3245@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, Anton Vorontsov <anton@enomsg.org>, Sachin Kamat <sachin.kamat@linaro.org>, AJAY KUMAR RAMAKRISHNA SHYMALAMMA <ajaykumar.rs@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, Sean Paul <seanpaul@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Liam Girdwood <lgirdwood@gmail.com>, Samuel Ortiz <sameo@linux.intel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140429222756.GA2382@flaeskesteg>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
-
-On Thu, May 1, 2014 at 11:49 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Thu, May 01, 2014 at 11:17:58AM -0700, Olof Johansson wrote:
+>-----Original Message-----
+>From: Mark Rutland [mailto:mark.rutland@arm.com]
+>Sent: Tuesday, April 29, 2014 6:28 PM
+>To: Karicheri, Muralidharan
+>Cc: linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org; linux-serial@vger.kernel.org;
+>devicetree@vger.kernel.org; Rob Herring; Ian Campbell; Kumar Gala; Randy Dunlap; Greg
+>Kroah-Hartman; Jiri Slaby; Shilimkar, Santosh
+>Subject: Re: [PATCH v1] serial: uart: add hw flow control support configuration
 >
->> so it looks like tps_pdata is NULL. Should likely be a check for it?
+>Hi,
 >
-> Yes, just about to post a fix.
+>On Tue, Apr 29, 2014 at 06:22:02PM +0100, Murali Karicheri wrote:
+>> 8250 uart driver currently supports only software assisted hw flow
+>> control. The software assisted hw flow control maintains a hw_stopped
+>> flag in the tty structure to stop and start transmission and use modem
+>> status interrupt for the event to drive the handshake signals. This is
+>> not needed if hw has flow control capabilities. This patch adds a DT
+>> attribute for enabling hw flow control for a uart port. Also skip stop
+>> and start if this flag is present in flag field of the port structure.
+>>
+>> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> CC: Pawel Moll <pawel.moll@arm.com>
+>> CC: Mark Rutland <mark.rutland@arm.com>
+>> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> CC: Kumar Gala <galak@codeaurora.org>
+>> CC: Randy Dunlap <rdunlap@infradead.org>
+>> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> CC: Jiri Slaby <jslaby@suse.cz>
+>> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> ---
+>>  - Fixed brackets around port->flags & UPF_HARD_FLOW as per comments
+>>  .../devicetree/bindings/serial/of-serial.txt       |    2 ++
+>>  drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+>>  drivers/tty/serial/of_serial.c                     |    4 ++++
+>>  drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+>>  4 files changed, 19 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt
+>> b/Documentation/devicetree/bindings/serial/of-serial.txt
+>> index 1928a3e..123de01 100644
+>> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
+>> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+>> @@ -37,6 +37,8 @@ Optional properties:
+>>  - auto-flow-control: one way to enable automatic flow control support. The
+>>    driver is allowed to detect support for the capability even without this
+>>    property.
+>> +- hw-flow-control: this enables pure hw flow control and no software
+>> +  intervention needed.
+>
+>From the wording of the commit message, I believe this would be better worded
+>something like:
+>
+>- hw-flow-control: the hardware has flow control capability.
+>
+>While the OS needs to know that flow control is present if it wishes to make use of it,
+>whether or not the OS does so is not a matter for the binding.
+>
+>It might also be better worded as "has-hw-flow-control", which would make that
+>distinction clearer.
+>
+>Otherwise this looks fine to me.
 
-Doh, was working on it at the same time.
+Fine. Will re-send with rewording as
 
-https://patchwork.kernel.org/patch/4099981/
+has-hw-flow-control: the hardware has flow control capability.
 
-Sorry for the bug.  :(  Thanks for the report!
-
--Doug
+Murali
+>
+>Thanks,
+>Mark.
