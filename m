@@ -1,88 +1,82 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
-Date: Thu, 1 May 2014 08:42:53 +0100
-Message-ID: <20140501074253.GA32761@lee--X1>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
- <20140429222522.GS15125@sirena.org.uk>
- <20140430140849.GR29462@lee--X1>
- <1398867073.695596467@f224.i.mail.ru>
- <20140430141708.GS29462@lee--X1>
- <20140430180653.GB3245@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140430180653.GB3245-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH/RFC 3/4] of/clk: Register clocks suitable for Runtime PM
+ with the PM core
+Date: Thu, 01 May 2014 09:03:31 +0100
+Message-ID: <20140501080331.D3CFAC409DA@trevor.secretlab.ca>
+References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+	<1398334403-26181-4-git-send-email-geert+renesas@glider.be>
+	<7hoazpdldx.fsf@paris.lan>
+	<20140429131610.29859C4094A@trevor.secretlab.ca>
+	<CAMuHMdUdnoah1uZbMn_xONXZ2i8wG5kY7msMzCdBwS+xt9tmDA@mail.gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUdnoah1uZbMn_xONXZ2i8wG5kY7msMzCdBwS+xt9tmDA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kevin Hilman <khilman@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux-sh list <linux-sh@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Apr 2014, Mark Brown wrote:
+On Wed, 30 Apr 2014 23:54:37 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Grant,
+> 
+> On Tue, Apr 29, 2014 at 3:16 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> > On Fri, 25 Apr 2014 16:44:58 -0700, Kevin Hilman <khilman@linaro.org> wrote:
+> >> Geert Uytterhoeven <geert+renesas@glider.be> writes:
+> >>
+> >> > When adding a device from DT, check if its clocks are suitable for Runtime
+> >> > PM, and register them with the PM core.
+> >> > If Runtime PM is disabled, just enable the clock.
+> >> >
+> >> > This allows the PM core to automatically manage gate clocks of devices for
+> >> > Runtime PM.
+> >>
+> >> ...unless the device is already in an existing pm_domain, right?
+> >>
+> >> I like this approach, and it extends nicely what we already do on
+> >> platforms using drivers/base/power/clock_ops.c into DT land.
+> >>
+> >> My only concern is how this will interact if it's used along with
+> >> devices that have existing pm_domains.  I don't have any specific
+> >> concerns (yet, because it's Friday, and my brain is turing off), but it
+> >> just made me wonder if this will be potentially confusing.
+> >
+> > I have big concerns about this approach. First, it will only work if
+> > a clock is available at deivce creation time. The conversion of irq
+> > controllers to normal device drivers has already shown that is a bad
+> > idea.
+> 
+> That's  indeed a valid concern that needs to be addressed.
+> 
+> > I also don't like that it tries to set up every clock, but there is no
+> > guarantee that the driver will even use it. I would rather see this
+> > behaviour linked into the function that obtains the clock at driver
+> > .probe() time. That way it can handle deferred probe correctly and it
+> > only sets up clocks that are actually used by the driver.
+> 
+> Not every clock. Only the clocks that are advertised by the clock driver as
+> being suitable for runtime_pm management. These are typically module
+> clocks, that must be enabled for the module to work. The driver doesn't
+> always want to handle these explicitly.
 
-> On Wed, Apr 30, 2014 at 03:17:08PM +0100, Lee Jones wrote:
->=20
-> > Neither Mark, nor I can apply this patch independently, we need to
-> > create a shared branch somewhere, or we'll risk conflicts at merge
-> > time.
->=20
-> You acked it without saying you didn't want me to apply it...  usuall=
-y
-> that means someone is OK with things getting applied.
+Help me out here becasue I don't understand how that works with this
+patch set. From my, admittedly naive, reading it looks like the setup is
+being done at device creation time, but if the driver (or module) gets
+to declare which clocks need to be enabled in order to work, then that
+information is not available at device creation time.
 
-Actually, that's not true:
+> In fact we have one case on shmobile where the module clock for an IP
+> core (rcar-gpio) is enabled unconditionally in one SoC,  while it became
+> controllable through a gate clock in a later SoC.
+> With my patch, just adding the clock to the DT node is sufficient to make
+> it work.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-MFD changes look sensible:
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-I'm happy to create a shared branch if required.   <-----###
-
-> In any case, as
-> ever it's on a branch by itself so you can pull it in easily.  I just
-> tagged it.
-
-Very well, thanks.
-
-> The following changes since commit c9eaa447e77efe77b7fa4c953bd62de829=
-7fd6c5:
->=20
->   Linux 3.15-rc1 (2014-04-13 14:18:35 -0700)
->=20
-> are available in the git repository at:
->=20
->   git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git tag=
-s/mc13783-asoc
->=20
-> for you to fetch changes up to 780aaeff96819ca58e0cad830bfbe6eee9aef8=
-2c:
->=20
->   ASoC: mc13783: Add devicetree support (2014-04-29 15:24:54 -0700)
->=20
-> ----------------------------------------------------------------
-> ASoC: mc13783 DT support
->=20
-> Tagged since it updates the MFD as well.
->=20
-> ----------------------------------------------------------------
-> Alexander Shiyan (1):
->       ASoC: mc13783: Add devicetree support
->=20
->  Documentation/devicetree/bindings/mfd/mc13xxx.txt |  3 +++
->  drivers/mfd/mc13xxx-core.c                        | 10 +++++++---
->  sound/soc/codecs/mc13783.c                        | 14 +++++++++++++=
--
->  3 files changed, 23 insertions(+), 4 deletions(-)
-
-
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
