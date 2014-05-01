@@ -1,128 +1,113 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Thu, 01 May 2014 14:12:10 +0100
-Message-ID: <20140501131210.CCC13C409DA@trevor.secretlab.ca>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
-	<1398353407-2345-5-git-send-email-santosh.shilimkar@ti.com>
-	<20140429144147.004EEC40992@trevor.secretlab.ca> <53610663.7070305@ti.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] of: mtd: add NAND randomizer mode retrieval
+Date: Thu, 01 May 2014 14:16:05 +0100
+Message-ID: <20140501131605.9CB7CC409DA@trevor.secretlab.ca>
+References: <1398906592-24677-1-git-send-email-b.brezillon.dev@gmail.com>
+	<1398906592-24677-3-git-send-email-b.brezillon.dev@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53610663.7070305-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1398906592-24677-3-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+To: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 30 Apr 2014 10:19:15 -0400, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> Hi Grant,
-> 
-> On Tuesday 29 April 2014 10:41 AM, Grant Likely wrote:
-> > On Thu, 24 Apr 2014 11:30:04 -0400, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> >> Retrieve DMA configuration from DT and setup platform device's DMA
-> >> parameters. The DMA configuration in DT has to be specified using
-> >> "dma-ranges" and "dma-coherent" properties if supported.
-> >>
-> >> We setup dma_pfn_offset using "dma-ranges" and dma_coherent_ops
-> >> using "dma-coherent" device tree properties.
-> >>
-> >> The set_arch_dma_coherent_ops macro has to be defined by arch if
-> >> it supports coherent dma_ops. Otherwise, set_arch_dma_coherent_ops() is
-> >> declared as nop.
-> >>
-> >> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> >> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> >> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> >> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> >> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> >> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> >> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >>  drivers/of/platform.c       |   48 ++++++++++++++++++++++++++++++++++++++++---
-> >>  include/linux/dma-mapping.h |    7 +++++++
-> >>  2 files changed, 52 insertions(+), 3 deletions(-)
-> >>
-> >> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> >> index 48de98f..270c0b9 100644
-> >> --- a/drivers/of/platform.c
-> >> +++ b/drivers/of/platform.c
-> >> @@ -187,6 +187,50 @@ struct platform_device *of_device_alloc(struct device_node *np,
-> >>  EXPORT_SYMBOL(of_device_alloc);
-> >>  
-> >>  /**
-> >> + * of_dma_configure - Setup DMA configuration
-> >> + * @dev:	Device to apply DMA configuration
-> >> + *
-> >> + * Try to get devices's DMA configuration from DT and update it
-> >> + * accordingly.
-> >> + *
-> >> + * In case if platform code need to use own special DMA configuration,it
-> >> + * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
-> >> + * to fix up DMA configuration.
-> >> + */
-> >> +static void of_dma_configure(struct device *dev)
-> >> +{
-> >> +	u64 dma_addr, paddr, size;
-> >> +	int ret;
-> >> +
-> >> +	dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> >> +	if (!dev->dma_mask)
-> >> +		dev->dma_mask = &dev->coherent_dma_mask;
-> >> +
-> >> +	/*
-> >> +	 * if dma-coherent property exist, call arch hook to setup
-> >> +	 * dma coherent operations.
-> >> +	 */
-> >> +	if (of_dma_is_coherent(dev->of_node)) {
-> >> +		set_arch_dma_coherent_ops(dev);
-> >> +		dev_dbg(dev, "device is dma coherent\n");
-> >> +	}
-> >> +
-> >> +	/*
-> >> +	 * if dma-ranges property doesn't exist - just return else
-> >> +	 * setup the dma offset
-> >> +	 */
-> >> +	ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> >> +	if ((ret == -ENODEV) || (ret < 0)) {
-> >> +		dev_dbg(dev, "no dma range information to setup\n");
-> >> +		return;
-> >> +	}
-> >> +
-> >> +	/* DMA ranges found. Calculate and set dma_pfn_offset */
-> >> +	dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-> >> +	dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
-> > 
-> > I've got two concerns here. of_dma_get_range() retrieves only the first
-> > tuple from the dma-ranges property, but it is perfectly valid for
-> > dma-ranges to contain multiple tuples. How should we handle it if a
-> > device has multiple ranges it can DMA from?
-> > 
-> 
-> We've not found any cases in current Linux where more than one dma-ranges
-> would be used. Moreover, The MM (definitely for ARM) isn't supported such
-> cases at all (if i understand everything right).
-> - there are only one arm_dma_pfn_limit
-> - there is only one MM zone is used for ARM
-> - some arches like x86,mips can support 2 zones (per arch - not per device or bus)
->   DMA & DMA32, but they configured once and forever per arch.
+On Thu,  1 May 2014 03:09:51 +0200, Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
 
-Okay. If anyone ever does implement multiple ranges then this code will
-need to be revisited.
+No commit message? Immediate NAK. Please, make sure you write a
+description for each and every patch. This is not optional. Future
+readers want to know what this patch solves and any other information
+you can provide without having to read the diff.
 
-> > Second, while the pfn offset is being determined, I don't see anything
-> > making use of either the base address or size. How is the device
-> > constrained to only getting DMA buffers from within that range? Is the
-> > driver expected to manage that directly?
-> > 
-> Drivers don't have to do anything special apart from setting
-> the correct mask. The pfn_offset case, we use DMA_ZONE which takes
-> care of masks already. Size is suppose to be used for dma_mask
-> setup which we discussed in previous threads.
+>  drivers/of/of_mtd.c    | 35 +++++++++++++++++++++++++++++++++++
+>  include/linux/of_mtd.h |  6 ++++++
 
-okay.
+Don't forget to update Documentation/devicetree/bindings/mtd/nand.txt
 
 g.
+
+>  2 files changed, 41 insertions(+)
+> 
+> diff --git a/drivers/of/of_mtd.c b/drivers/of/of_mtd.c
+> index a862c08..f941a5e 100644
+> --- a/drivers/of/of_mtd.c
+> +++ b/drivers/of/of_mtd.c
+> @@ -84,6 +84,41 @@ int of_get_nand_ecc_strength(struct device_node *np)
+>  EXPORT_SYMBOL_GPL(of_get_nand_ecc_strength);
+>  
+>  /**
+> + * It maps 'enum nand_rnd_modes_t' found in include/linux/mtd/nand.h
+> + * into the device tree binding of 'nand-rnd', so that MTD
+> + * device driver can get nand rnd from device tree.
+> + */
+> +static const char * const nand_rnd_modes[] = {
+> +	[NAND_RND_NONE]		= "none",
+> +	[NAND_RND_SOFT]		= "soft",
+> +	[NAND_RND_HW]		= "hw",
+> +};
+> +
+> +/**
+> + * of_get_nand_rnd_mode - Get nand randomizer mode for given device_node
+> + * @np:	Pointer to the given device_node
+> + *
+> + * The function gets randomizer mode string from property 'nand-rnd-mode',
+> + * and return its index in nand_rnd_modes table, or errno in error case.
+> + */
+> +int of_get_nand_rnd_mode(struct device_node *np)
+> +{
+> +	const char *pm;
+> +	int err, i;
+> +
+> +	err = of_property_read_string(np, "nand-rnd-mode", &pm);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(nand_rnd_modes); i++)
+> +		if (!strcasecmp(pm, nand_rnd_modes[i]))
+> +			return i;
+> +
+> +	return -ENODEV;
+> +}
+> +EXPORT_SYMBOL_GPL(of_get_nand_rnd_mode);
+> +
+> +/**
+>   * of_get_nand_bus_width - Get nand bus witdh for given device_node
+>   * @np:	Pointer to the given device_node
+>   *
+> diff --git a/include/linux/of_mtd.h b/include/linux/of_mtd.h
+> index d0145fb..2f43362 100644
+> --- a/include/linux/of_mtd.h
+> +++ b/include/linux/of_mtd.h
+> @@ -15,6 +15,7 @@
+>  int of_get_nand_ecc_mode(struct device_node *np);
+>  int of_get_nand_ecc_step_size(struct device_node *np);
+>  int of_get_nand_ecc_strength(struct device_node *np);
+> +int of_get_nand_rnd_mode(struct device_node *np);
+>  int of_get_nand_bus_width(struct device_node *np);
+>  bool of_get_nand_on_flash_bbt(struct device_node *np);
+>  int of_get_nand_onfi_timing_mode(struct device_node *np);
+> @@ -36,6 +37,11 @@ static inline int of_get_nand_ecc_strength(struct device_node *np)
+>  	return -ENOSYS;
+>  }
+>  
+> +static inline int of_get_nand_rnd_mode(struct device_node *np)
+> +{
+> +	return -ENOSYS;
+> +}
+> +
+>  static inline int of_get_nand_bus_width(struct device_node *np)
+>  {
+>  	return -ENOSYS;
+> -- 
+> 1.8.3.2
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
