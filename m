@@ -1,121 +1,93 @@
-From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
-	Exynos System MMU
-Date: Thu, 01 May 2014 23:02:14 +0900
-Message-ID: <20140501230214.ed53cd0fc977225f37b14e29@samsung.com>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<20140429181601.GE3582@e103592.cambridge.arm.com>
-	<CANEJEGs6TXNzE8cWYgEKfFSsD2w5XiYvwSbhQ_+gtfzfs+6udA@mail.gmail.com>
-	<7044616.kdaKNu3Qet@wuerfel>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and
+ dma-coherent
+Date: Thu, 1 May 2014 10:06:58 -0400
+Message-ID: <53625502.1040808@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <536249D6.3020008@ti.com> <20140501132516.GG26756@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <7044616.kdaKNu3Qet@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org" <a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, rahul.
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140501132516.GG26756-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Apr 2014 23:00:29 +0200, Arnd Bergmann wrote:
-> On Tuesday 29 April 2014 13:07:54 Grant Grundler wrote:
-> > On Tue, Apr 29, 2014 at 11:16 AM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
-> > ...
-> > > An IOMMU is really a specialised bridge
-> > 
-> > Is a GART a bridge?
-> > 
-> > IOMMUs can provide three basic functions:
-> > 1) remap address space to reach phys mem ranges that the device is
-> > otherwise not capable of accessing (classic 32-bit DMA to reach 64-bit
-> > Phys address)
-> > 
-> > 2) implement scatter-gather (page level granularity) so the device
-> > doesn't have to
-> > 
-> > 3) provide some level of system protection against "rogue" DMA by
-> > forcing everything through a DMA mapping interface and faulting when
-> > encountering unmapped DMA transactions.
+On Thursday 01 May 2014 09:25 AM, Russell King - ARM Linux wrote:
+> On Thu, May 01, 2014 at 09:19:18AM -0400, Santosh Shilimkar wrote:
+>> Rob, Russell,
+>>
+>> On Thursday 24 April 2014 11:30 AM, Santosh Shilimkar wrote:
+>>> Here is an updated v3 of the series. Series introduces support for setting up
+>>> dma parameters based on device tree properties like 'dma-ranges' and
+>>> 'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
+>>> series can be found here [3], [2] and [1].
+>>>
+>>> The 'dma-ranges' helps to take care of few DMAable system memory restrictions
+>>> by use of dma_pfn_offset which we maintain now per device. Arch code then
+>>> uses it for dma address translations for such cases. We update the
+>>> dma_pfn_offset accordingly during DT the device creation process.The
+>>> 'dma-coherent' property is used to setup arch's coherent dma_ops.
+>>>
+>>> Hopefully with acks, tested-by this version can get into 3.16 queue. I will
+>>> post a followup series for Keystone SOC which will use this infrastructure.
+>>> Linus W also wants to use this for ARM integrator platform dma offset issue.
+>>>
+>>> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>>> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+>>> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>>>
+>>> Grygorii Strashko (2):
+>>>   of: introduce of_dma_get_range() helper
+>>>   ARM: dma: Use dma_pfn_offset for dma address translation
+>>>
+>>> Santosh Shilimkar (5):
+>>>   device: introduce per device dma_pfn_offset
+>>>   of: introduce of_dma_is_coherent() helper
+>>>   of: configure the platform device dma parameters
+>>>   ARM: dma: implement set_arch_dma_coherent_ops()
+>>>   ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
+>>>
+>>>  arch/arm/include/asm/dma-mapping.h |   28 ++++++++++--
+>>>  arch/arm/mm/dma-mapping.c          |    4 +-
+>>>  drivers/of/address.c               |   87 ++++++++++++++++++++++++++++++++++++
+>>>  drivers/of/platform.c              |   71 +++++++++++++++++++++++++++--
+>>>  include/linux/device.h             |    2 +
+>>>  include/linux/dma-mapping.h        |    7 +++
+>>>  include/linux/of_address.h         |    8 ++++
+>>>  include/linux/of_platform.h        |    6 +++
+>>>  8 files changed, 204 insertions(+), 9 deletions(-)
+>>>
+>> How do we go about merging this series ? There is a dependency
+>> between the patches and hence the question.
 > 
-> [ 4) provide isolation between multiple contexts, typically for purposes
->      of virtualization]
+> I don't know anymore.  People today want to assert exclusive rights over
+> parts of the kernel tree, which makes this kind of cross-patching rather
+> impossible.
 > 
-> > I summarize IOMMUs as: "participate in the routing of MMIO
-> > transactions in the system fabric."
-> > In this sense, IOMMUs are sort of a bridge. Defining what kind of
-> > routing they can do (coalesce transactions? remapping MMIO domains?)
-> > and which address ranges they route would describe most of that
-> > functionality.
-> > 
-> > This "remapping" of MMIO transaction is also usually asymmetric.
-> > Meaning routing of "downstream" transactions *might* be completely
-> > different than the routing + remapping of transactions heading
-> > upstream. DMA mappings services are designed to handle only the
-> > transactions generated (aka "mastered") by a downstream device.
+> The only workable solution I can see is the long winded way to split the
+> series up, merge the first set of dependencies in one merge window, and
+> hold the rest back for the following merge window.  Not ideal, but it
+> stops the arguments.
 > 
-> For the purposes of the DT binding, we have a 'ranges' property
-> that defines the downstream translation (CPU-to-MMIO) and a
-> 'dma-ranges' property for the opposite address translation
-> (device-to-memory).
-> 
-> > >, so it may be cleaner to describe
-> > > an IOMMU using a real bus node in the DT, if we also define a way to make
-> > > master/slave linkages explicit where it matters.
-> > 
-> > "where it matters" is a bit vague.  Is the goal to just enable DMA
-> > mapping services to "do the right thing" for a device that can
-> > generate DMA?
-> 
-> Yes. It's very complicated unfortunately, because we have to be
-> able to deal with arbitrary combinations of a lot of oddball cases
-> that can show up in random SoCs:
-> 
-> - device can only do DMA to a limited address range
-> - DMA is noncoherent and needs manual cache management
-> - DMA address is at an offset from physical address
-> - some devices have an IOMMU
-> - some IOMMUs are shared between devices
-> - some devices with IOMMU can have multiple simultaneous contexts
-> - a device may access some memory directly and some other memory through IOMMU
-
-Do we need to consider this case?
-I don't think a device can have different contexts at the same time.
-If there such device is in a system, its driver must handle it correctly
-with different devices descriptors for the different contexts, for example.
-I mean, if a device has two DMA ports that are in different contexts,
-they can be treated as different devices which are handed by a driver.
-
-I worry that abstracting everything we can think may make the problem harder.
+I really hope we don't have to go this route. I think since the changes
+as such used for ARM arch for now, if we get this series via your tree
+or arm-soc which pulls your tree, things should work. I also have small
+series on the list on top of $subject series which enables coherency
+for Keystone.
 
 Regards,
+Santosh
 
-   KyongHo
 
-> - a device may have DMA access to a bus that is invisible to the CPU
-> - DMA on some device is only coherent if the IOMMU is enabled
-> - DMA on some device is only coherent if the IOMMU is disabled
-> - the IOVA range to an IOMMU is device dependent
-> 
-> > > I've been hacking around some proposals on these areas which are a bit
-> > > different from the approach suggested here -- I'll try to summarise some
-> > > of it intelligibly and post something tomorrow so that we can discuss.
-> > 
-> > Are you planning on consolidating Documentation/devicetree/bindings/iommu/ ?
-> > Do you care about Documentation/Intel-IOMMU.txt?
-> 
-> I think we can ignore the Intel-IOMMU because that is specialized on PCI
-> devices, which we don't normally represent in DT. It is also a special
-> case because the Intel IOMMU is a single-instance device. If it's present
-> and enabled, it will be used by every device. The case we do need to describe
-> is when we don't know which IOMMU is used for which master, or how to
-> configure it.
-> 
-> 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
