@@ -1,52 +1,36 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv4 0/4] Enable usbphy and hsotg for exynos4
-Date: Fri, 02 May 2014 20:21:02 +0200
-Message-ID: <5363E20E.9010802@gmail.com>
-References: <1399004769-31033-1-git-send-email-chanho61.park@samsung.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] arm: exynos: Add MCPM call-back functions
+Date: Fri, 2 May 2014 11:23:51 -0700
+Message-ID: <CAL1qeaHrP+i4EhOQKkSX7xFNyiyBiBfpsV3B0EHCFcrNzc6KLQ@mail.gmail.com>
+References: <1398528348-21214-6-git-send-email-a.kesavan@samsung.com>
+	<1399044359-15784-1-git-send-email-a.kesavan@samsung.com>
+	<alpine.LFD.2.11.1405021347500.980@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399004769-31033-1-git-send-email-chanho61.park@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanho Park <chanho61.park@samsung.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: devicetree@vger.kernel.org, t.figa@samsung.com, k.debski@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.11.1405021347500.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanho,
+>> +     /*
+>> +      * TODO: Turn off the clusters when all cores in the cluster
+>> +      * are down to achieve significant power savings.
+>> +      */
+>
+> This comment should actually be located right after the
+> "if (exynos_cluster_unused(cluster))" above.  That is where the cluster
+> control should be applied, assuming it'll be effective only when WFI is
+> executed.
 
-On 02.05.2014 06:26, Chanho Park wrote:
-> This patchset enables a exynos4 usbphy and hsotg DT node for exynos4. The usb
-> phy node uses generic exynos phy driver. The driver uses PMU syscon and SYSREG
-> syscon phandles.
->
-> Change from v3:
->   - Place a status field at the end of the nodes for readability
->
-> Change from v2:
->   - Split 4x12 compatibles to 4212 and 4412
->
-> Changes from v1: Applied Tomasz Figa's comments
->   - Document PMU syscon compatibles for exynos4210/4x12
->   - Use clock macro instead of raw clock number
->   - Correct phy name to "usb2-phy"
->
-> Chanho Park (4):
->    ARM: dts: exynos4: add PMU syscon node
->    ARM: dts: exynos4: add exynos_usbphy node
->    ARM: dts: exynos4: add hsotg device node
->    ARM: dts: exynos4412-trats2: enable usb nodes
->
->   .../devicetree/bindings/arm/samsung/pmu.txt        |  3 +++
->   arch/arm/boot/dts/exynos4.dtsi                     | 26 ++++++++++++++++++++++
->   arch/arm/boot/dts/exynos4412-trats2.dts            | 10 +++++++++
->   arch/arm/boot/dts/exynos4x12.dtsi                  |  9 ++++++++
->   4 files changed, 48 insertions(+)
->
+Correct me if I'm wrong Samsung folks, but I thought it was not
+possible to apply cluster power control from a CPU within the cluster
+being powered down, i.e. a CPU in the other cluster must be the one to
+apply the cluster power control to power down the outbound cluster.
 
-Looks good. Feel free to add
-
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-
-Best regards,
-Tomasz
+-Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
