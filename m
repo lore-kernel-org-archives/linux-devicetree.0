@@ -1,400 +1,272 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH RFC] pwm: omap: Add PWM driver for OMAP using dual-mode timers
-Date: Fri,  2 May 2014 15:50:38 +0200
-Message-ID: <1399038638-27036-1-git-send-email-manabian@gmail.com>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: joelf@ti.com, tony@atomide.com, thierry.reding@gmail.com
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Joachim Eastwood <manabian@gmail.com>, Grant Erickson <marathon96@gmail.com>, NeilBrown <neilb@suse.de>
+From: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: syscon or memory mappings (was: Re: [RFC/PATCH 0/8] pinctrl-rockchip: Change wrong initial assumptions)
+Date: Fri, 02 May 2014 15:59:05 +0200
+Message-ID: <1721270.d6hHid1rhj@typ>
+References: <1414506.B4e2jZujVm@diego> <699502106.fEF2JGVO0i@typ> <5737609.o5tyv6lkQG@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5737609.o5tyv6lkQG@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adds support for using a OMAP dual-mode timer with PWM capability
-as a Linux PWM device. The driver controls the timer by using the
-dmtimer API.
+Hello Heiko,
 
-Cc: Grant Erickson <marathon96@gmail.com>
-Cc: NeilBrown <neilb@suse.de>
-Not-Yet-Signed-off-by: Joachim Eastwood <manabian@gmail.com>
----
+On Thursday 01 May 2014 at 15:21:34, Heiko St=FCbner wrote:
+> Hi Max,
+>=20
+> Am Donnerstag, 1. Mai 2014, 12:43:13 schrieb Max Schwarz:
+> > On Wednesday 30 April 2014 at 00:07:12, Heiko St=FCbner wrote:
+> > > While this wasn't a problem until now, the upcoming rk3288 introd=
+uces
+> > > additional changes to both the grf and pmu areas. On it even part=
+ of
+> > > the pinmux registers move into the pmu space.
+> >=20
+> > Could you give us more information on that? I tried to find details=
+ on the
+> > RK3288 but came up with nothing. How are the pinmux registers divid=
+ed?
+>=20
+> Some days ago, Rockchip released kernel sources for the rk3288 [0]. T=
+hey
+> took a lot of our current mainline code as base for their kernel. AS =
+you
+> can see in the register map below, the pinmux registers for the gpio0=
+ bank
+> are residing in the pmu space, while gpio1-8 are residing in the regu=
+lar
+> "general register files"
 
-Hello,
+Wow, that's interesting. Seems they invested some real effort to catch =
+up=20
+instead of simply modifying their old patches. Which is a compliment to=
+ your=20
+contributions!
 
-First of all this is a RFC patch not to be merged in it's current state.
+Maybe we should try to get one of the Rockchip developers on board. The=
+y must=20
+have thought about this kind of thing as well.
 
-There are two problems with the driver now as I see.
-* I don't think this hack will fly on mainline.
-  #include <../arch/arm/plat-omap/include/plat/dmtimer.h>
-  I use the above include path for testing now since the plat include doesn't
-  work with DT multiplatform build.
-  Joel Fernandes is working on moving the dmtimer driver into
-  drivers/clocksource so eventually this will be fixed.
+> To elaborate a bit:
+>=20
+> On rk3188 it is
+> GRF: 0x00 - 0x5c: pin suspend control
+> GRF: 0x60 - 0x9c: pinmux control (0x60 and 0x64 gpio-only)
+> GRF: 0xa0 - 0xac: soc-control/status
+> GRF: 0xb0 - 0xc8: dma-control
+> GRF: 0xcc - 0xe0: "cpu core configuration"
+> GRF: 0xec - 0xf0: ddr-controller config
+> GRF: 0xf4 - 0x104: pin drive-strength (what we currently do not suppo=
+rt)
+> GRF: 0x108: soc_status1
+> GRF: 0x10c - 0x140: USB phy control
+> GRF: 0x144 - 0x160: "OS register"
+> GRF: 0x160 - 0x19c: pin pull settings
+> PMU: 0x00 - 0x38: power-domains and a lot of unknown stuff
+> PMU: 0x3c: something called GPIO0_CON, what Rockchip does not use at =
+all
+> PMU: 0x40 - 0x60: "SYS_REGx"
+> PMU: 0x64 - 0x68: part of GPIO0 pull config
+>=20
+> so we would/will in the end need 4 mappings for the rk3188-pinctrl
+> GRF: 0x00 - 0x9c, GRF: 0xf4 - 0x104, GRF: 0x160 - 0x19c, PMU: 0x64 - =
+0x68
+>=20
+>=20
+> On rk3288 it is
+>=20
+> GRF: 0x00 - 0x84: gpio1-gpio8 iomux settings
+> GRF: 0x104 - 0x138: unknown GPIOxx_SR registers
+> GRF: 0x140 - 0x1b4: gpio1-gpio8 pull settings
+> GRF: 0x1c0 - 0x234: gpio1-gpio8 driver strength settings
+> GRF: 0x240: unknown/unused GPIO_SMT
+> GRF: 0x244 - 0x2d4: soc control/status registers
+> GRF: 0x2e0 - ...: a lot of stuff like dma, usb-phy etc.
+> PMU: 0x00 - 0x5c: powerdomains and a lot of other stuff
+> PMU: 0x60: GPIO_SR
+> PMU: 0x64 - 0x6c: gpio0 pull settings
+> PMU: 0x70 - 0x78: gpio0 drive-strength settings
+> PMU: 0x7c: GPIO_OP
+> PMU: 0x80: GPIO0_SEL18
+> PMU: 0x84 - 0x8c: gpio0 pinmux settings
+> PMU: 0x90 - 0xa0: more misc registers (powermode, sys_regX)
+>=20
+> so we would essentially need only two mappings here
+> GRF: 0x00 - 0x240 and PMU: 0x60 - 0x8c
+>
+> So we'd need additional if(is_rk3188()) conditionals to distinguish b=
+etween
+> these implementations [and possible future ones] to select the correc=
+t base
+> address, and we don't know what the next SoC will bring and how the s=
+tuff
+> will be ordered there.
 
-* The drivers calls omap_dm_timer_set_source() to set the source. This should
-  decided in DT on the timer node itself. There is also work in this area by
-  Tero Kristo and Joel has said that this function will become a no-op when
-  this work is done.
+Thanks for providing the register mappings.
 
-So for now it be nice if people could look at the dmtimer API usage, the DT
-bindings and the PWM part of the driver to see if that looks okay.
+Yes, if you do specify the mappings as you proposed it would be a night=
+mare.
 
-Joel: I have tested this driver on top of your last dmtimer cleanup patches
-and it works nicely. It would be nice if you could take a look at the dmtimer
-API usage. I think you might be the one who knows dmtimer best now.
+However, this sheds light on an underlying issue: Rockchip is not treat=
+ing the=20
+whole GPIO block as one cohesive device as we do currently. Instead, it=
+ seems=20
+to me, one GPIO bank is one device. Each has its cohesive mux, bank and=
+ pull=20
+registers - apart from rk3188-bank-0, maybe. But that one is special an=
+yway=20
+with regards to register ordering (s.b.).
 
-A bit of history on this driver.
-First version made by Grant Erickson for the old PWM API back in 2010. Later
-NeilBrown converted the driver to the new PWM API and submitted [1] it to the
-mail list back in 2012. The driver was then reviewed by Thierry Reding and Jon
-Hunter. NeilBrown also later added DT support to the driver. I have since made
-some fixes, removed platform data support and added DT documentation.
+The issues you had with RK3188 and now have with RK3288 seem to stem fr=
+om=20
+trying to group all banks together into one pinctrl driver.
 
+So maybe we should promote the GPIO banks to full devices in the dt and=
+ make=20
+smaller mappings for each GPIO bank, i.e. three mappings for each GPIO =
+bank=20
+(mux, bank, pull). I know we have to stay backwards compatible dt-wise,=
+ but=20
+that should be doable.
 
-[1]: https://lkml.org/lkml/2012/12/12/51
+Then we are fully flexible and don't need any conditionals or address=20
+calculation logic. And should a future SoC bring another layout inside =
+the=20
+banks, we can react with a new "compatible"-name (and maybe a completel=
+y=20
+separate driver, if the change is big enough).
 
-regards
-Joachim Eastwood
+> Also leaving the driver behind, devicetree is meant to describe the
+> hardware, not the implementation. And hw-wise both PMU and GRF are ac=
+tual
+> hardware blocks even with individual clock gates.
 
+Whatever a "hardware block" is. n:m mappings between devices and clocks=
+ are no=20
+problems in the dt. So why not describe things a bit more precisely?
 
- Documentation/devicetree/bindings/pwm/pwm-omap.txt |  15 ++
- drivers/pwm/Kconfig                                |   9 +
- drivers/pwm/Makefile                               |   1 +
- drivers/pwm/pwm-omap.c                             | 273 +++++++++++++++++++++
- 4 files changed, 298 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-omap.txt
- create mode 100644 drivers/pwm/pwm-omap.c
+> Citing the syscon-devicetree bindings:
+>=20
+> 	System controller node represents a register region containing a set
+> 	of miscellaneous registers. The registers are not cohesive enough to
+> 	represent as any specific type of device.
+>=20
+> So to me both GRF and PMU regions scream "syscon".
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-omap.txt b/Documentation/devicetree/bindings/pwm/pwm-omap.txt
-new file mode 100644
-index 000000000000..e254874e5eee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-omap.txt
-@@ -0,0 +1,15 @@
-+* OMAP PWM for dual-mode timers
-+
-+Required properties:
-+- compatible: Shall contain "ti,omap-pwm".
-+- ti,timers: phandle to PWM capable OMAP timer. See arm/omap/timer.txt for info
-+  about these timers.
-+- #pwm-cells: Should be 3. See pwm.txt in this directory for a description of
-+  the cells format.
-+
-+Example:
-+	pwm: omap-pwm {
-+		compatible = "ti,omap-pwm";
-+		ti,timers = <&timer9>;
-+		#pwm-cells = <3>;
-+	};
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index 5b34ff29ea38..15b64aa14990 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -168,6 +168,15 @@ config PWM_PCA9685
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-pca9685.
- 
-+config PWM_OMAP
-+	tristate "OMAP PWM support"
-+	depends on OF && ARCH_OMAP && OMAP_DM_TIMER
-+	help
-+	  Generic PWM framework driver for OMAP
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-omap
-+
- config PWM_PUV3
- 	tristate "PKUnity NetBook-0916 PWM support"
- 	depends on ARCH_PUV3
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index e57d2c38a794..db52650d65e9 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_PWM_LP3943)	+= pwm-lp3943.o
- obj-$(CONFIG_PWM_LPC32XX)	+= pwm-lpc32xx.o
- obj-$(CONFIG_PWM_LPSS)		+= pwm-lpss.o
- obj-$(CONFIG_PWM_MXS)		+= pwm-mxs.o
-+obj-$(CONFIG_PWM_OMAP)		+= pwm-omap.o
- obj-$(CONFIG_PWM_PCA9685)	+= pwm-pca9685.o
- obj-$(CONFIG_PWM_PUV3)		+= pwm-puv3.o
- obj-$(CONFIG_PWM_PXA)		+= pwm-pxa.o
-diff --git a/drivers/pwm/pwm-omap.c b/drivers/pwm/pwm-omap.c
-new file mode 100644
-index 000000000000..1ad45f8a03ab
---- /dev/null
-+++ b/drivers/pwm/pwm-omap.c
-@@ -0,0 +1,273 @@
-+/*
-+ *    Copyright (c) 2014 Joachim Eastwood <manabian@gmail.com>
-+ *    Copyright (c) 2012 NeilBrown <neilb@suse.de>
-+ *    Heavily based on earlier code which is:
-+ *    Copyright (c) 2010 Grant Erickson <marathon96@gmail.com>
-+ *
-+ *    Also based on pwm-samsung.c
-+ *
-+ *    This program is free software; you can redistribute it and/or
-+ *    modify it under the terms of the GNU General Public License
-+ *    version 2 as published by the Free Software Foundation.
-+ *
-+ *    Description:
-+ *      This file is the core OMAP support for the generic, Linux
-+ *      PWM driver / controller, using the OMAP's dual-mode timers.
-+ *
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+#include <linux/time.h>
-+
-+#include <../arch/arm/plat-omap/include/plat/dmtimer.h>
-+
-+#define DM_TIMER_LOAD_MIN		0xFFFFFFFE
-+
-+struct omap_chip {
-+	struct omap_dm_timer	*dm_timer;
-+	unsigned int		duty_ns, period_ns;
-+	struct mutex		mutex;
-+	struct pwm_chip		chip;
-+};
-+
-+#define to_omap_chip(chip)	container_of(chip, struct omap_chip, chip)
-+
-+static int omap_pwm_calc_value(unsigned long clk_rate, int ns)
-+{
-+	u64 c;
-+
-+	c = (u64)clk_rate * ns;
-+	do_div(c, NSEC_PER_SEC);
-+
-+	return DM_TIMER_LOAD_MIN - c;
-+}
-+
-+static void omap_pwm_start(struct omap_chip *omap)
-+{
-+	/*
-+	 * According to OMAP 4 TRM section 22.2.4.10 the counter should be
-+	 * started at 0xFFFFFFFE when overflow and match is used to ensure
-+	 * that the PWM line is toggled on the first event.
-+	 *
-+	 * Note that omap_dm_timer_enable/disable is for register access and
-+	 * not the timer counter itself.
-+	 */
-+	omap_dm_timer_enable(omap->dm_timer);
-+	omap_dm_timer_write_counter(omap->dm_timer, DM_TIMER_LOAD_MIN);
-+	omap_dm_timer_disable(omap->dm_timer);
-+
-+	omap_dm_timer_start(omap->dm_timer);
-+}
-+
-+static int omap_pwm_enable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct omap_chip *omap = to_omap_chip(chip);
-+
-+	mutex_lock(&omap->mutex);
-+	omap_pwm_start(omap);
-+	mutex_unlock(&omap->mutex);
-+
-+	return 0;
-+}
-+
-+static void omap_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-+{
-+	struct omap_chip *omap = to_omap_chip(chip);
-+
-+	mutex_lock(&omap->mutex);
-+	omap_dm_timer_stop(omap->dm_timer);
-+	mutex_unlock(&omap->mutex);
-+}
-+
-+static int omap_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
-+			   int duty_ns, int period_ns)
-+{
-+	struct omap_chip *omap = to_omap_chip(chip);
-+	int load_value, match_value;
-+	unsigned long clk_rate;
-+	bool timer_active;
-+
-+	dev_dbg(chip->dev, "duty cycle: %d, period %d\n", duty_ns, period_ns);
-+
-+	mutex_lock(&omap->mutex);
-+	if (omap->duty_ns == duty_ns &&
-+	    omap->period_ns == period_ns) {
-+		/* No change - don't cause any transients. */
-+		mutex_unlock(&omap->mutex);
-+		return 0;
-+	}
-+
-+	clk_rate = clk_get_rate(omap_dm_timer_get_fclk(omap->dm_timer));
-+
-+	/*
-+	 * Calculate the appropriate load and match values based on the
-+	 * specified period and duty cycle. The load value determines the
-+	 * cycle time and the match value determines the duty cycle.
-+	 */
-+	load_value = omap_pwm_calc_value(clk_rate, period_ns);
-+	match_value = omap_pwm_calc_value(clk_rate, period_ns - duty_ns);
-+
-+	/*
-+	 * We MUST stop the associated dual-mode timer before attempting to
-+	 * write its registers, but calls to omap_dm_timer_start/stop must
-+	 * be balanced so check if timer is active before calling timer_stop.
-+	 */
-+	timer_active = pm_runtime_active(&omap->dm_timer->pdev->dev);
-+	if (timer_active)
-+		omap_dm_timer_stop(omap->dm_timer);
-+
-+	omap_dm_timer_set_load(omap->dm_timer, true, load_value);
-+	omap_dm_timer_set_match(omap->dm_timer, true, match_value);
-+
-+	dev_dbg(chip->dev, "load value: %#08x (%d), match value: %#08x (%d)\n",
-+		load_value, load_value,	match_value, match_value);
-+
-+	omap_dm_timer_set_pwm(omap->dm_timer,
-+			      pwm->polarity == PWM_POLARITY_INVERSED,
-+			      true,
-+			      OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+
-+	/* If config was called while timer was running it must be reenabled. */
-+	if (timer_active)
-+		omap_pwm_start(omap);
-+
-+	omap->duty_ns = duty_ns;
-+	omap->period_ns = period_ns;
-+	mutex_unlock(&omap->mutex);
-+
-+	return 0;
-+}
-+
-+static int omap_pwm_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-+				 enum pwm_polarity polarity)
-+{
-+	struct omap_chip *omap = to_omap_chip(chip);
-+
-+	/*
-+	 * PWM core will not call set_polarity while PWM is enabled so it's
-+	 * safe to reconfigure the timer here without stopping it first.
-+	 */
-+	mutex_lock(&omap->mutex);
-+	omap_dm_timer_set_pwm(omap->dm_timer,
-+			      polarity == PWM_POLARITY_INVERSED,
-+			      true,
-+			      OMAP_TIMER_TRIGGER_OVERFLOW_AND_COMPARE);
-+	mutex_unlock(&omap->mutex);
-+
-+	return 0;
-+}
-+
-+static struct pwm_ops omap_pwm_ops = {
-+	.enable		= omap_pwm_enable,
-+	.disable	= omap_pwm_disable,
-+	.config		= omap_pwm_config,
-+	.set_polarity	= omap_pwm_set_polarity,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int omap_pwm_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct omap_dm_timer *dm_timer;
-+	struct device_node *timer;
-+	struct omap_chip *omap;
-+	int status;
-+
-+	timer = of_parse_phandle(np, "ti,timers", 0);
-+	if (!timer)
-+		return -ENODEV;
-+
-+	dm_timer = omap_dm_timer_request_by_node(timer);
-+	if (!dm_timer)
-+		return -EPROBE_DEFER;
-+
-+	if (!(dm_timer->capability & OMAP_TIMER_HAS_PWM)) {
-+		dev_err(&pdev->dev, "timer has no PWM capability\n");
-+		return -ENODEV;
-+	}
-+
-+	omap = devm_kzalloc(&pdev->dev, sizeof(*omap), GFP_KERNEL);
-+	if (omap == NULL)
-+		return -ENOMEM;
-+
-+	omap->dm_timer = dm_timer;
-+	omap_dm_timer_set_source(omap->dm_timer, OMAP_TIMER_SRC_SYS_CLK);
-+
-+	omap->chip.dev = &pdev->dev;
-+	omap->chip.ops = &omap_pwm_ops;
-+	omap->chip.base = -1;
-+	omap->chip.npwm = 1;
-+	omap->chip.of_xlate = of_pwm_xlate_with_flags;
-+	omap->chip.of_pwm_n_cells = 3;
-+
-+	mutex_init(&omap->mutex);
-+
-+	/*
-+	 * Ensure that the timer is stopped before we allow PWM core to call
-+	 * pwm_enable.
-+	 */
-+	if (pm_runtime_active(&omap->dm_timer->pdev->dev))
-+		omap_dm_timer_stop(omap->dm_timer);
-+
-+	status = pwmchip_add(&omap->chip);
-+	if (status < 0) {
-+		dev_err(&pdev->dev, "failed to register PWM\n");
-+		omap_dm_timer_free(omap->dm_timer);
-+		return status;
-+	}
-+
-+	platform_set_drvdata(pdev, omap);
-+
-+	return 0;
-+}
-+
-+static int omap_pwm_remove(struct platform_device *pdev)
-+{
-+	struct omap_chip *omap = platform_get_drvdata(pdev);
-+	int status;
-+
-+	status = pwmchip_remove(&omap->chip);
-+	if (status < 0)
-+		return status;
-+
-+	if (pm_runtime_active(&omap->dm_timer->pdev->dev))
-+		omap_dm_timer_stop(omap->dm_timer);
-+
-+	omap_dm_timer_free(omap->dm_timer);
-+
-+	mutex_destroy(&omap->mutex);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id omap_pwm_of_match[] = {
-+	{.compatible = "ti,omap-pwm"},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, omap_pwm_of_match);
-+
-+static struct platform_driver omap_pwm_driver = {
-+	.driver = {
-+		.name	= "omap-pwm",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = omap_pwm_of_match,
-+	},
-+	.probe		= omap_pwm_probe,
-+	.remove		= omap_pwm_remove,
-+};
-+module_platform_driver(omap_pwm_driver);
-+
-+MODULE_AUTHOR("Grant Erickson <marathon96@gmail.com>");
-+MODULE_AUTHOR("NeilBrown <neilb@suse.de>");
-+MODULE_LICENSE("GPL v2");
-+MODULE_VERSION("2014-20-04");
-+MODULE_DESCRIPTION("OMAP PWM Driver using Dual-mode Timers");
--- 
-1.8.0
+Yes, that sounds a bit like the mess we are dealing with ;-)
+I still feel that declaring everything as syscon is somehow circumventi=
+ng the=20
+dt. And I feel more comfortable declaring GRF_SOC_* as "miscellaneous=20
+registers" rather than e.g. the iomux space of GPIO0.
 
+Don't get me wrong please, I'm not completely against the syscon idea. =
+I'm=20
+just trying to have a full discussion on the issue.
+
+> I've attached my current WIP patch to implement rk3288 support (untes=
+ted, as
+> I don't have any hardware), based on this series. As you can see in i=
+t, the
+> rk3288 has even more peculiarities with gpio-only and 4bit wide iomux=
+es.
+
+Nice, but you needed to introduce flags like "SOURCE_PMU/GRF" which wou=
+ld not=20
+be necessary with the fine-grained mapping. GPIO-Only could be handled =
+by a=20
+mask specified in the dt.
+
+> As the patch stands now, rk3288 doesn't even need special handling fo=
+r its
+> iomux registers, as it can be simply described now in the pin-bank
+> declaration at the bottom - and even the rk3188-bank0 wouldn't be nec=
+essary
+> anymore.
+
+       /*
+		 * The bits in these registers have an inverse ordering
+		 * with the lowest pin being in bits 15:14 and the highest
+		 * pin in bits 1:0
+		 */
+		*bit =3D 7 - (pin_num % RK3188_PULL_PINS_PER_REG);
+
+(from rk3188_calc_pull_reg_and_bit)
+
+That's probably still a peculiarity of rk3188-bank0, isn't it? So we'd =
+still=20
+need a conditional on rk3188-bank0. That could enable a fourth mapping =
+for the=20
+split up mux space of bank0 as well.
+
+Compared to your RK3288 patch we'd be moving the information from the t=
+able in=20
+your driver (which is just describing the hw layout & capabilities) int=
+o the=20
+dt.
+
+> > There are some question marks for me on the syscon solution. Regmap=
+ uses
+> > locking internally, which means separate drivers can't access separ=
+ate
+> > registers simultaneously. We have an SMP machine here, so that's no=
+t far-
+> > fetched. And that locking is completely unnecessary, as we *know* i=
+n most
+> > cases that the accessed areas do not overlap.
+>=20
+> For locking vs. speed, I do not see this as a big problem. All regist=
+ers in
+> there mainly contain general settings that are not changed often duri=
+ng the
+> operation of the device. So there is no high frequency access to them=
+ in any
+> case.
+
+Agreed, that's probably not an issue (if no one wants to do high-speed=20
+concurrent bitbang I/O :D).
+
+> > > The other option would be to leave the grf as it is and create se=
+parate
+> > > syscons for real small individual parts like the soc-conf and usb=
+-phys.
+> > > But apart from creating these real small syscons that would
+> > > also make it necessary to introduce another register map for the
+> > > drive-strength settings of the pin-controller, which are sitting =
+in the
+> > > middle of everything at least on rk3066 and rk3188.
+> >=20
+> > Wy do we need a syscon for usb-phys? Is it shared by multiple drive=
+rs?
+> > My instinctive approach would be two usb-phys devices mapping the
+> > GRF_UOC0/1 spaces directly via reg properties. Or did I miss someth=
+ing?
+>=20
+> Of course if we're going to map each part of the GRF individually the=
+re is
+> no need for a syscon.
+
+Okay, sorry for misunderstanding.
+
+> I'm also hoping for more input so I've changed the title a bit, to ma=
+ybe=20
+> attract more people :-).
+
+Yes, let's hope someone else speaks up. Maybe there has already been a=20
+precedent in another mach-*? I'll try to find something similar.
+In the end you as the maintainer have to make the decision though. And =
+as I=20
+said I don't have real problems with the syscon solution, it just doesn=
+'t feel=20
+nice.
+
+Cheers,
+  Max
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
