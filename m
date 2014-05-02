@@ -1,44 +1,56 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Fri, 02 May 2014 11:31:11 +0900
-Message-ID: <045901cf65ae$94f4f4b0$bedede10$@samsung.com>
-References: <1398941085-10224-1-git-send-email-sachin.kamat@linaro.org>
- <5153376.z2oJ163pLF@wuerfel> <1625238.xy1WDqNhgs@diego>
+From: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [4/5] IBM Akebono: Add the Akebono platform
+Date: Fri, 02 May 2014 12:33:22 +1000
+Message-ID: <1398998002.2925.15.camel@pasglop>
+References: <1394077948-8395-5-git-send-email-alistair@popple.id.au>
+	 <1398936447.4121.12.camel@x220> <10214508.Vq3Ynjy2Co@mexican>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1625238.xy1WDqNhgs@diego>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>, 'Arnd Bergmann' <arnd@arndb.de>
-Cc: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t.figa@samsung.com, robh+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <10214508.Vq3Ynjy2Co@mexican>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Heiko St=FCbner wrote:
-> Am Donnerstag, 1. Mai 2014, 15:32:14 schrieb Arnd Bergmann:
-> > On Thursday 01 May 2014 16:14:44 Sachin Kamat wrote:
-> > > Instead of hardcoding the SYSRAM details for each SoC,
-> > > pass this information through device tree (DT) and make
-> > > the code SoC agnostic. Generic SRAM bindings are used
-> > > for achieving this.
-> > >
-> > > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> > > Cc: Heiko Stuebner <heiko@sntech.de>
-> > > Cc: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Looks good to me. Both patches
-> >
-> > Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > Heiko, can you also have a look?
->=20
-> Already did :-)
+On Fri, 2014-05-02 at 10:35 +1000, Alistair Popple wrote:
 
-Thanks you guys ;-)
+> > The plan to add MMC_SDHCI_OF_476GTR seems to have been abandoned (see
+> > the discussion of https://lkml.org/lkml/2014/2/21/24 ). So this select
+> > is not needed. Should I submit a trivial patch to drop this select?
+> 
+> Thanks for pointing this out, I should have removed the select for 
+> MMC_SDHCI_OF_476GTR as suggested. I can submit a patch to drop the select or 
+> send an updated version of the original patch. Which is easiest for you Ben?
 
-I will take this series when I get confirmation of universal-c210's beh=
-avior
-from Andrzej or Tomasz.
+I don't rebase next so it has to be a followup patch.
 
-- Kukjin
+Cheers,
+Ben.
+
+> > > +	select ATA
+> > > +	select SATA_AHCI_PLATFORM
+> > > +	help
+> > > +	  This option enables support for the IBM Akebono (476gtr) evaluation
+> > > board +
+> > > +
+> > > 
+> > >  config ICON
+> > >  
+> > >  	bool "Icon"
+> > >  	depends on 44x
+> > 
+> > Paul Bolle
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
