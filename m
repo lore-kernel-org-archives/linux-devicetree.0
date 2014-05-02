@@ -1,44 +1,54 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/3] clk: exynos5420: Add 5800 specific clocks
-Date: Fri, 02 May 2014 20:52:26 +0200
-Message-ID: <4431329.kolHX05ZMV@wuerfel>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com> <1399035821-25096-2-git-send-email-arun.kk@samsung.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 02 May 2014 12:55:45 -0600
+Message-ID: <5363EA31.3000509@wwwdotorg.org>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
+ <4369315.NLgjZW6qVF@wuerfel> <20140502132327.GA14612@ulmo>
+ <6555552.UqkKQIAsih@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399035821-25096-2-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, dianders@chromium.org, olofj@google.com, t.figa@samsung.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, arunkk.samsung@gmail.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6555552.UqkKQIAsih@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, devicetree@vger.kernel.org, Shaik Ameer Basha <shaik.ameer@samsung.com>, Grant Grundler <grundler@chromium.org>, Will Deacon <Will.Deacon@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel@lists.infradead.org, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 May 2014 18:33:39 Arun Kumar K wrote:
-> From: Alim Akhtar <alim.akhtar@samsung.com>
+On 05/02/2014 09:19 AM, Arnd Bergmann wrote:
+> On Friday 02 May 2014 15:23:29 Thierry Reding wrote:
+...
+>> To some degree this also depends on how we want to handle IOMMUs. If
+>> they should remain transparently handled via dma_map_ops, then it makes
+>> sense to set this up at device instantiation time. But how can we handle
+>> this in situations where one device needs to master on two IOMMUs at the
+>> same time? Or if the device needs physically contiguous memory for
+>> purposes other than device I/O. Using dma_map_ops we can't control which
+>> allocations get mapped via the IOMMU and which don't.
 > 
-> Exynos5800 clock structure is mostly similar to 5420 with only
-> a small delta changes. So the 5420 clock file is re-used for
-> 5800 also. The common clocks for both are seggreagated and few
-> clocks which are different for both are separately initialized.
-> 
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> I still hope we can handle this in common code by selecting the right
+> dma_map_ops when the devices are instantiated, at least for 99% of the
+> cases. I'm not convinced we really need to handle the 'multiple IOMMUs
+> on one device' case in a generic way. If there are no common use cases
+> for that, we can probably get away with having multiple device nodes
+> and an ugly driver for the exception, instead of making life complicated
+> for everybody.
 
-This isn't about your specific patch, but every time I see a new
-exynos variant get supported, it comes with a clock driver patch
-that is at least as big as all the other patches combined.
+By "multiple device nodes", I assume you mean device tree nodes? I'm not
+sure I like the sound of that.
 
-New variants come out all the time now, and we are starting to
-accumulate huge amounts of clock definitions both in the source
-and the binary. I think we should try to come up with a better
-way to represent the clocks. I don't think any other SoC
-family is nearly as bad as Exynos, either because they have
-much fewer models, or because they abstract their clocks more
-and put all the tables into DT.
-
-I'm definitely not saying no to the exynos5800 addition for this,
-but I'm starting to get a little annoyed, and I think it would be
-good to come up with a new clock binding before we see 64-bit
-Exynos variants.
-
-	Arnd
+I believe that DT should represent the structure of the HW in terms of
+HW modules or blocks. If there's a single cohesive HW module that
+happens to talk to multiple MMUs, or indeed has any kind of unusual case
+at all, I don't think that should force the DT representation to be
+broken up into multiple nodes. We should have a DT node for that HW
+module, and it should be up to the device driver to make the internal SW
+representation work correctly.
