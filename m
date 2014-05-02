@@ -1,127 +1,72 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND 3/5] ARM: BCM63XX: add BCM63138 minimal Device Tree
-Date: Thu, 1 May 2014 22:37:21 -0700
-Message-ID: <CAGVrzcac=jUVtjZrX9NrNC7=eOKVGn6cBabmm98qD9k7Q5BtEg@mail.gmail.com>
-References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com>
- <1398130758-19456-4-git-send-email-f.fainelli@gmail.com> <4701106.5EnjdVQgVO@wuerfel>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: Re: [RESEND PATCH 0/3] ARM: dts: add device data for exynos4412-trats2
+Date: Fri, 02 May 2014 14:50:18 +0900
+Message-ID: <5363321A.10302@samsung.com>
+References: <53327CE3.8030800@samsung.com> <5359C2B9.5040003@samsung.com>
+ <53631F16.7010708@samsung.com> <04ea01cf65c7$6bfd8db0$43f8a910$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4701106.5EnjdVQgVO@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <04ea01cf65c7$6bfd8db0$43f8a910$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'Tomasz Figa' <t.figa@samsung.com>
+Cc: 'Myungjoo Ham' <myungjoo.ham@samsung.com>, 'Chanwoo Choi' <cw00.choi@samsung.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2014-04-22 3:52 GMT-07:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Monday 21 April 2014 18:39:16 Florian Fainelli wrote:
+On 05/02/2014 02:29 PM, Kukjin Kim wrote:
+> Beomho Seo wrote:
 >>
->> +#include "skeleton.dtsi"
->> +
->> +/ {
->> +       compatible = "brcm,bcm63138";
->> +       model = "Broadcom BCM63138 DSL SoC";
->> +       interrupt-parent = <&gic>;
->> +
->> +       cpus {
->> +               #address-cells = <1>;
->> +               #size-cells = <0>;
->> +
->> +               cpu@0 {
->> +                       device_type = "cpu";
->> +                       compatible = "arm,cortex-a9";
->> +                       next-level-cache = <&L2>;
->> +                       reg = <0>;
->> +               };
->> +       };
->
-> Even if you don't support SMP yet, I can see no reason not
-> to list both CPUs here. The binding is known and the code
-> should ignore the extra cores if it doesn't know how to
-> turn them on.
+>> Hi all,
+>>
+>> Didn't have Any other comment for this patch set?
+>>
+>> On 04/25/2014 11:04 AM, Beomho Seo wrote:
+>>> This patchset add some device node for exynos4412-trats2.
+>>> It is based on v3.15-next/dt-samsung-2 branch.
+>>>
+>>> exynos4412-trats2.dts
+>>> - Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-
+>> kasei,ak8975".
+>>> - Add cm36651 light/proximity sensor device node.
+>>> - Change gpio-key device node. fix incorrect gpio property, and then add
+>> "ok-key" node.
+>>>
+>>> Beomho Seo (3):
+>>>   ARM: dts: fix incorrect compatible for exynos4412
+>>>   ARM: dts: add cm36651 light/proximity sensor node
+>>>   ARM: dts: fixed gpio key node for exynos4412
+>>>
+>>>  arch/arm/boot/dts/exynos4412-trats2.dts |   50
+>> ++++++++++++++++++++++++++-----
+>>>  1 file changed, 43 insertions(+), 7 deletions(-)
+>>>
+>>
+> I have no objection on this series but need to get ack from dt guys.
+> 
+> BTW, shouldn't it include vendor name in compatible?...
+> 
+> And according to dt bindings(iio/magnetometer/ak8975.txt), it should be:
+> 
+> "compatible = "asahi-kasei,ak8975";"
+> 
+> even though "ak8975" also included in the driver "drivers/iio/magnetometer/ak8975.c"...
+> 
+> Thanks,
+> Kukjin
+> 
 
-OK.
+Thank you for comment.
 
->
->> +
->> +       /* ARM bus */
->> +       axi@80000000 {
->> +               compatible = "simple-bus";
->> +               ranges = <0 0x80000000 0x783003>;
->> +               reg = <0x80000000 0x783003>;
->
-> The length seems odd, I would expect that the bus actually
-> translates all addresses in the 0x80000000 range to downstream
-> devices even if there is nothing connected. Just round it up
-> to your best knowledge.
->
-> I would also drop the 'reg' property. Since you don't have a
-> specific "compatible" value, there is no way to use the registers
-> in this node.
+Compatible of ak8975 will be fixed according to dt bindings(iio/magnetometer/ak8975.txt).
+I will fix it and send v2 patch soon.
 
-OK.
-
->
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +
->> +               L2: cache-controller@1d000 {
->> +                       compatible = "arm,pl310-cache";
->> +                       reg = <0x1d000 0x1000>;
->> +                       cache-unified;
->> +                       cache-level = <2>;
->> +                       interrupts = <GIC_PPI 0 IRQ_TYPE_LEVEL_HIGH>;
->> +               };
->> +
->> +               mpcore@1e000 {
->> +                       compatible = "simple-bus";
->> +                       reg = <0x1e000 0x20000>;
->> +                       ranges = <0 0x1e000 0x20000>;
->> +                       #address-cells = <1>;
->> +                       #size-cells = <1>;
->
->
-> Same thing here.
->
-> Also, can you explain why there is a separate 'mpcore' bus, and why the
-> cache controller is not part of that?
->
-> Do you have reason to believe that this is how the hardware actually
-> looks?
-
-I think I was just mistaken by how the register space looks like and
-is named, but there probably is not a separate underlying bus, so I
-will move this up one level as it should.
-
->
->> +
->> +       /* Legacy UBUS base */
->> +       ubus@fffe8000 {
->> +               compatible = "simple-bus";
->> +               reg = <0xfffe8000 0x8053>;
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               ranges = <0 0xfffe8000 0x8053>;
->> +       };
->> +};
->
->
-> Again, use a proper 'length' here and remove the 'reg' property.
+Thanks,
+Beomho
 
 
->
->         Arnd
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
