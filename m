@@ -1,39 +1,35 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [RESEND PATCH 0/3] ARM: dts: add device data for exynos4412-trats2
-Date: Fri, 02 May 2014 13:29:10 +0900
-Message-ID: <53631F16.7010708@samsung.com>
-References: <53327CE3.8030800@samsung.com> <5359C2B9.5040003@samsung.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: Re: [PATCH V2] ASoC: SAMSUNG: Add sound card driver for Snow board
+Date: Fri, 02 May 2014 10:26:08 +0530
+Message-ID: <53632568.5020200@linaro.org>
+References: <1398243705-31151-1-git-send-email-tushar.behera@linaro.org> <20140424133920.GA12304@sirena.org.uk> <5359E18B.60600@linaro.org> <20140429222915.GU15125@sirena.org.uk> <5360E5E7.8090807@linaro.org> <20140430180314.GA3245@sirena.org.uk> <53623004.5010805@linaro.org> <20140501141510.GW3245@sirena.org.uk> <CAD=FV=Wa4CovkxBng0SkUUAryiFqa=m63tro1Yv1jRgp4e95aw@mail.gmail.com> <20140501164003.GC3245@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5359C2B9.5040003@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140501164003.GC3245@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>, Doug Anderson <dianders@chromium.org>
+Cc: alsa-devel@alsa-project.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, sbkim73@samsung.com, Randy Dunlap <rdunlap@infradead.org>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
-
-Didn't have Any other comment for this patch set?
-
-On 04/25/2014 11:04 AM, Beomho Seo wrote:
-> This patchset add some device node for exynos4412-trats2.
-> It is based on v3.15-next/dt-samsung-2 branch.
+On 05/01/2014 10:10 PM, Mark Brown wrote:
+> On Thu, May 01, 2014 at 08:54:14AM -0700, Doug Anderson wrote:
 > 
-> exynos4412-trats2.dts
-> - Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-kasei,ak8975".
-> - Add cm36651 light/proximity sensor device node.
-> - Change gpio-key device node. fix incorrect gpio property, and then add "ok-key" node.
+>> This is exactly the thing (expected clock parenting) we agreed could
+>> be put in the device tree I think.  ...but I don't know that anyone
+>> proposed exactly how that would work.
 > 
-> Beomho Seo (3):
->   ARM: dts: fix incorrect compatible for exynos4412
->   ARM: dts: add cm36651 light/proximity sensor node
->   ARM: dts: fixed gpio key node for exynos4412
-> 
->  arch/arm/boot/dts/exynos4412-trats2.dts |   50 ++++++++++++++++++++++++++-----
->  1 file changed, 43 insertions(+), 7 deletions(-)
+> There's patches been posted by (IIRC) Sylvester Nawrocki for this which
+> I think Mike was basically happy with - I don't immediately see them in
+> -next though, but I may be looking in the wrong place.
 > 
 
-Thanks
-Beomho Seo
+Right, there are some patches from Sylwester regarding this. I dont'
+think the patches are accepted yet as Rob has some reservations against
+the clock parents.
+
+https://lkml.org/lkml/2014/4/9/173
+
+-- 
+Tushar Behera
