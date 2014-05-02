@@ -1,72 +1,155 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v5 0/4] usb: ehci/ohci-exynos: Move to generic phy framework
-Date: Fri, 02 May 2014 22:17:54 +0900
-Message-ID: <53639B02.1020101@samsung.com>
-References: <1399034855-9686-1-git-send-email-gautam.vivek@samsung.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 2 May 2014 15:23:29 +0200
+Message-ID: <20140502132327.GA14612@ulmo>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
+ <20140502110557.GA18452@ulmo>
+ <4369315.NLgjZW6qVF@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1399034855-9686-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, t.figa@samsung.com, k.debski@samsung.com, jg1.han@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4369315.NLgjZW6qVF@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/14 21:47, Vivek Gautam wrote:
-> Based and tested on 'usb-next' branch of Greg's usb tree, with relevant
-> device tree patches[1]
->
-> Hi Alan,
->   I have included your Acked-by in all the four patches, but there has been
->   some amount of restructuring as suggested by Tomasz Figa.
->   Please let me know if you have some comments on this patch-series.
->
-> Changes from v4:
->   - Addressed review comments for restructuring exynos_ohci_get_phy()
->     and exynos_ehci_get_phy(); and thereby adding proper checks in
->     exynos_ohci_phy_enable()/disable() as well as exynos_ehci_phy_enable()/
->     disable().
->
-> Changes from v3:
->   - Calling usb_phy_shutdown() when exynos_o/ehci_phy_enable() is failing.
->   - Made exynos_o/ehci_phy_disable() return void, since its return value
->     did not serve any purpose.
->   - Calling clk_disable_unprepare() in exynos_o/ehci_resume() when
->     exynos_o/ehci_phy_enable() is failed.
->
-> Changes from v2:
->   - Added two patches in the series for some cleanup.
->     usb: ohci-exynos: Use struct device instead of platform_device
->     usb: ehci-exynos: Use struct device instead of platform_device
->   - Addressed review comments.
->     -- Moved exynos_ohci_phyg_on()/off routines inside
->        exynos_ohci_phy_enable()/disable.
->     -- Added functions exynos_ehci_phy_enable() and exynos_ehci_phy_disable()
->        and moved exynos_ehci_phyg_on()/off routines respectively in them.
->     -- Added necessary checks.
->
-> [1]: [PATCH 0/4] dts: Add usb2phy to Exynos 5250/5420
->       https://lkml.org/lkml/2014/4/30/119
->
-> Kamil Debski (1):
->    usb: ehci-exynos: Change to use phy provided by the generic phy
->      framework
->
-> Vivek Gautam (3):
->    usb: ohci-exynos: Use struct device instead of platform_device
->    usb: ehci-exynos: Use struct device instead of platform_device
->    usb: ohci-exynos: Add facility to use phy provided by the generic phy
->      framework
->
->   .../devicetree/bindings/usb/exynos-usb.txt         |   31 +++++
->   drivers/usb/host/ehci-exynos.c                     |  136 ++++++++++++++++----
->   drivers/usb/host/ohci-exynos.c                     |  134 +++++++++++++++----
->   3 files changed, 254 insertions(+), 47 deletions(-)
->
-This series looks good to me, please feel free to add my ack on this series,
 
-Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+--oyUTqETQ0mS9luUI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Kukjin
+On Fri, May 02, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
+> On Friday 02 May 2014 13:05:58 Thierry Reding wrote:
+> >=20
+> > Let me see if I understood the above proposal by trying to translate it
+> > into a simple example for a specific use-case. On Tegra for example we
+> > have various units that can either access system memory directly or use
+> > the IOMMU to translate accesses for them. One such unit would be the
+> > display controller that scans out a framebuffer from memory.
+>=20
+> Can you explain how the decision is made whether the IOMMU gets used
+> or not? In all cases I've seen so far, I think we can hardwire this
+> in DT, and only expose one or the other. Are both ways used
+> concurrently?
+
+It should be possible to hardcode this in DT for Tegra. As I understand
+it, both interfaces can't be used at the same time. Once translation has
+been enabled for one client, all accesses generated by that client will
+be translated.
+
+Hiroshi, please correct me if I'm wrong.
+
+> >         dc@0,54200000 {
+> >                 ...
+> >=20
+> >                 slave {
+> >                         /*
+> >                          * 2 is the memory controller client ID of the
+> >                          * display controller.
+> >                          */
+> >                         iommu =3D <&iommu 2>;
+> >=20
+> >                         ...
+> >                 };
+> >         };
+> >=20
+> > Admittedly this is probably a lot more trivial than what you're looking
+> > for. There's no need for virtualization here, the IOMMU is simply used
+> > to isolate memory accesses by devices. Still it's a use-case that needs
+> > to be supported and one that at least Tegra and Exynos have an immediate
+> > need for.
+> >=20
+> > So the above isn't much different from the proposed bindings, except
+> > that the iommu property is now nested within a slave node. I guess this
+> > gives us a lot more flexibility to extend the description of a slave as
+> > needed to represent more complex scenarios.
+>=20
+> This looks rather complicated to parse automatically in the generic
+> DT code when we try to decide which dma_map_ops to use. We'd have
+> to look for 'slave' nodes in each device we instatiate and then see
+> if they use an iommu or not.
+
+But we need to do that now anyway in order to find an iommu property,
+don't we? Adding one extra level here shouldn't be all that bad if it
+gives us more flexibility or uniformity with more complicated setups.
+
+To some degree this also depends on how we want to handle IOMMUs. If
+they should remain transparently handled via dma_map_ops, then it makes
+sense to set this up at device instantiation time. But how can we handle
+this in situations where one device needs to master on two IOMMUs at the
+same time? Or if the device needs physically contiguous memory for
+purposes other than device I/O. Using dma_map_ops we can't control which
+allocations get mapped via the IOMMU and which don't.
+
+> > Also, are slaves/slave-names and slave subnodes mutually exclusive? It
+> > sounds like slaves/slave-names would be a specialization of the slave
+> > subnode concept for the trivial cases. Would the following be an
+> > equivalent description of the above example?
+> >=20
+> >         dc@0,54200000 {
+> >                 ...
+> >=20
+> >                 slaves =3D <&iommu 2>;
+> >         };
+> >=20
+> > I don't see how it could be exactly equivalent since it misses context
+> > regarding the type of slave that's being interacted with. Perhaps that
+> > could be solved by making that knowledge driver-specific (i.e. the
+> > driver for the Tegra display controller will know that it can only be
+> > the master on an IOMMU and therefore derive the slave type). Or the
+> > slave's type could be derived from the slave-names property.
+>=20
+> I'd rather have a device-specific property that tells the driver
+> about things the iommu driver doesn't need to know but the master
+> does. In most cases, we should be fine without a name attached to the
+> slave.
+
+For the easy cases where we either have no IOMMU or a single IOMMU per
+device, that should work fine. This only becomes problematic when there
+are more than one, since you need to distinguish between possibly more
+than one type.
+
+As I understand it, Dave's proposal is for generic bus masters, which
+may be an IOMMU but could also be something completely different. So in
+those cases we need extra meta information so that we can look up the
+proper type of object.
+
+FWIW, I do prefer a device-specific property as well. Though I also
+think we should agree on common names (like "iommu") as part of the
+binding definition. And then, even for devices that can use multiple
+IOMMUs they can be differentiated using iommu-names for example. If
+another type of master interface is required, then a different set of
+property names can be used.
+
+Thierry
+
+--oyUTqETQ0mS9luUI
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTY5xPAAoJEN0jrNd/PrOh4jQQAL7JYLxIhmY87gy+L3SI5c8p
+9exnmvOkZ3vLIj4G09i81U+1HcnuAq+hH0JUB8xxhvodUehCSEZIM5/B87Y61DJ8
+Vgo8UWOeovbbeFDBpHI2GPhaE32AR4mVj6S78uSJgRhExc9pWA7UT2fZIRW7dTAb
+t4m4Yex7bNgK2QdBvC73Q4TT5LbRFEUu6buvZ1S+TT59Xc1Q2uU2Nxo9WlVsTPQ+
+p7+mVreyj3Y6fOjAZ0ucQG5Ynjc80HzqifvilxwaDIr4x5FEhLlurtq72uedQ3h3
+HMa5ZkDy1DjVWPm4s73FhTPXMepUd1MqNydS6yBIcYTtRfYFtj1bdGdXbDg9+1IP
+WbSIYW1HjFQBhXCcXlUl1+/EZK+sTf//S+h6IXYzQv/lBHHpLbCyLbIX6qymNzeB
+SRMUPgNjzzmy8EWPRor8Gd+CxrZotFsMlprO44skj4CnX7kJd2B0p2LMqenenDuY
+uKyOgpRiaAYcaScE8LDmdinNlH/5t2AVTSCy67lqHsoNTF4n8wTZKAQZjLir70k+
+EbdmfgEg+5XfYiick6J0CRIq0F1+PDMgO2d/riJJUwYqWXk+xi/GiXdgkWKhndGM
+4NI9RcPj57VsfVvyZLQyOJ5QmR8FKmEHghDsNmUzxK4kTwsMfSVTDpgoX9MhS/3t
+jL9XcCAO9fGhv4yDqZ0m
+=+fpt
+-----END PGP SIGNATURE-----
+
+--oyUTqETQ0mS9luUI--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
