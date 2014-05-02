@@ -1,92 +1,112 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add peach-pi board support
-Date: Fri, 02 May 2014 19:10:14 +0200
-Message-ID: <5363D176.80601@gmail.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com> <1399035821-25096-4-git-send-email-arun.kk@samsung.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v12 5/7] dma: of: add common xlate function for
+ matching by channel id
+Date: Fri, 2 May 2014 22:34:59 +0530
+Message-ID: <20140502170459.GK32284@intel.com>
+References: <1398261209-5578-1-git-send-email-a13xp0p0v88@gmail.com>
+ <1398261209-5578-6-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399035821-25096-4-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@chromium.org, olofj@google.com, t.figa@samsung.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, arunkk.samsung@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398261209-5578-6-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arun,
+On Wed, Apr 23, 2014 at 05:53:27PM +0400, Alexander Popov wrote:
+> This patch adds a new common OF dma xlate callback function which will match a
+> channel by it's id. The binding expects one integer argument which it will use to
+> lookup the channel by the id.
+> 
+> Unlike of_dma_simple_xlate this function is able to handle a system with
+> multiple DMA controllers. When registering the of dma provider with
+> of_dma_controller_register a pointer to the dma_device struct which is
+> associated with the dt node needs to passed as the data parameter.
+> New function will use this pointer to match only channels which belong to the
+> specified DMA controller.
 
-On 02.05.2014 15:03, Arun Kumar K wrote:
-> Adds support for google peach-pi board having the
-> Exynos5800 SoC.
->
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
+This patch needs review by DT folks too
+
+> 
+> Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
->   arch/arm/boot/dts/Makefile                |    3 +-
->   arch/arm/boot/dts/exynos5800-peach-pi.dts |  144 +++++++++++++++++++++++++++++
->   2 files changed, 146 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm/boot/dts/exynos5800-peach-pi.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 35c146f..efe1573 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -76,7 +76,8 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->   	exynos5420-arndale-octa.dtb \
->   	exynos5420-smdk5420.dtb \
->   	exynos5440-sd5v1.dtb \
-> -	exynos5440-ssdk5440.dtb
-> +	exynos5440-ssdk5440.dtb \
-> +	exynos5800-peach-pi.dtb
->   dtb-$(CONFIG_ARCH_HI3xxx) += hi3620-hi4511.dtb
->   dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb \
->   	ecx-2000.dtb
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> new file mode 100644
-> index 0000000..e0f8633
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -0,0 +1,144 @@
-> +/*
-> + * Google Peach Pi Rev 10+ board device tree source
+>  drivers/dma/of-dma.c   | 35 +++++++++++++++++++++++++++++++++++
+>  include/linux/of_dma.h |  4 ++++
+>  2 files changed, 39 insertions(+)
+> 
+> diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+> index e8fe9dc..d5fbeaa 100644
+> --- a/drivers/dma/of-dma.c
+> +++ b/drivers/dma/of-dma.c
+> @@ -218,3 +218,38 @@ struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+>  			&dma_spec->args[0]);
+>  }
+>  EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
+> +
+> +/**
+> + * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
+> + * @dma_spec:	pointer to DMA specifier as found in the device tree
+> + * @of_dma:	pointer to DMA controller data
 > + *
-> + * Copyright (c) 2014 Google, Inc
+> + * This function can be used as the of xlate callback for DMA driver which wants
+> + * to match the channel based on the channel id. When using this xlate function
+> + * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
+> + * The data parameter of of_dma_controller_register must be a pointer to the
+> + * dma_device struct the function should match upon.
 > + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
+> + * Returns pointer to appropriate dma channel on success or NULL on error.
 > + */
+> +struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
+> +					 struct of_dma *ofdma)
+> +{
+> +	struct dma_device *dev = ofdma->of_dma_data;
+> +	struct dma_chan *chan, *candidate = NULL;
 > +
-> +/dts-v1/;
-> +#include <dt-bindings/input/input.h>
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "exynos5800.dtsi"
+> +	if (!dev || dma_spec->args_count != 1)
+> +		return NULL;
 > +
-> +/ {
-> +	model = "Google Peach Pi Rev 10+";
+> +	list_for_each_entry(chan, &dev->channels, device_node)
+> +		if (chan->chan_id == dma_spec->args[0]) {
+> +			candidate = chan;
+> +			break;
+> +		}
 > +
-> +	compatible = "google,pi-rev16",
-> +		"google,pi-rev15", "google,pi-rev14",
-> +		"google,pi-rev13", "google,pi-rev12",
-> +		"google,pi-rev11", "google,pi-rev10",
-> +		"google,pi", "google,peach", "samsung,exynos5800",
-> +		"samsung,exynos5";
-
-I can see this board using the "google,peach" compatible string, which 
-is the same as one listed for peach-pit board. Since they are based on 
-different SoCs, are they really compatible?
-
+> +	if (!candidate)
+> +		return NULL;
 > +
-> +	memory {
-> +		reg = <0 0>;
+> +	return dma_get_slave_channel(candidate);
+> +}
+> +EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
+> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+> index ae36298..56bc026 100644
+> --- a/include/linux/of_dma.h
+> +++ b/include/linux/of_dma.h
+> @@ -41,6 +41,8 @@ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+>  						     const char *name);
+>  extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+>  		struct of_dma *ofdma);
+> +extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
+> +		struct of_dma *ofdma);
+>  #else
+>  static inline int of_dma_controller_register(struct device_node *np,
+>  		struct dma_chan *(*of_dma_xlate)
+> @@ -66,6 +68,8 @@ static inline struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_s
+>  	return NULL;
+>  }
+>  
+> +#define of_dma_xlate_by_chan_id NULL
+> +
+>  #endif
+>  
+>  #endif /* __LINUX_OF_DMA_H */
+> -- 
+> 1.8.4.2
+> 
 
-I don't think this is a good idea, because this is basically rendering 
-this dts file useless, unless used with a bootloader that can actually 
-inject correct values. I believe that some generic setup could be 
-provided in the dts, so you could at least get the board running.
-
-Otherwise looks good, so after addressing the two comments above feel 
-free to add my Reviewed-by.
-
-Best regards,
-Tomasz
+-- 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
