@@ -1,73 +1,172 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 1/7] device: introduce per device dma_pfn_offset
-Date: Thu, 1 May 2014 20:01:09 -0500
-Message-ID: <CAL_JsqJqmdYh61KGs-qfw_SRwUu=WT02ivkK5Rw4CKeDB3mXSw@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 2/7] of: introduce of_dma_get_range() helper
+Date: Thu, 1 May 2014 20:06:25 -0500
+Message-ID: <CAL_Jsq+j_mVp2F=Cb4F+i2Q-B4A7YLvLCP+YnAxkUJT2S+rcQQ@mail.gmail.com>
 References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
-	<1398353407-2345-2-git-send-email-santosh.shilimkar@ti.com>
+	<1398353407-2345-3-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398353407-2345-2-git-send-email-santosh.shilimkar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398353407-2345-3-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Thu, Apr 24, 2014 at 10:30 AM, Santosh Shilimkar
-<santosh.shilimkar@ti.com> wrote:
-> On few architectures, there are few restrictions on DMAble area of system
-> RAM. That also means that devices needs to know about this restrictions so
-> that the dma_masks can be updated accordingly and dma address translation
-> helpers can add/subtract the dma offset.
+<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+> From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 >
-> In most of cases DMA addresses can be performed using offset value of
-> Bus address space relatively to physical address space as following:
+> The of_dma_get_range() allows to find "dma-range" property for
+> the specified device and parse it.
+>  dma-ranges format:
+>    DMA addr (dma_addr)          : naddr cells
+>    CPU addr (phys_addr_t)       : pna cells
+>    size                         : nsize cells
 >
-> PFN->DMA:  __pfn_to_phys(pfn + [-]dma_pfn_offset)
-> DMA->PFN:  __phys_to_pfn(dma_addr) + [-]dma_pfn_offset
->
-> So we introduce per device dma_pfn_offset which can be popullated
-> by architecture init code while creating the devices.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-Rob
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 > ---
->  include/linux/device.h |    2 ++
->  1 file changed, 2 insertions(+)
+>  drivers/of/address.c       |   87 ++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_address.h |    8 ++++
+>  2 files changed, 95 insertions(+)
 >
-> diff --git a/include/linux/device.h b/include/linux/device.h
-> index 233bbbe..85a52d6 100644
-> --- a/include/linux/device.h
-> +++ b/include/linux/device.h
-> @@ -691,6 +691,7 @@ struct acpi_dev_node {
->   * @coherent_dma_mask: Like dma_mask, but for alloc_coherent mapping as not all
->   *             hardware supports 64-bit addresses for consistent allocations
->   *             such descriptors.
-> + * @dma_pfn_offset: offset of DMA memory range relatively of RAM
->   * @dma_parms: A low level driver may set these to teach IOMMU code about
->   *             segment limitations.
->   * @dma_pools: Dma pools (if dma'ble device).
-> @@ -756,6 +757,7 @@ struct device {
->                                              not all hardware supports
->                                              64 bit addresses for consistent
->                                              allocations such descriptors. */
-> +       unsigned long   dma_pfn_offset;
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index cb4242a..c54baee 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -721,3 +721,90 @@ void __iomem *of_iomap(struct device_node *np, int index)
+>         return ioremap(res.start, resource_size(&res));
+>  }
+>  EXPORT_SYMBOL(of_iomap);
+> +
+> +/**
+> + * of_dma_get_range - Get DMA range info
+> + * @np:                device node to get DMA range info
+> + * @dma_addr:  pointer to store initial DMA address of DMA range
+> + * @paddr:     pointer to store initial CPU address of DMA range
+> + * @size:      pointer to store size of DMA range
+> + *
+> + * Look in bottom up direction for the first "dma-ranges" property
+> + * and parse it.
+> + *  dma-ranges format:
+> + *     DMA addr (dma_addr)     : naddr cells
+> + *     CPU addr (phys_addr_t)  : pna cells
+> + *     size                    : nsize cells
+> + *
+> + * It returns -ENODEV if "dma-ranges" property was not found
+> + * for this device in DT.
+> + */
+> +int of_dma_get_range(struct device_node *np, u64 *dma_addr, u64 *paddr, u64 *size)
+> +{
+> +       struct device_node *node = of_node_get(np);
+> +       const __be32 *ranges = NULL;
+> +       int len, naddr, nsize, pna;
+> +       int ret = 0;
+> +       u64 dmaaddr;
+> +
+> +       if (!node)
+> +               return -EINVAL;
+> +
+> +       while (1) {
+> +               naddr = of_n_addr_cells(node);
+> +               nsize = of_n_size_cells(node);
+> +               node = of_get_next_parent(node);
+> +               if (!node)
+> +                       break;
+> +
+> +               ranges = of_get_property(node, "dma-ranges", &len);
+> +
+> +               /* Ignore empty ranges, they imply no translation required */
+> +               if (ranges && len > 0)
+> +                       break;
+> +
+> +               /*
+> +                * At least empty ranges has to be defined for parent node if
+> +                * DMA is supported
+> +                */
+> +               if (!ranges)
+> +                       break;
+> +       }
+> +
+> +       if (!ranges) {
+> +               pr_debug("%s: no dma-ranges found for node(%s)\n",
+> +                        __func__, np->full_name);
+> +               ret = -ENODEV;
+> +               goto out;
+> +       }
+> +
+> +       len /= sizeof(u32);
+> +
+> +       pna = of_n_addr_cells(node);
+> +
+> +       /* dma-ranges format:
+> +        * DMA addr     : naddr cells
+> +        * CPU addr     : pna cells
+> +        * size         : nsize cells
+> +        */
+> +       dmaaddr = of_read_number(ranges, naddr);
+> +       *paddr = of_translate_dma_address(np, ranges);
+> +       if (*paddr == OF_BAD_ADDR) {
+> +               pr_err("%s: translation of DMA address(%pad) to CPU address failed node(%s)\n",
+> +                      __func__, dma_addr, np->full_name);
+> +               ret = -EINVAL;
+> +               goto out;
+> +       }
+> +       *dma_addr = dmaaddr;
+> +
+> +       *size = of_read_number(ranges + naddr + pna, nsize);
+> +
+> +       pr_debug("dma_addr(%llx) cpu_addr(%llx) size(%llx)\n",
+> +                *dma_addr, *paddr, *size);
+> +
+> +out:
+> +       of_node_put(node);
+> +
+> +       return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(of_dma_get_range);
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 5f6ed6b..4d7b325 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -63,6 +63,8 @@ extern int of_pci_range_parser_init(struct of_pci_range_parser *parser,
+>  extern struct of_pci_range *of_pci_range_parser_one(
+>                                         struct of_pci_range_parser *parser,
+>                                         struct of_pci_range *range);
+> +extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+> +                               u64 *paddr, u64 *size);
+>  #else /* CONFIG_OF_ADDRESS */
+>  static inline struct device_node *of_find_matching_node_by_address(
+>                                         struct device_node *from,
+> @@ -90,6 +92,12 @@ static inline struct of_pci_range *of_pci_range_parser_one(
+>  {
+>         return NULL;
+>  }
+> +
+> +static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+> +                               u64 *paddr, u64 *size)
+> +{
+> +       return -ENODEV;
+> +}
+>  #endif /* CONFIG_OF_ADDRESS */
 >
->         struct device_dma_parameters *dma_parms;
->
+>  #ifdef CONFIG_OF
 > --
 > 1.7.9.5
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
