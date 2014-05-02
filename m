@@ -1,68 +1,43 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
-Date: Fri, 02 May 2014 09:55:23 +0200
-Message-ID: <5674507.GGRAhKo0Eq@wuerfel>
-References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com> <7337945.Kibhmj51LR@wuerfel> <CAGVrzcayySWxBhXVK0Tq8-foH5tTX0_9EbFL3YtPreHeruNDmQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Subject: [PATCH] IBM Akebono: Remove obsolete config select
+Date: Fri,  2 May 2014 18:06:45 +1000
+Message-ID: <1399018005-23136-1-git-send-email-alistair@popple.id.au>
+References: <1398998002.2925.15.camel@pasglop>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcayySWxBhXVK0Tq8-foH5tTX0_9EbFL3YtPreHeruNDmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1398998002.2925.15.camel@pasglop>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, aelder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
+Cc: pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 May 2014 22:32:27 Florian Fainelli wrote:
-> >> +#ifndef __ARM_BCM63XX_H
-> >> +#define __ARM_BCM63XX_H
-> >> +
-> >> +#define IO_ADDRESS(x)                (((x) & 0x00ffffff) + 0xfc000000)
-> >> +
-> >> +/* AHB register space */
-> >> +#define BCM63XX_AHB_PHYS     0x80001000
-> >> +#define BCM63XX_AHB_VIRT     IO_ADDRESS(BCM63XX_AHB_PHYS)
-> >> +#define BCM63XX_AHB_SIZE     0x800000
-> >> +
-> >> +/* PERIPH (legacy) register space */
-> >> +#define BCM63XX_PERIPH_PHYS  0xfffe8000
-> >> +#define BCM63XX_PERIPH_VIRT  IO_ADDRESS(BCM63XX_PERIPH_PHYS)
-> >> +#define BCM63XX_PERIPH_SIZE  0x10000
-> >
-> > You shouldn't need these any more. If you do, just move all of this
-> > into the main file, to ensure no other file accidentally relies
-> > on hardcoded values.
-> >
-> > Note that BCM63XX_AHB_PHYS is nor aligned, so AFAICT you don't
-> > actually get a huge page entry for it, and there is no point
-> > doing this at all, as it has neither functional nor performance
-> > relevance.
-> >
-> > You may have out-of-tree drivers that you haven't cleaned up
-> > or posted yet relying on specific static mappings, but that is
-> > no reason to have these mappings in the mainline kernel.
-> 
-> I tried without the iotable entries, and any register access to these
-> regions did hang the system, I will check harder what was going on
-> there.
+The original implementation of MMC support for Akebono introduced a
+new configuration symbol (MMC_SDHCI_OF_476GTR). This symbol has been
+dropped in favour of using the generic platform driver however the
+select for this symbol was mistakenly left in the platform
+configuration.
 
-Can you clarify what you mean with 'any register access to these
-regions did hang the system'? If you remove the call to iotable_init,
-you obviously can't access the registers through BCM63XX_{AHB,PERIPH}_VIRT
-any longer, but accesses through a pointer returned from ioremap()
-should keep working as before.
+This patch removes the obsolete symbol selection.
 
-The DEBUG_LL early output is a special case here, these need one
-of three options:
+Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+---
+ arch/powerpc/platforms/44x/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-- .map_io is NULL (preferred)
-- .map_io points to a function that calls debug_ll_io_init()
-- .map_io points to a function that calls iotable_init with
-  an equivalent or larger mapping as debug_ll_io_init() would.
+diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
+index 8beec7d..908bf11 100644
+--- a/arch/powerpc/platforms/44x/Kconfig
++++ b/arch/powerpc/platforms/44x/Kconfig
+@@ -220,7 +220,6 @@ config AKEBONO
+ 	select USB_EHCI_HCD_PLATFORM
+ 	select MMC_SDHCI
+ 	select MMC_SDHCI_PLTFM
+-	select MMC_SDHCI_OF_476GTR
+ 	select ATA
+ 	select SATA_AHCI_PLATFORM
+ 	help
+-- 
+1.8.3.2
 
-I suspect you were doing the third here for historic reasons.
-
-	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
