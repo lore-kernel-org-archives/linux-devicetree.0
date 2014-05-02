@@ -1,75 +1,84 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH v2 3/3] ARM: dts: fixed gpio key node for exynos4412
-Date: Fri, 02 May 2014 15:38:03 +0900
-Message-ID: <53633D4B.9070500@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH 3/3] media: mx2-emmaprp: Add devicetree support
+Date: Fri,  2 May 2014 11:18:39 +0400
+Message-ID: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixed gpio key device node.
-First, fix incorrect gpio property.
-And then, add ok-key node where locate bottom center.
-I have tested on exynos4412-trats2 board.
+This patch adds devicetree support for the Freescale enhanced Multimedia
+Accelerator (eMMA) video Pre-processor (PrP).
 
-Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 ---
-Changes in v2:
-- None.
----
- arch/arm/boot/dts/exynos4412-trats2.dts |   22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+ .../devicetree/bindings/media/fsl-imx-emmaprp.txt     | 19 +++++++++++++++++++
+ drivers/media/platform/mx2_emmaprp.c                  |  8 ++++++++
+ 2 files changed, 27 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index d599215..41305e2 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -87,18 +87,18 @@
- 		compatible = "gpio-keys";
-
- 		key-down {
--			interrupt-parent = <&gpj1>;
--			interrupts = <2 0>;
--			gpios = <&gpj1 2 1>;
-+			interrupt-parent = <&gpx3>;
-+			interrupts = <3 0>;
-+			gpios = <&gpx3 3 1>;
- 			linux,code = <114>;
- 			label = "volume down";
- 			debounce-interval = <10>;
- 		};
-
- 		key-up {
--			interrupt-parent = <&gpj1>;
--			interrupts = <1 0>;
--			gpios = <&gpj1 1 1>;
-+			interrupt-parent = <&gpx2>;
-+			interrupts = <2 0>;
-+			gpios = <&gpx2 2 1>;
- 			linux,code = <115>;
- 			label = "volume up";
- 			debounce-interval = <10>;
-@@ -113,6 +113,16 @@
- 			debounce-interval = <10>;
- 			gpio-key,wakeup;
- 		};
+diff --git a/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
+new file mode 100644
+index 0000000..9e8238f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
+@@ -0,0 +1,19 @@
++* Freescale enhanced Multimedia Accelerator (eMMA) video Pre-processor (PrP)
++  for i.MX.
 +
-+		key-ok {
-+			interrupt-parent = <&gpx0>;
-+			interrupts = <1 0>;
-+			gpios = <&gpx0 1 1>;
-+			linux,code = <139>;
-+			label = "ok";
-+			debounce-inteval = <10>;
-+			gpio-key,wakeup;
-+		};
- 	};
-
- 	adc: adc@126C0000 {
++Required properties:
++- compatible : Shall contain "fsl,imx21-emmaprp".
++- reg        : Offset and length of the register set for the device.
++- interrupts : Should contain eMMA PrP interrupt number.
++- clocks     : Should contain the ahb and ipg clocks, in the order
++               determined by the clock-names property.
++- clock-names: Should be "ahb", "ipg".
++
++Example:
++	emmaprp: emmaprp@10026400 {
++		compatible = "fsl,imx27-emmaprp", "fsl,imx21-emmaprp";
++		reg = <0x10026400 0x100>;
++		interrupts = <51>;
++		clocks = <&clks 49>, <&clks 68>;
++		clock-names = "ipg", "ahb";
++	};
+diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
+index fa8f7ca..0646bda 100644
+--- a/drivers/media/platform/mx2_emmaprp.c
++++ b/drivers/media/platform/mx2_emmaprp.c
+@@ -18,6 +18,7 @@
+  */
+ #include <linux/module.h>
+ #include <linux/clk.h>
++#include <linux/of.h>
+ #include <linux/slab.h>
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+@@ -1005,12 +1006,19 @@ static int emmaprp_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id __maybe_unused emmaprp_dt_ids[] = {
++	{ .compatible = "fsl,imx21-emmaprp", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, emmaprp_dt_ids);
++
+ static struct platform_driver emmaprp_pdrv = {
+ 	.probe		= emmaprp_probe,
+ 	.remove		= emmaprp_remove,
+ 	.driver		= {
+ 		.name	= MEM2MEM_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(emmaprp_dt_ids),
+ 	},
+ };
+ module_platform_driver(emmaprp_pdrv);
 -- 
-1.7.9.5
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
