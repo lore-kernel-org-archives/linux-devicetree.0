@@ -1,28 +1,44 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: henninger: specify EXTAL frequency
-Date: Fri, 2 May 2014 11:30:12 +0900
-Message-ID: <20140502023012.GH2265@verge.net.au>
-References: <201405020256.34093.sergei.shtylyov@cogentembedded.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
+Date: Fri, 02 May 2014 11:31:11 +0900
+Message-ID: <045901cf65ae$94f4f4b0$bedede10$@samsung.com>
+References: <1398941085-10224-1-git-send-email-sachin.kamat@linaro.org>
+ <5153376.z2oJ163pLF@wuerfel> <1625238.xy1WDqNhgs@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201405020256.34093.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1625238.xy1WDqNhgs@diego>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>, 'Arnd Bergmann' <arnd@arndb.de>
+Cc: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, t.figa@samsung.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 02, 2014 at 02:56:33AM +0400, Sergei Shtylyov wrote:
-> When creating the initial device tree for the Henninger board,  I've overlooked
-> that EXTAL frequency needs to be overridden there. The 'sh-sci' driver  managed
-> to work somehow but the SDHI driver that I've tried to enable just hanged with
-> the default EXTAL frequency of 0...
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> ---
-> This patch is against 'renesas-devel-v3.15-rc3-20140429' tag of Simon Horman's
-> 'renesas.git' repo.
+Heiko St=FCbner wrote:
+> Am Donnerstag, 1. Mai 2014, 15:32:14 schrieb Arnd Bergmann:
+> > On Thursday 01 May 2014 16:14:44 Sachin Kamat wrote:
+> > > Instead of hardcoding the SYSRAM details for each SoC,
+> > > pass this information through device tree (DT) and make
+> > > the code SoC agnostic. Generic SRAM bindings are used
+> > > for achieving this.
+> > >
+> > > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> > > Cc: Heiko Stuebner <heiko@sntech.de>
+> > > Cc: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Looks good to me. Both patches
+> >
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > Heiko, can you also have a look?
+>=20
+> Already did :-)
 
-Thanks, I have queued this up.
+Thanks you guys ;-)
+
+I will take this series when I get confirmation of universal-c210's beh=
+avior
+from Andrzej or Tomasz.
+
+- Kukjin
