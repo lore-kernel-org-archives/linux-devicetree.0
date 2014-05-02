@@ -1,72 +1,37 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH/RFC 3/4] of/clk: Register clocks suitable for Runtime PM
- with the PM core
-Date: Fri, 2 May 2014 10:13:11 +0200
-Message-ID: <CAPDyKFqG0dV+-y2=t=d3w6_hxWsYi+sOmNdvS6ECPOuoQ61Pmw@mail.gmail.com>
-References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
-	<1398334403-26181-4-git-send-email-geert+renesas@glider.be>
-	<CAPDyKFr02yyhGNncYX2AgBXTA3Sc0AGQcExjtLvQ5QU0_=YJwg@mail.gmail.com>
-	<535B130C.1000007@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/2] Documentation: DT: Exynos: Bind SRAM though DT
+Date: Fri, 02 May 2014 10:53:44 +0200
+Message-ID: <4811186.9DeISv2WWp@wuerfel>
+References: <1399007180-20680-1-git-send-email-sachin.kamat@linaro.org> <1399007180-20680-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <535B130C.1000007@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-sh@vger.kernel.org, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399007180-20680-2-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, robh+dt@kernel.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
->>
->>
->> Normally I don't think it's a good idea to "automatically" manage
->> clocks from PM core or any other place but from the driver (and
->> possibly the subsystem).
->>
->> The reason is simply that we hide things that normally is supposed to
->> be handled by the driver. Typically a cross SOC driver should work
->> fine both with and without a pm_domain. It should also not rely on
->> CONFIG_PM_RUNTIME.
+On Friday 02 May 2014 10:36:20 Sachin Kamat wrote:
+> +       sram@02020000 {
+> +               compatible = "mmio-sram";
+> +               reg = <0x02020000 0x54000>;
+> +               #address-cells = <1>;
+> +               #size-cells = <1>;
+> +               ranges = <0 0x02020000 0x54000>;
+> +
 
-[Snip]
+That is actually quite a lot of unused SRAM. Since it came up this
+morning in another thread, there may be value in using this for
+coherent DMA allocations for some devices. Not sure about how
+to best hook this up, but there could be some serious performance
+improvements. A typical case would be DMA descriptors for a
+gigabit ethernet adapter, which are a pain to maintain on platforms
+without cache-coherent DMA.
 
->>
->>> +static int of_clk_register(struct device *dev, struct clk *clk)
->>> +{
->>> +       int error;
->>> +
->>> +       if (!dev->pm_domain) {
->>> +               error = pm_clk_create(dev);
->>> +               if (error)
->>> +                       return error;
->>> +
->>> +               dev->pm_domain = &of_clk_pm_domain;
->>
->>
->> I am concerned about how this will work in conjunction with the
->> generic power domain.
->>
->> A device can't reside in more than one pm_domain; thus I think it
->> would be better to always use the generic power domain and not have a
->> specific one for clocks. Typically the genpd should invoke
->> pm_clk_resume|suspend from it's runtime PM callbacks.
->
->
-> I'm not sure about this. A typical use case would be to gate clocks ASAP and
-> then wait until device is idle long enough to consider turning off the power
-> domain worthwhile. Also sometimes we may want to gate the clocks, but
-> prevent power domain from being powered off to retain hardware state (e.g.
-> because there is no way to read it and restore later).
+You could check what drivers you have that call dma_alloc_coherent,
+and see if any of them are performance-critical, then hack them
+up to use this memory instead as an experiment.
 
-So, in principle you prefer to have driver's handle clock gating to
-save power from their runtime PM callbacks, instead of from the power
-domain, right? Just to clarify, that's my view as well.
-
-Kind regards
-Ulf Hansson
-
->
-> I believe, though, that for devices that are not inside a controllable power
-> domain, this might be a good solution.
->
-> Best regards,
-> Tomasz
+	Arnd
