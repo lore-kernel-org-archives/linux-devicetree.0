@@ -1,84 +1,73 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH 3/3] media: mx2-emmaprp: Add devicetree support
-Date: Fri,  2 May 2014 11:18:39 +0400
-Message-ID: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mauro Carvalho Chehab <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 4/6] i2c: sh_mobile: add devicetree documentation
+Date: Fri, 2 May 2014 09:23:03 +0200
+Message-ID: <20140502072303.GB2647@katana>
+References: <1398896470-24663-1-git-send-email-wsa@the-dreams.de>
+ <1398896470-24663-5-git-send-email-wsa@the-dreams.de>
+ <CAMuHMdWP8KH=6OKmBbA5UqixV7mdKZdEhFw8Tq_XZLaJCOQ07w@mail.gmail.com>
+ <CAL_JsqKgwKjag2hRSaDwoejuXRDxDgWwtpnS1gijQbVo0h_MjQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="JYK4vJDZwFMowpUq"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqKgwKjag2hRSaDwoejuXRDxDgWwtpnS1gijQbVo0h_MjQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Linux I2C <linux-i2c@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa+renesas@sang-engineering.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds devicetree support for the Freescale enhanced Multimedia
-Accelerator (eMMA) video Pre-processor (PrP).
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../devicetree/bindings/media/fsl-imx-emmaprp.txt     | 19 +++++++++++++++++++
- drivers/media/platform/mx2_emmaprp.c                  |  8 ++++++++
- 2 files changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
+--JYK4vJDZwFMowpUq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
-new file mode 100644
-index 0000000..9e8238f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
-@@ -0,0 +1,19 @@
-+* Freescale enhanced Multimedia Accelerator (eMMA) video Pre-processor (PrP)
-+  for i.MX.
-+
-+Required properties:
-+- compatible : Shall contain "fsl,imx21-emmaprp".
-+- reg        : Offset and length of the register set for the device.
-+- interrupts : Should contain eMMA PrP interrupt number.
-+- clocks     : Should contain the ahb and ipg clocks, in the order
-+               determined by the clock-names property.
-+- clock-names: Should be "ahb", "ipg".
-+
-+Example:
-+	emmaprp: emmaprp@10026400 {
-+		compatible = "fsl,imx27-emmaprp", "fsl,imx21-emmaprp";
-+		reg = <0x10026400 0x100>;
-+		interrupts = <51>;
-+		clocks = <&clks 49>, <&clks 68>;
-+		clock-names = "ipg", "ahb";
-+	};
-diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
-index fa8f7ca..0646bda 100644
---- a/drivers/media/platform/mx2_emmaprp.c
-+++ b/drivers/media/platform/mx2_emmaprp.c
-@@ -18,6 +18,7 @@
-  */
- #include <linux/module.h>
- #include <linux/clk.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
-@@ -1005,12 +1006,19 @@ static int emmaprp_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id __maybe_unused emmaprp_dt_ids[] = {
-+	{ .compatible = "fsl,imx21-emmaprp", },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, emmaprp_dt_ids);
-+
- static struct platform_driver emmaprp_pdrv = {
- 	.probe		= emmaprp_probe,
- 	.remove		= emmaprp_remove,
- 	.driver		= {
- 		.name	= MEM2MEM_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(emmaprp_dt_ids),
- 	},
- };
- module_platform_driver(emmaprp_pdrv);
--- 
-1.8.3.2
+On Wed, Apr 30, 2014 at 08:02:10PM -0500, Rob Herring wrote:
+> On Wed, Apr 30, 2014 at 5:32 PM, Geert Uytterhoeven
+> <geert@linux-m68k.org> wrote:
+> > Hi Wolfram,
+> >
+> > CC devicetree
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yes. Thanks, Geert.
+
+> >> +Required properties:
+> >> +- compatible      : "renesas,iic-<soctype>". "renesas,rmobile-iic" as=
+ fallback
+> >
+> > Please also list all supported values, so checkpatch can validate DTS c=
+ompatible
+> > properties against this binding document.
+>=20
+> You could add this pattern to checkpatch as well. I really wish
+> Renesas would follow normal convention of <vendor>,<chip>-<device>.
+
+The binding is already applied and this patch just adds forgotten
+documentation. Can we keep this documentation describing the current
+state for now and discuss the binding convention seperately?
+
+
+--JYK4vJDZwFMowpUq
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTY0fWAAoJEBQN5MwUoCm2RyoP/2L+CoXhmUTPaniA9VXP2Ldo
+IKXVEsNGg3TGB4OsZxJ/uAAM8fji/IJ+a9ls2IZRLj1msHa8f5M511l9LinyWdhS
+c4wVhaUp0Rh/wV2YPSPWYDqOTYU6X9nRy0Wqumavt12xYoquruh+Xb80gFOVmLyT
+tMX5xgml5W/sjBAGubXOi0Yk8/9ZmUar5dOUdbvs848QHDPKQ48gMM77hAksjerm
+2IaseiB+uV95WGjhwXx8blfz33qrFkUEGeNl1PLJSy8/ekn7wiKOSi7BuDKSqjaq
+qTQl+7TD3ukXHEMovqX6sqC/kiCsNHa4FsiWVUyCV7rh2c9EOU4aG/TtPI+NpKK2
+ZwxetR2WFKmkFIqnikYhZD+0OjSl5Edb3ivuV1IMmY8gyBSuZZJTDzUgcuDF/Xt5
+NDK3I5/JsQ1BnlVkw9WhUbBM1To22XTvEyt1bHHK5fqLKJIrBC2hEPs5vbCfyP/f
+bnomsR0zk7mX8ZJ+ag+3M862Fd72Yq8FMQNjtorRny3d4oH5lLO42Y9cg+709EHd
+pMui2Mstvy7ScOIiNDh2AXxUTuMSSxV9GYtV5EYILHFLttIRAirgglgETEllCnVt
+jfleswZSC9yJeQQiBrEC/uoMr004ZIRoJTZ7Y/xU0/IV+8iQ0Z4BGbAhYcP5R52c
+75CqO1pPPREA06g9MUNx
+=lQun
+-----END PGP SIGNATURE-----
+
+--JYK4vJDZwFMowpUq--
