@@ -1,47 +1,69 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v4 5/5] arm: exynos: Add MCPM call-back functions
-Date: Fri, 2 May 2014 14:37:42 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1405021435420.980@knanqh.ubzr>
-References: <1398528348-21214-6-git-send-email-a.kesavan@samsung.com>
- <1399044359-15784-1-git-send-email-a.kesavan@samsung.com>
- <alpine.LFD.2.11.1405021347500.980@knanqh.ubzr>
- <CAL1qeaHrP+i4EhOQKkSX7xFNyiyBiBfpsV3B0EHCFcrNzc6KLQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 02 May 2014 12:50:17 -0600
+Message-ID: <5363E8E9.6000908@wwwdotorg.org>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com> <20140502110557.GA18452@ulmo> <4369315.NLgjZW6qVF@wuerfel> <20140502132327.GA14612@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL1qeaHrP+i4EhOQKkSX7xFNyiyBiBfpsV3B0EHCFcrNzc6KLQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <t.figa@samsung.com>, daniel.lezcano@linaro.org, Will Deacon <will.deacon@arm.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, thomas.ab@samsung.com, Abhilash Kesavan <a.kesavan@samsung.com>, Dave Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, inderpal.s@samsung.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140502132327.GA14612@ulmo>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2 May 2014, Andrew Bresticker wrote:
-
-> >> +     /*
-> >> +      * TODO: Turn off the clusters when all cores in the cluster
-> >> +      * are down to achieve significant power savings.
-> >> +      */
-> >
-> > This comment should actually be located right after the
-> > "if (exynos_cluster_unused(cluster))" above.  That is where the cluster
-> > control should be applied, assuming it'll be effective only when WFI is
-> > executed.
+On 05/02/2014 07:23 AM, Thierry Reding wrote:
+> On Fri, May 02, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
+>> On Friday 02 May 2014 13:05:58 Thierry Reding wrote:
+>>>
+>>> Let me see if I understood the above proposal by trying to translate it
+>>> into a simple example for a specific use-case. On Tegra for example we
+>>> have various units that can either access system memory directly or use
+>>> the IOMMU to translate accesses for them. One such unit would be the
+>>> display controller that scans out a framebuffer from memory.
+>>
+>> Can you explain how the decision is made whether the IOMMU gets used
+>> or not? In all cases I've seen so far, I think we can hardwire this
+>> in DT, and only expose one or the other. Are both ways used
+>> concurrently?
 > 
-> Correct me if I'm wrong Samsung folks, but I thought it was not
-> possible to apply cluster power control from a CPU within the cluster
-> being powered down, i.e. a CPU in the other cluster must be the one to
-> apply the cluster power control to power down the outbound cluster.
+> It should be possible to hardcode this in DT for Tegra. As I understand
+> it, both interfaces can't be used at the same time. Once translation has
+> been enabled for one client, all accesses generated by that client will
+> be translated.
+> 
+> Hiroshi, please correct me if I'm wrong.
 
-Is this true even for deep idle C-states?
+I believe the HW connectivity is always as follows:
 
+Bus master (e.g. display controller) ---> IOMMU (Tegra SMMU) ---> RAM
 
-Nicolas
+In the IOMMU, there is a bit per bus master that indicates whether the
+IOMMU translates the bus master's accesses or not. If that bit is
+enabled, then page tables in the IOMMU are used to perform the translation.
+
+You could also look at the HW setup as:
+
+Bus master (e.g. display controller)
+    v
+   ----
+  /    \
+  ------
+   |  \
+   |   ------------------
+   |                     \
+   v                     v
+IOMMU (Tegra SMMU) ---> RAM
+
+But IIRC the bit that controls that demux is in the IOMMU, so this
+distinction probably isn't relevant.
+
+Now, perhaps there are devices which themselves control whether
+transactions are sent to the IOMMU or direct to RAM, but I'm not
+familiar with them. Is the GPU in that category, since it has its own
+GMMU, albeit chained into the SMMU IIRC?
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
