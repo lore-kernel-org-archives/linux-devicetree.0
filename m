@@ -1,233 +1,328 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/3] clk: exynos5420: Add 5800 specific clocks
-Date: Fri, 02 May 2014 19:23:35 +0200
-Message-ID: <5363D497.6090001@gmail.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com> <1399035821-25096-2-git-send-email-arun.kk@samsung.com>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 2 May 2014 18:31:20 +0100
+Message-ID: <20140502173120.GD3805@e103592.cambridge.arm.com>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
+ <6774053.rAccqTeoiQ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399035821-25096-2-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@chromium.org, olofj@google.com, t.figa@samsung.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, arunkk.samsung@gmail.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6774053.rAccqTeoiQ@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arun, Alim,
+On Fri, May 02, 2014 at 06:14:58PM +0200, Arnd Bergmann wrote:
+> On Thursday 01 May 2014 18:32:48 Dave Martin wrote:
+> > (Note, this is a long mail -- people in a hurry may want to skip to
+> > "Outline binding" to get a feel for what is bring proposed, before
+> > returning to the background wording.)
+> > 
+> > As highlighted in some previous discussions[1], it is becoming possible
+> > to build ARM-based SoCs that seem to be impossible to describe using the
+> > DT bindings currently specified by ePAPR.  This is driven by increasing
+> > complexity of interconnects, the appearance of IOMMUs, MSI-capable
+> > interrupt controllers and multiple bus masters.
+> > 
+> > This issue is not fundamental to ARM and could apply to other SoC
+> > families with a similar bus architecture, but most of the current
+> > discussion in this area has been about how to address these
+> > requirements for ARM SoCs.
+> > 
+> > This RFC is an outline for some core bindings to solve part of the
+> > problem of describing such systems, particularly how to describe master/
+> > slave relationships not currently representable in DT.  It is premature
+> > to make a concrete proposal yet: rather I'm presenting this as a starting
+> > point for discussion initially.
+> > 
+> > The intent is not to rewrite existing bindings, but to define a common
+> > DT approach for describing otherwise problematic features of future
+> > systems.  Actual Linux support for this could be implemented as needed.
+> 
+> Thanks a lot for getting this rolling!
+> 
+> 
+> > ** Outline binding **
+> > 
+> > generic device node property: "slaves"
+> > 
+> > 	optional
+> > 
+> > 	type : cell array consisting of one or more phandles
+> > 
+> > 	Implies that the device represented by the containing node
+> > 	can issue transactions to the referenced node.
+> > 
+> > 	The referenced node is any bus or device node, and is
+> > 	interpreted in the usual way, including the treatment
+> > 	of ranges, #address-cells and #size-cells.  If the
+> > 	referenced node has a non-empty ranges property, the
+> > 	referencing node's #address-cells must be the same as
+> > 	that of the referenced node's device tree parent.
+> 
+> I guess you mean "dma-ranges" here, not "ranges", right?
+> I don't see how "ranges" is even relevant for this.
 
-On 02.05.2014 15:03, Arun Kumar K wrote:
-> From: Alim Akhtar <alim.akhtar@samsung.com>
->
-> Exynos5800 clock structure is mostly similar to 5420 with only
-> a small delta changes. So the 5420 clock file is re-used for
-> 5800 also. The common clocks for both are seggreagated and few
-> clocks which are different for both are separately initialized.
+No, but I didn't state it very clearly.
 
-Let's start with a general comment to this patch first. Have you 
-consulted this with Shaik and Rahul (on CC) who are currently doing a 
-quite heavy lifting of this driver to make sure that your work don't 
-cause conflicts?
+In this:
 
-Also please see some more specific comments inline.
+	parent {
+		child {
+			ranges = < ... >;
+			dma-ranges = < ... >;
+		};
+	};
 
->
-> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> ---
->   .../devicetree/bindings/clock/exynos5420-clock.txt |    3 +-
->   drivers/clk/samsung/clk-exynos5420.c               |  192 +++++++++++++++-----
->   include/dt-bindings/clock/exynos5420.h             |    1 +
->   3 files changed, 150 insertions(+), 46 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/exynos5420-clock.txt b/Documentation/devicetree/bindings/clock/exynos5420-clock.txt
-> index ca88c97..d54f42c 100644
-> --- a/Documentation/devicetree/bindings/clock/exynos5420-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/exynos5420-clock.txt
-> @@ -1,12 +1,13 @@
->   * Samsung Exynos5420 Clock Controller
->
->   The Exynos5420 clock controller generates and supplies clock to various
-> -controllers within the Exynos5420 SoC.
-> +controllers within the Exynos5420 SoC and for the Exynos5800 SoC.
->
->   Required Properties:
->
->   - compatible: should be one of the following.
->     - "samsung,exynos5420-clock" - controller compatible with Exynos5420 SoC.
-> +  - "samsung,exynos5800-clock" - controller compatible with Exynos5800 SoC.
->
->   - reg: physical base address of the controller and length of memory mapped
->     region.
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 60b2681..0543cb7 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -51,6 +51,7 @@
->   #define SRC_TOP5		0x10214
->   #define SRC_TOP6		0x10218
->   #define SRC_TOP7		0x1021c
-> +#define SRC_TOP9		0x10224 /* 5800 specific */
->   #define SRC_DISP10		0x1022c
->   #define SRC_MAU			0x10240
->   #define SRC_FSYS		0x10244
-> @@ -59,6 +60,7 @@
->   #define SRC_TOP10		0x10280
->   #define SRC_TOP11		0x10284
->   #define SRC_TOP12		0x10288
-> +#define SRC_TOP13		0x1028c /* 5800 specific */
->   #define	SRC_MASK_DISP10		0x1032c
->   #define SRC_MASK_FSYS		0x10340
->   #define SRC_MASK_PERIC0		0x10350
-> @@ -66,6 +68,7 @@
->   #define DIV_TOP0		0x10500
->   #define DIV_TOP1		0x10504
->   #define DIV_TOP2		0x10508
-> +#define DIV_TOP9		0x10524 /* 5800 specific */
->   #define DIV_DISP10		0x1052c
->   #define DIV_MAU			0x10544
->   #define DIV_FSYS0		0x10548
-> @@ -102,8 +105,14 @@
->   #define SRC_KFC			0x28200
->   #define DIV_KFC0		0x28500
->
-> +/* Exynos5x SoC type */
-> +enum exynos5x_soc {
-> +	EXYNOS5420,
-> +	EXYNOS5800,
-> +};
-> +
->   /* list of PLLs */
-> -enum exynos5420_plls {
-> +enum exynos5x_plls {
->   	apll, cpll, dpll, epll, rpll, ipll, spll, vpll, mpll,
->   	bpll, kpll,
->   	nr_plls			/* number of PLLs */
-> @@ -112,13 +121,13 @@ enum exynos5420_plls {
->   static void __iomem *reg_base;
->
->   #ifdef CONFIG_PM_SLEEP
-> -static struct samsung_clk_reg_dump *exynos5420_save;
-> +static struct samsung_clk_reg_dump *exynos5x_save;
->
->   /*
->    * list of controller registers to be saved and restored during a
->    * suspend/resume cycle.
->    */
-> -static unsigned long exynos5420_clk_regs[] __initdata = {
-> +static unsigned long exynos5x_clk_regs[] __initdata = {
->   	SRC_CPU,
->   	DIV_CPU0,
->   	DIV_CPU1,
-> @@ -182,16 +191,16 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
->
->   static int exynos5420_clk_suspend(void)
->   {
-> -	samsung_clk_save(reg_base, exynos5420_save,
-> -				ARRAY_SIZE(exynos5420_clk_regs));
-> +	samsung_clk_save(reg_base, exynos5x_save,
-> +				ARRAY_SIZE(exynos5x_clk_regs));
+There are two transaction flows being described.  There are transactions
+from parent -> child, for which "ranges" describes the mappings, and
+there are transactions from child -> parent, for which "dma-ranges"
+describes the mappings.
 
-Don't you need to handle save and restore of 5800-specific registers as 
-well? You can see Exynos4 clock driver for an example of handling such 
-setup.
+The name "dma-ranges" obfuscates this symmetry, so it took me a while
+to figure out what it really means -- maybe I'm still confused, but
+I think that's the gist of it.
 
->
->   	return 0;
->   }
->
->   static void exynos5420_clk_resume(void)
->   {
-> -	samsung_clk_restore(reg_base, exynos5420_save,
-> -				ARRAY_SIZE(exynos5420_clk_regs));
-> +	samsung_clk_restore(reg_base, exynos5x_save,
-> +				ARRAY_SIZE(exynos5x_clk_regs));
 
-Ditto.
+For the purposes of cross-links, my plan was that we interpret all
+those links as "forward" (i.e., parent -> child) links, where the
+referencing node is deemed to be the parent, and the referenced node is
+deemed to be the child. Just as in the ePAPR case, the associated mapping
+is then described by "ranges".
 
->   }
->
->   static struct syscore_ops exynos5420_clk_syscore_ops = {
-> @@ -201,9 +210,9 @@ static struct syscore_ops exynos5420_clk_syscore_ops = {
->
->   static void exynos5420_clk_sleep_init(void)
->   {
-> -	exynos5420_save = samsung_clk_alloc_reg_dump(exynos5420_clk_regs,
-> -					ARRAY_SIZE(exynos5420_clk_regs));
-> -	if (!exynos5420_save) {
-> +	exynos5x_save = samsung_clk_alloc_reg_dump(exynos5x_clk_regs,
-> +					ARRAY_SIZE(exynos5x_clk_regs));
-> +	if (!exynos5x_save) {
->   		pr_warn("%s: failed to allocate sleep save data, no sleep support!\n",
->   			__func__);
->   		return;
-> @@ -296,13 +305,29 @@ PNAME(hdmi_p)	= { "dout_hdmi_pixel", "sclk_hdmiphy" };
->   PNAME(maudio0_p)	= { "fin_pll", "maudio_clk", "sclk_dpll", "sclk_mpll",
->   			  "sclk_spll", "sclk_ipll", "sclk_epll", "sclk_rpll" };
->
-> +/* List of parents specific to exynos5800 */
-> +PNAME(mout_epll2_5800_p)	= { "mout_sclk_epll", "ffactor_dout_epll2" };
-> +PNAME(mout_group1_5800_p)	= { "mout_sclk_cpll", "mout_sclk_dpll",
-> +				"mout_sclk_mpll", "ffactor_dout_spll2" };
-> +PNAME(mout_group3_5800_p)	= { "mout_sclk_cpll", "mout_sclk_dpll",
-> +					"mout_sclk_mpll", "ffactor_dout_spll2",
-> +					"mout_epll2" };
-> +PNAME(mout_group5_5800_p)	= { "mout_sclk_cpll", "mout_sclk_dpll",
-> +					"mout_sclk_mpll", "mout_sclk_spll" };
-> +PNAME(mout_group6_5800_p)	= { "mout_sclk_ipll", "mout_sclk_dpll",
-> +				"mout_sclk_mpll", "ffactor_dout_spll2" };
-> +PNAME(mout_group8_5800_p)	= { "dout_aclk432_scaler", "dout_sclk_sw" };
-> +PNAME(mout_group9_5800_p)	= { "dout_osc_div", "mout_sw_aclk432_scaler" };
-> +
->   /* fixed rate clocks generated outside the soc */
-> -static struct samsung_fixed_rate_clock exynos5420_fixed_rate_ext_clks[] __initdata = {
-> +static struct
-> +samsung_fixed_rate_clock exynos5x_fixed_rate_ext_clks[] __initdata = {
+> Don't you need arguments to the phandle? It seems that in most
+> cases, you need at least one of a dma-ranges like translation
+> or a master ID. What you need would be specific to the slave.
 
-This is kind of strange way of wrapping long lines. I'd say that at 
-least struct should be in the same line as samsung_fixed_rate_clock, so 
-that could be at least kind of readable.
+For any 1:N relationship between nodes, you can describe the
+_relationship_ by putting properties on the nodes at the "1" end.  This
+is precisely how "ranges" and "dma-ranges" work.
 
->   	FRATE(CLK_FIN_PLL, "fin_pll", NULL, CLK_IS_ROOT, 0),
->   };
->
->   /* fixed rate clocks generated inside the soc */
-> -static struct samsung_fixed_rate_clock exynos5420_fixed_rate_clks[] __initdata = {
-> +static struct
-> +samsung_fixed_rate_clock exynos5x_fixed_rate_clks[] __initdata = {
+The N:M case can be resolved by inserting simple-bus nodes into any
+links with non-default mappings: i.e., you split each affected link in
+two, with a simple-bus node in the middle describing the mapping:
 
-Ditto.
+root: / {
+	ranges;
+	...
 
->   	FRATE(CLK_SCLK_HDMIPHY, "sclk_hdmiphy", NULL, CLK_IS_ROOT, 24000000),
->   	FRATE(0, "sclk_pwi", NULL, CLK_IS_ROOT, 24000000),
->   	FRATE(0, "sclk_usbh20", NULL, CLK_IS_ROOT, 48000000),
-> @@ -310,39 +335,88 @@ static struct samsung_fixed_rate_clock exynos5420_fixed_rate_clks[] __initdata =
->   	FRATE(0, "sclk_usbh20_scan_clk", NULL, CLK_IS_ROOT, 480000000),
->   };
->
-> -static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[] __initdata = {
-> +static struct
-> +samsung_fixed_factor_clock exynos5x_fixed_factor_clks[] __initdata = {
+	master@1 {
+		slave {
+			ranges = < ... >;
+			slaves = <&root>;
+		};
+	};
 
-Ditto (and the same for other numerous instances of this below).
+	master@2 {
+		slave {
+			slaves = < &root &master2_dma_slave >;
+			slave-names = "config-fetch", "dma";
 
->   	FFACTOR(0, "sclk_hsic_12m", "fin_pll", 1, 2, 0),
->   };
->
-> -static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
-> -	MUX(0, "mout_mspll_kfc", mspll_cpu_p, SRC_TOP7, 8, 2),
-> -	MUX(0, "mout_mspll_cpu", mspll_cpu_p, SRC_TOP7, 12, 2),
-> -	MUX(0, "mout_apll", apll_p, SRC_CPU, 0, 1),
-> -	MUX(0, "mout_cpu", cpu_p, SRC_CPU, 16, 1),
-> -	MUX(0, "mout_kpll", kpll_p, SRC_KFC, 0, 1),
-> -	MUX(0, "mout_cpu_kfc", kfc_p, SRC_KFC, 16, 1),
-> +static struct
-> +samsung_fixed_factor_clock exynos5800_fixed_factor_clks[] __initdata = {
-> +	FFACTOR(0, "ffactor_dout_epll2", "mout_sclk_epll", 1, 2, 0),
-> +	FFACTOR(0, "ffactor_dout_spll2", "mout_sclk_spll", 1, 2, 0),
+		master2_dma_slave: dma-slave {
+				ranges = < ... >;
+				slaves = <&root>;
+			};
+		};
+	};
 
-I don't think you need the "ffactor_" prefix in the name. I assume 
-"dout_epll2" and "dout_spll2" are the names listed in the datasheet. Is 
-that correct?
+	master@3 {
+		slaves = <&root>;
+	};
+};
 
-Best regards,
-Tomasz
+
+Here, there are three master devices, one with two different mastering
+roles.
+
+master@2's configuration data fetch mechanism accesses the root bus
+node, but with some remapping.  master@2 also does bulk DMA, which
+has no remapping.
+
+master@1 masters on / with its own remapping.  master@3 masters on
+/ with no remapping.
+
+(This is a silly made-up system: I don't claim I've seen something like
+this.)
+
+
+> 
+> It may be best to make the ranges explicit here and then also
+> allow additional fields depending on e.g. a #dma-slave-cells
+> property in the slave.
+> 
+> For instance, a 32-bit master on a a 64-bit bus that has master-id
+> 23 would look like
+> 
+> 	otherbus: axi@somewhere{
+> 		#address-cells = <2>;
+> 		#size-cells = <2>;
+> 	};
+> 
+> 	somemaster@somewhere {
+> 		#address-cells = <1>;
+> 		#size-cells = <1>;
+> 		slaves = <&otherbus  // phandle
+> 				0     // local address
+> 				0 0   // remote address
+> 				0x1 0 // size
+> 				23>;  // master id
+> 	};
+
+I thought about this possibility, but was worried that the "slaves"
+property would become awkward to parse, where except for the "master id"
+concept, all these attributes are well described by ePAPR already for
+bus nodes if we can figure out how to piggyback on them -- hence my
+alternative approach explained above.
+
+How to describe the "master id" is particularly problematic and may
+be a separate discussion.  It can get munged or remapped as it
+passes through the interconnect: for example, a PCI device's ID 
+accompanying an MSI write may be translated once as it passes from
+the PCI RC to an IOMMU, then again before it reaches the GIC.
+
+In the "windowed IOMMU" case, address bits are effectively being
+mapped to ID bits as they reach IOMMU.
+
+An IOMMU also does a complete mapping of ID+address -> ID'+address'
+(although programmable rather than static and unprobeable, so the
+actual mappings for an IOMMU won't be in the DT).
+
+> 
+> > Questions:
+> > 
+> > 1) Should the names "slaves" and "slave" be globally generic?
+> > 
+> >    Pro: Making them generic permits some processing to be done on the DT
+> >    without knowing the individual bindings for every node, such as
+> >    figuring out the global DMA mask.  It should also encourage adoption
+> >    of the bindings as a common approach.
+> > 
+> >    Con: Namespace pollution
+> > 
+> >    Otherwise, there could be a special string in the node's compatible
+> >    list (strictly not "simple-bus") to indicate that these properties
+> >    should be interpreted.
+> > 
+> >    The alternative is for the way of identifying a node's slaves to be
+> >    binding-specific.  This makes some generic operations on the DT
+> >    impossible without knowing all the bindings, such as analysing
+> >    reachability or determining the effective DMA mask.  This analysis
+> >    can be performed using generic bindings alone today, for systems
+> >    describable by ePAPR.  Breaking this concept feels like a backward
+> >    step.
+> 
+> How about being slightly more specific, using "dma-slaves" and
+> "dma-slave-names" etc?
+
+I avoided the word "dma" because I found it confusing initially.
+
+In the hardware there is no difference at all between "dma" and
+bus mastering by CPUs, at least not in the ARM SoC world.
+
+"DMA" suggests a relatively dumb peripheral doing grunt work on behalf
+of a CPU.  Viewing pagetable fetches and polygon rendering or
+RenderScript-style computataion offload done by a GPU as "DMA" seems a
+bit of a stretch.
+
+That said, DT is intended for use by OSes, so if it is CPU-centric,
+that's OK (it already is CPU-centric, anyway).  A name is just a name;
+so long as bindings are understandable, the choice of name shouldn't
+matter too much.
+
+> > 2) The generic "slave" node(s) are for convenience and readability.
+> >    They could be made eliminated by using child nodes with
+> >    binding-specific names and referencing them in "slaves".  This is a
+> >    bit more awkward, but has the same expressive power.
+> > 
+> >    Should the generic "slave" nodes go away?
+> 
+> I would prefer not having to have subnodes for the simple case
+> where you just need to reference one slave iommu from a master
+> device.
+
+My expectation is that subnodes would only be useful in special cases in
+any case.
+
+We can remove the special "slave" name, because there's nothing to
+stop us referencing other random nested nodes with the "slaves" property.
+
+> 
+> It could be a recommendation for devices that have multiple slaves,
+> but I still haven't seen an example where this is actually needed.
+> 
+> > 3) Should "slave" or "slaves" be traversable for bridge- or bus-like
+> >    nodes?
+> > 
+> >    Saying "no" to this makes it impossible for the reachability graph of
+> >    the DT to contain cycles.  This is a clear benefit for any software
+> >    attempting to parse the DT in a robust way.  Only the first link,
+> >    from the initiating master to the first bridge, would be permitted
+> >    to be a "slaves" link.
+> > 
+> >    Ideally, we would want an IOMMU's bridge-like role to be represented
+> >    by some deep node in the DT: it can't usually be on the global path
+> >    from / since CPUs typically don't master through the IOMMU.
+> > 
+> >    Parsers could be made robust while still permitting this, by
+> >    truncating the search if the initial master node is reached.
+> >    Ill-formed DTs could contains cycles that can't be resolved in
+> >    this way, e.g., A -> B -> B.  For now it might be reasonable to
+> >    check for this in dtc.
+> 
+> I wouldn't be worried about cycles. We can just declare them forbidden
+> in the binding. Anything can break if you supply a broken DT, this
+> is the least of the problems.
+
+That's my thought.  If there turns out to be a really good reason to
+describe cycles then we can cross that bridge* when we come to it,
+but it's best to forbid it until/unless the need for it is proven.
+
+(*no pun intended)
+
+Note that a certain kind of trivial cycle will always be created
+when a node refers back to its parent:
+
+root: / {
+	ranges;
+
+	iommu {
+		reg = < ... >;
+		slaves = <&root>;
+	};
+};
+
+ePAPR says that if there is no "ranges" property, then the parent
+node cannot access any address of the child -- we can interpret
+this as saying that transactions do not propagate.  "ranges" with
+an empty value imples a complete 1:1 mapping, which we can interpret
+as transactions being forwarded without any transformation.
+
+Crucially, "iommu" must not have a "ranges" property in this case,
+because this would permit a static routing cycle root -> iommu ->
+root.
+
+
+Providing that the only devices that master on iommu are not
+themselves bridges reachable from /, there is no cycle --
+a given transaction will issued to the iommu will sooner or later hit
+something that is not a bridge and disappear.
+
+Note that there is no cycle through the "reg" property on iommu:
+"reg" indicates a sink for transactions; "slaves" indicates a
+source of transactions, and "ranges" indicates a propagator of
+transactions.
+
+"dma-ranges" indicates that the children of the node _might_ be
+sources of transactions (but that does not mean that they definitely
+are) -- and that the parent node acts as a bridge for those transactions,
+forwarding them back to its own parent or children depending on the
+address.
+
+Cheers
+---Dave
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
