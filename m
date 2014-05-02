@@ -1,111 +1,29 @@
 From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC v12 5/7] dma: of: add common xlate function for
- matching by channel id
-Date: Fri, 2 May 2014 22:34:59 +0530
-Message-ID: <20140502170459.GK32284@intel.com>
+Subject: Re: [PATCH RFC v12 2/7] dma: mpc512x: separate 'compatible' values
+ for MPC512x and MPC8308
+Date: Fri, 2 May 2014 22:37:13 +0530
+Message-ID: <20140502170713.GM32284@intel.com>
 References: <1398261209-5578-1-git-send-email-a13xp0p0v88@gmail.com>
- <1398261209-5578-6-git-send-email-a13xp0p0v88@gmail.com>
+ <1398261209-5578-3-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1398261209-5578-6-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1398261209-5578-3-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 23, 2014 at 05:53:27PM +0400, Alexander Popov wrote:
-> This patch adds a new common OF dma xlate callback function which will match a
-> channel by it's id. The binding expects one integer argument which it will use to
-> lookup the channel by the id.
-> 
-> Unlike of_dma_simple_xlate this function is able to handle a system with
-> multiple DMA controllers. When registering the of dma provider with
-> of_dma_controller_register a pointer to the dma_device struct which is
-> associated with the dt node needs to passed as the data parameter.
-> New function will use this pointer to match only channels which belong to the
-> specified DMA controller.
-
-This patch needs review by DT folks too
-
+On Wed, Apr 23, 2014 at 05:53:24PM +0400, Alexander Popov wrote:
+> MPC512x and MPC8308 have similar DMA controllers, but are independent SoCs.
+> DMA controller driver should have separate 'compatible' values for these SoCs.
 > 
 > Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/dma/of-dma.c   | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/of_dma.h |  4 ++++
->  2 files changed, 39 insertions(+)
-> 
-> diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-> index e8fe9dc..d5fbeaa 100644
-> --- a/drivers/dma/of-dma.c
-> +++ b/drivers/dma/of-dma.c
-> @@ -218,3 +218,38 @@ struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
->  			&dma_spec->args[0]);
->  }
->  EXPORT_SYMBOL_GPL(of_dma_simple_xlate);
-> +
-> +/**
-> + * of_dma_xlate_by_chan_id - Translate dt property to DMA channel by channel id
-> + * @dma_spec:	pointer to DMA specifier as found in the device tree
-> + * @of_dma:	pointer to DMA controller data
-> + *
-> + * This function can be used as the of xlate callback for DMA driver which wants
-> + * to match the channel based on the channel id. When using this xlate function
-> + * the #dma-cells propety of the DMA controller dt node needs to be set to 1.
-> + * The data parameter of of_dma_controller_register must be a pointer to the
-> + * dma_device struct the function should match upon.
-> + *
-> + * Returns pointer to appropriate dma channel on success or NULL on error.
-> + */
-> +struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
-> +					 struct of_dma *ofdma)
-> +{
-> +	struct dma_device *dev = ofdma->of_dma_data;
-> +	struct dma_chan *chan, *candidate = NULL;
-> +
-> +	if (!dev || dma_spec->args_count != 1)
-> +		return NULL;
-> +
-> +	list_for_each_entry(chan, &dev->channels, device_node)
-> +		if (chan->chan_id == dma_spec->args[0]) {
-> +			candidate = chan;
-> +			break;
-> +		}
-> +
-> +	if (!candidate)
-> +		return NULL;
-> +
-> +	return dma_get_slave_channel(candidate);
-> +}
-> +EXPORT_SYMBOL_GPL(of_dma_xlate_by_chan_id);
-> diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
-> index ae36298..56bc026 100644
-> --- a/include/linux/of_dma.h
-> +++ b/include/linux/of_dma.h
-> @@ -41,6 +41,8 @@ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
->  						     const char *name);
->  extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
->  		struct of_dma *ofdma);
-> +extern struct dma_chan *of_dma_xlate_by_chan_id(struct of_phandle_args *dma_spec,
-> +		struct of_dma *ofdma);
->  #else
->  static inline int of_dma_controller_register(struct device_node *np,
->  		struct dma_chan *(*of_dma_xlate)
-> @@ -66,6 +68,8 @@ static inline struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_s
->  	return NULL;
->  }
->  
-> +#define of_dma_xlate_by_chan_id NULL
-> +
->  #endif
->  
->  #endif /* __LINUX_OF_DMA_H */
-> -- 
-> 1.8.4.2
-> 
+Applied, thanks
 
 -- 
+~Vinod
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
