@@ -1,103 +1,159 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [RFC PATCH] regulator: virtual: Introduce a new virtual locker
- regulator type
-Date: Fri, 2 May 2014 09:13:39 -0700
-Message-ID: <CAD=FV=X5vGgZOxbRb808R9CSnGLPD9Tc77VMO5B3f3FS0jwk6Q@mail.gmail.com>
-References: <1398749704-10196-1-git-send-email-inderpal.s@samsung.com>
-	<CAD=FV=Vo+GLTt7fh4639XFsJfSUTN0ARBsOy+O24gtB_87MgLw@mail.gmail.com>
-	<20140501012825.GI3245@sirena.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 02 May 2014 18:14:58 +0200
+Message-ID: <6774053.rAccqTeoiQ@wuerfel>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140501012825.GI3245@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Inderpal Singh <inderpal.s@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Pawel Moll <pawel.moll@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140501173248.GD3732-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+On Thursday 01 May 2014 18:32:48 Dave Martin wrote:
+> (Note, this is a long mail -- people in a hurry may want to skip to
+> "Outline binding" to get a feel for what is bring proposed, before
+> returning to the background wording.)
+> 
+> As highlighted in some previous discussions[1], it is becoming possible
+> to build ARM-based SoCs that seem to be impossible to describe using the
+> DT bindings currently specified by ePAPR.  This is driven by increasing
+> complexity of interconnects, the appearance of IOMMUs, MSI-capable
+> interrupt controllers and multiple bus masters.
+> 
+> This issue is not fundamental to ARM and could apply to other SoC
+> families with a similar bus architecture, but most of the current
+> discussion in this area has been about how to address these
+> requirements for ARM SoCs.
+> 
+> This RFC is an outline for some core bindings to solve part of the
+> problem of describing such systems, particularly how to describe master/
+> slave relationships not currently representable in DT.  It is premature
+> to make a concrete proposal yet: rather I'm presenting this as a starting
+> point for discussion initially.
+> 
+> The intent is not to rewrite existing bindings, but to define a common
+> DT approach for describing otherwise problematic features of future
+> systems.  Actual Linux support for this could be implemented as needed.
 
-On Wed, Apr 30, 2014 at 6:28 PM, Mark Brown <broonie@kernel.org> wrote:
-> On Wed, Apr 30, 2014 at 11:56:08AM -0700, Doug Anderson wrote:
->
->> I cornered Rob and Mark Rutland a little bit about this at ELC today
->> (sorry!).  Neither of them was a huge ran of adding a pseudo device.
->> Rob suggested that Mark Brown might be the best person to give
->> direction here.  Mark Brown: any thoughts?
->
-> I glanced at this briefly and couldn't really understand what it was
-> supposed to do from a quick glance but I do tend to agree that it's too
-> complex and confusing.  Quite what the virtual regulator is supposed to
-> represent or how it is used is distinctly non-obvious.
-
->From my understanding, there are parts internal to the SoC where
-something powered by the INT rail looks at an signal based on the ARM
-rail, or vice versa.  If the two voltages are too vastly different
-then you get into trouble.
-
-To put numbers imagine the ARM rail at 1300 mV and the INT rail at 875
-mV.  Something powered by the ARM rail will be looking at a signal,
-and perhaps it decides that signals that are >= 1000 mV are high and
-signals that are < 1000 mV are low.  If the INT rail is 875 mV then it
-will never be able to signal a high.
-
-The ARM and INT rails scale independently of each other.  The ARM rail
-increases when the CPU frequency need to be fast.  The INT rail
-increases when some internal peripherals on the system need to run
-fast.  Imagine you're doing hardware assisted video decoding: you'd
-want INT high and ARM low.  Imagine that you're running a
-CPU-intensive game: you want INT low and ARM high.
-
-The "solution" to the above (without redoing the SoC) is to make sure
-that the INT and ARM rails are always within 300mV of each other.
+Thanks a lot for getting this rolling!
 
 
->> Potentially we could also make this type of thing a core regulator property:
->
-> Yes, that seems like the obvious solution if it's in the core.  Someone
-> would need to write the code of course.
+> ** Outline binding **
+> 
+> generic device node property: "slaves"
+> 
+> 	optional
+> 
+> 	type : cell array consisting of one or more phandles
+> 
+> 	Implies that the device represented by the containing node
+> 	can issue transactions to the referenced node.
+> 
+> 	The referenced node is any bus or device node, and is
+> 	interpreted in the usual way, including the treatment
+> 	of ranges, #address-cells and #size-cells.  If the
+> 	referenced node has a non-empty ranges property, the
+> 	referencing node's #address-cells must be the same as
+> 	that of the referenced node's device tree parent.
 
-OK.  Inderpal: is this something you're willing to do?  I'd imagine
-that all of the core code should remain the same, it's just a matter
-of hooking it up properly.
+I guess you mean "dma-ranges" here, not "ranges", right?
+I don't see how "ranges" is even relevant for this.
 
-Mark Brown: did the bindings above seem sane to you?  I can clean them
-up a bit and explain more:
+Don't you need arguments to the phandle? It seems that in most
+cases, you need at least one of a dma-ranges like translation
+or a master ID. What you need would be specific to the slave.
 
-  buck2_reg: BUCK2 {
-          regulator-name = "vdd_arm";
-          regulator-min-microvolt = <800000>;
-          regulator-max-microvolt = <1500000>;
-          regulator-always-on;
-          regulator-boot-on;
-          regulator-op-mode = <1>;
-          regulator-ramp-delay = <12500>;
-          regulator-lock-to = <&buck3_reg>;
-          regulator-lock-within-microvolt = <300000>;
- };
-  buck3_reg: BUCK3 {
-          regulator-name = "vdd_int";
-          regulator-min-microvolt = <800000>;
-          regulator-max-microvolt = <1400000>;
-          regulator-always-on;
-          regulator-boot-on;
-          regulator-op-mode = <1>;
-          regulator-ramp-delay = <12500>;
-          regulator-lock-to = <&buck2_reg>, <&buck9_reg>;
-          regulator-lock-within-microvolt = <300000>, <200000>;
-  };
+It may be best to make the ranges explicit here and then also
+allow additional fields depending on e.g. a #dma-slave-cells
+property in the slave.
 
-- regulator-lock-to: A list of regulators to monitor.  If they ever
-are greater than our voltage + the corresponding "lock-within" then we
-should bump up our voltage.  We'll bump back down if/when the
-monitored regulator falls again.
+For instance, a 32-bit master on a a 64-bit bus that has master-id
+23 would look like
 
-- regulator-lock-within-microvolt: A list of microvolt values that
-correspond to a phandle in the "regulator-lock-to" list.
+	otherbus: axi@somewhere{
+		#address-cells = <2>;
+		#size-cells = <2>;
+	};
 
-Note that the above specification makes the locking a single
-direction.  If it needs to be bidirectional you specify it in both
-regulators.
+	somemaster@somewhere {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		slaves = <&otherbus  // phandle
+				0     // local address
+				0 0   // remote address
+				0x1 0 // size
+				23>;  // master id
+	};
 
+> Questions:
+> 
+> 1) Should the names "slaves" and "slave" be globally generic?
+> 
+>    Pro: Making them generic permits some processing to be done on the DT
+>    without knowing the individual bindings for every node, such as
+>    figuring out the global DMA mask.  It should also encourage adoption
+>    of the bindings as a common approach.
+> 
+>    Con: Namespace pollution
+> 
+>    Otherwise, there could be a special string in the node's compatible
+>    list (strictly not "simple-bus") to indicate that these properties
+>    should be interpreted.
+> 
+>    The alternative is for the way of identifying a node's slaves to be
+>    binding-specific.  This makes some generic operations on the DT
+>    impossible without knowing all the bindings, such as analysing
+>    reachability or determining the effective DMA mask.  This analysis
+>    can be performed using generic bindings alone today, for systems
+>    describable by ePAPR.  Breaking this concept feels like a backward
+>    step.
 
--Doug
+How about being slightly more specific, using "dma-slaves" and
+"dma-slave-names" etc?
+
+> 2) The generic "slave" node(s) are for convenience and readability.
+>    They could be made eliminated by using child nodes with
+>    binding-specific names and referencing them in "slaves".  This is a
+>    bit more awkward, but has the same expressive power.
+> 
+>    Should the generic "slave" nodes go away?
+
+I would prefer not having to have subnodes for the simple case
+where you just need to reference one slave iommu from a master
+device.
+
+It could be a recommendation for devices that have multiple slaves,
+but I still haven't seen an example where this is actually needed.
+
+> 3) Should "slave" or "slaves" be traversable for bridge- or bus-like
+>    nodes?
+> 
+>    Saying "no" to this makes it impossible for the reachability graph of
+>    the DT to contain cycles.  This is a clear benefit for any software
+>    attempting to parse the DT in a robust way.  Only the first link,
+>    from the initiating master to the first bridge, would be permitted
+>    to be a "slaves" link.
+> 
+>    Ideally, we would want an IOMMU's bridge-like role to be represented
+>    by some deep node in the DT: it can't usually be on the global path
+>    from / since CPUs typically don't master through the IOMMU.
+> 
+>    Parsers could be made robust while still permitting this, by
+>    truncating the search if the initial master node is reached.
+>    Ill-formed DTs could contains cycles that can't be resolved in
+>    this way, e.g., A -> B -> B.  For now it might be reasonable to
+>    check for this in dtc.
+
+I wouldn't be worried about cycles. We can just declare them forbidden
+in the binding. Anything can break if you supply a broken DT, this
+is the least of the problems.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
