@@ -1,63 +1,59 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH 1/2] of: add bq and radxa vendor prefixes
-Date: Fri, 02 May 2014 01:32:37 +0200
-Message-ID: <2225372.rvnmuAdhHE@phil>
-References: <1398973835-26303-1-git-send-email-b.galvani@gmail.com>
+From: Alistair Popple <alistair@popple.id.au>
+Subject: Re: [4/5] IBM Akebono: Add the Akebono platform
+Date: Fri, 02 May 2014 10:35:02 +1000
+Message-ID: <10214508.Vq3Ynjy2Co@mexican>
+References: <1394077948-8395-5-git-send-email-alistair@popple.id.au> <1398936447.4121.12.camel@x220>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398973835-26303-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398936447.4121.12.camel@x220>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Bolle <pebolle@tiscali.nl>
+Cc: benh@kernel.crashing.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Beniamino,
+Paul,
 
-Am Donnerstag, 1. Mai 2014, 21:50:34 schrieb Beniamino Galvani:
-> Add new vendor prefixes for:
+On Thu, 1 May 2014 11:27:27 Paul Bolle wrote:
+> On Thu, 2014-03-06 at 14:52 +1100, Alistair Popple wrote:
+
+[...]
+
+> > This patch adds support for the IBM Akebono board.
+> > +	select IBM_EMAC_RGMII_WOL
 > 
->     * bq, a company that sells multimedia devices and 3D printers
+> The patch that added this symbol (and the related driver) was submitted
+> in https://lkml.org/lkml/2014/2/21/25 . It's not (yet) included in
+> linux-next. Is it queued somewhere else?
 
-bq is actually only a brandname. The company itself is "Mundo Reader S.L.".
-I'm not sure what the actual policy is concerning the vendor prefix, i.e. if it 
-should use the visible brand name or the actual company name.
+To be honest I'm not sure. I will follow this up on the netdev list.
 
-I.e. another possibility would be to add the vendor prefix
-	mundoreader	Mundo Reader S.L.
-and name the currie
-	mundoreader,bq-curie2
-
-
-Heiko
-
->     * Radxa, manufacturer of ARM boards
+> > +	select USB
+> > +	select USB_OHCI_HCD_PLATFORM
+> > +	select USB_EHCI_HCD_PLATFORM
+> > +	select MMC_SDHCI
+> > +	select MMC_SDHCI_PLTFM
+> > +	select MMC_SDHCI_OF_476GTR
 > 
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
-> abc3080..6f8177c 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -21,6 +21,7 @@ atmel	Atmel Corporation
->  auo	AU Optronics Corporation
->  avago	Avago Technologies
->  bosch	Bosch Sensortec GmbH
-> +bq	bq
->  brcm	Broadcom Corporation
->  buffalo	Buffalo, Inc.
->  calxeda	Calxeda
-> @@ -98,6 +99,7 @@ powervr	PowerVR (deprecated, use img)
->  qca	Qualcomm Atheros, Inc.
->  qcom	Qualcomm Technologies, Inc
->  qnap	QNAP Systems, Inc.
-> +radxa	Radxa
->  raidsonic	RaidSonic Technology GmbH
->  ralink	Mediatek/Ralink Technology Corp.
->  ramtron	Ramtron International
+> The plan to add MMC_SDHCI_OF_476GTR seems to have been abandoned (see
+> the discussion of https://lkml.org/lkml/2014/2/21/24 ). So this select
+> is not needed. Should I submit a trivial patch to drop this select?
 
+Thanks for pointing this out, I should have removed the select for 
+MMC_SDHCI_OF_476GTR as suggested. I can submit a patch to drop the select or 
+send an updated version of the original patch. Which is easiest for you Ben?
+
+> > +	select ATA
+> > +	select SATA_AHCI_PLATFORM
+> > +	help
+> > +	  This option enables support for the IBM Akebono (476gtr) evaluation
+> > board +
+> > +
+> > 
+> >  config ICON
+> >  
+> >  	bool "Icon"
+> >  	depends on 44x
+> 
+> Paul Bolle
