@@ -1,102 +1,132 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Fri, 02 May 2014 17:13:46 +0200
-Message-ID: <4526988.X68ZFJZdRl@wuerfel>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <5279118.J5305KQNjB@wuerfel> <53639A0C.8070306@ti.com>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 02 May 2014 17:19:44 +0200
+Message-ID: <6555552.UqkKQIAsih@wuerfel>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com> <4369315.NLgjZW6qVF@wuerfel> <20140502132327.GA14612@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53639A0C.8070306-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20140502132327.GA14612@ulmo>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 May 2014 09:13:48 Santosh Shilimkar wrote:
-> On Friday 02 May 2014 05:58 AM, Arnd Bergmann wrote:
-> > On Thursday 01 May 2014 14:12:10 Grant Likely wrote:
-> >>>> I've got two concerns here. of_dma_get_range() retrieves only th=
-e first
-> >>>> tuple from the dma-ranges property, but it is perfectly valid fo=
-r
-> >>>> dma-ranges to contain multiple tuples. How should we handle it i=
-f a
-> >>>> device has multiple ranges it can DMA from?
-> >>>>
-> >>>
-> >>> We've not found any cases in current Linux where more than one dm=
-a-ranges
-> >>> would be used. Moreover, The MM (definitely for ARM) isn't suppor=
-ted such
-> >>> cases at all (if i understand everything right).
-> >>> - there are only one arm_dma_pfn_limit
-> >>> - there is only one MM zone is used for ARM
-> >>> - some arches like x86,mips can support 2 zones (per arch - not p=
-er device or bus)
-> >>>   DMA & DMA32, but they configured once and forever per arch.
-> >>
-> >> Okay. If anyone ever does implement multiple ranges then this code=
- will
-> >> need to be revisited.
-> >=20
-> > I wonder if it's needed for platforms implementing the standard "AR=
-M memory map" [1].
-> > The document only talks about addresses as seen from the CPU, and I=
- can see
-> > two logical interpretations how the RAM is supposed to be visible f=
-rom a device:
-> > either all RAM would be visible contiguously at DMA address zero, o=
-r everything
-> > would be visible at the same physical address as the CPU sees it.
-> >=20
-> > If anyone picks the first interpretation, we will have to implement=
- that
-> > in Linux. We can of course hope that all hardware designs follow th=
-e second
-> > interpretation, which would be more convenient for us here.
-> >
-> not sure if I got your point correctly but DMA address 0 isn't used a=
-s DRAM start in
-> any of the ARM SOC today, mainly because of the boot architecture whe=
-re address 0 is
-> typically used by ROM code. RAM start will be at some offset always a=
-nd hence I
-> believe ARM SOCs will follow second interpretation. This was one of t=
-he main reason
-> we ended up fixing the max*pfn stuff.=20
-> 26ba47b {ARM: 7805/1: mm: change max*pfn to include the physical offs=
-et of memory}
+On Friday 02 May 2014 15:23:29 Thierry Reding wrote:
+> On Fri, May 02, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
+> > On Friday 02 May 2014 13:05:58 Thierry Reding wrote:
+> > > 
+> > > Let me see if I understood the above proposal by trying to translate it
+> > > into a simple example for a specific use-case. On Tegra for example we
+> > > have various units that can either access system memory directly or use
+> > > the IOMMU to translate accesses for them. One such unit would be the
+> > > display controller that scans out a framebuffer from memory.
+> > 
+> > Can you explain how the decision is made whether the IOMMU gets used
+> > or not? In all cases I've seen so far, I think we can hardwire this
+> > in DT, and only expose one or the other. Are both ways used
+> > concurrently?
+> 
+> It should be possible to hardcode this in DT for Tegra. As I understand
+> it, both interfaces can't be used at the same time. Once translation has
+> been enabled for one client, all accesses generated by that client will
+> be translated.
 
-Marvell normally has memory starting at physical address zero.
+Ok.
 
-Even if RAM starts elsewhere, I don't think that is a reason to have
-the DMA address do the same. The memory controller internally obviously
-starts at zero, and it wouldn't be unreasonable to have the DMA space
-match what the memory controller sees rather than have it match what
-the CPU sees.
+> > >         dc@0,54200000 {
+> > >                 ...
+> > > 
+> > >                 slave {
+> > >                         /*
+> > >                          * 2 is the memory controller client ID of the
+> > >                          * display controller.
+> > >                          */
+> > >                         iommu = <&iommu 2>;
+> > > 
+> > >                         ...
+> > >                 };
+> > >         };
+> > > 
+> > > Admittedly this is probably a lot more trivial than what you're looking
+> > > for. There's no need for virtualization here, the IOMMU is simply used
+> > > to isolate memory accesses by devices. Still it's a use-case that needs
+> > > to be supported and one that at least Tegra and Exynos have an immediate
+> > > need for.
+> > > 
+> > > So the above isn't much different from the proposed bindings, except
+> > > that the iommu property is now nested within a slave node. I guess this
+> > > gives us a lot more flexibility to extend the description of a slave as
+> > > needed to represent more complex scenarios.
+> > 
+> > This looks rather complicated to parse automatically in the generic
+> > DT code when we try to decide which dma_map_ops to use. We'd have
+> > to look for 'slave' nodes in each device we instatiate and then see
+> > if they use an iommu or not.
+> 
+> But we need to do that now anyway in order to find an iommu property,
+> don't we? Adding one extra level here shouldn't be all that bad if it
+> gives us more flexibility or uniformity with more complicated setups.
 
-If you look at the table 3.1.4, you have both addresses listed:
+The common code just needs to know whether an IOMMU is in use or
+not, and what the mask/offset are.
 
-	  Physical Addresses in SoC	Offset	 		Internal DRAM address
+> To some degree this also depends on how we want to handle IOMMUs. If
+> they should remain transparently handled via dma_map_ops, then it makes
+> sense to set this up at device instantiation time. But how can we handle
+> this in situations where one device needs to master on two IOMMUs at the
+> same time? Or if the device needs physically contiguous memory for
+> purposes other than device I/O. Using dma_map_ops we can't control which
+> allocations get mapped via the IOMMU and which don't.
 
-2 GBytes	0x00 8000 0000 =E2=80=93	-0x00 8000 0000		0x00 0000 0000 =E2=80=
-=93
-		0x00 FFFF FFFF			 		0x00 7FFF FFFF
+I still hope we can handle this in common code by selecting the right
+dma_map_ops when the devices are instantiated, at least for 99% of the
+cases. I'm not convinced we really need to handle the 'multiple IOMMUs
+on one device' case in a generic way. If there are no common use cases
+for that, we can probably get away with having multiple device nodes
+and an ugly driver for the exception, instead of making life complicated
+for everybody.
 
-30 GBytes	0x08 8000 0000 =E2=80=93 	-0x08 0000 0000		0x00 8000 0000 =E2=
-=80=93
-		0x0F FFFF FFFF					0x07 FFFF FFFF
+> > > Also, are slaves/slave-names and slave subnodes mutually exclusive? It
+> > > sounds like slaves/slave-names would be a specialization of the slave
+> > > subnode concept for the trivial cases. Would the following be an
+> > > equivalent description of the above example?
+> > > 
+> > >         dc@0,54200000 {
+> > >                 ...
+> > > 
+> > >                 slaves = <&iommu 2>;
+> > >         };
+> > > 
+> > > I don't see how it could be exactly equivalent since it misses context
+> > > regarding the type of slave that's being interacted with. Perhaps that
+> > > could be solved by making that knowledge driver-specific (i.e. the
+> > > driver for the Tegra display controller will know that it can only be
+> > > the master on an IOMMU and therefore derive the slave type). Or the
+> > > slave's type could be derived from the slave-names property.
+> > 
+> > I'd rather have a device-specific property that tells the driver
+> > about things the iommu driver doesn't need to know but the master
+> > does. In most cases, we should be fine without a name attached to the
+> > slave.
+> 
+> For the easy cases where we either have no IOMMU or a single IOMMU per
+> device, that should work fine. This only becomes problematic when there
+> are more than one, since you need to distinguish between possibly more
+> than one type.
+> 
+> As I understand it, Dave's proposal is for generic bus masters, which
+> may be an IOMMU but could also be something completely different. So in
+> those cases we need extra meta information so that we can look up the
+> proper type of object.
 
-32 GBytes	0x88 0000 0000 -	-0x80 0000 0000	 	0x08 0000 0000 -
-		0x8F FFFF FFFF					0x0F FFFF FFFF
-
-The wording "Physical Addresses in SoC" would indeed suggest that the
-same address is used for DMA, but I would trust everybody to do that.
+Doing something complicated for the IOMMUs themselves seems fine, also
+for other nonstandard devices that are just weird. I just want to
+handle the simple case automatically.
 
 	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
