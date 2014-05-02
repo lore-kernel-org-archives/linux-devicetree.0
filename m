@@ -1,61 +1,59 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Fri, 2 May 2014 09:13:48 -0400
-Message-ID: <53639A0C.8070306@ti.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <53610663.7070305@ti.com> <20140501131210.CCC13C409DA@trevor.secretlab.ca> <5279118.J5305KQNjB@wuerfel>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH 0/3] Add Exynos5800 support
+Date: Fri, 02 May 2014 22:14:38 +0900
+Message-ID: <53639A3E.6090508@samsung.com>
+References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5279118.J5305KQNjB@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, dianders@chromium.org, olofj@google.com, t.figa@samsung.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 May 2014 05:58 AM, Arnd Bergmann wrote:
-> On Thursday 01 May 2014 14:12:10 Grant Likely wrote:
->>>> I've got two concerns here. of_dma_get_range() retrieves only the first
->>>> tuple from the dma-ranges property, but it is perfectly valid for
->>>> dma-ranges to contain multiple tuples. How should we handle it if a
->>>> device has multiple ranges it can DMA from?
->>>>
->>>
->>> We've not found any cases in current Linux where more than one dma-ranges
->>> would be used. Moreover, The MM (definitely for ARM) isn't supported such
->>> cases at all (if i understand everything right).
->>> - there are only one arm_dma_pfn_limit
->>> - there is only one MM zone is used for ARM
->>> - some arches like x86,mips can support 2 zones (per arch - not per device or bus)
->>>   DMA & DMA32, but they configured once and forever per arch.
->>
->> Okay. If anyone ever does implement multiple ranges then this code will
->> need to be revisited.
-> 
-> I wonder if it's needed for platforms implementing the standard "ARM memory map" [1].
-> The document only talks about addresses as seen from the CPU, and I can see
-> two logical interpretations how the RAM is supposed to be visible from a device:
-> either all RAM would be visible contiguously at DMA address zero, or everything
-> would be visible at the same physical address as the CPU sees it.
-> 
-> If anyone picks the first interpretation, we will have to implement that
-> in Linux. We can of course hope that all hardware designs follow the second
-> interpretation, which would be more convenient for us here.
+On 05/02/14 22:03, Arun Kumar K wrote:
+> Exynos5800 is a derivative of Exynos5420 with higher
+> clock speeds and most other IP blocks remaining the same
+> except for a few.
+> Due to the similarities with 5420, following is done to
+> achieve maximum code re-use:
+> - Use the same 5420 clock file with few changes for adding
+>    extra 5800 clocks.
+> - Include the 5420 dtsi into 5800 and override required
+>    properties.
 >
-not sure if I got your point correctly but DMA address 0 isn't used as DRAM start in
-any of the ARM SOC today, mainly because of the boot architecture where address 0 is
-typically used by ROM code. RAM start will be at some offset always and hence I
-believe ARM SOCs will follow second interpretation. This was one of the main reason
-we ended up fixing the max*pfn stuff. 
-26ba47b {ARM: 7805/1: mm: change max*pfn to include the physical offset of memory}
+> This series is dependent on the following patches
+> 1) Adding node labels for Exynos5420
+>     https://patchwork.kernel.org/patch/4092701/
+> 2) Adding pwm nodes for backlight
+>     https://patchwork.kernel.org/patch/4101881/
+>
+> Alim Akhtar (1):
+>    clk: exynos5420: Add 5800 specific clocks
+>
+> Arun Kumar K (2):
+>    ARM: dts: Add Exynos5800 dt file
+>    ARM: dts: Add peach-pi board support
+>
+>   .../devicetree/bindings/clock/exynos5420-clock.txt |    3 +-
+>   arch/arm/boot/dts/Makefile                         |    3 +-
+>   arch/arm/boot/dts/exynos5800-peach-pi.dts          |  144 +++++++++++++++
+>   arch/arm/boot/dts/exynos5800.dtsi                  |   24 +++
+>   drivers/clk/samsung/clk-exynos5420.c               |  192 +++++++++++++++-----
+>   include/dt-bindings/clock/exynos5420.h             |    1 +
+>   6 files changed, 320 insertions(+), 47 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/exynos5800-peach-pi.dts
+>   create mode 100644 arch/arm/boot/dts/exynos5800.dtsi
+>
+Hi all,
 
-> 
-> [1] http://infocenter.arm.com/help/topic/com.arm.doc.den0001c/DEN0001C_principles_of_arm_memory_maps.pdf
-> 
- 
-Regards,
-Santosh
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Just note that some changes of C and Kconfig in mach-exynos are missed 
+in this series as per my suggestion because I'm working on consolidate 
+it for exynos stuff.
+
+So please just review dt and clock stuff.
+
+Thanks,
+Kukjin
