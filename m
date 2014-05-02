@@ -1,243 +1,93 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
-Date: Fri, 2 May 2014 17:19:10 +0100
-Message-ID: <20140502161910.GC3805@e103592.cambridge.arm.com>
-References: <20140501173248.GD3732@e103592.cambridge.arm.com>
- <20140502110557.GA18452@ulmo>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and
+ dma-coherent
+Date: Fri, 2 May 2014 12:41:43 -0400
+Message-ID: <5363CAC7.3020706@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>	<536249D6.3020008@ti.com>	<20140501132516.GG26756@n2100.arm.linux.org.uk> <CAL_JsqKcQ3eHPVGmz7LwE-s1KdkOAKTiF43XPjD3bVS2ghKLJA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140502110557.GA18452@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKcQ3eHPVGmz7LwE-s1KdkOAKTiF43XPjD3bVS2ghKLJA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 02, 2014 at 01:05:58PM +0200, Thierry Reding wrote:
-> On Thu, May 01, 2014 at 06:32:48PM +0100, Dave Martin wrote:
-> [...]
-> > ** Outline binding **
-> > 
-> > generic device node property: "slaves"
-> > 
-> > 	optional
-> > 
-> > 	type : cell array consisting of one or more phandles
-> > 
-> > 	Implies that the device represented by the containing node
-> > 	can issue transactions to the referenced node.
-> > 
-> > 	The referenced node is any bus or device node, and is
-> > 	interpreted in the usual way, including the treatment
-> > 	of ranges, #address-cells and #size-cells.  If the
-> > 	referenced node has a non-empty ranges property, the
-> > 	referencing node's #address-cells must be the same as
-> > 	that of the referenced node's device tree parent.
-> > 
-> > generic device node property: "slave-names"
-> > 
-> > 	prohibited if there is no "slaves" property; otherwise
-> > 	optional.  Recommended if the "slaves" property has
-> > 	two or more entries.
-> > 
-> > 	type : string list with the same number of entries as
-> > 		the number of cells in the value of the
-> > 		"slaves" property.
-> > 
-> > 	Assigns symbolic names to the entries in the "slaves"
-> > 	property, permitting slave connections with different
-> > 	roles to be disambiguated.  See
-> > 	Documentation/devicetree/bindings/resource-names.txt
-> > 
-> > generic device node: "slave"
-> > 
-> > 	optional
-> > 
-> > 	Implies that the device represented by the containing
-> > 	node can issue transactions to the "slave" node.  "slave"
-> > 	would always have these semantics; whether other child
-> > 	nodes have a similar meaning is binding-specific.
-> > 
-> > 	property : "name"
-> > 
-> > 		optional
-> > 
-> > 		Assigns a symbolic name to this slave with
-> > 		respect to the master.
-> > 
-> > If neither "slaves" nor any "slave" node is present, the topological
-> > relationships are those defined by ePAPR: the device may or not be
-> > a master, and if it is a master then it masters onto the parent node,
-> > optionally propagating through the parent to the parent's parent
-> > via mappings described by dma-ranges.
+On Friday 02 May 2014 10:41 AM, Rob Herring wrote:
+> On Thu, May 1, 2014 at 8:25 AM, Russell King - ARM Linux
+> <linux@arm.linux.org.uk> wrote:
+>> On Thu, May 01, 2014 at 09:19:18AM -0400, Santosh Shilimkar wrote:
+>>> Rob, Russell,
+>>>
+>>> On Thursday 24 April 2014 11:30 AM, Santosh Shilimkar wrote:
+>>>> Here is an updated v3 of the series. Series introduces support for setting up
+>>>> dma parameters based on device tree properties like 'dma-ranges' and
+>>>> 'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
+>>>> series can be found here [3], [2] and [1].
+>>>>
+>>>> The 'dma-ranges' helps to take care of few DMAable system memory restrictions
+>>>> by use of dma_pfn_offset which we maintain now per device. Arch code then
+>>>> uses it for dma address translations for such cases. We update the
+>>>> dma_pfn_offset accordingly during DT the device creation process.The
+>>>> 'dma-coherent' property is used to setup arch's coherent dma_ops.
+>>>>
+>>>> Hopefully with acks, tested-by this version can get into 3.16 queue. I will
+>>>> post a followup series for Keystone SOC which will use this infrastructure.
+>>>> Linus W also wants to use this for ARM integrator platform dma offset issue.
+>>>>
+>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>>> Cc: Olof Johansson <olof@lixom.net>
+>>>> Cc: Grant Likely <grant.likely@linaro.org>
+>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>>>> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
+>>>>
+>>>> Grygorii Strashko (2):
+>>>>   of: introduce of_dma_get_range() helper
+>>>>   ARM: dma: Use dma_pfn_offset for dma address translation
+>>>>
+>>>> Santosh Shilimkar (5):
+>>>>   device: introduce per device dma_pfn_offset
+>>>>   of: introduce of_dma_is_coherent() helper
+>>>>   of: configure the platform device dma parameters
+>>>>   ARM: dma: implement set_arch_dma_coherent_ops()
+>>>>   ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
+>>>>
+>>>>  arch/arm/include/asm/dma-mapping.h |   28 ++++++++++--
+>>>>  arch/arm/mm/dma-mapping.c          |    4 +-
+>>>>  drivers/of/address.c               |   87 ++++++++++++++++++++++++++++++++++++
+>>>>  drivers/of/platform.c              |   71 +++++++++++++++++++++++++++--
+>>>>  include/linux/device.h             |    2 +
+>>>>  include/linux/dma-mapping.h        |    7 +++
+>>>>  include/linux/of_address.h         |    8 ++++
+>>>>  include/linux/of_platform.h        |    6 +++
+>>>>  8 files changed, 204 insertions(+), 9 deletions(-)
+>>>>
+>>> How do we go about merging this series ? There is a dependency
+>>> between the patches and hence the question.
+>>
+>> I don't know anymore.  People today want to assert exclusive rights over
+>> parts of the kernel tree, which makes this kind of cross-patching rather
+>> impossible.
 > 
-> Let me see if I understood the above proposal by trying to translate it
-> into a simple example for a specific use-case. On Tegra for example we
-> have various units that can either access system memory directly or use
-> the IOMMU to translate accesses for them. One such unit would be the
-> display controller that scans out a framebuffer from memory.
+> I can take this series or provide an ack for the DT parts. Either way
+> it does not matter to me.
 > 
-> 	dc@0,54200000 {
-> 		...
+>> The only workable solution I can see is the long winded way to split the
+>> series up, merge the first set of dependencies in one merge window, and
+>> hold the rest back for the following merge window.  Not ideal, but it
+>> stops the arguments.
 > 
-> 		slave {
-> 			/*
-> 			 * 2 is the memory controller client ID of the
-> 			 * display controller.
-> 			 */
-> 			iommu = <&iommu 2>;
+> That should not be necessary. We should be able to sort this out as it
+> is not a difficult problem.
 > 
-> 			...
-> 		};
-> 	};
-> 
-> Admittedly this is probably a lot more trivial than what you're looking
-> for. There's no need for virtualization here, the IOMMU is simply used
-> to isolate memory accesses by devices. Still it's a use-case that needs
-> to be supported and one that at least Tegra and Exynos have an immediate
-> need for.
-> 
-> So the above isn't much different from the proposed bindings, except
-> that the iommu property is now nested within a slave node. I guess this
-> gives us a lot more flexibility to extend the description of a slave as
-> needed to represent more complex scenarios.
-> 
-> One thing that confuses me slightly about your proposal is that these
-> subnodes describe the master interfaces of the containing nodes. Would
-> it not be more appropriate to name the nodes "master" instead?
-> 
-> Also, are slaves/slave-names and slave subnodes mutually exclusive? It
-> sounds like slaves/slave-names would be a specialization of the slave
-> subnode concept for the trivial cases. Would the following be an
-> equivalent description of the above example?
-> 
-> 	dc@0,54200000 {
-> 		...
-> 
-> 		slaves = <&iommu 2>;
-> 	};
+yeah. After addressing those few minor comments, I will create a pull
+request for both RMK and arm-soc to pull from with your ack. That way
+I can also add keystone specific parts on top of this series to arm-soc.
 
-A slave node has the same meaning as a node referenced by a phandle
-in slaves.  The only difference is where in the DT the node appears:
-if the slave is shared by two masters then it probably doesn't make
-sense to bury the node inside one of the masters' nodes.
-
-I would picture the DT for your example system something like this:
-
-	root: / {
-		#address-cells = <2>;
-		#address-cells = <2>;
-		memory { ... };
-
-		peripherals {
-			ranges = ...;
-
-			iommu {
-				reg = < ... >;
-				interrupts = < ... >;
-				slaves = <&root>;
-			};
-
-			dc {
-				slaves = <&iommu>;
-				...
-			};
-
-			dmac@1 {
-				slaves = <&iommu>;
-				...
-			};
-
-			dmac@2 {
-				slave {
-					#address-cells = <2>;
-					#size-cells = <2>;
-					ranges = < 0 0 0 0 0 1 >;
-					slaves = <&root>;
-				};
-			};
-		};
-	};
-
-Here, for reasons best known to the hardware designers, dmac@2 is
-not connected via the IOMMU, but is only 32-bit capable, hence
-we have a ranges property to describe how the root address space
-is seen by dmac@2.  (slave/#size-cells is 2 purely because we cannot
-describe a size of 2^32 with #address-cells=1).
-
-I could equally have done
-
-	dmac@2 {
-		slaves = <&foo>;
-
-		foo {
-			#address-cells = <2>;
-			#size-cells = <2>;
-			ranges = < 0 0 0 0 0 1 >;
-			slaves = <&root>;
-		};
-	};
-
-... hence the doubt about whether "slave" nodes are really useful
-in addition to "slaves" properties.
-
-> I don't see how it could be exactly equivalent since it misses context
-> regarding the type of slave that's being interacted with. Perhaps that
-
-The compatible string on the referenced node tells you what it is.
-
-The driver associated with the "iommu" node would provide functionality
-to report the downstream mapping capabilities in this case, though it's
-possible we could do parts of it in a generic way.
-
-> could be solved by making that knowledge driver-specific (i.e. the
-> driver for the Tegra display controller will know that it can only be
-> the master on an IOMMU and therefore derive the slave type). Or the
-> slave's type could be derived from the slave-names property.
-> 
-> While this proposal lacks specifics for IOMMU devices, I think it could
-
-In case it wasn't clear, this proposoal is only about how to describe
-linkage.  For IOMMUs and some other devices we also need to describe
-how some other bus signals get mapped etc.
-
-I have some ideas on these other areas, but I didn't want to dump it
-all at once.
-
-> work well to describe them in a generic way. Especially when slave nodes
-> are used, arbitrarily more data can be added to describe more complex
-> master interfaces (DMA windows, ...).
-> 
-> I still see an issue with supporting this generically with the currently
-> recommended way to use IOMMUs (via the DMA mapping API). There's not
-> enough granularity in the API to support this. It's probably going to
-> work fine for Tegra, but I think for more complex cases drivers will
-> probably need to use the IOMMU API directly.
-
-Initially I would expect that Linux would only support rather limited
-variations on this theme.
-
-In particular, we would determine the path from each master device to
-/memory, recording the mappings and components that we go through
-along the way.
-
-The simplest cases are:
-
-  a) There is nothing on the path except static address remappings.
-
-  b) There is nothing on the path except a single IOMMU.
-
-> But that's an implementation detail and can probably be solved later.
-
-There is no need why Linux should cope with anything that doesn't
-match the simple cases until/unless such a system appears.  When and
-if that happens, we would have a ready-made way of describing it.
-
-Cheers
----Dave
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Santosh  
