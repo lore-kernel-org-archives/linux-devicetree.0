@@ -1,189 +1,61 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH 3/3] ARM: dts: Add peach-pi board support
-Date: Fri,  2 May 2014 18:33:41 +0530
-Message-ID: <1399035821-25096-4-git-send-email-arun.kk@samsung.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, dianders@chromium.org, olofj@google.com, t.figa@samsung.com, sachin.kamat@linaro.org, tushar.behera@linaro.org, arunkk.samsung@gmail.com
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
+Date: Fri, 2 May 2014 09:13:48 -0400
+Message-ID: <53639A0C.8070306@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <53610663.7070305@ti.com> <20140501131210.CCC13C409DA@trevor.secretlab.ca> <5279118.J5305KQNjB@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5279118.J5305KQNjB@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Strashko, Grygorii" <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds support for google peach-pi board having the
-Exynos5800 SoC.
+On Friday 02 May 2014 05:58 AM, Arnd Bergmann wrote:
+> On Thursday 01 May 2014 14:12:10 Grant Likely wrote:
+>>>> I've got two concerns here. of_dma_get_range() retrieves only the first
+>>>> tuple from the dma-ranges property, but it is perfectly valid for
+>>>> dma-ranges to contain multiple tuples. How should we handle it if a
+>>>> device has multiple ranges it can DMA from?
+>>>>
+>>>
+>>> We've not found any cases in current Linux where more than one dma-ranges
+>>> would be used. Moreover, The MM (definitely for ARM) isn't supported such
+>>> cases at all (if i understand everything right).
+>>> - there are only one arm_dma_pfn_limit
+>>> - there is only one MM zone is used for ARM
+>>> - some arches like x86,mips can support 2 zones (per arch - not per device or bus)
+>>>   DMA & DMA32, but they configured once and forever per arch.
+>>
+>> Okay. If anyone ever does implement multiple ranges then this code will
+>> need to be revisited.
+> 
+> I wonder if it's needed for platforms implementing the standard "ARM memory map" [1].
+> The document only talks about addresses as seen from the CPU, and I can see
+> two logical interpretations how the RAM is supposed to be visible from a device:
+> either all RAM would be visible contiguously at DMA address zero, or everything
+> would be visible at the same physical address as the CPU sees it.
+> 
+> If anyone picks the first interpretation, we will have to implement that
+> in Linux. We can of course hope that all hardware designs follow the second
+> interpretation, which would be more convenient for us here.
+>
+not sure if I got your point correctly but DMA address 0 isn't used as DRAM start in
+any of the ARM SOC today, mainly because of the boot architecture where address 0 is
+typically used by ROM code. RAM start will be at some offset always and hence I
+believe ARM SOCs will follow second interpretation. This was one of the main reason
+we ended up fixing the max*pfn stuff. 
+26ba47b {ARM: 7805/1: mm: change max*pfn to include the physical offset of memory}
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
- arch/arm/boot/dts/Makefile                |    3 +-
- arch/arm/boot/dts/exynos5800-peach-pi.dts |  144 +++++++++++++++++++++++++++++
- 2 files changed, 146 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/exynos5800-peach-pi.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 35c146f..efe1573 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -76,7 +76,8 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
- 	exynos5420-arndale-octa.dtb \
- 	exynos5420-smdk5420.dtb \
- 	exynos5440-sd5v1.dtb \
--	exynos5440-ssdk5440.dtb
-+	exynos5440-ssdk5440.dtb \
-+	exynos5800-peach-pi.dtb
- dtb-$(CONFIG_ARCH_HI3xxx) += hi3620-hi4511.dtb
- dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb \
- 	ecx-2000.dtb
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-new file mode 100644
-index 0000000..e0f8633
---- /dev/null
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -0,0 +1,144 @@
-+/*
-+ * Google Peach Pi Rev 10+ board device tree source
-+ *
-+ * Copyright (c) 2014 Google, Inc
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/dts-v1/;
-+#include <dt-bindings/input/input.h>
-+#include <dt-bindings/gpio/gpio.h>
-+#include "exynos5800.dtsi"
-+
-+/ {
-+	model = "Google Peach Pi Rev 10+";
-+
-+	compatible = "google,pi-rev16",
-+		"google,pi-rev15", "google,pi-rev14",
-+		"google,pi-rev13", "google,pi-rev12",
-+		"google,pi-rev11", "google,pi-rev10",
-+		"google,pi", "google,peach", "samsung,exynos5800",
-+		"samsung,exynos5";
-+
-+	memory {
-+		reg = <0 0>;
-+	};
-+
-+	fixed-rate-clocks {
-+		oscclk {
-+			compatible = "samsung,exynos5420-oscclk";
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&power_key_irq>;
-+
-+		power {
-+			label = "Power";
-+			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
-+			linux,code = <KEY_POWER>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 1000000 0>;
-+		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
-+		default-brightness-level = <7>;
-+		pinctrl-0 = <&pwm0_out>;
-+		pinctrl-names = "default";
-+	};
-+};
-+
-+&pinctrl_0 {
-+	tpm_irq: tpm-irq {
-+		samsung,pins = "gpx1-0";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	power_key_irq: power-key-irq {
-+		samsung,pins = "gpx1-2";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+};
-+
-+&rtc {
-+	status = "okay";
-+};
-+
-+&serial_3 {
-+	status = "okay";
-+};
-+
-+&mmc_0 {
-+	status = "okay";
-+	num-slots = <1>;
-+	broken-cd;
-+	caps2-mmc-hs200-1_8v;
-+	supports-highspeed;
-+	non-removable;
-+	card-detect-delay = <200>;
-+	clock-frequency = <400000000>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <0 4>;
-+	samsung,dw-mshc-ddr-timing = <0 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <8>;
-+	};
-+};
-+
-+&mmc_2 {
-+	status = "okay";
-+	num-slots = <1>;
-+	supports-highspeed;
-+	card-detect-delay = <200>;
-+	clock-frequency = <400000000>;
-+	samsung,dw-mshc-ciu-div = <3>;
-+	samsung,dw-mshc-sdr-timing = <2 3>;
-+	samsung,dw-mshc-ddr-timing = <1 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
-+
-+	slot@0 {
-+		reg = <0>;
-+		bus-width = <4>;
-+	};
-+};
-+
-+&hsi2c_9 {
-+	status = "okay";
-+	clock-frequency = <400000>;
-+
-+	tpm@20 {
-+		compatible = "infineon,slb9645tt";
-+		reg = <0x20>;
-+		/* Unused irq; but still need to configure the pins */
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&tpm_irq>;
-+	};
-+};
-+
-+/*
-+ * Use longest HW watchdog in SoC (32 seconds) since the hardware
-+ * watchdog provides no debugging information (compared to soft/hard
-+ * lockup detectors) and so should be last resort.
-+ */
-+&watchdog {
-+	timeout-sec = <32>;
-+};
--- 
-1.7.9.5
+> 
+> [1] http://infocenter.arm.com/help/topic/com.arm.doc.den0001c/DEN0001C_principles_of_arm_memory_maps.pdf
+> 
+ 
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
