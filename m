@@ -1,44 +1,55 @@
-From: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Subject: [PATCH] IBM Akebono: Remove obsolete config select
-Date: Fri,  2 May 2014 18:06:45 +1000
-Message-ID: <1399018005-23136-1-git-send-email-alistair@popple.id.au>
-References: <1398998002.2925.15.camel@pasglop>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
+Date: Fri, 2 May 2014 09:09:44 +0100
+Message-ID: <20140502080944.GA5206@lee--X1>
+References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
+ <20140429222522.GS15125@sirena.org.uk>
+ <20140430140849.GR29462@lee--X1>
+ <1398867073.695596467@f224.i.mail.ru>
+ <20140430141708.GS29462@lee--X1>
+ <20140430180653.GB3245@sirena.org.uk>
+ <20140501074253.GA32761@lee--X1>
+ <20140501150653.GZ3245@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398998002.2925.15.camel@pasglop>
+Content-Disposition: inline
+In-Reply-To: <20140501150653.GZ3245-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org
-Cc: pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The original implementation of MMC support for Akebono introduced a
-new configuration symbol (MMC_SDHCI_OF_476GTR). This symbol has been
-dropped in favour of using the generic platform driver however the
-select for this symbol was mistakenly left in the platform
-configuration.
+On Thu, 01 May 2014, Mark Brown wrote:
 
-This patch removes the obsolete symbol selection.
+> On Thu, May 01, 2014 at 08:42:53AM +0100, Lee Jones wrote:
+>=20
+> > > You acked it without saying you didn't want me to apply it...  us=
+ually
+> > > that means someone is OK with things getting applied.
+>=20
+> > Actually, that's not true:
+>=20
+> > MFD changes look sensible:
+> >   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>=20
+> > I'm happy to create a shared branch if required.   <-----###
+>=20
+> Sure, but I didn't see an urgent need for that immediately so I just
+> went ahead - the ack usually means that it's OK to apply.
 
-Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
----
- arch/powerpc/platforms/44x/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+Hmm... I'm inclined to disagree.  The Ack is a marker that I'm okay
+with the changes, but the note after makes it pretty clear that the
+preference would be for the patch to be handled via an IB.
 
-diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
-index 8beec7d..908bf11 100644
---- a/arch/powerpc/platforms/44x/Kconfig
-+++ b/arch/powerpc/platforms/44x/Kconfig
-@@ -220,7 +220,6 @@ config AKEBONO
- 	select USB_EHCI_HCD_PLATFORM
- 	select MMC_SDHCI
- 	select MMC_SDHCI_PLTFM
--	select MMC_SDHCI_OF_476GTR
- 	select ATA
- 	select SATA_AHCI_PLATFORM
- 	help
--- 
-1.8.3.2
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
