@@ -1,93 +1,93 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and
- dma-coherent
-Date: Fri, 2 May 2014 12:41:43 -0400
-Message-ID: <5363CAC7.3020706@ti.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>	<536249D6.3020008@ti.com>	<20140501132516.GG26756@n2100.arm.linux.org.uk> <CAL_JsqKcQ3eHPVGmz7LwE-s1KdkOAKTiF43XPjD3bVS2ghKLJA@mail.gmail.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7] DMA: sun6i: Add driver for the Allwinner A31 DMA
+ controller
+Date: Fri, 2 May 2014 22:04:29 +0530
+Message-ID: <20140502163429.GA32284@intel.com>
+References: <20140430070408.GR32284@intel.com>
+ <20140430215322.GH3000@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKcQ3eHPVGmz7LwE-s1KdkOAKTiF43XPjD3bVS2ghKLJA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140430215322.GH3000@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 May 2014 10:41 AM, Rob Herring wrote:
-> On Thu, May 1, 2014 at 8:25 AM, Russell King - ARM Linux
-> <linux@arm.linux.org.uk> wrote:
->> On Thu, May 01, 2014 at 09:19:18AM -0400, Santosh Shilimkar wrote:
->>> Rob, Russell,
->>>
->>> On Thursday 24 April 2014 11:30 AM, Santosh Shilimkar wrote:
->>>> Here is an updated v3 of the series. Series introduces support for setting up
->>>> dma parameters based on device tree properties like 'dma-ranges' and
->>>> 'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
->>>> series can be found here [3], [2] and [1].
->>>>
->>>> The 'dma-ranges' helps to take care of few DMAable system memory restrictions
->>>> by use of dma_pfn_offset which we maintain now per device. Arch code then
->>>> uses it for dma address translations for such cases. We update the
->>>> dma_pfn_offset accordingly during DT the device creation process.The
->>>> 'dma-coherent' property is used to setup arch's coherent dma_ops.
->>>>
->>>> Hopefully with acks, tested-by this version can get into 3.16 queue. I will
->>>> post a followup series for Keystone SOC which will use this infrastructure.
->>>> Linus W also wants to use this for ARM integrator platform dma offset issue.
->>>>
->>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>> Cc: Russell King <linux@arm.linux.org.uk>
->>>> Cc: Arnd Bergmann <arnd@arndb.de>
->>>> Cc: Olof Johansson <olof@lixom.net>
->>>> Cc: Grant Likely <grant.likely@linaro.org>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>> Cc: Linus Walleij <linus.walleij@linaro.org>
->>>> Cc: Grygorii Strashko <grygorii.strashko@ti.com>
->>>>
->>>> Grygorii Strashko (2):
->>>>   of: introduce of_dma_get_range() helper
->>>>   ARM: dma: Use dma_pfn_offset for dma address translation
->>>>
->>>> Santosh Shilimkar (5):
->>>>   device: introduce per device dma_pfn_offset
->>>>   of: introduce of_dma_is_coherent() helper
->>>>   of: configure the platform device dma parameters
->>>>   ARM: dma: implement set_arch_dma_coherent_ops()
->>>>   ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
->>>>
->>>>  arch/arm/include/asm/dma-mapping.h |   28 ++++++++++--
->>>>  arch/arm/mm/dma-mapping.c          |    4 +-
->>>>  drivers/of/address.c               |   87 ++++++++++++++++++++++++++++++++++++
->>>>  drivers/of/platform.c              |   71 +++++++++++++++++++++++++++--
->>>>  include/linux/device.h             |    2 +
->>>>  include/linux/dma-mapping.h        |    7 +++
->>>>  include/linux/of_address.h         |    8 ++++
->>>>  include/linux/of_platform.h        |    6 +++
->>>>  8 files changed, 204 insertions(+), 9 deletions(-)
->>>>
->>> How do we go about merging this series ? There is a dependency
->>> between the patches and hence the question.
->>
->> I don't know anymore.  People today want to assert exclusive rights over
->> parts of the kernel tree, which makes this kind of cross-patching rather
->> impossible.
-> 
-> I can take this series or provide an ack for the DT parts. Either way
-> it does not matter to me.
-> 
->> The only workable solution I can see is the long winded way to split the
->> series up, merge the first set of dependencies in one merge window, and
->> hold the rest back for the following merge window.  Not ideal, but it
->> stops the arguments.
-> 
-> That should not be necessary. We should be able to sort this out as it
-> is not a difficult problem.
-> 
-yeah. After addressing those few minor comments, I will create a pull
-request for both RMK and arm-soc to pull from with your ack. That way
-I can also add keystone specific parts on top of this series to arm-soc.
 
-Regards,
-Santosh  
+--VywGB/WGlW4DM4P8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 30, 2014 at 02:53:22PM -0700, Maxime Ripard wrote:
+> Hi Vinod,
+>=20
+> On Wed, Apr 30, 2014 at 12:34:08PM +0530, Vinod Koul wrote:
+> > On Thu, Apr 24, 2014 at 04:22:44PM +0200, Maxime Ripard wrote:
+> > > +static inline void sun6i_dma_free(struct sun6i_dma_dev *sdc)
+> > > +{
+> > > +	int i;
+> > > +
+> > > +	for (i =3D 0; i < NR_MAX_VCHANS; i++) {
+> > > +		struct sun6i_vchan *vchan =3D &sdc->vchans[i];
+> > > +
+> > > +		list_del(&vchan->vc.chan.device_node);
+> > > +		tasklet_kill(&vchan->vc.task);
+> > > +	}
+> > > +
+> > > +	tasklet_kill(&sdc->task);
+> > This is again not good. see http://lwn.net/Articles/588457/
+> > At this point HW can still generate interrupts or you can have irq runn=
+ing!
+>=20
+> I'm not sure to fully understand the issue here, but what is not good?
+> the first or the second tasklet_kill calls, or both?
+>=20
+> From what I understood, the issue is only there whenever you are
+> calling tasklet_disable without making sure that no one will schedule
+> your tasklet before disabling it.
+>=20
+> But the point is I don't actually use either _enable/_disable. I might
+> be wrong in not using those functions, but I don't really see how I
+> can be impacted.
+
+Well that was one part of it. How do you ensure the tasklet is not scheduled
+while and after you are killing it. You need to ensure irq is disabled and =
+pending irqs
+have finished processing. I dont see that bit.
+
+--=20
+~Vinod
+
+
+--VywGB/WGlW4DM4P8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTY8kVAAoJEHwUBw8lI4NHMwoP/i4gEC/gYCpkacQiL5wED/DR
+vMKJK48oAo5gejkWrd65m7HyyxiGtBDZLU+XJ/EjlZJovr8fDdcNt+mf180hyXY4
++uwxu5tFuH9UlQeFmz6RmPAIMhJfPH/H0YYYkCaC38/nUlYUaQDRguHLR5ntepa0
+4gpAx8bZvcLPt/ni0XxeiI7mBxDrjsAtpxe50yo4WwSsI85BiycH5q6+zO2yR9O2
+veCV6HT0RN/5WwOHSTYCBHpSL1ustsm1boFhiJuy8tEP7QJbWwxYFKBcrCCrt3+X
+2n8XASdx29lTeGkOzNSAObqW5eIs8Vtm4k4WdCiGETi3YpjlTqurm9yb58UTp/81
+RR+zA8wTbjHFftzKQsg1b7qDdaNekJyQh+evFwQgZ6n7hMyJ+ZzbXA5hFg7SL/72
+tpuR860W61IGJZLk7Q617XWNs0ShpmS9wEF/oByOyrznaiNB5ZIrYDbS+a0Y6Zdh
+uTK63VDfwIJnpYpotw+xz80NhHy/GlKDpXbKbHrxiY7iANTjg7shz4UOnoSBx36e
+zfsBHq5V16PedzD6PVzS4Q6JS/G8oEC6bJvbSVde+iy/StSSGEdR1yNExzrR3QpP
+jXyHlwwJRJsj8+FmI45sNjB9xzpxRi6RR0NqEiicFFs172JHhN+oPUL5fjZrtABw
+YwqV+SLBJGqv8rfhCFp1
+=X/X1
+-----END PGP SIGNATURE-----
+
+--VywGB/WGlW4DM4P8--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
