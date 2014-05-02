@@ -1,44 +1,91 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH/RFC 3/4] of/clk: Register clocks suitable for Runtime PM
- with the PM core
-Date: Fri, 2 May 2014 16:35:44 +0200
-Message-ID: <CAMuHMdUGdfF8x58dz46VWNsC4X0cmFng39Z2xSO_pXYqn9u=HA@mail.gmail.com>
-References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
-	<1398334403-26181-4-git-send-email-geert+renesas@glider.be>
-	<CAPDyKFpTwPDu9afhOjhhQ2PKGFB+hWsp=mcaYTq8OvuGF7yT3Q@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and dma-coherent
+Date: Fri, 2 May 2014 09:41:48 -0500
+Message-ID: <CAL_JsqKcQ3eHPVGmz7LwE-s1KdkOAKTiF43XPjD3bVS2ghKLJA@mail.gmail.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
+	<536249D6.3020008@ti.com>
+	<20140501132516.GG26756@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpTwPDu9afhOjhhQ2PKGFB+hWsp=mcaYTq8OvuGF7yT3Q@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Felipe Balbi <balbi@ti.com>, Mike Turquette <mturquette@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140501132516.GG26756-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulf,
-
-On Fri, May 2, 2014 at 10:56 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> +static int of_clk_pm_runtime_suspend(struct device *dev)
->> +{
->> +       int ret;
->> +
->> +       ret = pm_generic_runtime_suspend(dev);
->> +       if (ret)
->> +               return ret;
->> +
->> +       ret = pm_clk_suspend(dev);
+On Thu, May 1, 2014 at 8:25 AM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Thu, May 01, 2014 at 09:19:18AM -0400, Santosh Shilimkar wrote:
+>> Rob, Russell,
+>>
+>> On Thursday 24 April 2014 11:30 AM, Santosh Shilimkar wrote:
+>> > Here is an updated v3 of the series. Series introduces support for setting up
+>> > dma parameters based on device tree properties like 'dma-ranges' and
+>> > 'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
+>> > series can be found here [3], [2] and [1].
+>> >
+>> > The 'dma-ranges' helps to take care of few DMAable system memory restrictions
+>> > by use of dma_pfn_offset which we maintain now per device. Arch code then
+>> > uses it for dma address translations for such cases. We update the
+>> > dma_pfn_offset accordingly during DT the device creation process.The
+>> > 'dma-coherent' property is used to setup arch's coherent dma_ops.
+>> >
+>> > Hopefully with acks, tested-by this version can get into 3.16 queue. I will
+>> > post a followup series for Keystone SOC which will use this infrastructure.
+>> > Linus W also wants to use this for ARM integrator platform dma offset issue.
+>> >
+>> > Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+>> > Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+>> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> > Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+>> > Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> > Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+>> > Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>> >
+>> > Grygorii Strashko (2):
+>> >   of: introduce of_dma_get_range() helper
+>> >   ARM: dma: Use dma_pfn_offset for dma address translation
+>> >
+>> > Santosh Shilimkar (5):
+>> >   device: introduce per device dma_pfn_offset
+>> >   of: introduce of_dma_is_coherent() helper
+>> >   of: configure the platform device dma parameters
+>> >   ARM: dma: implement set_arch_dma_coherent_ops()
+>> >   ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
+>> >
+>> >  arch/arm/include/asm/dma-mapping.h |   28 ++++++++++--
+>> >  arch/arm/mm/dma-mapping.c          |    4 +-
+>> >  drivers/of/address.c               |   87 ++++++++++++++++++++++++++++++++++++
+>> >  drivers/of/platform.c              |   71 +++++++++++++++++++++++++++--
+>> >  include/linux/device.h             |    2 +
+>> >  include/linux/dma-mapping.h        |    7 +++
+>> >  include/linux/of_address.h         |    8 ++++
+>> >  include/linux/of_platform.h        |    6 +++
+>> >  8 files changed, 204 insertions(+), 9 deletions(-)
+>> >
+>> How do we go about merging this series ? There is a dependency
+>> between the patches and hence the question.
 >
-> What about slow clocks? Those aren't handled with pm_clk_suspend().
+> I don't know anymore.  People today want to assert exclusive rights over
+> parts of the kernel tree, which makes this kind of cross-patching rather
+> impossible.
 
-How are slow clocks handled?
+I can take this series or provide an ack for the DT parts. Either way
+it does not matter to me.
 
-Gr{oetje,eeting}s,
+> The only workable solution I can see is the long winded way to split the
+> series up, merge the first set of dependencies in one merge window, and
+> hold the rest back for the following merge window.  Not ideal, but it
+> stops the arguments.
 
-                        Geert
+That should not be necessary. We should be able to sort this out as it
+is not a difficult problem.
 
+Rob
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
