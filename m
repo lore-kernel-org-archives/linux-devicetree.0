@@ -1,86 +1,62 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
-Date: Fri, 02 May 2014 14:32:08 +0200
-Message-ID: <4369315.NLgjZW6qVF@wuerfel>
-References: <20140501173248.GD3732@e103592.cambridge.arm.com> <20140502110557.GA18452@ulmo>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140502110557.GA18452@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v5 0/4] usb: ehci/ohci-exynos: Move to generic phy framework
+Date: Fri,  2 May 2014 18:17:31 +0530
+Message-ID: <1399034855-9686-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, t.figa@samsung.com, k.debski@samsung.com, jg1.han@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 May 2014 13:05:58 Thierry Reding wrote:
-> 
-> Let me see if I understood the above proposal by trying to translate it
-> into a simple example for a specific use-case. On Tegra for example we
-> have various units that can either access system memory directly or use
-> the IOMMU to translate accesses for them. One such unit would be the
-> display controller that scans out a framebuffer from memory.
+Based and tested on 'usb-next' branch of Greg's usb tree, with relevant
+device tree patches[1]
 
-Can you explain how the decision is made whether the IOMMU gets used
-or not? In all cases I've seen so far, I think we can hardwire this
-in DT, and only expose one or the other. Are both ways used
-concurrently?
+Hi Alan,
+ I have included your Acked-by in all the four patches, but there has been
+ some amount of restructuring as suggested by Tomasz Figa.
+ Please let me know if you have some comments on this patch-series.
 
->         dc@0,54200000 {
->                 ...
-> 
->                 slave {
->                         /*
->                          * 2 is the memory controller client ID of the
->                          * display controller.
->                          */
->                         iommu = <&iommu 2>;
-> 
->                         ...
->                 };
->         };
-> 
-> Admittedly this is probably a lot more trivial than what you're looking
-> for. There's no need for virtualization here, the IOMMU is simply used
-> to isolate memory accesses by devices. Still it's a use-case that needs
-> to be supported and one that at least Tegra and Exynos have an immediate
-> need for.
-> 
-> So the above isn't much different from the proposed bindings, except
-> that the iommu property is now nested within a slave node. I guess this
-> gives us a lot more flexibility to extend the description of a slave as
-> needed to represent more complex scenarios.
+Changes from v4:
+ - Addressed review comments for restructuring exynos_ohci_get_phy()
+   and exynos_ehci_get_phy(); and thereby adding proper checks in
+   exynos_ohci_phy_enable()/disable() as well as exynos_ehci_phy_enable()/
+   disable().
 
-This looks rather complicated to parse automatically in the generic
-DT code when we try to decide which dma_map_ops to use. We'd have
-to look for 'slave' nodes in each device we instatiate and then see
-if they use an iommu or not.
- 
-> Also, are slaves/slave-names and slave subnodes mutually exclusive? It
-> sounds like slaves/slave-names would be a specialization of the slave
-> subnode concept for the trivial cases. Would the following be an
-> equivalent description of the above example?
-> 
->         dc@0,54200000 {
->                 ...
-> 
->                 slaves = <&iommu 2>;
->         };
-> 
-> I don't see how it could be exactly equivalent since it misses context
-> regarding the type of slave that's being interacted with. Perhaps that
-> could be solved by making that knowledge driver-specific (i.e. the
-> driver for the Tegra display controller will know that it can only be
-> the master on an IOMMU and therefore derive the slave type). Or the
-> slave's type could be derived from the slave-names property.
+Changes from v3:
+ - Calling usb_phy_shutdown() when exynos_o/ehci_phy_enable() is failing.
+ - Made exynos_o/ehci_phy_disable() return void, since its return value
+   did not serve any purpose.
+ - Calling clk_disable_unprepare() in exynos_o/ehci_resume() when
+   exynos_o/ehci_phy_enable() is failed.
 
-I'd rather have a device-specific property that tells the driver
-about things the iommu driver doesn't need to know but the master
-does. In most cases, we should be fine without a name attached to the
-slave.
+Changes from v2:
+ - Added two patches in the series for some cleanup.
+   usb: ohci-exynos: Use struct device instead of platform_device
+   usb: ehci-exynos: Use struct device instead of platform_device
+ - Addressed review comments.
+   -- Moved exynos_ohci_phyg_on()/off routines inside
+      exynos_ohci_phy_enable()/disable.
+   -- Added functions exynos_ehci_phy_enable() and exynos_ehci_phy_disable()
+      and moved exynos_ehci_phyg_on()/off routines respectively in them.
+   -- Added necessary checks.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[1]: [PATCH 0/4] dts: Add usb2phy to Exynos 5250/5420
+     https://lkml.org/lkml/2014/4/30/119
+
+Kamil Debski (1):
+  usb: ehci-exynos: Change to use phy provided by the generic phy
+    framework
+
+Vivek Gautam (3):
+  usb: ohci-exynos: Use struct device instead of platform_device
+  usb: ehci-exynos: Use struct device instead of platform_device
+  usb: ohci-exynos: Add facility to use phy provided by the generic phy
+    framework
+
+ .../devicetree/bindings/usb/exynos-usb.txt         |   31 +++++
+ drivers/usb/host/ehci-exynos.c                     |  136 ++++++++++++++++----
+ drivers/usb/host/ohci-exynos.c                     |  134 +++++++++++++++----
+ 3 files changed, 254 insertions(+), 47 deletions(-)
+
+-- 
+1.7.10.4
