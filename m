@@ -1,135 +1,52 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
-Date: Fri, 2 May 2014 12:17:50 -0600
-Message-ID: <20140502181750.GD3179@obsidianresearch.com>
-References: <20140501173248.GD3732@e103592.cambridge.arm.com>
- <6774053.rAccqTeoiQ@wuerfel>
- <20140502173120.GD3805@e103592.cambridge.arm.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCHv4 0/4] Enable usbphy and hsotg for exynos4
+Date: Fri, 02 May 2014 20:21:02 +0200
+Message-ID: <5363E20E.9010802@gmail.com>
+References: <1399004769-31033-1-git-send-email-chanho61.park@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140502173120.GD3805-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399004769-31033-1-git-send-email-chanho61.park@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Chanho Park <chanho61.park@samsung.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, t.figa@samsung.com, k.debski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 02, 2014 at 06:31:20PM +0100, Dave Martin wrote:
+Hi Chanho,
 
-> Note that there is no cycle through the "reg" property on iommu:
-> "reg" indicates a sink for transactions; "slaves" indicates a
-> source of transactions, and "ranges" indicates a propagator of
-> transactions.
+On 02.05.2014 06:26, Chanho Park wrote:
+> This patchset enables a exynos4 usbphy and hsotg DT node for exynos4. The usb
+> phy node uses generic exynos phy driver. The driver uses PMU syscon and SYSREG
+> syscon phandles.
+>
+> Change from v3:
+>   - Place a status field at the end of the nodes for readability
+>
+> Change from v2:
+>   - Split 4x12 compatibles to 4212 and 4412
+>
+> Changes from v1: Applied Tomasz Figa's comments
+>   - Document PMU syscon compatibles for exynos4210/4x12
+>   - Use clock macro instead of raw clock number
+>   - Correct phy name to "usb2-phy"
+>
+> Chanho Park (4):
+>    ARM: dts: exynos4: add PMU syscon node
+>    ARM: dts: exynos4: add exynos_usbphy node
+>    ARM: dts: exynos4: add hsotg device node
+>    ARM: dts: exynos4412-trats2: enable usb nodes
+>
+>   .../devicetree/bindings/arm/samsung/pmu.txt        |  3 +++
+>   arch/arm/boot/dts/exynos4.dtsi                     | 26 ++++++++++++++++++++++
+>   arch/arm/boot/dts/exynos4412-trats2.dts            | 10 +++++++++
+>   arch/arm/boot/dts/exynos4x12.dtsi                  |  9 ++++++++
+>   4 files changed, 48 insertions(+)
+>
 
-I wonder if this might be a better naming scheme, I actually don't
-really like 'slave' for this, it really only applies well to AXI style
-unidirectional busses, and any sort of message-based bus architectures
-(HT, PCI, QPI, etc) just have the concept of an initiator and target.
+Looks good. Feel free to add
 
-Since initiator/target applies equally well to master/slave buses,
-that seems like better, clearer, naming.
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-Using a nomenclature where
-  'reg' describes a target reachable from the CPU initiator via the
-        natural DT hierarchy
-  'initiator' describes a non-CPU (eg 'DMA') source of ops, and
-        travels via the path described to memory (which is the
-	target).
-  'path' describes the route between an intitator and target, where
-        bridges along the route may alter the operation.
-  'upstream' path direction toward the target, typically memory.
-  'upstream-bridge' The next hop on a path between an initiator/target
-
-But I would encourage you to think about the various limitations this
-still has
- - NUMA systems. How does one describe the path from each
-   CPU to a target regs, and target memory? This is important for
-   automatically setting affinities.
- - Peer-to-Peer DMA, this is where a non-CPU initiator speaks to a
-   non-memory target, possibly through IOMMUs and what not. ie
-   a graphics card in a PCI-E slot DMA'ing through a QPI bus to
-   a graphics card in a PCI-E slot attached to a different socket.
-
-These are already use-cases happening on x86.. and the same underlying
-hardware architectures this tries to describe for DMA to memory is at
-work for the above as well.
-
-Basically, these days, interconnect is a graph. Pretending things are
-a tree is stressful :)
-
-Here is a basic attempt using the above language, trying to describe
-an x86ish system with two sockets, two DMA devices, where one has DMA
-target capabable memory (eg a GPU)
-
-// DT tree is the view from the SMP CPU complex down to regs
-smp_system {
-   socket0 {
-       cpu0@0 {}
-       cpu1@0 {}
-       memory@0: {}
-       interconnect0: {targets = <&memory@0,interconnect1>;}
-       interconnect0_control: {
-             ranges;
-             peripheral@0 {
-   		regs = <>;
-                intiator1 {
-                        ranges = < ... >;
-                        // View from this DMA initiator back to memory
-                        upstream-bridge = <&interconnect0>;
-                };
-		/* For some reason this peripheral has two DMA
-		   initiation ports. */
-                intiator2 {
-                        ranges = < ... >;
-                        upstream-bridge = <&interconnect0>;
-                };
-             };
-        };
-   }
-   socket1 {
-       cpu0@1 {}
-       cpu1@1 {}
-       memory@1: {}
-       interconnect1: {targets = <&memory@1,&interconnect0,&peripheral@1/target>;}
-       interconnect1_control: {
-             ranges;
-             peripheral@1 {
-                ranges = < ... >;
-   		regs = <>;
-                intiator {
-                        ranges = < ... >;
-                        // View from this DMA initiator back to memory
-                        upstream-bridge = <&interconnect1>;
-                };
-                target {
-		        reg = <..>
-                        /* This peripheral has integrated memory!
-                           But notice the CPU path is
-                             smp_system -> socket1 -> interconnect1_control -> target
-			   While a DMA path is
-                             intiator1 -> interconnect0 -> interconnect1 -> target
-			 */
-                };
-            };
-            peripheral2@0 {
-   		regs = <>;
-
-		// Or we can write the simplest case like this.
-		dma-ranges = <>;
-		upstream-bridge = <&interconnect1>;
-                /* if upstream-bridge is omitted then it defaults to
-	           &parent, eg interconnect1_control */
-       }
-}
-
-It is computable that ops from initator2 -> target flow through
-interconnect0, interconnect1, and then are delivered to target.
-
-It has a fair symmetry with the interrupt-parent mechanism..
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
