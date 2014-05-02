@@ -1,7 +1,7 @@
 From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH v2 0/3] ARM: dts: add device data for exynos4412-trats2
-Date: Fri, 02 May 2014 15:37:38 +0900
-Message-ID: <53633D32.8000809@samsung.com>
+Subject: [PATCH v2 1/3] ARM: dts: fix incorrect compatible for exynos4412
+Date: Fri, 02 May 2014 15:37:44 +0900
+Message-ID: <53633D38.9000108@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
@@ -11,25 +11,31 @@ To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <
 Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset add some device node for exynos4412-trats2.
-It is based on v3.15-next/dt-samsung-2 branch.
+This patch fixed incorrect compatible for ak8975 magnetic sensor.
+ak8975 magnetic sensor use compatible "ak8975" or "asahi-kasei,ak8975"
+In this patch, use "asahi-kasei,ak8975" according to dt bindings document.
 
-exynos4412-trats2.dts
-- Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-kasei,ak8975".
-- Add cm36651 light/proximity sensor device node.
-- Change gpio-key device node. fix incorrect gpio property, and then add "ok-key" node.
-
+Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+---
 Changes in v2:
-- Change ak8975 magnetic sensor compatible according to binding document.
-- Change cm36651 light/proximity sensor compatible according to binding document and driver.
+- Compatible is changed according to device tree binding document.
+---
+ arch/arm/boot/dts/exynos4412-trats2.dts |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Beomho Seo (3):
-  ARM: dts: fix incorrect compatible for exynos4412
-  ARM: dts: add cm36651 light/proximity sensor node
-  ARM: dts: fixed gpio key node for exynos4412
+diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+index 3228506..1279a8a 100644
+--- a/arch/arm/boot/dts/exynos4412-trats2.dts
++++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+@@ -494,7 +494,7 @@
+ 		status = "okay";
 
- arch/arm/boot/dts/exynos4412-trats2.dts |   50 ++++++++++++++++++++++++++-----
- 1 file changed, 43 insertions(+), 7 deletions(-)
-
+ 		ak8975@0c {
+-			compatible = "ak,ak8975";
++			compatible = "asahi-kasei,ak8975";
+ 			reg = <0x0c>;
+ 			gpios = <&gpj0 7 0>;
+ 		};
 -- 
 1.7.9.5
