@@ -1,87 +1,115 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: Re: [PATCH 1/3] clk: exynos5420: Add 5800 specific clocks
-Date: Sat, 3 May 2014 17:42:25 +0530
-Message-ID: <CALt3h7_sLG6hYOQnYO6KtBoKEPNbx1RU-QxRST3wm6Dy4Ju0Rg@mail.gmail.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
-	<1399035821-25096-2-git-send-email-arun.kk@samsung.com>
-	<CAL1qeaHTuQ1Br=WLt0xd5a-rA0MjzKez0esgKYTpKs9Y8Gnsxw@mail.gmail.com>
+From: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: syscon or memory mappings (was: Re: [RFC/PATCH 0/8] pinctrl-rockchip: Change wrong initial assumptions)
+Date: Sat, 03 May 2014 14:40:36 +0200
+Message-ID: <9747726.2b5sgjTxWB@typ>
+References: <1414506.B4e2jZujVm@diego> <1721270.d6hHid1rhj@typ> <4321949.A6Ghcdztds@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaHTuQ1Br=WLt0xd5a-rA0MjzKez0esgKYTpKs9Y8Gnsxw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@google.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Douglas Anderson <dianders@chromium.org>, Olof Johansson <olofj@google.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tushar Behera <tushar.behera@linaro.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4321949.A6Ghcdztds@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hello Heiko,
 
-On Fri, May 2, 2014 at 11:21 PM, Andrew Bresticker <abrestic@google.com> wrote:
-> Hi Arun,
->
-> On Fri, May 2, 2014 at 6:03 AM, Arun Kumar K <arun.kk@samsung.com> wrote:
->> From: Alim Akhtar <alim.akhtar@samsung.com>
->>
->> Exynos5800 clock structure is mostly similar to 5420 with only
->> a small delta changes. So the 5420 clock file is re-used for
->> 5800 also. The common clocks for both are seggreagated and few
->> clocks which are different for both are separately initialized.
->
-> As Tomasz mentioned, this will certainly conflict with Shaik and
-> Rahul's 5420 clock cleanup series.  That series adds/fixes the MAU,
-> WCORE, and ISP blocks which also have differences from 5420 to 5800.
->
+On Saturday 03 May 2014 at 01:45:11, Heiko St=FCbner wrote:
+> > However, this sheds light on an underlying issue: Rockchip is not t=
+reating
+> > the whole GPIO block as one cohesive device as we do currently. Ins=
+tead,
+> > it
+> > seems to me, one GPIO bank is one device. Each has its cohesive mux=
+, bank
+> > and pull registers - apart from rk3188-bank-0, maybe. But that one =
+is
+> > special anyway with regards to register ordering (s.b.).
+> >=20
+> > The issues you had with RK3188 and now have with RK3288 seem to ste=
+m from
+> > trying to group all banks together into one pinctrl driver.
+> >=20
+> > So maybe we should promote the GPIO banks to full devices in the dt=
+ and
+> > make smaller mappings for each GPIO bank, i.e. three mappings for e=
+ach
+> > GPIO bank (mux, bank, pull). I know we have to stay backwards compa=
+tible
+> > dt-wise, but that should be doable.
+>=20
+> Yes, that is another miss-conception from the early days. The
+> gpio-controllers themself are actually Synopsis Designware IPs - the =
+kernel
+> now even has a separate driver for them (gpio-dwapb). Only the real
+> pincontrol/muxing/pull/etc is from Rockchip.
+>=20
+> Currently I can't think of a way to move over gracefully, without
+> introducing crap into the gpio-dwapb driver. As at the moment it pars=
+es all
+> information it needs from the dt directly - of course with different
+> bindings.
+>=20
+> That is also the reason I do not want to introduce more "special-case=
+s" in
+> the bank-declaration we're using currently - to not make this move mo=
+re
+> difficult in the future.
+>=20
+> As it is, with the patch attached to the last mail, the pinctrl drive=
+r
+> wouldn't even need the "rockchip,rk3188-gpio-bank0" compatible anymor=
+e, as
+> the information about its special case is now sitting in the bank
+> declaration inside the driver. Which then would enable us to remove t=
+he
+> gpio-bank subnodes alltogether and use the external gpio driver.
 
-Yes I will rebase on that series. I dropped many of the changes
-in 5800 as it doesnt have the common terminating GATES as of now.
-If rebased on Shaik/Rahul cleanup series, I can put all of them
-back again.
+Okay, you convinced me. That sounds like a good plan to me. Maybe we ca=
+n=20
+introduce some compability code into the pinctrl driver to generate the=
+=20
+correct dt nodes for gpio-dwabp at runtime? I think that would depend o=
+n=20
+something like CONFIG_OF_DYNAMIC though.
 
->>
->> Signed-off-by: Alim Akhtar <alim.akhtar@samsung.com>
->> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
->> ---
->>  .../devicetree/bindings/clock/exynos5420-clock.txt |    3 +-
->>  drivers/clk/samsung/clk-exynos5420.c               |  192 +++++++++++++++-----
->>  include/dt-bindings/clock/exynos5420.h             |    1 +
->>  3 files changed, 150 insertions(+), 46 deletions(-)
->>
+> While for example syscon cannot handle clocks currently, the underlyi=
+ng
+> regmap can - so it would be only a matter of teaching syscon to tell =
+regmap
+> of the clock to use (GRF and PMU register-clocks in this case), inste=
+ad of
+> needing to have every user of parts of these registers handle the rel=
+evant
+> clock itself on register accesses.
+>=20
+> Also, as you can see in the grf map, the rk3188 actually has two soc_=
+status
+> registers (0xac and 0x108) which have the dmac, cpu and drive strengt=
+h
+> registers in between. So having a syscon only for soc_con and soc_sta=
+tus
+> will produce problems too.
+>=20
+> Another example, GRF_IO_VSEL at 0x0380 is most likely some sort of pi=
+n
+> voltage selection. As it only spans 1 register I'd assume it could co=
+ntain
+> settings that span all pin banks.
 
-[snip]
+Okay, we couldn't handle that with individual devices for each bank.
 
->> +struct samsung_mux_clock exynos5800_mux_clks[] __initdata = {
->> +       MUX(0, "mout_aclk400_mscl", mout_group3_5800_p, SRC_TOP0, 4, 3),
->> +
->> +       MUX(0, "mout_aclk333_432_gscl", mout_group6_5800_p, SRC_TOP1, 0, 2),
->> +       MUX(0, "mout_aclk266", mout_group5_5800_p, SRC_TOP1, 20, 2),
->> +       MUX(0, "mout_aclk333", mout_group1_5800_p, SRC_TOP1, 28, 2),
->> +
->> +       MUX(0, "mout_aclk333_g2d", mout_group5_5800_p, SRC_TOP2, 8, 2),
->> +       MUX(0, "mout_aclk266_g2d", mout_group5_5800_p, SRC_TOP2, 12, 2),
->> +       MUX(0, "mout_aclk300_jpeg", mout_group5_5800_p, SRC_TOP2, 20, 2),
->> +       MUX(0, "mout_aclk300_disp1", mout_group5_5800_p, SRC_TOP2, 24, 2),
->> +       MUX(0, "mout_aclk300_gscl", mout_group5_5800_p, SRC_TOP2, 28, 2),
->> +
->> +       MUX(0, "sclk_bpll", bpll_p, SRC_TOP7, 24, 1),
->> +       MUX(0, "mout_epll2", mout_epll2_5800_p, SRC_TOP7, 28, 1),
->> +
->> +       MUX(0, "mout_user_aclk432_scaler", mout_group9_5800_p,
->> +                                                       SRC_TOP9, 28, 1),
->>
->> +       MUX(0, "mout_sw_aclk432_scaler", mout_group8_5800_p,
->> +                                                       SRC_TOP13, 28, 1),
->
-> The aclk432_scaler tree is incomplete - you're missing
-> mout_aclk432_scaler and dout_aclk432_scaler.  The rest of the CAM
-> block (aclk432_cam, aclkfl1_550_cam, and aclk550_cam) is also missing,
-> though I suppose that could go in a later patch.
->
+> And of course, splitting the register space into dozens of small indi=
+vidual
+> mappings looks messy :-)
 
-The CAM gates you mentioned are omitted as I found that there
-are some issues caused by it during S2R sequences and I have
-to leave it as CLK_IGNORE_UNUSED for proper functionality.
+Yes, I agree now ;-)
 
-[snip]
-
-Regards
-Arun
+Cheers,
+  Max
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
