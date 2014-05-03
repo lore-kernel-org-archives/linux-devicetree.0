@@ -1,94 +1,138 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: mc13783: Add devicetree support
-Date: Fri, 2 May 2014 18:49:34 -0700
-Message-ID: <20140503014934.GB22111@sirena.org.uk>
-References: <1398495423-2223-1-git-send-email-shc_work@mail.ru>
- <20140429222522.GS15125@sirena.org.uk>
- <20140430140849.GR29462@lee--X1>
- <1398867073.695596467@f224.i.mail.ru>
- <20140430141708.GS29462@lee--X1>
- <20140430180653.GB3245@sirena.org.uk>
- <20140501074253.GA32761@lee--X1>
- <20140501150653.GZ3245@sirena.org.uk>
- <20140502080944.GA5206@lee--X1>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 3/3] ARM: dts: Add peach-pi board support
+Date: Sat, 03 May 2014 04:00:59 +0200
+Message-ID: <53644DDB.7050503@gmail.com>
+References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>	<1399035821-25096-4-git-send-email-arun.kk@samsung.com>	<5363D176.80601@gmail.com> <CAD=FV=XYjMg7V9=OzAy_ifwaM83QS0tiTrp5+nxvG236kkSjRQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6278849073951485969=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20140502080944.GA5206@lee--X1>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Samuel Ortiz <sameo@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Takashi Iwai <tiwai@suse.de>, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=XYjMg7V9=OzAy_ifwaM83QS0tiTrp5+nxvG236kkSjRQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olofj@google.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tushar Behera <tushar.behera@linaro.org>, Arun Kumar <arunkk.samsung@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Doug,
 
---===============6278849073951485969==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="V0207lvV8h4k8FAm"
-Content-Disposition: inline
+On 02.05.2014 20:31, Doug Anderson wrote:
+> Tomasz,
+>
+> On Fri, May 2, 2014 at 10:10 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>> Hi Arun,
+>>
+>>
+>> On 02.05.2014 15:03, Arun Kumar K wrote:
+>>>
+>>> Adds support for google peach-pi board having the
+>>> Exynos5800 SoC.
+>>>
+>>> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+>>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>>> ---
+>>>    arch/arm/boot/dts/Makefile                |    3 +-
+>>>    arch/arm/boot/dts/exynos5800-peach-pi.dts |  144
+>>> +++++++++++++++++++++++++++++
+>>>    2 files changed, 146 insertions(+), 1 deletion(-)
+>>>    create mode 100644 arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>>
+>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>>> index 35c146f..efe1573 100644
+>>> --- a/arch/arm/boot/dts/Makefile
+>>> +++ b/arch/arm/boot/dts/Makefile
+>>> @@ -76,7 +76,8 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+>>>          exynos5420-arndale-octa.dtb \
+>>>          exynos5420-smdk5420.dtb \
+>>>          exynos5440-sd5v1.dtb \
+>>> -       exynos5440-ssdk5440.dtb
+>>> +       exynos5440-ssdk5440.dtb \
+>>> +       exynos5800-peach-pi.dtb
+>>>    dtb-$(CONFIG_ARCH_HI3xxx) += hi3620-hi4511.dtb
+>>>    dtb-$(CONFIG_ARCH_HIGHBANK) += highbank.dtb \
+>>>          ecx-2000.dtb
+>>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> new file mode 100644
+>>> index 0000000..e0f8633
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> @@ -0,0 +1,144 @@
+>>> +/*
+>>> + * Google Peach Pi Rev 10+ board device tree source
+>>> + *
+>>> + * Copyright (c) 2014 Google, Inc
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + */
+>>> +
+>>> +/dts-v1/;
+>>> +#include <dt-bindings/input/input.h>
+>>> +#include <dt-bindings/gpio/gpio.h>
+>>> +#include "exynos5800.dtsi"
+>>> +
+>>> +/ {
+>>> +       model = "Google Peach Pi Rev 10+";
+>>> +
+>>> +       compatible = "google,pi-rev16",
+>>> +               "google,pi-rev15", "google,pi-rev14",
+>>> +               "google,pi-rev13", "google,pi-rev12",
+>>> +               "google,pi-rev11", "google,pi-rev10",
+>>> +               "google,pi", "google,peach", "samsung,exynos5800",
+>>> +               "samsung,exynos5";
+>>
+>>
+>> I can see this board using the "google,peach" compatible string, which is
+>> the same as one listed for peach-pit board. Since they are based on
+>> different SoCs, are they really compatible?
+>
+> I'd like to see "google,peach" continue to be here but won't fight too
+> strongly if it's rejected.  The pit and pi boards are incredibly
+> similar to each other.  They have a 380 point difference in their
+> processor and a few minor peripheral differences, but not a lot else.
+>
+> I could totally imagine some code somewhere wanting to know if this
+> board is compatible with "google,peach" just like you can imagine code
+> somewhere wanting to know if this is compatible with
+> "samsung,exynos5".
+>
+> Potentially you could swap the order of "google,peach" and
+> "samsung,exynos5800" though...
+>
 
+Well, if you can use the device tree of peach-pit board and boot 
+peach-pi and vice-versa and it won't cause any hardware failures then I 
+guess it's fine to keep this string.
 
---V0207lvV8h4k8FAm
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Not sure about the order, though, as both "google,peach" and 
+"samsung,exynos5800" strings can't really be strictly ordered. IMHO 
+current order is the closest to ideal, as particular family of similar 
+boards is supposedly less generic than all boards based on particular SoC.
 
-On Fri, May 02, 2014 at 09:09:44AM +0100, Lee Jones wrote:
-> On Thu, 01 May 2014, Mark Brown wrote:
+>
+>>> +
+>>> +       memory {
+>>> +               reg = <0 0>;
+>>
+>> I don't think this is a good idea, because this is basically rendering this
+>> dts file useless, unless used with a bootloader that can actually inject
+>> correct values. I believe that some generic setup could be provided in the
+>> dts, so you could at least get the board running.
+>
+> I won't say that I care a whole lot, but I think that was what was
+> agreed upon the other day.  Specifically Tom Rini of U-Boot was
+> worried about the fact that U-Boot will read the memory node and
+> totally clobber it.  He thought there might be cases where someone
+> might _purposely_ not want U-Boot to do that.
+>
+> ...I would wonder what alternate bootloader you're imagining will
+> actually run on this board and not do this?
 
-> > Sure, but I didn't see an urgent need for that immediately so I just
-> > went ahead - the ack usually means that it's OK to apply.
+People should have the freedom to choose anything they want. We have 
+also barebox and coreboot with ARM and even Exynos5 support (in 
+coreboot), but people might want to use something completely exotic as 
+well and the device tree should let them do so.
 
-> Hmm... I'm inclined to disagree.  The Ack is a marker that I'm okay
-> with the changes, but the note after makes it pretty clear that the
-> preference would be for the patch to be handled via an IB.
-
-Right, and it's sitting on a separate branch which is (as we've seen)
-very easy to add a tag to if it turns out to be needed.  This is what
-all the small topic branches are there for, it makes it really easy to
-cross merge, and obviously applying the patch on a branch is always
-going to be the first step in creating an immutable branch.  It
-certainly doesn't seem worth getting worried about.
-
-Really, if you're not happy for something to be applied you probably
-don't want to be acking it or you at least want to be really explicit
-about things.
-
---V0207lvV8h4k8FAm
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTZEslAAoJELSic+t+oim9qNgP/1eYWmEaAgSa5iAWAye0EJvN
-MX2wFTUf4ciqdDWP1dbYArGqYChHIo3mFj/Oz7JLK9nspsC7x6orxgPIyzy4tU7g
-zhqMgcri/dzpTBfV0DPV7T7dRAZD0DuXsTP0oggqYRoqep+IKKG2PjZMBz5+d0ry
-m2AR2ZIQsR/AO6ZmYkKVra47dPBpxkH4XJgoQqurbQLzbx34J9Fh0sFJP7rCd1xJ
-PlOVGHXODtnTiUSlnqY+A+JR8+PyZ5mgcF6GZrG4O3HKowTYFYwwsly1c9XdSJtw
-OR8vZ6ykoKlNi1BmgvY+UOqZsV6dC9dpS+EksL5o7JcgCSssfNw+33UYULztdHK7
-OufBs3AfLXbcpbesrzQJDT4vLDPjp0YgQ8VWCz84jS4ys0Flc8px8v5ut2RzvHsU
-4o6ZkbSO/LeIbvku1H97XKMKEiLCrpqgdEbnCQm0jGzSctSYVNk7eksPpRow8ol6
-zjYtNZVAM6IK8vxtni7IEz8PnkUHoLpe77eXZzOQQnrhGBspJwphBEpqpMTIsUDQ
-suCCAUI9UutPehBFE+VLKQkXXI2NhIGi2RoFcYBOPux3q0bhCdHlioP8mjWTeDJ6
-bxIJlT+nQmMNYiPIL7p7/n1G3cG1aU4pwecE0rIY+IT5fGVjrE5vget82X3HP6OV
-EkV2ALXlZnv4v63VrmZM
-=jjkq
------END PGP SIGNATURE-----
-
---V0207lvV8h4k8FAm--
-
---===============6278849073951485969==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6278849073951485969==--
+Best regards,
+Tomasz
