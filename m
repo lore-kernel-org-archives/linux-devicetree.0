@@ -1,33 +1,53 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 0/6] Add CPTS support for AM437x
-Date: Sun, 4 May 2014 18:24:22 +0200
-Message-ID: <20140504162422.GA28908@netboy>
-References: <1399012324-20737-1-git-send-email-george.cherian@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] ASoC: alc5623: Add device tree binding
+Date: Sun, 4 May 2014 13:49:23 -0400
+Message-ID: <20140504174923.GW28159@titan.lakedaemon.net>
+References: <1399141819-23924-1-git-send-email-andrew@lunn.ch>
+ <1399141819-23924-2-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1399012324-20737-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: George Cherian <george.cherian@ti.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, davem@davemloft.net, jeffrey.t.kirsher@intel.com, dborkman@redhat.com, ast@plumgrid.com, tklauser@distanz.ch, mpa@pengutronix.de, bhutchings@solarflare.com, zonque@gmail.com, balbi@ti.com, mugunthanvnm@ti.com, t-kristo@ti.com, mturquette@linaro.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com
+In-Reply-To: <1399141819-23924-2-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 02, 2014 at 12:01:58PM +0530, George Cherian wrote:
-> The series adds CPTS support for AM4372.
+On Sat, May 03, 2014 at 08:30:11PM +0200, Andrew Lunn wrote:
+> Let the ALC5623 codec be instantiated from DT. Add a simple binding
+> for the additional control register and the jack detect register.
 > 
-> Patch 1 - DT changes w.r.t clock changes for AM33xx.
-> Patch 2 - CPTS clock name harcoding in the driver is removed. 
-> 	  Easier to pass the clock name from dt rather than hardcoding in driver.
-> 	  Also in prepration for DRA7x CPTS support.
-> Patch 3 - Enable the CPTS support for both DRA7x and AM4372 in the driver.
-> Patch 4 - Enable the Annexe F for L2 PTP for AM437x and DRA7x.
-> Patch 5 - Change the default clocksource to dpll_core_m5 
-> Patch 6 - DT changes for AM4372.
+> Also, add a prompt to the Kconfig entry for this CODEC, so that it can
+> be selected. Since kirkwood-t5325.c will no longer be used, we need to
+> be able to enable the CODEC in the mvebu_v5_defconfig etc.
 > 
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+> I followed the example of the WM8903 binding which allows register
+> values to be placed into DT.
 > 
-> v1 -> v2
-> 	Patch 1 and 2 Re-ordering.
-> 	Seperate TS_BITS define for Hw version V2 and V3
+> v1->v2:
+> 
+> Add redundant OF ID table.
+> Fix binding documentation.
+> Fix check of return code from of_property_read_u32().
+> Add Kconfig prompt
+> ---
+>  .../devicetree/bindings/sound/alc5623.txt          | 25 ++++++++++++++++++++++
+>  sound/soc/codecs/Kconfig                           |  2 +-
+>  sound/soc/codecs/alc5623.c                         | 20 +++++++++++++++++
+>  3 files changed, 46 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/alc5623.txt
 
-Acked-by: Richard Cochran <richardcochran@gmail.com>
+I assume Mark is going to take this through his tree.
+
+Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
