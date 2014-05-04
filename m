@@ -1,252 +1,33 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v2 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Sun, 4 May 2014 20:47:41 +0530
-Message-ID: <CAK9yfHzNijGLuikqPLUTxk52jF2P7Yugqn7oGQbyrHCJidKNqw@mail.gmail.com>
-References: <1399007180-20680-1-git-send-email-sachin.kamat@linaro.org>
-	<5363DBD0.2060903@gmail.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH v2 0/6] Add CPTS support for AM437x
+Date: Sun, 4 May 2014 18:24:22 +0200
+Message-ID: <20140504162422.GA28908@netboy>
+References: <1399012324-20737-1-git-send-email-george.cherian@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5363DBD0.2060903@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Arnd Bergmann <arnd@arndb.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399012324-20737-1-git-send-email-george.cherian@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: George Cherian <george.cherian@ti.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, davem@davemloft.net, jeffrey.t.kirsher@intel.com, dborkman@redhat.com, ast@plumgrid.com, tklauser@distanz.ch, mpa@pengutronix.de, bhutchings@solarflare.com, zonque@gmail.com, balbi@ti.com, mugunthanvnm@ti.com, t-kristo@ti.com, mturquette@linaro.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Fri, May 02, 2014 at 12:01:58PM +0530, George Cherian wrote:
+> The series adds CPTS support for AM4372.
+> 
+> Patch 1 - DT changes w.r.t clock changes for AM33xx.
+> Patch 2 - CPTS clock name harcoding in the driver is removed. 
+> 	  Easier to pass the clock name from dt rather than hardcoding in driver.
+> 	  Also in prepration for DRA7x CPTS support.
+> Patch 3 - Enable the CPTS support for both DRA7x and AM4372 in the driver.
+> Patch 4 - Enable the Annexe F for L2 PTP for AM437x and DRA7x.
+> Patch 5 - Change the default clocksource to dpll_core_m5 
+> Patch 6 - DT changes for AM4372.
+> 
+> 
+> v1 -> v2
+> 	Patch 1 and 2 Re-ordering.
+> 	Seperate TS_BITS define for Hw version V2 and V3
 
-On 2 May 2014 23:24, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Sachin,
->
-> The whole series looks quite good,
-
-Thanks :)
-
->but I have one concern about support for
-> Universal C210 board. Please see my comment inline.
->
->
-> On 02.05.2014 07:06, Sachin Kamat wrote:
->>
->> Instead of hardcoding the SYSRAM details for each SoC,
->> pass this information through device tree (DT) and make
->> the code SoC agnostic. Generic SRAM bindings are used
->> for achieving this.
->>
->> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->> Acked-by: Arnd Bergmann <arnd@arndb.de>
->> Acked-by: Heiko Stuebner <heiko@sntech.de>
->> ---
->> This patch is based on linux next (next-20140501) on top of
->> my Kconfig consolidation patch
->> http://comments.gmane.org/gmane.linux.kernel.samsung-soc/28642
->>
->> Changes since v1:
->> Type and presence of sram nodes is SoC/board dependent. V1 mandated the
->> presence of both the nodes and used to return an error if one of the
->> nodes was absent and thus fail the boot altogether. Removed this
->> dependency.
->>
->> Tested on 4210/4412 Origen, 5250/5420 Arndale and SMDK5420 boards.
->> ---
->>   arch/arm/Kconfig                                |    1 +
->>   arch/arm/boot/dts/exynos4210-universal_c210.dts |   17 ++++++
->>   arch/arm/boot/dts/exynos4210.dtsi               |   18 +++++++
->>   arch/arm/boot/dts/exynos4x12.dtsi               |   18 +++++++
->>   arch/arm/boot/dts/exynos5250.dtsi               |   18 +++++++
->>   arch/arm/boot/dts/exynos5420.dtsi               |   18 +++++++
->>   arch/arm/mach-exynos/common.h                   |    1 +
->>   arch/arm/mach-exynos/exynos.c                   |   64
->> -----------------------
->>   arch/arm/mach-exynos/firmware.c                 |    8 ++-
->>   arch/arm/mach-exynos/include/mach/map.h         |    7 ---
->>   arch/arm/mach-exynos/platsmp.c                  |   33 ++++++++++--
->>   11 files changed, 128 insertions(+), 75 deletions(-)
->>
->> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
->> index a6aaaad19b1a..f66ea9453df9 100644
->> --- a/arch/arm/Kconfig
->> +++ b/arch/arm/Kconfig
->> @@ -855,6 +855,7 @@ config ARCH_EXYNOS
->>         select S5P_DEV_MFC
->>         select SAMSUNG_DMADEV
->>         select SPARSE_IRQ
->> +       select SRAM
->>         select USE_OF
->>         help
->>           Support for SAMSUNG's EXYNOS SoCs (EXYNOS4/5)
->> diff --git a/arch/arm/boot/dts/exynos4210-universal_c210.dts
->> b/arch/arm/boot/dts/exynos4210-universal_c210.dts
->> index 63e34b24b04f..8d4de5c0d0c7 100644
->> --- a/arch/arm/boot/dts/exynos4210-universal_c210.dts
->> +++ b/arch/arm/boot/dts/exynos4210-universal_c210.dts
->> @@ -28,6 +28,23 @@
->>                 bootargs = "console=ttySAC2,115200N8 root=/dev/mmcblk0p5
->> rw rootwait earlyprintk panic=5 maxcpus=1";
->>         };
->>
->> +       sram@02020000 {
->> +               status = "disabled";
->
->
-> Here you just disable just the top level node of non-secure SYSRAM, but the
-> sub-nodes are still present and enabled.
-
-I was under the impression that disabling parent node would also
-disable the sub-nodes.
-I will disable all of them in this case.
-
->
->
->> +       };
->> +
->> +       sram@02025000 {
->> +               compatible = "mmio-sram";
->> +               reg = <0x02025000 0x1000>;
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               ranges = <0 0x02025000 0x1000>;
->> +
->> +               smp-sram@0 {
->> +                       compatible = "samsung,exynos4210-sram";
->> +                       reg = <0x0 0x1000>;
->> +               };
->> +       };
->> +
->>         mct@10050000 {
->>                 compatible = "none";
->>         };
->
->
-> [snip]
->
->
->> diff --git a/arch/arm/mach-exynos/platsmp.c
->> b/arch/arm/mach-exynos/platsmp.c
->> index 03e5e9f94705..0aac03204f9f 100644
->> --- a/arch/arm/mach-exynos/platsmp.c
->> +++ b/arch/arm/mach-exynos/platsmp.c
->> @@ -20,6 +20,7 @@
->>   #include <linux/jiffies.h>
->>   #include <linux/smp.h>
->>   #include <linux/io.h>
->> +#include <linux/of_address.h>
->>
->>   #include <asm/cacheflush.h>
->>   #include <asm/smp_plat.h>
->> @@ -33,11 +34,33 @@
->>
->>   extern void exynos4_secondary_startup(void);
->>
->> +static void __iomem *sram_base_addr;
->> +void __iomem *sram_ns_base_addr;
->> +
->> +static void __init exynos_smp_prepare_sram(void)
->> +{
->> +       struct device_node *node;
->> +
->> +       node = of_find_compatible_node(NULL, NULL,
->> "samsung,exynos4210-sram");
->
->
-> Now here you don't check whether the node is "okay", so on Universal C210 it
-> will pick just the first node with this compatible string,
-
-Right. Missed that one.
-
->
-> I think you should be using for_each_compatible_node() here, then check if
-> the node is "okay" using of_devicE_is_available() and only then use this
-> node to map the SYSRAM.
-
-OK.
-
->
->
->> +       if (node) {
->> +               sram_base_addr = of_iomap(node, 0);
->> +               if (!sram_base_addr)
->> +                       pr_err("Secondary CPU boot address not found\n");
->> +       }
->> +
->> +       node = of_find_compatible_node(NULL, NULL,
->> "samsung,exynos4210-sram-ns");
->
->
-> Same here.
-
-OK.
-
->
->
->> +       if (node) {
->> +               sram_ns_base_addr = of_iomap(node, 0);
->> +               if (!sram_ns_base_addr)
->> +                       pr_err("Secondary CPU boot address not found\n");
->> +       }
->> +}
->> +
->>   static inline void __iomem *cpu_boot_reg_base(void)
->>   {
->>         if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_1_1)
->>                 return S5P_INFORM5;
->> -       return S5P_VA_SYSRAM;
->> +       return sram_base_addr;
->>   }
->>
->>   static inline void __iomem *cpu_boot_reg(int cpu)
->> @@ -147,7 +170,8 @@ static int exynos_boot_secondary(unsigned int cpu,
->> struct task_struct *idle)
->>                  * and fall back to boot register if it fails.
->>                  */
->>                 if (call_firmware_op(set_cpu_boot_addr, phys_cpu,
->> boot_addr))
->> -                       __raw_writel(boot_addr, cpu_boot_reg(phys_cpu));
->> +                       if (cpu_boot_reg_base())
->
->
-> When can this condition be not met?
-
-I experimented with various combinations of node presence/absence in dts files
-and in one such case if we do not have the sram-ns node present (on
-arndale-octa),
-the system just hung at boot time (as base address was null) and this
-check became
-necessary.
-
->
->
->> +                               __raw_writel(boot_addr,
->> cpu_boot_reg(phys_cpu));
->>
->>                 call_firmware_op(cpu_boot, phys_cpu);
->>
->> @@ -205,6 +229,8 @@ static void __init exynos_smp_prepare_cpus(unsigned
->> int max_cpus)
->>         if (read_cpuid_part_number() == ARM_CPU_PART_CORTEX_A9)
->>                 scu_enable(scu_base_addr());
->>
->> +       exynos_smp_prepare_sram();
->> +
->>         /*
->>          * Write the address of secondary startup into the
->>          * system-wide flags register. The boot monitor waits
->> @@ -222,7 +248,8 @@ static void __init exynos_smp_prepare_cpus(unsigned
->> int max_cpus)
->>                 boot_addr = virt_to_phys(exynos4_secondary_startup);
->>
->>                 if (call_firmware_op(set_cpu_boot_addr, phys_cpu,
->> boot_addr))
->> -                       __raw_writel(boot_addr, cpu_boot_reg(phys_cpu));
->> +                       if (cpu_boot_reg_base())
->
->
-> Ditto.
-
-ditto.
-
-Thanks for your review. Will update the same in v3.
-
--- 
-With warm regards,
-Sachin
+Acked-by: Richard Cochran <richardcochran@gmail.com>
