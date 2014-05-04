@@ -1,125 +1,118 @@
-From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: hip04: add gpio pieces
-Date: Sun, 4 May 2014 19:37:23 +0800
-Message-ID: <53662673.7000709@hisilicon.com>
-References: <5357A947.2010506@hisilicon.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Sun, 4 May 2014 14:50:57 +0200
+Message-ID: <CABuKBeKEPcwwQNDegUPybcM54utUfk+UmkUT2+6pfLU+7gehYQ@mail.gmail.com>
+References: <1397072736-10793-1-git-send-email-matthias.bgg@gmail.com>
+ <1397072736-10793-4-git-send-email-matthias.bgg@gmail.com>
+ <CAL_JsqJowqV2bsxE2VeYXQQSj4_L_KcH+C_dD=ZUvC=1crN4dA@mail.gmail.com>
+ <87ha6136dz.fsf@approximate.cambridge.arm.com>
+ <CABuKBeKLexBsTwF-nX15AYfLNA9bFDRm2XyeLpwQg9+3m6Xf=w@mail.gmail.com>
+ <5347B942.2040703@arm.com>
+ <CABuKBeLLC2xApUMpT=u5nq4kxp9f4AotQCdk0nRU=aREM6Bwkg@mail.gmail.com>
+ <534D6106.1070005@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5357A947.2010506-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <534D6106.1070005@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Silvio F <silvio.fricke@gmail.com>, Kumar
 List-Id: devicetree@vger.kernel.org
 
-On 2014/4/23 19:51, Zhou Wang wrote:
-> Hisilicon Soc hip04 has four gpio controllers, each one has 32
-> gpios and can be configured to be an interrupt controller.
-> The gpio controllers are compatible with the snps,dw-apb-gpio
-> driver. This patch add the corresponding device tree nodes.
-> 
-> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
-> ---
->  arch/arm/boot/dts/hip04.dtsi |   76 ++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
-> index 7e909ee..c7c1f8c 100644
-> --- a/arch/arm/boot/dts/hip04.dtsi
-> +++ b/arch/arm/boot/dts/hip04.dtsi
-> @@ -235,5 +235,81 @@
->  			reg-shift = <2>;
->  			status = "disabled";
->  		};
-> +
-> +		gpio@4003000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,dw-apb-gpio";
-> +			reg = <0x4003000 0x1000>;
-> +
-> +			gpio3: gpio-controller@0 {
-> +				compatible = "snps,dw-apb-gpio-port";
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				snps,nr-gpios = <32>;
-> +				reg = <0>;
-> +				interrupt-parent = <&gic>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupts = <0 392 4>;
-> +			};
-> +		};
-> +
-> +		gpio@4002000 {
-> + 			#address-cells = <1>;
-> + 			#size-cells = <0>;
-> + 			compatible = "snps,dw-apb-gpio";
-> + 			reg = <0x4002000 0x1000>;
-> +
-> + 			gpio2: gpio-controller@0 {
-> + 				compatible = "snps,dw-apb-gpio-port";
-> + 				gpio-controller;
-> + 				#gpio-cells = <2>;
-> + 				snps,nr-gpios = <32>;
-> + 				reg = <0>;
-> +				interrupt-parent = <&gic>;
-> + 				interrupt-controller;
-> + 				#interrupt-cells = <2>;
-> + 				interrupts = <0 391 4>;
-> + 			};
-> + 		};
-> +
-> +		gpio@4001000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,dw-apb-gpio";
-> +			reg = <0x4001000 0x1000>;
-> +
-> +			gpio1: gpio-controller@0 {
-> +				compatible = "snps,dw-apb-gpio-port";
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				snps,nr-gpios = <32>;
-> +				reg = <0>;
-> +				interrupt-parent = <&gic>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupts = <0 390 4>;
-> +			};
-> +		};
-> +
-> +		gpio@4000000 {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			compatible = "snps,dw-apb-gpio";
-> +			reg = <0x4000000 0x1000>;
-> +
-> +			gpio0: gpio-controller@0 {
-> +				compatible = "snps,dw-apb-gpio-port";
-> +				gpio-controller;
-> +				#gpio-cells = <2>;
-> +				snps,nr-gpios = <32>;
-> +				reg = <0>;
-> +				interrupt-parent = <&gic>;
-> +				interrupt-controller;
-> +				#interrupt-cells = <2>;
-> +				interrupts = <0 389 4>;
-> +			};
-> +		};
->  	};
->  };
-> -- 1.7.9.5
-> 
-Hi haojian
+2014-04-15 18:40 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
+> On 15/04/14 17:09, Matthias Brugger wrote:
+>> 2014-04-11 11:43 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
+>>> On 11/04/14 10:11, Matthias Brugger wrote:
+>>>> 2014-04-10 11:01 GMT+02:00 Marc Zyngier <marc.zyngier@arm.com>:
+>>>>> A couple of things on top of Rob's comments:
+>>>>>
+>>>>> On Wed, Apr 09 2014 at 10:50:33 pm BST, Rob Herring <robherring2@gmail.com> wrote:
+>>>>>> On Wed, Apr 9, 2014 at 2:45 PM, Matthias Brugger <matthias.bgg@gmail.com> wrote:
+>>>>>>> This adds a generic devicetree board file and a dtsi for boards
+>>>>>>> based on the MT6589 SoCs from Mediatek.
+>>>>>>>
+>>>>>>> Apart from the generic parts (gic, clocks) the only component
+>>>>>>> currently supported are the timers.
+>>>>>>>
+>>>>>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>>>>
+>>>>> [...]
+>>>>>
+>>>>>>> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+>>>>>>> new file mode 100644
+>>>>>>> index 0000000..c0139ca
+>>>>>>> --- /dev/null
+>>>>>>> +++ b/arch/arm/mach-mediatek/Kconfig
+>>>>>>> @@ -0,0 +1,14 @@
+>>>>>>> +config ARCH_MEDIATEK
+>>>>>>> +       bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+>>>>>>> +       select ARCH_REQUIRE_GPIOLIB
+>>>>>>
+>>>>>> Then where is your GPIO driver?
+>>>>>>
+>>>>>>> +       select ARM_GIC
+>>>>>>> +       select CACHE_L2X0
+>>>>>>> +       select HAVE_ARM_TWD if LOCAL_TIMERS
+>>>>>
+>>>>> Hell no! ;-) ARM_ARCH_TIMER is the way (please also add the missing
+>>>>> node).
+>>>>
+>>>> I considered this, but the timer wasn't able to get it's clock frequency:
+>>>> "Architected timer frequency not available
+>>>> Division by zero in kernel."
+>>>
+>>> This is because your bootloader/firmware is utterly broken, and doesn't
+>>> set CNTFRQ (it must be set on all CPUs, from secure mode). As a
+>>> *workaround*, you can set the timer frequency in the timer node, but
+>>> that's just a hack, and will prevent virtual machines from running on
+>>> such hardware.
+>>
+>> The last days I tried to get the ARM_ARCH_TIMER working, but I wasn't
+>> able to do so.
+>> I set the frequency in the DT node.
+>> But reading CNTP_TVAL at the end of arch_timer_init, it always returns
+>> the same value.
+>> When reading CNTPCT at the same place, returns zero.
+>> As far as I understand CNTPCT will be always incremented, am I right?
+>>
+>> Consequently, when calling mdelay in arch_timer_init the system hangs.
+>>
+>> So can it be, that the timers are not working due to a screwed up chip
+>> design? Or do I miss something here?
+>
+> That would indicate that the clock that feeds into the timer is gated.
+> Other SoC vendors have done the same thing. Do you have access to
+> documentation describing the clock tree?
+>
+> Of course, a broken design is always possible, but let's not think of
+> the worse just yet... ;-)
 
- Are the gpio nodes OK for hip04.dtsi?
+The clock tree documentation is really spare but I tried to made some
+changes to the registers which controls the clock gates and the DCMs.
+But with no luck.
+So for me it looks like a broken design :(
+It looks like we need the global timer from mediatek.
 
-Best regards
-Zhou Wang
+I will try to update the patch series with the comments given and send
+a v2 the next days.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks,
+>
+>         M.
+> --
+> Jazz is not dead. It just smells funny...
+
+
+
+-- 
+motzblog.wordpress.com
