@@ -1,94 +1,124 @@
-From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 5/6] powerpc/corenet: Add DPAA FMan support to the SoC
- device tree(s)
-Date: Sun, 4 May 2014 05:59:55 -0500
-Message-ID: <53661DAB.10808@Freescale.com>
-References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
- <1397823693-27977-5-git-send-email-Shruti@Freescale.com>
- <1398118442.1694.190.camel__272.432543761347$1398129129$gmane$org@snotra.buserror.net>
+From: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: hip04: add gpio pieces
+Date: Sun, 4 May 2014 19:37:23 +0800
+Message-ID: <53662673.7000709@hisilicon.com>
+References: <5357A947.2010506@hisilicon.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1398118442.1694.190.camel__272.432543761347$1398129129$gmane$org-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+In-Reply-To: <5357A947.2010506-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Kanetkar Shruti-B44454 <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: haojian.zhuang-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Scott,
-
-
-On 04/21/2014 05:14 PM, Scott Wood wrote:
-> On Fri, 2014-04-18 at 07:21 -0500, Shruti Kanetkar wrote:
->> FMan 1 Gb/s MACs (dTSEC and mEMAC) have support for SGMII PHYs.
->> Add support for the internal SerDes TBI PHYs
->>
->> Based on prior work by Andy Fleming <afleming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>
->> Signed-off-by: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
->> ---
->>  arch/powerpc/boot/dts/fsl/b4860si-post.dtsi |  28 +++++
->>  arch/powerpc/boot/dts/fsl/b4si-post.dtsi    |  51 +++++++++
->>  arch/powerpc/boot/dts/fsl/p1023si-post.dtsi |  14 +++
->>  arch/powerpc/boot/dts/fsl/p2041si-post.dtsi |  64 ++++++++++++
->>  arch/powerpc/boot/dts/fsl/p3041si-post.dtsi |  64 ++++++++++++
->>  arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 104 +++++++++++++++++++
->>  arch/powerpc/boot/dts/fsl/p5020si-post.dtsi |  64 ++++++++++++
->>  arch/powerpc/boot/dts/fsl/p5040si-post.dtsi | 128 +++++++++++++++++++++++
->>  arch/powerpc/boot/dts/fsl/t4240si-post.dtsi | 154 ++++++++++++++++++++++++++++
->>  9 files changed, 671 insertions(+)
->>
->> diff --git a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
->> index cbc354b..45b0ff5 100644
->> --- a/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
->> +++ b/arch/powerpc/boot/dts/fsl/b4860si-post.dtsi
->> @@ -172,6 +172,34 @@
->>  		compatible = "fsl,b4860-rcpm", "fsl,qoriq-rcpm-2.0";
->>  	};
->>  
->> +/include/ "qoriq-fman3-0-1g-4.dtsi"
->> +/include/ "qoriq-fman3-0-1g-5.dtsi"
->> +/include/ "qoriq-fman3-0-10g-0.dtsi"
->> +/include/ "qoriq-fman3-0-10g-1.dtsi"
->> +	fman@400000 {
->> +		ethernet@e8000 {
->> +			tbi-handle = <&tbi4>;
->> +		};
+On 2014/4/23 19:51, Zhou Wang wrote:
+> Hisilicon Soc hip04 has four gpio controllers, each one has 32
+> gpios and can be configured to be an interrupt controller.
+> The gpio controllers are compatible with the snps,dw-apb-gpio
+> driver. This patch add the corresponding device tree nodes.
 > 
-> Binding needed
+> Signed-off-by: Zhou Wang <wangzhou1-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/hip04.dtsi |   76 ++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
 > 
-> Where is the "reg" for these unit addresses?
-
-As I said, the bulk of the FMan work comes from another team. Here we
-need just enough to hook up the MDIO and PHY nodes. I'd really like to
-be able to make progress on this without waiting for that moment in time
-we can get the entire FMan binding in place
-
->> +		mdio@e9000 {
->> +			tbi4: tbi-phy@8 {
->> +				reg = <0x8>;
->> +				device_type = "tbi-phy";
->> +			};
->> +		};
+> diff --git a/arch/arm/boot/dts/hip04.dtsi b/arch/arm/boot/dts/hip04.dtsi
+> index 7e909ee..c7c1f8c 100644
+> --- a/arch/arm/boot/dts/hip04.dtsi
+> +++ b/arch/arm/boot/dts/hip04.dtsi
+> @@ -235,5 +235,81 @@
+>  			reg-shift = <2>;
+>  			status = "disabled";
+>  		};
+> +
+> +		gpio@4003000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,dw-apb-gpio";
+> +			reg = <0x4003000 0x1000>;
+> +
+> +			gpio3: gpio-controller@0 {
+> +				compatible = "snps,dw-apb-gpio-port";
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				snps,nr-gpios = <32>;
+> +				reg = <0>;
+> +				interrupt-parent = <&gic>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				interrupts = <0 392 4>;
+> +			};
+> +		};
+> +
+> +		gpio@4002000 {
+> + 			#address-cells = <1>;
+> + 			#size-cells = <0>;
+> + 			compatible = "snps,dw-apb-gpio";
+> + 			reg = <0x4002000 0x1000>;
+> +
+> + 			gpio2: gpio-controller@0 {
+> + 				compatible = "snps,dw-apb-gpio-port";
+> + 				gpio-controller;
+> + 				#gpio-cells = <2>;
+> + 				snps,nr-gpios = <32>;
+> + 				reg = <0>;
+> +				interrupt-parent = <&gic>;
+> + 				interrupt-controller;
+> + 				#interrupt-cells = <2>;
+> + 				interrupts = <0 391 4>;
+> + 			};
+> + 		};
+> +
+> +		gpio@4001000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,dw-apb-gpio";
+> +			reg = <0x4001000 0x1000>;
+> +
+> +			gpio1: gpio-controller@0 {
+> +				compatible = "snps,dw-apb-gpio-port";
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				snps,nr-gpios = <32>;
+> +				reg = <0>;
+> +				interrupt-parent = <&gic>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				interrupts = <0 390 4>;
+> +			};
+> +		};
+> +
+> +		gpio@4000000 {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			compatible = "snps,dw-apb-gpio";
+> +			reg = <0x4000000 0x1000>;
+> +
+> +			gpio0: gpio-controller@0 {
+> +				compatible = "snps,dw-apb-gpio-port";
+> +				gpio-controller;
+> +				#gpio-cells = <2>;
+> +				snps,nr-gpios = <32>;
+> +				reg = <0>;
+> +				interrupt-parent = <&gic>;
+> +				interrupt-controller;
+> +				#interrupt-cells = <2>;
+> +				interrupts = <0 389 4>;
+> +			};
+> +		};
+>  	};
+>  };
+> -- 1.7.9.5
 > 
-> Binding needed for tbi-phy device_type
+Hi haojian
 
-I guess that's fair (BTW, you accepted tbi-phy nodes/device-type before
-without a binding)
+ Are the gpio nodes OK for hip04.dtsi?
 
-> Why are we using device_type at all for this?
+Best regards
+Zhou Wang
 
-That's what the upstream driver is looking for. Anyway, most days PHYs
-can be discovered so they don't use/need compatible properties. That's I
-guess part of the reason we don't have bindings for them PHY nodes
-
-However, what you can't discover is how they are wired to the MAC(s) so
-we still need some nodes in the device tree to convey that. Also, when
-looking for a specific kind of PHY, such as TBI, device_type works
-easier then parsing compatibles from various vendors or so
-
-
-Cheers,
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
