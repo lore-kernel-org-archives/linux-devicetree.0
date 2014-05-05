@@ -1,102 +1,87 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH 0/2] ARM: sunxi: Enable syscon for the
- system controller
-Date: Tue, 6 May 2014 10:03:19 +0200
-Message-ID: <CAOQ7t2akOEr7o4Q5ze5QPr_RHj6MWmA-u5NTuq2q1epy2LBr8w@mail.gmail.com>
-References: <1399212160-26934-1-git-send-email-carlo@caione.org>
-	<20140505225517.GE9464@lukather>
-	<CAGb2v66JBM_Rv8ie=7iuTPrXGPJECTeevnf9LLXNS=FSYs1+Tg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBSFOUKNQKGQEYRFJM5Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v66JBM_Rv8ie=7iuTPrXGPJECTeevnf9LLXNS=FSYs1+Tg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, wens Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 4/5] clk: bcm281xx: define a bus clock
+Date: Mon,  5 May 2014 08:57:35 -0500
+Message-ID: <1399298256-10965-5-git-send-email-elder@linaro.org>
+References: <1399298256-10965-1-git-send-email-elder@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399298256-10965-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 6, 2014 at 8:36 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> Hi,
+Define the bus clock "bsc3_apb".  This bus clock has to be managed
+using the CCU policy mechanism, so add the definitions required for
+that to the clock and its CCU.
 
-Hi,
+This one bus clock in particular is defined because it is needed
+by peripheral clock "bsc3".  Our boot loader does not properly
+activate "bsc3_apb", and as a result, "bsc3" isn't able to function
+properly.  With "bsc3_apb" specified as a prerequisite clock for
+"bsc3", the latter works correctly.
 
-> On Tue, May 6, 2014 at 6:55 AM, Maxime Ripard
-> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> On Sun, May 04, 2014 at 04:02:38PM +0200, Carlo Caione wrote:
->>> The so called "system controller" in Allwinner A20 and A31 SoCs is
->>> multi-purpose controller that tries to add misc functionality to one
->>> memory region.
->>> In these SoCs it controls the internal SRAM partitioning but it also
->>> includes registers for chip versioning and NMI control.
->>> This patch adds the proper nodes in the DTS files and enable the syscon
->>> in the defconfig files.
->>>
->>> Even though the system controller includes also register for managing the
->>> NMI controller, these register are not mapped in the syscon since they
->>> are directly used and mapped by the NMI controller itself.
->>
->> Hmmm, what exactly do you want to achieve with this?
->>
->> The NMI controller won't be able to use it, since it's initialized
->> much earlier than syscon and regmap.
+For now only this one bus clock is defined, because it allows
+correct operation of "bsc3".  Others can be added later as needed
+(and this patch serves to show how that's done).
 
-This is what I meant with that phrase. NMI controller doesn't use the
-syscon but we can use it for several other drivers. In fact the
-registers for NMI controller are excluded from the range of syscon
-registers.
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ drivers/clk/bcm/clk-bcm281xx.c       | 13 ++++++++++++-
+ include/dt-bindings/clock/bcm281xx.h |  3 ++-
+ 2 files changed, 14 insertions(+), 2 deletions(-)
 
-> I believe this will be used for toggling the SRAM mappings. (Am I right?)
-
-Definitely right.
-
-> The second register toggles mappings for MUSB FIFO, EMAC, and a few of
-> the other IP blocks we currently don't support.
-
-Not yet :)
-
->> Moreover, the A31 doesn't seem to have this system controller, or at
->> least this overlap.
-
-I admit that I didn't check the A31 manual but I trusted the wiki page
-at http://linux-sunxi.org/SRAM_Controller and
-http://linux-sunxi.org/A31/Memory_map
-
-> There should be something similar, as does the A23. There is no overlap AFAIK.
-
-I agree and will check also A23.
-
->> And since on the A20, registers seem to have one usage only, so I
->> guess we can just split this IP into several nodes, just like we did
->> with the NMI.
->
-> As stated above, the second register toggles SRAM mappings for at most
-> 4 SRAM blocks (for EMAC, MUSB, ACE, ISP).
->
-> syscon would be a good way to share this register among the various drivers.
-> We do not toggle it in the current EMAC driver. The driver seems to assume
-> it is setup by the bootloader, and on the A20, it seems to be mapped to
-> EMAC by default.
->
-> The MUSB glue layer driver must toggle this.
-
-This is exactly why I wrote these patches. I started hacking /
-studying your MUSB driver and I think that using syscon is a better
-way to manage these registers instead of mapping them in several
-drivers also because most of the time a single register has to be used
-by multiple drivers (i.e. SRAM_CTL1_CFG is used for USB,  EMAC,
-etc...)
-
-> I think this approach is better than all the individual drivers mapping
-> the registers and toggling a single bit. In fact I did something similar
-> when working on preliminary musb support.
-
-Thanks,
-
+diff --git a/drivers/clk/bcm/clk-bcm281xx.c b/drivers/clk/bcm/clk-bcm281xx.c
+index 502a487..b937fc9 100644
+--- a/drivers/clk/bcm/clk-bcm281xx.c
++++ b/drivers/clk/bcm/clk-bcm281xx.c
+@@ -309,8 +309,17 @@ static struct peri_clk_data pwm_data = {
+ 	.trig		= TRIGGER(0x0afc, 15),
+ };
+ 
++static struct bus_clk_data bsc3_apb_data = {
++	.policy		= POLICY(0x0048, 4),
++	.gate		= HW_SW_GATE(0x0484, 16, 0, 1),
++};
++
+ static struct ccu_data slave_ccu_data = {
+ 	BCM281XX_CCU_COMMON(slave, SLAVE),
++	.policy		= {
++		.enable		= CCU_LVM_EN(0x0034, 0),
++		.control	= CCU_POLICY_CTL(0x000c, 0, 1, 2),
++	},
+ 	.kona_clks	= {
+ 		[BCM281XX_SLAVE_CCU_UARTB] =
+ 			KONA_CLK(slave, uartb, peri),
+@@ -329,9 +338,11 @@ static struct ccu_data slave_ccu_data = {
+ 		[BCM281XX_SLAVE_CCU_BSC2] =
+ 			KONA_CLK(slave, bsc2, peri),
+ 		[BCM281XX_SLAVE_CCU_BSC3] =
+-			KONA_CLK(slave, bsc3, peri),
++			KONA_CLK_PREREQ(slave, bsc3, peri, bsc3_apb),
+ 		[BCM281XX_SLAVE_CCU_PWM] =
+ 			KONA_CLK(slave, pwm, peri),
++		[BCM281XX_SLAVE_CCU_BSC3_APB] =
++			KONA_CLK(slave, bsc3_apb, bus),
+ 		[BCM281XX_SLAVE_CCU_CLOCK_COUNT] = LAST_KONA_CLK,
+ 	},
+ };
+diff --git a/include/dt-bindings/clock/bcm281xx.h b/include/dt-bindings/clock/bcm281xx.h
+index a763460..99f4aad 100644
+--- a/include/dt-bindings/clock/bcm281xx.h
++++ b/include/dt-bindings/clock/bcm281xx.h
+@@ -72,6 +72,7 @@
+ #define BCM281XX_SLAVE_CCU_BSC2			7
+ #define BCM281XX_SLAVE_CCU_BSC3			8
+ #define BCM281XX_SLAVE_CCU_PWM			9
+-#define BCM281XX_SLAVE_CCU_CLOCK_COUNT		10
++#define BCM281XX_SLAVE_CCU_BSC3_APB		10
++#define BCM281XX_SLAVE_CCU_CLOCK_COUNT		11
+ 
+ #endif /* _CLOCK_BCM281XX_H */
 -- 
-Carlo Caione
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
