@@ -1,61 +1,48 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 05 May 2014 16:41:02 +0200
-Message-ID: <69387177.zGLDjZS0ln@wuerfel>
-References: <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <97692EF2-013E-4E4B-BC16-E0915D67EFEC@antoniou-consulting.com> <53673866.9000105@ahsoftware.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] DTS: ARM: TWL4030: Add madc
+Date: Mon, 5 May 2014 12:26:51 -0700
+Message-ID: <20140505192651.GB25949@atomide.com>
+References: <1395184426-316-1-git-send-email-sre@debian.org>
+ <1395184426-316-2-git-send-email-sre@debian.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53673866.9000105-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1395184426-316-2-git-send-email-sre@debian.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@debian.org>
+Cc: Sebastian Reichel <sre@ring0.de>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 May 2014 09:06:14 Alexander Holler wrote:
+* Sebastian Reichel <sre@debian.org> [140318 16:17]:
+> Add madc node to twl4030, so that board DTS
+> files can simply reference the A/D converter.
 > 
-> A bit late (I don't follow the ML (or what happens in the ARM world) 
-> closely, but as I've recently read that ARM64 will go UEFI and ACPI, I 
-> wonder what was the reasoning behind that decision.
+> Signed-off-by: Sebastian Reichel <sre@debian.org>
+
+Applying into omap-for-v3.16/dt thanks.
+
+Tony
+
+> ---
+>  arch/arm/boot/dts/twl4030.dtsi | 6 ++++++
+>  1 file changed, 6 insertions(+)
 > 
-> Does anyone really assume we will become high quality UEFI and ACPI 
-> blobs from vendors? And such with reasonable support/update periods?
+> diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
+> index 86cfc7d..36ae916 100644
+> --- a/arch/arm/boot/dts/twl4030.dtsi
+> +++ b/arch/arm/boot/dts/twl4030.dtsi
+> @@ -152,4 +152,10 @@
+>  		keypad,num-rows = <8>;
+>  		keypad,num-columns = <8>;
+>  	};
+> +
+> +	twl_madc: madc {
+> +		compatible = "ti,twl4030-madc";
+> +		interrupts = <3>;
+> +		#io-channel-cells = <1>;
+> +	};
+>  };
+> -- 
+> 1.9.0
 > 
-> For me that sounds like someone asked dreamers and was unable to adjust 
-> those answers in regard to reality.
-
-Where did you read that? It's simply not true and we should make sure
-people stop spreading dangerous misinformation.
-
-Regarding UEFI, I don't expect that to change much for Linux, since
-it has very little visibility at runtime. UEFI makes sense for some
-systems, and we can support that easily. The license is a bit problematic,
-since it allows shipping a system without bootloader sources, but other
-boot loaders allow that as well, and a lot of companies ship pirated
-u-boot without sources, too.
-
-ACPI is a lot harder to support, as it conflicts with the normal DT
-probing method, and will be visible to a lot of drivers. I expect
-that we will see systems shipping with ACPI at some point, but
-so far, nobody has made a serious submission for supporting that,
-so it's likely a few years out, and it will only be a small subset
-of the shipping systems: basically anything that tries to look like
-an x86 PC server rather than an embedded system.
-
-There is ongoing work from Linaro to provide a base enablement of
-ACPI on ARM64. Those patches are looking harmless enough, but the
-current plan is to not merge them until there is an actual user
-who is submitting their platform specific code based on that, and
-not before we have clear rules about what systems should or should
-not be using ACPI. 
-
-For all embedded systems, DT remains the way to pass data about
-nondiscoverable devices on arm64, and I expect that to include
-"server" machines based on embedded SoCs.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
