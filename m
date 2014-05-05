@@ -1,66 +1,84 @@
-From: Diana Craciun <diana.craciun@freescale.com>
-Subject: [PATCH] powerpc/fsl: Updated corenet-cf compatible string for
- corenet1-cf chips
-Date: Tue, 6 May 2014 17:56:16 +0300
-Message-ID: <1399388176-25257-1-git-send-email-diana.craciun@freescale.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v10 15/15] ARM: dts: sun7i: Add basic support for the
+ Cubietruck WiFi module
+Date: Mon, 5 May 2014 17:46:45 -0500
+Message-ID: <20140505224645.GC9464@lukather>
+References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
+ <1399046249-19472-16-git-send-email-hdegoede@redhat.com>
+ <20140505040212.GC11606@lukather>
+ <CAGb2v65egbY5-ZeioLuoTatQ_y6iQ9n=auiiCRNAvTEj1z59hA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: linuxppc-dev@lists.ozlabs.org
-Cc: scottwood@freescale.com, devicetree@vger.kernel.org, Diana Craciun <Diana.Craciun@freescale.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="da4uJneut+ArUgXk"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v65egbY5-ZeioLuoTatQ_y6iQ9n=auiiCRNAvTEj1z59hA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogRGlhbmEgQ3JhY2l1biA8RGlhbmEuQ3JhY2l1bkBmcmVlc2NhbGUuY29tPgoKVXBkYXRl
-ZCB0aGUgZGV2aWNlIHRyZWVzIGFjY29yZGluZyB0byB0aGUgY29yZW5ldC1jZgpiaW5kaW5nIGRl
-ZmluaXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBEaWFuYSBDcmFjaXVuIDxEaWFuYS5DcmFjaXVuQGZy
-ZWVzY2FsZS5jb20+Ci0tLQogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXBvc3Qu
-ZHRzaSB8IDIgKy0KIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kg
-fCAyICstCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpIHwgMiAr
-LQogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXBvc3QuZHRzaSB8IDIgKy0KIDQg
-ZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
-dCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgYi9hcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNpCmluZGV4IGUyOTg3YTMuLmI1ZGFh
-NGMgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0
-c2kKKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaQpAQCAt
-MjQ2LDcgKzI0Niw3IEBACiAJfTsKIAogCWNvcmVuZXQtY2ZAMTgwMDAgewotCQljb21wYXRpYmxl
-ID0gImZzbCxjb3JlbmV0LWNmIjsKKwkJY29tcGF0aWJsZSA9ICJmc2wsY29yZW5ldDEtY2YiLCAi
-ZnNsLGNvcmVuZXQtY2YiOwogCQlyZWcgPSA8MHgxODAwMCAweDEwMDA+OwogCQlpbnRlcnJ1cHRz
-ID0gPDE2IDIgMSAzMT47CiAJCWZzbCxjY2YtbnVtLWNzZGlkcyA9IDwzMj47CmRpZmYgLS1naXQg
-YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dl
-cnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaQppbmRleCA3YWY2ZDQ1Li41YWJkMWZj
-IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNp
-CisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kKQEAgLTI3
-Myw3ICsyNzMsNyBAQAogCX07CiAKIAljb3JlbmV0LWNmQDE4MDAwIHsKLQkJY29tcGF0aWJsZSA9
-ICJmc2wsY29yZW5ldC1jZiI7CisJCWNvbXBhdGlibGUgPSAiZnNsLGNvcmVuZXQxLWNmIiwgImZz
-bCxjb3JlbmV0LWNmIjsKIAkJcmVnID0gPDB4MTgwMDAgMHgxMDAwPjsKIAkJaW50ZXJydXB0cyA9
-IDwxNiAyIDEgMzE+OwogCQlmc2wsY2NmLW51bS1jc2RpZHMgPSA8MzI+OwpkaWZmIC0tZ2l0IGEv
-YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJw
-Yy9ib290L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kKaW5kZXggMjQxNWUxZi4uYmYwZTdjOSAx
-MDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaQor
-KysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpCkBAIC0yODEs
-NyArMjgxLDcgQEAKIAl9OwogCiAJY29yZW5ldC1jZkAxODAwMCB7Ci0JCWNvbXBhdGlibGUgPSAi
-ZnNsLGNvcmVuZXQtY2YiOworCQljb21wYXRpYmxlID0gImZzbCxjb3JlbmV0MS1jZiIsICJmc2ws
-Y29yZW5ldC1jZiI7CiAJCXJlZyA9IDwweDE4MDAwIDB4MTAwMD47CiAJCWludGVycnVwdHMgPSA8
-MTYgMiAxIDMxPjsKIAkJZnNsLGNjZi1udW0tY3NkaWRzID0gPDMyPjsKZGlmZiAtLWdpdCBhL2Fy
-Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMv
-Ym9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpCmluZGV4IDI5ODVkZTQuLmY3Y2E5ZjQgMTAw
-NjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kKKysr
-IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXBvc3QuZHRzaQpAQCAtMjc4LDcg
-KzI3OCw3IEBACiAJfTsKIAogCWNvcmVuZXQtY2ZAMTgwMDAgewotCQljb21wYXRpYmxlID0gImZz
-bCxjb3JlbmV0LWNmIjsKKwkJY29tcGF0aWJsZSA9ICJmc2wsY29yZW5ldDEtY2YiLCAiZnNsLGNv
-cmVuZXQtY2YiOwogCQlyZWcgPSA8MHgxODAwMCAweDEwMDA+OwogCQlpbnRlcnJ1cHRzID0gPDE2
-IDIgMSAzMT47CiAJCWZzbCxjY2YtbnVtLWNzZGlkcyA9IDwzMj47Ci0tIAoxLjcuMTEuNwoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2
-IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
-Lm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+
+--da4uJneut+ArUgXk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, May 05, 2014 at 12:20:56PM +0800, Chen-Yu Tsai wrote:
+> On Mon, May 5, 2014 at 12:02 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > On Fri, May 02, 2014 at 05:57:29PM +0200, Hans de Goede wrote:
+> >> From: Chen-Yu Tsai <wens@csie.org>
+> >>
+> >> The CubieTruck has an AMPAK AP6210 WiFi+Bluetooth module. The WiFi
+> >> part is a BCM43362 IC connected to MMC3 in the A20 SoC via SDIO.
+> >> The IC also takes a power enable signal via GPIO.
+> >>
+> >> The WiFi module supports out-of-band interrupt signaling via GPIO,
+> >> but this is not supported in this patch.
+> >>
+> >> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >
+> > It doesn't have Chen-Yu SoB. Chen-Yu, are you fine with adding it?
+>=20
+> My apologies, I didn't notice this patch still had my name on it.
+> Looks good.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> (or Acked-by, not sure which applies in this situation.)
+
+Since you're the author, we need your SoB.
+
+If you were not involved with writing (or merging the patch), Acked-by
+would have been appropriate.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--da4uJneut+ArUgXk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTaBTUAAoJEBx+YmzsjxAg8oIQALXZQPTWBGtTJyrnf82jra5L
+KuhLhS98Abq2mokSpVXm2sI4JRh2hnQJ9mRxJZTYbQqZK1HszNCxwh/D7PkCUrWs
+i8sQgvOegw670WoJaKXtFIM6a8y0+h9ccuCU02nNYnRtYEMw5xfjbzArxmArMUEe
+PeVEkdXD9iwZJKhjvw+fcqGMTagYdHlO4SRaIgMcKeQDlh06wFiCLyWTQfFB3P/y
+3OiqviTYzZOlbzso/tb0hyfPZsW/Qbvg6C0KU90xba8xOsUgTlmp8sF/SecjQd8x
+MUPLN2fi2uCgevfXmwmZa7CkSQZ2WCdu/KU1PavGmdFlEvWY/m/KqgbJoXS/Crq4
+pQeCiMfsLaDeMD7JtpaPamcXehNuAhiGhsRR3FFAmCJCPqv02BY6RsRjzf69wsdD
+7cXYfVpgl/s7kclvcsokVR5c/9TxIKAEjnEeLHnW0sQPCBvFGCKXGo3Z0jV+dNhh
+fTe3OTfsC7EU+DMN0yrjOAjMnjZpTe6sKUxOjnQnK/r0scnPPnNM6HFH29j6I3dj
+hOROk/T+QD2JgLvil7an1drAv68pKfI6lcCgzyZfJfClH8qtL5EDH/J3UeMFg62I
+eF0nab6GsxaqKCvFtRwzN/lhZdkjmhnDKSW5//psJEZ18mVP6GlCLLsTkEK/aB0D
+6Y4Z9c49Q9/vJR5TyVBz
+=cjm7
+-----END PGP SIGNATURE-----
+
+--da4uJneut+ArUgXk--
