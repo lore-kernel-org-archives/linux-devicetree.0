@@ -1,79 +1,95 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 2/4] ARM: STi: DT: add keyscan for stih416
-Date: Mon,  5 May 2014 17:38:38 +0200
-Message-ID: <1399304320-18197-3-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399304320-18197-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Condorelli <giuseppe.condorelli-qxv4g6HH51o@public.gmane.org>
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH v5 3/5] arm: exynos: Add generic cluster power control functions
+Date: Mon,  5 May 2014 21:56:59 +0530
+Message-ID: <1399307221-8659-4-git-send-email-a.kesavan@samsung.com>
+References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: nicolas.pitre@linaro.org, Dave.Martin@arm.com, lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, abrestic@chromium.org, thomas.ab@samsung.com, inderpal.s@samsung.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, kesavan.abhilash@gmail.com, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add keyscan support for stih416.
-It is disabled by default given that it is not enabled on all boards.
-Also there are PIOs conflict with already claimed lines.
+Add generic cluster power control functions for exynos based SoCS
+for cluster power up/down and to know the cluster status.
 
-Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
 ---
- arch/arm/boot/dts/stih416-pinctrl.dtsi | 16 ++++++++++++++++
- arch/arm/boot/dts/stih416.dtsi         | 12 ++++++++++++
- 2 files changed, 28 insertions(+)
+ arch/arm/mach-exynos/common.h   |    3 +++
+ arch/arm/mach-exynos/pm.c       |   30 ++++++++++++++++++++++++++++++
+ arch/arm/mach-exynos/regs-pmu.h |    6 ++++++
+ 3 files changed, 39 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih416-pinctrl.dtsi b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-index 250d5ec..ee6c119 100644
---- a/arch/arm/boot/dts/stih416-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/stih416-pinctrl.dtsi
-@@ -122,6 +122,22 @@
- 				};
- 			};
+diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+index a7dbb5f..03b8bb2 100644
+--- a/arch/arm/mach-exynos/common.h
++++ b/arch/arm/mach-exynos/common.h
+@@ -66,5 +66,8 @@ extern void exynos_sys_powerdown_conf(enum sys_powerdown mode);
+ extern void exynos_cpu_powerdown(int cpu);
+ extern void exynos_cpu_powerup(int cpu);
+ extern int  exynos_cpu_power_state(int cpu);
++extern void exynos_cluster_powerdown(int cluster);
++extern void exynos_cluster_powerup(int cluster);
++extern int  exynos_cluster_power_state(int cluster);
  
-+			keyscan {
-+				pinctrl_keyscan: keyscan {
-+					st,pins {
-+						keyin0 = <&PIO0 2 ALT2 IN>;
-+						keyin1 = <&PIO0 3 ALT2 IN>;
-+						keyin2 = <&PIO0 4 ALT2 IN>;
-+						keyin3 = <&PIO2 6 ALT2 IN>;
-+
-+						keyout0 = <&PIO1 6 ALT2 OUT>;
-+						keyout1 = <&PIO1 7 ALT2 OUT>;
-+						keyout2 = <&PIO0 6 ALT2 OUT>;
-+						keyout3 = <&PIO2 7 ALT2 OUT>;
-+					};
-+				};
-+			};
-+
- 			sbc_i2c0 {
- 				pinctrl_sbc_i2c0_default: sbc_i2c0-default {
- 					st,pins {
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index 78746d2..d3bc263 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -224,5 +224,17 @@
+ #endif /* __ARCH_ARM_MACH_EXYNOS_COMMON_H */
+diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
+index 6651028..f02d864 100644
+--- a/arch/arm/mach-exynos/pm.c
++++ b/arch/arm/mach-exynos/pm.c
+@@ -136,6 +136,36 @@ int exynos_cpu_power_state(int cpu)
+ 			S5P_CORE_LOCAL_PWR_EN);
+ }
  
- 			status = "disabled";
- 		};
++/**
++ * exynos_common_powerdown : power down the specified cluster
++ * @cluster : the cluster to power down
++ */
++void exynos_cluster_powerdown(int cluster)
++{
++	__raw_writel(0, EXYNOS_COMMON_CONFIGURATION(cluster));
++}
 +
-+		keyscan: keyscan@fe4b0000 {
-+			compatible = "st,sti-keyscan";
-+			status = "disabled";
-+			reg = <0xfe4b0000 0x2000>;
-+			interrupts = <GIC_SPI 212 IRQ_TYPE_NONE>;
-+			clocks = <&CLK_SYSIN>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&pinctrl_keyscan>;
-+			resets	= <&powerdown STIH416_KEYSCAN_POWERDOWN>,
-+				  <&softreset STIH416_KEYSCAN_SOFTRESET>;
-+		};
- 	};
- };
++/**
++ * exynos_cluster_powerup : power up the specified cluster
++ * @cluster : the cluster to power up
++ */
++void exynos_cluster_powerup(int cluster)
++{
++	__raw_writel(S5P_CORE_LOCAL_PWR_EN,
++		     EXYNOS_COMMON_CONFIGURATION(cluster));
++}
++
++/**
++ * exynos_cluster_power_state : returns the power state of the cluster
++ * @cluster : the cluster to retrieve the power state from
++ *
++ */
++int exynos_cluster_power_state(int cluster)
++{
++	return (__raw_readl(EXYNOS_COMMON_STATUS(cluster)) &
++			S5P_CORE_LOCAL_PWR_EN);
++}
++
+ /* For Cortex-A9 Diagnostic and Power control register */
+ static unsigned int save_arm_register[2];
+ 
+diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-pmu.h
+index 0bdfcbc..6685ebf 100644
+--- a/arch/arm/mach-exynos/regs-pmu.h
++++ b/arch/arm/mach-exynos/regs-pmu.h
+@@ -127,6 +127,12 @@
+ #define EXYNOS_ARM_CORE_STATUS(_nr)		\
+ 			(EXYNOS_ARM_CORE_CONFIGURATION(_nr) + 0x4)
+ 
++#define EXYNOS_ARM_COMMON_CONFIGURATION		S5P_PMUREG(0x2500)
++#define EXYNOS_COMMON_CONFIGURATION(_nr)	\
++			(EXYNOS_ARM_COMMON_CONFIGURATION + (0x80 * (_nr)))
++#define EXYNOS_COMMON_STATUS(_nr)		\
++			(EXYNOS_COMMON_CONFIGURATION(_nr) + 0x4)
++
+ /* Only for EXYNOS4210 */
+ #define S5P_CMU_CLKSTOP_LCD1_LOWPWR	S5P_PMUREG(0x1154)
+ #define S5P_CMU_RESET_LCD1_LOWPWR	S5P_PMUREG(0x1174)
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
