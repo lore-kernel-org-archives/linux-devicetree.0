@@ -1,102 +1,73 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 05 May 2014 19:29:44 +0200
-Message-ID: <7113027.fTBIcKEU63@wuerfel>
-References: <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <69387177.zGLDjZS0ln@wuerfel> <5367AE6B.3010105@ahsoftware.de>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v3 7/7] dts: dra7-evm: add USB support
+Date: Mon, 5 May 2014 12:54:46 +0300
+Message-ID: <1399283686-6127-8-git-send-email-rogerq@ti.com>
+References: <1399283686-6127-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5367AE6B.3010105-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1399283686-6127-1-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: kishon@ti.com, tony@atomide.com, balbi@ti.com, bcousson@baylibre.com
+Cc: george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 May 2014 17:29:47 Alexander Holler wrote:
-> Am 05.05.2014 16:41, schrieb Arnd Bergmann:
-> > On Monday 05 May 2014 09:06:14 Alexander Holler wrote:
-> >>
-> >> A bit late (I don't follow the ML (or what happens in the ARM world)
-> >> closely, but as I've recently read that ARM64 will go UEFI and ACPI, I
-> >> wonder what was the reasoning behind that decision.
-> >>
-> >> Does anyone really assume we will become high quality UEFI and ACPI
-> >> blobs from vendors? And such with reasonable support/update periods?
-> >>
-> >> For me that sounds like someone asked dreamers and was unable to adjust
-> >> those answers in regard to reality.
-> >
-> > Where did you read that? It's simply not true and we should make sure
-> > people stop spreading dangerous misinformation.
-> 
-> I've recently read Grant Likely's blog entry about armv8 servers: 
-> http://www.secretlab.ca/archives/27 (I've read the disclaimer too  )
+Add USB pinmux information and USB modes
+for the USB controllers.
 
-Ok, that is fine. Everything he says there is ok, but it's easy to
-miss the point that he is only talking about general-purpose servers
-there.
+CC: Beno=C3=AEt Cousson <bcousson@baylibre.com>
+Reviewed-by: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/boot/dts/dra7-evm.dts | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-> > For all embedded systems, DT remains the way to pass data about
-> > nondiscoverable devices on arm64, and I expect that to include
-> > "server" machines based on embedded SoCs.
-> 
-> I usually avoid to talk about embedded systems as something different 
-> (e.g. than servers). I think such differentations don't make much sense 
-> anymore in times where people are getting in need of an administrator 
-> for their phones. 
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-ev=
+m.dts
+index 5babba0..1d77815 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -93,6 +93,18 @@
+ 			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
+ 		>;
+ 	};
++
++	usb1_pins: pinmux_usb1_pins {
++                pinctrl-single,pins =3D <
++			0x280	0xc0000	/* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
++                >;
++        };
++
++	usb2_pins: pinmux_usb2_pins {
++                pinctrl-single,pins =3D <
++			0x284	0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
++                >;
++        };
+ };
+=20
+ &i2c1 {
+@@ -273,3 +285,15 @@
+ &cpu0 {
+ 	cpu0-supply =3D <&smps123_reg>;
+ };
++
++&usb1 {
++	dr_mode =3D "peripheral";
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&usb1_pins>;
++};
++
++&usb2 {
++	dr_mode =3D "host";
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&usb2_pins>;
++};
+--=20
+1.8.3.2
 
-It's the server people that see themselves as something different
-though. Which is funny because they came up with the idea to use
-ACPI in order to improve interoperability between hardware vendors,
-and now that they actually want to come out with systems, everything
-can already be interoperable, except that ACPI support is getting
-in the way.
-
-> The problem I see is that if ARM requires UEFI and ACPI for general 
-> purpose ARMv8 servers, SOC vendors and the kernel will have to support 
-> that (I make the maybe silly assumption every ARMv8 SOC vendor wants to 
-> play in the server market). That means the kernel has to support it too.
-
-I don't think they are in a position to make that a requirement
-for servers in general. There is a boot architecture document that
-requires the use of ACPI for compliant systems. That doesn't prevent
-anyone from shipping a noncompliant system. I think it's similar to
-the SBSA specification: It's nice for companies to build a system
-compliant with that in theory, because then they get support for
-any OS that supports compliant systems, but in practice, I expect
-most of them to treat the spec as more of a suggestion and take
-shortcuts wherever it suits them.
-
-> And nobody likes to support two types of something. So there is a 
-> requirement (on paper) for UEFI and ACPI (both likely closed blobs), but 
-> none for the open stuff. And when I now start to think about paper 
-> loving vogons, I don't need much imagination which type will be 
-> streamlined away.
-
-I'm very strongly supporting the idea that we should not have two
-different kinds of device abstractions for a given SoC family. I also
-think we have two very distinct groups of SoC vendors here:
-
-* One side actively wants to use APCI, as they want to support MS Windows,
-  and they have fast and simple general-purpose SoCs designed around
-  the ACPI concepts and SBSA compliance. They wouldn't ship an open
-  system anyway, and when they can show a reasonable implementation
-  of ACPI that works on their systems, we will very likely merge that.
-
-* The other side has existing special-purpose SoC designs with ARM32,
-  PowerPC, MIPS or other CPU cores and they want to migrate to ARM64
-  because everyone else is doing that too. They ship whatever their
-  customers want, but they care little about Windows support, or strict
-  standards compliance as long as their customers are happy. There is
-  a lot of opposition to ACPI both in the customer base and the upstream
-  Linux community for these machines, so these are likely to stay with
-  DT for the foreseeable future. In fact, fear over fragmentation with
-  ACPI on these systems one of the issues currently holding up merging
-  ACPI for the first category.
-
-	Arnd
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
