@@ -1,45 +1,41 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 03/20] usb: host: xhci-plat: Sort the headers in alphabetic order
-Date: Tue,  6 May 2014 02:13:58 +0200
-Message-ID: <1399335255-589-4-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 0/9] ARM: STi: Add Clock driver support STiH415 & STiH416
+Date: Mon,  5 May 2014 17:53:34 +0200
+Message-ID: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sorting the headers in alphabetic order will help to reduce the conflict
-when adding new headers later.
+The goal of this series is to add DT definition for STiH415 
+and STiH416 SoCs on B2000 and B2020 boards.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
----
- drivers/usb/host/xhci-plat.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Gabriel Fernandez (9):
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
+  ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+    fixed clocks
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
+  ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+    fixed clocks
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 151901ce1ba9..f5351af4b2c5 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -11,11 +11,11 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
--#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/module.h>
--#include <linux/slab.h>
- #include <linux/of.h>
--#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
- 
- #include "xhci.h"
- 
+ arch/arm/boot/dts/stih415-clks.h     |  15 +
+ arch/arm/boot/dts/stih415-clock.dtsi | 517 ++++++++++++++++++++++++-
+ arch/arm/boot/dts/stih415.dtsi       |  10 +-
+ arch/arm/boot/dts/stih416-clks.h     |  15 +
+ arch/arm/boot/dts/stih416-clock.dtsi | 732 ++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/stih416.dtsi       |  10 +-
+ 6 files changed, 1256 insertions(+), 43 deletions(-)
+ create mode 100644 arch/arm/boot/dts/stih415-clks.h
+ create mode 100644 arch/arm/boot/dts/stih416-clks.h
+
 -- 
-1.8.1.2
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
