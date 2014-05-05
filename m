@@ -1,74 +1,60 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 5/8] pinctrl: rockchip: only map bank0-pull-region when pmu regmap missing
-Date: Mon, 05 May 2014 13:59:30 +0200
-Message-ID: <2137557.ZDqNcqZTUP@diego>
-References: <11862890.WUjscWaP3U@diego>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v3] powerpc/fsl: Added binding for Freescale CoreNet
+ coherency fabric (CCF)
+Date: Mon, 5 May 2014 14:31:02 -0500
+Message-ID: <1399318262.15726.98.camel@snotra.buserror.net>
+References: <1399305499-6612-1-git-send-email-diana.craciun@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11862890.WUjscWaP3U@diego>
+In-Reply-To: <1399305499-6612-1-git-send-email-diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When the pmu registers are supplied through a syscon regmap we do not need
-to map the registers ourself.
+On Mon, 2014-05-05 at 18:58 +0300, Diana Craciun wrote:
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+> index 922c30a..09dbc5f 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
+> @@ -20,3 +20,11 @@ PROPERTIES
+>  	a property named fsl,eref-[CAT], where [CAT] is the abbreviated category
+>  	name with all uppercase letters converted to lowercase, indicates that
+>  	the category is supported by the implementation.
+> +
+> +	- fsl,portid-mapping : <u32>
+> +	The Coherency Subdomain ID Port Mapping Registers and Snoop ID Port Mapping
+> +	registers which are part of the CoreNet Coherency fabric (CCF) provide a
+> +	CoreNet Coherency Subdomain ID/CoreNet Snoop ID to cpu mapping functions.
+> +	Certain bits from these registers should be set if the coresponding CPU
+> +	should be snooped. This property defines a bitmask which selects the bit that
+> +	should be set if this cpu should be snooped.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
----
- drivers/pinctrl/pinctrl-rockchip.c | 30 +++++++++++++++++++-----------
- 1 file changed, 19 insertions(+), 11 deletions(-)
+Please follow existing formatting in this file.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 11ad643..d6e2401 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -1464,21 +1464,29 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
- 	 */
- 	if (of_device_is_compatible(bank->of_node,
- 				    "rockchip,rk3188-gpio-bank0")) {
-+		struct device_node *node;
- 
- 		bank->bank_type = RK3188_BANK0;
- 
--		if (of_address_to_resource(bank->of_node, 1, &res)) {
--			dev_err(info->dev, "cannot find IO resource for bank\n");
--			return -ENOENT;
--		}
-+		node = of_parse_phandle(bank->of_node->parent,
-+					"rockchip,pmu", 0);
-+		if (!node) {
-+			if (of_address_to_resource(bank->of_node, 1, &res)) {
-+				dev_err(info->dev, "cannot find IO resource for bank\n");
-+				return -ENOENT;
-+			}
- 
--		base = devm_ioremap_resource(info->dev, &res);
--		if (IS_ERR(base))
--			return PTR_ERR(base);
--		rockchip_regmap_config.max_register = resource_size(&res) - 4;
--		rockchip_regmap_config.name = "rockchip,rk3188-gpio-bank0-pull";
--		bank->regmap_pull = devm_regmap_init_mmio(info->dev, base,
--						  &rockchip_regmap_config);
-+			base = devm_ioremap_resource(info->dev, &res);
-+			if (IS_ERR(base))
-+				return PTR_ERR(base);
-+			rockchip_regmap_config.max_register =
-+						    resource_size(&res) - 4;
-+			rockchip_regmap_config.name =
-+					    "rockchip,rk3188-gpio-bank0-pull";
-+			bank->regmap_pull = devm_regmap_init_mmio(info->dev,
-+						    base,
-+						    &rockchip_regmap_config);
-+		}
- 
- 	} else {
- 		bank->bank_type = COMMON_BANK;
--- 
-1.9.0
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt b/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
+> index 1f5e329..827c637 100644
+> --- a/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
+> @@ -26,6 +26,13 @@ Required properties:
+>  		  A standard property.
+>  - #size-cells	: <u32>
+>  		  A standard property.
+> +- fsl,portid-mapping : <u32>
+> +	The Coherency Subdomain ID Port Mapping Registers and Snoop ID Port Mapping
+> +	registers which are part of the CoreNet Coherency fabric (CCF) provide a
+> +	CoreNet Coherency Subdomain ID/CoreNet Snoop ID to pamu mapping functions.
+> +	Certain bits from these registers should be set if PAMUs should be snooped.
+> +	This property defines a bitmask which selects the bits that should be set
+> +	if PAMUs should be snooped.
+
+This can't be a required property since existing trees don't have it --
+in addition to allowing for the possibility of a PAMU where the snoop ID
+is not known or where the snoop domain mechanism does not exist.
+
+-Scott
 
 
 --
