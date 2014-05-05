@@ -1,78 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] Documentation: dt: bindings: sound:
- Add bindings for CS42L56 CODEC
-Date: Mon, 5 May 2014 17:53:50 -0700
-Message-ID: <20140506005350.GA22111@sirena.org.uk>
-References: <1399320549-16645-1-git-send-email-brian.austin@cirrus.com>
- <1399320549-16645-2-git-send-email-brian.austin@cirrus.com>
- <47E0FD7A-D2C0-425E-A7FB-917B65D74B2D@codeaurora.org>
- <alpine.DEB.2.02.1405051654060.25909@heelrod>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6487835968244177461=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <alpine.DEB.2.02.1405051654060.25909@heelrod>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Brian Austin <brian.austin@cirrus.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, paul.handrigan@cirrus.com, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH 1/2] ARM: dts: Enable USB 3503 hub on exynos5250-snow
+Date: Mon,  5 May 2014 18:00:55 +0530
+Message-ID: <1399293056-17143-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, arunkk.samsung@gmail.com, Vivek Gautam <gautam.vivek@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+The exynos5250-snow has a SMSC USB3503 connected in
+hardware only mode like a PHY. Enable support for it,
+and add necessary 'reset-gpio' for it.
 
---===============6487835968244177461==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="/0ZNML3L+nUf91nU"
-Content-Disposition: inline
+This is in correspondance to similar patch by Mark Brown
+7c1b0ec ARM: dts: Enable USB hub on Arndale
 
+Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+---
 
---/0ZNML3L+nUf91nU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Based on 'for-next' branch of kgene's linux-samsung tree.
 
-On Mon, May 05, 2014 at 04:56:12PM -0500, Brian Austin wrote:
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi |    7 +++++++
+ arch/arm/boot/dts/exynos5250-snow.dts     |   14 ++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-> >Add a include/dt-bindings for all the various enums
-
-> Can I add that as a seperate patch with the update for the dt-bindings? Or
-> do I need to resend the whole patch series?
-
-Incremental is fine.
-
---/0ZNML3L+nUf91nU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTaDKVAAoJELSic+t+oim9dXAP/jTwRJ9mm4IqTrBsLNoYqdit
-Q/tCO6vxuEoljPiUHavarWhyU4/QYQ+F8tlCyTt9I6w0421fK5lliZYFEjLfcdjr
-+67XLHISKroGDBPJgXA74OjnSfhcGJkRewf/RBJ97vOs9zkBcq3aJhfFMKQ0TbYm
-qzU5Ockeep0hl9u30fJu03JyG2wrVE6mA+t7ZMNMtH+HAZip+aeomZU1tME2fqT3
-UMBGg4vss8OycAxXWHVLYvcbcCA1EqwUwREupb08SSLSzx3ihv9DrTy2CRnSdSoA
-IDq0E9V2z3mn7pTsHHaZYHn5wjS32KlxNbfOUAFac+bNuEebRhCVcyGj7Q5CbJi5
-e6uOhwyK2uryV6GrN+A/sUGIFjGZ+Cu+5m3wVzmhtoxDe1/6HF6xFUhR7v98tyQT
-Ax6TunPLiLf3nNp0E+6HR7XWO5aIxTqwNgoiynB9Ci693YfUZchpy81Jd6BV4j4J
-juX8DwdfAiccdlVmmRAw4m/Vs4VgHOLzOC67dHgZ3srkieOk1sZ/LZ/ogXxOaot3
-ppvjw0dSRozpRjicbjOTFpGXXWUIWxGujTyTp0nXxmsz0p5qbMTBBAPrzo+Aqbsz
-c/hpMgp+MJhtaNeEYTNiQWIvs4QGMS7E2K9DwbsTRISU3tPXW3w9k17GCmYWjQZ+
-O5zuEh6FzSAW5FNwqDf9
-=2AV+
------END PGP SIGNATURE-----
-
---/0ZNML3L+nUf91nU--
-
---===============6487835968244177461==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============6487835968244177461==--
+diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+index 9a49e68..bd8c8f1 100644
+--- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+@@ -706,6 +706,13 @@
+ 			samsung,pin-pud = <0>;
+ 			samsung,pin-drv = <0>;
+ 		};
++
++		usb_hub_reset: usb-hub-reset {
++			samsung,pins = "gpe1-0";
++			samsung,pin-function = <1>;
++			samsung,pin-pud = <0>;
++			samsung,pin-drv = <0>;
++		};
+ 	};
+ 
+ 	pinctrl@10d10000 {
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index 1ce1088..2e48f27 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -200,6 +200,20 @@
+ 		samsung,vbus-gpio = <&gpx1 1 0>;
+ 	};
+ 
++	usb_hub_bus {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		// SMSC USB3503 connected in hardware only mode as a PHY
++		usb_hub {
++			compatible = "smsc,usb3503a";
++			reset-gpios = <&gpe1 0 1>;
++			pinctrl-0 = <&usb_hub_reset>;
++			pinctrl-names = "default";
++		};
++	};
++
+ 	fixed-rate-clocks {
+ 		xxti {
+ 			compatible = "samsung,clock-xxti";
+-- 
+1.7.10.4
