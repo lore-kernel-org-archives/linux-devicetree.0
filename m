@@ -1,99 +1,42 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 6/8] pinctrl: rockchip: base regmap supplied by a syscon
-Date: Mon, 05 May 2014 13:59:51 +0200
-Message-ID: <3891411.NqW4ocWURn@diego>
-References: <11862890.WUjscWaP3U@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11862890.WUjscWaP3U@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH 7/9] ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
+Date: Mon,  5 May 2014 17:53:41 +0200
+Message-ID: <1399305223-18703-8-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This allows the basic registers of the general register files to be supplied
-by a syscon instead of being mapped locally.
+CLK_S_ICN_REG_0 clock is no longer used.
 
-The GRF registers contain a lot more than pinctrl functions like dma, usb-phy
-and general soc control and status registers, intermixed with the iomux, pull
-and drive-strength registers.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- drivers/pinctrl/pinctrl-rockchip.c | 47 +++++++++++++++++++++++---------------
- 1 file changed, 28 insertions(+), 19 deletions(-)
+ arch/arm/boot/dts/stih415-clock.dtsi | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index d6e2401..bb805d5 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -1574,30 +1574,39 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 	}
- 	info->ctrl = ctrl;
+diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
+index f67762d7a..5bdba06 100644
+--- a/arch/arm/boot/dts/stih415-clock.dtsi
++++ b/arch/arm/boot/dts/stih415-clock.dtsi
+@@ -32,16 +32,6 @@
+ 			clock-frequency = <500000000>;
+ 		};
  
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	base = devm_ioremap_resource(&pdev->dev, res);
--	if (IS_ERR(base))
--		return PTR_ERR(base);
+-		/*
+-		 * Bootloader initialized system infrastructure clock for
+-		 * serial devices.
+-		 */
+-		CLKS_ICN_REG_0: CLKS_ICN_REG_0 {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <100000000>;
+-		};
 -
--	rockchip_regmap_config.max_register = resource_size(res) - 4;
--	rockchip_regmap_config.name = "rockchip,pinctrl";
--	info->regmap_base = devm_regmap_init_mmio(&pdev->dev, base,
--						  &rockchip_regmap_config);
--
--	/* to check for the old dt-bindings */
--	info->reg_size = resource_size(res);
--
--	/* Honor the old binding, with pull registers as 2nd resource */
--	if (ctrl->type == RK3188 && info->reg_size < 0x200) {
--		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+	node = of_parse_phandle(np, "rockchip,grf", 0);
-+	if (node) {
-+		info->regmap_base = syscon_node_to_regmap(node);
-+		if (IS_ERR(info->regmap_base))
-+			return PTR_ERR(info->regmap_base);
-+	} else {
-+		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 		base = devm_ioremap_resource(&pdev->dev, res);
- 		if (IS_ERR(base))
- 			return PTR_ERR(base);
- 
- 		rockchip_regmap_config.max_register = resource_size(res) - 4;
--		rockchip_regmap_config.name = "rockchip,pinctrl-pull";
--		info->regmap_pull = devm_regmap_init_mmio(&pdev->dev, base,
--						  &rockchip_regmap_config);
-+		rockchip_regmap_config.name = "rockchip,pinctrl";
-+		info->regmap_base = devm_regmap_init_mmio(&pdev->dev, base,
-+						    &rockchip_regmap_config);
-+
-+		/* to check for the old dt-bindings */
-+		info->reg_size = resource_size(res);
-+
-+		/* Honor the old binding, with pull registers as 2nd resource */
-+		if (ctrl->type == RK3188 && info->reg_size < 0x200) {
-+			res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-+			base = devm_ioremap_resource(&pdev->dev, res);
-+			if (IS_ERR(base))
-+				return PTR_ERR(base);
-+
-+			rockchip_regmap_config.max_register =
-+							resource_size(res) - 4;
-+			rockchip_regmap_config.name = "rockchip,pinctrl-pull";
-+			info->regmap_pull = devm_regmap_init_mmio(&pdev->dev,
-+						    base,
-+						    &rockchip_regmap_config);
-+		}
- 	}
- 
- 	/* try to find the optional reference to the pmu syscon */
+ 		CLKS_GMAC0_PHY: clockgenA1@7 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
 -- 
-1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
