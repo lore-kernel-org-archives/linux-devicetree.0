@@ -1,98 +1,221 @@
-From: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] Documentation: dt: bindings: sound: Add bindings for CS42L56 CODEC
-Date: Mon, 5 May 2014 15:09:09 -0500
-Message-ID: <1399320549-16645-2-git-send-email-brian.austin@cirrus.com>
-References: <1399320549-16645-1-git-send-email-brian.austin@cirrus.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399320549-16645-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, paul.handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH 4/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+Date: Mon,  5 May 2014 17:53:38 +0200
+Message-ID: <1399305223-18703-5-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds binding documentation for the Cirrus Logic CS42L56 Low Power Stereo I2C CODEC
+Patch adds DT entries for clockgen B/C/D/E/F
 
-Signed-off-by: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- .../devicetree/bindings/sound/cs42l56.txt          |   63 ++++++++++++++++++++
- 1 file changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cs42l56.txt
+ arch/arm/boot/dts/stih416-clock.dtsi | 189 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 189 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/sound/cs42l56.txt b/Documentation/devicetree/bindings/sound/cs42l56.txt
-new file mode 100644
-index 0000000..9ae074f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cs42l56.txt
-@@ -0,0 +1,63 @@
-+CS42L52 audio CODEC
+diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
+index fdb5654..7ff107b 100644
+--- a/arch/arm/boot/dts/stih416-clock.dtsi
++++ b/arch/arm/boot/dts/stih416-clock.dtsi
+@@ -503,5 +503,194 @@
+ 						     /* Remaining outputs unused */
+ 			};
+ 		};
 +
-+Required properties:
++		/*
++		 * Frequency synthesizers on the SASG2
++		 */
++		CLOCKGEN_B0: CLOCKGEN_B0 {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs216", "st,quadfs";
++			reg = <0xfee108b4 0x44>;
 +
-+  - compatible : "cirrus,cs42l56"
++			clocks = <&CLK_SYSIN>;
++			clock-output-names = "CLK_S_USB48",
++					     "CLK_S_DSS",
++					     "CLK_S_STFE_FRC_2",
++					     "CLK_S_THSENS_SCARD";
++		};
 +
-+  - reg : the I2C address of the device for I2C
++		CLOCKGEN_B1: CLOCKGEN_B1 {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs216", "st,quadfs";
++			reg = <0xfe8308c4 0x44>;
 +
-+  - VA-supply, VCP-supply, VLDO-supply : power supplies for the device,
-+  as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
++			clocks = <&CLK_SYSIN>;
++			clock-output-names = "CLK_S_PCM_0",
++					     "CLK_S_PCM_1",
++					     "CLK_S_PCM_2",
++					     "CLK_S_PCM_3";
++		};
 +
-+Optional properties:
++		CLOCKGEN_C: CLOCKGEN_C {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs432", "st,quadfs";
++			reg = <0xfe8307d0 0x44>;
 +
-+  - cirrus,gpio-nreset : GPIO controller's phandle and the number
-+  of the GPIO used to reset the codec.
++			clocks = <&CLK_SYSIN>;
++			clock-output-names = "CLK_S_C_FS0_CH0",
++					     "CLK_S_C_VCC_SD",
++					     "CLK_S_C_FS0_CH2";
++		};
 +
-+  - cirrus,chgfreq-divisor : Values used to set the Charge Pump Frequency.
-+  Allowable values of 0x00 through 0x0F. These are raw values written to the
-+  register, not the actual frequency. The frequency is determined by the following.
-+  Frequency = MCLK / 4 * (N+2)
-+  N = chgfreq_val
-+  MCLK = Where MCLK is the frequency of the mclk signal after the MCLKDIV2 circuit.
++		CLK_S_VCC_HD: CLK_S_VCC_HD {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenc-vcc-hd", "st,clkgen-mux";
++			reg = <0xfe8308b8 0x4>; /* SYSCFG2558 */
 +
-+  - cirrus,ain1a-ref-cfg, ain1b-ref-cfg : boolean, If present, AIN1A or AIN1B are configured
-+  as a pseudo-differential input referenced to AIN1REF/AIN3A.
++			clocks = <&CLK_SYSIN>,
++				 <&CLOCKGEN_C 0>;
++		};
 +
-+  - cirrus,ain2a-ref-cfg, ain2b-ref-cfg : boolean, If present, AIN2A or AIN2B are configured
-+  as a pseudo-differential input referenced to AIN2REF/AIN3B.
++		/*
++		 * Add a dummy clock for the HDMI PHY for the VCC input mux
++		 */
++		CLK_S_TMDS_FROMPHY: CLK_S_TMDS_FROMPHY {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <0>;
++		};
 +
-+  - cirrus,micbias-lvl: Set the output voltage level on the MICBIAS Pin.
-+  0 = 0.5 x VA
-+  1 = 0.6 x VA
-+  2 = 0.7 x VA
-+  3 = 0.8 x VA
-+  4 = 0.83 x VA
-+  5 = 0.91 x VA
++		CLOCKGEN_C_VCC: CLOCKGEN_C_VCC {
++			#clock-cells = <1>;
++			compatible = "st,stih416-clkgenc", "st,clkgen-vcc";
++			reg = <0xfe8308ac 0xc>; /* SYSCFG2555,2556,2557 */
 +
-+  - cirrus,adaptive-pwr-cfg : Configures how the power to the Headphone and Lineout
-+  Amplifiers adapt to the output signal levels.
-+  0 = Adapt to Volume Mode. Voltage level determined by the sum of the relevant volume settings.
-+  1 = Fixed - Headphone and Line Amp supply = + or - VCP/2.
-+  2 = Fixed - Headphone and Line Amp supply = + or - VCP.
-+  3 = Adapted to Signal; Voltage level is dynamically determined by the output signal.
++			clocks = <&CLK_S_VCC_HD>,
++				 <&CLOCKGEN_C 1>,
++				 <&CLK_S_TMDS_FROMPHY>,
++				 <&CLOCKGEN_C 2>;
 +
-+  - cirrus,hpf-left-freq, hpf-right-freq : Sets the corner frequency (-3dB point) for the internal High-Pass
-+  Filter.
-+  0 = 1.8Hz
-+  1 = 119Hz
-+  2 = 236Hz
-+  3 = 464Hz
++			clock-output-names  = "CLK_S_PIX_HDMI",
++					      "CLK_S_PIX_DVO",
++					      "CLK_S_OUT_DVO",
++					      "CLK_S_PIX_HD",
++					      "CLK_S_HDDAC",
++					      "CLK_S_DENC",
++					      "CLK_S_SDDAC",
++					      "CLK_S_PIX_MAIN",
++					      "CLK_S_PIX_AUX",
++					      "CLK_S_STFE_FRC_0",
++					      "CLK_S_REF_MCRU",
++					      "CLK_S_SLAVE_MCRU",
++					      "CLK_S_TMDS_HDMI",
++					      "CLK_S_HDMI_REJECT_PLL",
++					      "CLK_S_THSENS";
++		};
 +
++		CLOCKGEN_D: CLOCKGEN_D {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs216", "st,quadfs";
++			reg = <0xfee107e0 0x44>;
 +
-+Example:
++			clocks = <&CLK_SYSIN>;
++			clock-output-names = "CLK_S_CCSC",
++					     "CLK_S_STFE_FRC_1",
++					     "CLK_S_TSOUT_1",
++					     "CLK_S_MCHI";
++		};
 +
-+codec: codec@4b {
-+	compatible = "cirrus,cs42l56";
-+	reg = <0x4b>;
-+	gpio-reset = <&gpio 10 0>;
-+	cirrus,chgfreq-divisor = <0x05>;
-+	cirrus.ain1_ref_cfg;
-+	cirrus,micbias-lvl = <5>;
-+	VA-supply = <&reg_audio>;
-+};
++		/*
++		 * Frequency synthesizers on the MPE42
++		 */
++		CLOCKGEN_E: CLOCKGEN_E {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs660-E", "st,quadfs";
++			reg = <0xfd3208bc 0xb0>;
++
++			clocks = <&CLK_SYSIN>;
++			clock-output-names = "CLK_M_PIX_MDTP_0",
++					     "CLK_M_PIX_MDTP_1",
++					     "CLK_M_PIX_MDTP_2",
++					     "CLK_M_MPELPC";
++		};
++
++		CLOCKGEN_F: CLOCKGEN_F {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs660-F", "st,quadfs";
++			reg = <0xfd320878 0xf0>;
++
++			clocks = <&CLK_SYSIN>;
++			clock-output-names = "CLK_M_MAIN_VIDFS",
++					     "CLK_M_HVA_FS",
++					     "CLK_M_FVDP_VCPU",
++					     "CLK_M_FVDP_PROC_FS";
++		};
++
++		CLK_M_FVDP_PROC: CLK_M_FVDP_PROC {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-fvdp", "st,clkgen-mux";
++			reg = <0xfd320910 0x4>; /* SYSCFG8580 */
++
++			clocks = <&CLK_M_A1_DIV2 0>,
++				 <&CLOCKGEN_F 3>;
++		};
++
++		CLK_M_HVA: CLK_M_HVA {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-hva", "st,clkgen-mux";
++			reg = <0xfd690868 0x4>; /* SYSCFG9538 */
++
++			clocks = <&CLOCKGEN_F 1>,
++				 <&CLK_M_A1_DIV0 3>;
++		};
++
++		CLK_M_F_VCC_HD: CLK_M_F_VCC_HD {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-hd", "st,clkgen-mux";
++			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
++
++			clocks = <&CLOCKGEN_C_VCC 7>,
++				 <&CLOCKGEN_F 0>;
++		};
++
++		CLK_M_F_VCC_SD: CLK_M_F_VCC_SD {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-sd", "st,clkgen-mux";
++			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
++
++			clocks = <&CLOCKGEN_C_VCC 8>,
++				 <&CLOCKGEN_F 1>;
++		};
++
++		/*
++		 * Add a dummy clock for the HDMIRx external signal clock
++		 */
++		CLK_M_PIX_HDMIRX_SAS: CLK_M_PIX_HDMIRX_SAS {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <0>;
++		};
++
++		CLOCKGEN_F_VCC: CLOCKGEN_F_VCC {
++			#clock-cells = <1>;
++			compatible = "st,stih416-clkgenf", "st,clkgen-vcc";
++			reg = <0xfd32086c 0xc>; /* SYSCFG8539,8540,8541 */
++
++			clocks = <&CLK_M_F_VCC_HD>,
++				 <&CLK_M_F_VCC_SD>,
++				 <&CLOCKGEN_F 0>,
++				 <&CLK_M_PIX_HDMIRX_SAS>;
++
++			clock-output-names  = "CLK_M_PIX_MAIN_PIPE",
++					      "CLK_M_PIX_AUX_PIPE",
++					      "CLK_M_PIX_MAIN_CRU",
++					      "CLK_M_PIX_AUX_CRU",
++					      "CLK_M_XFER_BE_COMPO",
++					      "CLK_M_XFER_PIP_COMPO",
++					      "CLK_M_XFER_AUX_COMPO",
++					      "CLK_M_VSENS",
++					      "CLK_M_PIX_HDMIRX_0",
++					      "CLK_M_PIX_HDMIRX_1";
++		};
+ 	};
+ };
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
