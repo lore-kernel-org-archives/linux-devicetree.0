@@ -1,86 +1,104 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the
- Broadcom BCM63138 DSL SoC
-Date: Mon, 5 May 2014 15:41:43 -0700
-Message-ID: <CAGVrzcaoxiwTzduK7_uTLsM=oyzT_2FYkiSS=m0rz5AEJrJRkw@mail.gmail.com>
-References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com>
- <7337945.Kibhmj51LR@wuerfel> <CAGVrzcayySWxBhXVK0Tq8-foH5tTX0_9EbFL3YtPreHeruNDmQ@mail.gmail.com>
- <5674507.GGRAhKo0Eq@wuerfel>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH 2/5] ARM: add SMP support for Broadcom mobile SoCs
+Date: Mon, 05 May 2014 17:02:03 -0500
+Message-ID: <53680A5B.4060208@linaro.org>
+References: <1396577891-2713-1-git-send-email-elder@linaro.org> <1396577891-2713-3-git-send-email-elder@linaro.org> <533EF21C.6000909@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5674507.GGRAhKo0Eq@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <533EF21C.6000909@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org, arnd@arndb.de
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-05-02 0:55 GMT-07:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> On Thursday 01 May 2014 22:32:27 Florian Fainelli wrote:
->> >> +#ifndef __ARM_BCM63XX_H
->> >> +#define __ARM_BCM63XX_H
->> >> +
->> >> +#define IO_ADDRESS(x)                (((x) & 0x00ffffff) + 0xfc000000)
->> >> +
->> >> +/* AHB register space */
->> >> +#define BCM63XX_AHB_PHYS     0x80001000
->> >> +#define BCM63XX_AHB_VIRT     IO_ADDRESS(BCM63XX_AHB_PHYS)
->> >> +#define BCM63XX_AHB_SIZE     0x800000
->> >> +
->> >> +/* PERIPH (legacy) register space */
->> >> +#define BCM63XX_PERIPH_PHYS  0xfffe8000
->> >> +#define BCM63XX_PERIPH_VIRT  IO_ADDRESS(BCM63XX_PERIPH_PHYS)
->> >> +#define BCM63XX_PERIPH_SIZE  0x10000
->> >
->> > You shouldn't need these any more. If you do, just move all of this
->> > into the main file, to ensure no other file accidentally relies
->> > on hardcoded values.
->> >
->> > Note that BCM63XX_AHB_PHYS is nor aligned, so AFAICT you don't
->> > actually get a huge page entry for it, and there is no point
->> > doing this at all, as it has neither functional nor performance
->> > relevance.
->> >
->> > You may have out-of-tree drivers that you haven't cleaned up
->> > or posted yet relying on specific static mappings, but that is
->> > no reason to have these mappings in the mainline kernel.
->>
->> I tried without the iotable entries, and any register access to these
->> regions did hang the system, I will check harder what was going on
->> there.
->
-> Can you clarify what you mean with 'any register access to these
-> regions did hang the system'?
+On 04/04/2014 12:55 PM, Stephen Boyd wrote:
+> On 04/03/14 19:18, Alex Elder wrote:
+>> +
+>> +/*
+>> + * Secondary startup method setup routine to extract the location of
+>> + * the secondary boot register from a "cpu" or "cpus" device tree
+>> + * node.  Only the first seen secondary boot register value is used;
+>> + * any others are ignored.  The secondary boot register value must be
+>> + * non-zero.
+>> + *
+>> + * Returns 0 if successful or an error code otherwise.
+>> + */
+>> +static int __init of_enable_method_setup(struct device_node *node)
+>> +{
+>> +	int ret;
+>> +
+>> +	/* Ignore all but the first one specified */
+>> +	if (secondary_boot)
+>> +		return 0;
+>> +
+>> +	ret = of_property_read_u32(node, OF_SECONDARY_BOOT, &secondary_boot);
+>> +	if (ret)
+>> +		pr_err("%s: missing/invalid " OF_SECONDARY_BOOT " property\n",
+>> +			node->name);
+>> +
+>> +	return ret;
+>> +}
+> 
+> I don't understand why we need this. Why can't we get the secondary boot
+> address from the /cpus node in the smp_prepare_cpus op. It isn't that
+> hard to get access to the cpus node there via of_find_node_by_path().
+> Then we don't need patch 1 at all. If it turns out to be common stuff,
+> we can always have the common function live in arm common code or maybe
+> even be a devicetree API.
 
-I would not get any console output progress around the time we
-initialize the MMU (roughly), neither would I get an exception since
-that is too early in the boot process.
+I already responded to this, but never got any response.  I
+was preparing to re-send this series and wanted to try to
+pull the added feature (patch 1) out and not be dependent on
+it.  But I think it's a bit ugly so I'm hoping to get a
+blessing to proceed with what I originally proposed.  For
+reference, here's the thread:
+    https://lkml.org/lkml/2014/4/3/421
 
-> If you remove the call to iotable_init,
-> you obviously can't access the registers through BCM63XX_{AHB,PERIPH}_VIRT
-> any longer, but accesses through a pointer returned from ioremap()
-> should keep working as before.
->
-> The DEBUG_LL early output is a special case here, these need one
-> of three options:
->
-> - .map_io is NULL (preferred)
-> - .map_io points to a function that calls debug_ll_io_init()
-> - .map_io points to a function that calls iotable_init with
->   an equivalent or larger mapping as debug_ll_io_init() would.
->
-> I suspect you were doing the third here for historic reasons.
+What I'm trying to do is get the value of a "secondary-boot-reg"
+property from a node known to have an "enable-method" property
+that matches the method name supplied in CPU_METHOD_OF_DECLARE().
 
-I think you are right, I was in the 3rd case where accessing the UART
-using its virtual address would make the system. Reading through
-devicemaps_init(), defining a custom map_io() functions means you are
-in control and you explicitely need to call debug_ll_io_init(), which
-I was not doing when I removed my custom map_io() implementation.
+Using the callback function as I originally proposed, this is
+very easy.  When arm_dt_init_cpu_maps() parses the "cpus" portion
+of the device tree it calls set_smp_ops_by_method() for a
+matching "cpu" or "cpus" node, and that function supplies
+the node to the callback function. The callback can extract
+additional property values if needed.
 
-Thanks!
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If I hold off until smp_prepare_cpus() is called, I have to
+re-parse the device tree to find the "cpus" node (this is
+in itself trivial).  I then need to re-parse that node to
+verify the matching "enable-method" property is found before
+looking for the parameter information I need for that enable
+method.  I would really prefer not to re-do this parsing
+step.  It's imprecise and a little inefficient, and it
+duplicates (but not exactly) logic that's already performed
+by arm_dt_init_cpu_maps().
+
+One more point of clarification.  This "secondary-boot-reg"
+value is *not* the secondary boot address--that is, it's
+not the address secondary cores jump to when they are
+activated.  Instead, this is the address of a register
+that's used to request the ROM code release a core from
+its ROM-implemented holding pen.  For this machine,
+control jumps at that point to secondary_startup(),
+defined in arch/arm/kernel/head.S.
+
+So...
+
+Stephen, I'd like to hear from you whether my explanation
+is adequate, and whether you think my addition and use of
+CPU_METHOD_OF_DECLARE_SETUP() is reasonable.  (If you have
+a suggestion for a better name, I'm open.)
+
+If you still don't like it, I'll follow up with a
+new version of the patches, this time parsing the
+device tree in the smp_prepare_cpus() method as
+you suggested.  I don't want this to hold up getting
+this SMP support into the kernel.
+
+Thanks.
+
+					-Alex
