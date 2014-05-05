@@ -1,41 +1,130 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH 5/5] ARM: dts: add bus clock bsc3_apb for bcm281xx
-Date: Mon,  5 May 2014 08:57:36 -0500
-Message-ID: <1399298256-10965-6-git-send-email-elder@linaro.org>
-References: <1399298256-10965-1-git-send-email-elder@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399298256-10965-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
+Date: Mon, 5 May 2014 17:45:48 -0400
+Message-ID: <5368068C.3090403@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>	<1398353407-2345-4-git-send-email-santosh.shilimkar@ti.com> <CAL_JsqKmf-OCf_-J06ztHWS0iRaMHAVxV0bOFGnY4Ci3fPgLow@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqKmf-OCf_-J06ztHWS0iRaMHAVxV0bOFGnY4Ci3fPgLow@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the bus clock named "bsc3_apb" to the list of those provided by
-the slave CCU.
+On Thursday 01 May 2014 08:56 PM, Rob Herring wrote:
+> On Thu, Apr 24, 2014 at 10:30 AM, Santosh Shilimkar
+> <santosh.shilimkar@ti.com> wrote:
+>> The of_dma_is_coherent() helper parses the given DT device
+>> node to see if the "dma-coherent" property is supported and
+>> returns true or false accordingly.
+>>
+>> If the arch is always coherent or always noncoherent, then the default
+>> DMA ops has to be specified accordingly.
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Russell King <linux@arm.linux.org.uk>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Cc: Olof Johansson <olof@lixom.net>
+>> Cc: Grant Likely <grant.likely@linaro.org>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>> Cc: Linus Walleij <linus.walleij@linaro.org>
+>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>> ---
+>>  drivers/of/platform.c       |   23 +++++++++++++++++++++++
+>>  include/linux/of_platform.h |    6 ++++++
+> 
+> I thought I said this already, but this does not belong in these files
+> as the function does not deal with platform devices. Probably
+> address.c/of_address.h would be the best place.
+> 
+Updated patch with functions now moved to of_address.h/address.c
 
-Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>From 08fb70715afe4adf203d24f1737dba7123c6713b Mon Sep 17 00:00:00 2001
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Date: Thu, 24 Apr 2014 11:30:03 -0400
+Subject: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
+
+The of_dma_is_coherent() helper parses the given DT device
+node to see if the "dma-coherent" property is supported and
+returns true or false accordingly.
+
+If the arch is always coherent or always noncoherent, then the default
+DMA ops has to be specified accordingly.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Olof Johansson <olof@lixom.net>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 ---
- arch/arm/boot/dts/bcm11351.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/of/address.c       |   23 +++++++++++++++++++++++
+ include/linux/of_address.h |    6 ++++++
+ 2 files changed, 29 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 64d069b..faff8af 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -247,7 +247,8 @@
- 					     "bsc1",
- 					     "bsc2",
- 					     "bsc3",
--					     "pwm";
-+					     "pwm",
-+					     "bsc3_apb";
- 		};
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index c54baee..d244b28 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -808,3 +808,26 @@ out:
+ 	return ret;
+ }
+ EXPORT_SYMBOL_GPL(of_dma_get_range);
++
++/**
++ * of_dma_is_coherent - Check if device is coherent
++ * @np:	device node
++ *
++ * It returns true if "dma-coherent" property was found
++ * for this device in DT.
++ */
++bool of_dma_is_coherent(struct device_node *np)
++{
++	struct device_node *node = of_node_get(np);
++
++	while (node) {
++		if (of_property_read_bool(node, "dma-coherent")) {
++			of_node_put(node);
++			return true;
++		}
++		node = of_get_next_parent(node);
++	}
++	of_node_put(node);
++	return false;
++}
++EXPORT_SYMBOL_GPL(of_dma_is_coherent);
+\ No newline at end of file
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 4d7b325..839a352 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -65,6 +65,7 @@ extern struct of_pci_range *of_pci_range_parser_one(
+ 					struct of_pci_range *range);
+ extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+ 				u64 *paddr, u64 *size);
++extern bool of_dma_is_coherent(struct device_node *np);
+ #else /* CONFIG_OF_ADDRESS */
+ static inline struct device_node *of_find_matching_node_by_address(
+ 					struct device_node *from,
+@@ -98,6 +99,11 @@ static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
+ {
+ 	return -ENODEV;
+ }
++
++static inline bool of_dma_is_coherent(struct device_node *np)
++{
++	return false;
++}
+ #endif /* CONFIG_OF_ADDRESS */
  
- 		ref_1m_clk: ref_1m {
+ #ifdef CONFIG_OF
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
