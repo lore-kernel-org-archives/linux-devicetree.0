@@ -1,71 +1,68 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH 1/2] ARM: dts: Enable USB 3503 hub on exynos5250-snow
-Date: Mon,  5 May 2014 18:00:55 +0530
-Message-ID: <1399293056-17143-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, arunkk.samsung@gmail.com, Vivek Gautam <gautam.vivek@samsung.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 3/4] ARM: STi: DT: add keyscan for stih41x-b2000
+Date: Mon,  5 May 2014 17:38:39 +0200
+Message-ID: <1399304320-18197-4-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399304320-18197-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Condorelli <giuseppe.condorelli-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The exynos5250-snow has a SMSC USB3503 connected in
-hardware only mode like a PHY. Enable support for it,
-and add necessary 'reset-gpio' for it.
+Add keyscan setup for stih415/h416 b2000.
+Both have same raw/column lines number, debounce time and keymap.
 
-This is in correspondance to similar patch by Mark Brown
-7c1b0ec ARM: dts: Enable USB hub on Arndale
-
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
+ arch/arm/boot/dts/stih41x-b2000.dtsi | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-Based on 'for-next' branch of kgene's linux-samsung tree.
-
- arch/arm/boot/dts/exynos5250-pinctrl.dtsi |    7 +++++++
- arch/arm/boot/dts/exynos5250-snow.dts     |   14 ++++++++++++++
- 2 files changed, 21 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-index 9a49e68..bd8c8f1 100644
---- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-@@ -706,6 +706,13 @@
- 			samsung,pin-pud = <0>;
- 			samsung,pin-drv = <0>;
+diff --git a/arch/arm/boot/dts/stih41x-b2000.dtsi b/arch/arm/boot/dts/stih41x-b2000.dtsi
+index bf65c49..403bf1b 100644
+--- a/arch/arm/boot/dts/stih41x-b2000.dtsi
++++ b/arch/arm/boot/dts/stih41x-b2000.dtsi
+@@ -6,6 +6,7 @@
+  * it under the terms of the GNU General Public License version 2 as
+  * publishhed by the Free Software Foundation.
+  */
++#include <dt-bindings/input/input.h>
+ / {
+ 
+ 	memory{
+@@ -68,5 +69,27 @@
+ 			snps,reset-active-low;
+ 			snps,reset-delays-us 	= <0 10000 10000>;
  		};
 +
-+		usb_hub_reset: usb-hub-reset {
-+			samsung,pins = "gpe1-0";
-+			samsung,pin-function = <1>;
-+			samsung,pin-pud = <0>;
-+			samsung,pin-drv = <0>;
++		keyscan: keyscan@fe4b0000 {
++			keypad,num-rows = <4>;
++			keypad,num-columns = <4>;
++			st,debounce-us = <5000>;
++			linux,keymap = < MATRIX_KEY(0x00, 0x00, KEY_F13)
++					 MATRIX_KEY(0x00, 0x01, KEY_F9)
++					 MATRIX_KEY(0x00, 0x02, KEY_F5)
++					 MATRIX_KEY(0x00, 0x03, KEY_F1)
++					 MATRIX_KEY(0x01, 0x00, KEY_F14)
++					 MATRIX_KEY(0x01, 0x01, KEY_F10)
++					 MATRIX_KEY(0x01, 0x02, KEY_F6)
++					 MATRIX_KEY(0x01, 0x03, KEY_F2)
++					 MATRIX_KEY(0x02, 0x00, KEY_F15)
++					 MATRIX_KEY(0x02, 0x01, KEY_F11)
++					 MATRIX_KEY(0x02, 0x02, KEY_F7)
++					 MATRIX_KEY(0x02, 0x03, KEY_F3)
++					 MATRIX_KEY(0x03, 0x00, KEY_F16)
++					 MATRIX_KEY(0x03, 0x01, KEY_F12)
++					 MATRIX_KEY(0x03, 0x02, KEY_F8)
++					 MATRIX_KEY(0x03, 0x03, KEY_F4) >;
 +		};
  	};
- 
- 	pinctrl@10d10000 {
-diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-index 1ce1088..2e48f27 100644
---- a/arch/arm/boot/dts/exynos5250-snow.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow.dts
-@@ -200,6 +200,20 @@
- 		samsung,vbus-gpio = <&gpx1 1 0>;
- 	};
- 
-+	usb_hub_bus {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		// SMSC USB3503 connected in hardware only mode as a PHY
-+		usb_hub {
-+			compatible = "smsc,usb3503a";
-+			reset-gpios = <&gpe1 0 1>;
-+			pinctrl-0 = <&usb_hub_reset>;
-+			pinctrl-names = "default";
-+		};
-+	};
-+
- 	fixed-rate-clocks {
- 		xxti {
- 			compatible = "samsung,clock-xxti";
+ };
 -- 
-1.7.10.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
