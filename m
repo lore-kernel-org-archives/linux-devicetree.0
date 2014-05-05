@@ -1,42 +1,47 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 7/9] ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
-Date: Mon,  5 May 2014 17:53:41 +0200
-Message-ID: <1399305223-18703-8-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/1] ARM: EXYNOS: Fix compilation warning
+Date: Mon,  5 May 2014 14:56:48 +0530
+Message-ID: <1399282008-9738-1-git-send-email-sachin.kamat@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-CLK_S_ICN_REG_0 clock is no longer used.
+of_get_flat_dt_prop return type is now const.
+=46ixes the following compilation warning introduced by commit 9d0c4dfe=
+dd96
+("of/fdt: update of_get_flat_dt_prop in prep for libfdt")
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+arch/arm/mach-exynos/exynos.c:259:6: warning:
+assignment discards =E2=80=98const=E2=80=99 qualifier from pointer targ=
+et type [enabled by default]
+
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/stih415-clock.dtsi | 10 ----------
- 1 file changed, 10 deletions(-)
+Based on linux-next (20140505)
+---
+ arch/arm/mach-exynos/exynos.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-index f67762d7a..5bdba06 100644
---- a/arch/arm/boot/dts/stih415-clock.dtsi
-+++ b/arch/arm/boot/dts/stih415-clock.dtsi
-@@ -32,16 +32,6 @@
- 			clock-frequency = <500000000>;
- 		};
- 
--		/*
--		 * Bootloader initialized system infrastructure clock for
--		 * serial devices.
--		 */
--		CLKS_ICN_REG_0: CLKS_ICN_REG_0 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <100000000>;
--		};
--
- 		CLKS_GMAC0_PHY: clockgenA1@7 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
--- 
-1.9.1
+diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exyno=
+s.c
+index 77293d39dfc9..f356c67a1fa9 100644
+--- a/arch/arm/mach-exynos/exynos.c
++++ b/arch/arm/mach-exynos/exynos.c
+@@ -249,7 +249,7 @@ static int __init exynos_fdt_map_chipid(unsigned lo=
+ng node, const char *uname,
+ 					int depth, void *data)
+ {
+ 	struct map_desc iodesc;
+-	__be32 *reg;
++	const __be32 *reg;
+ 	int len;
+=20
+ 	if (!of_flat_dt_is_compatible(node, "samsung,exynos4210-chipid") &&
+--=20
+1.7.9.5
