@@ -1,86 +1,315 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Mon, 05 May 2014 22:55:49 +0200
-Message-ID: <5575019.Hr92MUuDnc@wuerfel>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <20923376.buVzFR52Qe@wuerfel> <CAErSpo5-FXmVs8BWRYKz9Ln1g1Ls7_uo3oiPd32fUegf3d8hXQ@mail.gmail.com>
+From: Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC v3 PATCH v2 10/16] drm/exynos: dsi: add driver data to
+ support Exynos5420
+Date: Mon, 05 May 2014 13:27:37 +0200
+Message-ID: <536775A9.3010005@samsung.com>
+References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
+ <1398563412-21781-11-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAErSpo5-FXmVs8BWRYKz9Ln1g1Ls7_uo3oiPd32fUegf3d8hXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-reply-to: <1398563412-21781-11-git-send-email-yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Metcalf <cmetcalf-kv+TWInifGbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+To: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 May 2014 14:45:21 Bjorn Helgaas wrote:
-> [+cc Ben, Chris]
+On 04/27/2014 03:50 AM, YoungJun Cho wrote:
+> The offset of register DSIM_PLLTMR_REG in Exynos5420 is different
+> from the one in Exynos4 SoC.
 > 
-> On Fri, May 2, 2014 at 12:59 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Friday 02 May 2014 10:54:59 Bjorn Helgaas wrote:
-> >> > +static void of_dma_configure(struct device *dev)
-> >> > +{
-> >> > +     u64 dma_addr, paddr, size;
-> >> > +     int ret;
-> >> > +
-> >> > +     dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> >> > +     if (!dev->dma_mask)
-> >> > +             dev->dma_mask = &dev->coherent_dma_mask;
-> >> > +
-> >> > +     /*
-> >> > +      * if dma-coherent property exist, call arch hook to setup
-> >> > +      * dma coherent operations.
-> >> > +      */
-> >> > +     if (of_dma_is_coherent(dev->of_node)) {
-> >> > +             set_arch_dma_coherent_ops(dev);
-> >> > +             dev_dbg(dev, "device is dma coherent\n");
-> >> > +     }
-> >> > +
-> >> > +     /*
-> >> > +      * if dma-ranges property doesn't exist - just return else
-> >> > +      * setup the dma offset
-> >> > +      */
-> >> > +     ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> >> > +     if ((ret == -ENODEV) || (ret < 0)) {
-> >> > +             dev_dbg(dev, "no dma range information to setup\n");
-> >> > +             return;
-> >> > +     }
-> >> > +
-> >> > +     /* DMA ranges found. Calculate and set dma_pfn_offset */
-> >> > +     dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-> >> > +     dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
-> >>
-> >> Is this effectively the same as an IOMMU that applies a constant offset
-> >> to the bus address?  Could or should this be done by adding a simple IOMMU
-> >> driver instead of adding dma_pfn_offset to struct device?
-> >
-> > We currently have two dma_map_ops variants on ARM (plus another set for
-> > coherent/noncoherent differences, but we can ignore that for the sake
-> > of this discussion): one that handles linear mappings and one that
-> > handles IOMMUs by calling into the linux/iommu.h APIs.
-> >
-> > I guess what you mean by 'a simple IOMMU driver' would be another
-> > dma_map_ops implementation that is separate from real IOMMUs, right?
+> In case of Exynos5420 SoC, there is no frequency band bit in DSIM_PLLCTRL_REG,
+> and it uses DSIM_PHYCTRL_REG and DSIM_PHYTIMING*_REG instead.
+> So this patch adds driver data to distinguish it.
 > 
-> I suppose so; it seems like the offset could be managed inside
-> arm_dma_ops.  My idea of an IOMMU is something that maps bus addresses
-> to physical memory addresses.  That's what we're doing here; it's just
-> that the mapping function is very simple.  So why add something new in
-> struct device for it?
+> Changelog v2:
+> - Moves exynos_dsi_enable_clocks() after exynos_dsi_reset()
+>   (commented by Andrzej Hajda)
+> - Splits D-PHY control setting routines from PLL setting one
+>   (commented by Andrzej Hajda)
 > 
-> I think powerpc and tile do something similar in dma_direct_map_page()
-> and tile_pci_dma_map_page() (they store the offset in struct
-> dev_archdata).
+> Signed-off-by: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_dsi.c |  154 ++++++++++++++++++++++++++-----
+>  1 file changed, 132 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> index 4a918ec..c18dba3 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+> @@ -17,6 +17,7 @@
+>  
+>  #include <linux/clk.h>
+>  #include <linux/irq.h>
+> +#include <linux/of_device.h>
+>  #include <linux/phy/phy.h>
+>  #include <linux/regulator/consumer.h>
+>  
+> @@ -54,9 +55,12 @@
+>  
+>  /* FIFO memory AC characteristic register */
+>  #define DSIM_PLLCTRL_REG	0x4c	/* PLL control register */
+> -#define DSIM_PLLTMR_REG		0x50	/* PLL timer register */
+>  #define DSIM_PHYACCHR_REG	0x54	/* D-PHY AC characteristic register */
+>  #define DSIM_PHYACCHR1_REG	0x58	/* D-PHY AC characteristic register1 */
+> +#define DSIM_PHYCTRL_REG	0x5c
+> +#define DSIM_PHYTIMING_REG	0x64
+> +#define DSIM_PHYTIMING1_REG	0x68
+> +#define DSIM_PHYTIMING2_REG	0x6c
+>  
+>  /* DSIM_STATUS */
+>  #define DSIM_STOP_STATE_DAT(x)		(((x) & 0xf) << 0)
+> @@ -200,6 +204,21 @@
+>  #define DSIM_PLL_M(x)			((x) << 4)
+>  #define DSIM_PLL_S(x)			((x) << 1)
+>  
+> +/* DSIM_PHYTIMING */
+> +#define DSIM_PHYTIMING_LPX(x)		((x) << 8)
+> +#define DSIM_PHYTIMING_HS_EXIT(x)	((x) << 0)
+> +
+> +/* DSIM_PHYTIMING1 */
+> +#define DSIM_PHYTIMING1_CLK_PREPARE(x)	((x) << 24)
+> +#define DSIM_PHYTIMING1_CLK_ZERO(x)	((x) << 16)
+> +#define DSIM_PHYTIMING1_CLK_POST(x)	((x) << 8)
+> +#define DSIM_PHYTIMING1_CLK_TRAIL(x)	((x) << 0)
+> +
+> +/* DSIM_PHYTIMING2 */
+> +#define DSIM_PHYTIMING2_HS_PREPARE(x)	((x) << 16)
+> +#define DSIM_PHYTIMING2_HS_ZERO(x)	((x) << 8)
+> +#define DSIM_PHYTIMING2_HS_TRAIL(x)	((x) << 0)
+> +
+>  #define DSI_MAX_BUS_WIDTH		4
+>  #define DSI_NUM_VIRTUAL_CHANNELS	4
+>  #define DSI_TX_FIFO_SIZE		2048
+> @@ -233,6 +252,12 @@ struct exynos_dsi_transfer {
+>  #define DSIM_STATE_INITIALIZED		BIT(1)
+>  #define DSIM_STATE_CMD_LPM		BIT(2)
+>  
+> +struct exynos_dsi_driver_data {
+> +	unsigned int plltmr_reg;
+> +
+> +	unsigned int has_freqband:1;
+> +};
+> +
+>  struct exynos_dsi {
+>  	struct mipi_dsi_host dsi_host;
+>  	struct drm_connector connector;
+> @@ -262,11 +287,39 @@ struct exynos_dsi {
+>  
+>  	spinlock_t transfer_lock; /* protects transfer_list */
+>  	struct list_head transfer_list;
+> +
+> +	struct exynos_dsi_driver_data *driver_data;
+>  };
+>  
+>  #define host_to_dsi(host) container_of(host, struct exynos_dsi, dsi_host)
+>  #define connector_to_dsi(c) container_of(c, struct exynos_dsi, connector)
+>  
+> +static struct exynos_dsi_driver_data exynos4_dsi_driver_data = {
+> +	.plltmr_reg = 0x50,
+> +	.has_freqband = 1,
+> +};
+> +
+> +static struct exynos_dsi_driver_data exynos5_dsi_driver_data = {
+> +	.plltmr_reg = 0x58,
+> +};
+> +
+> +static struct of_device_id exynos_dsi_of_match[] = {
+> +	{ .compatible = "samsung,exynos4210-mipi-dsi",
+> +	  .data = &exynos4_dsi_driver_data },
+> +	{ .compatible = "samsung,exynos5420-mipi-dsi",
+> +	  .data = &exynos5_dsi_driver_data },
+> +	{ }
+> +};
 
-Ah, so the only question is whether to store it in dev_archdata or
-in device. I think the argument for using struct device directly
-was that it lets us access this field from architecture independent
-code. It's not important to the overall design though: we could easily
-put it in dev_archdata and call an architecture specific function to
-set it, if there are good reasons for keeping it out of the generic
-device structure.
+I raise again issue of compatible string.
+Since exynos5410 DSIM contains DSIM_VERSION register, it is better
+to use this register instead of compatible string to distinguish
+device versions. So as a compatible we should use the first exynos
+chipset containing this field. AFAIK it is exynos5410.
+So the only thing you should do is to change compatible string from
+samsung,exynos5420-mipi-dsi to samsung,exynos5410-mipi-dsi.
 
-	Arnd
+> 
+> I posted RFC v3 without this try.
+> 
+> Because there is no exynos5410 relevant DTS yet,
+> and making exynos5410 DTS is out of scope for this RFC.
+
+
+It is irrelevant.
+
+Regards
+Andrzej
+
+
+> +
+> +static inline struct exynos_dsi_driver_data *exynos_dsi_get_driver_data(
+> +						struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *of_id =
+> +			of_match_device(exynos_dsi_of_match, &pdev->dev);
+> +
+> +	return (struct exynos_dsi_driver_data *)of_id->data;
+> +}
+> +
+>  static void exynos_dsi_wait_for_reset(struct exynos_dsi *dsi)
+>  {
+>  	if (wait_for_completion_timeout(&dsi->completed, msecs_to_jiffies(300)))
+> @@ -340,14 +393,9 @@ static unsigned long exynos_dsi_pll_find_pms(struct exynos_dsi *dsi,
+>  static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
+>  					unsigned long freq)
+>  {
+> -	static const unsigned long freq_bands[] = {
+> -		100 * MHZ, 120 * MHZ, 160 * MHZ, 200 * MHZ,
+> -		270 * MHZ, 320 * MHZ, 390 * MHZ, 450 * MHZ,
+> -		510 * MHZ, 560 * MHZ, 640 * MHZ, 690 * MHZ,
+> -		770 * MHZ, 870 * MHZ, 950 * MHZ,
+> -	};
+> +	struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
+>  	unsigned long fin, fout;
+> -	int timeout, band;
+> +	int timeout;
+>  	u8 p, s;
+>  	u16 m;
+>  	u32 reg;
+> @@ -368,18 +416,30 @@ static unsigned long exynos_dsi_set_pll(struct exynos_dsi *dsi,
+>  			"failed to find PLL PMS for requested frequency\n");
+>  		return -EFAULT;
+>  	}
+> +	dev_dbg(dsi->dev, "PLL freq %lu, (p %d, m %d, s %d)\n", fout, p, m, s);
+>  
+> -	for (band = 0; band < ARRAY_SIZE(freq_bands); ++band)
+> -		if (fout < freq_bands[band])
+> -			break;
+> +	writel(500, dsi->reg_base + driver_data->plltmr_reg);
+> +
+> +	reg = DSIM_PLL_EN | DSIM_PLL_P(p) | DSIM_PLL_M(m) | DSIM_PLL_S(s);
+> +
+> +	if (driver_data->has_freqband) {
+> +		static const unsigned long freq_bands[] = {
+> +			100 * MHZ, 120 * MHZ, 160 * MHZ, 200 * MHZ,
+> +			270 * MHZ, 320 * MHZ, 390 * MHZ, 450 * MHZ,
+> +			510 * MHZ, 560 * MHZ, 640 * MHZ, 690 * MHZ,
+> +			770 * MHZ, 870 * MHZ, 950 * MHZ,
+> +		};
+> +		int band;
+> +
+> +		for (band = 0; band < ARRAY_SIZE(freq_bands); ++band)
+> +			if (fout < freq_bands[band])
+> +				break;
+>  
+> -	dev_dbg(dsi->dev, "PLL freq %lu, (p %d, m %d, s %d), band %d\n", fout,
+> -		p, m, s, band);
+> +		dev_dbg(dsi->dev, "band %d\n", band);
+>  
+> -	writel(500, dsi->reg_base + DSIM_PLLTMR_REG);
+> +		reg |= DSIM_FREQ_BAND(band);
+> +	}
+>  
+> -	reg = DSIM_FREQ_BAND(band) | DSIM_PLL_EN
+> -			| DSIM_PLL_P(p) | DSIM_PLL_M(m) | DSIM_PLL_S(s);
+>  	writel(reg, dsi->reg_base + DSIM_PLLCTRL_REG);
+>  
+>  	timeout = 1000;
+> @@ -433,6 +493,59 @@ static int exynos_dsi_enable_clock(struct exynos_dsi *dsi)
+>  	return 0;
+>  }
+>  
+> +static void exynos_dsi_set_phy_ctrl(struct exynos_dsi *dsi)
+> +{
+> +	struct exynos_dsi_driver_data *driver_data = dsi->driver_data;
+> +	u32 reg;
+> +
+> +	if (driver_data->has_freqband)
+> +		return;
+> +
+> +	/* B D-PHY */
+> +	reg = 0x0af & 0x1ff;
+> +	writel(reg, dsi->reg_base + DSIM_PHYCTRL_REG);
+> +
+> +	/*
+> +	 * T LPX: Transmitted length of any Low-Power state period
+> +	 * T HS-EXIT: Time that the transmitter drives LP-11 following a HS
+> +	 *	burst
+> +	 */
+> +	reg = DSIM_PHYTIMING_LPX(0x06) | DSIM_PHYTIMING_HS_EXIT(0x0b);
+> +	writel(reg, dsi->reg_base + DSIM_PHYTIMING_REG);
+> +
+> +	/*
+> +	 * T CLK-PREPARE: Time that the transmitter drives the Clock Lane LP-00
+> +	 *	Line state immediately before the HS-0 Line state starting the
+> +	 *	HS transmission
+> +	 * T CLK-ZERO: Time that the transmitter drives the HS-0 state prior to
+> +	 *	transmitting the Clock.
+> +	 * T CLK_POST: Time that the transmitter continues to send HS clock
+> +	 *	after the last associated Data Lane has transitioned to LP Mode
+> +	 *	Interval is defined as the period from the end of T HS-TRAIL to
+> +	 *	the beginning of T CLK-TRAIL
+> +	 * T CLK-TRAIL: Time that the transmitter drives the HS-0 state after
+> +	 *	the last payload clock bit of a HS transmission burst
+> +	 */
+> +	reg = DSIM_PHYTIMING1_CLK_PREPARE(0x07) |
+> +			DSIM_PHYTIMING1_CLK_ZERO(0x27) |
+> +			DSIM_PHYTIMING1_CLK_POST(0x0d) |
+> +			DSIM_PHYTIMING1_CLK_TRAIL(0x08);
+> +	writel(reg, dsi->reg_base + DSIM_PHYTIMING1_REG);
+> +
+> +	/*
+> +	 * T HS-PREPARE: Time that the transmitter drives the Data Lane LP-00
+> +	 *	Line state immediately before the HS-0 Line state starting the
+> +	 *	HS transmission
+> +	 * T HS-ZERO: Time that the transmitter drives the HS-0 state prior to
+> +	 *	transmitting the Sync sequence.
+> +	 * T HS-TRAIL: Time that the transmitter drives the flipped differential
+> +	 *	state after last payload data bit of a HS transmission burst
+> +	 */
+> +	reg = DSIM_PHYTIMING2_HS_PREPARE(0x09) | DSIM_PHYTIMING2_HS_ZERO(0x0d) |
+> +			DSIM_PHYTIMING2_HS_TRAIL(0x0b);
+> +	writel(reg, dsi->reg_base + DSIM_PHYTIMING2_REG);
+> +}
+> +
+>  static void exynos_dsi_disable_clock(struct exynos_dsi *dsi)
+>  {
+>  	u32 reg;
+> @@ -947,10 +1060,11 @@ static irqreturn_t exynos_dsi_irq(int irq, void *dev_id)
+>  
+>  static int exynos_dsi_init(struct exynos_dsi *dsi)
+>  {
+> -	exynos_dsi_enable_clock(dsi);
+>  	exynos_dsi_reset(dsi);
+>  	enable_irq(dsi->irq);
+> +	exynos_dsi_enable_clock(dsi);
+>  	exynos_dsi_wait_for_reset(dsi);
+> +	exynos_dsi_set_phy_ctrl(dsi);
+>  	exynos_dsi_init_link(dsi);
+>  
+>  	return 0;
+> @@ -1412,6 +1526,7 @@ static int exynos_dsi_probe(struct platform_device *pdev)
+>  	dsi->dsi_host.dev = &pdev->dev;
+>  
+>  	dsi->dev = &pdev->dev;
+> +	dsi->driver_data = exynos_dsi_get_driver_data(pdev);
+>  
+>  	ret = exynos_dsi_parse_dt(dsi);
+>  	if (ret)
+> @@ -1516,11 +1631,6 @@ static const struct dev_pm_ops exynos_dsi_pm_ops = {
+>  	SET_SYSTEM_SLEEP_PM_OPS(exynos_dsi_suspend, exynos_dsi_resume)
+>  };
+>  
+> -static struct of_device_id exynos_dsi_of_match[] = {
+> -	{ .compatible = "samsung,exynos4210-mipi-dsi" },
+> -	{ }
+> -};
+> -
+>  struct platform_driver dsi_driver = {
+>  	.probe = exynos_dsi_probe,
+>  	.remove = exynos_dsi_remove,
+> 
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
