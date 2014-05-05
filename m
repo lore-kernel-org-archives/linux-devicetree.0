@@ -1,139 +1,175 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: syscon or memory mappings (was: Re: [RFC/PATCH 0/8] pinctrl-rockchip: Change wrong initial assumptions)
-Date: Mon, 05 May 2014 14:11:08 +0200
-Message-ID: <3114029.fvjZVjkFrH@diego>
-References: <1414506.B4e2jZujVm@diego> <4321949.A6Ghcdztds@diego> <9747726.2b5sgjTxWB@typ>
+From: "Austin, Brian" <Brian.Austin@cirrus.com>
+Subject: Re: [PATCH 2/2] Documentation: dt: bindings: sound:
+ Add bindings for CS42L56 CODEC
+Date: Mon, 5 May 2014 21:33:57 +0000
+Message-ID: <C793051E-4B3F-4BB9-AA70-AE3522F07002@cirrus.com>
+References: <1399320549-16645-1-git-send-email-brian.austin@cirrus.com>
+ <1399320549-16645-2-git-send-email-brian.austin@cirrus.com>
+ <47E0FD7A-D2C0-425E-A7FB-917B65D74B2D@codeaurora.org>
+ <F1AEB906-8BB1-4699-909A-DF29343F2B6F@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <9747726.2b5sgjTxWB@typ>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0327908640754036618=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <F1AEB906-8BB1-4699-909A-DF29343F2B6F@cirrus.com>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "broonie@kernel.org" <broonie@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "Handrigan,
+ Paul" <Paul.Handrigan@cirrus.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Samstag, 3. Mai 2014, 14:40:36 schrieb Max Schwarz:
-> Hello Heiko,
+--===============0327908640754036618==
+Content-Language: en-US
+Content-Type: multipart/signed;
+	boundary="Apple-Mail=_9F56AAE2-5AE8-44E5-A454-0B4379102C24";
+	protocol="application/pgp-signature"; micalg=pgp-sha512
+
+--Apple-Mail=_9F56AAE2-5AE8-44E5-A454-0B4379102C24
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain;
+	charset=us-ascii
+
+
+On May 5, 2014, at 4:32 PM, Austin, Brian <brian.austin@cirrus.com> =
+wrote:
+
 >=20
-> On Saturday 03 May 2014 at 01:45:11, Heiko St=FCbner wrote:
-> > > However, this sheds light on an underlying issue: Rockchip is not
-> > > treating
-> > > the whole GPIO block as one cohesive device as we do currently. I=
-nstead,
-> > > it
-> > > seems to me, one GPIO bank is one device. Each has its cohesive m=
-ux,
-> > > bank
-> > > and pull registers - apart from rk3188-bank-0, maybe. But that on=
-e is
-> > > special anyway with regards to register ordering (s.b.).
-> > >=20
-> > > The issues you had with RK3188 and now have with RK3288 seem to s=
-tem
-> > > from
-> > > trying to group all banks together into one pinctrl driver.
-> > >=20
-> > > So maybe we should promote the GPIO banks to full devices in the =
-dt and
-> > > make smaller mappings for each GPIO bank, i.e. three mappings for=
- each
-> > > GPIO bank (mux, bank, pull). I know we have to stay backwards com=
-patible
-> > > dt-wise, but that should be doable.
-> >=20
-> > Yes, that is another miss-conception from the early days. The
-> > gpio-controllers themself are actually Synopsis Designware IPs - th=
-e
-> > kernel
-> > now even has a separate driver for them (gpio-dwapb). Only the real
-> > pincontrol/muxing/pull/etc is from Rockchip.
-> >=20
-> > Currently I can't think of a way to move over gracefully, without
-> > introducing crap into the gpio-dwapb driver. As at the moment it pa=
-rses
-> > all
-> > information it needs from the dt directly - of course with differen=
-t
-> > bindings.
-> >=20
-> > That is also the reason I do not want to introduce more "special-ca=
-ses" in
-> > the bank-declaration we're using currently - to not make this move =
-more
-> > difficult in the future.
-> >=20
-> > As it is, with the patch attached to the last mail, the pinctrl dri=
-ver
-> > wouldn't even need the "rockchip,rk3188-gpio-bank0" compatible anym=
-ore, as
-> > the information about its special case is now sitting in the bank
-> > declaration inside the driver. Which then would enable us to remove=
- the
-> > gpio-bank subnodes alltogether and use the external gpio driver.
+> On May 5, 2014, at 4:18 PM, Kumar Gala <galak@codeaurora.org> wrote:
 >=20
-> Okay, you convinced me. That sounds like a good plan to me. Maybe we =
-can
-> introduce some compability code into the pinctrl driver to generate t=
-he
-> correct dt nodes for gpio-dwabp at runtime? I think that would depend=
- on
-> something like CONFIG_OF_DYNAMIC though.
-
-Yep, that's one option. The other would be to let the driver support bo=
-th (the=20
-internal gpio code and the real gpio-dwapb), deprecate the old one=20
-[of course also disallowing it for rk3288 and following] and simply rem=
-ove it=20
-after the appropriate timespan (1 or more years if I remember correctly=
- :-) ].
-
-
-
-> > While for example syscon cannot handle clocks currently, the underl=
-ying
-> > regmap can - so it would be only a matter of teaching syscon to tel=
-l
-> > regmap
-> > of the clock to use (GRF and PMU register-clocks in this case), ins=
-tead of
-> > needing to have every user of parts of these registers handle the r=
-elevant
-> > clock itself on register accesses.
-> >=20
-> > Also, as you can see in the grf map, the rk3188 actually has two
-> > soc_status
-> > registers (0xac and 0x108) which have the dmac, cpu and drive stren=
-gth
-> > registers in between. So having a syscon only for soc_con and soc_s=
-tatus
-> > will produce problems too.
-> >=20
-> > Another example, GRF_IO_VSEL at 0x0380 is most likely some sort of =
-pin
-> > voltage selection. As it only spans 1 register I'd assume it could =
-contain
-> > settings that span all pin banks.
+>>=20
+>> On May 5, 2014, at 3:09 PM, Brian Austin <brian.austin@cirrus.com> =
+wrote:
+>>=20
+>>> This patch adds binding documentation for the Cirrus Logic CS42L56 =
+Low Power Stereo I2C CODEC
+>>>=20
+>>> Signed-off-by: Brian Austin <brian.austin@cirrus.com>
+>>> ---
+>>> .../devicetree/bindings/sound/cs42l56.txt          |   63 =
+++++++++++++++++++++
+>>> 1 file changed, 63 insertions(+)
+>>> create mode 100644 =
+Documentation/devicetree/bindings/sound/cs42l56.txt
+>>>=20
+>>> diff --git a/Documentation/devicetree/bindings/sound/cs42l56.txt =
+b/Documentation/devicetree/bindings/sound/cs42l56.txt
+>>> new file mode 100644
+>>> index 0000000..9ae074f
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/sound/cs42l56.txt
+>>> @@ -0,0 +1,63 @@
+>>> +CS42L52 audio CODEC
+>>> +
+>>> +Required properties:
+>>> +
+>>> +  - compatible : "cirrus,cs42l56"
+>>> +
+>>> +  - reg : the I2C address of the device for I2C
+>>> +
+>>> +  - VA-supply, VCP-supply, VLDO-supply : power supplies for the =
+device,
+>>> +  as covered in =
+Documentation/devicetree/bindings/regulator/regulator.txt.
+>>> +
+>>> +Optional properties:
+>>> +
+>>> +  - cirrus,gpio-nreset : GPIO controller's phandle and the number
+>>> +  of the GPIO used to reset the codec.
+>>> +
+>>> +  - cirrus,chgfreq-divisor : Values used to set the Charge Pump =
+Frequency.
+>>> +  Allowable values of 0x00 through 0x0F. These are raw values =
+written to the
+>>> +  register, not the actual frequency. The frequency is determined =
+by the following.
+>>> +  Frequency =3D MCLK / 4 * (N+2)
+>>> +  N =3D chgfreq_val
+>>> +  MCLK =3D Where MCLK is the frequency of the mclk signal after the =
+MCLKDIV2 circuit.
+>>> +
+>>> +  - cirrus,ain1a-ref-cfg, ain1b-ref-cfg : boolean, If present, =
+AIN1A or AIN1B are configured
+>>> +  as a pseudo-differential input referenced to AIN1REF/AIN3A.
+>>=20
+>> What happens if a DT had both bools?
+> That would not cause any issues, but you can only tie the ref to one =
+of the inputs
 >=20
-> Okay, we couldn't handle that with individual devices for each bank.
+>>=20
+>>> +
+>>> +  - cirrus,ain2a-ref-cfg, ain2b-ref-cfg : boolean, If present, =
+AIN2A or AIN2B are configured
+>>> +  as a pseudo-differential input referenced to AIN2REF/AIN3B.
+>>> +
+>>> +  - cirrus,micbias-lvl: Set the output voltage level on the MICBIAS =
+Pin.
+>>> +  0 =3D 0.5 x VA
+>>> +  1 =3D 0.6 x VA
+>>> +  2 =3D 0.7 x VA
+>>> +  3 =3D 0.8 x VA
+>>> +  4 =3D 0.83 x VA
+>>> +  5 =3D 0.91 x VA
+>>> +
+>>> +  - cirrus,adaptive-pwr-cfg : Configures how the power to the =
+Headphone and Lineout
+>>> +  Amplifiers adapt to the output signal levels.
+>>> +  0 =3D Adapt to Volume Mode. Voltage level determined by the sum =
+of the relevant volume settings.
+>>> +  1 =3D Fixed - Headphone and Line Amp supply =3D + or - VCP/2.
+>>> +  2 =3D Fixed - Headphone and Line Amp supply =3D + or - VCP.
+>>> +  3 =3D Adapted to Signal; Voltage level is dynamically determined =
+by the output signal.
+>>> +
+>>> +  - cirrus,hpf-left-freq, hpf-right-freq : Sets the corner =
+frequency (-3dB point) for the internal High-Pass
+>>> +  Filter.
+>>> +  0 =3D 1.8Hz
+>>> +  1 =3D 119Hz
+>>> +  2 =3D 236Hz
+>>> +  3 =3D 464Hz
+>>> +
+>>=20
+>> Add a include/dt-bindings for all the various enums
+> Could you explain more please?
 >=20
-> > And of course, splitting the register space into dozens of small
-> > individual
-> > mappings looks messy :-)
->=20
-> Yes, I agree now ;-)
+> Thanks
 
-cool :-D
-
-I've also just sent a v2, including the missing MFD_SYSCON dependency, =
-thanks=20
-for the find.
+I understand now thanks
 
 
+--Apple-Mail=_9F56AAE2-5AE8-44E5-A454-0B4379102C24
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Message signed with OpenPGP using GPGMail
 
-Heiko
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Comment: GPGTools - https://gpgtools.org
+
+iQEcBAEBCgAGBQJTaAPEAAoJEHdXZdGWfiO7Su4H/2kQRBgn8R+CiWIoo5il1N+n
+gSEt5905IC9ymA1r4rvrGR+eEKgJOQSLhByctE2o+wRmb3ZJYtaBn1S6LIoeT2SC
+FSpodisC60M71ZgfELahicfdtftE96JlL5hCuLclyhKg5f+utwIik+0vuQY29/Ui
+8dRUN+5NKockJj+xRslS59XdY7GMvYCkVWhd7F5ndc+V9PNy92/mL9g1j+zQxYSe
+bhcG7UzD8dKt1UWRiDtgUnx7HvkbVTrc/McgjHN+QqWr0RkiLpp1yi2n7TpaesHU
+HQ8L9W/6TOW6iehdYj71E25229o2x6Uy73totTLstC/B4tt8/pmKTK4e2jKWL7k=
+=KHr1
+-----END PGP SIGNATURE-----
+
+--Apple-Mail=_9F56AAE2-5AE8-44E5-A454-0B4379102C24--
+
+--===============0327908640754036618==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0327908640754036618==--
