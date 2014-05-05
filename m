@@ -1,75 +1,122 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 5/6] ARM: AM43xx: clk: Change the cpts ref clock source
- to dpll_core_m5 clk
-Date: Mon, 5 May 2014 15:22:01 +0300
-Message-ID: <53678269.2000306@ti.com>
-References: <1399012324-20737-1-git-send-email-george.cherian@ti.com> <1399012324-20737-6-git-send-email-george.cherian@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399012324-20737-6-git-send-email-george.cherian-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jeffrey.t.kirsher-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, dborkman-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, ast-uqk4Ao+rVK5Wk0Htik3J/w@public.gmane.org, tklauser-93Khv+1bN0NyDzI6CaY1VQ@public.gmane.org, mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, bhutchings-s/n/eUQHGBpZroRs9YW3xA@public.gmane.org, zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+From: Soren Brinkmann <soren.brinkmann@xilinx.com>
+Subject: [PATCH] ARM: zynq: dt: Clean up device tree
+Date: Mon,  5 May 2014 10:16:08 -0700
+Message-ID: <1399310168-6099-1-git-send-email-soren.brinkmann@xilinx.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/02/2014 09:32 AM, George Cherian wrote:
-> cpsw_cpts_rft_clk has got the choice of 3 clocksources
->   -dpll_core_m4_ck
->   -dpll_core_m5_ck
->   -dpll_disp_m2_ck
->
-> By default dpll_core_m4_ck is selected, witn this as clock
-> source the CPTS doesnot work properly. It gives clockcheck errors
-> while running PTP.
->
->   clockcheck: clock jumped backward or running slower than expected!
->
-> By selecting dpll_core_m5_ck as the clocksource fixes this issue.
-> In AM335x dpll_core_m5_ck is the default clocksource.
->
-> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+ - Use generic node names
+ - Fix up some weird formatting and white spaces
+ - Update copyright info
 
-Acked-by: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+---
 
-> ---
->   drivers/clk/ti/clk-43xx.c | 16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
->
-> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
-> index 67c8de5..b4877e0 100644
-> --- a/drivers/clk/ti/clk-43xx.c
-> +++ b/drivers/clk/ti/clk-43xx.c
-> @@ -110,9 +110,25 @@ static struct ti_dt_clk am43xx_clks[] = {
->
->   int __init am43xx_dt_clk_init(void)
->   {
-> +	struct clk *clk1, *clk2;
-> +
->   	ti_dt_clocks_register(am43xx_clks);
->
->   	omap2_clk_disable_autoidle_all();
->
-> +	/*
-> +	 * cpsw_cpts_rft_clk  has got the choice of 3 clocksources
-> +	 * dpll_core_m4_ck, dpll_core_m5_ck and dpll_disp_m2_ck.
-> +	 * By default dpll_core_m4_ck is selected, witn this as clock
-> +	 * source the CPTS doesnot work properly. It gives clockcheck errors
-> +	 * while running PTP.
-> +	 * clockcheck: clock jumped backward or running slower than expected!
-> +	 * By selecting dpll_core_m5_ck as the clocksource fixes this issue.
-> +	 * In AM335x dpll_core_m5_ck is the default clocksource.
-> +	 */
-> +	clk1 = clk_get_sys(NULL, "cpsw_cpts_rft_clk");
-> +	clk2 = clk_get_sys(NULL, "dpll_core_m5_ck");
-> +	clk_set_parent(clk1, clk2);
-> +
->   	return 0;
->   }
->
+ arch/arm/boot/dts/zynq-7000.dtsi | 29 +++++++++++++++--------------
+ 1 file changed, 15 insertions(+), 14 deletions(-)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+index c1176abc34d9..bed6e0aed00a 100644
+--- a/arch/arm/boot/dts/zynq-7000.dtsi
++++ b/arch/arm/boot/dts/zynq-7000.dtsi
+@@ -1,5 +1,5 @@
+ /*
+- *  Copyright (C) 2011 Xilinx
++ *  Copyright (C) 2011 - 2014 Xilinx
+  *
+  * This software is licensed under the terms of the GNU General Public
+  * License version 2, as published by the Free Software Foundation, and
+@@ -55,7 +55,7 @@
+ 		interrupt-parent = <&intc>;
+ 		ranges;
+ 
+-		i2c0: zynq-i2c@e0004000 {
++		i2c0: i2c@e0004000 {
+ 			compatible = "cdns,i2c-r1p10";
+ 			status = "disabled";
+ 			clocks = <&clkc 38>;
+@@ -66,7 +66,7 @@
+ 			#size-cells = <0>;
+ 		};
+ 
+-		i2c1: zynq-i2c@e0005000 {
++		i2c1: i2c@e0005000 {
+ 			compatible = "cdns,i2c-r1p10";
+ 			status = "disabled";
+ 			clocks = <&clkc 39>;
+@@ -95,7 +95,7 @@
+ 			cache-level = <2>;
+ 		};
+ 
+-		uart0: uart@e0000000 {
++		uart0: serial@e0000000 {
+ 			compatible = "xlnx,xuartps";
+ 			status = "disabled";
+ 			clocks = <&clkc 23>, <&clkc 40>;
+@@ -104,7 +104,7 @@
+ 			interrupts = <0 27 4>;
+ 		};
+ 
+-		uart1: uart@e0001000 {
++		uart1: serial@e0001000 {
+ 			compatible = "xlnx,xuartps";
+ 			status = "disabled";
+ 			clocks = <&clkc 24>, <&clkc 41>;
+@@ -131,7 +131,7 @@
+ 			clock-names = "pclk", "hclk", "tx_clk";
+ 		};
+ 
+-		sdhci0: ps7-sdhci@e0100000 {
++		sdhci0: sdhci@e0100000 {
+ 			compatible = "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			clock-names = "clk_xin", "clk_ahb";
+@@ -141,7 +141,7 @@
+ 			reg = <0xe0100000 0x1000>;
+ 		} ;
+ 
+-		sdhci1: ps7-sdhci@e0101000 {
++		sdhci1: sdhci@e0101000 {
+ 			compatible = "arasan,sdhci-8.9a";
+ 			status = "disabled";
+ 			clock-names = "clk_xin", "clk_ahb";
+@@ -185,26 +185,27 @@
+ 			clocks = <&clkc 4>;
+ 		};
+ 
+-		ttc0: ttc0@f8001000 {
++		ttc0: timer@f8001000 {
+ 			interrupt-parent = <&intc>;
+-			interrupts = < 0 10 4 0 11 4 0 12 4 >;
++			interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
+ 			compatible = "cdns,ttc";
+ 			clocks = <&clkc 6>;
+ 			reg = <0xF8001000 0x1000>;
+ 		};
+ 
+-		ttc1: ttc1@f8002000 {
++		ttc1: timer@f8002000 {
+ 			interrupt-parent = <&intc>;
+-			interrupts = < 0 37 4 0 38 4 0 39 4 >;
++			interrupts = <0 37 4>, <0 38 4>, <0 39 4>;
+ 			compatible = "cdns,ttc";
+ 			clocks = <&clkc 6>;
+ 			reg = <0xF8002000 0x1000>;
+ 		};
+-		scutimer: scutimer@f8f00600 {
++
++		scutimer: timer@f8f00600 {
+ 			interrupt-parent = <&intc>;
+-			interrupts = < 1 13 0x301 >;
++			interrupts = <1 13 0x301>;
+ 			compatible = "arm,cortex-a9-twd-timer";
+-			reg = < 0xf8f00600 0x20 >;
++			reg = <0xf8f00600 0x20>;
+ 			clocks = <&clkc 4>;
+ 		} ;
+ 	};
+-- 
+1.9.2.1.g06c4abd
