@@ -1,94 +1,136 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 8/8] ARM: dts: rockchip: convert pinctrl nodes to new bindings
-Date: Mon, 05 May 2014 14:00:38 +0200
-Message-ID: <1719309.HLoKcrQoNG@diego>
-References: <11862890.WUjscWaP3U@diego>
+From: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Subject: [RFC] [v2 Patch 2/6] ARM: TI: Describe the ti reset DT entries
+Date: Mon, 5 May 2014 15:09:23 -0500
+Message-ID: <1399320567-3639-3-git-send-email-dmurphy@ti.com>
+References: <1399320567-3639-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11862890.WUjscWaP3U@diego>
+In-Reply-To: <1399320567-3639-1-git-send-email-dmurphy-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Introduce the grf syscon and convert the pinctrl drivers for rk3066 and rk3188
-to use it, instead of mapping the grf registers themselfs.
+Describe the TI reset DT entries for TI SoC's.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Signed-off-by: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/rk3066a.dtsi | 2 +-
- arch/arm/boot/dts/rk3188.dtsi  | 9 ++++-----
- arch/arm/boot/dts/rk3xxx.dtsi  | 9 +++++++--
- 3 files changed, 12 insertions(+), 8 deletions(-)
+ .../devicetree/bindings/reset/ti,reset.txt         |  103 ++++++++++++++++++++
+ 1 file changed, 103 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/ti,reset.txt
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 4d4dfbb..048c5de 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -79,7 +79,7 @@
- 
- 		pinctrl@20008000 {
- 			compatible = "rockchip,rk3066a-pinctrl";
--			reg = <0x20008000 0x150>;
-+			rockchip,grf = <&grf>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-diff --git a/arch/arm/boot/dts/rk3188.dtsi b/arch/arm/boot/dts/rk3188.dtsi
-index ed9a70a..a494fb0 100644
---- a/arch/arm/boot/dts/rk3188.dtsi
-+++ b/arch/arm/boot/dts/rk3188.dtsi
-@@ -75,17 +75,16 @@
- 
- 		pinctrl@20008000 {
- 			compatible = "rockchip,rk3188-pinctrl";
--			reg = <0x20008000 0xa0>,
--			      <0x20008164 0x1a0>;
--			reg-names = "base", "pull";
-+			rockchip,grf = <&grf>;
-+			rockchip,pmu = <&pmu>;
+diff --git a/Documentation/devicetree/bindings/reset/ti,reset.txt b/Documentation/devicetree/bindings/reset/ti,reset.txt
+new file mode 100644
+index 0000000..9d5c29c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/ti,reset.txt
+@@ -0,0 +1,103 @@
++Texas Instruments Reset Controller
++======================================
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
 +
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
- 
- 			gpio0: gpio0@0x2000a000 {
- 				compatible = "rockchip,rk3188-gpio-bank0";
--				reg = <0x2000a000 0x100>,
--				      <0x20004064 0x8>;
-+				reg = <0x2000a000 0x100>;
- 				interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&clk_gates8 9>;
- 
-diff --git a/arch/arm/boot/dts/rk3xxx.dtsi b/arch/arm/boot/dts/rk3xxx.dtsi
-index 26e5a96..2adf1cc9e 100644
---- a/arch/arm/boot/dts/rk3xxx.dtsi
-+++ b/arch/arm/boot/dts/rk3xxx.dtsi
-@@ -31,11 +31,16 @@
- 			reg = <0x1013c000 0x100>;
- 		};
- 
--		pmu@20004000 {
--			compatible = "rockchip,rk3066-pmu";
-+		pmu: pmu@20004000 {
-+			compatible = "rockchip,rk3066-pmu", "syscon";
- 			reg = <0x20004000 0x100>;
- 		};
- 
-+		grf: grf@20008000 {
-+			compatible = "syscon";
-+			reg = <0x20008000 0x200>;
++Specifying the reset entries for the IP module
++==============================================
++Parent module:
++This is the module node that contains the reset registers and bits.
++
++example:
++			prcm_resets: resets {
++				compatible = "ti,dra7-resets";
++				#reset-cells = <1>;
++			};
++
++Required parent properties:
++- compatible : Should be one of,
++		"ti,omap4-prm" for OMAP4 PRM instances
++		"ti,omap5-prm" for OMAP5 PRM instances
++		"ti,dra7-prm" for DRA7xx PRM instances
++		"ti,am4-prcm" for AM43xx PRCM instances
++		"ti,am3-prcm" for AM33xx PRCM instances
++
++Required child reset property:
++- compatible : Should be
++		"resets" for All TI SoCs
++
++example:
++		prm: prm@4ae06000 {
++			compatible = "ti,omap5-prm";
++			reg = <0x4ae06000 0x3000>;
++
++			prm_resets: resets {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				#reset-cells = <1>;
++			};
 +		};
 +
- 		gic: interrupt-controller@1013d000 {
- 			compatible = "arm,cortex-a9-gic";
- 			interrupt-controller;
++
++Reset node declaration
++==============================================
++The reset node is declared in a parent child relationship.  The main parent
++is the PRCM module which contains the base address.  The first child within
++the reset parent declares the target modules reset name.  This is followed by
++the control and status offsets.
++
++Within the first reset child node is a secondary child node which declares the
++reset signal of interest.  Under this node the control and status bits
++are declared.  These bits declare the bit mask for the target reset.
++
++
++Required properties:
++reg - This is the register offset from the PRCM parent.
++	This must be declared as:
++
++	reg = <control register offset>,
++		  <status register offset>;
++
++control-bit - This is the bit within the register which controls the reset
++	of the target module.  This is declared as a bit mask for the register.
++status-bit - This is the bit within the register which contains the status of
++	the reset of the target module.
++	This is declared as a bit mask for the register.
++
++example:
++&prm_resets {
++	dsp_rstctrl {
++		reg = <0x1c00>,
++			  <0x1c04>;
++
++		dsp_reset: dsp_reset {
++			control-bit = <0x01>;
++			status-bit = <0x01>;
++		};
++	};
++};
++
++
++
++Client Node Declaration
++==============================================
++This is the consumer of the parent node to declare what resets this
++particular module is interested in.
++
++example:
++	src: src@55082000 {
++		    resets = <&reset_src phandle>;
++			reset-names = "<reset_name>";
++	};
++
++Required Properties:
++reset_src - This is the parent DT entry for the reset controller
++phandle - This is the phandle of the specific reset to be used by the clien
++	driver.
++reset-names - This is the reset name of module that the device driver
++	needs to be able to reset.  This value must correspond to a value within
++	the reset controller array.
++
++example:
++resets = <&prm_resets &dsp_mmu_reset>;
++reset-names = "dsp_mmu_reset";
 -- 
-1.9.0
-
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
