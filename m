@@ -1,80 +1,110 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v4 0/4] net: Add APM X-Gene SoC Ethernet driver support
-Date: Mon,  5 May 2014 14:47:23 -0700
-Message-ID: <1399326447-2329-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [RFC] [v2 Patch 4/6] ARM: dts: am4372: Add prcm_resets node
+Date: Mon, 5 May 2014 15:09:25 -0500
+Message-ID: <1399320567-3639-5-git-send-email-dmurphy@ti.com>
+References: <1399320567-3639-1-git-send-email-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1399320567-3639-1-git-send-email-dmurphy@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com
+Cc: Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding APM X-Gene SoC Ethernet driver.
+Add the prcm_resets node to the prcm parent node.
 
-v4: Address comments from v3 review
-* MAINTAINERS: changed status to supported
-* Kconfig: made default to no
-* changed to bool data type wherever applicable
-* cleaned up single bit set and masking code
-* removed statistics counters masking
-* removed unnecessary OOM message printing
-* fixed dma_map_single and dma_unmap_single size parameter
-* changed set bits macro body using new set_bits function
+Add the am34xx_resets file to define the
+am34xx reset lines that are handled by this reset
+framework.
 
-v3: Address comments from v2 review
-* cleaned up set_desc and get_desc functions
-* added dtb mdio node and phy-handle subnode
-* renamed dtb phy-mode to phy-connection-type
-* added of_phy_connect call to connec to PHY
-* added empty line after last local variable declaration
-* removed type casting when not required
-* removed inline keyword from source files
-* removed CONFIG_CPU_BIG_ENDIAN ifdef
-
-v2
-* Completely redesigned ethernet driver
-* Added support to work with big endian kernel
-* Renamed dtb phyid entry to phy_addr
-* Changed dtb local-mac-address entry to byte string format
-* Renamed dtb eth8clk entry to menetclk
-
-v1
-* Initial version
-
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Ravi Patel <rapatel@apm.com>
-Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
 ---
+ arch/arm/boot/dts/am4372.dtsi        |    7 +++++
+ arch/arm/boot/dts/am43xx-resets.dtsi |   52 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 59 insertions(+)
+ create mode 100644 arch/arm/boot/dts/am43xx-resets.dtsi
 
-Iyappan Subramanian (4):
-  MAINTAINERS: Add entry for APM X-Gene SoC ethernet driver
-  Documentation: dts: Add bindings for APM X-Gene SoC ethernet driver
-  dts: Add bindings for APM X-Gene SoC ethernet driver
-  drivers: net: Add APM X-Gene SoC ethernet driver support.
-
- .../devicetree/bindings/net/apm-xgene-enet.txt     |   66 ++
- MAINTAINERS                                        |    8 +
- arch/arm64/boot/dts/apm-mustang.dts                |    4 +
- arch/arm64/boot/dts/apm-storm.dtsi                 |   27 +-
- drivers/net/ethernet/Kconfig                       |    1 +
- drivers/net/ethernet/Makefile                      |    1 +
- drivers/net/ethernet/apm/Kconfig                   |    1 +
- drivers/net/ethernet/apm/Makefile                  |    5 +
- drivers/net/ethernet/apm/xgene/Kconfig             |    9 +
- drivers/net/ethernet/apm/xgene/Makefile            |    6 +
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     |  807 +++++++++++++++++
- drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     |  353 ++++++++
- drivers/net/ethernet/apm/xgene/xgene_enet_main.c   |  936 ++++++++++++++++++++
- drivers/net/ethernet/apm/xgene/xgene_enet_main.h   |  131 +++
- 14 files changed, 2352 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
- create mode 100644 drivers/net/ethernet/apm/Kconfig
- create mode 100644 drivers/net/ethernet/apm/Makefile
- create mode 100644 drivers/net/ethernet/apm/xgene/Kconfig
- create mode 100644 drivers/net/ethernet/apm/xgene/Makefile
- create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
- create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
- create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.c
- create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.h
-
+diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+index d1f8707..e1ba7ed 100644
+--- a/arch/arm/boot/dts/am4372.dtsi
++++ b/arch/arm/boot/dts/am4372.dtsi
+@@ -84,6 +84,12 @@
+ 
+ 			prcm_clockdomains: clockdomains {
+ 			};
++
++			prcm_resets: resets {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				#reset-cells = <1>;
++			};
+ 		};
+ 
+ 		scrm: scrm@44e10000 {
+@@ -739,3 +745,4 @@
+ };
+ 
+ /include/ "am43xx-clocks.dtsi"
++/include/ "am43xx-resets.dtsi"
+diff --git a/arch/arm/boot/dts/am43xx-resets.dtsi b/arch/arm/boot/dts/am43xx-resets.dtsi
+new file mode 100644
+index 0000000..ef338ba
+--- /dev/null
++++ b/arch/arm/boot/dts/am43xx-resets.dtsi
+@@ -0,0 +1,52 @@
++/*
++ * Device Tree Source for AM43XX reset data
++ *
++ * Copyright (C) 2014 Texas Instruments, Inc.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++&prcm_resets {
++	icss_rstctrl {
++		reg = <0x810>,
++			  <0x814>;
++
++		icss_reset: icss_reset {
++			control-bit = <0x01>;
++			status-bit = <0x01>;
++		};
++	};
++
++	gfx_rstctrl {
++		reg = <0x410>,
++			  <0x414>;
++
++		gfx_reset: gfx_reset {
++			control-bit = <0x01>;
++			status-bit = <0x01>;
++		};
++	};
++
++	per_rstctrl {
++		reg = <0x2010>,
++			  <0x2014>;
++
++		iva_reset: iva_reset {
++			control-bit = <0x01>;
++			status-bit = <0x01>;
++		};
++	};
++
++	device_rstctrl {
++		reg = <0x4000>,
++			  <0x4004>;
++
++		device_reset: device_reset {
++			control-bit = <0x01>;
++			status-bit = <0x01>;
++		};
++	};
++
++};
 -- 
 1.7.9.5
+
