@@ -1,95 +1,104 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 4/8] pinctrl: rockchip: let pmu registers be supplied by a syscon
-Date: Mon, 05 May 2014 13:59:09 +0200
-Message-ID: <4931573.BTfMJeskVK@diego>
-References: <11862890.WUjscWaP3U@diego>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
+Date: Mon, 5 May 2014 16:28:02 -0600
+Message-ID: <CAErSpo6gYT34-sOvNgEdV+3wxv=Fdqtx7c1d-4577mFydLtZMg@mail.gmail.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
+ <20923376.buVzFR52Qe@wuerfel> <CAErSpo5-FXmVs8BWRYKz9Ln1g1Ls7_uo3oiPd32fUegf3d8hXQ@mail.gmail.com>
+ <5575019.Hr92MUuDnc@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11862890.WUjscWaP3U@diego>
+In-Reply-To: <5575019.Hr92MUuDnc@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Metcalf <cmetcalf-kv+TWInifGbQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently the pmu registers containing pin pull settings on the rk3188 are mapped
-locally when bank0 is instantiated. Add an alternative that can resolve the pmu
-from a syscon phandle.
+On Mon, May 5, 2014 at 2:55 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 05 May 2014 14:45:21 Bjorn Helgaas wrote:
+>> [+cc Ben, Chris]
+>>
+>> On Fri, May 2, 2014 at 12:59 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Friday 02 May 2014 10:54:59 Bjorn Helgaas wrote:
+>> >> > +static void of_dma_configure(struct device *dev)
+>> >> > +{
+>> >> > +     u64 dma_addr, paddr, size;
+>> >> > +     int ret;
+>> >> > +
+>> >> > +     dev->coherent_dma_mask = DMA_BIT_MASK(32);
+>> >> > +     if (!dev->dma_mask)
+>> >> > +             dev->dma_mask = &dev->coherent_dma_mask;
+>> >> > +
+>> >> > +     /*
+>> >> > +      * if dma-coherent property exist, call arch hook to setup
+>> >> > +      * dma coherent operations.
+>> >> > +      */
+>> >> > +     if (of_dma_is_coherent(dev->of_node)) {
+>> >> > +             set_arch_dma_coherent_ops(dev);
+>> >> > +             dev_dbg(dev, "device is dma coherent\n");
+>> >> > +     }
+>> >> > +
+>> >> > +     /*
+>> >> > +      * if dma-ranges property doesn't exist - just return else
+>> >> > +      * setup the dma offset
+>> >> > +      */
+>> >> > +     ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
+>> >> > +     if ((ret == -ENODEV) || (ret < 0)) {
+>> >> > +             dev_dbg(dev, "no dma range information to setup\n");
+>> >> > +             return;
+>> >> > +     }
+>> >> > +
+>> >> > +     /* DMA ranges found. Calculate and set dma_pfn_offset */
+>> >> > +     dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
+>> >> > +     dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
+>> >>
+>> >> Is this effectively the same as an IOMMU that applies a constant offset
+>> >> to the bus address?  Could or should this be done by adding a simple IOMMU
+>> >> driver instead of adding dma_pfn_offset to struct device?
+>> >
+>> > We currently have two dma_map_ops variants on ARM (plus another set for
+>> > coherent/noncoherent differences, but we can ignore that for the sake
+>> > of this discussion): one that handles linear mappings and one that
+>> > handles IOMMUs by calling into the linux/iommu.h APIs.
+>> >
+>> > I guess what you mean by 'a simple IOMMU driver' would be another
+>> > dma_map_ops implementation that is separate from real IOMMUs, right?
+>>
+>> I suppose so; it seems like the offset could be managed inside
+>> arm_dma_ops.  My idea of an IOMMU is something that maps bus addresses
+>> to physical memory addresses.  That's what we're doing here; it's just
+>> that the mapping function is very simple.  So why add something new in
+>> struct device for it?
+>>
+>> I think powerpc and tile do something similar in dma_direct_map_page()
+>> and tile_pci_dma_map_page() (they store the offset in struct
+>> dev_archdata).
+>
+> Ah, so the only question is whether to store it in dev_archdata or
+> in device. I think the argument for using struct device directly
+> was that it lets us access this field from architecture independent
+> code. It's not important to the overall design though: we could easily
+> put it in dev_archdata and call an architecture specific function to
+> set it, if there are good reasons for keeping it out of the generic
+> device structure.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
----
- drivers/pinctrl/pinctrl-rockchip.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+Well, it wasn't my *only* question, since I didn't know about the
+powerpc and tile usage originally :).  Putting it in dev_archdata does
+seem better because it's a similar solution to a similar problem, and
+it's less public.
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index b67771d..11ad643 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -38,6 +38,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/clk.h>
- #include <linux/regmap.h>
-+#include <linux/mfd/syscon.h>
- #include <dt-bindings/pinctrl/rockchip.h>
- 
- #include "core.h"
-@@ -164,6 +165,7 @@ struct rockchip_pinctrl {
- 	struct regmap			*regmap_base;
- 	int				reg_size;
- 	struct regmap			*regmap_pull;
-+	struct regmap			*regmap_pmu;
- 	struct device			*dev;
- 	struct rockchip_pin_ctrl	*ctrl;
- 	struct pinctrl_desc		pctl;
-@@ -438,6 +440,7 @@ static void rk2928_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
- #define RK3188_PULL_BITS_PER_PIN	2
- #define RK3188_PULL_PINS_PER_REG	8
- #define RK3188_PULL_BANK_STRIDE		16
-+#define RK3188_PULL_PMU_OFFSET		0x64
- 
- static void rk3188_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
- 				    int pin_num, struct regmap **regmap,
-@@ -447,8 +450,9 @@ static void rk3188_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
- 
- 	/* The first 12 pins of the first bank are located elsewhere */
- 	if (bank->bank_type == RK3188_BANK0 && pin_num < 12) {
--		*regmap = bank->regmap_pull;
--		*reg = 0;
-+		*regmap = info->regmap_pmu ? info->regmap_pmu
-+					   : bank->regmap_pull;
-+		*reg = info->regmap_pmu ? RK3188_PULL_PMU_OFFSET : 0;
- 		*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
- 		*bit = pin_num % RK3188_PULL_PINS_PER_REG;
- 		*bit *= RK3188_PULL_BITS_PER_PIN;
-@@ -1539,6 +1543,7 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 	struct rockchip_pinctrl *info;
- 	struct device *dev = &pdev->dev;
- 	struct rockchip_pin_ctrl *ctrl;
-+	struct device_node *np = pdev->dev.of_node, *node;
- 	struct resource *res;
- 	void __iomem *base;
- 	int ret;
-@@ -1587,6 +1592,14 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 						  &rockchip_regmap_config);
- 	}
- 
-+	/* try to find the optional reference to the pmu syscon */
-+	node = of_parse_phandle(np, "rockchip,pmu", 0);
-+	if (node) {
-+		info->regmap_pmu = syscon_node_to_regmap(node);
-+		if (IS_ERR(info->regmap_pmu))
-+			return PTR_ERR(info->regmap_pmu);
-+	}
-+
- 	ret = rockchip_gpiolib_register(pdev, info);
- 	if (ret)
- 		return ret;
--- 
-1.9.0
+I still wonder whether arm, powerpc, and tile (and I just noticed
+microblaze also has a similar dma_direct_map_page()) could all be
+handled by attaching devices to a generic trivial IOMMU driver
+parameterized with the appropriate constant offset.
 
+What arch-independent code would access this data?  I expect that
+drivers will use dma_map_page(), etc., so they should already have
+both the bus and the physical address and wouldn't need it.  Shouldn't
+generic code just rely on the DMA API, which might use an IOMMU or
+this dma_pfn_offset internally?
 
+Bjorn
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
