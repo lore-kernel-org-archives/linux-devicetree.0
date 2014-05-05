@@ -1,131 +1,28 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Mon, 5 May 2014 10:49:38 +0300
-Message-ID: <53674292.5050008@ti.com>
-References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com> <535FBC62.9050902@ti.com> <20140501190015.5739.86963@quantum>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/3] regulator: ltc3589: Add DT binding documentation
+Date: Mon, 05 May 2014 09:17:33 +0200
+Message-ID: <1399274253.3871.3.camel@paszta.hi.pengutronix.de>
+References: <1398789430-23897-1-git-send-email-p.zabel@pengutronix.de>
+	 <1398789430-23897-2-git-send-email-p.zabel@pengutronix.de>
+	 <20140501180428.GO3245@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140501190015.5739.86963@quantum>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140501180428.GO3245@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 05/01/2014 10:00 PM, Mike Turquette wrote:
-> Quoting Tero Kristo (2014-04-29 07:51:14)
->> On 04/29/2014 05:15 PM, Sourav Poddar wrote:
->>> We need "tbclk" clock data for the functioning of ehrpwm
->>> module. Hence, populating the required clock information
->>> in clock dts file.
->>>
->>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->>
->> Acked-by: Tero Kristo <t-kristo@ti.com>
->
-> Looks good to me.
->
-> Tero, just to be clear, are you planning on batching up OMAPish clock
-> patches and sending a pull request (once they have been reviewed on the
-> list)?
+Am Donnerstag, den 01.05.2014, 11:04 -0700 schrieb Mark Brown:
+> On Tue, Apr 29, 2014 at 06:37:09PM +0200, Philipp Zabel wrote:
+> > This patch adds the device tree binding documentation for Linear
+> > Technology LTC3589, LTC3589-1, and LTC3589-2 8-port regulators.
+> 
+> This is all good apart from the vendor prefix change thing.
 
-No, I haven't been planning on sending a pull-req, as I believe you 
-still want to ack the TI related clock driver patches yourself also. If 
-you want to change the setup I am of course willing to negotiate the 
-terms. :)
+Thanks, I'll change that and resubmit.
 
--Tero
-
->
-> Thanks,
-> Mike
->
->>
->>
->>> ---
->>> v2->v3
->>> - correct bitshifting
->>>
->>>    arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
->>>    drivers/clk/ti/clk-43xx.c            |    6 +++++
->>>    2 files changed, 54 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>> index 142009c..42d7b1f 100644
->>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>> @@ -87,6 +87,54 @@
->>>                clock-mult = <1>;
->>>                clock-div = <1>;
->>>        };
->>> +
->>> +     ehrpwm0_tbclk: ehrpwm0_tbclk {
->>> +             #clock-cells = <0>;
->>> +             compatible = "ti,gate-clock";
->>> +             clocks = <&dpll_per_m2_ck>;
->>> +             ti,bit-shift = <0>;
->>> +             reg = <0x0664>;
->>> +     };
->>> +
->>> +     ehrpwm1_tbclk: ehrpwm1_tbclk {
->>> +             #clock-cells = <0>;
->>> +             compatible = "ti,gate-clock";
->>> +             clocks = <&dpll_per_m2_ck>;
->>> +             ti,bit-shift = <1>;
->>> +             reg = <0x0664>;
->>> +     };
->>> +
->>> +     ehrpwm2_tbclk: ehrpwm2_tbclk {
->>> +             #clock-cells = <0>;
->>> +             compatible = "ti,gate-clock";
->>> +             clocks = <&dpll_per_m2_ck>;
->>> +             ti,bit-shift = <2>;
->>> +             reg = <0x0664>;
->>> +     };
->>> +
->>> +     ehrpwm3_tbclk: ehrpwm3_tbclk {
->>> +             #clock-cells = <0>;
->>> +             compatible = "ti,gate-clock";
->>> +             clocks = <&dpll_per_m2_ck>;
->>> +             ti,bit-shift = <4>;
->>> +             reg = <0x0664>;
->>> +     };
->>> +
->>> +     ehrpwm4_tbclk: ehrpwm4_tbclk {
->>> +             #clock-cells = <0>;
->>> +             compatible = "ti,gate-clock";
->>> +             clocks = <&dpll_per_m2_ck>;
->>> +             ti,bit-shift = <5>;
->>> +             reg = <0x0664>;
->>> +     };
->>> +
->>> +     ehrpwm5_tbclk: ehrpwm5_tbclk {
->>> +             #clock-cells = <0>;
->>> +             compatible = "ti,gate-clock";
->>> +             clocks = <&dpll_per_m2_ck>;
->>> +             ti,bit-shift = <6>;
->>> +             reg = <0x0664>;
->>> +     };
->>>    };
->>>    &prcm_clocks {
->>>        clk_32768_ck: clk_32768_ck {
->>> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
->>> index 67c8de5..527a43d 100644
->>> --- a/drivers/clk/ti/clk-43xx.c
->>> +++ b/drivers/clk/ti/clk-43xx.c
->>> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
->>>        DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
->>>        DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
->>>        DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
->>> +     DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
->>> +     DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
->>> +     DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
->>> +     DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
->>> +     DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
->>> +     DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
->>>        { .node_name = NULL },
->>>    };
->>>
->>>
->>
-
+regards
+Philipp
