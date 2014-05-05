@@ -1,109 +1,141 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv5 RFC 12/15] hwspinlock/core: add OF helper to parse reserved
- locks
-Date: Mon, 5 May 2014 16:44:25 -0500
-Message-ID: <53680639.1080405@ti.com>
-References: <1398904476-26200-1-git-send-email-s-anna@ti.com> <1398904476-26200-13-git-send-email-s-anna@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398904476-26200-13-git-send-email-s-anna@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robherring2@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 1/2] ARM: dts: Add node labels to 5420
+Date: Mon,  5 May 2014 14:55:31 +0530
+Message-ID: <1399281933-31064-2-git-send-email-arun.kk@samsung.com>
+References: <1399281933-31064-1-git-send-email-arun.kk@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399281933-31064-1-git-send-email-arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, arunkk.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Adding labels to nodes which do not have it yet
+in exynos5420.dtsi. This is done so as to use reference
+based node updation in board files.
 
-On 04/30/2014 07:34 PM, Suman Anna wrote:
-> The property 'hwlock-reserved-locks' will be used to represent
-> the number of locks to be reserved for clients that would need
-> to request/operate on specific locks. A new OF helper function,
-> of_hwspin_lock_get_num_reserved_locks(), is added to minimize
-> duplication in different platform implementations.
-> 
-> The function will return a value of 0 if the property is not
-> defined, so as to support a default behavior of marking all
-> locks as unused and open for anonymous allocations.
-> 
-> Signed-off-by: Suman Anna <s-anna@ti.com>
-> ---
->  .../devicetree/bindings/hwlock/hwlock.txt          |  3 +++
->  drivers/hwspinlock/hwspinlock_core.c               | 25 ++++++++++++++++++++++
->  include/linux/hwspinlock.h                         |  1 +
->  3 files changed, 29 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
-> index d538a9b..88d16d2 100644
-> --- a/Documentation/devicetree/bindings/hwlock/hwlock.txt
-> +++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
-> @@ -18,6 +18,9 @@ Common properties:
->  			property is needed on hwlock devices, where the number
->  			of supported locks within a hwlock device cannot be
->  			read from a register.
-> +- hwlock-reserved-locks: Number of locks to reserve for clients requiring
-> +			specific locks. This value cannot exceed the value of
-> +			hwlock-num-locks.
+Signed-off-by: Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5420.dtsi |   26 +++++++++++++-------------
+ 1 file changed, 13 insertions(+), 13 deletions(-)
 
-Any suggestions here on the approach? This property falls into a gray
-area as well, as the current approach is somewhat limiting (it doesn't
-support sparse reserved locks, and expects them at the beginning of the
-lock range).
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index c3a9a66..0d1dea8 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -125,7 +125,7 @@
+ 		clock-names = "pll_ref", "pll_in", "sclk_audio", "sclk_pcm_in";
+ 	};
+ 
+-	codec@11000000 {
++	mfc: codec@11000000 {
+ 		compatible = "samsung,mfc-v7";
+ 		reg = <0x11000000 0x10000>;
+ 		interrupts = <0 96 0>;
+@@ -169,7 +169,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	mct@101C0000 {
++	mct: mct@101C0000 {
+ 		compatible = "samsung,exynos4210-mct";
+ 		reg = <0x101C0000 0x800>;
+ 		interrupt-controller;
+@@ -270,7 +270,7 @@
+ 		interrupts = <0 47 0>;
+ 	};
+ 
+-	rtc@101E0000 {
++	rtc: rtc@101E0000 {
+ 		clocks = <&clock CLK_RTC>;
+ 		clock-names = "rtc";
+ 		status = "disabled";
+@@ -430,22 +430,22 @@
+ 		status = "disabled";
+ 	};
+ 
+-	serial@12C00000 {
++	uart_0: serial@12C00000 {
+ 		clocks = <&clock CLK_UART0>, <&clock CLK_SCLK_UART0>;
+ 		clock-names = "uart", "clk_uart_baud0";
+ 	};
+ 
+-	serial@12C10000 {
++	uart_1: serial@12C10000 {
+ 		clocks = <&clock CLK_UART1>, <&clock CLK_SCLK_UART1>;
+ 		clock-names = "uart", "clk_uart_baud0";
+ 	};
+ 
+-	serial@12C20000 {
++	uart_2: serial@12C20000 {
+ 		clocks = <&clock CLK_UART2>, <&clock CLK_SCLK_UART2>;
+ 		clock-names = "uart", "clk_uart_baud0";
+ 	};
+ 
+-	serial@12C30000 {
++	uart_3: serial@12C30000 {
+ 		clocks = <&clock CLK_UART3>, <&clock CLK_SCLK_UART3>;
+ 		clock-names = "uart", "clk_uart_baud0";
+ 	};
+@@ -465,14 +465,14 @@
+ 		#phy-cells = <0>;
+ 	};
+ 
+-	dp-controller@145B0000 {
++	dp: dp-controller@145B0000 {
+ 		clocks = <&clock CLK_DP1>;
+ 		clock-names = "dp";
+ 		phys = <&dp_phy>;
+ 		phy-names = "dp";
+ 	};
+ 
+-	fimd@14400000 {
++	fimd: fimd@14400000 {
+ 		samsung,power-domain = <&disp_pd>;
+ 		clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
+ 		clock-names = "sclk_fimd", "fimd";
+@@ -632,7 +632,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	hdmi@14530000 {
++	hdmi: hdmi@14530000 {
+ 		compatible = "samsung,exynos4212-hdmi";
+ 		reg = <0x14530000 0x70000>;
+ 		interrupts = <0 95 0>;
+@@ -644,7 +644,7 @@
+ 		status = "disabled";
+ 	};
+ 
+-	mixer@14450000 {
++	mixer: mixer@14450000 {
+ 		compatible = "samsung,exynos5420-mixer";
+ 		reg = <0x14450000 0x10000>;
+ 		interrupts = <0 94 0>;
+@@ -715,7 +715,7 @@
+ 		clock-names = "tmu_apbif", "tmu_triminfo_apbif";
+ 	};
+ 
+-        watchdog@101D0000 {
++        watchdog: watchdog@101D0000 {
+ 		compatible = "samsung,exynos5420-wdt";
+ 		reg = <0x101D0000 0x100>;
+ 		interrupts = <0 42 0>;
+@@ -724,7 +724,7 @@
+ 		samsung,syscon-phandle = <&pmu_system_controller>;
+         };
+ 
+-	sss@10830000 {
++	sss: sss@10830000 {
+ 		compatible = "samsung,exynos4210-secss";
+ 		reg = <0x10830000 0x10000>;
+ 		interrupts = <0 112 0>;
+-- 
+1.7.9.5
 
-regards
-Suman
-
->  - hwlock-base-id:	An unique base Id for the locks for a particular hwlock
->  			device. This property is mandatory ONLY if a SoC has
->  			several hwlock devices.
-> diff --git a/drivers/hwspinlock/hwspinlock_core.c b/drivers/hwspinlock/hwspinlock_core.c
-> index e05cea8..e74b55b 100644
-> --- a/drivers/hwspinlock/hwspinlock_core.c
-> +++ b/drivers/hwspinlock/hwspinlock_core.c
-> @@ -286,6 +286,31 @@ int of_hwspin_lock_get_base_id(struct device_node *dn)
->  EXPORT_SYMBOL_GPL(of_hwspin_lock_get_base_id);
->  
->  /**
-> + * of_hwspin_lock_get_num_reserved_locks() - retrieve number of reserved locks
-> + * @dn: device node pointer
-> + *
-> + * This is an OF helper function that can be called by the underlying platform
-> + * specific implementations, to retrieve the number of locks to reserve from
-> + * the hwspinlock device instance's base id. The hwlock-reserved-locks DT
-> + * property needs to be defined for requesting any DT-based locks.
-> + *
-> + * Returns a positive number of locks on success, a default value of 0 if the
-> + * property is missing or an appropriate error code as returned by the OF layer
-> + */
-> +int of_hwspin_lock_get_num_reserved_locks(struct device_node *dn)
-> +{
-> +	unsigned int val = 0;
-> +	int ret;
-> +
-> +	ret = of_property_read_u32(dn, "hwlock-reserved-locks", &val);
-> +	if (!ret || ret == -EINVAL)
-> +		ret = val;
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(of_hwspin_lock_get_num_reserved_locks);
-> +
-> +/**
->   * of_hwspin_lock_get_num_locks() - OF helper to retrieve number of locks
->   * @dn: device node pointer
->   *
-> diff --git a/include/linux/hwspinlock.h b/include/linux/hwspinlock.h
-> index d120035..d18431f 100644
-> --- a/include/linux/hwspinlock.h
-> +++ b/include/linux/hwspinlock.h
-> @@ -69,6 +69,7 @@ int of_hwspin_lock_simple_xlate(struct hwspinlock_device *bank,
->  				const struct of_phandle_args *hwlock_spec);
->  int of_hwspin_lock_get_base_id(struct device_node *dn);
->  int of_hwspin_lock_get_num_locks(struct device_node *dn);
-> +int of_hwspin_lock_get_num_reserved_locks(struct device_node *dn);
->  int hwspin_lock_register(struct hwspinlock_device *bank, struct device *dev,
->  		const struct hwspinlock_ops *ops, int base_id, int num_locks,
->  		int num_reserved_locks);
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
