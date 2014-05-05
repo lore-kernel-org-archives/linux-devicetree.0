@@ -1,113 +1,74 @@
-From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 0/5] MCPM backend for Exynos5420
-Date: Mon,  5 May 2014 21:56:56 +0530
-Message-ID: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH 1/4] ARM: STi: DT: add keyscan for stih415
+Date: Mon,  5 May 2014 17:38:37 +0200
+Message-ID: <1399304320-18197-2-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Giuseppe Condorelli <giuseppe.condorelli@st.com>
 List-Id: devicetree@vger.kernel.org
 
-This is v5 of the series adding MCPM backend support for SMP secondary boot
-and core switching on Samsung's Exynos5420. The patches are based on the mcpm
-support added for Exynos5420 in the Chromium kernel repository here:
-https://chromium.googlesource.com/chromiumos/third_party/kernel-next/+/chromeos-3.8
+Add keyscan support for stih415.
+It is put disabled by default because it is not enabled on all boards
+Also there are PIOs conflict with already claimed lines.
 
-This patchset depends on:
-- [v2,1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-(https://patchwork.kernel.org/patch/4101091/)
+Signed-off-by: Giuseppe Condorelli <giuseppe.condorelli@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ arch/arm/boot/dts/stih415-pinctrl.dtsi | 16 ++++++++++++++++
+ arch/arm/boot/dts/stih415.dtsi         | 12 ++++++++++++
+ 2 files changed, 28 insertions(+)
 
-The patches have been prepared on linux-next(20140502) and tested on SMDK5420
-EVT1 using the "/dev/b.L_switcher" user interface. Secondary core boot-up has
-also been tested on an Exynos5420-based chromebook.
-
-Changes since v4:
-Addressed the following comments from Nicolas Pitre:
-	- Fixed the location of L2 prefetching disable code.
-	- Fixed the location of the "TODO" comment.
-	- Fixed a possible race in mcpm cluster state check in
-	  exynos_power_up().
-	
-Changes since v3:
-	- Rebased on top of the latest SYSRAM DT patchset from Sachin Kamat.
-
-Addressed the following comments from Lorenzo Pieralisi and Nicolas Pitre:
-	- Dropped the patch "arm: exynos: Add /dev/bL_status user interface on
-	  Exynos5420".
-	- Fixed the header ordering and removed unnecessary header inclusions.
-	- Made the code symmetric in exynos_cluster_power_control().
-	- Fixed the error path in exynos_power_up.
-	- Got rid of "cnt" variable used for last man checking.
-	- Removed stale comments.
-	- Replaced "soc_is" with "of_find_compatible_node" check for exynos5420.
-	- Added L2 prefetching disable code needed during A15 power down.
-
-Changes since v2:
-Addressed the following comments from Nicolas Pitre and Daniel Lezcano:
-	- Added generic common (cluster) configuration functions to pm.c
-	  which may be used by other subsystems.
-	- Removed unused "cpumask" variable in mcpm code.
-	- Re-worked exynos_power_down_finish() referencing the tc2_pm code.
-	- Removed the status checks in core and cluster power functions. We
-	  just set the power control bit and do not check the previous state
-	  anymore.
-	- Removed incorrect jiffies timeout usage in path where IRQs are
-	  disabled.
-
-Changes since v1:
-Addressed the following comments from Dave Martin and Nicolas Pitre:
-	- Fixed help text for EXYNOS5420_MCPM symbol.
-	- Removed mcpm-exynos-setup.S file and added similar code from tc2_pm.c.
-	- Changed the spinlock name from "bl_lock" to "exynos_mcpm_lock".
-	- Removed snoop enable/disable calls due to possible cpuidle issue and
-	  not having numbers proving a significant power savings. Dropped the
-	  "drivers/bus: arm-cci: Add common control interface for ACE ports"
-	  patch from v1 as it was no longer needed.
-	- Created a macro for exynos-specific v7_exit_coherency_flush which
-	  handles an erratum. This was done to prevent duplication of code.
-	- Removed "outer_flush_all" call.
-	- Removed redundant dsb in power_down function.
-	- Removed unnecessary initialization of global variables to zero.
-	- Split the /dev/bL_status debug interface into another patch.
-	- Fixed error handling in exynos_mcpm_init().
-	- Called mcpm_smp_set_ops directly from exynos_mcpm_init().
-	- Added a TODO for supporting cluster down on exynos5420.
-
-NOTE:
-- Have added Leela Krishna's generic cpu power control function series
-  as part of this patchset.
-- Only the patch "arm: exynos: Add MCPM call-back functions" has changed
-  from v3.
-- I have tested with and without the erratum 799270 workaround and both
-  work fine. I have kept the erratum fix for the time being.
-
-Abhilash Kesavan (2):
-  arm: exynos: Add generic cluster power control functions
-  arm: exynos: Add MCPM call-back functions
-
-Andrew Bresticker (1):
-  ARM: dts: exynos5420: add CCI node
-
-Leela Krishna Amudala (2):
-  ARM: EXYNOS: Add generic cpu power control functions for all exynos
-    based SoCs
-  ARM: EXYNOS: use generic exynos cpu power control functions
-
- arch/arm/boot/dts/exynos5420.dtsi  |   27 +++
- arch/arm/mach-exynos/Kconfig       |    8 +
- arch/arm/mach-exynos/Makefile      |    2 +
- arch/arm/mach-exynos/common.h      |    6 +
- arch/arm/mach-exynos/mcpm-exynos.c |  344 ++++++++++++++++++++++++++++++++++++
- arch/arm/mach-exynos/platsmp.c     |    9 +-
- arch/arm/mach-exynos/pm.c          |   66 +++++++
- arch/arm/mach-exynos/regs-pmu.h    |   15 ++
- 8 files changed, 471 insertions(+), 6 deletions(-)
- create mode 100644 arch/arm/mach-exynos/mcpm-exynos.c
-
+diff --git a/arch/arm/boot/dts/stih415-pinctrl.dtsi b/arch/arm/boot/dts/stih415-pinctrl.dtsi
+index 81df870..8509a03 100644
+--- a/arch/arm/boot/dts/stih415-pinctrl.dtsi
++++ b/arch/arm/boot/dts/stih415-pinctrl.dtsi
+@@ -102,6 +102,22 @@
+ 				};
+ 			};
+ 
++			keyscan {
++				pinctrl_keyscan: keyscan {
++					st,pins {
++						keyin0 = <&PIO0 2 ALT2 IN>;
++						keyin1 = <&PIO0 3 ALT2 IN>;
++						keyin2 = <&PIO0 4 ALT2 IN>;
++						keyin3 = <&PIO2 6 ALT2 IN>;
++
++						keyout0 = <&PIO1 6 ALT2 OUT>;
++						keyout1 = <&PIO1 7 ALT2 OUT>;
++						keyout2 = <&PIO0 6 ALT2 OUT>;
++						keyout3 = <&PIO2 7 ALT2 OUT>;
++					};
++				};
++			};
++
+ 			sbc_i2c0 {
+ 				pinctrl_sbc_i2c0_default: sbc_i2c0-default {
+ 					st,pins {
+diff --git a/arch/arm/boot/dts/stih415.dtsi b/arch/arm/boot/dts/stih415.dtsi
+index d89064c..ba0905c 100644
+--- a/arch/arm/boot/dts/stih415.dtsi
++++ b/arch/arm/boot/dts/stih415.dtsi
+@@ -206,5 +206,17 @@
+ 			pinctrl-0	= <&pinctrl_ir>;
+ 			resets		= <&softreset STIH415_IRB_SOFTRESET>;
+ 		};
++
++		keyscan: keyscan@fe4b0000 {
++			compatible = "st,sti-keyscan";
++			status = "disabled";
++			reg = <0xfe4b0000 0x2000>;
++			interrupts = <GIC_SPI 212 IRQ_TYPE_NONE>;
++			clocks = <&CLK_SYSIN>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&pinctrl_keyscan>;
++			resets	= <&powerdown STIH415_KEYSCAN_POWERDOWN>,
++				  <&softreset STIH415_KEYSCAN_SOFTRESET>;
++		};
+ 	};
+ };
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
