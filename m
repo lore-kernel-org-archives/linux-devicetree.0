@@ -1,92 +1,34 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv3 1/5] Input: add common DT binding for touchscreens
-Date: Mon, 5 May 2014 13:12:02 -0700
-Message-ID: <20140505201202.GH25949@atomide.com>
-References: <1398470179-20880-1-git-send-email-sre@kernel.org>
- <1398470179-20880-2-git-send-email-sre@kernel.org>
- <20140505194125.GD25949@atomide.com>
- <20140505195139.GA26978@core.coreip.homeip.net>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
+Date: Mon, 5 May 2014 15:14:18 +0530
+Message-ID: <53675D72.70103@ti.com>
+References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com> <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com> <534506B1.4040908@samsung.com> <CAPdUM4M109_kzY6cUMJQPSwgazvWmNDWL1JeXgiqnzvH8dhK2Q@mail.gmail.com> <53451A60.4050803@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140505195139.GA26978@core.coreip.homeip.net>
+In-Reply-To: <53451A60.4050803@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Sebastian Reichel <sre@ring0.de>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Andrzej Hajda <a.hajda@samsung.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kukjin Kim <kgene.kim@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rahul Sharma <rahul.sharma@samsung.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Dmitry Torokhov <dmitry.torokhov@gmail.com> [140505 12:52]:
-> On Mon, May 05, 2014 at 12:41:26PM -0700, Tony Lindgren wrote:
-> > * Sebastian Reichel <sre@kernel.org> [140425 16:56]:
-> > > Add common DT binding documentation for touchscreen devices and
-> > > implement input_parse_touchscreen_of_params, which parses the common
-> > > properties and configures the input device accordingly.
-> > > 
-> > > The method currently does not interpret the axis inversion properties,
-> > > since there is no matching flag in the generic linux input device.
-> > > 
-> > > Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> > > ---
-> > >  .../bindings/input/touchscreen/touchscreen.txt     | 27 +++++++++++++++++
-> > >  drivers/input/input.c                              | 34 ++++++++++++++++++++++
-> > >  include/linux/input.h                              |  8 +++++
-> > >  3 files changed, 69 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> > > new file mode 100644
-> > > index 0000000..d8e0616
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> > > @@ -0,0 +1,27 @@
-> > > +General Touchscreen Properties:
-> > > +
-> > > +Optional properties for Touchscreens:
-> > > + - touchscreen-size-x		: horizontal resolution of touchscreen
-> > > +				  (in pixels)
-> > > + - touchscreen-size-y		: vertical resolution of touchscreen
-> > > +				  (in pixels)
-> > > + - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
-> > > +				  dependent on the controller)
-> > > + - touchscreen-fuzz-x		: horizontal noise value of the absolute input
-> > > +				  device (in pixels)
-> > > + - touchscreen-fuzz-y		: vertical noise value of the absolute input
-> > > +				  device (in pixels)
-> > > + - touchscreen-fuzz-pressure	: pressure noise value of the absolute input
-> > > +				  device (arbitrary range dependent on the
-> > > +				  controller)
+Hi,
+
+On Wednesday 09 April 2014 03:31 PM, Sylwester Nawrocki wrote:
+> Hi,
 > 
-> Fuzz seems like linux-specific property, not generic one.
+> On 09/04/14 11:12, Rahul Sharma wrote:
+>> Idea looks good. How about keeping compatible which is independent
+>> of SoC, something like "samsung,exynos-simple-phy" and provide Reg
+>> and Bit through phy provider node. This way we can avoid SoC specific
+>> hardcoding in phy driver and don't need to look into dt bindings for
+>> each new SoC.
 > 
-> 
-> > > + - touchscreen-inverted-x	: X axis is inverted (boolean)
-> > > + - touchscreen-inverted-y	: Y axis is inverted (boolean)
-> > 
-> > We probably also need something to swap x and y depending on the
-> > display orientation in addition to the touchscreen-inverted-x and y.
-> > Just swapping x and y is not enough depending if we rotate by 270
-> > degrees instead of 90 degrees.
-> > 
-> > Naturally that part can be added later.
-> 
-> So far we've been relying on upper layers (such as tslib) to perform
-> such transformations rather than re-implementing it in every driver. Are
-> we saying that we need to implement this in input core?
+> I believe it is a not recommended approach.
 
-We seem to have that already partially implemented at least with
-ti,swap-xy in Documentation/devicetree/bindings/input/ads7846.txt.
+Why not? We should try to avoid hard coding in the driver code. Moreover by
+avoiding hardcoding we can make it a generic driver for single bit PHYs.
 
-But that only works for the 90 degree rotation case as it's missing
-something similar to touchscreen-inverted-x I just noticed few days
-ago while trying to make some legacy code disappear :)
-
-No idea where rotation should be specified. But if the panel is
-rotated based on the DT property or kernel cmdline, probably the
-touchscreen should be too? In most cases touchscreens are integrated
-together with the LCD panel, and they are not separate like other
-input devices.
-
-Regards,
-
-Tony
+Cheers
+Kishon
