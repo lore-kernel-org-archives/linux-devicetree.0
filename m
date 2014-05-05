@@ -1,62 +1,78 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: [PATCHv3 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
- controller
-Date: Mon, 5 May 2014 16:16:52 -0700
-Message-ID: <ba35254f-4ba5-4b2c-8056-cde5c693b0ff@CH1EHSMHS009.ehs.local>
-References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
- <1399330337-16748-2-git-send-email-tthayer@altera.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v3 4/7] ARM: dts: dra7-clock: Add "l3init_960m_gfclk" clock gate
+Date: Mon, 5 May 2014 12:54:43 +0300
+Message-ID: <1399283686-6127-5-git-send-email-rogerq@ti.com>
+References: <1399283686-6127-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399330337-16748-2-git-send-email-tthayer@altera.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tthayer@altera.com
-Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1399283686-6127-1-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: kishon@ti.com, tony@atomide.com, balbi@ti.com, bcousson@baylibre.com
+Cc: george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Roger Quadros <rogerq@ti.com>, Tero Kristo <t-kristo@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thor,
+This clock gate description is missing in the older Reference manuals.
+It is present on the SoC to provide 960MHz reference clock to the
+internal USB PHYs.
 
-On Mon, 2014-05-05 at 05:52PM -0500, tthayer@altera.com wrote:
-> From: Thor Thayer <tthayer@altera.com>
->=20
-> Addition of the Altera SDRAM controller bindings and device
-> tree changes to the Altera SoC project. The "syscon" parameter
-> is included here because the SDRAM EDAC bits are shared with the SDRA=
-M
-> configuration bits.
-> ---
-> v2: Changes to SoC SDRAM EDAC code.
->=20
-> V3: Implement code suggestions for SDRAM EDAC code.
->=20
-> Signed-off-by: Thor Thayer <tthayer@altera.com>
-> ---
->  .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++++=
-++++
->  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
->  2 files changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/altera/socf=
-pga-sdram.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdr=
-am.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> new file mode 100644
-> index 0000000..525cb76
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> @@ -0,0 +1,14 @@
-> +Altera SOCFPGA SDRAM Controller
-> +
-> +Required properties:
-> +- compatible : "altr,sdr-ctl", "syscon";
-> +                Note that syscon is invoked for this device to suppo=
-rt the FPGA
-> +		bridge driver, EDAC driver and other devices that share the
-> +		registers.
+Reference: DRA75x_DRA74x_ES1.1_NDA_TRM_vO.pdf, pg. 900,
+Table 3-812. CM_COREAON_L3INIT_60M_GFCLK_CLKCTRL
 
-This sounds like implementation specifics, which shouldn't be part of
-the bindings.
+Use l3init_960m_gfclk as parent of usb_otg_ss1_refclk960m and
+usb_otg_ss2_refclk960m.
 
-	S=C3=B6ren
+CC: Beno=C3=AEt Cousson <bcousson@baylibre.com>
+CC: Tero Kristo <t-kristo@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 12 ++++++++++--
+ 1 file changed, 10 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/d=
+ra7xx-clocks.dtsi
+index cfb8fc7..c767687 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1386,6 +1386,14 @@
+ 		ti,dividers =3D <1>, <8>;
+ 	};
+=20
++	l3init_960m_gfclk: l3init_960m_gfclk {
++		#clock-cells =3D <0>;
++		compatible =3D "ti,gate-clock";
++		clocks =3D <&dpll_usb_clkdcoldo>;
++		ti,bit-shift =3D <8>;
++		reg =3D <0x06c0>;
++	};
++
+ 	dss_32khz_clk: dss_32khz_clk {
+ 		#clock-cells =3D <0>;
+ 		compatible =3D "ti,gate-clock";
+@@ -1533,7 +1541,7 @@
+ 	usb_otg_ss1_refclk960m: usb_otg_ss1_refclk960m {
+ 		#clock-cells =3D <0>;
+ 		compatible =3D "ti,gate-clock";
+-		clocks =3D <&dpll_usb_clkdcoldo>;
++		clocks =3D <&l3init_960m_gfclk>;
+ 		ti,bit-shift =3D <8>;
+ 		reg =3D <0x13f0>;
+ 	};
+@@ -1541,7 +1549,7 @@
+ 	usb_otg_ss2_refclk960m: usb_otg_ss2_refclk960m {
+ 		#clock-cells =3D <0>;
+ 		compatible =3D "ti,gate-clock";
+-		clocks =3D <&dpll_usb_clkdcoldo>;
++		clocks =3D <&l3init_960m_gfclk>;
+ 		ti,bit-shift =3D <8>;
+ 		reg =3D <0x1340>;
+ 	};
+--=20
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
