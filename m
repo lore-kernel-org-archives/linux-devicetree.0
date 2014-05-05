@@ -1,33 +1,77 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 3/9] ARM: Kirkwood: Add node for audio codec
-Date: Sun, 4 May 2014 21:21:18 -0400
-Message-ID: <20140505012118.GG28159@titan.lakedaemon.net>
-References: <1399141819-23924-1-git-send-email-andrew@lunn.ch>
- <1399141819-23924-4-git-send-email-andrew@lunn.ch>
+From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Subject: Re: [PATCH 0/2] Add support for sii9234 chip
+Date: Mon, 05 May 2014 16:15:03 +0200
+Message-ID: <53679CE7.3070202@samsung.com>
+References: <1397216910-15904-1-git-send-email-t.stanislaws@samsung.com>
+ <20140503231726.GA20212@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399141819-23924-4-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140503231726.GA20212@kroah.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, arnd@arndb.de, linux-doc@vger.kernel.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, robh+dt@kernel.org, ben-linux@fluff.org, grant.likely@linaro.org, kgene.kim@samsung.com, m.szyprowski@samsung.com, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 03, 2014 at 08:30:13PM +0200, Andrew Lunn wrote:
-> Instantiate the audio codec via a DT node.
+On 05/04/2014 01:17 AM, Greg KH wrote:
+> On Fri, Apr 11, 2014 at 01:48:28PM +0200, Tomasz Stanislawski wrote:
+>> Hi everyone,
+>> This patchset adds support for sii9234 HD Mobile Link Bridge.  The chip is used
+>> to convert HDMI signal into MHL.  The driver enables HDMI output on Trats and
+>> Trats2 boards.
+>>
+>> The code is based on the driver [1] developed by:
+>>        Adam Hampson <ahampson@sta.samsung.com>
+>>        Erik Gilling <konkers@android.com>
+>> with additional contributions from:
+>>        Shankar Bandal <shankar.b@samsung.com>
+>>        Dharam Kumar <dharam.kr@samsung.com>
+>>
+>> The drivers architecture was greatly simplified and transformed into a form
+>> accepted (hopefully) by opensource community.  The main differences from
+>> original code are:
+>> * using single I2C client instead of 4 subclients
+>> * remove all logic non-related to establishing HDMI link
+>> * simplify error handling
+>> * rewrite state machine in interrupt handler
+>> * wakeup and discovery triggered by an extcon event
+>> * integrate with Device Tree
+>>
+>> For now, the driver is added to drivers/misc/ directory because it has neigher
+>> userspace nor kernel interface.  The chip is capable of receiving and
+>> processing CEC events, so the driver may export an input device in /dev/ in the
+>> future.  However CEC could be also handled by HDMI driver.
+>>
+>> I kindly ask for suggestions about the best location for this driver.
 > 
-> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> ---
->  arch/arm/boot/dts/kirkwood-t5325.dts | 8 ++++++++
->  1 file changed, 8 insertions(+)
+> It really is an extcon driver, so why not put it in drivers/extcon?  And
+> that might solve any build issues you have if you don't select extcon in
+> your .config file and try to build this code :)
+> 
+> thanks,
 
-Patches 3, 4, and 7 applied to mvebu/dt
+Hi Greg,
+Thank you for your comments.
 
-thx,
+As I understand, drivers/extcon contains only extcon providers.
+This driver is an extcon client, so mentioned location may not be adequate.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I am surprised that there are no comments about this driver.
+Sii9234 chip is present on many exynos based boards/phones
+and HDMI subsystem will not work without this code.
+
+Regards,
+Tomasz Stanislawski
+
+> 
+> greg k-h
+> 
