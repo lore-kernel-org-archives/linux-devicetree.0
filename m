@@ -1,60 +1,86 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 19/20] ARM: mvebu: Add Device Tree description of the xHCI host on Armada 375
-Date: Tue,  6 May 2014 02:14:14 +0200
-Message-ID: <1399335255-589-20-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the
+ Broadcom BCM63138 DSL SoC
+Date: Mon, 5 May 2014 15:41:43 -0700
+Message-ID: <CAGVrzcaoxiwTzduK7_uTLsM=oyzT_2FYkiSS=m0rz5AEJrJRkw@mail.gmail.com>
+References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com>
+ <7337945.Kibhmj51LR@wuerfel> <CAGVrzcayySWxBhXVK0Tq8-foH5tTX0_9EbFL3YtPreHeruNDmQ@mail.gmail.com>
+ <5674507.GGRAhKo0Eq@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5674507.GGRAhKo0Eq@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 375 SoCs contain a xHCI host. This commit adds the
-Device Tree description of this interfaces at the SoC level, and also
-enables the USB3 port on the Armada 375 DB platform.
+2014-05-02 0:55 GMT-07:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> On Thursday 01 May 2014 22:32:27 Florian Fainelli wrote:
+>> >> +#ifndef __ARM_BCM63XX_H
+>> >> +#define __ARM_BCM63XX_H
+>> >> +
+>> >> +#define IO_ADDRESS(x)                (((x) & 0x00ffffff) + 0xfc000000)
+>> >> +
+>> >> +/* AHB register space */
+>> >> +#define BCM63XX_AHB_PHYS     0x80001000
+>> >> +#define BCM63XX_AHB_VIRT     IO_ADDRESS(BCM63XX_AHB_PHYS)
+>> >> +#define BCM63XX_AHB_SIZE     0x800000
+>> >> +
+>> >> +/* PERIPH (legacy) register space */
+>> >> +#define BCM63XX_PERIPH_PHYS  0xfffe8000
+>> >> +#define BCM63XX_PERIPH_VIRT  IO_ADDRESS(BCM63XX_PERIPH_PHYS)
+>> >> +#define BCM63XX_PERIPH_SIZE  0x10000
+>> >
+>> > You shouldn't need these any more. If you do, just move all of this
+>> > into the main file, to ensure no other file accidentally relies
+>> > on hardcoded values.
+>> >
+>> > Note that BCM63XX_AHB_PHYS is nor aligned, so AFAICT you don't
+>> > actually get a huge page entry for it, and there is no point
+>> > doing this at all, as it has neither functional nor performance
+>> > relevance.
+>> >
+>> > You may have out-of-tree drivers that you haven't cleaned up
+>> > or posted yet relying on specific static mappings, but that is
+>> > no reason to have these mappings in the mainline kernel.
+>>
+>> I tried without the iotable entries, and any register access to these
+>> regions did hang the system, I will check harder what was going on
+>> there.
+>
+> Can you clarify what you mean with 'any register access to these
+> regions did hang the system'?
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- arch/arm/boot/dts/armada-375-db.dts |  4 ++++
- arch/arm/boot/dts/armada-375.dtsi   | 10 ++++++++++
- 2 files changed, 14 insertions(+)
+I would not get any console output progress around the time we
+initialize the MMU (roughly), neither would I get an exception since
+that is too early in the boot process.
 
-diff --git a/arch/arm/boot/dts/armada-375-db.dts b/arch/arm/boot/dts/armada-375-db.dts
-index 9378d3136b41..0453d69e6433 100644
---- a/arch/arm/boot/dts/armada-375-db.dts
-+++ b/arch/arm/boot/dts/armada-375-db.dts
-@@ -102,6 +102,10 @@
- 				};
- 			};
- 
-+			usb3@58000 {
-+				status = "okay";
-+			};
-+
- 			mvsdio@d4000 {
- 				pinctrl-0 = <&sdio_pins &sdio_st_pins>;
- 				pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
-index 6724c10a8862..1b81d1e33510 100644
---- a/arch/arm/boot/dts/armada-375.dtsi
-+++ b/arch/arm/boot/dts/armada-375.dtsi
-@@ -320,6 +320,16 @@
- 				clocks = <&coreclk 0>;
- 			};
- 
-+			usb3@58000 {
-+				compatible = "marvell,armada-375-xhci";
-+				reg = <0x58000 0x20000>,<0x5b880 0x80>;
-+				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 16>;
-+				phys = <&usbcluster 1>;
-+				phy-names="usb";
-+				status = "disabled";
-+			};
-+
- 			usbcluster: usb-cluster@18400 {
- 				compatible = "marvell,armada-375-usb-cluster";
- 				reg = <0x18400 0x4>;
+> If you remove the call to iotable_init,
+> you obviously can't access the registers through BCM63XX_{AHB,PERIPH}_VIRT
+> any longer, but accesses through a pointer returned from ioremap()
+> should keep working as before.
+>
+> The DEBUG_LL early output is a special case here, these need one
+> of three options:
+>
+> - .map_io is NULL (preferred)
+> - .map_io points to a function that calls debug_ll_io_init()
+> - .map_io points to a function that calls iotable_init with
+>   an equivalent or larger mapping as debug_ll_io_init() would.
+>
+> I suspect you were doing the third here for historic reasons.
+
+I think you are right, I was in the 3rd case where accessing the UART
+using its virtual address would make the system. Reading through
+devicemaps_init(), defining a custom map_io() functions means you are
+in control and you explicitely need to call debug_ll_io_init(), which
+I was not doing when I removed my custom map_io() implementation.
+
+Thanks!
 -- 
-1.8.1.2
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
