@@ -1,82 +1,70 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: ACPI vs DT at runtime
-Date: Mon, 05 May 2014 17:29:47 +0200
-Message-ID: <5367AE6B.3010105@ahsoftware.de>
-References: <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <97692EF2-013E-4E4B-BC16-E0915D67EFEC@antoniou-consulting.com> <53673866.9000105@ahsoftware.de> <69387177.zGLDjZS0ln@wuerfel>
+From: <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCHv3 2/3] dts: socfpga: Add bindings for Altera SoC SDRAM EDAC
+Date: Mon, 5 May 2014 17:52:16 -0500
+Message-ID: <1399330337-16748-3-git-send-email-tthayer@altera.com>
+References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <69387177.zGLDjZS0ln@wuerfel>
+In-Reply-To: <1399330337-16748-1-git-send-email-tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am 05.05.2014 16:41, schrieb Arnd Bergmann:
-> On Monday 05 May 2014 09:06:14 Alexander Holler wrote:
->>
->> A bit late (I don't follow the ML (or what happens in the ARM world)
->> closely, but as I've recently read that ARM64 will go UEFI and ACPI, I
->> wonder what was the reasoning behind that decision.
->>
->> Does anyone really assume we will become high quality UEFI and ACPI
->> blobs from vendors? And such with reasonable support/update periods?
->>
->> For me that sounds like someone asked dreamers and was unable to adjust
->> those answers in regard to reality.
->
-> Where did you read that? It's simply not true and we should make sure
-> people stop spreading dangerous misinformation.
+From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
 
-I've recently read Grant Likely's blog entry about armv8 servers: 
-http://www.secretlab.ca/archives/27 (I've read the disclaimer too ;) )
+Addition of the Altera SDRAM EDAC bindings and device
+tree changes to the Altera SoC project.
+---
+v2: Changes to SoC EDAC source code.
 
-> Regarding UEFI, I don't expect that to change much for Linux, since
-> it has very little visibility at runtime. UEFI makes sense for some
-> systems, and we can support that easily. The license is a bit problematic,
-> since it allows shipping a system without bootloader sources, but other
-> boot loaders allow that as well, and a lot of companies ship pirated
-> u-boot without sources, too.
->
-> ACPI is a lot harder to support, as it conflicts with the normal DT
-> probing method, and will be visible to a lot of drivers. I expect
-> that we will see systems shipping with ACPI at some point, but
-> so far, nobody has made a serious submission for supporting that,
-> so it's likely a few years out, and it will only be a small subset
-> of the shipping systems: basically anything that tries to look like
-> an x86 PC server rather than an embedded system.
->
-> There is ongoing work from Linaro to provide a base enablement of
-> ACPI on ARM64. Those patches are looking harmless enough, but the
-> current plan is to not merge them until there is an actual user
-> who is submitting their platform specific code based on that, and
-> not before we have clear rules about what systems should or should
-> not be using ACPI.
->
-> For all embedded systems, DT remains the way to pass data about
-> nondiscoverable devices on arm64, and I expect that to include
-> "server" machines based on embedded SoCs.
+v3: Fix typo in device tree documentation.
 
-I usually avoid to talk about embedded systems as something different 
-(e.g. than servers). I think such differentations don't make much sense 
-anymore in times where people are getting in need of an administrator 
-for their phones. ;)
+Signed-off-by: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+---
+ .../bindings/arm/altera/socfpga-sdram-edac.txt     |   12 ++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+ 2 files changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
 
-The problem I see is that if ARM requires UEFI and ACPI for general 
-purpose ARMv8 servers, SOC vendors and the kernel will have to support 
-that (I make the maybe silly assumption every ARMv8 SOC vendor wants to 
-play in the server market). That means the kernel has to support it too.
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+new file mode 100644
+index 0000000..431e98b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+@@ -0,0 +1,12 @@
++Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
++
++Required properties:
++- compatible : should contain "altr,sdram-edac";
++- interrupts : Should contain the SDRAM ECC IRQ in the
++	appropriate format for the IRQ controller.
++
++Example:
++	sdramedac@0 {
++		compatible = "altr,sdram-edac";
++		interrupts = <0 39 4>;
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index 6ce912e..a0ea69b 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -681,6 +681,11 @@
+ 			reg = <0xffc25000 0x1000>;
+ 		};
+ 
++		sdramedac@0 {
++			compatible = "altr,sdram-edac";
++			interrupts = <0 39 4>;
++		};
++
+ 		rstmgr@ffd05000 {
+ 			compatible = "altr,rst-mgr";
+ 			reg = <0xffd05000 0x1000>;
+-- 
+1.7.9.5
 
-And nobody likes to support two types of something. So there is a 
-requirement (on paper) for UEFI and ACPI (both likely closed blobs), but 
-none for the open stuff. And when I now start to think about paper 
-loving vogons, I don't need much imagination which type will be 
-streamlined away.
-
-Regards,
-
-Alexander Holler
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
