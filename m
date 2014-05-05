@@ -1,70 +1,103 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
-Date: Mon, 05 May 2014 17:14:44 +0200
-Message-ID: <4735818.FvYoTFuExd@wuerfel>
-References: <20140501173248.GD3732@e103592.cambridge.arm.com> <6555552.UqkKQIAsih@wuerfel> <20140502174301.GE3805@e103592.cambridge.arm.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 7/8] dt-bindings: adapt rockchip-pinctrl doc to changed bindings
+Date: Mon, 05 May 2014 14:00:11 +0200
+Message-ID: <1557534.VnPPvEdoje@diego>
+References: <11862890.WUjscWaP3U@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140502174301.GE3805-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+In-Reply-To: <11862890.WUjscWaP3U@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 02 May 2014 18:43:01 Dave Martin wrote:
-> On Fri, May 02, 2014 at 05:19:44PM +0200, Arnd Bergmann wrote:
-> > On Friday 02 May 2014 15:23:29 Thierry Reding wrote:
-> > > To some degree this also depends on how we want to handle IOMMUs. If
-> > > they should remain transparently handled via dma_map_ops, then it makes
-> > > sense to set this up at device instantiation time. But how can we handle
-> > > this in situations where one device needs to master on two IOMMUs at the
-> > > same time? Or if the device needs physically contiguous memory for
-> > > purposes other than device I/O. Using dma_map_ops we can't control which
-> > > allocations get mapped via the IOMMU and which don't.
-> > 
-> > I still hope we can handle this in common code by selecting the right
-> > dma_map_ops when the devices are instantiated, at least for 99% of the
-> > cases. I'm not convinced we really need to handle the 'multiple IOMMUs
-> > on one device' case in a generic way. If there are no common use cases
-> > for that, we can probably get away with having multiple device nodes
-> > and an ugly driver for the exception, instead of making life complicated
-> > for everybody.
-> 
-> Multiple IOMMUs certainly seems an unusual case for now.
-> 
-> Being able to describe that in the DT doesn't necessarily mean the
-> kernel has to support it: just as the kernel doesn't need to support
-> all the features of a crazy hardware platform just someone was crazy
-> enough to build it.
+Introduce the syscons for grf and pmu and deprecate the previous register
+areas.
 
-Right.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+---
+ .../bindings/pinctrl/rockchip,pinctrl.txt          | 28 +++++++++++++++-------
+ 1 file changed, 20 insertions(+), 8 deletions(-)
 
-> My expectation was that we do some check when probing a device to figure
-> out the path from the device to main memory, thus figuring out the dma
-> mask, the IOMMU (if any) and any relevant device ID.  This is a bit more
-> complex than the existing situation, but I still think we could have
-> common code for the bulk of it.
+diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+index 78dafc9..cefef74 100644
+--- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
+@@ -21,15 +21,23 @@ defined as gpio sub-nodes of the pinmux controller.
+ Required properties for iomux controller:
+   - compatible: one of "rockchip,rk2928-pinctrl", "rockchip,rk3066a-pinctrl"
+ 		       "rockchip,rk3066b-pinctrl", "rockchip,rk3188-pinctrl"
++  - rockchip,grf: phandle referencing a syscon providing the
++	 "general register files"
++
++Optional properties for iomux controller:
++  - rockchip,pmu: phandle referencing a syscon providing the pmu registers
++	 as some SoCs carry parts of the iomux controller registers there.
++	 Required for at least rk3188 and rk3288.
++
++Deprecated properties for iomux controller:
+   - reg: first element is the general register space of the iomux controller
+ 	 It should be large enough to contain also separate pull registers.
+-	 Deprecated:
+-	 second element is the separate pull register space of the rk3188
++	 second element is the separate pull register space of the rk3188.
++	 Use rockchip,grf and rockchip,pmu described above instead.
+ 
+ Required properties for gpio sub nodes:
+   - compatible: "rockchip,gpio-bank", "rockchip,rk3188-gpio-bank0"
+   - reg: register of the gpio bank (different than the iomux registerset)
+-         second element: separate pull register for rk3188 bank0
+   - interrupts: base interrupt of the gpio bank in the interrupt controller
+   - clocks: clock that drives this bank
+   - gpio-controller: identifies the node as a gpio controller and pin bank.
+@@ -41,6 +49,10 @@ Required properties for gpio sub nodes:
+     cells should use the standard two-cell scheme described in
+     bindings/interrupt-controller/interrupts.txt
+ 
++Deprecated properties for gpio sub nodes:
++  - reg: second element: separate pull register for rk3188 bank0, use
++	 rockchip,pmu described above instead
++
+ Required properties for pin configuration node:
+   - rockchip,pins: 3 integers array, represents a group of pins mux and config
+     setting. The format is rockchip,pins = <PIN_BANK PIN_BANK_IDX MUX &phandle>.
+@@ -56,7 +68,8 @@ Examples:
+ 
+ pinctrl@20008000 {
+ 	compatible = "rockchip,rk3066a-pinctrl";
+-	reg = <0x20008000 0x150>;
++	rockchip,grf = <&grf>;
++
+ 	#address-cells = <1>;
+ 	#size-cells = <1>;
+ 	ranges;
+@@ -105,16 +118,15 @@ Example for rk3188:
+ 
+ 	pinctrl@20008000 {
+ 		compatible = "rockchip,rk3188-pinctrl";
+-		reg = <0x20008000 0xa0>,
+-		      <0x20008164 0x1a0>;
++		rockchip,grf = <&grf>;
++		rockchip,pmu = <&pmu>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges;
+ 
+ 		gpio0: gpio0@0x2000a000 {
+ 			compatible = "rockchip,rk3188-gpio-bank0";
+-			reg = <0x2000a000 0x100>,
+-			      <0x20004064 0x8>;
++			reg = <0x2000a000 0x100>;
+ 			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&clk_gates8 9>;
+ 
+-- 
+1.9.0
 
-I'd still prefer if we could keep following just "dma-ranges" to find
-a path from device to memory, with an extension to handle IOMMUs etc,
-but not describe the things to the extend that your proposal does.
 
-We already pretend that things are a tree for the purposes of MMIO,
-which is probably still close enough for the vast majority of cases.
-For simplicity, I'd actually prefer keeping the illusion that MMIO
-and DMA are two different things, which matches how operating systems
-see things even if it's no longer true for the hardware.
-
-> If a device has different roles with completely different paths to
-> memory, one option could be for the driver to instantiate two devices in
-> the kernel.  This puts the burden on the driver for the device, instead
-> of the core framework.
-
-Yes, this is what I suggested earlier as well.
-
-	ARnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
