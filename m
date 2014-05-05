@@ -1,136 +1,92 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/4] Documentation: dts: Add bindings for APM X-Gene
- SoC ethernet driver
-Date: Mon, 5 May 2014 14:57:13 -0700
-Message-ID: <CAGVrzcbecJHbZn1UU3yaD3MtSWk8FmgjMxG4zmQONrnVc05uqg@mail.gmail.com>
-References: <1399326447-2329-1-git-send-email-isubramanian@apm.com> <1399326447-2329-3-git-send-email-isubramanian@apm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv3 1/5] Input: add common DT binding for touchscreens
+Date: Mon, 5 May 2014 13:12:02 -0700
+Message-ID: <20140505201202.GH25949@atomide.com>
+References: <1398470179-20880-1-git-send-email-sre@kernel.org>
+ <1398470179-20880-2-git-send-email-sre@kernel.org>
+ <20140505194125.GD25949@atomide.com>
+ <20140505195139.GA26978@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399326447-2329-3-git-send-email-isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140505195139.GA26978@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Sebastian Reichel <sre@kernel.org>, Sebastian Reichel <sre@ring0.de>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-05-05 14:47 GMT-07:00 Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>:
-> This patch adds documentation for APM X-Gene SoC ethernet DTS binding.
->
-> Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
-> ---
->  .../devicetree/bindings/net/apm-xgene-enet.txt     |   66 ++++++++++++++++++++
->  1 file changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> new file mode 100644
-> index 0000000..9ad6fe1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-> @@ -0,0 +1,66 @@
-> +APM X-Gene SoC Ethernet nodes
-> +
-> +Ethernet nodes are defined to describe on-chip ethernet interfaces in
-> +APM X-Gene SoC.
-> +
-> +Required properties:
-> +- compatible:          Should be "apm,xgene-enet"
-> +- reg:                 First resource is the ethernet base register set
-> +                       Second resource is the ring base register set
-> +                       Third resource is the ring command register set
-> +- interrupts:          Ethernet main interrupt
-> +- clocks:              Reference to the clock entry.
-> +- local-mac-address:   Ethernet MAC address.
-> +- phy-connection-type: Ethernet MII mode.
+* Dmitry Torokhov <dmitry.torokhov@gmail.com> [140505 12:52]:
+> On Mon, May 05, 2014 at 12:41:26PM -0700, Tony Lindgren wrote:
+> > * Sebastian Reichel <sre@kernel.org> [140425 16:56]:
+> > > Add common DT binding documentation for touchscreen devices and
+> > > implement input_parse_touchscreen_of_params, which parses the common
+> > > properties and configures the input device accordingly.
+> > > 
+> > > The method currently does not interpret the axis inversion properties,
+> > > since there is no matching flag in the generic linux input device.
+> > > 
+> > > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> > > ---
+> > >  .../bindings/input/touchscreen/touchscreen.txt     | 27 +++++++++++++++++
+> > >  drivers/input/input.c                              | 34 ++++++++++++++++++++++
+> > >  include/linux/input.h                              |  8 +++++
+> > >  3 files changed, 69 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> > > 
+> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> > > new file mode 100644
+> > > index 0000000..d8e0616
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> > > @@ -0,0 +1,27 @@
+> > > +General Touchscreen Properties:
+> > > +
+> > > +Optional properties for Touchscreens:
+> > > + - touchscreen-size-x		: horizontal resolution of touchscreen
+> > > +				  (in pixels)
+> > > + - touchscreen-size-y		: vertical resolution of touchscreen
+> > > +				  (in pixels)
+> > > + - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
+> > > +				  dependent on the controller)
+> > > + - touchscreen-fuzz-x		: horizontal noise value of the absolute input
+> > > +				  device (in pixels)
+> > > + - touchscreen-fuzz-y		: vertical noise value of the absolute input
+> > > +				  device (in pixels)
+> > > + - touchscreen-fuzz-pressure	: pressure noise value of the absolute input
+> > > +				  device (arbitrary range dependent on the
+> > > +				  controller)
+> 
+> Fuzz seems like linux-specific property, not generic one.
+> 
+> 
+> > > + - touchscreen-inverted-x	: X axis is inverted (boolean)
+> > > + - touchscreen-inverted-y	: Y axis is inverted (boolean)
+> > 
+> > We probably also need something to swap x and y depending on the
+> > display orientation in addition to the touchscreen-inverted-x and y.
+> > Just swapping x and y is not enough depending if we rotate by 270
+> > degrees instead of 90 degrees.
+> > 
+> > Naturally that part can be added later.
+> 
+> So far we've been relying on upper layers (such as tslib) to perform
+> such transformations rather than re-implementing it in every driver. Are
+> we saying that we need to implement this in input core?
 
-- phy-handle is not listed anywhere, yet, present in the example you give.
+We seem to have that already partially implemented at least with
+ti,swap-xy in Documentation/devicetree/bindings/input/ads7846.txt.
 
-> +
-> +- mdio device tree subnode: When the X-Gene SoC has a phy connected to its local
-> +               mdio, there must be device tree subnode with the following
-> +               required properties:
+But that only works for the 90 degree rotation case as it's missing
+something similar to touchscreen-inverted-x I just noticed few days
+ago while trying to make some legacy code disappear :)
 
-In that specific case, 'phy-handle' becomes an optional property.
+No idea where rotation should be specified. But if the panel is
+rotated based on the DT property or kernel cmdline, probably the
+touchscreen should be too? In most cases touchscreens are integrated
+together with the LCD panel, and they are not separate like other
+input devices.
 
-> +
-> +       - compatible: Must be "apm,xgene-mdio".
-> +       - #address-cells: Must be <1>.
-> +       - #size-cells: Must be <0>.
-> +
-> +       For the phy on the mdio bus, there must be a node with the following
-> +       fields:
-> +
-> +       - reg: phy id used to communicate to phy.
+Regards,
 
-Better refer to Documentation/devicetree/bindings/ethernet/phy.txt
-which contains a more exhaustive binding description for Ethernet PHY
-nodes.
-
-> +
-> +Optional properties:
-> +- status               : Should be "ok" or "disabled" for enabled/disabled.
-> +                         Default is "ok".
-> +
-> +Example:
-> +       menetclk: menetclk {
-> +               compatible = "apm,xgene-device-clock";
-> +               clock-output-names = "menetclk";
-> +               status = "ok";
-> +       };
-> +
-> +       menet: ethernet@17020000 {
-> +               compatible = "apm,xgene-enet";
-> +               status = "disabled";
-> +               reg = <0x0 0x17020000 0x0 0xd100>,
-> +                     <0x0 0X17030000 0x0 0X400>,
-> +                     <0x0 0X10000000 0x0 0X200>;
-
-Since you have mutliple values in your 'reg' property, you could also
-provide an optional 'reg-names' which documents what the register
-ranges are about.
-
-> +               interrupts = <0x0 0x3c 0x4>;
-> +               clocks = <&menetclk 0>;
-> +               local-mac-address = [00 01 73 00 00 01];
-> +               phy-connection-type = "rgmii";
-> +               phy-handle = <&menetphy>;
-> +               mdio {
-> +                       compatible = "apm,xgene-mdio";
-> +                       #address-cells = <1>;
-> +                       #size-cells = <0>;
-> +                       menetphy: menetphy@3 {
-
-This PHY node is missing a compatible string as described in
-Documentation/devicetree/bindings/net/ethernet/phy.txt. Your binding
-should also link to that documentation for
-
-> +                               reg = <0x3>;
-> +                       };
-> +
-> +               };
-> +       };
-> +
-> +/* Board-specific peripheral configurations */
-> +
-> +&menet {
-> +        status = "ok";
-> +};
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
