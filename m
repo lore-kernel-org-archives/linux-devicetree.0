@@ -1,118 +1,65 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 2/2] Documentation: dt: bindings: sound:
-	Add bindings for CS42L56 CODEC
-Date: Mon, 5 May 2014 16:18:05 -0500
-Message-ID: <47E0FD7A-D2C0-425E-A7FB-917B65D74B2D@codeaurora.org>
-References: <1399320549-16645-1-git-send-email-brian.austin@cirrus.com>
- <1399320549-16645-2-git-send-email-brian.austin@cirrus.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1399320549-16645-2-git-send-email-brian.austin@cirrus.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Brian Austin <brian.austin@cirrus.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, lgirdwood@gmail.com, paul.handrigan@cirrus.com, robh+dt@kernel.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv3 00/14] OMAP SSI driver / N900 modem support
+Date: Tue, 6 May 2014 00:41:44 +0200
+Message-ID: <20140505224143.GB6261@earth.universe>
+References: <1396053110-21639-1-git-send-email-sre@kernel.org>
+ <20140505193129.GC25949@atomide.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140505193129.GC25949@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
 
-On May 5, 2014, at 3:09 PM, Brian Austin <brian.austin@cirrus.com> wrote:
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> This patch adds binding documentation for the Cirrus Logic CS42L56 Low Power Stereo I2C CODEC
-> 
-> Signed-off-by: Brian Austin <brian.austin@cirrus.com>
-> ---
-> .../devicetree/bindings/sound/cs42l56.txt          |   63 ++++++++++++++++++++
-> 1 file changed, 63 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/sound/cs42l56.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/cs42l56.txt b/Documentation/devicetree/bindings/sound/cs42l56.txt
-> new file mode 100644
-> index 0000000..9ae074f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/cs42l56.txt
-> @@ -0,0 +1,63 @@
-> +CS42L52 audio CODEC
-> +
-> +Required properties:
-> +
-> +  - compatible : "cirrus,cs42l56"
-> +
-> +  - reg : the I2C address of the device for I2C
-> +
-> +  - VA-supply, VCP-supply, VLDO-supply : power supplies for the device,
-> +  as covered in Documentation/devicetree/bindings/regulator/regulator.txt.
-> +
-> +Optional properties:
-> +
-> +  - cirrus,gpio-nreset : GPIO controller's phandle and the number
-> +  of the GPIO used to reset the codec.
-> +
-> +  - cirrus,chgfreq-divisor : Values used to set the Charge Pump Frequency.
-> +  Allowable values of 0x00 through 0x0F. These are raw values written to the
-> +  register, not the actual frequency. The frequency is determined by the following.
-> +  Frequency = MCLK / 4 * (N+2)
-> +  N = chgfreq_val
-> +  MCLK = Where MCLK is the frequency of the mclk signal after the MCLKDIV2 circuit.
-> +
-> +  - cirrus,ain1a-ref-cfg, ain1b-ref-cfg : boolean, If present, AIN1A or AIN1B are configured
-> +  as a pseudo-differential input referenced to AIN1REF/AIN3A.
+On Mon, May 05, 2014 at 12:31:30PM -0700, Tony Lindgren wrote:
+> * Sebastian Reichel <sre@kernel.org> [140328 17:36]:
+> > Please send feedback (e.g. Tested-By or Reviewed-By :)), so that I can
+> > send a pull request for 3.16. You can either apply this patchset or
+> > use the n900-modem-support branch available on [1].
+>=20
+> Sebastian, can you please do a separate pull request for the .dts
+> changes for me once the driver changes are pulled? Otherwise we
+> will be creating pointless merge conflicts.
 
-What happens if a DT had both bools?
+That was my intention from the beginning. I only added those patches
+here to make reviewing the other patches easier.
 
-> +
-> +  - cirrus,ain2a-ref-cfg, ain2b-ref-cfg : boolean, If present, AIN2A or AIN2B are configured
-> +  as a pseudo-differential input referenced to AIN2REF/AIN3B.
-> +
-> +  - cirrus,micbias-lvl: Set the output voltage level on the MICBIAS Pin.
-> +  0 = 0.5 x VA
-> +  1 = 0.6 x VA
-> +  2 = 0.7 x VA
-> +  3 = 0.8 x VA
-> +  4 = 0.83 x VA
-> +  5 = 0.91 x VA
-> +
-> +  - cirrus,adaptive-pwr-cfg : Configures how the power to the Headphone and Lineout
-> +  Amplifiers adapt to the output signal levels.
-> +  0 = Adapt to Volume Mode. Voltage level determined by the sum of the relevant volume settings.
-> +  1 = Fixed - Headphone and Line Amp supply = + or - VCP/2.
-> +  2 = Fixed - Headphone and Line Amp supply = + or - VCP.
-> +  3 = Adapted to Signal; Voltage level is dynamically determined by the output signal.
-> +
-> +  - cirrus,hpf-left-freq, hpf-right-freq : Sets the corner frequency (-3dB point) for the internal High-Pass
-> +  Filter.
-> +  0 = 1.8Hz
-> +  1 = 119Hz
-> +  2 = 236Hz
-> +  3 = 464Hz
-> +
+I'm still missing a reviewed by for the most important patches (ssi
+driver, modem protocol driver), though. Can somebody at least test
+the patches and provide a Tested-By?
 
-Add a include/dt-bindings for all the various enums
+-- Sebastian
 
-> +
-> +Example:
-> +
-> +codec: codec@4b {
-> +	compatible = "cirrus,cs42l56";
-> +	reg = <0x4b>;
-> +	gpio-reset = <&gpio 10 0>;
-> +	cirrus,chgfreq-divisor = <0x05>;
-> +	cirrus.ain1_ref_cfg;
-> +	cirrus,micbias-lvl = <5>;
-> +	VA-supply = <&reg_audio>;
-> +};
-> -- 
-> 1.7.9.5
-> 
+--s/l3CgOIzMHHjg/5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTaBOnAAoJENju1/PIO/qaxgIQAJWby+pGWyAjQqTTTjQHwavW
+3zN0ce5kBeKkxdfFurz/zPxxbZ7FNXd9TdbVEQJuTz/4CkPpxX6jyMYoSdATj/sh
+ZIhqfUlzg2fUz4ozKpT0hGIaVHJ9SDJ0HD9Cm1P+5GfelpuqNZ2pjMVyVyywYLtw
+kFAvd+BrwPHmou6Dx6p+6jYsjjPS6NXN6r14pkO3bXsD4HhI7oFuKUHiQGEtUJqw
+jIt92AE/QfsMojfueKyCI130d1nCKyguJLGonpNXMUzrViW8Y68fPRrkjUjPFTjM
+uUmQldOZyUolmVp8b3wpbfRoDlmpqD7z0XD0oLA+aG4l8bPPoOXLj4zPqrdxAjwT
+3bUBUI8I2nAzfeGZR38HSCIxB3En7RHcCAVh3sIagUpQoWQ9I4vnJk8JjZeCV7EV
+FSr5bCQ7JzC3Cq5PMlKCY1+1sigMyeWkunEq0BcqsQFLqh8px7iTQrJKfojK+uuu
+48lwcyhFs10HFtfwP2e+EJjFcwSPuItqJLmwzBEtEy48kkP6Y9GHh7c09MKmBpZm
+/R1oRUNBpknLIjRmfCXWmQWyQ5JqqNAX9eqJJ1yTk9dgGMrdvkBOkzeb1zErUiau
+9R8EJIJo2LnZScIJzAn/D1AYNkVolb1iPQmuZI9c+xN0Pcw7N7S03zCkWAnkAAOV
+f9RPaZdqBteQrrBRSsV9
+=eAOQ
+-----END PGP SIGNATURE-----
+
+--s/l3CgOIzMHHjg/5--
