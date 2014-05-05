@@ -1,82 +1,72 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 0/7] USB support for DRA7-evm
-Date: Tue, 6 May 2014 13:49:19 +0530
-Message-ID: <53689B07.8030407@ti.com>
-References: <1399283686-6127-1-git-send-email-rogerq@ti.com> <53688D13.4000409@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v10 15/15] ARM: dts: sun7i: Add basic support for the
+ Cubietruck WiFi module
+Date: Mon, 5 May 2014 17:45:20 -0500
+Message-ID: <20140505224520.GB9464@lukather>
+References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
+ <1399046249-19472-16-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53688D13.4000409@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, tony@atomide.com, balbi@ti.com, bcousson@baylibre.com
-Cc: george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1399046249-19472-16-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--l76fUT7nc3MelDdI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Tuesday 06 May 2014 12:49 PM, Roger Quadros wrote:
-> Hi Kishon,
-> 
-> Could you please pick the first 2 patches in this series for phy-next?
-> They are independent of the rest. Thanks.
+On Fri, May 02, 2014 at 05:57:29PM +0200, Hans de Goede wrote:
+> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>=20
+> The CubieTruck has an AMPAK AP6210 WiFi+Bluetooth module. The WiFi
+> part is a BCM43362 IC connected to MMC3 in the A20 SoC via SDIO.
+> The IC also takes a power enable signal via GPIO.
+>=20
+> The WiFi module supports out-of-band interrupt signaling via GPIO,
+> but this is not supported in this patch.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-sure.. will be queuing it shortly.
+Applied with Chen-Yu SoB.
 
-Thanks
-Kishon
+Maxime
 
-> 
-> cheers,
-> -roger
-> 
-> On 05/05/2014 12:54 PM, Roger Quadros wrote:
->> Hi,
->>
->> This series enables the 2 USB ports on the DRA7-evm.
->>
->> NOTE: USB1 port is hard coded to work in peripheral mode and USB2 port
->> in host mode. This is due to missing ID pin interrupt in pre ver.E boards.
->>
->> USB1 port doesn't in peripheral mode out of the box due to missing VBUS detection
->> and mailbox write. To test this I had to do a manual write to enable VBUSVALID
->> in the USB_UTMI_OTG_STATUS register.
->> 	omapconf set bit 0x48880084 1
->>
->> USB2 port works well in host mode.
->>
->> Patches are based on 3.15-rc3.
->>
->> cheers,
->> -roger
->>
->> Changelog:
->>
->> v3:
->> -Rearraged patches. PHY related stuff first.
->> -Addressed backward compatibility issue for phy-omap-usb2.
->>
->> v2:
->> -Rebased on v3.15-rc3
->>
->> ---
->> Roger Quadros (7):
->>   phy: omap-usb2: Use generic clock names "wkupclk" and "refclk"
->>   phy: omap-usb2: Add clock names to Documentation binding
->>   ARM: dts: omap4+: Add clocks to USB2 PHY node
->>   ARM: dts: dra7-clock: Add "l3init_960m_gfclk" clock gate
->>   ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
->>   ARM: dts: dra7: Add USB related nodes
->>   dts: dra7-evm: add USB support
->>
->>  Documentation/devicetree/bindings/phy/ti-phy.txt |   7 ++
->>  arch/arm/boot/dts/dra7-evm.dts                   |  24 ++++
->>  arch/arm/boot/dts/dra7.dtsi                      | 149 +++++++++++++++++++++++
->>  arch/arm/boot/dts/dra7xx-clocks.dtsi             |  12 +-
->>  arch/arm/boot/dts/omap4.dtsi                     |   2 +
->>  arch/arm/boot/dts/omap5.dtsi                     |   2 +
->>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c        |  22 ++--
->>  drivers/phy/phy-omap-usb2.c                      |  30 +++--
->>  8 files changed, 229 insertions(+), 19 deletions(-)
->>
-> 
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--l76fUT7nc3MelDdI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTaBSAAAoJEBx+YmzsjxAgViQQAIQz01UO42cj8NSm6kfkFdzu
+t1duWA/Ncc8qtOduOubaCSekqG049+Xykpx+Ievuisha6Xo8SrrOkiMBfKKgSTxq
+MPYGjMnfxxQYiJqoM91ySttBZr8lj3guviz0hQ/n32454gCGDWOuFMFSAyLftzVV
+qvj7KN7v9iOrjS+j8xft4BY60AH7nNhGPRm0eDRS+4CsehkUWXuHzzp2Yhw/za1t
+Z0y45E0Kxw/HB6fhZJGKy5Ql2hyM14wnt0gZwH9jIuOcMpzJB1JZkOcUjG14/3np
+1vb+mrAvOHtYR0pRSnCWRAZaccNZ1twRP9PSB2eWg4SSnqbnWaIw2tQuXSLPB/0u
+Cy6D/G3fld8Vo70kLebnkhIldINFZ9owJIj0HPUkC9ZH8snbp58avZBPQRpywLaU
+OftY4CuGcJM5zrae4zJU7yf3oROdfMpOt5nUqK+hs7RvFhXBIrI2W/eJkSj+PMif
+v6A55xzeijQPUw61HUpBdh+up1lnaHMmyXDj0LhmYB85o6QrdRakGINMvvvOQPtX
+V6iRYPf24ZWbCieMcJUMleOk6PtKoaCTXTj6AP1/JCroUtWecULS8mBYEG52WIMM
+S/2CiqRZ/QJdnstY4VGr8Jroj0rnf5g3Wr8c5sn5PTrO4mflWEMTCNHdvMuV8RjJ
+fEXAQG9v/UnvNdmnya+v
+=DAVu
+-----END PGP SIGNATURE-----
+
+--l76fUT7nc3MelDdI--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
