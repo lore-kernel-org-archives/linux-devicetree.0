@@ -1,198 +1,52 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v4 4/7] Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
-Date: Mon, 5 May 2014 12:04:35 +0300
-Message-ID: <1399280678-23925-5-git-send-email-rogerq@ti.com>
-References: <1399280678-23925-1-git-send-email-rogerq@ti.com>
+From: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: am437x-gp-evm: Add vtt_fixed regulator
+Date: Mon, 5 May 2014 14:58:28 -0500
+Message-ID: <1399319909-53795-2-git-send-email-d-gerlach@ti.com>
+References: <1399319909-53795-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1399280678-23925-1-git-send-email-rogerq@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399319909-53795-1-git-send-email-d-gerlach-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Switch to using the Type-B Multi-Touch protocol.
+The VTT regulator for DDR3 termination on the am437x-gp-evm is
+controlled by a gpio. It is configured by the bootloader so here we
+define an always-on, fixed voltage regulator to hold the gpio.
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
+Signed-off-by: Dave Gerlach <d-gerlach-l0cyMroinI0@public.gmane.org>
 ---
- drivers/input/touchscreen/pixcir_i2c_ts.c | 125 ++++++++++++++++++++++--------
- 1 file changed, 94 insertions(+), 31 deletions(-)
+ arch/arm/boot/dts/am437x-gp-evm.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index d0f6989..3123699 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -23,9 +23,12 @@
- #include <linux/slab.h>
- #include <linux/i2c.h>
- #include <linux/input.h>
-+#include <linux/input/mt.h>
- #include <linux/input/pixcir_ts.h>
- #include <linux/gpio.h>
+diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
+index df8798e..6e61e42 100644
+--- a/arch/arm/boot/dts/am437x-gp-evm.dts
++++ b/arch/arm/boot/dts/am437x-gp-evm.dts
+@@ -27,6 +27,17 @@
+ 		enable-active-high;
+ 	};
  
-+#define PIXCIR_MAX_SLOTS       2
++	vtt_fixed: fixedregulator-vtt {
++		compatible = "regulator-fixed";
++		regulator-name = "vtt_fixed";
++		regulator-min-microvolt = <1500000>;
++		regulator-max-microvolt = <1500000>;
++		regulator-always-on;
++		regulator-boot-on;
++		enable-active-high;
++		gpio = <&gpio5 7 GPIO_ACTIVE_HIGH>;
++	};
 +
- struct pixcir_i2c_ts_data {
- 	struct i2c_client *client;
- 	struct input_dev *input;
-@@ -33,12 +36,25 @@ struct pixcir_i2c_ts_data {
- 	bool exiting;
- };
- 
--static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
-+struct pixcir_touch {
-+	int x;
-+	int y;
-+};
-+
-+struct pixcir_report_data {
-+	int num_touches;
-+	struct pixcir_touch touches[PIXCIR_MAX_SLOTS];
-+};
-+
-+static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
-+			    struct pixcir_report_data *report)
- {
--	struct pixcir_i2c_ts_data *tsdata = data;
- 	u8 rdbuf[10], wrbuf[1] = { 0 };
-+	u8 *bufptr;
- 	u8 touch;
--	int ret;
-+	int ret, i;
-+
-+	memset(report, 0, sizeof(struct pixcir_report_data));
- 
- 	ret = i2c_master_send(tsdata->client, wrbuf, sizeof(wrbuf));
- 	if (ret != sizeof(wrbuf)) {
-@@ -56,45 +72,85 @@ static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
- 		return;
- 	}
- 
--	touch = rdbuf[0];
--	if (touch) {
--		u16 posx1 = (rdbuf[3] << 8) | rdbuf[2];
--		u16 posy1 = (rdbuf[5] << 8) | rdbuf[4];
--		u16 posx2 = (rdbuf[7] << 8) | rdbuf[6];
--		u16 posy2 = (rdbuf[9] << 8) | rdbuf[8];
--
--		input_report_key(tsdata->input, BTN_TOUCH, 1);
--		input_report_abs(tsdata->input, ABS_X, posx1);
--		input_report_abs(tsdata->input, ABS_Y, posy1);
--
--		input_report_abs(tsdata->input, ABS_MT_POSITION_X, posx1);
--		input_report_abs(tsdata->input, ABS_MT_POSITION_Y, posy1);
--		input_mt_sync(tsdata->input);
--
--		if (touch == 2) {
--			input_report_abs(tsdata->input,
--					 ABS_MT_POSITION_X, posx2);
--			input_report_abs(tsdata->input,
--					 ABS_MT_POSITION_Y, posy2);
--			input_mt_sync(tsdata->input);
--		}
--	} else {
--		input_report_key(tsdata->input, BTN_TOUCH, 0);
-+	touch = rdbuf[0] & 0x7;
-+	if (touch > PIXCIR_MAX_SLOTS)
-+		touch = PIXCIR_MAX_SLOTS;
-+
-+	report->num_touches = touch;
-+	bufptr = &rdbuf[2];
-+
-+	for (i = 0; i < touch; i++) {
-+		report->touches[i].x = (bufptr[1] << 8) | bufptr[0];
-+		report->touches[i].y = (bufptr[3] << 8) | bufptr[2];
-+
-+		bufptr = &bufptr[4];
- 	}
-+}
-+
-+static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
-+			     struct pixcir_report_data *report)
-+{
-+	struct input_mt_pos pos[PIXCIR_MAX_SLOTS];
-+	int slots[PIXCIR_MAX_SLOTS];
-+	struct pixcir_touch *touch;
-+	int n, i, slot;
-+	struct device *dev = &ts->client->dev;
- 
--	input_sync(tsdata->input);
-+	n = report->num_touches;
-+	if (n > PIXCIR_MAX_SLOTS)
-+		n = PIXCIR_MAX_SLOTS;
-+
-+	for (i = 0; i < n; i++) {
-+		touch = &report->touches[i];
-+		pos[i].x = touch->x;
-+		pos[i].y = touch->y;
-+	}
-+
-+	input_mt_assign_slots(ts->input, slots, pos, n);
-+
-+	for (i = 0; i < n; i++) {
-+		touch = &report->touches[i];
-+		slot = slots[i];
-+
-+		input_mt_slot(ts->input, slot);
-+		input_mt_report_slot_state(ts->input,
-+					   MT_TOOL_FINGER, true);
-+
-+		input_event(ts->input, EV_ABS, ABS_MT_POSITION_X, touch->x);
-+		input_event(ts->input, EV_ABS, ABS_MT_POSITION_Y, touch->y);
-+
-+		dev_dbg(dev, "%d: slot %d, x %d, y %d\n",
-+			i, slot, touch->x, touch->y);
-+	}
-+
-+	input_mt_sync_frame(ts->input);
-+	input_sync(ts->input);
- }
- 
- static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
- {
- 	struct pixcir_i2c_ts_data *tsdata = dev_id;
- 	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
-+	struct pixcir_report_data report;
- 
- 	while (!tsdata->exiting) {
--		pixcir_ts_poscheck(tsdata);
--
--		if (gpio_get_value(pdata->gpio_attb))
-+		/* parse packet */
-+		pixcir_ts_parse(tsdata, &report);
-+
-+		/* report it */
-+		pixcir_ts_report(tsdata, &report);
-+
-+		if (gpio_get_value(pdata->gpio_attb)) {
-+			if (report.num_touches) {
-+				/*
-+				 * Last report with no finger up?
-+				 * Do it now then.
-+				 */
-+				input_mt_sync_frame(tsdata->input);
-+				input_sync(tsdata->input);
-+			}
- 			break;
-+		}
- 
- 		msleep(20);
- 	}
-@@ -333,6 +389,13 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
- 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
- 
-+	error = input_mt_init_slots(input, PIXCIR_MAX_SLOTS,
-+				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
-+	if (error) {
-+		dev_err(dev, "Error initializing Multi-Touch slots\n");
-+		return error;
-+	}
-+
- 	input_set_drvdata(input, tsdata);
- 
- 	error = devm_gpio_request_one(dev, pdata->gpio_attb,
+ 	backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&ecap0 0 50000 PWM_POLARITY_INVERTED>;
 -- 
-1.8.3.2
+1.9.0
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
