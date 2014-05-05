@@ -1,102 +1,70 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 3/8] pinctrl: rockchip: rockchip_pinctrl in rockchip_get_bank_data
-Date: Mon, 05 May 2014 13:58:46 +0200
-Message-ID: <1862780.XdYo0OxnPz@diego>
-References: <11862890.WUjscWaP3U@diego>
+From: Johan Hovold <jhovold@gmail.com>
+Subject: Re: [PATCH 3.14 012/158] ARM: dts: am33xx: correcting dt node unit
+ address for usb
+Date: Mon, 5 May 2014 10:37:57 +0200
+Message-ID: <20140505083757.GB30739@localhost>
+References: <20140504154029.975081050@linuxfoundation.org>
+ <20140504154031.690140742@linuxfoundation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11862890.WUjscWaP3U@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <stable-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140504154031.690140742@linuxfoundation.org>
+Sender: stable-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Felipe Balbi <balbi@ti.com>, Mugunthan V N <mugunthanvnm@ti.com>, Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Leigh Brown <leigh@solinno.co.uk>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert rockchip_get_bank_data to use the struct rockchip_pinctrl because
-later on we need to check a value from it when registering the gpio banks.
+On Sun, May 04, 2014 at 11:38:41AM -0400, Greg Kroah-Hartman wrote:
+> 3.14-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
----
- drivers/pinctrl/pinctrl-rockchip.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+This one should not be backported without commit
 
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 71d9c99..b67771d 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -1440,17 +1440,17 @@ static int rockchip_gpiolib_unregister(struct platform_device *pdev,
- }
- 
- static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
--				  struct device *dev)
-+				  struct rockchip_pinctrl *info)
- {
- 	struct resource res;
- 	void __iomem *base;
- 
- 	if (of_address_to_resource(bank->of_node, 0, &res)) {
--		dev_err(dev, "cannot find IO resource for bank\n");
-+		dev_err(info->dev, "cannot find IO resource for bank\n");
- 		return -ENOENT;
- 	}
- 
--	bank->reg_base = devm_ioremap_resource(dev, &res);
-+	bank->reg_base = devm_ioremap_resource(info->dev, &res);
- 	if (IS_ERR(bank->reg_base))
- 		return PTR_ERR(bank->reg_base);
- 
-@@ -1464,16 +1464,16 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
- 		bank->bank_type = RK3188_BANK0;
- 
- 		if (of_address_to_resource(bank->of_node, 1, &res)) {
--			dev_err(dev, "cannot find IO resource for bank\n");
-+			dev_err(info->dev, "cannot find IO resource for bank\n");
- 			return -ENOENT;
- 		}
- 
--		base = devm_ioremap_resource(dev, &res);
-+		base = devm_ioremap_resource(info->dev, &res);
- 		if (IS_ERR(base))
- 			return PTR_ERR(base);
- 		rockchip_regmap_config.max_register = resource_size(&res) - 4;
- 		rockchip_regmap_config.name = "rockchip,rk3188-gpio-bank0-pull";
--		bank->regmap_pull = devm_regmap_init_mmio(dev, base,
-+		bank->regmap_pull = devm_regmap_init_mmio(info->dev, base,
- 						  &rockchip_regmap_config);
- 
- 	} else {
-@@ -1515,7 +1515,7 @@ static struct rockchip_pin_ctrl *rockchip_pinctrl_get_soc_data(
- 			if (!strcmp(bank->name, np->name)) {
- 				bank->of_node = np;
- 
--				if (!rockchip_get_bank_data(bank, &pdev->dev))
-+				if (!rockchip_get_bank_data(bank, d))
- 					bank->valid = true;
- 
- 				break;
-@@ -1552,13 +1552,14 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 	if (!info)
- 		return -ENOMEM;
- 
-+	info->dev = dev;
-+
- 	ctrl = rockchip_pinctrl_get_soc_data(info, pdev);
- 	if (!ctrl) {
- 		dev_err(dev, "driver data not available\n");
- 		return -EINVAL;
- 	}
- 	info->ctrl = ctrl;
--	info->dev = dev;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	base = devm_ioremap_resource(&pdev->dev, res);
--- 
-1.9.0
+	a2f8d6b30321 ("ARM: dts: am335x: update USB DT references")
 
+which is in Linus' tree but is not marked for stable (or USB will be
+disabled for the boards relying on the old node addresses).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Johan
+
+> ------------------
+> 
+> From: Mugunthan V N <mugunthanvnm@ti.com>
+> 
+> commit 8abcdd680d543fb582371e146e62ba9f2af8a816 upstream.
+> 
+> DT node's unit address should be its own register offset address to make it a
+> unique across the system. This patch corrects the incorrect USB entries with
+> correct register offset for unit address.
+> 
+> Acked-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> Acked-by: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  arch/arm/boot/dts/am33xx.dtsi |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> --- a/arch/arm/boot/dts/am33xx.dtsi
+> +++ b/arch/arm/boot/dts/am33xx.dtsi
+> @@ -448,7 +448,7 @@
+>  			ti,hwmods = "usb_otg_hs";
+>  			status = "disabled";
+>  
+> -			usb_ctrl_mod: control@44e10000 {
+> +			usb_ctrl_mod: control@44e10620 {
+>  				compatible = "ti,am335x-usb-ctrl-module";
+>  				reg = <0x44e10620 0x10
+>  					0x44e10648 0x4>;
+> @@ -551,7 +551,7 @@
+>  					"tx14", "tx15";
+>  			};
+>  
+> -			cppi41dma: dma-controller@07402000 {
+> +			cppi41dma: dma-controller@47402000 {
+>  				compatible = "ti,am3359-cppi41";
+>  				reg =  <0x47400000 0x1000
+>  					0x47402000 0x1000
