@@ -1,71 +1,67 @@
-From: <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCHv3 2/3] dts: socfpga: Add bindings for Altera SoC SDRAM EDAC
-Date: Mon, 5 May 2014 17:52:16 -0500
-Message-ID: <1399330337-16748-3-git-send-email-tthayer@altera.com>
-References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv3 1/5] Input: add common DT binding for touchscreens
+Date: Mon, 5 May 2014 12:41:26 -0700
+Message-ID: <20140505194125.GD25949@atomide.com>
+References: <1398470179-20880-1-git-send-email-sre@kernel.org>
+ <1398470179-20880-2-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399330337-16748-1-git-send-email-tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398470179-20880-2-git-send-email-sre@kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+* Sebastian Reichel <sre@kernel.org> [140425 16:56]:
+> Add common DT binding documentation for touchscreen devices and
+> implement input_parse_touchscreen_of_params, which parses the common
+> properties and configures the input device accordingly.
+> 
+> The method currently does not interpret the axis inversion properties,
+> since there is no matching flag in the generic linux input device.
+> 
+> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> ---
+>  .../bindings/input/touchscreen/touchscreen.txt     | 27 +++++++++++++++++
+>  drivers/input/input.c                              | 34 ++++++++++++++++++++++
+>  include/linux/input.h                              |  8 +++++
+>  3 files changed, 69 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> new file mode 100644
+> index 0000000..d8e0616
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+> @@ -0,0 +1,27 @@
+> +General Touchscreen Properties:
+> +
+> +Optional properties for Touchscreens:
+> + - touchscreen-size-x		: horizontal resolution of touchscreen
+> +				  (in pixels)
+> + - touchscreen-size-y		: vertical resolution of touchscreen
+> +				  (in pixels)
+> + - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
+> +				  dependent on the controller)
+> + - touchscreen-fuzz-x		: horizontal noise value of the absolute input
+> +				  device (in pixels)
+> + - touchscreen-fuzz-y		: vertical noise value of the absolute input
+> +				  device (in pixels)
+> + - touchscreen-fuzz-pressure	: pressure noise value of the absolute input
+> +				  device (arbitrary range dependent on the
+> +				  controller)
+> + - touchscreen-inverted-x	: X axis is inverted (boolean)
+> + - touchscreen-inverted-y	: Y axis is inverted (boolean)
 
-Addition of the Altera SDRAM EDAC bindings and device
-tree changes to the Altera SoC project.
----
-v2: Changes to SoC EDAC source code.
+We probably also need something to swap x and y depending on the
+display orientation in addition to the touchscreen-inverted-x and y.
+Just swapping x and y is not enough depending if we rotate by 270
+degrees instead of 90 degrees.
 
-v3: Fix typo in device tree documentation.
+Naturally that part can be added later.
 
-Signed-off-by: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/arm/altera/socfpga-sdram-edac.txt     |   12 ++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
- 2 files changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+Regards,
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-new file mode 100644
-index 0000000..431e98b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-@@ -0,0 +1,12 @@
-+Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
-+
-+Required properties:
-+- compatible : should contain "altr,sdram-edac";
-+- interrupts : Should contain the SDRAM ECC IRQ in the
-+	appropriate format for the IRQ controller.
-+
-+Example:
-+	sdramedac@0 {
-+		compatible = "altr,sdram-edac";
-+		interrupts = <0 39 4>;
-+	};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 6ce912e..a0ea69b 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -681,6 +681,11 @@
- 			reg = <0xffc25000 0x1000>;
- 		};
- 
-+		sdramedac@0 {
-+			compatible = "altr,sdram-edac";
-+			interrupts = <0 39 4>;
-+		};
-+
- 		rstmgr@ffd05000 {
- 			compatible = "altr,rst-mgr";
- 			reg = <0xffd05000 0x1000>;
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That 
