@@ -1,70 +1,34 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v10 15/15] ARM: dts: sun7i: Add basic support for the
- Cubietruck WiFi module
-Date: Sun, 4 May 2014 23:02:12 -0500
-Message-ID: <20140505040212.GC11606@lukather>
-References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
- <1399046249-19472-16-git-send-email-hdegoede@redhat.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 2/9] ARM: Kirkwood: Remove platform driver for codec
+Date: Sun, 4 May 2014 21:12:25 -0400
+Message-ID: <20140505011225.GF28159@titan.lakedaemon.net>
+References: <1399141819-23924-1-git-send-email-andrew@lunn.ch>
+ <1399141819-23924-3-git-send-email-andrew@lunn.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1399046249-19472-16-git-send-email-hdegoede@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
+In-Reply-To: <1399141819-23924-3-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, May 03, 2014 at 08:30:12PM +0200, Andrew Lunn wrote:
+> Remove the platform driver and platform data for the audio codec.
+> A DT node will replace it.
+> 
+> Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> ---
+>  arch/arm/mach-mvebu/board-t5325.c | 15 ---------------
+>  1 file changed, 15 deletions(-)
 
---zCKi3GIZzVBPywwA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Patches 2 and 6 applied to mvebu/soc.
 
-On Fri, May 02, 2014 at 05:57:29PM +0200, Hans de Goede wrote:
-> From: Chen-Yu Tsai <wens@csie.org>
->=20
-> The CubieTruck has an AMPAK AP6210 WiFi+Bluetooth module. The WiFi
-> part is a BCM43362 IC connected to MMC3 in the A20 SoC via SDIO.
-> The IC also takes a power enable signal via GPIO.
->=20
-> The WiFi module supports out-of-band interrupt signaling via GPIO,
-> but this is not supported in this patch.
->=20
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+thx,
 
-It doesn't have Chen-Yu SoB. Chen-Yu, are you fine with adding it?
-
-No need to respin the set, I'll add it when applying if it's ok.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---zCKi3GIZzVBPywwA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTZw1EAAoJEBx+YmzsjxAgGDgP/RdSkxqfd9PZsrqZ0uhSQdJz
-qM+lAmdlw48ZG74fu2/ZEeBaDKcikaKp3IMveqD0f5lNRD11kfSSI8AnhZ2fMf4k
-Bid+n6ETXTwYJ8g22o2CC6y95oZhUwvl36juweOB4ro6qVG9rKm+Bt4+wLg3QMs6
-QaXWOe26GaomzBckyz6r7c8W2qYvbwus5YPwBs60qOJQJKysmckOmk586NLdSl1G
-glXVD1Y5EcYpYs/sTqMBNOwkftHIGwWBp53RsFdiG99z9YmCyizMboM6Ccr++FpU
-+JIJ1CVmRgHbN3bKXYLSQwT/9vTebfLmCP+Oy0+s70xgBrjtBCwKsltlnlRONreA
-IMRHd45geDgkhua1zld0sSZz0lDsbTiKhVFrZbMWZI9nWKtQEcpfsSmFXkEbynn8
-zpLtvqjHTO5IdixPUT6efupCmsf6Qu2c/wSQRp33iOg25nakDLw7tD5KaA5DBzag
-Yku6cJBJV7Qwf/vbyznUnlgOokzpgV3txNIeYHZhOoH34JiQgQWiAYo4d/XUjaOD
-hmGILZJ9VwwrXm8+0J34jd2Wj0tepHcuwv2pRBTehuJRa23rUs/WIkTqBGeq1VTu
-SOkVFDzpB0jTcFHTpXPP6DY+K2LBIGE1bTc/RkGZLgpnMKTboDnjU0IDVB0evOga
-uXuSDsjn7cBNQvpKiBVK
-=c/z9
------END PGP SIGNATURE-----
-
---zCKi3GIZzVBPywwA--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
