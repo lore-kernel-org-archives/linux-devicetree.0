@@ -1,45 +1,70 @@
-From: Neil Zhang <zhangwm@marvell.com>
-Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
-Date: Sun, 4 May 2014 23:28:03 -0700
-Message-ID: <175CCF5F49938B4D99B2E3EF7F558EBE57AF37D469@SC-VEXCH4.marvell.com>
-References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
- <20140422103642.GF7484@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
- <20140423170821.GJ5649@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
- <5360FB07.5030407@arm.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v10 15/15] ARM: dts: sun7i: Add basic support for the
+ Cubietruck WiFi module
+Date: Sun, 4 May 2014 23:02:12 -0500
+Message-ID: <20140505040212.GC11606@lukather>
+References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
+ <1399046249-19472-16-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5360FB07.5030407@arm.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sudeep Holla <sudeep.holla@arm.com>, Will Deacon <Will.Deacon@arm.com>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zCKi3GIZzVBPywwA"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399046249-19472-16-git-send-email-hdegoede@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer@o2s.ch>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-U3VkZWVwLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFN1ZGVlcCBI
-b2xsYSBbbWFpbHRvOnN1ZGVlcC5ob2xsYUBhcm0uY29tXQ0KPiBTZW50OiAyMDE05bm0NOaciDMw
-5pelIDIxOjMxDQo+IFRvOiBOZWlsIFpoYW5nOyBXaWxsIERlYWNvbg0KPiBDYzogU3VkZWVwIEhv
-bGxhOyBsaW51eEBhcm0ubGludXgub3JnLnVrOw0KPiBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjRdIEFSTTogcGVyZjogc2F2
-ZS9yZXN0b3JlIHBtdSByZWdpc3RlcnMgaW4gcG0gbm90aWZpZXINCj4gDQo+IEhpIE5laWwsDQo+
-IA0KPiBPbiAzMC8wNC8xNCAwMzoyMSwgTmVpbCBaaGFuZyB3cm90ZToNCj4gPg0KPiA+PiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBXaWxsIERlYWNvbiBbbWFpbHRvOndp
-bGwuZGVhY29uQGFybS5jb21dDQo+IA0KPiBbLi4uXQ0KPiANCj4gPj4NCj4gPj4gSSB0aGluayB3
-ZSBuZWVkIHNvbWUgaW5wdXQgZnJvbSB0aGUgZGV2aWNlLXRyZWUgZ3V5cyB0byBzZWUgd2hldGhl
-cg0KPiA+PiB0aGV5IHdvdWxkIG9iamVjdCB0byB1cyBzb2x2aW5nIHRoaXMgbG9jYWxseSAoaW4g
-dGhlIFBNVSBub2RlKSBvciBub3QuDQo+ID4+IFBlcnNvbmFsbHksIEknZCBtdWNoIHByZWZlciBh
-IGdlbmVyYWwgd2F5IHRvIGRlc2NyaWJlIHRoZSBuZWVkIGZvcg0KPiA+PiBwbS1ub3RpZmllcnMs
-IGJ1dCBpZiB0aGF0J3Mgbm90IGJlaW5nIGxvb2tlZCBhdCB0aGVuIHdlIGNhbiBjb29rDQo+ID4+
-IHNvbWV0aGluZyBzcGVjaWZpY2FsbHkgZm9yIG91ciBuZWVkcy4NCj4gPj4NCj4gPg0KPiA+IE5v
-IGlucHV0IGZyb20gZGV2aWNlLXRyZWUgZ3V5cyA6KA0KPiANCj4gVGhlIGRldmljZSB0cmVlIGJp
-bmRpbmdzIGZvciBwb3dlciBkb21haW5zIGlzIHVuZGVyIGRpc2N1c3Npb24gWzFdDQoNClRoYW5r
-cyBmb3IgdGhlIGluZm9ybWF0aW9uLg0KQnV0IGl0IGN1cnJlbnRseSBmb3IgZGV2aWNlIG9ubHks
-IGNvcmUgcmVsYXRlZCBzdHVmZiBhcmUgbm90IHN1cHBvcnRlZC4NCkFuZCBpcyBpdCByZWFsbHkg
-Z29vZCB0byByZWdpc3RlciBwb3dlciBwcm92aWRlciBmb3IgY29yZSBhbmQgbGV0IHZmcCAvIHBt
-dSBldGMgdG8gZ2V0IGl0Pw0KDQo+IA0KPiBSZWdhcmRzLA0KPiBTdWRlZXANCj4gDQo+IFsxXSBo
-dHRwczovL2xrbWwub3JnL2xrbWwvMjAxNC80LzIzLzc1NQ0KDQoNCkJlc3QgUmVnYXJkcywNCk5l
-aWwgWmhhbmcNCg==
+
+--zCKi3GIZzVBPywwA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 02, 2014 at 05:57:29PM +0200, Hans de Goede wrote:
+> From: Chen-Yu Tsai <wens@csie.org>
+>=20
+> The CubieTruck has an AMPAK AP6210 WiFi+Bluetooth module. The WiFi
+> part is a BCM43362 IC connected to MMC3 in the A20 SoC via SDIO.
+> The IC also takes a power enable signal via GPIO.
+>=20
+> The WiFi module supports out-of-band interrupt signaling via GPIO,
+> but this is not supported in this patch.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+
+It doesn't have Chen-Yu SoB. Chen-Yu, are you fine with adding it?
+
+No need to respin the set, I'll add it when applying if it's ok.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--zCKi3GIZzVBPywwA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTZw1EAAoJEBx+YmzsjxAgGDgP/RdSkxqfd9PZsrqZ0uhSQdJz
+qM+lAmdlw48ZG74fu2/ZEeBaDKcikaKp3IMveqD0f5lNRD11kfSSI8AnhZ2fMf4k
+Bid+n6ETXTwYJ8g22o2CC6y95oZhUwvl36juweOB4ro6qVG9rKm+Bt4+wLg3QMs6
+QaXWOe26GaomzBckyz6r7c8W2qYvbwus5YPwBs60qOJQJKysmckOmk586NLdSl1G
+glXVD1Y5EcYpYs/sTqMBNOwkftHIGwWBp53RsFdiG99z9YmCyizMboM6Ccr++FpU
++JIJ1CVmRgHbN3bKXYLSQwT/9vTebfLmCP+Oy0+s70xgBrjtBCwKsltlnlRONreA
+IMRHd45geDgkhua1zld0sSZz0lDsbTiKhVFrZbMWZI9nWKtQEcpfsSmFXkEbynn8
+zpLtvqjHTO5IdixPUT6efupCmsf6Qu2c/wSQRp33iOg25nakDLw7tD5KaA5DBzag
+Yku6cJBJV7Qwf/vbyznUnlgOokzpgV3txNIeYHZhOoH34JiQgQWiAYo4d/XUjaOD
+hmGILZJ9VwwrXm8+0J34jd2Wj0tepHcuwv2pRBTehuJRa23rUs/WIkTqBGeq1VTu
+SOkVFDzpB0jTcFHTpXPP6DY+K2LBIGE1bTc/RkGZLgpnMKTboDnjU0IDVB0evOga
+uXuSDsjn7cBNQvpKiBVK
+=c/z9
+-----END PGP SIGNATURE-----
+
+--zCKi3GIZzVBPywwA--
