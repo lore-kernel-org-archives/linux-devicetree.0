@@ -1,121 +1,197 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 1/4] usb: ohci-exynos: Use struct device instead of platform_device
-Date: Mon,  5 May 2014 10:33:42 +0530
-Message-ID: <1399266222-31802-1-git-send-email-gautam.vivek@samsung.com>
-References: <1399034855-9686-2-git-send-email-gautam.vivek@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399034855-9686-2-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v3 7/7] ARM: dts: berlin: add the pinctrl node and muxing setup for uarts
+Date: Mon,  5 May 2014 07:27:29 +0200
+Message-ID: <1399267649-20218-8-git-send-email-antoine.tenart@free-electrons.com>
+References: <1399267649-20218-1-git-send-email-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399267649-20218-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, linus.walleij@linaro.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Change to use struct device instead of struct platform_device
-for some static functions.
+The uart0 pinmux configuration is in the dtsi because uart0 will always
+use uart0-pmux to work, no other possibility. Same thing for uart1 and
+uart2 (BG2).
 
-Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
+ arch/arm/boot/dts/berlin2.dtsi   | 31 +++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/berlin2cd.dtsi | 17 +++++++++++++++++
+ arch/arm/boot/dts/berlin2q.dtsi  | 24 ++++++++++++++++++++++++
+ 3 files changed, 72 insertions(+)
 
-Changes since v1:
- - none
-
- drivers/usb/host/ohci-exynos.c |   20 +++++++++-----------
- 1 file changed, 9 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index 9cf80cb..05f00e3 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -39,18 +39,18 @@ struct exynos_ohci_hcd {
- 	struct usb_otg *otg;
- };
- 
--static void exynos_ohci_phy_enable(struct platform_device *pdev)
-+static void exynos_ohci_phy_enable(struct device *dev)
- {
--	struct usb_hcd *hcd = platform_get_drvdata(pdev);
-+	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
- 
- 	if (exynos_ohci->phy)
- 		usb_phy_init(exynos_ohci->phy);
- }
- 
--static void exynos_ohci_phy_disable(struct platform_device *pdev)
-+static void exynos_ohci_phy_disable(struct device *dev)
- {
--	struct usb_hcd *hcd = platform_get_drvdata(pdev);
-+	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
- 
- 	if (exynos_ohci->phy)
-@@ -139,7 +139,7 @@ skip_phy:
- 
- 	platform_set_drvdata(pdev, hcd);
- 
--	exynos_ohci_phy_enable(pdev);
-+	exynos_ohci_phy_enable(&pdev->dev);
- 
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err) {
-@@ -150,7 +150,7 @@ skip_phy:
- 	return 0;
- 
- fail_add_hcd:
--	exynos_ohci_phy_disable(pdev);
-+	exynos_ohci_phy_disable(&pdev->dev);
- fail_io:
- 	clk_disable_unprepare(exynos_ohci->clk);
- fail_clk:
-@@ -168,7 +168,7 @@ static int exynos_ohci_remove(struct platform_device *pdev)
- 	if (exynos_ohci->otg)
- 		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
- 
--	exynos_ohci_phy_disable(pdev);
-+	exynos_ohci_phy_disable(&pdev->dev);
- 
- 	clk_disable_unprepare(exynos_ohci->clk);
- 
-@@ -190,7 +190,6 @@ static int exynos_ohci_suspend(struct device *dev)
- {
- 	struct usb_hcd *hcd = dev_get_drvdata(dev);
- 	struct exynos_ohci_hcd *exynos_ohci = to_exynos_ohci(hcd);
--	struct platform_device *pdev = to_platform_device(dev);
- 	bool do_wakeup = device_may_wakeup(dev);
- 	int rc = ohci_suspend(hcd, do_wakeup);
- 
-@@ -200,7 +199,7 @@ static int exynos_ohci_suspend(struct device *dev)
- 	if (exynos_ohci->otg)
- 		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
- 
--	exynos_ohci_phy_disable(pdev);
-+	exynos_ohci_phy_disable(dev);
- 
- 	clk_disable_unprepare(exynos_ohci->clk);
- 
-@@ -211,14 +210,13 @@ static int exynos_ohci_resume(struct device *dev)
- {
- 	struct usb_hcd *hcd			= dev_get_drvdata(dev);
- 	struct exynos_ohci_hcd *exynos_ohci	= to_exynos_ohci(hcd);
--	struct platform_device *pdev		= to_platform_device(dev);
- 
- 	clk_prepare_enable(exynos_ohci->clk);
- 
- 	if (exynos_ohci->otg)
- 		exynos_ohci->otg->set_host(exynos_ohci->otg, &hcd->self);
- 
--	exynos_ohci_phy_enable(pdev);
-+	exynos_ohci_phy_enable(dev);
- 
- 	ohci_resume(hcd, false);
- 
--- 
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2=
+=2Edtsi
+index 56a1af2f1052..fb58f43eab52 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -176,6 +176,11 @@
+ 			};
+ 		};
+=20
++		soc_pinctrl: pin-controller@ea0000 {
++			compatible =3D "marvell,berlin2-soc-pinctrl";
++			reg =3D <0xea0000 0x4c>;
++		};
++
+ 		apb@fc0000 {
+ 			compatible =3D "simple-bus";
+ 			#address-cells =3D <1>;
+@@ -184,6 +189,26 @@
+ 			ranges =3D <0 0xfc0000 0x10000>;
+ 			interrupt-parent =3D <&sic>;
+=20
++			sm_pinctrl: pin-controller@0000 {
++				compatible =3D "marvell,berlin2-sysmgr-pinctrl";
++				reg =3D <0x0000 0x44>;
++
++				uart0_pmux: uart0-pmux {
++					marvell,groups =3D "GSM4";
++					marvell,function =3D "uart0";
++				};
++
++				uart1_pmux: uart1-pmux {
++					marvell,groups =3D "GSM5";
++					marvell,function =3D "uart1";
++				};
++
++				uart2_pmux: uart2-pmux {
++					marvell,groups =3D "GSM3";
++					marvell,function =3D "uart2";
++				};
++			};
++
+ 			uart0: serial@9000 {
+ 				compatible =3D "snps,dw-apb-uart";
+ 				reg =3D <0x9000 0x100>;
+@@ -191,6 +216,8 @@
+ 				reg-io-width =3D <1>;
+ 				interrupts =3D <8>;
+ 				clocks =3D <&smclk>;
++				pinctrl-0 =3D <&uart0_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
+@@ -201,6 +228,8 @@
+ 				reg-io-width =3D <1>;
+ 				interrupts =3D <9>;
+ 				clocks =3D <&smclk>;
++				pinctrl-0 =3D <&uart1_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
+@@ -211,6 +240,8 @@
+ 				reg-io-width =3D <1>;
+ 				interrupts =3D <10>;
+ 				clocks =3D <&smclk>;
++				pinctrl-0 =3D <&uart2_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berli=
+n2cd.dtsi
+index 094968c27533..a802d3fe5da6 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -169,6 +169,11 @@
+ 			};
+ 		};
+=20
++		soc_pinctrl: pin-controller@ae0000 {
++			compatible =3D "marvell,berlin2cd-soc-pinctrl";
++			reg =3D <0xea0000 0x4c>;
++		};
++
+ 		apb@fc0000 {
+ 			compatible =3D "simple-bus";
+ 			#address-cells =3D <1>;
+@@ -177,6 +182,16 @@
+ 			ranges =3D <0 0xfc0000 0x10000>;
+ 			interrupt-parent =3D <&sic>;
+=20
++			sm_pinctrl: pin-controller@0000 {
++				compatible =3D "marvell,berlin2cd-sysmgr-pinctrl";
++				reg =3D <0x0000 0x44>;
++
++				uart0_pmux: uart0-pmux {
++					marvell,groups =3D "G6";
++					marvell,function =3D "uart0";
++				};
++			};
++
+ 			uart0: serial@9000 {
+ 				compatible =3D "snps,dw-apb-uart";
+ 				reg =3D <0x9000 0x100>;
+@@ -184,6 +199,8 @@
+ 				reg-io-width =3D <1>;
+ 				interrupts =3D <8>;
+ 				clocks =3D <&smclk>;
++				pinctrl-0 =3D <&uart0_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
+2q.dtsi
+index 07452a7483fa..734debbf072f 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -183,6 +183,11 @@
+ 			};
+ 		};
+=20
++		soc_pinctrl: pin-controller@ea0000 {
++			compatible =3D "marvell,berlin2q-soc-pinctrl";
++			reg =3D <0xea0000 0x4c>;
++		};
++
+ 		apb@fc0000 {
+ 			compatible =3D "simple-bus";
+ 			#address-cells =3D <1>;
+@@ -198,6 +203,8 @@
+ 				interrupts =3D <8>;
+ 				clocks =3D <&smclk>;
+ 				reg-shift =3D <2>;
++				pinctrl-0 =3D <&uart0_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
+@@ -208,9 +215,26 @@
+ 				interrupts =3D <9>;
+ 				clocks =3D <&smclk>;
+ 				reg-shift =3D <2>;
++				pinctrl-0 =3D <&uart1_pmux>;
++				pinctrl-names =3D "default";
+ 				status =3D "disabled";
+ 			};
+=20
++			sm_pinctrl: pin-controller@d000 {
++				compatible =3D "marvell,berlin2q-sysmgr-pinctrl";
++				reg =3D <0xd000 0x44>;
++
++				uart0_pmux: uart0-pmux {
++					marvell,groups =3D "GSM12";
++					marvell,function =3D "uart0";
++				};
++
++				uart1_pmux: uart1-pmux {
++					marvell,groups =3D "GSM14";
++					marvell,function =3D "uart1";
++				};
++			};
++
+ 			sic: interrupt-controller@e000 {
+ 				compatible =3D "snps,dw-apb-ictl";
+ 				reg =3D <0xe000 0x30>;
+--=20
+1.8.3.2
