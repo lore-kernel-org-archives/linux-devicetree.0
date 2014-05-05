@@ -1,152 +1,87 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH 2/5] ARM: add SMP support for Broadcom mobile SoCs
-Date: Mon, 05 May 2014 18:43:28 -0700
-Message-ID: <53683E40.1060909@codeaurora.org>
-References: <1396577891-2713-1-git-send-email-elder@linaro.org> <1396577891-2713-3-git-send-email-elder@linaro.org> <533EF21C.6000909@codeaurora.org> <53680A5B.4060208@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53680A5B.4060208-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH 9/9] ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
+Date: Mon,  5 May 2014 17:53:43 +0200
+Message-ID: <1399305223-18703-10-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/14 15:02, Alex Elder wrote:
-> On 04/04/2014 12:55 PM, Stephen Boyd wrote:
->> On 04/03/14 19:18, Alex Elder wrote:
->>> +
->>> +/*
->>> + * Secondary startup method setup routine to extract the location of
->>> + * the secondary boot register from a "cpu" or "cpus" device tree
->>> + * node.  Only the first seen secondary boot register value is used;
->>> + * any others are ignored.  The secondary boot register value must be
->>> + * non-zero.
->>> + *
->>> + * Returns 0 if successful or an error code otherwise.
->>> + */
->>> +static int __init of_enable_method_setup(struct device_node *node)
->>> +{
->>> +	int ret;
->>> +
->>> +	/* Ignore all but the first one specified */
->>> +	if (secondary_boot)
->>> +		return 0;
->>> +
->>> +	ret = of_property_read_u32(node, OF_SECONDARY_BOOT, &secondary_boot);
->>> +	if (ret)
->>> +		pr_err("%s: missing/invalid " OF_SECONDARY_BOOT " property\n",
->>> +			node->name);
->>> +
->>> +	return ret;
->>> +}
->> I don't understand why we need this. Why can't we get the secondary boot
->> address from the /cpus node in the smp_prepare_cpus op. It isn't that
->> hard to get access to the cpus node there via of_find_node_by_path().
->> Then we don't need patch 1 at all. If it turns out to be common stuff,
->> we can always have the common function live in arm common code or maybe
->> even be a devicetree API.
-> I already responded to this, but never got any response.  I
-> was preparing to re-send this series and wanted to try to
-> pull the added feature (patch 1) out and not be dependent on
-> it.  But I think it's a bit ugly so I'm hoping to get a
-> blessing to proceed with what I originally proposed.  For
-> reference, here's the thread:
->     https://lkml.org/lkml/2014/4/3/421
->
-> What I'm trying to do is get the value of a "secondary-boot-reg"
-> property from a node known to have an "enable-method" property
-> that matches the method name supplied in CPU_METHOD_OF_DECLARE().
+Patch adds DT entries for clockgen A9
 
-I don't recall seeing any documentation about the secondary-boot-reg
-property. Please make sure it is documented in the next patch series.
+Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ arch/arm/boot/dts/stih415-clock.dtsi | 48 +++++++++++++++++++++++++++++-------
+ 1 file changed, 39 insertions(+), 9 deletions(-)
 
->
-> Using the callback function as I originally proposed, this is
-> very easy.  When arm_dt_init_cpu_maps() parses the "cpus" portion
-> of the device tree it calls set_smp_ops_by_method() for a
-> matching "cpu" or "cpus" node, and that function supplies
-> the node to the callback function. The callback can extract
-> additional property values if needed.
->
-> If I hold off until smp_prepare_cpus() is called, I have to
-> re-parse the device tree to find the "cpus" node (this is
-> in itself trivial).  I then need to re-parse that node to
-> verify the matching "enable-method" property is found before
-> looking for the parameter information I need for that enable
-> method.  I would really prefer not to re-do this parsing
-> step.  It's imprecise and a little inefficient, and it
-> duplicates (but not exactly) logic that's already performed
-> by arm_dt_init_cpu_maps().
-
-Do you have any devices where the enable-method and secondary-boot-reg
-isn't the same across all CPUs? A lot of the complexity comes from
-broken DTs that don't specify a secondary-boot-reg along with the
-enable-method. From the description and the code it seems that we should
-just always put these two properties in the cpus node to make things
-simple and precise. I agree it's a minor duplication to read the DT
-again to get the /cpus node and read a property out of it, but I doubt
-you could even measure the difference.
-
->
-> One more point of clarification.  This "secondary-boot-reg"
-> value is *not* the secondary boot address--that is, it's
-> not the address secondary cores jump to when they are
-> activated.  Instead, this is the address of a register
-> that's used to request the ROM code release a core from
-> its ROM-implemented holding pen.  For this machine,
-> control jumps at that point to secondary_startup(),
-> defined in arch/arm/kernel/head.S.
-
-Yes it wouldn't be possible to specify the entry address in DT (depends
-on compile time factors). How is this different from cpu-release-addr
-though? It looks like it describes something similar to what ePAPR
-describes and how arm64 uses it (although those two slightly differ).
-Assuming it's paired with a different enable-method than spin-table I
-don't see a problem reusing the same name.
-
->
-> So...
->
-> Stephen, I'd like to hear from you whether my explanation
-> is adequate, and whether you think my addition and use of
-> CPU_METHOD_OF_DECLARE_SETUP() is reasonable.  (If you have
-> a suggestion for a better name, I'm open.)
->
-> If you still don't like it, I'll follow up with a
-> new version of the patches, this time parsing the
-> device tree in the smp_prepare_cpus() method as
-> you suggested.  I don't want this to hold up getting
-> this SMP support into the kernel.
->
-
-This was my train of thought. It annoys me that we have smp ops at two
-levels. We already have SMP ops that deal with SMP things and now we
-have another level that is associated with the enable-method. If we
-really need this callback why couldn't we just collapse it with the
-smp_ops we already have? When we do that we realize that
-smp_prepare_cpus() is a fairly similar place to do this sort of thing,
-but changing that callback to take the node is annoying to propagate to
-all users. But do we really need that node? It seems simple enough to
-just get the cpus node and then read out the property we care about and
-we can do all that in smp_prepare_cpus() one time (and keep the mapping
-around forever) without requiring any core ARM changes.
-
-Do you have any more complicated use cases for this setup hook? RIght
-now I'm not convinced that we need to add all this framework for
-something that looks like it could be done in a couple lines in the
-prepare_cpus() step.
-
-	cpus = of_find_node_by_path("/cpus")
-	ret = of_property_read_u32(cpus, "secondary-boot-reg", &addr);
-
-
+diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
+index 24a7508..4ad779d 100644
+--- a/arch/arm/boot/dts/stih415-clock.dtsi
++++ b/arch/arm/boot/dts/stih415-clock.dtsi
+@@ -24,15 +24,6 @@
+ 		};
+ 
+ 		/*
+-		 * ARM Peripheral clock for timers
+-		 */
+-		arm_periph_clk: arm_periph_clk {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <500000000>;
+-		};
+-
+-		/*
+ 		 * ClockGenAs on SASG1
+ 		 */
+ 		clockgenA@fee62000 {
+@@ -499,5 +490,44 @@
+ 						/* Remaining outputs unused */
+ 			};
+ 		};
++
++		/*
++		 * A9 PLL
++		 */
++		clockgenA9 {
++			reg = <0xfdde00d8 0x70>;
++
++			CLOCKGEN_A9_PLL: CLOCKGEN_A9_PLL {
++				#clock-cells = <1>;
++				compatible = "st,stih415-plls-c32-a9", "st,clkgen-plls-c32";
++
++				clocks = <&CLK_SYSIN>;
++				clock-output-names = "CLOCKGEN_A9_PLL_ODF";
++			};
++		};
++
++		/*
++		 * ARM CPU related clocks
++		 */
++		CLK_M_A9: CLK_M_A9 {
++			#clock-cells = <0>;
++			compatible = "st,stih415-clkgen-a9-mux", "st,clkgen-mux";
++			reg = <0xfdde00d8 0x4>;
++			clocks = <&CLOCKGEN_A9_PLL 0>,
++				 <&CLOCKGEN_A9_PLL 0>,
++				 <&CLK_M_A0_DIV1 2>,
++				 <&CLK_M_A9_EXT2F_DIV2>;
++		};
++
++		/*
++		 * ARM Peripheral clock for timers
++		 */
++		arm_periph_clk: CLK_M_A9_PERIPHS {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&CLK_M_A9>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
+ 	};
+ };
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
