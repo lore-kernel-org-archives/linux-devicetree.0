@@ -1,221 +1,335 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 4/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
-Date: Mon,  5 May 2014 17:53:38 +0200
-Message-ID: <1399305223-18703-5-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
+From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 5/5] arm: exynos: Add MCPM call-back functions
+Date: Mon, 5 May 2014 21:55:24 +0530
+Message-ID: <CAM4voannHDvT_dAKd_-mofLS=7_CmEVF6S+z0CccFjXG8ZuxVw@mail.gmail.com>
+References: <1398528348-21214-6-git-send-email-a.kesavan@samsung.com>
+	<1399044359-15784-1-git-send-email-a.kesavan@samsung.com>
+	<alpine.LFD.2.11.1405021347500.980@knanqh.ubzr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.11.1405021347500.980-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas P Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "mark.rutland" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds DT entries for clockgen B/C/D/E/F
+Hi Nicolas,
 
-Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- arch/arm/boot/dts/stih416-clock.dtsi | 189 +++++++++++++++++++++++++++++++++++
- 1 file changed, 189 insertions(+)
+On Fri, May 2, 2014 at 11:46 PM, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Fri, 2 May 2014, Abhilash Kesavan wrote:
+>
+>> Add machine-dependent MCPM call-backs for Exynos5420. These are used
+>> to power up/down the secondary CPUs during boot, shutdown, s2r and
+>> switching.
+>>
+>> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Inderpal Singh <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> Signed-off-by: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> OK.... There is still a detail wrong.  At least we are converging.
+>
+>> ---
+>>  arch/arm/mach-exynos/Kconfig       |    8 +
+>>  arch/arm/mach-exynos/Makefile      |    2 +
+>>  arch/arm/mach-exynos/mcpm-exynos.c |  345 ++++++++++++++++++++++++++++++++++++
+>>  arch/arm/mach-exynos/regs-pmu.h    |    3 +
+>>  4 files changed, 358 insertions(+)
+>>  create mode 100644 arch/arm/mach-exynos/mcpm-exynos.c
+>>
+>> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+>> index 5c34dc2..138070e 100644
+>> --- a/arch/arm/mach-exynos/Kconfig
+>> +++ b/arch/arm/mach-exynos/Kconfig
+>> @@ -73,4 +73,12 @@ config SOC_EXYNOS5440
+>>
+>>  endmenu
+>>
+>> +config EXYNOS5420_MCPM
+>> +     bool "Exynos5420 Multi-Cluster PM support"
+>> +     depends on MCPM && SOC_EXYNOS5420
+>> +     select ARM_CCI
+>> +     help
+>> +       This is needed to provide CPU and cluster power management
+>> +       on Exynos5420 implementing big.LITTLE.
+>> +
+>>  endif
+>> diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
+>> index a656dbe..01bc9b9 100644
+>> --- a/arch/arm/mach-exynos/Makefile
+>> +++ b/arch/arm/mach-exynos/Makefile
+>> @@ -29,3 +29,5 @@ obj-$(CONFIG_ARCH_EXYNOS)   += firmware.o
+>>
+>>  plus_sec := $(call as-instr,.arch_extension sec,+sec)
+>>  AFLAGS_exynos-smc.o          :=-Wa,-march=armv7-a$(plus_sec)
+>> +
+>> +obj-$(CONFIG_EXYNOS5420_MCPM)        += mcpm-exynos.o
+>> diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
+>> new file mode 100644
+>> index 0000000..d0f7461
+>> --- /dev/null
+>> +++ b/arch/arm/mach-exynos/mcpm-exynos.c
+>> @@ -0,0 +1,345 @@
+>> +/*
+>> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+>> + *           http://www.samsung.com
+>> + *
+>> + * arch/arm/mach-exynos/mcpm-exynos.c
+>> + *
+>> + * Based on arch/arm/mach-vexpress/dcscb.c
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/arm-cci.h>
+>> +#include <linux/delay.h>
+>> +#include <linux/io.h>
+>> +#include <linux/of_address.h>
+>> +
+>> +#include <asm/cputype.h>
+>> +#include <asm/cp15.h>
+>> +#include <asm/mcpm.h>
+>> +
+>> +#include "regs-pmu.h"
+>> +#include "common.h"
+>> +
+>> +#define EXYNOS5420_CPUS_PER_CLUSTER  4
+>> +#define EXYNOS5420_NR_CLUSTERS               2
+>> +
+>> +/* Non-secure iRAM base address */
+>> +static void __iomem *ns_sram_base_addr;
+>> +
+>> +/*
+>> + * The common v7_exit_coherency_flush API could not be used because of the
+>> + * Erratum 799270 workaround. This macro is the same as the common one (in
+>> + * arch/arm/include/asm/cacheflush.h) except for the erratum handling.
+>> + */
+>> +#define exynos_v7_exit_coherency_flush(level) \
+>> +     asm volatile( \
+>> +     "stmfd  sp!, {fp, ip}\n\t"\
+>> +     "mrc    p15, 0, r0, c1, c0, 0   @ get SCTLR\n\t" \
+>> +     "bic    r0, r0, #"__stringify(CR_C)"\n\t" \
+>> +     "mcr    p15, 0, r0, c1, c0, 0   @ set SCTLR\n\t" \
+>> +     "isb\n\t"\
+>> +     "bl     v7_flush_dcache_"__stringify(level)"\n\t" \
+>> +     "clrex\n\t"\
+>> +     "mrc    p15, 0, r0, c1, c0, 1   @ get ACTLR\n\t" \
+>> +     "bic    r0, r0, #(1 << 6)       @ disable local coherency\n\t" \
+>> +     /* Dummy Load of a device register to avoid Erratum 799270 */ \
+>> +     "ldr    r4, [%0]\n\t" \
+>> +     "and    r4, r4, #0\n\t" \
+>> +     "orr    r0, r0, r4\n\t" \
+>> +     "mcr    p15, 0, r0, c1, c0, 1   @ set ACTLR\n\t" \
+>> +     "isb\n\t" \
+>> +     "dsb\n\t" \
+>> +     "ldmfd  sp!, {fp, ip}" \
+>> +     : \
+>> +     : "Ir" (S5P_INFORM0) \
+>> +     : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", \
+>> +       "r9", "r10", "lr", "memory")
+>> +
+>> +/*
+>> + * We can't use regular spinlocks. In the switcher case, it is possible
+>> + * for an outbound CPU to call power_down() after its inbound counterpart
+>> + * is already live using the same logical CPU number which trips lockdep
+>> + * debugging.
+>> + */
+>> +static arch_spinlock_t exynos_mcpm_lock = __ARCH_SPIN_LOCK_UNLOCKED;
+>> +static int
+>> +cpu_use_count[EXYNOS5420_CPUS_PER_CLUSTER][EXYNOS5420_NR_CLUSTERS];
+>> +
+>> +#define exynos_cluster_unused(cluster) \
+>> +     (!cpu_use_count[0][cluster] && \
+>> +      !cpu_use_count[1][cluster] && \
+>> +      !cpu_use_count[2][cluster] && \
+>> +      !cpu_use_count[3][cluster])
+>> +
+>> +static int exynos_cluster_power_control(unsigned int cluster, int enable)
+>> +{
+>> +     unsigned int tries = 100;
+>> +     unsigned int val;
+>> +
+>> +     if (enable) {
+>> +             exynos_cluster_powerup(cluster);
+>> +             val = S5P_CORE_LOCAL_PWR_EN;
+>> +     } else {
+>> +             exynos_cluster_powerdown(cluster);
+>> +             val = 0;
+>> +     }
+>> +
+>> +     /* Wait until cluster power control is applied */
+>> +     while (tries--) {
+>> +             if (exynos_cluster_power_state(cluster) == val)
+>> +                     return 0;
+>> +
+>> +             cpu_relax();
+>> +     }
+>> +     pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
+>> +             enable ? "on" : "off");
+>> +
+>> +     return -ETIMEDOUT;
+>> +}
+>> +
+>> +static int exynos_power_up(unsigned int cpu, unsigned int cluster)
+>> +{
+>> +     unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
+>> +     int err = 0;
+>> +
+>> +     pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+>> +     if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
+>> +             cluster >= EXYNOS5420_NR_CLUSTERS)
+>> +             return -EINVAL;
+>> +
+>> +     /*
+>> +      * Since this is called with IRQs enabled, and no arch_spin_lock_irq
+>> +      * variant exists, we need to disable IRQs manually here.
+>> +      */
+>> +     local_irq_disable();
+>> +     arch_spin_lock(&exynos_mcpm_lock);
+>> +
+>> +     cpu_use_count[cpu][cluster]++;
+>> +     if (cpu_use_count[cpu][cluster] == 1) {
+>> +             bool was_cluster_down =
+>> +                     __mcpm_cluster_state(cluster) == CLUSTER_DOWN;
+>
+> This is racy.  I probably made this comment already.  The MCPM cluster
+> state may change in mcpm-head.S where concurrency protection is achieved
+> with a different mechanism.
+>
+> What you should do instead is to redefine exynos_cluster_unused() into
+> exynos_cluster_usecnt() and simply add all counts together.  You could
+> even have:
+>
+> #define exynos_cluster_unused(cluster) !exynos_cluster_usecnt(cluster)
+>
+> Yet, here you should use:
+>
+>         bool was_cluster_down = (exynos_cluster_usecnt(cluster) == 1);
+Fixed as per suggestion.
+>
+>> +
+>> +             /*
+>> +              * Turn on the cluster (L2/COMMON) and then power on the
+>> +              * cores.
+>> +              */
+>> +             if (was_cluster_down)
+>> +                     err = exynos_cluster_power_control(cluster, 1);
+>> +
+>> +             if (!err)
+>> +                     exynos_cpu_powerup(cpunr);
+>> +             else
+>> +                     exynos_cluster_power_control(cluster, 0);
+>> +     } else if (cpu_use_count[cpu][cluster] != 2) {
+>> +             /*
+>> +              * The only possible values are:
+>> +              * 0 = CPU down
+>> +              * 1 = CPU (still) up
+>> +              * 2 = CPU requested to be up before it had a chance
+>> +              *     to actually make itself down.
+>> +              * Any other value is a bug.
+>> +              */
+>> +             BUG();
+>> +     }
+>> +
+>> +     arch_spin_unlock(&exynos_mcpm_lock);
+>> +     local_irq_enable();
+>> +
+>> +     return err;
+>> +}
+>> +
+>> +static void exynos_power_down(void)
+>> +{
+>> +     unsigned int mpidr, cpu, cluster;
+>> +     bool last_man = false, skip_wfi = false;
+>> +     unsigned int cpunr;
+>> +
+>> +     mpidr = read_cpuid_mpidr();
+>> +     cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
+>> +     cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
+>> +     cpunr =  cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
+>> +
+>> +     pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
+>> +     BUG_ON(cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
+>> +                     cluster >= EXYNOS5420_NR_CLUSTERS);
+>> +
+>> +     __mcpm_cpu_going_down(cpu, cluster);
+>> +
+>> +     arch_spin_lock(&exynos_mcpm_lock);
+>> +     BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
+>> +     cpu_use_count[cpu][cluster]--;
+>> +     if (cpu_use_count[cpu][cluster] == 0) {
+>> +             exynos_cpu_powerdown(cpunr);
+>> +
+>> +             if (exynos_cluster_unused(cluster))
+>> +                     last_man = true;
+>> +     } else if (cpu_use_count[cpu][cluster] == 1) {
+>> +             /*
+>> +              * A power_up request went ahead of us.
+>> +              * Even if we do not want to shut this CPU down,
+>> +              * the caller expects a certain state as if the WFI
+>> +              * was aborted.  So let's continue with cache cleaning.
+>> +              */
+>> +             skip_wfi = true;
+>> +     } else {
+>> +             BUG();
+>> +     }
+>> +
+>> +     /*
+>> +      * TODO: Turn off the clusters when all cores in the cluster
+>> +      * are down to achieve significant power savings.
+>> +      */
+>
+> This comment should actually be located right after the
+> "if (exynos_cluster_unused(cluster))" above.  That is where the cluster
+> control should be applied, assuming it'll be effective only when WFI is
+> executed.
+OK.
+>
+>
+>> +     if (last_man && __mcpm_outbound_enter_critical(cpu, cluster)) {
+>> +             arch_spin_unlock(&exynos_mcpm_lock);
+>> +
+>> +             /* Flush all cache levels for this cluster. */
+>> +             exynos_v7_exit_coherency_flush(all);
+>> +
+>> +             /*
+>> +              * Disable cluster-level coherency by masking
+>> +              * incoming snoops and DVM messages:
+>> +              */
+>> +             cci_disable_port_by_cpu(mpidr);
+>> +
+>> +             __mcpm_outbound_leave_critical(cluster, CLUSTER_DOWN);
+>> +     } else {
+>> +             arch_spin_unlock(&exynos_mcpm_lock);
+>> +
+>> +             if (read_cpuid_part_number() == ARM_CPU_PART_CORTEX_A15) {
+>> +                     /*
+>> +                      * On the Cortex-A15 we need to disable
+>> +                      * L2 prefetching before flushing the cache.
+>> +                      */
+>> +                     asm volatile(
+>> +                     "mcr    p15, 1, %0, c15, c0, 3\n\t"
+>> +                     "isb\n\t"
+>> +                     "dsb"
+>> +                     : : "r" (0x400));
+>> +             }
+>
+> This doesn't belong here.  That is for the last_man only to do, right
+> before the "Flush all cache levels for this cluster" comment.
+This was a bad miss on my part. Will fix.
+>
+> The rest looks fine to me.
+Will post v5 soon.
 
-diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index fdb5654..7ff107b 100644
---- a/arch/arm/boot/dts/stih416-clock.dtsi
-+++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -503,5 +503,194 @@
- 						     /* Remaining outputs unused */
- 			};
- 		};
-+
-+		/*
-+		 * Frequency synthesizers on the SASG2
-+		 */
-+		CLOCKGEN_B0: CLOCKGEN_B0 {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs216", "st,quadfs";
-+			reg = <0xfee108b4 0x44>;
-+
-+			clocks = <&CLK_SYSIN>;
-+			clock-output-names = "CLK_S_USB48",
-+					     "CLK_S_DSS",
-+					     "CLK_S_STFE_FRC_2",
-+					     "CLK_S_THSENS_SCARD";
-+		};
-+
-+		CLOCKGEN_B1: CLOCKGEN_B1 {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs216", "st,quadfs";
-+			reg = <0xfe8308c4 0x44>;
-+
-+			clocks = <&CLK_SYSIN>;
-+			clock-output-names = "CLK_S_PCM_0",
-+					     "CLK_S_PCM_1",
-+					     "CLK_S_PCM_2",
-+					     "CLK_S_PCM_3";
-+		};
-+
-+		CLOCKGEN_C: CLOCKGEN_C {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs432", "st,quadfs";
-+			reg = <0xfe8307d0 0x44>;
-+
-+			clocks = <&CLK_SYSIN>;
-+			clock-output-names = "CLK_S_C_FS0_CH0",
-+					     "CLK_S_C_VCC_SD",
-+					     "CLK_S_C_FS0_CH2";
-+		};
-+
-+		CLK_S_VCC_HD: CLK_S_VCC_HD {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenc-vcc-hd", "st,clkgen-mux";
-+			reg = <0xfe8308b8 0x4>; /* SYSCFG2558 */
-+
-+			clocks = <&CLK_SYSIN>,
-+				 <&CLOCKGEN_C 0>;
-+		};
-+
-+		/*
-+		 * Add a dummy clock for the HDMI PHY for the VCC input mux
-+		 */
-+		CLK_S_TMDS_FROMPHY: CLK_S_TMDS_FROMPHY {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <0>;
-+		};
-+
-+		CLOCKGEN_C_VCC: CLOCKGEN_C_VCC {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-clkgenc", "st,clkgen-vcc";
-+			reg = <0xfe8308ac 0xc>; /* SYSCFG2555,2556,2557 */
-+
-+			clocks = <&CLK_S_VCC_HD>,
-+				 <&CLOCKGEN_C 1>,
-+				 <&CLK_S_TMDS_FROMPHY>,
-+				 <&CLOCKGEN_C 2>;
-+
-+			clock-output-names  = "CLK_S_PIX_HDMI",
-+					      "CLK_S_PIX_DVO",
-+					      "CLK_S_OUT_DVO",
-+					      "CLK_S_PIX_HD",
-+					      "CLK_S_HDDAC",
-+					      "CLK_S_DENC",
-+					      "CLK_S_SDDAC",
-+					      "CLK_S_PIX_MAIN",
-+					      "CLK_S_PIX_AUX",
-+					      "CLK_S_STFE_FRC_0",
-+					      "CLK_S_REF_MCRU",
-+					      "CLK_S_SLAVE_MCRU",
-+					      "CLK_S_TMDS_HDMI",
-+					      "CLK_S_HDMI_REJECT_PLL",
-+					      "CLK_S_THSENS";
-+		};
-+
-+		CLOCKGEN_D: CLOCKGEN_D {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs216", "st,quadfs";
-+			reg = <0xfee107e0 0x44>;
-+
-+			clocks = <&CLK_SYSIN>;
-+			clock-output-names = "CLK_S_CCSC",
-+					     "CLK_S_STFE_FRC_1",
-+					     "CLK_S_TSOUT_1",
-+					     "CLK_S_MCHI";
-+		};
-+
-+		/*
-+		 * Frequency synthesizers on the MPE42
-+		 */
-+		CLOCKGEN_E: CLOCKGEN_E {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs660-E", "st,quadfs";
-+			reg = <0xfd3208bc 0xb0>;
-+
-+			clocks = <&CLK_SYSIN>;
-+			clock-output-names = "CLK_M_PIX_MDTP_0",
-+					     "CLK_M_PIX_MDTP_1",
-+					     "CLK_M_PIX_MDTP_2",
-+					     "CLK_M_MPELPC";
-+		};
-+
-+		CLOCKGEN_F: CLOCKGEN_F {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs660-F", "st,quadfs";
-+			reg = <0xfd320878 0xf0>;
-+
-+			clocks = <&CLK_SYSIN>;
-+			clock-output-names = "CLK_M_MAIN_VIDFS",
-+					     "CLK_M_HVA_FS",
-+					     "CLK_M_FVDP_VCPU",
-+					     "CLK_M_FVDP_PROC_FS";
-+		};
-+
-+		CLK_M_FVDP_PROC: CLK_M_FVDP_PROC {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-fvdp", "st,clkgen-mux";
-+			reg = <0xfd320910 0x4>; /* SYSCFG8580 */
-+
-+			clocks = <&CLK_M_A1_DIV2 0>,
-+				 <&CLOCKGEN_F 3>;
-+		};
-+
-+		CLK_M_HVA: CLK_M_HVA {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-hva", "st,clkgen-mux";
-+			reg = <0xfd690868 0x4>; /* SYSCFG9538 */
-+
-+			clocks = <&CLOCKGEN_F 1>,
-+				 <&CLK_M_A1_DIV0 3>;
-+		};
-+
-+		CLK_M_F_VCC_HD: CLK_M_F_VCC_HD {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-hd", "st,clkgen-mux";
-+			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
-+
-+			clocks = <&CLOCKGEN_C_VCC 7>,
-+				 <&CLOCKGEN_F 0>;
-+		};
-+
-+		CLK_M_F_VCC_SD: CLK_M_F_VCC_SD {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-sd", "st,clkgen-mux";
-+			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
-+
-+			clocks = <&CLOCKGEN_C_VCC 8>,
-+				 <&CLOCKGEN_F 1>;
-+		};
-+
-+		/*
-+		 * Add a dummy clock for the HDMIRx external signal clock
-+		 */
-+		CLK_M_PIX_HDMIRX_SAS: CLK_M_PIX_HDMIRX_SAS {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <0>;
-+		};
-+
-+		CLOCKGEN_F_VCC: CLOCKGEN_F_VCC {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-clkgenf", "st,clkgen-vcc";
-+			reg = <0xfd32086c 0xc>; /* SYSCFG8539,8540,8541 */
-+
-+			clocks = <&CLK_M_F_VCC_HD>,
-+				 <&CLK_M_F_VCC_SD>,
-+				 <&CLOCKGEN_F 0>,
-+				 <&CLK_M_PIX_HDMIRX_SAS>;
-+
-+			clock-output-names  = "CLK_M_PIX_MAIN_PIPE",
-+					      "CLK_M_PIX_AUX_PIPE",
-+					      "CLK_M_PIX_MAIN_CRU",
-+					      "CLK_M_PIX_AUX_CRU",
-+					      "CLK_M_XFER_BE_COMPO",
-+					      "CLK_M_XFER_PIP_COMPO",
-+					      "CLK_M_XFER_AUX_COMPO",
-+					      "CLK_M_VSENS",
-+					      "CLK_M_PIX_HDMIRX_0",
-+					      "CLK_M_PIX_HDMIRX_1";
-+		};
- 	};
- };
--- 
-1.9.1
+Regards,
+Abhilash
+>
+>
+> Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
