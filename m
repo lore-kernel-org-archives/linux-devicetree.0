@@ -1,230 +1,131 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 5/7] Input: pixcir_i2c_ts: support upto 5 fingers and hardware provided tracking IDs
-Date: Mon, 5 May 2014 12:04:36 +0300
-Message-ID: <1399280678-23925-6-git-send-email-rogerq@ti.com>
-References: <1399280678-23925-1-git-send-email-rogerq@ti.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [RFC] [v2 Patch 2/6] ARM: TI: Describe the ti reset DT entries
+Date: Mon, 5 May 2014 15:01:55 -0700
+Message-ID: <20140505220155.GI25949@atomide.com>
+References: <1399320567-3639-1-git-send-email-dmurphy@ti.com>
+ <1399320567-3639-3-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399280678-23925-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1399320567-3639-3-git-send-email-dmurphy-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, dmurphy-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+To: Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Some variants of the Pixcir touch controller support upto 5
-simultaneous fingers and hardware tracking IDs. Prepare the driver
-for that.
+* Dan Murphy <dmurphy-l0cyMroinI0@public.gmane.org> [140505 13:10]:
+> +
+> +Required parent properties:
+> +- compatible : Should be one of,
+> +		"ti,omap4-prm" for OMAP4 PRM instances
+> +		"ti,omap5-prm" for OMAP5 PRM instances
+> +		"ti,dra7-prm" for DRA7xx PRM instances
+> +		"ti,am4-prcm" for AM43xx PRCM instances
+> +		"ti,am3-prcm" for AM33xx PRCM instances
+> +
+> +Required child reset property:
+> +- compatible : Should be
+> +		"resets" for All TI SoCs
+> +
+> +example:
+> +		prm: prm@4ae06000 {
+> +			compatible = "ti,omap5-prm";
+> +			reg = <0x4ae06000 0x3000>;
+> +
+> +			prm_resets: resets {
+> +				#address-cells = <1>;
+> +				#size-cells = <1>;
+> +				#reset-cells = <1>;
+> +			};
+> +		};
 
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- drivers/input/touchscreen/pixcir_i2c_ts.c | 74 ++++++++++++++++++++++++-------
- include/linux/input/pixcir_ts.h           | 12 +++++
- 2 files changed, 69 insertions(+), 17 deletions(-)
+The reg entries you have in the example below has different format
+compared to this?
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 3123699..927aed1 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -27,18 +27,20 @@
- #include <linux/input/pixcir_ts.h>
- #include <linux/gpio.h>
- 
--#define PIXCIR_MAX_SLOTS       2
-+#define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
- 
- struct pixcir_i2c_ts_data {
- 	struct i2c_client *client;
- 	struct input_dev *input;
--	const struct pixcir_ts_platform_data *chip;
-+	const struct pixcir_ts_platform_data *pdata;
- 	bool exiting;
-+	int max_fingers;	/* Max fingers supported in this instance */
- };
- 
- struct pixcir_touch {
- 	int x;
- 	int y;
-+	int id;
- };
- 
- struct pixcir_report_data {
-@@ -49,13 +51,21 @@ struct pixcir_report_data {
- static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 			    struct pixcir_report_data *report)
- {
--	u8 rdbuf[10], wrbuf[1] = { 0 };
-+	u8 rdbuf[2 + PIXCIR_MAX_SLOTS * 5];
-+	u8 wrbuf[1] = { 0 };
- 	u8 *bufptr;
- 	u8 touch;
- 	int ret, i;
-+	int readsize;
-+	const struct pixcir_i2c_chip_data *chip = &tsdata->pdata->chip;
- 
- 	memset(report, 0, sizeof(struct pixcir_report_data));
- 
-+	i = chip->has_hw_ids ? 1 : 0;
-+	readsize = 2 + tsdata->max_fingers * (4 + i);
-+	if (readsize > sizeof(rdbuf))
-+		readsize = sizeof(rdbuf);
-+
- 	ret = i2c_master_send(tsdata->client, wrbuf, sizeof(wrbuf));
- 	if (ret != sizeof(wrbuf)) {
- 		dev_err(&tsdata->client->dev,
-@@ -64,7 +74,7 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 		return;
- 	}
- 
--	ret = i2c_master_recv(tsdata->client, rdbuf, sizeof(rdbuf));
-+	ret = i2c_master_recv(tsdata->client, rdbuf, readsize);
- 	if (ret != sizeof(rdbuf)) {
- 		dev_err(&tsdata->client->dev,
- 			"%s: i2c_master_recv failed(), ret=%d\n",
-@@ -73,8 +83,8 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 	}
- 
- 	touch = rdbuf[0] & 0x7;
--	if (touch > PIXCIR_MAX_SLOTS)
--		touch = PIXCIR_MAX_SLOTS;
-+	if (touch > tsdata->max_fingers)
-+		touch = tsdata->max_fingers;
- 
- 	report->num_touches = touch;
- 	bufptr = &rdbuf[2];
-@@ -83,7 +93,12 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 		report->touches[i].x = (bufptr[1] << 8) | bufptr[0];
- 		report->touches[i].y = (bufptr[3] << 8) | bufptr[2];
- 
--		bufptr = &bufptr[4];
-+		if (chip->has_hw_ids) {
-+			report->touches[i].id = bufptr[4];
-+			bufptr = &bufptr[5];
-+		} else {
-+			bufptr = &bufptr[4];
-+		}
- 	}
- }
- 
-@@ -95,22 +110,35 @@ static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
- 	struct pixcir_touch *touch;
- 	int n, i, slot;
- 	struct device *dev = &ts->client->dev;
-+	const struct pixcir_i2c_chip_data *chip = &ts->pdata->chip;
- 
- 	n = report->num_touches;
- 	if (n > PIXCIR_MAX_SLOTS)
- 		n = PIXCIR_MAX_SLOTS;
- 
--	for (i = 0; i < n; i++) {
--		touch = &report->touches[i];
--		pos[i].x = touch->x;
--		pos[i].y = touch->y;
--	}
-+	if (!chip->has_hw_ids) {
-+		for (i = 0; i < n; i++) {
-+			touch = &report->touches[i];
-+			pos[i].x = touch->x;
-+			pos[i].y = touch->y;
-+		}
- 
--	input_mt_assign_slots(ts->input, slots, pos, n);
-+		input_mt_assign_slots(ts->input, slots, pos, n);
-+	}
- 
- 	for (i = 0; i < n; i++) {
- 		touch = &report->touches[i];
--		slot = slots[i];
-+
-+		if (chip->has_hw_ids) {
-+			slot = input_mt_get_slot_by_key(ts->input, touch->id);
-+			if (slot < 0) {
-+				dev_dbg(dev, "no free slot for id 0x%x\n",
-+					touch->id);
-+				continue;
-+			}
-+		} else {
-+			slot = slots[i];
-+		}
- 
- 		input_mt_slot(ts->input, slot);
- 		input_mt_report_slot_state(ts->input,
-@@ -130,7 +158,7 @@ static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
- static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
- {
- 	struct pixcir_i2c_ts_data *tsdata = dev_id;
--	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
-+	const struct pixcir_ts_platform_data *pdata = tsdata->pdata;
- 	struct pixcir_report_data report;
- 
- 	while (!tsdata->exiting) {
-@@ -359,6 +387,11 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 			dev_err(dev, "Invalid gpio_attb in pdata\n");
- 			return -EINVAL;
- 		}
-+
-+		if (pdata->chip.max_fingers <= 0) {
-+			dev_err(dev, "Invalid max_fingers in pdata\n");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
-@@ -373,7 +406,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 
- 	tsdata->client = client;
- 	tsdata->input = input;
--	tsdata->chip = pdata;
-+	tsdata->pdata = pdata;
- 
- 	input->name = client->name;
- 	input->id.bustype = BUS_I2C;
-@@ -389,7 +422,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
- 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
- 
--	error = input_mt_init_slots(input, PIXCIR_MAX_SLOTS,
-+	tsdata->max_fingers = tsdata->pdata->chip.max_fingers;
-+	if (tsdata->max_fingers > PIXCIR_MAX_SLOTS) {
-+		tsdata->max_fingers = PIXCIR_MAX_SLOTS;
-+		dev_info(dev, "Limiting maximum fingers to %d\n",
-+			 tsdata->max_fingers);
-+	}
-+
-+	error = input_mt_init_slots(input, tsdata->max_fingers,
- 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
- 	if (error) {
- 		dev_err(dev, "Error initializing Multi-Touch slots\n");
-diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
-index 160cf35..7bae83b 100644
---- a/include/linux/input/pixcir_ts.h
-+++ b/include/linux/input/pixcir_ts.h
-@@ -43,10 +43,22 @@ enum pixcir_int_mode {
- #define PIXCIR_INT_ENABLE	(1UL << 3)
- #define PIXCIR_INT_POL_HIGH	(1UL << 2)
- 
-+/**
-+ * struct pixcir_irc_chip_data - chip related data
-+ * @max_fingers:	Max number of fingers reported simultaneously by h/w
-+ * @has_hw_ids:		Hardware supports finger tracking IDs
-+ *
-+ */
-+struct pixcir_i2c_chip_data {
-+	u8 max_fingers;
-+	bool has_hw_ids;
-+};
-+
- struct pixcir_ts_platform_data {
- 	int x_max;
- 	int y_max;
- 	int gpio_attb;		/* GPIO connected to ATTB line */
-+	struct pixcir_i2c_chip_data chip;
- };
- 
- #endif
--- 
-1.8.3.2
+> +Reset node declaration
+> +==============================================
+> +The reset node is declared in a parent child relationship.  The main parent
+> +is the PRCM module which contains the base address.  The first child within
+> +the reset parent declares the target modules reset name.  This is followed by
+> +the control and status offsets.
+> +
+> +Within the first reset child node is a secondary child node which declares the
+> +reset signal of interest.  Under this node the control and status bits
+> +are declared.  These bits declare the bit mask for the target reset.
+> +
+> +
+> +Required properties:
+> +reg - This is the register offset from the PRCM parent.
+> +	This must be declared as:
+> +
+> +	reg = <control register offset>,
+> +		  <status register offset>;
+> +
+> +control-bit - This is the bit within the register which controls the reset
+> +	of the target module.  This is declared as a bit mask for the register.
+> +status-bit - This is the bit within the register which contains the status of
+> +	the reset of the target module.
+> +	This is declared as a bit mask for the register.
+> +
+> +example:
+> +&prm_resets {
+> +	dsp_rstctrl {
+> +		reg = <0x1c00>,
+> +			  <0x1c04>;
 
+Shouldn't this be start and size instead of start and end here?
+
+> +		dsp_reset: dsp_reset {
+> +			control-bit = <0x01>;
+> +			status-bit = <0x01>;
+> +		};
+> +	};
+> +};
+
+Are the control-bit and status-bit always the same? If so, you can
+keep that knowlede private to the the driver.
+
+And maybe you can have the bit offset in a reg property here to
+avoid adding any custom properties? Something like:
+
+	dsp_reset: reset@1 {
+		reg = 1;
+	};
+
+If reg is not suitable for that, it seems that some generic property
+to describe the bit offset is needed by quite a few drivers
+anyways, for things like clocks and regulators. 
+
+> +Client Node Declaration
+> +==============================================
+> +This is the consumer of the parent node to declare what resets this
+> +particular module is interested in.
+> +
+> +example:
+> +	src: src@55082000 {
+> +		    resets = <&reset_src phandle>;
+> +			reset-names = "<reset_name>";
+> +	};
+> +
+> +Required Properties:
+> +reset_src - This is the parent DT entry for the reset controller
+> +phandle - This is the phandle of the specific reset to be used by the clien
+> +	driver.
+> +reset-names - This is the reset name of module that the device driver
+> +	needs to be able to reset.  This value must correspond to a value within
+> +	the reset controller array.
+> +
+> +example:
+> +resets = <&prm_resets &dsp_mmu_reset>;
+> +reset-names = "dsp_mmu_reset";
+
+This part looks OK to me, not sure if we need the reset-names property
+if we have one already why not.
+
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
