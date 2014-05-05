@@ -1,47 +1,122 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 13/20] usb: host: xhci-plat: Add support for the Armada 375
-Date: Tue,  6 May 2014 02:14:08 +0200
-Message-ID: <1399335255-589-14-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv3 1/5] Input: add common DT binding for touchscreens
+Date: Tue, 6 May 2014 01:04:12 +0200
+Message-ID: <20140505230412.GC6261@earth.universe>
+References: <1398470179-20880-1-git-send-email-sre@kernel.org>
+ <1398470179-20880-2-git-send-email-sre@kernel.org>
+ <20140505194125.GD25949@atomide.com>
+ <20140505195139.GA26978@core.coreip.homeip.net>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="E/DnYTRukya0zdZ1"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140505195139.GA26978@core.coreip.homeip.net>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-For the Armada 375 SoC which comes with an xhci controller. Currently
-the quirk is the same that the Armada 380/385 one, but by introducing
-a new compatible string it will allow to make the driver evolve
-seamless.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/usb/host/xhci-plat.c | 5 +++++
- 1 file changed, 5 insertions(+)
+--E/DnYTRukya0zdZ1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index d12ba56f52da..09639962c0bb 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -152,6 +152,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 					"marvell,armada-380-xhci"))
- 		xhci_mvebu_mbus_init_quirk(pdev);
- 
-+	if (of_device_is_compatible(pdev->dev.of_node,
-+					"marvell,armada-375-xhci"))
-+		xhci_mvebu_mbus_init_quirk(pdev);
-+
- 	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
- 	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
- 	if (ret)
-@@ -288,6 +292,7 @@ static const struct of_device_id usb_xhci_of_match[] = {
- 	{ .compatible = "generic-xhci" },
- 	{ .compatible = "xhci-platform" },
- 	{ .compatible = "marvell,armada-380-xhci"},
-+	{ .compatible = "marvell,armada-375-xhci"},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
--- 
-1.8.1.2
+On Mon, May 05, 2014 at 12:51:39PM -0700, Dmitry Torokhov wrote:
+> On Mon, May 05, 2014 at 12:41:26PM -0700, Tony Lindgren wrote:
+> > * Sebastian Reichel <sre@kernel.org> [140425 16:56]:
+> > > Add common DT binding documentation for touchscreen devices and
+> > > implement input_parse_touchscreen_of_params, which parses the common
+> > > properties and configures the input device accordingly.
+> > >=20
+> > > The method currently does not interpret the axis inversion properties,
+> > > since there is no matching flag in the generic linux input device.
+> > >=20
+> > > Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> > > ---
+> > >  .../bindings/input/touchscreen/touchscreen.txt     | 27 ++++++++++++=
++++++
+> > >  drivers/input/input.c                              | 34 ++++++++++++=
+++++++++++
+> > >  include/linux/input.h                              |  8 +++++
+> > >  3 files changed, 69 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/input/touchscre=
+en/touchscreen.txt
+> > >=20
+> > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/touc=
+hscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscre=
+en.txt
+> > > new file mode 100644
+> > > index 0000000..d8e0616
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen=
+=2Etxt
+> > > @@ -0,0 +1,27 @@
+> > > +General Touchscreen Properties:
+> > > +
+> > > +Optional properties for Touchscreens:
+> > > + - touchscreen-size-x		: horizontal resolution of touchscreen
+> > > +				  (in pixels)
+> > > + - touchscreen-size-y		: vertical resolution of touchscreen
+> > > +				  (in pixels)
+> > > + - touchscreen-max-pressure	: maximum reported pressure (arbitrary r=
+ange
+> > > +				  dependent on the controller)
+> > > + - touchscreen-fuzz-x		: horizontal noise value of the absolute input
+> > > +				  device (in pixels)
+> > > + - touchscreen-fuzz-y		: vertical noise value of the absolute input
+> > > +				  device (in pixels)
+> > > + - touchscreen-fuzz-pressure	: pressure noise value of the absolute =
+input
+> > > +				  device (arbitrary range dependent on the
+> > > +				  controller)
+>=20
+> Fuzz seems like linux-specific property, not generic one.
+
+I don't know about the term "fuzz", but the idea is pretty generic
+IMHO. It's similar to debouncing switches/buttons.
+
+> > > + - touchscreen-inverted-x	: X axis is inverted (boolean)
+> > > + - touchscreen-inverted-y	: Y axis is inverted (boolean)
+> >=20
+> > We probably also need something to swap x and y depending on the
+> > display orientation in addition to the touchscreen-inverted-x and y.
+> > Just swapping x and y is not enough depending if we rotate by 270
+> > degrees instead of 90 degrees.
+> >=20
+> > Naturally that part can be added later.
+>=20
+> So far we've been relying on upper layers (such as tslib) to perform
+> such transformations rather than re-implementing it in every driver. Are
+> we saying that we need to implement this in input core?
+
+I would appreciate to add this later to move on with this patchset.
+Having the N900's touchscreen working via DT in 3.16 would be nice
+now that the display is working :)
+
+-- Sebastian
+
+--E/DnYTRukya0zdZ1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTaBjsAAoJENju1/PIO/qa5X0P/0R6YC4fy8gLQSMy3uNyrjIe
+QnU0boUqNPvYV9XPeF+L6/u+psMZKJBRUhEYkKlUwFy/rsuuCDL2eFxX/AmdTEyk
+sp7rBMBAZgmtSMd1NJ8D3HjjRtqZqF7dPYHlDpbqSQhjF7geKB00wQcckq+ntsib
+n439+TQeveSGc4M4x+jEhO1dMa97GmHoKIaFFVFl6MnZqy6PhssPRzkNlS1ryIfq
+yy19QY6Bixnnn7PAx48MseWigwWNdESgORPgJGdr8L+y7wVbd39HYwEClUMbBgxA
+yWdeH9C/+01rJjVxmUGBS0iHdVZzz9gfUL6rjCc33bVpGLuwCQEFc/BMnEMschiF
+mRAPXA12JXkxGPgiE1wlEhk237ERRtCnF4nv/Fu20LxJgtqrHrHFz+T8NzfQvwCT
+EeZE2n3Y0Xd2xK1P5pGHFWAdKxEH0l8tc8YKcYNu7ZzDuelNQbQ2kYEyM/iNcNHe
+b+fvZhX+GF0EzaExXcoWwG+eyPHZ/5maUOp44H0vb+1ySK5XWbLFvoIXrahiy2jd
+NnKWLnFJQhcfil6TfQ7p6B9s4rE6EjYHWUwXcFNr/Cn7axDDHtYWYEz8++YYnkyI
+Rmx2SftckSLdV7iPiPJt64RMcrHLB13V94Af87+IGBWYe7TvPS2pdbqsQZmb3ThH
+ciYDaqDGjhNGc0puoGsh
+=C06e
+-----END PGP SIGNATURE-----
+
+--E/DnYTRukya0zdZ1--
