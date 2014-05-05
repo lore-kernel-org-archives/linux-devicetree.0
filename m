@@ -1,62 +1,99 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: dts: Add peach-pi board support
-Date: Mon, 5 May 2014 08:17:05 -0700
-Message-ID: <CAD=FV=U_b_n=V_mEFYNPFZ1wyrgjjr5jEGrVb5TviP0Z33popg@mail.gmail.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
-	<1399035821-25096-4-git-send-email-arun.kk@samsung.com>
-	<5363D176.80601@gmail.com>
-	<CAD=FV=XYjMg7V9=OzAy_ifwaM83QS0tiTrp5+nxvG236kkSjRQ@mail.gmail.com>
-	<53644DDB.7050503@gmail.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 3/7] Input: pixcir_i2c_ts: Get rid of pdata->attb_read_val()
+Date: Mon, 5 May 2014 12:04:34 +0300
+Message-ID: <1399280678-23925-4-git-send-email-rogerq@ti.com>
+References: <1399280678-23925-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53644DDB.7050503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1399280678-23925-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olofj-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arun Kumar <arunkk.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, dmurphy-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 2, 2014 at 7:00 PM, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Well, if you can use the device tree of peach-pit board and boot peach-pi
-> and vice-versa and it won't cause any hardware failures then I guess it's
-> fine to keep this string.
+Get rid of the attb_read_val() platform hook. Instead,
+read the ATTB gpio directly from the driver.
 
-I believe you can actually make it a good portion of the way through
-boot, though a bunch of things (including graphics) won't work.  I
-general I don't think it's all that different from "exynos5".
+Fail if valid ATTB gpio is not provided by patform data.
 
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+---
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 16 +++++++++++++++-
+ include/linux/input/pixcir_ts.h           |  2 +-
+ 2 files changed, 16 insertions(+), 2 deletions(-)
 
->>> I don't think this is a good idea, because this is basically rendering
->>> this
->>> dts file useless, unless used with a bootloader that can actually inject
->>> correct values. I believe that some generic setup could be provided in
->>> the
->>> dts, so you could at least get the board running.
->>
->>
->> I won't say that I care a whole lot, but I think that was what was
->> agreed upon the other day.  Specifically Tom Rini of U-Boot was
->> worried about the fact that U-Boot will read the memory node and
->> totally clobber it.  He thought there might be cases where someone
->> might _purposely_ not want U-Boot to do that.
->>
->> ...I would wonder what alternate bootloader you're imagining will
->> actually run on this board and not do this?
->
->
-> People should have the freedom to choose anything they want. We have also
-> barebox and coreboot with ARM and even Exynos5 support (in coreboot), but
-> people might want to use something completely exotic as well and the device
-> tree should let them do so.
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 53d01d4..d0f6989 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -24,6 +24,7 @@
+ #include <linux/i2c.h>
+ #include <linux/input.h>
+ #include <linux/input/pixcir_ts.h>
++#include <linux/gpio.h>
+ 
+ struct pixcir_i2c_ts_data {
+ 	struct i2c_client *client;
+@@ -87,11 +88,12 @@ static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
+ static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+ {
+ 	struct pixcir_i2c_ts_data *tsdata = dev_id;
++	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
+ 
+ 	while (!tsdata->exiting) {
+ 		pixcir_ts_poscheck(tsdata);
+ 
+-		if (tsdata->chip->attb_read_val())
++		if (gpio_get_value(pdata->gpio_attb))
+ 			break;
+ 
+ 		msleep(20);
+@@ -296,6 +298,11 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	if (!pdata) {
+ 		dev_err(&client->dev, "platform data not defined\n");
+ 		return -EINVAL;
++	} else {
++		if (!gpio_is_valid(pdata->gpio_attb)) {
++			dev_err(dev, "Invalid gpio_attb in pdata\n");
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
+@@ -328,6 +335,13 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 
+ 	input_set_drvdata(input, tsdata);
+ 
++	error = devm_gpio_request_one(dev, pdata->gpio_attb,
++				      GPIOF_DIR_IN, "pixcir_i2c_attb");
++	if (error) {
++		dev_err(dev, "Failed to request ATTB gpio\n");
++		return error;
++	}
++
+ 	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
+ 					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+ 					  client->name, tsdata);
+diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+index 7942804..160cf35 100644
+--- a/include/linux/input/pixcir_ts.h
++++ b/include/linux/input/pixcir_ts.h
+@@ -44,9 +44,9 @@ enum pixcir_int_mode {
+ #define PIXCIR_INT_POL_HIGH	(1UL << 2)
+ 
+ struct pixcir_ts_platform_data {
+-	int (*attb_read_val)(void);
+ 	int x_max;
+ 	int y_max;
++	int gpio_attb;		/* GPIO connected to ATTB line */
+ };
+ 
+ #endif
+-- 
+1.8.3.2
 
-Fair enough.  Unless Tom cares about this enough to throw his opinion
-in here, I guess our answer is that the memory node should have a sane
-default and we'll expect the bootloader to put something better in if
-it can properly probe memory.
-
-In this case I guess it would be 2GB.
-
--Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
