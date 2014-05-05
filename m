@@ -1,68 +1,132 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the Armada
- 38x
-Date: Tue, 06 May 2014 13:57:44 +0200
-Message-ID: <61061197.hLhKsFqJLF@wuerfel>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
- <1584794.IM1uiSkBdk@amdc1032>
+From: Adam Baker <linux@baker-net.org.uk>
+Subject: Re: [PATCH 01/15] ARM: dts: kirkwood: fix mislocated pcie-controller
+ nodes
+Date: Mon, 05 May 2014 23:20:28 +0100
+Message-ID: <53680EAC.3090401@baker-net.org.uk>
+References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com> <1398862602-29595-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1584794.IM1uiSkBdk@amdc1032>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Nadav Haklai <nadavh@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398862602-29595-2-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 06 May 2014 13:34:46 Bartlomiej Zolnierkiewicz wrote:
-> On Tuesday, May 06, 2014 02:14:01 AM Gregory CLEMENT wrote:
-> > For the Armada 38x SoCs which come with an xhci controller, specific
-> > initialization must be done during probe related to the MBus windows
-> > configuration. This patch adds the support of this quirk.
-> > 
-> > Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> > ---
-> >  drivers/usb/host/Kconfig      |  7 +++++
-> >  drivers/usb/host/Makefile     |  1 +
-> >  drivers/usb/host/xhci-mvebu.c | 71 +++++++++++++++++++++++++++++++++++++++++++
-> >  drivers/usb/host/xhci-mvebu.h | 21 +++++++++++++
-> >  drivers/usb/host/xhci-plat.c  |  6 ++++
-> >  5 files changed, 106 insertions(+)
-> >  create mode 100644 drivers/usb/host/xhci-mvebu.c
-> >  create mode 100644 drivers/usb/host/xhci-mvebu.h
-> > 
-> > diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> > index 3d9e54062d62..e70943fac4a1 100644
-> > --- a/drivers/usb/host/Kconfig
-> > +++ b/drivers/usb/host/Kconfig
-> > @@ -29,6 +29,13 @@ if USB_XHCI_HCD
-> >  config USB_XHCI_PLATFORM
-> >       tristate
-> >  
-> > +config USB_XHCI_MVEBU
-> > +     tristate "xHCI support for Marvell Armada 38x"
-> 
-> Please limit this driver to mvebu arch and compile testing, i.e.
-> 
->         depends on ARCH_MVEBU || COMPILE_TEST
+On 30/04/14 13:56, Sebastian Hesselbarth wrote:
+> Commit 54397d85349f
+>   ("ARM: kirkwood: Relocate PCIe device tree nodes")
+>
+> moved the pcie-controller nodes for the Kirkwood SoCs to the mbus
+> bus node. For some reason, two boards were not properly converted
+> and have their pci-controller nodes still in the ocp bus node.
+>
+> As the corresponding SoC pcie-controller does not exist anymore,
+> it is likely that pcie is broken on those boards since above commit.
+> Fix it by moving the pcie related nodes to the correct location.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 
-I think it actually needs a dependency on MVEBU_MBUS.
 
-You probably need something like
+I've tried this patch on NSA320, as expected it doesn't make any 
+observable difference as there is nothing connected to the PCIe bus 
+(hence not really worth a tested by). It matters more on the NSA310 as 
+that uses PCIe for Ethernet.
 
-	depends on MVEBU_MBUS=y || (MVEBU_MBUS=m && USB_XHCI=m)
+Regards
 
-Also, having the option 'tristate' makes no sense, since you
-can't have it as a loadable module.
+Adam Baker
 
-	Arnd
+> ---
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Russell King <linux@arm.linux.org.uk>
+> Cc: Jason Cooper <jason@lakedaemon.net>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Cc: Gregory Clement <gregory.clement@free-electrons.com>
+> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>   arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 18 ++++++++++--------
+>   arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi  | 18 ++++++++++--------
+>   2 files changed, 20 insertions(+), 16 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+> index 2cb0dc529165..4bf358c28be2 100644
+> --- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+> +++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
+> @@ -30,6 +30,16 @@
+>   		bootargs = "console=ttyS0,115200n8 earlyprintk";
+>   	};
+>
+> +	mbus {
+> +		pcie-controller {
+> +			status = "okay";
+> +
+> +			pcie@1,0 {
+> +				status = "okay";
+> +			};
+> +		};
+> +        };
+> +
+>   	ocp@f1000000 {
+>   		pinctrl@10000 {
+>   			pmx_usb_led: pmx-usb-led {
+> @@ -73,14 +83,6 @@
+>   		ehci@50000 {
+>   			status = "okay";
+>   		};
+> -
+> -		pcie-controller {
+> -			status = "okay";
+> -
+> -			pcie@1,0 {
+> -				status = "okay";
+> -			};
+> -		};
+>   	};
+>
+>   	gpio-leds {
+> diff --git a/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi b/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
+> index 843b8b561e5e..b88810df7ca2 100644
+> --- a/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
+> +++ b/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
+> @@ -4,6 +4,16 @@
+>   / {
+>   	model = "ZyXEL NSA310";
+>
+> +	mbus {
+> +		pcie-controller {
+> +			status = "okay";
+> +
+> +			pcie@1,0 {
+> +				status = "okay";
+> +			};
+> +		};
+> +	};
+> +
+>   	ocp@f1000000 {
+>   		pinctrl: pinctrl@10000 {
+>
+> @@ -51,14 +61,6 @@
+>   			status = "okay";
+>   			nr-ports = <2>;
+>   		};
+> -
+> -		pcie-controller {
+> -			status = "okay";
+> -
+> -			pcie@1,0 {
+> -				status = "okay";
+> -			};
+> -		};
+>   	};
+>
+>   	gpio_poweroff {
+>
