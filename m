@@ -1,111 +1,132 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/4] ARM: dts: am335x-evm: use phandles for USB and DMA
- refs
-Date: Tue, 6 May 2014 11:16:27 -0500
-Message-ID: <20140506161627.GJ25849@saruman.home>
-References: <1398693512-5355-1-git-send-email-guido@vanguardiasur.com.ar>
- <1398693512-5355-2-git-send-email-guido@vanguardiasur.com.ar>
-Reply-To: <balbi@ti.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [RFC v3 PATCH v6 11/16] ARM: dts: s6e3fa0: add DT bindings
+Date: Mon, 05 May 2014 12:35:17 +0200
+Message-ID: <53676965.4020800@samsung.com>
+References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
+ <1398563412-21781-12-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4wkndigzIeYF6Hbg"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398693512-5355-2-git-send-email-guido@vanguardiasur.com.ar>
-Sender: linux-omap-owner@vger.kernel.org
-To: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>
-Cc: LKML <linux-kernel@vger.kernel.org>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1398563412-21781-12-git-send-email-yj44.cho@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
---4wkndigzIeYF6Hbg
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 28, 2014 at 10:58:30AM -0300, Guido Mart=EDnez wrote:
-> Use phandles instead of unit adresses to reference usb and dma nodes.
-> This makes the DT more robust and readable.
->=20
-> Signed-off-by: Guido Mart=EDnez <guido@vanguardiasur.com.ar>
-
-Acked-by: Felipe Balbi <balbi@ti.com>
-
+On 04/27/2014 03:50 AM, YoungJun Cho wrote:
+> This patch adds DT bindings for s6e3fa0 panel.
+> The bindings describes panel resources, display timings and cpu mode timings.
+> 
+> Changelog v2:
+> - Adds unit address (commented by Sachin Kamat)
+> Changelog v3:
+> - Removes optional delay, size properties (commented by Laurent Pinchart)
+> - Adds OLED detection, TE gpio properties
+> Changelog v4:
+> - Moves CPU timings relevant properties from FIMD DT
+>   (commeted by Laurent Pinchart, Andrzej Hajda)
+> Changelog v5:
+> - Fixes gpio property names (commented by Andrzej Hajda)
+> Changelog v6:
+> - Renames CPU timings to CPU mode timings
+> - Modifies CPU mode timings internal properties relevant things
+>   (commeted by Laurent Pinchart, Andrzej Hajda)
+> 
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
->  arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-=
-evm.dts
-> index 6028217..e802627 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -331,28 +331,28 @@
->  &usb {
->  	status =3D "okay";
-> =20
-> -	control@44e10620 {
-> +	&usb_ctrl_mod {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb-phy@47401300 {
-> +	&usb0_phy {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb-phy@47401b00 {
-> +	&usb1_phy {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb@47401000 {
-> +	&usb0 {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb@47401800 {
-> +	&usb1 {
->  		status =3D "okay";
->  		dr_mode =3D "host";
->  	};
-> =20
-> -	dma-controller@47402000  {
-> +	&cppi41dma  {
->  		status =3D "okay";
->  	};
->  };
-> --=20
-> 1.9.2
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+>  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   68 ++++++++++++++++++++
+>  1 file changed, 68 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> new file mode 100644
+> index 0000000..9f06645
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> @@ -0,0 +1,68 @@
+> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
+> +
+> +Required properties:
+> +  - compatible: "samsung,s6e3fa0"
+> +  - reg: the virtual channel number of a DSI peripheral
+> +  - vdd3-supply: core voltage supply
+> +  - vci-supply: voltage supply for analog circuits
+> +  - reset-gpios: a GPIO spec for the reset pin
+> +  - det-gpios: a GPIO spec for the OLED detection pin
+> +  - te-gpios: a GPIO spec for the TE pin
+> +  - display-timings: timings for the connected panel as described by [1]
 
---=20
-balbi
+This still bothers me, it forces users to provide bunch of fake
+properties (four porches, two syncs and clock-frequency) just because we
+need to pass somehow pixel width and height. And do we really need pixel
+dimension to be passed via DT? I guess it could be:
+- hardcoded into the driver,
+- derived from the panel id,
+- maybe read from the panel, this is the best option I guess but I am
+not sure if panel provides an API for this.
 
---4wkndigzIeYF6Hbg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Regards
+Andrzej
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTaQrbAAoJEIaOsuA1yqRE7f4QAJ5CYqdobdBY8+3jfVncqo45
-IRclizz5bgJl4BWdu6RNDIB1/wozXPKwZZyeGTIvU9seeWNIwXFn8ILNVrMfzBJm
-kvmm8O25DTu+0DUepXxx3h12ix3sMrS/hZRlwwRx8hse3A8BV8bz0GakMFoXxufw
-pQIllRA+nytoZKbZA4mzaWkm99q9hCbGNbbXoAIWZJLZSKgl/RtPomXzrpzDJx3W
-Xr9hTSX336A3oUxTsamhmoSeRUTVhT48OLH/8LZlqt3awatS46ezCNOURsXCcIig
-cZNAsKiGfObpAz7ePuoEc9k7mpCLQlo/FILSjDIkPRUT+dJkv+uyhS18HDp2axKd
-irx4G251jaf4sWNSvKOsnzCAPGfToyER1MpUcU/vRLoTtJRNpXc6NBT9D8zjMsz7
-MEOEce9ThQWRLzQO/sd5UKJ3LgFU4pehtNy1ynV0kDauSJltn4Uf9lL+AhO9YTpf
-2PoQZ2TdUeAm/BP7QmAbbastilxVEhV1uvZzVCtbATtcQarbv7Xx1VbaGXhtDu1k
-i/jbo2skG8np498L+pG8MzPDz7xchQP9HptgptBvaRmurdCY0+/MlTZZM58x7zsK
-H2qc0Ww4kv+MgKz+RZfW5kYd9s9pMGvg2SFVuzc9Rtn60PSg0SOabNB1OcknbLXX
-C3bOFuTahomaOcjos/bo
-=60Dh
------END PGP SIGNATURE-----
-
---4wkndigzIeYF6Hbg--
+> +  - cpu-mode-timings: CPU interface timings for the connected panel,
+> +      and it contains following properties.
+> +        Required properties:
+> +          - wr-active: clock cycles for the active period of CS enable in CPU
+> +              interface.
+> +        Optional properties:
+> +          - cs-setup: clock cycles for the active period of address signal
+> +              enable until chip select is enable in CPU interface.
+> +              If not specified, the default value(0) will be used.
+> +          - wr-setup: clock cycles for the active period of CS signal enable
+> +              until write signal is enable in CPU interface.
+> +              If not specified, the default value(0) will be used.
+> +          - wr-hold: clock cycles for the active period of CS disable until
+> +              write signal is disable in CPU interface.
+> +              If not specified, the default value(0) will be used.
+> +
+> +Optional properties:
+> +
+> +The device node can contain one 'port' child node with one child 'endpoint'
+> +node, according to the bindings defined in [2]. This node should describe
+> +panel's video bus.
+> +
+> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
+> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
+> +
+> +Example:
+> +
+> +	panel@0 {
+> +		compatible = "samsung,s6e3fa0";
+> +		reg = <0>;
+> +		vdd3-supply = <&vcclcd_reg>;
+> +		vci-supply = <&vlcd_reg>;
+> +		reset-gpios = <&gpy7 4 0>;
+> +		det-gpios = <&gpg0 6 0>;
+> +		te-gpios = <&gpd1 7 0>;
+> +
+> +		display-timings {
+> +			timing0: timing-0 {
+> +				clock-frequency = <0>;
+> +				hactive = <1080>;
+> +				vactive = <1920>;
+> +				hfront-porch = <2>;
+> +				hback-porch = <2>;
+> +				hsync-len = <1>;
+> +				vfront-porch = <1>;
+> +				vback-porch = <4>;
+> +				vsync-len = <1>;
+> +			};
+> +		};
+> +
+> +		cpu-mode-timings {
+> +			cs-setup = <0>;
+> +			wr-setup = <0>;
+> +			wr-active = <1>;
+> +			wr-hold = <0>;
+> +		};
+> +	};
+> 
