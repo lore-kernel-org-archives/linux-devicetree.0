@@ -1,130 +1,63 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 5/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
-Date: Mon,  5 May 2014 17:53:39 +0200
-Message-ID: <1399305223-18703-6-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v3 5/7] ARM: dma: Use dma_pfn_offset for dma address
+	translation
+Date: Mon, 5 May 2014 20:50:40 +0100
+Message-ID: <20140505195040.GE3693@n2100.arm.linux.org.uk>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <1398353407-2345-6-git-send-email-santosh.shilimkar@ti.com> <20140502145852.GC3693@n2100.arm.linux.org.uk> <5363B42C.4010404@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5363B42C.4010404@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds DT entries for clockgen A9/DDR/GPU
+On Fri, May 02, 2014 at 11:05:16AM -0400, Santosh Shilimkar wrote:
+> On Friday 02 May 2014 10:58 AM, Russell King - ARM Linux wrote:
+> > On Thu, Apr 24, 2014 at 11:30:05AM -0400, Santosh Shilimkar wrote:
+> >>  static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
+> >>  {
+> >> -	return (void *)__bus_to_virt((unsigned long)addr);
+> >> +	if (!dev)
+> >> +		return (void *)__bus_to_virt((unsigned long)addr);
+> >> +	else
+> >> +		return (void *)__bus_to_virt(__pfn_to_bus(dma_to_pfn(dev, addr)));
+> > 
+> > This is quite horrendous.  There's easier ways to do this...  I assume
+> > you haven't looked at the assembler resulting from this at all with
+> > stuff like the p2v patching enabled?
+> > 
+> I haven't. Will check.
 
-Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/stih416-clock.dtsi | 79 ++++++++++++++++++++++++++++++++----
- 1 file changed, 70 insertions(+), 9 deletions(-)
+	if (dev) {
+		unsigned long pfn = dma_to_pfn(dev, addr);
 
-diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index 7ff107b..d68860f 100644
---- a/arch/arm/boot/dts/stih416-clock.dtsi
-+++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -26,15 +26,6 @@
- 		};
- 
- 		/*
--		 * ARM Peripheral clock for timers
--		 */
--		arm_periph_clk: arm_periph_clk {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <600000000>;
--		};
--
--		/*
- 		 * ClockGenAs on SASG2
- 		 */
- 		clockgenA@fee62000 {
-@@ -505,6 +496,45 @@
- 		};
- 
- 		/*
-+		 * A9 PLL
-+		 */
-+		clockgenA9 {
-+			reg = <0xfdde08b0 0x70>;
-+
-+			CLOCKGEN_A9_PLL: CLOCKGEN_A9_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih416-plls-c32-a9", "st,clkgen-plls-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_A9_PLL_ODF";
-+			};
-+		};
-+
-+		/*
-+		 * ARM CPU related clocks
-+		 */
-+		CLK_M_A9: CLK_M_A9 {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgen-a9-mux", "st,clkgen-mux";
-+			reg = <0xfdde08ac 0x4>;
-+			clocks = <&CLOCKGEN_A9_PLL 0>,
-+				     <&CLOCKGEN_A9_PLL 0>,
-+					 <&CLK_M_A0_DIV1 2>,
-+					 <&CLK_M_A9_EXT2F_DIV2>;
-+		};
-+
-+		/*
-+		 * ARM Peripheral clock for timers
-+		 */
-+		arm_periph_clk: CLK_M_A9_PERIPHS {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&CLK_M_A9>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+		};
-+
-+		/*
- 		 * Frequency synthesizers on the SASG2
- 		 */
- 		CLOCKGEN_B0: CLOCKGEN_B0 {
-@@ -692,5 +722,36 @@
- 					      "CLK_M_PIX_HDMIRX_0",
- 					      "CLK_M_PIX_HDMIRX_1";
- 		};
-+
-+		/*
-+		 * DDR PLL
-+		 */
-+		clockgenDDR {
-+			reg = <0xfdde07d8 0x110>;
-+
-+			CLOCKGEN_DDR_PLL: CLOCKGEN_DDR_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih416-plls-c32-ddr", "st,clkgen-plls-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_DDR0",
-+									 "CLOCKGEN_DDR1";
-+			};
-+		};
-+
-+		/*
-+		 * GPU PLL
-+		 */
-+		clockgenGPU {
-+			reg = <0xfd68ff00 0x910>;
-+
-+			CLOCKGEN_GPU_PLL: CLOCKGEN_GPU_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih416-gpu-pll-c32", "st,clkgengpu-pll-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_GPU_PLL";
-+			};
-+		};
- 	};
- };
+		return phys_to_virt(__pfn_to_phys(pfn));
+	}
+
+	return (void *)__bus_to_virt((unsigned long)addr);
+
+> >>  static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
+> >>  {
+> >> -	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+> >> +	if (!dev)
+> >> +		return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+> >> +	else
+> >> +		return pfn_to_dma(dev,
+> >> +				__bus_to_pfn(__virt_to_bus((unsigned long)(addr))));
+> > 
+> > Same here.
+> > 
+> ok.
+
+
+	if (dev)
+		return pfn_to_dma(dev, virt_to_pfn(addr));
+
+	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
