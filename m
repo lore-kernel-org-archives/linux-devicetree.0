@@ -1,94 +1,231 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: Re: [PATCH v2 2/5] Power: reset: add bindings for keystone reset
- driver
-Date: Mon, 5 May 2014 21:53:08 +0300
-Message-ID: <5367DE14.8000907@ti.com>
-References: <1397497283-16391-1-git-send-email-ivan.khoronzhuk@ti.com> <1397497283-16391-3-git-send-email-ivan.khoronzhuk@ti.com> <6937937.4J6iI7VpBO@wuerfel> <534D1719.40701@ti.com>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 5/7] Input: pixcir_i2c_ts: support upto 5 fingers and hardware provided tracking IDs
+Date: Mon, 5 May 2014 12:04:36 +0300
+Message-ID: <1399280678-23925-6-git-send-email-rogerq@ti.com>
+References: <1399280678-23925-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <534D1719.40701@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, santosh.shilimkar@ti.com, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, olof@lixom.net
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399280678-23925-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, dmurphy-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Some variants of the Pixcir touch controller support upto 5
+simultaneous fingers and hardware tracking IDs. Prepare the driver
+for that.
 
-On 04/15/2014 02:25 PM, Ivan Khoronzhuk wrote:
->
-> On 04/14/2014 09:44 PM, Arnd Bergmann wrote:
->> On Monday 14 April 2014 20:41:20 Ivan Khoronzhuk wrote:
->>> +Optional properties:
->>> +
->>> +- ti,soft-reset:       Boolean option indicating soft reset.
->>> +                       By default hard reset is used.
->>> +
->>> +- ti,wdt_list:         WDT list that can cause SoC reset.
->>> +                       The list in format: <0>, <2>;
->>> +                       Begins from 0 to 3, as keystone can contain up
->>> +                       to 4 SoC reset watchdogs.
->>>
->> This looks like your binding just describes a subset of the
->> watchdog timer registers. If so, don't do a standalone reset
->
-> The registers are not a subset of watchdog hardware it's SoC specific 
-> future
-> controlled by SoC specific registers (bootregs and PLL regs).
->
-> For watchog IP setup, the Keystone uses the watchdog driver common 
-> with other
-> SoCs -- davinci_watchdog that is not depend on other SoC settings like 
-> this driver does.
->
-> The Keystone SoCs have separate registers to tune Keystone2 reset 
-> functionality
-> by configuring Reset multiplexer &  PLL. And it tunes not only 
-> watchdog usage.
-> The keystone SoC can be rebooted in several ways. By external reset 
-> pin, by soft and
-> by watchdogs. This driver allows software reset or reset by one of the 
-> watchdogs
-> (and other settings) independently on watchdog driver settings. This 
-> is job of reset driver.
->
->> It's
->> driver, but instead do a watchdog driver that can also be
->> used for reset, and have a binding that properly describes
->> the watchdog hardware.
->>
->> It is bad to have overlapping register ranges between logical
->
-> WDT doesn't overlap with this driver.
->
->> devices, and it's also generally wrong to describe devices that
->> are not actually there: The hardware contains a watchdog, not
->> a system-reset device, so you should not make one up because
->> it seems easier given the Linux driver model.
->>
->>     Arnd 
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 74 ++++++++++++++++++++++++-------
+ include/linux/input/pixcir_ts.h           | 12 +++++
+ 2 files changed, 69 insertions(+), 17 deletions(-)
 
-Hi Arnd,
-
-Could I do smth additional to make bindings explanation more clear?
-Or this is enough?
-
-I can write like the following:
-Optional properties:
-
-- ti,soft-reset:       Boolean option indicating soft reset.
-                        By default hard reset is used.
-
-- ti,wdt_list:         WDT list that can cause SoC reset. This is not
-                         related to WDT driver, it's just needed to enable
-                         a SoC related reset that is triggered by one of 
-watchdogs.
-                        The list in format: <0>, <2>;
-                        Begins from 0 to 3, as keystone can contain up
-                        to 4 SoC reset watchdogs. Can be in random order.
-
-That is OK?
-
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 3123699..927aed1 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -27,18 +27,20 @@
+ #include <linux/input/pixcir_ts.h>
+ #include <linux/gpio.h>
+ 
+-#define PIXCIR_MAX_SLOTS       2
++#define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
+ 
+ struct pixcir_i2c_ts_data {
+ 	struct i2c_client *client;
+ 	struct input_dev *input;
+-	const struct pixcir_ts_platform_data *chip;
++	const struct pixcir_ts_platform_data *pdata;
+ 	bool exiting;
++	int max_fingers;	/* Max fingers supported in this instance */
+ };
+ 
+ struct pixcir_touch {
+ 	int x;
+ 	int y;
++	int id;
+ };
+ 
+ struct pixcir_report_data {
+@@ -49,13 +51,21 @@ struct pixcir_report_data {
+ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
+ 			    struct pixcir_report_data *report)
+ {
+-	u8 rdbuf[10], wrbuf[1] = { 0 };
++	u8 rdbuf[2 + PIXCIR_MAX_SLOTS * 5];
++	u8 wrbuf[1] = { 0 };
+ 	u8 *bufptr;
+ 	u8 touch;
+ 	int ret, i;
++	int readsize;
++	const struct pixcir_i2c_chip_data *chip = &tsdata->pdata->chip;
+ 
+ 	memset(report, 0, sizeof(struct pixcir_report_data));
+ 
++	i = chip->has_hw_ids ? 1 : 0;
++	readsize = 2 + tsdata->max_fingers * (4 + i);
++	if (readsize > sizeof(rdbuf))
++		readsize = sizeof(rdbuf);
++
+ 	ret = i2c_master_send(tsdata->client, wrbuf, sizeof(wrbuf));
+ 	if (ret != sizeof(wrbuf)) {
+ 		dev_err(&tsdata->client->dev,
+@@ -64,7 +74,7 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
+ 		return;
+ 	}
+ 
+-	ret = i2c_master_recv(tsdata->client, rdbuf, sizeof(rdbuf));
++	ret = i2c_master_recv(tsdata->client, rdbuf, readsize);
+ 	if (ret != sizeof(rdbuf)) {
+ 		dev_err(&tsdata->client->dev,
+ 			"%s: i2c_master_recv failed(), ret=%d\n",
+@@ -73,8 +83,8 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
+ 	}
+ 
+ 	touch = rdbuf[0] & 0x7;
+-	if (touch > PIXCIR_MAX_SLOTS)
+-		touch = PIXCIR_MAX_SLOTS;
++	if (touch > tsdata->max_fingers)
++		touch = tsdata->max_fingers;
+ 
+ 	report->num_touches = touch;
+ 	bufptr = &rdbuf[2];
+@@ -83,7 +93,12 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
+ 		report->touches[i].x = (bufptr[1] << 8) | bufptr[0];
+ 		report->touches[i].y = (bufptr[3] << 8) | bufptr[2];
+ 
+-		bufptr = &bufptr[4];
++		if (chip->has_hw_ids) {
++			report->touches[i].id = bufptr[4];
++			bufptr = &bufptr[5];
++		} else {
++			bufptr = &bufptr[4];
++		}
+ 	}
+ }
+ 
+@@ -95,22 +110,35 @@ static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
+ 	struct pixcir_touch *touch;
+ 	int n, i, slot;
+ 	struct device *dev = &ts->client->dev;
++	const struct pixcir_i2c_chip_data *chip = &ts->pdata->chip;
+ 
+ 	n = report->num_touches;
+ 	if (n > PIXCIR_MAX_SLOTS)
+ 		n = PIXCIR_MAX_SLOTS;
+ 
+-	for (i = 0; i < n; i++) {
+-		touch = &report->touches[i];
+-		pos[i].x = touch->x;
+-		pos[i].y = touch->y;
+-	}
++	if (!chip->has_hw_ids) {
++		for (i = 0; i < n; i++) {
++			touch = &report->touches[i];
++			pos[i].x = touch->x;
++			pos[i].y = touch->y;
++		}
+ 
+-	input_mt_assign_slots(ts->input, slots, pos, n);
++		input_mt_assign_slots(ts->input, slots, pos, n);
++	}
+ 
+ 	for (i = 0; i < n; i++) {
+ 		touch = &report->touches[i];
+-		slot = slots[i];
++
++		if (chip->has_hw_ids) {
++			slot = input_mt_get_slot_by_key(ts->input, touch->id);
++			if (slot < 0) {
++				dev_dbg(dev, "no free slot for id 0x%x\n",
++					touch->id);
++				continue;
++			}
++		} else {
++			slot = slots[i];
++		}
+ 
+ 		input_mt_slot(ts->input, slot);
+ 		input_mt_report_slot_state(ts->input,
+@@ -130,7 +158,7 @@ static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
+ static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+ {
+ 	struct pixcir_i2c_ts_data *tsdata = dev_id;
+-	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
++	const struct pixcir_ts_platform_data *pdata = tsdata->pdata;
+ 	struct pixcir_report_data report;
+ 
+ 	while (!tsdata->exiting) {
+@@ -359,6 +387,11 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 			dev_err(dev, "Invalid gpio_attb in pdata\n");
+ 			return -EINVAL;
+ 		}
++
++		if (pdata->chip.max_fingers <= 0) {
++			dev_err(dev, "Invalid max_fingers in pdata\n");
++			return -EINVAL;
++		}
+ 	}
+ 
+ 	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
+@@ -373,7 +406,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 
+ 	tsdata->client = client;
+ 	tsdata->input = input;
+-	tsdata->chip = pdata;
++	tsdata->pdata = pdata;
+ 
+ 	input->name = client->name;
+ 	input->id.bustype = BUS_I2C;
+@@ -389,7 +422,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
+ 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
+ 
+-	error = input_mt_init_slots(input, PIXCIR_MAX_SLOTS,
++	tsdata->max_fingers = tsdata->pdata->chip.max_fingers;
++	if (tsdata->max_fingers > PIXCIR_MAX_SLOTS) {
++		tsdata->max_fingers = PIXCIR_MAX_SLOTS;
++		dev_info(dev, "Limiting maximum fingers to %d\n",
++			 tsdata->max_fingers);
++	}
++
++	error = input_mt_init_slots(input, tsdata->max_fingers,
+ 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
+ 	if (error) {
+ 		dev_err(dev, "Error initializing Multi-Touch slots\n");
+diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+index 160cf35..7bae83b 100644
+--- a/include/linux/input/pixcir_ts.h
++++ b/include/linux/input/pixcir_ts.h
+@@ -43,10 +43,22 @@ enum pixcir_int_mode {
+ #define PIXCIR_INT_ENABLE	(1UL << 3)
+ #define PIXCIR_INT_POL_HIGH	(1UL << 2)
+ 
++/**
++ * struct pixcir_irc_chip_data - chip related data
++ * @max_fingers:	Max number of fingers reported simultaneously by h/w
++ * @has_hw_ids:		Hardware supports finger tracking IDs
++ *
++ */
++struct pixcir_i2c_chip_data {
++	u8 max_fingers;
++	bool has_hw_ids;
++};
++
+ struct pixcir_ts_platform_data {
+ 	int x_max;
+ 	int y_max;
+ 	int gpio_attb;		/* GPIO connected to ATTB line */
++	struct pixcir_i2c_chip_data chip;
+ };
+ 
+ #endif
 -- 
-Regards,
-Ivan Khoronzhuk
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
