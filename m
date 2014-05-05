@@ -1,34 +1,43 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 4/4] ARM: multi_v7_defconfig: add ST Keyscan driver
-Date: Mon,  5 May 2014 17:38:40 +0200
-Message-ID: <1399304320-18197-5-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v4 0/2] Add peach-pit board support
+Date: Mon,  5 May 2014 14:55:30 +0530
+Message-ID: <1399281933-31064-1-git-send-email-arun.kk@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, dianders@chromium.org, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds KEYBOARD_ST_KEYSCAN config
+Dependencies
+------------
+Adding pwm nodes for backlight
+https://patchwork.kernel.org/patch/4101881/
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Changes from v3
+--------------
+- Addressed comments from Tomasz and Doug.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index d4e8a47..4f0dce1 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -143,6 +143,7 @@ CONFIG_INPUT_EVDEV=y
- CONFIG_KEYBOARD_GPIO=y
- CONFIG_KEYBOARD_TEGRA=y
- CONFIG_KEYBOARD_SPEAR=y
-+CONFIG_KEYBOARD_ST_KEYSCAN=y
- CONFIG_KEYBOARD_CROS_EC=y
- CONFIG_MOUSE_PS2_ELANTECH=y
- CONFIG_INPUT_MISC=y
+Changes from v2
+--------------
+- Use reference based node addressing in board dts file
+  as suggested by Tomasz.
+- Included patch to update 5420.dtsi with node references
+  for all existing nodes.
+
+Changes from v1
+--------------
+- Addressed review comments from Doug, Sachin & Tushar
+- Removed adc and lid-switch nodes
+
+Arun Kumar K (2):
+  ARM: dts: Add node labels to 5420
+  ARM: dts: Add peach-pit board support
+
+ arch/arm/boot/dts/Makefile                 |    1 +
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |  147 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420.dtsi          |   26 ++---
+ 3 files changed, 161 insertions(+), 13 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
+
 -- 
-1.9.1
+1.7.9.5
