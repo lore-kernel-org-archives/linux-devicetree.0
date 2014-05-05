@@ -1,78 +1,71 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v2 3/7] phy: omap-usb2: Use generic clock names "wkupclk"
- and "refclk"
-Date: Mon, 5 May 2014 12:23:32 +0300
-Message-ID: <53675894.1090703@ti.com>
-References: <1398693687-13967-1-git-send-email-rogerq@ti.com>	<1398693687-13967-4-git-send-email-rogerq@ti.com>	<20140428160347.GG30292@saruman.home>	<535F59CF.6050002@ti.com>	<20140429161420.GH633@saruman.home>	<20140429161616.GI633@saruman.home> <CAGo_u6oAJZvUBvOWMtkn8pEXO1Q=A+CrQ1kcWGWLobFza65sbA@mail.gmail.com> <53673C6D.5060400@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Mon, 05 May 2014 17:14:44 +0200
+Message-ID: <4735818.FvYoTFuExd@wuerfel>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com> <6555552.UqkKQIAsih@wuerfel> <20140502174301.GE3805@e103592.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53673C6D.5060400@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, "Balbi, Felipe" <balbi@ti.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Tony Lindgren <tony@atomide.com>, george.cherian@ti.com, linux-omap <linux-omap@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140502174301.GE3805-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2014 10:23 AM, Roger Quadros wrote:
-> On 04/30/2014 06:20 PM, Nishanth Menon wrote:
->> On Tue, Apr 29, 2014 at 11:16 AM, Felipe Balbi <balbi@ti.com> wrote:
->>> On Tue, Apr 29, 2014 at 11:14:20AM -0500, Felipe Balbi wrote:
->>>> On Tue, Apr 29, 2014 at 10:50:39AM +0300, Roger Quadros wrote:
->>>>> +Nishant
->>>>>
->>>>> Hi,
->>>>>
->>>>> On 04/28/2014 07:03 PM, Felipe Balbi wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On Mon, Apr 28, 2014 at 05:01:23PM +0300, Roger Quadros wrote:
->>>>>>> As clocks might be named differently on multiple platforms, use a generic
->>>>>>> name in the driver and allow device tree node to specify the platform
->>>>>>> specific clock name.
->>>>>>>
->>>>>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>>>>>> ---
->>>>>>>  drivers/phy/phy-omap-usb2.c | 8 ++++----
->>>>>>>  1 file changed, 4 insertions(+), 4 deletions(-)
->>>>>>>
->>>>>>> diff --git a/drivers/phy/phy-omap-usb2.c b/drivers/phy/phy-omap-usb2.c
->>>>>>> index a2205a8..fb5e515 100644
->>>>>>> --- a/drivers/phy/phy-omap-usb2.c
->>>>>>> +++ b/drivers/phy/phy-omap-usb2.c
->>>>>>> @@ -275,16 +275,16 @@ static int omap_usb2_probe(struct platform_device *pdev)
->>>>>>>          if (IS_ERR(phy_provider))
->>>>>>>                  return PTR_ERR(phy_provider);
->>>>>>>
->>>>>>> -        phy->wkupclk = devm_clk_get(phy->dev, "usb_phy_cm_clk32k");
->>>>>>> +        phy->wkupclk = devm_clk_get(phy->dev, "wkupclk");
->>>>>>
->>>>>> doesn't this patch cause a regression ? I mean, you're changing the
->>>>>> clock name before fixing DTS. Also, that DTS has been in a major version
->>>>>> of the kernel, so we need to maintain compatibility with it. How about:
->>>>>
->>>>> I'm changing the DTS in Patch 4, but I prefer to do it in this patch
->>>>> to prevent synchronization issues in -next.
->>>>>
->>>>> About backward compatibility, I agree with you but at the same time I
->>>>> don't think anyone using TI SoCs burns the DTB to ROM and needs
->>>>> backward compatibility. We supply our BSPs/SDKs with the updated DTBs.
->>>>> Do you feel strict backward compatibility is worth the effort for TI
->>>>> specific blocks?
->>>>
->>>> dunno, but it would, at least, avoid "synchronization issues with
->>>> linux-next" :-)
->>>
->>> and the bisectability issue.
->>
->> I agree - we cannot drop backward compatibility for DTBs
->> http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/?id=2a9330010bea5982a5c6593824bc036bf62d67b7
+On Friday 02 May 2014 18:43:01 Dave Martin wrote:
+> On Fri, May 02, 2014 at 05:19:44PM +0200, Arnd Bergmann wrote:
+> > On Friday 02 May 2014 15:23:29 Thierry Reding wrote:
+> > > To some degree this also depends on how we want to handle IOMMUs. If
+> > > they should remain transparently handled via dma_map_ops, then it makes
+> > > sense to set this up at device instantiation time. But how can we handle
+> > > this in situations where one device needs to master on two IOMMUs at the
+> > > same time? Or if the device needs physically contiguous memory for
+> > > purposes other than device I/O. Using dma_map_ops we can't control which
+> > > allocations get mapped via the IOMMU and which don't.
+> > 
+> > I still hope we can handle this in common code by selecting the right
+> > dma_map_ops when the devices are instantiated, at least for 99% of the
+> > cases. I'm not convinced we really need to handle the 'multiple IOMMUs
+> > on one device' case in a generic way. If there are no common use cases
+> > for that, we can probably get away with having multiple device nodes
+> > and an ugly driver for the exception, instead of making life complicated
+> > for everybody.
 > 
-> That says backward compatibility for stable bindings.
-> In this case, the binding that I changed doesn't even exist in Documentation/devicetree/bindings,
-> so it never was a stable binding. 
+> Multiple IOMMUs certainly seems an unusual case for now.
+> 
+> Being able to describe that in the DT doesn't necessarily mean the
+> kernel has to support it: just as the kernel doesn't need to support
+> all the features of a crazy hardware platform just someone was crazy
+> enough to build it.
 
-Forgot to mention, I'm sending a revised version based on your and Felipe's suggestion.
+Right.
 
-cheers,
--roger
+> My expectation was that we do some check when probing a device to figure
+> out the path from the device to main memory, thus figuring out the dma
+> mask, the IOMMU (if any) and any relevant device ID.  This is a bit more
+> complex than the existing situation, but I still think we could have
+> common code for the bulk of it.
+
+I'd still prefer if we could keep following just "dma-ranges" to find
+a path from device to memory, with an extension to handle IOMMUs etc,
+but not describe the things to the extend that your proposal does.
+
+We already pretend that things are a tree for the purposes of MMIO,
+which is probably still close enough for the vast majority of cases.
+For simplicity, I'd actually prefer keeping the illusion that MMIO
+and DMA are two different things, which matches how operating systems
+see things even if it's no longer true for the hardware.
+
+> If a device has different roles with completely different paths to
+> memory, one option could be for the driver to instantiate two devices in
+> the kernel.  This puts the burden on the driver for the device, instead
+> of the core framework.
+
+Yes, this is what I suggested earlier as well.
+
+	ARnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
