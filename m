@@ -1,95 +1,208 @@
-From: Abhilash Kesavan <a.kesavan@samsung.com>
-Subject: [PATCH v5 3/5] arm: exynos: Add generic cluster power control functions
-Date: Mon,  5 May 2014 21:56:59 +0530
-Message-ID: <1399307221-8659-4-git-send-email-a.kesavan@samsung.com>
-References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: nicolas.pitre@linaro.org, Dave.Martin@arm.com, lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, abrestic@chromium.org, thomas.ab@samsung.com, inderpal.s@samsung.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, kesavan.abhilash@gmail.com, linux-samsung-soc@vger.kernel.org
+From: Alex Elder <elder@linaro.org>
+Subject: [PATCH 2/5] clk: bcm281xx: implement prerequisite clocks
+Date: Mon,  5 May 2014 08:57:33 -0500
+Message-ID: <1399298256-10965-3-git-send-email-elder@linaro.org>
+References: <1399298256-10965-1-git-send-email-elder@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399298256-10965-1-git-send-email-elder@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@linaro.org, mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add generic cluster power control functions for exynos based SoCS
-for cluster power up/down and to know the cluster status.
+Allow a clock to specify a "prerequisite" clock.  The prerequisite
+clock must be initialized before the clock that depends on it.  A
+prerequisite clock is defined initially by its name; as that clock
+gets initialized the name gets replaced with a pointer to its clock
+structure pointer.  In order to allow getting a reference to a clock
+by its name we call clkdev_add() for each clock as it gets set up.
+A new clk_lookup structure is added to the kona_clk type for this
+purpose.
 
-Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+Rework the KONA_CLK() macro, and define a new KONA_CLK_PREREQ()
+variant that allows a prerequisite clock to be specified.
+
+There exist clocks that could specify more than one prequisite, but
+almost all clocks only ever use one.  We can add support for more
+than one if we find we need it at some point.
+
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- arch/arm/mach-exynos/common.h   |    3 +++
- arch/arm/mach-exynos/pm.c       |   30 ++++++++++++++++++++++++++++++
- arch/arm/mach-exynos/regs-pmu.h |    6 ++++++
- 3 files changed, 39 insertions(+)
+ drivers/clk/bcm/clk-kona-setup.c | 16 ++++++++++----
+ drivers/clk/bcm/clk-kona.c       | 45 ++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/bcm/clk-kona.h       | 20 +++++++++++++++---
+ 3 files changed, 74 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-index a7dbb5f..03b8bb2 100644
---- a/arch/arm/mach-exynos/common.h
-+++ b/arch/arm/mach-exynos/common.h
-@@ -66,5 +66,8 @@ extern void exynos_sys_powerdown_conf(enum sys_powerdown mode);
- extern void exynos_cpu_powerdown(int cpu);
- extern void exynos_cpu_powerup(int cpu);
- extern int  exynos_cpu_power_state(int cpu);
-+extern void exynos_cluster_powerdown(int cluster);
-+extern void exynos_cluster_powerup(int cluster);
-+extern int  exynos_cluster_power_state(int cluster);
+diff --git a/drivers/clk/bcm/clk-kona-setup.c b/drivers/clk/bcm/clk-kona-setup.c
+index e5aeded..fcce22c 100644
+--- a/drivers/clk/bcm/clk-kona-setup.c
++++ b/drivers/clk/bcm/clk-kona-setup.c
+@@ -686,6 +686,9 @@ peri_clk_setup(struct peri_clk_data *data, struct clk_init_data *init_data)
  
- #endif /* __ARCH_ARM_MACH_EXYNOS_COMMON_H */
-diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
-index 6651028..f02d864 100644
---- a/arch/arm/mach-exynos/pm.c
-+++ b/arch/arm/mach-exynos/pm.c
-@@ -136,6 +136,36 @@ int exynos_cpu_power_state(int cpu)
- 			S5P_CORE_LOCAL_PWR_EN);
+ static void bcm_clk_teardown(struct kona_clk *bcm_clk)
+ {
++	/* There is no function defined for this (yet) */
++	/* clkdev_remove(&bcm_clk->cl); */
++
+ 	switch (bcm_clk->type) {
+ 	case bcm_clk_peri:
+ 		peri_clk_teardown(bcm_clk->u.data, &bcm_clk->init_data);
+@@ -719,6 +722,7 @@ static void kona_clk_teardown(struct clk *clk)
+ struct clk *kona_clk_setup(struct kona_clk *bcm_clk)
+ {
+ 	struct clk_init_data *init_data = &bcm_clk->init_data;
++	const char *name = init_data->name;
+ 	struct clk *clk = NULL;
+ 
+ 	switch (bcm_clk->type) {
+@@ -728,14 +732,13 @@ struct clk *kona_clk_setup(struct kona_clk *bcm_clk)
+ 		break;
+ 	default:
+ 		pr_err("%s: clock type %d invalid for %s\n", __func__,
+-			(int)bcm_clk->type, init_data->name);
++			(int)bcm_clk->type, name);
+ 		return NULL;
+ 	}
+ 
+ 	/* Make sure everything makes sense before we set it up */
+ 	if (!kona_clk_valid(bcm_clk)) {
+-		pr_err("%s: clock data invalid for %s\n", __func__,
+-			init_data->name);
++		pr_err("%s: clock data invalid for %s\n", __func__, name);
+ 		goto out_teardown;
+ 	}
+ 
+@@ -743,11 +746,16 @@ struct clk *kona_clk_setup(struct kona_clk *bcm_clk)
+ 	clk = clk_register(NULL, &bcm_clk->hw);
+ 	if (IS_ERR(clk)) {
+ 		pr_err("%s: error registering clock %s (%ld)\n", __func__,
+-			init_data->name, PTR_ERR(clk));
++			name, PTR_ERR(clk));
+ 		goto out_teardown;
+ 	}
+ 	BUG_ON(!clk);
+ 
++	/*  Make it so we can look the clock up using clk_find() */
++	bcm_clk->cl.con_id = name;
++	bcm_clk->cl.clk = clk;
++	clkdev_add(&bcm_clk->cl);
++
+ 	return clk;
+ out_teardown:
+ 	bcm_clk_teardown(bcm_clk);
+diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
+index d8a7f38..de8047d 100644
+--- a/drivers/clk/bcm/clk-kona.c
++++ b/drivers/clk/bcm/clk-kona.c
+@@ -1195,6 +1195,48 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
+ 	return true;
  }
  
-+/**
-+ * exynos_common_powerdown : power down the specified cluster
-+ * @cluster : the cluster to power down
-+ */
-+void exynos_cluster_powerdown(int cluster)
++static bool __kona_clk_init(struct kona_clk *bcm_clk);
++static bool __kona_prereq_init(struct kona_clk *bcm_clk)
 +{
-+	__raw_writel(0, EXYNOS_COMMON_CONFIGURATION(cluster));
++	struct clk *clk;
++	struct clk_hw *hw;
++	struct kona_clk *prereq;
++
++	BUG_ON(clk_is_initialized(bcm_clk));
++
++	if (!bcm_clk->prereq)
++		return true;
++
++	clk = clk_get(NULL, bcm_clk->prereq);
++	if (IS_ERR(clk)) {
++		pr_err("%s: unable to get prereq clock %s for %s\n",
++			__func__, bcm_clk->prereq, bcm_clk->init_data.name);
++		return false;
++	}
++	hw = __clk_get_hw(clk);
++	if (!hw) {
++		pr_err("%s: null hw pointer for clock %s\n", __func__,
++			bcm_clk->init_data.name);
++		return false;
++	}
++	prereq = to_kona_clk(hw);
++	if (prereq->ccu != bcm_clk->ccu) {
++		pr_err("%s: prereq clock %s CCU different for clock %s\n",
++			__func__, bcm_clk->prereq, bcm_clk->init_data.name);
++		return false;
++	}
++
++	/* Initialize the prerequisite clock first */
++	if (!__kona_clk_init(prereq)) {
++		pr_err("%s: failed to init prereq %s for clock %s\n",
++			__func__, bcm_clk->prereq, bcm_clk->init_data.name);
++		return false;
++	}
++	bcm_clk->prereq_clk = clk;
++
++	return true;
 +}
 +
-+/**
-+ * exynos_cluster_powerup : power up the specified cluster
-+ * @cluster : the cluster to power up
-+ */
-+void exynos_cluster_powerup(int cluster)
-+{
-+	__raw_writel(S5P_CORE_LOCAL_PWR_EN,
-+		     EXYNOS_COMMON_CONFIGURATION(cluster));
-+}
-+
-+/**
-+ * exynos_cluster_power_state : returns the power state of the cluster
-+ * @cluster : the cluster to retrieve the power state from
-+ *
-+ */
-+int exynos_cluster_power_state(int cluster)
-+{
-+	return (__raw_readl(EXYNOS_COMMON_STATUS(cluster)) &
-+			S5P_CORE_LOCAL_PWR_EN);
-+}
-+
- /* For Cortex-A9 Diagnostic and Power control register */
- static unsigned int save_arm_register[2];
+ static bool __kona_clk_init(struct kona_clk *bcm_clk)
+ {
+ 	bool ret;
+@@ -1202,6 +1244,9 @@ static bool __kona_clk_init(struct kona_clk *bcm_clk)
+ 	if (clk_is_initialized(bcm_clk))
+ 		return true;
  
-diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-pmu.h
-index 0bdfcbc..6685ebf 100644
---- a/arch/arm/mach-exynos/regs-pmu.h
-+++ b/arch/arm/mach-exynos/regs-pmu.h
-@@ -127,6 +127,12 @@
- #define EXYNOS_ARM_CORE_STATUS(_nr)		\
- 			(EXYNOS_ARM_CORE_CONFIGURATION(_nr) + 0x4)
- 
-+#define EXYNOS_ARM_COMMON_CONFIGURATION		S5P_PMUREG(0x2500)
-+#define EXYNOS_COMMON_CONFIGURATION(_nr)	\
-+			(EXYNOS_ARM_COMMON_CONFIGURATION + (0x80 * (_nr)))
-+#define EXYNOS_COMMON_STATUS(_nr)		\
-+			(EXYNOS_COMMON_CONFIGURATION(_nr) + 0x4)
++	if (!__kona_prereq_init(bcm_clk))
++		return false;
 +
- /* Only for EXYNOS4210 */
- #define S5P_CMU_CLKSTOP_LCD1_LOWPWR	S5P_PMUREG(0x1154)
- #define S5P_CMU_RESET_LCD1_LOWPWR	S5P_PMUREG(0x1174)
+ 	switch (bcm_clk->type) {
+ 	case bcm_clk_peri:
+ 		ret = __peri_clk_init(bcm_clk);
+diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
+index 10e238d..beac016 100644
+--- a/drivers/clk/bcm/clk-kona.h
++++ b/drivers/clk/bcm/clk-kona.h
+@@ -22,6 +22,8 @@
+ #include <linux/device.h>
+ #include <linux/of.h>
+ #include <linux/clk-provider.h>
++#include <linux/clkdev.h>
++#include <linux/debugfs.h>
+ 
+ #define	BILLION		1000000000
+ 
+@@ -407,6 +409,11 @@ struct kona_clk {
+ 	struct ccu_data *ccu;	/* ccu this clock is associated with */
+ 	enum bcm_clk_type type;
+ 	u32 flags;		/* BCM_CLK_KONA_FLAGS_* below */
++	struct clk_lookup cl;
++	union {
++		const char *prereq;
++		struct clk *prereq_clk;
++	};
+ 	union {
+ 		void *data;
+ 		struct peri_clk_data *peri;
+@@ -422,15 +429,22 @@ struct kona_clk {
+ #define BCM_CLK_KONA_FLAGS_INITIALIZED	((u32)1 << 0)	/* Clock initialized */
+ 
+ /* Initialization macro for an entry in a CCU's kona_clks[] array. */
+-#define KONA_CLK(_ccu_name, _clk_name, _type)				\
+-	{								\
++#define ___KONA_CLK_COMMON(_ccu_name, _clk_name, _type)			\
+ 		.init_data	= {					\
+ 			.name = #_clk_name,				\
+ 			.ops = &kona_ ## _type ## _clk_ops,		\
+ 		},							\
+ 		.ccu		= &_ccu_name ## _ccu_data,		\
+ 		.type		= bcm_clk_ ## _type,			\
+-		.u.data		= &_clk_name ## _data,			\
++		.u.data		= &_clk_name ## _data
++#define KONA_CLK_PREREQ(_ccu_name, _clk_name, _type, _prereq)		\
++	{								\
++		.prereq		= #_prereq,				\
++		___KONA_CLK_COMMON(_ccu_name, _clk_name, _type),	\
++	}
++#define KONA_CLK(_ccu_name, _clk_name, _type)				\
++	{								\
++		___KONA_CLK_COMMON(_ccu_name, _clk_name, _type),	\
+ 	}
+ #define LAST_KONA_CLK	{ .type = bcm_clk_none }
+ 
 -- 
-1.7.9.5
+1.9.1
