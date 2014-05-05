@@ -1,52 +1,49 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 16/20] dt: binding: Armada 375 USB cluster
-Date: Tue,  6 May 2014 02:14:11 +0200
-Message-ID: <1399335255-589-17-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 8/9] ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY fixed clocks
+Date: Mon,  5 May 2014 17:53:42 +0200
+Message-ID: <1399305223-18703-9-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Armada 375 comes with an USB2 host and device controller and an USB3
-controller. The USB cluster control register allows to manage common
-features of both USB controllers.
+CLK_S_GMAC0_PHY &  CLK_S_ETH1_PH clocks are no longer used.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- .../bindings/phy/armada-375-usb-phy-cluster.txt       | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
+ arch/arm/boot/dts/stih415-clock.dtsi | 14 --------------
+ 1 file changed, 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt b/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
-new file mode 100644
-index 000000000000..258407c5ab90
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
-@@ -0,0 +1,19 @@
-+Armada 375 USB cluster
-+----------------------
-+
-+Armada 375 comes with an USB2 host and device controller and an USB3
-+controller. The USB cluster control register allows to manage common
-+features of both USB controllers.
-+
-+Required properties:
-+
-+- compatible: "marvell,armada-375-usb-cluster"
-+- reg: Should contain usb cluster register location and length.
-+- #phy-cells : from the generic phy bindings, must be 1
-+
-+Example:
-+	usbcluster: usb-cluster@18400 {
-+		compatible = "marvell,armada-375-usb-cluster";
-+		reg = <0x18400 0x4>;
-+		#phy-cells = <1>
-+	};
+diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
+index 5bdba06..24a7508 100644
+--- a/arch/arm/boot/dts/stih415-clock.dtsi
++++ b/arch/arm/boot/dts/stih415-clock.dtsi
+@@ -32,20 +32,6 @@
+ 			clock-frequency = <500000000>;
+ 		};
+ 
+-		CLKS_GMAC0_PHY: clockgenA1@7 {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <25000000>;
+-			clock-output-names = "CLKS_GMAC0_PHY";
+-		};
+-
+-		CLKS_ETH1_PHY: clockgenA0@7 {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <25000000>;
+-			clock-output-names = "CLKS_ETH1_PHY";
+-		};
+-
+ 		/*
+ 		 * ClockGenAs on SASG1
+ 		 */
 -- 
-1.8.1.2
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
