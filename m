@@ -1,135 +1,160 @@
-From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] ARM: zynq: dt: Clean up device tree
-Date: Tue, 6 May 2014 13:04:22 +0200
-Message-ID: <cb504244-1639-4ad9-97c3-4258507fb647@CO9EHSMHS026.ehs.local>
-References: <1399310168-6099-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 4/6] powerpc/corenet: Create the dts components for the
+ DPAA FMan
+Date: Mon, 5 May 2014 18:25:59 -0500
+Message-ID: <1399332359.15726.154.camel@snotra.buserror.net>
+References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
+	 <1397823693-27977-4-git-send-email-Shruti@Freescale.com>
+	 <1398118262.1694.188.camel__8135.6513932862$1398128944$gmane$org@snotra.buserror.net>
+	 <5364BEB3.6000904@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399310168-6099-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <5364BEB3.6000904-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2014 07:16 PM, Soren Brinkmann wrote:
->  - Use generic node names
->  - Fix up some weird formatting and white spaces
->  - Update copyright info
+On Sat, 2014-05-03 at 05:02 -0500, Emil Medve wrote:
+> Hello Scott,
 > 
-> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-> ---
 > 
->  arch/arm/boot/dts/zynq-7000.dtsi | 29 +++++++++++++++--------------
->  1 file changed, 15 insertions(+), 14 deletions(-)
+> On 04/21/2014 05:11 PM, Scott Wood wrote:
+> > On Fri, 2014-04-18 at 07:21 -0500, Shruti Kanetkar wrote:
+> >> +fman@400000 {
+> >> +	mdio@f1000 {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +		compatible = "fsl,fman-xmdio";
+> >> +		reg = <0xf1000 0x1000>;
+> >> +	};
+> >> +};
+> > 
+> > I'd like to see a complete fman binding before we start adding pieces.
 > 
-> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-> index c1176abc34d9..bed6e0aed00a 100644
-> --- a/arch/arm/boot/dts/zynq-7000.dtsi
-> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
-> @@ -1,5 +1,5 @@
->  /*
-> - *  Copyright (C) 2011 Xilinx
-> + *  Copyright (C) 2011 - 2014 Xilinx
->   *
->   * This software is licensed under the terms of the GNU General Public
->   * License version 2, as published by the Free Software Foundation, and
-> @@ -55,7 +55,7 @@
->  		interrupt-parent = <&intc>;
->  		ranges;
->  
-> -		i2c0: zynq-i2c@e0004000 {
-> +		i2c0: i2c@e0004000 {
->  			compatible = "cdns,i2c-r1p10";
->  			status = "disabled";
->  			clocks = <&clkc 38>;
-> @@ -66,7 +66,7 @@
->  			#size-cells = <0>;
->  		};
->  
-> -		i2c1: zynq-i2c@e0005000 {
-> +		i2c1: i2c@e0005000 {
->  			compatible = "cdns,i2c-r1p10";
->  			status = "disabled";
->  			clocks = <&clkc 39>;
-> @@ -95,7 +95,7 @@
->  			cache-level = <2>;
->  		};
->  
-> -		uart0: uart@e0000000 {
-> +		uart0: serial@e0000000 {
->  			compatible = "xlnx,xuartps";
->  			status = "disabled";
->  			clocks = <&clkc 23>, <&clkc 40>;
-> @@ -104,7 +104,7 @@
->  			interrupts = <0 27 4>;
->  		};
->  
-> -		uart1: uart@e0001000 {
-> +		uart1: serial@e0001000 {
->  			compatible = "xlnx,xuartps";
->  			status = "disabled";
->  			clocks = <&clkc 24>, <&clkc 41>;
-> @@ -131,7 +131,7 @@
->  			clock-names = "pclk", "hclk", "tx_clk";
->  		};
->  
-> -		sdhci0: ps7-sdhci@e0100000 {
-> +		sdhci0: sdhci@e0100000 {
->  			compatible = "arasan,sdhci-8.9a";
->  			status = "disabled";
->  			clock-names = "clk_xin", "clk_ahb";
-> @@ -141,7 +141,7 @@
->  			reg = <0xe0100000 0x1000>;
->  		} ;
->  
-> -		sdhci1: ps7-sdhci@e0101000 {
-> +		sdhci1: sdhci@e0101000 {
->  			compatible = "arasan,sdhci-8.9a";
->  			status = "disabled";
->  			clock-names = "clk_xin", "clk_ahb";
-> @@ -185,26 +185,27 @@
->  			clocks = <&clkc 4>;
->  		};
->  
-> -		ttc0: ttc0@f8001000 {
-> +		ttc0: timer@f8001000 {
->  			interrupt-parent = <&intc>;
-> -			interrupts = < 0 10 4 0 11 4 0 12 4 >;
-> +			interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
->  			compatible = "cdns,ttc";
->  			clocks = <&clkc 6>;
->  			reg = <0xF8001000 0x1000>;
->  		};
->  
-> -		ttc1: ttc1@f8002000 {
-> +		ttc1: timer@f8002000 {
->  			interrupt-parent = <&intc>;
-> -			interrupts = < 0 37 4 0 38 4 0 39 4 >;
-> +			interrupts = <0 37 4>, <0 38 4>, <0 39 4>;
->  			compatible = "cdns,ttc";
->  			clocks = <&clkc 6>;
->  			reg = <0xF8002000 0x1000>;
->  		};
-> -		scutimer: scutimer@f8f00600 {
-> +
-> +		scutimer: timer@f8f00600 {
->  			interrupt-parent = <&intc>;
-> -			interrupts = < 1 13 0x301 >;
-> +			interrupts = <1 13 0x301>;
->  			compatible = "arm,cortex-a9-twd-timer";
-> -			reg = < 0xf8f00600 0x20 >;
-> +			reg = <0xf8f00600 0x20>;
->  			clocks = <&clkc 4>;
->  		} ;
->  	};
+> The driver for the FMan 10 Gb/s MDIO has upstreamed a couple of years
+> ago: '9f35a73 net/fsl: introduce Freescale 10G MDIO driver', granted
+> without a binding writeup.
+
+Pushing driver code through the netdev tree does not establish device
+tree ABI.  Binding documents and dts files do.
+
+> This patch series should probably include a
+> binding blurb. However, let's not gate this patchset on a complete
+> binding for the FMan
+
+I at least want to see enough of the FMan binding to have confidence
+that what we're adding now is correct.
+
+> As you know we don't own the FMan work and the FMan work is... not ready
+> for upstreaming.
+
+I'm not asking for a driver, just a binding that describes hardware.  Is
+there any reason why the fman node needs to be anywhere near as
+complicated as it is in the SDK, if we're limiting it to actual hardware
+description?  Do we really need to have nodes for all the sub-blocks?
+
+> In an attempt to make some sort of progress we've
+> decided to upstream the pieces that are less controversial and MDIO is
+> an obvious candidate
+> 
+> >> +fman@400000 {
+> >> +	mdio0: mdio@e1120 {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +		compatible = "fsl,fman-mdio";
+> >> +		reg = <0xe1120 0xee0>;
+> >> +	};
+> >> +};
+> > 
+> > What is the difference between "fsl,fman-mdio" and "fsl,fman-xmdio"?  I
+> > don't see the latter on the list of compatibles in patch 3/6.
+> 
+> 'fsl,fman-mdio' is the 1 Gb/s MDIO (Clause 22 only). 'fsl,fman-xmdio' is
+> the 10 Gb/s MDIO (Clause 45 only). We can respin this patch wi
 > 
 
-Looks good to me. Applied to zynq/dt branch.
+"respin this patch wi..."?
 
-Thanks,
-Michal
+> I believe 'fsl,fman-mdio' (and others on that list) was added
+> gratuitously as the FMan MDIO is completely compatible with the
+> eTSEC/gianfar MDIO driver, but we can deal with that later
+
+It's still good to identify the specific device, even if it's believed
+to be 100% compatible.  Plus, IIRC there's been enough badness in the
+eTSEC MDIO binding that it'd be good to steer clear of it.
+
+> > Within each category, is the exact fman version discoverable from the
+> > mdio registers?
+> 
+> No, but that's irrelevant as that's not the difference between the two
+> compatibles
+
+It's relevant because it means the compatible string should have a block
+version number in it, or at least some other way in the MDIO node to
+indicate the block version.
+
+> >> +fman@500000 {
+> >> +	#address-cells = <1>;
+> >> +	#size-cells = <1>;
+> >> +	compatible = "simple-bus";
+> > 
+> > Why is this simple-bus?
+> 
+> Because that's the translation type for the FMan sub-nodes.
+
+What do you mean by "translation type"?
+
+> We need it now to get the MDIO nodes probed
+
+No.  "simple-bus" is stating an attribute of the hardware, that the
+child nodes represent simple memory-mapped devices that can be used
+without special bus knowledge.  I don't think that applies here.
+
+You can get the MDIO node probed without misusing simple-bus by adding
+the fman node's compatible to the probe list in the kernel code.
+
+This sort of thing is why I want to see what the rest of the fman
+binding will look like.
+
+>  and we'll needed later to probe other nodes/devices that will have
+> standalone drivers: MAC, MURAM. etc. 
+
+How are they truly standalone?  The exist in service to the greater
+entity that is fman.  They presumably work together in some fashion.
+
+> >> +	/* mdio nodes for fman v3 @ 0x500000 */
+> >> +	mdio@fc000 {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +		reg = <0xfc000 0x1000>;
+> >> +	};
+> >> +
+> >> +	mdio@fd000 {
+> >> +		#address-cells = <1>;
+> >> +		#size-cells = <0>;
+> >> +		reg = <0xfd000 0x1000>;
+> >> +	};
+> >> +};
+> > 
+> > Where's the compatible?  Why is this file different from all the others?
+> 
+> The FMan v3 MDIO block (supports both Clause 22/45) is compatible with
+> the FMan v2 10 Gb/s MDIO (the xgmac-mdio driver). However, the driver
+> needs a small clean-up patch (still in internal review) that will get it
+> working for FMan v3 MDIO.
+
+This suggests that it is not 100% backwards compatible.
+
+>  With that patch will add the compatible to these nodes. However, we
+> need these nodes now for the board level MDIO bus muxing support
+> (included in this patchset)
+
+If you need these nodes now then add the compatible property now.
+
+-Scott
 
 
 --
