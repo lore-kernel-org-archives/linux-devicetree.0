@@ -1,132 +1,96 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [RFC v3 PATCH v6 11/16] ARM: dts: s6e3fa0: add DT bindings
-Date: Mon, 05 May 2014 12:35:17 +0200
-Message-ID: <53676965.4020800@samsung.com>
-References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
- <1398563412-21781-12-git-send-email-yj44.cho@samsung.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 4/8] pinctrl: rockchip: let pmu registers be supplied by a syscon
+Date: Mon, 05 May 2014 13:59:09 +0200
+Message-ID: <4931573.BTfMJeskVK@diego>
+References: <11862890.WUjscWaP3U@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1398563412-21781-12-git-send-email-yj44.cho@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <11862890.WUjscWaP3U@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/27/2014 03:50 AM, YoungJun Cho wrote:
-> This patch adds DT bindings for s6e3fa0 panel.
-> The bindings describes panel resources, display timings and cpu mode timings.
-> 
-> Changelog v2:
-> - Adds unit address (commented by Sachin Kamat)
-> Changelog v3:
-> - Removes optional delay, size properties (commented by Laurent Pinchart)
-> - Adds OLED detection, TE gpio properties
-> Changelog v4:
-> - Moves CPU timings relevant properties from FIMD DT
->   (commeted by Laurent Pinchart, Andrzej Hajda)
-> Changelog v5:
-> - Fixes gpio property names (commented by Andrzej Hajda)
-> Changelog v6:
-> - Renames CPU timings to CPU mode timings
-> - Modifies CPU mode timings internal properties relevant things
->   (commeted by Laurent Pinchart, Andrzej Hajda)
-> 
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   68 ++++++++++++++++++++
->  1 file changed, 68 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> new file mode 100644
-> index 0000000..9f06645
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
-> @@ -0,0 +1,68 @@
-> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
-> +
-> +Required properties:
-> +  - compatible: "samsung,s6e3fa0"
-> +  - reg: the virtual channel number of a DSI peripheral
-> +  - vdd3-supply: core voltage supply
-> +  - vci-supply: voltage supply for analog circuits
-> +  - reset-gpios: a GPIO spec for the reset pin
-> +  - det-gpios: a GPIO spec for the OLED detection pin
-> +  - te-gpios: a GPIO spec for the TE pin
-> +  - display-timings: timings for the connected panel as described by [1]
+Currently the pmu registers containing pin pull settings on the rk3188 are mapped
+locally when bank0 is instantiated. Add an alternative that can resolve the pmu
+from a syscon phandle.
 
-This still bothers me, it forces users to provide bunch of fake
-properties (four porches, two syncs and clock-frequency) just because we
-need to pass somehow pixel width and height. And do we really need pixel
-dimension to be passed via DT? I guess it could be:
-- hardcoded into the driver,
-- derived from the panel id,
-- maybe read from the panel, this is the best option I guess but I am
-not sure if panel provides an API for this.
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+---
+ drivers/pinctrl/pinctrl-rockchip.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
 
-Regards
-Andrzej
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index b67771d..11ad643 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -38,6 +38,7 @@
+ #include <linux/irqchip/chained_irq.h>
+ #include <linux/clk.h>
+ #include <linux/regmap.h>
++#include <linux/mfd/syscon.h>
+ #include <dt-bindings/pinctrl/rockchip.h>
+ 
+ #include "core.h"
+@@ -164,6 +165,7 @@ struct rockchip_pinctrl {
+ 	struct regmap			*regmap_base;
+ 	int				reg_size;
+ 	struct regmap			*regmap_pull;
++	struct regmap			*regmap_pmu;
+ 	struct device			*dev;
+ 	struct rockchip_pin_ctrl	*ctrl;
+ 	struct pinctrl_desc		pctl;
+@@ -438,6 +440,7 @@ static void rk2928_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+ #define RK3188_PULL_BITS_PER_PIN	2
+ #define RK3188_PULL_PINS_PER_REG	8
+ #define RK3188_PULL_BANK_STRIDE		16
++#define RK3188_PULL_PMU_OFFSET		0x64
+ 
+ static void rk3188_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+ 				    int pin_num, struct regmap **regmap,
+@@ -447,8 +450,9 @@ static void rk3188_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
+ 
+ 	/* The first 12 pins of the first bank are located elsewhere */
+ 	if (bank->bank_type == RK3188_BANK0 && pin_num < 12) {
+-		*regmap = bank->regmap_pull;
+-		*reg = 0;
++		*regmap = info->regmap_pmu ? info->regmap_pmu
++					   : bank->regmap_pull;
++		*reg = info->regmap_pmu ? RK3188_PULL_PMU_OFFSET : 0;
+ 		*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
+ 		*bit = pin_num % RK3188_PULL_PINS_PER_REG;
+ 		*bit *= RK3188_PULL_BITS_PER_PIN;
+@@ -1539,6 +1543,7 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
+ 	struct rockchip_pinctrl *info;
+ 	struct device *dev = &pdev->dev;
+ 	struct rockchip_pin_ctrl *ctrl;
++	struct device_node *np = pdev->dev.of_node, *node;
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	int ret;
+@@ -1587,6 +1592,14 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
+ 						  &rockchip_regmap_config);
+ 	}
+ 
++	/* try to find the optional reference to the pmu syscon */
++	node = of_parse_phandle(np, "rockchip,pmu", 0);
++	if (node) {
++		info->regmap_pmu = syscon_node_to_regmap(node);
++		if (IS_ERR(info->regmap_pmu))
++			return PTR_ERR(info->regmap_pmu);
++	}
++
+ 	ret = rockchip_gpiolib_register(pdev, info);
+ 	if (ret)
+ 		return ret;
+-- 
+1.9.0
 
 
-> +  - cpu-mode-timings: CPU interface timings for the connected panel,
-> +      and it contains following properties.
-> +        Required properties:
-> +          - wr-active: clock cycles for the active period of CS enable in CPU
-> +              interface.
-> +        Optional properties:
-> +          - cs-setup: clock cycles for the active period of address signal
-> +              enable until chip select is enable in CPU interface.
-> +              If not specified, the default value(0) will be used.
-> +          - wr-setup: clock cycles for the active period of CS signal enable
-> +              until write signal is enable in CPU interface.
-> +              If not specified, the default value(0) will be used.
-> +          - wr-hold: clock cycles for the active period of CS disable until
-> +              write signal is disable in CPU interface.
-> +              If not specified, the default value(0) will be used.
-> +
-> +Optional properties:
-> +
-> +The device node can contain one 'port' child node with one child 'endpoint'
-> +node, according to the bindings defined in [2]. This node should describe
-> +panel's video bus.
-> +
-> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
-> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
-> +
-> +Example:
-> +
-> +	panel@0 {
-> +		compatible = "samsung,s6e3fa0";
-> +		reg = <0>;
-> +		vdd3-supply = <&vcclcd_reg>;
-> +		vci-supply = <&vlcd_reg>;
-> +		reset-gpios = <&gpy7 4 0>;
-> +		det-gpios = <&gpg0 6 0>;
-> +		te-gpios = <&gpd1 7 0>;
-> +
-> +		display-timings {
-> +			timing0: timing-0 {
-> +				clock-frequency = <0>;
-> +				hactive = <1080>;
-> +				vactive = <1920>;
-> +				hfront-porch = <2>;
-> +				hback-porch = <2>;
-> +				hsync-len = <1>;
-> +				vfront-porch = <1>;
-> +				vback-porch = <4>;
-> +				vsync-len = <1>;
-> +			};
-> +		};
-> +
-> +		cpu-mode-timings {
-> +			cs-setup = <0>;
-> +			wr-setup = <0>;
-> +			wr-active = <1>;
-> +			wr-hold = <0>;
-> +		};
-> +	};
-> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
