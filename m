@@ -1,154 +1,426 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Mon, 5 May 2014 17:08:45 -0500
-Message-ID: <CAL_JsqL07fGB4Xp-aZZsj+K-UH91v-1WVmtSq+xFoA4xoJ+HwQ@mail.gmail.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
-	<1398353407-2345-5-git-send-email-santosh.shilimkar@ti.com>
-	<CAL_Jsq+nh26NZXx-9Y5FTxWZdVrG7aLTOBhC4j9P8mPPvUu2ag@mail.gmail.com>
-	<536806F4.1090904@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <536806F4.1090904@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH v5 5/5] arm: exynos: Add MCPM call-back functions
+Date: Mon,  5 May 2014 21:57:01 +0530
+Message-ID: <1399307221-8659-6-git-send-email-a.kesavan@samsung.com>
+References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: nicolas.pitre@linaro.org, Dave.Martin@arm.com, lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, abrestic@chromium.org, thomas.ab@samsung.com, inderpal.s@samsung.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, will.deacon@arm.com, arnd@arndb.de, kesavan.abhilash@gmail.com, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 5, 2014 at 4:47 PM, Santosh Shilimkar
-<santosh.shilimkar@ti.com> wrote:
-> On Thursday 01 May 2014 08:49 PM, Rob Herring wrote:
->> On Thu, Apr 24, 2014 at 10:30 AM, Santosh Shilimkar
->> <santosh.shilimkar@ti.com> wrote:
+Add machine-dependent MCPM call-backs for Exynos5420. These are used
+to power up/down the secondary CPUs during boot, shutdown, s2r and
+switching.
 
-> Updated patch with above minor updates.
->
-> From 80a9f06a09a90801d8ee337d9b2d155c43da8f23 Mon Sep 17 00:00:00 2001
-> From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> Date: Thu, 24 Apr 2014 11:30:04 -0400
-> Subject: [PATCH v3 4/7] of: configure the platform device dma parameters
->
-> Retrieve DMA configuration from DT and setup platform device's DMA
-> parameters. The DMA configuration in DT has to be specified using
-> "dma-ranges" and "dma-coherent" properties if supported.
->
-> We setup dma_pfn_offset using "dma-ranges" and dma_coherent_ops
-> using "dma-coherent" device tree properties.
->
-> The set_arch_dma_coherent_ops macro has to be defined by arch if
-> it supports coherent dma_ops. Otherwise, set_arch_dma_coherent_ops() is
-> declared as nop.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: Olof Johansson <olof@lixom.net>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+Signed-off-by: Inderpal Singh <inderpal.s@samsung.com>
+Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
+---
+ arch/arm/mach-exynos/Kconfig       |    8 +
+ arch/arm/mach-exynos/Makefile      |    2 +
+ arch/arm/mach-exynos/mcpm-exynos.c |  344 ++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-exynos/regs-pmu.h    |    3 +
+ 4 files changed, 357 insertions(+)
+ create mode 100644 arch/arm/mach-exynos/mcpm-exynos.c
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> ---
->  drivers/of/platform.c       |   55 ++++++++++++++++++++++++++++++++++++++-----
->  include/linux/dma-mapping.h |    7 ++++++
->  2 files changed, 56 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 404d1da..b71e089 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -187,6 +187,54 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  EXPORT_SYMBOL(of_device_alloc);
->
->  /**
-> + * of_dma_configure - Setup DMA configuration
-> + * @dev:       Device to apply DMA configuration
-> + *
-> + * Try to get devices's DMA configuration from DT and update it
-> + * accordingly.
-> + *
-> + * In case if platform code need to use own special DMA configuration,it
-> + * can use Platform bus notifier and handle BUS_NOTIFY_ADD_DEVICE event
-> + * to fix up DMA configuration.
-> + */
-> +static void of_dma_configure(struct platform_device *pdev)
-> +{
-> +       u64 dma_addr, paddr, size;
-> +       int ret;
-> +       struct device *dev = &pdev->dev;
-> +
-> +#if defined(CONFIG_MICROBLAZE)
-> +       pdev->archdata.dma_mask = 0xffffffffUL;
-> +#endif
-> +       dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +       if (!dev->dma_mask)
-> +               dev->dma_mask = &dev->coherent_dma_mask;
-> +
-> +       /*
-> +        * if dma-coherent property exist, call arch hook to setup
-> +        * dma coherent operations.
-> +        */
-> +       if (of_dma_is_coherent(dev->of_node)) {
-> +               set_arch_dma_coherent_ops(dev);
-> +               dev_dbg(dev, "device is dma coherent\n");
-> +       }
-> +
-> +       /*
-> +        * if dma-ranges property doesn't exist - just return else
-> +        * setup the dma offset
-> +        */
-> +       ret = of_dma_get_range(dev->of_node, &dma_addr, &paddr, &size);
-> +       if (ret < 0) {
-> +               dev_dbg(dev, "no dma range information to setup\n");
-> +               return;
-> +       }
-> +
-> +       /* DMA ranges found. Calculate and set dma_pfn_offset */
-> +       dev->dma_pfn_offset = PFN_DOWN(paddr - dma_addr);
-> +       dev_dbg(dev, "dma_pfn_offset(%#08lx)\n", dev->dma_pfn_offset);
-> +}
-> +
-> +/**
->   * of_platform_device_create_pdata - Alloc, initialize and register an of_device
->   * @np: pointer to node to create device for
->   * @bus_id: name to assign device
-> @@ -211,12 +259,7 @@ static struct platform_device *of_platform_device_create_pdata(
->         if (!dev)
->                 return NULL;
->
-> -#if defined(CONFIG_MICROBLAZE)
-> -       dev->archdata.dma_mask = 0xffffffffUL;
-> -#endif
-> -       dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> -       if (!dev->dev.dma_mask)
-> -               dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
-> +       of_dma_configure(dev);
->         dev->dev.bus = &platform_bus_type;
->         dev->dev.platform_data = platform_data;
->
-> diff --git a/include/linux/dma-mapping.h b/include/linux/dma-mapping.h
-> index fd4aee2..c7d9b1b 100644
-> --- a/include/linux/dma-mapping.h
-> +++ b/include/linux/dma-mapping.h
-> @@ -123,6 +123,13 @@ static inline int dma_coerce_mask_and_coherent(struct device *dev, u64 mask)
->
->  extern u64 dma_get_required_mask(struct device *dev);
->
-> +#ifndef set_arch_dma_coherent_ops
-> +static inline int set_arch_dma_coherent_ops(struct device *dev)
-> +{
-> +       return 0;
-> +}
-> +#endif
-> +
->  static inline unsigned int dma_get_max_seg_size(struct device *dev)
->  {
->         return dev->dma_parms ? dev->dma_parms->max_segment_size : 65536;
-> --
-> 1.7.9.5
->
->
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 5c34dc2..138070e 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -73,4 +73,12 @@ config SOC_EXYNOS5440
+ 
+ endmenu
+ 
++config EXYNOS5420_MCPM
++	bool "Exynos5420 Multi-Cluster PM support"
++	depends on MCPM && SOC_EXYNOS5420
++	select ARM_CCI
++	help
++	  This is needed to provide CPU and cluster power management
++	  on Exynos5420 implementing big.LITTLE.
++
+ endif
+diff --git a/arch/arm/mach-exynos/Makefile b/arch/arm/mach-exynos/Makefile
+index a656dbe..01bc9b9 100644
+--- a/arch/arm/mach-exynos/Makefile
++++ b/arch/arm/mach-exynos/Makefile
+@@ -29,3 +29,5 @@ obj-$(CONFIG_ARCH_EXYNOS)	+= firmware.o
+ 
+ plus_sec := $(call as-instr,.arch_extension sec,+sec)
+ AFLAGS_exynos-smc.o		:=-Wa,-march=armv7-a$(plus_sec)
++
++obj-$(CONFIG_EXYNOS5420_MCPM)	+= mcpm-exynos.o
+diff --git a/arch/arm/mach-exynos/mcpm-exynos.c b/arch/arm/mach-exynos/mcpm-exynos.c
+new file mode 100644
+index 0000000..e578007
+--- /dev/null
++++ b/arch/arm/mach-exynos/mcpm-exynos.c
+@@ -0,0 +1,344 @@
++/*
++ * Copyright (c) 2014 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * arch/arm/mach-exynos/mcpm-exynos.c
++ *
++ * Based on arch/arm/mach-vexpress/dcscb.c
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#include <linux/arm-cci.h>
++#include <linux/delay.h>
++#include <linux/io.h>
++#include <linux/of_address.h>
++
++#include <asm/cputype.h>
++#include <asm/cp15.h>
++#include <asm/mcpm.h>
++
++#include "regs-pmu.h"
++#include "common.h"
++
++#define EXYNOS5420_CPUS_PER_CLUSTER	4
++#define EXYNOS5420_NR_CLUSTERS		2
++
++/* Non-secure iRAM base address */
++static void __iomem *ns_sram_base_addr;
++
++/*
++ * The common v7_exit_coherency_flush API could not be used because of the
++ * Erratum 799270 workaround. This macro is the same as the common one (in
++ * arch/arm/include/asm/cacheflush.h) except for the erratum handling.
++ */
++#define exynos_v7_exit_coherency_flush(level) \
++	asm volatile( \
++	"stmfd	sp!, {fp, ip}\n\t"\
++	"mrc	p15, 0, r0, c1, c0, 0	@ get SCTLR\n\t" \
++	"bic	r0, r0, #"__stringify(CR_C)"\n\t" \
++	"mcr	p15, 0, r0, c1, c0, 0	@ set SCTLR\n\t" \
++	"isb\n\t"\
++	"bl	v7_flush_dcache_"__stringify(level)"\n\t" \
++	"clrex\n\t"\
++	"mrc	p15, 0, r0, c1, c0, 1	@ get ACTLR\n\t" \
++	"bic	r0, r0, #(1 << 6)	@ disable local coherency\n\t" \
++	/* Dummy Load of a device register to avoid Erratum 799270 */ \
++	"ldr	r4, [%0]\n\t" \
++	"and	r4, r4, #0\n\t" \
++	"orr	r0, r0, r4\n\t" \
++	"mcr	p15, 0, r0, c1, c0, 1	@ set ACTLR\n\t" \
++	"isb\n\t" \
++	"dsb\n\t" \
++	"ldmfd	sp!, {fp, ip}" \
++	: \
++	: "Ir" (S5P_INFORM0) \
++	: "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", \
++	  "r9", "r10", "lr", "memory")
++
++/*
++ * We can't use regular spinlocks. In the switcher case, it is possible
++ * for an outbound CPU to call power_down() after its inbound counterpart
++ * is already live using the same logical CPU number which trips lockdep
++ * debugging.
++ */
++static arch_spinlock_t exynos_mcpm_lock = __ARCH_SPIN_LOCK_UNLOCKED;
++static int
++cpu_use_count[EXYNOS5420_CPUS_PER_CLUSTER][EXYNOS5420_NR_CLUSTERS];
++
++#define exynos_cluster_usecnt(cluster) \
++	(cpu_use_count[0][cluster] +   \
++	 cpu_use_count[1][cluster] +   \
++	 cpu_use_count[2][cluster] +   \
++	 cpu_use_count[3][cluster])
++
++#define exynos_cluster_unused(cluster) !exynos_cluster_usecnt(cluster)
++
++static int exynos_cluster_power_control(unsigned int cluster, int enable)
++{
++	unsigned int tries = 100;
++	unsigned int val;
++
++	if (enable) {
++		exynos_cluster_powerup(cluster);
++		val = S5P_CORE_LOCAL_PWR_EN;
++	} else {
++		exynos_cluster_powerdown(cluster);
++		val = 0;
++	}
++
++	/* Wait until cluster power control is applied */
++	while (tries--) {
++		if (exynos_cluster_power_state(cluster) == val)
++			return 0;
++
++		cpu_relax();
++	}
++	pr_warn("timed out waiting for cluster %u to power %s\n", cluster,
++		enable ? "on" : "off");
++
++	return -ETIMEDOUT;
++}
++
++static int exynos_power_up(unsigned int cpu, unsigned int cluster)
++{
++	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
++	int err = 0;
++
++	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
++	if (cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
++		cluster >= EXYNOS5420_NR_CLUSTERS)
++		return -EINVAL;
++
++	/*
++	 * Since this is called with IRQs enabled, and no arch_spin_lock_irq
++	 * variant exists, we need to disable IRQs manually here.
++	 */
++	local_irq_disable();
++	arch_spin_lock(&exynos_mcpm_lock);
++
++	cpu_use_count[cpu][cluster]++;
++	if (cpu_use_count[cpu][cluster] == 1) {
++		bool was_cluster_down =
++			(exynos_cluster_usecnt(cluster) == 1);
++
++		/*
++		 * Turn on the cluster (L2/COMMON) and then power on the
++		 * cores.
++		 */
++		if (was_cluster_down)
++			err = exynos_cluster_power_control(cluster, 1);
++
++		if (!err)
++			exynos_cpu_powerup(cpunr);
++		else
++			exynos_cluster_power_control(cluster, 0);
++	} else if (cpu_use_count[cpu][cluster] != 2) {
++		/*
++		 * The only possible values are:
++		 * 0 = CPU down
++		 * 1 = CPU (still) up
++		 * 2 = CPU requested to be up before it had a chance
++		 *     to actually make itself down.
++		 * Any other value is a bug.
++		 */
++		BUG();
++	}
++
++	arch_spin_unlock(&exynos_mcpm_lock);
++	local_irq_enable();
++
++	return err;
++}
++
++static void exynos_power_down(void)
++{
++	unsigned int mpidr, cpu, cluster;
++	bool last_man = false, skip_wfi = false;
++	unsigned int cpunr;
++
++	mpidr = read_cpuid_mpidr();
++	cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
++	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
++	cpunr =  cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
++
++	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
++	BUG_ON(cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
++			cluster >= EXYNOS5420_NR_CLUSTERS);
++
++	__mcpm_cpu_going_down(cpu, cluster);
++
++	arch_spin_lock(&exynos_mcpm_lock);
++	BUG_ON(__mcpm_cluster_state(cluster) != CLUSTER_UP);
++	cpu_use_count[cpu][cluster]--;
++	if (cpu_use_count[cpu][cluster] == 0) {
++		exynos_cpu_powerdown(cpunr);
++
++		if (exynos_cluster_unused(cluster))
++			/* TODO: Turn off the cluster here to save power. */
++			last_man = true;
++	} else if (cpu_use_count[cpu][cluster] == 1) {
++		/*
++		 * A power_up request went ahead of us.
++		 * Even if we do not want to shut this CPU down,
++		 * the caller expects a certain state as if the WFI
++		 * was aborted.  So let's continue with cache cleaning.
++		 */
++		skip_wfi = true;
++	} else {
++		BUG();
++	}
++
++	if (last_man && __mcpm_outbound_enter_critical(cpu, cluster)) {
++		arch_spin_unlock(&exynos_mcpm_lock);
++
++		if (read_cpuid_part_number() == ARM_CPU_PART_CORTEX_A15) {
++			/*
++			 * On the Cortex-A15 we need to disable
++			 * L2 prefetching before flushing the cache.
++			 */
++			asm volatile(
++			"mcr	p15, 1, %0, c15, c0, 3\n\t"
++			"isb\n\t"
++			"dsb"
++			: : "r" (0x400));
++		}
++
++		/* Flush all cache levels for this cluster. */
++		exynos_v7_exit_coherency_flush(all);
++
++		/*
++		 * Disable cluster-level coherency by masking
++		 * incoming snoops and DVM messages:
++		 */
++		cci_disable_port_by_cpu(mpidr);
++
++		__mcpm_outbound_leave_critical(cluster, CLUSTER_DOWN);
++	} else {
++		arch_spin_unlock(&exynos_mcpm_lock);
++
++		/* Disable and flush the local CPU cache. */
++		exynos_v7_exit_coherency_flush(louis);
++	}
++
++	__mcpm_cpu_down(cpu, cluster);
++
++	/* Now we are prepared for power-down, do it: */
++	if (!skip_wfi)
++		wfi();
++
++	/* Not dead at this point?  Let our caller cope. */
++}
++
++static int exynos_power_down_finish(unsigned int cpu, unsigned int cluster)
++{
++	unsigned int tries = 100;
++	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
++
++	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
++	BUG_ON(cpu >= EXYNOS5420_CPUS_PER_CLUSTER ||
++			cluster >= EXYNOS5420_NR_CLUSTERS);
++
++	/* Wait for the core state to be OFF */
++	while (tries--) {
++		if (ACCESS_ONCE(cpu_use_count[cpu][cluster]) == 0) {
++			if ((exynos_cpu_power_state(cpunr) == 0))
++				return 0; /* success: the CPU is halted */
++		}
++
++		/* Otherwise, wait and retry: */
++		msleep(1);
++	}
++
++	return -ETIMEDOUT; /* timeout */
++}
++
++static const struct mcpm_platform_ops exynos_power_ops = {
++	.power_up		= exynos_power_up,
++	.power_down		= exynos_power_down,
++	.power_down_finish	= exynos_power_down_finish,
++};
++
++static void __init exynos_mcpm_usage_count_init(void)
++{
++	unsigned int mpidr, cpu, cluster;
++
++	mpidr = read_cpuid_mpidr();
++	cpu = MPIDR_AFFINITY_LEVEL(mpidr, 0);
++	cluster = MPIDR_AFFINITY_LEVEL(mpidr, 1);
++
++	pr_debug("%s: cpu %u cluster %u\n", __func__, cpu, cluster);
++	BUG_ON(cpu >= EXYNOS5420_CPUS_PER_CLUSTER  ||
++			cluster >= EXYNOS5420_NR_CLUSTERS);
++
++	cpu_use_count[cpu][cluster] = 1;
++}
++
++/*
++ * Enable cluster-level coherency, in preparation for turning on the MMU.
++ */
++static void __naked exynos_pm_power_up_setup(unsigned int affinity_level)
++{
++	asm volatile ("\n"
++	"cmp	r0, #1\n"
++	"bxne	lr\n"
++	"b	cci_enable_port_for_self");
++}
++
++static int __init exynos_mcpm_init(void)
++{
++	struct device_node *node;
++	int ret = 0;
++
++	node = of_find_compatible_node(NULL, NULL, "samsung,exynos5420");
++	if (!node)
++		return -ENODEV;
++	of_node_put(node);
++
++	if (!cci_probed())
++		return -ENODEV;
++
++	node = of_find_compatible_node(NULL, NULL,
++			"samsung,exynos4210-sram-ns");
++	if (!node)
++		return -ENODEV;
++
++	ns_sram_base_addr = of_iomap(node, 0);
++	of_node_put(node);
++	if (!ns_sram_base_addr) {
++		pr_err("failed to map non-secure iRAM base address\n");
++		return -ENOMEM;
++	}
++
++	/*
++	 * To increase the stability of KFC reset we need to program
++	 * the PMU SPARE3 register
++	 */
++	__raw_writel(EXYNOS5420_SWRESET_KFC_SEL, S5P_PMU_SPARE3);
++
++	exynos_mcpm_usage_count_init();
++
++	ret = mcpm_platform_register(&exynos_power_ops);
++	if (!ret)
++		ret = mcpm_sync_init(exynos_pm_power_up_setup);
++	if (ret) {
++		iounmap(ns_sram_base_addr);
++		return ret;
++	}
++
++	mcpm_smp_set_ops();
++
++	pr_info("Exynos MCPM support installed\n");
++
++	/*
++	 * Future entries into the kernel can now go
++	 * through the cluster entry vectors.
++	 */
++	__raw_writel(virt_to_phys(mcpm_entry_point), ns_sram_base_addr + 0x1c);
++
++	return ret;
++}
++
++early_initcall(exynos_mcpm_init);
+diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-pmu.h
+index 6685ebf..f44d318 100644
+--- a/arch/arm/mach-exynos/regs-pmu.h
++++ b/arch/arm/mach-exynos/regs-pmu.h
+@@ -38,6 +38,7 @@
+ #define S5P_INFORM5				S5P_PMUREG(0x0814)
+ #define S5P_INFORM6				S5P_PMUREG(0x0818)
+ #define S5P_INFORM7				S5P_PMUREG(0x081C)
++#define S5P_PMU_SPARE3				S5P_PMUREG(0x090C)
+ 
+ #define S5P_ARM_CORE0_LOWPWR			S5P_PMUREG(0x1000)
+ #define S5P_DIS_IRQ_CORE0			S5P_PMUREG(0x1004)
+@@ -325,4 +326,6 @@
+ 
+ #define EXYNOS5_OPTION_USE_RETENTION				(1 << 4)
+ 
++#define EXYNOS5420_SWRESET_KFC_SEL				0x3
++
+ #endif /* __ASM_ARCH_REGS_PMU_H */
+-- 
+1.7.9.5
