@@ -1,122 +1,223 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH] ARM: zynq: dt: Clean up device tree
-Date: Mon,  5 May 2014 10:16:08 -0700
-Message-ID: <1399310168-6099-1-git-send-email-soren.brinkmann@xilinx.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: =?UTF-8?q?S=C3=B6ren=20Brinkmann?= <soren.brinkmann@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v10 03/15] ARM: sunxi: Add driver for SD/MMC hosts found
+ on Allwinner sunxi SoCs
+Date: Mon, 5 May 2014 22:33:00 +0200
+Message-ID: <CAPDyKFpAGNLaKagJ_RPt1vbz70pNWJzo-s6Ao50Mh0gFrRLN0g@mail.gmail.com>
+References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
+	<1399046249-19472-4-git-send-email-hdegoede@redhat.com>
+	<CAPDyKFoinhyob7GZLgH4Dm7KdHCxj1+OpuZYKDK3OkU8RFsY8A@mail.gmail.com>
+	<53678DB4.60209@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <53678DB4.60209@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: =?UTF-8?Q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer@o2s.ch>, Chris Ball <chris@printf.net>, Emilio Lopez <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
- - Use generic node names
- - Fix up some weird formatting and white spaces
- - Update copyright info
+[snip]
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
+> On 05/05/2014 02:41 PM, Ulf Hansson wrote:
+>>> +struct sunxi_mmc_host {
+>>> +       struct mmc_host *mmc;
+>>> +       struct regulator *vmmc;
+>>
+>> Instead of having a specific regulator for this driver, please use the
+>> mmc_regulator_get_supply API.
+>
+> We cannot use mmc_regulator_get_supply because for the sunxi mmc controller
+> not only vqmmc but also vmmc itself is optional, and mmc_regulator_get_supply
+> calls devm_regulator_get rather then devm_regulator_get_optional for vmmc.
 
- arch/arm/boot/dts/zynq-7000.dtsi | 29 +++++++++++++++--------------
- 1 file changed, 15 insertions(+), 14 deletions(-)
+Is that because the mmc controller handle the power to the card or
+because you have a fixed supply?
 
-diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
-index c1176abc34d9..bed6e0aed00a 100644
---- a/arch/arm/boot/dts/zynq-7000.dtsi
-+++ b/arch/arm/boot/dts/zynq-7000.dtsi
-@@ -1,5 +1,5 @@
- /*
-- *  Copyright (C) 2011 Xilinx
-+ *  Copyright (C) 2011 - 2014 Xilinx
-  *
-  * This software is licensed under the terms of the GNU General Public
-  * License version 2, as published by the Free Software Foundation, and
-@@ -55,7 +55,7 @@
- 		interrupt-parent = <&intc>;
- 		ranges;
- 
--		i2c0: zynq-i2c@e0004000 {
-+		i2c0: i2c@e0004000 {
- 			compatible = "cdns,i2c-r1p10";
- 			status = "disabled";
- 			clocks = <&clkc 38>;
-@@ -66,7 +66,7 @@
- 			#size-cells = <0>;
- 		};
- 
--		i2c1: zynq-i2c@e0005000 {
-+		i2c1: i2c@e0005000 {
- 			compatible = "cdns,i2c-r1p10";
- 			status = "disabled";
- 			clocks = <&clkc 39>;
-@@ -95,7 +95,7 @@
- 			cache-level = <2>;
- 		};
- 
--		uart0: uart@e0000000 {
-+		uart0: serial@e0000000 {
- 			compatible = "xlnx,xuartps";
- 			status = "disabled";
- 			clocks = <&clkc 23>, <&clkc 40>;
-@@ -104,7 +104,7 @@
- 			interrupts = <0 27 4>;
- 		};
- 
--		uart1: uart@e0001000 {
-+		uart1: serial@e0001000 {
- 			compatible = "xlnx,xuartps";
- 			status = "disabled";
- 			clocks = <&clkc 24>, <&clkc 41>;
-@@ -131,7 +131,7 @@
- 			clock-names = "pclk", "hclk", "tx_clk";
- 		};
- 
--		sdhci0: ps7-sdhci@e0100000 {
-+		sdhci0: sdhci@e0100000 {
- 			compatible = "arasan,sdhci-8.9a";
- 			status = "disabled";
- 			clock-names = "clk_xin", "clk_ahb";
-@@ -141,7 +141,7 @@
- 			reg = <0xe0100000 0x1000>;
- 		} ;
- 
--		sdhci1: ps7-sdhci@e0101000 {
-+		sdhci1: sdhci@e0101000 {
- 			compatible = "arasan,sdhci-8.9a";
- 			status = "disabled";
- 			clock-names = "clk_xin", "clk_ahb";
-@@ -185,26 +185,27 @@
- 			clocks = <&clkc 4>;
- 		};
- 
--		ttc0: ttc0@f8001000 {
-+		ttc0: timer@f8001000 {
- 			interrupt-parent = <&intc>;
--			interrupts = < 0 10 4 0 11 4 0 12 4 >;
-+			interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
- 			compatible = "cdns,ttc";
- 			clocks = <&clkc 6>;
- 			reg = <0xF8001000 0x1000>;
- 		};
- 
--		ttc1: ttc1@f8002000 {
-+		ttc1: timer@f8002000 {
- 			interrupt-parent = <&intc>;
--			interrupts = < 0 37 4 0 38 4 0 39 4 >;
-+			interrupts = <0 37 4>, <0 38 4>, <0 39 4>;
- 			compatible = "cdns,ttc";
- 			clocks = <&clkc 6>;
- 			reg = <0xF8002000 0x1000>;
- 		};
--		scutimer: scutimer@f8f00600 {
-+
-+		scutimer: timer@f8f00600 {
- 			interrupt-parent = <&intc>;
--			interrupts = < 1 13 0x301 >;
-+			interrupts = <1 13 0x301>;
- 			compatible = "arm,cortex-a9-twd-timer";
--			reg = < 0xf8f00600 0x20 >;
-+			reg = <0xf8f00600 0x20>;
- 			clocks = <&clkc 4>;
- 		} ;
- 	};
--- 
-1.9.2.1.g06c4abd
+Having a fixed regulator supply could easily be set up in DT, which
+then also dynamically gives you the ocr mask instead of having a them
+"hard coded".
+
+>
+> Using mmc_regulator_get_supply would lead to false postive errors being logged
+> on 99/100 boards.
+
+I was kind of expecting a response like this. :-) Actually I would
+prefer if we could make the API suit drivers like this one as well.
+
+For reference, there are currently a patch being discussed which
+relates to this topic.
+"mmc: core: Improve support for deferred regulators"
+
+>
+>>
+>>> +       struct reset_control *reset;
+>>> +
+>>> +       /* IO mapping base */
+>>> +       void __iomem    *reg_base;
+>>> +
+>>> +       spinlock_t      lock;
+>>> +       struct tasklet_struct manual_stop_tasklet;
+>>
+>> Any reason why you can't use a threaded IRQ handler instead of a tasklet?
+>
+> AFAIK IRQ threaded handlers always have the highest priority. When
+> the manual_stop_tasklet runs we disable irqs and start polling to
+> recover from an error condition, which is nothing something I want
+> todo with the highest priority on the system.
+
+To me, that seems like a good match for a threaded irq handler.
+
+I suppose you could change priority of the kthread that executes the
+threaded irq handler, if you need that.
+
+[snip]
+
+>>> +static void sunxi_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>>> +{
+>>> +       struct sunxi_mmc_host *host = mmc_priv(mmc);
+>>> +       u32 rval;
+>>> +       s32 err;
+>>> +
+>>> +       /* Set the power state */
+>>> +       switch (ios->power_mode) {
+>>> +       case MMC_POWER_ON:
+>>> +               break;
+>>> +
+>>> +       case MMC_POWER_UP:
+>>> +               if (!IS_ERR(host->vmmc)) {
+>>> +                       mmc_regulator_set_ocr(host->mmc, host->vmmc, ios->vdd);
+>>> +                       udelay(200);
+>>> +               }
+>>> +
+>>> +               err = sunxi_mmc_init_host(mmc);
+>>
+>> So, sunxi_mmc_init_host() will ungate the clocks - but you shouldn't
+>> use ->set_ios() callback to implement power save.
+>>
+>> Clocks should be ungated at ->probe() and gated at ->remove().
+>>
+>> If fine grained power save is wanted, I advise you to rework the clock
+>> handling - and to build it upon runtime PM instead. Typically you
+>> would do these adaptations:
+>>
+>> 1. Besides enabling the clocks at ->probe(), also enable runtime PM
+>> and use the runtime PM auto-suspend feature.
+>> 2. Add pm_runtime_get|put at the proper places in the driver.
+>> 3. Implement the runtime PM callbacks (suspend|resume) and do clock
+>> gating|ungating from there.
+>>
+>> You may refer to drivers/mmc/host/mmci.c to get an example.
+>
+> I'll just move the enable / disable to probe / remove for now.
+
+Seems reasonable!
+
+While you do that, it would be nice to have some understanding whether
+the reset sequence, also performed by sunxi_mmc_init_host(), is
+connected to clk gating|ungating, or a power cycle. I guess you will
+find out during testing. :-)
+
+>
+>>> +               if (err) {
+>>> +                       host->ferror = 1;
+>>> +                       return;
+>>> +               }
+>>> +
+>>> +               enable_irq(host->irq);
+
+Just realize that I also think you should move the enable|disable_irq
+to ->probe|remove().
+
+That will mean you will be better prepared to implement runtime PM
+support and thus make it possible to disable irqs during request
+inactivity.
+
+>>> +
+>>> +               dev_dbg(mmc_dev(host->mmc), "power on!\n");
+>>> +               host->ferror = 0;
+>>> +               break;
+>>> +
+>>> +       case MMC_POWER_OFF:
+>>> +               dev_dbg(mmc_dev(host->mmc), "power off!\n");
+>>> +               disable_irq(host->irq);
+>>> +               sunxi_mmc_exit_host(host);
+>>
+>> See comment above for sunxi_mmc_init_host().
+>>
+>>> +               if (!IS_ERR(host->vmmc))
+>>> +                       mmc_regulator_set_ocr(host->mmc, host->vmmc, 0);
+>>> +
+>>> +               host->ferror = 0;
+>>> +               break;
+>>> +       }
+>>> +
+>>> +       /* set bus width */
+>>> +       switch (ios->bus_width) {
+>>> +       case MMC_BUS_WIDTH_1:
+>>> +               mci_writel(host, REG_WIDTH, SDXC_WIDTH1);
+>>> +               host->bus_width = 1;
+>>> +               break;
+>>> +       case MMC_BUS_WIDTH_4:
+>>> +               mci_writel(host, REG_WIDTH, SDXC_WIDTH4);
+>>> +               host->bus_width = 4;
+>>> +               break;
+>>> +       case MMC_BUS_WIDTH_8:
+>>> +               mci_writel(host, REG_WIDTH, SDXC_WIDTH8);
+>>> +               host->bus_width = 8;
+>>> +               break;
+>>> +       }
+>>> +
+>>> +       /* set ddr mode */
+>>> +       rval = mci_readl(host, REG_GCTRL);
+>>> +       if (ios->timing == MMC_TIMING_UHS_DDR50) {
+>>> +               rval |= SDXC_DDR_MODE;
+>>> +               host->ddr = 1;
+>>> +       } else {
+>>> +               rval &= ~SDXC_DDR_MODE;
+>>> +               host->ddr = 0;
+>>> +       }
+>>> +       mci_writel(host, REG_GCTRL, rval);
+>>> +
+>>> +       /* set up clock */
+>>> +       if (ios->clock && ios->power_mode) {
+>>> +               dev_dbg(mmc_dev(host->mmc), "ios->clock: %d\n", ios->clock);
+>>> +               sunxi_mmc_clk_set_rate(host, ios->clock);
+>>> +               usleep_range(50000, 55000);
+>>
+>> Is those values for usleep really correct? I am not sure how many
+>> times we execute this path while detecting/powering the card, but
+>> quite a few.
+>> Detecting/powering the card is also done during each system
+>> suspend/resume cycle - thus this will heavily affect these cycles.
+>
+> The problem is we've no docs, so this is all based on android code, the
+> android code has 2 drivers, lets call them the old and the new one.
+>
+> This works is based on the new driver as that one was significantly
+> cleaner then the old driver. This bit comes directly from the new driver,
+> but it seems that the old driver has no delay at all. And clk_set_rate
+> already does a busy-wait waiting for the hardware to acknowledge the
+> clock rate change, so I think this is not really necessary. I'll run
+> some tests with it removed and if everything still works I'll drop it.
+
+Okay, great!
+
+Maybe we could add some comments, no matter what!?
+
+[snip]
+
+>>> +       if (cmd->opcode == MMC_GO_IDLE_STATE) {
+>>> +               cmd_val |= SDXC_SEND_INIT_SEQUENCE;
+>>> +               imask |= SDXC_COMMAND_DONE;
+>>
+>> This seems really strange! Please elaborate on why need specific
+>> handling of this CMD.
+>
+> I've no clue, again no docs.
+
+I see the problem. :-)
+
+[snip]
+
+Kind regards
+Ulf Hansson
