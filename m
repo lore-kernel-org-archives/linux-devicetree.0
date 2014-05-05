@@ -1,31 +1,190 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv2 9/9] DTS: OMAP3-N900: Add sound support
-Date: Mon, 5 May 2014 12:45:13 -0700
-Message-ID: <20140505194513.GE25949@atomide.com>
-References: <1398694047-28596-1-git-send-email-sre@kernel.org>
- <1398694047-28596-10-git-send-email-sre@kernel.org>
- <20140501175845.GK3245@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140501175845.GK3245-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [PATCH v4 2/2] ARM: dts: Add peach-pit board support
+Date: Mon,  5 May 2014 14:55:32 +0530
+Message-ID: <1399281933-31064-3-git-send-email-arun.kk@samsung.com>
+References: <1399281933-31064-1-git-send-email-arun.kk@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399281933-31064-1-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, dianders@chromium.org, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-* Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [140501 11:41]:
-> On Mon, Apr 28, 2014 at 04:07:27PM +0200, Sebastian Reichel wrote:
-> > This patch adds support for the Nokia N900's sound
-> > system.
-> 
-> Reviewed-by: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Adds the google peach-pit board dts file which uses
+exynos5420 SoC.
 
-Applying the last patch into omap-for-v3.16/dt branch thanks.
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
+ arch/arm/boot/dts/Makefile                 |    1 +
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |  147 ++++++++++++++++++++++++++++
+ 2 files changed, 148 insertions(+)
+ create mode 100644 arch/arm/boot/dts/exynos5420-peach-pit.dts
 
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 35c146f..3220e29 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -74,6 +74,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+ 	exynos5250-smdk5250.dtb \
+ 	exynos5250-snow.dtb \
+ 	exynos5420-arndale-octa.dtb \
++	exynos5420-peach-pit.dtb \
+ 	exynos5420-smdk5420.dtb \
+ 	exynos5440-sd5v1.dtb \
+ 	exynos5440-ssdk5440.dtb
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+new file mode 100644
+index 0000000..fae33dd
+--- /dev/null
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -0,0 +1,147 @@
++/*
++ * Google Peach Pit Rev 6+ board device tree source
++ *
++ * Copyright (c) 2014 Google, Inc
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/dts-v1/;
++#include <dt-bindings/input/input.h>
++#include <dt-bindings/gpio/gpio.h>
++#include "exynos5420.dtsi"
++
++/ {
++	model = "Google Peach Pit Rev 6+";
++
++	compatible = "google,pit-rev16",
++		"google,pit-rev15", "google,pit-rev14",
++		"google,pit-rev13", "google,pit-rev12",
++		"google,pit-rev11", "google,pit-rev10",
++		"google,pit-rev9", "google,pit-rev8",
++		"google,pit-rev7", "google,pit-rev6",
++		"google,pit", "google,peach","samsung,exynos5420",
++		"samsung,exynos5";
++
++	memory {
++		reg = <0x20000000 0x80000000>;
++	};
++
++	fixed-rate-clocks {
++		oscclk {
++			compatible = "samsung,exynos5420-oscclk";
++			clock-frequency = <24000000>;
++		};
++	};
++
++	gpio-keys {
++		compatible = "gpio-keys";
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&power_key_irq>;
++
++		power {
++			label = "Power";
++			gpios = <&gpx1 2 GPIO_ACTIVE_LOW>;
++			linux,code = <KEY_POWER>;
++			gpio-key,wakeup;
++		};
++	};
++
++	backlight {
++		compatible = "pwm-backlight";
++		pwms = <&pwm 0 1000000 0>;
++		brightness-levels = <0 100 500 1000 1500 2000 2500 2800>;
++		default-brightness-level = <7>;
++		pinctrl-0 = <&pwm0_out>;
++		pinctrl-names = "default";
++	};
++};
++
++&pinctrl_0 {
++	tpm_irq: tpm-irq {
++		samsung,pins = "gpx1-0";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
++	power_key_irq: power-key-irq {
++		samsung,pins = "gpx1-2";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++};
++
++&rtc {
++	status = "okay";
++};
++
++&uart_3 {
++	status = "okay";
++};
++
++&mmc_0 {
++	status = "okay";
++	num-slots = <1>;
++	broken-cd;
++	caps2-mmc-hs200-1_8v;
++	supports-highspeed;
++	non-removable;
++	card-detect-delay = <200>;
++	clock-frequency = <400000000>;
++	samsung,dw-mshc-ciu-div = <3>;
++	samsung,dw-mshc-sdr-timing = <0 4>;
++	samsung,dw-mshc-ddr-timing = <0 2>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
++
++	slot@0 {
++		reg = <0>;
++		bus-width = <8>;
++	};
++};
++
++&mmc_2 {
++	status = "okay";
++	num-slots = <1>;
++	supports-highspeed;
++	card-detect-delay = <200>;
++	clock-frequency = <400000000>;
++	samsung,dw-mshc-ciu-div = <3>;
++	samsung,dw-mshc-sdr-timing = <2 3>;
++	samsung,dw-mshc-ddr-timing = <1 2>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
++
++	slot@0 {
++		reg = <0>;
++		bus-width = <4>;
++	};
++};
++
++&hsi2c_9 {
++	status = "okay";
++	clock-frequency = <400000>;
++
++	tpm@20 {
++		compatible = "infineon,slb9645tt";
++		reg = <0x20>;
++
++		/* Unused irq; but still need to configure the pins */
++		pinctrl-names = "default";
++		pinctrl-0 = <&tpm_irq>;
++	};
++};
++
++/*
++ * Use longest HW watchdog in SoC (32 seconds) since the hardware
++ * watchdog provides no debugging information (compared to soft/hard
++ * lockup detectors) and so should be last resort.
++ */
++&watchdog {
++	timeout-sec = <32>;
++};
+-- 
+1.7.9.5
