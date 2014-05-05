@@ -1,102 +1,71 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 1/8] pinctrl: rockchip: do not require 2nd register area
-Date: Mon, 05 May 2014 13:58 +0200
-Message-ID: <2232662.BNuMPTx7jK@diego>
-References: <11862890.WUjscWaP3U@diego>
+From: <tthayer@altera.com>
+Subject: [PATCHv3 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
+Date: Mon, 5 May 2014 17:52:15 -0500
+Message-ID: <1399330337-16748-2-git-send-email-tthayer@altera.com>
+References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11862890.WUjscWaP3U@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399330337-16748-1-git-send-email-tthayer@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com, tthayer@altera.com
 List-Id: devicetree@vger.kernel.org
 
-Deprecate secondary register area for rk3188 pulls. Instead use big enough
-initial mapping of grf registers to catch all.
+From: Thor Thayer <tthayer@altera.com>
 
-The now deprecated register is still supported though.
-
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Addition of the Altera SDRAM controller bindings and device
+tree changes to the Altera SoC project. The "syscon" parameter
+is included here because the SDRAM EDAC bits are shared with the SDRAM
+configuration bits.
 ---
- .../devicetree/bindings/pinctrl/rockchip,pinctrl.txt      |  2 ++
- drivers/pinctrl/pinctrl-rockchip.c                        | 15 ++++++++++++---
- 2 files changed, 14 insertions(+), 3 deletions(-)
+v2: Changes to SoC SDRAM EDAC code.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-index f378d34..78dafc9 100644
---- a/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/rockchip,pinctrl.txt
-@@ -22,6 +22,8 @@ Required properties for iomux controller:
-   - compatible: one of "rockchip,rk2928-pinctrl", "rockchip,rk3066a-pinctrl"
- 		       "rockchip,rk3066b-pinctrl", "rockchip,rk3188-pinctrl"
-   - reg: first element is the general register space of the iomux controller
-+	 It should be large enough to contain also separate pull registers.
-+	 Deprecated:
- 	 second element is the separate pull register space of the rk3188
- 
- Required properties for gpio sub nodes:
-diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
-index 2e198a4..ab71de8 100644
---- a/drivers/pinctrl/pinctrl-rockchip.c
-+++ b/drivers/pinctrl/pinctrl-rockchip.c
-@@ -160,6 +160,7 @@ struct rockchip_pmx_func {
- 
- struct rockchip_pinctrl {
- 	void __iomem			*reg_base;
-+	int				reg_size;
- 	void __iomem			*reg_pull;
- 	struct device			*dev;
- 	struct rockchip_pin_ctrl	*ctrl;
-@@ -416,6 +417,7 @@ static void rk2928_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
- 	*bit = pin_num % RK2928_PULL_PINS_PER_REG;
- };
- 
-+#define RK3188_PULL_OFFSET		0x164
- #define RK3188_PULL_BITS_PER_PIN	2
- #define RK3188_PULL_PINS_PER_REG	8
- #define RK3188_PULL_BANK_STRIDE		16
-@@ -432,7 +434,10 @@ static void rk3188_calc_pull_reg_and_bit(struct rockchip_pin_bank *bank,
- 		*bit = pin_num % RK3188_PULL_PINS_PER_REG;
- 		*bit *= RK3188_PULL_BITS_PER_PIN;
- 	} else {
--		*reg = info->reg_pull - 4;
-+		*reg = info->reg_pull ? info->reg_pull
-+				      : info->reg_base + RK3188_PULL_OFFSET;
-+		/* correct the offset, as it is the 2nd pull register */
-+		*reg -= 4;
- 		*reg += bank->bank_num * RK3188_PULL_BANK_STRIDE;
- 		*reg += ((pin_num / RK3188_PULL_PINS_PER_REG) * 4);
- 
-@@ -1427,6 +1432,7 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
- 	 */
- 	if (of_device_is_compatible(bank->of_node,
- 				    "rockchip,rk3188-gpio-bank0")) {
+V3: Implement code suggestions for SDRAM EDAC code.
+
+Signed-off-by: Thor Thayer <tthayer@altera.com>
+---
+ .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+new file mode 100644
+index 0000000..525cb76
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+@@ -0,0 +1,14 @@
++Altera SOCFPGA SDRAM Controller
 +
- 		bank->bank_type = RK3188_BANK0;
- 
- 		if (of_address_to_resource(bank->of_node, 1, &res)) {
-@@ -1525,8 +1531,11 @@ static int rockchip_pinctrl_probe(struct platform_device *pdev)
- 	if (IS_ERR(info->reg_base))
- 		return PTR_ERR(info->reg_base);
- 
--	/* The RK3188 has its pull registers in a separate place */
--	if (ctrl->type == RK3188) {
-+	/* to check for the old dt-bindings */
-+	info->reg_size = resource_size(res);
++Required properties:
++- compatible : "altr,sdr-ctl", "syscon";
++                Note that syscon is invoked for this device to support the FPGA
++		bridge driver, EDAC driver and other devices that share the
++		registers.
++- reg : Should contain 1 register ranges(address and length)
 +
-+	/* Honor the old binding, with pull registers as 2nd resource */
-+	if (ctrl->type == RK3188 &&  info->reg_size < 0x200) {
- 		res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
- 		info->reg_pull = devm_ioremap_resource(&pdev->dev, res);
- 		if (IS_ERR(info->reg_pull))
++Example:
++	sdrctl@ffc25000 {
++		compatible = "altr,sdr-ctl", "syscon";
++		reg = <0xffc25000 0x1000>;
++	};
+diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+index df43702..6ce912e 100644
+--- a/arch/arm/boot/dts/socfpga.dtsi
++++ b/arch/arm/boot/dts/socfpga.dtsi
+@@ -676,6 +676,11 @@
+ 			clocks = <&l4_sp_clk>;
+ 		};
+ 
++		sdrctl@ffc25000 {
++			compatible = "altr,sdr-ctl", "syscon";
++			reg = <0xffc25000 0x1000>;
++		};
++
+ 		rstmgr@ffd05000 {
+ 			compatible = "altr,rst-mgr";
+ 			reg = <0xffd05000 0x1000>;
 -- 
-1.9.0
+1.7.9.5
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
