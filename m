@@ -1,108 +1,291 @@
-From: Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 1/5] ARM: EXYNOS: Add generic cpu power control functions for all exynos based SoCs
-Date: Mon,  5 May 2014 21:56:57 +0530
-Message-ID: <1399307221-8659-2-git-send-email-a.kesavan@samsung.com>
-References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399307221-8659-1-git-send-email-a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Dave.Martin-5wv7dgnIgG8@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v4 2/7] Input: pixcir_i2c_ts: Initialize interrupt mode and power mode
+Date: Mon, 5 May 2014 12:04:33 +0300
+Message-ID: <1399280678-23925-3-git-send-email-rogerq@ti.com>
+References: <1399280678-23925-1-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399280678-23925-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Leela Krishna Amudala <leela.krishna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Introduce helper functions to configure power and interrupt
+registers. Default to IDLE mode on probe as device supports
+auto wakeup to ACVIE mode on detecting finger touch.
 
-Add generic cpu power control functions for exynos based SoCS
-for cpu power up/down and to know the cpu status.
+Configure interrupt mode and polarity on start up.
+Power down on device closure or module removal.
 
-Signed-off-by: Leela Krishna Amudala <leela.krishna-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
 ---
- arch/arm/mach-exynos/common.h   |    3 +++
- arch/arm/mach-exynos/pm.c       |   36 ++++++++++++++++++++++++++++++++++++
- arch/arm/mach-exynos/regs-pmu.h |    6 ++++++
- 3 files changed, 45 insertions(+)
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 176 +++++++++++++++++++++++++++++-
+ include/linux/input/pixcir_ts.h           |  42 +++++++
+ 2 files changed, 216 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-index 47cbab0..a7dbb5f 100644
---- a/arch/arm/mach-exynos/common.h
-+++ b/arch/arm/mach-exynos/common.h
-@@ -63,5 +63,8 @@ struct exynos_pmu_conf {
- };
- 
- extern void exynos_sys_powerdown_conf(enum sys_powerdown mode);
-+extern void exynos_cpu_powerdown(int cpu);
-+extern void exynos_cpu_powerup(int cpu);
-+extern int  exynos_cpu_power_state(int cpu);
- 
- #endif /* __ARCH_ARM_MACH_EXYNOS_COMMON_H */
-diff --git a/arch/arm/mach-exynos/pm.c b/arch/arm/mach-exynos/pm.c
-index 15af0ce..6651028 100644
---- a/arch/arm/mach-exynos/pm.c
-+++ b/arch/arm/mach-exynos/pm.c
-@@ -100,6 +100,42 @@ static int exynos_irq_set_wake(struct irq_data *data, unsigned int state)
- 	return -ENOENT;
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 8a083bd..53d01d4 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -100,6 +100,164 @@ static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+ 	return IRQ_HANDLED;
  }
  
-+/**
-+ * exynos_cpu_powerdown : power down the specified cpu
-+ * @cpu : the cpu to power down
-+ *
-+ * Power downs the specified cpu. The sequence must be finished by a
-+ * call to cpu_do_idle()
-+ *
-+ */
-+void exynos_cpu_powerdown(int cpu)
++static int pixcir_set_power_mode(struct pixcir_i2c_ts_data *ts,
++				 enum pixcir_power_mode mode)
 +{
-+	__raw_writel(0, EXYNOS_ARM_CORE_CONFIGURATION(cpu));
++	struct device *dev = &ts->client->dev;
++	int ret;
++
++	ret = i2c_smbus_read_byte_data(ts->client, PIXCIR_REG_POWER_MODE);
++	if (ret < 0) {
++		dev_err(dev, "%s: can't read reg 0x%x : %d\n",
++			__func__, PIXCIR_REG_POWER_MODE, ret);
++		return ret;
++	}
++
++	ret &= ~PIXCIR_POWER_MODE_MASK;
++	ret |= mode;
++
++	/* Always AUTO_IDLE */
++	ret |= PIXCIR_POWER_ALLOW_IDLE;
++
++	ret = i2c_smbus_write_byte_data(ts->client, PIXCIR_REG_POWER_MODE, ret);
++	if (ret < 0) {
++		dev_err(dev, "%s: can't write reg 0x%x : %d\n",
++			__func__, PIXCIR_REG_POWER_MODE, ret);
++		return ret;
++	}
++
++	return 0;
 +}
 +
-+/**
-+ * exynos_cpu_powerup : power up the specified cpu
-+ * @cpu : the cpu to power up
++/*
++ * Set the interrupt mode for the device i.e. ATTB line behaviour
 + *
-+ * Power up the specified cpu
++ * @polarity : 1 for active high, 0 for active low.
 + */
-+void exynos_cpu_powerup(int cpu)
++static int pixcir_set_int_mode(struct pixcir_i2c_ts_data *ts,
++			       enum pixcir_int_mode mode,
++					bool polarity)
 +{
-+	__raw_writel(S5P_CORE_LOCAL_PWR_EN,
-+		     EXYNOS_ARM_CORE_CONFIGURATION(cpu));
++	struct device *dev = &ts->client->dev;
++	int ret;
++
++	ret = i2c_smbus_read_byte_data(ts->client, PIXCIR_REG_INT_MODE);
++	if (ret < 0) {
++		dev_err(dev, "%s: can't read reg 0x%x : %d\n",
++			__func__, PIXCIR_REG_INT_MODE, ret);
++		return ret;
++	}
++
++	ret &= ~PIXCIR_INT_MODE_MASK;
++	ret |= mode;
++
++	if (polarity)
++		ret |= PIXCIR_INT_POL_HIGH;
++	else
++		ret &= ~PIXCIR_INT_POL_HIGH;
++
++	ret = i2c_smbus_write_byte_data(ts->client, PIXCIR_REG_INT_MODE, ret);
++	if (ret < 0) {
++		dev_err(dev, "%s: can't write reg 0x%x : %d\n",
++			__func__, PIXCIR_REG_INT_MODE, ret);
++		return ret;
++	}
++
++	return 0;
 +}
 +
-+/**
-+ * exynos_cpu_power_state : returns the power state of the cpu
-+ * @cpu : the cpu to retrieve the power state from
-+ *
++/*
++ * Enable/disable interrupt generation
 + */
-+int exynos_cpu_power_state(int cpu)
++static int pixcir_int_enable(struct pixcir_i2c_ts_data *ts, bool enable)
 +{
-+	return (__raw_readl(EXYNOS_ARM_CORE_STATUS(cpu)) &
-+			S5P_CORE_LOCAL_PWR_EN);
++	struct device *dev = &ts->client->dev;
++	int ret;
++
++	ret = i2c_smbus_read_byte_data(ts->client, PIXCIR_REG_INT_MODE);
++	if (ret < 0) {
++		dev_err(dev, "%s: can't read reg 0x%x : %d\n",
++			__func__, PIXCIR_REG_INT_MODE, ret);
++		return ret;
++	}
++
++	if (enable)
++		ret |= PIXCIR_INT_ENABLE;
++	else
++		ret &= ~PIXCIR_INT_ENABLE;
++
++	ret = i2c_smbus_write_byte_data(ts->client, PIXCIR_REG_INT_MODE, ret);
++	if (ret < 0) {
++		dev_err(dev, "%s: can't write reg 0x%x : %d\n",
++			__func__, PIXCIR_REG_INT_MODE, ret);
++		return ret;
++	}
++
++	return 0;
 +}
 +
- /* For Cortex-A9 Diagnostic and Power control register */
- static unsigned int save_arm_register[2];
- 
-diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-pmu.h
-index 4f6a256..0bdfcbc 100644
---- a/arch/arm/mach-exynos/regs-pmu.h
-+++ b/arch/arm/mach-exynos/regs-pmu.h
-@@ -121,6 +121,12 @@
- 
- #define S5P_CHECK_SLEEP				0x00000BAD
- 
-+#define EXYNOS_ARM_CORE0_CONFIGURATION		S5P_PMUREG(0x2000)
-+#define EXYNOS_ARM_CORE_CONFIGURATION(_nr)	\
-+			(EXYNOS_ARM_CORE0_CONFIGURATION + (0x80 * (_nr)))
-+#define EXYNOS_ARM_CORE_STATUS(_nr)		\
-+			(EXYNOS_ARM_CORE_CONFIGURATION(_nr) + 0x4)
++static int pixcir_start(struct pixcir_i2c_ts_data *ts)
++{
++	struct device *dev = &ts->client->dev;
++	int ret;
 +
- /* Only for EXYNOS4210 */
- #define S5P_CMU_CLKSTOP_LCD1_LOWPWR	S5P_PMUREG(0x1154)
- #define S5P_CMU_RESET_LCD1_LOWPWR	S5P_PMUREG(0x1174)
++	/* LEVEL_TOUCH interrupt with active low polarity */
++	ret = pixcir_set_int_mode(ts, PIXCIR_INT_LEVEL_TOUCH, 0);
++	if (ret) {
++		dev_err(dev, "Failed to set interrupt mode\n");
++		return ret;
++	}
++
++	ts->exiting = false;
++	mb();	/* Update status before IRQ can fire */
++
++	/* enable interrupt generation */
++	ret = pixcir_int_enable(ts, 1);
++	if (ret) {
++		dev_err(dev, "Failed to enable interrupt generation\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static int pixcir_stop(struct pixcir_i2c_ts_data *ts)
++{
++	struct device *dev = &ts->client->dev;
++	int ret;
++
++	/* disable interrupt generation */
++	ret = pixcir_int_enable(ts, 0);
++	if (ret) {
++		dev_err(dev, "Failed to disable interrupt generation\n");
++		return ret;
++	}
++
++	/* exit ISR if running, no more report parsing */
++	ts->exiting = true;
++	mb();	/* update status before we synchronize irq */
++
++	/* wait till running ISR complete */
++	synchronize_irq(ts->client->irq);
++
++	return 0;
++}
++
++static int pixcir_input_open(struct input_dev *dev)
++{
++	struct pixcir_i2c_ts_data *ts = input_get_drvdata(dev);
++
++	return pixcir_start(ts);
++}
++
++static void pixcir_input_close(struct input_dev *dev)
++{
++	struct pixcir_i2c_ts_data *ts = input_get_drvdata(dev);
++
++	pixcir_stop(ts);
++}
++
++
+ #ifdef CONFIG_PM_SLEEP
+ static int pixcir_i2c_ts_suspend(struct device *dev)
+ {
+@@ -157,6 +315,8 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	input->name = client->name;
+ 	input->id.bustype = BUS_I2C;
+ 	input->dev.parent = &client->dev;
++	input->open = pixcir_input_open;
++	input->close = pixcir_input_close;
+ 
+ 	__set_bit(EV_KEY, input->evbit);
+ 	__set_bit(EV_ABS, input->evbit);
+@@ -176,6 +336,18 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 		return error;
+ 	}
+ 
++	/* Always be in IDLE mode to save power, device supports auto wake */
++	error = pixcir_set_power_mode(tsdata, PIXCIR_POWER_IDLE);
++	if (error) {
++		dev_err(dev, "Failed to set IDLE mode\n");
++		return error;
++	}
++
++	/* Stop device till opened */
++	error = pixcir_stop(tsdata);
++	if (error)
++		return error;
++
+ 	error = input_register_device(input);
+ 	if (error)
+ 		return error;
+@@ -192,8 +364,8 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+ 
+ 	device_init_wakeup(&client->dev, 0);
+ 
+-	tsdata->exiting = true;
+-	mb();
++	if (!tsdata->exiting)
++		pixcir_stop(tsdata);
+ 
+ 	return 0;
+ }
+diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
+index 7163d91..7942804 100644
+--- a/include/linux/input/pixcir_ts.h
++++ b/include/linux/input/pixcir_ts.h
+@@ -1,6 +1,48 @@
+ #ifndef	_PIXCIR_I2C_TS_H
+ #define	_PIXCIR_I2C_TS_H
+ 
++/*
++ * Register map
++ */
++#define PIXCIR_REG_POWER_MODE	51
++#define PIXCIR_REG_INT_MODE	52
++
++/*
++ * Power modes:
++ * active: max scan speed
++ * idle: lower scan speed with automatic transition to active on touch
++ * halt: datasheet says sleep but this is more like halt as the chip
++ *       clocks are cut and it can only be brought out of this mode
++ *	 using the RESET pin.
++ */
++enum pixcir_power_mode {
++	PIXCIR_POWER_ACTIVE,
++	PIXCIR_POWER_IDLE,
++	PIXCIR_POWER_HALT,
++};
++
++#define PIXCIR_POWER_MODE_MASK	0x03
++#define PIXCIR_POWER_ALLOW_IDLE (1UL << 2)
++
++/*
++ * Interrupt modes:
++ * periodical: interrupt is asserted periodicaly
++ * diff coordinates: interrupt is asserted when coordinates change
++ * level on touch: interrupt level asserted during touch
++ * pulse on touch: interrupt pulse asserted druing touch
++ *
++ */
++enum pixcir_int_mode {
++	PIXCIR_INT_PERIODICAL,
++	PIXCIR_INT_DIFF_COORD,
++	PIXCIR_INT_LEVEL_TOUCH,
++	PIXCIR_INT_PULSE_TOUCH,
++};
++
++#define PIXCIR_INT_MODE_MASK	0x03
++#define PIXCIR_INT_ENABLE	(1UL << 3)
++#define PIXCIR_INT_POL_HIGH	(1UL << 2)
++
+ struct pixcir_ts_platform_data {
+ 	int (*attb_read_val)(void);
+ 	int x_max;
 -- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.3.2
