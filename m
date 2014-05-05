@@ -1,68 +1,80 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 0/7] USB support for DRA7-evm
-Date: Mon, 5 May 2014 12:54:39 +0300
-Message-ID: <1399283686-6127-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: george.cherian-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: [PATCH v4 0/4] net: Add APM X-Gene SoC Ethernet driver support
+Date: Mon,  5 May 2014 14:47:23 -0700
+Message-ID: <1399326447-2329-1-git-send-email-isubramanian@apm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Adding APM X-Gene SoC Ethernet driver.
 
-This series enables the 2 USB ports on the DRA7-evm.
+v4: Address comments from v3 review
+* MAINTAINERS: changed status to supported
+* Kconfig: made default to no
+* changed to bool data type wherever applicable
+* cleaned up single bit set and masking code
+* removed statistics counters masking
+* removed unnecessary OOM message printing
+* fixed dma_map_single and dma_unmap_single size parameter
+* changed set bits macro body using new set_bits function
 
-NOTE: USB1 port is hard coded to work in peripheral mode and USB2 port
-in host mode. This is due to missing ID pin interrupt in pre ver.E boards.
+v3: Address comments from v2 review
+* cleaned up set_desc and get_desc functions
+* added dtb mdio node and phy-handle subnode
+* renamed dtb phy-mode to phy-connection-type
+* added of_phy_connect call to connec to PHY
+* added empty line after last local variable declaration
+* removed type casting when not required
+* removed inline keyword from source files
+* removed CONFIG_CPU_BIG_ENDIAN ifdef
 
-USB1 port doesn't in peripheral mode out of the box due to missing VBUS detection
-and mailbox write. To test this I had to do a manual write to enable VBUSVALID
-in the USB_UTMI_OTG_STATUS register.
-	omapconf set bit 0x48880084 1
+v2
+* Completely redesigned ethernet driver
+* Added support to work with big endian kernel
+* Renamed dtb phyid entry to phy_addr
+* Changed dtb local-mac-address entry to byte string format
+* Renamed dtb eth8clk entry to menetclk
 
-USB2 port works well in host mode.
+v1
+* Initial version
 
-Patches are based on 3.15-rc3.
-
-cheers,
--roger
-
-Changelog:
-
-v3:
--Rearraged patches. PHY related stuff first.
--Addressed backward compatibility issue for phy-omap-usb2.
-
-v2:
--Rebased on v3.15-rc3
-
+Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
+Signed-off-by: Ravi Patel <rapatel@apm.com>
+Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
 ---
-Roger Quadros (7):
-  phy: omap-usb2: Use generic clock names "wkupclk" and "refclk"
-  phy: omap-usb2: Add clock names to Documentation binding
-  ARM: dts: omap4+: Add clocks to USB2 PHY node
-  ARM: dts: dra7-clock: Add "l3init_960m_gfclk" clock gate
-  ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
-  ARM: dts: dra7: Add USB related nodes
-  dts: dra7-evm: add USB support
 
- Documentation/devicetree/bindings/phy/ti-phy.txt |   7 ++
- arch/arm/boot/dts/dra7-evm.dts                   |  24 ++++
- arch/arm/boot/dts/dra7.dtsi                      | 149 +++++++++++++++++++++++
- arch/arm/boot/dts/dra7xx-clocks.dtsi             |  12 +-
- arch/arm/boot/dts/omap4.dtsi                     |   2 +
- arch/arm/boot/dts/omap5.dtsi                     |   2 +
- arch/arm/mach-omap2/omap_hwmod_7xx_data.c        |  22 ++--
- drivers/phy/phy-omap-usb2.c                      |  30 +++--
- 8 files changed, 229 insertions(+), 19 deletions(-)
+Iyappan Subramanian (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC ethernet driver
+  Documentation: dts: Add bindings for APM X-Gene SoC ethernet driver
+  dts: Add bindings for APM X-Gene SoC ethernet driver
+  drivers: net: Add APM X-Gene SoC ethernet driver support.
+
+ .../devicetree/bindings/net/apm-xgene-enet.txt     |   66 ++
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/apm-mustang.dts                |    4 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   27 +-
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/apm/Kconfig                   |    1 +
+ drivers/net/ethernet/apm/Makefile                  |    5 +
+ drivers/net/ethernet/apm/xgene/Kconfig             |    9 +
+ drivers/net/ethernet/apm/xgene/Makefile            |    6 +
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     |  807 +++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     |  353 ++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c   |  936 ++++++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h   |  131 +++
+ 14 files changed, 2352 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+ create mode 100644 drivers/net/ethernet/apm/Kconfig
+ create mode 100644 drivers/net/ethernet/apm/Makefile
+ create mode 100644 drivers/net/ethernet/apm/xgene/Kconfig
+ create mode 100644 drivers/net/ethernet/apm/xgene/Makefile
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.h
 
 -- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
