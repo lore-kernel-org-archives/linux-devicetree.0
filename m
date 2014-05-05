@@ -1,45 +1,79 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for configuring the iATU
-Date: Tue, 06 May 2014 15:59 +0200
-Message-ID: <4764413.ZAEU5S5p0p@wuerfel>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-7-git-send-email-kishon@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] ARM: shmobile: henninger: add QSPI DT support
+Date: Tue, 6 May 2014 02:45:31 +0400
+Message-ID: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1399383244-14556-7-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, Bjorn Helgaas <bhelgaas@google.com>, Marek Vasut <marex@denx.de>, santosh.shilimkar@ti.com
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 06 May 2014 19:03:52 Kishon Vijay Abraham I wrote:
-> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
-> address. So whenever the cpu issues a read/write request, the 4 most
-> significant bits are used by L3 to determine the target controller.
-> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
-> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
-> the outbound translation window the *base* should be programmed as 0x000_0000.
-> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
-> we have programmed in the translation window with base as 0x000_0000.
-> 
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Marek Vasut <marex@denx.de>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> Acked-by: Jingoo Han <jg1.han@samsung.com>
-> Acked-by: Mohit Kumar <mohit.kumar@st.com>
+Define the Henninger board dependent part of the QSPI device node.
+Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
 
-Sorry, but NAK.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-We have a standard 'dma-ranges' property to handle this, so use it.
+---
+This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
+'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
 
-See the x-gene PCIe driver patches for an example. Please also talk
-to Santosh about it, as he is implementing generic support for
-parsing dma-ranges in platform devices at the moment.
+ arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
-I also suspect you will have to implement swiotlb support to make
-generic PCI devices work behind this bridge. Otherwise you end up
-with random physical addresses passed into DMA registers.
-
-	Arnd
-
+Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
++++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+@@ -109,6 +109,11 @@
+ 		renesas,groups = "sdhi2_data4", "sdhi2_ctrl";
+ 		renesas,function = "sdhi2";
+ 	};
++
++	qspi_pins: spi0 {
++		renesas,groups = "qspi_ctrl", "qspi_data4";
++		renesas,function = "qspi";
++	};
+ };
+ 
+ &scif0 {
+@@ -158,3 +163,36 @@
+ 	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
+ 	status = "okay";
+ };
++
++&qspi {
++	pinctrl-0 = <&qspi_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++
++	flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl512s";
++		reg = <0>;
++		spi-max-frequency = <30000000>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++		m25p,fast-read;
++
++		partition@0 {
++			label = "loader_prg";
++			reg = <0x00000000 0x00040000>;
++			read-only;
++		};
++		partition@40000 {
++			label = "user_prg";
++			reg = <0x00040000 0x00400000>;
++			read-only;
++		};
++		partition@440000 {
++			label = "flash_fs";
++			reg = <0x00440000 0x03bc0000>;
++		};
++	};
++};
