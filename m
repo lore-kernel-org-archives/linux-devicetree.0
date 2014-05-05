@@ -1,79 +1,61 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: henninger: add QSPI DT support
-Date: Tue, 6 May 2014 02:45:31 +0400
-Message-ID: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: ACPI vs DT at runtime
+Date: Mon, 05 May 2014 16:41:02 +0200
+Message-ID: <69387177.zGLDjZS0ln@wuerfel>
+References: <20131115095717.GC1709@e106331-lin.cambridge.arm.com> <97692EF2-013E-4E4B-BC16-E0915D67EFEC@antoniou-consulting.com> <53673866.9000105@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53673866.9000105-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Define the Henninger board dependent part of the QSPI device node.
-Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
+On Monday 05 May 2014 09:06:14 Alexander Holler wrote:
+> 
+> A bit late (I don't follow the ML (or what happens in the ARM world) 
+> closely, but as I've recently read that ARM64 will go UEFI and ACPI, I 
+> wonder what was the reasoning behind that decision.
+> 
+> Does anyone really assume we will become high quality UEFI and ACPI 
+> blobs from vendors? And such with reasonable support/update periods?
+> 
+> For me that sounds like someone asked dreamers and was unable to adjust 
+> those answers in regard to reality.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Where did you read that? It's simply not true and we should make sure
+people stop spreading dangerous misinformation.
 
----
-This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
-'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
+Regarding UEFI, I don't expect that to change much for Linux, since
+it has very little visibility at runtime. UEFI makes sense for some
+systems, and we can support that easily. The license is a bit problematic,
+since it allows shipping a system without bootloader sources, but other
+boot loaders allow that as well, and a lot of companies ship pirated
+u-boot without sources, too.
 
- arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+ACPI is a lot harder to support, as it conflicts with the normal DT
+probing method, and will be visible to a lot of drivers. I expect
+that we will see systems shipping with ACPI at some point, but
+so far, nobody has made a serious submission for supporting that,
+so it's likely a few years out, and it will only be a small subset
+of the shipping systems: basically anything that tries to look like
+an x86 PC server rather than an embedded system.
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -109,6 +109,11 @@
- 		renesas,groups = "sdhi2_data4", "sdhi2_ctrl";
- 		renesas,function = "sdhi2";
- 	};
-+
-+	qspi_pins: spi0 {
-+		renesas,groups = "qspi_ctrl", "qspi_data4";
-+		renesas,function = "qspi";
-+	};
- };
- 
- &scif0 {
-@@ -158,3 +163,36 @@
- 	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
- 	status = "okay";
- };
-+
-+&qspi {
-+	pinctrl-0 = <&qspi_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl512s";
-+		reg = <0>;
-+		spi-max-frequency = <30000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		m25p,fast-read;
-+
-+		partition@0 {
-+			label = "loader_prg";
-+			reg = <0x00000000 0x00040000>;
-+			read-only;
-+		};
-+		partition@40000 {
-+			label = "user_prg";
-+			reg = <0x00040000 0x00400000>;
-+			read-only;
-+		};
-+		partition@440000 {
-+			label = "flash_fs";
-+			reg = <0x00440000 0x03bc0000>;
-+		};
-+	};
-+};
+There is ongoing work from Linaro to provide a base enablement of
+ACPI on ARM64. Those patches are looking harmless enough, but the
+current plan is to not merge them until there is an actual user
+who is submitting their platform specific code based on that, and
+not before we have clear rules about what systems should or should
+not be using ACPI. 
+
+For all embedded systems, DT remains the way to pass data about
+nondiscoverable devices on arm64, and I expect that to include
+"server" machines based on embedded SoCs.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
