@@ -1,38 +1,75 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 12/20] ARM: configs: Add usb_xhci_mvebu to multi_v7_defconfig
-Date: Tue,  6 May 2014 02:14:07 +0200
-Message-ID: <1399335255-589-13-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 5/8] pinctrl: rockchip: only map bank0-pull-region when pmu regmap missing
+Date: Mon, 05 May 2014 13:59:30 +0200
+Message-ID: <2137557.ZDqNcqZTUP@diego>
+References: <11862890.WUjscWaP3U@diego>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <11862890.WUjscWaP3U@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 38x platform needs the xhci_mvebu driver enabled
-for the xHCI USB hosts, so this commit enables the corresponding
-Kconfig option in multi_v7_defconfig.
+When the pmu registers are supplied through a syscon regmap we do not need
+to map the registers ourself.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Tested-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
 ---
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/pinctrl/pinctrl-rockchip.c | 30 +++++++++++++++++++-----------
+ 1 file changed, 19 insertions(+), 11 deletions(-)
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index d4e8a47a2f7c..820cc35d40cf 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -254,6 +254,7 @@ CONFIG_SND_SOC_TEGRA_ALC5632=y
- CONFIG_SND_SOC_TEGRA_MAX98090=y
- CONFIG_USB=y
- CONFIG_USB_XHCI_HCD=y
-+CONFIG_USB_XHCI_MVEBU=y
- CONFIG_USB_EHCI_HCD=y
- CONFIG_USB_EHCI_TEGRA=y
- CONFIG_USB_EHCI_HCD_PLATFORM=y
+diff --git a/drivers/pinctrl/pinctrl-rockchip.c b/drivers/pinctrl/pinctrl-rockchip.c
+index 11ad643..d6e2401 100644
+--- a/drivers/pinctrl/pinctrl-rockchip.c
++++ b/drivers/pinctrl/pinctrl-rockchip.c
+@@ -1464,21 +1464,29 @@ static int rockchip_get_bank_data(struct rockchip_pin_bank *bank,
+ 	 */
+ 	if (of_device_is_compatible(bank->of_node,
+ 				    "rockchip,rk3188-gpio-bank0")) {
++		struct device_node *node;
+ 
+ 		bank->bank_type = RK3188_BANK0;
+ 
+-		if (of_address_to_resource(bank->of_node, 1, &res)) {
+-			dev_err(info->dev, "cannot find IO resource for bank\n");
+-			return -ENOENT;
+-		}
++		node = of_parse_phandle(bank->of_node->parent,
++					"rockchip,pmu", 0);
++		if (!node) {
++			if (of_address_to_resource(bank->of_node, 1, &res)) {
++				dev_err(info->dev, "cannot find IO resource for bank\n");
++				return -ENOENT;
++			}
+ 
+-		base = devm_ioremap_resource(info->dev, &res);
+-		if (IS_ERR(base))
+-			return PTR_ERR(base);
+-		rockchip_regmap_config.max_register = resource_size(&res) - 4;
+-		rockchip_regmap_config.name = "rockchip,rk3188-gpio-bank0-pull";
+-		bank->regmap_pull = devm_regmap_init_mmio(info->dev, base,
+-						  &rockchip_regmap_config);
++			base = devm_ioremap_resource(info->dev, &res);
++			if (IS_ERR(base))
++				return PTR_ERR(base);
++			rockchip_regmap_config.max_register =
++						    resource_size(&res) - 4;
++			rockchip_regmap_config.name =
++					    "rockchip,rk3188-gpio-bank0-pull";
++			bank->regmap_pull = devm_regmap_init_mmio(info->dev,
++						    base,
++						    &rockchip_regmap_config);
++		}
+ 
+ 	} else {
+ 		bank->bank_type = COMMON_BANK;
 -- 
-1.8.1.2
+1.9.0
+
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
