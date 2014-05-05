@@ -1,34 +1,131 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 00/10] Clean up, DTS and ISO15693 support
-Date: Mon, 5 May 2014 01:09:31 +0200
-Message-ID: <20140504230931.GM13137@zurbaran>
-References: <1398374379-17133-1-git-send-email-christophe-h.ricard@st.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
+Date: Mon, 5 May 2014 10:49:38 +0300
+Message-ID: <53674292.5050008@ti.com>
+References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com> <535FBC62.9050902@ti.com> <20140501190015.5739.86963@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398374379-17133-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140501190015.5739.86963@quantum>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
+On 05/01/2014 10:00 PM, Mike Turquette wrote:
+> Quoting Tero Kristo (2014-04-29 07:51:14)
+>> On 04/29/2014 05:15 PM, Sourav Poddar wrote:
+>>> We need "tbclk" clock data for the functioning of ehrpwm
+>>> module. Hence, populating the required clock information
+>>> in clock dts file.
+>>>
+>>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+>>
+>> Acked-by: Tero Kristo <t-kristo@ti.com>
+>
+> Looks good to me.
+>
+> Tero, just to be clear, are you planning on batching up OMAPish clock
+> patches and sending a pull request (once they have been reviewed on the
+> list)?
 
-On Thu, Apr 24, 2014 at 11:19:29PM +0200, Christophe Ricard wrote:
-> This patchset applies on top of:
-> 18d2c624f9c08a80ac317eacea75d136cf59c459
-> NFC: st21nfca: Improve st21nfca initialization by handling reboot properly
-The first 6 patches are applied, I'll be looking at the DTS and the type
-V ones next. Thanks.
+No, I haven't been planning on sending a pull-req, as I believe you 
+still want to ack the TI related clock driver patches yourself also. If 
+you want to change the setup I am of course willing to negotiate the 
+terms. :)
 
-Cheers,
-Samuel.
+-Tero
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks,
+> Mike
+>
+>>
+>>
+>>> ---
+>>> v2->v3
+>>> - correct bitshifting
+>>>
+>>>    arch/arm/boot/dts/am43xx-clocks.dtsi |   48 ++++++++++++++++++++++++++++++++++
+>>>    drivers/clk/ti/clk-43xx.c            |    6 +++++
+>>>    2 files changed, 54 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>> index 142009c..42d7b1f 100644
+>>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>> @@ -87,6 +87,54 @@
+>>>                clock-mult = <1>;
+>>>                clock-div = <1>;
+>>>        };
+>>> +
+>>> +     ehrpwm0_tbclk: ehrpwm0_tbclk {
+>>> +             #clock-cells = <0>;
+>>> +             compatible = "ti,gate-clock";
+>>> +             clocks = <&dpll_per_m2_ck>;
+>>> +             ti,bit-shift = <0>;
+>>> +             reg = <0x0664>;
+>>> +     };
+>>> +
+>>> +     ehrpwm1_tbclk: ehrpwm1_tbclk {
+>>> +             #clock-cells = <0>;
+>>> +             compatible = "ti,gate-clock";
+>>> +             clocks = <&dpll_per_m2_ck>;
+>>> +             ti,bit-shift = <1>;
+>>> +             reg = <0x0664>;
+>>> +     };
+>>> +
+>>> +     ehrpwm2_tbclk: ehrpwm2_tbclk {
+>>> +             #clock-cells = <0>;
+>>> +             compatible = "ti,gate-clock";
+>>> +             clocks = <&dpll_per_m2_ck>;
+>>> +             ti,bit-shift = <2>;
+>>> +             reg = <0x0664>;
+>>> +     };
+>>> +
+>>> +     ehrpwm3_tbclk: ehrpwm3_tbclk {
+>>> +             #clock-cells = <0>;
+>>> +             compatible = "ti,gate-clock";
+>>> +             clocks = <&dpll_per_m2_ck>;
+>>> +             ti,bit-shift = <4>;
+>>> +             reg = <0x0664>;
+>>> +     };
+>>> +
+>>> +     ehrpwm4_tbclk: ehrpwm4_tbclk {
+>>> +             #clock-cells = <0>;
+>>> +             compatible = "ti,gate-clock";
+>>> +             clocks = <&dpll_per_m2_ck>;
+>>> +             ti,bit-shift = <5>;
+>>> +             reg = <0x0664>;
+>>> +     };
+>>> +
+>>> +     ehrpwm5_tbclk: ehrpwm5_tbclk {
+>>> +             #clock-cells = <0>;
+>>> +             compatible = "ti,gate-clock";
+>>> +             clocks = <&dpll_per_m2_ck>;
+>>> +             ti,bit-shift = <6>;
+>>> +             reg = <0x0664>;
+>>> +     };
+>>>    };
+>>>    &prcm_clocks {
+>>>        clk_32768_ck: clk_32768_ck {
+>>> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
+>>> index 67c8de5..527a43d 100644
+>>> --- a/drivers/clk/ti/clk-43xx.c
+>>> +++ b/drivers/clk/ti/clk-43xx.c
+>>> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
+>>>        DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
+>>>        DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
+>>>        DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
+>>> +     DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
+>>> +     DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
+>>> +     DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
+>>> +     DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
+>>> +     DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
+>>> +     DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
+>>>        { .node_name = NULL },
+>>>    };
+>>>
+>>>
+>>
+
