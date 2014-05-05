@@ -1,41 +1,81 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 07/20] xhci-platform: Add a new controller using xhci: Armada 38x
-Date: Tue,  6 May 2014 02:14:02 +0200
-Message-ID: <1399335255-589-8-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Nishanth Menon <nm@ti.com>
+Subject: [GIT PULL #1/2] bus: omap_l3_noc: driver fixes and DRA7/AM437x
+ support
+Date: Mon, 5 May 2014 15:03:22 -0500
+Message-ID: <20140505200322.GA9863@kahuna>
+References: <1397492726-17203-1-git-send-email-nm@ti.com>
+ <1398698101-25513-1-git-send-email-nm@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398698101-25513-1-git-send-email-nm@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Extend the compatible string list with armada-380-xhci. It is used to
-describe xhci controller which is in the Armada 38x SoCs.
+Hi Tony,
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+   Please pull the following driver fixes based on V3 of l3noc fixes and
+   support for DRA7 and AM437x for upcoming 3.16 window.
+   http://marc.info/?l=linux-omap&m=139869922030493&w=2
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 90f8f607d125..a0915941fc25 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -1,7 +1,8 @@
- USB xHCI controllers
- 
- Required properties:
--  - compatible: should be "generic-xhci" (deprecated: "xhci-platform").
-+  - compatible: should be one of "generic-xhci",
-+    "marvell,armada-380-xhci" (deprecated: "xhci-platform").
-   - reg: should contain address and length of the standard XHCI
-     register set for the device.
-   - interrupts: one XHCI interrupt should be described here.
+   This is part 1 of the pull request containing purely the driver
+   updates.
+
+The following changes since commit 455c6fdbd219161bd09b1165f11699d6d73de11c:
+
+  Linux 3.14 (2014-03-30 20:40:15 -0700)
+
+are available in the git repository at:
+
+  https://github.com/nmenon/linux-2.6-playground.git pull/l3noc/driver-fixes
+
+for you to fetch changes up to 27b7d5f3cc49f2e5cd6c005d73696058b7140c5c:
+
+  bus: omap_l3_noc: Add AM4372 interconnect error data (2014-05-05 14:34:37 -0500)
+
+----------------------------------------------------------------
+Afzal Mohammed (2):
+      bus: omap_l3_noc: ignore masked out unclearable targets
+      bus: omap_l3_noc: Add AM4372 interconnect error data
+
+Nishanth Menon (14):
+      bus: omap_l3_noc: Fix copyright information
+      bus: omap_l3_noc: remove iclk from omap_l3 struct
+      bus: omap_l3_noc: populate l3->dev and use it
+      bus: omap_l3_noc: switch over to relaxed variants of readl/writel
+      bus: omap_l3_noc: un-obfuscate l3_targ address computation
+      bus: omap_l3_noc: move L3 master data structure out
+      bus: omap_l3_noc: convert target information into a structure
+      bus: omap_l3_noc: convert flagmux information into a structure
+      bus: omap_l3_noc: fix masterid detection
+      bus: omap_l3_noc: make error reporting and handling common
+      bus: omap_l3_noc: improve readability by using helper for slave event parsing
+      bus: omap_l3_noc: add information about the type of operation
+      bus: omap_l3_noc: Add information about the context of operation
+      bus: omap_l3_noc: introduce concept of submodule
+
+Peter Ujfalusi (5):
+      drivers: bus: omap_l3: Convert to use devm_kzalloc
+      drivers: bus: omap_l3: Convert to use devm_ioremap_resource()
+      drivers: bus: omap_l3: Convert to use devm_request_irq()
+      drivers: bus: omap_l3: Remove the platform driver's remove function
+      drivers: bus: omap_l3: Change pr_crit() to dev_err() when IRQ request fails
+
+Rajendra Nayak (2):
+      bus: omap_l3_noc: Add support for discountinous flag mux input numbers
+      bus: omap_l3_noc: Add DRA7 interconnect error data
+
+Sricharan R (2):
+      bus: omap_l3_noc: rename functions and data to omap_l3
+      bus: omap_l3_noc: use of_match_data to pick up SoC information
+
+ .../devicetree/bindings/arm/omap/l3-noc.txt        |    2 +
+ drivers/bus/omap_l3_noc.c                          |  406 ++++++++-------
+ drivers/bus/omap_l3_noc.h                          |  545 +++++++++++++++-----
+ 3 files changed, 653 insertions(+), 300 deletions(-)
 -- 
-1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
