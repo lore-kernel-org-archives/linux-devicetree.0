@@ -1,51 +1,36 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH 8/9] ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY fixed clocks
-Date: Mon,  5 May 2014 17:53:42 +0200
-Message-ID: <1399305223-18703-9-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [RFC v2] TI Reset Driver adapted to the reset core
+Date: Mon, 5 May 2014 15:09:21 -0500
+Message-ID: <1399320567-3639-1-git-send-email-dmurphy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com
 List-Id: devicetree@vger.kernel.org
 
-CLK_S_GMAC0_PHY &  CLK_S_ETH1_PH clocks are no longer used.
+All
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/stih415-clock.dtsi | 14 --------------
- 1 file changed, 14 deletions(-)
+I have made some big changes to this patchset so I did not put all the
+changes in the patches themselves.
 
-diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-index 5bdba06..24a7508 100644
---- a/arch/arm/boot/dts/stih415-clock.dtsi
-+++ b/arch/arm/boot/dts/stih415-clock.dtsi
-@@ -32,20 +32,6 @@
- 			clock-frequency = <500000000>;
- 		};
- 
--		CLKS_GMAC0_PHY: clockgenA1@7 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <25000000>;
--			clock-output-names = "CLKS_GMAC0_PHY";
--		};
--
--		CLKS_ETH1_PHY: clockgenA0@7 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <25000000>;
--			clock-output-names = "CLKS_ETH1_PHY";
--		};
--
- 		/*
- 		 * ClockGenAs on SASG1
- 		 */
--- 
-1.9.1
+In brief
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- I removed the object data files for each SoC and moved the data into
+the DT.  I updated the binding document as well
+
+- The DT implementation creates a parent reset node with the base offset
+for each reset and the children within that parent declares the bit mask
+
+- I created a xlate function in the reset driver to verify that reset
+data and that the phandle exists.  The core xlate checks for the nr_resets
+which we don't care about since we are not indexed based.
+
+- Made the driver a platform driver as well so this removed the
+prm_common patch as well as the header file.
+
+I will add other TI devices once I feel comfortable that the design
+is acceptable.
+
+Dan
+
