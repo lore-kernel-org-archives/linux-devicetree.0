@@ -1,108 +1,128 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 1/7] Input: pixcir_i2c_ts: Use devres managed resource allocations
-Date: Mon, 5 May 2014 12:04:32 +0300
-Message-ID: <1399280678-23925-2-git-send-email-rogerq@ti.com>
-References: <1399280678-23925-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH 5/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
+Date: Mon,  5 May 2014 17:53:39 +0200
+Message-ID: <1399305223-18703-6-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399280678-23925-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, dmurphy-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use devm_() and friends for allocating memory, input device
-and IRQ.
+Patch adds DT entries for clockgen A9/DDR/GPU
 
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- drivers/input/touchscreen/pixcir_i2c_ts.c | 38 ++++++++++++-------------------
- 1 file changed, 15 insertions(+), 23 deletions(-)
+ arch/arm/boot/dts/stih416-clock.dtsi | 79 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 70 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 02392d2..8a083bd 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -130,6 +130,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- {
- 	const struct pixcir_ts_platform_data *pdata =
- 			dev_get_platdata(&client->dev);
-+	struct device *dev = &client->dev;
- 	struct pixcir_i2c_ts_data *tsdata;
- 	struct input_dev *input;
- 	int error;
-@@ -139,12 +140,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
+diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
+index 7ff107b..d68860f 100644
+--- a/arch/arm/boot/dts/stih416-clock.dtsi
++++ b/arch/arm/boot/dts/stih416-clock.dtsi
+@@ -26,15 +26,6 @@
+ 		};
  
--	tsdata = kzalloc(sizeof(*tsdata), GFP_KERNEL);
--	input = input_allocate_device();
--	if (!tsdata || !input) {
--		dev_err(&client->dev, "Failed to allocate driver data!\n");
--		error = -ENOMEM;
--		goto err_free_mem;
-+	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
-+	if (!tsdata)
-+		return -ENOMEM;
+ 		/*
+-		 * ARM Peripheral clock for timers
+-		 */
+-		arm_periph_clk: arm_periph_clk {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <600000000>;
+-		};
+-
+-		/*
+ 		 * ClockGenAs on SASG2
+ 		 */
+ 		clockgenA@fee62000 {
+@@ -505,6 +496,45 @@
+ 		};
+ 
+ 		/*
++		 * A9 PLL
++		 */
++		clockgenA9 {
++			reg = <0xfdde08b0 0x70>;
 +
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_err(&client->dev, "Failed to allocate input device\n");
-+		return -ENOMEM;
- 	}
- 
- 	tsdata->client = client;
-@@ -165,29 +168,22 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 
- 	input_set_drvdata(input, tsdata);
- 
--	error = request_threaded_irq(client->irq, NULL, pixcir_ts_isr,
--				     IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--				     client->name, tsdata);
-+	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  client->name, tsdata);
- 	if (error) {
--		dev_err(&client->dev, "Unable to request touchscreen IRQ.\n");
--		goto err_free_mem;
-+		dev_err(dev, "failed to request irq %d\n", client->irq);
-+		return error;
- 	}
- 
- 	error = input_register_device(input);
- 	if (error)
--		goto err_free_irq;
-+		return error;
- 
- 	i2c_set_clientdata(client, tsdata);
- 	device_init_wakeup(&client->dev, 1);
- 
- 	return 0;
--
--err_free_irq:
--	free_irq(client->irq, tsdata);
--err_free_mem:
--	input_free_device(input);
--	kfree(tsdata);
--	return error;
- }
- 
- static int pixcir_i2c_ts_remove(struct i2c_client *client)
-@@ -198,10 +194,6 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
- 
- 	tsdata->exiting = true;
- 	mb();
--	free_irq(client->irq, tsdata);
--
--	input_unregister_device(tsdata->input);
--	kfree(tsdata);
- 
- 	return 0;
- }
++			CLOCKGEN_A9_PLL: CLOCKGEN_A9_PLL {
++				#clock-cells = <1>;
++				compatible = "st,stih416-plls-c32-a9", "st,clkgen-plls-c32";
++
++				clocks = <&CLK_SYSIN>;
++				clock-output-names = "CLOCKGEN_A9_PLL_ODF";
++			};
++		};
++
++		/*
++		 * ARM CPU related clocks
++		 */
++		CLK_M_A9: CLK_M_A9 {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgen-a9-mux", "st,clkgen-mux";
++			reg = <0xfdde08ac 0x4>;
++			clocks = <&CLOCKGEN_A9_PLL 0>,
++				     <&CLOCKGEN_A9_PLL 0>,
++					 <&CLK_M_A0_DIV1 2>,
++					 <&CLK_M_A9_EXT2F_DIV2>;
++		};
++
++		/*
++		 * ARM Peripheral clock for timers
++		 */
++		arm_periph_clk: CLK_M_A9_PERIPHS {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&CLK_M_A9>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++
++		/*
+ 		 * Frequency synthesizers on the SASG2
+ 		 */
+ 		CLOCKGEN_B0: CLOCKGEN_B0 {
+@@ -692,5 +722,36 @@
+ 					      "CLK_M_PIX_HDMIRX_0",
+ 					      "CLK_M_PIX_HDMIRX_1";
+ 		};
++
++		/*
++		 * DDR PLL
++		 */
++		clockgenDDR {
++			reg = <0xfdde07d8 0x110>;
++
++			CLOCKGEN_DDR_PLL: CLOCKGEN_DDR_PLL {
++				#clock-cells = <1>;
++				compatible = "st,stih416-plls-c32-ddr", "st,clkgen-plls-c32";
++
++				clocks = <&CLK_SYSIN>;
++				clock-output-names = "CLOCKGEN_DDR0",
++									 "CLOCKGEN_DDR1";
++			};
++		};
++
++		/*
++		 * GPU PLL
++		 */
++		clockgenGPU {
++			reg = <0xfd68ff00 0x910>;
++
++			CLOCKGEN_GPU_PLL: CLOCKGEN_GPU_PLL {
++				#clock-cells = <1>;
++				compatible = "st,stih416-gpu-pll-c32", "st,clkgengpu-pll-c32";
++
++				clocks = <&CLK_SYSIN>;
++				clock-output-names = "CLOCKGEN_GPU_PLL";
++			};
++		};
+ 	};
+ };
 -- 
-1.8.3.2
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
