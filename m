@@ -1,118 +1,150 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 0/2] ARM: sunxi: Enable syscon for the
- system controller
-Date: Tue, 6 May 2014 16:27:39 +0800
-Message-ID: <CAGb2v64nm2i+XivDO8drHSkUUJvGr_=HaWMB26rbytVZAdTQFw@mail.gmail.com>
-References: <1399212160-26934-1-git-send-email-carlo@caione.org>
- <20140505225517.GE9464@lukather> <CAGb2v66JBM_Rv8ie=7iuTPrXGPJECTeevnf9LLXNS=FSYs1+Tg@mail.gmail.com>
- <CAOQ7t2akOEr7o4Q5ze5QPr_RHj6MWmA-u5NTuq2q1epy2LBr8w@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBD52UKNQKGQERT6GZ5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAOQ7t2akOEr7o4Q5ze5QPr_RHj6MWmA-u5NTuq2q1epy2LBr8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+From: Hubert Chaumette <hchaumette-HH5893ap9ioXz/+GnIZSFEEOCMrvLtNR@public.gmane.org>
+Subject: [PATCH v4 2/2] ARM: i.MX6: Add OF configuration support for ksz9031
+Date: Tue,  6 May 2014 09:40:17 +0200
+Message-ID: <1399362017-25787-3-git-send-email-hchaumette@adeneo-embedded.com>
+References: <1399362017-25787-1-git-send-email-hchaumette@adeneo-embedded.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399362017-25787-1-git-send-email-hchaumette-HH5893ap9ioXz/+GnIZSFEEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 6, 2014 at 4:03 PM, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, May 6, 2014 at 8:36 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->> Hi,
->
-> Hi,
->
->> On Tue, May 6, 2014 at 6:55 AM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>> On Sun, May 04, 2014 at 04:02:38PM +0200, Carlo Caione wrote:
->>>> The so called "system controller" in Allwinner A20 and A31 SoCs is
->>>> multi-purpose controller that tries to add misc functionality to one
->>>> memory region.
->>>> In these SoCs it controls the internal SRAM partitioning but it also
->>>> includes registers for chip versioning and NMI control.
->>>> This patch adds the proper nodes in the DTS files and enable the syscon
->>>> in the defconfig files.
->>>>
->>>> Even though the system controller includes also register for managing the
->>>> NMI controller, these register are not mapped in the syscon since they
->>>> are directly used and mapped by the NMI controller itself.
->>>
->>> Hmmm, what exactly do you want to achieve with this?
->>>
->>> The NMI controller won't be able to use it, since it's initialized
->>> much earlier than syscon and regmap.
->
-> This is what I meant with that phrase. NMI controller doesn't use the
-> syscon but we can use it for several other drivers. In fact the
-> registers for NMI controller are excluded from the range of syscon
-> registers.
->
->> I believe this will be used for toggling the SRAM mappings. (Am I right?)
->
-> Definitely right.
->
->> The second register toggles mappings for MUSB FIFO, EMAC, and a few of
->> the other IP blocks we currently don't support.
->
-> Not yet :)
->
->>> Moreover, the A31 doesn't seem to have this system controller, or at
->>> least this overlap.
->
-> I admit that I didn't check the A31 manual but I trusted the wiki page
-> at http://linux-sunxi.org/SRAM_Controller and
-> http://linux-sunxi.org/A31/Memory_map
+Adds support for ksz9031 PAD skew configuration over devicetree.
 
-I think the wiki hasn't been updated with much A31/A23 specifics yet.
+Signed-off-by: Hubert Chaumette <hchaumette-HH5893ap9ioXz/+GnIZSFEEOCMrvLtNR@public.gmane.org>
+---
+ drivers/net/phy/micrel.c | 106 ++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 105 insertions(+), 1 deletion(-)
 
->> There should be something similar, as does the A23. There is no overlap AFAIK.
->
-> I agree and will check also A23.
+diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
+index d849684..bc7c7d2 100644
+--- a/drivers/net/phy/micrel.c
++++ b/drivers/net/phy/micrel.c
+@@ -283,6 +283,110 @@ static int ksz9021_config_init(struct phy_device *phydev)
+ 	return 0;
+ }
+ 
++#define MII_KSZ9031RN_MMD_CTRL_REG	0x0d
++#define MII_KSZ9031RN_MMD_REGDATA_REG	0x0e
++#define OP_DATA				1
++#define KSZ9031_PS_TO_REG		60
++
++/* Extended registers */
++#define MII_KSZ9031RN_CONTROL_PAD_SKEW	4
++#define MII_KSZ9031RN_RX_DATA_PAD_SKEW	5
++#define MII_KSZ9031RN_TX_DATA_PAD_SKEW	6
++#define MII_KSZ9031RN_CLK_PAD_SKEW	8
++
++static int ksz9031_extended_write(struct phy_device *phydev,
++				  u8 mode, u32 dev_addr, u32 regnum, u16 val)
++{
++	phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, dev_addr);
++	phy_write(phydev, MII_KSZ9031RN_MMD_REGDATA_REG, regnum);
++	phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, (mode << 14) | dev_addr);
++	return phy_write(phydev, MII_KSZ9031RN_MMD_REGDATA_REG, val);
++}
++
++static int ksz9031_extended_read(struct phy_device *phydev,
++				 u8 mode, u32 dev_addr, u32 regnum)
++{
++	phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, dev_addr);
++	phy_write(phydev, MII_KSZ9031RN_MMD_REGDATA_REG, regnum);
++	phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, (mode << 14) | dev_addr);
++	return phy_read(phydev, MII_KSZ9031RN_MMD_REGDATA_REG);
++}
++
++static int ksz9031_of_load_skew_values(struct phy_device *phydev,
++				       struct device_node *of_node,
++				       u16 reg, size_t field_sz,
++				       char *field[], u8 numfields)
++{
++	int val[4] = {-1, -2, -3, -4};
++	int matches = 0;
++	u16 mask;
++	u16 maxval;
++	u16 newval;
++	int i;
++
++	for (i = 0; i < numfields; i++)
++		if (!of_property_read_u32(of_node, field[i], val + i))
++			matches++;
++
++	if (!matches)
++		return 0;
++
++	if (matches < numfields)
++		newval = ksz9031_extended_read(phydev, OP_DATA, 2, reg);
++	else
++		newval = 0;
++
++	maxval = (field_sz == 4) ? 0xf : 0x1f;
++	for (i = 0; i < numfields; i++)
++		if (val[i] != -(i + 1)) {
++			mask = 0xffff;
++			mask ^= maxval << (field_sz * i);
++			newval = (newval & mask) |
++				(((val[i] / KSZ9031_PS_TO_REG) & maxval)
++					<< (field_sz * i));
++		}
++
++	return ksz9031_extended_write(phydev, OP_DATA, 2, reg, newval);
++}
++
++static int ksz9031_config_init(struct phy_device *phydev)
++{
++	struct device *dev = &phydev->dev;
++	struct device_node *of_node = dev->of_node;
++	char *clk_skews[2] = {"rxc-skew-ps", "txc-skew-ps"};
++	char *rx_data_skews[4] = {
++		"rxd0-skew-ps", "rxd1-skew-ps",
++		"rxd2-skew-ps", "rxd3-skew-ps"
++	};
++	char *tx_data_skews[4] = {
++		"txd0-skew-ps", "txd1-skew-ps",
++		"txd2-skew-ps", "txd3-skew-ps"
++	};
++	char *control_skews[2] = {"txen-skew-ps", "rxdv-skew-ps"};
++
++	if (!of_node && dev->parent->of_node)
++		of_node = dev->parent->of_node;
++
++	if (of_node) {
++		ksz9031_of_load_skew_values(phydev, of_node,
++				MII_KSZ9031RN_CLK_PAD_SKEW, 5,
++				clk_skews, 2);
++
++		ksz9031_of_load_skew_values(phydev, of_node,
++				MII_KSZ9031RN_CONTROL_PAD_SKEW, 4,
++				control_skews, 2);
++
++		ksz9031_of_load_skew_values(phydev, of_node,
++				MII_KSZ9031RN_RX_DATA_PAD_SKEW, 4,
++				rx_data_skews, 4);
++
++		ksz9031_of_load_skew_values(phydev, of_node,
++				MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
++				tx_data_skews, 4);
++	}
++	return 0;
++}
++
+ #define KSZ8873MLL_GLOBAL_CONTROL_4	0x06
+ #define KSZ8873MLL_GLOBAL_CONTROL_4_DUPLEX	(1 << 6)
+ #define KSZ8873MLL_GLOBAL_CONTROL_4_SPEED	(1 << 4)
+@@ -469,7 +573,7 @@ static struct phy_driver ksphy_driver[] = {
+ 	.features	= (PHY_GBIT_FEATURES | SUPPORTED_Pause
+ 				| SUPPORTED_Asym_Pause),
+ 	.flags		= PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
+-	.config_init	= kszphy_config_init,
++	.config_init	= ksz9031_config_init,
+ 	.config_aneg	= genphy_config_aneg,
+ 	.read_status	= genphy_read_status,
+ 	.ack_interrupt	= kszphy_ack_interrupt,
+-- 
+2.0.0.rc0
 
-I will try to find time to update the wiki tonight.
-
->>> And since on the A20, registers seem to have one usage only, so I
->>> guess we can just split this IP into several nodes, just like we did
->>> with the NMI.
->>
->> As stated above, the second register toggles SRAM mappings for at most
->> 4 SRAM blocks (for EMAC, MUSB, ACE, ISP).
->>
->> syscon would be a good way to share this register among the various drivers.
->> We do not toggle it in the current EMAC driver. The driver seems to assume
->> it is setup by the bootloader, and on the A20, it seems to be mapped to
->> EMAC by default.
->>
->> The MUSB glue layer driver must toggle this.
->
-> This is exactly why I wrote these patches. I started hacking /
-> studying your MUSB driver and I think that using syscon is a better
-> way to manage these registers instead of mapping them in several
-> drivers also because most of the time a single register has to be used
-> by multiple drivers (i.e. SRAM_CTL1_CFG is used for USB,  EMAC,
-> etc...)
-
-I came to the same conclusion, though I somehow forgot to update my tree
-on github. Here it is:
-
-  https://github.com/wens/linux/tree/wip/sunxi-musb
-
-This also has the bit definitions:
-
-  https://github.com/wens/linux/commit/3db9c184df5e5b3e1ddef59926e88fc2d03b4de9
-
-Beware musb in my tree doesn't work. I was focused on getting the phy driver
-and port controller correct.
-
->> I think this approach is better than all the individual drivers mapping
->> the registers and toggling a single bit. In fact I did something similar
->> when working on preliminary musb support.
-
-Cheers
-
-ChenYu
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
