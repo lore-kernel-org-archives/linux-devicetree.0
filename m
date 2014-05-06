@@ -1,64 +1,72 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 0/4] OMAPDSS: Add support for panel ls037v7dw01
-Date: Mon, 5 May 2014 11:41:38 -0700
-Message-ID: <20140505184138.GB15463@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 20/20] ARM: mvebu: Add Device Tree description of the EHCI host on Armada 375
+Date: Tue,  6 May 2014 02:14:15 +0200
+Message-ID: <1399335255-589-21-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398815562-24113-1-git-send-email-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tomi.valkeinen-l0cyMroinI0@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [140429 16:53]:
-> Hi all,
-> 
-> Here are few patches to add devicetree support for panel ls037v7dw01
-> that's found on many omap3 boards. They seem to be often mis-configured
-> as various panel dpi entries, but really should be move to use panel
-> ls037v7dw01 instead. This panel is found at least on the omap3 sdp,
-> ldp, omap3 evm and few other development boards.
+The Marvell Armada 375 SoCs contains one EHCI host. This commit adds
+the Device Tree description of this interfaces at the SoC level, and
+also enables the USB2 port on the Armada 375 DB platform.
 
-Tomi, assuming no more comments, do you want to pick up the first
-three patches of this series? I can queue the .dts changes or you
-can also set up a separate .dts changes branch for DSS that I can
-merge in too.
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/armada-375-db.dts |  4 ++++
+ arch/arm/boot/dts/armada-375.dtsi   | 18 ++++++++++++++++++
+ 2 files changed, 22 insertions(+)
 
-Tony
+diff --git a/arch/arm/boot/dts/armada-375-db.dts b/arch/arm/boot/dts/armada-375-db.dts
+index 0453d69e6433..01bc5e87898b 100644
+--- a/arch/arm/boot/dts/armada-375-db.dts
++++ b/arch/arm/boot/dts/armada-375-db.dts
+@@ -102,6 +102,10 @@
+ 				};
+ 			};
  
-> Regards,
-> 
-> Tony
-> 
-> Tony Lindgren (4):
->   OMAPDSS: Fix DSS clock multiplier issue on 3703 and probably 3630
->   OMAPDSS: panel-sharp-ls037v7dw01: update to use gpiod
->   OMAPDSS: panel-sharp-ls037v7dw01: add device tree support
->   ARM: dts: Add LCD panel sharp ls037v7dw01 support for omap3-evm and
->     ldp
-> 
->  .../bindings/panel/sharp,ls037v7dw01.txt           |  53 +++++++
->  .../arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi |  82 ++++++++++
->  arch/arm/boot/dts/omap3-evm-37xx.dts               |  50 ++++++
->  arch/arm/boot/dts/omap3-evm-common.dtsi            |  47 ++++++
->  arch/arm/boot/dts/omap3-ldp.dts                    |  31 +++-
->  .../omap2/displays-new/panel-sharp-ls037v7dw01.c   | 176 ++++++++++++++-------
->  drivers/video/fbdev/omap2/dss/dss.c                |   5 +-
->  7 files changed, 379 insertions(+), 65 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
->  create mode 100644 arch/arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi
-> 
-> -- 
-> 1.8.1.1
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
++			usb@54000 {
++				status = "okay";
++			};
++
+ 			usb3@58000 {
+ 				status = "okay";
+ 			};
+diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+index 1b81d1e33510..d2b19bfe7496 100644
+--- a/arch/arm/boot/dts/armada-375.dtsi
++++ b/arch/arm/boot/dts/armada-375.dtsi
+@@ -320,6 +320,24 @@
+ 				clocks = <&coreclk 0>;
+ 			};
+ 
++			usb@50000 {
++				compatible = "marvell,orion-ehci";
++				reg = <0x50000 0x500>;
++				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 18>;
++				phys = <&usbcluster 0>;
++				phy-names="usb";
++				status = "disabled";
++			};
++
++			usb@54000 {
++				compatible = "marvell,orion-ehci";
++				reg = <0x54000 0x500>;
++				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 26>;
++				status = "disabled";
++			};
++
+ 			usb3@58000 {
+ 				compatible = "marvell,armada-375-xhci";
+ 				reg = <0x58000 0x20000>,<0x5b880 0x80>;
+-- 
+1.8.1.2
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
