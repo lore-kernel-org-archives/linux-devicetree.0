@@ -1,83 +1,39 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: Option to disable dma descriptor mode
-Date: Tue, 6 May 2014 13:36:30 -0500
-Message-ID: <20140506183630.GA31117@saruman.home>
-References: <1399328585-30949-1-git-send-email-dinguyen@altera.com>
- <A2CA0424C0A6F04399FB9E1CD98E03046D193CDB@US01WEMBX2.internal.synopsys.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v12 00/31] iommu/exynos: Fixes and Enhancements of System
+ MMU driver with DT
+Date: Tue, 6 May 2014 19:59:05 +0200
+Message-ID: <20140506175904.GB12376@8bytes.org>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
+ <26065037.GxQQuIURPg@wuerfel>
+ <CAOD6ATqZ5UwRwSKiPDQLrgmX=UUrJVE7ybM_RhXz_CEUjM3W7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <A2CA0424C0A6F04399FB9E1CD98E03046D193CDB-Yu2iAY70zvrYN67daEjeMPufCSb+aD3WLzEdoUbNIic@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOD6ATqZ5UwRwSKiPDQLrgmX=UUrJVE7ybM_RhXz_CEUjM3W7w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.samsung@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux IOMMU <iommu@lists.linux-foundation.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Prathyush <prathyush.k@samsung.com>, Grant Grundler <grundler@chromium.org>, "supash.ramaswamy" <supash.ramaswamy@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Varun Sethi <Varun.Sethi@freescale.com>, Antonios Motakis <a.motakis@virtualopensystems.com>, Cho KyongHo <pullip.cho@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed, Apr 30, 2014 at 04:27:10PM +0530, Shaik Ameer Basha wrote:
+> This series is going on for quite a long time and most of the patches here
+> doesn't depend on dt bindings. As Exynos IOMMU h/w is introducing new versions
+> very frequently, maintaining and reviewing all these patches again and
+> again is quite a hard job.
+> 
+> If it is acceptable, I can post one more series with the subset of
+> above patches,
+> which doesn't depend on dt-bindings. As all the patches which doesn't depend on
+> DT bindings are already tested,  I hope merging these subset of patches may help
+> in reducing the rework and review effort every time.
+> 
+> Once we finalize the generic DT bindings for the IOMMU devices, the driver
+> can be updated with the proposed DT bindings in mind.
 
-On Tue, May 06, 2014 at 06:21:02PM +0000, Paul Zimmerman wrote:
-> > From: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org [mailto:dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org]
-> > Sent: Monday, May 05, 2014 3:23 PM
-> >=20
-> > Even though the IP supports Descriptor DMA mode, it does not support SP=
-LIT
-> > transactions in this mode. Since the driver can get the Descriptor DMA =
-mode
-> > support from hardware, the driver in its currently form cannot fully su=
-pport
-> > LS/FS devices connected to a HS Hub when Descriptor DMA mode is enabled=
- in the
-> > driver. Thus, we give the option to disable Descriptor DMA from device =
-tree.
->=20
-> Hi Dinh,
->=20
-> Instead of this patch, how about if we make the driver default to buffer
-> DMA mode instead, and if anyone wants to use descriptor DMA mode, they
-> can add a DT property for that? I don't think anyone will want that,
-> since as you say it doesn't fully support LS/FS devices in that mode.
->=20
-> The driver originally worked like that. I guess the default got changed by
-> one of Matthijs' patches, and I didn't notice it.
+Sounds reasonable to me if the patch subset is self-contained. When
+Arnd is OK with that and no one else has objections I can take the
+dt-independend parts.
 
-if this is the case, I guess you could call it a regression - well, it
-_did_ break LS/FS use cases - and still merge it during the -rc cycle.
 
-cheers
-
---=20
-balbi
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTaSuuAAoJEIaOsuA1yqREF24P/i3JFLf9H+hlanczWj4lP5A8
-M72iYa1qBVjSjsVyRaMkhmaXIc/3JjF05Lc06Z/ym5EfHzB92KHmeKWgzSLTPIpu
-4N2tK5APUZ9ksh+CTCCXD42qjvhowQqVCKtKSJZQ8JAdKDDEu2fsztRYATwtCS03
-iEQFvru5FJqR8ZhDB2yO4eh2hQyOtuF1ym3HBzywHC3JgN6v2hCGp+wOMG/DiLzv
-as/fqd3mOLOxO85pMC+wc4eLRMxY8ewfxSPmotozPNI1XMmRe3nVPsszt8AOaWaj
-qmYraAHsX3NzH1neLbX0gF+Zab3VRdwE1kuNhegHpVK9JG3rMk/dHYeqTA04NQi+
-PvI//VamuhnjdwTWYxK22N+s19zgteJTK5Z2/KMb8pkj2RTfTLh/Nm9LkjIUzA6N
-lNlS6qoXEpvzWg8Vicd6rrPNlGtYemAgMFvXXykOlwckDBp2KS1XBashBhicQnu9
-coQeNo3pGKL0Vcbp5wklhli6BGjF6FGdbm/fWBAoXAuS9DsqmFw+0tucQ46F4ZXI
-JJqtJxydzZqapfYYV0mqkOVQvlv5Bt24gcr1mH+B3tY3brpbhUuYovIvKJ/5Rs9k
-pzwzey1Tj7AhPMUf10dKkZTJwgU++6oSVcWTIQfIWhL6tqd4wriMq05mvaSHa+an
-AyqCOfJfx5Bja+tEKZoy
-=8tZG
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Joerg
