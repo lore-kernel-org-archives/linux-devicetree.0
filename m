@@ -1,58 +1,59 @@
 From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 0/5] ARM: SMP: support Broadcom mobile SoCs
-Date: Tue,  6 May 2014 17:18:28 -0500
-Message-ID: <1399414713-19206-1-git-send-email-elder@linaro.org>
+Subject: [PATCH v3 1/5] devicetree: bindings: document Broadcom CPU enable method
+Date: Tue,  6 May 2014 17:18:29 -0500
+Message-ID: <1399414713-19206-2-git-send-email-elder@linaro.org>
+References: <1399414713-19206-1-git-send-email-elder@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399414713-19206-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds SMP support for two Broadcom mobile SoC families.
-It uses CPU_METHOD_OF_DECLARE() so that SMP operations are assigned
-using device tree rather than adding it to a machine definition in a
-board file.
+Broadcom mobile SoCs use a ROM-implemented holding pen for
+controlled boot of secondary cores.  A special register is
+used to communicate to the ROM that a secondary core should
+start executing kernel code.  This enable method is currently
+used for members of the bcm281xx and bcm21664 SoC families.
 
-The enable method starts a secondary core by writing to a register
-monitored by CPUs spinning in a ROM-based holding pen loop.  The
-address of this register is recorded as a property in the "cpus"
-node of the device tree.
+The use of an enable method also allows the SMP operation vector to
+be assigned as a result of device tree content for these SoCs.
 
-					-Alex
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Note:
-This series is based on v3.15-rc4, plus one more recently-posted patch:
-    http://permalink.gmane.org/gmane.linux.kernel/1683693
-
-History
-v3: - Dropped definition and use of CPU_METHOD_OF_DECLARE_SETUP()
-    - Added documentation for "enable-method"
-    - Rebased onto v3.15-rc4
-v2: - Fixed a Makefile error (:= should have been +=)
-    - No longer set CONFIG_NR_CPUS in bcm_defconfig
-    - Rebased onto v3.15-rc1
-
-This series is available here:
-    http://git.linaro.org/landing-teams/working/broadcom/kernel.git
-    Branch review/bcm-smp-v3
-
-Alex Elder (5):
-  devicetree: bindings: document Broadcom CPU enable method
-  ARM: add SMP support for Broadcom mobile SoCs
-  ARM: configs: enable SMP in bcm_defconfig
-  ARM: dts: enable SMP support for bcm28155
-  ARM: dts: enable SMP support for bcm21664
-
- Documentation/devicetree/bindings/arm/cpus.txt |  12 ++
- arch/arm/boot/dts/bcm11351.dtsi                |  19 +++
- arch/arm/boot/dts/bcm21664.dtsi                |  19 +++
- arch/arm/configs/bcm_defconfig                 |   1 +
- arch/arm/mach-bcm/Kconfig                      |  18 ++-
- arch/arm/mach-bcm/Makefile                     |   3 +
- arch/arm/mach-bcm/platsmp.c                    | 201 +++++++++++++++++++++++++
- 7 files changed, 270 insertions(+), 3 deletions(-)
- create mode 100644 arch/arm/mach-bcm/platsmp.c
-
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 333f4ae..c6a2411 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -185,6 +185,7 @@ nodes to be present and contain the properties described below.
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
++			    "brcm,bcm11351-cpu-method"
+ 
+ 	- cpu-release-addr
+ 		Usage: required for systems that have an "enable-method"
+@@ -209,6 +210,17 @@ nodes to be present and contain the properties described below.
+ 		Value type: <phandle>
+ 		Definition: Specifies the ACC[2] node associated with this CPU.
+ 
++	- secondary-boot-reg
++		Usage:
++			Required for systems that have an "enable-method"
++			property value of "brcm,bcm11351-cpu-method".
++		Value type: <u32>
++		Definition:
++			Specifies the physical address of the register used to
++			request the ROM holding pen code release a secondary
++			CPU.  The value written to the register is formed by
++			encoding the target CPU id into the low bits of the
++			physical start address it should jump to.
+ 
+ Example 1 (dual-cluster big.LITTLE system 32-bit):
+ 
 -- 
 1.9.1
 
