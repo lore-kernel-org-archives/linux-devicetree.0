@@ -1,71 +1,55 @@
-From: Thor Thayer <tthayer.linux@gmail.com>
-Subject: Re: [PATCHv3 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
-Date: Tue, 6 May 2014 13:34:36 -0500
-Message-ID: <CAF03EBfO9JELqJim10r7dJnmLH41i_VxZt_vnRKaOOO96eH_JA@mail.gmail.com>
-References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
-	<1399330337-16748-2-git-send-email-tthayer@altera.com>
-	<ba35254f-4ba5-4b2c-8056-cde5c693b0ff@CH1EHSMHS009.ehs.local>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 14/15] clk: exynos5420: add misc clocks
+Date: Tue, 06 May 2014 19:49:25 +0200
+Message-ID: <536920A5.1090502@gmail.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com> <1399393610-23394-15-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba35254f-4ba5-4b2c-8056-cde5c693b0ff@CH1EHSMHS009.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Thor Thayer <tthayer@altera.com>, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, grant.likely@linaro.org, Borislav Petkov <bp@alien8.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399393610-23394-15-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi S=C3=B6ren
+Shaik,
 
-On Mon, May 5, 2014 at 6:16 PM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
+On 06.05.2014 18:26, Shaik Ameer Basha wrote:
+> This patch adds some missing miscellaneous clocks specific
+> to exynos5420.
 >
-> Hi Thor,
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>   drivers/clk/samsung/clk-exynos5420.c   |   14 +++++++++++---
+>   include/dt-bindings/clock/exynos5420.h |    2 ++
+>   2 files changed, 13 insertions(+), 3 deletions(-)
 >
-> On Mon, 2014-05-05 at 05:52PM -0500, tthayer@altera.com wrote:
-> > From: Thor Thayer <tthayer@altera.com>
-> >
-> > Addition of the Altera SDRAM controller bindings and device
-> > tree changes to the Altera SoC project. The "syscon" parameter
-> > is included here because the SDRAM EDAC bits are shared with the SD=
-RAM
-> > configuration bits.
-> > ---
-> > v2: Changes to SoC SDRAM EDAC code.
-> >
-> > V3: Implement code suggestions for SDRAM EDAC code.
-> >
-> > Signed-off-by: Thor Thayer <tthayer@altera.com>
-> > ---
-> >  .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++=
-++++++
-> >  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
-> >  2 files changed, 19 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/altera/so=
-cfpga-sdram.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-s=
-dram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.t=
-xt
-> > new file mode 100644
-> > index 0000000..525cb76
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.tx=
-t
-> > @@ -0,0 +1,14 @@
-> > +Altera SOCFPGA SDRAM Controller
-> > +
-> > +Required properties:
-> > +- compatible : "altr,sdr-ctl", "syscon";
-> > +                Note that syscon is invoked for this device to sup=
-port the FPGA
-> > +             bridge driver, EDAC driver and other devices that sha=
-re the
-> > +             registers.
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index e0e749d..e69e820 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -273,7 +273,8 @@ PNAME(mout_group5_p) = {"mout_sclk_vpll", "mout_sclk_dpll"};
 >
-> This sounds like implementation specifics, which shouldn't be part of
-> the bindings.
+>   PNAME(mout_fimd1_final_p) = {"mout_fimd1", "mout_fimd1_opt"};
+>   PNAME(mout_sw_aclk66_p)	= {"dout_aclk66", "mout_sclk_spll"};
+> -PNAME(mout_user_aclk66_peric_p)	= { "fin_pll", "mout_sw_aclk66" };
+> +PNAME(mout_user_aclk66_peric_p)	= { "fin_pll", "mout_sw_aclk66"};
+> +PNAME(mout_user_pclk66_gpio_p) = {"mout_sw_aclk66", "ffactor_sw_aclk66"};
 >
->         S=C3=B6ren
+>   PNAME(mout_sw_aclk200_fsys_p) = {"dout_aclk200_fsys", "mout_sclk_spll"};
+>   PNAME(mout_sw_pclk200_fsys_p) = {"dout_pclk200_fsys", "mout_sclk_spll"};
+> @@ -372,10 +373,13 @@ static struct samsung_fixed_rate_clock exynos5420_fixed_rate_clks[] __initdata =
+>   };
 >
-I see your point and will remove. Thanks!
+>   static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[] __initdata = {
+> -	FFACTOR(0, "sclk_hsic_12m", "fin_pll", 1, 2, 0),
+> +	FFACTOR(0, "ffactor_hsic_12m", "fin_pll", 1, 2, 0),
+> +	FFACTOR(0, "ffactor_sw_aclk66", "mout_sw_aclk66", 1, 2, 0),
+
+Is the "ffactor_" prefix also present in the datasheet? If not, it 
+should be removed from clock names as well.
+
+Best regards,
+Tomasz
