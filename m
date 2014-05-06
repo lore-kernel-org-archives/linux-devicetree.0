@@ -1,43 +1,50 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 08/17] ARM: dts: DRA7: Change the parent of apll_pcie_in_clk_mux to dpll_pcie_ref_m2ldo_ck
-Date: Tue, 6 May 2014 19:03:54 +0530
-Message-ID: <1399383244-14556-9-git-send-email-kishon@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the Armada 38x
+Date: Tue, 06 May 2014 14:21:55 +0200
+Message-ID: <4660313.evfclGtT1x@wuerfel>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com> <61061197.hLhKsFqJLF@wuerfel> <20140506141023.715b932d@skate>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399383244-14556-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: rogerq@ti.com, balajitk@ti.com, Keerthy <j-keerthy@ti.com>, Rajendra Nayak <rnayak@ti.com>, Tero Kristo <t-kristo@ti.com>, Paul Walmsley <paul@pwsan.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140506141023.715b932d@skate>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Keerthy <j-keerthy@ti.com>
+On Tuesday 06 May 2014 14:10:23 Thomas Petazzoni wrote:
+> On Tue, 06 May 2014 13:57:44 +0200, Arnd Bergmann wrote:
+> 
+> > > Please limit this driver to mvebu arch and compile testing, i.e.
+> > > 
+> > >         depends on ARCH_MVEBU || COMPILE_TEST
+> > 
+> > I think it actually needs a dependency on MVEBU_MBUS.
+> 
+> That's not what we do for any of the other drivers that use the
+> MVEBU_MBUS functions.
 
-Change the parent of apll_pcie_in_clk_mux to dpll_pcie_ref_m2ldo_ck
-from dpll_pcie_ref_ck.
+Fair enough. I guess using ARCH_MVEBU as the dependency works as well
+because it implies MVEBU_MBUS. However, you can't use COMPILE_TEST
+then because the driver itself needs the interfaces provided by MBUS.
 
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>
-Signed-off-by: Keerthy <j-keerthy@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7xx-clocks.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+It could be
 
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index 55e95c5..44993ec 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -1152,7 +1152,7 @@
- 
- 	apll_pcie_in_clk_mux: apll_pcie_in_clk_mux@4ae06118 {
- 		compatible = "ti,mux-clock";
--		clocks = <&dpll_pcie_ref_ck>, <&pciesref_acs_clk_ck>;
-+		clocks = <&dpll_pcie_ref_m2ldo_ck>, <&pciesref_acs_clk_ck>;
- 		#clock-cells = <0>;
- 		reg = <0x021c 0x4>;
- 		ti,bit-shift = <7>;
--- 
-1.7.9.5
+	depends on ARCH_MVEBU || (MVEBU_MBUS && COMPILE_TEST)
+
+to describe the dependency most accurately.
+
+> > You probably need something like
+> > 
+> >       depends on MVEBU_MBUS=y || (MVEBU_MBUS=m && USB_XHCI=m)
+> 
+> MVEBU_MBUS is a bool, so there is no way is can be =m.
+
+Yes, that helps.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
