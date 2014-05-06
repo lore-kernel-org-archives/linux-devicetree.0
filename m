@@ -1,64 +1,76 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH] ARM: shmobile: henninger: add MSIOF0 DT support
-Date: Wed, 7 May 2014 00:47:59 +0400
-Message-ID: <201405070048.00213.sergei.shtylyov@cogentembedded.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [PATCH v3 17/20] phy: Add support for USB cluster on the Armada
+ 375 SoC
+Date: Tue, 6 May 2014 17:53:30 -0300
+Message-ID: <20140506205330.GA27308@arch.cereza>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+ <1399335255-589-18-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399335255-589-18-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define the Henninger board dependent part of the MSIOF0 device node.
-Add device node for Renesas R2A11302FT PMIC for which no bindings exist yet.
+Hi Greg,
 
-Based on the Koelsch MSIOF device tree patch by Geert Uytterhoeven.
+On 06 May 02:14 AM, Gregory CLEMENT wrote:
+> +
+> +#define USB2_PHY_CONFIG_ENABLE BIT(0) /* active low */
+> +
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I still think it's more readable to use USB2_PHY_CONFIG_DISABLE.
+It's just a nitpick, though.
 
----
-This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
-'renesas.git' repo and SDHI0/2 and QSPI DT support patches posted recently.
+> +static int armada375_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct phy *phy;
+> +	struct device_node *np =3D dev->of_node;
+> +	struct phy_provider *phy_provider;
+> +	void __iomem *usb_cluster_base;
+> +	struct device_node *xhci_node;
+> +	int i;
+> +
+> +	usb_cluster_base =3D of_iomap(np, 0);
+> +	BUG_ON(!usb_cluster_base);
+> +
 
- arch/arm/boot/dts/r8a7791-henninger.dts |   21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+Isn't a bit extreme to call BUG_ON (and thus bring down the whole syste=
+m)
+in a phy driver?
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -114,6 +114,12 @@
- 		renesas,groups = "qspi_ctrl", "qspi_data4";
- 		renesas,function = "qspi";
- 	};
-+
-+	msiof0_pins: spi1 {
-+		renesas,groups = "msiof0_clk", "msiof0_sync", "msiof0_rx",
-+				 "msiof0_tx";
-+		renesas,function = "msiof0";
-+	};
- };
- 
- &scif0 {
-@@ -195,3 +201,18 @@
- 		};
- 	};
- };
-+
-+&msiof0 {
-+	pinctrl-0 = <&msiof0_pins>;
-+	pinctrl-names = "default";
-+
-+	status = "okay";
-+
-+	pmic@0 {
-+		compatible = "renesas,r2a11302ft";
-+		reg = <0>;
-+		spi-max-frequency = <6000000>;
-+		spi-cpol;
-+		spi-cpha;
-+	};
-+};
+> +	for (i =3D 0; i < NB_PHY; i++) {
+> +		phy =3D devm_phy_create(dev, &armada375_usb_phy_ops, NULL);
+> +		if (IS_ERR(phy))
+> +			dev_err(dev, "failed to create PHY n%d\n", i);
+> +
+
+I think you're missing a continue/break here.
+
+> +		usb_cluster_phy[i].phy =3D phy;
+> +		usb_cluster_phy[i].reg =3D usb_cluster_base;
+> +		usb_cluster_phy[i].enable =3D false;
+> +		phy_set_drvdata(phy, &usb_cluster_phy[i]);
+> +	}
+> +
+> +	usb_cluster_phy[PHY_USB2].use_usb3 =3D false;
+> +	usb_cluster_phy[PHY_USB3].use_usb3 =3D true;
+> +
+[..]
+> +
+> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
+> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>"=
+);
+> +MODULE_LICENSE("GPL");
+
+GPL v2 ?
+
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
