@@ -1,50 +1,115 @@
-From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
-Subject: Re: Re: [PATCH 0/2] ARM: sunxi: Enable syscon for the
- system controller
-Date: Tue, 6 May 2014 10:42:11 +0200
-Message-ID: <CAOQ7t2aAUESX5X6n2PLKfctzNEqjDEbncDHZZL+Ew_29s1WM+g@mail.gmail.com>
-References: <1399212160-26934-1-git-send-email-carlo@caione.org>
-	<20140505225517.GE9464@lukather>
-	<CAGb2v66JBM_Rv8ie=7iuTPrXGPJECTeevnf9LLXNS=FSYs1+Tg@mail.gmail.com>
-	<CAOQ7t2akOEr7o4Q5ze5QPr_RHj6MWmA-u5NTuq2q1epy2LBr8w@mail.gmail.com>
-	<CAGb2v64nm2i+XivDO8drHSkUUJvGr_=HaWMB26rbytVZAdTQFw@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/7] ARM: dts: socfpga: add gpio pieces
+Date: Tue, 6 May 2014 10:01:11 -0500
+Message-ID: <CANk1AXQXWrsgbypTFENFf+X9yhE2t967icK0=3WAvxCPwsXFYA@mail.gmail.com>
+References: <1395505004-22650-1-git-send-email-bigeasy@linutronix.de>
+	<1395505004-22650-2-git-send-email-bigeasy@linutronix.de>
+	<CAOesGMi_0fT4UbfGUp9jkrwYMXgfxC5gmXOBviU9PjAutPdHiw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDWJTUUC5UCBBZGAUKNQKGQE7ZLN4CY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v64nm2i+XivDO8drHSkUUJvGr_=HaWMB26rbytVZAdTQFw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: wens Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMi_0fT4UbfGUp9jkrwYMXgfxC5gmXOBviU9PjAutPdHiw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, LinusW <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-gpio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 6, 2014 at 10:27 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-
-<snip>
-
-> I came to the same conclusion, though I somehow forgot to update my tree
-> on github. Here it is:
+On Mon, May 5, 2014 at 5:02 PM, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
+> Hi,
 >
->   https://github.com/wens/linux/tree/wip/sunxi-musb
+> I saw this patch as it came in through Dinh's pull request, see below=
+:
 >
-> This also has the bit definitions:
 >
->   https://github.com/wens/linux/commit/3db9c184df5e5b3e1ddef59926e88fc2d03b4de9
+> On Sat, Mar 22, 2014 at 9:16 AM, Sebastian Andrzej Siewior
+> <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> wrote:
+>> The cycloneV has three gpio controllers, the first two with 29 gpios=
+, the last
+>> one with 27. This patch adds the three controller with the gpio driv=
+er which is
+>> now sitting the gpio tree.
+>>
+>> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Acked-by: Alan Tull <atull-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>> Signed-off-by: Sebastian Andrzej Siewior <bigeasy-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+>> ---
+>> v1=E2=80=A6v2:
+>>         - #gpio-cells =3D <2>
+>>         - third gpio block has now only 27 gpios
+>>
+>>  arch/arm/boot/dts/socfpga.dtsi | 64 +++++++++++++++++++++++++++++++=
++++++++++++
+>>  1 file changed, 64 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socf=
+pga.dtsi
+>> index 537f1a5..2a84e67 100644
+>> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> @@ -463,6 +463,70 @@
+>>                         status =3D "disabled";
+>>                 };
+>>
+>> +               gpio@ff708000 {
+>> +                       #address-cells =3D <1>;
+>> +                       #size-cells =3D <0>;
+>> +                       compatible =3D "snps,dw-apb-gpio";
+>> +                       reg =3D <0xff708000 0x1000>;
+>> +                       clocks =3D <&per_base_clk>;
+>> +                       status =3D "disabled";
+>> +
+>> +                       gpio0: gpio-controller@0 {
+>> +                               compatible =3D "snps,dw-apb-gpio-por=
+t";
+>> +                               gpio-controller;
+>> +                               #gpio-cells =3D <2>;
+>> +                               snps,nr-gpios =3D <29>;
+>> +                               reg =3D <0>;
+>> +                               interrupt-controller;
+>> +                               #interrupt-cells =3D <2>;
+>> +                               interrupts =3D <0 164 4>;
+>> +                       };
+>> +               };
+>
+> This is an odd setup. We usually would have it all in one node, since
+> the @ff708000 is the GPIO controller, instead of adding a subnode wit=
+h
+> the actual GPIO info.
+>
+> So I would have expected something more like:
+>
+>
+> gpio0: gpio-controller@ff708000 {
+>                        #address-cells =3D <1>;
+>                        #size-cells =3D <0>;
+>                        compatible =3D "snps,dw-apb-gpio";
+>                        reg =3D <0xff708000 0x1000>;
+>                        interrupts =3D <0 164 4>;
+>                       clocks =3D <&per_base_clk>;
+>                        status =3D "disabled";
+>                        gpio-controller;
+>                        #gpio-cells =3D <2>;
+>                        snps,nr-gpios =3D <29>;
+>                        interrupt-controller;
+>                        #interrupt-cells =3D <2>;
+>                };
+>
+>
+> ... or is there some underlying reason for having the two-layer
+> approach that isn't obvious from this device tree?
+>
+>
+> -Olof
 
-Oh, I missed that wip branch. I'll add your SoB also and I'll add the
-bit definitions in v2 (if Maxime ACKs it)
+The synopsys gpio ip can have 1, 2, or 3 gpio ports of varying widths
+per IP block.  The simpler bindings assume one gpio port per IP block.
 
-> Beware musb in my tree doesn't work. I was focused on getting the phy driver
-> and port controller correct.
-
-No prob, still scouting around :)
-
-Thanks,
-
--- 
-Carlo Caione
+Alan Tull
+aka
+delicious quinoa
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
