@@ -1,82 +1,58 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 08/20] ARM: mvebu: Add Device Tree description of xHCI
- hosts on Armada 38x
-Date: Tue, 6 May 2014 15:42:51 +0200
-Message-ID: <20140506134251.GF6503@lunn.ch>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-9-git-send-email-gregory.clement@free-electrons.com>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: [PATCH V5 1/3] arm: dts: dra7: Add crossbar device binding
+Date: Tue, 6 May 2014 19:26:17 +0530
+Message-ID: <1399384579-25620-2-git-send-email-r.sricharan@ti.com>
+References: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399335255-589-9-git-send-email-gregory.clement@free-electrons.com>
+In-Reply-To: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
+Cc: Sricharan R <r.sricharan@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 06, 2014 at 02:14:03AM +0200, Gregory CLEMENT wrote:
-> The Marvell Armada 38x SoCs contains two xHCI host. This commit adds
-> the Device Tree description of those interfaces at the SoC level, and
-> also enables the two USB3 ports on the Armada 385 DB platform and one
-> USB3 port on the Armada 385 RD platform.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
->  arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
->  arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
->  3 files changed, 29 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-> index 6828d77696a6..d5db1466da82 100644
-> --- a/arch/arm/boot/dts/armada-385-db.dts
-> +++ b/arch/arm/boot/dts/armada-385-db.dts
-> @@ -101,6 +101,14 @@
->  					reg = <0x1000000 0x3f000000>;
->  				};
->  			};
-> +
-> +			usb3@f0000 {
-> +				status = "okay";
-> +			};
-> +
-> +			usb3@f8000 {
-> +				status = "okay";
-> +			};
->  		};
->  
->  		pcie-controller {
-> diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
-> index 45250c88814b..a505fe94ff37 100644
-> --- a/arch/arm/boot/dts/armada-385-rd.dts
-> +++ b/arch/arm/boot/dts/armada-385-rd.dts
-> @@ -77,6 +77,10 @@
->  					reg = <1>;
->  				};
->  			};
-> +
-> +			usb3@f0000 {
-> +				status = "okay";
-> +			};
->  		};
->  
->  		pcie-controller {
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index a064f59da02d..5913ce1cc601 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -355,6 +355,23 @@
->  				clocks = <&coredivclk 0>;
->  				status = "disabled";
->  			};
-> +
-> +			usb3@f0000 {
-> +				compatible = "marvell,armada-380-xhci";
-> +				reg = <0xf0000 0x3fff>,<0xf4000 0x3fff>;
+This adds the irq crossbar device node.
 
-0x3fff?
+There is a IRQ crossbar device in the soc, which
+maps the irq requests from the peripherals to the
+mpu interrupt controller's inputs. The Peripheral irq
+requests are connected to only one crossbar
+input and the output of the crossbar is connected to only one
+controller's input line. The crossbar device is used to map
+a peripheral input to a free mpu's interrupt controller line.
 
-I would expect that to be 0x4000.
+Cc: Benoit Cousson <bcousson@baylibre.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Rajendra Nayak <rnayak@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sricharan R <r.sricharan@ti.com>
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+[V5] Rebased on top of 3.15-rc4 and corrected the
+     irqs-reserved list
 
-	Andrew
+ arch/arm/boot/dts/dra7.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 149b550..0274a86 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -790,6 +790,14 @@
+ 			status = "disabled";
+ 		};
+ 	};
++
++	crossbar_mpu: crossbar@4a020000 {
++		compatible = "ti,irq-crossbar";
++		reg = <0x4a002a48 0x130>;
++		ti,max-irqs = <160>;
++		ti,reg-size = <2>;
++		ti,irqs-reserved = <0 1 2 3 5 6 131 132>;
++	};
+ };
+ 
+ /include/ "dra7xx-clocks.dtsi"
+-- 
+1.7.9.5
