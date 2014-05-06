@@ -1,56 +1,111 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Tue, 6 May 2014 09:32:10 -0400
-Message-ID: <5368E45A.1000205@ti.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
- <CAErSpo6gYT34-sOvNgEdV+3wxv=Fdqtx7c1d-4577mFydLtZMg@mail.gmail.com>
- <1399347878.20388.96.camel@pasglop> <5699845.615YLDid8d@wuerfel>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 3/4] ARM: dts: am335x-evmsk: use phandles for USB and DMA
+ refs
+Date: Tue, 6 May 2014 11:16:53 -0500
+Message-ID: <20140506161653.GL25849@saruman.home>
+References: <1398693512-5355-1-git-send-email-guido@vanguardiasur.com.ar>
+ <1398693512-5355-3-git-send-email-guido@vanguardiasur.com.ar>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5699845.615YLDid8d@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Metcalf <cmetcalf@tilera.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="UeXZ3FjlYZvuln/G"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398693512-5355-3-git-send-email-guido@vanguardiasur.com.ar>
+Sender: linux-omap-owner@vger.kernel.org
+To: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>
+Cc: LKML <linux-kernel@vger.kernel.org>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 06 May 2014 05:54 AM, Arnd Bergmann wrote:
-> On Tuesday 06 May 2014 13:44:38 Benjamin Herrenschmidt wrote:
->> On Mon, 2014-05-05 at 16:28 -0600, Bjorn Helgaas wrote:
->>> I still wonder whether arm, powerpc, and tile (and I just noticed
->>> microblaze also has a similar dma_direct_map_page()) could all be
->>> handled by attaching devices to a generic trivial IOMMU driver
->>> parameterized with the appropriate constant offset.
-> 
+--UeXZ3FjlYZvuln/G
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[..]
+On Mon, Apr 28, 2014 at 10:58:31AM -0300, Guido Mart=EDnez wrote:
+> Use phandles instead of unit adresses to reference usb and dma nodes.
+> This makes the DT more robust and readable.
+>=20
+> Signed-off-by: Guido Mart=EDnez <guido@vanguardiasur.com.ar>
 
-> It may be easier to replace set_arch_dma_coherent_ops() with
-> a generic function that handles all cases:
-> 
-> int set_arch_dma_ops(struct device *dev, bool coherent,
-> 		phys_addr_t offset, struct device_node *iommu);
-> 
-> and let the architecture handle the cases it needs.
-> 
->> On powerpc, the offset is not constant, it can be per-device.
-> 
-> I think that's the case on all of them. The code under review here
-> is what parses the dma-ranges property in order to put the correct
-> value into the per-device structure.
-> 
-Yep. The per-device property need is one of the reason, we added the
-information to struct device. The constant need not be same though
-on keystone it is same for all devices.
+Acked-by: Felipe Balbi <balbi@ti.com>
 
-Regards,
-Santosh
+> ---
+>  arch/arm/boot/dts/am335x-evmsk.dts | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335=
+x-evmsk.dts
+> index ab23885..44b8d75 100644
+> --- a/arch/arm/boot/dts/am335x-evmsk.dts
+> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
+> @@ -364,28 +364,28 @@
+>  &usb {
+>  	status =3D "okay";
+> =20
+> -	control@44e10620 {
+> +	&usb_ctrl_mod {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb-phy@47401300 {
+> +	&usb0_phy {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb-phy@47401b00 {
+> +	&usb1_phy {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb@47401000 {
+> +	&usb0 {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb@47401800 {
+> +	&usb1 {
+>  		status =3D "okay";
+>  		dr_mode =3D "host";
+>  	};
+> =20
+> -	dma-controller@47402000  {
+> +	&cppi41dma  {
+>  		status =3D "okay";
+>  	};
+>  };
+> --=20
+> 1.9.2
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+
+--=20
+balbi
+
+--UeXZ3FjlYZvuln/G
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTaQr1AAoJEIaOsuA1yqRELgMP/08TnA+0ygwdhLvnv/kENDBV
+fjgVCXjLwUy991enOg572OwqZWqXTAOWBBZRmDj8i3VJ3T27PHgnH2vlH/1cd35+
+HgEO8EXNe1/EE5Jcp5ZSs7mFh/DsBJzvoevLW2ckKSuwoWFgOULr3YbE0sW1CI6o
+SucCsQ0ePd2ZSG0LmSA1ISr/AKfVPPvb8N614WgPtg8wc27KjKmwUY33V8dRvjSO
+Oc4D5jq6gUXRZcRDilyq0S7fnxe6VqY5nj/aYvTCrUXOesUXvTkRArZyKIT39mHj
+hPqQ+yKRaCWbOk3OiOtpYZ3yEZeEuYsRmG6iToNuBGgK/2xe1zYbSkH1uCiVHW/B
+XYpZl9wbzFk80LNXn92cjzklbBhRsRNn6EBdwpl5FQAZNtidLg9XBWDOIO966Wo2
+rULACbamT6o8DgVt+WGJDWpzxczfCWDbJpZI9+TpoZLJ+xUX/OA9kF/Lh9EAKd56
+wnCr8FFQ8On8qnCkatzSQEt0g+jmRo63hbsJLD6jakLTr1fQqC5uyyf1PidJYidL
+sainci9Vw/tlI9mk25VDgbwSF1MlllZ+EOlXe5P3F9DdgGo+huVFicz2JlfRygbm
+I/PBKy3rioSbn684koclpjkO7YIo0GB+ESM8dLcLQ7TPhICSMsObF7fVAZ5ACX/U
+NhUPqfXct9YAnMK1SVdY
+=Vexg
+-----END PGP SIGNATURE-----
+
+--UeXZ3FjlYZvuln/G--
