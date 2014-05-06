@@ -1,159 +1,153 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH v4 10/15] clk: exynos5420: update clocks for FSYS and FSYS2
- blocks
-Date: Tue, 06 May 2014 21:56:45 +0530
-Message-ID: <1399393610-23394-11-git-send-email-shaik.ameer@samsung.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for configuring the iATU
+Date: Tue, 6 May 2014 19:03:52 +0530
+Message-ID: <1399383244-14556-7-git-send-email-kishon@ti.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1399383244-14556-1-git-send-email-kishon@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: rogerq@ti.com, balajitk@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Helgaas <bhelgaas@google.com>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds more clocks from FSYS and FSYS2 blocks
-and uses GATE_IP_* registers for gating IPs.
+In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
+address. So whenever the cpu issues a read/write request, the 4 most
+significant bits are used by L3 to determine the target controller.
+For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
+the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
+the outbound translation window the *base* should be programmed as 0x000_0000.
+Whenever we try to write to say 0x2000_0000, it will be translated to whatever
+we have programmed in the translation window with base as 0x000_0000.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Marek Vasut <marex@denx.de>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Acked-by: Jingoo Han <jg1.han@samsung.com>
+Acked-by: Mohit Kumar <mohit.kumar@st.com>
 ---
- drivers/clk/samsung/clk-exynos5420.c |   41 ++++++++++++++++++++++------------
- 1 file changed, 27 insertions(+), 14 deletions(-)
+ .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
+ drivers/pci/host/pcie-designware.c                 |   39 ++++++++++++++------
+ drivers/pci/host/pcie-designware.h                 |    1 +
+ 3 files changed, 29 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index f0460b4..6d88ae2 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -85,6 +85,7 @@
- #define GATE_BUS_TOP		0x10700
- #define GATE_BUS_GEN		0x1073c
- #define GATE_BUS_FSYS0		0x10740
-+#define GATE_BUS_FSYS2		0x10748
- #define GATE_BUS_PERIC		0x10750
- #define GATE_BUS_PERIC1		0x10754
- #define GATE_BUS_PERIS0		0x10760
-@@ -97,6 +98,7 @@
- #define GATE_IP_DISP1		0x10928
- #define GATE_IP_G3D		0x10930
- #define GATE_IP_GEN		0x10934
-+#define GATE_IP_FSYS		0x10944
- #define GATE_IP_PERIC		0x10950
- #define GATE_IP_PERIS		0x10960
- #define GATE_IP_MSCL		0x10970
-@@ -177,6 +179,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
- 	GATE_BUS_TOP,
- 	GATE_BUS_GEN,
- 	GATE_BUS_FSYS0,
-+	GATE_BUS_FSYS2,
- 	GATE_BUS_PERIC,
- 	GATE_BUS_PERIC1,
- 	GATE_BUS_PERIS0,
-@@ -189,6 +192,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
- 	GATE_IP_DISP1,
- 	GATE_IP_G3D,
- 	GATE_IP_GEN,
-+	GATE_IP_FSYS,
- 	GATE_IP_PERIC,
- 	GATE_IP_PERIS,
- 	GATE_IP_MSCL,
-@@ -269,6 +273,8 @@ PNAME(mout_sw_aclk66_p)	= {"dout_aclk66", "mout_sclk_spll"};
- PNAME(mout_user_aclk66_peric_p)	= { "fin_pll", "mout_sw_aclk66" };
+diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+index d6fae13..c574dd3 100644
+--- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+@@ -27,6 +27,7 @@ Optional properties for fsl,imx6q-pcie
+ - power-on-gpio: gpio pin number of power-enable signal
+ - wake-up-gpio: gpio pin number of incoming wakeup signal
+ - disable-gpio: gpio pin number of outgoing rfkill/endpoint disable signal
++- base-mask: address mask for the PCIe controller target port
  
- PNAME(mout_sw_aclk200_fsys_p) = {"dout_aclk200_fsys", "mout_sclk_spll"};
-+PNAME(mout_sw_pclk200_fsys_p) = {"dout_pclk200_fsys", "mout_sclk_spll"};
-+PNAME(mout_user_pclk200_fsys_p)	= {"fin_pll", "mout_sw_pclk200_fsys"};
- PNAME(mout_user_aclk200_fsys_p)	= {"fin_pll", "mout_sw_aclk200_fsys"};
+ Example:
  
- PNAME(mout_sw_aclk200_fsys2_p) = {"dout_aclk200_fsys2", "mout_sclk_spll"};
-@@ -381,6 +387,7 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 	MUX(0, "mout_aclk200_fsys2", mout_group1_p, SRC_TOP0, 12, 2),
- 	MUX(0, "mout_aclk400_wcore", mout_group1_p, SRC_TOP0, 16, 2),
- 	MUX(0, "mout_aclk100_noc", mout_group1_p, SRC_TOP0, 20, 2),
-+	MUX(0, "mout_pclk200_fsys", mout_group1_p, SRC_TOP0, 24, 2),
- 	MUX(0, "mout_aclk200_fsys", mout_group1_p, SRC_TOP0, 28, 2),
+diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+index c4e3732..243f148 100644
+--- a/drivers/pci/host/pcie-designware.c
++++ b/drivers/pci/host/pcie-designware.c
+@@ -463,6 +463,9 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+ 		return -EINVAL;
+ 	}
  
- 	MUX(0, "mout_aclk333_432_gscl", mout_group4_p, SRC_TOP1, 0, 2),
-@@ -412,6 +419,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 			SRC_TOP3, 16, 1),
- 	MUX(0, "mout_user_aclk100_noc", mout_user_aclk100_noc_p,
- 			SRC_TOP3, 20, 1),
-+	MUX(0, "mout_user_pclk200_fsys", mout_user_pclk200_fsys_p,
-+			SRC_TOP3, 24, 1),
- 	MUX(0, "mout_user_aclk200_fsys", mout_user_aclk200_fsys_p,
- 			SRC_TOP3, 28, 1),
- 
-@@ -466,6 +475,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 			SRC_TOP10, 16, 1),
- 	MUX(0, "mout_sw_aclk100_noc", mout_sw_aclk100_noc_p,
- 			SRC_TOP10, 20, 1),
-+	MUX(0, "mout_sw_pclk200_fsys", mout_sw_pclk200_fsys_p,
-+			SRC_TOP10, 24, 1),
- 	MUX(0, "mout_sw_aclk200_fsys", mout_sw_aclk200_fsys_p,
- 			SRC_TOP10, 28, 1),
- 
-@@ -518,6 +529,7 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 	MUX(0, "mout_mmc2", mout_group2_p, SRC_FSYS, 16, 3),
- 	MUX(0, "mout_usbd300", mout_group2_p, SRC_FSYS, 20, 3),
- 	MUX(0, "mout_unipro", mout_group2_p, SRC_FSYS, 24, 3),
-+	MUX(0, "mout_mphy_refclk", mout_group2_p, SRC_FSYS, 28, 3),
- 
- 	/* PERIC Block */
- 	MUX(0, "mout_uart0", mout_group2_p, SRC_PERIC0, 4, 3),
-@@ -600,6 +612,7 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
- 	DIV(0, "dout_mmc2", "mout_mmc2", DIV_FSYS1, 20, 10),
- 
- 	DIV(0, "dout_unipro", "mout_unipro", DIV_FSYS2, 24, 8),
-+	DIV(0, "dout_mphy_refclk", "mout_mphy_refclk", DIV_FSYS2, 16, 8),
- 
- 	/* UART and PWM */
- 	DIV(0, "dout_uart0", "mout_uart0", DIV_PERIC0, 8, 4),
-@@ -736,12 +749,9 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
- 	GATE(CLK_SCLK_USBPHY300, "sclk_usbphy300", "dout_usbphy300",
- 		GATE_TOP_SCLK_FSYS, 8, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_USBD300, "sclk_usbd300", "dout_usbd300",
--		GATE_TOP_SCLK_FSYS, 9, CLK_SET_RATE_PARENT, 0),
-+		GATE_TOP_SCLK_FSYS, 9, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_SCLK_USBD301, "sclk_usbd301", "dout_usbd301",
--		GATE_TOP_SCLK_FSYS, 10, CLK_SET_RATE_PARENT, 0),
--
--	GATE(CLK_SCLK_USBD301, "sclk_unipro", "dout_unipro",
--		SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
-+		GATE_TOP_SCLK_FSYS, 10, CLK_IGNORE_UNUSED, 0),
- 
- 	/* Display */
- 	GATE(CLK_SCLK_FIMD1, "sclk_fimd1", "dout_fimd1",
-@@ -760,20 +770,23 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
- 		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
- 		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
--	/* FSYS */
++	if (of_property_read_u64(np, "base-mask", &pp->base_mask))
++		pp->base_mask = ~0x0ULL;
 +
-+	/* FSYS Block */
- 	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
- 	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
- 	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
- 	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
--	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_BUS_FSYS0, 5, 0, 0),
--	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_BUS_FSYS0, 12, 0, 0),
--	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_BUS_FSYS0, 13, 0, 0),
--	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_BUS_FSYS0, 14, 0, 0),
-+	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
-+	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
-+	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_IP_FSYS, 13, 0, 0),
-+	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
- 	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
--			GATE_BUS_FSYS0, 19, CLK_IGNORE_UNUSED, 0),
--	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_BUS_FSYS0, 20, 0, 0),
--	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_BUS_FSYS0, 21, 0, 0),
--	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_BUS_FSYS0, 28, 0, 0),
-+			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
-+	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
-+	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
-+	GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
-+			GATE_IP_FSYS, 23, CLK_SET_RATE_PARENT, 0),
+ 	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+ 		pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+ 					MAX_MSI_IRQS, &msi_domain_ops,
+@@ -502,12 +505,15 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
  
- 	/* PERIC Block */
- 	GATE(CLK_UART0, "uart0", "aclk66_peric", GATE_IP_PERIC, 0, 0, 0),
+ static void dw_pcie_prog_viewport_cfg0(struct pcie_port *pp, u32 busdev)
+ {
++	u64 cfg0_base;
++
++	cfg0_base = pp->cfg0_base & pp->base_mask;
+ 	/* Program viewport 0 : OUTBOUND : CFG0 */
+ 	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX0,
+ 			  PCIE_ATU_VIEWPORT);
+-	dw_pcie_writel_rc(pp, pp->cfg0_base, PCIE_ATU_LOWER_BASE);
+-	dw_pcie_writel_rc(pp, (pp->cfg0_base >> 32), PCIE_ATU_UPPER_BASE);
+-	dw_pcie_writel_rc(pp, pp->cfg0_base + pp->config.cfg0_size - 1,
++	dw_pcie_writel_rc(pp, cfg0_base, PCIE_ATU_LOWER_BASE);
++	dw_pcie_writel_rc(pp, (cfg0_base >> 32), PCIE_ATU_UPPER_BASE);
++	dw_pcie_writel_rc(pp, cfg0_base + pp->config.cfg0_size - 1,
+ 			  PCIE_ATU_LIMIT);
+ 	dw_pcie_writel_rc(pp, busdev, PCIE_ATU_LOWER_TARGET);
+ 	dw_pcie_writel_rc(pp, 0, PCIE_ATU_UPPER_TARGET);
+@@ -517,13 +523,16 @@ static void dw_pcie_prog_viewport_cfg0(struct pcie_port *pp, u32 busdev)
+ 
+ static void dw_pcie_prog_viewport_cfg1(struct pcie_port *pp, u32 busdev)
+ {
++	u64 cfg1_base;
++
++	cfg1_base = pp->cfg1_base & pp->base_mask;
+ 	/* Program viewport 1 : OUTBOUND : CFG1 */
+ 	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX1,
+ 			  PCIE_ATU_VIEWPORT);
+ 	dw_pcie_writel_rc(pp, PCIE_ATU_TYPE_CFG1, PCIE_ATU_CR1);
+-	dw_pcie_writel_rc(pp, pp->cfg1_base, PCIE_ATU_LOWER_BASE);
+-	dw_pcie_writel_rc(pp, (pp->cfg1_base >> 32), PCIE_ATU_UPPER_BASE);
+-	dw_pcie_writel_rc(pp, pp->cfg1_base + pp->config.cfg1_size - 1,
++	dw_pcie_writel_rc(pp, cfg1_base, PCIE_ATU_LOWER_BASE);
++	dw_pcie_writel_rc(pp, (cfg1_base >> 32), PCIE_ATU_UPPER_BASE);
++	dw_pcie_writel_rc(pp, cfg1_base + pp->config.cfg1_size - 1,
+ 			  PCIE_ATU_LIMIT);
+ 	dw_pcie_writel_rc(pp, busdev, PCIE_ATU_LOWER_TARGET);
+ 	dw_pcie_writel_rc(pp, 0, PCIE_ATU_UPPER_TARGET);
+@@ -532,13 +541,16 @@ static void dw_pcie_prog_viewport_cfg1(struct pcie_port *pp, u32 busdev)
+ 
+ static void dw_pcie_prog_viewport_mem_outbound(struct pcie_port *pp)
+ {
++	u64 mem_base;
++
++	mem_base = pp->mem_base & pp->base_mask;
+ 	/* Program viewport 0 : OUTBOUND : MEM */
+ 	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX0,
+ 			  PCIE_ATU_VIEWPORT);
+ 	dw_pcie_writel_rc(pp, PCIE_ATU_TYPE_MEM, PCIE_ATU_CR1);
+-	dw_pcie_writel_rc(pp, pp->mem_base, PCIE_ATU_LOWER_BASE);
+-	dw_pcie_writel_rc(pp, (pp->mem_base >> 32), PCIE_ATU_UPPER_BASE);
+-	dw_pcie_writel_rc(pp, pp->mem_base + pp->config.mem_size - 1,
++	dw_pcie_writel_rc(pp, mem_base, PCIE_ATU_LOWER_BASE);
++	dw_pcie_writel_rc(pp, (mem_base >> 32), PCIE_ATU_UPPER_BASE);
++	dw_pcie_writel_rc(pp, mem_base + pp->config.mem_size - 1,
+ 			  PCIE_ATU_LIMIT);
+ 	dw_pcie_writel_rc(pp, pp->config.mem_bus_addr, PCIE_ATU_LOWER_TARGET);
+ 	dw_pcie_writel_rc(pp, upper_32_bits(pp->config.mem_bus_addr),
+@@ -548,13 +560,16 @@ static void dw_pcie_prog_viewport_mem_outbound(struct pcie_port *pp)
+ 
+ static void dw_pcie_prog_viewport_io_outbound(struct pcie_port *pp)
+ {
++	u64 io_base;
++
++	io_base = pp->io_base & pp->base_mask;
+ 	/* Program viewport 1 : OUTBOUND : IO */
+ 	dw_pcie_writel_rc(pp, PCIE_ATU_REGION_OUTBOUND | PCIE_ATU_REGION_INDEX1,
+ 			  PCIE_ATU_VIEWPORT);
+ 	dw_pcie_writel_rc(pp, PCIE_ATU_TYPE_IO, PCIE_ATU_CR1);
+-	dw_pcie_writel_rc(pp, pp->io_base, PCIE_ATU_LOWER_BASE);
+-	dw_pcie_writel_rc(pp, (pp->io_base >> 32), PCIE_ATU_UPPER_BASE);
+-	dw_pcie_writel_rc(pp, pp->io_base + pp->config.io_size - 1,
++	dw_pcie_writel_rc(pp, io_base, PCIE_ATU_LOWER_BASE);
++	dw_pcie_writel_rc(pp, (io_base >> 32), PCIE_ATU_UPPER_BASE);
++	dw_pcie_writel_rc(pp, io_base + pp->config.io_size - 1,
+ 			  PCIE_ATU_LIMIT);
+ 	dw_pcie_writel_rc(pp, pp->config.io_bus_addr, PCIE_ATU_LOWER_TARGET);
+ 	dw_pcie_writel_rc(pp, upper_32_bits(pp->config.io_bus_addr),
+diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
+index 3063b35..3fa12a6 100644
+--- a/drivers/pci/host/pcie-designware.h
++++ b/drivers/pci/host/pcie-designware.h
+@@ -35,6 +35,7 @@ struct pcie_port {
+ 	struct device		*dev;
+ 	u8			root_bus_nr;
+ 	void __iomem		*dbi_base;
++	u64			base_mask;
+ 	u64			cfg0_base;
+ 	void __iomem		*va_cfg0_base;
+ 	u64			cfg1_base;
 -- 
 1.7.9.5
