@@ -1,62 +1,194 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v12 18/31] iommu/exynos: allow having multiple System
- MMUs for a master H/W
-Date: Tue, 06 May 2014 20:05:14 +0200
-Message-ID: <5369245A.1060001@gmail.com>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com> <1398584283-22846-19-git-send-email-shaik.ameer@samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v5 7/7] Input: pixcir_i2c_ts: Add device tree support
+Date: Tue, 6 May 2014 14:06:12 +0300
+Message-ID: <1399374372-29123-8-git-send-email-rogerq@ti.com>
+References: <1399374372-29123-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1398584283-22846-19-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
-Cc: kgene.kim@samsung.com, pullip.cho@samsung.com, a.motakis@virtualopensystems.com, grundler@chromium.org, joro@8bytes.org, prathyush.k@samsung.com, rahul.sharma@samsung.com, sachin.kamat@linaro.org, supash.ramaswamy@linaro.org, Varun.Sethi@freescale.com, s.nawrocki@samsung.com, t.figa@samsung.com, joshi@samsung.com
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27.04.2014 09:37, Shaik Ameer Basha wrote:
-> From: Cho KyongHo <pullip.cho@samsung.com>
->
-> Some master device descriptor like fimc-is which is an abstraction
-> of very complex H/W may have multiple System MMUs. For those devices,
-> the design of the link between System MMU and its master H/W is needed
-> to be reconsidered.
->
-> A link structure, sysmmu_list_data is introduced that provides a link
-> to master H/W and that has a pointer to the device descriptor of a
-> System MMU. Given a device descriptor of a master H/W, it is possible
-> to traverse all System MMUs that must be controlled along with the
-> master H/W.
->
-> Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
-> ---
->   drivers/iommu/exynos-iommu.c |  545 ++++++++++++++++++++++++++----------------
->   1 file changed, 335 insertions(+), 210 deletions(-)
->
-> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> index fefedec3..c2e6365 100755
-> --- a/drivers/iommu/exynos-iommu.c
-> +++ b/drivers/iommu/exynos-iommu.c
-> @@ -117,6 +117,10 @@
->   #define REG_PB1_EADDR		0x058
->
->   #define has_sysmmu(dev)		(dev->archdata.iommu != NULL)
-> +#define for_each_sysmmu_list(dev, list_data)				\
-> +	list_for_each_entry(list_data,					\
-> +		&((struct exynos_iommu_owner *)dev->archdata.iommu)->mmu_list, \
-> +		entry)
+Provide device tree support and binding information.
+Also provide support for a new chip "pixcir_tangoc".
 
-Sorry, NAK.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ .../bindings/input/touchscreen/pixcir_i2c_ts.txt   | 26 ++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/input/touchscreen/pixcir_i2c_ts.c          | 78 ++++++++++++++++++++++
+ 3 files changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
 
-Please don't add this kind of complexity and business logic to low level 
-code. We want the configuration functions to be simple, easy to read, 
-maintain and extend.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+new file mode 100644
+index 0000000..0ab9505
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
+@@ -0,0 +1,26 @@
++* Pixcir I2C touchscreen controllers
++
++Required properties:
++- compatible: must be "pixcir,pixcir_ts" or "pixcir,pixcir_tangoc"
++- reg: I2C address of the chip
++- interrupts: interrupt to which the chip is connected
++- attb-gpio: GPIO connected to the ATTB line of the chip
++- x-size: horizontal resolution of touchscreen
++- y-size: vertical resolution of touchscreen
++
++Example:
++
++	i2c@00000000 {
++		/* ... */
++
++		pixcir_ts@5c {
++			compatible = "pixcir,pixcir_ts";
++			reg = <0x5c>;
++			interrupts = <2 0>;
++			attb-gpio = <&gpf 2 0 2>;
++			x-size = <800>;
++			y-size = <600>;
++		};
++
++		/* ... */
++	};
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index abc3080..2270ebe 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -94,6 +94,7 @@ panasonic	Panasonic Corporation
+ phytec	PHYTEC Messtechnik GmbH
+ picochip	Picochip Ltd
+ plathome	Plat'Home Co., Ltd.
++pixcir  PIXCIR MICROELECTRONICS Co., Ltd
+ powervr	PowerVR (deprecated, use img)
+ qca	Qualcomm Atheros, Inc.
+ qcom	Qualcomm Technologies, Inc
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index b0f7680..a2f8100 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -26,6 +26,9 @@
+ #include <linux/input/mt.h>
+ #include <linux/input/pixcir_ts.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_device.h>
+ 
+ #define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
+ 
+@@ -407,16 +410,70 @@ unlock:
+ static SIMPLE_DEV_PM_OPS(pixcir_dev_pm_ops,
+ 			 pixcir_i2c_ts_suspend, pixcir_i2c_ts_resume);
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id pixcir_of_match[];
++
++static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
++{
++	struct pixcir_ts_platform_data *pdata;
++	struct device_node *np = dev->of_node;
++
++	const struct of_device_id *match;
++
++	match = of_match_device(of_match_ptr(pixcir_of_match), dev);
++	if (!match)
++		return ERR_PTR(-EINVAL);
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	pdata->chip = *(const struct pixcir_i2c_chip_data *)match->data;
++
++	pdata->gpio_attb = of_get_named_gpio(np, "attb-gpio", 0);
++	/* gpio_attb validity is checked in probe */
++
++	if (of_property_read_u32(np, "x-size", &pdata->x_max)) {
++		dev_err(dev, "Failed to get x-size property\n");
++		return ERR_PTR(-EINVAL);
++	}
++	pdata->x_max -= 1;
++
++	if (of_property_read_u32(np, "y-size", &pdata->y_max)) {
++		dev_err(dev, "Failed to get y-size property\n");
++		return ERR_PTR(-EINVAL);
++	}
++	pdata->y_max -= 1;
++
++	dev_dbg(dev, "%s: x %d, y %d, gpio %d\n", __func__,
++		pdata->x_max + 1, pdata->y_max + 1, pdata->gpio_attb);
++
++	return pdata;
++}
++#else
++static struct pixcir_ts_platform_data *pixcir_parse_dt(struct device *dev)
++{
++	return ERR_PTR(-EINVAL);
++}
++#endif
++
+ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 					 const struct i2c_device_id *id)
+ {
+ 	const struct pixcir_ts_platform_data *pdata =
+ 			dev_get_platdata(&client->dev);
+ 	struct device *dev = &client->dev;
++	struct device_node *np = dev->of_node;
+ 	struct pixcir_i2c_ts_data *tsdata;
+ 	struct input_dev *input;
+ 	int error;
+ 
++	if (np && !pdata) {
++		pdata = pixcir_parse_dt(dev);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	}
++
+ 	if (!pdata) {
+ 		dev_err(&client->dev, "platform data not defined\n");
+ 		return -EINVAL;
+@@ -522,15 +579,36 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+ 
+ static const struct i2c_device_id pixcir_i2c_ts_id[] = {
+ 	{ "pixcir_ts", 0 },
++	{ "pixcir_tangoc", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, pixcir_i2c_ts_id);
+ 
++#ifdef CONFIG_OF
++static const struct pixcir_i2c_chip_data pixcir_ts_data = {
++	.max_fingers = 2,
++	/* no hw id support */
++};
++
++static const struct pixcir_i2c_chip_data pixcir_tangoc_data = {
++	.max_fingers = 5,
++	.has_hw_ids = true,
++};
++
++static const struct of_device_id pixcir_of_match[] = {
++	{ .compatible = "pixcir,pixcir_ts", .data = &pixcir_ts_data },
++	{ .compatible = "pixcir,pixcir_tangoc", .data = &pixcir_tangoc_data },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, pixcir_of_match);
++#endif
++
+ static struct i2c_driver pixcir_i2c_ts_driver = {
+ 	.driver = {
+ 		.owner	= THIS_MODULE,
+ 		.name	= "pixcir_ts",
+ 		.pm	= &pixcir_dev_pm_ops,
++		.of_match_table = of_match_ptr(pixcir_of_match),
+ 	},
+ 	.probe		= pixcir_i2c_ts_probe,
+ 	.remove		= pixcir_i2c_ts_remove,
+-- 
+1.8.3.2
 
-The proper way to do it is to let the IOMMUs be grouped together on 
-IOMMU subsystem level, so that each IOMMU consumer driver would see just 
-one IOMMU, but then IOMMU driver callbacks would handle just particular 
-instances of the IOMMU IP blocks, without any loops, lists and other 
-crazy code...
-
-Best regards,
-Tomasz
