@@ -1,64 +1,111 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
-Date: Mon, 5 May 2014 17:06:10 -0500
-Message-ID: <CAL_JsqLdScT5SzHKB_XoDm7o0pZ5WJFAk4hG0yzmET68yjnmzA@mail.gmail.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
-	<1398353407-2345-4-git-send-email-santosh.shilimkar@ti.com>
-	<CAL_JsqKmf-OCf_-J06ztHWS0iRaMHAVxV0bOFGnY4Ci3fPgLow@mail.gmail.com>
-	<5368068C.3090403@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/4] ARM: dts: am335x-evm: use phandles for USB and DMA
+ refs
+Date: Tue, 6 May 2014 11:16:27 -0500
+Message-ID: <20140506161627.GJ25849@saruman.home>
+References: <1398693512-5355-1-git-send-email-guido@vanguardiasur.com.ar>
+ <1398693512-5355-2-git-send-email-guido@vanguardiasur.com.ar>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5368068C.3090403-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4wkndigzIeYF6Hbg"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398693512-5355-2-git-send-email-guido@vanguardiasur.com.ar>
+Sender: linux-omap-owner@vger.kernel.org
+To: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>
+Cc: LKML <linux-kernel@vger.kernel.org>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 5, 2014 at 4:45 PM, Santosh Shilimkar
-<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> On Thursday 01 May 2014 08:56 PM, Rob Herring wrote:
->> On Thu, Apr 24, 2014 at 10:30 AM, Santosh Shilimkar
->> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+--4wkndigzIeYF6Hbg
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>>  drivers/of/platform.c       |   23 +++++++++++++++++++++++
->>>  include/linux/of_platform.h |    6 ++++++
->>
->> I thought I said this already, but this does not belong in these files
->> as the function does not deal with platform devices. Probably
->> address.c/of_address.h would be the best place.
->>
-> Updated patch with functions now moved to of_address.h/address.c
->
-> From 08fb70715afe4adf203d24f1737dba7123c6713b Mon Sep 17 00:00:00 2001
-> From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> Date: Thu, 24 Apr 2014 11:30:03 -0400
-> Subject: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
->
-> The of_dma_is_coherent() helper parses the given DT device
-> node to see if the "dma-coherent" property is supported and
-> returns true or false accordingly.
->
-> If the arch is always coherent or always noncoherent, then the default
-> DMA ops has to be specified accordingly.
->
-> Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+On Mon, Apr 28, 2014 at 10:58:30AM -0300, Guido Mart=EDnez wrote:
+> Use phandles instead of unit adresses to reference usb and dma nodes.
+> This makes the DT more robust and readable.
+>=20
+> Signed-off-by: Guido Mart=EDnez <guido@vanguardiasur.com.ar>
+
+Acked-by: Felipe Balbi <balbi@ti.com>
+
 > ---
->  drivers/of/address.c       |   23 +++++++++++++++++++++++
->  include/linux/of_address.h |    6 ++++++
->  2 files changed, 29 insertions(+)
+>  arch/arm/boot/dts/am335x-evm.dts | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-=
+evm.dts
+> index 6028217..e802627 100644
+> --- a/arch/arm/boot/dts/am335x-evm.dts
+> +++ b/arch/arm/boot/dts/am335x-evm.dts
+> @@ -331,28 +331,28 @@
+>  &usb {
+>  	status =3D "okay";
+> =20
+> -	control@44e10620 {
+> +	&usb_ctrl_mod {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb-phy@47401300 {
+> +	&usb0_phy {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb-phy@47401b00 {
+> +	&usb1_phy {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb@47401000 {
+> +	&usb0 {
+>  		status =3D "okay";
+>  	};
+> =20
+> -	usb@47401800 {
+> +	&usb1 {
+>  		status =3D "okay";
+>  		dr_mode =3D "host";
+>  	};
+> =20
+> -	dma-controller@47402000  {
+> +	&cppi41dma  {
+>  		status =3D "okay";
+>  	};
+>  };
+> --=20
+> 1.9.2
+>=20
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+balbi
+
+--4wkndigzIeYF6Hbg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTaQrbAAoJEIaOsuA1yqRE7f4QAJ5CYqdobdBY8+3jfVncqo45
+IRclizz5bgJl4BWdu6RNDIB1/wozXPKwZZyeGTIvU9seeWNIwXFn8ILNVrMfzBJm
+kvmm8O25DTu+0DUepXxx3h12ix3sMrS/hZRlwwRx8hse3A8BV8bz0GakMFoXxufw
+pQIllRA+nytoZKbZA4mzaWkm99q9hCbGNbbXoAIWZJLZSKgl/RtPomXzrpzDJx3W
+Xr9hTSX336A3oUxTsamhmoSeRUTVhT48OLH/8LZlqt3awatS46ezCNOURsXCcIig
+cZNAsKiGfObpAz7ePuoEc9k7mpCLQlo/FILSjDIkPRUT+dJkv+uyhS18HDp2axKd
+irx4G251jaf4sWNSvKOsnzCAPGfToyER1MpUcU/vRLoTtJRNpXc6NBT9D8zjMsz7
+MEOEce9ThQWRLzQO/sd5UKJ3LgFU4pehtNy1ynV0kDauSJltn4Uf9lL+AhO9YTpf
+2PoQZ2TdUeAm/BP7QmAbbastilxVEhV1uvZzVCtbATtcQarbv7Xx1VbaGXhtDu1k
+i/jbo2skG8np498L+pG8MzPDz7xchQP9HptgptBvaRmurdCY0+/MlTZZM58x7zsK
+H2qc0Ww4kv+MgKz+RZfW5kYd9s9pMGvg2SFVuzc9Rtn60PSg0SOabNB1OcknbLXX
+C3bOFuTahomaOcjos/bo
+=60Dh
+-----END PGP SIGNATURE-----
+
+--4wkndigzIeYF6Hbg--
