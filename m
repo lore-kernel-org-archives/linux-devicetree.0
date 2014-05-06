@@ -1,78 +1,48 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 6/7] Input: pixcir_i2c_ts: Implement wakeup from suspend
-Date: Tue, 6 May 2014 11:33:24 +0300
-Message-ID: <53689E54.5080705@ti.com>
-References: <1399280678-23925-1-git-send-email-rogerq@ti.com> <1399280678-23925-7-git-send-email-rogerq@ti.com> <20140506052148.GB2608@core.coreip.homeip.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
+Date: Tue, 06 May 2014 11:32:22 +0200
+Message-ID: <6183628.TOzU0KjZQs@wuerfel>
+References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com> <5674507.GGRAhKo0Eq@wuerfel> <CAGVrzcaoxiwTzduK7_uTLsM=oyzT_2FYkiSS=m0rz5AEJrJRkw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140506052148.GB2608-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+In-Reply-To: <CAGVrzcaoxiwTzduK7_uTLsM=oyzT_2FYkiSS=m0rz5AEJrJRkw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, dmurphy-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2014 08:21 AM, Dmitry Torokhov wrote:
-> On Mon, May 05, 2014 at 12:04:37PM +0300, Roger Quadros wrote:
->> Improve the suspend and resume handlers to allow the device
->> to wakeup the system from suspend.
->>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
->> ---
->>  drivers/input/touchscreen/pixcir_i2c_ts.c | 53 ++++++++++++++++++++++++++++---
->>  1 file changed, 49 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
->> index 927aed1..5f6a27e 100644
->> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
->> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
->> @@ -348,21 +348,66 @@ static void pixcir_input_close(struct input_dev *dev)
->>  static int pixcir_i2c_ts_suspend(struct device *dev)
->>  {
->>  	struct i2c_client *client = to_i2c_client(dev);
->> +	struct pixcir_i2c_ts_data *ts = i2c_get_clientdata(client);
->> +	struct input_dev *input = ts->input;
->> +	int ret = 0;
->> +
->> +	mutex_lock(&input->mutex);
->> +
->> +	if (input->users) {
->> +		ret = pixcir_stop(ts);
->> +		if (ret)
->> +			goto unlock;
->> +	}
->> +
->> +	/*
->> +	 * If wakeup is enabled we need to enable interrupt generation
->> +	 * but don't need to process any reports i.e. ts->exiting must be true.
->> +	 */
->> +	if (device_may_wakeup(&client->dev)) {
->> +		/* enable wakeup interrupt generation */
->> +		ret = pixcir_int_enable(ts, 1);
->> +		if (ret) {
->> +			dev_err(dev, "Failed to enable interrupt generation\n");
->> +			goto unlock;
->> +		}
+On Monday 05 May 2014 15:41:43 Florian Fainelli wrote:
+> 2014-05-02 0:55 GMT-07:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
+> > On Thursday 01 May 2014 22:32:27 Florian Fainelli wrote:
+> > If you remove the call to iotable_init,
+> > you obviously can't access the registers through BCM63XX_{AHB,PERIPH}_VIRT
+> > any longer, but accesses through a pointer returned from ioremap()
+> > should keep working as before.
+> >
+> > The DEBUG_LL early output is a special case here, these need one
+> > of three options:
+> >
+> > - .map_io is NULL (preferred)
+> > - .map_io points to a function that calls debug_ll_io_init()
+> > - .map_io points to a function that calls iotable_init with
+> >   an equivalent or larger mapping as debug_ll_io_init() would.
+> >
+> > I suspect you were doing the third here for historic reasons.
 > 
-> I am not sure why we need to disable event processing here. Why not do
-> 
-> 	if (device_may_wakeup(&client->dev)) {
-> 		enable_irq_wake(client->irq); 
-> 		ret = pixcir_int_enable(ts, true);
-> 		...
-> 	} else if (input->users) {
-> 		ret = pixcir_stop(ts);
-> 	}
-> 
-> like many of the drivers do?
+> I think you are right, I was in the 3rd case where accessing the UART
+> using its virtual address would make the system. Reading through
+> devicemaps_init(), defining a custom map_io() functions means you are
+> in control and you explicitely need to call debug_ll_io_init(), which
+> I was not doing when I removed my custom map_io() implementation.
 
-Seems to work without disabling event processing. I'll send a v5 with this
-and patch 2 fixed as per your suggestion. Thanks.
+Ok, so I guess it should all work now if you remove the function from
+the submission, or keep one in your private tree that sets up any
+mapping needed by drivers that are not converted along with
+debug_ll_io_init().
 
-cheers,
--roger
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
