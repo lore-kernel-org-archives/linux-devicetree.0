@@ -1,70 +1,54 @@
-From: Tom Rini <trini@ti.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add peach-pi board support
-Date: Mon, 5 May 2014 14:18:09 -0400
-Message-ID: <5367D5E1.9070709@ti.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>	<1399035821-25096-4-git-send-email-arun.kk@samsung.com>	<5363D176.80601@gmail.com>	<CAD=FV=XYjMg7V9=OzAy_ifwaM83QS0tiTrp5+nxvG236kkSjRQ@mail.gmail.com>	<53644DDB.7050503@gmail.com> <CAD=FV=U_b_n=V_mEFYNPFZ1wyrgjjr5jEGrVb5TviP0Z33popg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=U_b_n=V_mEFYNPFZ1wyrgjjr5jEGrVb5TviP0Z33popg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olofj@google.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tushar Behera <tushar.behera@linaro.org>, Arun Kumar <arunkk.samsung@gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 16/20] dt: binding: Armada 375 USB cluster
+Date: Tue,  6 May 2014 02:14:11 +0200
+Message-ID: <1399335255-589-17-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2014 11:17 AM, Doug Anderson wrote:
-> On Fri, May 2, 2014 at 7:00 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> Well, if you can use the device tree of peach-pit board and boot peach-pi
->> and vice-versa and it won't cause any hardware failures then I guess it's
->> fine to keep this string.
-> 
-> I believe you can actually make it a good portion of the way through
-> boot, though a bunch of things (including graphics) won't work.  I
-> general I don't think it's all that different from "exynos5".
-> 
-> 
->>>> I don't think this is a good idea, because this is basically rendering
->>>> this
->>>> dts file useless, unless used with a bootloader that can actually inject
->>>> correct values. I believe that some generic setup could be provided in
->>>> the
->>>> dts, so you could at least get the board running.
->>>
->>>
->>> I won't say that I care a whole lot, but I think that was what was
->>> agreed upon the other day.  Specifically Tom Rini of U-Boot was
->>> worried about the fact that U-Boot will read the memory node and
->>> totally clobber it.  He thought there might be cases where someone
->>> might _purposely_ not want U-Boot to do that.
->>>
->>> ...I would wonder what alternate bootloader you're imagining will
->>> actually run on this board and not do this?
->>
->>
->> People should have the freedom to choose anything they want. We have also
->> barebox and coreboot with ARM and even Exynos5 support (in coreboot), but
->> people might want to use something completely exotic as well and the device
->> tree should let them do so.
-> 
-> Fair enough.  Unless Tom cares about this enough to throw his opinion
-> in here, I guess our answer is that the memory node should have a sane
-> default and we'll expect the bootloader to put something better in if
-> it can properly probe memory.
-> 
-> In this case I guess it would be 2GB.
+Armada 375 comes with an USB2 host and device controller and an USB3
+controller. The USB cluster control register allows to manage common
+features of both USB controllers.
 
-So, a memory node that says a size of 0 is a valid and long standing
-(see PowerPC folks) way of saying "please fill in my memory node value
-for me" due to any number of reasons for not knowing before hand how
-much memory there is.  Any boot loader which cannot fill in the memory
-node is going to have problems with the various boards (PowerPC, ARM and
-other) which say "my memory size is 0, I want this fixed up at run time".
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../bindings/phy/armada-375-usb-phy-cluster.txt       | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
 
-The problem I was raising at the ELC BoF is that today we can't just
-stop overwriting values in the non-zero case as many boards lie about
-their memory size, in non-zero ways, but no one noticed as they only
-tested with U-Boot which was performing the fixup.
-
+diff --git a/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt b/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
+new file mode 100644
+index 000000000000..258407c5ab90
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
+@@ -0,0 +1,19 @@
++Armada 375 USB cluster
++----------------------
++
++Armada 375 comes with an USB2 host and device controller and an USB3
++controller. The USB cluster control register allows to manage common
++features of both USB controllers.
++
++Required properties:
++
++- compatible: "marvell,armada-375-usb-cluster"
++- reg: Should contain usb cluster register location and length.
++- #phy-cells : from the generic phy bindings, must be 1
++
++Example:
++	usbcluster: usb-cluster@18400 {
++		compatible = "marvell,armada-375-usb-cluster";
++		reg = <0x18400 0x4>;
++		#phy-cells = <1>
++	};
 -- 
-Tom
+1.8.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
