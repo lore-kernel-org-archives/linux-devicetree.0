@@ -1,111 +1,44 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 3/4] ARM: dts: am335x-evmsk: use phandles for USB and DMA
- refs
-Date: Tue, 6 May 2014 11:16:53 -0500
-Message-ID: <20140506161653.GL25849@saruman.home>
-References: <1398693512-5355-1-git-send-email-guido@vanguardiasur.com.ar>
- <1398693512-5355-3-git-send-email-guido@vanguardiasur.com.ar>
-Reply-To: <balbi@ti.com>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH 1/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen
+ A0/1/10/11/12
+Date: Tue, 6 May 2014 10:20:27 +0200
+Message-ID: <CAG374jD+msPPbPtFS+ji=8jS9+D-YHu31k7zzzC7Ty7jw9n7jQ@mail.gmail.com>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1399305223-18703-2-git-send-email-gabriel.fernandez@linaro.org>
+ <20140506071843.GD5206@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UeXZ3FjlYZvuln/G"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398693512-5355-3-git-send-email-guido@vanguardiasur.com.ar>
-Sender: linux-omap-owner@vger.kernel.org
-To: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>
-Cc: LKML <linux-kernel@vger.kernel.org>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140506071843.GD5206@lee--X1>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Pankaj Dev <pankaj.dev@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>
 List-Id: devicetree@vger.kernel.org
 
---UeXZ3FjlYZvuln/G
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Apr 28, 2014 at 10:58:31AM -0300, Guido Mart=EDnez wrote:
-> Use phandles instead of unit adresses to reference usb and dma nodes.
-> This makes the DT more robust and readable.
->=20
-> Signed-off-by: Guido Mart=EDnez <guido@vanguardiasur.com.ar>
-
-Acked-by: Felipe Balbi <balbi@ti.com>
-
-> ---
->  arch/arm/boot/dts/am335x-evmsk.dts | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335=
-x-evmsk.dts
-> index ab23885..44b8d75 100644
-> --- a/arch/arm/boot/dts/am335x-evmsk.dts
-> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
-> @@ -364,28 +364,28 @@
->  &usb {
->  	status =3D "okay";
-> =20
-> -	control@44e10620 {
-> +	&usb_ctrl_mod {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb-phy@47401300 {
-> +	&usb0_phy {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb-phy@47401b00 {
-> +	&usb1_phy {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb@47401000 {
-> +	&usb0 {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb@47401800 {
-> +	&usb1 {
->  		status =3D "okay";
->  		dr_mode =3D "host";
->  	};
-> =20
-> -	dma-controller@47402000  {
-> +	&cppi41dma  {
->  		status =3D "okay";
->  	};
->  };
-> --=20
-> 1.9.2
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-
---=20
-balbi
-
---UeXZ3FjlYZvuln/G
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTaQr1AAoJEIaOsuA1yqRELgMP/08TnA+0ygwdhLvnv/kENDBV
-fjgVCXjLwUy991enOg572OwqZWqXTAOWBBZRmDj8i3VJ3T27PHgnH2vlH/1cd35+
-HgEO8EXNe1/EE5Jcp5ZSs7mFh/DsBJzvoevLW2ckKSuwoWFgOULr3YbE0sW1CI6o
-SucCsQ0ePd2ZSG0LmSA1ISr/AKfVPPvb8N614WgPtg8wc27KjKmwUY33V8dRvjSO
-Oc4D5jq6gUXRZcRDilyq0S7fnxe6VqY5nj/aYvTCrUXOesUXvTkRArZyKIT39mHj
-hPqQ+yKRaCWbOk3OiOtpYZ3yEZeEuYsRmG6iToNuBGgK/2xe1zYbSkH1uCiVHW/B
-XYpZl9wbzFk80LNXn92cjzklbBhRsRNn6EBdwpl5FQAZNtidLg9XBWDOIO966Wo2
-rULACbamT6o8DgVt+WGJDWpzxczfCWDbJpZI9+TpoZLJ+xUX/OA9kF/Lh9EAKd56
-wnCr8FFQ8On8qnCkatzSQEt0g+jmRo63hbsJLD6jakLTr1fQqC5uyyf1PidJYidL
-sainci9Vw/tlI9mk25VDgbwSF1MlllZ+EOlXe5P3F9DdgGo+huVFicz2JlfRygbm
-I/PBKy3rioSbn684koclpjkO7YIo0GB+ESM8dLcLQ7TPhICSMsObF7fVAZ5ACX/U
-NhUPqfXct9YAnMK1SVdY
-=Vexg
------END PGP SIGNATURE-----
-
---UeXZ3FjlYZvuln/G--
+SGkgTGVlLAoKT24gNiBNYXkgMjAxNCAwOToxOCwgTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJv
+Lm9yZz4gd3JvdGU6Cj4+IFBhdGNoIGFkZHMgRFQgZW50cmllcyBmb3IgY2xvY2tnZW4gQTAvMS8x
+MC8xMS8xMgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBQYW5rYWogRGV2IDxwYW5rYWouZGV2QHN0LmNv
+bT4KPj4gU2lnbmVkLW9mZi1ieTogR2FicmllbCBGZXJuYW5kZXogPGdhYnJpZWwuZmVybmFuZGV6
+QGxpbmFyby5vcmc+Cj4+IC0tLQo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxNi1jbGtzLmgg
+ICAgIHwgIDE1ICsrCj4KPiBUaGlzIHNob3VsZCBsaXZlIGluIGluY2x1ZGUvZHQtYmluZGluZ3Mv
+Y2xrCj4KaW5jbHVkZS9kdC1iaW5kaW5ncy9jbGsgb3IgIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xv
+Y2sgPwoKPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTYtY2xvY2suZHRzaSB8IDQ3NyArKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICBhcmNoL2FybS9ib290L2R0cy9zdGlo
+NDE2LmR0c2kgICAgICAgfCAgMTAgKy0KPj4gIDMgZmlsZXMgY2hhbmdlZCwgNDk3IGluc2VydGlv
+bnMoKyksIDUgZGVsZXRpb25zKC0pCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9v
+dC9kdHMvc3RpaDQxNi1jbGtzLmgKPgo+IC0tCj4gTGVlIEpvbmVzCj4gTGluYXJvIFNUTWljcm9l
+bGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZAo+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNl
+IHNvZnR3YXJlIGZvciBBUk0gU29Dcwo+IEZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRl
+ciB8IEJsb2cKCkJlc3QgcmVnYXJkcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
