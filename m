@@ -1,49 +1,63 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/5] ARM: BCM63XX: add basic support for the Broadcom BCM63138 DSL SoC
-Date: Tue, 06 May 2014 11:32:22 +0200
-Message-ID: <6183628.TOzU0KjZQs@wuerfel>
-References: <1398130758-19456-1-git-send-email-f.fainelli@gmail.com> <5674507.GGRAhKo0Eq@wuerfel> <CAGVrzcaoxiwTzduK7_uTLsM=oyzT_2FYkiSS=m0rz5AEJrJRkw@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 14/17] ARM: dts: dra7: Add dt data for PCIe controller
+Date: Tue, 6 May 2014 19:04:00 +0530
+Message-ID: <1399383244-14556-15-git-send-email-kishon@ti.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcaoxiwTzduK7_uTLsM=oyzT_2FYkiSS=m0rz5AEJrJRkw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, mbizon <mbizon-MmRyKUhfbQ9GWvitb5QawA@public.gmane.org>, Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Kevin Cernekee <cernekee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, jpeshkin-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Russell King <rmk-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1399383244-14556-1-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: rogerq@ti.com, balajitk@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, Tony Lindgren <tony@atomide.com>, Bjorn Helgaas <bhelgaas@google.com>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 05 May 2014 15:41:43 Florian Fainelli wrote:
-> 2014-05-02 0:55 GMT-07:00 Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>:
-> > On Thursday 01 May 2014 22:32:27 Florian Fainelli wrote:
-> > If you remove the call to iotable_init,
-> > you obviously can't access the registers through BCM63XX_{AHB,PERIPH}_VIRT
-> > any longer, but accesses through a pointer returned from ioremap()
-> > should keep working as before.
-> >
-> > The DEBUG_LL early output is a special case here, these need one
-> > of three options:
-> >
-> > - .map_io is NULL (preferred)
-> > - .map_io points to a function that calls debug_ll_io_init()
-> > - .map_io points to a function that calls iotable_init with
-> >   an equivalent or larger mapping as debug_ll_io_init() would.
-> >
-> > I suspect you were doing the third here for historic reasons.
-> 
-> I think you are right, I was in the 3rd case where accessing the UART
-> using its virtual address would make the system. Reading through
-> devicemaps_init(), defining a custom map_io() functions means you are
-> in control and you explicitely need to call debug_ll_io_init(), which
-> I was not doing when I removed my custom map_io() implementation.
+Added dt data for PCIe controller. This node contains dt data for
+both the DRA7 part of designware controller and for the designware core.
+The documention for this node can be found @ ../bindings/pci/ti-pci.txt.
 
-Ok, so I guess it should all work now if you remove the function from
-the submission, or keep one in your private tree that sets up any
-mapping needed by drivers that are not converted along with
-debug_ll_io_init().
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Jingoo Han <jg1.han@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/dra7.dtsi |   22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index 653b5f6..20b1a09 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -1011,6 +1011,28 @@
+ 			};
+ 		};
+ 
++		pcie@51000000 {
++			compatible = "ti,dra7xx-pcie";
++			reg = <0x51002000 0x14c>, <0x51000000 0x2000>;
++			reg-names = "ti_conf", "rc_dbics";
++			interrupts = <0 232 0x4>, <0 233 0x4>;
++			#address-cells = <3>;
++			#size-cells = <2>;
++			device_type = "pci";
++			ti,device_type = <3>;
++			ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000
++				  0x81000000 0 0          0x20003000 0 0x00010000
++				  0x82000000 0 0x20013000 0x20013000 0 0xffed000>;
++			#interrupt-cells = <1>;
++			base-mask = <0x00000000 0x0fffffff>;
++			num-lanes = <1>;
++			interrupt-map-mask = <0 0 0 0>;
++			interrupt-map = <0x0 0 &gic 233>;
++			ti,hwmods = "pcie1";
++			phys = <&pcie1_phy>;
++			phy-names = "pcie-phy";
++		};
++
+ 		sata: sata@4a141100 {
+ 			compatible = "snps,dwc-ahci";
+ 			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
+-- 
+1.7.9.5
+
