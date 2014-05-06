@@ -1,42 +1,71 @@
-From: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: RE: [PATCH 1/2] usb: dwc2: Option to disable dma descriptor mode
-Date: Tue, 6 May 2014 18:21:02 +0000
-Message-ID: <A2CA0424C0A6F04399FB9E1CD98E03046D193CDB@US01WEMBX2.internal.synopsys.com>
-References: <1399328585-30949-1-git-send-email-dinguyen@altera.com>
+From: Thor Thayer <tthayer.linux@gmail.com>
+Subject: Re: [PATCHv3 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
+Date: Tue, 6 May 2014 13:34:36 -0500
+Message-ID: <CAF03EBfO9JELqJim10r7dJnmLH41i_VxZt_vnRKaOOO96eH_JA@mail.gmail.com>
+References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
+	<1399330337-16748-2-git-send-email-tthayer@altera.com>
+	<ba35254f-4ba5-4b2c-8056-cde5c693b0ff@CH1EHSMHS009.ehs.local>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399328585-30949-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ba35254f-4ba5-4b2c-8056-cde5c693b0ff@CH1EHSMHS009.ehs.local>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Thor Thayer <tthayer@altera.com>, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, grant.likely@linaro.org, Borislav Petkov <bp@alien8.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> From: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org [mailto:dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org]
-> Sent: Monday, May 05, 2014 3:23 PM
-> 
-> Even though the IP supports Descriptor DMA mode, it does not support SPLIT
-> transactions in this mode. Since the driver can get the Descriptor DMA mode
-> support from hardware, the driver in its currently form cannot fully support
-> LS/FS devices connected to a HS Hub when Descriptor DMA mode is enabled in the
-> driver. Thus, we give the option to disable Descriptor DMA from device tree.
+Hi S=C3=B6ren
 
-Hi Dinh,
-
-Instead of this patch, how about if we make the driver default to buffer
-DMA mode instead, and if anyone wants to use descriptor DMA mode, they
-can add a DT property for that? I don't think anyone will want that,
-since as you say it doesn't fully support LS/FS devices in that mode.
-
-The driver originally worked like that. I guess the default got changed by
-one of Matthijs' patches, and I didn't notice it.
-
--- 
-Paul
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Mon, May 5, 2014 at 6:16 PM, S=C3=B6ren Brinkmann
+<soren.brinkmann@xilinx.com> wrote:
+>
+> Hi Thor,
+>
+> On Mon, 2014-05-05 at 05:52PM -0500, tthayer@altera.com wrote:
+> > From: Thor Thayer <tthayer@altera.com>
+> >
+> > Addition of the Altera SDRAM controller bindings and device
+> > tree changes to the Altera SoC project. The "syscon" parameter
+> > is included here because the SDRAM EDAC bits are shared with the SD=
+RAM
+> > configuration bits.
+> > ---
+> > v2: Changes to SoC SDRAM EDAC code.
+> >
+> > V3: Implement code suggestions for SDRAM EDAC code.
+> >
+> > Signed-off-by: Thor Thayer <tthayer@altera.com>
+> > ---
+> >  .../bindings/arm/altera/socfpga-sdram.txt          |   14 ++++++++=
+++++++
+> >  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+> >  2 files changed, 19 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/arm/altera/so=
+cfpga-sdram.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-s=
+dram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.t=
+xt
+> > new file mode 100644
+> > index 0000000..525cb76
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.tx=
+t
+> > @@ -0,0 +1,14 @@
+> > +Altera SOCFPGA SDRAM Controller
+> > +
+> > +Required properties:
+> > +- compatible : "altr,sdr-ctl", "syscon";
+> > +                Note that syscon is invoked for this device to sup=
+port the FPGA
+> > +             bridge driver, EDAC driver and other devices that sha=
+re the
+> > +             registers.
+>
+> This sounds like implementation specifics, which shouldn't be part of
+> the bindings.
+>
+>         S=C3=B6ren
+>
+I see your point and will remove. Thanks!
