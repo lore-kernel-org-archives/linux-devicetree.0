@@ -1,782 +1,1225 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Tue, 6 May 2014 19:19:03 +0530
-Message-ID: <5368E84F.3000802@ti.com>
-References: <1398665874-31238-1-git-send-email-gautam.vivek@samsung.com> <CAFp+6iEz-Hp6yL5iobLB1FYNvkjheNerE2iptvHDn4me2t5vAw@mail.gmail.com>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Tue, 6 May 2014 12:39:45 +0530
+Message-ID: <CA+mB=1L3O6QJhDJyff2=jQm3euxUHPtPD2Zw9xKFUCYecaB3iA@mail.gmail.com>
+References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
+	<20140430214109.GB30412@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFp+6iEz-Hp6yL5iobLB1FYNvkjheNerE2iptvHDn4me2t5vAw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140430214109.GB30412-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On Wednesday 30 April 2014 08:54 AM, Vivek Gautam wrote:
-> Hi Kishon, Tomasz,
-> 
-> 
-> On Mon, Apr 28, 2014 at 11:47 AM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
->> The new driver uses the generic PHY framework and will interact
->> with DWC3 controller present on Exynos5 series of SoCs.
->> Thereby, removing old phy-samsung-usb3 driver and related code
->> used untill now which was based on usb/phy framework.
+On Thu, May 1, 2014 at 3:11 AM, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> On Tue, Apr 15, 2014 at 05:08:31PM +0530, Srikanth Thokala wrote:
+>> This is the driver for Xilinx AXI PCIe Host Bridge Soft IP
 >>
->> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Signed-off-by: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 >> ---
-> 
-> Does this patch looks Ok now ?
-
-fine by me. Tomasz, if you are OK with this patch pls give you Acked by.
-
-Cheers
-Kishon
-
-> Actually we plan to get this in for 3.16, so if things are good we can
-> get a go ahead for this :-)
-> 
+>> Changes in v3:
+>> - Rebased on v3.15.0-rc1
+>> - Added support for interrupt-map DT functionality.
+>> - Removed map_irq() wrapper, instead using of_irq_parse_and_map_pci().
+>> - Modified resource mapping logic as per the series
+>>   "PCI: ARM: add support for generic PCI host controller"
+>> - Modified devicetree binding documentation to update with interrupt-
+>>   map properties.
+>> - Use devm calls wherever applicable.
+>> - Fixed minor comments from Jason
+>> - Thanks Jason for the review and suggestions.
 >>
->> Changes from v6:
->>  - Addressed review comments:
->>    -- Sorted config entries in Kconfig and Makefile
->>    -- Made #define to_usbdrd_phy(inst) to a static inline routine.
->>    -- Restructured exynos5_rate_to_clk() as suggested.
->>    -- Amended 'val' field for regmap_update_bits() in the routine
->>       exynos5_usbdrd_phy_isol().
->>    -- Removed sentinel entry from exynos5_usbdrd_phy_cfg[] struct.
->>    -- Removed check for 'match' entry in probe().
+>> Changes in v2:
+>> - Rebased on v3.14.0-rc8
+>> - Removed IP specific DT properties like include-rc, axibar-num etc.,
+>>   as suggested by Jason and Bjorn, Thanks
+>> ---
+>>  .../devicetree/bindings/pci/xilinx-pcie.txt        |   62 ++
+>>  drivers/pci/host/Kconfig                           |    7 +
+>>  drivers/pci/host/Makefile                          |    1 +
+>>  drivers/pci/host/pci-xilinx.c                      |  999 ++++++++++++++++++++
+>>  4 files changed, 1069 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+>>  create mode 100644 drivers/pci/host/pci-xilinx.c
 >>
->>  .../devicetree/bindings/phy/samsung-phy.txt        |   40 ++
->>  drivers/phy/Kconfig                                |   11 +
->>  drivers/phy/Makefile                               |    1 +
->>  drivers/phy/phy-exynos5-usbdrd.c                   |  627 ++++++++++++++++++++
->>  4 files changed, 679 insertions(+)
->>  create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
->>
->> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> index b422e38..51efe4c 100644
->> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
->> @@ -114,3 +114,43 @@ Example:
->>                 compatible = "samsung,exynos-sataphy-i2c";
->>                 reg = <0x38>;
->>         };
->> +
->> +Samsung Exynos5 SoC series USB DRD PHY controller
->> +--------------------------------------------------
+>> diff --git a/Documentation/devicetree/bindings/pci/xilinx-pcie.txt b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+>> new file mode 100644
+>> index 0000000..2fb28e0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/pci/xilinx-pcie.txt
+>> @@ -0,0 +1,62 @@
+>> +* Xilinx AXI PCIe Root Port Bridge DT description
 >> +
 >> +Required properties:
->> +- compatible : Should be set to one of the following supported values:
->> +       - "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
->> +       - "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
->> +- reg : Register offset and length of USB DRD PHY register set;
->> +- clocks: Clock IDs array as required by the controller
->> +- clock-names: names of clocks correseponding to IDs in the clock property;
->> +              Required clocks:
->> +       - phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
->> +              used for register access.
->> +       - ref: PHY's reference clock (usually crystal clock), used for
->> +              PHY operations, associated by phy name. It is used to
->> +              determine bit values for clock settings register.
->> +              For Exynos5420 this is given as 'sclk_usbphy30' in CMU.
->> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
->> +                     control pmu registers for power isolation.
->> +- samsung,pmu-offset: phy power control register offset to pmu-system-controller
->> +                     base.
->> +- #phy-cells : from the generic PHY bindings, must be 1;
+>> +- #address-cells: Address representation for root ports, set to <3>
+>> +- #size-cells: Size representation for root ports, set to <2>
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +     interrupt source. The value must be 1.
+>> +- compatible: Should contain "xlnx,axi-pcie-host-1.00.a"
+>> +- reg: Should contain AXI PCIe registers location and length
+>> +- device_type: must be "pci"
+>> +- interrupts: Should contain AXI PCIe interrupt
+>> +- interrupt-map-mask,
+>> +  interrupt-map: standard PCI properties to define the mapping of the
+>> +     PCI interface to interrupt numbers.
+>> +- ranges: ranges for the PCI memory regions (I/O space region is noti
+>> +     supported by hardware)
+>> +     Please refer to the standard PCI bus binding document for a more
+>> +     detailed explanation
 >> +
->> +For "samsung,exynos5250-usbdrd-phy" and "samsung,exynos5420-usbdrd-phy"
->> +compatible PHYs, the second cell in the PHY specifier identifies the
->> +PHY id, which is interpreted as follows:
->> +  0 - UTMI+ type phy,
->> +  1 - PIPE3 type phy,
+>> +Optional properties:
+>> +- bus-range: PCI bus numbers covered
+>> +
+>> +Interrupt controller child node
+>> ++++++++++++++++++++++++++++++++
+>> +Required properties:
+>> +- interrupt-controller: identifies the node as an interrupt controller
+>> +- #address-cells: specifies the number of cells needed to encode an
+>> +     address. The value must be 0.
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +     interrupt source. The value must be 1.
+>> +
+>> +NOTE:
+>> +The core provides a single interrupt for both INTx/MSI messages. So,
+>> +created a interrupt controller node to support 'interrupt-map' DT
+>> +functionality.  The driver will create an IRQ domain for this map, decode
+>> +the four INTx interrupts in ISR and route them to this domain.
+>> +
 >> +
 >> +Example:
->> +       usb3_phy: usbphy@12100000 {
->> +               compatible = "samsung,exynos5250-usbdrd-phy";
->> +               reg = <0x12100000 0x100>;
->> +               clocks = <&clock 286>, <&clock 1>;
->> +               clock-names = "phy", "ref";
->> +               samsung,pmu-syscon = <&pmu_system_controller>;
->> +               samsung,pmu-offset = <0x704>;
->> +               #phy-cells = <1>;
->> +       };
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index 3bb05f1..daa1707 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -159,6 +159,17 @@ config PHY_EXYNOS5250_USB2
->>           particular SoC is compiled in the driver. In case of Exynos 5250 four
->>           phys are available - device, host, HSIC0 and HSIC.
->>
->> +config PHY_EXYNOS5_USBDRD
->> +       tristate "Exynos5 SoC series USB DRD PHY driver"
->> +       depends on ARCH_EXYNOS5 && OF
->> +       depends on HAS_IOMEM
->> +       select GENERIC_PHY
->> +       select MFD_SYSCON
->> +       help
->> +         Enable USB DRD PHY support for Exynos 5 SoC series.
->> +         This driver provides PHY interface for USB 3.0 DRD controller
->> +         present on Exynos5 SoC series.
+>> +++++++++
 >> +
->>  config PHY_XGENE
->>         tristate "APM X-Gene 15Gbps PHY support"
->>         depends on HAS_IOMEM && OF && (ARM64 || COMPILE_TEST)
->> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->> index 2faf78e..333ba98 100644
->> --- a/drivers/phy/Makefile
->> +++ b/drivers/phy/Makefile
->> @@ -17,4 +17,5 @@ obj-$(CONFIG_PHY_SAMSUNG_USB2)                += phy-samsung-usb2.o
->>  obj-$(CONFIG_PHY_EXYNOS4210_USB2)      += phy-exynos4210-usb2.o
->>  obj-$(CONFIG_PHY_EXYNOS4X12_USB2)      += phy-exynos4x12-usb2.o
->>  obj-$(CONFIG_PHY_EXYNOS5250_USB2)      += phy-exynos5250-usb2.o
->> +obj-$(CONFIG_PHY_EXYNOS5_USBDRD)       += phy-exynos5-usbdrd.o
->>  obj-$(CONFIG_PHY_XGENE)                        += phy-xgene.o
->> diff --git a/drivers/phy/phy-exynos5-usbdrd.c b/drivers/phy/phy-exynos5-usbdrd.c
+>> +     pci_express: axi-pcie@50000000 {
+>> +             #address-cells = <3>;
+>> +             #size-cells = <2>;
+>> +             #interrupt-cells = <1>;
+>> +             compatible = "xlnx,axi-pcie-host-1.00.a";
+>> +             reg = < 0x50000000 0x10000000 >;
+>> +             device_type = "pci";
+>> +             interrupts = < 0 52 4 >;
+>> +             interrupt-map-mask = <0 0 0 7>;
+>> +             interrupt-map = <0 0 0 1 &pcie_intc 1>,
+>> +                             <0 0 0 2 &pcie_intc 2>,
+>> +                             <0 0 0 3 &pcie_intc 3>,
+>> +                             <0 0 0 4 &pcie_intc 4>;
+>> +             ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
+>> +
+>> +             pcie_intc: interrupt-controller {
+>> +                     interrupt-controller;
+>> +                     #address-cells = <0>;
+>> +                     #interrupt-cells = <1>;
+>> +             }
+>> +     };
+>> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+>> index a6f67ec..71afdcd 100644
+>> --- a/drivers/pci/host/Kconfig
+>> +++ b/drivers/pci/host/Kconfig
+>> @@ -33,4 +33,11 @@ config PCI_RCAR_GEN2
+>>         There are 3 internal PCI controllers available with a single
+>>         built-in EHCI/OHCI host controller present on each one.
+>>
+>> +config PCI_XILINX
+>> +     bool "Xilinx AXI PCIe host bridge support"
+>> +     depends on ARCH_ZYNQ
+>> +     help
+>> +       Say 'Y' here if you want kernel to support the Xilinx AXI PCIe
+>> +       Host Bridge driver.
+>> +
+>>  endmenu
+>> diff --git a/drivers/pci/host/Makefile b/drivers/pci/host/Makefile
+>> index 13fb333..4e9c843 100644
+>> --- a/drivers/pci/host/Makefile
+>> +++ b/drivers/pci/host/Makefile
+>> @@ -4,3 +4,4 @@ obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>>  obj-$(CONFIG_PCI_MVEBU) += pci-mvebu.o
+>>  obj-$(CONFIG_PCI_TEGRA) += pci-tegra.o
+>>  obj-$(CONFIG_PCI_RCAR_GEN2) += pci-rcar-gen2.o
+>> +obj-$(CONFIG_PCI_XILINX) += pci-xilinx.o
+>> diff --git a/drivers/pci/host/pci-xilinx.c b/drivers/pci/host/pci-xilinx.c
 >> new file mode 100644
->> index 0000000..bc381e3
+>> index 0000000..d9afe66
 >> --- /dev/null
->> +++ b/drivers/phy/phy-exynos5-usbdrd.c
->> @@ -0,0 +1,627 @@
+>> +++ b/drivers/pci/host/pci-xilinx.c
+>> @@ -0,0 +1,999 @@
 >> +/*
->> + * Samsung EXYNOS5 SoC series USB DRD PHY driver
+>> + * PCIe host controller driver for Xilinx AXI PCIe Bridge
 >> + *
->> + * Phy provider for USB 3.0 DRD controller on Exynos5 SoC series
+>> + * Copyright (c) 2012 - 2014 Xilinx, Inc.
 >> + *
->> + * Copyright (C) 2014 Samsung Electronics Co., Ltd.
->> + * Author: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> + * Based on the Tegra PCIe driver
 >> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
+>> + * Bits taken from Synopsys Designware Host controller driver and
+>> + * ARM PCI Host generic driver.
+>> + *
+>> + * This program is free software: you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation, either version 2 of the License, or
+>> + * (at your option) any later version.
 >> + */
 >> +
->> +#include <linux/clk.h>
->> +#include <linux/delay.h>
->> +#include <linux/io.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/irq.h>
+>> +#include <linux/irqdomain.h>
 >> +#include <linux/kernel.h>
 >> +#include <linux/module.h>
->> +#include <linux/of.h>
+>> +#include <linux/msi.h>
 >> +#include <linux/of_address.h>
->> +#include <linux/phy/phy.h>
+>> +#include <linux/of_pci.h>
+>> +#include <linux/of_platform.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/pci.h>
 >> +#include <linux/platform_device.h>
->> +#include <linux/mutex.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
 >> +
->> +/* Exynos USB PHY registers */
->> +#define EXYNOS5_FSEL_9MHZ6             0x0
->> +#define EXYNOS5_FSEL_10MHZ             0x1
->> +#define EXYNOS5_FSEL_12MHZ             0x2
->> +#define EXYNOS5_FSEL_19MHZ2            0x3
->> +#define EXYNOS5_FSEL_20MHZ             0x4
->> +#define EXYNOS5_FSEL_24MHZ             0x5
->> +#define EXYNOS5_FSEL_50MHZ             0x7
+>> +/* Register definitions */
+>> +#define XILINX_PCIE_REG_VSECC                0x00000128
+>> +#define XILINX_PCIE_REG_VSECH                0x0000012c
+>> +#define XILINX_PCIE_REG_BIR          0x00000130
+>> +#define XILINX_PCIE_REG_BSCR         0x00000134
+>> +#define XILINX_PCIE_REG_IDR          0x00000138
+>> +#define XILINX_PCIE_REG_IMR          0x0000013c
+>> +#define XILINX_PCIE_REG_BLR          0x00000140
+>> +#define XILINX_PCIE_REG_PSCR         0x00000144
+>> +#define XILINX_PCIE_REG_RPSC         0x00000148
+>> +#define XILINX_PCIE_REG_MSIBASE1     0x0000014c
+>> +#define XILINX_PCIE_REG_MSIBASE2     0x00000150
+>> +#define XILINX_PCIE_REG_RPEFR                0x00000154
+>> +#define XILINX_PCIE_REG_RPIFR1               0x00000158
+>> +#define XILINX_PCIE_REG_RPIFR2               0x0000015c
+>> +#define XILINX_PCIE_REG_VSECC2               0x00000200
+>> +#define XILINX_PCIE_REG_VSECH2               0x00000204
 >> +
->> +/* EXYNOS5: USB 3.0 DRD PHY registers */
->> +#define EXYNOS5_DRD_LINKSYSTEM                 0x04
+>> +/* Interrupt registers definitions */
+>> +#define XILINX_PCIE_INTR_LINK_DOWN   BIT(0)
+>> +#define XILINX_PCIE_INTR_ECRC_ERR    BIT(1)
+>> +#define XILINX_PCIE_INTR_STR_ERR     BIT(2)
+>> +#define XILINX_PCIE_INTR_HOT_RESET   BIT(3)
+>> +#define XILINX_PCIE_INTR_CFG_COMPL   GENMASK(7, 5)
+>> +#define XILINX_PCIE_INTR_CFG_TIMEOUT BIT(8)
+>> +#define XILINX_PCIE_INTR_CORRECTABLE BIT(9)
+>> +#define XILINX_PCIE_INTR_NONFATAL    BIT(10)
+>> +#define XILINX_PCIE_INTR_FATAL               BIT(11)
+>> +#define XILINX_PCIE_INTR_INTX                BIT(16)
+>> +#define XILINX_PCIE_INTR_MSI         BIT(17)
+>> +#define XILINX_PCIE_INTR_SLV_UNSUPP  BIT(20)
+>> +#define XILINX_PCIE_INTR_SLV_UNEXP   BIT(21)
+>> +#define XILINX_PCIE_INTR_SLV_COMPL   BIT(22)
+>> +#define XILINX_PCIE_INTR_SLV_ERRP    BIT(23)
+>> +#define XILINX_PCIE_INTR_SLV_CMPABT  BIT(24)
+>> +#define XILINX_PCIE_INTR_SLV_ILLBUR  BIT(25)
+>> +#define XILINX_PCIE_INTR_MST_DECERR  BIT(26)
+>> +#define XILINX_PCIE_INTR_MST_SLVERR  BIT(27)
+>> +#define XILINX_PCIE_INTR_MST_ERRP    BIT(28)
+>> +#define XILINX_PCIE_IMR_ALL_MASK     0x1FF30FED
+>> +#define XILINX_PCIE_IDR_ALL_MASK     0xFFFFFFFF
 >> +
->> +#define LINKSYSTEM_FLADJ_MASK                  (0x3f << 1)
->> +#define LINKSYSTEM_FLADJ(_x)                   ((_x) << 1)
->> +#define LINKSYSTEM_XHCI_VERSION_CONTROL                BIT(27)
+>> +/* Root Port Error FIFO Read Register definitions */
+>> +#define XILINX_PCIE_RPEFR_ERR_VALID  BIT(18)
+>> +#define XILINX_PCIE_RPEFR_REQ_ID     GENMASK(15, 0)
+>> +#define XILINX_PCIE_RPEFR_ALL_MASK   0xFFFFFFFF
 >> +
->> +#define EXYNOS5_DRD_PHYUTMI                    0x08
+>> +/* Root Port Interrupt FIFO Read Register 1 definitions */
+>> +#define XILINX_PCIE_RPIFR1_INTR_VALID        BIT(31)
+>> +#define XILINX_PCIE_RPIFR1_MSI_INTR  BIT(30)
+>> +#define XILINX_PCIE_RPIFR1_INTR_ASSRT        BIT(29)
+>> +#define XILINX_PCIE_RPIFR1_INTR_MASK GENMASK(28, 27)
+>> +#define XILINX_PCIE_RPIFR1_MSI_ADR_MASK      GENMASK(26, 16)
+>> +#define XILINX_PCIE_RPIFR1_ALL_MASK  0xFFFFFFFF
+>> +#define XILINX_PCIE_RPIFR1_INTR_SHIFT                27
+>> +#define XILINX_PCIE_RPIFR1_MSI_ADR_SHIFT     16
 >> +
->> +#define PHYUTMI_OTGDISABLE                     BIT(6)
->> +#define PHYUTMI_FORCESUSPEND                   BIT(1)
->> +#define PHYUTMI_FORCESLEEP                     BIT(0)
+>> +/* Bridge Info Register definitions */
+>> +#define XILINX_PCIE_BIR_ECAM_SZ_MASK GENMASK(18, 16)
+>> +#define XILINX_PCIE_BIR_ECAM_SZ_SHIFT        16
 >> +
->> +#define EXYNOS5_DRD_PHYPIPE                    0x0c
+>> +/* Root Port Interrupt FIFO Read Register 2 definitions */
+>> +#define XILINX_PCIE_RPIFR2_MSG_DATA  GENMASK(15, 0)
 >> +
->> +#define EXYNOS5_DRD_PHYCLKRST                  0x10
+>> +/* Root Port Status/control Register definitions */
+>> +#define XILINX_PCIE_REG_RPSC_BEN     BIT(0)
 >> +
->> +#define PHYCLKRST_EN_UTMISUSPEND               BIT(31)
+>> +/* Phy Status/Control Register definitions */
+>> +#define XILINX_PCIE_REG_PSCR_LNKUP   BIT(11)
 >> +
->> +#define PHYCLKRST_SSC_REFCLKSEL_MASK           (0xff << 23)
->> +#define PHYCLKRST_SSC_REFCLKSEL(_x)            ((_x) << 23)
+>> +/* ECAM definitions */
+>> +#define ECAM_BUS_NUM_SHIFT           20
+>> +#define ECAM_DEV_NUM_SHIFT           12
 >> +
->> +#define PHYCLKRST_SSC_RANGE_MASK               (0x03 << 21)
->> +#define PHYCLKRST_SSC_RANGE(_x)                        ((_x) << 21)
+>> +/* PCI Configuration space Bus Number Register definitions */
+>> +#define PCI_SECONDARY_BUS_NUM_SHIFT  8
+>> +#define PCI_SUBORDINATE_BUS_NUM_SHIFT        16
+>> +#define PCI_LATENCY_TIMER_MASK               GENMASK(31, 24)
 >> +
->> +#define PHYCLKRST_SSC_EN                       BIT(20)
->> +#define PHYCLKRST_REF_SSP_EN                   BIT(19)
->> +#define PHYCLKRST_REF_CLKDIV2                  BIT(18)
+>> +/* Number of MSI IRQs */
+>> +#define XILINX_NUM_MSI_IRQS          128
 >> +
->> +#define PHYCLKRST_MPLL_MULTIPLIER_MASK         (0x7f << 11)
->> +#define PHYCLKRST_MPLL_MULTIPLIER_100MHZ_REF   (0x19 << 11)
->> +#define PHYCLKRST_MPLL_MULTIPLIER_50M_REF      (0x32 << 11)
->> +#define PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF    (0x68 << 11)
->> +#define PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF    (0x7d << 11)
->> +#define PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF (0x02 << 11)
+>> +/* Number of Memory Resources */
+>> +#define XILINX_MAX_NUM_RESOURCES     3
 >> +
->> +#define PHYCLKRST_FSEL_UTMI_MASK               (0x7 << 5)
->> +#define PHYCLKRST_FSEL_PIPE_MASK               (0x7 << 8)
->> +#define PHYCLKRST_FSEL(_x)                     ((_x) << 5)
->> +#define PHYCLKRST_FSEL_PAD_100MHZ              (0x27 << 5)
->> +#define PHYCLKRST_FSEL_PAD_24MHZ               (0x2a << 5)
->> +#define PHYCLKRST_FSEL_PAD_20MHZ               (0x31 << 5)
->> +#define PHYCLKRST_FSEL_PAD_19_2MHZ             (0x38 << 5)
->> +
->> +#define PHYCLKRST_RETENABLEN                   BIT(4)
->> +
->> +#define PHYCLKRST_REFCLKSEL_MASK               (0x03 << 2)
->> +#define PHYCLKRST_REFCLKSEL_PAD_REFCLK         (0x2 << 2)
->> +#define PHYCLKRST_REFCLKSEL_EXT_REFCLK         (0x3 << 2)
->> +
->> +#define PHYCLKRST_PORTRESET                    BIT(1)
->> +#define PHYCLKRST_COMMONONN                    BIT(0)
->> +
->> +#define EXYNOS5_DRD_PHYREG0                    0x14
->> +#define EXYNOS5_DRD_PHYREG1                    0x18
->> +
->> +#define EXYNOS5_DRD_PHYPARAM0                  0x1c
->> +
->> +#define PHYPARAM0_REF_USE_PAD                  BIT(31)
->> +#define PHYPARAM0_REF_LOSLEVEL_MASK            (0x1f << 26)
->> +#define PHYPARAM0_REF_LOSLEVEL                 (0x9 << 26)
->> +
->> +#define EXYNOS5_DRD_PHYPARAM1                  0x20
->> +
->> +#define PHYPARAM1_PCS_TXDEEMPH_MASK            (0x1f << 0)
->> +#define PHYPARAM1_PCS_TXDEEMPH                 (0x1c)
->> +
->> +#define EXYNOS5_DRD_PHYTERM                    0x24
->> +
->> +#define EXYNOS5_DRD_PHYTEST                    0x28
->> +
->> +#define PHYTEST_POWERDOWN_SSP                  BIT(3)
->> +#define PHYTEST_POWERDOWN_HSP                  BIT(2)
->> +
->> +#define EXYNOS5_DRD_PHYADP                     0x2c
->> +
->> +#define EXYNOS5_DRD_PHYUTMICLKSEL              0x30
->> +
->> +#define PHYUTMICLKSEL_UTMI_CLKSEL              BIT(2)
->> +
->> +#define EXYNOS5_DRD_PHYRESUME                  0x34
->> +#define EXYNOS5_DRD_LINKPORT                   0x44
->> +
->> +/* Power isolation defined in power management unit */
->> +#define EXYNOS5_USBDRD_PMU_ISOL                        BIT(0)
->> +
->> +#define KHZ    1000
->> +#define MHZ    (KHZ * KHZ)
->> +
->> +enum exynos5_usbdrd_phy_id {
->> +       EXYNOS5_DRDPHY_UTMI,
->> +       EXYNOS5_DRDPHY_PIPE3,
->> +       EXYNOS5_DRDPHYS_NUM,
+>> +/**
+>> + * struct xilinx_pcie_port - PCIe port information
+>> + * @reg_base: IO Mapped Register Base
+>> + * @irq: Interrupt number
+>> + * @msg_addr: MSI message address
+>> + * @root_busno: Root Bus number
+>> + * @link_up: Link status flag
+>> + * @dev: Device pointer
+>> + * @irq_domain: IRQ domain pointer
+>> + */
+>> +struct xilinx_pcie_port {
+>> +     void __iomem *reg_base;
+>> +     u32 irq;
+>> +     unsigned long msg_addr;
+>> +     u8 root_busno;
+>> +     bool link_up;
+>> +     struct device *dev;
+>> +     struct irq_domain *irq_domain;
 >> +};
 >> +
->> +struct phy_usb_instance;
->> +struct exynos5_usbdrd_phy;
+>> +static DECLARE_BITMAP(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
 >> +
->> +struct usbdrd_phy_config {
->> +       u32 id;
->> +       void (*phy_isol)(struct phy_usb_instance *inst, u32 on);
->> +       void (*phy_init)(struct exynos5_usbdrd_phy *phy_drd);
->> +       unsigned int (*set_refclk)(struct phy_usb_instance *inst);
+>> +static inline struct xilinx_pcie_port *sys_to_pcie(struct pci_sys_data *sys)
+>> +{
+>> +     return sys->private_data;
+>> +}
+>> +
+>> +static inline u32 pcie_read(struct xilinx_pcie_port *port, u32 reg)
+>> +{
+>> +     return readl(port->reg_base + reg);
+>> +}
+>> +
+>> +static inline void pcie_write(struct xilinx_pcie_port *port,
+>> +                           u32 val, u32 reg)
+>> +{
+>> +     writel(val, port->reg_base + reg);
+>> +}
+>> +
+>> +static inline bool xilinx_pcie_is_link_up(struct xilinx_pcie_port *port)
+>> +{
+>> +     return (pcie_read(port, XILINX_PCIE_REG_PSCR) &
+>> +             XILINX_PCIE_REG_PSCR_LNKUP) ? 1 : 0;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_clear_err_interrupts - Clear Error Interrupts
+>> + * @port: PCIe port information
+>> + */
+>> +static inline void
+>> +xilinx_pcie_clear_err_interrupts(struct xilinx_pcie_port *port)
+>> +{
+>> +     u32 val = pcie_read(port, XILINX_PCIE_REG_RPEFR);
+>> +
+>> +     if (val & XILINX_PCIE_RPEFR_ERR_VALID) {
+>> +             dev_dbg(port->dev, "Requester ID %d\n",
+>> +                     val & XILINX_PCIE_RPEFR_REQ_ID);
+>> +             pcie_write(port, XILINX_PCIE_RPEFR_ALL_MASK,
+>> +                        XILINX_PCIE_REG_RPEFR);
+>> +     }
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_verify_config - Verify configuration
+>> + * @bus: Bus structure of current bus
+>> + * @devfn: device/function
+>> + *
+>> + * Return: 0 on success and PCIBIOS_DEVICE_NOT_FOUND on error
+>
+> This comment about the return value doesn't match the code.
+
+I will fix it, Thanks.
+
+>
+>> + */
+>> +static int xilinx_pcie_verify_config(struct pci_bus *bus,
+>> +                                  unsigned int devfn)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
+>> +
+>> +     /* Check if link is up when trying to access downstream ports */
+>> +     if (bus->number != port->root_busno)
+>> +             if (!xilinx_pcie_is_link_up(port))
+>> +                     return 0;
+>> +
+>> +     /* Only one device down on each root port */
+>> +     if (bus->number == port->root_busno && devfn > 0)
+>> +             return 0;
+>> +
+>> +     /*
+>> +      * Do not read more than one device on the bus directly attached
+>> +      * to RC.
+>> +      */
+>> +     if (bus->primary == port->root_busno && devfn > 0)
+>> +             return 0;
+>> +
+>> +     return 1;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_get_config_base - Get configuration base
+>> + * @bus: Bus structure of current bus
+>
+> There's not really a concept of a "current" bus here.  I think these
+> function comments that repeat what the function and argument names already
+> tell us are of minimal value.  But I know some people do like them.
+
+I will fix it.
+
+>
+>> + * @devfn: Device/function
+>> + * @where: Offset from base
+>> + *
+>> + * Return: Base address of the configuration space needed to be
+>> + *      accessed.
+>> + */
+>> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
+>> +                                              unsigned int devfn,
+>> +                                              int where)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
+>> +     int relbus;
+>> +
+>> +     relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
+>> +              (devfn << ECAM_DEV_NUM_SHIFT);
+>> +
+>> +     return port->reg_base + relbus + where;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_read_config - Read configuration space
+>> + * @bus: Bus structure of current bus
+>> + * @devfn: Device/function
+>> + * @where: Offset from base
+>> + * @size: Byte/word/dword
+>> + * @val: Value to be read
+>> + *
+>> + * Return: PCIBIOS_SUCCESSFUL on success
+>> + *      EINVAL/PCIBIOS_DEVICE_NOT_FOUND/PCIBIOS_BAD_REGISTER_NUMBER
+>> + *      on failure.
+>> + */
+>> +static int xilinx_pcie_read_config(struct pci_bus *bus,
+>> +                                unsigned int devfn, int where,
+>> +                                int size, u32 *val)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
+>> +     void __iomem *addr;
+>> +
+>> +     if (!port) {
+>> +             BUG();
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     if (!xilinx_pcie_verify_config(bus, devfn)) {
+>> +             *val = 0xFFFFFFFF;
+>> +             return PCIBIOS_DEVICE_NOT_FOUND;
+>> +     }
+>> +
+>> +     addr = xilinx_pcie_get_config_base(bus, devfn, where);
+>> +
+>> +     switch (size) {
+>> +     case 1:
+>> +             *val = readb(addr);
+>> +             break;
+>> +     case 2:
+>> +             *val = readw(addr);
+>> +             break;
+>> +     default:
+>> +             *val = readl(addr);
+>> +             break;
+>> +     }
+>> +
+>> +     return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_write_config - Write configuration space
+>> + * @bus: Bus structure of current bus
+>> + * @devfn: Device/function
+>> + * @where: Offset from base
+>> + * @size: Byte/word/dword
+>> + * @val: Value to be written to device
+>> + *
+>> + * Return: PCIBIOS_SUCCESSFUL on success,
+>> + *      EINVAL/PCIBIOS_DEVICE_NOT_FOUND/PCIBIOS_BAD_REGISTER_NUMBER
+>> + *      on failure.
+>> + */
+>> +static int xilinx_pcie_write_config(struct pci_bus *bus,
+>> +                                 unsigned int devfn, int where,
+>> +                                 int size, u32 val)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
+>> +     void __iomem *addr;
+>> +
+>> +     if (!port) {
+>> +             BUG();
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     if (!xilinx_pcie_verify_config(bus, devfn))
+>> +             return PCIBIOS_DEVICE_NOT_FOUND;
+>> +
+>> +     addr = xilinx_pcie_get_config_base(bus, devfn, where);
+>> +
+>> +     switch (size) {
+>> +     case 1:
+>> +             writeb(val, addr);
+>> +             break;
+>> +     case 2:
+>> +             writew(val, addr);
+>> +             break;
+>> +     default:
+>> +             writel(val, addr);
+>> +             break;
+>> +     }
+>> +
+>> +     return PCIBIOS_SUCCESSFUL;
+>> +}
+>> +
+>> +/* PCIe operations */
+>> +static struct pci_ops xilinx_pcie_ops = {
+>> +     .read  = xilinx_pcie_read_config,
+>> +     .write = xilinx_pcie_write_config,
 >> +};
 >> +
->> +struct exynos5_usbdrd_phy_drvdata {
->> +       const struct usbdrd_phy_config *phy_cfg;
+>> +/* MSI functions */
+>> +
+>> +/**
+>> + * xilinx_pcie_destroy_msi - Free MSI number
+>> + * @irq: IRQ to be freed
+>> + */
+>> +static void xilinx_pcie_destroy_msi(unsigned int irq)
+>> +{
+>> +     struct irq_desc *desc;
+>> +     struct msi_desc *msi;
+>> +     struct xilinx_pcie_port *port;
+>> +
+>> +     desc = irq_to_desc(irq);
+>> +     msi = irq_desc_get_msi_desc(desc);
+>> +     port = sys_to_pcie(msi->dev->bus->sysdata);
+>> +     if (!port) {
+>> +             BUG();
+>> +             return;
+>> +     }
+>> +
+>> +     if (!test_bit(irq, msi_irq_in_use))
+>> +             dev_err(port->dev, "Trying to free unused MSI#%d\n", irq);
+>> +     else
+>> +             clear_bit(irq, msi_irq_in_use);
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_assign_msi - Allocate MSI number
+>> + * @port: PCIe port structure
+>> + *
+>> + * Return: A valid IRQ on success and error value on failure.
+>> + */
+>> +static int xilinx_pcie_assign_msi(struct xilinx_pcie_port *port)
+>> +{
+>> +     int pos;
+>> +
+>> +     pos = find_first_zero_bit(msi_irq_in_use, XILINX_NUM_MSI_IRQS);
+>> +     if (pos < XILINX_NUM_MSI_IRQS)
+>> +             set_bit(pos, msi_irq_in_use);
+>> +     else
+>> +             return -ENOSPC;
+>> +
+>> +     return irq_find_mapping(port->irq_domain, pos);
+>> +}
+>> +
+>> +/**
+>> + * xilinx_msi_teardown_irq - Destroy the MSI
+>> + * @chip: MSI Chip descriptor
+>> + * @irq: MSI IRQ to destroy
+>> + */
+>> +static void xilinx_msi_teardown_irq(struct msi_chip *chip, unsigned int irq)
+>> +{
+>> +     xilinx_pcie_destroy_msi(irq);
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_msi_setup_irq - Setup MSI request
+>> + * @chip: MSI chip pointer
+>> + * @pdev: PCIe device pointer
+>> + * @desc: MSI descriptor pointer
+>> + *
+>> + * Return: '0' on success and error value on failure
+>> + */
+>> +static int xilinx_pcie_msi_setup_irq(struct msi_chip *chip,
+>> +                                  struct pci_dev *pdev,
+>> +                                  struct msi_desc *desc)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(pdev->bus->sysdata);
+>> +     int irq;
+>> +     struct msi_msg msg;
+>> +
+>> +     if (!port) {
+>> +             BUG();
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     irq = xilinx_pcie_assign_msi(port);
+>> +     if (irq < 0)
+>> +             return irq;
+>> +
+>> +     irq_set_msi_desc(irq, desc);
+>> +
+>> +     msg.address_hi = 0;
+>> +     msg.address_lo = virt_to_phys((void *)port->msg_addr);
+>> +     msg.data = irq;
+>> +
+>> +     write_msi_msg(irq, &msg);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +/* MSI Chip Descriptor */
+>> +static struct msi_chip xilinx_pcie_msi_chip = {
+>> +     .setup_irq = xilinx_pcie_msi_setup_irq,
+>> +     .teardown_irq = xilinx_msi_teardown_irq,
+>> +};
+>> +
+>> +/* HW Interrupt Chip Descriptor */
+>> +static struct irq_chip xilinx_msi_irq_chip = {
+>> +     .name = "Xilinx PCIe MSI",
+>> +     .irq_enable = unmask_msi_irq,
+>> +     .irq_disable = mask_msi_irq,
+>> +     .irq_mask = mask_msi_irq,
+>> +     .irq_unmask = unmask_msi_irq,
 >> +};
 >> +
 >> +/**
->> + * struct exynos5_usbdrd_phy - driver data for USB 3.0 PHY
->> + * @dev: pointer to device instance of this platform device
->> + * @reg_phy: usb phy controller register memory base
->> + * @clk: phy clock for register access
->> + * @drv_data: pointer to SoC level driver data structure
->> + * @phys[]: array for 'EXYNOS5_DRDPHYS_NUM' number of PHY
->> + *         instances each with its 'phy' and 'phy_cfg'.
->> + * @extrefclk: frequency select settings when using 'separate
->> + *            reference clocks' for SS and HS operations
->> + * @ref_clk: reference clock to PHY block from which PHY's
->> + *          operational clocks are derived
->> + * @ref_rate: rate of above reference clock
+>> + * xilinx_pcie_msi_map - Set the handler for the MSI and mark IRQ as valid
+>> + * @domain: IRQ domain
+>> + * @irq: Virtual IRQ number
+>> + * @hwirq: HW interrupt number
+>> + *
+>> + * Return: Always returns 0.
 >> + */
->> +struct exynos5_usbdrd_phy {
->> +       struct device *dev;
->> +       void __iomem *reg_phy;
->> +       struct clk *clk;
->> +       const struct exynos5_usbdrd_phy_drvdata *drv_data;
->> +       struct phy_usb_instance {
->> +               struct phy *phy;
->> +               u32 index;
->> +               struct regmap *reg_pmu;
->> +               u32 pmu_offset;
->> +               const struct usbdrd_phy_config *phy_cfg;
->> +       } phys[EXYNOS5_DRDPHYS_NUM];
->> +       u32 extrefclk;
->> +       struct clk *ref_clk;
->> +};
->> +
->> +static inline
->> +struct exynos5_usbdrd_phy *to_usbdrd_phy(struct phy_usb_instance *inst)
+>> +static int xilinx_pcie_msi_map(struct irq_domain *domain, unsigned int irq,
+>> +                            irq_hw_number_t hwirq)
 >> +{
->> +       return container_of((inst), struct exynos5_usbdrd_phy,
->> +                           phys[(inst)->index]);
+>> +     irq_set_chip_and_handler(irq, &xilinx_msi_irq_chip, handle_simple_irq);
+>> +     irq_set_chip_data(irq, domain->host_data);
+>> +     set_irq_flags(irq, IRQF_VALID);
+>> +
+>> +     return 0;
 >> +}
 >> +
->> +/*
->> + * exynos5_rate_to_clk() converts the supplied clock rate to the value that
->> + * can be written to the phy register.
+>> +/* IRQ Domain operations */
+>> +static const struct irq_domain_ops msi_domain_ops = {
+>> +     .map = xilinx_pcie_msi_map,
+>> +};
+>> +
+>> +/**
+>> + * xilinx_pcie_enable_msi - Enable MSI support
+>> + * @port: PCIe port information
 >> + */
->> +static unsigned int exynos5_rate_to_clk(unsigned long rate, u32 *reg)
+>> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
 >> +{
->> +       /* EXYNOS5_FSEL_MASK */
+>> +     port->msg_addr = __get_free_pages(GFP_KERNEL, 0);
 >> +
->> +       switch (rate) {
->> +       case 9600 * KHZ:
->> +               *reg = EXYNOS5_FSEL_9MHZ6;
->> +               break;
->> +       case 10 * MHZ:
->> +               *reg = EXYNOS5_FSEL_10MHZ;
->> +               break;
->> +       case 12 * MHZ:
->> +               *reg = EXYNOS5_FSEL_12MHZ;
->> +               break;
->> +       case 19200 * KHZ:
->> +               *reg = EXYNOS5_FSEL_19MHZ2;
->> +               break;
->> +       case 20 * MHZ:
->> +               *reg = EXYNOS5_FSEL_20MHZ;
->> +               break;
->> +       case 24 * MHZ:
->> +               *reg = EXYNOS5_FSEL_24MHZ;
->> +               break;
->> +       case 50 * MHZ:
->> +               *reg = EXYNOS5_FSEL_50MHZ;
->> +               break;
->> +       default:
->> +               return -EINVAL;
->> +       }
->> +
->> +       return 0;
+>> +     pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+>> +     pcie_write(port, virt_to_phys((void *)port->msg_addr),
+>> +                XILINX_PCIE_REG_MSIBASE2);
 >> +}
 >> +
->> +static void exynos5_usbdrd_phy_isol(struct phy_usb_instance *inst,
->> +                                               unsigned int on)
->> +{
->> +       unsigned int val;
->> +
->> +       if (!inst->reg_pmu)
->> +               return;
->> +
->> +       val = on ? 0 : EXYNOS5_USBDRD_PMU_ISOL;
->> +
->> +       regmap_update_bits(inst->reg_pmu, inst->pmu_offset,
->> +                          EXYNOS5_USBDRD_PMU_ISOL, val);
->> +}
->> +
->> +/*
->> + * Sets the pipe3 phy's clk as EXTREFCLK (XXTI) which is internal clock
->> + * from clock core. Further sets multiplier values and spread spectrum
->> + * clock settings for SuperSpeed operations.
+>> +/**
+>> + * xilinx_pcie_add_bus - Add MSI chip info to PCIe bus
+>> + * @bus: PCIe bus
 >> + */
->> +static unsigned int
->> +exynos5_usbdrd_pipe3_set_refclk(struct phy_usb_instance *inst)
+>> +static void xilinx_pcie_add_bus(struct pci_bus *bus)
 >> +{
->> +       static u32 reg;
->> +       struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+>> +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +             struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
 >> +
->> +       /* restore any previous reference clock settings */
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
+>> +             if (!port)
+>> +                     return;
 >> +
->> +       /* Use EXTREFCLK as ref clock */
->> +       reg &= ~PHYCLKRST_REFCLKSEL_MASK;
->> +       reg |=  PHYCLKRST_REFCLKSEL_EXT_REFCLK;
->> +
->> +       /* FSEL settings corresponding to reference clock */
->> +       reg &= ~PHYCLKRST_FSEL_PIPE_MASK |
->> +               PHYCLKRST_MPLL_MULTIPLIER_MASK |
->> +               PHYCLKRST_SSC_REFCLKSEL_MASK;
->> +       switch (phy_drd->extrefclk) {
->> +       case EXYNOS5_FSEL_50MHZ:
->> +               reg |= (PHYCLKRST_MPLL_MULTIPLIER_50M_REF |
->> +                       PHYCLKRST_SSC_REFCLKSEL(0x00));
->> +               break;
->> +       case EXYNOS5_FSEL_24MHZ:
->> +               reg |= (PHYCLKRST_MPLL_MULTIPLIER_24MHZ_REF |
->> +                       PHYCLKRST_SSC_REFCLKSEL(0x88));
->> +               break;
->> +       case EXYNOS5_FSEL_20MHZ:
->> +               reg |= (PHYCLKRST_MPLL_MULTIPLIER_20MHZ_REF |
->> +                       PHYCLKRST_SSC_REFCLKSEL(0x00));
->> +               break;
->> +       case EXYNOS5_FSEL_19MHZ2:
->> +               reg |= (PHYCLKRST_MPLL_MULTIPLIER_19200KHZ_REF |
->> +                       PHYCLKRST_SSC_REFCLKSEL(0x88));
->> +               break;
->> +       default:
->> +               dev_dbg(phy_drd->dev, "unsupported ref clk\n");
->> +               break;
->> +       }
->> +
->> +       return reg;
+>> +             xilinx_pcie_msi_chip.dev = port->dev;
+>> +             bus->msi = &xilinx_pcie_msi_chip;
+>> +     }
 >> +}
 >> +
->> +/*
->> + * Sets the utmi phy's clk as EXTREFCLK (XXTI) which is internal clock
->> + * from clock core. Further sets the FSEL values for HighSpeed operations.
+>> +/* INTx Functions */
+>> +
+>> +/**
+>> + * xilinx_pcie_intx_map - Set the handler for the INTx and mark IRQ as valid
+>> + * @domain: IRQ domain
+>> + * @irq: Virtual IRQ number
+>> + * @hwirq: HW interrupt number
+>> + *
+>> + * Return: Always returns 0.
 >> + */
->> +static unsigned int
->> +exynos5_usbdrd_utmi_set_refclk(struct phy_usb_instance *inst)
+>> +static int xilinx_pcie_intx_map(struct irq_domain *domain, unsigned int irq,
+>> +                             irq_hw_number_t hwirq)
 >> +{
->> +       static u32 reg;
->> +       struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
+>> +     irq_set_chip_and_handler(irq, &dummy_irq_chip, handle_simple_irq);
+>> +     irq_set_chip_data(irq, domain->host_data);
+>> +     set_irq_flags(irq, IRQF_VALID);
 >> +
->> +       /* restore any previous reference clock settings */
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
->> +
->> +       reg &= ~PHYCLKRST_REFCLKSEL_MASK;
->> +       reg |=  PHYCLKRST_REFCLKSEL_EXT_REFCLK;
->> +
->> +       reg &= ~PHYCLKRST_FSEL_UTMI_MASK |
->> +               PHYCLKRST_MPLL_MULTIPLIER_MASK |
->> +               PHYCLKRST_SSC_REFCLKSEL_MASK;
->> +       reg |= PHYCLKRST_FSEL(phy_drd->extrefclk);
->> +
->> +       return reg;
+>> +     return 0;
 >> +}
 >> +
->> +static void exynos5_usbdrd_pipe3_init(struct exynos5_usbdrd_phy *phy_drd)
->> +{
->> +       u32 reg;
->> +
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
->> +       /* Set Tx De-Emphasis level */
->> +       reg &= ~PHYPARAM1_PCS_TXDEEMPH_MASK;
->> +       reg |=  PHYPARAM1_PCS_TXDEEMPH;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
->> +
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
->> +       reg &= ~PHYTEST_POWERDOWN_SSP;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
->> +}
->> +
->> +static void exynos5_usbdrd_utmi_init(struct exynos5_usbdrd_phy *phy_drd)
->> +{
->> +       u32 reg;
->> +
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
->> +       /* Set Loss-of-Signal Detector sensitivity */
->> +       reg &= ~PHYPARAM0_REF_LOSLEVEL_MASK;
->> +       reg |=  PHYPARAM0_REF_LOSLEVEL;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
->> +
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
->> +       /* Set Tx De-Emphasis level */
->> +       reg &= ~PHYPARAM1_PCS_TXDEEMPH_MASK;
->> +       reg |=  PHYPARAM1_PCS_TXDEEMPH;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM1);
->> +
->> +       /* UTMI Power Control */
->> +       writel(PHYUTMI_OTGDISABLE, phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
->> +
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
->> +       reg &= ~PHYTEST_POWERDOWN_HSP;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
->> +}
->> +
->> +static int exynos5_usbdrd_phy_init(struct phy *phy)
->> +{
->> +       int ret;
->> +       u32 reg;
->> +       struct phy_usb_instance *inst = phy_get_drvdata(phy);
->> +       struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
->> +
->> +       ret = clk_prepare_enable(phy_drd->clk);
->> +       if (ret)
->> +               return ret;
->> +
->> +       /* Reset USB 3.0 PHY */
->> +       writel(0x0, phy_drd->reg_phy + EXYNOS5_DRD_PHYREG0);
->> +       writel(0x0, phy_drd->reg_phy + EXYNOS5_DRD_PHYRESUME);
->> +
->> +       /*
->> +        * Setting the Frame length Adj value[6:1] to default 0x20
->> +        * See xHCI 1.0 spec, 5.2.4
->> +        */
->> +       reg =   LINKSYSTEM_XHCI_VERSION_CONTROL |
->> +               LINKSYSTEM_FLADJ(0x20);
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_LINKSYSTEM);
->> +
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
->> +       /* Select PHY CLK source */
->> +       reg &= ~PHYPARAM0_REF_USE_PAD;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYPARAM0);
->> +
->> +       /* This bit must be set for both HS and SS operations */
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMICLKSEL);
->> +       reg |= PHYUTMICLKSEL_UTMI_CLKSEL;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMICLKSEL);
->> +
->> +       /* UTMI or PIPE3 specific init */
->> +       inst->phy_cfg->phy_init(phy_drd);
->> +
->> +       /* reference clock settings */
->> +       reg = inst->phy_cfg->set_refclk(inst);
->> +
->> +               /* Digital power supply in normal operating mode */
->> +       reg |=  PHYCLKRST_RETENABLEN |
->> +               /* Enable ref clock for SS function */
->> +               PHYCLKRST_REF_SSP_EN |
->> +               /* Enable spread spectrum */
->> +               PHYCLKRST_SSC_EN |
->> +               /* Power down HS Bias and PLL blocks in suspend mode */
->> +               PHYCLKRST_COMMONONN |
->> +               /* Reset the port */
->> +               PHYCLKRST_PORTRESET;
->> +
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
->> +
->> +       udelay(10);
->> +
->> +       reg &= ~PHYCLKRST_PORTRESET;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
->> +
->> +       clk_disable_unprepare(phy_drd->clk);
->> +
->> +       return 0;
->> +}
->> +
->> +static int exynos5_usbdrd_phy_exit(struct phy *phy)
->> +{
->> +       int ret;
->> +       u32 reg;
->> +       struct phy_usb_instance *inst = phy_get_drvdata(phy);
->> +       struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
->> +
->> +       ret = clk_prepare_enable(phy_drd->clk);
->> +       if (ret)
->> +               return ret;
->> +
->> +       reg =   PHYUTMI_OTGDISABLE |
->> +               PHYUTMI_FORCESUSPEND |
->> +               PHYUTMI_FORCESLEEP;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYUTMI);
->> +
->> +       /* Resetting the PHYCLKRST enable bits to reduce leakage current */
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
->> +       reg &= ~(PHYCLKRST_REF_SSP_EN |
->> +                PHYCLKRST_SSC_EN |
->> +                PHYCLKRST_COMMONONN);
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYCLKRST);
->> +
->> +       /* Control PHYTEST to remove leakage current */
->> +       reg = readl(phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
->> +       reg |=  PHYTEST_POWERDOWN_SSP |
->> +               PHYTEST_POWERDOWN_HSP;
->> +       writel(reg, phy_drd->reg_phy + EXYNOS5_DRD_PHYTEST);
->> +
->> +       clk_disable_unprepare(phy_drd->clk);
->> +
->> +       return 0;
->> +}
->> +
->> +static int exynos5_usbdrd_phy_power_on(struct phy *phy)
->> +{
->> +       struct phy_usb_instance *inst = phy_get_drvdata(phy);
->> +       struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
->> +
->> +       dev_dbg(phy_drd->dev, "Request to power_on usbdrd_phy phy\n");
->> +
->> +       clk_prepare_enable(phy_drd->ref_clk);
->> +
->> +       /* Power-on PHY*/
->> +       inst->phy_cfg->phy_isol(inst, 0);
->> +
->> +       return 0;
->> +}
->> +
->> +static int exynos5_usbdrd_phy_power_off(struct phy *phy)
->> +{
->> +       struct phy_usb_instance *inst = phy_get_drvdata(phy);
->> +       struct exynos5_usbdrd_phy *phy_drd = to_usbdrd_phy(inst);
->> +
->> +       dev_dbg(phy_drd->dev, "Request to power_off usbdrd_phy phy\n");
->> +
->> +       /* Power-off the PHY */
->> +       inst->phy_cfg->phy_isol(inst, 1);
->> +
->> +       clk_disable_unprepare(phy_drd->ref_clk);
->> +
->> +       return 0;
->> +}
->> +
->> +static struct phy *exynos5_usbdrd_phy_xlate(struct device *dev,
->> +                                       struct of_phandle_args *args)
->> +{
->> +       struct exynos5_usbdrd_phy *phy_drd = dev_get_drvdata(dev);
->> +
->> +       if (WARN_ON(args->args[0] > EXYNOS5_DRDPHYS_NUM))
->> +               return ERR_PTR(-ENODEV);
->> +
->> +       return phy_drd->phys[args->args[0]].phy;
->> +}
->> +
->> +static struct phy_ops exynos5_usbdrd_phy_ops = {
->> +       .init           = exynos5_usbdrd_phy_init,
->> +       .exit           = exynos5_usbdrd_phy_exit,
->> +       .power_on       = exynos5_usbdrd_phy_power_on,
->> +       .power_off      = exynos5_usbdrd_phy_power_off,
->> +       .owner          = THIS_MODULE,
+>> +/* INTx IRQ Domain operations */
+>> +static const struct irq_domain_ops intx_domain_ops = {
+>> +     .map = xilinx_pcie_intx_map,
 >> +};
 >> +
->> +const struct usbdrd_phy_config exynos5_usbdrd_phy_cfg[] = {
->> +       {
->> +               .id             = EXYNOS5_DRDPHY_UTMI,
->> +               .phy_isol       = exynos5_usbdrd_phy_isol,
->> +               .phy_init       = exynos5_usbdrd_utmi_init,
->> +               .set_refclk     = exynos5_usbdrd_utmi_set_refclk,
->> +       },
->> +       {
->> +               .id             = EXYNOS5_DRDPHY_PIPE3,
->> +               .phy_isol       = exynos5_usbdrd_phy_isol,
->> +               .phy_init       = exynos5_usbdrd_pipe3_init,
->> +               .set_refclk     = exynos5_usbdrd_pipe3_set_refclk,
->> +       },
->> +};
+>> +/* PCIe HW Functions */
 >> +
->> +const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
->> +       .phy_cfg                = exynos5_usbdrd_phy_cfg,
->> +};
->> +
->> +const struct exynos5_usbdrd_phy_drvdata exynos5250_usbdrd_phy = {
->> +       .phy_cfg                = exynos5_usbdrd_phy_cfg,
->> +};
->> +
->> +static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
->> +       {
->> +               .compatible = "samsung,exynos5250-usbdrd-phy",
->> +               .data = &exynos5250_usbdrd_phy
->> +       }, {
->> +               .compatible = "samsung,exynos5420-usbdrd-phy",
->> +               .data = &exynos5420_usbdrd_phy
->> +       },
->> +       { },
->> +};
->> +
->> +static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
+>> +/**
+>> + * xilinx_pcie_intr_handler - Interrupt Service Handler
+>> + * @irq: IRQ number
+>> + * @data: PCIe port information
+>> + *
+>> + * Return: IRQ_HANDLED on success and IRQ_NONE on failure
+>> + */
+>> +static irqreturn_t xilinx_pcie_intr_handler(int irq, void *data)
 >> +{
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *node = dev->of_node;
->> +       struct exynos5_usbdrd_phy *phy_drd;
->> +       struct phy_provider *phy_provider;
->> +       struct resource *res;
->> +       const struct of_device_id *match;
->> +       const struct exynos5_usbdrd_phy_drvdata *drv_data;
->> +       struct regmap *reg_pmu;
->> +       u32 pmu_offset;
->> +       unsigned long ref_rate;
->> +       int i, ret;
+>> +     struct xilinx_pcie_port *port = (struct xilinx_pcie_port *)data;
+>> +     u32 val, mask, status, msi_data;
 >> +
->> +       phy_drd = devm_kzalloc(dev, sizeof(*phy_drd), GFP_KERNEL);
->> +       if (!phy_drd)
->> +               return -ENOMEM;
+>> +     /* Read interrupt decode and mask registers */
+>> +     val = pcie_read(port, XILINX_PCIE_REG_IDR);
+>> +     mask = pcie_read(port, XILINX_PCIE_REG_IMR);
 >> +
->> +       dev_set_drvdata(dev, phy_drd);
->> +       phy_drd->dev = dev;
+>> +     status = val & mask;
+>> +     if (!status)
+>> +             return IRQ_NONE;
 >> +
->> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +       phy_drd->reg_phy = devm_ioremap_resource(dev, res);
->> +       if (IS_ERR(phy_drd->reg_phy))
->> +               return PTR_ERR(phy_drd->reg_phy);
+>> +     if (status & XILINX_PCIE_INTR_LINK_DOWN)
+>> +             dev_warn(port->dev, "Link Down\n");
 >> +
->> +       match = of_match_node(exynos5_usbdrd_phy_of_match, pdev->dev.of_node);
+>> +     if (status & XILINX_PCIE_INTR_ECRC_ERR)
+>> +             dev_warn(port->dev, "ECRC failed\n");
 >> +
->> +       drv_data = match->data;
->> +       phy_drd->drv_data = drv_data;
+>> +     if (status & XILINX_PCIE_INTR_STR_ERR)
+>> +             dev_warn(port->dev, "Streaming error\n");
 >> +
->> +       phy_drd->clk = devm_clk_get(dev, "phy");
->> +       if (IS_ERR(phy_drd->clk)) {
->> +               dev_err(dev, "Failed to get clock of phy controller\n");
->> +               return PTR_ERR(phy_drd->clk);
->> +       }
+>> +     if (status & XILINX_PCIE_INTR_HOT_RESET)
+>> +             dev_info(port->dev, "Hot reset\n");
 >> +
->> +       phy_drd->ref_clk = devm_clk_get(dev, "ref");
->> +       if (IS_ERR(phy_drd->ref_clk)) {
->> +               dev_err(dev, "Failed to get reference clock of usbdrd phy\n");
->> +               return PTR_ERR(phy_drd->ref_clk);
->> +       }
->> +       ref_rate = clk_get_rate(phy_drd->ref_clk);
+>> +     if (status & XILINX_PCIE_INTR_CFG_TIMEOUT)
+>> +             dev_warn(port->dev, "ECAM access timeout\n");
 >> +
->> +       ret = exynos5_rate_to_clk(ref_rate, &phy_drd->extrefclk);
->> +       if (ret) {
->> +               dev_err(phy_drd->dev, "Clock rate (%ld) not supported\n",
->> +                       ref_rate);
->> +               return ret;
->> +       }
+>> +     if (status & XILINX_PCIE_INTR_CORRECTABLE) {
+>> +             dev_warn(port->dev, "Correctable error message\n");
+>> +             xilinx_pcie_clear_err_interrupts(port);
+>> +     }
 >> +
->> +       reg_pmu = syscon_regmap_lookup_by_phandle(dev->of_node,
->> +                                                  "samsung,pmu-syscon");
->> +       if (IS_ERR(reg_pmu)) {
->> +               dev_err(dev, "Failed to map PMU register (via syscon)\n");
->> +               return PTR_ERR(reg_pmu);
->> +       }
+>> +     if (status & XILINX_PCIE_INTR_NONFATAL) {
+>> +             dev_warn(port->dev, "Non fatal error message\n");
+>> +             xilinx_pcie_clear_err_interrupts(port);
+>> +     }
 >> +
->> +       ret = of_property_read_u32(node, "samsung,pmu-offset", &pmu_offset);
->> +       if (ret) {
->> +               dev_err(dev, "Missing pmu-offset for phy isolation\n");
->> +               return ret;
->> +       }
+>> +     if (status & XILINX_PCIE_INTR_FATAL) {
+>> +             dev_warn(port->dev, "Fatal error message\n");
+>> +             xilinx_pcie_clear_err_interrupts(port);
+>> +     }
 >> +
->> +       dev_vdbg(dev, "Creating usbdrd_phy phy\n");
+>> +     if (status & XILINX_PCIE_INTR_INTX) {
+>> +             /* INTx interrupt received */
+>> +             val = pcie_read(port, XILINX_PCIE_REG_RPIFR1);
 >> +
->> +       for (i = 0; i < EXYNOS5_DRDPHYS_NUM; i++) {
->> +               struct phy *phy = devm_phy_create(dev, &exynos5_usbdrd_phy_ops,
->> +                                                 NULL);
->> +               if (IS_ERR(phy)) {
->> +                       dev_err(dev, "Failed to create usbdrd_phy phy\n");
->> +                       return PTR_ERR(phy);
->> +               }
+>> +             /* Check whether interrupt valid */
+>> +             if (!(val & XILINX_PCIE_RPIFR1_INTR_VALID)) {
+>> +                     dev_warn(port->dev, "RP Intr FIFO1 read error\n");
+>> +                     return IRQ_HANDLED;
+>> +             }
 >> +
->> +               phy_drd->phys[i].phy = phy;
->> +               phy_drd->phys[i].index = i;
->> +               phy_drd->phys[i].reg_pmu = reg_pmu;
->> +               phy_drd->phys[i].pmu_offset = pmu_offset;
->> +               phy_drd->phys[i].phy_cfg = &drv_data->phy_cfg[i];
->> +               phy_set_drvdata(phy, &phy_drd->phys[i]);
->> +       }
+>> +             /* Clear interrupt FIFO register 1 */
+>> +             pcie_write(port, XILINX_PCIE_RPIFR1_ALL_MASK,
+>> +                        XILINX_PCIE_REG_RPIFR1);
 >> +
->> +       phy_provider = devm_of_phy_provider_register(dev,
->> +                                                    exynos5_usbdrd_phy_xlate);
->> +       if (IS_ERR(phy_provider)) {
->> +               dev_err(phy_drd->dev, "Failed to register phy provider\n");
->> +               return PTR_ERR(phy_provider);
->> +       }
+>> +             /* Handle INTx Interrupt */
+>> +             val = ((val & XILINX_PCIE_RPIFR1_INTR_MASK) >>
+>> +                     XILINX_PCIE_RPIFR1_INTR_SHIFT) + 1;
+>> +             generic_handle_irq(irq_find_mapping(port->irq_domain, val));
+>> +     }
 >> +
->> +       return 0;
+>> +     if (status & XILINX_PCIE_INTR_MSI) {
+>> +             /* MSI Interrupt */
+>> +             val = pcie_read(port, XILINX_PCIE_REG_RPIFR1);
+>> +
+>> +             if (!(val & XILINX_PCIE_RPIFR1_INTR_VALID)) {
+>> +                     dev_warn(port->dev, "RP Intr FIFO1 read error\n");
+>> +                     return IRQ_HANDLED;
+>> +             }
+>> +
+>> +             if (val & XILINX_PCIE_RPIFR1_MSI_INTR) {
+>> +                     msi_data = pcie_read(port, XILINX_PCIE_REG_RPIFR2) &
+>> +                                XILINX_PCIE_RPIFR2_MSG_DATA;
+>> +
+>> +                     /* Clear interrupt FIFO register 1 */
+>> +                     pcie_write(port, XILINX_PCIE_RPIFR1_ALL_MASK,
+>> +                                XILINX_PCIE_REG_RPIFR1);
+>> +
+>> +                     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +                             /* Handle MSI Interrupt */
+>> +                             generic_handle_irq(msi_data);
+>> +                     }
+>> +             }
+>> +     }
+>> +
+>> +     if (status & XILINX_PCIE_INTR_SLV_UNSUPP)
+>> +             dev_warn(port->dev, "Slave unsupported request\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_SLV_UNEXP)
+>> +             dev_warn(port->dev, "Slave unexpected completion\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_SLV_COMPL)
+>> +             dev_warn(port->dev, "Slave completion timeout\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_SLV_ERRP)
+>> +             dev_warn(port->dev, "Slave Error Poison\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_SLV_CMPABT)
+>> +             dev_warn(port->dev, "Slave Completer Abort\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_SLV_ILLBUR)
+>> +             dev_warn(port->dev, "Slave Illegal Burst\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_MST_DECERR)
+>> +             dev_warn(port->dev, "Master decode error\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_MST_SLVERR)
+>> +             dev_warn(port->dev, "Master slave error\n");
+>> +
+>> +     if (status & XILINX_PCIE_INTR_MST_ERRP)
+>> +             dev_warn(port->dev, "Master error poison\n");
+>> +
+>> +     /* Clear the Interrupt Decode register */
+>> +     pcie_write(port, status, XILINX_PCIE_REG_IDR);
+>> +
+>> +     return IRQ_HANDLED;
 >> +}
 >> +
->> +static struct platform_driver exynos5_usb3drd_phy = {
->> +       .probe  = exynos5_usbdrd_phy_probe,
->> +       .driver = {
->> +               .of_match_table = exynos5_usbdrd_phy_of_match,
->> +               .name           = "exynos5_usb3drd_phy",
->> +               .owner          = THIS_MODULE,
->> +       }
+>> +/**
+>> + * xilinx_pcie_free_irq_domain - Free IRQ domain
+>> + * @port: PCIe port information
+>> + */
+>> +static void xilinx_pcie_free_irq_domain(struct xilinx_pcie_port *port)
+>> +{
+>> +     int i;
+>> +     u32 irq, num_irqs;
+>> +
+>> +     /* Free IRQ Domain */
+>> +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +             free_pages(port->msg_addr, 0);
+>> +
+>> +             num_irqs = XILINX_NUM_MSI_IRQS;
+>> +     } else {
+>> +             /* INTx */
+>> +             num_irqs = 4;
+>> +     }
+>> +
+>> +     for (i = 0; i < num_irqs; i++) {
+>> +             irq = irq_find_mapping(port->irq_domain, i);
+>> +             if (irq > 0)
+>> +                     irq_dispose_mapping(irq);
+>> +     }
+>> +
+>> +     irq_domain_remove(port->irq_domain);
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_init_irq_domain - Initialize IRQ domain
+>> + * @port: PCIe port information
+>> + *
+>> + * Return: '0' on success and error value on failure
+>> + */
+>> +static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>> +{
+>> +     struct device *dev = port->dev;
+>> +     struct device_node *node = dev->of_node;
+>> +
+>> +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +             /* Setup MSI */
+>> +             int i;
+>> +
+>> +             port->irq_domain = irq_domain_add_linear(node,
+>> +                                                      XILINX_NUM_MSI_IRQS,
+>> +                                                      &msi_domain_ops,
+>> +                                                      &xilinx_pcie_msi_chip);
+>> +             if (!port->irq_domain) {
+>> +                     dev_err(dev, "Failed to get a MSI IRQ domain\n");
+>> +                     return PTR_ERR(port->irq_domain);
+>> +             }
+>> +
+>> +             for (i = 0; i < XILINX_NUM_MSI_IRQS; i++)
+>> +                     irq_create_mapping(port->irq_domain, i);
+>> +
+>> +             xilinx_pcie_enable_msi(port);
+>> +     } else {
+>
+> This means that you can't set up INTx if CONFIG_PCI_MSI is defined.  Is
+> that what you want?  The hardware doesn't know whether we have
+> CONFIG_PCI_MSI defined, of course, so I would think it would still support
+> INTx either way.
+
+Thanks for pointing this. I will fix it in my v4.
+
+>
+>> +             /* Setup INTx */
+>> +             struct device_node *pcie_intc_node =
+>> +                              of_get_next_child(node, NULL);
+>> +
+>> +             if (!pcie_intc_node) {
+>> +                     dev_err(dev, "No PCIe Intc node found\n");
+>> +                     return PTR_ERR(pcie_intc_node);
+>> +             }
+>> +
+>> +             port->irq_domain = irq_domain_add_linear(pcie_intc_node, 4,
+>> +                                                      &intx_domain_ops,
+>> +                                                      port);
+>> +             if (!port->irq_domain) {
+>> +                     dev_err(dev, "Failed to get a INTx IRQ domain\n");
+>> +                     return PTR_ERR(port->irq_domain);
+>> +             }
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_init_port - Initialize hardware
+>> + * @port: PCIe port information
+>> + */
+>> +static void xilinx_pcie_init_port(struct xilinx_pcie_port *port)
+>> +{
+>> +     /* Check if PCIe link is up? */
+>
+> Superfluous comment, since it's obvious from the function name and dev_info
+> text.
+
+Ok.
+
+>
+>> +     port->link_up = xilinx_pcie_is_link_up(port);
+>> +     if (!port->link_up)
+>> +             dev_info(port->dev, "PCIe Link is DOWN\n");
+>> +     else
+>> +             dev_info(port->dev, "PCIe Link is UP\n");
+>> +
+>> +     /* Disable all interrupts*/
+>> +     pcie_write(port, ~XILINX_PCIE_IDR_ALL_MASK,
+>> +                XILINX_PCIE_REG_IMR);
+>> +
+>> +     /* Clear pending interrupts */
+>> +     pcie_write(port, pcie_read(port, XILINX_PCIE_REG_IDR) &
+>> +                      XILINX_PCIE_IMR_ALL_MASK,
+>> +                XILINX_PCIE_REG_IDR);
+>> +
+>> +     /* Enable all interrupts*/
+>> +     pcie_write(port, XILINX_PCIE_IMR_ALL_MASK, XILINX_PCIE_REG_IMR);
+>> +
+>> +     /* Enable the Bridge enable bit */
+>> +     pcie_write(port, pcie_read(port, XILINX_PCIE_REG_RPSC) |
+>> +                      XILINX_PCIE_REG_RPSC_BEN,
+>> +                XILINX_PCIE_REG_RPSC);
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_setup - Setup memory resources
+>> + * @nr: Bus number
+>> + * @sys: Per controller structure
+>> + *
+>> + * Return: '1' on success and error value on failure
+>> + */
+>> +static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(sys);
+>> +     struct device *dev = port->dev;
+>> +     struct device_node *node = dev->of_node;
+>> +     struct resource *mem;
+>> +     resource_size_t offset;
+>> +     struct of_pci_range_parser parser;
+>> +     struct of_pci_range range;
+>> +     struct pci_host_bridge_window *win;
+>> +     int err = 0, mem_resno = 0;
+>> +
+>> +     /* Get the ranges */
+>> +     if (of_pci_range_parser_init(&parser, node)) {
+>> +             dev_err(dev, "missing \"ranges\" property\n");
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     /* Parse the ranges and add the resources found to the list */
+>> +     for_each_of_pci_range(&parser, &range) {
+>> +
+>> +             if (mem_resno >= XILINX_MAX_NUM_RESOURCES) {
+>> +                     dev_err(dev, "Maximum memory resources exceeded\n");
+>> +                     return -EINVAL;
+>> +             }
+>> +
+>> +             mem = devm_kmalloc(dev, sizeof(*mem), GFP_KERNEL);
+>> +             if (!mem) {
+>> +                     err = -ENOMEM;
+>> +                     goto free_resources;
+>> +             }
+>> +
+>> +             of_pci_range_to_resource(&range, node, mem);
+>> +
+>> +             switch (mem->flags & IORESOURCE_TYPE_BITS) {
+>> +             case IORESOURCE_MEM:
+>> +                     offset = range.cpu_addr - range.pci_addr;
+>> +                     mem_resno++;
+>> +                     break;
+>> +             default:
+>> +                     err = -EINVAL;
+>> +                     break;
+>> +             }
+>> +
+>> +             if (err < 0) {
+>> +                     dev_warn(dev, "Invalid resource found\n");
+>
+> It'd be nice for debugging to print something useful here, e.g,
+> %pR of "mem".
+
+Ok.
+
+>
+>> +                     continue;
+>> +             }
+>> +
+>> +             err = request_resource(&iomem_resource, mem);
+>> +             if (err)
+>> +                     goto free_resources;
+>> +
+>> +             pci_add_resource_offset(&sys->resources, mem, offset);
+>> +     }
+>> +
+>> +     return 1;
+>> +
+>> +free_resources:
+>> +     release_child_resources(&iomem_resource);
+>> +     list_for_each_entry(win, &sys->resources, list)
+>> +             devm_kfree(dev, win->res);
+>> +     pci_free_resource_list(&sys->resources);
+>> +
+>> +     return err;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_scan_bus - Scan PCIe bus for devices
+>> + * @nr: Bus number
+>> + * @sys: Per controller structure
+>> + *
+>> + * Return: Valid Bus pointer on success and NULL on failure
+>> + */
+>> +static struct pci_bus __init *xilinx_pcie_scan_bus(int nr,
+>> +                                                struct pci_sys_data *sys)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(sys);
+>> +     struct pci_bus *bus;
+>> +
+>> +     if (port) {
+>> +             port->root_busno = sys->busnr;
+>> +             bus = pci_scan_root_bus(port->dev, sys->busnr, &xilinx_pcie_ops,
+>> +                                     sys, &sys->resources);
+>
+> I don't think you're supplying a bus number resource here, and you should.
+> There's a discussion about this issue in a different driver here:
+>
+> http://lkml.kernel.org/r/1396261856-22465-2-git-send-email-phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org
+
+Ok.
+
+>
+>> +     } else {
+>> +             bus = NULL;
+>> +             BUG();
+>> +     }
+>> +
+>> +     return bus;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_parse_dt - Parse Device tree
+>> + * @port: PCIe port information
+>> + *
+>> + * Return: '0' on success and error value on failure
+>> + */
+>> +static int xilinx_pcie_parse_dt(struct xilinx_pcie_port *port)
+>> +{
+>> +     struct device *dev = port->dev;
+>> +     struct device_node *node = dev->of_node;
+>> +     struct resource regs, busn;
+>> +     const char *type;
+>> +     int err;
+>> +
+>> +     /* Check for device type */
+>> +     type = of_get_property(node, "device_type", NULL);
+>> +     if (!type || strcmp(type, "pci")) {
+>> +             dev_err(dev, "invalid \"device_type\" %s\n", type);
+>> +             return -EINVAL;
+>> +     }
+>> +
+>> +     /* Map the register space */
+>> +     err = of_address_to_resource(node, 0, &regs);
+>> +     if (err) {
+>> +             dev_err(dev, "missing \"reg\" property\n");
+>> +             return err;
+>> +     }
+>> +
+>> +     port->reg_base = devm_ioremap_resource(dev, &regs);
+>> +     if (IS_ERR(port->reg_base))
+>> +             return PTR_ERR(port->reg_base);
+>> +
+>> +     /* Map IRQ */
+>> +     port->irq = irq_of_parse_and_map(node, 0);
+>> +     err = devm_request_irq(dev, port->irq, xilinx_pcie_intr_handler,
+>> +                            IRQF_SHARED, "xilinx-pcie", port);
+>> +     if (err) {
+>> +             dev_err(dev, "unable to request irq %d\n", port->irq);
+>> +             return err;
+>> +     }
+>> +
+>> +     /* Get the bus range */
+>> +     if (of_pci_parse_bus_range(node, &busn)) {
+>> +             u32 val = pcie_read(port, XILINX_PCIE_REG_BIR);
+>> +             u8 last;
+>> +
+>> +             last = (val & XILINX_PCIE_BIR_ECAM_SZ_MASK) >>
+>> +                     XILINX_PCIE_BIR_ECAM_SZ_SHIFT;
+>> +
+>> +             busn = (struct resource) {
+>> +                     .name   = node->name,
+>> +                     .start  = 0,
+>> +                     .end    = last,
+>> +                     .flags  = IORESOURCE_BUS,
+>> +             };
+>
+> This doesn't actually *do* anything, does it?  You're filling in "busn",
+> but that's just a local variable, and I don't see that you save the
+> information anywhere.
+
+Will fix.
+
+>
+>> +     }
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_probe - Probe function
+>> + * @pdev: Platform device pointer
+>> + *
+>> + * Return: '0' on success and error value on failure
+>> + */
+>> +static int xilinx_pcie_probe(struct platform_device *pdev)
+>> +{
+>> +     struct xilinx_pcie_port *port;
+>> +     struct hw_pci hw;
+>> +     struct device *dev = &pdev->dev;
+>> +     int err;
+>> +
+>> +     if (!dev->of_node)
+>> +             return -ENODEV;
+>> +
+>> +     port = devm_kzalloc(dev, sizeof(*port), GFP_KERNEL);
+>> +     if (!port)
+>> +             return -ENOMEM;
+>> +
+>> +     port->dev = dev;
+>> +
+>> +     /* Parse the device tree */
+>
+> All the comments here are superfluous.
+
+Ok, will remove.
+
+>
+>> +     err = xilinx_pcie_parse_dt(port);
+>> +     if (err) {
+>> +             dev_err(dev, "Parsing DT failed\n");
+>> +             return err;
+>> +     }
+>> +
+>> +     /* Initialize the hardware */
+>> +     xilinx_pcie_init_port(port);
+>> +
+>> +     /* Setup IRQ Domain */
+>> +     err = xilinx_pcie_init_irq_domain(port);
+>> +     if (err) {
+>> +             dev_err(dev, "Failed creating IRQ Dommain\n");
+>> +             return err;
+>> +     }
+>> +
+>> +     /* Initialize hw_pci structure */
+>> +     memset(&hw, 0, sizeof(hw));
+>> +     hw = (struct hw_pci) {
+>> +             .nr_controllers = 1,
+>> +             .private_data   = (void **)&port,
+>> +             .setup          = xilinx_pcie_setup,
+>> +             .map_irq        = of_irq_parse_and_map_pci,
+>> +             .add_bus        = xilinx_pcie_add_bus,
+>> +             .scan           = xilinx_pcie_scan_bus,
+>> +             .ops            = &xilinx_pcie_ops,
+>> +     };
+>> +
+>> +     /* Register the device */
+>> +     pci_common_init_dev(dev, &hw);
+>> +
+>> +     platform_set_drvdata(pdev, port);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +/**
+>> + * xilinx_pcie_remove - Remove function
+>> + * @pdev: Platform device pointer
+>> + *
+>> + * Return: '0' always
+>> + */
+>> +static int xilinx_pcie_remove(struct platform_device *pdev)
+>> +{
+>> +     struct xilinx_pcie_port *port = platform_get_drvdata(pdev);
+>> +
+>> +     xilinx_pcie_free_irq_domain(port);
+>> +
+>> +     return 0;
+>> +}
+>> +
+>> +static struct of_device_id xilinx_pcie_of_match[] = {
+>> +     { .compatible = "xlnx,axi-pcie-host-1.00.a" ,},
+>
+> The "," inside the closing brace look unnecessary, but if you want to keep
+> it, the space should go after the comma instead of before it.
+
+Ok, I will fix all these comments in my v4.
+
+Thanks for the review,
+Srikanth
+
+>
+>> +     {}
 >> +};
 >> +
->> +module_platform_driver(exynos5_usb3drd_phy);
->> +MODULE_DESCRIPTION("Samsung EXYNOS5 SoCs USB 3.0 DRD controller PHY driver");
->> +MODULE_AUTHOR("Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_ALIAS("platform:exynos5_usb3drd_phy");
+>> +static struct platform_driver xilinx_pcie_driver = {
+>> +     .driver = {
+>> +             .name = "xilinx-pcie",
+>> +             .owner = THIS_MODULE,
+>> +             .of_match_table = xilinx_pcie_of_match,
+>> +             .suppress_bind_attrs = true,
+>> +     },
+>> +     .probe = xilinx_pcie_probe,
+>> +     .remove = xilinx_pcie_remove,
+>> +};
+>> +module_platform_driver(xilinx_pcie_driver);
+>> +
+>> +MODULE_AUTHOR("Xilinx Inc");
+>> +MODULE_DESCRIPTION("Xilinx AXI PCIe driver");
+>> +MODULE_LICENSE("GPLv2");
 >> --
->> 1.7.10.4
+>> 1.7.9.5
 >>
-> 
-> 
-> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
