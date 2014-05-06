@@ -1,68 +1,238 @@
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] usb: dwc2: Option to disable dma descriptor mode
-Date: Tue, 6 May 2014 10:44:30 -0500
-Message-ID: <1399391070.11533.7.camel@linux-builds1>
-References: <1399328585-30949-1-git-send-email-dinguyen@altera.com>
-	 <5369022A.2060905@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5369022A.2060905-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org, dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 1/6] i2c: s3c2410: Moving I2C interrupt re-configuration
+ code into i2c driver
+Date: Tue, 06 May 2014 17:51:17 +0900
+Message-ID: <1399366282-4191-2-git-send-email-pankaj.dubey@samsung.com>
+References: <1399366282-4191-1-git-send-email-pankaj.dubey@samsung.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1399366282-4191-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-05-06 at 19:39 +0400, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 05/06/2014 02:23 AM, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
-> 
-> > From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> 
-> > Even though the IP supports Descriptor DMA mode, it does not support SPLIT
-> > transactions in this mode. Since the driver can get the Descriptor DMA mode
-> > support from hardware, the driver in its currently form cannot fully support
-> > LS/FS devices connected to a HS Hub when Descriptor DMA mode is enabled in the
-> > driver. Thus, we give the option to disable Descriptor DMA from device tree.
-> 
-> > Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >   drivers/usb/dwc2/platform.c |    3 +++
-> >   1 file changed, 3 insertions(+)
-> 
-> > diff --git a/drivers/usb/dwc2/platform.c b/drivers/usb/dwc2/platform.c
-> > index eaba547..cb2133c 100644
-> > --- a/drivers/usb/dwc2/platform.c
-> > +++ b/drivers/usb/dwc2/platform.c
-> > @@ -123,6 +123,7 @@ static int dwc2_driver_probe(struct platform_device *dev)
-> >   	struct resource *res;
-> >   	int retval;
-> >   	int irq;
-> > +	u32 prop;
-> >
-> >   	if (usb_disabled())
-> >   		return -ENODEV;
-> > @@ -135,6 +136,8 @@ static int dwc2_driver_probe(struct platform_device *dev)
-> >   		dwc2_set_all_params(&defparams, -1);
-> >   		params = &defparams;
-> >   	}
-> > +	if (!of_property_read_u32(dev->dev.of_node, "dma-desc-enable", &prop))
-> > +		defparams.dma_desc_enable = prop;
-> 
->     You don't really need a helper local variable here, the variable receiving 
-> the property value won't be changed if there was an error retrieving it.
-> 
+Let's move I2C interrupt re-configuration code from machine
+file exynos.c to I2C driver. Since only Exynos5250, and
+Exynos5420 need to do this, added syscon based phandle to
+i2c device nodes of respective SoC DT files.
 
-Ah yes, you're right. Thanks for the review.
+CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+CC: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+CC: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+CC: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+CC: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+CC: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ .../devicetree/bindings/arm/samsung/sysreg.txt     |    1 +
+ arch/arm/boot/dts/exynos5.dtsi                     |    5 ++++
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 +++
+ arch/arm/boot/dts/exynos5420.dtsi                  |    4 +++
+ arch/arm/mach-exynos/exynos.c                      |   26 -------------------
+ drivers/i2c/busses/i2c-s3c2410.c                   |   27 ++++++++++++++++++++
+ 6 files changed, 41 insertions(+), 26 deletions(-)
 
-Dinh
-> WBR, Sergei
-> 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+index 0ab3251..fd71581 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+@@ -3,6 +3,7 @@ SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
+ Properties:
+  - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
+    For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
++   For Exynos5 SoC series it should be "samsung,exynos5-sysreg", "syscon";
+  - reg : offset and length of the register set.
+ 
+ Example:
+diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+index 79d0608..3027e37 100644
+--- a/arch/arm/boot/dts/exynos5.dtsi
++++ b/arch/arm/boot/dts/exynos5.dtsi
+@@ -99,4 +99,9 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	sys_reg: syscon@10050000 {
++		compatible = "samsung,exynos5-sysreg", "syscon";
++		reg = <0x10050000 0x400>;
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 8d724d5..46f0233 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -285,6 +285,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c0_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -298,6 +299,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c1_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -311,6 +313,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c2_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -324,6 +327,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c3_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index ff496ad..762128c 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -517,6 +517,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c0_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -530,6 +531,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c1_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -543,6 +545,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c2_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+@@ -556,6 +559,7 @@
+ 		clock-names = "i2c";
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&i2c3_bus>;
++		samsung,syscon-phandle = <&sys_reg>;
+ 		status = "disabled";
+ 	};
+ 
+diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+index 59eb1f1..54ae2e1 100644
+--- a/arch/arm/mach-exynos/exynos.c
++++ b/arch/arm/mach-exynos/exynos.c
+@@ -293,32 +293,6 @@ void __init exynos_map_pmu(void)
+ 
+ static void __init exynos_dt_machine_init(void)
+ {
+-	struct device_node *i2c_np;
+-	const char *i2c_compat = "samsung,s3c2440-i2c";
+-	unsigned int tmp;
+-	int id;
+-
+-	/*
+-	 * Exynos5's legacy i2c controller and new high speed i2c
+-	 * controller have muxed interrupt sources. By default the
+-	 * interrupts for 4-channel HS-I2C controller are enabled.
+-	 * If node for first four channels of legacy i2c controller
+-	 * are available then re-configure the interrupts via the
+-	 * system register.
+-	 */
+-	if (soc_is_exynos5()) {
+-		for_each_compatible_node(i2c_np, NULL, i2c_compat) {
+-			if (of_device_is_available(i2c_np)) {
+-				id = of_alias_get_id(i2c_np, "i2c");
+-				if (id < 4) {
+-					tmp = readl(EXYNOS5_SYS_I2C_CFG);
+-					writel(tmp & ~(0x1 << id),
+-							EXYNOS5_SYS_I2C_CFG);
+-				}
+-			}
+-		}
+-	}
+-
+ 	exynos_map_pmu();
+ 
+ 	if (!soc_is_exynos5440())
+diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
+index ae44910..0420150 100644
+--- a/drivers/i2c/busses/i2c-s3c2410.c
++++ b/drivers/i2c/busses/i2c-s3c2410.c
+@@ -39,6 +39,8 @@
+ #include <linux/of.h>
+ #include <linux/of_gpio.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -91,6 +93,9 @@
+ /* Max time to wait for bus to become idle after a xfer (in us) */
+ #define S3C2410_IDLE_TIMEOUT	5000
+ 
++/* Exynos5 Sysreg offset */
++#define EXYNOS5_SYS_I2C_CFG	0x0234
++
+ /* i2c controller state */
+ enum s3c24xx_i2c_state {
+ 	STATE_IDLE,
+@@ -127,6 +132,7 @@ struct s3c24xx_i2c {
+ #if defined(CONFIG_ARM_S3C24XX_CPUFREQ)
+ 	struct notifier_block	freq_transition;
+ #endif
++	struct regmap		*sysreg;
+ };
+ 
+ static struct platform_device_id s3c24xx_driver_ids[] = {
+@@ -1075,6 +1081,8 @@ static void
+ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
+ {
+ 	struct s3c2410_platform_i2c *pdata = i2c->pdata;
++	unsigned int tmp;
++	int id;
+ 
+ 	if (!np)
+ 		return;
+@@ -1084,6 +1092,25 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
+ 	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
+ 	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
+ 				(u32 *)&pdata->frequency);
++	/*
++	 * Exynos5's legacy i2c controller and new high speed i2c
++	 * controller have muxed interrupt sources. By default the
++	 * interrupts for 4-channel HS-I2C controller are enabled.
++	 * If node for first four channels of legacy i2c controller
++	 * are available then re-configure the interrupts via the
++	 * system register.
++	 */
++	id = of_alias_get_id(np, "i2c");
++	i2c->sysreg = syscon_regmap_lookup_by_phandle(np,
++			"samsung,syscon-phandle");
++	if (IS_ERR(i2c->sysreg)) {
++		i2c->sysreg = NULL;
++		/* As this is not compulsary do not return error */
++		pr_info("i2c-%d skipping re-configuration of interrutps\n", id);
++		return;
++	}
++	regmap_read(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, &tmp);
++	regmap_write(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, tmp & ~(0x1 << id));
+ }
+ #else
+ static void
+-- 
+1.7.10.4
