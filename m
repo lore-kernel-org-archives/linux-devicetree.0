@@ -1,74 +1,91 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH v2 2/2] ARM: dts: rockchip: add root compatible properties
-Date: Tue,  6 May 2014 19:10:11 +0200
-Message-ID: <1399396211-25353-2-git-send-email-b.galvani@gmail.com>
-References: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Beniamino Galvani <b.galvani@gmail.com>
+From: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 14/15] clk: exynos5420: add misc clocks
+Date: Tue, 06 May 2014 21:56:49 +0530
+Message-ID: <1399393610-23394-15-git-send-email-shaik.ameer@samsung.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the missing 'compatible' property to device tree root node of
+This patch adds some missing miscellaneous clocks specific
+to exynos5420.
 
- - rk3066a-bqcurie2.dts
- - rk3188-radxarock.dts
-
-and document the new values.
-
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
+ drivers/clk/samsung/clk-exynos5420.c   |   14 +++++++++++---
+ include/dt-bindings/clock/exynos5420.h |    2 ++
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-v2:
- - use mundoreader prefix instead of bq as suggested by Heiko Stuebner
-
- Documentation/devicetree/bindings/arm/rockchip.txt |   10 ++++++++++
- arch/arm/boot/dts/rk3066a-bqcurie2.dts             |    1 +
- arch/arm/boot/dts/rk3188-radxarock.dts             |    1 +
- 3 files changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/rockchip.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
-new file mode 100644
-index 0000000..857f126
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/rockchip.txt
-@@ -0,0 +1,10 @@
-+Rockchip platforms device tree bindings
-+---------------------------------------
-+
-+- bq Curie 2 tablet:
-+    Required root node properties:
-+      - compatible = "mundoreader,bq-curie2", "rockchip,rk3066a";
-+
-+- Radxa Rock board:
-+    Required root node properties:
-+      - compatible = "radxa,rock", "rockchip,rk3188";
-diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-index 035df40..afb3273 100644
---- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-+++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
-@@ -18,6 +18,7 @@
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index e0e749d..e69e820 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -273,7 +273,8 @@ PNAME(mout_group5_p) = {"mout_sclk_vpll", "mout_sclk_dpll"};
  
- / {
- 	model = "bq Curie 2";
-+	compatible = "mundoreader,bq-curie2", "rockchip,rk3066a";
+ PNAME(mout_fimd1_final_p) = {"mout_fimd1", "mout_fimd1_opt"};
+ PNAME(mout_sw_aclk66_p)	= {"dout_aclk66", "mout_sclk_spll"};
+-PNAME(mout_user_aclk66_peric_p)	= { "fin_pll", "mout_sw_aclk66" };
++PNAME(mout_user_aclk66_peric_p)	= { "fin_pll", "mout_sw_aclk66"};
++PNAME(mout_user_pclk66_gpio_p) = {"mout_sw_aclk66", "ffactor_sw_aclk66"};
  
- 	memory {
- 		reg = <0x60000000 0x40000000>;
-diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
-index 3ba1968..a5eee55 100644
---- a/arch/arm/boot/dts/rk3188-radxarock.dts
-+++ b/arch/arm/boot/dts/rk3188-radxarock.dts
-@@ -17,6 +17,7 @@
+ PNAME(mout_sw_aclk200_fsys_p) = {"dout_aclk200_fsys", "mout_sclk_spll"};
+ PNAME(mout_sw_pclk200_fsys_p) = {"dout_pclk200_fsys", "mout_sclk_spll"};
+@@ -372,10 +373,13 @@ static struct samsung_fixed_rate_clock exynos5420_fixed_rate_clks[] __initdata =
+ };
  
- / {
- 	model = "Radxa Rock";
-+	compatible = "radxa,rock", "rockchip,rk3188";
+ static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[] __initdata = {
+-	FFACTOR(0, "sclk_hsic_12m", "fin_pll", 1, 2, 0),
++	FFACTOR(0, "ffactor_hsic_12m", "fin_pll", 1, 2, 0),
++	FFACTOR(0, "ffactor_sw_aclk66", "mout_sw_aclk66", 1, 2, 0),
+ };
  
- 	memory {
- 		reg = <0x60000000 0x80000000>;
+ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
++	MUX(0, "mout_user_pclk66_gpio", mout_user_pclk66_gpio_p,
++			SRC_TOP7, 4, 1),
+ 	MUX(0, "mout_mspll_kfc", mout_mspll_cpu_p, SRC_TOP7, 8, 2),
+ 	MUX(0, "mout_mspll_cpu", mout_mspll_cpu_p, SRC_TOP7, 12, 2),
+ 	MUX_F(0, "mout_mau_epll_clk", mout_mau_epll_clk_p,
+@@ -700,7 +704,7 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 			GATE_BUS_TOP, 7, CLK_IGNORE_UNUSED, 0),
+ 	GATE(0, "aclk333_432_isp", "mout_user_aclk333_432_isp",
+ 			GATE_BUS_TOP, 8, 0, 0),
+-	GATE(0, "pclk66_gpio", "mout_sw_aclk66",
++	GATE(CLK_PCLK66_GPIO, "pclk66_gpio", "mout_user_pclk66_gpio",
+ 			GATE_BUS_TOP, 9, CLK_IGNORE_UNUSED, 0),
+ 	GATE(0, "aclk66_psgen", "mout_user_aclk66_psgen",
+ 			GATE_BUS_TOP, 10, CLK_IGNORE_UNUSED, 0),
+@@ -718,6 +722,10 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 			GATE_BUS_TOP, 17, CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_ACLK200_DISP1, "aclk200_disp1", "mout_user_aclk200_disp1",
+ 			GATE_BUS_TOP, 18, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SCLK_MPHY_IXTAL24, "sclk_mphy_ixtal24", "mphy_refclk_ixtal24",
++			GATE_BUS_TOP, 28, 0, 0),
++	GATE(CLK_SCLK_HSIC_12M, "sclk_hsic_12m", "ffactor_hsic_12m",
++			GATE_BUS_TOP, 29, 0, 0),
+ 
+ 	GATE(CLK_ACLK300_DISP1, "aclk300_disp1", "mout_user_aclk300_disp1",
+ 			SRC_MASK_TOP2, 24, CLK_IGNORE_UNUSED, 0),
+diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+index 4831267..3f09da7 100644
+--- a/include/dt-bindings/clock/exynos5420.h
++++ b/include/dt-bindings/clock/exynos5420.h
+@@ -59,6 +59,8 @@
+ #define CLK_SCLK_GSCL_WB	157
+ #define CLK_SCLK_HDMIPHY	158
+ #define CLK_MAU_EPLL		159
++#define CLK_SCLK_HSIC_12M	160
++#define CLK_SCLK_MPHY_IXTAL24	161
+ 
+ /* gate clocks */
+ #define CLK_ACLK66_PERIC	256
 -- 
-1.7.10.4
+1.7.9.5
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
