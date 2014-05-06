@@ -1,111 +1,73 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
- Armada 38x
-Date: Tue, 6 May 2014 10:39:53 -0500
-Message-ID: <20140506153953.GF25849@saruman.home>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="iBwuxWUsK/REspAd"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 00/15] exynos5420: clock file cleanup
+Date: Tue, 06 May 2014 21:56:35 +0530
+Message-ID: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---iBwuxWUsK/REspAd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Many changes/fixes have been identified for clock file for exynos5420.
+These include correct parents, bit fields, new clocks etc. Existing
+files needs some correction in terms of names of the clock and
+indentation. These issues are addressed in this patch series.
 
-Hi,
+This patch series is rebased on,
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git:3.15-rc3
 
-On Tue, May 06, 2014 at 02:14:01AM +0200, Gregory CLEMENT wrote:
-> For the Armada 38x SoCs which come with an xhci controller, specific
-> initialization must be done during probe related to the MBus windows
-> configuration. This patch adds the support of this quirk.
->=20
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
->  drivers/usb/host/Kconfig      |  7 +++++
->  drivers/usb/host/Makefile     |  1 +
->  drivers/usb/host/xhci-mvebu.c | 71 +++++++++++++++++++++++++++++++++++++=
-++++++
->  drivers/usb/host/xhci-mvebu.h | 21 +++++++++++++
->  drivers/usb/host/xhci-plat.c  |  6 ++++
->  5 files changed, 106 insertions(+)
->  create mode 100644 drivers/usb/host/xhci-mvebu.c
->  create mode 100644 drivers/usb/host/xhci-mvebu.h
->=20
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index 3d9e54062d62..e70943fac4a1 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -29,6 +29,13 @@ if USB_XHCI_HCD
->  config USB_XHCI_PLATFORM
->  	tristate
-> =20
-> +config USB_XHCI_MVEBU
-> +	tristate "xHCI support for Marvell Armada 38x"
-> +	select USB_XHCI_PLATFORM
-> +	---help---
-> +	  Say 'Y' to enable the support for the xHCI host controller
-> +	  found in Marvell Armada 38x ARM SOCs.
-> +
->  endif # USB_XHCI_HCD
-> =20
->  config USB_EHCI_HCD
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index 7530468c9a4f..7a8db7f7dc01 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -19,6 +19,7 @@ xhci-hcd-$(CONFIG_PCI)	+=3D xhci-pci.o
-> =20
->  ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
->  	xhci-hcd-y		+=3D xhci-plat.o
-> +	xhci-hcd-$(CONFIG_USB_XHCI_MVEBU)	+=3D xhci-mvebu.o
+This patch is also dependent on the following patch.
+clk: exynos5420: Add clock IDs needed by GPU
+    -- http://www.spinics.net/lists/arm-kernel/msg326461.html
 
-hmm, this has the potential of resulting in:
+This patch series is tested on Exynos5420 based peach-pit board.
+[PATCH v4 0/2] Add peach-pit board support
 
-	xhci-hcd-m +=3D xhci-mvebu.o
+Changes since v3:
+-----------------
+Addressed review comments from Tomasz Figa and Alim Akhtar
+Some of the changes includes,
+1] Adding clock IDs for all the added gate clocks.
+2] Followed bit ordering while defining new clocks.
+3] Adding SET_RATE_PARENT flag for all the clocks having
+   dividers as parents.
 
-I guess it's best to turn this into:
+Changes since v2:
+-----------------
+1] Addressed review comments from Gerhard Sittig and Tomasz Figa.
 
-ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
-	xhci-hcd-y +=3D xhci-mvebu.o
-endif
+Changes since v1:
+-----------------
+1] Addressed review comments from Tomasz Figa.
+    http://www.spinics.net/lists/devicetree/msg16759.html
+    http://www.spinics.net/lists/devicetree/msg16760.html
 
-no ? Other than this comment:
+Shaik Ameer Basha (15):
+  clk: exynos5420: Rename mux parent arrays
+  clk: exynos5420: add clocks for ISP block
+  clk: exynos5420: update clocks for GSCL and MSCL blocks
+  clk: exynos5420: fix parent clocks for mscl sysmmu
+  clk: exynos5420: update clocks for G2D and G3D blocks
+  clk: exynos5420: update clocks for DISP1 block
+  clk: exynos5420: update clocks for PERIC block
+  clk: exynos5420: update clocks for PERIS and GEN blocks
+  clk: exynos5420: clk: exynos5420: update clocks for WCORE block
+  clk: exynos5420: update clocks for FSYS and FSYS2 blocks
+  clk: exynos5420: correct sysmmu-mfc parent clocks
+  clk: exynos5420: fix register offset for sclk_bpll
+  clk: exynos5420: update clocks for MAU Block
+  clk: exynos5420: add misc clocks
+  clk: exynos5420: add more registers to restore list
 
-Acked-by: Felipe Balbi <balbi@ti.com>
+ arch/arm/boot/dts/exynos5420.dtsi      |   14 +-
+ drivers/clk/samsung/clk-exynos5420.c   |  876 ++++++++++++++++++++------------
+ include/dt-bindings/clock/exynos5420.h |   39 +-
+ 3 files changed, 597 insertions(+), 332 deletions(-)
 
---=20
-balbi
+-- 
+1.7.9.5
 
---iBwuxWUsK/REspAd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTaQJJAAoJEIaOsuA1yqREsJAP/39cmJ8jyTRPtPgR57qyf1l5
-M9y3VnAec9Aob6bhhMMm+zhq9nvUoqbLSdNNrmy4f5BDq4KJRV2KpTJN70/E98Au
-mlwX0XsEg1bN0ehmIG9hukGPyof/LUBcEy18BZLxeJVgQcKnsGpYRUoQ/rmGAXRK
-/7LE37nHnaM0EBxdg/P7drIIUSoK1cxpHy6yKOjfMRdTM4n2m1egrJ1a3wLVNUFS
-l0N7wv/d0Oh9zgsAN5Y5Flxvf33A9V/m9iuJ0RDCcWGTqQEKYWI8cDdZlO6OQfud
-0A6arl5Oqct3njUry8ZibJRjHtndFdsoS6Zri8WykxIhYxUwcA2VwT23e8Ubo+Dq
-L5n92sfVeyqJ15BXWXsw0z2G29Yzhl272fH6yGEUOSuceRZwaI5pkxoqDhAj8VgE
-Go3Gpy2cPbGwk0ebXqiO/Tt/G7AgediBkU3NtQF+cbwWAiChWKw4Bg0BBhXTPTgu
-A9k2xZz2fn0lFoWiQd5bcTTg3baQ0+TgGd/dy2g/TS5hIjwM45z9ERzDGJtE0omF
-iyxiuqMf9alxT/BckGZDkhvUxa9794f7TXxOuAq6MEt+T7JmBOoHM2Fb70RF0RcF
-V0gns9CIPRr45Y/Lb+SJRPoaoRVpngbY7lnNCr2sscw6ZtGCxsOkegOAmUhEOjA7
-xkV1jCxc27DAex2PZvBs
-=y1dE
------END PGP SIGNATURE-----
-
---iBwuxWUsK/REspAd--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
