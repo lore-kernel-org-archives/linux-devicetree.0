@@ -1,171 +1,86 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for pcie-dra7xx controller
-Date: Tue, 06 May 2014 15:54:49 +0200
-Message-ID: <4300084.bc6ByDTk7W@wuerfel>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-6-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399383244-14556-6-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, balajitk-l0cyMroinI0@public.gmane.org, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, rogerq-l0cyMroinI0@public.gmane.org
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v4 05/15] clk: exynos5420: update clocks for G2D and G3D blocks
+Date: Tue, 06 May 2014 21:56:40 +0530
+Message-ID: <1399393610-23394-6-git-send-email-shaik.ameer@samsung.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 06 May 2014 19:03:51 Kishon Vijay Abraham I wrote:
-> Added support for pcie controller in dra7xx. This driver re-uses
-> the designware core code that is already present in kernel.
-> 
-> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-> Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
-> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+This patch adds missing clocks of G2D block. It also removes
+the aclkg3d alias from G3D block clocks.
 
-Looks pretty good overall, just a few details I noticed:
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5420.c   |   17 ++++++++++++++---
+ include/dt-bindings/clock/exynos5420.h |    2 ++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> new file mode 100644
-> index 0000000..6cb6f09
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
-> @@ -0,0 +1,33 @@
-> +TI PCI Controllers
-> +
-> +PCIe Designware Controller
-> +This node should have the properties described in "designware-pcie.txt".
-> + - compatible: Should be "ti,dra7xx-pcie""
-
-No "xx" in compatible strings please. Just make name this after the first
-chip to use this particular interface.
-
-> + - reg : Address and length of the register set for the device.
-> + - reg-names : "ti_conf" for the TI specific registers and rc_dbics for the
-> +   "designware" registers.
-
-The description uses inconsistent quotation marks. You should also have
-a fixed order in the binding, such as
-
- - reg : Two register ranges as listed in the reg-names property
- - reg-names : The first entry must be "ti-conf" for the TI specific registers
-	       The second entry must be "rc-dbics" for the designware pcie registers.
-
-> + - phys : the phandle for the PHY device (used by generic PHY framework)
-> + - phy-names : the names of the PHY corresponding to the PHYs present in the
-> +   *phy* phandle.
-
-It's not just a phandle, it can be any phy specifier including additional
-argument cells.
-
-The second line should just read
-
- - phy-names : must be "pcie-phy"
-
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
-> index a6f67ec..7be6393 100644
-> --- a/drivers/pci/host/Kconfig
-> +++ b/drivers/pci/host/Kconfig
-> @@ -1,6 +1,16 @@
->  menu "PCI host controller drivers"
->  	depends on PCI
->  
-> +config PCI_DRA7XX
-> +	bool "TI DRA7xx PCIe controller"
-> +	select PCIE_DW
-> +	depends on OF || HAS_IOMEM || TI_PIPE3
-
-I think you mean &&, not || here.
-
-> +static inline u32 x(void __iomem *base, u32 offset)
-> +{
-> +	return readl(base + offset);
-> +}
-> +
-> +static inline void dra7xx_pcie_writel(void __iomem *base, u32 offset, u32 value)
-> +{
-> +	writel(value, base + offset);
-> +}
-
-These don't actually seem to add any value, you need more characters
-to call the inline function than to open-code it.
-
-> +static void dra7xx_pcie_enable_interrupts(struct pcie_port *pp)
-> +{
-> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
-> +
-> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MAIN,
-> +			   ~INTERRUPTS);
-> +	dra7xx_pcie_writel(dra7xx->base,
-> +			   PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MAIN, INTERRUPTS);
-> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI,
-> +			   ~LEG_EP_INTERRUPTS & ~MSI);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI))
-> +		dra7xx_pcie_writel(dra7xx->base,
-> +				   PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MSI, MSI);
-> +	else
-> +		dra7xx_pcie_writel(dra7xx->base,
-> +				   PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MSI,
-> +				   LEG_EP_INTERRUPTS);
-
-Doesn't this just enable one or the other? In general I'd assume you need
-both INTx and MSI, at least if MSI is available.
-
-It probably doesn't hurt to always turn them all on.
-
-> +static int add_pcie_port(struct dra7xx_pcie *dra7xx,
-> +			  struct platform_device *pdev)
-> +{
-> +	int ret;
-> +	struct pcie_port *pp;
-> +	struct resource *res;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	pp = &dra7xx->pp;
-> +	pp->dev = dev;
-> +	pp->ops = &dra7xx_pcie_host_ops;
-> +
-> +	spin_lock_init(&pp->conf_lock);
-> +
-> +	pp->irq = platform_get_irq(pdev, 1);
-> +	if (pp->irq < 0) {
-> +		dev_err(dev, "missing IRQ resource\n");
-> +		return -EINVAL;
-> +	}
->
-
-The binding does not list a mandatory "interrupts" property, so
-this should not be treated as an error.
-
-> +static int __init dra7xx_pcie_probe(struct platform_device *pdev)
-> +{
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "missing IRQ resource\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, irq, dra7xx_pcie_irq_handler,
-> +			       IRQF_SHARED, "dra7xx-pcie-main", dra7xx);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to request irq\n");
-> +		return ret;
-> +	}
-
-Same here.
-
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
-> +	base = devm_ioremap_nocache(dev, res->start, resource_size(res));
-
-Just use devm_ioremap() instead of devm_ioremap_nocache(). The second
-one is just there for historic reasons, and they always do the same
-thing.
-
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 320f72d..5bc4798 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -27,6 +27,7 @@
+ #define DIV_CPU1		0x504
+ #define GATE_BUS_CPU		0x700
+ #define GATE_SCLK_CPU		0x800
++#define GATE_IP_G2D		0x8800
+ #define CPLL_LOCK		0x10020
+ #define DPLL_LOCK		0x10030
+ #define EPLL_LOCK		0x10040
+@@ -402,8 +403,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+ 			8, 1),
+ 	MUX(0, "mout_user_aclk266_g2d", mout_user_aclk266_g2d_p, SRC_TOP5,
+ 			12, 1),
+-	MUX_A(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
+-			SRC_TOP5, 16, 1, "aclkg3d"),
++	MUX(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
++			SRC_TOP5, 16, 1),
+ 	MUX(0, "mout_user_aclk300_jpeg", mout_user_aclk300_jpeg_p,
+ 			SRC_TOP5, 20, 1),
+ 	MUX(0, "mout_user_aclk300_disp1", mout_user_aclk300_disp1_p,
+@@ -830,6 +831,16 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 	GATE(CLK_SMMU_FIMD1, "smmu_fimd1", "aclk300_disp1", GATE_IP_DISP1, 8, 0,
+ 		0),
+ 
++	/* G2D */
++	GATE(CLK_MDMA0, "mdma0", "aclk266_g2d",
++			GATE_IP_G2D, 1, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_G2D, "g2d", "aclk333_g2d",
++			GATE_IP_G2D, 3, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_MDMA0, "smmu_mdma0", "aclk266_g2d",
++			GATE_IP_G2D, 5, CLK_IGNORE_UNUSED, 0),
++	GATE(CLK_SMMU_G2D, "smmu_g2d", "aclk333_g2d",
++			GATE_IP_G2D, 7, CLK_IGNORE_UNUSED, 0),
++
+ 	/* ISP */
+ 	GATE(CLK_SCLK_UART_ISP, "sclk_uart_isp", "dout_uart_isp",
+ 			GATE_TOP_SCLK_ISP, 0, CLK_SET_RATE_PARENT, 0),
+@@ -850,7 +861,7 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 	GATE(CLK_SMMU_MFCL, "smmu_mfcl", "aclk333", GATE_IP_MFC, 1, 0, 0),
+ 	GATE(CLK_SMMU_MFCR, "smmu_mfcr", "aclk333", GATE_IP_MFC, 2, 0, 0),
+ 
+-	GATE(CLK_G3D, "g3d", "aclkg3d", GATE_IP_G3D, 9, 0, 0),
++	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
+ 
+ 	GATE(CLK_ROTATOR, "rotator", "aclk266", GATE_IP_GEN, 1, 0, 0),
+ 	GATE(CLK_JPEG, "jpeg", "aclk300_jpeg", GATE_IP_GEN, 2, 0, 0),
+diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+index 6e22fdd..bf85418 100644
+--- a/include/dt-bindings/clock/exynos5420.h
++++ b/include/dt-bindings/clock/exynos5420.h
+@@ -177,6 +177,8 @@
+ #define CLK_ACLK_G3D		500
+ #define CLK_G3D			501
+ #define CLK_SMMU_MIXER		502
++#define CLK_SMMU_G2D		503
++#define CLK_SMMU_MDMA0		504
+ #define CLK_SCLK_UART_ISP	510
+ #define CLK_SCLK_SPI0_ISP	511
+ #define CLK_SCLK_SPI1_ISP	512
+-- 
+1.7.9.5
