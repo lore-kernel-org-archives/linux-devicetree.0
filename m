@@ -1,83 +1,54 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v4 05/15] clk: exynos5420: update clocks for G2D and G3D
- blocks
-Date: Tue, 06 May 2014 18:50:13 +0200
-Message-ID: <536912C5.7060500@gmail.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
- <1399393610-23394-6-git-send-email-shaik.ameer@samsung.com>
+From: "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: Add support for CS42L56 CODEC
+Date: Tue, 6 May 2014 01:46:10 +0000
+Message-ID: <2EE0E51C-750B-41A1-BEF7-210DF8CB7365@cirrus.com>
+References: <1399320549-16645-1-git-send-email-brian.austin@cirrus.com>,<20140506012422.GB22111@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1399393610-23394-6-git-send-email-shaik.ameer@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: kgene.kim@samsung.com, shaik.samsung@gmail.com, t.figa@samsung.com, joshi@samsung.com, alim.akhtar@samsung.com, r.sh.open@gmail.com, mturquette@linaro.org, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140506012422.GB22111-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shaik,
 
-On 06.05.2014 18:26, Shaik Ameer Basha wrote:
-> This patch adds missing clocks of G2D block. It also removes
-> the aclkg3d alias from G3D block clocks.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> ---
->   drivers/clk/samsung/clk-exynos5420.c   |   17 ++++++++++++++---
->   include/dt-bindings/clock/exynos5420.h |    2 ++
->   2 files changed, 16 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 320f72d..5bc4798 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -27,6 +27,7 @@
->   #define DIV_CPU1		0x504
->   #define GATE_BUS_CPU		0x700
->   #define GATE_SCLK_CPU		0x800
-> +#define GATE_IP_G2D		0x8800
->   #define CPLL_LOCK		0x10020
->   #define DPLL_LOCK		0x10030
->   #define EPLL_LOCK		0x10040
-> @@ -402,8 +403,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
->   			8, 1),
->   	MUX(0, "mout_user_aclk266_g2d", mout_user_aclk266_g2d_p, SRC_TOP5,
->   			12, 1),
-> -	MUX_A(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
-> -			SRC_TOP5, 16, 1, "aclkg3d"),
-> +	MUX(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
-> +			SRC_TOP5, 16, 1),
->   	MUX(0, "mout_user_aclk300_jpeg", mout_user_aclk300_jpeg_p,
->   			SRC_TOP5, 20, 1),
->   	MUX(0, "mout_user_aclk300_disp1", mout_user_aclk300_disp1_p,
-> @@ -830,6 +831,16 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
->   	GATE(CLK_SMMU_FIMD1, "smmu_fimd1", "aclk300_disp1", GATE_IP_DISP1, 8, 0,
->   		0),
->
-> +	/* G2D */
-> +	GATE(CLK_MDMA0, "mdma0", "aclk266_g2d",
-> +			GATE_IP_G2D, 1, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_G2D, "g2d", "aclk333_g2d",
-> +			GATE_IP_G2D, 3, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_SMMU_MDMA0, "smmu_mdma0", "aclk266_g2d",
-> +			GATE_IP_G2D, 5, CLK_IGNORE_UNUSED, 0),
-> +	GATE(CLK_SMMU_G2D, "smmu_g2d", "aclk333_g2d",
-> +			GATE_IP_G2D, 7, CLK_IGNORE_UNUSED, 0),
 
-Why they all have CLK_IGNORE_UNUSED flag set? This isn't very good from 
-power management point of view.
+> On May 5, 2014, at 20:24, "Mark Brown" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+>> On Mon, May 05, 2014 at 03:09:08PM -0500, Brian Austin wrote:
+>> This patch adds support for the Cirrus Logic Low Power Stereo I2C CODEC
+> 
+> Applied, thanks.  A couple of minor issues it'd be good to look at
+> incrementally.
+> 
+>> +    SOC_ENUM("PCMA Swap", pcma_swap_enum),
+>> +    SOC_ENUM("PCMB Swap", pcmb_swap_enum),
+>> +    SOC_ENUM("ADCA Swap", adca_swap_enum),
+>> +    SOC_ENUM("ADCB Swap", adcb_swap_enum),
+> 
+> Can these be moved to DAPM?
+> 
+Yes they can
+>> +    regcache_cache_bypass(cs42l56->regmap, true);
+> 
+> You shouldn't need to do this, if no default is provided regmap should
+> just go to hardware.
+> 
+That's good to know, thanks
+>> +    dev_info(&i2c_client->dev, "Cirrus Logic CS42L56 ");
+>> +    dev_info(&i2c_client->dev, "Alpha Rev %X Metal Rev %X\n",
+>> +         alpha_rev, metal_rev);
+> 
+> It's better to just put things on one line and ignore the line length
+> warnings from checkpatch - this makes the code more grepable.
+Yes indeed. I will gladly rework that one.
 
-Sorry for commenting on this only in this version of the series, but I 
-was a bit short of time before. I'll try to review this one thoroughly.
-
-Best regards,
-Tomasz
+Thanks,
+Brian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
