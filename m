@@ -1,40 +1,98 @@
-From: Joakim Tjernlund <joakim.tjernlund-SNLAxHN9vbcOP4wsBPIw7w@public.gmane.org>
-Subject: Re: [PATCH 5/6] powerpc/corenet: Add DPAA FMan support to the SoC device
- tree(s)
-Date: Tue, 6 May 2014 09:40:55 +0200
-Message-ID: <OF3FF1D0D1.9BC865BB-ONC1257CD0.0029D93B-C1257CD0.002A330F@transmode.se>
-References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com> <1397823693-27977-5-git-send-email-Shruti@Freescale.com> <1398118442.1694.190.camel__272.432543761347$1398129129$gmane$org@snotra.buserror.net> <53661DAB.10808@Freescale.com> <1399332886.15726.161.camel@snotra.buserror.net> <5368811A.3060609@Freescale.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 13/15] clk: exynos5420: update clocks for MAU Block
+Date: Tue, 06 May 2014 19:47:04 +0200
+Message-ID: <53692018.9020707@gmail.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com> <1399393610-23394-14-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5368811A.3060609-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1399393610-23394-14-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, Kanetkar Shruti-B44454 <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-"Linuxppc-dev" 
-<linuxppc-dev-bounces+joakim.tjernlund=transmode.se-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org> 
-wrote on 2014/05/06 08:28:42:
-> 
+Shaik,
 
-.....
+On 06.05.2014 18:26, Shaik Ameer Basha wrote:
+> This patch adds the missing MAU block specific clocks.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>   drivers/clk/samsung/clk-exynos5420.c   |   14 +++++++++++++-
+>   include/dt-bindings/clock/exynos5420.h |    2 ++
+>   2 files changed, 15 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index ba7273a..e0e749d 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -62,7 +62,9 @@
+>   #define SRC_TOP11		0x10284
+>   #define SRC_TOP12		0x10288
+>   #define SRC_MASK_TOP2		0x10308
+> +#define SRC_MASK_TOP7		0x1031c
+>   #define SRC_MASK_DISP10		0x1032c
+> +#define SRC_MASK_MAU		0x10334
+>   #define SRC_MASK_FSYS		0x10340
+>   #define SRC_MASK_PERIC0		0x10350
+>   #define SRC_MASK_PERIC1		0x10354
+> @@ -155,6 +157,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+>   	SRC_TOP11,
+>   	SRC_TOP12,
+>   	SRC_MASK_TOP2,
+> +	SRC_MASK_TOP7,
+>   	SRC_MASK_DISP10,
+>   	SRC_MASK_FSYS,
+>   	SRC_MASK_PERIC0,
+> @@ -351,6 +354,8 @@ PNAME(mout_hdmi_p) = {"dout_hdmi_pixel", "sclk_hdmiphy"};
+>   PNAME(mout_maudio0_p) = {"fin_pll", "maudio_clk", "mout_sclk_dpll",
+>   			 "mout_sclk_mpll", "mout_sclk_spll", "mout_sclk_ipll",
+>   			 "mout_sclk_epll", "mout_sclk_rpll"};
+> +PNAME(mout_mau_epll_clk_p) = {"mout_sclk_epll", "mout_sclk_dpll",
+> +				"mout_sclk_mpll", "mout_sclk_spll"};
+>
+>   /* fixed rate clocks generated outside the soc */
+>   static struct samsung_fixed_rate_clock exynos5420_fixed_rate_ext_clks[] __initdata = {
+> @@ -373,6 +378,9 @@ static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[] __initda
+>   static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+>   	MUX(0, "mout_mspll_kfc", mout_mspll_cpu_p, SRC_TOP7, 8, 2),
+>   	MUX(0, "mout_mspll_cpu", mout_mspll_cpu_p, SRC_TOP7, 12, 2),
+> +	MUX_F(0, "mout_mau_epll_clk", mout_mau_epll_clk_p,
+> +			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
 
-> 
-> > That said,
-> > I don't object to having a way to label a PHY as attached via TBI if
-> > that's useful.  I'm giving a mild, non-nacking (given the history)
-> > objection to using device_type for that (given other history).
-> 
-> Personally, I think that TBI PHY support is a bit messy but I don't have
-> bandwidth to deal with that. The TBI PHY should be handled as a regular
-> PHY and right now is a special case
+Again, the CLK_SET_RATE_PARENT doesn't seem to be correct here.
 
-Yes please! We will use the TBI as the only PHY in 1000BASE-X mode so
-naturally we want to see the TBI as its own PHY and monitor its link 
-status, AN etc.
+> +
+>   	MUX(0, "mout_apll", mout_apll_p, SRC_CPU, 0, 1),
+>   	MUX(0, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1),
+>   	MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
+> @@ -520,7 +528,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+>   			TOP_SPARE2, 8, 1, CLK_SET_RATE_PARENT, 0),
+>
+>   	/* MAU Block */
+> -	MUX(0, "mout_maudio0", mout_maudio0_p, SRC_MAU, 28, 3),
+> +	MUX_F(CLK_MOUT_MAUDIO0, "mout_maudio0", mout_maudio0_p, SRC_MAU, 28, 3,
+> +						CLK_SET_RATE_PARENT, 0),
 
- Jocke
+Ditto.
+
+>
+>   	/* FSYS Block */
+>   	MUX(0, "mout_usbd301", mout_group2_p, SRC_FSYS, 4, 3),
+> @@ -713,6 +722,9 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>   	GATE(CLK_ACLK300_DISP1, "aclk300_disp1", "mout_user_aclk300_disp1",
+>   			SRC_MASK_TOP2, 24, CLK_IGNORE_UNUSED, 0),
+>
+> +	GATE(CLK_MAU_EPLL, "mau_epll", "mout_mau_epll_clk",
+> +			SRC_MASK_TOP7, 20, CLK_IGNORE_UNUSED, 0),
+
+What is the reason for CLK_IGNORE_UNUSED flag here?
+
+Best regards,
+Tomasz
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
