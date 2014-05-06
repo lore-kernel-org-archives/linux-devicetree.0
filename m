@@ -1,124 +1,63 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [RFC] [v2 Patch 6/6] ARM: dts: omap5: Add prm_resets node
-Date: Mon, 5 May 2014 15:09:27 -0500
-Message-ID: <1399320567-3639-7-git-send-email-dmurphy@ti.com>
-References: <1399320567-3639-1-git-send-email-dmurphy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1399320567-3639-1-git-send-email-dmurphy@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, tony@atomide.com
-Cc: Dan Murphy <dmurphy@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 09/20] ARM: mvebu: Add Device Tree description of the EHCI host on Armada 38x
+Date: Tue,  6 May 2014 02:14:04 +0200
+Message-ID: <1399335255-589-10-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the prm_resets node to the prm parent node.
+The Marvell Armada 38x SoCs contains one EHCI host. This commit adds
+the Device Tree description of this interface at the SoC level, and
+also enables the USB2 port on the Armada 385 DB platform.
 
-Add the omap54xx_resets file to define the
-omap5 reset lines that are handled by this reset
-framework.
-
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/omap5.dtsi           |    7 ++++
- arch/arm/boot/dts/omap54xx-resets.dtsi |   66 ++++++++++++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap54xx-resets.dtsi
+ arch/arm/boot/dts/armada-385-db.dts | 4 ++++
+ arch/arm/boot/dts/armada-38x.dtsi   | 8 ++++++++
+ 2 files changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index f8c9855..b6e3c4c 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -134,6 +134,12 @@
- 
- 			prm_clockdomains: clockdomains {
+diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
+index d5db1466da82..91e3e449067f 100644
+--- a/arch/arm/boot/dts/armada-385-db.dts
++++ b/arch/arm/boot/dts/armada-385-db.dts
+@@ -65,6 +65,10 @@
+ 				phy-mode = "rgmii-id";
  			};
-+
-+			prm_resets: resets {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				#reset-cells = <1>;
+ 
++			usb@50000 {
++				status = "ok";
 +			};
- 		};
++
+ 			ethernet@70000 {
+ 				status = "okay";
+ 				phy = <&phy0>;
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 5913ce1cc601..11f1f9e28cbc 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -283,6 +283,14 @@
+ 				status = "disabled";
+ 			};
  
- 		cm_core_aon: cm_core_aon@4a004000 {
-@@ -873,3 +879,4 @@
- };
- 
- /include/ "omap54xx-clocks.dtsi"
-+/include/ "omap54xx-resets.dtsi"
-diff --git a/arch/arm/boot/dts/omap54xx-resets.dtsi b/arch/arm/boot/dts/omap54xx-resets.dtsi
-new file mode 100644
-index 0000000..cba6f52
---- /dev/null
-+++ b/arch/arm/boot/dts/omap54xx-resets.dtsi
-@@ -0,0 +1,66 @@
-+/*
-+ * Device Tree Source for OMAP5 reset data
-+ *
-+ * Copyright (C) 2014 Texas Instruments, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
++			usb@50000 {
++				compatible = "marvell,orion-ehci";
++				reg = <0x58000 0x500>;
++				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 18>;
++				status = "disabled";
++			};
 +
-+&prm_resets {
-+	dsp_rstctrl {
-+		reg = <0x1c00>,
-+			  <0x1c04>;
-+
-+		dsp_reset: dsp_reset {
-+			control-bit = <0x01>;
-+			status-bit = <0x01>;
-+		};
-+
-+		dsp_mmu_reset: dsp_mmu_reset {
-+			control-bit = <0x02>;
-+			status-bit = <0x02>;
-+		};
-+	};
-+
-+	ipu_rstctrl {
-+		reg = <0x910>,
-+			  <0x914>;
-+
-+		ipu_cpu0_reset: ipu_cpu0_reset {
-+			control-bit = <0x01>;
-+			status-bit = <0x01>;
-+		};
-+
-+		ipu_cpu1_reset: ipu_cpu1_reset {
-+			control-bit = <0x02>;
-+			status-bit = <0x02>;
-+		};
-+
-+		ipu_mmu_reset: ipu_mmu_reset {
-+			control-bit = <0x04>;
-+			status-bit = <0x04>;
-+		};
-+	};
-+
-+	iva_rstctrl {
-+		reg = <0x1210>,
-+			  <0x1214>;
-+
-+		iva_reset: iva_reset {
-+			control-bit = <0x01>;
-+			status-bit = <0x01>;
-+		};
-+	};
-+
-+	device_rstctrl {
-+		reg = <0x1c00>,
-+			  <0x1c04>;
-+
-+		device_reset: device_reset {
-+			control-bit = <0x01>;
-+			status-bit = <0x01>;
-+		};
-+	};
-+};
+ 			xor@60800 {
+ 				compatible = "marvell,orion-xor";
+ 				reg = <0x60800 0x100
 -- 
-1.7.9.5
+1.8.1.2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
