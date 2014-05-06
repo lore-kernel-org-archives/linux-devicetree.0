@@ -1,109 +1,62 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH v4 09/15] clk: exynos5420: clk: exynos5420: update clocks for
- WCORE block
-Date: Tue, 06 May 2014 21:56:44 +0530
-Message-ID: <1399393610-23394-10-git-send-email-shaik.ameer@samsung.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v12 18/31] iommu/exynos: allow having multiple System
+ MMUs for a master H/W
+Date: Tue, 06 May 2014 20:05:14 +0200
+Message-ID: <5369245A.1060001@gmail.com>
+References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com> <1398584283-22846-19-git-send-email-shaik.ameer@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+In-Reply-To: <1398584283-22846-19-git-send-email-shaik.ameer@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc: kgene.kim@samsung.com, pullip.cho@samsung.com, a.motakis@virtualopensystems.com, grundler@chromium.org, joro@8bytes.org, prathyush.k@samsung.com, rahul.sharma@samsung.com, sachin.kamat@linaro.org, supash.ramaswamy@linaro.org, Varun.Sethi@freescale.com, s.nawrocki@samsung.com, t.figa@samsung.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds missing clocks from WCORE block.
+On 27.04.2014 09:37, Shaik Ameer Basha wrote:
+> From: Cho KyongHo <pullip.cho@samsung.com>
+>
+> Some master device descriptor like fimc-is which is an abstraction
+> of very complex H/W may have multiple System MMUs. For those devices,
+> the design of the link between System MMU and its master H/W is needed
+> to be reconsidered.
+>
+> A link structure, sysmmu_list_data is introduced that provides a link
+> to master H/W and that has a pointer to the device descriptor of a
+> System MMU. Given a device descriptor of a master H/W, it is possible
+> to traverse all System MMUs that must be controlled along with the
+> master H/W.
+>
+> Signed-off-by: Cho KyongHo <pullip.cho@samsung.com>
+> ---
+>   drivers/iommu/exynos-iommu.c |  545 ++++++++++++++++++++++++++----------------
+>   1 file changed, 335 insertions(+), 210 deletions(-)
+>
+> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+> index fefedec3..c2e6365 100755
+> --- a/drivers/iommu/exynos-iommu.c
+> +++ b/drivers/iommu/exynos-iommu.c
+> @@ -117,6 +117,10 @@
+>   #define REG_PB1_EADDR		0x058
+>
+>   #define has_sysmmu(dev)		(dev->archdata.iommu != NULL)
+> +#define for_each_sysmmu_list(dev, list_data)				\
+> +	list_for_each_entry(list_data,					\
+> +		&((struct exynos_iommu_owner *)dev->archdata.iommu)->mmu_list, \
+> +		entry)
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c |   25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
+Sorry, NAK.
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index af13e6c..f0460b4 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -89,6 +89,7 @@
- #define GATE_BUS_PERIC1		0x10754
- #define GATE_BUS_PERIS0		0x10760
- #define GATE_BUS_PERIS1		0x10764
-+#define GATE_BUS_NOC		0x10770
- #define GATE_TOP_SCLK_ISP	0x10870
- #define GATE_IP_GSCL0		0x10910
- #define GATE_IP_GSCL1		0x10920
-@@ -180,6 +181,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
- 	GATE_BUS_PERIC1,
- 	GATE_BUS_PERIS0,
- 	GATE_BUS_PERIS1,
-+	GATE_BUS_NOC,
- 	GATE_TOP_SCLK_ISP,
- 	GATE_IP_GSCL0,
- 	GATE_IP_GSCL1,
-@@ -271,6 +273,13 @@ PNAME(mout_user_aclk200_fsys_p)	= {"fin_pll", "mout_sw_aclk200_fsys"};
- 
- PNAME(mout_sw_aclk200_fsys2_p) = {"dout_aclk200_fsys2", "mout_sclk_spll"};
- PNAME(mout_user_aclk200_fsys2_p) = {"fin_pll", "mout_sw_aclk200_fsys2"};
-+PNAME(mout_sw_aclk100_noc_p) = {"dout_aclk100_noc", "mout_sclk_spll"};
-+PNAME(mout_user_aclk100_noc_p) = {"fin_pll", "mout_sw_aclk100_noc"};
-+
-+PNAME(mout_sw_aclk400_wcore_p) = {"dout_aclk400_wcore", "mout_sclk_spll"};
-+PNAME(mout_aclk400_wcore_bpll_p) = {"mout_aclk400_wcore", "sclk_bpll"};
-+PNAME(mout_user_aclk400_wcore_p) = {"fin_pll", "mout_sw_aclk400_wcore"};
-+
- PNAME(mout_sw_aclk400_isp_p) = {"dout_aclk400_isp", "mout_sclk_spll"};
- PNAME(mout_user_aclk400_isp_p) = {"fin_pll", "mout_sw_aclk400_isp"};
- 
-@@ -370,6 +379,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 			SRC_TOP0, 4, 2, "aclk400_mscl"),
- 	MUX(0, "mout_aclk200", mout_group1_p, SRC_TOP0, 8, 2),
- 	MUX(0, "mout_aclk200_fsys2", mout_group1_p, SRC_TOP0, 12, 2),
-+	MUX(0, "mout_aclk400_wcore", mout_group1_p, SRC_TOP0, 16, 2),
-+	MUX(0, "mout_aclk100_noc", mout_group1_p, SRC_TOP0, 20, 2),
- 	MUX(0, "mout_aclk200_fsys", mout_group1_p, SRC_TOP0, 28, 2),
- 
- 	MUX(0, "mout_aclk333_432_gscl", mout_group4_p, SRC_TOP1, 0, 2),
-@@ -397,6 +408,10 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 			SRC_TOP3, 8, 1),
- 	MUX(0, "mout_user_aclk200_fsys2", mout_user_aclk200_fsys2_p,
- 			SRC_TOP3, 12, 1),
-+	MUX(0, "mout_user_aclk400_wcore", mout_user_aclk400_wcore_p,
-+			SRC_TOP3, 16, 1),
-+	MUX(0, "mout_user_aclk100_noc", mout_user_aclk100_noc_p,
-+			SRC_TOP3, 20, 1),
- 	MUX(0, "mout_user_aclk200_fsys", mout_user_aclk200_fsys_p,
- 			SRC_TOP3, 28, 1),
- 
-@@ -447,6 +462,10 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 	MUX(0, "mout_sw_aclk200", mout_sw_aclk200_p, SRC_TOP10, 8, 1),
- 	MUX(0, "mout_sw_aclk200_fsys2", mout_sw_aclk200_fsys2_p,
- 			SRC_TOP10, 12, 1),
-+	MUX(0, "mout_sw_aclk400_wcore", mout_sw_aclk400_wcore_p,
-+			SRC_TOP10, 16, 1),
-+	MUX(0, "mout_sw_aclk100_noc", mout_sw_aclk100_noc_p,
-+			SRC_TOP10, 20, 1),
- 	MUX(0, "mout_sw_aclk200_fsys", mout_sw_aclk200_fsys_p,
- 			SRC_TOP10, 28, 1),
- 
-@@ -483,6 +502,9 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 	MUX(CLK_MOUT_HDMI, "mout_hdmi", mout_hdmi_p, SRC_DISP10, 28, 1),
- 	MUX_F(0, "mout_fimd1_opt", mout_group2_p,
- 			SRC_DISP10, 8, 3, CLK_SET_RATE_PARENT, 0),
-+
-+	MUX(0, "mout_aclk400_wcore_bpll", mout_aclk400_wcore_bpll_p,
-+			TOP_SPARE2, 4, 1),
- 	MUX_F(0, "mout_fimd1_final", mout_fimd1_final_p,
- 			TOP_SPARE2, 8, 1, CLK_SET_RATE_PARENT, 0),
- 
-@@ -530,6 +552,9 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
- 	DIV(0, "dout_aclk400_mscl", "mout_aclk400_mscl", DIV_TOP0, 4, 3),
- 	DIV(0, "dout_aclk200", "mout_aclk200", DIV_TOP0, 8, 3),
- 	DIV(0, "dout_aclk200_fsys2", "mout_aclk200_fsys2", DIV_TOP0, 12, 3),
-+	DIV(0, "dout_aclk400_wcore", "mout_aclk400_wcore_bpll",
-+			DIV_TOP0, 16, 3),
-+	DIV(0, "dout_aclk100_noc", "mout_aclk100_noc", DIV_TOP0, 20, 3),
- 	DIV(0, "dout_pclk200_fsys", "mout_pclk200_fsys", DIV_TOP0, 24, 3),
- 	DIV(0, "dout_aclk200_fsys", "mout_aclk200_fsys", DIV_TOP0, 28, 3),
- 
--- 
-1.7.9.5
+Please don't add this kind of complexity and business logic to low level 
+code. We want the configuration functions to be simple, easy to read, 
+maintain and extend.
+
+The proper way to do it is to let the IOMMUs be grouped together on 
+IOMMU subsystem level, so that each IOMMU consumer driver would see just 
+one IOMMU, but then IOMMU driver callbacks would handle just particular 
+instances of the IOMMU IP blocks, without any loops, lists and other 
+crazy code...
+
+Best regards,
+Tomasz
