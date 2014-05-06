@@ -1,84 +1,75 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 00/20] USB support for Armada 38x and Armada 375
-Date: Tue,  6 May 2014 02:13:55 +0200
-Message-ID: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 6/7] Input: pixcir_i2c_ts: Implement wakeup from
+ suspend
+Date: Mon, 5 May 2014 22:21:48 -0700
+Message-ID: <20140506052148.GB2608@core.coreip.homeip.net>
+References: <1399280678-23925-1-git-send-email-rogerq@ti.com>
+ <1399280678-23925-7-git-send-email-rogerq@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399280678-23925-7-git-send-email-rogerq@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds the USB support for the Armada 38x Armada
-375. These SoCs use an xHCI but still need specific initialization,
-mainly to setup the windows memory on the mbus. They also use the same
-controller that the other mvebu SoC for EHCI.
+On Mon, May 05, 2014 at 12:04:37PM +0300, Roger Quadros wrote:
+> Improve the suspend and resume handlers to allow the device
+> to wakeup the system from suspend.
+> 
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+> ---
+>  drivers/input/touchscreen/pixcir_i2c_ts.c | 53 ++++++++++++++++++++++++++++---
+>  1 file changed, 49 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> index 927aed1..5f6a27e 100644
+> --- a/drivers/input/touchscreen/pixcir_i2c_ts.c
+> +++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+> @@ -348,21 +348,66 @@ static void pixcir_input_close(struct input_dev *dev)
+>  static int pixcir_i2c_ts_suspend(struct device *dev)
+>  {
+>  	struct i2c_client *client = to_i2c_client(dev);
+> +	struct pixcir_i2c_ts_data *ts = i2c_get_clientdata(client);
+> +	struct input_dev *input = ts->input;
+> +	int ret = 0;
+> +
+> +	mutex_lock(&input->mutex);
+> +
+> +	if (input->users) {
+> +		ret = pixcir_stop(ts);
+> +		if (ret)
+> +			goto unlock;
+> +	}
+> +
+> +	/*
+> +	 * If wakeup is enabled we need to enable interrupt generation
+> +	 * but don't need to process any reports i.e. ts->exiting must be true.
+> +	 */
+> +	if (device_may_wakeup(&client->dev)) {
+> +		/* enable wakeup interrupt generation */
+> +		ret = pixcir_int_enable(ts, 1);
+> +		if (ret) {
+> +			dev_err(dev, "Failed to enable interrupt generation\n");
+> +			goto unlock;
+> +		}
 
-Since the 2nd version I converted the usb cluster driver in a PHY
-driver. While I was working on it I found a bug on ehci-orion which I
-fixed in the 1st patch.
+I am not sure why we need to disable event processing here. Why not do
 
-The other noticeable change was that in order to be able to use the
-clocks I also added private platform data for xHCI.
+	if (device_may_wakeup(&client->dev)) {
+		enable_irq_wake(client->irq); 
+		ret = pixcir_int_enable(ts, true);
+		...
+	} else if (input->users) {
+		ret = pixcir_stop(ts);
+	}
 
-In the meantime I also received the A0 version of the Armada 375 so I
-removed all the workaround related to the very earlier version of the
-SoC, indeed there were very few boards with this version of the SoC.
+like many of the drivers do?
 
-
-This series is also available in
-the branch USB-375-38x-3.15-rc1-V3
-https://github.com/MISL-EBU-System-SW/mainline-public.git
-
-Thanks,
-
-Gregory CLEMENT (20):
-  usb: ehci-orion: Fix clock reference leaking
-  usb: ehci-orion: Add the optional PHY support
-  usb: host: xhci-plat: Sort the headers in alphabetic order
-  usb: xhci: add a platform-private field
-  usb: host: xhci-plat: Add clocks support
-  usb: host: xhci-plat: Add support for the Armada 38x
-  xhci-platform: Add a new controller using xhci: Armada 38x
-  ARM: mvebu: Add Device Tree description of xHCI hosts on Armada 38x
-  ARM: mvebu: Add Device Tree description of the EHCI host on Armada 38x
-  ARM: mvebu: Add USB3 support for Armada 38x
-  ARM: configs: Add usb_xhci_mvebu to mvebu_v7_defconfig
-  ARM: configs: Add usb_xhci_mvebu to multi_v7_defconfig
-  usb: host: xhci-plat: Add support for the Armada 375
-  xhci-platform: Add a new controller using xHCI: Armada 375
-  ARM: mvebu: Add Device Tree description of USB cluster controller on
-    Armada 375
-  dt: binding: Armada 375 USB cluster
-  phy: Add support for USB cluster on the Armada 375 SoC
-  ARM: mvebu: Add USB3 support for Armada 375
-  ARM: mvebu: Add Device Tree description of the xHCI host on Armada 375
-  ARM: mvebu: Add Device Tree description of the EHCI host on Armada 375
-
- .../bindings/phy/armada-375-usb-phy-cluster.txt    |  19 +++
- Documentation/devicetree/bindings/usb/usb-xhci.txt |   4 +-
- arch/arm/boot/dts/armada-375-db.dts                |   8 ++
- arch/arm/boot/dts/armada-375.dtsi                  |  34 +++++
- arch/arm/boot/dts/armada-385-db.dts                |  12 ++
- arch/arm/boot/dts/armada-385-rd.dts                |   4 +
- arch/arm/boot/dts/armada-38x.dtsi                  |  25 ++++
- arch/arm/configs/multi_v7_defconfig                |   1 +
- arch/arm/configs/mvebu_v7_defconfig                |   1 +
- arch/arm/mach-mvebu/Kconfig                        |   2 +
- drivers/phy/Kconfig                                |   5 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-armada375-usb2.c                   | 154 +++++++++++++++++++++
- drivers/usb/host/Kconfig                           |   7 +
- drivers/usb/host/Makefile                          |   1 +
- drivers/usb/host/ehci-orion.c                      |  68 ++++++---
- drivers/usb/host/xhci-mvebu.c                      |  71 ++++++++++
- drivers/usb/host/xhci-mvebu.h                      |  21 +++
- drivers/usb/host/xhci-plat.c                       |  74 +++++++++-
- drivers/usb/host/xhci.h                            |   3 +
- 20 files changed, 491 insertions(+), 24 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
- create mode 100644 drivers/phy/phy-armada375-usb2.c
- create mode 100644 drivers/usb/host/xhci-mvebu.c
- create mode 100644 drivers/usb/host/xhci-mvebu.h
+Thanks.
 
 -- 
-1.8.1.2
+Dmitry
