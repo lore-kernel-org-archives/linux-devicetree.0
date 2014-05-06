@@ -1,40 +1,45 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V5 0/3] arm: dts: dra7: Updates for adding crossbar device
-Date: Tue, 6 May 2014 19:26:16 +0530
-Message-ID: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v4 2/7] Input: pixcir_i2c_ts: Initialize interrupt mode
+ and power mode
+Date: Tue, 6 May 2014 11:31:45 +0300
+Message-ID: <53689DF1.4070008@ti.com>
+References: <1399280678-23925-1-git-send-email-rogerq@ti.com> <1399280678-23925-3-git-send-email-rogerq@ti.com> <20140506051922.GA2608@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
-Cc: Sricharan R <r.sricharan@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140506051922.GA2608@core.coreip.homeip.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some socs have a large number of interrupts requests to service
-the needs of its many peripherals and subsystems. All of the interrupt
-requests lines from the subsystems are not needed at the same
-time, so they have to be muxed to the controllers appropriately.
-In such places a interrupt controllers are preceded by an
-IRQ CROSSBAR that provides flexibility in muxing the device interrupt
-requests to the controller inputs.
+Dmitry,
 
-The dts file update to support the crossbar device and convert
-peripheral irq numbers to crossbar number are added here.
+On 05/06/2014 08:19 AM, Dmitry Torokhov wrote:
+> Hi Roger,
+> 
+> On Mon, May 05, 2014 at 12:04:33PM +0300, Roger Quadros wrote:
+>> @@ -192,8 +364,8 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+>>  
+>>  	device_init_wakeup(&client->dev, 0);
+>>  
+>> -	tsdata->exiting = true;
+>> -	mb();
+>> +	if (!tsdata->exiting)
+>> +		pixcir_stop(tsdata);
+>>  
+> 
+> I think if we change tsdata->exiting to tsdata->running we won't have to
+> do it here. Does the version of the patch below work for you?
+> 
 
-This is a rebase of V4 series on top of 3.15-rc4
+The call to pixcir_stop() was not required in the original version as well. It seems
+that the root of the problem for remove() and suspend() that I was trying to solve
+was in the pixcir_stop() function. i.e. the order of mb() and synchronize_irq();
 
-This series depends on crossbar-driver-fixes sent below
-http://marc.info/?l=linux-omap&m=139929963420299&w=2
+But I like your version more since "running" reflects the behaviour more accurately
+than "exiting".
 
-Sricharan R (3):
-  arm: dts: dra7: Add crossbar device binding
-  arm: dts: dra7: Replace peripheral interrupt numbers with crossbar
-    inputs
-  arm: dts: dra7: Add routable-irqs property for gic node
-
- arch/arm/boot/dts/dra7.dtsi |  109 +++++++++++++++++++++++++------------------
- 1 file changed, 63 insertions(+), 46 deletions(-)
-
--- 
-1.7.9.5
-
+cheers,
+-roger
