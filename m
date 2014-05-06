@@ -1,164 +1,56 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for pcie-dra7xx controller
-Date: Tue, 6 May 2014 15:44:28 +0200
-Message-ID: <201405061544.28738.marex@denx.de>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-6-git-send-email-kishon@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
+Date: Tue, 6 May 2014 09:32:10 -0400
+Message-ID: <5368E45A.1000205@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
+ <CAErSpo6gYT34-sOvNgEdV+3wxv=Fdqtx7c1d-4577mFydLtZMg@mail.gmail.com>
+ <1399347878.20388.96.camel@pasglop> <5699845.615YLDid8d@wuerfel>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1399383244-14556-6-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5699845.615YLDid8d@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Metcalf <cmetcalf@tilera.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, May 06, 2014 at 03:33:51 PM, Kishon Vijay Abraham I wrote:
-> Added support for pcie controller in dra7xx. This driver re-uses
-> the designware core code that is already present in kernel.
+On Tuesday 06 May 2014 05:54 AM, Arnd Bergmann wrote:
+> On Tuesday 06 May 2014 13:44:38 Benjamin Herrenschmidt wrote:
+>> On Mon, 2014-05-05 at 16:28 -0600, Bjorn Helgaas wrote:
+>>> I still wonder whether arm, powerpc, and tile (and I just noticed
+>>> microblaze also has a similar dma_direct_map_page()) could all be
+>>> handled by attaching devices to a generic trivial IOMMU driver
+>>> parameterized with the appropriate constant offset.
+> 
 
-[...]
+[..]
 
-> +#define to_dra7xx_pcie(x)	container_of((x), struct dra7xx_pcie, pp)
-> +
-> +static inline u32 dra7xx_pcie_readl(void __iomem *base, u32 offset)
+> It may be easier to replace set_arch_dma_coherent_ops() with
+> a generic function that handles all cases:
+> 
+> int set_arch_dma_ops(struct device *dev, bool coherent,
+> 		phys_addr_t offset, struct device_node *iommu);
+> 
+> and let the architecture handle the cases it needs.
+> 
+>> On powerpc, the offset is not constant, it can be per-device.
+> 
+> I think that's the case on all of them. The code under review here
+> is what parses the dma-ranges property in order to put the correct
+> value into the per-device structure.
+> 
+Yep. The per-device property need is one of the reason, we added the
+information to struct device. The constant need not be same though
+on keystone it is same for all devices.
 
-Just pass struct dra7xx_pcie * instead of *base here , it will make the code 
-below shorter.
-
-> +{
-> +	return readl(base + offset);
-> +}
-> +
-> +static inline void dra7xx_pcie_writel(void __iomem *base, u32 offset, u32
-> value) +{
-
-DTTO.
-
-> +	writel(value, base + offset);
-> +}
-> +
-> +static int dra7xx_pcie_link_up(struct pcie_port *pp)
-> +{
-> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
-> +	u32 reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_DRA7XX_CONF_PHY_CS);
-> +
-> +	if (reg & LINK_UP)
-> +		return true;
-> +	return false;
-
-return reg & LINK_UP;
-
-> +}
-> +
-> +static int dra7xx_pcie_establish_link(struct pcie_port *pp)
-> +{
-> +	u32 reg;
-> +	int retries = 1000;
-> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
-> +
-> +	if (dw_pcie_link_up(pp)) {
-> +		dev_err(pp->dev, "link is already up\n");
-
-This will spew, since the .link_up (and thus this function) can be called 
-repeatedly. The subsystem will query if the link is up via this function.
-
-> +		return 0;
-> +	}
-> +
-> +	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
-> +	reg |= LTSSM_EN;
-> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg);
-> +
-> +	while (--retries) {
-
-Use retries--
-
-> +		reg = dra7xx_pcie_readl(dra7xx->base,
-> +					PCIECTRL_DRA7XX_CONF_PHY_CS);
-> +		if (reg & LINK_UP)
-> +			break;
-> +		usleep_range(10, 20);
-> +	}
-> +
-> +	if (retries <= 0) {
-
-Then check if retries == 0 and retries can be unsigned int.
-
-> +		dev_err(pp->dev, "link is not up\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-[...]
-> +static int __init dra7xx_pcie_probe(struct platform_device *pdev)
-> +{
-> +	u32 reg;
-> +	int ret;
-> +	int irq;
-> +	struct phy *phy;
-> +	void __iomem *base;
-> +	struct resource *res;
-> +	struct dra7xx_pcie *dra7xx;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	dra7xx = devm_kzalloc(&pdev->dev, sizeof(*dra7xx), GFP_KERNEL);
-> +	if (!dra7xx)
-> +		return -ENOMEM;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "missing IRQ resource\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = devm_request_irq(&pdev->dev, irq, dra7xx_pcie_irq_handler,
-> +			       IRQF_SHARED, "dra7xx-pcie-main", dra7xx);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "failed to request irq\n");
-> +		return ret;
-> +	}
-> +
-> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
-> +	base = devm_ioremap_nocache(dev, res->start, resource_size(res));
-> +	if (!base)
-> +		return -ENOMEM;
-> +
-> +	phy = devm_phy_get(dev, "pcie-phy");
-> +	if (IS_ERR(phy))
-> +		return PTR_ERR(phy);
-> +
-> +	ret = phy_init(phy);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	ret = phy_power_on(phy);
-> +	if (ret < 0)
-> +		goto err_power_on;
-> +
-> +	dra7xx->base = base;
-> +	dra7xx->phy = phy;
-> +	dra7xx->dev = dev;
-> +
-> +	pm_runtime_enable(&pdev->dev);
-> +	ret = pm_runtime_get_sync(&pdev->dev);
-> +	if (IS_ERR_VALUE(ret)) {
-> +		dev_err(dev, "pm_runtime_get_sync failed\n");
-> +		goto err_runtime_get;
-> +	}
-> +
-> +	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
-> +	reg &= ~LTSSM_EN;
-> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg);
-
-platform_set_drvdata() should be here, before you add the port.
-
-> +	ret = add_pcie_port(dra7xx, pdev);
-> +	if (ret < 0)
-> +		goto err_add_port;
-> +
-> +	platform_set_drvdata(pdev, dra7xx);
-> +	return 0;
-[...]
+Regards,
+Santosh
