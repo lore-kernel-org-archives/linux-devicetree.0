@@ -1,55 +1,39 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V5 3/3] arm: dts: dra7: Add routable-irqs property for gic node
-Date: Tue, 6 May 2014 19:26:19 +0530
-Message-ID: <1399384579-25620-4-git-send-email-r.sricharan@ti.com>
-References: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
-Cc: Sricharan R <r.sricharan@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 10/20] ARM: mvebu: Add USB3 support for Armada 38x
+Date: Tue,  6 May 2014 02:14:05 +0200
+Message-ID: <1399335255-589-11-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There is a IRQ crossbar device in the soc, which maps the
-irq requests from the peripherals to the mpu interrupt
-controller's inputs. The gic provides the support for such
-IPs in the form of routable-irqs. So adding the property
-here to gic node.
+This patch add the selection of the config symbol to build the USB3
+support for Armada 38x.
 
-Cc: Benoit Cousson <bcousson@baylibre.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
-[V5] Rebased and corrected routable irqs from 160 to 192
-
- arch/arm/boot/dts/dra7.dtsi |    1 +
+ arch/arm/mach-mvebu/Kconfig | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 52e4bd0..cec826f 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -72,6 +72,7 @@
- 		compatible = "arm,cortex-a15-gic";
- 		interrupt-controller;
- 		#interrupt-cells = <3>;
-+		arm,routable-irqs = <192>;
- 		reg = <0x48211000 0x1000>,
- 		      <0x48212000 0x1000>,
- 		      <0x48214000 0x2000>,
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index 3f73eecbcfb0..7960f218702b 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -54,6 +54,7 @@ config MACH_ARMADA_38X
+ 	select CPU_V7
+ 	select MACH_MVEBU_V7
+ 	select PINCTRL_ARMADA_38X
++	select USB_ARCH_HAS_XHCI
+ 	help
+ 	  Say 'Y' here if you want your kernel to support boards based
+ 	  on the Marvell Armada 380/385 SoC with device tree.
 -- 
-1.7.9.5
+1.8.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
