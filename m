@@ -1,67 +1,50 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v5 0/7] Input: pixcir_i2c_ts: Add Type-B Multi-touch and DT support
-Date: Tue, 6 May 2014 14:06:05 +0300
-Message-ID: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
+ Armada 38x
+Date: Tue, 6 May 2014 14:10:23 +0200
+Message-ID: <20140506141023.715b932d@skate>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+ <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
+ <1584794.IM1uiSkBdk@amdc1032> <61061197.hLhKsFqJLF@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <61061197.hLhKsFqJLF@wuerfel>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Nadav Haklai <nadavh@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Dear Arnd Bergmann,
 
-This series does the following
+On Tue, 06 May 2014 13:57:44 +0200, Arnd Bergmann wrote:
 
-- use devres managed resource allocations
-- convert to Type-B multi touch protocol
-- support upto 5 fingers with hardware supplied tracking IDs
-- device tree support
+> > Please limit this driver to mvebu arch and compile testing, i.e.
+> > 
+> >         depends on ARCH_MVEBU || COMPILE_TEST
+> 
+> I think it actually needs a dependency on MVEBU_MBUS.
 
-Please queue this for -next (3.16). Thanks.
+That's not what we do for any of the other drivers that use the
+MVEBU_MBUS functions.
 
-cheers,
--roger
+> You probably need something like
+> 
+> 	depends on MVEBU_MBUS=y || (MVEBU_MBUS=m && USB_XHCI=m)
 
-Changelog:
+MVEBU_MBUS is a bool, so there is no way is can be =m.
 
-v5:
-- Changed ts->exiting flag to ts->running in patch 2.
-- Don't call pixcir_stop() from .suspend() if wakeup is required.
-
-v4:
-- Imporved pixcir_stop() as per Dmitry's suggestion.
-- Removed unnecessary input_unregister_device() from .remove().
-
-v3:
-- Rebased to 3.15-rc3
-- Fixed suspend while touchscreen in use
-- Fixed module removal while touchscreen in use
-
-v2:
-- Addressed review comments and re-arranged patch order
-
-v1:
-- http://article.gmane.org/gmane.linux.kernel/1616417
-
---
-Roger Quadros (7):
-  Input: pixcir_i2c_ts: Use devres managed resource allocations
-  Input: pixcir_i2c_ts - initialize interrupt mode and power mode
-  Input: pixcir_i2c_ts: Get rid of pdata->attb_read_val()
-  Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
-  Input: pixcir_i2c_ts: support upto 5 fingers and hardware provided
-    tracking IDs
-  Input: pixcir_i2c_ts: Implement wakeup from suspend
-  Input: pixcir_i2c_ts: Add device tree support
-
- .../bindings/input/touchscreen/pixcir_i2c_ts.txt   |  26 +
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- drivers/input/touchscreen/pixcir_i2c_ts.c          | 524 ++++++++++++++++++---
- include/linux/input/pixcir_ts.h                    |  56 ++-
- 4 files changed, 540 insertions(+), 67 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/pixcir_i2c_ts.txt
-
+Thomas
 -- 
-1.8.3.2
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
