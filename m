@@ -1,96 +1,198 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: RE: [PATCH v2] mmc: add a driver for the Renesas usdhi6rol0 SD/SDIO
- host controller
-Date: Tue, 6 May 2014 08:41:52 +0000
-Message-ID: <1d83df00171643148fc62bf493876a86@HKXPR06MB168.apcprd06.prod.outlook.com>
-References: <Pine.LNX.4.64.1404261404030.21367@axis700.grange>
- <a3075651ae064d2fb70073eb3472ede4@HKXPR06MB168.apcprd06.prod.outlook.com>
- <Pine.LNX.4.64.1405031046560.23253@axis700.grange>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v5 4/7] Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
+Date: Tue, 6 May 2014 14:06:09 +0300
+Message-ID: <1399374372-29123-5-git-send-email-rogerq@ti.com>
+References: <1399374372-29123-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1405031046560.23253@axis700.grange>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+Sender: linux-input-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
+Switch to using the Type-B Multi-Touch protocol.
 
-On 03 May 2014 10:09, Guennadi wrote:
-> On Mon, 28 Apr 2014, Phil Edworthy wrote:
-> 
-> > Hi Guennadi,
-> >
-> > On 26 April 2014 13:06, Guennadi wrote:
-> > > Subject: [PATCH v2] mmc: add a driver for the Renesas usdhi6rol0
-> SD/SDIO
-> > > host controller
-> > >
-> > > This patch adds a driver for the Renesas usdhi6rol0 SD/SDIO host
-> controller
-> > > in both PIO and DMA modes.
-> >
-> > ...
-> > > +static void usdhi6_dma_stop_unmap(struct usdhi6_host *host)
-> > > +{
-> > > +	struct mmc_data *data = host->mrq->data;
-> > > +
-> > > +	if (!host->dma_active)
-> > > +		return;
-> > > +
-> > > +	usdhi6_write(host, USDHI6_CC_EXT_MODE, 0);
-> > > +	host->dma_active = false;
-> > > +
-> > > +	if (data->flags & MMC_DATA_READ)
-> > > +		/* TODO: do we have to synchronise? */
-> > > +		dma_unmap_sg(host->chan_rx->device->dev, data->sg,
-> > > +			     data->sg_len, DMA_FROM_DEVICE);
-> > Yes, you have to sync, so you can remove this TODO comment.
-> 
-> Why do you think so? If we really do, we'd have to add it. And I did think
-> synchronisation was needed, that's why I posted this patch series:
-> 
-> http://thread.gmane.org/gmane.linux.kernel.mmc/24969
-> 
-> but it never got applied, even though it got 2 acks. And actually now I
-> think that synchronisation isn't needed. I think dma_map_sg() /
-> dma_unmap_sg() do that for us already. E.g.
-> 
-> dma_map_sg_attrs()
-> arm_dma_map_page()
-> __dma_page_cpu_to_dev()
-> dmac_map_area()
-> cpu_cache.dma_map_area()
-> v7_dma_inv_range()
-> v7_dma_clean_range()
-> 
-> Similar for unmapping. So, I think it would be best to remove the comment
-> without adding synchronisation.
-> 
-> Let me do this: I'll prepare a separate patch for adding dma syncs, but I
-> won't submit it for now, or I can just provide it for reference.
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 125 ++++++++++++++++++++++--------
+ 1 file changed, 94 insertions(+), 31 deletions(-)
 
-Ok, my comment was based on the fact that your above patches got acks... Based on your comments above, I think it's best just to remove the TODO comment.
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 8a7da61..1b6e4e5 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -23,9 +23,12 @@
+ #include <linux/slab.h>
+ #include <linux/i2c.h>
+ #include <linux/input.h>
++#include <linux/input/mt.h>
+ #include <linux/input/pixcir_ts.h>
+ #include <linux/gpio.h>
+ 
++#define PIXCIR_MAX_SLOTS       2
++
+ struct pixcir_i2c_ts_data {
+ 	struct i2c_client *client;
+ 	struct input_dev *input;
+@@ -33,12 +36,25 @@ struct pixcir_i2c_ts_data {
+ 	bool running;
+ };
+ 
+-static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
++struct pixcir_touch {
++	int x;
++	int y;
++};
++
++struct pixcir_report_data {
++	int num_touches;
++	struct pixcir_touch touches[PIXCIR_MAX_SLOTS];
++};
++
++static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
++			    struct pixcir_report_data *report)
+ {
+-	struct pixcir_i2c_ts_data *tsdata = data;
+ 	u8 rdbuf[10], wrbuf[1] = { 0 };
++	u8 *bufptr;
+ 	u8 touch;
+-	int ret;
++	int ret, i;
++
++	memset(report, 0, sizeof(struct pixcir_report_data));
+ 
+ 	ret = i2c_master_send(tsdata->client, wrbuf, sizeof(wrbuf));
+ 	if (ret != sizeof(wrbuf)) {
+@@ -56,45 +72,85 @@ static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
+ 		return;
+ 	}
+ 
+-	touch = rdbuf[0];
+-	if (touch) {
+-		u16 posx1 = (rdbuf[3] << 8) | rdbuf[2];
+-		u16 posy1 = (rdbuf[5] << 8) | rdbuf[4];
+-		u16 posx2 = (rdbuf[7] << 8) | rdbuf[6];
+-		u16 posy2 = (rdbuf[9] << 8) | rdbuf[8];
+-
+-		input_report_key(tsdata->input, BTN_TOUCH, 1);
+-		input_report_abs(tsdata->input, ABS_X, posx1);
+-		input_report_abs(tsdata->input, ABS_Y, posy1);
+-
+-		input_report_abs(tsdata->input, ABS_MT_POSITION_X, posx1);
+-		input_report_abs(tsdata->input, ABS_MT_POSITION_Y, posy1);
+-		input_mt_sync(tsdata->input);
+-
+-		if (touch == 2) {
+-			input_report_abs(tsdata->input,
+-					 ABS_MT_POSITION_X, posx2);
+-			input_report_abs(tsdata->input,
+-					 ABS_MT_POSITION_Y, posy2);
+-			input_mt_sync(tsdata->input);
+-		}
+-	} else {
+-		input_report_key(tsdata->input, BTN_TOUCH, 0);
++	touch = rdbuf[0] & 0x7;
++	if (touch > PIXCIR_MAX_SLOTS)
++		touch = PIXCIR_MAX_SLOTS;
++
++	report->num_touches = touch;
++	bufptr = &rdbuf[2];
++
++	for (i = 0; i < touch; i++) {
++		report->touches[i].x = (bufptr[1] << 8) | bufptr[0];
++		report->touches[i].y = (bufptr[3] << 8) | bufptr[2];
++
++		bufptr = &bufptr[4];
+ 	}
++}
++
++static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
++			     struct pixcir_report_data *report)
++{
++	struct input_mt_pos pos[PIXCIR_MAX_SLOTS];
++	int slots[PIXCIR_MAX_SLOTS];
++	struct pixcir_touch *touch;
++	int n, i, slot;
++	struct device *dev = &ts->client->dev;
+ 
+-	input_sync(tsdata->input);
++	n = report->num_touches;
++	if (n > PIXCIR_MAX_SLOTS)
++		n = PIXCIR_MAX_SLOTS;
++
++	for (i = 0; i < n; i++) {
++		touch = &report->touches[i];
++		pos[i].x = touch->x;
++		pos[i].y = touch->y;
++	}
++
++	input_mt_assign_slots(ts->input, slots, pos, n);
++
++	for (i = 0; i < n; i++) {
++		touch = &report->touches[i];
++		slot = slots[i];
++
++		input_mt_slot(ts->input, slot);
++		input_mt_report_slot_state(ts->input,
++					   MT_TOOL_FINGER, true);
++
++		input_event(ts->input, EV_ABS, ABS_MT_POSITION_X, touch->x);
++		input_event(ts->input, EV_ABS, ABS_MT_POSITION_Y, touch->y);
++
++		dev_dbg(dev, "%d: slot %d, x %d, y %d\n",
++			i, slot, touch->x, touch->y);
++	}
++
++	input_mt_sync_frame(ts->input);
++	input_sync(ts->input);
+ }
+ 
+ static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+ {
+ 	struct pixcir_i2c_ts_data *tsdata = dev_id;
+ 	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
++	struct pixcir_report_data report;
+ 
+ 	while (tsdata->running) {
+-		pixcir_ts_poscheck(tsdata);
+-
+-		if (gpio_get_value(pdata->gpio_attb))
++		/* parse packet */
++		pixcir_ts_parse(tsdata, &report);
++
++		/* report it */
++		pixcir_ts_report(tsdata, &report);
++
++		if (gpio_get_value(pdata->gpio_attb)) {
++			if (report.num_touches) {
++				/*
++				 * Last report with no finger up?
++				 * Do it now then.
++				 */
++				input_mt_sync_frame(tsdata->input);
++				input_sync(tsdata->input);
++			}
+ 			break;
++		}
+ 
+ 		msleep(20);
+ 	}
+@@ -333,6 +389,13 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
+ 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
+ 
++	error = input_mt_init_slots(input, PIXCIR_MAX_SLOTS,
++				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
++	if (error) {
++		dev_err(dev, "Error initializing Multi-Touch slots\n");
++		return error;
++	}
++
+ 	input_set_drvdata(input, tsdata);
+ 
+ 	error = devm_gpio_request_one(dev, pdata->gpio_attb,
+-- 
+1.8.3.2
 
-> > ...
-> > > +static int usdhi6_probe(struct platform_device *pdev)
-> > > +{
-> > ...
-> > > +	host		= mmc_priv(mmc);
-> > > +	host->mmc	= mmc;
-> > > +	host->wait	= USDHI6_WAIT_FOR_REQUEST;
-> > > +	host->timeout	= msecs_to_jiffies(1000);
-> 
-> > In all places you use host->timeout, the code uses host->timeout * 4.
-> > Wouldn't it better to just set it here to 4 seconds?
-> 
-> ok, I'll do that for v3.
-> 
-> Thanks
-> Guennadi
-
-Thanks
-Phil
