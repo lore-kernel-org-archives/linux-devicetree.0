@@ -1,38 +1,60 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [TEMP PATCH 17/17] ARM: dts: dra7: Add *resets* property for PCIe dt node
-Date: Tue, 6 May 2014 19:04:03 +0530
-Message-ID: <1399383244-14556-18-git-send-email-kishon@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 05/20] usb: host: xhci-plat: Add clocks support
+Date: Mon, 5 May 2014 22:00:39 -0500
+Message-ID: <20140506030039.GA15336@saruman.home>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+ <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/04w6evG8XlLl3ft"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399383244-14556-1-git-send-email-kishon@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: rogerq@ti.com, balajitk@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, Dan Murphy <dmurphy@ti.com>
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Added *resets* and *reset-names* properies for PCIe dt node.
-The documention for this node can be found @ ../bindings/pci/ti-pci.txt.
+--/04w6evG8XlLl3ft
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Cc: Dan Murphy <dmurphy@ti.com>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi |    2 ++
- 1 file changed, 2 insertions(+)
+On Tue, May 06, 2014 at 02:14:00AM +0200, Gregory CLEMENT wrote:
+> @@ -118,7 +158,7 @@ static int xhci_plat_probe(struct platform_device *pd=
+ev)
+> =20
+>  	hcd =3D usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+>  	if (!hcd)
+> -		return -ENOMEM;
+> +		ret =3D -ENOMEM;
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 20b1a09..7bc0555 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -1031,6 +1031,8 @@
- 			ti,hwmods = "pcie1";
- 			phys = <&pcie1_phy>;
- 			phy-names = "pcie-phy";
-+			resets = <&prm_resets &device_reset>;
-+			reset-names = "reset";
- 		};
- 
- 		sata: sata@4a141100 {
--- 
-1.7.9.5
+regression
+
+--=20
+balbi
+
+--/04w6evG8XlLl3ft
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTaFBXAAoJEIaOsuA1yqRE9dUQAK1ujVgf0xDp21zyWDxh3FpQ
+PISVIEvfLYiXp4Fxcr5mpslzuwRlQmudBOvXSPnmxDhzCD1f+zxT6fc32uoBZYKL
+7RUDuyAdsSAmL+Hfm/EjMwvgFxKarU0+CzKgoj7xw9853UTgJghbrpBIK+6Sb+sC
+liVY/sNVjg6KLY28kwKd1WLxuCxhaVk+gncRa7hzKo5vUab4r9lk5kYqgLFiNN8O
+Omn3dNwmzHz55BXcMSoKi3XVoAZ2dud+MbYqpW8uPLTWYlThdURRk55tWtzZZQzj
++W2fWees/4D8PR6xTymUBpetAH4BvofkQ0XuF5E5XvGTmJxBXPzqvc2J25cDzQCH
+sDS3OOe5HNowKisvT3GtKI8JB9AnfU/PE8vABl22Af7aSGefgS8+bk/0HhPZMQn7
+YilgqJ3Tx+lf9Z9dzWopYZwLdguFWLsqJyAoYDZhLHuC7fXi6Gb266PhuYFSzFfJ
+SqZv8fYY4ukkNMZxsayAdIK3EoV4ftV5UslmN0hBY3qW0BIAdOeSJT431Aix7kSp
+TlSQBYiMFzdTj1gX39I2XGFt8NueKHfULRQmD/XxkxTvG2A5k0DMFK7HspxEOcDp
+oEnZ9XuObgdi1Fp1PBwC5wVS9YF0WGKcCuNfKO14PdoN5W88icJUFZqbIHHQZUxh
+FpReMh+lZtMWbh2ZLuiN
+=wKS4
+-----END PGP SIGNATURE-----
+
+--/04w6evG8XlLl3ft--
