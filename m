@@ -1,70 +1,70 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
- Armada 38x
-Date: Tue, 6 May 2014 14:42:42 +0200
-Message-ID: <20140506144242.1b098f30@skate>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <61061197.hLhKsFqJLF@wuerfel> <20140506141023.715b932d@skate>
- <4660313.evfclGtT1x@wuerfel>
+From: Jacek Anaszewski <j.anaszewski@samsung.com>
+Subject: Re: [PATCH/RFC v3 5/5] media: Add registration helpers for V4L2 flash
+ sub-devices
+Date: Tue, 06 May 2014 08:44:41 +0200
+Message-ID: <536884D9.4050104@samsung.com>
+References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
+ <1397228216-6657-6-git-send-email-j.anaszewski@samsung.com>
+ <20140416182141.GG8753@valkosipuli.retiisi.org.uk>
+ <534F9044.6080508@samsung.com>
+ <20140423152435.GJ8753@valkosipuli.retiisi.org.uk>
+ <535E3A95.6010206@samsung.com>
+ <20140502110651.GX8753@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <4660313.evfclGtT1x@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20140502110651.GX8753@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd Bergmann,
+Hi Sakari,
 
-On Tue, 06 May 2014 14:21:55 +0200, Arnd Bergmann wrote:
+On 05/02/2014 01:06 PM, Sakari Ailus wrote:
 
-> > That's not what we do for any of the other drivers that use the
-> > MVEBU_MBUS functions.
-> 
-> Fair enough. I guess using ARCH_MVEBU as the dependency works as well
-> because it implies MVEBU_MBUS. However, you can't use COMPILE_TEST
-> then because the driver itself needs the interfaces provided by MBUS.
-> 
-> It could be
-> 
-> 	depends on ARCH_MVEBU || (MVEBU_MBUS && COMPILE_TEST)
-> 
-> to describe the dependency most accurately.
+>>>> [...]
+>>>>>> +static inline enum led_brightness v4l2_flash_intensity_to_led_brightness(
+>>>>>> +					struct led_ctrl *config,
+>>>>>> +					u32 intensity)
+>>>>>
+>>>>> Fits on a single line.
+>>>>>
+>>>>>> +{
+>>>>>> +	return intensity / config->step;
+>>>>>
+>>>>> Shouldn't you first decrement the minimum before the division?
+>>>>
+>>>> Brightness level 0 means that led is off. Let's consider following case:
+>>>>
+>>>> intensity - 15625
+>>>> config->step - 15625
+>>>> intensity / config->step = 1 (the lowest possible current level)
+>>>
+>>> In V4L2 controls the minimum is not off, and zero might not be a possible
+>>> value since minimum isn't divisible by step.
+>>>
+>>> I wonder how to best take that into account.
+>>
+>> I've assumed that in MODE_TORCH a led is always on. Switching
+>> the mode to MODE_FLASH or MODE_OFF turns the led off.
+>> This way we avoid the problem with converting 0 uA value to
+>> led_brightness, as available torch brightness levels start from
+>> the minimum current level value and turning the led off is
+>> accomplished on transition to MODE_OFF or MODE_FLASH, by
+>> calling brightness_set op with led_brightness = 0.
+>
+> I'm not sure if we understood the issue the same way. My concern was that if
+> the intensity isn't a multiple of step (but intensity - min is), the above
+> formula won't return a valid result (unless I miss something).
+>
 
-Right, that would work indeed, but is in fact not necessary, at least
-for this driver. The only mbus function used by this driver is
-mv_mbus_dram_info(), and <linux/mbus.h> provides an empty stub for this
-function (returning NULL) when MVEBU_MBUS is disabled. So from a
-compile time point of view, there is no problem with compiling the
-xhci-plat driver with MVEBU_MBUS disabled, so in fact:
+Please note that v4l2_flash_intensity_to_led_brightness is called only
+from s_ctrl callback, and thus it expects to get the intensity aligned
+to the step value, so it will always be a multiple of step.
+Is it possible that s_ctrl callback would be passed a non-aligned
+control value?
 
-	depends on ARCH_MVEBU || COMPILE_TEST
-
-will work just fine.
-
-The only case where this doesn't work is for drivers that use the other
-mbus functions to create/remove windows, because no stubs are provided
-for these ones. However, as things are today, the only driver in this
-situation is the pci-mvebu driver, and its dependency is:
-
-	depends on ARCH_MVEBU || ARCH_DOVE || ARCH_KIRKWOOD
-
-For this one, we could indeed add || (MVEBU_MBUS && COMPILE_TEST)
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Regards,
+Jacek Anaszewski
