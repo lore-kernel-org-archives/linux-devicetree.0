@@ -1,89 +1,104 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for
- pcie-dra7xx controller
-Date: Tue, 6 May 2014 10:35:08 -0600
-Message-ID: <20140506163507.GA15542@obsidianresearch.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com>
- <1399383244-14556-6-git-send-email-kishon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399383244-14556-6-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, Marek Vasut <marex@denx.de>, balajitk@ti.com, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, rogerq@ti.com
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v4 13/15] clk: exynos5420: update clocks for MAU Block
+Date: Tue, 06 May 2014 21:56:48 +0530
+Message-ID: <1399393610-23394-14-git-send-email-shaik.ameer@samsung.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 06, 2014 at 07:03:51PM +0530, Kishon Vijay Abraham I wrote:
-> +Example:
-> +pcie@51000000 {
-> +	compatible = "ti,dra7xx-pcie";
-> +	reg = <0x51002000 0x14c>, <0x51000000 0x2000>;
-> +	reg-names = "ti_conf", "rc_dbics";
-> +	interrupts = <0 232 0x4>, <0 233 0x4>;
-> +	#address-cells = <3>;
-> +	#size-cells = <2>;
-> +	device_type = "pci";
-> +	ti,device_type = <3>;
-> +	ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* Configuration Space */
+This patch adds the missing MAU block specific clocks.
 
-Configuration space should not show up in the ranges, please don't
-copy that mistake from other drivers, put it in reg.
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5420.c   |   14 +++++++++++++-
+ include/dt-bindings/clock/exynos5420.h |    2 ++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-> +	interrupt-map-mask = <0 0 0 0>;
-> +	interrupt-map = <0x0 0 &gic 134>;
-
-The HW cannot decode INTA/B/C/D?
-
-> +#define	PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI		0x0034
-> +#define	PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MSI		0x0038
-> +#define	INTA						BIT(0)
-> +#define	INTB						BIT(1)
-> +#define	INTC						BIT(2)
-> +#define	INTD						BIT(3)
-> +#define	MSI						BIT(4)
-> +#define	LEG_EP_INTERRUPTS (INTA | INTB | INTC | INTD)
-
-Oh, it can, it would be wise to export this from the driver. Look at
-the latest patches from Srikanth Thokala for the Xilinx PCI driver to
-see how this should look
-
-> +static int dra7xx_pcie_establish_link(struct pcie_port *pp)
-> +{
-> +	u32 reg;
-> +	int retries = 1000;
-> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
-> +
-> +	if (dw_pcie_link_up(pp)) {
-> +		dev_err(pp->dev, "link is already up\n");
-> +		return 0;
-> +	}
-> +
-> +	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
-> +	reg |= LTSSM_EN;
-> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg);
-> +
-> +	while (--retries) {
-> +		reg = dra7xx_pcie_readl(dra7xx->base,
-> +					PCIECTRL_DRA7XX_CONF_PHY_CS);
-> +		if (reg & LINK_UP)
-> +			break;
-> +		usleep_range(10, 20);
-> +	}
-> +
-> +	if (retries <= 0) {
-> +		dev_err(pp->dev, "link is not up\n");
-> +		return -ETIMEDOUT;
-> +	}
-> +
-> +	return 0;
-> +}
-
-It would be really nice to see the link bring up process live in the
-PCI core, every driver seems to have its own take on this.
-
-The PCI-E spec requires a 100ms delay after link bring up (aka hot
-reset) before sending any configuration TLPs.
-
-Jason
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index ba7273a..e0e749d 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -62,7 +62,9 @@
+ #define SRC_TOP11		0x10284
+ #define SRC_TOP12		0x10288
+ #define SRC_MASK_TOP2		0x10308
++#define SRC_MASK_TOP7		0x1031c
+ #define SRC_MASK_DISP10		0x1032c
++#define SRC_MASK_MAU		0x10334
+ #define SRC_MASK_FSYS		0x10340
+ #define SRC_MASK_PERIC0		0x10350
+ #define SRC_MASK_PERIC1		0x10354
+@@ -155,6 +157,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+ 	SRC_TOP11,
+ 	SRC_TOP12,
+ 	SRC_MASK_TOP2,
++	SRC_MASK_TOP7,
+ 	SRC_MASK_DISP10,
+ 	SRC_MASK_FSYS,
+ 	SRC_MASK_PERIC0,
+@@ -351,6 +354,8 @@ PNAME(mout_hdmi_p) = {"dout_hdmi_pixel", "sclk_hdmiphy"};
+ PNAME(mout_maudio0_p) = {"fin_pll", "maudio_clk", "mout_sclk_dpll",
+ 			 "mout_sclk_mpll", "mout_sclk_spll", "mout_sclk_ipll",
+ 			 "mout_sclk_epll", "mout_sclk_rpll"};
++PNAME(mout_mau_epll_clk_p) = {"mout_sclk_epll", "mout_sclk_dpll",
++				"mout_sclk_mpll", "mout_sclk_spll"};
+ 
+ /* fixed rate clocks generated outside the soc */
+ static struct samsung_fixed_rate_clock exynos5420_fixed_rate_ext_clks[] __initdata = {
+@@ -373,6 +378,9 @@ static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[] __initda
+ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+ 	MUX(0, "mout_mspll_kfc", mout_mspll_cpu_p, SRC_TOP7, 8, 2),
+ 	MUX(0, "mout_mspll_cpu", mout_mspll_cpu_p, SRC_TOP7, 12, 2),
++	MUX_F(0, "mout_mau_epll_clk", mout_mau_epll_clk_p,
++			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
++
+ 	MUX(0, "mout_apll", mout_apll_p, SRC_CPU, 0, 1),
+ 	MUX(0, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1),
+ 	MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
+@@ -520,7 +528,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+ 			TOP_SPARE2, 8, 1, CLK_SET_RATE_PARENT, 0),
+ 
+ 	/* MAU Block */
+-	MUX(0, "mout_maudio0", mout_maudio0_p, SRC_MAU, 28, 3),
++	MUX_F(CLK_MOUT_MAUDIO0, "mout_maudio0", mout_maudio0_p, SRC_MAU, 28, 3,
++						CLK_SET_RATE_PARENT, 0),
+ 
+ 	/* FSYS Block */
+ 	MUX(0, "mout_usbd301", mout_group2_p, SRC_FSYS, 4, 3),
+@@ -713,6 +722,9 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 	GATE(CLK_ACLK300_DISP1, "aclk300_disp1", "mout_user_aclk300_disp1",
+ 			SRC_MASK_TOP2, 24, CLK_IGNORE_UNUSED, 0),
+ 
++	GATE(CLK_MAU_EPLL, "mau_epll", "mout_mau_epll_clk",
++			SRC_MASK_TOP7, 20, CLK_IGNORE_UNUSED, 0),
++
+ 	/* sclk */
+ 	GATE(CLK_SCLK_UART0, "sclk_uart0", "dout_uart0",
+ 		GATE_TOP_SCLK_PERIC, 0, CLK_SET_RATE_PARENT, 0),
+diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+index f5459c1..4831267 100644
+--- a/include/dt-bindings/clock/exynos5420.h
++++ b/include/dt-bindings/clock/exynos5420.h
+@@ -58,6 +58,7 @@
+ #define CLK_SCLK_GSCL_WA	156
+ #define CLK_SCLK_GSCL_WB	157
+ #define CLK_SCLK_HDMIPHY	158
++#define CLK_MAU_EPLL		159
+ 
+ /* gate clocks */
+ #define CLK_ACLK66_PERIC	256
+@@ -197,6 +198,7 @@
+ #define CLK_MOUT_HDMI		640
+ #define CLK_MOUT_G3D		641
+ #define CLK_MOUT_VPLL		642
++#define CLK_MOUT_MAUDIO0	643
+ 
+ /* divider clocks */
+ #define CLK_DOUT_PIXEL		768
+-- 
+1.7.9.5
