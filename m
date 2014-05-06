@@ -1,86 +1,74 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH v4 05/15] clk: exynos5420: update clocks for G2D and G3D blocks
-Date: Tue, 06 May 2014 21:56:40 +0530
-Message-ID: <1399393610-23394-6-git-send-email-shaik.ameer@samsung.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH v2 2/2] ARM: dts: rockchip: add root compatible properties
+Date: Tue,  6 May 2014 19:10:11 +0200
+Message-ID: <1399396211-25353-2-git-send-email-b.galvani@gmail.com>
+References: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds missing clocks of G2D block. It also removes
-the aclkg3d alias from G3D block clocks.
+Add the missing 'compatible' property to device tree root node of
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+ - rk3066a-bqcurie2.dts
+ - rk3188-radxarock.dts
+
+and document the new values.
+
+Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 ---
- drivers/clk/samsung/clk-exynos5420.c   |   17 ++++++++++++++---
- include/dt-bindings/clock/exynos5420.h |    2 ++
- 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 320f72d..5bc4798 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -27,6 +27,7 @@
- #define DIV_CPU1		0x504
- #define GATE_BUS_CPU		0x700
- #define GATE_SCLK_CPU		0x800
-+#define GATE_IP_G2D		0x8800
- #define CPLL_LOCK		0x10020
- #define DPLL_LOCK		0x10030
- #define EPLL_LOCK		0x10040
-@@ -402,8 +403,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 			8, 1),
- 	MUX(0, "mout_user_aclk266_g2d", mout_user_aclk266_g2d_p, SRC_TOP5,
- 			12, 1),
--	MUX_A(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
--			SRC_TOP5, 16, 1, "aclkg3d"),
-+	MUX(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
-+			SRC_TOP5, 16, 1),
- 	MUX(0, "mout_user_aclk300_jpeg", mout_user_aclk300_jpeg_p,
- 			SRC_TOP5, 20, 1),
- 	MUX(0, "mout_user_aclk300_disp1", mout_user_aclk300_disp1_p,
-@@ -830,6 +831,16 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
- 	GATE(CLK_SMMU_FIMD1, "smmu_fimd1", "aclk300_disp1", GATE_IP_DISP1, 8, 0,
- 		0),
- 
-+	/* G2D */
-+	GATE(CLK_MDMA0, "mdma0", "aclk266_g2d",
-+			GATE_IP_G2D, 1, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_G2D, "g2d", "aclk333_g2d",
-+			GATE_IP_G2D, 3, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_SMMU_MDMA0, "smmu_mdma0", "aclk266_g2d",
-+			GATE_IP_G2D, 5, CLK_IGNORE_UNUSED, 0),
-+	GATE(CLK_SMMU_G2D, "smmu_g2d", "aclk333_g2d",
-+			GATE_IP_G2D, 7, CLK_IGNORE_UNUSED, 0),
+v2:
+ - use mundoreader prefix instead of bq as suggested by Heiko Stuebner
+
+ Documentation/devicetree/bindings/arm/rockchip.txt |   10 ++++++++++
+ arch/arm/boot/dts/rk3066a-bqcurie2.dts             |    1 +
+ arch/arm/boot/dts/rk3188-radxarock.dts             |    1 +
+ 3 files changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.txt b/Documentation/devicetree/bindings/arm/rockchip.txt
+new file mode 100644
+index 0000000..857f126
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/rockchip.txt
+@@ -0,0 +1,10 @@
++Rockchip platforms device tree bindings
++---------------------------------------
 +
- 	/* ISP */
- 	GATE(CLK_SCLK_UART_ISP, "sclk_uart_isp", "dout_uart_isp",
- 			GATE_TOP_SCLK_ISP, 0, CLK_SET_RATE_PARENT, 0),
-@@ -850,7 +861,7 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
- 	GATE(CLK_SMMU_MFCL, "smmu_mfcl", "aclk333", GATE_IP_MFC, 1, 0, 0),
- 	GATE(CLK_SMMU_MFCR, "smmu_mfcr", "aclk333", GATE_IP_MFC, 2, 0, 0),
++- bq Curie 2 tablet:
++    Required root node properties:
++      - compatible = "mundoreader,bq-curie2", "rockchip,rk3066a";
++
++- Radxa Rock board:
++    Required root node properties:
++      - compatible = "radxa,rock", "rockchip,rk3188";
+diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+index 035df40..afb3273 100644
+--- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
++++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+@@ -18,6 +18,7 @@
  
--	GATE(CLK_G3D, "g3d", "aclkg3d", GATE_IP_G3D, 9, 0, 0),
-+	GATE(CLK_G3D, "g3d", "mout_user_aclk_g3d", GATE_IP_G3D, 9, 0, 0),
+ / {
+ 	model = "bq Curie 2";
++	compatible = "mundoreader,bq-curie2", "rockchip,rk3066a";
  
- 	GATE(CLK_ROTATOR, "rotator", "aclk266", GATE_IP_GEN, 1, 0, 0),
- 	GATE(CLK_JPEG, "jpeg", "aclk300_jpeg", GATE_IP_GEN, 2, 0, 0),
-diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-index 6e22fdd..bf85418 100644
---- a/include/dt-bindings/clock/exynos5420.h
-+++ b/include/dt-bindings/clock/exynos5420.h
-@@ -177,6 +177,8 @@
- #define CLK_ACLK_G3D		500
- #define CLK_G3D			501
- #define CLK_SMMU_MIXER		502
-+#define CLK_SMMU_G2D		503
-+#define CLK_SMMU_MDMA0		504
- #define CLK_SCLK_UART_ISP	510
- #define CLK_SCLK_SPI0_ISP	511
- #define CLK_SCLK_SPI1_ISP	512
+ 	memory {
+ 		reg = <0x60000000 0x40000000>;
+diff --git a/arch/arm/boot/dts/rk3188-radxarock.dts b/arch/arm/boot/dts/rk3188-radxarock.dts
+index 3ba1968..a5eee55 100644
+--- a/arch/arm/boot/dts/rk3188-radxarock.dts
++++ b/arch/arm/boot/dts/rk3188-radxarock.dts
+@@ -17,6 +17,7 @@
+ 
+ / {
+ 	model = "Radxa Rock";
++	compatible = "radxa,rock", "rockchip,rk3188";
+ 
+ 	memory {
+ 		reg = <0x60000000 0x80000000>;
 -- 
-1.7.9.5
+1.7.10.4
+
