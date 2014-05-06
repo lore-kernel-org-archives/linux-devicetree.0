@@ -1,101 +1,83 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v5 6/7] Input: pixcir_i2c_ts: Implement wakeup from suspend
-Date: Tue, 6 May 2014 14:06:11 +0300
-Message-ID: <1399374372-29123-7-git-send-email-rogerq@ti.com>
-References: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 05/15] clk: exynos5420: update clocks for G2D and G3D
+ blocks
+Date: Tue, 06 May 2014 18:50:13 +0200
+Message-ID: <536912C5.7060500@gmail.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+ <1399393610-23394-6-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399374372-29123-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1399393610-23394-6-git-send-email-shaik.ameer@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: kgene.kim@samsung.com, shaik.samsung@gmail.com, t.figa@samsung.com, joshi@samsung.com, alim.akhtar@samsung.com, r.sh.open@gmail.com, mturquette@linaro.org, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Improve the suspend and resume handlers to allow the device
-to wakeup the system from suspend.
+Hi Shaik,
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- drivers/input/touchscreen/pixcir_i2c_ts.c | 47 ++++++++++++++++++++++++++++---
- 1 file changed, 43 insertions(+), 4 deletions(-)
+On 06.05.2014 18:26, Shaik Ameer Basha wrote:
+> This patch adds missing clocks of G2D block. It also removes
+> the aclkg3d alias from G3D block clocks.
+>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>   drivers/clk/samsung/clk-exynos5420.c   |   17 ++++++++++++++---
+>   include/dt-bindings/clock/exynos5420.h |    2 ++
+>   2 files changed, 16 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+> index 320f72d..5bc4798 100644
+> --- a/drivers/clk/samsung/clk-exynos5420.c
+> +++ b/drivers/clk/samsung/clk-exynos5420.c
+> @@ -27,6 +27,7 @@
+>   #define DIV_CPU1		0x504
+>   #define GATE_BUS_CPU		0x700
+>   #define GATE_SCLK_CPU		0x800
+> +#define GATE_IP_G2D		0x8800
+>   #define CPLL_LOCK		0x10020
+>   #define DPLL_LOCK		0x10030
+>   #define EPLL_LOCK		0x10040
+> @@ -402,8 +403,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+>   			8, 1),
+>   	MUX(0, "mout_user_aclk266_g2d", mout_user_aclk266_g2d_p, SRC_TOP5,
+>   			12, 1),
+> -	MUX_A(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
+> -			SRC_TOP5, 16, 1, "aclkg3d"),
+> +	MUX(CLK_MOUT_G3D, "mout_user_aclk_g3d", mout_user_aclk_g3d_p,
+> +			SRC_TOP5, 16, 1),
+>   	MUX(0, "mout_user_aclk300_jpeg", mout_user_aclk300_jpeg_p,
+>   			SRC_TOP5, 20, 1),
+>   	MUX(0, "mout_user_aclk300_disp1", mout_user_aclk300_disp1_p,
+> @@ -830,6 +831,16 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>   	GATE(CLK_SMMU_FIMD1, "smmu_fimd1", "aclk300_disp1", GATE_IP_DISP1, 8, 0,
+>   		0),
+>
+> +	/* G2D */
+> +	GATE(CLK_MDMA0, "mdma0", "aclk266_g2d",
+> +			GATE_IP_G2D, 1, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_G2D, "g2d", "aclk333_g2d",
+> +			GATE_IP_G2D, 3, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_SMMU_MDMA0, "smmu_mdma0", "aclk266_g2d",
+> +			GATE_IP_G2D, 5, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_SMMU_G2D, "smmu_g2d", "aclk333_g2d",
+> +			GATE_IP_G2D, 7, CLK_IGNORE_UNUSED, 0),
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 0728c04..b0f7680 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -348,21 +348,59 @@ static void pixcir_input_close(struct input_dev *dev)
- static int pixcir_i2c_ts_suspend(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	struct pixcir_i2c_ts_data *ts = i2c_get_clientdata(client);
-+	struct input_dev *input = ts->input;
-+	int ret = 0;
-+
-+	mutex_lock(&input->mutex);
-+
-+	if (device_may_wakeup(&client->dev)) {
-+		if (!input->users) {
-+			ret = pixcir_start(ts);
-+			if (ret) {
-+				dev_err(dev, "Failed to start\n");
-+				goto unlock;
-+			}
-+		}
- 
--	if (device_may_wakeup(&client->dev))
- 		enable_irq_wake(client->irq);
-+	} else if (input->users) {
-+		ret = pixcir_stop(ts);
-+	}
- 
--	return 0;
-+unlock:
-+	mutex_unlock(&input->mutex);
-+
-+	return ret;
- }
- 
- static int pixcir_i2c_ts_resume(struct device *dev)
- {
- 	struct i2c_client *client = to_i2c_client(dev);
-+	struct pixcir_i2c_ts_data *ts = i2c_get_clientdata(client);
-+	struct input_dev *input = ts->input;
-+	int ret = 0;
-+
-+	mutex_lock(&input->mutex);
- 
--	if (device_may_wakeup(&client->dev))
-+	if (device_may_wakeup(&client->dev)) {
- 		disable_irq_wake(client->irq);
- 
--	return 0;
-+		if (!input->users) {
-+			ret = pixcir_stop(ts);
-+			if (ret) {
-+				dev_err(dev, "Failed to stop\n");
-+				goto unlock;
-+			}
-+		}
-+	} else if (input->users) {
-+		ret = pixcir_start(ts);
-+	}
-+
-+unlock:
-+	mutex_unlock(&input->mutex);
-+
-+	return ret;
- }
- #endif
- 
-@@ -469,6 +507,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 	if (error)
- 		return error;
- 
-+	i2c_set_clientdata(client, tsdata);
- 	device_init_wakeup(&client->dev, 1);
- 
- 	return 0;
--- 
-1.8.3.2
+Why they all have CLK_IGNORE_UNUSED flag set? This isn't very good from 
+power management point of view.
+
+Sorry for commenting on this only in this version of the series, but I 
+was a bit short of time before. I'll try to review this one thoroughly.
+
+Best regards,
+Tomasz
