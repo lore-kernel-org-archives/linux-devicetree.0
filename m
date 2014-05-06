@@ -1,238 +1,157 @@
-From: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 1/6] i2c: s3c2410: Moving I2C interrupt re-configuration
- code into i2c driver
-Date: Tue, 06 May 2014 17:51:17 +0900
-Message-ID: <1399366282-4191-2-git-send-email-pankaj.dubey@samsung.com>
-References: <1399366282-4191-1-git-send-email-pankaj.dubey@samsung.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1399366282-4191-1-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 01/20] usb: ehci-orion: Fix clock reference leaking
+Date: Tue,  6 May 2014 02:13:56 +0200
+Message-ID: <1399335255-589-2-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Let's move I2C interrupt re-configuration code from machine
-file exynos.c to I2C driver. Since only Exynos5250, and
-Exynos5420 need to do this, added syscon based phandle to
-i2c device nodes of respective SoC DT files.
+In order to disable the clock while the module was removing, a call to
+devm_clk_get() was made. This was wrong and lead to a leak module
+ref-counts.
 
-CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-CC: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-CC: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-CC: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-CC: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In order to have a reference of the clock get, a private structure was
+added using the override mechanism provided by the ehci framework.
+
+The bug was introduced in v3.6, however the ehci framework allowing to
+use the override mechanism have only been introduced in v3.8, so this
+patch won't apply before it.
+
+Fixes: 8c869edaee07c623066266827371235fb9c12e01 ('ARM: Orion: EHCI: Add support for enabling clocks')
+Cc: <stable@vger.kernel.org> # v3.8+
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- .../devicetree/bindings/arm/samsung/sysreg.txt     |    1 +
- arch/arm/boot/dts/exynos5.dtsi                     |    5 ++++
- arch/arm/boot/dts/exynos5250.dtsi                  |    4 +++
- arch/arm/boot/dts/exynos5420.dtsi                  |    4 +++
- arch/arm/mach-exynos/exynos.c                      |   26 -------------------
- drivers/i2c/busses/i2c-s3c2410.c                   |   27 ++++++++++++++++++++
- 6 files changed, 41 insertions(+), 26 deletions(-)
+ drivers/usb/host/ehci-orion.c | 49 +++++++++++++++++++++++++++----------------
+ 1 file changed, 31 insertions(+), 18 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-index 0ab3251..fd71581 100644
---- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-@@ -3,6 +3,7 @@ SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
- Properties:
-  - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
-    For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
-+   For Exynos5 SoC series it should be "samsung,exynos5-sysreg", "syscon";
-  - reg : offset and length of the register set.
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index 30d35e5e503a..d6c19c37c76b 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -42,6 +42,12 @@
  
- Example:
-diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-index 79d0608..3027e37 100644
---- a/arch/arm/boot/dts/exynos5.dtsi
-+++ b/arch/arm/boot/dts/exynos5.dtsi
-@@ -99,4 +99,9 @@
- 		#size-cells = <0>;
- 		status = "disabled";
- 	};
+ #define DRIVER_DESC "EHCI orion driver"
+ 
++#define hcd_to_orion_priv(h) ((struct orion_ehci_hcd *)hcd_to_ehci(h)->priv)
 +
-+	sys_reg: syscon@10050000 {
-+		compatible = "samsung,exynos5-sysreg", "syscon";
-+		reg = <0x10050000 0x400>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 8d724d5..46f0233 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -285,6 +285,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c0_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-@@ -298,6 +299,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c1_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-@@ -311,6 +313,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c2_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-@@ -324,6 +327,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c3_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index ff496ad..762128c 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -517,6 +517,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c0_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-@@ -530,6 +531,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c1_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-@@ -543,6 +545,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c2_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-@@ -556,6 +559,7 @@
- 		clock-names = "i2c";
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&i2c3_bus>;
-+		samsung,syscon-phandle = <&sys_reg>;
- 		status = "disabled";
- 	};
- 
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index 59eb1f1..54ae2e1 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -293,32 +293,6 @@ void __init exynos_map_pmu(void)
- 
- static void __init exynos_dt_machine_init(void)
- {
--	struct device_node *i2c_np;
--	const char *i2c_compat = "samsung,s3c2440-i2c";
--	unsigned int tmp;
--	int id;
--
--	/*
--	 * Exynos5's legacy i2c controller and new high speed i2c
--	 * controller have muxed interrupt sources. By default the
--	 * interrupts for 4-channel HS-I2C controller are enabled.
--	 * If node for first four channels of legacy i2c controller
--	 * are available then re-configure the interrupts via the
--	 * system register.
--	 */
--	if (soc_is_exynos5()) {
--		for_each_compatible_node(i2c_np, NULL, i2c_compat) {
--			if (of_device_is_available(i2c_np)) {
--				id = of_alias_get_id(i2c_np, "i2c");
--				if (id < 4) {
--					tmp = readl(EXYNOS5_SYS_I2C_CFG);
--					writel(tmp & ~(0x1 << id),
--							EXYNOS5_SYS_I2C_CFG);
--				}
--			}
--		}
--	}
--
- 	exynos_map_pmu();
- 
- 	if (!soc_is_exynos5440())
-diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-index ae44910..0420150 100644
---- a/drivers/i2c/busses/i2c-s3c2410.c
-+++ b/drivers/i2c/busses/i2c-s3c2410.c
-@@ -39,6 +39,8 @@
- #include <linux/of.h>
- #include <linux/of_gpio.h>
- #include <linux/pinctrl/consumer.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/regmap.h>
- 
- #include <asm/irq.h>
- 
-@@ -91,6 +93,9 @@
- /* Max time to wait for bus to become idle after a xfer (in us) */
- #define S3C2410_IDLE_TIMEOUT	5000
- 
-+/* Exynos5 Sysreg offset */
-+#define EXYNOS5_SYS_I2C_CFG	0x0234
++struct orion_ehci_hcd {
++	struct clk *clk;
++};
 +
- /* i2c controller state */
- enum s3c24xx_i2c_state {
- 	STATE_IDLE,
-@@ -127,6 +132,7 @@ struct s3c24xx_i2c {
- #if defined(CONFIG_ARM_S3C24XX_CPUFREQ)
- 	struct notifier_block	freq_transition;
- #endif
-+	struct regmap		*sysreg;
- };
+ static const char hcd_name[] = "ehci-orion";
  
- static struct platform_device_id s3c24xx_driver_ids[] = {
-@@ -1075,6 +1081,8 @@ static void
- s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
- {
- 	struct s3c2410_platform_i2c *pdata = i2c->pdata;
-+	unsigned int tmp;
-+	int id;
- 
- 	if (!np)
- 		return;
-@@ -1084,6 +1092,25 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
- 	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
- 	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
- 				(u32 *)&pdata->frequency);
-+	/*
-+	 * Exynos5's legacy i2c controller and new high speed i2c
-+	 * controller have muxed interrupt sources. By default the
-+	 * interrupts for 4-channel HS-I2C controller are enabled.
-+	 * If node for first four channels of legacy i2c controller
-+	 * are available then re-configure the interrupts via the
-+	 * system register.
-+	 */
-+	id = of_alias_get_id(np, "i2c");
-+	i2c->sysreg = syscon_regmap_lookup_by_phandle(np,
-+			"samsung,syscon-phandle");
-+	if (IS_ERR(i2c->sysreg)) {
-+		i2c->sysreg = NULL;
-+		/* As this is not compulsary do not return error */
-+		pr_info("i2c-%d skipping re-configuration of interrutps\n", id);
-+		return;
-+	}
-+	regmap_read(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, &tmp);
-+	regmap_write(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, tmp & ~(0x1 << id));
+ static struct hc_driver __read_mostly ehci_orion_hc_driver;
+@@ -137,6 +143,10 @@ ehci_orion_conf_mbus_windows(struct usb_hcd *hcd,
+ 	}
  }
- #else
- static void
+ 
++static const struct ehci_driver_overrides orion_overrides __initdata = {
++	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
++};
++
+ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ {
+ 	struct orion_ehci_data *pd = dev_get_platdata(&pdev->dev);
+@@ -144,10 +154,10 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 	struct resource *res;
+ 	struct usb_hcd *hcd;
+ 	struct ehci_hcd *ehci;
+-	struct clk *clk;
+ 	void __iomem *regs;
+ 	int irq, err;
+ 	enum orion_ehci_phy_ver phy_version;
++	struct orion_ehci_hcd *priv;
+ 
+ 	if (usb_disabled())
+ 		return -ENODEV;
+@@ -190,17 +200,11 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 		goto err1;
+ 	}
+ 
+-	/* Not all platforms can gate the clock, so it is not
+-	   an error if the clock does not exists. */
+-	clk = devm_clk_get(&pdev->dev, NULL);
+-	if (!IS_ERR(clk))
+-		clk_prepare_enable(clk);
+-
+ 	hcd = usb_create_hcd(&ehci_orion_hc_driver,
+ 			&pdev->dev, dev_name(&pdev->dev));
+ 	if (!hcd) {
+ 		err = -ENOMEM;
+-		goto err2;
++		goto err1;
+ 	}
+ 
+ 	hcd->rsrc_start = res->start;
+@@ -211,6 +215,15 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 	ehci->caps = hcd->regs + 0x100;
+ 	hcd->has_tt = 1;
+ 
++	priv = hcd_to_orion_priv(hcd);
++	/*
++	 * Not all platforms can gate the clock, so it is not an error if
++	 * the clock does not exists.
++	 */
++	priv->clk = devm_clk_get(&pdev->dev, NULL);
++	if (!IS_ERR(priv->clk))
++		clk_prepare_enable(priv->clk);
++
+ 	/*
+ 	 * (Re-)program MBUS remapping windows if we are asked to.
+ 	 */
+@@ -240,16 +253,16 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 
+ 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (err)
+-		goto err3;
++		goto err2;
+ 
+ 	device_wakeup_enable(hcd->self.controller);
+ 	return 0;
+ 
+-err3:
+-	usb_put_hcd(hcd);
+ err2:
+-	if (!IS_ERR(clk))
+-		clk_disable_unprepare(clk);
++	usb_put_hcd(hcd);
++
++	if (!IS_ERR(priv->clk))
++		clk_disable_unprepare(priv->clk);
+ err1:
+ 	dev_err(&pdev->dev, "init %s fail, %d\n",
+ 		dev_name(&pdev->dev), err);
+@@ -260,14 +273,14 @@ err1:
+ static int ehci_orion_drv_remove(struct platform_device *pdev)
+ {
+ 	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+-	struct clk *clk;
++	struct orion_ehci_hcd *priv = hcd_to_orion_priv(hcd);
+ 
+ 	usb_remove_hcd(hcd);
+ 	usb_put_hcd(hcd);
+ 
+-	clk = devm_clk_get(&pdev->dev, NULL);
+-	if (!IS_ERR(clk))
+-		clk_disable_unprepare(clk);
++	if (!IS_ERR(priv->clk))
++		clk_disable_unprepare(priv->clk);
++
+ 	return 0;
+ }
+ 
+@@ -295,7 +308,7 @@ static int __init ehci_orion_init(void)
+ 
+ 	pr_info("%s: " DRIVER_DESC "\n", hcd_name);
+ 
+-	ehci_init_driver(&ehci_orion_hc_driver, NULL);
++	ehci_init_driver(&ehci_orion_hc_driver, &orion_overrides);
+ 	return platform_driver_register(&ehci_orion_driver);
+ }
+ module_init(ehci_orion_init);
 -- 
-1.7.10.4
+1.8.1.2
