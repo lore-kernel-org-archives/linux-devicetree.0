@@ -1,69 +1,42 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v4 01/15] clk: exynos5420: Rename mux parent arrays
-Date: Tue, 06 May 2014 20:01:11 +0200
-Message-ID: <53692367.30907@gmail.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com> <1399393610-23394-2-git-send-email-shaik.ameer@samsung.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v10 00/15] ARM: sunxi: Add driver for SD/MMC hosts found on
+ Allwinner sunxi SoCs
+Date: Tue, 06 May 2014 10:04:37 -0700
+Message-ID: <20140506170437.5739.402@quantum>
+References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399393610-23394-2-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>
+Cc: =?utf-8?q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer@o2s.ch>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-Shaik,
+Quoting Hans de Goede (2014-05-02 08:57:14)
+> The first 2 patches are depenencies which should go in through the clk tree,
+> Mike can you pick these 2 up please ?  :
 
-On 06.05.2014 18:26, Shaik Ameer Basha wrote:
-> This patch renames the mux parent arrays as per the naming
-> convension followed by the other exynos specific clock drivers.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
-> ---
->   drivers/clk/samsung/clk-exynos5420.c |  359 ++++++++++++++++++----------------
->   1 file changed, 186 insertions(+), 173 deletions(-)
->
-> diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index 7a9e3b4..831670d 100644
-> --- a/drivers/clk/samsung/clk-exynos5420.c
-> +++ b/drivers/clk/samsung/clk-exynos5420.c
+Taken into clk-next.
 
-[snip]
+> 
+> "clk: sunxi: factors: automatic reparenting support"
+> Is uncontroversial and has been favorably reviewed by various people.
+> 
+> "clk: sunxi: Implement MMC phase control"
+> Is somewhat more controversial as there has been lots of discussion about
+> adding a generic phase control method to the clk framework. The problem is
+> that there has been a lot of talk about such a generic phase control method
+> but not a single patch. Therefor I would like to move forwards with using
+> a platform specific method for now. I hereby promise that once we've a generic
+> method I'll write patches to convert the sunxi code to that method.
 
->   static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
-> -	MUX(0, "mout_mspll_kfc", mspll_cpu_p, SRC_TOP7, 8, 2),
-> -	MUX(0, "mout_mspll_cpu", mspll_cpu_p, SRC_TOP7, 12, 2),
-> -	MUX(0, "mout_apll", apll_p, SRC_CPU, 0, 1),
-> -	MUX(0, "mout_cpu", cpu_p, SRC_CPU, 16, 1),
-> -	MUX(0, "mout_kpll", kpll_p, SRC_KFC, 0, 1),
-> -	MUX(0, "mout_cpu_kfc", kfc_p, SRC_KFC, 16, 1),
-> +	MUX(0, "mout_mspll_kfc", mout_mspll_cpu_p, SRC_TOP7, 8, 2),
-> +	MUX(0, "mout_mspll_cpu", mout_mspll_cpu_p, SRC_TOP7, 12, 2),
-> +	MUX(0, "mout_apll", mout_apll_p, SRC_CPU, 0, 1),
-> +	MUX(0, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1),
-> +	MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
-> +	MUX(0, "mout_kfc", mout_kfc_p, SRC_KFC, 16, 1),
+Thanks for the promise. I will hold you to it once the set_phase api is
+sorted ;-)
 
-Here the clock name is also changed, but I'll just fix the commit 
-message when applying, assuming that this change doesn't break anything.
+Also thanks for the clear and concise cover letter. It is very helpful
+when going through the tenth iteration of a series.
 
->
-> -	MUX(0, "sclk_bpll", bpll_p, SRC_CDREX, 0, 1),
-> +	MUX(0, "sclk_bpll", mout_bpll_p, SRC_CDREX, 0, 1),
-
-[snip]
-
->   static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
->   	DIV(0, "div_arm", "mout_cpu", DIV_CPU0, 0, 3),
->   	DIV(0, "sclk_apll", "mout_apll", DIV_CPU0, 24, 3),
->   	DIV(0, "armclk2", "div_arm", DIV_CPU0, 28, 3),
-> -	DIV(0, "div_kfc", "mout_cpu_kfc", DIV_KFC0, 0, 3),
-> +	DIV(0, "div_kfc", "mout_kfc", DIV_KFC0, 0, 3),
-
-Same here.
-
-Best regards,
-Tomasz
+Regards,
+Mike
