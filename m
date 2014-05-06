@@ -1,105 +1,164 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v5 1/7] Input: pixcir_i2c_ts: Use devres managed resource allocations
-Date: Tue, 6 May 2014 14:06:06 +0300
-Message-ID: <1399374372-29123-2-git-send-email-rogerq@ti.com>
-References: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH v3 05/20] usb: host: xhci-plat: Add clocks support
+Date: Tue, 6 May 2014 09:41:13 -0400
+Message-ID: <20140506134113.GV28159@titan.lakedaemon.net>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+ <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use devm_() and friends for allocating memory, input device
-and IRQ.
+On Tue, May 06, 2014 at 02:14:00AM +0200, Gregory CLEMENT wrote:
+> Some platform (such as the Armada 38x ones) can gate the clock of
+> their USB controller. This patch add the support for the clock, by
+> enabling them during probe and disabling them on remove.
+> 
+> As not all platforms have clock support then enabling and disabling
+> the clocks have been placed in separate functions. Then if the clocks
+> are not supported we still can use the same calls, and there is no
 
-Signed-off-by: Roger Quadros <rogerq@ti.com>
-Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- drivers/input/touchscreen/pixcir_i2c_ts.c | 38 ++++++++++++-------------------
- 1 file changed, 15 insertions(+), 23 deletions(-)
+... ?
 
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 02392d2..8a083bd 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -130,6 +130,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- {
- 	const struct pixcir_ts_platform_data *pdata =
- 			dev_get_platdata(&client->dev);
-+	struct device *dev = &client->dev;
- 	struct pixcir_i2c_ts_data *tsdata;
- 	struct input_dev *input;
- 	int error;
-@@ -139,12 +140,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 		return -EINVAL;
- 	}
- 
--	tsdata = kzalloc(sizeof(*tsdata), GFP_KERNEL);
--	input = input_allocate_device();
--	if (!tsdata || !input) {
--		dev_err(&client->dev, "Failed to allocate driver data!\n");
--		error = -ENOMEM;
--		goto err_free_mem;
-+	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
-+	if (!tsdata)
-+		return -ENOMEM;
-+
-+	input = devm_input_allocate_device(dev);
-+	if (!input) {
-+		dev_err(&client->dev, "Failed to allocate input device\n");
-+		return -ENOMEM;
- 	}
- 
- 	tsdata->client = client;
-@@ -165,29 +168,22 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 
- 	input_set_drvdata(input, tsdata);
- 
--	error = request_threaded_irq(client->irq, NULL, pixcir_ts_isr,
--				     IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
--				     client->name, tsdata);
-+	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
-+					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-+					  client->name, tsdata);
- 	if (error) {
--		dev_err(&client->dev, "Unable to request touchscreen IRQ.\n");
--		goto err_free_mem;
-+		dev_err(dev, "failed to request irq %d\n", client->irq);
-+		return error;
- 	}
- 
- 	error = input_register_device(input);
- 	if (error)
--		goto err_free_irq;
-+		return error;
- 
- 	i2c_set_clientdata(client, tsdata);
- 	device_init_wakeup(&client->dev, 1);
- 
- 	return 0;
--
--err_free_irq:
--	free_irq(client->irq, tsdata);
--err_free_mem:
--	input_free_device(input);
--	kfree(tsdata);
--	return error;
- }
- 
- static int pixcir_i2c_ts_remove(struct i2c_client *client)
-@@ -198,10 +194,6 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
- 
- 	tsdata->exiting = true;
- 	mb();
--	free_irq(client->irq, tsdata);
--
--	input_unregister_device(tsdata->input);
--	kfree(tsdata);
- 
- 	return 0;
- }
--- 
-1.8.3.2
+thx,
+
+Jason.
+
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+>  drivers/usb/host/xhci-plat.c | 57 +++++++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 54 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index f5351af4b2c5..bb37b941c8ec 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -11,6 +11,7 @@
+>   * version 2 as published by the Free Software Foundation.
+>   */
+>  
+> +#include <linux/clk.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> @@ -19,6 +20,10 @@
+>  
+>  #include "xhci.h"
+>  
+> +struct xhci_plat_priv {
+> +	struct clk *clk;
+> +};
+> +
+>  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  {
+>  	/*
+> @@ -38,7 +43,8 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
+>  static const struct hc_driver xhci_plat_xhci_driver = {
+>  	.description =		"xhci-hcd",
+>  	.product_desc =		"xHCI Host Controller",
+> -	.hcd_priv_size =	sizeof(struct xhci_hcd *),
+> +	.hcd_priv_size =	sizeof(struct xhci_hcd *) +
+> +				sizeof(struct xhci_plat_priv),
+>  
+>  	/*
+>  	 * generic hardware linkage
+> @@ -85,6 +91,40 @@ static const struct hc_driver xhci_plat_xhci_driver = {
+>  	.bus_resume =		xhci_bus_resume,
+>  };
+>  
+> +static int xhci_plat_enable_clk(struct platform_device *pdev)
+> +{
+> +	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
+> +
+> +	priv->clk = devm_clk_get(&pdev->dev, NULL);
+> +
+> +	/*
+> +	 * Not all platforms have a clk so it is not an error if the
+> +	 * clock does not exists.
+> +	 */
+> +	if (IS_ERR(priv->clk))
+> +		return 0;
+> +
+> +	return clk_prepare_enable(priv->clk);
+> +}
+> +
+> +static void xhci_plat_disable_clk(struct platform_device *pdev)
+> +{
+> +	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
+> +	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
+> +
+> +	/*
+> +	 * Not all platforms have a clk so it is not an error if the
+> +	 * clock does not exists.
+> +	 */
+> +	if (IS_ERR(priv->clk))
+> +		return;
+> +
+> +	clk_disable_unprepare(priv->clk);
+> +}
+> +
+>  static int xhci_plat_probe(struct platform_device *pdev)
+>  {
+>  	const struct hc_driver	*driver;
+> @@ -118,7 +158,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>  
+>  	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+>  	if (!hcd)
+> -		return -ENOMEM;
+> +		ret = -ENOMEM;
+>  
+>  	hcd->rsrc_start = res->start;
+>  	hcd->rsrc_len = resource_size(res);
+> @@ -140,6 +180,13 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>  	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>  	if (ret)
+>  		goto unmap_registers;
+> +
+> +	ret = xhci_plat_enable_clk(pdev);
+> +	if (ret) {
+> +		dev_dbg(&pdev->dev, "error enabling clocks\n");
+> +		goto dealloc_usb2_hcd;
+> +	}
+> +
+>  	device_wakeup_enable(hcd->self.controller);
+>  
+>  	/* USB 2.0 roothub is stored in the platform_device now. */
+> @@ -149,7 +196,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>  			dev_name(&pdev->dev), hcd);
+>  	if (!xhci->shared_hcd) {
+>  		ret = -ENOMEM;
+> -		goto dealloc_usb2_hcd;
+> +		goto disable_clk;
+>  	}
+>  
+>  	/*
+> @@ -170,6 +217,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>  put_usb3_hcd:
+>  	usb_put_hcd(xhci->shared_hcd);
+>  
+> +disable_clk:
+> +	xhci_plat_disable_clk(pdev);
+> +
+>  dealloc_usb2_hcd:
+>  	usb_remove_hcd(hcd);
+>  
+> @@ -193,6 +243,7 @@ static int xhci_plat_remove(struct platform_device *dev)
+>  	usb_remove_hcd(xhci->shared_hcd);
+>  	usb_put_hcd(xhci->shared_hcd);
+>  
+> +	xhci_plat_disable_clk(dev);
+>  	usb_remove_hcd(hcd);
+>  	iounmap(hcd->regs);
+>  	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
+> -- 
+> 1.8.1.2
+> 
