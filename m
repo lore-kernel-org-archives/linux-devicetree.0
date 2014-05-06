@@ -1,47 +1,199 @@
-From: <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 2/2] Documentation: dt: add an optional dma-desc-enable property for dwc2 usb
-Date: Mon, 5 May 2014 17:23:05 -0500
-Message-ID: <1399328585-30949-2-git-send-email-dinguyen@altera.com>
-References: <1399328585-30949-1-git-send-email-dinguyen@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399328585-30949-1-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the Armada 38x
+Date: Tue,  6 May 2014 02:14:01 +0200
+Message-ID: <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+For the Armada 38x SoCs which come with an xhci controller, specific
+initialization must be done during probe related to the MBus windows
+configuration. This patch adds the support of this quirk.
 
-The "dma-desc-enable" property can be used to disable descriptor DMA mode
-for the DWC2 USB IP.
-
-Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/dwc2.txt |    5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/usb/host/Kconfig      |  7 +++++
+ drivers/usb/host/Makefile     |  1 +
+ drivers/usb/host/xhci-mvebu.c | 71 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-mvebu.h | 21 +++++++++++++
+ drivers/usb/host/xhci-plat.c  |  6 ++++
+ 5 files changed, 106 insertions(+)
+ create mode 100644 drivers/usb/host/xhci-mvebu.c
+ create mode 100644 drivers/usb/host/xhci-mvebu.h
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-index b8b6871..37af3bc 100644
---- a/Documentation/devicetree/bindings/usb/dwc2.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-@@ -14,6 +14,11 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
- Optional properties:
- - phys: phy provider specifier
- - phy-names: shall be "device"
-+- dma-desc-enable: This property is used to disable descriptor DMA support.
-+	The reason why this property is needed is that even if the HW supports
-+	description DMA support, it does not support it for SPLIT transactions.
-+	So this property can be used to optionally disable descriptor DMA
-+	support.
- Refer to phy/phy-bindings.txt for generic phy consumer properties
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 3d9e54062d62..e70943fac4a1 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -29,6 +29,13 @@ if USB_XHCI_HCD
+ config USB_XHCI_PLATFORM
+ 	tristate
  
- Example:
++config USB_XHCI_MVEBU
++	tristate "xHCI support for Marvell Armada 38x"
++	select USB_XHCI_PLATFORM
++	---help---
++	  Say 'Y' to enable the support for the xHCI host controller
++	  found in Marvell Armada 38x ARM SOCs.
++
+ endif # USB_XHCI_HCD
+ 
+ config USB_EHCI_HCD
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index 7530468c9a4f..7a8db7f7dc01 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -19,6 +19,7 @@ xhci-hcd-$(CONFIG_PCI)	+= xhci-pci.o
+ 
+ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
+ 	xhci-hcd-y		+= xhci-plat.o
++	xhci-hcd-$(CONFIG_USB_XHCI_MVEBU)	+= xhci-mvebu.o
+ endif
+ 
+ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
+diff --git a/drivers/usb/host/xhci-mvebu.c b/drivers/usb/host/xhci-mvebu.c
+new file mode 100644
+index 000000000000..bcfa61a13f5d
+--- /dev/null
++++ b/drivers/usb/host/xhci-mvebu.c
+@@ -0,0 +1,71 @@
++/*
++ * Copyright (C) 2014 Marvell
++ * Author: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ */
++
++#include <linux/io.h>
++#include <linux/mbus.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++#define USB3_MAX_WINDOWS	4
++#define USB3_WIN_CTRL(w)	(0x0 + ((w) * 8))
++#define USB3_WIN_BASE(w)	(0x4 + ((w) * 8))
++
++static void __init xhci_mvebu_mbus_config(void __iomem *base,
++			const struct mbus_dram_target_info *dram)
++{
++	int win;
++
++	/* Clear all existing windows */
++	for (win = 0; win < USB3_MAX_WINDOWS; win++) {
++		writel(0, base + USB3_WIN_CTRL(win));
++		writel(0, base + USB3_WIN_BASE(win));
++	}
++
++	/* Program each DRAM CS in a seperate window */
++	for (win = 0; win < dram->num_cs; win++) {
++		const struct mbus_dram_window *cs = dram->cs + win;
++
++		writel(((cs->size - 1) & 0xffff0000) | (cs->mbus_attr << 8) |
++		       (dram->mbus_dram_target_id << 4) | 1,
++		       base + USB3_WIN_CTRL(win));
++
++		writel((cs->base & 0xffff0000), base + USB3_WIN_BASE(win));
++	}
++}
++
++int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev)
++{
++	struct resource	*res;
++	void __iomem	*base;
++	const struct mbus_dram_target_info *dram;
++	int ret = 0;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res)
++		return -ENODEV;
++
++	/*
++	 * We don't use devm_ioremap() because this mapping should
++	 * only exists for the duration of this probe function.
++	 */
++	base = ioremap(res->start, resource_size(res));
++	if (!base)
++		return -ENODEV;
++
++	dram = mv_mbus_dram_info();
++	xhci_mvebu_mbus_config(base, dram);
++
++	/*
++	 * This memory area was only needed to configure the MBus
++	 * windows, and is therefore no longer useful.
++	 */
++	iounmap(base);
++
++	return ret;
++}
+diff --git a/drivers/usb/host/xhci-mvebu.h b/drivers/usb/host/xhci-mvebu.h
+new file mode 100644
+index 000000000000..61d09b6e8443
+--- /dev/null
++++ b/drivers/usb/host/xhci-mvebu.h
+@@ -0,0 +1,21 @@
++/*
++ * Copyright (C) 2014 Marvell
++ *
++ * Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#ifndef __LINUX_XHCI_MVEBU_H
++#define __LINUX_XHCI_MVEBU_H
++#if IS_ENABLED(CONFIG_USB_XHCI_MVEBU)
++int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev);
++#else
++static inline int xhci_mvebu_mbus_init_quirk(struct device dev)
++{
++	return 0;
++}
++#endif
++#endif /* __LINUX_XHCI_MVEBU_H */
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index bb37b941c8ec..d12ba56f52da 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -19,6 +19,7 @@
+ #include <linux/slab.h>
+ 
+ #include "xhci.h"
++#include "xhci-mvebu.h"
+ 
+ struct xhci_plat_priv {
+ 	struct clk *clk;
+@@ -147,6 +148,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 	if (!res)
+ 		return -ENODEV;
+ 
++	if (of_device_is_compatible(pdev->dev.of_node,
++					"marvell,armada-380-xhci"))
++		xhci_mvebu_mbus_init_quirk(pdev);
++
+ 	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
+ 	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (ret)
+@@ -282,6 +287,7 @@ static const struct dev_pm_ops xhci_plat_pm_ops = {
+ static const struct of_device_id usb_xhci_of_match[] = {
+ 	{ .compatible = "generic-xhci" },
+ 	{ .compatible = "xhci-platform" },
++	{ .compatible = "marvell,armada-380-xhci"},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
 -- 
-1.7.9.5
+1.8.1.2
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
