@@ -1,89 +1,70 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3 1/3] base: power: Add generic OF-based power domain
- look-up
-Date: Tue, 06 May 2014 19:15:21 +0200
-Message-ID: <536918A9.6050502@gmail.com>
-References: <1398271618-28932-1-git-send-email-t.figa@samsung.com>	<1398271618-28932-2-git-send-email-t.figa@samsung.com>	<535E9163.3070305@wwwdotorg.org>
- <CAPDyKFoGOcScsaGWkw9bVh=gpGTApRK48AczaMiSmLah+YOSXQ@mail.gmail.com>
- <53690D21.8080807@wwwdotorg.org>
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the Armada
+ 38x
+Date: Tue, 06 May 2014 13:34:46 +0200
+Message-ID: <1584794.IM1uiSkBdk@amdc1032>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+ <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <53690D21.8080807@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <philipp.zabel@gmail.com>, Len Brown <len.brown@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Pavel Machek <pavel@ucw.cz>, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vg
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1399335255-589-7-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
+Hi,
 
-On 06.05.2014 18:26, Stephen Warren wrote:
-> On 05/06/2014 02:22 AM, Ulf Hansson wrote:
->> On 28 April 2014 19:35, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>> On 04/23/2014 10:46 AM, Tomasz Figa wrote:
->>>> This patch introduces generic code to perform power domain look-up using
->>>> device tree and automatically bind devices to their power domains.
->>>> Generic device tree binding is introduced to specify power domains of
->>>> devices in their device tree nodes.
->>>>
->>>> Backwards compatibility with legacy Samsung-specific power domain
->>>> bindings is provided, but for now the new code is not compiled when
->>>> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
->>>> will change as soon as Exynos power domain code gets converted to use
->>>> the generic framework in further patch.
->>>
->>>> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
->>>
->>>> +==Power domain consumers==
->>>> +
->>>> +Required properties:
->>>> + - power-domain : A phandle and power domain specifier as defined by bindings
->>>> +                  of power controller specified by phandle.
->>>
->>> It seems quite likely that a single logical device could have components
->>> in multiple power domains. Consider an HDMI controller with different
->>> power domains for the HDMI core, CEC communication, DDC/I2C
->>> communication, and the I/O pads, with no clear separation between those
->>> two components of the module (no separate register spaces, but the
->>> bits/registers are interleaved all together).
->>>
->>> As such, I think that rather than a "power-domain" property, we need a
->>> pair of "power-domains", and "power-domain-names" properties, and
->>> preferably with mandatory usage of name-based lookups, rather than
->>> allowing a random mix of name-based and index-based lookups like we have
->>> with some existing resource bindings.
->>
->> Each struct device have only one dev_pm_domain pointer, thus a device
->> are not able to reside in more than one power domain.
->>
->> Therefore I doubt this will be very useful, unless I missed your point. :-)
->
-> A struct device is a Linux-internal concept. DT is supposed to represent
-> the HW in an OS-agnostic fashion, not according to the limitations of
-> any one OS's driver model.
->
-> It's certainly true that a single logical HW module (represented by a
-> single DT node) can have parts in multiple power domains.
->
+On Tuesday, May 06, 2014 02:14:01 AM Gregory CLEMENT wrote:
+> For the Armada 38x SoCs which come with an xhci controller, specific
+> initialization must be done during probe related to the MBus windows
+> configuration. This patch adds the support of this quirk.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/usb/host/Kconfig      |  7 +++++
+>  drivers/usb/host/Makefile     |  1 +
+>  drivers/usb/host/xhci-mvebu.c | 71 +++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/host/xhci-mvebu.h | 21 +++++++++++++
+>  drivers/usb/host/xhci-plat.c  |  6 ++++
+>  5 files changed, 106 insertions(+)
+>  create mode 100644 drivers/usb/host/xhci-mvebu.c
+>  create mode 100644 drivers/usb/host/xhci-mvebu.h
+> 
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index 3d9e54062d62..e70943fac4a1 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -29,6 +29,13 @@ if USB_XHCI_HCD
+>  config USB_XHCI_PLATFORM
+>  	tristate
+>  
+> +config USB_XHCI_MVEBU
+> +	tristate "xHCI support for Marvell Armada 38x"
 
-AFAIK a single DT node is supposed to represent a single _physical_ HW 
-module. It all depends on description granularity, though. A physical 
-chip (or IP block) might be further divided into multiple blocks, so I 
-can imagine some of them being in different power domains than another. 
-Still, based on the fact that in Linux we never needed to specify 
-multiple power domains for a device, is this really a real use case?
+Please limit this driver to mvebu arch and compile testing, i.e.
 
-Anyway, the binding is defined in a way that lets you simply turn the 
-single phandle+specifier into a list of them, if such need ever shows up.
+	depends on ARCH_MVEBU || COMPILE_TEST
+
+> +	select USB_XHCI_PLATFORM
+> +	---help---
+> +	  Say 'Y' to enable the support for the xHCI host controller
+> +	  found in Marvell Armada 38x ARM SOCs.
+> +
+>  endif # USB_XHCI_HCD
+>  
+>  config USB_EHCI_HCD
 
 Best regards,
-Tomasz
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
