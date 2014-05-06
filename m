@@ -1,72 +1,185 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH v3] powerpc/fsl: Added binding for Freescale CoreNet
- coherency fabric (CCF)
-Date: Mon, 5 May 2014 21:22:47 -0500
-Message-ID: <1399342967.15726.181.camel@snotra.buserror.net>
-References: <1399305499-6612-1-git-send-email-diana.craciun@freescale.com>
- <1FE471CC-2024-4B39-89E2-FBACF8F18A9B@kernel.crashing.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1FE471CC-2024-4B39-89E2-FBACF8F18A9B@kernel.crashing.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: Kumar Gala <galak@kernel.crashing.org>
-Cc: Diana Craciun <diana.craciun@freescale.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+From: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 03/15] clk: exynos5420: update clocks for GSCL and MSCL
+ blocks
+Date: Tue, 06 May 2014 21:56:38 +0530
+Message-ID: <1399393610-23394-4-git-send-email-shaik.ameer@samsung.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCAyMDE0LTA1LTA1IGF0IDIxOjEyIC0wNTAwLCBLdW1hciBHYWxhIHdyb3RlOgo+IE9u
-IE1heSA1LCAyMDE0LCBhdCAxMDo1OCBBTSwgRGlhbmEgQ3JhY2l1biA8ZGlhbmEuY3JhY2l1bkBm
-cmVlc2NhbGUuY29tPiB3cm90ZToKPiAKPiA+IEZyb206IERpYW5hIENyYWNpdW4gPERpYW5hLkNy
-YWNpdW5AZnJlZXNjYWxlLmNvbT4KPiA+IAo+ID4gVGhlIENvcmVOZXQgY29oZXJlbmN5IGZhYnJp
-YyBpcyBhIGZhYnJpYy1vcmllbnRlZCwgY29uZWN0aXZpdHkKPiA+IGluZnJhc3RydWN0dXJlIHRo
-YXQgZW5hYmxlcyB0aGUgaW1wbGVtZW50YXRpb24gb2YgY29oZXJlbnQsIG11bHRpY29yZQo+ID4g
-c3lzdGVtcy4gVGhlIENDRiBhY3RzIGFzIGEgY2VudHJhbCBpbnRlcmNvbm5lY3QgZm9yIGNvcmVz
-LAo+ID4gcGxhdGZvcm0tbGV2ZWwgY2FjaGVzLCBtZW1vcnkgc3Vic3lzdGVtLCBwZXJpcGhlcmFs
-IGRldmljZXMgYW5kIEkvTyBob3N0Cj4gPiBicmlkZ2VzIGluIHRoZSBzeXN0ZW0uCj4gPiAKPiA+
-IFNpZ25lZC1vZmYtYnk6IERpYW5hIENyYWNpdW4gPERpYW5hLkNyYWNpdW5AZnJlZXNjYWxlLmNv
-bT4KPiA+IC0tLQo+ID4gdjM6Cj4gPiAJLSBhZGRlZCBwb3J0IElEIG1hcHBpbmcKPiA+IAktIHJl
-bW92ZWQgZnNsLGNvcmVuZXR4LWNmCj4gPiAKPiA+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
-d2VycGMvZnNsL2NjZi50eHQgICAgICAgIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKwo+ID4g
-Li4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3B1cy50eHQgICAgICAgfCAgOCAr
-KysrKwo+ID4gLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvcGFtdS50eHQgICAg
-ICAgfCAgOCArKysrKwo+ID4gMyBmaWxlcyBjaGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspCj4gPiBj
-cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
-cGMvZnNsL2NjZi50eHQKPiAKPiBbc25pcF0KPiAKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcHVzLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwdXMudHh0Cj4gPiBAQCAtMjAs
-MyArMjAsMTEgQEAgUFJPUEVSVElFUwo+ID4gCWEgcHJvcGVydHkgbmFtZWQgZnNsLGVyZWYtW0NB
-VF0sIHdoZXJlIFtDQVRdIGlzIHRoZSBhYmJyZXZpYXRlZCBjYXRlZ29yeQo+ID4gCW5hbWUgd2l0
-aCBhbGwgdXBwZXJjYXNlIGxldHRlcnMgY29udmVydGVkIHRvIGxvd2VyY2FzZSwgaW5kaWNhdGVz
-IHRoYXQKPiA+IAl0aGUgY2F0ZWdvcnkgaXMgc3VwcG9ydGVkIGJ5IHRoZSBpbXBsZW1lbnRhdGlv
-bi4KPiA+ICsKPiA+ICsJLSBmc2wscG9ydGlkLW1hcHBpbmcgOiA8dTMyPgo+ID4gKwlUaGUgQ29o
-ZXJlbmN5IFN1YmRvbWFpbiBJRCBQb3J0IE1hcHBpbmcgUmVnaXN0ZXJzIGFuZCBTbm9vcCBJRCBQ
-b3J0IE1hcHBpbmcKPiA+ICsJcmVnaXN0ZXJzIHdoaWNoIGFyZSBwYXJ0IG9mIHRoZSBDb3JlTmV0
-IENvaGVyZW5jeSBmYWJyaWMgKENDRikgcHJvdmlkZSBhCj4gPiArCUNvcmVOZXQgQ29oZXJlbmN5
-IFN1YmRvbWFpbiBJRC9Db3JlTmV0IFNub29wIElEIHRvIGNwdSBtYXBwaW5nIGZ1bmN0aW9ucy4K
-PiA+ICsJQ2VydGFpbiBiaXRzIGZyb20gdGhlc2UgcmVnaXN0ZXJzIHNob3VsZCBiZSBzZXQgaWYg
-dGhlIGNvcmVzcG9uZGluZyBDUFUKPiA+ICsJc2hvdWxkIGJlIHNub29wZWQuIFRoaXMgcHJvcGVy
-dHkgZGVmaW5lcyBhIGJpdG1hc2sgd2hpY2ggc2VsZWN0cyB0aGUgYml0IHRoYXQKPiA+ICsJc2hv
-dWxkIGJlIHNldCBpZiB0aGlzIGNwdSBzaG91bGQgYmUgc25vb3BlZC4KPiAKPiBVbmRlciB3aGF0
-IGNhc2VzIGNhbiBzb2Z0d2FyZSBub3QgZmlndXJlIG91dCBob3cgdG8gc2V0IHRoaXMgYmFzZWQg
-b24gdGhlIFBBTVVzIGluIHRoZSBEVD8KCkhvdyB3b3VsZCBpdCBnbyBhYm91dCBkb2luZyB0aGF0
-PwoKQmVzaWRlcyB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIGNvcmVuZXQxLWNmIGFuZCBjb3JlbmV0
-Mi1jZiwgb24KY29yZW5ldDEtY2YgdGhlIHBvc2l0aW9uIG9mIHRoZSBQQU1VIGJpdHMgZGVwZW5k
-cyBvbiB0aGUgbnVtYmVyIG9mIENQVXMKdGhhdCB0aGUgY2hpcCB3YXMgZGVzaWduZWQgZm9yLiAg
-VGhpcyBtYXkgYmUgZGlmZmVyZW50IGZyb20gdGhlIG51bWJlcgpvZiBDUFVzIHRoYXQgYXJlIGFj
-dHVhbGx5IHByZXNlbnQgKGUuZy4gcDQwNDAsIG9yIEFNUCkuICBJdCdzIGFsc28gYQpjb21wbGlj
-YXRpb24gdGhhdCBJTUhPIGlzIGFza2luZyBmb3IgdHJvdWJsZSwgdmVyc3VzIHN0cmFpZ2h0Zm9y
-d2FyZGx5CnJlY29yZGluZyBpbmZvcm1hdGlvbiB0aGF0IGlzIHByZXNlbnQgaW4gYSB0YWJsZSBp
-biB0aGUgbWFudWFsLgoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlz
-dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMt
-ZGV2
+This patch adds the missing GSCL and MSCL block clocks
+and corrects some wrong parent-child relationships.
+
+Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/clk/samsung/clk-exynos5420.c   |   71 ++++++++++++++++++++------------
+ include/dt-bindings/clock/exynos5420.h |    4 +-
+ 2 files changed, 47 insertions(+), 28 deletions(-)
+
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 9f77d56..328be6a 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -79,6 +79,7 @@
+ #define DIV_PERIC4		0x10568
+ #define SCLK_DIV_ISP0		0x10580
+ #define SCLK_DIV_ISP1		0x10584
++#define DIV2_RATIO0		0x10590
+ #define GATE_BUS_TOP		0x10700
+ #define GATE_BUS_FSYS0		0x10740
+ #define GATE_BUS_PERIC		0x10750
+@@ -164,6 +165,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+ 	DIV_PERIC4,
+ 	SCLK_DIV_ISP0,
+ 	SCLK_DIV_ISP1,
++	DIV2_RATIO0,
+ 	GATE_BUS_TOP,
+ 	GATE_BUS_FSYS0,
+ 	GATE_BUS_PERIC,
+@@ -575,6 +577,11 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
+ 	DIV(0, "dout_pre_spi1", "dout_spi1", DIV_PERIC4, 16, 8),
+ 	DIV(0, "dout_pre_spi2", "dout_spi2", DIV_PERIC4, 24, 8),
+ 
++	/* GSCL Block */
++	DIV(0, "dout_gscl_blk_300", "mout_user_aclk300_gscl",
++			DIV2_RATIO0, 4, 2),
++	DIV(0, "dout_gscl_blk_333", "aclk333_432_gscl", DIV2_RATIO0, 6, 2),
++
+ 	/* ISP Block */
+ 	DIV(0, "dout_isp_sensor0", "mout_isp_sensor", SCLK_DIV_ISP0, 8, 8),
+ 	DIV(0, "dout_isp_sensor1", "mout_isp_sensor", SCLK_DIV_ISP0, 16, 8),
+@@ -627,6 +634,8 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 			GATE_BUS_TOP, 15, CLK_IGNORE_UNUSED, 0),
+ 	GATE(0, "aclk400_isp", "mout_user_aclk400_isp",
+ 			GATE_BUS_TOP, 16, 0, 0),
++	GATE(CLK_ACLK400_MSCL, "aclk400_mscl", "mout_user_aclk400_mscl",
++			GATE_BUS_TOP, 17, CLK_IGNORE_UNUSED, 0),
+ 
+ 	/* sclk */
+ 	GATE(CLK_SCLK_UART0, "sclk_uart0", "dout_uart0",
+@@ -674,11 +683,6 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 	GATE(CLK_SCLK_USBD301, "sclk_unipro", "dout_unipro",
+ 		SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
+ 
+-	GATE(CLK_SCLK_GSCL_WA, "sclk_gscl_wa", "aclK333_432_gscl",
+-		GATE_TOP_SCLK_GSCL, 6, CLK_SET_RATE_PARENT, 0),
+-	GATE(CLK_SCLK_GSCL_WB, "sclk_gscl_wb", "aclk333_432_gscl",
+-		GATE_TOP_SCLK_GSCL, 7, CLK_SET_RATE_PARENT, 0),
+-
+ 	/* Display */
+ 	GATE(CLK_SCLK_FIMD1, "sclk_fimd1", "dout_fimd1",
+ 		GATE_TOP_SCLK_DISP1, 0, CLK_SET_RATE_PARENT, 0),
+@@ -772,27 +776,49 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 	GATE(CLK_TMU, "tmu", "aclk66_psgen", GATE_BUS_PERIS1, 5, 0, 0),
+ 	GATE(CLK_TMU_GPU, "tmu_gpu", "aclk66_psgen", GATE_BUS_PERIS1, 6, 0, 0),
+ 
++	/* GSCL Block */
++	GATE(CLK_SCLK_GSCL_WA, "sclk_gscl_wa", "mout_user_aclk333_432_gscl",
++			GATE_TOP_SCLK_GSCL, 6, 0, 0),
++	GATE(CLK_SCLK_GSCL_WB, "sclk_gscl_wb", "mout_user_aclk333_432_gscl",
++			GATE_TOP_SCLK_GSCL, 7, 0, 0),
++
+ 	GATE(CLK_GSCL0, "gscl0", "aclk300_gscl", GATE_IP_GSCL0, 0, 0, 0),
+ 	GATE(CLK_GSCL1, "gscl1", "aclk300_gscl", GATE_IP_GSCL0, 1, 0, 0),
+-	GATE(CLK_CLK_3AA, "clk_3aa", "aclk300_gscl", GATE_IP_GSCL0, 4, 0, 0),
+-
+-	GATE(CLK_SMMU_3AA, "smmu_3aa", "aclk333_432_gscl", GATE_IP_GSCL1, 2, 0,
+-		0),
+-	GATE(CLK_SMMU_FIMCL0, "smmu_fimcl0", "aclk333_432_gscl",
++	GATE(CLK_FIMC_3AA, "fimc_3aa", "aclk333_432_gscl",
++			GATE_IP_GSCL0, 4, 0, 0),
++	GATE(CLK_FIMC_LITE0, "fimc_lite0", "aclk333_432_gscl",
++			GATE_IP_GSCL0, 5, 0, 0),
++	GATE(CLK_FIMC_LITE1, "fimc_lite1", "aclk333_432_gscl",
++			GATE_IP_GSCL0, 6, 0, 0),
++
++	GATE(CLK_SMMU_3AA, "smmu_3aa", "dout_gscl_blk_333",
++			GATE_IP_GSCL1, 2, 0, 0),
++	GATE(CLK_SMMU_FIMCL0, "smmu_fimcl0", "dout_gscl_blk_333",
+ 			GATE_IP_GSCL1, 3, 0, 0),
+-	GATE(CLK_SMMU_FIMCL1, "smmu_fimcl1", "aclk333_432_gscl",
++	GATE(CLK_SMMU_FIMCL1, "smmu_fimcl1", "dout_gscl_blk_333",
+ 			GATE_IP_GSCL1, 4, 0, 0),
+-	GATE(CLK_SMMU_GSCL0, "smmu_gscl0", "aclk300_gscl", GATE_IP_GSCL1, 6, 0,
+-		0),
+-	GATE(CLK_SMMU_GSCL1, "smmu_gscl1", "aclk300_gscl", GATE_IP_GSCL1, 7, 0,
+-		0),
+-	GATE(CLK_GSCL_WA, "gscl_wa", "aclk300_gscl", GATE_IP_GSCL1, 12, 0, 0),
+-	GATE(CLK_GSCL_WB, "gscl_wb", "aclk300_gscl", GATE_IP_GSCL1, 13, 0, 0),
+-	GATE(CLK_SMMU_FIMCL3, "smmu_fimcl3,", "aclk333_432_gscl",
++	GATE(CLK_SMMU_GSCL0, "smmu_gscl0", "dout_gscl_blk_300",
++			GATE_IP_GSCL1, 6, 0, 0),
++	GATE(CLK_SMMU_GSCL1, "smmu_gscl1", "dout_gscl_blk_300",
++			GATE_IP_GSCL1, 7, 0, 0),
++	GATE(CLK_GSCL_WA, "gscl_wa", "sclk_gscl_wa", GATE_IP_GSCL1, 12, 0, 0),
++	GATE(CLK_GSCL_WB, "gscl_wb", "sclk_gscl_wb", GATE_IP_GSCL1, 13, 0, 0),
++	GATE(CLK_SMMU_FIMCL3, "smmu_fimcl3,", "dout_gscl_blk_333",
+ 			GATE_IP_GSCL1, 16, 0, 0),
+ 	GATE(CLK_FIMC_LITE3, "fimc_lite3", "aclk333_432_gscl",
+ 			GATE_IP_GSCL1, 17, 0, 0),
+ 
++	/* MSCL Block */
++	GATE(CLK_MSCL0, "mscl0", "aclk400_mscl", GATE_IP_MSCL, 0, 0, 0),
++	GATE(CLK_MSCL1, "mscl1", "aclk400_mscl", GATE_IP_MSCL, 1, 0, 0),
++	GATE(CLK_MSCL2, "mscl2", "aclk400_mscl", GATE_IP_MSCL, 2, 0, 0),
++	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "aclk400_mscl",
++			GATE_IP_MSCL, 8, 0, 0),
++	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "aclk400_mscl",
++			GATE_IP_MSCL, 9, 0, 0),
++	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "aclk400_mscl",
++			GATE_IP_MSCL, 10, 0, 0),
++
+ 	GATE(CLK_FIMD1, "fimd1", "aclk300_disp1", GATE_IP_DISP1, 0, 0, 0),
+ 	GATE(CLK_DSIM1, "dsim1", "aclk200_disp1", GATE_IP_DISP1, 3, 0, 0),
+ 	GATE(CLK_DP1, "dp1", "aclk200_disp1", GATE_IP_DISP1, 4, 0, 0),
+@@ -831,15 +857,6 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+ 	GATE(CLK_SMMU_JPEG, "smmu_jpeg", "aclk300_jpeg", GATE_IP_GEN, 7, 0, 0),
+ 	GATE(CLK_SMMU_MDMA1, "smmu_mdma1", "aclk266", GATE_IP_GEN, 9, 0, 0),
+ 
+-	GATE(CLK_MSCL0, "mscl0", "aclk400_mscl", GATE_IP_MSCL, 0, 0, 0),
+-	GATE(CLK_MSCL1, "mscl1", "aclk400_mscl", GATE_IP_MSCL, 1, 0, 0),
+-	GATE(CLK_MSCL2, "mscl2", "aclk400_mscl", GATE_IP_MSCL, 2, 0, 0),
+-	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "aclk400_mscl", GATE_IP_MSCL, 8, 0,
+-		0),
+-	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "aclk400_mscl", GATE_IP_MSCL, 9, 0,
+-		0),
+-	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "aclk400_mscl", GATE_IP_MSCL, 10, 0,
+-		0),
+ 	GATE(CLK_SMMU_MIXER, "smmu_mixer", "aclk200_disp1", GATE_IP_DISP1, 9, 0,
+ 		0),
+ };
+diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
+index bddf549..6e22fdd 100644
+--- a/include/dt-bindings/clock/exynos5420.h
++++ b/include/dt-bindings/clock/exynos5420.h
+@@ -159,7 +159,7 @@
+ #define CLK_GSCL_WB		464
+ #define CLK_GSCL0		465
+ #define CLK_GSCL1		466
+-#define CLK_CLK_3AA		467
++#define CLK_FIMC_3AA		467
+ #define CLK_ACLK266_G2D		470
+ #define CLK_SSS			471
+ #define CLK_SLIM_SSS		472
+@@ -172,6 +172,8 @@
+ #define CLK_SMMU_FIMCL1		493
+ #define CLK_SMMU_FIMCL3		494
+ #define CLK_FIMC_LITE3		495
++#define CLK_FIMC_LITE0		496
++#define CLK_FIMC_LITE1		497
+ #define CLK_ACLK_G3D		500
+ #define CLK_G3D			501
+ #define CLK_SMMU_MIXER		502
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
