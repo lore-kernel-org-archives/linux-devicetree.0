@@ -1,76 +1,73 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [PATCH v3 17/20] phy: Add support for USB cluster on the Armada
- 375 SoC
-Date: Tue, 6 May 2014 17:53:30 -0300
-Message-ID: <20140506205330.GA27308@arch.cereza>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-18-git-send-email-gregory.clement@free-electrons.com>
+From: Thor Thayer <tthayer.linux@gmail.com>
+Subject: Re: [PATCHv3 3/3] edac: altera: Add EDAC support for Altera SDRAM
+Date: Tue, 6 May 2014 16:00:10 -0500
+Message-ID: <CAF03EBfSxBnB+yfD-vki2e1d_kE1kCCczuOyQ4XJ+ZbCnL51dQ@mail.gmail.com>
+References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
+	<1399330337-16748-4-git-send-email-tthayer@altera.com>
+	<1399390979.11533.6.camel@linux-builds1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399335255-589-18-git-send-email-gregory.clement@free-electrons.com>
+In-Reply-To: <1399390979.11533.6.camel@linux-builds1>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Dinh Nguyen <dinguyen@altera.com>
+Cc: Thor Thayer <tthayer@altera.com>, robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dougthompson@xmission.com, grant.likely@linaro.org, Borislav Petkov <bp@alien8.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
+On Tue, May 6, 2014 at 10:42 AM, Dinh Nguyen <dinguyen@altera.com> wrote:
+> On Mon, 2014-05-05 at 17:52 -0500, Thor Thayer wrote:
+>> From: Thor Thayer <tthayer@altera.com>
+>>
+>> ---
+>> v2: Use the SDRAM controller registers to calculate memory size
+>>     instead of the Device Tree. Update To & Cc list. Add maintainer
+>>     information.
+>>
+>> v3: EDAC driver cleanup based on comments from Mailing list.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@altera.com>
+>> ---
+>>  MAINTAINERS                |    5 +
+>>  drivers/edac/Kconfig       |    9 +
+>>  drivers/edac/Makefile      |    2 +
+>>  drivers/edac/altera_edac.c |  411 ++++++++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 427 insertions(+)
+>>  create mode 100644 drivers/edac/altera_edac.c
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index e67ea24..ecd1277 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -1290,6 +1290,11 @@ M:     Dinh Nguyen <dinguyen@altera.com>
+>>  S:   Maintained
+>>  F:   drivers/clk/socfpga/
+>>
+>> +ARM/SOCFPGA SDRAM EDAC SUPPORT
+>> +M:   Thor Thayer <tthayer@altera.com>
+>> +S:   Maintained
+>> +F:   drivers/edac/altera_edac.c
+>> +
+>>  ARM/STI ARCHITECTURE
+>>  M:   Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
+>>  M:   Maxime Coquelin <maxime.coquelin@st.com>
+>> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+>> index 878f090..4f4d379 100644
+>> --- a/drivers/edac/Kconfig
+>> +++ b/drivers/edac/Kconfig
+>> @@ -368,4 +368,13 @@ config EDAC_OCTEON_PCI
+>>         Support for error detection and correction on the
+>>         Cavium Octeon family of SOCs.
+>>
+>> +config EDAC_ALTERA_MC
+>> +     bool "Altera SDRAM Memory Controller EDAC"
+>
+> Can this be tristate?
+>
+> Dinh
+>
+Hi Dinh,
 
-On 06 May 02:14 AM, Gregory CLEMENT wrote:
-> +
-> +#define USB2_PHY_CONFIG_ENABLE BIT(0) /* active low */
-> +
+We elected to make this a compile time option because it requires a
+special preloader to setup the SDRAM for EDAC.
 
-I still think it's more readable to use USB2_PHY_CONFIG_DISABLE.
-It's just a nitpick, though.
-
-> +static int armada375_usb_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct phy *phy;
-> +	struct device_node *np =3D dev->of_node;
-> +	struct phy_provider *phy_provider;
-> +	void __iomem *usb_cluster_base;
-> +	struct device_node *xhci_node;
-> +	int i;
-> +
-> +	usb_cluster_base =3D of_iomap(np, 0);
-> +	BUG_ON(!usb_cluster_base);
-> +
-
-Isn't a bit extreme to call BUG_ON (and thus bring down the whole syste=
-m)
-in a phy driver?
-
-> +	for (i =3D 0; i < NB_PHY; i++) {
-> +		phy =3D devm_phy_create(dev, &armada375_usb_phy_ops, NULL);
-> +		if (IS_ERR(phy))
-> +			dev_err(dev, "failed to create PHY n%d\n", i);
-> +
-
-I think you're missing a continue/break here.
-
-> +		usb_cluster_phy[i].phy =3D phy;
-> +		usb_cluster_phy[i].reg =3D usb_cluster_base;
-> +		usb_cluster_phy[i].enable =3D false;
-> +		phy_set_drvdata(phy, &usb_cluster_phy[i]);
-> +	}
-> +
-> +	usb_cluster_phy[PHY_USB2].use_usb3 =3D false;
-> +	usb_cluster_phy[PHY_USB3].use_usb3 =3D true;
-> +
-[..]
-> +
-> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
-> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>"=
-);
-> +MODULE_LICENSE("GPL");
-
-GPL v2 ?
-
---=20
-Ezequiel Garc=EDa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+Thor
