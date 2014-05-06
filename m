@@ -1,63 +1,47 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 3/7] ARM: dts: omap4+: Add clocks to USB2 PHY node
-Date: Mon, 5 May 2014 12:54:42 +0300
-Message-ID: <1399283686-6127-4-git-send-email-rogerq@ti.com>
-References: <1399283686-6127-1-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399283686-6127-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
-Cc: george.cherian-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 13/20] usb: host: xhci-plat: Add support for the Armada 375
+Date: Tue,  6 May 2014 02:14:08 +0200
+Message-ID: <1399335255-589-14-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The USB2 PHY driver expects named clocks for wakeup clock
-and reference clock. Provide this information for USB2 PHY
-nodes in OMAP4 and OMAP5 SoC DTS.
+For the Armada 375 SoC which comes with an xhci controller. Currently
+the quirk is the same that the Armada 380/385 one, but by introducing
+a new compatible string it will allow to make the driver evolve
+seamless.
 
-CC: Beno=C3=AEt Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm/boot/dts/omap4.dtsi | 2 ++
- arch/arm/boot/dts/omap5.dtsi | 2 ++
- 2 files changed, 4 insertions(+)
+ drivers/usb/host/xhci-plat.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dts=
-i
-index 649b5cd..f866de9 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -642,6 +642,8 @@
- 				compatible =3D "ti,omap-usb2";
- 				reg =3D <0x4a0ad080 0x58>;
- 				ctrl-module =3D <&omap_control_usb2phy>;
-+				clocks =3D <&usb_phy_cm_clk32k>;
-+				clock-names =3D "wkupclk";
- 				#phy-cells =3D <0>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dts=
-i
-index f8c9855..47b714c 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -803,6 +803,8 @@
- 				compatible =3D "ti,omap-usb2";
- 				reg =3D <0x4a084000 0x7c>;
- 				ctrl-module =3D <&omap_control_usb2phy>;
-+				clocks =3D <&usb_phy_cm_clk32k>, <&usb_otg_ss_refclk960m>;
-+				clock-names =3D "wkupclk", "refclk";
- 				#phy-cells =3D <0>;
- 			};
-=20
---=20
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index d12ba56f52da..09639962c0bb 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -152,6 +152,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 					"marvell,armada-380-xhci"))
+ 		xhci_mvebu_mbus_init_quirk(pdev);
+ 
++	if (of_device_is_compatible(pdev->dev.of_node,
++					"marvell,armada-375-xhci"))
++		xhci_mvebu_mbus_init_quirk(pdev);
++
+ 	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
+ 	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (ret)
+@@ -288,6 +292,7 @@ static const struct of_device_id usb_xhci_of_match[] = {
+ 	{ .compatible = "generic-xhci" },
+ 	{ .compatible = "xhci-platform" },
+ 	{ .compatible = "marvell,armada-380-xhci"},
++	{ .compatible = "marvell,armada-375-xhci"},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
+-- 
+1.8.1.2
