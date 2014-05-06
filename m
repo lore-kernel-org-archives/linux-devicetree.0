@@ -1,60 +1,135 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3] powerpc/fsl: Added binding for Freescale CoreNet
- coherency fabric (CCF)
-Date: Mon, 5 May 2014 14:31:02 -0500
-Message-ID: <1399318262.15726.98.camel@snotra.buserror.net>
-References: <1399305499-6612-1-git-send-email-diana.craciun@freescale.com>
+From: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ARM: zynq: dt: Clean up device tree
+Date: Tue, 6 May 2014 13:04:22 +0200
+Message-ID: <cb504244-1639-4ad9-97c3-4258507fb647@CO9EHSMHS026.ehs.local>
+References: <1399310168-6099-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399305499-6612-1-git-send-email-diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+In-Reply-To: <1399310168-6099-1-git-send-email-soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-05-05 at 18:58 +0300, Diana Craciun wrote:
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
-> index 922c30a..09dbc5f 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/cpus.txt
-> @@ -20,3 +20,11 @@ PROPERTIES
->  	a property named fsl,eref-[CAT], where [CAT] is the abbreviated category
->  	name with all uppercase letters converted to lowercase, indicates that
->  	the category is supported by the implementation.
+On 05/05/2014 07:16 PM, Soren Brinkmann wrote:
+>  - Use generic node names
+>  - Fix up some weird formatting and white spaces
+>  - Update copyright info
+> 
+> Signed-off-by: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> ---
+> 
+>  arch/arm/boot/dts/zynq-7000.dtsi | 29 +++++++++++++++--------------
+>  1 file changed, 15 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/zynq-7000.dtsi b/arch/arm/boot/dts/zynq-7000.dtsi
+> index c1176abc34d9..bed6e0aed00a 100644
+> --- a/arch/arm/boot/dts/zynq-7000.dtsi
+> +++ b/arch/arm/boot/dts/zynq-7000.dtsi
+> @@ -1,5 +1,5 @@
+>  /*
+> - *  Copyright (C) 2011 Xilinx
+> + *  Copyright (C) 2011 - 2014 Xilinx
+>   *
+>   * This software is licensed under the terms of the GNU General Public
+>   * License version 2, as published by the Free Software Foundation, and
+> @@ -55,7 +55,7 @@
+>  		interrupt-parent = <&intc>;
+>  		ranges;
+>  
+> -		i2c0: zynq-i2c@e0004000 {
+> +		i2c0: i2c@e0004000 {
+>  			compatible = "cdns,i2c-r1p10";
+>  			status = "disabled";
+>  			clocks = <&clkc 38>;
+> @@ -66,7 +66,7 @@
+>  			#size-cells = <0>;
+>  		};
+>  
+> -		i2c1: zynq-i2c@e0005000 {
+> +		i2c1: i2c@e0005000 {
+>  			compatible = "cdns,i2c-r1p10";
+>  			status = "disabled";
+>  			clocks = <&clkc 39>;
+> @@ -95,7 +95,7 @@
+>  			cache-level = <2>;
+>  		};
+>  
+> -		uart0: uart@e0000000 {
+> +		uart0: serial@e0000000 {
+>  			compatible = "xlnx,xuartps";
+>  			status = "disabled";
+>  			clocks = <&clkc 23>, <&clkc 40>;
+> @@ -104,7 +104,7 @@
+>  			interrupts = <0 27 4>;
+>  		};
+>  
+> -		uart1: uart@e0001000 {
+> +		uart1: serial@e0001000 {
+>  			compatible = "xlnx,xuartps";
+>  			status = "disabled";
+>  			clocks = <&clkc 24>, <&clkc 41>;
+> @@ -131,7 +131,7 @@
+>  			clock-names = "pclk", "hclk", "tx_clk";
+>  		};
+>  
+> -		sdhci0: ps7-sdhci@e0100000 {
+> +		sdhci0: sdhci@e0100000 {
+>  			compatible = "arasan,sdhci-8.9a";
+>  			status = "disabled";
+>  			clock-names = "clk_xin", "clk_ahb";
+> @@ -141,7 +141,7 @@
+>  			reg = <0xe0100000 0x1000>;
+>  		} ;
+>  
+> -		sdhci1: ps7-sdhci@e0101000 {
+> +		sdhci1: sdhci@e0101000 {
+>  			compatible = "arasan,sdhci-8.9a";
+>  			status = "disabled";
+>  			clock-names = "clk_xin", "clk_ahb";
+> @@ -185,26 +185,27 @@
+>  			clocks = <&clkc 4>;
+>  		};
+>  
+> -		ttc0: ttc0@f8001000 {
+> +		ttc0: timer@f8001000 {
+>  			interrupt-parent = <&intc>;
+> -			interrupts = < 0 10 4 0 11 4 0 12 4 >;
+> +			interrupts = <0 10 4>, <0 11 4>, <0 12 4>;
+>  			compatible = "cdns,ttc";
+>  			clocks = <&clkc 6>;
+>  			reg = <0xF8001000 0x1000>;
+>  		};
+>  
+> -		ttc1: ttc1@f8002000 {
+> +		ttc1: timer@f8002000 {
+>  			interrupt-parent = <&intc>;
+> -			interrupts = < 0 37 4 0 38 4 0 39 4 >;
+> +			interrupts = <0 37 4>, <0 38 4>, <0 39 4>;
+>  			compatible = "cdns,ttc";
+>  			clocks = <&clkc 6>;
+>  			reg = <0xF8002000 0x1000>;
+>  		};
+> -		scutimer: scutimer@f8f00600 {
 > +
-> +	- fsl,portid-mapping : <u32>
-> +	The Coherency Subdomain ID Port Mapping Registers and Snoop ID Port Mapping
-> +	registers which are part of the CoreNet Coherency fabric (CCF) provide a
-> +	CoreNet Coherency Subdomain ID/CoreNet Snoop ID to cpu mapping functions.
-> +	Certain bits from these registers should be set if the coresponding CPU
-> +	should be snooped. This property defines a bitmask which selects the bit that
-> +	should be set if this cpu should be snooped.
+> +		scutimer: timer@f8f00600 {
+>  			interrupt-parent = <&intc>;
+> -			interrupts = < 1 13 0x301 >;
+> +			interrupts = <1 13 0x301>;
+>  			compatible = "arm,cortex-a9-twd-timer";
+> -			reg = < 0xf8f00600 0x20 >;
+> +			reg = <0xf8f00600 0x20>;
+>  			clocks = <&clkc 4>;
+>  		} ;
+>  	};
+> 
 
-Please follow existing formatting in this file.
+Looks good to me. Applied to zynq/dt branch.
 
-> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt b/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
-> index 1f5e329..827c637 100644
-> --- a/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
-> +++ b/Documentation/devicetree/bindings/powerpc/fsl/pamu.txt
-> @@ -26,6 +26,13 @@ Required properties:
->  		  A standard property.
->  - #size-cells	: <u32>
->  		  A standard property.
-> +- fsl,portid-mapping : <u32>
-> +	The Coherency Subdomain ID Port Mapping Registers and Snoop ID Port Mapping
-> +	registers which are part of the CoreNet Coherency fabric (CCF) provide a
-> +	CoreNet Coherency Subdomain ID/CoreNet Snoop ID to pamu mapping functions.
-> +	Certain bits from these registers should be set if PAMUs should be snooped.
-> +	This property defines a bitmask which selects the bits that should be set
-> +	if PAMUs should be snooped.
-
-This can't be a required property since existing trees don't have it --
-in addition to allowing for the possibility of a PAMU where the snoop ID
-is not known or where the snoop domain mechanism does not exist.
-
--Scott
+Thanks,
+Michal
 
 
 --
