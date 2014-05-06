@@ -1,67 +1,73 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCHv3 1/5] Input: add common DT binding for touchscreens
-Date: Mon, 5 May 2014 12:41:26 -0700
-Message-ID: <20140505194125.GD25949@atomide.com>
-References: <1398470179-20880-1-git-send-email-sre@kernel.org>
- <1398470179-20880-2-git-send-email-sre@kernel.org>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: Add support for CS42L56 CODEC
+Date: Mon, 5 May 2014 18:24:22 -0700
+Message-ID: <20140506012422.GB22111@sirena.org.uk>
+References: <1399320549-16645-1-git-send-email-brian.austin@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kxn/JluRpPoM1h3S"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1398470179-20880-2-git-send-email-sre@kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1399320549-16645-1-git-send-email-brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Brian Austin <brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, paul.handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre@kernel.org> [140425 16:56]:
-> Add common DT binding documentation for touchscreen devices and
-> implement input_parse_touchscreen_of_params, which parses the common
-> properties and configures the input device accordingly.
-> 
-> The method currently does not interpret the axis inversion properties,
-> since there is no matching flag in the generic linux input device.
-> 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
-> ---
->  .../bindings/input/touchscreen/touchscreen.txt     | 27 +++++++++++++++++
->  drivers/input/input.c                              | 34 ++++++++++++++++++++++
->  include/linux/input.h                              |  8 +++++
->  3 files changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> new file mode 100644
-> index 0000000..d8e0616
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-> @@ -0,0 +1,27 @@
-> +General Touchscreen Properties:
-> +
-> +Optional properties for Touchscreens:
-> + - touchscreen-size-x		: horizontal resolution of touchscreen
-> +				  (in pixels)
-> + - touchscreen-size-y		: vertical resolution of touchscreen
-> +				  (in pixels)
-> + - touchscreen-max-pressure	: maximum reported pressure (arbitrary range
-> +				  dependent on the controller)
-> + - touchscreen-fuzz-x		: horizontal noise value of the absolute input
-> +				  device (in pixels)
-> + - touchscreen-fuzz-y		: vertical noise value of the absolute input
-> +				  device (in pixels)
-> + - touchscreen-fuzz-pressure	: pressure noise value of the absolute input
-> +				  device (arbitrary range dependent on the
-> +				  controller)
-> + - touchscreen-inverted-x	: X axis is inverted (boolean)
-> + - touchscreen-inverted-y	: Y axis is inverted (boolean)
 
-We probably also need something to swap x and y depending on the
-display orientation in addition to the touchscreen-inverted-x and y.
-Just swapping x and y is not enough depending if we rotate by 270
-degrees instead of 90 degrees.
+--kxn/JluRpPoM1h3S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Naturally that part can be added later.
+On Mon, May 05, 2014 at 03:09:08PM -0500, Brian Austin wrote:
+> This patch adds support for the Cirrus Logic Low Power Stereo I2C CODEC
 
-Regards,
+Applied, thanks.  A couple of minor issues it'd be good to look at
+incrementally.
 
-That 
+> +	SOC_ENUM("PCMA Swap", pcma_swap_enum),
+> +	SOC_ENUM("PCMB Swap", pcmb_swap_enum),
+> +	SOC_ENUM("ADCA Swap", adca_swap_enum),
+> +	SOC_ENUM("ADCB Swap", adcb_swap_enum),
+
+Can these be moved to DAPM?
+
+> +	regcache_cache_bypass(cs42l56->regmap, true);
+
+You shouldn't need to do this, if no default is provided regmap should
+just go to hardware.
+
+> +	dev_info(&i2c_client->dev, "Cirrus Logic CS42L56 ");
+> +	dev_info(&i2c_client->dev, "Alpha Rev %X Metal Rev %X\n",
+> +		 alpha_rev, metal_rev);
+
+It's better to just put things on one line and ignore the line length
+warnings from checkpatch - this makes the code more grepable.
+
+--kxn/JluRpPoM1h3S
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTaDnDAAoJELSic+t+oim9XMMP/0WIYpeXtjZ9A7oJOz7QiqOL
+nXYMh5G1a5MfuWpVK+7ykCxtZW/L9RDUVef9Ii3PnPGriz6y/PMtiCZqV6uF51gH
+sM/6GJ136tb+ANpaaJaMBS/r/FSEEWOgA/GhVWvabM2gssLfnBpuLiRzCspTxFrS
+pYgK8021vSiSvJL6mCSqT8qwXqbr9KUSzm44baYyF3PlAmk8d3VQm1ruuoe13LpT
+LE9HKTBLswIIgPKlN+MF8T9XMKbcArCahVzGkP469CHyP2cxjH5Y7WzAmQPfvLfa
+z25N0NDzhpRQQ3KGua+pHuj21JfTx74Afj8qFBu0b1QthVI4gmhtZuuHVBkErRLN
+q1O5OBADQDvXdLTJIb5w6zitUinIq+5YQyom81Pb5WahCRkTgNUoTDPv8BAkhvld
+M9ZIfiZX2MPEXaIQT6JPGI8PcMtJh47V7saks+MjtS6GxW49al5GW/UFzp4GG4K0
+fOxBgNyzjcHGZGJKsnnuGOYo72EAatuiM1WlRntnDxC7ReqqM4gYPz/x0uV03oys
+lIk4kQg+iL/MWghDGJCLl2xeApId9Gs9H+zpVYLgtBuG0vMfoS5bpfb6hdveBpcW
+mEoGSY8r9HQIrJDQSi2SqfmoycHzerWEh6fJEWx7MBDZpWV+rssgDTXRAmDNwpLD
+MzY4LbRM8HHCtVPrWLDo
+=GFHa
+-----END PGP SIGNATURE-----
+
+--kxn/JluRpPoM1h3S--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
