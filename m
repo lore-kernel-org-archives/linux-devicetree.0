@@ -1,85 +1,73 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 04/20] usb: xhci: add a platform-private field
-Date: Tue, 6 May 2014 10:40:14 -0500
-Message-ID: <20140506154014.GG25849@saruman.home>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-5-git-send-email-gregory.clement@free-electrons.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Cp3Cp8fzgozWLBWL"
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 2/2] Documentation: DT: Exynos: Bind SRAM though DT
+Date: Tue,  6 May 2014 13:40:24 +0530
+Message-ID: <1399363824-23543-2-git-send-email-sachin.kamat@linaro.org>
+References: <1399363824-23543-1-git-send-email-sachin.kamat@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399335255-589-5-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1399363824-23543-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Cp3Cp8fzgozWLBWL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add SRAM binding documentation.
 
-On Tue, May 06, 2014 at 02:13:59AM +0200, Gregory CLEMENT wrote:
-> This patch adds an xhci->priv field for private use by xHCI platform
-> drivers. This field was present for OHCI and EHCI and it was not
-> needed until now for xHCI. With the introduction of the clock support,
-> then a private field will be useful, so let's mimic what have been
-> done for the other HCI.
->=20
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+---
+No changes since v1.
+---
+ .../devicetree/bindings/arm/exynos/smp-sram.txt    |   38 ++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/exynos/smp-sram.txt
 
-Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+diff --git a/Documentation/devicetree/bindings/arm/exynos/smp-sram.txt b/Documentation/devicetree/bindings/arm/exynos/smp-sram.txt
+new file mode 100644
+index 000000000000..c9ff2f58f9b6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/exynos/smp-sram.txt
+@@ -0,0 +1,38 @@
++Samsung Exynos SRAM for SMP bringup:
++------------------------------------
++
++Samsung SMP-capable Exynos SoCs use part of the SRAM for the bringup
++of the secondary cores. Once the core gets powered up it executes the
++code that is residing at some specific location of the SRAM.
++
++Therefore reserved section sub-nodes have to be added to the mmio-sram
++declaration. These nodes are of two types depending upon secure or
++non-secure execution environment.
++
++Required sub-node properties:
++- compatible : depending upon boot mode, should be
++		"samsung,exynos4210-sram" : for Secure SYSRAM
++		"samsung,exynos4210-sram-ns" : for Non-secure SYSRAM
++
++The rest of the properties should follow the generic mmio-sram discription
++found in ../../misc/sram.txt
++
++Example:
++
++	sram@02020000 {
++		compatible = "mmio-sram";
++		reg = <0x02020000 0x54000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x02020000 0x54000>;
++
++		smp-sram@0 {
++			compatible = "samsung,exynos4210-sram";
++			reg = <0x0 0x1000>;
++		};
++
++		smp-sram@53000 {
++			compatible = "samsung,exynos4210-sram-ns";
++			reg = <0x53000 0x1000>;
++		};
++	};
+-- 
+1.7.9.5
 
-> ---
->  drivers/usb/host/xhci.h | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/drivers/usb/host/xhci.h b/drivers/usb/host/xhci.h
-> index d280e9213d08..054017f66246 100644
-> --- a/drivers/usb/host/xhci.h
-> +++ b/drivers/usb/host/xhci.h
-> @@ -1584,6 +1584,9 @@ struct xhci_hcd {
->  	u32			port_status_u0;
->  /* Compliance Mode Timer Triggered every 2 seconds */
->  #define COMP_MODE_RCVRY_MSECS 2000
-> +
-> +	/* platform-specific data -- must come last */
-> +	unsigned long		priv[0] __aligned(sizeof(s64));
->  };
-> =20
->  /* convert between an HCD pointer and the corresponding EHCI_HCD */
-> --=20
-> 1.8.1.2
->=20
-
---=20
-balbi
-
---Cp3Cp8fzgozWLBWL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTaQJeAAoJEIaOsuA1yqRE0eIQAJ8f8Ky6nc6bPSl/VzLKtJF1
-gCXhMvocUl2WwGUr/oikTPkgAXCChrQpAlfzhl7h3GLggOHV23yCND2/DdChHkQf
-LwE4Mn7E06lUTTKYkdOrYQ6/Y2jXpOkyGK5kUB45wgu30k2RAXhBBGUAhu1kyjVo
-ESV4sH7CoGeYda2WKa792r6GudpwGOXdiXnyJD8XBNuWU1GNSVkse51QebSjE2VV
-jnZKB+KAIRZexOF4HNRHkoP5UiM2cZuvOo6ENvPqrGw3FEWXna22fjpnW9G1GiyE
-tIB1LV/TkwAd/lm8i9tEl/ifyQxwffuS26XpRR9kXz8CmznFhJTTK/VyfQmDv5Y+
-GE5AoRlR2SFcTLWKnVH+pxzlZ43qJ5Sv1PlxU00511IUofgI66dMrfJ3Q4mqY8tj
-I+bNFojjNPYuh/zY/Pb7HKrPpYhWmTMC2ErNBLJaudKelcj1uhtnn+OnR30VV4RN
-GVCwU1bzDHCLyVzROlBrpIY9GfIoB8l2CSkE2JiXGFNMosSES2QUpiEZaxtTkRDb
-5/H7vW+Nq/AkjFRJsirh0FUhjpqMhv5V0y7Vr/okyqt5a7I+p3e3XfJ3Pux4r9Bx
-ja66SMxeSDa/oKHnUnfbvxUdy20J0Ao79vkjA6gW0JkflhT1cEJk69M5TYr8nb+d
-e2/YLodFIz1srGz+n17n
-=tyjZ
------END PGP SIGNATURE-----
-
---Cp3Cp8fzgozWLBWL--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
