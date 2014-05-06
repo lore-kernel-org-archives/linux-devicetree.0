@@ -1,80 +1,67 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v3 5/5] media: Add registration helpers for V4L2
- flash sub-devices
-Date: Tue, 6 May 2014 12:10:59 +0300
-Message-ID: <20140506091059.GB8753@valkosipuli.retiisi.org.uk>
-References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
- <1397228216-6657-6-git-send-email-j.anaszewski@samsung.com>
- <20140416182141.GG8753@valkosipuli.retiisi.org.uk>
- <534F9044.6080508@samsung.com>
- <20140423152435.GJ8753@valkosipuli.retiisi.org.uk>
- <535E3A95.6010206@samsung.com>
- <20140502110651.GX8753@valkosipuli.retiisi.org.uk>
- <536884D9.4050104@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536884D9.4050104@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com
+From: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v4 15/15] clk: exynos5420: add more registers to restore list
+Date: Tue, 06 May 2014 21:56:50 +0530
+Message-ID: <1399393610-23394-16-git-send-email-shaik.ameer@samsung.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+This patch adds more register offsets to the list for
+preserving their values during S2R.
 
-On Tue, May 06, 2014 at 08:44:41AM +0200, Jacek Anaszewski wrote:
-> Hi Sakari,
-> 
-> On 05/02/2014 01:06 PM, Sakari Ailus wrote:
-> 
-> >>>>[...]
-> >>>>>>+static inline enum led_brightness v4l2_flash_intensity_to_led_brightness(
-> >>>>>>+					struct led_ctrl *config,
-> >>>>>>+					u32 intensity)
-> >>>>>
-> >>>>>Fits on a single line.
-> >>>>>
-> >>>>>>+{
-> >>>>>>+	return intensity / config->step;
-> >>>>>
-> >>>>>Shouldn't you first decrement the minimum before the division?
-> >>>>
-> >>>>Brightness level 0 means that led is off. Let's consider following case:
-> >>>>
-> >>>>intensity - 15625
-> >>>>config->step - 15625
-> >>>>intensity / config->step = 1 (the lowest possible current level)
-> >>>
-> >>>In V4L2 controls the minimum is not off, and zero might not be a possible
-> >>>value since minimum isn't divisible by step.
-> >>>
-> >>>I wonder how to best take that into account.
-> >>
-> >>I've assumed that in MODE_TORCH a led is always on. Switching
-> >>the mode to MODE_FLASH or MODE_OFF turns the led off.
-> >>This way we avoid the problem with converting 0 uA value to
-> >>led_brightness, as available torch brightness levels start from
-> >>the minimum current level value and turning the led off is
-> >>accomplished on transition to MODE_OFF or MODE_FLASH, by
-> >>calling brightness_set op with led_brightness = 0.
-> >
-> >I'm not sure if we understood the issue the same way. My concern was that if
-> >the intensity isn't a multiple of step (but intensity - min is), the above
-> >formula won't return a valid result (unless I miss something).
-> >
-> 
-> Please note that v4l2_flash_intensity_to_led_brightness is called only
-> from s_ctrl callback, and thus it expects to get the intensity aligned
-> to the step value, so it will always be a multiple of step.
-> Is it possible that s_ctrl callback would be passed a non-aligned
-> control value?
+Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+ drivers/clk/samsung/clk-exynos5420.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-In a nutshell: value - min is aligned but value is not. Please see
-validate_new() in drivers/media/v4l2-core/v4l2-ctrls.c .
-
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index e69e820..566d351 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -27,6 +27,7 @@
+ #define DIV_CPU1		0x504
+ #define GATE_BUS_CPU		0x700
+ #define GATE_SCLK_CPU		0x800
++#define CLKOUT_CMU_CPU		0xa00
+ #define GATE_IP_G2D		0x8800
+ #define CPLL_LOCK		0x10020
+ #define DPLL_LOCK		0x10030
+@@ -39,7 +40,11 @@
+ #define CPLL_CON0		0x10120
+ #define DPLL_CON0		0x10128
+ #define EPLL_CON0		0x10130
++#define EPLL_CON1		0x10134
++#define EPLL_CON2		0x10138
+ #define RPLL_CON0		0x10140
++#define RPLL_CON1		0x10144
++#define RPLL_CON2		0x10148
+ #define IPLL_CON0		0x10150
+ #define SPLL_CON0		0x10160
+ #define VPLL_CON0		0x10170
+@@ -140,6 +145,13 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+ 	DIV_CPU1,
+ 	GATE_BUS_CPU,
+ 	GATE_SCLK_CPU,
++	CLKOUT_CMU_CPU,
++	EPLL_CON0,
++	EPLL_CON1,
++	EPLL_CON2,
++	RPLL_CON0,
++	RPLL_CON1,
++	RPLL_CON2,
+ 	SRC_TOP0,
+ 	SRC_TOP1,
+ 	SRC_TOP2,
 -- 
-Regards,
+1.7.9.5
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
