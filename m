@@ -1,111 +1,54 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: am335x-igep0033: use phandles for USB and
- DMA refs
-Date: Tue, 6 May 2014 11:17:03 -0500
-Message-ID: <20140506161703.GM25849@saruman.home>
-References: <1398693512-5355-1-git-send-email-guido@vanguardiasur.com.ar>
- <1398693512-5355-4-git-send-email-guido@vanguardiasur.com.ar>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="McpcKDxJRrEJVmOH"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398693512-5355-4-git-send-email-guido@vanguardiasur.com.ar>
-Sender: linux-omap-owner@vger.kernel.org
-To: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>
-Cc: LKML <linux-kernel@vger.kernel.org>, bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [Patch v2 1/4] soc: Placeholder files for drivers/soc
+Date: Tue, 6 May 2014 10:06:52 -0700
+Message-ID: <655E240A-D6B1-4750-AC3A-09BA9D0C084E@codeaurora.org>
+References: <1398357082-5102-1-git-send-email-agross@codeaurora.org> <1398357082-5102-2-git-send-email-agross@codeaurora.org> <53593D89.1020703@ti.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <53593D89.1020703@ti.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Paul Walmsley <paul@pwsan.com>
+Cc: Andy Gross <agross@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
---McpcKDxJRrEJVmOH
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, Apr 28, 2014 at 10:58:32AM -0300, Guido Mart=EDnez wrote:
-> Use phandles instead of unit adresses to reference usb and dma nodes.
-> This makes the DT more robust and readable.
->=20
-> Signed-off-by: Guido Mart=EDnez <guido@vanguardiasur.com.ar>
+On Apr 24, 2014, at 9:36 AM, Santosh Shilimkar <santosh.shilimkar@ti.co=
+m> wrote:
 
-Acked-by: Felipe Balbi <balbi@ti.com>
-
-> ---
->  arch/arm/boot/dts/am335x-igep0033.dtsi | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
+> On Thursday 24 April 2014 12:31 PM, Andy Gross wrote:
+>> Add placeholder Kconfig and linkage for driver/soc.
+>>=20
+>> The first patch set that implemented this was authored by Santosh Sh=
+ilimkar:
+>> https://lkml.org/lkml/2014/2/28/567
+>>=20
+>> Signed-off-by: Andy Gross <agross@codeaurora.org>
+>> ---
+> Good to see these patches on the list. Me and Kumar spoke about it
+> many times before.
 >=20
-> diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/dts/a=
-m335x-igep0033.dtsi
-> index 9f22c18..81cf68b 100644
-> --- a/arch/arm/boot/dts/am335x-igep0033.dtsi
-> +++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
-> @@ -201,28 +201,28 @@
->  &usb {
->  	status =3D "okay";
-> =20
-> -	control@44e10620 {
-> +	&usb_ctrl_mod {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb-phy@47401300 {
-> +	&usb0_phy {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb-phy@47401b00 {
-> +	&usb1_phy {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb@47401000 {
-> +	&usb0 {
->  		status =3D "okay";
->  	};
-> =20
-> -	usb@47401800 {
-> +	&usb1 {
->  		status =3D "okay";
->  		dr_mode =3D "host";
->  	};
-> =20
-> -	dma-controller@47402000  {
-> +	&cppi41dma  {
->  		status =3D "okay";
->  	};
->  };
-> --=20
-> 1.9.2
+> BTW, I just posted updated version. Feel free to use the from it inst=
+ead
+> of 4subject one.
 >=20
+> Regards,
+> Santosh
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> To unsubscribe from this list: send the line "unsubscribe linux-arm-m=
+sm" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+
+Paul,
+
+Did you have any other thoughts on this, do we want to add more to Sant=
+osh=92s patch w/regards to comments or MAINTAINERs?
+
+- k
 
 --=20
-balbi
-
---McpcKDxJRrEJVmOH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTaQr/AAoJEIaOsuA1yqREYjEQAKiMKdTfGKKPkJO91rX2+EAO
-5ec7cXNIiaNl/7vRZLxCU7sLR57iYHRvjt3kxjq2mrr8ObFkXQtFc0RbTo8flULk
-bA4fTdm0xlweb7jz735shA0zDSh3eX4UtYxafUtGbtxjckY7vvT61JNOciayrPRJ
-FTqvnOots9iOWhIYnfDE1+jBivTEZ3RmN5ftwF3SrsISns5im4JPtkVgl+jlwCFH
-sUzftadNnxeZK6qmR5BSql5N9lWhRSqMIN1Fq/+M7P7u8qJiYhNDjWwfzbargLsW
-28RarO93ZaAd5NiePCnVr5Hfp698iIu3l9mEk2frfF2Br4oVz0M4trtqqF0R4x8J
-LoeJqTieTp1hasZNQwgbZ62n3TKkxSZ+rekJC25wgPlqecNpKlU+ciwN6BbbZKeN
-21l9x/YKhL2i2yicALlMn6s/+yZAhc9zQx+4zj/fUWkxUXb3iltya4h/4kD8MtkJ
-0tScREwV1pZQEIJj4LgEGQesuegA/6Ks1V/sdlGCCyCEMQdwOQUGbXbD8cs8B0v2
-LcUrUnkNQKm8s3MbAP+gNkizrFkgurtQGytAtChFNCvt7aoAIjICJMU8Q6QeYzH9
-sktTUYS9RHFgyqekjI1di05Qe6+lDuM+OX3MvcS3E12F3tUwk196l06sldaDkyLz
-4GWA20JJ3z2sCW9AxucS
-=ZZxB
------END PGP SIGNATURE-----
-
---McpcKDxJRrEJVmOH--
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
