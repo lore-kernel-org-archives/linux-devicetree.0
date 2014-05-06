@@ -1,42 +1,109 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v10 00/15] ARM: sunxi: Add driver for SD/MMC hosts found on
- Allwinner sunxi SoCs
-Date: Tue, 06 May 2014 10:04:37 -0700
-Message-ID: <20140506170437.5739.402@quantum>
-References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>
-Cc: =?utf-8?q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer@o2s.ch>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v4 09/15] clk: exynos5420: clk: exynos5420: update clocks for
+ WCORE block
+Date: Tue, 06 May 2014 21:56:44 +0530
+Message-ID: <1399393610-23394-10-git-send-email-shaik.ameer@samsung.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, t.figa@samsung.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Hans de Goede (2014-05-02 08:57:14)
-> The first 2 patches are depenencies which should go in through the clk tree,
-> Mike can you pick these 2 up please ?  :
+This patch adds missing clocks from WCORE block.
 
-Taken into clk-next.
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5420.c |   25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-> 
-> "clk: sunxi: factors: automatic reparenting support"
-> Is uncontroversial and has been favorably reviewed by various people.
-> 
-> "clk: sunxi: Implement MMC phase control"
-> Is somewhat more controversial as there has been lots of discussion about
-> adding a generic phase control method to the clk framework. The problem is
-> that there has been a lot of talk about such a generic phase control method
-> but not a single patch. Therefor I would like to move forwards with using
-> a platform specific method for now. I hereby promise that once we've a generic
-> method I'll write patches to convert the sunxi code to that method.
-
-Thanks for the promise. I will hold you to it once the set_phase api is
-sorted ;-)
-
-Also thanks for the clear and concise cover letter. It is very helpful
-when going through the tenth iteration of a series.
-
-Regards,
-Mike
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index af13e6c..f0460b4 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -89,6 +89,7 @@
+ #define GATE_BUS_PERIC1		0x10754
+ #define GATE_BUS_PERIS0		0x10760
+ #define GATE_BUS_PERIS1		0x10764
++#define GATE_BUS_NOC		0x10770
+ #define GATE_TOP_SCLK_ISP	0x10870
+ #define GATE_IP_GSCL0		0x10910
+ #define GATE_IP_GSCL1		0x10920
+@@ -180,6 +181,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
+ 	GATE_BUS_PERIC1,
+ 	GATE_BUS_PERIS0,
+ 	GATE_BUS_PERIS1,
++	GATE_BUS_NOC,
+ 	GATE_TOP_SCLK_ISP,
+ 	GATE_IP_GSCL0,
+ 	GATE_IP_GSCL1,
+@@ -271,6 +273,13 @@ PNAME(mout_user_aclk200_fsys_p)	= {"fin_pll", "mout_sw_aclk200_fsys"};
+ 
+ PNAME(mout_sw_aclk200_fsys2_p) = {"dout_aclk200_fsys2", "mout_sclk_spll"};
+ PNAME(mout_user_aclk200_fsys2_p) = {"fin_pll", "mout_sw_aclk200_fsys2"};
++PNAME(mout_sw_aclk100_noc_p) = {"dout_aclk100_noc", "mout_sclk_spll"};
++PNAME(mout_user_aclk100_noc_p) = {"fin_pll", "mout_sw_aclk100_noc"};
++
++PNAME(mout_sw_aclk400_wcore_p) = {"dout_aclk400_wcore", "mout_sclk_spll"};
++PNAME(mout_aclk400_wcore_bpll_p) = {"mout_aclk400_wcore", "sclk_bpll"};
++PNAME(mout_user_aclk400_wcore_p) = {"fin_pll", "mout_sw_aclk400_wcore"};
++
+ PNAME(mout_sw_aclk400_isp_p) = {"dout_aclk400_isp", "mout_sclk_spll"};
+ PNAME(mout_user_aclk400_isp_p) = {"fin_pll", "mout_sw_aclk400_isp"};
+ 
+@@ -370,6 +379,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+ 			SRC_TOP0, 4, 2, "aclk400_mscl"),
+ 	MUX(0, "mout_aclk200", mout_group1_p, SRC_TOP0, 8, 2),
+ 	MUX(0, "mout_aclk200_fsys2", mout_group1_p, SRC_TOP0, 12, 2),
++	MUX(0, "mout_aclk400_wcore", mout_group1_p, SRC_TOP0, 16, 2),
++	MUX(0, "mout_aclk100_noc", mout_group1_p, SRC_TOP0, 20, 2),
+ 	MUX(0, "mout_aclk200_fsys", mout_group1_p, SRC_TOP0, 28, 2),
+ 
+ 	MUX(0, "mout_aclk333_432_gscl", mout_group4_p, SRC_TOP1, 0, 2),
+@@ -397,6 +408,10 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+ 			SRC_TOP3, 8, 1),
+ 	MUX(0, "mout_user_aclk200_fsys2", mout_user_aclk200_fsys2_p,
+ 			SRC_TOP3, 12, 1),
++	MUX(0, "mout_user_aclk400_wcore", mout_user_aclk400_wcore_p,
++			SRC_TOP3, 16, 1),
++	MUX(0, "mout_user_aclk100_noc", mout_user_aclk100_noc_p,
++			SRC_TOP3, 20, 1),
+ 	MUX(0, "mout_user_aclk200_fsys", mout_user_aclk200_fsys_p,
+ 			SRC_TOP3, 28, 1),
+ 
+@@ -447,6 +462,10 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+ 	MUX(0, "mout_sw_aclk200", mout_sw_aclk200_p, SRC_TOP10, 8, 1),
+ 	MUX(0, "mout_sw_aclk200_fsys2", mout_sw_aclk200_fsys2_p,
+ 			SRC_TOP10, 12, 1),
++	MUX(0, "mout_sw_aclk400_wcore", mout_sw_aclk400_wcore_p,
++			SRC_TOP10, 16, 1),
++	MUX(0, "mout_sw_aclk100_noc", mout_sw_aclk100_noc_p,
++			SRC_TOP10, 20, 1),
+ 	MUX(0, "mout_sw_aclk200_fsys", mout_sw_aclk200_fsys_p,
+ 			SRC_TOP10, 28, 1),
+ 
+@@ -483,6 +502,9 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
+ 	MUX(CLK_MOUT_HDMI, "mout_hdmi", mout_hdmi_p, SRC_DISP10, 28, 1),
+ 	MUX_F(0, "mout_fimd1_opt", mout_group2_p,
+ 			SRC_DISP10, 8, 3, CLK_SET_RATE_PARENT, 0),
++
++	MUX(0, "mout_aclk400_wcore_bpll", mout_aclk400_wcore_bpll_p,
++			TOP_SPARE2, 4, 1),
+ 	MUX_F(0, "mout_fimd1_final", mout_fimd1_final_p,
+ 			TOP_SPARE2, 8, 1, CLK_SET_RATE_PARENT, 0),
+ 
+@@ -530,6 +552,9 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
+ 	DIV(0, "dout_aclk400_mscl", "mout_aclk400_mscl", DIV_TOP0, 4, 3),
+ 	DIV(0, "dout_aclk200", "mout_aclk200", DIV_TOP0, 8, 3),
+ 	DIV(0, "dout_aclk200_fsys2", "mout_aclk200_fsys2", DIV_TOP0, 12, 3),
++	DIV(0, "dout_aclk400_wcore", "mout_aclk400_wcore_bpll",
++			DIV_TOP0, 16, 3),
++	DIV(0, "dout_aclk100_noc", "mout_aclk100_noc", DIV_TOP0, 20, 3),
+ 	DIV(0, "dout_pclk200_fsys", "mout_pclk200_fsys", DIV_TOP0, 24, 3),
+ 	DIV(0, "dout_aclk200_fsys", "mout_aclk200_fsys", DIV_TOP0, 28, 3),
+ 
+-- 
+1.7.9.5
