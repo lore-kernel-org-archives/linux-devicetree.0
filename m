@@ -1,271 +1,87 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH RFC v3 5/6] drivers: cpuidle: CPU idle ARM64 driver
-Date: Tue,  6 May 2014 19:04:42 +0100
-Message-ID: <1399399483-17112-6-git-send-email-lorenzo.pieralisi@arm.com>
-References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399399483-17112-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Charles Garcia Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antti Miettinen <ananaza-X3B1VOXEql0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Capella <sebastian.capella-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH V5 1/3] arm: dts: dra7: Add crossbar device binding
+Date: Tue, 6 May 2014 14:40:55 -0500
+Message-ID: <20140506194055.GA6962@saruman.home>
+References: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
+ <1399384579-25620-2-git-send-email-r.sricharan@ti.com>
+Reply-To: <balbi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ReaqsoxgOBHFXBhH"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399384579-25620-2-git-send-email-r.sricharan@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch implements a generic CPU idle driver for ARM64 machines.
+--ReaqsoxgOBHFXBhH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-It relies on the DT idle states infrastructure to initialize idle
-states count and respective parameters. Current code assumes the driver
-is managing idle states on all possible CPUs but can be easily
-generalized to support heterogenous systems and build cpumasks at
-runtime using MIDRs or DT cpu nodes compatible properties.
+On Tue, May 06, 2014 at 07:26:17PM +0530, Sricharan R wrote:
+> This adds the irq crossbar device node.
+>=20
+> There is a IRQ crossbar device in the soc, which
+> maps the irq requests from the peripherals to the
+> mpu interrupt controller's inputs. The Peripheral irq
+> requests are connected to only one crossbar
+> input and the output of the crossbar is connected to only one
+> controller's input line. The crossbar device is used to map
+> a peripheral input to a free mpu's interrupt controller line.
+>=20
+> Cc: Benoit Cousson <bcousson@baylibre.com>
+> Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> Cc: Rajendra Nayak <rnayak@ti.com>
+> Cc: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Sricharan R <r.sricharan@ti.com>
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+> [V5] Rebased on top of 3.15-rc4 and corrected the
+>      irqs-reserved list
+>=20
+>  arch/arm/boot/dts/dra7.dtsi |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+> index 149b550..0274a86 100644
+> --- a/arch/arm/boot/dts/dra7.dtsi
+> +++ b/arch/arm/boot/dts/dra7.dtsi
+> @@ -790,6 +790,14 @@
+>  			status =3D "disabled";
+>  		};
+>  	};
+> +
+> +	crossbar_mpu: crossbar@4a020000 {
 
-Suspend back-ends (eg PSCI) must register a suspend initializer with
-the CPU idle driver so that the suspend backend call can be detected,
-and the driver code can call the back-end infrastructure to complete the
-suspend backend initialization.
+shouldn't this be "status =3D disabled"; so that boards enable this
+on-demand ??
 
-Idle state index 0 is always initialized as a simple wfi state, ie always
-considered present and functional on all ARM64 platforms.
-
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
----
- drivers/cpuidle/Kconfig         |   5 ++
- drivers/cpuidle/Kconfig.arm64   |  13 ++++
- drivers/cpuidle/Makefile        |   4 +
- drivers/cpuidle/cpuidle-arm64.c | 161 ++++++++++++++++++++++++++++++++++++=
-++++
- 4 files changed, 183 insertions(+)
- create mode 100644 drivers/cpuidle/Kconfig.arm64
- create mode 100644 drivers/cpuidle/cpuidle-arm64.c
-
-diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-index 995654e..0654eb5 100644
---- a/drivers/cpuidle/Kconfig
-+++ b/drivers/cpuidle/Kconfig
-@@ -44,6 +44,11 @@ depends on ARM
- source "drivers/cpuidle/Kconfig.arm"
- endmenu
-=20
-+menu "ARM64 CPU Idle Drivers"
-+depends on ARM64
-+source "drivers/cpuidle/Kconfig.arm64"
-+endmenu
-+
- menu "POWERPC CPU Idle Drivers"
- depends on PPC
- source "drivers/cpuidle/Kconfig.powerpc"
-diff --git a/drivers/cpuidle/Kconfig.arm64 b/drivers/cpuidle/Kconfig.arm64
-new file mode 100644
-index 0000000..b83612c
---- /dev/null
-+++ b/drivers/cpuidle/Kconfig.arm64
-@@ -0,0 +1,13 @@
-+#
-+# ARM64 CPU Idle drivers
-+#
-+
-+config ARM64_CPUIDLE
-+=09bool "Generic ARM64 CPU idle Driver"
-+=09select OF_IDLE_STATES
-+=09help
-+=09  Select this to enable generic cpuidle driver for ARM v8.
-+=09  It provides a generic idle driver whose idle states are configured
-+=09  at run-time through DT nodes. The CPUidle suspend backend is
-+=09  initialized by the device tree parsing code on matching the entry
-+=09  method to the respective CPU operations.
-diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-index 2fc5139..161a5f2 100644
---- a/drivers/cpuidle/Makefile
-+++ b/drivers/cpuidle/Makefile
-@@ -16,6 +16,10 @@ obj-$(CONFIG_ARM_U8500_CPUIDLE)         +=3D cpuidle-ux5=
-00.o
- obj-$(CONFIG_ARM_AT91_CPUIDLE)          +=3D cpuidle-at91.o
-=20
- ##########################################################################=
-#####
-+# ARM64 drivers
-+obj-$(CONFIG_ARM64_CPUIDLE)=09=09+=3D cpuidle-arm64.o
-+
-+##########################################################################=
-#####
- # POWERPC drivers
- obj-$(CONFIG_PSERIES_CPUIDLE)=09=09+=3D cpuidle-pseries.o
- obj-$(CONFIG_POWERNV_CPUIDLE)=09=09+=3D cpuidle-powernv.o
-diff --git a/drivers/cpuidle/cpuidle-arm64.c b/drivers/cpuidle/cpuidle-arm6=
-4.c
-new file mode 100644
-index 0000000..fef1fad
---- /dev/null
-+++ b/drivers/cpuidle/cpuidle-arm64.c
-@@ -0,0 +1,161 @@
-+/*
-+ * ARM64 generic CPU idle driver.
-+ *
-+ * Copyright (C) 2014 ARM Ltd.
-+ * Author: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#define pr_fmt(fmt) "CPUidle arm64: " fmt
-+
-+#include <linux/cpuidle.h>
-+#include <linux/cpumask.h>
-+#include <linux/cpu_pm.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+
-+#include <asm/psci.h>
-+#include <asm/suspend.h>
-+
-+#include "of_idle_states.h"
-+
-+typedef int (*suspend_init_fn)(struct cpuidle_driver *,
-+=09=09=09       struct device_node *[]);
-+
-+struct cpu_suspend_ops {
-+=09const char *id;
-+=09suspend_init_fn init_fn;
-+};
-+
-+static const struct cpu_suspend_ops suspend_operations[] __initconst =3D {
-+=09{"arm,psci", psci_dt_register_idle_states},
-+=09{}
-+};
-+
-+static __init const struct cpu_suspend_ops *get_suspend_ops(const char *st=
-r)
-+{
-+=09int i;
-+
-+=09if (!str)
-+=09=09return NULL;
-+
-+=09for (i =3D 0; suspend_operations[i].id; i++)
-+=09=09if (!strcmp(suspend_operations[i].id, str))
-+=09=09=09return &suspend_operations[i];
-+
-+=09return NULL;
-+}
-+
-+/*
-+ * arm_enter_idle_state - Programs CPU to enter the specified state
-+ *
-+ * @dev: cpuidle device
-+ * @drv: cpuidle driver
-+ * @idx: state index
-+ *
-+ * Called from the CPUidle framework to program the device to the
-+ * specified target state selected by the governor.
-+ */
-+static int arm_enter_idle_state(struct cpuidle_device *dev,
-+=09=09=09=09struct cpuidle_driver *drv, int idx)
-+{
-+=09int ret;
-+
-+=09if (!idx) {
-+=09=09cpu_do_idle();
-+=09=09return idx;
-+=09}
-+
-+=09cpu_pm_enter();
-+=09/*
-+=09 * Pass idle state index to cpu_suspend which in turn will call
-+=09 * the CPU ops suspend protocol with idle index as a parameter.
-+=09 *
-+=09 * Some states would not require context to be saved and flushed
-+=09 * to DRAM, so calling cpu_suspend would not be stricly necessary.
-+=09 * When power domains specifications for ARM CPUs are finalized then
-+=09 * this code can be optimized to prevent saving registers if not
-+=09 * needed.
-+=09 */
-+=09ret =3D cpu_suspend(idx);
-+
-+=09cpu_pm_exit();
-+
-+=09return ret ? -1 : idx;
-+}
-+
-+struct cpuidle_driver arm64_idle_driver =3D {
-+=09.name =3D "arm64_idle",
-+=09.owner =3D THIS_MODULE,
-+};
-+
-+static struct device_node *state_nodes[CPUIDLE_STATE_MAX] __initdata;
-+
-+/*
-+ * arm64_idle_init
-+ *
-+ * Registers the arm64 specific cpuidle driver with the cpuidle
-+ * framework. It relies on core code to parse the idle states
-+ * and initialize them using driver data structures accordingly.
-+ */
-+static int __init arm64_idle_init(void)
-+{
-+=09int i, ret;
-+=09const char *entry_method;
-+=09struct device_node *idle_states_node;
-+=09const struct cpu_suspend_ops *suspend_init;
-+=09struct cpuidle_driver *drv =3D &arm64_idle_driver;
-+
-+=09idle_states_node =3D of_find_node_by_path("/cpus/idle-states");
-+=09if (!idle_states_node)
-+=09=09return -ENOENT;
-+
-+=09if (of_property_read_string(idle_states_node, "entry-method",
-+=09=09=09=09    &entry_method)) {
-+=09=09pr_warn(" * %s missing entry-method property\n",
-+=09=09=09    idle_states_node->full_name);
-+=09=09of_node_put(idle_states_node);
-+=09=09return -EOPNOTSUPP;
-+=09}
-+
-+=09suspend_init =3D get_suspend_ops(entry_method);
-+=09if (!suspend_init) {
-+=09=09pr_warn("Missing suspend initializer\n");
-+=09=09of_node_put(idle_states_node);
-+=09=09return -EOPNOTSUPP;
-+=09}
-+
-+=09/*
-+=09 * State at index 0 is standby wfi and considered standard
-+=09 * on all ARM platforms. If in some platforms simple wfi
-+=09 * can't be used as "state 0", DT bindings must be implemented
-+=09 * to work around this issue and allow installing a special
-+=09 * handler for idle state index 0.
-+=09 */
-+=09drv->states[0].exit_latency =3D 1;
-+=09drv->states[0].target_residency =3D 1;
-+=09drv->states[0].flags =3D CPUIDLE_FLAG_TIME_VALID;
-+=09strncpy(drv->states[0].name, "ARM WFI", CPUIDLE_NAME_LEN);
-+=09strncpy(drv->states[0].desc, "ARM WFI", CPUIDLE_DESC_LEN);
-+
-+=09drv->cpumask =3D (struct cpumask *) cpu_possible_mask;
-+=09/*
-+=09 * Start at index 1, request idle state nodes to be filled
-+=09 */
-+=09ret =3D of_init_idle_driver(drv, state_nodes, 1, true);
-+=09if (ret)
-+=09=09return ret;
-+
-+=09if (suspend_init->init_fn(drv, state_nodes))
-+=09=09return -EOPNOTSUPP;
-+
-+=09for (i =3D 0; i < drv->state_count; i++)
-+=09=09drv->states[i].enter =3D arm_enter_idle_state;
-+
-+=09return cpuidle_register(drv, NULL);
-+}
-+device_initcall(arm64_idle_init);
 --=20
-1.8.4
+balbi
 
+--ReaqsoxgOBHFXBhH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTaTrHAAoJEIaOsuA1yqREVxQP/1rfzqFpCWVKKc8S4sHCubvp
+x4kEprOmrbYoeAyQZyqhzM6Ha45kCP0XB8bQlbEE32zfvnqyk3ZWLAqV4q30wpkV
+LMAlZkrrdy81izZlXsIISCEWFnlTyMsVJ9JFCcCzGOLhpdo/JarpIqw+6zJxEY0R
+WC0DlGT3SSH6C9HhInIGKXCwqpCtQGq5A7ZJeXzLRJAwkl/uVl4OXkeWnFXKu8c2
+mzVVwajZmSZpyazAh63REdSjPPNJhnvtf992i/YEAKIszXP+NRsyDFgacfGCxREn
+OJccJ1r166dMhGveFI57R3jEPknmhilYtqoTSF9JA8N7mTXwlPJLBWJQdJnblP8D
+ODg4hPxRbHhMfRft/arcLzaa0GhN58KXaHCga4Ppts7W134XVZfQSR9s4IhX6U1c
+2JCOPadoxP/ynDr9lCpLeNz9pTx2FaBjiJx6ik1GX2rPkgGnbCN8Bfzexz0CFDhR
+5llt52NGzDtxxx3nSVfMHGN+sQVxnoipsuW+GOE4Tpb1K61ZE9/z3Q3ejgJhMsIZ
+FchTbTB+foWdO9loQ/5pOujUCeODJfPvzGxPQjkQXv5yrTPo3vfTlEv+Od0weew4
+lr9oPuwb9Z2o0kBgqPKUHrX55KLwgC89xd26R+6icSdw52jzjxxXcSpoN7DsfEVD
+pIywBu8cZlyG/EWoQmLe
+=9gl2
+-----END PGP SIGNATURE-----
+
+--ReaqsoxgOBHFXBhH--
