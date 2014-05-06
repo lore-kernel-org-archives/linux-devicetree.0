@@ -1,87 +1,67 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH v3 4/7] ARM: dts: dra7-clock: Add "l3init_960m_gfclk"
- clock gate
-Date: Tue, 6 May 2014 13:10:33 +0300
-Message-ID: <5368B519.6030600@ti.com>
-References: <1399283686-6127-1-git-send-email-rogerq@ti.com> <1399283686-6127-5-git-send-email-rogerq@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v3 02/20] usb: ehci-orion: Add the optional PHY support
+Date: Tue, 6 May 2014 15:33:41 +0200
+Message-ID: <20140506133341.GE6503@lunn.ch>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+ <1399335255-589-3-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1399283686-6127-5-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, kishon@ti.com, tony@atomide.com, balbi@ti.com, bcousson@baylibre.com
-Cc: george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399335255-589-3-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2014 12:54 PM, Roger Quadros wrote:
-> This clock gate description is missing in the older Reference manuals=
-=2E
-> It is present on the SoC to provide 960MHz reference clock to the
-> internal USB PHYs.
->
-> Reference: DRA75x_DRA74x_ES1.1_NDA_TRM_vO.pdf, pg. 900,
-> Table 3-812. CM_COREAON_L3INIT_60M_GFCLK_CLKCTRL
->
-> Use l3init_960m_gfclk as parent of usb_otg_ss1_refclk960m and
-> usb_otg_ss2_refclk960m.
->
-> CC: Beno=C3=AEt Cousson <bcousson@baylibre.com>
-> CC: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-
-Got myself to download the latest copy of the TRM, so this patch looks=20
-valid.
-
-Acked-by: Tero Kristo <t-kristo@ti.com>
-
+On Tue, May 06, 2014 at 02:13:57AM +0200, Gregory CLEMENT wrote:
+> This commit allows to use the PHY provided through the device tree. It
+> will be useful for the Armada 375 SoCs. if no PHY is provided then the
+> behavior of the driver is unchanged.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 > ---
->   arch/arm/boot/dts/dra7xx-clocks.dtsi | 12 ++++++++++--
->   1 file changed, 10 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts=
-/dra7xx-clocks.dtsi
-> index cfb8fc7..c767687 100644
-> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> @@ -1386,6 +1386,14 @@
->   		ti,dividers =3D <1>, <8>;
->   	};
->
-> +	l3init_960m_gfclk: l3init_960m_gfclk {
-> +		#clock-cells =3D <0>;
-> +		compatible =3D "ti,gate-clock";
-> +		clocks =3D <&dpll_usb_clkdcoldo>;
-> +		ti,bit-shift =3D <8>;
-> +		reg =3D <0x06c0>;
-> +	};
+>  drivers/usb/host/ehci-orion.c | 25 +++++++++++++++++++++++--
+>  1 file changed, 23 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+> index d6c19c37c76b..f6d9eb2e33cd 100644
+> --- a/drivers/usb/host/ehci-orion.c
+> +++ b/drivers/usb/host/ehci-orion.c
+> @@ -15,6 +15,7 @@
+>  #include <linux/clk.h>
+>  #include <linux/platform_data/usb-ehci-orion.h>
+>  #include <linux/of.h>
+> +#include <linux/phy/phy.h>
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/usb.h>
+> @@ -46,6 +47,7 @@
+>  
+>  struct orion_ehci_hcd {
+>  	struct clk *clk;
+> +	struct phy *phy;
+>  };
+>  
+>  static const char hcd_name[] = "ehci-orion";
+> @@ -224,6 +226,18 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>  	if (!IS_ERR(priv->clk))
+>  		clk_prepare_enable(priv->clk);
+>  
 > +
->   	dss_32khz_clk: dss_32khz_clk {
->   		#clock-cells =3D <0>;
->   		compatible =3D "ti,gate-clock";
-> @@ -1533,7 +1541,7 @@
->   	usb_otg_ss1_refclk960m: usb_otg_ss1_refclk960m {
->   		#clock-cells =3D <0>;
->   		compatible =3D "ti,gate-clock";
-> -		clocks =3D <&dpll_usb_clkdcoldo>;
-> +		clocks =3D <&l3init_960m_gfclk>;
->   		ti,bit-shift =3D <8>;
->   		reg =3D <0x13f0>;
->   	};
-> @@ -1541,7 +1549,7 @@
->   	usb_otg_ss2_refclk960m: usb_otg_ss2_refclk960m {
->   		#clock-cells =3D <0>;
->   		compatible =3D "ti,gate-clock";
-> -		clocks =3D <&dpll_usb_clkdcoldo>;
-> +		clocks =3D <&l3init_960m_gfclk>;
->   		ti,bit-shift =3D <8>;
->   		reg =3D <0x1340>;
->   	};
->
+> +	priv->phy = devm_phy_get(&pdev->dev, "usb");
+> +	if (!IS_ERR(priv->phy)) {
+> +		err = phy_init(priv->phy);
+> +		if (err)
+> +			goto err2;
+> +
+> +		err = phy_power_on(priv->phy);
+> +		if (err)
+> +			goto err3;
+> +	}
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hi Gregory
+
+What about EPROBE_DEFERRED?
+
+     Andrew
