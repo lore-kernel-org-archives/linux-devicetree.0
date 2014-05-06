@@ -1,50 +1,57 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the Armada 38x
-Date: Tue, 06 May 2014 14:21:55 +0200
-Message-ID: <4660313.evfclGtT1x@wuerfel>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com> <61061197.hLhKsFqJLF@wuerfel> <20140506141023.715b932d@skate>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 0/4] Enable ST Keyscan driver
+Date: Tue, 6 May 2014 17:48:05 +0200
+Message-ID: <53690435.5040602@st.com>
+References: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org> <5368D806.8050609@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140506141023.715b932d@skate>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5368D806.8050609-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 06 May 2014 14:10:23 Thomas Petazzoni wrote:
-> On Tue, 06 May 2014 13:57:44 +0200, Arnd Bergmann wrote:
-> 
-> > > Please limit this driver to mvebu arch and compile testing, i.e.
-> > > 
-> > >         depends on ARCH_MVEBU || COMPILE_TEST
-> > 
-> > I think it actually needs a dependency on MVEBU_MBUS.
-> 
-> That's not what we do for any of the other drivers that use the
-> MVEBU_MBUS functions.
+Hi Srini,
 
-Fair enough. I guess using ARCH_MVEBU as the dependency works as well
-because it implies MVEBU_MBUS. However, you can't use COMPILE_TEST
-then because the driver itself needs the interfaces provided by MBUS.
+	I will prepare the branch next week for the pull request.
 
-It could be
+Thanks,
+Maxime
 
-	depends on ARCH_MVEBU || (MVEBU_MBUS && COMPILE_TEST)
-
-to describe the dependency most accurately.
-
-> > You probably need something like
-> > 
-> >       depends on MVEBU_MBUS=y || (MVEBU_MBUS=m && USB_XHCI=m)
-> 
-> MVEBU_MBUS is a bool, so there is no way is can be =m.
-
-Yes, that helps.
-
-	Arnd
+On 05/06/2014 02:39 PM, Srinivas Kandagatla wrote:
+> All the DT patches look good for me.
+> Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> I think It will be better to send a pull request to Arnd/Olof including
+> other reviewed DT patches.
+>
+> thanks,
+> srini
+>
+>
+> On 05/05/14 16:38, Gabriel FERNANDEZ wrote:
+>> The goal of this series is to enable ST Keyscan support to ST SoCs.
+>> The DT definition is added for STiH415 and STiH416 SoCs on
+>> B2000 board.
+>> Tested on B2000 sti board.
+>>
+>> Gabriel Fernandez (4):
+>>    ARM: STi: DT: add keyscan for stih415
+>>    ARM: STi: DT: add keyscan for stih416
+>>    ARM: STi: DT: add keyscan for stih41x-b2000
+>>    ARM: multi_v7_defconfig: add ST Keyscan driver
+>>
+>>   arch/arm/boot/dts/stih415-pinctrl.dtsi | 16 ++++++++++++++++
+>>   arch/arm/boot/dts/stih415.dtsi         | 12 ++++++++++++
+>>   arch/arm/boot/dts/stih416-pinctrl.dtsi | 16 ++++++++++++++++
+>>   arch/arm/boot/dts/stih416.dtsi         | 12 ++++++++++++
+>>   arch/arm/boot/dts/stih41x-b2000.dtsi   | 23 +++++++++++++++++++++++
+>>   arch/arm/configs/multi_v7_defconfig    |  1 +
+>>   6 files changed, 80 insertions(+)
+>>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
