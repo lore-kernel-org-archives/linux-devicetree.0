@@ -1,65 +1,88 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 0/8] pinctrl-rockchip: Change wrong initial assumptions
-Date: Mon, 05 May 2014 13:57:31 +0200
-Message-ID: <11862890.WUjscWaP3U@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 08/20] ARM: mvebu: Add Device Tree description of xHCI hosts on Armada 38x
+Date: Tue,  6 May 2014 02:14:03 +0200
+Message-ID: <1399335255-589-9-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Initially due to lack of documentation and (personal) understanding
-I assumed that the area holding the iomux settings would be separate
-from everything else, while in fact the grf registers contain not only
-pinctrl stuff but also dma, usb-phy and general soc-status settings.
-Also things like drive-strength we do not support currently are intermixed.
+The Marvell Armada 38x SoCs contains two xHCI host. This commit adds
+the Device Tree description of those interfaces at the SoC level, and
+also enables the two USB3 ports on the Armada 385 DB platform and one
+USB3 port on the Armada 385 RD platform.
 
-The same is true for the pmu, which does not only contain power domains
-but also the system reset as well as well as general registers surviving
-system-resets. Additionally the rk3188 moved parts of the pull-setting
-registers into the pmu space.
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+---
+ arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
+ arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
+ arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
+ 3 files changed, 29 insertions(+)
 
-While this wasn't a problem until now, the upcoming rk3288 introduces
-additional changes to both the grf and pmu areas. On it even part of
-the pinmux registers move into the pmu space.
-
-The code in it's current form supports both the old as well as the
-changed bindings.
-
-As stated in the v1 thread, this is also a first step to deprecate the
-wrongly included gpio-controllers which now duplicate the recently added
-gpio-dwapb, that should be used instead.
-
-
-changes since v1:
-- add select MFD_SYSCON as suggested by Max
-
-Heiko Stuebner (8):
-  pinctrl: rockchip: do not require 2nd register area
-  pinctrl: rockchip: use regmaps instead of raw mappings
-  pinctrl: rockchip: rockchip_pinctrl in rockchip_get_bank_data
-  pinctrl: rockchip: let pmu registers be supplied by a syscon
-  pinctrl: rockchip: only map bank0-pull-region when pmu regmap missing
-  pinctrl: rockchip: base regmap supplied by a syscon
-  dt-bindings: adapt rockchip-pinctrl doc to changed bindings
-  ARM: dts: rockchip: convert pinctrl nodes to new bindings
-
- .../bindings/pinctrl/rockchip,pinctrl.txt          |  28 +++-
- arch/arm/boot/dts/rk3066a.dtsi                     |   2 +-
- arch/arm/boot/dts/rk3188.dtsi                      |   9 +-
- arch/arm/boot/dts/rk3xxx.dtsi                      |   9 +-
- drivers/pinctrl/Kconfig                            |   1 +
- drivers/pinctrl/pinctrl-rockchip.c                 | 178 +++++++++++++++------
- 6 files changed, 165 insertions(+), 62 deletions(-)
-
+diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
+index 6828d77696a6..d5db1466da82 100644
+--- a/arch/arm/boot/dts/armada-385-db.dts
++++ b/arch/arm/boot/dts/armada-385-db.dts
+@@ -101,6 +101,14 @@
+ 					reg = <0x1000000 0x3f000000>;
+ 				};
+ 			};
++
++			usb3@f0000 {
++				status = "okay";
++			};
++
++			usb3@f8000 {
++				status = "okay";
++			};
+ 		};
+ 
+ 		pcie-controller {
+diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
+index 45250c88814b..a505fe94ff37 100644
+--- a/arch/arm/boot/dts/armada-385-rd.dts
++++ b/arch/arm/boot/dts/armada-385-rd.dts
+@@ -77,6 +77,10 @@
+ 					reg = <1>;
+ 				};
+ 			};
++
++			usb3@f0000 {
++				status = "okay";
++			};
+ 		};
+ 
+ 		pcie-controller {
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index a064f59da02d..5913ce1cc601 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -355,6 +355,23 @@
+ 				clocks = <&coredivclk 0>;
+ 				status = "disabled";
+ 			};
++
++			usb3@f0000 {
++				compatible = "marvell,armada-380-xhci";
++				reg = <0xf0000 0x3fff>,<0xf4000 0x3fff>;
++				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 9>;
++				status = "disabled";
++			};
++
++			usb3@f8000 {
++				compatible = "marvell,armada-380-xhci";
++				reg = <0xf8000 0x3fff>,<0xfc000 0x3fff>;
++				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 10>;
++				status = "disabled";
++			};
++
+ 		};
+ 	};
+ 
 -- 
-1.9.0
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.2
