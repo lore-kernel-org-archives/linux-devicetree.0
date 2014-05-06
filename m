@@ -1,159 +1,38 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH v7 1/2] phy: Add new Exynos5 USB 3.0 PHY driver
-Date: Tue, 06 May 2014 16:27:02 +0200
-Message-ID: <5368F136.6070804@samsung.com>
-References: <1398665874-31238-1-git-send-email-gautam.vivek@samsung.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen
+ A0/1/10/11/12
+Date: Tue, 6 May 2014 08:18:43 +0100
+Message-ID: <20140506071843.GD5206@lee--X1>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1399305223-18703-2-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1398665874-31238-1-git-send-email-gautam.vivek@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <1399305223-18703-2-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, t.figa@samsung.com, k.debski@samsung.com
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 28/04/14 08:17, Vivek Gautam wrote:
-> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
-> The new driver uses the generic PHY framework and will interact
-> with DWC3 controller present on Exynos5 series of SoCs.
-> Thereby, removing old phy-samsung-usb3 driver and related code
-> used untill now which was based on usb/phy framework.
-> 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Patch adds DT entries for clockgen A0/1/10/11/12
+>=20
+> Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 > ---
-> 
-> Changes from v6:
->  - Addressed review comments:
->    -- Sorted config entries in Kconfig and Makefile
->    -- Made #define to_usbdrd_phy(inst) to a static inline routine.
->    -- Restructured exynos5_rate_to_clk() as suggested.
->    -- Amended 'val' field for regmap_update_bits() in the routine
->       exynos5_usbdrd_phy_isol().
->    -- Removed sentinel entry from exynos5_usbdrd_phy_cfg[] struct.
->    -- Removed check for 'match' entry in probe().
-> 
->  .../devicetree/bindings/phy/samsung-phy.txt        |   40 ++
->  drivers/phy/Kconfig                                |   11 +
->  drivers/phy/Makefile                               |    1 +
->  drivers/phy/phy-exynos5-usbdrd.c                   |  627 ++++++++++++++++++++
->  4 files changed, 679 insertions(+)
->  create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> index b422e38..51efe4c 100644
-> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-> @@ -114,3 +114,43 @@ Example:
->  		compatible = "samsung,exynos-sataphy-i2c";
->  		reg = <0x38>;
->  	};
-> +
-> +Samsung Exynos5 SoC series USB DRD PHY controller
-> +--------------------------------------------------
-> +
-> +Required properties:
-> +- compatible : Should be set to one of the following supported values:
-> +	- "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
-> +	- "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
-> +- reg : Register offset and length of USB DRD PHY register set;
-> +- clocks: Clock IDs array as required by the controller
-> +- clock-names: names of clocks correseponding to IDs in the clock property;
-> +	       Required clocks:
-> +	- phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
-> +	       used for register access.
-> +	- ref: PHY's reference clock (usually crystal clock), used for
-> +	       PHY operations, associated by phy name. It is used to
-> +	       determine bit values for clock settings register.
-> +	       For Exynos5420 this is given as 'sclk_usbphy30' in CMU.
-> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
-> +		      control pmu registers for power isolation.
-> +- samsung,pmu-offset: phy power control register offset to pmu-system-controller
-> +		      base.
+>  arch/arm/boot/dts/stih416-clks.h     |  15 ++
 
-It doesn't seem right to have register offset encoded in the device tree
-like this. I think it'd be more appropriate to associate such an offset
-with the compatible string's value in the driver.
+This should live in include/dt-bindings/clk
 
-Also it might be sensible to create a new header file in include/linux/mfd/
-syscon/ for Exynos5 SoCs and put any required PMU offset definitions there. 
-Instead having them scattered and possibly duplicated in various drivers.
+>  arch/arm/boot/dts/stih416-clock.dtsi | 477 +++++++++++++++++++++++++=
++++++++++
+>  arch/arm/boot/dts/stih416.dtsi       |  10 +-
+>  3 files changed, 497 insertions(+), 5 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/stih416-clks.h
 
-> +- #phy-cells : from the generic PHY bindings, must be 1;
-> +
-> +For "samsung,exynos5250-usbdrd-phy" and "samsung,exynos5420-usbdrd-phy"
-> +compatible PHYs, the second cell in the PHY specifier identifies the
-> +PHY id, which is interpreted as follows:
-> +  0 - UTMI+ type phy,
-> +  1 - PIPE3 type phy,
-> +
-> +Example:
-> +	usb3_phy: usbphy@12100000 {
-> +		compatible = "samsung,exynos5250-usbdrd-phy";
-> +		reg = <0x12100000 0x100>;
-> +		clocks = <&clock 286>, <&clock 1>;
-> +		clock-names = "phy", "ref";
-> +		samsung,pmu-syscon = <&pmu_system_controller>;
-> +		samsung,pmu-offset = <0x704>;
-> +		#phy-cells = <1>;
-> +	};
-[...]
-> +struct usbdrd_phy_config {
-
-Isn't name of this data structure too generic ? 
-Perhaps rename it to exynos_usbdrd_phy_config ?
-
-> +	u32 id;
-> +	void (*phy_isol)(struct phy_usb_instance *inst, u32 on);
-> +	void (*phy_init)(struct exynos5_usbdrd_phy *phy_drd);
-> +	unsigned int (*set_refclk)(struct phy_usb_instance *inst);
-> +};
-> +
-> +struct exynos5_usbdrd_phy_drvdata {
-> +	const struct usbdrd_phy_config *phy_cfg;
-> +};
-> +
-[...]
-> +const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
-> +	.phy_cfg		= exynos5_usbdrd_phy_cfg,
-> +};
-> +
-> +const struct exynos5_usbdrd_phy_drvdata exynos5250_usbdrd_phy = {
-> +	.phy_cfg		= exynos5_usbdrd_phy_cfg,
-> +};
-> +
-> +static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
-> +	{
-> +		.compatible = "samsung,exynos5250-usbdrd-phy",
-> +		.data = &exynos5250_usbdrd_phy
-> +	}, {
-> +		.compatible = "samsung,exynos5420-usbdrd-phy",
-> +		.data = &exynos5420_usbdrd_phy
-> +	},
-> +	{ },
-> +};
-> +
-> +static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
-> +{
-[...]
-> +	reg_pmu = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +						   "samsung,pmu-syscon");
-> +	if (IS_ERR(reg_pmu)) {
-> +		dev_err(dev, "Failed to map PMU register (via syscon)\n");
-
-nit: Maybe change it to: "Failed to lookup PMU regmap\n" ?
-
-> +		return PTR_ERR(reg_pmu);
-> +	}
-> +
-> +	ret = of_property_read_u32(node, "samsung,pmu-offset", &pmu_offset);
-> +	if (ret) {
-> +		dev_err(dev, "Missing pmu-offset for phy isolation\n");
-> +		return ret;
-> +	}
-
-Otherwise the patch looks good.
-
---
-Thanks,
-Sylwester
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
