@@ -1,43 +1,66 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v4 1/4] MAINTAINERS: Add entry for APM X-Gene SoC ethernet driver
-Date: Mon,  5 May 2014 14:47:24 -0700
-Message-ID: <1399326447-2329-2-git-send-email-isubramanian@apm.com>
-References: <1399326447-2329-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1399326447-2329-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+From: Diana Craciun <diana.craciun@freescale.com>
+Subject: [PATCH] powerpc/fsl: Updated corenet-cf compatible string for
+ corenet1-cf chips
+Date: Tue, 6 May 2014 17:56:16 +0300
+Message-ID: <1399388176-25257-1-git-send-email-diana.craciun@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: linuxppc-dev@lists.ozlabs.org
+Cc: scottwood@freescale.com, devicetree@vger.kernel.org, Diana Craciun <Diana.Craciun@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a MAINTAINERS entry for APM X-Gene SoC
-ethernet driver.
-
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Ravi Patel <rapatel@apm.com>
-Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
----
- MAINTAINERS |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7bb7ead..02c737e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -686,6 +686,14 @@ S:	Maintained
- F:	drivers/net/appletalk/
- F:	net/appletalk/
- 
-+APPLIED MICRO (APM) X-GENE SOC ETHERNET DRIVER
-+M:	Iyappan Subramanian <isubramanian@apm.com>
-+M:	Keyur Chudgar <kchudgar@apm.com>
-+M:	Ravi Patel <rapatel@apm.com>
-+S:	Supported
-+F:	drivers/net/ethernet/apm/xgene/
-+F:	Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-+
- APTINA CAMERA SENSOR PLL
- M:	Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
- L:	linux-media@vger.kernel.org
--- 
-1.7.9.5
+RnJvbTogRGlhbmEgQ3JhY2l1biA8RGlhbmEuQ3JhY2l1bkBmcmVlc2NhbGUuY29tPgoKVXBkYXRl
+ZCB0aGUgZGV2aWNlIHRyZWVzIGFjY29yZGluZyB0byB0aGUgY29yZW5ldC1jZgpiaW5kaW5nIGRl
+ZmluaXRpb24uCgpTaWduZWQtb2ZmLWJ5OiBEaWFuYSBDcmFjaXVuIDxEaWFuYS5DcmFjaXVuQGZy
+ZWVzY2FsZS5jb20+Ci0tLQogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXBvc3Qu
+ZHRzaSB8IDIgKy0KIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kg
+fCAyICstCiBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpIHwgMiAr
+LQogYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXBvc3QuZHRzaSB8IDIgKy0KIDQg
+ZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
+dCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgYi9hcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvZnNsL3AyMDQxc2ktcG9zdC5kdHNpCmluZGV4IGUyOTg3YTMuLmI1ZGFh
+NGMgMTAwNjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0
+c2kKKysrIGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wMjA0MXNpLXBvc3QuZHRzaQpAQCAt
+MjQ2LDcgKzI0Niw3IEBACiAJfTsKIAogCWNvcmVuZXQtY2ZAMTgwMDAgewotCQljb21wYXRpYmxl
+ID0gImZzbCxjb3JlbmV0LWNmIjsKKwkJY29tcGF0aWJsZSA9ICJmc2wsY29yZW5ldDEtY2YiLCAi
+ZnNsLGNvcmVuZXQtY2YiOwogCQlyZWcgPSA8MHgxODAwMCAweDEwMDA+OwogCQlpbnRlcnJ1cHRz
+ID0gPDE2IDIgMSAzMT47CiAJCWZzbCxjY2YtbnVtLWNzZGlkcyA9IDwzMj47CmRpZmYgLS1naXQg
+YS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNpIGIvYXJjaC9wb3dl
+cnBjL2Jvb3QvZHRzL2ZzbC9wMzA0MXNpLXBvc3QuZHRzaQppbmRleCA3YWY2ZDQ1Li41YWJkMWZj
+IDEwMDY0NAotLS0gYS9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3AzMDQxc2ktcG9zdC5kdHNp
+CisrKyBiL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1wb3N0LmR0c2kKQEAgLTI3
+Myw3ICsyNzMsNyBAQAogCX07CiAKIAljb3JlbmV0LWNmQDE4MDAwIHsKLQkJY29tcGF0aWJsZSA9
+ICJmc2wsY29yZW5ldC1jZiI7CisJCWNvbXBhdGlibGUgPSAiZnNsLGNvcmVuZXQxLWNmIiwgImZz
+bCxjb3JlbmV0LWNmIjsKIAkJcmVnID0gPDB4MTgwMDAgMHgxMDAwPjsKIAkJaW50ZXJydXB0cyA9
+IDwxNiAyIDEgMzE+OwogCQlmc2wsY2NmLW51bS1jc2RpZHMgPSA8MzI+OwpkaWZmIC0tZ2l0IGEv
+YXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93ZXJw
+Yy9ib290L2R0cy9mc2wvcDQwODBzaS1wb3N0LmR0c2kKaW5kZXggMjQxNWUxZi4uYmYwZTdjOSAx
+MDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNDA4MHNpLXBvc3QuZHRzaQor
+KysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A0MDgwc2ktcG9zdC5kdHNpCkBAIC0yODEs
+NyArMjgxLDcgQEAKIAl9OwogCiAJY29yZW5ldC1jZkAxODAwMCB7Ci0JCWNvbXBhdGlibGUgPSAi
+ZnNsLGNvcmVuZXQtY2YiOworCQljb21wYXRpYmxlID0gImZzbCxjb3JlbmV0MS1jZiIsICJmc2ws
+Y29yZW5ldC1jZiI7CiAJCXJlZyA9IDwweDE4MDAwIDB4MTAwMD47CiAJCWludGVycnVwdHMgPSA8
+MTYgMiAxIDMxPjsKIAkJZnNsLGNjZi1udW0tY3NkaWRzID0gPDMyPjsKZGlmZiAtLWdpdCBhL2Fy
+Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kgYi9hcmNoL3Bvd2VycGMv
+Ym9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpCmluZGV4IDI5ODVkZTQuLmY3Y2E5ZjQgMTAw
+NjQ0Ci0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDUwMjBzaS1wb3N0LmR0c2kKKysr
+IGIvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9wNTAyMHNpLXBvc3QuZHRzaQpAQCAtMjc4LDcg
+KzI3OCw3IEBACiAJfTsKIAogCWNvcmVuZXQtY2ZAMTgwMDAgewotCQljb21wYXRpYmxlID0gImZz
+bCxjb3JlbmV0LWNmIjsKKwkJY29tcGF0aWJsZSA9ICJmc2wsY29yZW5ldDEtY2YiLCAiZnNsLGNv
+cmVuZXQtY2YiOwogCQlyZWcgPSA8MHgxODAwMCAweDEwMDA+OwogCQlpbnRlcnJ1cHRzID0gPDE2
+IDIgMSAzMT47CiAJCWZzbCxjY2YtbnVtLWNzZGlkcyA9IDwzMj47Ci0tIAoxLjcuMTEuNwoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2
+IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
+Lm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
