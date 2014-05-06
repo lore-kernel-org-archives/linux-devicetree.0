@@ -1,58 +1,80 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V5 1/3] arm: dts: dra7: Add crossbar device binding
-Date: Tue, 6 May 2014 19:26:17 +0530
-Message-ID: <1399384579-25620-2-git-send-email-r.sricharan@ti.com>
-References: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH/RFC v3 5/5] media: Add registration helpers for V4L2
+ flash sub-devices
+Date: Tue, 6 May 2014 12:10:59 +0300
+Message-ID: <20140506091059.GB8753@valkosipuli.retiisi.org.uk>
+References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
+ <1397228216-6657-6-git-send-email-j.anaszewski@samsung.com>
+ <20140416182141.GG8753@valkosipuli.retiisi.org.uk>
+ <534F9044.6080508@samsung.com>
+ <20140423152435.GJ8753@valkosipuli.retiisi.org.uk>
+ <535E3A95.6010206@samsung.com>
+ <20140502110651.GX8753@valkosipuli.retiisi.org.uk>
+ <536884D9.4050104@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
+Content-Disposition: inline
+In-Reply-To: <536884D9.4050104@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
-Cc: Sricharan R <r.sricharan@ti.com>
+To: Jacek Anaszewski <j.anaszewski@samsung.com>
+Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This adds the irq crossbar device node.
+Hi Jacek,
 
-There is a IRQ crossbar device in the soc, which
-maps the irq requests from the peripherals to the
-mpu interrupt controller's inputs. The Peripheral irq
-requests are connected to only one crossbar
-input and the output of the crossbar is connected to only one
-controller's input line. The crossbar device is used to map
-a peripheral input to a free mpu's interrupt controller line.
+On Tue, May 06, 2014 at 08:44:41AM +0200, Jacek Anaszewski wrote:
+> Hi Sakari,
+> 
+> On 05/02/2014 01:06 PM, Sakari Ailus wrote:
+> 
+> >>>>[...]
+> >>>>>>+static inline enum led_brightness v4l2_flash_intensity_to_led_brightness(
+> >>>>>>+					struct led_ctrl *config,
+> >>>>>>+					u32 intensity)
+> >>>>>
+> >>>>>Fits on a single line.
+> >>>>>
+> >>>>>>+{
+> >>>>>>+	return intensity / config->step;
+> >>>>>
+> >>>>>Shouldn't you first decrement the minimum before the division?
+> >>>>
+> >>>>Brightness level 0 means that led is off. Let's consider following case:
+> >>>>
+> >>>>intensity - 15625
+> >>>>config->step - 15625
+> >>>>intensity / config->step = 1 (the lowest possible current level)
+> >>>
+> >>>In V4L2 controls the minimum is not off, and zero might not be a possible
+> >>>value since minimum isn't divisible by step.
+> >>>
+> >>>I wonder how to best take that into account.
+> >>
+> >>I've assumed that in MODE_TORCH a led is always on. Switching
+> >>the mode to MODE_FLASH or MODE_OFF turns the led off.
+> >>This way we avoid the problem with converting 0 uA value to
+> >>led_brightness, as available torch brightness levels start from
+> >>the minimum current level value and turning the led off is
+> >>accomplished on transition to MODE_OFF or MODE_FLASH, by
+> >>calling brightness_set op with led_brightness = 0.
+> >
+> >I'm not sure if we understood the issue the same way. My concern was that if
+> >the intensity isn't a multiple of step (but intensity - min is), the above
+> >formula won't return a valid result (unless I miss something).
+> >
+> 
+> Please note that v4l2_flash_intensity_to_led_brightness is called only
+> from s_ctrl callback, and thus it expects to get the intensity aligned
+> to the step value, so it will always be a multiple of step.
+> Is it possible that s_ctrl callback would be passed a non-aligned
+> control value?
 
-Cc: Benoit Cousson <bcousson@baylibre.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
-[V5] Rebased on top of 3.15-rc4 and corrected the
-     irqs-reserved list
+In a nutshell: value - min is aligned but value is not. Please see
+validate_new() in drivers/media/v4l2-core/v4l2-ctrls.c .
 
- arch/arm/boot/dts/dra7.dtsi |    8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 149b550..0274a86 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -790,6 +790,14 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	crossbar_mpu: crossbar@4a020000 {
-+		compatible = "ti,irq-crossbar";
-+		reg = <0x4a002a48 0x130>;
-+		ti,max-irqs = <160>;
-+		ti,reg-size = <2>;
-+		ti,irqs-reserved = <0 1 2 3 5 6 131 132>;
-+	};
- };
- 
- /include/ "dra7xx-clocks.dtsi"
 -- 
-1.7.9.5
+Regards,
+
+Sakari Ailus
+e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
