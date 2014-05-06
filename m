@@ -1,57 +1,40 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 0/4] Enable ST Keyscan driver
-Date: Tue, 6 May 2014 17:48:05 +0200
-Message-ID: <53690435.5040602@st.com>
-References: <1399304320-18197-1-git-send-email-gabriel.fernandez@linaro.org> <5368D806.8050609@linaro.org>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: [PATCH V5 0/3] arm: dts: dra7: Updates for adding crossbar device
+Date: Tue, 6 May 2014 19:26:16 +0530
+Message-ID: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5368D806.8050609-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
+Cc: Sricharan R <r.sricharan@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Srini,
+Some socs have a large number of interrupts requests to service
+the needs of its many peripherals and subsystems. All of the interrupt
+requests lines from the subsystems are not needed at the same
+time, so they have to be muxed to the controllers appropriately.
+In such places a interrupt controllers are preceded by an
+IRQ CROSSBAR that provides flexibility in muxing the device interrupt
+requests to the controller inputs.
 
-	I will prepare the branch next week for the pull request.
+The dts file update to support the crossbar device and convert
+peripheral irq numbers to crossbar number are added here.
 
-Thanks,
-Maxime
+This is a rebase of V4 series on top of 3.15-rc4
 
-On 05/06/2014 02:39 PM, Srinivas Kandagatla wrote:
-> All the DT patches look good for me.
-> Acked-by: Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> I think It will be better to send a pull request to Arnd/Olof including
-> other reviewed DT patches.
->
-> thanks,
-> srini
->
->
-> On 05/05/14 16:38, Gabriel FERNANDEZ wrote:
->> The goal of this series is to enable ST Keyscan support to ST SoCs.
->> The DT definition is added for STiH415 and STiH416 SoCs on
->> B2000 board.
->> Tested on B2000 sti board.
->>
->> Gabriel Fernandez (4):
->>    ARM: STi: DT: add keyscan for stih415
->>    ARM: STi: DT: add keyscan for stih416
->>    ARM: STi: DT: add keyscan for stih41x-b2000
->>    ARM: multi_v7_defconfig: add ST Keyscan driver
->>
->>   arch/arm/boot/dts/stih415-pinctrl.dtsi | 16 ++++++++++++++++
->>   arch/arm/boot/dts/stih415.dtsi         | 12 ++++++++++++
->>   arch/arm/boot/dts/stih416-pinctrl.dtsi | 16 ++++++++++++++++
->>   arch/arm/boot/dts/stih416.dtsi         | 12 ++++++++++++
->>   arch/arm/boot/dts/stih41x-b2000.dtsi   | 23 +++++++++++++++++++++++
->>   arch/arm/configs/multi_v7_defconfig    |  1 +
->>   6 files changed, 80 insertions(+)
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This series depends on crossbar-driver-fixes sent below
+http://marc.info/?l=linux-omap&m=139929963420299&w=2
+
+Sricharan R (3):
+  arm: dts: dra7: Add crossbar device binding
+  arm: dts: dra7: Replace peripheral interrupt numbers with crossbar
+    inputs
+  arm: dts: dra7: Add routable-irqs property for gic node
+
+ arch/arm/boot/dts/dra7.dtsi |  109 +++++++++++++++++++++++++------------------
+ 1 file changed, 63 insertions(+), 46 deletions(-)
+
+-- 
+1.7.9.5
+
