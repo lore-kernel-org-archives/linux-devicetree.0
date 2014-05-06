@@ -1,46 +1,58 @@
-From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Subject: RE: [PATCH 1/2] usb: dwc2: Option to disable dma descriptor mode
-Date: Tue, 6 May 2014 14:52:29 -0500
-Message-ID: <1399405949.17981.0.camel@linux-builds1>
-References: <1399328585-30949-1-git-send-email-dinguyen@altera.com>
-	 <A2CA0424C0A6F04399FB9E1CD98E03046D193CDB@US01WEMBX2.internal.synopsys.com>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Subject: Re: [PATCH v10 01/15] clk: sunxi: factors: automatic reparenting
+ support
+Date: Tue, 06 May 2014 17:24:08 -0300
+Message-ID: <536944E8.5060300@elopez.com.ar>
+References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com> <1399046249-19472-2-git-send-email-hdegoede@redhat.com> <20140506185131.GI9464@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <A2CA0424C0A6F04399FB9E1CD98E03046D193CDB-Yu2iAY70zvrYN67daEjeMPufCSb+aD3WLzEdoUbNIic@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140506185131.GI9464@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?ISO-8859-1?Q?David_Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-05-06 at 18:21 +0000, Paul Zimmerman wrote:
-> > From: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org [mailto:dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org]
-> > Sent: Monday, May 05, 2014 3:23 PM
-> > 
-> > Even though the IP supports Descriptor DMA mode, it does not support SPLIT
-> > transactions in this mode. Since the driver can get the Descriptor DMA mode
-> > support from hardware, the driver in its currently form cannot fully support
-> > LS/FS devices connected to a HS Hub when Descriptor DMA mode is enabled in the
-> > driver. Thus, we give the option to disable Descriptor DMA from device tree.
-> 
-> Hi Dinh,
-> 
-> Instead of this patch, how about if we make the driver default to buffer
-> DMA mode instead, and if anyone wants to use descriptor DMA mode, they
-> can add a DT property for that? I don't think anyone will want that,
-> since as you say it doesn't fully support LS/FS devices in that mode.
+Hi,
 
-Yes, I think that's a good idea. Let me spin up a patchset to do that.
+El 06/05/14 15:51, Maxime Ripard escribi=F3:
+> Hi Emilio,
+>
+> On Fri, May 02, 2014 at 05:57:15PM +0200, Hans de Goede wrote:
+>> From: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+>>
+>> This commit implements .determine_rate, so that our factor clocks ca=
+n be
+>> reparented when needed.
+>>
+>> Signed-off-by: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>
+> Any chance you merge this? Since it's pretty consensual, needed by
+> other drivers, and that you are the author, I can it can go in.
 
-Dinh
-> 
-> The driver originally worked like that. I guess the default got changed by
-> one of Matthijs' patches, and I didn't notice it.
-> 
+I merged it on my tree for Mike on April 22nd
 
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/249259=
+=2Ehtml
 
+It seems Mike has taken another copy for 3.16 though
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/253661.h=
+tml
+
+Mike, do you want to drop the patches and have me take both of them, or=
+=20
+would you prefer it if I dropped my copy?
+
+Cheers,
+
+Emilio
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
