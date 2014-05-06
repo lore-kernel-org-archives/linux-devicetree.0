@@ -1,290 +1,162 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] powerpc/fsl: Add fsl,portid-mapping to corenet1-cf chips
-Date: Mon, 5 May 2014 20:37:35 -0500
-Message-ID: <1399340255-18612-1-git-send-email-scottwood@freescale.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 05/20] usb: host: xhci-plat: Add clocks support
+Date: Tue,  6 May 2014 02:14:00 +0200
+Message-ID: <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Some platform (such as the Armada 38x ones) can gate the clock of
+their USB controller. This patch add the support for the clock, by
+enabling them during probe and disabling them on remove.
+
+As not all platforms have clock support then enabling and disabling
+the clocks have been placed in separate functions. Then if the clocks
+are not supported we still can use the same calls, and there is no
+
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/powerpc/boot/dts/fsl/p2041si-post.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi  | 4 ++++
- arch/powerpc/boot/dts/fsl/p3041si-post.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi  | 4 ++++
- arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi  | 8 ++++++++
- arch/powerpc/boot/dts/fsl/p5020si-post.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi  | 2 ++
- arch/powerpc/boot/dts/fsl/p5040si-post.dtsi | 1 +
- arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi  | 4 ++++
- 10 files changed, 27 insertions(+)
+ drivers/usb/host/xhci-plat.c | 57 +++++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 54 insertions(+), 3 deletions(-)
 
-diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-index b5daa4c..5290df8 100644
---- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-@@ -262,6 +262,7 @@
- 		interrupts = <
- 			24 2 0 0
- 			16 2 1 30>;
-+		fsl,portid-mapping = <0x0f000000>;
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index f5351af4b2c5..bb37b941c8ec 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -11,6 +11,7 @@
+  * version 2 as published by the Free Software Foundation.
+  */
  
- 		pamu0: pamu@0 {
- 			reg = <0 0x1000>;
-diff --git a/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi
-index 22f3b14..b1ea147 100644
---- a/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p2041si-pre.dtsi
-@@ -83,6 +83,7 @@
- 			reg = <0>;
- 			clocks = <&mux0>;
- 			next-level-cache = <&L2_0>;
-+			fsl,portid-mapping = <0x80000000>;
- 			L2_0: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -92,6 +93,7 @@
- 			reg = <1>;
- 			clocks = <&mux1>;
- 			next-level-cache = <&L2_1>;
-+			fsl,portid-mapping = <0x40000000>;
- 			L2_1: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -101,6 +103,7 @@
- 			reg = <2>;
- 			clocks = <&mux2>;
- 			next-level-cache = <&L2_2>;
-+			fsl,portid-mapping = <0x20000000>;
- 			L2_2: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -110,6 +113,7 @@
- 			reg = <3>;
- 			clocks = <&mux3>;
- 			next-level-cache = <&L2_3>;
-+			fsl,portid-mapping = <0x10000000>;
- 			L2_3: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-index 5abd1fc..cd63cb1 100644
---- a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
-@@ -289,6 +289,7 @@
- 		interrupts = <
- 			24 2 0 0
- 			16 2 1 30>;
-+		fsl,portid-mapping = <0x0f000000>;
++#include <linux/clk.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+@@ -19,6 +20,10 @@
  
- 		pamu0: pamu@0 {
- 			reg = <0 0x1000>;
-diff --git a/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi
-index 468e8be..dc5f4b3 100644
---- a/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p3041si-pre.dtsi
-@@ -84,6 +84,7 @@
- 			reg = <0>;
- 			clocks = <&mux0>;
- 			next-level-cache = <&L2_0>;
-+			fsl,portid-mapping = <0x80000000>;
- 			L2_0: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -93,6 +94,7 @@
- 			reg = <1>;
- 			clocks = <&mux1>;
- 			next-level-cache = <&L2_1>;
-+			fsl,portid-mapping = <0x40000000>;
- 			L2_1: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -102,6 +104,7 @@
- 			reg = <2>;
- 			clocks = <&mux2>;
- 			next-level-cache = <&L2_2>;
-+			fsl,portid-mapping = <0x20000000>;
- 			L2_2: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -111,6 +114,7 @@
- 			reg = <3>;
- 			clocks = <&mux3>;
- 			next-level-cache = <&L2_3>;
-+			fsl,portid-mapping = <0x10000000>;
- 			L2_3: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-index bf0e7c9..12947cc 100644
---- a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
-@@ -297,6 +297,7 @@
- 		interrupts = <
- 			24 2 0 0
- 			16 2 1 30>;
-+		fsl,portid-mapping = <0x00f80000>;
+ #include "xhci.h"
  
- 		pamu0: pamu@0 {
- 			reg = <0 0x1000>;
-diff --git a/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi
-index 0040b5a..38bde09 100644
---- a/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p4080si-pre.dtsi
-@@ -83,6 +83,7 @@
- 			reg = <0>;
- 			clocks = <&mux0>;
- 			next-level-cache = <&L2_0>;
-+			fsl,portid-mapping = <0x80000000>;
- 			L2_0: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -92,6 +93,7 @@
- 			reg = <1>;
- 			clocks = <&mux1>;
- 			next-level-cache = <&L2_1>;
-+			fsl,portid-mapping = <0x40000000>;
- 			L2_1: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -101,6 +103,7 @@
- 			reg = <2>;
- 			clocks = <&mux2>;
- 			next-level-cache = <&L2_2>;
-+			fsl,portid-mapping = <0x20000000>;
- 			L2_2: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -110,6 +113,7 @@
- 			reg = <3>;
- 			clocks = <&mux3>;
- 			next-level-cache = <&L2_3>;
-+			fsl,portid-mapping = <0x10000000>;
- 			L2_3: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -119,6 +123,7 @@
- 			reg = <4>;
- 			clocks = <&mux4>;
- 			next-level-cache = <&L2_4>;
-+			fsl,portid-mapping = <0x08000000>;
- 			L2_4: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -128,6 +133,7 @@
- 			reg = <5>;
- 			clocks = <&mux5>;
- 			next-level-cache = <&L2_5>;
-+			fsl,portid-mapping = <0x04000000>;
- 			L2_5: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -137,6 +143,7 @@
- 			reg = <6>;
- 			clocks = <&mux6>;
- 			next-level-cache = <&L2_6>;
-+			fsl,portid-mapping = <0x02000000>;
- 			L2_6: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -146,6 +153,7 @@
- 			reg = <7>;
- 			clocks = <&mux7>;
- 			next-level-cache = <&L2_7>;
-+			fsl,portid-mapping = <0x01000000>;
- 			L2_7: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-index f7ca9f4..4c4a2b0 100644
---- a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
-@@ -294,6 +294,7 @@
- 		interrupts = <
- 			24 2 0 0
- 			16 2 1 30>;
-+		fsl,portid-mapping = <0x3c000000>;
++struct xhci_plat_priv {
++	struct clk *clk;
++};
++
+ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+ {
+ 	/*
+@@ -38,7 +43,8 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
+ static const struct hc_driver xhci_plat_xhci_driver = {
+ 	.description =		"xhci-hcd",
+ 	.product_desc =		"xHCI Host Controller",
+-	.hcd_priv_size =	sizeof(struct xhci_hcd *),
++	.hcd_priv_size =	sizeof(struct xhci_hcd *) +
++				sizeof(struct xhci_plat_priv),
  
- 		pamu0: pamu@0 {
- 			reg = <0 0x1000>;
-diff --git a/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
-index fe1a2e6..1cc61e1 100644
---- a/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5020si-pre.dtsi
-@@ -90,6 +90,7 @@
- 			reg = <0>;
- 			clocks = <&mux0>;
- 			next-level-cache = <&L2_0>;
-+			fsl,portid-mapping = <0x80000000>;
- 			L2_0: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -99,6 +100,7 @@
- 			reg = <1>;
- 			clocks = <&mux1>;
- 			next-level-cache = <&L2_1>;
-+			fsl,portid-mapping = <0x40000000>;
- 			L2_1: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-index 91477b5..67296fd 100644
---- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
-@@ -248,6 +248,7 @@
- 		#size-cells = <1>;
- 		interrupts = <24 2 0 0
- 			      16 2 1 30>;
-+		fsl,portid-mapping = <0x0f800000>;
+ 	/*
+ 	 * generic hardware linkage
+@@ -85,6 +91,40 @@ static const struct hc_driver xhci_plat_xhci_driver = {
+ 	.bus_resume =		xhci_bus_resume,
+ };
  
- 		pamu0: pamu@0 {
- 			reg = <0 0x1000>;
-diff --git a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
-index 3674686..b048a2b 100644
---- a/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p5040si-pre.dtsi
-@@ -83,6 +83,7 @@
- 			reg = <0>;
- 			clocks = <&mux0>;
- 			next-level-cache = <&L2_0>;
-+			fsl,portid-mapping = <0x80000000>;
- 			L2_0: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -92,6 +93,7 @@
- 			reg = <1>;
- 			clocks = <&mux1>;
- 			next-level-cache = <&L2_1>;
-+			fsl,portid-mapping = <0x40000000>;
- 			L2_1: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -101,6 +103,7 @@
- 			reg = <2>;
- 			clocks = <&mux2>;
- 			next-level-cache = <&L2_2>;
-+			fsl,portid-mapping = <0x20000000>;
- 			L2_2: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
-@@ -110,6 +113,7 @@
- 			reg = <3>;
- 			clocks = <&mux3>;
- 			next-level-cache = <&L2_3>;
-+			fsl,portid-mapping = <0x10000000>;
- 			L2_3: l2-cache {
- 				next-level-cache = <&cpc>;
- 			};
++static int xhci_plat_enable_clk(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(pdev);
++	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
++	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
++
++	priv->clk = devm_clk_get(&pdev->dev, NULL);
++
++	/*
++	 * Not all platforms have a clk so it is not an error if the
++	 * clock does not exists.
++	 */
++	if (IS_ERR(priv->clk))
++		return 0;
++
++	return clk_prepare_enable(priv->clk);
++}
++
++static void xhci_plat_disable_clk(struct platform_device *pdev)
++{
++	struct usb_hcd *hcd = platform_get_drvdata(pdev);
++	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
++	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
++
++	/*
++	 * Not all platforms have a clk so it is not an error if the
++	 * clock does not exists.
++	 */
++	if (IS_ERR(priv->clk))
++		return;
++
++	clk_disable_unprepare(priv->clk);
++}
++
+ static int xhci_plat_probe(struct platform_device *pdev)
+ {
+ 	const struct hc_driver	*driver;
+@@ -118,7 +158,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 
+ 	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
+ 	if (!hcd)
+-		return -ENOMEM;
++		ret = -ENOMEM;
+ 
+ 	hcd->rsrc_start = res->start;
+ 	hcd->rsrc_len = resource_size(res);
+@@ -140,6 +180,13 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (ret)
+ 		goto unmap_registers;
++
++	ret = xhci_plat_enable_clk(pdev);
++	if (ret) {
++		dev_dbg(&pdev->dev, "error enabling clocks\n");
++		goto dealloc_usb2_hcd;
++	}
++
+ 	device_wakeup_enable(hcd->self.controller);
+ 
+ 	/* USB 2.0 roothub is stored in the platform_device now. */
+@@ -149,7 +196,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 			dev_name(&pdev->dev), hcd);
+ 	if (!xhci->shared_hcd) {
+ 		ret = -ENOMEM;
+-		goto dealloc_usb2_hcd;
++		goto disable_clk;
+ 	}
+ 
+ 	/*
+@@ -170,6 +217,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ put_usb3_hcd:
+ 	usb_put_hcd(xhci->shared_hcd);
+ 
++disable_clk:
++	xhci_plat_disable_clk(pdev);
++
+ dealloc_usb2_hcd:
+ 	usb_remove_hcd(hcd);
+ 
+@@ -193,6 +243,7 @@ static int xhci_plat_remove(struct platform_device *dev)
+ 	usb_remove_hcd(xhci->shared_hcd);
+ 	usb_put_hcd(xhci->shared_hcd);
+ 
++	xhci_plat_disable_clk(dev);
+ 	usb_remove_hcd(hcd);
+ 	iounmap(hcd->regs);
+ 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.8.1.2
