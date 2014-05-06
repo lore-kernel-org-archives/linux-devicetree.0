@@ -1,44 +1,171 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH 1/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen
- A0/1/10/11/12
-Date: Tue, 6 May 2014 10:20:27 +0200
-Message-ID: <CAG374jD+msPPbPtFS+ji=8jS9+D-YHu31k7zzzC7Ty7jw9n7jQ@mail.gmail.com>
-References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
- <1399305223-18703-2-git-send-email-gabriel.fernandez@linaro.org>
- <20140506071843.GD5206@lee--X1>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for pcie-dra7xx controller
+Date: Tue, 06 May 2014 15:54:49 +0200
+Message-ID: <4300084.bc6ByDTk7W@wuerfel>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-6-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140506071843.GD5206@lee--X1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Pankaj Dev <pankaj.dev@st.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399383244-14556-6-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, balajitk-l0cyMroinI0@public.gmane.org, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, rogerq-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTGVlLAoKT24gNiBNYXkgMjAxNCAwOToxOCwgTGVlIEpvbmVzIDxsZWUuam9uZXNAbGluYXJv
-Lm9yZz4gd3JvdGU6Cj4+IFBhdGNoIGFkZHMgRFQgZW50cmllcyBmb3IgY2xvY2tnZW4gQTAvMS8x
-MC8xMS8xMgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBQYW5rYWogRGV2IDxwYW5rYWouZGV2QHN0LmNv
-bT4KPj4gU2lnbmVkLW9mZi1ieTogR2FicmllbCBGZXJuYW5kZXogPGdhYnJpZWwuZmVybmFuZGV6
-QGxpbmFyby5vcmc+Cj4+IC0tLQo+PiAgYXJjaC9hcm0vYm9vdC9kdHMvc3RpaDQxNi1jbGtzLmgg
-ICAgIHwgIDE1ICsrCj4KPiBUaGlzIHNob3VsZCBsaXZlIGluIGluY2x1ZGUvZHQtYmluZGluZ3Mv
-Y2xrCj4KaW5jbHVkZS9kdC1iaW5kaW5ncy9jbGsgb3IgIGluY2x1ZGUvZHQtYmluZGluZ3MvY2xv
-Y2sgPwoKPj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MTYtY2xvY2suZHRzaSB8IDQ3NyArKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+ICBhcmNoL2FybS9ib290L2R0cy9zdGlo
-NDE2LmR0c2kgICAgICAgfCAgMTAgKy0KPj4gIDMgZmlsZXMgY2hhbmdlZCwgNDk3IGluc2VydGlv
-bnMoKyksIDUgZGVsZXRpb25zKC0pCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0vYm9v
-dC9kdHMvc3RpaDQxNi1jbGtzLmgKPgo+IC0tCj4gTGVlIEpvbmVzCj4gTGluYXJvIFNUTWljcm9l
-bGVjdHJvbmljcyBMYW5kaW5nIFRlYW0gTGVhZAo+IExpbmFyby5vcmcg4pSCIE9wZW4gc291cmNl
-IHNvZnR3YXJlIGZvciBBUk0gU29Dcwo+IEZvbGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRl
-ciB8IEJsb2cKCkJlc3QgcmVnYXJkcwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tuesday 06 May 2014 19:03:51 Kishon Vijay Abraham I wrote:
+> Added support for pcie controller in dra7xx. This driver re-uses
+> the designware core code that is already present in kernel.
+> 
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+
+Looks pretty good overall, just a few details I noticed:
+
+> diff --git a/Documentation/devicetree/bindings/pci/ti-pci.txt b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> new file mode 100644
+> index 0000000..6cb6f09
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pci/ti-pci.txt
+> @@ -0,0 +1,33 @@
+> +TI PCI Controllers
+> +
+> +PCIe Designware Controller
+> +This node should have the properties described in "designware-pcie.txt".
+> + - compatible: Should be "ti,dra7xx-pcie""
+
+No "xx" in compatible strings please. Just make name this after the first
+chip to use this particular interface.
+
+> + - reg : Address and length of the register set for the device.
+> + - reg-names : "ti_conf" for the TI specific registers and rc_dbics for the
+> +   "designware" registers.
+
+The description uses inconsistent quotation marks. You should also have
+a fixed order in the binding, such as
+
+ - reg : Two register ranges as listed in the reg-names property
+ - reg-names : The first entry must be "ti-conf" for the TI specific registers
+	       The second entry must be "rc-dbics" for the designware pcie registers.
+
+> + - phys : the phandle for the PHY device (used by generic PHY framework)
+> + - phy-names : the names of the PHY corresponding to the PHYs present in the
+> +   *phy* phandle.
+
+It's not just a phandle, it can be any phy specifier including additional
+argument cells.
+
+The second line should just read
+
+ - phy-names : must be "pcie-phy"
+
+> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+> index a6f67ec..7be6393 100644
+> --- a/drivers/pci/host/Kconfig
+> +++ b/drivers/pci/host/Kconfig
+> @@ -1,6 +1,16 @@
+>  menu "PCI host controller drivers"
+>  	depends on PCI
+>  
+> +config PCI_DRA7XX
+> +	bool "TI DRA7xx PCIe controller"
+> +	select PCIE_DW
+> +	depends on OF || HAS_IOMEM || TI_PIPE3
+
+I think you mean &&, not || here.
+
+> +static inline u32 x(void __iomem *base, u32 offset)
+> +{
+> +	return readl(base + offset);
+> +}
+> +
+> +static inline void dra7xx_pcie_writel(void __iomem *base, u32 offset, u32 value)
+> +{
+> +	writel(value, base + offset);
+> +}
+
+These don't actually seem to add any value, you need more characters
+to call the inline function than to open-code it.
+
+> +static void dra7xx_pcie_enable_interrupts(struct pcie_port *pp)
+> +{
+> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
+> +
+> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MAIN,
+> +			   ~INTERRUPTS);
+> +	dra7xx_pcie_writel(dra7xx->base,
+> +			   PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MAIN, INTERRUPTS);
+> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI,
+> +			   ~LEG_EP_INTERRUPTS & ~MSI);
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI))
+> +		dra7xx_pcie_writel(dra7xx->base,
+> +				   PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MSI, MSI);
+> +	else
+> +		dra7xx_pcie_writel(dra7xx->base,
+> +				   PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MSI,
+> +				   LEG_EP_INTERRUPTS);
+
+Doesn't this just enable one or the other? In general I'd assume you need
+both INTx and MSI, at least if MSI is available.
+
+It probably doesn't hurt to always turn them all on.
+
+> +static int add_pcie_port(struct dra7xx_pcie *dra7xx,
+> +			  struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct pcie_port *pp;
+> +	struct resource *res;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	pp = &dra7xx->pp;
+> +	pp->dev = dev;
+> +	pp->ops = &dra7xx_pcie_host_ops;
+> +
+> +	spin_lock_init(&pp->conf_lock);
+> +
+> +	pp->irq = platform_get_irq(pdev, 1);
+> +	if (pp->irq < 0) {
+> +		dev_err(dev, "missing IRQ resource\n");
+> +		return -EINVAL;
+> +	}
+>
+
+The binding does not list a mandatory "interrupts" property, so
+this should not be treated as an error.
+
+> +static int __init dra7xx_pcie_probe(struct platform_device *pdev)
+> +{
+> +	irq = platform_get_irq(pdev, 0);
+> +	if (irq < 0) {
+> +		dev_err(dev, "missing IRQ resource\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, irq, dra7xx_pcie_irq_handler,
+> +			       IRQF_SHARED, "dra7xx-pcie-main", dra7xx);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to request irq\n");
+> +		return ret;
+> +	}
+
+Same here.
+
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "ti_conf");
+> +	base = devm_ioremap_nocache(dev, res->start, resource_size(res));
+
+Just use devm_ioremap() instead of devm_ioremap_nocache(). The second
+one is just there for historic reasons, and they always do the same
+thing.
+
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
