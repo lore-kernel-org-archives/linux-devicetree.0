@@ -1,67 +1,40 @@
-From: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 15/15] clk: exynos5420: add more registers to restore list
-Date: Tue, 06 May 2014 21:56:50 +0530
-Message-ID: <1399393610-23394-16-git-send-email-shaik.ameer@samsung.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 15/17] ARM: OMAP: Enable PCI for DRA7
+Date: Tue, 6 May 2014 19:04:01 +0530
+Message-ID: <1399383244-14556-16-git-send-email-kishon@ti.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399383244-14556-1-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: rogerq@ti.com, balajitk@ti.com, Kishon Vijay Abraham I <kishon@ti.com>, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds more register offsets to the list for
-preserving their values during S2R.
+Now that we have added PCIe driver for DRA7 SOCs, enable PCI on
+DRA7 SOCs.
 
-Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- drivers/clk/samsung/clk-exynos5420.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/mach-omap2/Kconfig |    2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index e69e820..566d351 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -27,6 +27,7 @@
- #define DIV_CPU1		0x504
- #define GATE_BUS_CPU		0x700
- #define GATE_SCLK_CPU		0x800
-+#define CLKOUT_CMU_CPU		0xa00
- #define GATE_IP_G2D		0x8800
- #define CPLL_LOCK		0x10020
- #define DPLL_LOCK		0x10030
-@@ -39,7 +40,11 @@
- #define CPLL_CON0		0x10120
- #define DPLL_CON0		0x10128
- #define EPLL_CON0		0x10130
-+#define EPLL_CON1		0x10134
-+#define EPLL_CON2		0x10138
- #define RPLL_CON0		0x10140
-+#define RPLL_CON1		0x10144
-+#define RPLL_CON2		0x10148
- #define IPLL_CON0		0x10150
- #define SPLL_CON0		0x10160
- #define VPLL_CON0		0x10170
-@@ -140,6 +145,13 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
- 	DIV_CPU1,
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
-+	CLKOUT_CMU_CPU,
-+	EPLL_CON0,
-+	EPLL_CON1,
-+	EPLL_CON2,
-+	RPLL_CON0,
-+	RPLL_CON1,
-+	RPLL_CON2,
- 	SRC_TOP0,
- 	SRC_TOP1,
- 	SRC_TOP2,
+diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
+index cb31d43..b179e80 100644
+--- a/arch/arm/mach-omap2/Kconfig
++++ b/arch/arm/mach-omap2/Kconfig
+@@ -75,6 +75,8 @@ config SOC_DRA7XX
+ 	select ARM_GIC
+ 	select HAVE_ARM_ARCH_TIMER
+ 	select IRQ_CROSSBAR
++	select MIGHT_HAVE_PCI
++	select ARCH_SUPPORTS_MSI
+ 
+ config ARCH_OMAP2PLUS
+ 	bool
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
