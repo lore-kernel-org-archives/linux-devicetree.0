@@ -1,162 +1,156 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v3 05/20] usb: host: xhci-plat: Add clocks support
-Date: Tue,  6 May 2014 02:14:00 +0200
-Message-ID: <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [RFC] [v2 Patch 2/6] ARM: TI: Describe the ti reset DT entries
+Date: Tue, 6 May 2014 08:18:37 -0500
+Message-ID: <5368E12D.1060706@ti.com>
+References: <1399320567-3639-1-git-send-email-dmurphy@ti.com> <1399320567-3639-3-git-send-email-dmurphy@ti.com> <20140505220155.GI25949@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140505220155.GI25949@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some platform (such as the Armada 38x ones) can gate the clock of
-their USB controller. This patch add the support for the clock, by
-enabling them during probe and disabling them on remove.
+Tony
 
-As not all platforms have clock support then enabling and disabling
-the clocks have been placed in separate functions. Then if the clocks
-are not supported we still can use the same calls, and there is no
+Thanks for the comments
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- drivers/usb/host/xhci-plat.c | 57 +++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 54 insertions(+), 3 deletions(-)
+On 05/05/2014 05:01 PM, Tony Lindgren wrote:
+> * Dan Murphy <dmurphy@ti.com> [140505 13:10]:
+>> +
+>> +Required parent properties:
+>> +- compatible : Should be one of,
+>> +		"ti,omap4-prm" for OMAP4 PRM instances
+>> +		"ti,omap5-prm" for OMAP5 PRM instances
+>> +		"ti,dra7-prm" for DRA7xx PRM instances
+>> +		"ti,am4-prcm" for AM43xx PRCM instances
+>> +		"ti,am3-prcm" for AM33xx PRCM instances
+>> +
+>> +Required child reset property:
+>> +- compatible : Should be
+>> +		"resets" for All TI SoCs
+>> +
+>> +example:
+>> +		prm: prm@4ae06000 {
+>> +			compatible = "ti,omap5-prm";
+>> +			reg = <0x4ae06000 0x3000>;
+>> +
+>> +			prm_resets: resets {
+>> +				#address-cells = <1>;
+>> +				#size-cells = <1>;
+>> +				#reset-cells = <1>;
+>> +			};
+>> +		};
+> The reg entries you have in the example below has different format
+> compared to this?
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index f5351af4b2c5..bb37b941c8ec 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -11,6 +11,7 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
-+#include <linux/clk.h>
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/of.h>
-@@ -19,6 +20,10 @@
- 
- #include "xhci.h"
- 
-+struct xhci_plat_priv {
-+	struct clk *clk;
-+};
-+
- static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- {
- 	/*
-@@ -38,7 +43,8 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
- static const struct hc_driver xhci_plat_xhci_driver = {
- 	.description =		"xhci-hcd",
- 	.product_desc =		"xHCI Host Controller",
--	.hcd_priv_size =	sizeof(struct xhci_hcd *),
-+	.hcd_priv_size =	sizeof(struct xhci_hcd *) +
-+				sizeof(struct xhci_plat_priv),
- 
- 	/*
- 	 * generic hardware linkage
-@@ -85,6 +91,40 @@ static const struct hc_driver xhci_plat_xhci_driver = {
- 	.bus_resume =		xhci_bus_resume,
- };
- 
-+static int xhci_plat_enable_clk(struct platform_device *pdev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(pdev);
-+	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-+	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
-+
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+
-+	/*
-+	 * Not all platforms have a clk so it is not an error if the
-+	 * clock does not exists.
-+	 */
-+	if (IS_ERR(priv->clk))
-+		return 0;
-+
-+	return clk_prepare_enable(priv->clk);
-+}
-+
-+static void xhci_plat_disable_clk(struct platform_device *pdev)
-+{
-+	struct usb_hcd *hcd = platform_get_drvdata(pdev);
-+	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-+	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
-+
-+	/*
-+	 * Not all platforms have a clk so it is not an error if the
-+	 * clock does not exists.
-+	 */
-+	if (IS_ERR(priv->clk))
-+		return;
-+
-+	clk_disable_unprepare(priv->clk);
-+}
-+
- static int xhci_plat_probe(struct platform_device *pdev)
- {
- 	const struct hc_driver	*driver;
-@@ -118,7 +158,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 
- 	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
- 	if (!hcd)
--		return -ENOMEM;
-+		ret = -ENOMEM;
- 
- 	hcd->rsrc_start = res->start;
- 	hcd->rsrc_len = resource_size(res);
-@@ -140,6 +180,13 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (ret)
- 		goto unmap_registers;
-+
-+	ret = xhci_plat_enable_clk(pdev);
-+	if (ret) {
-+		dev_dbg(&pdev->dev, "error enabling clocks\n");
-+		goto dealloc_usb2_hcd;
-+	}
-+
- 	device_wakeup_enable(hcd->self.controller);
- 
- 	/* USB 2.0 roothub is stored in the platform_device now. */
-@@ -149,7 +196,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 			dev_name(&pdev->dev), hcd);
- 	if (!xhci->shared_hcd) {
- 		ret = -ENOMEM;
--		goto dealloc_usb2_hcd;
-+		goto disable_clk;
- 	}
- 
- 	/*
-@@ -170,6 +217,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
- put_usb3_hcd:
- 	usb_put_hcd(xhci->shared_hcd);
- 
-+disable_clk:
-+	xhci_plat_disable_clk(pdev);
-+
- dealloc_usb2_hcd:
- 	usb_remove_hcd(hcd);
- 
-@@ -193,6 +243,7 @@ static int xhci_plat_remove(struct platform_device *dev)
- 	usb_remove_hcd(xhci->shared_hcd);
- 	usb_put_hcd(xhci->shared_hcd);
- 
-+	xhci_plat_disable_clk(dev);
- 	usb_remove_hcd(hcd);
- 	iounmap(hcd->regs);
- 	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
+This is the parent to the resets.  The reg entries below are for
+the child reset signals.
+
+>
+>> +Reset node declaration
+>> +==============================================
+>> +The reset node is declared in a parent child relationship.  The main parent
+>> +is the PRCM module which contains the base address.  The first child within
+>> +the reset parent declares the target modules reset name.  This is followed by
+>> +the control and status offsets.
+>> +
+>> +Within the first reset child node is a secondary child node which declares the
+>> +reset signal of interest.  Under this node the control and status bits
+>> +are declared.  These bits declare the bit mask for the target reset.
+>> +
+>> +
+>> +Required properties:
+>> +reg - This is the register offset from the PRCM parent.
+>> +	This must be declared as:
+>> +
+>> +	reg = <control register offset>,
+>> +		  <status register offset>;
+>> +
+>> +control-bit - This is the bit within the register which controls the reset
+>> +	of the target module.  This is declared as a bit mask for the register.
+>> +status-bit - This is the bit within the register which contains the status of
+>> +	the reset of the target module.
+>> +	This is declared as a bit mask for the register.
+>> +
+>> +example:
+>> +&prm_resets {
+>> +	dsp_rstctrl {
+>> +		reg = <0x1c00>,
+>> +			  <0x1c04>;
+> Shouldn't this be start and size instead of start and end here?
+
+I could do start and size.  But the size will be the same for each register.
+AM33xx really hurts the consistency model here as the other patches in the series
+it appears that the control and status are consistent but AM33xx the registers are all over
+the place.
+
+I have not looked at OMAP2->4 yet for control and status register offsets.
+
+>> +		dsp_reset: dsp_reset {
+>> +			control-bit = <0x01>;
+>> +			status-bit = <0x01>;
+>> +		};
+>> +	};
+>> +};
+> Are the control-bit and status-bit always the same? If so, you can
+> keep that knowlede private to the the driver.
+
+No there is a case in the am33xx resets file where the status and control bits are not the same.
+
+>
+> And maybe you can have the bit offset in a reg property here to
+> avoid adding any custom properties? Something like:
+>
+> 	dsp_reset: reset@1 {
+> 		reg = 1;
+> 	};
+>
+> If reg is not suitable for that, it seems that some generic property
+> to describe the bit offset is needed by quite a few drivers
+> anyways, for things like clocks and regulators. 
+
+I will have to look into this.  Maybe a generic entry called bit-offset
+that defines the bit or a mask for the registers.  It can mimic the reg
+entry.
+
+>> +Client Node Declaration
+>> +==============================================
+>> +This is the consumer of the parent node to declare what resets this
+>> +particular module is interested in.
+>> +
+>> +example:
+>> +	src: src@55082000 {
+>> +		    resets = <&reset_src phandle>;
+>> +			reset-names = "<reset_name>";
+>> +	};
+>> +
+>> +Required Properties:
+>> +reset_src - This is the parent DT entry for the reset controller
+>> +phandle - This is the phandle of the specific reset to be used by the clien
+>> +	driver.
+>> +reset-names - This is the reset name of module that the device driver
+>> +	needs to be able to reset.  This value must correspond to a value within
+>> +	the reset controller array.
+>> +
+>> +example:
+>> +resets = <&prm_resets &dsp_mmu_reset>;
+>> +reset-names = "dsp_mmu_reset";
+> This part looks OK to me, not sure if we need the reset-names property
+> if we have one already why not.
+
+reset-names are part of the reset.txt file.  I could probably drop the resets and reset-name information here
+and point to the reset.txt file for further explanation.
+
+>
+> Regards,
+>
+> Tony
+
+
 -- 
-1.8.1.2
+------------------
+Dan Murphy
+
