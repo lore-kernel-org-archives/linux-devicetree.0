@@ -1,132 +1,45 @@
-From: Adam Baker <linux@baker-net.org.uk>
-Subject: Re: [PATCH 01/15] ARM: dts: kirkwood: fix mislocated pcie-controller
- nodes
-Date: Mon, 05 May 2014 23:20:28 +0100
-Message-ID: <53680EAC.3090401@baker-net.org.uk>
-References: <1398862602-29595-1-git-send-email-sebastian.hesselbarth@gmail.com> <1398862602-29595-2-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for configuring the iATU
+Date: Tue, 06 May 2014 15:59 +0200
+Message-ID: <4764413.ZAEU5S5p0p@wuerfel>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-7-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398862602-29595-2-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1399383244-14556-7-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, Bjorn Helgaas <bhelgaas@google.com>, Marek Vasut <marex@denx.de>, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 30/04/14 13:56, Sebastian Hesselbarth wrote:
-> Commit 54397d85349f
->   ("ARM: kirkwood: Relocate PCIe device tree nodes")
->
-> moved the pcie-controller nodes for the Kirkwood SoCs to the mbus
-> bus node. For some reason, two boards were not properly converted
-> and have their pci-controller nodes still in the ocp bus node.
->
-> As the corresponding SoC pcie-controller does not exist anymore,
-> it is likely that pcie is broken on those boards since above commit.
-> Fix it by moving the pcie related nodes to the correct location.
->
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+On Tuesday 06 May 2014 19:03:52 Kishon Vijay Abraham I wrote:
+> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
+> address. So whenever the cpu issues a read/write request, the 4 most
+> significant bits are used by L3 to determine the target controller.
+> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
+> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
+> the outbound translation window the *base* should be programmed as 0x000_0000.
+> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
+> we have programmed in the translation window with base as 0x000_0000.
+> 
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Marek Vasut <marex@denx.de>
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> Acked-by: Jingoo Han <jg1.han@samsung.com>
+> Acked-by: Mohit Kumar <mohit.kumar@st.com>
 
+Sorry, but NAK.
 
-I've tried this patch on NSA320, as expected it doesn't make any 
-observable difference as there is nothing connected to the PCIe bus 
-(hence not really worth a tested by). It matters more on the NSA310 as 
-that uses PCIe for Ethernet.
+We have a standard 'dma-ranges' property to handle this, so use it.
 
-Regards
+See the x-gene PCIe driver patches for an example. Please also talk
+to Santosh about it, as he is implementing generic support for
+parsing dma-ranges in platform devices at the moment.
 
-Adam Baker
+I also suspect you will have to implement swiotlb support to make
+generic PCI devices work behind this bridge. Otherwise you end up
+with random physical addresses passed into DMA registers.
 
-> ---
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Gregory Clement <gregory.clement@free-electrons.com>
-> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->   arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts | 18 ++++++++++--------
->   arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi  | 18 ++++++++++--------
->   2 files changed, 20 insertions(+), 16 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-> index 2cb0dc529165..4bf358c28be2 100644
-> --- a/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-> +++ b/arch/arm/boot/dts/kirkwood-mv88f6281gtw-ge.dts
-> @@ -30,6 +30,16 @@
->   		bootargs = "console=ttyS0,115200n8 earlyprintk";
->   	};
->
-> +	mbus {
-> +		pcie-controller {
-> +			status = "okay";
-> +
-> +			pcie@1,0 {
-> +				status = "okay";
-> +			};
-> +		};
-> +        };
-> +
->   	ocp@f1000000 {
->   		pinctrl@10000 {
->   			pmx_usb_led: pmx-usb-led {
-> @@ -73,14 +83,6 @@
->   		ehci@50000 {
->   			status = "okay";
->   		};
-> -
-> -		pcie-controller {
-> -			status = "okay";
-> -
-> -			pcie@1,0 {
-> -				status = "okay";
-> -			};
-> -		};
->   	};
->
->   	gpio-leds {
-> diff --git a/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi b/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
-> index 843b8b561e5e..b88810df7ca2 100644
-> --- a/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
-> +++ b/arch/arm/boot/dts/kirkwood-nsa3x0-common.dtsi
-> @@ -4,6 +4,16 @@
->   / {
->   	model = "ZyXEL NSA310";
->
-> +	mbus {
-> +		pcie-controller {
-> +			status = "okay";
-> +
-> +			pcie@1,0 {
-> +				status = "okay";
-> +			};
-> +		};
-> +	};
-> +
->   	ocp@f1000000 {
->   		pinctrl: pinctrl@10000 {
->
-> @@ -51,14 +61,6 @@
->   			status = "okay";
->   			nr-ports = <2>;
->   		};
-> -
-> -		pcie-controller {
-> -			status = "okay";
-> -
-> -			pcie@1,0 {
-> -				status = "okay";
-> -			};
-> -		};
->   	};
->
->   	gpio_poweroff {
->
+	Arnd
+
