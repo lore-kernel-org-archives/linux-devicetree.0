@@ -1,130 +1,104 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
-Date: Mon, 5 May 2014 17:45:48 -0400
-Message-ID: <5368068C.3090403@ti.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>	<1398353407-2345-4-git-send-email-santosh.shilimkar@ti.com> <CAL_JsqKmf-OCf_-J06ztHWS0iRaMHAVxV0bOFGnY4Ci3fPgLow@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 02/20] usb: ehci-orion: Add the optional PHY support
+Date: Tue,  6 May 2014 02:13:57 +0200
+Message-ID: <1399335255-589-3-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKmf-OCf_-J06ztHWS0iRaMHAVxV0bOFGnY4Ci3fPgLow@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Grygorii Strashko <grygorii.strashko@ti.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 01 May 2014 08:56 PM, Rob Herring wrote:
-> On Thu, Apr 24, 2014 at 10:30 AM, Santosh Shilimkar
-> <santosh.shilimkar@ti.com> wrote:
->> The of_dma_is_coherent() helper parses the given DT device
->> node to see if the "dma-coherent" property is supported and
->> returns true or false accordingly.
->>
->> If the arch is always coherent or always noncoherent, then the default
->> DMA ops has to be specified accordingly.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Russell King <linux@arm.linux.org.uk>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Cc: Olof Johansson <olof@lixom.net>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Catalin Marinas <catalin.marinas@arm.com>
->> Cc: Linus Walleij <linus.walleij@linaro.org>
->> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
->> ---
->>  drivers/of/platform.c       |   23 +++++++++++++++++++++++
->>  include/linux/of_platform.h |    6 ++++++
-> 
-> I thought I said this already, but this does not belong in these files
-> as the function does not deal with platform devices. Probably
-> address.c/of_address.h would be the best place.
-> 
-Updated patch with functions now moved to of_address.h/address.c
+This commit allows to use the PHY provided through the device tree. It
+will be useful for the Armada 375 SoCs. if no PHY is provided then the
+behavior of the driver is unchanged.
 
->From 08fb70715afe4adf203d24f1737dba7123c6713b Mon Sep 17 00:00:00 2001
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Date: Thu, 24 Apr 2014 11:30:03 -0400
-Subject: [PATCH v3 3/7] of: introduce of_dma_is_coherent() helper
-
-The of_dma_is_coherent() helper parses the given DT device
-node to see if the "dma-coherent" property is supported and
-returns true or false accordingly.
-
-If the arch is always coherent or always noncoherent, then the default
-DMA ops has to be specified accordingly.
-
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- drivers/of/address.c       |   23 +++++++++++++++++++++++
- include/linux/of_address.h |    6 ++++++
- 2 files changed, 29 insertions(+)
+ drivers/usb/host/ehci-orion.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index c54baee..d244b28 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -808,3 +808,26 @@ out:
- 	return ret;
- }
- EXPORT_SYMBOL_GPL(of_dma_get_range);
-+
-+/**
-+ * of_dma_is_coherent - Check if device is coherent
-+ * @np:	device node
-+ *
-+ * It returns true if "dma-coherent" property was found
-+ * for this device in DT.
-+ */
-+bool of_dma_is_coherent(struct device_node *np)
-+{
-+	struct device_node *node = of_node_get(np);
-+
-+	while (node) {
-+		if (of_property_read_bool(node, "dma-coherent")) {
-+			of_node_put(node);
-+			return true;
-+		}
-+		node = of_get_next_parent(node);
-+	}
-+	of_node_put(node);
-+	return false;
-+}
-+EXPORT_SYMBOL_GPL(of_dma_is_coherent);
-\ No newline at end of file
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 4d7b325..839a352 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -65,6 +65,7 @@ extern struct of_pci_range *of_pci_range_parser_one(
- 					struct of_pci_range *range);
- extern int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- 				u64 *paddr, u64 *size);
-+extern bool of_dma_is_coherent(struct device_node *np);
- #else /* CONFIG_OF_ADDRESS */
- static inline struct device_node *of_find_matching_node_by_address(
- 					struct device_node *from,
-@@ -98,6 +99,11 @@ static inline int of_dma_get_range(struct device_node *np, u64 *dma_addr,
- {
- 	return -ENODEV;
- }
-+
-+static inline bool of_dma_is_coherent(struct device_node *np)
-+{
-+	return false;
-+}
- #endif /* CONFIG_OF_ADDRESS */
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index d6c19c37c76b..f6d9eb2e33cd 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -15,6 +15,7 @@
+ #include <linux/clk.h>
+ #include <linux/platform_data/usb-ehci-orion.h>
+ #include <linux/of.h>
++#include <linux/phy/phy.h>
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
+ #include <linux/usb.h>
+@@ -46,6 +47,7 @@
  
- #ifdef CONFIG_OF
+ struct orion_ehci_hcd {
+ 	struct clk *clk;
++	struct phy *phy;
+ };
+ 
+ static const char hcd_name[] = "ehci-orion";
+@@ -224,6 +226,18 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 	if (!IS_ERR(priv->clk))
+ 		clk_prepare_enable(priv->clk);
+ 
++
++	priv->phy = devm_phy_get(&pdev->dev, "usb");
++	if (!IS_ERR(priv->phy)) {
++		err = phy_init(priv->phy);
++		if (err)
++			goto err2;
++
++		err = phy_power_on(priv->phy);
++		if (err)
++			goto err3;
++	}
++
+ 	/*
+ 	 * (Re-)program MBUS remapping windows if we are asked to.
+ 	 */
+@@ -253,14 +267,18 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 
+ 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (err)
+-		goto err2;
++		goto err4;
+ 
+ 	device_wakeup_enable(hcd->self.controller);
+ 	return 0;
+ 
+-err2:
++err4:
+ 	usb_put_hcd(hcd);
+ 
++err3:
++	phy_exit(priv->phy);
++
++err2:
+ 	if (!IS_ERR(priv->clk))
+ 		clk_disable_unprepare(priv->clk);
+ err1:
+@@ -278,6 +296,9 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
+ 	usb_remove_hcd(hcd);
+ 	usb_put_hcd(hcd);
+ 
++	if (!IS_ERR(priv->phy))
++		phy_exit(priv->phy);
++
+ 	if (!IS_ERR(priv->clk))
+ 		clk_disable_unprepare(priv->clk);
+ 
 -- 
-1.7.9.5
+1.8.1.2
