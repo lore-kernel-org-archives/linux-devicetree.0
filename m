@@ -1,164 +1,159 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v3 05/20] usb: host: xhci-plat: Add clocks support
-Date: Tue, 6 May 2014 09:41:13 -0400
-Message-ID: <20140506134113.GV28159@titan.lakedaemon.net>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH v7 1/2] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Tue, 06 May 2014 16:27:02 +0200
+Message-ID: <5368F136.6070804@samsung.com>
+References: <1398665874-31238-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399335255-589-6-git-send-email-gregory.clement@free-electrons.com>
+In-reply-to: <1398665874-31238-1-git-send-email-gautam.vivek@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kishon@ti.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gregkh@linuxfoundation.org, balbi@ti.com, kgene.kim@samsung.com, t.figa@samsung.com, k.debski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 06, 2014 at 02:14:00AM +0200, Gregory CLEMENT wrote:
-> Some platform (such as the Armada 38x ones) can gate the clock of
-> their USB controller. This patch add the support for the clock, by
-> enabling them during probe and disabling them on remove.
+On 28/04/14 08:17, Vivek Gautam wrote:
+> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+> The new driver uses the generic PHY framework and will interact
+> with DWC3 controller present on Exynos5 series of SoCs.
+> Thereby, removing old phy-samsung-usb3 driver and related code
+> used untill now which was based on usb/phy framework.
 > 
-> As not all platforms have clock support then enabling and disabling
-> the clocks have been placed in separate functions. Then if the clocks
-> are not supported we still can use the same calls, and there is no
-
-... ?
-
-thx,
-
-Jason.
-
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
 > ---
->  drivers/usb/host/xhci-plat.c | 57 +++++++++++++++++++++++++++++++++++++++++---
->  1 file changed, 54 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index f5351af4b2c5..bb37b941c8ec 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -11,6 +11,7 @@
->   * version 2 as published by the Free Software Foundation.
->   */
->  
-> +#include <linux/clk.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> @@ -19,6 +20,10 @@
->  
->  #include "xhci.h"
->  
-> +struct xhci_plat_priv {
-> +	struct clk *clk;
+> Changes from v6:
+>  - Addressed review comments:
+>    -- Sorted config entries in Kconfig and Makefile
+>    -- Made #define to_usbdrd_phy(inst) to a static inline routine.
+>    -- Restructured exynos5_rate_to_clk() as suggested.
+>    -- Amended 'val' field for regmap_update_bits() in the routine
+>       exynos5_usbdrd_phy_isol().
+>    -- Removed sentinel entry from exynos5_usbdrd_phy_cfg[] struct.
+>    -- Removed check for 'match' entry in probe().
+> 
+>  .../devicetree/bindings/phy/samsung-phy.txt        |   40 ++
+>  drivers/phy/Kconfig                                |   11 +
+>  drivers/phy/Makefile                               |    1 +
+>  drivers/phy/phy-exynos5-usbdrd.c                   |  627 ++++++++++++++++++++
+>  4 files changed, 679 insertions(+)
+>  create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> index b422e38..51efe4c 100644
+> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+> @@ -114,3 +114,43 @@ Example:
+>  		compatible = "samsung,exynos-sataphy-i2c";
+>  		reg = <0x38>;
+>  	};
+> +
+> +Samsung Exynos5 SoC series USB DRD PHY controller
+> +--------------------------------------------------
+> +
+> +Required properties:
+> +- compatible : Should be set to one of the following supported values:
+> +	- "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
+> +	- "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
+> +- reg : Register offset and length of USB DRD PHY register set;
+> +- clocks: Clock IDs array as required by the controller
+> +- clock-names: names of clocks correseponding to IDs in the clock property;
+> +	       Required clocks:
+> +	- phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
+> +	       used for register access.
+> +	- ref: PHY's reference clock (usually crystal clock), used for
+> +	       PHY operations, associated by phy name. It is used to
+> +	       determine bit values for clock settings register.
+> +	       For Exynos5420 this is given as 'sclk_usbphy30' in CMU.
+> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
+> +		      control pmu registers for power isolation.
+> +- samsung,pmu-offset: phy power control register offset to pmu-system-controller
+> +		      base.
+
+It doesn't seem right to have register offset encoded in the device tree
+like this. I think it'd be more appropriate to associate such an offset
+with the compatible string's value in the driver.
+
+Also it might be sensible to create a new header file in include/linux/mfd/
+syscon/ for Exynos5 SoCs and put any required PMU offset definitions there. 
+Instead having them scattered and possibly duplicated in various drivers.
+
+> +- #phy-cells : from the generic PHY bindings, must be 1;
+> +
+> +For "samsung,exynos5250-usbdrd-phy" and "samsung,exynos5420-usbdrd-phy"
+> +compatible PHYs, the second cell in the PHY specifier identifies the
+> +PHY id, which is interpreted as follows:
+> +  0 - UTMI+ type phy,
+> +  1 - PIPE3 type phy,
+> +
+> +Example:
+> +	usb3_phy: usbphy@12100000 {
+> +		compatible = "samsung,exynos5250-usbdrd-phy";
+> +		reg = <0x12100000 0x100>;
+> +		clocks = <&clock 286>, <&clock 1>;
+> +		clock-names = "phy", "ref";
+> +		samsung,pmu-syscon = <&pmu_system_controller>;
+> +		samsung,pmu-offset = <0x704>;
+> +		#phy-cells = <1>;
+> +	};
+[...]
+> +struct usbdrd_phy_config {
+
+Isn't name of this data structure too generic ? 
+Perhaps rename it to exynos_usbdrd_phy_config ?
+
+> +	u32 id;
+> +	void (*phy_isol)(struct phy_usb_instance *inst, u32 on);
+> +	void (*phy_init)(struct exynos5_usbdrd_phy *phy_drd);
+> +	unsigned int (*set_refclk)(struct phy_usb_instance *inst);
 > +};
 > +
->  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
->  {
->  	/*
-> @@ -38,7 +43,8 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
->  static const struct hc_driver xhci_plat_xhci_driver = {
->  	.description =		"xhci-hcd",
->  	.product_desc =		"xHCI Host Controller",
-> -	.hcd_priv_size =	sizeof(struct xhci_hcd *),
-> +	.hcd_priv_size =	sizeof(struct xhci_hcd *) +
-> +				sizeof(struct xhci_plat_priv),
->  
->  	/*
->  	 * generic hardware linkage
-> @@ -85,6 +91,40 @@ static const struct hc_driver xhci_plat_xhci_driver = {
->  	.bus_resume =		xhci_bus_resume,
->  };
->  
-> +static int xhci_plat_enable_clk(struct platform_device *pdev)
+> +struct exynos5_usbdrd_phy_drvdata {
+> +	const struct usbdrd_phy_config *phy_cfg;
+> +};
+> +
+[...]
+> +const struct exynos5_usbdrd_phy_drvdata exynos5420_usbdrd_phy = {
+> +	.phy_cfg		= exynos5_usbdrd_phy_cfg,
+> +};
+> +
+> +const struct exynos5_usbdrd_phy_drvdata exynos5250_usbdrd_phy = {
+> +	.phy_cfg		= exynos5_usbdrd_phy_cfg,
+> +};
+> +
+> +static const struct of_device_id exynos5_usbdrd_phy_of_match[] = {
+> +	{
+> +		.compatible = "samsung,exynos5250-usbdrd-phy",
+> +		.data = &exynos5250_usbdrd_phy
+> +	}, {
+> +		.compatible = "samsung,exynos5420-usbdrd-phy",
+> +		.data = &exynos5420_usbdrd_phy
+> +	},
+> +	{ },
+> +};
+> +
+> +static int exynos5_usbdrd_phy_probe(struct platform_device *pdev)
 > +{
-> +	struct usb_hcd *hcd = platform_get_drvdata(pdev);
-> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-> +	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
-> +
-> +	priv->clk = devm_clk_get(&pdev->dev, NULL);
-> +
-> +	/*
-> +	 * Not all platforms have a clk so it is not an error if the
-> +	 * clock does not exists.
-> +	 */
-> +	if (IS_ERR(priv->clk))
-> +		return 0;
-> +
-> +	return clk_prepare_enable(priv->clk);
-> +}
-> +
-> +static void xhci_plat_disable_clk(struct platform_device *pdev)
-> +{
-> +	struct usb_hcd *hcd = platform_get_drvdata(pdev);
-> +	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
-> +	struct xhci_plat_priv *priv = (struct xhci_plat_priv *) xhci->priv;
-> +
-> +	/*
-> +	 * Not all platforms have a clk so it is not an error if the
-> +	 * clock does not exists.
-> +	 */
-> +	if (IS_ERR(priv->clk))
-> +		return;
-> +
-> +	clk_disable_unprepare(priv->clk);
-> +}
-> +
->  static int xhci_plat_probe(struct platform_device *pdev)
->  {
->  	const struct hc_driver	*driver;
-> @@ -118,7 +158,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  
->  	hcd = usb_create_hcd(driver, &pdev->dev, dev_name(&pdev->dev));
->  	if (!hcd)
-> -		return -ENOMEM;
-> +		ret = -ENOMEM;
->  
->  	hcd->rsrc_start = res->start;
->  	hcd->rsrc_len = resource_size(res);
-> @@ -140,6 +180,13 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
->  	if (ret)
->  		goto unmap_registers;
-> +
-> +	ret = xhci_plat_enable_clk(pdev);
-> +	if (ret) {
-> +		dev_dbg(&pdev->dev, "error enabling clocks\n");
-> +		goto dealloc_usb2_hcd;
+[...]
+> +	reg_pmu = syscon_regmap_lookup_by_phandle(dev->of_node,
+> +						   "samsung,pmu-syscon");
+> +	if (IS_ERR(reg_pmu)) {
+> +		dev_err(dev, "Failed to map PMU register (via syscon)\n");
+
+nit: Maybe change it to: "Failed to lookup PMU regmap\n" ?
+
+> +		return PTR_ERR(reg_pmu);
 > +	}
 > +
->  	device_wakeup_enable(hcd->self.controller);
->  
->  	/* USB 2.0 roothub is stored in the platform_device now. */
-> @@ -149,7 +196,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  			dev_name(&pdev->dev), hcd);
->  	if (!xhci->shared_hcd) {
->  		ret = -ENOMEM;
-> -		goto dealloc_usb2_hcd;
-> +		goto disable_clk;
->  	}
->  
->  	/*
-> @@ -170,6 +217,9 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  put_usb3_hcd:
->  	usb_put_hcd(xhci->shared_hcd);
->  
-> +disable_clk:
-> +	xhci_plat_disable_clk(pdev);
-> +
->  dealloc_usb2_hcd:
->  	usb_remove_hcd(hcd);
->  
-> @@ -193,6 +243,7 @@ static int xhci_plat_remove(struct platform_device *dev)
->  	usb_remove_hcd(xhci->shared_hcd);
->  	usb_put_hcd(xhci->shared_hcd);
->  
-> +	xhci_plat_disable_clk(dev);
->  	usb_remove_hcd(hcd);
->  	iounmap(hcd->regs);
->  	release_mem_region(hcd->rsrc_start, hcd->rsrc_len);
-> -- 
-> 1.8.1.2
-> 
+> +	ret = of_property_read_u32(node, "samsung,pmu-offset", &pmu_offset);
+> +	if (ret) {
+> +		dev_err(dev, "Missing pmu-offset for phy isolation\n");
+> +		return ret;
+> +	}
+
+Otherwise the patch looks good.
+
+--
+Thanks,
+Sylwester
