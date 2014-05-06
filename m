@@ -1,62 +1,73 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH] arm: dts: exynos4412-trats2: rename alias for i2c_ak8975
- label
-Date: Tue, 06 May 2014 11:34:52 +0900
-Message-ID: <098d01cf68d3$c2420b10$46c62130$@samsung.com>
-References: <534D4143.3050801@samsung.com> <53594496.4010607@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 00/17] PCIe support for DRA7xx
+Date: Tue, 6 May 2014 19:03:46 +0530
+Message-ID: <1399383244-14556-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <53594496.4010607@samsung.com>
-Content-language: ko
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Tomasz Figa' <t.figa@samsung.com>, 'Tomasz Stanislawski' <t.stanislaws@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 'Ben Dooks' <ben-linux@fluff.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, j.anaszewski@samsung.com, =?UTF-8?B?J+uwleqyveuvvCc=?= <kyungmin.park@samsung.com>
+To: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org
+Cc: rogerq@ti.com, balajitk@ti.com, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
-> 
-> Hi Tomasz,
-> 
-> On 15.04.2014 16:25, Tomasz Stanislawski wrote:
-> > The i2c_ak8975 controler uses label i2c8.
-> > This alias is already used for I2C controller 8 defined
-> > in file arch/arm/boot/dts/exynos4.dtsi.
-> >
-> > This patch renames a label for i2c_ak8975 to i2c9.
-> >
-> > Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
-> > ---
-> >   arch/arm/boot/dts/exynos4412-trats2.dts |    2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts
-> b/arch/arm/boot/dts/exynos4412-trats2.dts
-> > index c16b315..5add765 100644
-> > --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> > +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> > @@ -20,7 +20,7 @@
-> >   	compatible = "samsung,trats2", "samsung,exynos4412",
-> "samsung,exynos4";
-> >
-> >   	aliases {
-> > -		i2c8 = &i2c_ak8975;
-> > +		i2c9 = &i2c_ak8975;
-> >   	};
-> >
-> >   	memory {
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-samsung-
-> soc" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> >
-> 
-> Seems reasonable.
-> 
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> 
-Applied, thanks.
+This patch series adds support for PCIe in DRA7xx including drivers and dt
+data. PCIe in DRA7xx uses desingware IP and hence this re-uses the
+pcie desingware driver (pcie-designware.c) by Jingoo.
 
-- Kukjin
+The last couple of patches are marked as *TEMP* since the TI reset driver [1]
+is not yet merged and is in RFC.
+
+Tested broadcom PCIe card and XIO2000 bridge along with DGE530T ethernet
+card.
+
+Changes from RFC:
+* Added external clock support for PCIE APLL
+* Miscellaneous cleanups in Documentation, macro naming etc..
+
+[1] -> http://www.spinics.net/lists/linux-omap/msg106411.html
+
+Keerthy (2):
+  ARM: dts: DRA7: Add divider table to optfclk_pciephy_div clock
+  ARM: dts: DRA7: Change the parent of apll_pcie_in_clk_mux to
+    dpll_pcie_ref_m2ldo_ck
+
+Kishon Vijay Abraham I (15):
+  phy: phy-omap-pipe3: Add support for PCIe PHY
+  phy: omap-control: add external clock support for PCIe PHY
+  phy: ti-pipe3: add external clock support for PCIe PHY
+  phy: pipe3: insert delay to enumerate in GEN2 mode
+  pci: host: pcie-dra7xx: add support for pcie-dra7xx controller
+  pci: host: pcie-designware: Use *base-mask* for configuring the iATU
+  arm: dra7xx: Add hwmod data for pcie1 phy and pcie2 phy
+  arm: dra7xx: Add hwmod data for pcie1 and pcie2 subsystems
+  ARM: dts: dra7xx-clocks: Add missing 32khz clocks used for PHY
+  ARM: dts: dra7: Add dt data for PCIe PHY control module
+  ARM: dts: dra7: Add dt data for PCIe PHY
+  ARM: dts: dra7: Add dt data for PCIe controller
+  ARM: OMAP: Enable PCI for DRA7
+  pci: host: pcie-dra7xx: use reset framework APIs to reset PCIe
+  ARM: dts: dra7: Add *resets* property for PCIe dt node
+
+ .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
+ Documentation/devicetree/bindings/pci/ti-pci.txt   |   35 ++
+ Documentation/devicetree/bindings/phy/ti-phy.txt   |   21 +-
+ arch/arm/boot/dts/dra7.dtsi                        |   55 +++
+ arch/arm/boot/dts/dra7xx-clocks.dtsi               |   11 +-
+ arch/arm/mach-omap2/Kconfig                        |    2 +
+ arch/arm/mach-omap2/cm2_7xx.h                      |    4 +
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c          |  112 ++++++
+ arch/arm/mach-omap2/prm7xx.h                       |    4 +
+ drivers/pci/host/Kconfig                           |   10 +
+ drivers/pci/host/Makefile                          |    1 +
+ drivers/pci/host/pci-dra7xx.c                      |  395 ++++++++++++++++++++
+ drivers/pci/host/pcie-designware.c                 |   39 +-
+ drivers/pci/host/pcie-designware.h                 |    1 +
+ drivers/phy/phy-omap-control.c                     |   92 ++++-
+ drivers/phy/phy-ti-pipe3.c                         |  142 +++++--
+ include/linux/phy/omap_control_phy.h               |   23 ++
+ 17 files changed, 898 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/ti-pci.txt
+ create mode 100644 drivers/pci/host/pci-dra7xx.c
+
+-- 
+1.7.9.5
