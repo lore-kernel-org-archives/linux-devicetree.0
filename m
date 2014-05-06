@@ -1,40 +1,84 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [ATTN] Re: [PATCH v2 4/9] dt-bindings: add documentation for s3c2410
- clock controller
-Date: Tue, 06 May 2014 17:19:02 +0200
-Message-ID: <5368FD66.9090400@gmail.com>
-References: <2104342.rkElQpXtvM@phil> <2506219.ti6q3JWVMf@phil>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2506219.ti6q3JWVMf@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH v3 00/20] USB support for Armada 38x and Armada 375
+Date: Tue,  6 May 2014 02:13:55 +0200
+Message-ID: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Rob, Pawel, Mark, Ian, Kumar,
+This patch set adds the USB support for the Armada 38x Armada
+375. These SoCs use an xHCI but still need specific initialization,
+mainly to setup the windows memory on the mbus. They also use the same
+controller that the other mvebu SoC for EHCI.
 
-On 23.04.2014 21:36, Heiko St=FCbner wrote:
-> Describe the clock controller of s3c2410, s3c2440 and s3c2442.
->
-> Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-> Acked-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->   .../bindings/clock/samsung,s3c2410-clock.txt       | 50 +++++++++++=
-+++++++++++
->   1 file changed, 50 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/clock/samsung,=
-s3c2410-clock.txt
+Since the 2nd version I converted the usb cluster driver in a PHY
+driver. While I was working on it I found a bug on ehci-orion which I
+fixed in the 1st patch.
 
-Might we ask you to take a look, please?
+The other noticeable change was that in order to be able to use the
+clocks I also added private platform data for xHCI.
 
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In the meantime I also received the A0 version of the Armada 375 so I
+removed all the workaround related to the very earlier version of the
+SoC, indeed there were very few boards with this version of the SoC.
+
+
+This series is also available in
+the branch USB-375-38x-3.15-rc1-V3
+https://github.com/MISL-EBU-System-SW/mainline-public.git
+
+Thanks,
+
+Gregory CLEMENT (20):
+  usb: ehci-orion: Fix clock reference leaking
+  usb: ehci-orion: Add the optional PHY support
+  usb: host: xhci-plat: Sort the headers in alphabetic order
+  usb: xhci: add a platform-private field
+  usb: host: xhci-plat: Add clocks support
+  usb: host: xhci-plat: Add support for the Armada 38x
+  xhci-platform: Add a new controller using xhci: Armada 38x
+  ARM: mvebu: Add Device Tree description of xHCI hosts on Armada 38x
+  ARM: mvebu: Add Device Tree description of the EHCI host on Armada 38x
+  ARM: mvebu: Add USB3 support for Armada 38x
+  ARM: configs: Add usb_xhci_mvebu to mvebu_v7_defconfig
+  ARM: configs: Add usb_xhci_mvebu to multi_v7_defconfig
+  usb: host: xhci-plat: Add support for the Armada 375
+  xhci-platform: Add a new controller using xHCI: Armada 375
+  ARM: mvebu: Add Device Tree description of USB cluster controller on
+    Armada 375
+  dt: binding: Armada 375 USB cluster
+  phy: Add support for USB cluster on the Armada 375 SoC
+  ARM: mvebu: Add USB3 support for Armada 375
+  ARM: mvebu: Add Device Tree description of the xHCI host on Armada 375
+  ARM: mvebu: Add Device Tree description of the EHCI host on Armada 375
+
+ .../bindings/phy/armada-375-usb-phy-cluster.txt    |  19 +++
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |   4 +-
+ arch/arm/boot/dts/armada-375-db.dts                |   8 ++
+ arch/arm/boot/dts/armada-375.dtsi                  |  34 +++++
+ arch/arm/boot/dts/armada-385-db.dts                |  12 ++
+ arch/arm/boot/dts/armada-385-rd.dts                |   4 +
+ arch/arm/boot/dts/armada-38x.dtsi                  |  25 ++++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/mvebu_v7_defconfig                |   1 +
+ arch/arm/mach-mvebu/Kconfig                        |   2 +
+ drivers/phy/Kconfig                                |   5 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-armada375-usb2.c                   | 154 +++++++++++++++++++++
+ drivers/usb/host/Kconfig                           |   7 +
+ drivers/usb/host/Makefile                          |   1 +
+ drivers/usb/host/ehci-orion.c                      |  68 ++++++---
+ drivers/usb/host/xhci-mvebu.c                      |  71 ++++++++++
+ drivers/usb/host/xhci-mvebu.h                      |  21 +++
+ drivers/usb/host/xhci-plat.c                       |  74 +++++++++-
+ drivers/usb/host/xhci.h                            |   3 +
+ 20 files changed, 491 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
+ create mode 100644 drivers/phy/phy-armada375-usb2.c
+ create mode 100644 drivers/usb/host/xhci-mvebu.c
+ create mode 100644 drivers/usb/host/xhci-mvebu.h
+
+-- 
+1.8.1.2
