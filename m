@@ -1,57 +1,145 @@
-From: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 12/15] clk: exynos5420: fix register offset for sclk_bpll
-Date: Tue, 06 May 2014 21:56:47 +0530
-Message-ID: <1399393610-23394-13-git-send-email-shaik.ameer@samsung.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [Resend/PATCH] arm: dts: dra7: Add qspi device.
+Date: Tue, 6 May 2014 16:37:24 +0530
+Message-ID: <1399374445-16456-1-git-send-email-sourav.poddar@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the wrong register offset for sclk_bpll clock.
+These add device tree entry for qspi controller driver on dra7-evm.
 
-Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Alim Akhtar <alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
 ---
- drivers/clk/samsung/clk-exynos5420.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Depends on sricharan's irq crossbar.
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 1449aee..ba7273a 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -111,7 +111,6 @@
- #define TOP_SPARE2		0x10b08
- #define BPLL_LOCK		0x20010
- #define BPLL_CON0		0x20110
--#define SRC_CDREX		0x20200
- #define KPLL_LOCK		0x28000
- #define KPLL_CON0		0x28100
- #define SRC_KFC			0x28200
-@@ -204,7 +203,6 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
- 	GATE_TOP_SCLK_FSYS,
- 	GATE_TOP_SCLK_PERIC,
- 	TOP_SPARE2,
--	SRC_CDREX,
- 	SRC_KFC,
- 	DIV_KFC0,
+ arch/arm/boot/dts/dra7-evm.dts |   80 ++++++++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/dra7.dtsi    |   14 +++++++
+ 2 files changed, 94 insertions(+)
+
+diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
+index 5babba0..62f4256 100644
+--- a/arch/arm/boot/dts/dra7-evm.dts
++++ b/arch/arm/boot/dts/dra7-evm.dts
+@@ -93,6 +93,21 @@
+ 			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
+ 		>;
+ 	};
++
++	qspi1_pins: pinmux_qspi1_pins {
++		pinctrl-single,pins = <
++			0x4c (PIN_INPUT | MUX_MODE1)  /* gpmc_a3.qspi1_cs2 */
++			0x50 (PIN_INPUT | MUX_MODE1)  /* gpmc_a4.qspi1_cs3 */
++			0x74 (PIN_INPUT | MUX_MODE1)  /* gpmc_a13.qspi1_rtclk */
++			0x78 (PIN_INPUT | MUX_MODE1)  /* gpmc_a14.qspi1_d3 */
++			0x7c (PIN_INPUT | MUX_MODE1)  /* gpmc_a15.qspi1_d2 */
++			0x80 (PIN_INPUT | MUX_MODE1) /* gpmc_a16.qspi1_d1 */
++			0x84 (PIN_INPUT | MUX_MODE1)  /* gpmc_a17.qspi1_d0 */
++			0x88 (PIN_INPUT | MUX_MODE1)  /* qpmc_a18.qspi1_sclk */
++			0xb8 (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs2.qspi1_cs0 */
++			0xbc (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs3.qspi1_cs1 */
++		>;
++	};
  };
-@@ -380,7 +378,7 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
- 	MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
- 	MUX(0, "mout_kfc", mout_kfc_p, SRC_KFC, 16, 1),
  
--	MUX(0, "sclk_bpll", mout_bpll_p, SRC_CDREX, 0, 1),
-+	MUX(0, "sclk_bpll", mout_bpll_p, TOP_SPARE2, 0, 1),
+ &i2c1 {
+@@ -273,3 +288,68 @@
+ &cpu0 {
+ 	cpu0-supply = <&smps123_reg>;
+ };
++
++&qspi {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&qspi1_pins>;
++
++	spi-max-frequency = <48000000>;
++	m25p80@0 {
++		compatible = "s25fl256s1";
++		spi-max-frequency = <48000000>;
++		reg = <0>;
++		spi-tx-bus-width = <1>;
++		spi-rx-bus-width = <4>;
++		spi-cpol;
++		spi-cpha;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		/* MTD partition table.
++		 * The ROM checks the first four physical blocks
++		 * for a valid file to boot and the flash here is
++		 * 64KiB block size.
++		 */
++		partition@0 {
++			label = "QSPI.SPL";
++			reg = <0x00000000 0x000010000>;
++		};
++		partition@1 {
++			label = "QSPI.SPL.backup1";
++			reg = <0x00010000 0x00010000>;
++		};
++		partition@2 {
++			label = "QSPI.SPL.backup2";
++			reg = <0x00020000 0x00010000>;
++		};
++		partition@3 {
++			label = "QSPI.SPL.backup3";
++			reg = <0x00030000 0x00010000>;
++		};
++		partition@4 {
++			label = "QSPI.u-boot";
++			reg = <0x00040000 0x00100000>;
++		};
++		partition@5 {
++			label = "QSPI.u-boot-spl-os";
++			reg = <0x00140000 0x00010000>;
++		};
++		partition@6 {
++			label = "QSPI.u-boot-env";
++			reg = <0x00150000 0x00010000>;
++		};
++		partition@7 {
++			label = "QSPI.u-boot-env.backup1";
++			reg = <0x00160000 0x0010000>;
++		};
++		partition@8 {
++			label = "QSPI.kernel";
++			reg = <0x00170000 0x0800000>;
++		};
++		partition@9 {
++			label = "QSPI.file-system";
++			reg = <0x00970000 0x01690000>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index d93311a..a4557b4 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -798,6 +798,20 @@
+ 			dma-names = "tx0", "rx0";
+ 			status = "disabled";
+ 		};
++
++		qspi: qspi@4b300000 {
++			compatible = "ti,dra7xxx-qspi";
++			reg = <0x4b300000 0x100>;
++			reg-names = "qspi_base";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			ti,hwmods = "qspi";
++			clocks = <&qspi_gfclk_div>;
++			clock-names = "fck";
++			num-cs = <4>;
++			interrupts = <0 343 0x4>;
++			status = "disabled";
++		};
+ 	};
  
- 	MUX(0, "mout_aclk400_isp", mout_group1_p, SRC_TOP0, 0, 2),
- 	MUX_A(0, "mout_aclk400_mscl", mout_group1_p,
+ 	crossbar_mpu: crossbar@4a020000 {
 -- 
 1.7.9.5
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
