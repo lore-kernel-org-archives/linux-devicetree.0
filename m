@@ -1,71 +1,53 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v10 02/15] clk: sunxi: Implement MMC phase control
-Date: Tue, 6 May 2014 13:53:01 -0500
-Message-ID: <20140506185301.GJ9464@lukather>
-References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>
- <1399046249-19472-3-git-send-email-hdegoede@redhat.com>
+From: Paul Zimmerman <Paul.Zimmerman-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: RE: [PATCH 1/2] usb: dwc2: Option to disable dma descriptor mode
+Date: Tue, 6 May 2014 20:11:34 +0000
+Message-ID: <A2CA0424C0A6F04399FB9E1CD98E03046D193D1E@US01WEMBX2.internal.synopsys.com>
+References: <1399328585-30949-1-git-send-email-dinguyen@altera.com>
+ <A2CA0424C0A6F04399FB9E1CD98E03046D193CDB@US01WEMBX2.internal.synopsys.com>
+ <20140506183630.GA31117@saruman.home>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2VXyA7JGja7B50zs"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399046249-19472-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20140506183630.GA31117-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: "dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org" <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+> From: Felipe Balbi [mailto:balbi-l0cyMroinI0@public.gmane.org]
+> Sent: Tuesday, May 06, 2014 11:37 AM
+> 
+> On Tue, May 06, 2014 at 06:21:02PM +0000, Paul Zimmerman wrote:
+> > > From: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org [mailto:dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org]
+> > > Sent: Monday, May 05, 2014 3:23 PM
+> > >
+> > > Even though the IP supports Descriptor DMA mode, it does not support SPLIT
+> > > transactions in this mode. Since the driver can get the Descriptor DMA mode
+> > > support from hardware, the driver in its currently form cannot fully support
+> > > LS/FS devices connected to a HS Hub when Descriptor DMA mode is enabled in the
+> > > driver. Thus, we give the option to disable Descriptor DMA from device tree.
+> >
+> > Hi Dinh,
+> >
+> > Instead of this patch, how about if we make the driver default to buffer
+> > DMA mode instead, and if anyone wants to use descriptor DMA mode, they
+> > can add a DT property for that? I don't think anyone will want that,
+> > since as you say it doesn't fully support LS/FS devices in that mode.
+> >
+> > The driver originally worked like that. I guess the default got changed by
+> > one of Matthijs' patches, and I didn't notice it.
+> 
+> if this is the case, I guess you could call it a regression - well, it
+> _did_ break LS/FS use cases - and still merge it during the -rc cycle.
 
---2VXyA7JGja7B50zs
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well, the change from Matthijs went in on August 30th last year. So it's
+not exactly a recent regression ;)
 
-Hi Mike,
+-- 
+Paul
 
-On Fri, May 02, 2014 at 05:57:16PM +0200, Hans de Goede wrote:
-> From: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
->=20
-> HdG: add header exporting clk_sunxi_mmc_phase_control
->=20
-> Signed-off-by: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
-Do you agree with Hans proposal to merge this, and then convert to the
-clk_set_phase proposal whenever we will have the details of the phase
-values?
-
-Thanks,
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---2VXyA7JGja7B50zs
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTaS+NAAoJEBx+YmzsjxAgD58QAL3JAqDUzPIPQAL29U1vZWc1
-zVinxdcbhtvmrPaSA2pidRDt2nKvoeHrV8qJKUcc4dPOw3dYVn23VLC9jzZlcyQb
-PUr2402XLIOkkc62KHKMJ+AduyNrsqkr5AvJUAcYRpCYrchehTlpV1awJsQATQI8
-3ZqgpEBx83LfdVYRyy4EZwPwdOYm1SnjJl/EfVcu4ne3wmHZ2bpjF0n9tuQg1fcO
-wcuYAMKiftZL+uK3J5lSW9A4DhXgAQE16KKkEcp5f04VliTRow4WiiwJCFRI5aIA
-tHJHpjQ3ICY3Oqax1bcOBb89/35FwA0aWgmrGifDW2H2vGAZOMr1pQvA4Bt3yMrJ
-e8HeoqQlv6uI30p+HOEJ5r1+9FVR6co/DBQNeQR6tQop5Pp+f31VTH7+yvOSyBF0
-KT/V3A8XGVzCSeR6Sd3Svx9qQazPyUtJqQRG6KSAGilGxqpkFbeplo6R1ndopnhW
-S7n/dMoJP8cNNeelMMjy/RR2/WqUOZLNglAxlytQeImhbeqWT1CfMSr3GE75obw3
-ujhXjyDb+MSTtN/W4lwjTGxzc8z0jxXglz/XZhM9o+slTUYzcHbHKJCjuDK+sQAz
-yowIpu8+XcwhaEhree6Lkn+RYmUnu11pn3tQvwaGwXCaaaqPHvbIAUO1+crhyG5Z
-8HWhl4zsTZcPTaFetnBR
-=z9fK
------END PGP SIGNATURE-----
-
---2VXyA7JGja7B50zs--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
