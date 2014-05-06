@@ -1,63 +1,78 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v3 5/7] ARM: dma: Use dma_pfn_offset for dma address
-	translation
-Date: Mon, 5 May 2014 20:50:40 +0100
-Message-ID: <20140505195040.GE3693@n2100.arm.linux.org.uk>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <1398353407-2345-6-git-send-email-santosh.shilimkar@ti.com> <20140502145852.GC3693@n2100.arm.linux.org.uk> <5363B42C.4010404@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] Documentation: dt: bindings: sound:
+ Add bindings for CS42L56 CODEC
+Date: Mon, 5 May 2014 17:53:50 -0700
+Message-ID: <20140506005350.GA22111@sirena.org.uk>
+References: <1399320549-16645-1-git-send-email-brian.austin@cirrus.com>
+ <1399320549-16645-2-git-send-email-brian.austin@cirrus.com>
+ <47E0FD7A-D2C0-425E-A7FB-917B65D74B2D@codeaurora.org>
+ <alpine.DEB.2.02.1405051654060.25909@heelrod>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5363B42C.4010404@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: multipart/mixed; boundary="===============6487835968244177461=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <alpine.DEB.2.02.1405051654060.25909@heelrod>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Brian Austin <brian.austin@cirrus.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, lgirdwood@gmail.com, paul.handrigan@cirrus.com, robh+dt@kernel.org, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 02, 2014 at 11:05:16AM -0400, Santosh Shilimkar wrote:
-> On Friday 02 May 2014 10:58 AM, Russell King - ARM Linux wrote:
-> > On Thu, Apr 24, 2014 at 11:30:05AM -0400, Santosh Shilimkar wrote:
-> >>  static inline void *dma_to_virt(struct device *dev, dma_addr_t addr)
-> >>  {
-> >> -	return (void *)__bus_to_virt((unsigned long)addr);
-> >> +	if (!dev)
-> >> +		return (void *)__bus_to_virt((unsigned long)addr);
-> >> +	else
-> >> +		return (void *)__bus_to_virt(__pfn_to_bus(dma_to_pfn(dev, addr)));
-> > 
-> > This is quite horrendous.  There's easier ways to do this...  I assume
-> > you haven't looked at the assembler resulting from this at all with
-> > stuff like the p2v patching enabled?
-> > 
-> I haven't. Will check.
 
-	if (dev) {
-		unsigned long pfn = dma_to_pfn(dev, addr);
-
-		return phys_to_virt(__pfn_to_phys(pfn));
-	}
-
-	return (void *)__bus_to_virt((unsigned long)addr);
-
-> >>  static inline dma_addr_t virt_to_dma(struct device *dev, void *addr)
-> >>  {
-> >> -	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
-> >> +	if (!dev)
-> >> +		return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
-> >> +	else
-> >> +		return pfn_to_dma(dev,
-> >> +				__bus_to_pfn(__virt_to_bus((unsigned long)(addr))));
-> > 
-> > Same here.
-> > 
-> ok.
+--===============6487835968244177461==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="/0ZNML3L+nUf91nU"
+Content-Disposition: inline
 
 
-	if (dev)
-		return pfn_to_dma(dev, virt_to_pfn(addr));
+--/0ZNML3L+nUf91nU
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-	return (dma_addr_t)__virt_to_bus((unsigned long)(addr));
+On Mon, May 05, 2014 at 04:56:12PM -0500, Brian Austin wrote:
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+> >Add a include/dt-bindings for all the various enums
+
+> Can I add that as a seperate patch with the update for the dt-bindings? Or
+> do I need to resend the whole patch series?
+
+Incremental is fine.
+
+--/0ZNML3L+nUf91nU
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTaDKVAAoJELSic+t+oim9dXAP/jTwRJ9mm4IqTrBsLNoYqdit
+Q/tCO6vxuEoljPiUHavarWhyU4/QYQ+F8tlCyTt9I6w0421fK5lliZYFEjLfcdjr
++67XLHISKroGDBPJgXA74OjnSfhcGJkRewf/RBJ97vOs9zkBcq3aJhfFMKQ0TbYm
+qzU5Ockeep0hl9u30fJu03JyG2wrVE6mA+t7ZMNMtH+HAZip+aeomZU1tME2fqT3
+UMBGg4vss8OycAxXWHVLYvcbcCA1EqwUwREupb08SSLSzx3ihv9DrTy2CRnSdSoA
+IDq0E9V2z3mn7pTsHHaZYHn5wjS32KlxNbfOUAFac+bNuEebRhCVcyGj7Q5CbJi5
+e6uOhwyK2uryV6GrN+A/sUGIFjGZ+Cu+5m3wVzmhtoxDe1/6HF6xFUhR7v98tyQT
+Ax6TunPLiLf3nNp0E+6HR7XWO5aIxTqwNgoiynB9Ci693YfUZchpy81Jd6BV4j4J
+juX8DwdfAiccdlVmmRAw4m/Vs4VgHOLzOC67dHgZ3srkieOk1sZ/LZ/ogXxOaot3
+ppvjw0dSRozpRjicbjOTFpGXXWUIWxGujTyTp0nXxmsz0p5qbMTBBAPrzo+Aqbsz
+c/hpMgp+MJhtaNeEYTNiQWIvs4QGMS7E2K9DwbsTRISU3tPXW3w9k17GCmYWjQZ+
+O5zuEh6FzSAW5FNwqDf9
+=2AV+
+-----END PGP SIGNATURE-----
+
+--/0ZNML3L+nUf91nU--
+
+--===============6487835968244177461==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6487835968244177461==--
