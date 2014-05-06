@@ -1,50 +1,98 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
- Armada 38x
-Date: Tue, 6 May 2014 14:10:23 +0200
-Message-ID: <20140506141023.715b932d@skate>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
- <1584794.IM1uiSkBdk@amdc1032> <61061197.hLhKsFqJLF@wuerfel>
+From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH] ARM: dts: Add pwmX_out pinctrl nodes to Exynos5420
+Date: Tue, 06 May 2014 09:29:04 +0900
+Message-ID: <060d01cf68c2$31598c10$940ca430$@samsung.com>
+References: <1399034937-24683-1-git-send-email-arun.kk@samsung.com>
+ <CAD=FV=V30qfsRfFZ7LXnF9VmMo5dGJx6FfOaKwGrLtS5_r7PGQ@mail.gmail.com>
+ <5363D6BD.6070001@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <61061197.hLhKsFqJLF@wuerfel>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Felipe Balbi <balbi@ti.com>, Nadav Haklai <nadavh@marvell.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <5363D6BD.6070001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-language: ko
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Tomasz Figa' <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Doug Anderson' <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, 'Arun Kumar K' <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: 'linux-samsung-soc' <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Arun Kumar' <arunkk.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd Bergmann,
-
-On Tue, 06 May 2014 13:57:44 +0200, Arnd Bergmann wrote:
-
-> > Please limit this driver to mvebu arch and compile testing, i.e.
-> > 
-> >         depends on ARCH_MVEBU || COMPILE_TEST
+Tomasz Figa wrote:
 > 
-> I think it actually needs a dependency on MVEBU_MBUS.
-
-That's not what we do for any of the other drivers that use the
-MVEBU_MBUS functions.
-
-> You probably need something like
+> Hi,
 > 
-> 	depends on MVEBU_MBUS=y || (MVEBU_MBUS=m && USB_XHCI=m)
+Hi,
 
-MVEBU_MBUS is a bool, so there is no way is can be =m.
+> On 02.05.2014 17:44, Doug Anderson wrote:
+> > Arun,
+> >
+> > On Fri, May 2, 2014 at 5:48 AM, Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> >> Adds the PWM nodes to 5420 pinctrl dtsi file.
+> >>
+> >> Signed-off-by: Arun Kumar K <arun.kk-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> >> ---
+> >>   arch/arm/boot/dts/exynos5420-pinctrl.dtsi |   28
+> ++++++++++++++++++++++++++++
+> >>   1 file changed, 28 insertions(+)
+> >>
+> >> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+> b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+> >> index e62c8eb..ba686e4 100644
+> >> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
+> >> @@ -624,6 +624,34 @@
+> >>                          samsung,pin-drv = <0>;
+> >>                  };
+> >>
+> >> +               pwm0_out: pwm0-out {
+> >> +                       samsung,pins = "gpb2-0";
+> >> +                       samsung,pin-function = <2>;
+> >> +                       samsung,pin-pud = <0>;
+> >> +                       samsung,pin-drv = <0>;
+> >> +               };
+> >> +
+> >> +               pwm1_out: pwm1-out {
+> >> +                       samsung,pins = "gpb2-1";
+> >> +                       samsung,pin-function = <2>;
+> >> +                       samsung,pin-pud = <0>;
+> >> +                       samsung,pin-drv = <0>;
+> >> +               };
+> >> +
+> >> +               pwm2_out: pwm2-out {
+> >> +                       samsung,pins = "gpb2-2";
+> >> +                       samsung,pin-function = <2>;
+> >> +                       samsung,pin-pud = <0>;
+> >> +                       samsung,pin-drv = <0>;
+> >> +               };
+> >> +
+> >> +               pwm3_out: pwm3-out {
+> >> +                       samsung,pins = "gpb2-3";
+> >> +                       samsung,pin-function = <2>;
+> >> +                       samsung,pin-pud = <0>;
+> >> +                       samsung,pin-drv = <0>;
+> >> +               };
+> >> +
+> >>                  i2c7_hs_bus: i2c7-hs-bus {
+> >>                          samsung,pins = "gpb2-2", "gpb2-3";
+> >>                          samsung,pin-function = <3>;
+> >
+> > Possibly pwm3-out belongs below this one (since the start pin is
+> > "larger" than the start pin of i2c7-hs-bus).  Tomasz probably has a
+> > definite opinion on this.
+> 
+> Well, I'm not opposed to keeping it as is. Having all the pwm nodes
+> together might be even more readable.
+> 
++1 ;-)
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> So feel free to add my Reviewed-by tag.
+> 
+Thanks for you two guys' review.
+
+Applied, thanks.
+
+- Kukjin
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
