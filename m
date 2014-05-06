@@ -1,231 +1,116 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v5 5/7] Input: pixcir_i2c_ts: support upto 5 fingers and hardware provided tracking IDs
-Date: Tue, 6 May 2014 14:06:10 +0300
-Message-ID: <1399374372-29123-6-git-send-email-rogerq@ti.com>
-References: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+From: Emil Medve <Emilian.Medve@Freescale.com>
+Subject: Re: [PATCH 5/6] powerpc/corenet: Add DPAA FMan support to the SoC
+ device tree(s)
+Date: Tue, 6 May 2014 01:28:42 -0500
+Message-ID: <5368811A.3060609@Freescale.com>
+References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
+ <1397823693-27977-5-git-send-email-Shruti@Freescale.com>
+ <1398118442.1694.190.camel__272.432543761347$1398129129$gmane$org@snotra.buserror.net>
+ <53661DAB.10808@Freescale.com>
+ <1399332886.15726.161.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399374372-29123-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, dmurphy-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1399332886.15726.161.camel@snotra.buserror.net>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: Scott Wood <scottwood@Freescale.com>
+Cc: devicetree@vger.kernel.org, Kanetkar Shruti-B44454 <Shruti@Freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Some variants of the Pixcir touch controller support upto 5
-simultaneous fingers and hardware tracking IDs. Prepare the driver
-for that.
-
-Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
----
- drivers/input/touchscreen/pixcir_i2c_ts.c | 74 ++++++++++++++++++++++++-------
- include/linux/input/pixcir_ts.h           | 12 +++++
- 2 files changed, 69 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
-index 1b6e4e5..0728c04 100644
---- a/drivers/input/touchscreen/pixcir_i2c_ts.c
-+++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
-@@ -27,18 +27,20 @@
- #include <linux/input/pixcir_ts.h>
- #include <linux/gpio.h>
- 
--#define PIXCIR_MAX_SLOTS       2
-+#define PIXCIR_MAX_SLOTS       5 /* Max fingers supported by driver */
- 
- struct pixcir_i2c_ts_data {
- 	struct i2c_client *client;
- 	struct input_dev *input;
--	const struct pixcir_ts_platform_data *chip;
-+	const struct pixcir_ts_platform_data *pdata;
- 	bool running;
-+	int max_fingers;	/* Max fingers supported in this instance */
- };
- 
- struct pixcir_touch {
- 	int x;
- 	int y;
-+	int id;
- };
- 
- struct pixcir_report_data {
-@@ -49,13 +51,21 @@ struct pixcir_report_data {
- static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 			    struct pixcir_report_data *report)
- {
--	u8 rdbuf[10], wrbuf[1] = { 0 };
-+	u8 rdbuf[2 + PIXCIR_MAX_SLOTS * 5];
-+	u8 wrbuf[1] = { 0 };
- 	u8 *bufptr;
- 	u8 touch;
- 	int ret, i;
-+	int readsize;
-+	const struct pixcir_i2c_chip_data *chip = &tsdata->pdata->chip;
- 
- 	memset(report, 0, sizeof(struct pixcir_report_data));
- 
-+	i = chip->has_hw_ids ? 1 : 0;
-+	readsize = 2 + tsdata->max_fingers * (4 + i);
-+	if (readsize > sizeof(rdbuf))
-+		readsize = sizeof(rdbuf);
-+
- 	ret = i2c_master_send(tsdata->client, wrbuf, sizeof(wrbuf));
- 	if (ret != sizeof(wrbuf)) {
- 		dev_err(&tsdata->client->dev,
-@@ -64,7 +74,7 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 		return;
- 	}
- 
--	ret = i2c_master_recv(tsdata->client, rdbuf, sizeof(rdbuf));
-+	ret = i2c_master_recv(tsdata->client, rdbuf, readsize);
- 	if (ret != sizeof(rdbuf)) {
- 		dev_err(&tsdata->client->dev,
- 			"%s: i2c_master_recv failed(), ret=%d\n",
-@@ -73,8 +83,8 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 	}
- 
- 	touch = rdbuf[0] & 0x7;
--	if (touch > PIXCIR_MAX_SLOTS)
--		touch = PIXCIR_MAX_SLOTS;
-+	if (touch > tsdata->max_fingers)
-+		touch = tsdata->max_fingers;
- 
- 	report->num_touches = touch;
- 	bufptr = &rdbuf[2];
-@@ -83,7 +93,12 @@ static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
- 		report->touches[i].x = (bufptr[1] << 8) | bufptr[0];
- 		report->touches[i].y = (bufptr[3] << 8) | bufptr[2];
- 
--		bufptr = &bufptr[4];
-+		if (chip->has_hw_ids) {
-+			report->touches[i].id = bufptr[4];
-+			bufptr = &bufptr[5];
-+		} else {
-+			bufptr = &bufptr[4];
-+		}
- 	}
- }
- 
-@@ -95,22 +110,35 @@ static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
- 	struct pixcir_touch *touch;
- 	int n, i, slot;
- 	struct device *dev = &ts->client->dev;
-+	const struct pixcir_i2c_chip_data *chip = &ts->pdata->chip;
- 
- 	n = report->num_touches;
- 	if (n > PIXCIR_MAX_SLOTS)
- 		n = PIXCIR_MAX_SLOTS;
- 
--	for (i = 0; i < n; i++) {
--		touch = &report->touches[i];
--		pos[i].x = touch->x;
--		pos[i].y = touch->y;
--	}
-+	if (!chip->has_hw_ids) {
-+		for (i = 0; i < n; i++) {
-+			touch = &report->touches[i];
-+			pos[i].x = touch->x;
-+			pos[i].y = touch->y;
-+		}
- 
--	input_mt_assign_slots(ts->input, slots, pos, n);
-+		input_mt_assign_slots(ts->input, slots, pos, n);
-+	}
- 
- 	for (i = 0; i < n; i++) {
- 		touch = &report->touches[i];
--		slot = slots[i];
-+
-+		if (chip->has_hw_ids) {
-+			slot = input_mt_get_slot_by_key(ts->input, touch->id);
-+			if (slot < 0) {
-+				dev_dbg(dev, "no free slot for id 0x%x\n",
-+					touch->id);
-+				continue;
-+			}
-+		} else {
-+			slot = slots[i];
-+		}
- 
- 		input_mt_slot(ts->input, slot);
- 		input_mt_report_slot_state(ts->input,
-@@ -130,7 +158,7 @@ static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
- static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
- {
- 	struct pixcir_i2c_ts_data *tsdata = dev_id;
--	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
-+	const struct pixcir_ts_platform_data *pdata = tsdata->pdata;
- 	struct pixcir_report_data report;
- 
- 	while (tsdata->running) {
-@@ -359,6 +387,11 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 			dev_err(dev, "Invalid gpio_attb in pdata\n");
- 			return -EINVAL;
- 		}
-+
-+		if (pdata->chip.max_fingers <= 0) {
-+			dev_err(dev, "Invalid max_fingers in pdata\n");
-+			return -EINVAL;
-+		}
- 	}
- 
- 	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
-@@ -373,7 +406,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 
- 	tsdata->client = client;
- 	tsdata->input = input;
--	tsdata->chip = pdata;
-+	tsdata->pdata = pdata;
- 
- 	input->name = client->name;
- 	input->id.bustype = BUS_I2C;
-@@ -389,7 +422,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
- 	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
- 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
- 
--	error = input_mt_init_slots(input, PIXCIR_MAX_SLOTS,
-+	tsdata->max_fingers = tsdata->pdata->chip.max_fingers;
-+	if (tsdata->max_fingers > PIXCIR_MAX_SLOTS) {
-+		tsdata->max_fingers = PIXCIR_MAX_SLOTS;
-+		dev_info(dev, "Limiting maximum fingers to %d\n",
-+			 tsdata->max_fingers);
-+	}
-+
-+	error = input_mt_init_slots(input, tsdata->max_fingers,
- 				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
- 	if (error) {
- 		dev_err(dev, "Error initializing Multi-Touch slots\n");
-diff --git a/include/linux/input/pixcir_ts.h b/include/linux/input/pixcir_ts.h
-index 160cf35..7bae83b 100644
---- a/include/linux/input/pixcir_ts.h
-+++ b/include/linux/input/pixcir_ts.h
-@@ -43,10 +43,22 @@ enum pixcir_int_mode {
- #define PIXCIR_INT_ENABLE	(1UL << 3)
- #define PIXCIR_INT_POL_HIGH	(1UL << 2)
- 
-+/**
-+ * struct pixcir_irc_chip_data - chip related data
-+ * @max_fingers:	Max number of fingers reported simultaneously by h/w
-+ * @has_hw_ids:		Hardware supports finger tracking IDs
-+ *
-+ */
-+struct pixcir_i2c_chip_data {
-+	u8 max_fingers;
-+	bool has_hw_ids;
-+};
-+
- struct pixcir_ts_platform_data {
- 	int x_max;
- 	int y_max;
- 	int gpio_attb;		/* GPIO connected to ATTB line */
-+	struct pixcir_i2c_chip_data chip;
- };
- 
- #endif
--- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+SGVsbG8gU2NvdHQsCgoKT24gMDUvMDUvMjAxNCAwNjozNCBQTSwgU2NvdHQgV29vZCB3cm90ZToK
+PiBPbiBTdW4sIDIwMTQtMDUtMDQgYXQgMDU6NTkgLTA1MDAsIEVtaWwgTWVkdmUgd3JvdGU6Cj4+
+IEhlbGxvIFNjb3R0LAo+Pgo+Pgo+PiBPbiAwNC8yMS8yMDE0IDA1OjE0IFBNLCBTY290dCBXb29k
+IHdyb3RlOgo+Pj4gT24gRnJpLCAyMDE0LTA0LTE4IGF0IDA3OjIxIC0wNTAwLCBTaHJ1dGkgS2Fu
+ZXRrYXIgd3JvdGU6Cj4+Pj4gRk1hbiAxIEdiL3MgTUFDcyAoZFRTRUMgYW5kIG1FTUFDKSBoYXZl
+IHN1cHBvcnQgZm9yIFNHTUlJIFBIWXMuCj4+Pj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBpbnRlcm5h
+bCBTZXJEZXMgVEJJIFBIWXMKPj4+Pgo+Pj4+IEJhc2VkIG9uIHByaW9yIHdvcmsgYnkgQW5keSBG
+bGVtaW5nIDxhZmxlbWluZ0BnbWFpbC5jb20+Cj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBTaHJ1
+dGkgS2FuZXRrYXIgPFNocnV0aUBGcmVlc2NhbGUuY29tPgo+Pj4+IC0tLQo+Pj4+ICBhcmNoL3Bv
+d2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2ktcG9zdC5kdHNpIHwgIDI4ICsrKysrCj4+Pj4gIGFy
+Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kgICAgfCAgNTEgKysrKysrKysr
+Cj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kgfCAgMTQg
+KysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgfCAg
+NjQgKysrKysrKysrKysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1w
+b3N0LmR0c2kgfCAgNjQgKysrKysrKysrKysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9m
+c2wvcDQwODBzaS1wb3N0LmR0c2kgfCAxMDQgKysrKysrKysrKysrKysrKysrKwo+Pj4+ICBhcmNo
+L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpIHwgIDY0ICsrKysrKysrKysr
+Kwo+Pj4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2ktcG9zdC5kdHNpIHwgMTI4
+ICsrKysrKysrKysrKysrKysrKysrKysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
+dDQyNDBzaS1wb3N0LmR0c2kgfCAxNTQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4+
+ICA5IGZpbGVzIGNoYW5nZWQsIDY3MSBpbnNlcnRpb25zKCspCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0
+IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93
+ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0LmR0c2kKPj4+PiBpbmRleCBjYmMzNTRiLi40
+NWIwZmY1IDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBz
+aS1wb3N0LmR0c2kKPj4+PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2kt
+cG9zdC5kdHNpCj4+Pj4gQEAgLTE3Miw2ICsxNzIsMzQgQEAKPj4+PiAgCQljb21wYXRpYmxlID0g
+ImZzbCxiNDg2MC1yY3BtIiwgImZzbCxxb3JpcS1yY3BtLTIuMCI7Cj4+Pj4gIAl9Owo+Pj4+ICAK
+Pj4+PiArL2luY2x1ZGUvICJxb3JpcS1mbWFuMy0wLTFnLTQuZHRzaSIKPj4+PiArL2luY2x1ZGUv
+ICJxb3JpcS1mbWFuMy0wLTFnLTUuZHRzaSIKPj4+PiArL2luY2x1ZGUvICJxb3JpcS1mbWFuMy0w
+LTEwZy0wLmR0c2kiCj4+Pj4gKy9pbmNsdWRlLyAicW9yaXEtZm1hbjMtMC0xMGctMS5kdHNpIgo+
+Pj4+ICsJZm1hbkA0MDAwMDAgewo+Pj4+ICsJCWV0aGVybmV0QGU4MDAwIHsKPj4+PiArCQkJdGJp
+LWhhbmRsZSA9IDwmdGJpND47Cj4+Pj4gKwkJfTsKPj4+Cj4+PiBCaW5kaW5nIG5lZWRlZAo+Pj4K
+Pj4+IFdoZXJlIGlzIHRoZSAicmVnIiBmb3IgdGhlc2UgdW5pdCBhZGRyZXNzZXM/Cj4+Cj4+IEFz
+IEkgc2FpZCwgdGhlIGJ1bGsgb2YgdGhlIEZNYW4gd29yayBjb21lcyBmcm9tIGFub3RoZXIgdGVh
+bS4gSGVyZSB3ZQo+PiBuZWVkIGp1c3QgZW5vdWdoIHRvIGhvb2sgdXAgdGhlIE1ESU8gYW5kIFBI
+WSBub2Rlcy4KPiAKPiBVbml0IGFkZHJlc3NlcyBtdXN0IG1hdGNoIHJlZy4gIE5vIHJlZywgbm8g
+dW5pdCBhZGRyZXNzLgoKV2UgY2FuIGFkZCBhICdyZWcnIHByb3BlcnR5LCBidXQgd2UgcmVhbGx5
+IGRvbid0IHdhbnQgdG8gY2xhc2ggd2l0aCB0aGUKdGVhbSB0aGF0IGlzIHdvcmtpbmcgb24gdXBz
+dHJlYW1pbmcgdGhlIEZNYW4vTUFDIGJpbmRpbmdzIGFuZCBkcml2ZXJzCgo+PiBJJ2QgcmVhbGx5
+IGxpa2UgdG8gYmUgYWJsZSB0byBtYWtlIHByb2dyZXNzIG9uIHRoaXMgd2l0aG91dCB3YWl0aW5n
+IGZvciB0aGF0IG1vbWVudCBpbiB0aW1lCj4+IHdlIGNhbiBnZXQgdGhlIGVudGlyZSBGTWFuIGJp
+bmRpbmcgaW4gcGxhY2UKPiAKPiBXaHkgaXMgdGhlIGZtYW4gYmluZGluZyBzdWNoIGEgYmlnIGRl
+YWw/Cj4gCj4+Pj4gKwkJbWRpb0BlOTAwMCB7Cj4+Pj4gKwkJCXRiaTQ6IHRiaS1waHlAOCB7Cj4+
+Pj4gKwkJCQlyZWcgPSA8MHg4PjsKPj4+PiArCQkJCWRldmljZV90eXBlID0gInRiaS1waHkiOwo+
+Pj4+ICsJCQl9Owo+Pj4+ICsJCX07Cj4+Pgo+Pj4gQmluZGluZyBuZWVkZWQgZm9yIHRiaS1waHkg
+ZGV2aWNlX3R5cGUKPj4KPj4gSSBndWVzcyB0aGF0J3MgZmFpciAoQlRXLCB5b3UgYWNjZXB0ZWQg
+dGJpLXBoeSBub2Rlcy9kZXZpY2UtdHlwZSBiZWZvcmUKPj4gd2l0aG91dCBhIGJpbmRpbmcpCj4g
+Cj4gSXQncyBleGlzdGluZyBwcmFjdGljZSBvbiBlVFNFQy4gIEZNYW4gc2VlbWVkIGxpa2UgYW4g
+b3Bwb3J0dW5pdHkgdG8KPiBhdm9pZCBjYXJyeWluZyBjcnVmdCBmb3J3YXJkLgoKVGhlIDEgR2Iv
+cyBNRElPIGJsb2NrIGlzIG5vdCBGTWFuIHNwZWNpZmljLiBBcyBJIHNhaWQgaXMgdGhlIHNhbWUg
+YmxvY2sKZnJvbSBlVFNFQy4gVGhhdCdzIHBhcnQgb2YgdGhlIHJlYXNvbiB3ZSdyZSB0cnlpbmcg
+dXBzdHJlYW1pbmcgdGhpcwppbmRlcGVuZGVudCBvZiB0aGUgRk1hbiBzdHVmZi4gU28sIGRvbid0
+IHRoaW5rIEZNYW4sIHRoaW5rIE1ESU8KCj4+PiBXaHkgYXJlIHdlIHVzaW5nIGRldmljZV90eXBl
+IGF0IGFsbCBmb3IgdGhpcz8KPj4KPj4gVGhhdCdzIHdoYXQgdGhlIHVwc3RyZWFtIGRyaXZlciBp
+cyBsb29raW5nIGZvci4KPiAKPiBEcml2ZXJzIHNob3VsZCBsb29rIGZvciB3aGF0IHRoZSBiaW5k
+aW5nIHNheXMgLS0gbm90IHRoZSBvdGhlciB3YXkKPiBhcm91bmQuCgpZZWFoIHllYWguIE5vYm9k
+eSBsaWtlcyBpdCwgYnV0IHRoZSBkcml2ZXIgaXMvZGVzY3JpYmVzIHRoZSBkZSBmYWN0byBiaW5k
+aW5nCgpPbiBhIGNvbnN0cnVjdGl2ZSBub3RlLCB0aGUgRXRoZXJuZXQgUEhZIGNvZGUgZG9lc24n
+dCBkbyBkZXZpY2UgdHJlZQpiYXNlZCBwcm9iaW5nIHNvIG5vIGNvbXBhdGlibGVzIGFyZSB1c2Vk
+IGF0IGFsbC4gU28gZGV2aWNlX3R5cGUgaXMgdXNlZAp0byBjb252ZXkgYSBUQkkgUEhZCgo+PiAg
+QW55d2F5LCBtb3N0IGRheXMgUEhZcyBjYW4gYmUgZGlzY292ZXJlZCBzbyB0aGV5IGRvbid0IHVz
+ZS9uZWVkCj4+IGNvbXBhdGlibGUgcHJvcGVydGllcy4gVGhhdCdzIEkgZ3Vlc3MgcGFydCBvZiB0
+aGUgcmVhc29uIHdlIGRvbid0IGhhdmUKPj4gYmluZGluZ3MgZm9yIHRoZW0gUEhZIG5vZGVzCj4g
+Cj4gSSBkb24ndCBzZWUgd2h5IHRoZXJlIGNvdWxkbid0IGJlIGEgY29tcGF0aWJsZSB0aGF0IGRl
+c2NyaWJlcyB0aGUKPiBzdGFuZGFyZCBwcm9ncmFtbWluZyBpbnRlcmZhY2UuCgpCZWNhdXNlIGl0
+IGNhbiBiZSBkZXRlY3RlZCBhdCBydW50aW1lIGFuZCBJIGd1ZXNzIHN0dWZmIGxpa2UgdGhhdCBz
+aG91bGQKc3RheSBvdXQgb2YgdGhlIGRldmljZSB0cmVlLiBJJ20gdXNpbmcgUENJIGFzIGFuIGFu
+YWxvZ3kgaGVyZQoKPj4gSG93ZXZlciwgd2hhdCB5b3UgY2FuJ3QgZGlzY292ZXIgaXMgaG93IHRo
+ZXkgYXJlIHdpcmVkIHRvIHRoZSBNQUMocykgc28KPj4gd2Ugc3RpbGwgbmVlZCBzb21lIG5vZGVz
+IGluIHRoZSBkZXZpY2UgdHJlZSB0byBjb252ZXkgdGhhdC4gQWxzbywgd2hlbgo+PiBsb29raW5n
+IGZvciBhIHNwZWNpZmljIGtpbmQgb2YgUEhZLCBzdWNoIGFzIFRCSSwgZGV2aWNlX3R5cGUgd29y
+a3MKPj4gZWFzaWVyIHRoZW4gcGFyc2luZyBjb21wYXRpYmxlcyBmcm9tIHZhcmlvdXMgdmVuZG9y
+cyBvciBzbwo+IAo+IERvbid0IHlvdSBmaW5kIHRoZSBUQkkgYnkgZm9sbG93aW5nIHRoZSB0Ymkt
+aGFuZGxlIHByb3BlcnR5PwoKV2hlbiB0aGUgTUFDICJhdHRhY2hlcyIgdG8gdGhlIFBIWSB0aGUg
+dGJpLWhhbmRsZSBpcyBmb2xsb3dlZC4gQnV0IHRoZQpNRElPL1BIWSBjb2RlL2RyaXZlcihzKSBk
+b2Vzbid0IHF1aXRlICJzZWUiIHRoZSB0YmktaGFuZGxlIGFzIGl0J3MKb3V0c2lkZSB0aGUgTURJ
+Ty9QSFkgbm9kZXMKCj4gVGhhdCBzYWlkLAo+IEkgZG9uJ3Qgb2JqZWN0IHRvIGhhdmluZyBhIHdh
+eSB0byBsYWJlbCBhIFBIWSBhcyBhdHRhY2hlZCB2aWEgVEJJIGlmCj4gdGhhdCdzIHVzZWZ1bC4g
+IEknbSBnaXZpbmcgYSBtaWxkLCBub24tbmFja2luZyAoZ2l2ZW4gdGhlIGhpc3RvcnkpCj4gb2Jq
+ZWN0aW9uIHRvIHVzaW5nIGRldmljZV90eXBlIGZvciB0aGF0IChnaXZlbiBvdGhlciBoaXN0b3J5
+KS4KClBlcnNvbmFsbHksIEkgdGhpbmsgdGhhdCBUQkkgUEhZIHN1cHBvcnQgaXMgYSBiaXQgbWVz
+c3kgYnV0IEkgZG9uJ3QgaGF2ZQpiYW5kd2lkdGggdG8gZGVhbCB3aXRoIHRoYXQuIFRoZSBUQkkg
+UEhZIHNob3VsZCBiZSBoYW5kbGVkIGFzIGEgcmVndWxhcgpQSFkgYW5kIHJpZ2h0IG5vdyBpcyBh
+IHNwZWNpYWwgY2FzZQoKCkNoZWVycywKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlz
+dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMt
+ZGV2
