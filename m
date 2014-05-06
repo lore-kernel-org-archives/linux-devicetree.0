@@ -1,67 +1,77 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v3 1/3] base: power: Add generic OF-based power domain
- look-up
-Date: Tue, 6 May 2014 10:22:42 +0200
-Message-ID: <CAPDyKFoGOcScsaGWkw9bVh=gpGTApRK48AczaMiSmLah+YOSXQ@mail.gmail.com>
-References: <1398271618-28932-1-git-send-email-t.figa@samsung.com>
- <1398271618-28932-2-git-send-email-t.figa@samsung.com>
- <535E9163.3070305@wwwdotorg.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 0/7] USB support for DRA7-evm
+Date: Tue, 6 May 2014 10:19:47 +0300
+Message-ID: <53688D13.4000409@ti.com>
+References: <1399283686-6127-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <535E9163.3070305@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <philipp.zabel@gmail.com>, Len Brown <len.brown@intel.com>, Stephen Boyd <sboyd@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Pavel Machek <pavel@ucw.cz>, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rafael J. Wysocki
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399283686-6127-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: george.cherian-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 28 April 2014 19:35, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 04/23/2014 10:46 AM, Tomasz Figa wrote:
->> This patch introduces generic code to perform power domain look-up using
->> device tree and automatically bind devices to their power domains.
->> Generic device tree binding is introduced to specify power domains of
->> devices in their device tree nodes.
->>
->> Backwards compatibility with legacy Samsung-specific power domain
->> bindings is provided, but for now the new code is not compiled when
->> CONFIG_ARCH_EXYNOS is selected to avoid collision with legacy code. This
->> will change as soon as Exynos power domain code gets converted to use
->> the generic framework in further patch.
->
->> diff --git a/Documentation/devicetree/bindings/power/power_domain.txt b/Documentation/devicetree/bindings/power/power_domain.txt
->
->> +==Power domain consumers==
->> +
->> +Required properties:
->> + - power-domain : A phandle and power domain specifier as defined by bindings
->> +                  of power controller specified by phandle.
->
-> It seems quite likely that a single logical device could have components
-> in multiple power domains. Consider an HDMI controller with different
-> power domains for the HDMI core, CEC communication, DDC/I2C
-> communication, and the I/O pads, with no clear separation between those
-> two components of the module (no separate register spaces, but the
-> bits/registers are interleaved all together).
->
-> As such, I think that rather than a "power-domain" property, we need a
-> pair of "power-domains", and "power-domain-names" properties, and
-> preferably with mandatory usage of name-based lookups, rather than
-> allowing a random mix of name-based and index-based lookups like we have
-> with some existing resource bindings.
+Hi Kishon,
 
-Each struct device have only one dev_pm_domain pointer, thus a device
-are not able to reside in more than one power domain.
+Could you please pick the first 2 patches in this series for phy-next?
+They are independent of the rest. Thanks.
 
-Therefore I doubt this will be very useful, unless I missed your point. :-)
+cheers,
+-roger
 
-Kind regards
-Ulf Hansson
+On 05/05/2014 12:54 PM, Roger Quadros wrote:
+> Hi,
+> 
+> This series enables the 2 USB ports on the DRA7-evm.
+> 
+> NOTE: USB1 port is hard coded to work in peripheral mode and USB2 port
+> in host mode. This is due to missing ID pin interrupt in pre ver.E boards.
+> 
+> USB1 port doesn't in peripheral mode out of the box due to missing VBUS detection
+> and mailbox write. To test this I had to do a manual write to enable VBUSVALID
+> in the USB_UTMI_OTG_STATUS register.
+> 	omapconf set bit 0x48880084 1
+> 
+> USB2 port works well in host mode.
+> 
+> Patches are based on 3.15-rc3.
+> 
+> cheers,
+> -roger
+> 
+> Changelog:
+> 
+> v3:
+> -Rearraged patches. PHY related stuff first.
+> -Addressed backward compatibility issue for phy-omap-usb2.
+> 
+> v2:
+> -Rebased on v3.15-rc3
+> 
+> ---
+> Roger Quadros (7):
+>   phy: omap-usb2: Use generic clock names "wkupclk" and "refclk"
+>   phy: omap-usb2: Add clock names to Documentation binding
+>   ARM: dts: omap4+: Add clocks to USB2 PHY node
+>   ARM: dts: dra7-clock: Add "l3init_960m_gfclk" clock gate
+>   ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
+>   ARM: dts: dra7: Add USB related nodes
+>   dts: dra7-evm: add USB support
+> 
+>  Documentation/devicetree/bindings/phy/ti-phy.txt |   7 ++
+>  arch/arm/boot/dts/dra7-evm.dts                   |  24 ++++
+>  arch/arm/boot/dts/dra7.dtsi                      | 149 +++++++++++++++++++++++
+>  arch/arm/boot/dts/dra7xx-clocks.dtsi             |  12 +-
+>  arch/arm/boot/dts/omap4.dtsi                     |   2 +
+>  arch/arm/boot/dts/omap5.dtsi                     |   2 +
+>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c        |  22 ++--
+>  drivers/phy/phy-omap-usb2.c                      |  30 +++--
+>  8 files changed, 229 insertions(+), 19 deletions(-)
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
