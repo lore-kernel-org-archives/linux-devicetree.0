@@ -1,39 +1,94 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 18/20] ARM: mvebu: Add USB3 support for Armada 375
-Date: Tue,  6 May 2014 02:14:13 +0200
-Message-ID: <1399335255-589-19-git-send-email-gregory.clement@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH] arm: dts: exynos4: add missing pinctrls for I2C controllers
+Date: Tue, 06 May 2014 11:35:38 +0900
+Message-ID: <099a01cf68d3$de1044b0$9a30ce10$@samsung.com>
+References: <534E7A3F.7050406@samsung.com> <534E7F1A.8080502@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <534E7F1A.8080502@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <t.figa@samsung.com>, 'Tomasz Stanislawski' <t.stanislaws@samsung.com>
+Cc: 'Ben Dooks' <ben-linux@fluff.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, =?UTF-8?B?J+uwleqyveuvvCc=?= <kyungmin.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add the selection of the config symbol to build the USB3
-support for Armada 375.
+Tomasz Figa wrote:
+> 
+> Hi Tomasz,
+> 
+> On 16.04.2014 14:40, Tomasz Stanislawski wrote:
+> > This patch adds missing pinctrls for I2C controllers 2-7.
+> >
+> > Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
+> > ---
+> >   arch/arm/boot/dts/exynos4.dtsi |   12 ++++++++++++
+> >   1 file changed, 12 insertions(+)
+> >
+> > diff --git a/arch/arm/boot/dts/exynos4.dtsi
+> b/arch/arm/boot/dts/exynos4.dtsi
+> > index 0401f4d..288aa81 100644
+> > --- a/arch/arm/boot/dts/exynos4.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4.dtsi
+> > @@ -357,6 +357,8 @@
+> >   		interrupts = <0 60 0>;
+> >   		clocks = <&clock CLK_I2C2>;
+> >   		clock-names = "i2c";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&i2c2_bus>;
+> >   		status = "disabled";
+> >   	};
+> >
+> > @@ -368,6 +370,8 @@
+> >   		interrupts = <0 61 0>;
+> >   		clocks = <&clock CLK_I2C3>;
+> >   		clock-names = "i2c";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&i2c3_bus>;
+> >   		status = "disabled";
+> >   	};
+> >
+> > @@ -379,6 +383,8 @@
+> >   		interrupts = <0 62 0>;
+> >   		clocks = <&clock CLK_I2C4>;
+> >   		clock-names = "i2c";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&i2c4_bus>;
+> >   		status = "disabled";
+> >   	};
+> >
+> > @@ -390,6 +396,8 @@
+> >   		interrupts = <0 63 0>;
+> >   		clocks = <&clock CLK_I2C5>;
+> >   		clock-names = "i2c";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&i2c5_bus>;
+> >   		status = "disabled";
+> >   	};
+> >
+> > @@ -401,6 +409,8 @@
+> >   		interrupts = <0 64 0>;
+> >   		clocks = <&clock CLK_I2C6>;
+> >   		clock-names = "i2c";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&i2c6_bus>;
+> >   		status = "disabled";
+> >   	};
+> >
+> > @@ -412,6 +422,8 @@
+> >   		interrupts = <0 65 0>;
+> >   		clocks = <&clock CLK_I2C7>;
+> >   		clock-names = "i2c";
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&i2c7_bus>;
+> >   		status = "disabled";
+> >   	};
+> >
+> >
+> 
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> 
+Applied, thanks.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/mach-mvebu/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
-index 7960f218702b..95afc7677ee1 100644
---- a/arch/arm/mach-mvebu/Kconfig
-+++ b/arch/arm/mach-mvebu/Kconfig
-@@ -41,6 +41,7 @@ config MACH_ARMADA_375
- 	select CPU_V7
- 	select MACH_MVEBU_V7
- 	select PINCTRL_ARMADA_375
-+	select USB_ARCH_HAS_XHCI
- 	help
- 	  Say 'Y' here if you want your kernel to support boards based
- 	  on the Marvell Armada 375 SoC with device tree.
--- 
-1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Kukjin
