@@ -1,49 +1,72 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v4 2/2] ARM: dts: Add peach-pit board support
-Date: Tue, 06 May 2014 11:05:52 +0900
-Message-ID: <06a801cf68cf$b5151350$1f3f39f0$@samsung.com>
-References: <1399281933-31064-1-git-send-email-arun.kk@samsung.com>
- <1399281933-31064-3-git-send-email-arun.kk@samsung.com>
- <CAD=FV=VH_WMQ+bENDDHB1OEPs9WOTVz7MLqYS6b=43vP5KgPkA@mail.gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH v3] powerpc/fsl: Added binding for Freescale CoreNet
+ coherency fabric (CCF)
+Date: Mon, 5 May 2014 21:22:47 -0500
+Message-ID: <1399342967.15726.181.camel@snotra.buserror.net>
+References: <1399305499-6612-1-git-send-email-diana.craciun@freescale.com>
+ <1FE471CC-2024-4B39-89E2-FBACF8F18A9B@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAD=FV=VH_WMQ+bENDDHB1OEPs9WOTVz7MLqYS6b=43vP5KgPkA@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Doug Anderson' <dianders@chromium.org>, 'Arun Kumar K' <arun.kk@samsung.com>
-Cc: 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, 'Tomasz Figa' <t.figa@samsung.com>, 'Arun Kumar' <arunkk.samsung@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1FE471CC-2024-4B39-89E2-FBACF8F18A9B@kernel.crashing.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: Kumar Gala <galak@kernel.crashing.org>
+Cc: Diana Craciun <diana.craciun@freescale.com>, devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Doug Anderson wrote:
-> 
-> Arun,
-> 
-> On Mon, May 5, 2014 at 2:25 AM, Arun Kumar K <arun.kk@samsung.com> wrote:
-> > Adds the google peach-pit board dts file which uses
-> > exynos5420 SoC.
-> >
-> > Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
-> > Signed-off-by: Doug Anderson <dianders@chromium.org>
-> > ---
-> >  arch/arm/boot/dts/Makefile                 |    1 +
-> >  arch/arm/boot/dts/exynos5420-peach-pit.dts |  147
-> ++++++++++++++++++++++++++++
-> >  2 files changed, 148 insertions(+)
-> 
-> Note that this has an implicit dependency upon
-> <https://patchwork.kernel.org/patch/4101881/> (ARM: dts: Add pwmX_out
-> pinctrl nodes to Exynos5420).  Once that has landed then I think we're
-> good to go.
-> 
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-
-Hi,
-
-Thanks for Arun's re-spin and Tomasz and Doug's review.
-
-Applied 1st and this.
-
-Thanks,
-Kukjin
+T24gTW9uLCAyMDE0LTA1LTA1IGF0IDIxOjEyIC0wNTAwLCBLdW1hciBHYWxhIHdyb3RlOgo+IE9u
+IE1heSA1LCAyMDE0LCBhdCAxMDo1OCBBTSwgRGlhbmEgQ3JhY2l1biA8ZGlhbmEuY3JhY2l1bkBm
+cmVlc2NhbGUuY29tPiB3cm90ZToKPiAKPiA+IEZyb206IERpYW5hIENyYWNpdW4gPERpYW5hLkNy
+YWNpdW5AZnJlZXNjYWxlLmNvbT4KPiA+IAo+ID4gVGhlIENvcmVOZXQgY29oZXJlbmN5IGZhYnJp
+YyBpcyBhIGZhYnJpYy1vcmllbnRlZCwgY29uZWN0aXZpdHkKPiA+IGluZnJhc3RydWN0dXJlIHRo
+YXQgZW5hYmxlcyB0aGUgaW1wbGVtZW50YXRpb24gb2YgY29oZXJlbnQsIG11bHRpY29yZQo+ID4g
+c3lzdGVtcy4gVGhlIENDRiBhY3RzIGFzIGEgY2VudHJhbCBpbnRlcmNvbm5lY3QgZm9yIGNvcmVz
+LAo+ID4gcGxhdGZvcm0tbGV2ZWwgY2FjaGVzLCBtZW1vcnkgc3Vic3lzdGVtLCBwZXJpcGhlcmFs
+IGRldmljZXMgYW5kIEkvTyBob3N0Cj4gPiBicmlkZ2VzIGluIHRoZSBzeXN0ZW0uCj4gPiAKPiA+
+IFNpZ25lZC1vZmYtYnk6IERpYW5hIENyYWNpdW4gPERpYW5hLkNyYWNpdW5AZnJlZXNjYWxlLmNv
+bT4KPiA+IC0tLQo+ID4gdjM6Cj4gPiAJLSBhZGRlZCBwb3J0IElEIG1hcHBpbmcKPiA+IAktIHJl
+bW92ZWQgZnNsLGNvcmVuZXR4LWNmCj4gPiAKPiA+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bv
+d2VycGMvZnNsL2NjZi50eHQgICAgICAgIHwgNDIgKysrKysrKysrKysrKysrKysrKysrKwo+ID4g
+Li4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvY3B1cy50eHQgICAgICAgfCAgOCAr
+KysrKwo+ID4gLi4uL2RldmljZXRyZWUvYmluZGluZ3MvcG93ZXJwYy9mc2wvcGFtdS50eHQgICAg
+ICAgfCAgOCArKysrKwo+ID4gMyBmaWxlcyBjaGFuZ2VkLCA1OCBpbnNlcnRpb25zKCspCj4gPiBj
+cmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2Vy
+cGMvZnNsL2NjZi50eHQKPiAKPiBbc25pcF0KPiAKPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9wb3dlcnBjL2ZzbC9jcHVzLnR4dAo+ID4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Bvd2VycGMvZnNsL2NwdXMudHh0Cj4gPiBAQCAtMjAs
+MyArMjAsMTEgQEAgUFJPUEVSVElFUwo+ID4gCWEgcHJvcGVydHkgbmFtZWQgZnNsLGVyZWYtW0NB
+VF0sIHdoZXJlIFtDQVRdIGlzIHRoZSBhYmJyZXZpYXRlZCBjYXRlZ29yeQo+ID4gCW5hbWUgd2l0
+aCBhbGwgdXBwZXJjYXNlIGxldHRlcnMgY29udmVydGVkIHRvIGxvd2VyY2FzZSwgaW5kaWNhdGVz
+IHRoYXQKPiA+IAl0aGUgY2F0ZWdvcnkgaXMgc3VwcG9ydGVkIGJ5IHRoZSBpbXBsZW1lbnRhdGlv
+bi4KPiA+ICsKPiA+ICsJLSBmc2wscG9ydGlkLW1hcHBpbmcgOiA8dTMyPgo+ID4gKwlUaGUgQ29o
+ZXJlbmN5IFN1YmRvbWFpbiBJRCBQb3J0IE1hcHBpbmcgUmVnaXN0ZXJzIGFuZCBTbm9vcCBJRCBQ
+b3J0IE1hcHBpbmcKPiA+ICsJcmVnaXN0ZXJzIHdoaWNoIGFyZSBwYXJ0IG9mIHRoZSBDb3JlTmV0
+IENvaGVyZW5jeSBmYWJyaWMgKENDRikgcHJvdmlkZSBhCj4gPiArCUNvcmVOZXQgQ29oZXJlbmN5
+IFN1YmRvbWFpbiBJRC9Db3JlTmV0IFNub29wIElEIHRvIGNwdSBtYXBwaW5nIGZ1bmN0aW9ucy4K
+PiA+ICsJQ2VydGFpbiBiaXRzIGZyb20gdGhlc2UgcmVnaXN0ZXJzIHNob3VsZCBiZSBzZXQgaWYg
+dGhlIGNvcmVzcG9uZGluZyBDUFUKPiA+ICsJc2hvdWxkIGJlIHNub29wZWQuIFRoaXMgcHJvcGVy
+dHkgZGVmaW5lcyBhIGJpdG1hc2sgd2hpY2ggc2VsZWN0cyB0aGUgYml0IHRoYXQKPiA+ICsJc2hv
+dWxkIGJlIHNldCBpZiB0aGlzIGNwdSBzaG91bGQgYmUgc25vb3BlZC4KPiAKPiBVbmRlciB3aGF0
+IGNhc2VzIGNhbiBzb2Z0d2FyZSBub3QgZmlndXJlIG91dCBob3cgdG8gc2V0IHRoaXMgYmFzZWQg
+b24gdGhlIFBBTVVzIGluIHRoZSBEVD8KCkhvdyB3b3VsZCBpdCBnbyBhYm91dCBkb2luZyB0aGF0
+PwoKQmVzaWRlcyB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuIGNvcmVuZXQxLWNmIGFuZCBjb3JlbmV0
+Mi1jZiwgb24KY29yZW5ldDEtY2YgdGhlIHBvc2l0aW9uIG9mIHRoZSBQQU1VIGJpdHMgZGVwZW5k
+cyBvbiB0aGUgbnVtYmVyIG9mIENQVXMKdGhhdCB0aGUgY2hpcCB3YXMgZGVzaWduZWQgZm9yLiAg
+VGhpcyBtYXkgYmUgZGlmZmVyZW50IGZyb20gdGhlIG51bWJlcgpvZiBDUFVzIHRoYXQgYXJlIGFj
+dHVhbGx5IHByZXNlbnQgKGUuZy4gcDQwNDAsIG9yIEFNUCkuICBJdCdzIGFsc28gYQpjb21wbGlj
+YXRpb24gdGhhdCBJTUhPIGlzIGFza2luZyBmb3IgdHJvdWJsZSwgdmVyc3VzIHN0cmFpZ2h0Zm9y
+d2FyZGx5CnJlY29yZGluZyBpbmZvcm1hdGlvbiB0aGF0IGlzIHByZXNlbnQgaW4gYSB0YWJsZSBp
+biB0aGUgbWFudWFsLgoKLVNjb3R0CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlz
+dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMt
+ZGV2
