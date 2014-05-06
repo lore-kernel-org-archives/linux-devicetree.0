@@ -1,87 +1,47 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 9/9] ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
-Date: Mon,  5 May 2014 17:53:43 +0200
-Message-ID: <1399305223-18703-10-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 03/20] usb: host: xhci-plat: Sort the headers in alphabetic order
+Date: Tue,  6 May 2014 02:13:58 +0200
+Message-ID: <1399335255-589-4-git-send-email-gregory.clement@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399335255-589-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Patch adds DT entries for clockgen A9
+Sorting the headers in alphabetic order will help to reduce the conflict
+when adding new headers later.
 
-Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/stih415-clock.dtsi | 48 +++++++++++++++++++++++++++++-------
- 1 file changed, 39 insertions(+), 9 deletions(-)
+ drivers/usb/host/xhci-plat.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-index 24a7508..4ad779d 100644
---- a/arch/arm/boot/dts/stih415-clock.dtsi
-+++ b/arch/arm/boot/dts/stih415-clock.dtsi
-@@ -24,15 +24,6 @@
- 		};
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 151901ce1ba9..f5351af4b2c5 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -11,11 +11,11 @@
+  * version 2 as published by the Free Software Foundation.
+  */
  
- 		/*
--		 * ARM Peripheral clock for timers
--		 */
--		arm_periph_clk: arm_periph_clk {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <500000000>;
--		};
--
--		/*
- 		 * ClockGenAs on SASG1
- 		 */
- 		clockgenA@fee62000 {
-@@ -499,5 +490,44 @@
- 						/* Remaining outputs unused */
- 			};
- 		};
-+
-+		/*
-+		 * A9 PLL
-+		 */
-+		clockgenA9 {
-+			reg = <0xfdde00d8 0x70>;
-+
-+			CLOCKGEN_A9_PLL: CLOCKGEN_A9_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih415-plls-c32-a9", "st,clkgen-plls-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_A9_PLL_ODF";
-+			};
-+		};
-+
-+		/*
-+		 * ARM CPU related clocks
-+		 */
-+		CLK_M_A9: CLK_M_A9 {
-+			#clock-cells = <0>;
-+			compatible = "st,stih415-clkgen-a9-mux", "st,clkgen-mux";
-+			reg = <0xfdde00d8 0x4>;
-+			clocks = <&CLOCKGEN_A9_PLL 0>,
-+				 <&CLOCKGEN_A9_PLL 0>,
-+				 <&CLK_M_A0_DIV1 2>,
-+				 <&CLK_M_A9_EXT2F_DIV2>;
-+		};
-+
-+		/*
-+		 * ARM Peripheral clock for timers
-+		 */
-+		arm_periph_clk: CLK_M_A9_PERIPHS {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&CLK_M_A9>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+		};
- 	};
- };
+-#include <linux/platform_device.h>
++#include <linux/dma-mapping.h>
+ #include <linux/module.h>
+-#include <linux/slab.h>
+ #include <linux/of.h>
+-#include <linux/dma-mapping.h>
++#include <linux/platform_device.h>
++#include <linux/slab.h>
+ 
+ #include "xhci.h"
+ 
 -- 
-1.9.1
+1.8.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
