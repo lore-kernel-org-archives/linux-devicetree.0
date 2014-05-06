@@ -1,270 +1,217 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2 1/6] i2c: s3c2410: Moving I2C interrupt re-configuration
- code into i2c driver
-Date: Tue, 06 May 2014 20:36:58 +0200
-Message-ID: <53692BCA.4070601@gmail.com>
-References: <1399366282-4191-1-git-send-email-pankaj.dubey@samsung.com>
- <1399366282-4191-2-git-send-email-pankaj.dubey@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1399366282-4191-2-git-send-email-pankaj.dubey@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Dubey <pankaj.dubey@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, kgene.kim@samsung.com, Russell King <linux@arm.linux.org.uk>, arnd@arndb.de, Wolfram Sang <wsa@the-dreams.de>, t.figa@samsung.com, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH RFC v3 4/6] arm64: add PSCI CPU_SUSPEND based cpu_suspend support
+Date: Tue,  6 May 2014 19:04:41 +0100
+Message-ID: <1399399483-17112-5-git-send-email-lorenzo.pieralisi@arm.com>
+References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399399483-17112-1-git-send-email-lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Charles Garcia Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antti Miettinen <ananaza-X3B1VOXEql0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Capella <sebastian.capella-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pankaj,
+This patch implements the cpu_suspend cpu operations method through
+the PSCI CPU_SUSPEND API. The PSCI implementation translates the idle state
+index passed by the cpu_suspend core call into a valid PSCI state according=
+ to
+the PSCI states initialized at boot by the PSCI suspend backend.
 
-On 06.05.2014 10:51, Pankaj Dubey wrote:
-> Let's move I2C interrupt re-configuration code from machine
-> file exynos.c to I2C driver. Since only Exynos5250, and
-> Exynos5420 need to do this, added syscon based phandle to
-> i2c device nodes of respective SoC DT files.
->
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Randy Dunlap <rdunlap@infradead.org>
-> CC: Wolfram Sang <wsa@the-dreams.de>
-> CC: Russell King <linux@arm.linux.org.uk>
-> CC: devicetree@vger.kernel.org
-> CC: linux-doc@vger.kernel.org
-> CC: linux-i2c@vger.kernel.org
-> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
-> ---
->   .../devicetree/bindings/arm/samsung/sysreg.txt     |    1 +
->   arch/arm/boot/dts/exynos5.dtsi                     |    5 ++++
->   arch/arm/boot/dts/exynos5250.dtsi                  |    4 +++
->   arch/arm/boot/dts/exynos5420.dtsi                  |    4 +++
->   arch/arm/mach-exynos/exynos.c                      |   26 -------------------
->   drivers/i2c/busses/i2c-s3c2410.c                   |   27 ++++++++++++++++++++
->   6 files changed, 41 insertions(+), 26 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> index 0ab3251..fd71581 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> @@ -3,6 +3,7 @@ SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
->   Properties:
->    - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
->      For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
-> +   For Exynos5 SoC series it should be "samsung,exynos5-sysreg", "syscon";
->    - reg : offset and length of the register set.
->
->   Example:
-> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
-> index 79d0608..3027e37 100644
-> --- a/arch/arm/boot/dts/exynos5.dtsi
-> +++ b/arch/arm/boot/dts/exynos5.dtsi
-> @@ -99,4 +99,9 @@
->   		#size-cells = <0>;
->   		status = "disabled";
->   	};
-> +
-> +	sys_reg: syscon@10050000 {
-> +		compatible = "samsung,exynos5-sysreg", "syscon";
-> +		reg = <0x10050000 0x400>;
-> +	};
->   };
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 8d724d5..46f0233 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -285,6 +285,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c0_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> @@ -298,6 +299,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c1_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> @@ -311,6 +313,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c2_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> @@ -324,6 +327,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c3_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index ff496ad..762128c 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -517,6 +517,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c0_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> @@ -530,6 +531,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c1_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> @@ -543,6 +545,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c2_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> @@ -556,6 +559,7 @@
->   		clock-names = "i2c";
->   		pinctrl-names = "default";
->   		pinctrl-0 = <&i2c3_bus>;
-> +		samsung,syscon-phandle = <&sys_reg>;
->   		status = "disabled";
->   	};
->
-> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-> index 59eb1f1..54ae2e1 100644
-> --- a/arch/arm/mach-exynos/exynos.c
-> +++ b/arch/arm/mach-exynos/exynos.c
-> @@ -293,32 +293,6 @@ void __init exynos_map_pmu(void)
->
->   static void __init exynos_dt_machine_init(void)
->   {
-> -	struct device_node *i2c_np;
-> -	const char *i2c_compat = "samsung,s3c2440-i2c";
-> -	unsigned int tmp;
-> -	int id;
-> -
-> -	/*
-> -	 * Exynos5's legacy i2c controller and new high speed i2c
-> -	 * controller have muxed interrupt sources. By default the
-> -	 * interrupts for 4-channel HS-I2C controller are enabled.
-> -	 * If node for first four channels of legacy i2c controller
-> -	 * are available then re-configure the interrupts via the
-> -	 * system register.
-> -	 */
-> -	if (soc_is_exynos5()) {
-> -		for_each_compatible_node(i2c_np, NULL, i2c_compat) {
-> -			if (of_device_is_available(i2c_np)) {
-> -				id = of_alias_get_id(i2c_np, "i2c");
-> -				if (id < 4) {
-> -					tmp = readl(EXYNOS5_SYS_I2C_CFG);
-> -					writel(tmp & ~(0x1 << id),
-> -							EXYNOS5_SYS_I2C_CFG);
-> -				}
-> -			}
-> -		}
-> -	}
-> -
->   	exynos_map_pmu();
->
->   	if (!soc_is_exynos5440())
-> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
-> index ae44910..0420150 100644
-> --- a/drivers/i2c/busses/i2c-s3c2410.c
-> +++ b/drivers/i2c/busses/i2c-s3c2410.c
-> @@ -39,6 +39,8 @@
->   #include <linux/of.h>
->   #include <linux/of_gpio.h>
->   #include <linux/pinctrl/consumer.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
->
->   #include <asm/irq.h>
->
-> @@ -91,6 +93,9 @@
->   /* Max time to wait for bus to become idle after a xfer (in us) */
->   #define S3C2410_IDLE_TIMEOUT	5000
->
-> +/* Exynos5 Sysreg offset */
-> +#define EXYNOS5_SYS_I2C_CFG	0x0234
-> +
->   /* i2c controller state */
->   enum s3c24xx_i2c_state {
->   	STATE_IDLE,
-> @@ -127,6 +132,7 @@ struct s3c24xx_i2c {
->   #if defined(CONFIG_ARM_S3C24XX_CPUFREQ)
->   	struct notifier_block	freq_transition;
->   #endif
-> +	struct regmap		*sysreg;
->   };
->
->   static struct platform_device_id s3c24xx_driver_ids[] = {
-> @@ -1075,6 +1081,8 @@ static void
->   s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
->   {
->   	struct s3c2410_platform_i2c *pdata = i2c->pdata;
-> +	unsigned int tmp;
-> +	int id;
->
->   	if (!np)
->   		return;
-> @@ -1084,6 +1092,25 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
->   	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
->   	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
->   				(u32 *)&pdata->frequency);
-> +	/*
-> +	 * Exynos5's legacy i2c controller and new high speed i2c
-> +	 * controller have muxed interrupt sources. By default the
-> +	 * interrupts for 4-channel HS-I2C controller are enabled.
-> +	 * If node for first four channels of legacy i2c controller
-> +	 * are available then re-configure the interrupts via the
-> +	 * system register.
-> +	 */
-> +	id = of_alias_get_id(np, "i2c");
-> +	i2c->sysreg = syscon_regmap_lookup_by_phandle(np,
-> +			"samsung,syscon-phandle");
-> +	if (IS_ERR(i2c->sysreg)) {
-> +		i2c->sysreg = NULL;
+Entry point is set to cpu_resume physical address, that represents the
+default kernel execution address following a CPU reset.
 
-NULL shouldn't be considered for pointers using the ERR_PTR() 
-convention, so you should just preserve the value returned by 
-syscon_regmap_lookup_by_phandle() here.
+Idle state indices missing a DT node description are initialized to power
+state standby WFI so that if called by the idle driver they provide the
+default behaviour.
 
-Also, the driver seems to do this only once in probe, so maybe you 
-should simply use a local variable here, without storing the regmap in 
-i2c struct.
+Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm64/include/asm/psci.h |   4 ++
+ arch/arm64/kernel/psci.c      | 102 ++++++++++++++++++++++++++++++++++++++=
+++++
+ 2 files changed, 106 insertions(+)
 
-> +		/* As this is not compulsary do not return error */
+diff --git a/arch/arm64/include/asm/psci.h b/arch/arm64/include/asm/psci.h
+index d15ab8b4..9a4b663 100644
+--- a/arch/arm64/include/asm/psci.h
++++ b/arch/arm64/include/asm/psci.h
+@@ -14,6 +14,10 @@
+ #ifndef __ASM_PSCI_H
+ #define __ASM_PSCI_H
+=20
++struct cpuidle_driver;
+ void psci_init(void);
+=20
++int __init psci_dt_register_idle_states(struct cpuidle_driver *,
++=09=09=09=09=09struct device_node *[]);
++
+ #endif /* __ASM_PSCI_H */
+diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+index ea4828a..0e32ab4 100644
+--- a/arch/arm64/kernel/psci.c
++++ b/arch/arm64/kernel/psci.c
+@@ -15,15 +15,18 @@
+=20
+ #define pr_fmt(fmt) "psci: " fmt
+=20
++#include <linux/cpuidle.h>
+ #include <linux/init.h>
+ #include <linux/of.h>
+ #include <linux/smp.h>
++#include <linux/slab.h>
+=20
+ #include <asm/compiler.h>
+ #include <asm/cpu_ops.h>
+ #include <asm/errno.h>
+ #include <asm/psci.h>
+ #include <asm/smp_plat.h>
++#include <asm/suspend.h>
+=20
+ #define PSCI_POWER_STATE_TYPE_STANDBY=09=090
+ #define PSCI_POWER_STATE_TYPE_POWER_DOWN=091
+@@ -54,6 +57,8 @@ enum psci_function {
+ =09PSCI_FN_MAX,
+ };
+=20
++static DEFINE_PER_CPU_READ_MOSTLY(struct psci_power_state *, psci_power_st=
+ate);
++
+ static u32 psci_function_id[PSCI_FN_MAX];
+=20
+ #define PSCI_RET_SUCCESS=09=090
+@@ -94,6 +99,17 @@ static u32 psci_power_state_pack(struct psci_power_state=
+ state)
+ =09=09=09<< PSCI_POWER_STATE_AFFL_SHIFT);
+ }
+=20
++static void psci_power_state_unpack(u32 power_state,
++=09=09=09=09    struct psci_power_state *state)
++{
++=09state->id =3D (power_state >> PSCI_POWER_STATE_ID_SHIFT)
++=09=09=09& PSCI_POWER_STATE_ID_MASK;
++=09state->type =3D (power_state >> PSCI_POWER_STATE_TYPE_SHIFT)
++=09=09=09& PSCI_POWER_STATE_TYPE_MASK;
++=09state->affinity_level =3D (power_state >> PSCI_POWER_STATE_AFFL_SHIFT)
++=09=09=09& PSCI_POWER_STATE_AFFL_MASK;
++}
++
+ /*
+  * The following two functions are invoked via the invoke_psci_fn pointer
+  * and will not be inlined, allowing us to piggyback on the AAPCS.
+@@ -176,6 +192,77 @@ static const struct of_device_id psci_of_match[] __ini=
+tconst =3D {
+ =09{},
+ };
+=20
++int __init psci_dt_register_idle_states(struct cpuidle_driver *drv,
++=09=09=09=09=09struct device_node *state_nodes[])
++{
++=09int cpu, i;
++=09struct psci_power_state *psci_states;
++=09const struct cpu_operations *cpu_ops_ptr;
++
++=09if (!state_nodes)
++=09=09return -EINVAL;
++=09/*
++=09 * This is belt-and-braces: make sure that if the idle
++=09 * specified protocol is psci, the cpu_ops have been
++=09 * initialized to psci operations. Anything else is
++=09 * a recipe for mayhem.
++=09 */
++=09for_each_cpu(cpu, drv->cpumask) {
++=09=09cpu_ops_ptr =3D cpu_ops[cpu];
++=09=09if (WARN_ON(!cpu_ops_ptr || strcmp(cpu_ops_ptr->name, "psci")))
++=09=09=09return -EOPNOTSUPP;
++=09}
++
++=09psci_states =3D kcalloc(drv->state_count, sizeof(*psci_states),
++=09=09=09      GFP_KERNEL);
++
++=09if (!psci_states) {
++=09=09pr_warn("psci idle state allocation failed\n");
++=09=09return -ENOMEM;
++=09}
++
++=09for_each_cpu(cpu, drv->cpumask) {
++=09=09if (per_cpu(psci_power_state, cpu)) {
++=09=09=09pr_warn("idle states already initialized on cpu %u\n",
++=09=09=09=09cpu);
++=09=09=09continue;
++=09=09}
++=09=09per_cpu(psci_power_state, cpu) =3D psci_states;
++=09}
++
++
++=09for (i =3D 0; i < drv->state_count; i++) {
++=09=09u32 psci_power_state;
++
++=09=09if (!state_nodes[i]) {
++=09=09=09/*
++=09=09=09 * An index with a missing node pointer falls back to
++=09=09=09 * simple STANDBYWFI
++=09=09=09 */
++=09=09=09psci_states[i].type =3D PSCI_POWER_STATE_TYPE_STANDBY;
++=09=09=09continue;
++=09=09}
++
++=09=09if (of_property_read_u32(state_nodes[i], "entry-method-param",
++=09=09=09=09=09 &psci_power_state)) {
++=09=09=09pr_warn(" * %s missing entry-method-param property\n",
++=09=09=09=09state_nodes[i]->full_name);
++=09=09=09/*
++=09=09=09 * If entry-method-param property is missing, fall
++=09=09=09 * back to STANDBYWFI state
++=09=09=09 */
++=09=09=09psci_states[i].type =3D PSCI_POWER_STATE_TYPE_STANDBY;
++=09=09=09continue;
++=09=09}
++
++=09=09pr_debug("psci-power-state %#x index %u\n",
++=09=09=09 psci_power_state, i);
++=09=09psci_power_state_unpack(psci_power_state, &psci_states[i]);
++=09}
++
++=09return 0;
++}
++
+ void __init psci_init(void)
+ {
+ =09struct device_node *np;
+@@ -279,6 +366,18 @@ static void cpu_psci_cpu_die(unsigned int cpu)
+ }
+ #endif
+=20
++#ifdef CONFIG_ARM64_CPU_SUSPEND
++static int cpu_psci_cpu_suspend(unsigned long index)
++{
++=09struct psci_power_state *state =3D __get_cpu_var(psci_power_state);
++
++=09if (!state)
++=09=09return -EOPNOTSUPP;
++
++=09return psci_ops.cpu_suspend(state[index], virt_to_phys(cpu_resume));
++}
++#endif
++
+ const struct cpu_operations cpu_psci_ops =3D {
+ =09.name=09=09=3D "psci",
+ =09.cpu_init=09=3D cpu_psci_cpu_init,
+@@ -288,6 +387,9 @@ const struct cpu_operations cpu_psci_ops =3D {
+ =09.cpu_disable=09=3D cpu_psci_cpu_disable,
+ =09.cpu_die=09=3D cpu_psci_cpu_die,
+ #endif
++#ifdef CONFIG_ARM64_CPU_SUSPEND
++=09.cpu_suspend=09=3D cpu_psci_cpu_suspend,
++#endif
+ };
+=20
+ #endif
+--=20
+1.8.4
 
-Is it? Will the driver work normally without interrupts in this case?
 
-Also, typo: s/compulsary/compulsory/
-
-> +		pr_info("i2c-%d skipping re-configuration of interrutps\n", id);
-> +		return;
-> +	}
-> +	regmap_read(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, &tmp);
-> +	regmap_write(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, tmp & ~(0x1 << id));
-
-You could use regmap_update_bits() [1] here instead, with mask set to 
-BIT(id) and val set to 0.
-
-[1] http://lxr.free-electrons.com/source/drivers/base/regmap/regmap.c#L1977
-
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
