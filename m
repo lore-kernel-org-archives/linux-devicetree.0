@@ -1,99 +1,104 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 13/15] clk: exynos5420: update clocks for MAU Block
-Date: Tue, 06 May 2014 19:47:04 +0200
-Message-ID: <53692018.9020707@gmail.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com> <1399393610-23394-14-git-send-email-shaik.ameer@samsung.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 10/15] clk: exynos5420: update clocks for FSYS and
+ FSYS2 blocks
+Date: Tue, 06 May 2014 19:43:25 +0200
+Message-ID: <53691F3D.8050104@gmail.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+ <1399393610-23394-11-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399393610-23394-14-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, shaik.samsung-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alim.akhtar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1399393610-23394-11-git-send-email-shaik.ameer@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: kgene.kim@samsung.com, shaik.samsung@gmail.com, t.figa@samsung.com, joshi@samsung.com, alim.akhtar@samsung.com, r.sh.open@gmail.com, mturquette@linaro.org, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
 Shaik,
 
 On 06.05.2014 18:26, Shaik Ameer Basha wrote:
-> This patch adds the missing MAU block specific clocks.
+> This patch adds more clocks from FSYS and FSYS2 blocks
+> and uses GATE_IP_* registers for gating IPs.
 >
-> Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
 > ---
->   drivers/clk/samsung/clk-exynos5420.c   |   14 +++++++++++++-
->   include/dt-bindings/clock/exynos5420.h |    2 ++
->   2 files changed, 15 insertions(+), 1 deletion(-)
+>   drivers/clk/samsung/clk-exynos5420.c |   41 ++++++++++++++++++++++------------
+>   1 file changed, 27 insertions(+), 14 deletions(-)
 >
 > diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-> index ba7273a..e0e749d 100644
+> index f0460b4..6d88ae2 100644
 > --- a/drivers/clk/samsung/clk-exynos5420.c
 > +++ b/drivers/clk/samsung/clk-exynos5420.c
-> @@ -62,7 +62,9 @@
->   #define SRC_TOP11		0x10284
->   #define SRC_TOP12		0x10288
->   #define SRC_MASK_TOP2		0x10308
-> +#define SRC_MASK_TOP7		0x1031c
->   #define SRC_MASK_DISP10		0x1032c
-> +#define SRC_MASK_MAU		0x10334
->   #define SRC_MASK_FSYS		0x10340
->   #define SRC_MASK_PERIC0		0x10350
->   #define SRC_MASK_PERIC1		0x10354
-> @@ -155,6 +157,7 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
->   	SRC_TOP11,
->   	SRC_TOP12,
->   	SRC_MASK_TOP2,
-> +	SRC_MASK_TOP7,
->   	SRC_MASK_DISP10,
->   	SRC_MASK_FSYS,
->   	SRC_MASK_PERIC0,
-> @@ -351,6 +354,8 @@ PNAME(mout_hdmi_p) = {"dout_hdmi_pixel", "sclk_hdmiphy"};
->   PNAME(mout_maudio0_p) = {"fin_pll", "maudio_clk", "mout_sclk_dpll",
->   			 "mout_sclk_mpll", "mout_sclk_spll", "mout_sclk_ipll",
->   			 "mout_sclk_epll", "mout_sclk_rpll"};
-> +PNAME(mout_mau_epll_clk_p) = {"mout_sclk_epll", "mout_sclk_dpll",
-> +				"mout_sclk_mpll", "mout_sclk_spll"};
+
+[snip]
+
+> @@ -736,12 +749,9 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>   	GATE(CLK_SCLK_USBPHY300, "sclk_usbphy300", "dout_usbphy300",
+>   		GATE_TOP_SCLK_FSYS, 8, CLK_SET_RATE_PARENT, 0),
+>   	GATE(CLK_SCLK_USBD300, "sclk_usbd300", "dout_usbd300",
+> -		GATE_TOP_SCLK_FSYS, 9, CLK_SET_RATE_PARENT, 0),
+> +		GATE_TOP_SCLK_FSYS, 9, CLK_IGNORE_UNUSED, 0),
+
+Why CLK_IGNORE_UNUSED? Also CLK_SET_RATE_PARENT seems quite right for 
+this clock.
+
+>   	GATE(CLK_SCLK_USBD301, "sclk_usbd301", "dout_usbd301",
+> -		GATE_TOP_SCLK_FSYS, 10, CLK_SET_RATE_PARENT, 0),
+> -
+> -	GATE(CLK_SCLK_USBD301, "sclk_unipro", "dout_unipro",
+> -		SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
+> +		GATE_TOP_SCLK_FSYS, 10, CLK_IGNORE_UNUSED, 0),
+
+Same here.
+
 >
->   /* fixed rate clocks generated outside the soc */
->   static struct samsung_fixed_rate_clock exynos5420_fixed_rate_ext_clks[] __initdata = {
-> @@ -373,6 +378,9 @@ static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[] __initda
->   static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
->   	MUX(0, "mout_mspll_kfc", mout_mspll_cpu_p, SRC_TOP7, 8, 2),
->   	MUX(0, "mout_mspll_cpu", mout_mspll_cpu_p, SRC_TOP7, 12, 2),
-> +	MUX_F(0, "mout_mau_epll_clk", mout_mau_epll_clk_p,
-> +			SRC_TOP7, 20, 2, CLK_SET_RATE_PARENT, 0),
-
-Again, the CLK_SET_RATE_PARENT doesn't seem to be correct here.
-
+>   	/* Display */
+>   	GATE(CLK_SCLK_FIMD1, "sclk_fimd1", "dout_fimd1",
+> @@ -760,20 +770,23 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
+>   		GATE_TOP_SCLK_MAU, 0, CLK_SET_RATE_PARENT, 0),
+>   	GATE(CLK_SCLK_MAUPCM0, "sclk_maupcm0", "dout_maupcm0",
+>   		GATE_TOP_SCLK_MAU, 1, CLK_SET_RATE_PARENT, 0),
+> -	/* FSYS */
 > +
->   	MUX(0, "mout_apll", mout_apll_p, SRC_CPU, 0, 1),
->   	MUX(0, "mout_cpu", mout_cpu_p, SRC_CPU, 16, 1),
->   	MUX(0, "mout_kpll", mout_kpll_p, SRC_KFC, 0, 1),
-> @@ -520,7 +528,8 @@ static struct samsung_mux_clock exynos5420_mux_clks[] __initdata = {
->   			TOP_SPARE2, 8, 1, CLK_SET_RATE_PARENT, 0),
->
->   	/* MAU Block */
-> -	MUX(0, "mout_maudio0", mout_maudio0_p, SRC_MAU, 28, 3),
-> +	MUX_F(CLK_MOUT_MAUDIO0, "mout_maudio0", mout_maudio0_p, SRC_MAU, 28, 3,
-> +						CLK_SET_RATE_PARENT, 0),
+> +	/* FSYS Block */
+>   	GATE(CLK_TSI, "tsi", "aclk200_fsys", GATE_BUS_FSYS0, 0, 0, 0),
+>   	GATE(CLK_PDMA0, "pdma0", "aclk200_fsys", GATE_BUS_FSYS0, 1, 0, 0),
+>   	GATE(CLK_PDMA1, "pdma1", "aclk200_fsys", GATE_BUS_FSYS0, 2, 0, 0),
+>   	GATE(CLK_UFS, "ufs", "aclk200_fsys2", GATE_BUS_FSYS0, 3, 0, 0),
+> -	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_BUS_FSYS0, 5, 0, 0),
+> -	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_BUS_FSYS0, 12, 0, 0),
+> -	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_BUS_FSYS0, 13, 0, 0),
+> -	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_BUS_FSYS0, 14, 0, 0),
+> +	GATE(CLK_RTIC, "rtic", "aclk200_fsys", GATE_IP_FSYS, 9, 0, 0),
+> +	GATE(CLK_MMC0, "mmc0", "aclk200_fsys2", GATE_IP_FSYS, 12, 0, 0),
+> +	GATE(CLK_MMC1, "mmc1", "aclk200_fsys2", GATE_IP_FSYS, 13, 0, 0),
+> +	GATE(CLK_MMC2, "mmc2", "aclk200_fsys2", GATE_IP_FSYS, 14, 0, 0),
+>   	GATE(CLK_SROMC, "sromc", "aclk200_fsys2",
+> -			GATE_BUS_FSYS0, 19, CLK_IGNORE_UNUSED, 0),
+> -	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_BUS_FSYS0, 20, 0, 0),
+> -	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_BUS_FSYS0, 21, 0, 0),
+> -	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_BUS_FSYS0, 28, 0, 0),
+> +			GATE_IP_FSYS, 17, CLK_IGNORE_UNUSED, 0),
+> +	GATE(CLK_USBH20, "usbh20", "aclk200_fsys", GATE_IP_FSYS, 18, 0, 0),
+> +	GATE(CLK_USBD300, "usbd300", "aclk200_fsys", GATE_IP_FSYS, 19, 0, 0),
+> +	GATE(CLK_USBD301, "usbd301", "aclk200_fsys", GATE_IP_FSYS, 20, 0, 0),
+> +	GATE(CLK_SCLK_UNIPRO, "sclk_unipro", "dout_unipro",
+> +			GATE_IP_FSYS, 23, CLK_SET_RATE_PARENT, 0),
 
-Ditto.
-
->
->   	/* FSYS Block */
->   	MUX(0, "mout_usbd301", mout_group2_p, SRC_FSYS, 4, 3),
-> @@ -713,6 +722,9 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
->   	GATE(CLK_ACLK300_DISP1, "aclk300_disp1", "mout_user_aclk300_disp1",
->   			SRC_MASK_TOP2, 24, CLK_IGNORE_UNUSED, 0),
->
-> +	GATE(CLK_MAU_EPLL, "mau_epll", "mout_mau_epll_clk",
-> +			SRC_MASK_TOP7, 20, CLK_IGNORE_UNUSED, 0),
-
-What is the reason for CLK_IGNORE_UNUSED flag here?
+Gating an SCLK through an GATE_IP_* register looks a bit unusual. The 
+original entry for this clock had SRC_MASK_FSYS register used. Also 
+there is the GATE_TOP_SCLK_FSYS register, are you sure that there is no 
+bit for this clock there?
 
 Best regards,
 Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
