@@ -1,116 +1,105 @@
-From: Emil Medve <Emilian.Medve@Freescale.com>
-Subject: Re: [PATCH 5/6] powerpc/corenet: Add DPAA FMan support to the SoC
- device tree(s)
-Date: Tue, 6 May 2014 01:28:42 -0500
-Message-ID: <5368811A.3060609@Freescale.com>
-References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
- <1397823693-27977-5-git-send-email-Shruti@Freescale.com>
- <1398118442.1694.190.camel__272.432543761347$1398129129$gmane$org@snotra.buserror.net>
- <53661DAB.10808@Freescale.com>
- <1399332886.15726.161.camel@snotra.buserror.net>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v5 1/7] Input: pixcir_i2c_ts: Use devres managed resource allocations
+Date: Tue, 6 May 2014 14:06:06 +0300
+Message-ID: <1399374372-29123-2-git-send-email-rogerq@ti.com>
+References: <1399374372-29123-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1399332886.15726.161.camel@snotra.buserror.net>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: Scott Wood <scottwood@Freescale.com>
-Cc: devicetree@vger.kernel.org, Kanetkar Shruti-B44454 <Shruti@Freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399374372-29123-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dmitry.torokhov@gmail.com
+Cc: rydberg@euromail.se, balbi@ti.com, dmurphy@ti.com, mugunthanvnm@ti.com, nsekhar@ti.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gU2NvdHQsCgoKT24gMDUvMDUvMjAxNCAwNjozNCBQTSwgU2NvdHQgV29vZCB3cm90ZToK
-PiBPbiBTdW4sIDIwMTQtMDUtMDQgYXQgMDU6NTkgLTA1MDAsIEVtaWwgTWVkdmUgd3JvdGU6Cj4+
-IEhlbGxvIFNjb3R0LAo+Pgo+Pgo+PiBPbiAwNC8yMS8yMDE0IDA1OjE0IFBNLCBTY290dCBXb29k
-IHdyb3RlOgo+Pj4gT24gRnJpLCAyMDE0LTA0LTE4IGF0IDA3OjIxIC0wNTAwLCBTaHJ1dGkgS2Fu
-ZXRrYXIgd3JvdGU6Cj4+Pj4gRk1hbiAxIEdiL3MgTUFDcyAoZFRTRUMgYW5kIG1FTUFDKSBoYXZl
-IHN1cHBvcnQgZm9yIFNHTUlJIFBIWXMuCj4+Pj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBpbnRlcm5h
-bCBTZXJEZXMgVEJJIFBIWXMKPj4+Pgo+Pj4+IEJhc2VkIG9uIHByaW9yIHdvcmsgYnkgQW5keSBG
-bGVtaW5nIDxhZmxlbWluZ0BnbWFpbC5jb20+Cj4+Pj4KPj4+PiBTaWduZWQtb2ZmLWJ5OiBTaHJ1
-dGkgS2FuZXRrYXIgPFNocnV0aUBGcmVlc2NhbGUuY29tPgo+Pj4+IC0tLQo+Pj4+ICBhcmNoL3Bv
-d2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2ktcG9zdC5kdHNpIHwgIDI4ICsrKysrCj4+Pj4gIGFy
-Y2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjRzaS1wb3N0LmR0c2kgICAgfCAgNTEgKysrKysrKysr
-Cj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDEwMjNzaS1wb3N0LmR0c2kgfCAgMTQg
-KysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDIwNDFzaS1wb3N0LmR0c2kgfCAg
-NjQgKysrKysrKysrKysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvcDMwNDFzaS1w
-b3N0LmR0c2kgfCAgNjQgKysrKysrKysrKysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9m
-c2wvcDQwODBzaS1wb3N0LmR0c2kgfCAxMDQgKysrKysrKysrKysrKysrKysrKwo+Pj4+ICBhcmNo
-L3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDIwc2ktcG9zdC5kdHNpIHwgIDY0ICsrKysrKysrKysr
-Kwo+Pj4+ICBhcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3A1MDQwc2ktcG9zdC5kdHNpIHwgMTI4
-ICsrKysrKysrKysrKysrKysrKysrKysrCj4+Pj4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wv
-dDQyNDBzaS1wb3N0LmR0c2kgfCAxNTQgKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+Pj4+
-ICA5IGZpbGVzIGNoYW5nZWQsIDY3MSBpbnNlcnRpb25zKCspCj4+Pj4KPj4+PiBkaWZmIC0tZ2l0
-IGEvYXJjaC9wb3dlcnBjL2Jvb3QvZHRzL2ZzbC9iNDg2MHNpLXBvc3QuZHRzaSBiL2FyY2gvcG93
-ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBzaS1wb3N0LmR0c2kKPj4+PiBpbmRleCBjYmMzNTRiLi40
-NWIwZmY1IDEwMDY0NAo+Pj4+IC0tLSBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvYjQ4NjBz
-aS1wb3N0LmR0c2kKPj4+PiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL2I0ODYwc2kt
-cG9zdC5kdHNpCj4+Pj4gQEAgLTE3Miw2ICsxNzIsMzQgQEAKPj4+PiAgCQljb21wYXRpYmxlID0g
-ImZzbCxiNDg2MC1yY3BtIiwgImZzbCxxb3JpcS1yY3BtLTIuMCI7Cj4+Pj4gIAl9Owo+Pj4+ICAK
-Pj4+PiArL2luY2x1ZGUvICJxb3JpcS1mbWFuMy0wLTFnLTQuZHRzaSIKPj4+PiArL2luY2x1ZGUv
-ICJxb3JpcS1mbWFuMy0wLTFnLTUuZHRzaSIKPj4+PiArL2luY2x1ZGUvICJxb3JpcS1mbWFuMy0w
-LTEwZy0wLmR0c2kiCj4+Pj4gKy9pbmNsdWRlLyAicW9yaXEtZm1hbjMtMC0xMGctMS5kdHNpIgo+
-Pj4+ICsJZm1hbkA0MDAwMDAgewo+Pj4+ICsJCWV0aGVybmV0QGU4MDAwIHsKPj4+PiArCQkJdGJp
-LWhhbmRsZSA9IDwmdGJpND47Cj4+Pj4gKwkJfTsKPj4+Cj4+PiBCaW5kaW5nIG5lZWRlZAo+Pj4K
-Pj4+IFdoZXJlIGlzIHRoZSAicmVnIiBmb3IgdGhlc2UgdW5pdCBhZGRyZXNzZXM/Cj4+Cj4+IEFz
-IEkgc2FpZCwgdGhlIGJ1bGsgb2YgdGhlIEZNYW4gd29yayBjb21lcyBmcm9tIGFub3RoZXIgdGVh
-bS4gSGVyZSB3ZQo+PiBuZWVkIGp1c3QgZW5vdWdoIHRvIGhvb2sgdXAgdGhlIE1ESU8gYW5kIFBI
-WSBub2Rlcy4KPiAKPiBVbml0IGFkZHJlc3NlcyBtdXN0IG1hdGNoIHJlZy4gIE5vIHJlZywgbm8g
-dW5pdCBhZGRyZXNzLgoKV2UgY2FuIGFkZCBhICdyZWcnIHByb3BlcnR5LCBidXQgd2UgcmVhbGx5
-IGRvbid0IHdhbnQgdG8gY2xhc2ggd2l0aCB0aGUKdGVhbSB0aGF0IGlzIHdvcmtpbmcgb24gdXBz
-dHJlYW1pbmcgdGhlIEZNYW4vTUFDIGJpbmRpbmdzIGFuZCBkcml2ZXJzCgo+PiBJJ2QgcmVhbGx5
-IGxpa2UgdG8gYmUgYWJsZSB0byBtYWtlIHByb2dyZXNzIG9uIHRoaXMgd2l0aG91dCB3YWl0aW5n
-IGZvciB0aGF0IG1vbWVudCBpbiB0aW1lCj4+IHdlIGNhbiBnZXQgdGhlIGVudGlyZSBGTWFuIGJp
-bmRpbmcgaW4gcGxhY2UKPiAKPiBXaHkgaXMgdGhlIGZtYW4gYmluZGluZyBzdWNoIGEgYmlnIGRl
-YWw/Cj4gCj4+Pj4gKwkJbWRpb0BlOTAwMCB7Cj4+Pj4gKwkJCXRiaTQ6IHRiaS1waHlAOCB7Cj4+
-Pj4gKwkJCQlyZWcgPSA8MHg4PjsKPj4+PiArCQkJCWRldmljZV90eXBlID0gInRiaS1waHkiOwo+
-Pj4+ICsJCQl9Owo+Pj4+ICsJCX07Cj4+Pgo+Pj4gQmluZGluZyBuZWVkZWQgZm9yIHRiaS1waHkg
-ZGV2aWNlX3R5cGUKPj4KPj4gSSBndWVzcyB0aGF0J3MgZmFpciAoQlRXLCB5b3UgYWNjZXB0ZWQg
-dGJpLXBoeSBub2Rlcy9kZXZpY2UtdHlwZSBiZWZvcmUKPj4gd2l0aG91dCBhIGJpbmRpbmcpCj4g
-Cj4gSXQncyBleGlzdGluZyBwcmFjdGljZSBvbiBlVFNFQy4gIEZNYW4gc2VlbWVkIGxpa2UgYW4g
-b3Bwb3J0dW5pdHkgdG8KPiBhdm9pZCBjYXJyeWluZyBjcnVmdCBmb3J3YXJkLgoKVGhlIDEgR2Iv
-cyBNRElPIGJsb2NrIGlzIG5vdCBGTWFuIHNwZWNpZmljLiBBcyBJIHNhaWQgaXMgdGhlIHNhbWUg
-YmxvY2sKZnJvbSBlVFNFQy4gVGhhdCdzIHBhcnQgb2YgdGhlIHJlYXNvbiB3ZSdyZSB0cnlpbmcg
-dXBzdHJlYW1pbmcgdGhpcwppbmRlcGVuZGVudCBvZiB0aGUgRk1hbiBzdHVmZi4gU28sIGRvbid0
-IHRoaW5rIEZNYW4sIHRoaW5rIE1ESU8KCj4+PiBXaHkgYXJlIHdlIHVzaW5nIGRldmljZV90eXBl
-IGF0IGFsbCBmb3IgdGhpcz8KPj4KPj4gVGhhdCdzIHdoYXQgdGhlIHVwc3RyZWFtIGRyaXZlciBp
-cyBsb29raW5nIGZvci4KPiAKPiBEcml2ZXJzIHNob3VsZCBsb29rIGZvciB3aGF0IHRoZSBiaW5k
-aW5nIHNheXMgLS0gbm90IHRoZSBvdGhlciB3YXkKPiBhcm91bmQuCgpZZWFoIHllYWguIE5vYm9k
-eSBsaWtlcyBpdCwgYnV0IHRoZSBkcml2ZXIgaXMvZGVzY3JpYmVzIHRoZSBkZSBmYWN0byBiaW5k
-aW5nCgpPbiBhIGNvbnN0cnVjdGl2ZSBub3RlLCB0aGUgRXRoZXJuZXQgUEhZIGNvZGUgZG9lc24n
-dCBkbyBkZXZpY2UgdHJlZQpiYXNlZCBwcm9iaW5nIHNvIG5vIGNvbXBhdGlibGVzIGFyZSB1c2Vk
-IGF0IGFsbC4gU28gZGV2aWNlX3R5cGUgaXMgdXNlZAp0byBjb252ZXkgYSBUQkkgUEhZCgo+PiAg
-QW55d2F5LCBtb3N0IGRheXMgUEhZcyBjYW4gYmUgZGlzY292ZXJlZCBzbyB0aGV5IGRvbid0IHVz
-ZS9uZWVkCj4+IGNvbXBhdGlibGUgcHJvcGVydGllcy4gVGhhdCdzIEkgZ3Vlc3MgcGFydCBvZiB0
-aGUgcmVhc29uIHdlIGRvbid0IGhhdmUKPj4gYmluZGluZ3MgZm9yIHRoZW0gUEhZIG5vZGVzCj4g
-Cj4gSSBkb24ndCBzZWUgd2h5IHRoZXJlIGNvdWxkbid0IGJlIGEgY29tcGF0aWJsZSB0aGF0IGRl
-c2NyaWJlcyB0aGUKPiBzdGFuZGFyZCBwcm9ncmFtbWluZyBpbnRlcmZhY2UuCgpCZWNhdXNlIGl0
-IGNhbiBiZSBkZXRlY3RlZCBhdCBydW50aW1lIGFuZCBJIGd1ZXNzIHN0dWZmIGxpa2UgdGhhdCBz
-aG91bGQKc3RheSBvdXQgb2YgdGhlIGRldmljZSB0cmVlLiBJJ20gdXNpbmcgUENJIGFzIGFuIGFu
-YWxvZ3kgaGVyZQoKPj4gSG93ZXZlciwgd2hhdCB5b3UgY2FuJ3QgZGlzY292ZXIgaXMgaG93IHRo
-ZXkgYXJlIHdpcmVkIHRvIHRoZSBNQUMocykgc28KPj4gd2Ugc3RpbGwgbmVlZCBzb21lIG5vZGVz
-IGluIHRoZSBkZXZpY2UgdHJlZSB0byBjb252ZXkgdGhhdC4gQWxzbywgd2hlbgo+PiBsb29raW5n
-IGZvciBhIHNwZWNpZmljIGtpbmQgb2YgUEhZLCBzdWNoIGFzIFRCSSwgZGV2aWNlX3R5cGUgd29y
-a3MKPj4gZWFzaWVyIHRoZW4gcGFyc2luZyBjb21wYXRpYmxlcyBmcm9tIHZhcmlvdXMgdmVuZG9y
-cyBvciBzbwo+IAo+IERvbid0IHlvdSBmaW5kIHRoZSBUQkkgYnkgZm9sbG93aW5nIHRoZSB0Ymkt
-aGFuZGxlIHByb3BlcnR5PwoKV2hlbiB0aGUgTUFDICJhdHRhY2hlcyIgdG8gdGhlIFBIWSB0aGUg
-dGJpLWhhbmRsZSBpcyBmb2xsb3dlZC4gQnV0IHRoZQpNRElPL1BIWSBjb2RlL2RyaXZlcihzKSBk
-b2Vzbid0IHF1aXRlICJzZWUiIHRoZSB0YmktaGFuZGxlIGFzIGl0J3MKb3V0c2lkZSB0aGUgTURJ
-Ty9QSFkgbm9kZXMKCj4gVGhhdCBzYWlkLAo+IEkgZG9uJ3Qgb2JqZWN0IHRvIGhhdmluZyBhIHdh
-eSB0byBsYWJlbCBhIFBIWSBhcyBhdHRhY2hlZCB2aWEgVEJJIGlmCj4gdGhhdCdzIHVzZWZ1bC4g
-IEknbSBnaXZpbmcgYSBtaWxkLCBub24tbmFja2luZyAoZ2l2ZW4gdGhlIGhpc3RvcnkpCj4gb2Jq
-ZWN0aW9uIHRvIHVzaW5nIGRldmljZV90eXBlIGZvciB0aGF0IChnaXZlbiBvdGhlciBoaXN0b3J5
-KS4KClBlcnNvbmFsbHksIEkgdGhpbmsgdGhhdCBUQkkgUEhZIHN1cHBvcnQgaXMgYSBiaXQgbWVz
-c3kgYnV0IEkgZG9uJ3QgaGF2ZQpiYW5kd2lkdGggdG8gZGVhbCB3aXRoIHRoYXQuIFRoZSBUQkkg
-UEhZIHNob3VsZCBiZSBoYW5kbGVkIGFzIGEgcmVndWxhcgpQSFkgYW5kIHJpZ2h0IG5vdyBpcyBh
-IHNwZWNpYWwgY2FzZQoKCkNoZWVycywKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlz
-dHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMt
-ZGV2
+Use devm_() and friends for allocating memory, input device
+and IRQ.
+
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Acked-by: Mugunthan V N <mugunthanvnm@ti.com>
+---
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 38 ++++++++++++-------------------
+ 1 file changed, 15 insertions(+), 23 deletions(-)
+
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 02392d2..8a083bd 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -130,6 +130,7 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ {
+ 	const struct pixcir_ts_platform_data *pdata =
+ 			dev_get_platdata(&client->dev);
++	struct device *dev = &client->dev;
+ 	struct pixcir_i2c_ts_data *tsdata;
+ 	struct input_dev *input;
+ 	int error;
+@@ -139,12 +140,14 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 		return -EINVAL;
+ 	}
+ 
+-	tsdata = kzalloc(sizeof(*tsdata), GFP_KERNEL);
+-	input = input_allocate_device();
+-	if (!tsdata || !input) {
+-		dev_err(&client->dev, "Failed to allocate driver data!\n");
+-		error = -ENOMEM;
+-		goto err_free_mem;
++	tsdata = devm_kzalloc(dev, sizeof(*tsdata), GFP_KERNEL);
++	if (!tsdata)
++		return -ENOMEM;
++
++	input = devm_input_allocate_device(dev);
++	if (!input) {
++		dev_err(&client->dev, "Failed to allocate input device\n");
++		return -ENOMEM;
+ 	}
+ 
+ 	tsdata->client = client;
+@@ -165,29 +168,22 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 
+ 	input_set_drvdata(input, tsdata);
+ 
+-	error = request_threaded_irq(client->irq, NULL, pixcir_ts_isr,
+-				     IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
+-				     client->name, tsdata);
++	error = devm_request_threaded_irq(dev, client->irq, NULL, pixcir_ts_isr,
++					  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
++					  client->name, tsdata);
+ 	if (error) {
+-		dev_err(&client->dev, "Unable to request touchscreen IRQ.\n");
+-		goto err_free_mem;
++		dev_err(dev, "failed to request irq %d\n", client->irq);
++		return error;
+ 	}
+ 
+ 	error = input_register_device(input);
+ 	if (error)
+-		goto err_free_irq;
++		return error;
+ 
+ 	i2c_set_clientdata(client, tsdata);
+ 	device_init_wakeup(&client->dev, 1);
+ 
+ 	return 0;
+-
+-err_free_irq:
+-	free_irq(client->irq, tsdata);
+-err_free_mem:
+-	input_free_device(input);
+-	kfree(tsdata);
+-	return error;
+ }
+ 
+ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+@@ -198,10 +194,6 @@ static int pixcir_i2c_ts_remove(struct i2c_client *client)
+ 
+ 	tsdata->exiting = true;
+ 	mb();
+-	free_irq(client->irq, tsdata);
+-
+-	input_unregister_device(tsdata->input);
+-	kfree(tsdata);
+ 
+ 	return 0;
+ }
+-- 
+1.8.3.2
