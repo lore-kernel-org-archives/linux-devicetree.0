@@ -1,62 +1,70 @@
-From: Darren Etheridge <detheridge@ti.com>
-Subject: Re: [PATCH V5 0/3] arm: dts: dra7: Updates for adding crossbar device
-Date: Tue, 6 May 2014 16:45:26 -0500
-Message-ID: <20140506214526.GF2626@ti.com>
-References: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399384579-25620-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH 3/4] Input: atmel_mxt_ts: define a device tree binding
+Date: Tue,  6 May 2014 16:13:11 -0600
+Message-ID: <1399414392-32572-4-git-send-email-swarren@wwwdotorg.org>
+References: <1399414392-32572-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1399414392-32572-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Benson Leung <bleung@chromium.org>, Yufeng Shen <miletus@chromium.org>, Daniel Kurtz <djkurtz@chromium.org>, linux-input@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sricharan R <r.sricharan@ti.com> wrote on Tue [2014-May-06 19:26:16 +0530]:
-> Some socs have a large number of interrupts requests to service
-> the needs of its many peripherals and subsystems. All of the interrupt
-> requests lines from the subsystems are not needed at the same
-> time, so they have to be muxed to the controllers appropriately.
-> In such places a interrupt controllers are preceded by an
-> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
-> requests to the controller inputs.
-> 
-> The dts file update to support the crossbar device and convert
-> peripheral irq numbers to crossbar number are added here.
-> 
-> This is a rebase of V4 series on top of 3.15-rc4
-> 
-> This series depends on crossbar-driver-fixes sent below
-> http://marc.info/?l=linux-omap&m=139929963420299&w=2
-> 
-> Sricharan R (3):
->   arm: dts: dra7: Add crossbar device binding
->   arm: dts: dra7: Replace peripheral interrupt numbers with crossbar
->     inputs
->   arm: dts: dra7: Add routable-irqs property for gic node
-> 
+From: Stephen Warren <swarren@nvidia.com>
 
-OK, assuming the bisectability issues discussed earlier on this thread
-are addressed.  I have tested the earlier crossbar patch series in
-conjunction with this dts series with VIP capture and DSS display
-running together on DRA7.  Looks good with this combination of
-devices. VIP is one of the modules that must have a crossbar mapping as
-there is no default interrupt mapping for it, therefore VIP makes a good
-test case.
+This document describes how to represent an Atmel MXT touchpad in device
+tree.
 
-So please feel free to add:
+The device may show up in bootloader mode if reset by SW, or if
+configuration/firmware is missing. Or, it may present itself as the final
+touchpad device. These modes have different I2C addresses, and hence
+different I2C nodes with different compatible values representing their
+feature-set.
 
-Tested-by: Darren Etheridge <detheridge@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+ .../devicetree/bindings/input/atmel,mxt-tp.txt     | 26 ++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/atmel,mxt-tp.txt
 
+diff --git a/Documentation/devicetree/bindings/input/atmel,mxt-tp.txt b/Documentation/devicetree/bindings/input/atmel,mxt-tp.txt
+new file mode 100644
+index 000000000000..c62798ef3a82
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/atmel,mxt-tp.txt
+@@ -0,0 +1,26 @@
++Atmel MXT touchpad
++
++Required properties:
++- compatible: One of:
++    atmel,mxt-tp (for the main touchpad I2C address)
++    atmel,mxt-tp-bootloader (for the bootloader I2C address)
++
++- reg: The I2C address of the device
++
++- interrupts: The sink for the touchpad's IRQ output
++    See ../interrupt-controller/interrupts.txt
++
++Optional properties for main touchpad device:
++
++- linux,gpio-keymap: An array of up to 4 entries indicating the Linux
++    keycode generated by each GPIO. Linux keycodes are defined in
++    <dt-bindings/input/input.h>.
++
++Example:
++
++	trackpad@4b {
++		compatible = "atmel,mxt-tp";
++		reg = <0x4b>;
++		interrupt-parent = <&gpio>;
++		interrupts = <TEGRA_GPIO(W, 3) GPIO_ACTIVE_HIGH>;
++	};
+-- 
+1.8.1.5
 
->  arch/arm/boot/dts/dra7.dtsi |  109 +++++++++++++++++++++++++------------------
->  1 file changed, 63 insertions(+), 46 deletions(-)
-> 
-> -- 
-> 1.7.9.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
