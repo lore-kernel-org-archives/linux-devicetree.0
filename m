@@ -1,163 +1,89 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 4/6] powerpc/corenet: Create the dts components for the
- DPAA FMan
-Date: Mon, 5 May 2014 18:25:59 -0500
-Message-ID: <1399332359.15726.154.camel@snotra.buserror.net>
-References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
-	 <1397823693-27977-4-git-send-email-Shruti@Freescale.com>
-	 <1398118262.1694.188.camel__8135.6513932862$1398128944$gmane$org@snotra.buserror.net>
-	 <5364BEB3.6000904@Freescale.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for
+ pcie-dra7xx controller
+Date: Tue, 6 May 2014 10:35:08 -0600
+Message-ID: <20140506163507.GA15542@obsidianresearch.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com>
+ <1399383244-14556-6-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5364BEB3.6000904-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399383244-14556-6-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, Marek Vasut <marex@denx.de>, balajitk@ti.com, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2014-05-03 at 05:02 -0500, Emil Medve wrote:
-> Hello Scott,
-> 
-> 
-> On 04/21/2014 05:11 PM, Scott Wood wrote:
-> > On Fri, 2014-04-18 at 07:21 -0500, Shruti Kanetkar wrote:
-> >> +fman@400000 {
-> >> +	mdio@f1000 {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +		compatible = "fsl,fman-xmdio";
-> >> +		reg = <0xf1000 0x1000>;
-> >> +	};
-> >> +};
-> > 
-> > I'd like to see a complete fman binding before we start adding pieces.
-> 
-> The driver for the FMan 10 Gb/s MDIO has upstreamed a couple of years
-> ago: '9f35a73 net/fsl: introduce Freescale 10G MDIO driver', granted
-> without a binding writeup.
+On Tue, May 06, 2014 at 07:03:51PM +0530, Kishon Vijay Abraham I wrote:
+> +Example:
+> +pcie@51000000 {
+> +	compatible = "ti,dra7xx-pcie";
+> +	reg = <0x51002000 0x14c>, <0x51000000 0x2000>;
+> +	reg-names = "ti_conf", "rc_dbics";
+> +	interrupts = <0 232 0x4>, <0 233 0x4>;
+> +	#address-cells = <3>;
+> +	#size-cells = <2>;
+> +	device_type = "pci";
+> +	ti,device_type = <3>;
+> +	ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* Configuration Space */
 
-Pushing driver code through the netdev tree does not establish device
-tree ABI.  Binding documents and dts files do.
+Configuration space should not show up in the ranges, please don't
+copy that mistake from other drivers, put it in reg.
 
-> This patch series should probably include a
-> binding blurb. However, let's not gate this patchset on a complete
-> binding for the FMan
+> +	interrupt-map-mask = <0 0 0 0>;
+> +	interrupt-map = <0x0 0 &gic 134>;
 
-I at least want to see enough of the FMan binding to have confidence
-that what we're adding now is correct.
+The HW cannot decode INTA/B/C/D?
 
-> As you know we don't own the FMan work and the FMan work is... not ready
-> for upstreaming.
+> +#define	PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI		0x0034
+> +#define	PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MSI		0x0038
+> +#define	INTA						BIT(0)
+> +#define	INTB						BIT(1)
+> +#define	INTC						BIT(2)
+> +#define	INTD						BIT(3)
+> +#define	MSI						BIT(4)
+> +#define	LEG_EP_INTERRUPTS (INTA | INTB | INTC | INTD)
 
-I'm not asking for a driver, just a binding that describes hardware.  Is
-there any reason why the fman node needs to be anywhere near as
-complicated as it is in the SDK, if we're limiting it to actual hardware
-description?  Do we really need to have nodes for all the sub-blocks?
+Oh, it can, it would be wise to export this from the driver. Look at
+the latest patches from Srikanth Thokala for the Xilinx PCI driver to
+see how this should look
 
-> In an attempt to make some sort of progress we've
-> decided to upstream the pieces that are less controversial and MDIO is
-> an obvious candidate
-> 
-> >> +fman@400000 {
-> >> +	mdio0: mdio@e1120 {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +		compatible = "fsl,fman-mdio";
-> >> +		reg = <0xe1120 0xee0>;
-> >> +	};
-> >> +};
-> > 
-> > What is the difference between "fsl,fman-mdio" and "fsl,fman-xmdio"?  I
-> > don't see the latter on the list of compatibles in patch 3/6.
-> 
-> 'fsl,fman-mdio' is the 1 Gb/s MDIO (Clause 22 only). 'fsl,fman-xmdio' is
-> the 10 Gb/s MDIO (Clause 45 only). We can respin this patch wi
-> 
+> +static int dra7xx_pcie_establish_link(struct pcie_port *pp)
+> +{
+> +	u32 reg;
+> +	int retries = 1000;
+> +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
+> +
+> +	if (dw_pcie_link_up(pp)) {
+> +		dev_err(pp->dev, "link is already up\n");
+> +		return 0;
+> +	}
+> +
+> +	reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD);
+> +	reg |= LTSSM_EN;
+> +	dra7xx_pcie_writel(dra7xx->base, PCIECTRL_DRA7XX_CONF_DEVICE_CMD, reg);
+> +
+> +	while (--retries) {
+> +		reg = dra7xx_pcie_readl(dra7xx->base,
+> +					PCIECTRL_DRA7XX_CONF_PHY_CS);
+> +		if (reg & LINK_UP)
+> +			break;
+> +		usleep_range(10, 20);
+> +	}
+> +
+> +	if (retries <= 0) {
+> +		dev_err(pp->dev, "link is not up\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	return 0;
+> +}
 
-"respin this patch wi..."?
+It would be really nice to see the link bring up process live in the
+PCI core, every driver seems to have its own take on this.
 
-> I believe 'fsl,fman-mdio' (and others on that list) was added
-> gratuitously as the FMan MDIO is completely compatible with the
-> eTSEC/gianfar MDIO driver, but we can deal with that later
+The PCI-E spec requires a 100ms delay after link bring up (aka hot
+reset) before sending any configuration TLPs.
 
-It's still good to identify the specific device, even if it's believed
-to be 100% compatible.  Plus, IIRC there's been enough badness in the
-eTSEC MDIO binding that it'd be good to steer clear of it.
-
-> > Within each category, is the exact fman version discoverable from the
-> > mdio registers?
-> 
-> No, but that's irrelevant as that's not the difference between the two
-> compatibles
-
-It's relevant because it means the compatible string should have a block
-version number in it, or at least some other way in the MDIO node to
-indicate the block version.
-
-> >> +fman@500000 {
-> >> +	#address-cells = <1>;
-> >> +	#size-cells = <1>;
-> >> +	compatible = "simple-bus";
-> > 
-> > Why is this simple-bus?
-> 
-> Because that's the translation type for the FMan sub-nodes.
-
-What do you mean by "translation type"?
-
-> We need it now to get the MDIO nodes probed
-
-No.  "simple-bus" is stating an attribute of the hardware, that the
-child nodes represent simple memory-mapped devices that can be used
-without special bus knowledge.  I don't think that applies here.
-
-You can get the MDIO node probed without misusing simple-bus by adding
-the fman node's compatible to the probe list in the kernel code.
-
-This sort of thing is why I want to see what the rest of the fman
-binding will look like.
-
->  and we'll needed later to probe other nodes/devices that will have
-> standalone drivers: MAC, MURAM. etc. 
-
-How are they truly standalone?  The exist in service to the greater
-entity that is fman.  They presumably work together in some fashion.
-
-> >> +	/* mdio nodes for fman v3 @ 0x500000 */
-> >> +	mdio@fc000 {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +		reg = <0xfc000 0x1000>;
-> >> +	};
-> >> +
-> >> +	mdio@fd000 {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <0>;
-> >> +		reg = <0xfd000 0x1000>;
-> >> +	};
-> >> +};
-> > 
-> > Where's the compatible?  Why is this file different from all the others?
-> 
-> The FMan v3 MDIO block (supports both Clause 22/45) is compatible with
-> the FMan v2 10 Gb/s MDIO (the xgmac-mdio driver). However, the driver
-> needs a small clean-up patch (still in internal review) that will get it
-> working for FMan v3 MDIO.
-
-This suggests that it is not 100% backwards compatible.
-
->  With that patch will add the compatible to these nodes. However, we
-> need these nodes now for the board level MDIO bus muxing support
-> (included in this patchset)
-
-If you need these nodes now then add the compatible property now.
-
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason
