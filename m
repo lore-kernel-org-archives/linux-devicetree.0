@@ -1,55 +1,49 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 1/2] of: add mundoreader and radxa vendor prefixes
-Date: Tue, 6 May 2014 12:24:00 -0500
-Message-ID: <CAL_JsqLj04SB0sPeRCQo00wKd5YGX3HG_TFHiUFhqf8VZarvyQ@mail.gmail.com>
-References: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am335x-boneblack: remove use of
+ ti,vcc-aux-disable-is-sleep
+Date: Mon, 5 May 2014 17:37:34 -0700
+Message-ID: <20140506003734.GO25949@atomide.com>
+References: <1398432986-30585-1-git-send-email-jhovold@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, Matthias Brugger <matthias.bgg@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398432986-30585-1-git-send-email-jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 6, 2014 at 12:10 PM, Beniamino Galvani <b.galvani@gmail.com> wrote:
-> Add new vendor prefixes for:
->
->     * Mundo Reader S.L., a company that produces tablets and e-readers
->     * Radxa, manufacturer of ARM boards
->
-> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+* Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [140425 06:37]:
+> Remove use of property ti,vcc-aux-disable-is-sleep, which does not
+> exist.
+> 
+> Signed-off-by: Johan Hovold <jhovold-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Acked-by: Rob Herring <robh@kernel.org>
+Thanks applying into omap-for-v3.16/fixes-not-urgent.
+
+Tony
 
 > ---
->
-> v2:
->  - use mundoreader prefix instead of bq as suggested by Heiko Stuebner
->
->  Documentation/devicetree/bindings/vendor-prefixes.txt |    2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index abc3080..53bd92f 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -79,6 +79,7 @@ microchip     Microchip Technology Inc.
->  mosaixtech     Mosaix Technologies, Inc.
->  moxa   Moxa
->  mpl    MPL AG
-> +mundoreader    Mundo Reader S.L.
->  mxicy  Macronix International Co., Ltd.
->  national       National Semiconductor
->  neonode                Neonode Inc.
-> @@ -98,6 +99,7 @@ powervr       PowerVR (deprecated, use img)
->  qca    Qualcomm Atheros, Inc.
->  qcom   Qualcomm Technologies, Inc
->  qnap   QNAP Systems, Inc.
-> +radxa  Radxa
->  raidsonic      RaidSonic Technology GmbH
->  ralink Mediatek/Ralink Technology Corp.
->  ramtron        Ramtron International
-> --
-> 1.7.10.4
->
+>  arch/arm/boot/dts/am335x-boneblack.dts | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/am335x-boneblack.dts b/arch/arm/boot/dts/am335x-boneblack.dts
+> index 6b71ad95a5cf..305975d3f531 100644
+> --- a/arch/arm/boot/dts/am335x-boneblack.dts
+> +++ b/arch/arm/boot/dts/am335x-boneblack.dts
+> @@ -26,7 +26,6 @@
+>  	pinctrl-0 = <&emmc_pins>;
+>  	bus-width = <8>;
+>  	status = "okay";
+> -	ti,vcc-aux-disable-is-sleep;
+>  };
+>  
+>  &am33xx_pinmux {
+> -- 
+> 1.8.3.2
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
