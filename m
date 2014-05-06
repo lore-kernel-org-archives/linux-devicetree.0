@@ -1,13 +1,15 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH v4 04/15] clk: exynos5420: fix parent clocks for mscl sysmmu
-Date: Tue, 06 May 2014 21:56:39 +0530
-Message-ID: <1399393610-23394-5-git-send-email-shaik.ameer@samsung.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
+Date: Tue, 06 May 2014 11:54:16 +0200
+Message-ID: <5699845.615YLDid8d@wuerfel>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
+ <CAErSpo6gYT34-sOvNgEdV+3wxv=Fdqtx7c1d-4577mFydLtZMg@mail.gmail.com>
+ <1399347878.20388.96.camel@pasglop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+In-Reply-To: <1399347878.20388.96.camel@pasglop>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,51 +19,53 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: kgene.kim@samsung.com, shaik.samsung@gmail.com, t.figa@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, alim.akhtar@samsung.com, r.sh.open@gmail.com, mturquette@linaro.org, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+To: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Olof Johansson <olof@lixom.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Metcalf <cmetcalf@tilera.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the parent clocks for mscl sysmmu.
+On Tuesday 06 May 2014 13:44:38 Benjamin Herrenschmidt wrote:
+> On Mon, 2014-05-05 at 16:28 -0600, Bjorn Helgaas wrote:
+> > I still wonder whether arm, powerpc, and tile (and I just noticed
+> > microblaze also has a similar dma_direct_map_page()) could all be
+> > handled by attaching devices to a generic trivial IOMMU driver
+> > parameterized with the appropriate constant offset.
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Reviewed-by: Alim Akhtar <alim.akhtar@samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+It gets complex at that point, but it can be done. We are going to
+need support for IOMMU and swiotlb in the same place, as well
+as coherent and noncoherent ops, so the code here will be something
+like
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 328be6a..320f72d 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -582,6 +582,9 @@ static struct samsung_div_clock exynos5420_div_clks[] __initdata = {
- 			DIV2_RATIO0, 4, 2),
- 	DIV(0, "dout_gscl_blk_333", "aclk333_432_gscl", DIV2_RATIO0, 6, 2),
- 
-+	/* MSCL Block */
-+	DIV(0, "dout_mscl_blk", "aclk400_mscl", DIV2_RATIO0, 28, 2),
-+
- 	/* ISP Block */
- 	DIV(0, "dout_isp_sensor0", "mout_isp_sensor", SCLK_DIV_ISP0, 8, 8),
- 	DIV(0, "dout_isp_sensor1", "mout_isp_sensor", SCLK_DIV_ISP0, 16, 8),
-@@ -812,12 +815,12 @@ static struct samsung_gate_clock exynos5420_gate_clks[] __initdata = {
- 	GATE(CLK_MSCL0, "mscl0", "aclk400_mscl", GATE_IP_MSCL, 0, 0, 0),
- 	GATE(CLK_MSCL1, "mscl1", "aclk400_mscl", GATE_IP_MSCL, 1, 0, 0),
- 	GATE(CLK_MSCL2, "mscl2", "aclk400_mscl", GATE_IP_MSCL, 2, 0, 0),
--	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "aclk400_mscl",
--			GATE_IP_MSCL, 8, 0, 0),
--	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "aclk400_mscl",
--			GATE_IP_MSCL, 9, 0, 0),
--	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "aclk400_mscl",
--			GATE_IP_MSCL, 10, 0, 0),
-+	GATE(CLK_SMMU_MSCL0, "smmu_mscl0", "dout_mscl_blk",
-+			GATE_IP_MSCL, 8, CLK_SET_RATE_PARENT, 0),
-+	GATE(CLK_SMMU_MSCL1, "smmu_mscl1", "dout_mscl_blk",
-+			GATE_IP_MSCL, 9, CLK_SET_RATE_PARENT, 0),
-+	GATE(CLK_SMMU_MSCL2, "smmu_mscl2", "dout_mscl_blk",
-+			GATE_IP_MSCL, 10, CLK_SET_RATE_PARENT, 0),
- 
- 	GATE(CLK_FIMD1, "fimd1", "aclk300_disp1", GATE_IP_DISP1, 0, 0, 0),
- 	GATE(CLK_DSIM1, "dsim1", "aclk200_disp1", GATE_IP_DISP1, 3, 0, 0),
--- 
-1.7.9.5
+	/* default is noncoherent, non-offset, no iommu */
+	if (offset) {
+		if (coherent)
+			set_arch_dma_coherent_offset_ops(dev);
+		else
+			set_arch_dma_offset_ops(dev);
+	} else if (coherent)
+		set_arch_dma_coherent_ops(dev);
+
+	if (iommu) {
+		if (coherent)
+			set_arch_dma_coherent_iommu_ops(dev);
+		else
+			set_arch_dma_iommu_ops(dev);
+	}
+
+Doing it in the default ops would reduce the number of cases
+from 5 to 3.
+
+It may be easier to replace set_arch_dma_coherent_ops() with
+a generic function that handles all cases:
+
+int set_arch_dma_ops(struct device *dev, bool coherent,
+		phys_addr_t offset, struct device_node *iommu);
+
+and let the architecture handle the cases it needs.
+
+> On powerpc, the offset is not constant, it can be per-device.
+
+I think that's the case on all of them. The code under review here
+is what parses the dma-ranges property in order to put the correct
+value into the per-device structure.
+
+	Arnd
