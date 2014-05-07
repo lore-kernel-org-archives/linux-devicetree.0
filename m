@@ -1,34 +1,112 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v4 0/2] net/phy: micrel: Add DT configuration support
- and documentation for KSZ9031
-Date: Wed, 07 May 2014 16:52:04 -0400 (EDT)
-Message-ID: <20140507.165204.912551375605501069.davem@davemloft.net>
-References: <1399362017-25787-1-git-send-email-hchaumette@adeneo-embedded.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH v2 06/11] dt-bindings: add documentation for rk3188 clock and reset unit
+Date: Wed, 07 May 2014 23:14:10 +0200
+Message-ID: <2003795.Fases3iJaR@diego>
+References: <3477211.Gkyeur83TV@diego>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399362017-25787-1-git-send-email-hchaumette@adeneo-embedded.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: hchaumette@adeneo-embedded.com
-Cc: f.fainelli@gmail.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, xobs@kosagi.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <3477211.Gkyeur83TV@diego>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Hubert Chaumette <hchaumette@adeneo-embedded.com>
-Date: Tue,  6 May 2014 09:40:15 +0200
+This add bindings documentation for the clock and reset unit found on
+rk3188 SoCs from Rockchip.
 
->  - Adds DT configuration support for ksz9031
->  - Renames micrel-ksz9021.txt to micrel-ksz90x1.txt and adds ksz9031 binding
->    documentation
-> 
-> Changes since v3:
->  - Rebased on net-next
-> Changes since v2:
->  - Merged together ksz9031_load_{clk,data,ctrl}_skew_values()
->  - Added field length and number of fields prameter to account for registers
->   specificities
->  - Added binding documentation
-> Changes since v1:
->  - Removed ksz9021 and ksz9031 fixup deletions from arch/arm/mach-imx/mach-imx6q.c
+Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+---
+ .../bindings/clock/rockchip,rk3188-cru.txt         | 74 ++++++++++++++++++++++
+ 1 file changed, 74 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
 
-Series applied to net-next, thanks.
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+new file mode 100644
+index 0000000..8165c0c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+@@ -0,0 +1,74 @@
++* Rockchip RK3188 Clock and Reset Unit
++
++The RK3188 clock controller generates and supplies clock to various controllers
++within the SoC and also implements a reset controller for SoC peripherals.
++There exist two variants of the rk3188 SoC, the rk3188 and rk3188a, with
++slight differences in the pll handling.
++
++Required Properties:
++
++- compatible: should be "rockchip,rk3188-cru" or "rockchip,rk3188a-cru"
++- reg: physical base address of the controller and length of memory mapped
++  region. The first element should be the cru register space and the second
++  element should be the address of the GRF_SOC_STATUS register providing the
++  pll lock status.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
++
++- rockchip,armclk-divider-table: when the frequency of the APLL is changed
++  some core divider clocks also need to be updated. These divider clocks have
++  SoC specific divider clock output requirements for a specific APLL clock
++  speeds. When APLL clock rate is changed, these divider clocks are
++  reprogrammed with pre-determined values in order to maintain the SoC
++  specific divider clock outputs. This property lists the divider values
++  for these clocks for supported APLL clock speeds.
++  The format of each entry included in the arm-frequency-table should be
++  defined as
++
++      cell #1: arm clock parent frequency
++      cell #2 ~ cell 3#: value of clock divider of core_peri and aclk_core.
++
++- #rockchip,armclk-cells: defines the number of cells in
++  rockchip,armclk-divider-table property. The value of this property depends on
++  the SoC type. For RK3188 SoCs it should be 3.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in dt-bindings/clock/rk3188-cru.h header and can be used
++in device tree sources.
++
++External clocks:
++
++The basic input clock is generated outside the SoC. It is expected that it is
++defined using standard clock bindings with a clock-output-name of "xin24m".
++
++Example: Clock controller node:
++
++	cru: cru@20000000 {
++		compatible = "rockchip,rk3188-cru";
++		reg = <0x20000000 0x1000>,
++		      <0x200080ac 0x4>;
++
++		#clock-cells = <1>;
++
++		#rockchip,armclk-cells = <3>;
++		rockchip,armclk-divider-table =	<1608000 2 3>,
++						<1416000 2 3>,
++						<1200000 2 3>,
++						<1008000 2 3>,
++						< 816000 2 3>,
++						< 504000 1 3>,
++						< 312000 0 1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@10124000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x10124000 0x400>;
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <1>;
++		clocks = <&cru SCLK_UART0>;
++	};
+-- 
+1.9.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
