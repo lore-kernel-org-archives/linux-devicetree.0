@@ -1,8 +1,7 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 7/7] ARM: sunxi: dt: add PRCM clk and reset
- controller subdevices
-Date: Wed,  7 May 2014 19:25:54 +0200
-Message-ID: <1399483554-8824-8-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 4/7] mfd: sun6i-prcm: document DT bindings
+Date: Wed,  7 May 2014 19:25:51 +0200
+Message-ID: <1399483554-8824-5-git-send-email-boris.brezillon@free-electrons.com>
 References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -19,65 +18,78 @@ To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT definitions for PRCM (Power/Reset/Clock Management) clock and reset
-controller subdevices.
+Document DT bindings of the PRCM (Power/Reset/Clock Management) unit.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun6i-a31.dtsi | 39 ++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ .../devicetree/bindings/mfd/sun6i-prcm.txt         | 59 ++++++++++++++++++++++
+ 1 file changed, 59 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index ec3253a..b69be0b 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -498,9 +498,46 @@
- 			reg = <0x01f01c00 0x300>;
- 		};
- 
--		prcm@01f01c00 {
-+		prcm@01f01400 {
- 			compatible = "allwinner,sun6i-a31-prcm";
- 			reg = <0x01f01400 0x200>;
+diff --git a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+new file mode 100644
+index 0000000..1f5a31f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+@@ -0,0 +1,59 @@
++* Allwinner PRCM (Power/Reset/Clock Management) Multi-Functional Device
 +
-+			ar100: ar100_clk {
-+				compatible = "allwinner,sun6i-a31-ar100-clk";
-+				#clock-cells = <0>;
-+				clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
-+			};
++PRCM is an MFD device exposing several Power Management related devices
++(like clks and reset controllers).
 +
-+			ahb0: ahb0_clk {
-+				compatible = "fixed-factor-clock";
-+				#clock-cells = <0>;
-+				clock-div = <1>;
-+				clock-mult = <1>;
-+				clocks = <&ar100>;
-+				clock-output-names = "ahb0";
-+			};
++Required properties:
++ - compatible: "allwinner,sun6i-a31-prcm"
++ - reg: The PRCM registers range
 +
-+			apb0: apb0_clk {
-+				compatible = "allwinner,sun6i-a31-apb0-clk";
-+				#clock-cells = <0>;
-+				clocks = <&ahb0>;
-+				clock-output-names = "apb0";
-+			};
++The prcm node may contain several subdevices definitions:
++ - see Documentation/devicetree/clk/sunxi.txt for clock devices
++ - see Documentation/devicetree/reset/allwinner,sunxi-clock-reset.txt for reset
++   controller devices
 +
-+			apb0_gates: apb0_gates_clk {
-+				compatible = "allwinner,sun6i-a31-apb0-gates-clk";
-+				#clock-cells = <1>;
-+				clocks = <&apb0>;
-+				clock-output-names = "apb0_pio", "apb0_ir",
-+						"apb0_timer01", "apb0_p2wi",
-+						"apb0_uart", "apb0_1wire",
-+						"apb0_i2c";
-+			};
 +
-+			apb0_rst: apb0_rst {
-+				compatible = "allwinner,sun6i-a31-clock-reset";
-+				#reset-cells = <1>;
-+			};
- 		};
- 	};
- };
++Example:
++
++	prcm: prcm@01f01400 {
++		compatible = "allwinner,sun6i-a31-prcm";
++		reg = <0x01f01400 0x200>;
++
++		/* Put subdevices here */
++		ar100: ar100_clk {
++			compatible = "allwinner,sun6i-a31-ar100-clk";
++			#clock-cells = <0>;
++			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
++		};
++
++		ahb0: ahb0_clk {
++			compatible = "fixed-factor-clock";
++			#clock-cells = <0>;
++			clock-div = <1>;
++			clock-mult = <1>;
++			clocks = <&ar100_div>;
++			clock-output-names = "ahb0";
++		};
++
++		apb0: apb0_clk {
++			compatible = "allwinner,sun6i-a31-apb0-clk";
++			#clock-cells = <0>;
++			clocks = <&ahb0>;
++			clock-output-names = "apb0";
++		};
++
++		apb0_gates: apb0_gates_clk {
++			compatible = "allwinner,sun6i-a31-apb0-gates-clk";
++			#clock-cells = <1>;
++			clocks = <&apb0>;
++			clock-output-names = "apb0_pio", "apb0_ir",
++					"apb0_timer01", "apb0_p2wi",
++					"apb0_uart", "apb0_1wire",
++					"apb0_i2c";
++		};
++
++		apb0_rst: apb0_rst {
++			compatible = "allwinner,sun6i-a31-clock-reset";
++			#reset-cells = <1>;
++		};
++	};
 -- 
 1.8.3.2
