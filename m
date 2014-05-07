@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 4/4] of: kill off of_can_translate_address
-Date: Wed,  7 May 2014 16:48:18 -0500
-Message-ID: <1399499298-8830-5-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 3/4] of/platform: fix device naming for non-translatable addresses
+Date: Wed,  7 May 2014 16:48:17 -0500
+Message-ID: <1399499298-8830-4-git-send-email-robherring2@gmail.com>
 References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
@@ -12,89 +12,52 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-of_can_translate_address only checks some conditions for address
-translation, but does not check other conditions like having range
-properties. The checks it does do are redundant with
-__of_address_translate. The only difference is printing a message or
-not. Since we only have a single caller that does the full translation
-anyway, just remove of_can_translate_address and quiet the error
-message.
+Using non-translatable addresses in platform device names is wrong
+because they may not be globally unique. Just use the default naming with
+a global index if the address cannot be translated instead.
 
+of_can_translate_address has the same checks as of_translate_address, so
+we can remove it here as well.
+
+Reported-by: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Josh Cartwright <joshc@codeaurora.org>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: Bjorn Andersson <bjorn@kryo.se>
+Cc: Frank Rowand <frowand.list@gmail.com>
 Cc: Grant Likely <grant.likely@linaro.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/address.c       | 22 +---------------------
- drivers/of/platform.c      |  5 ++---
- include/linux/of_address.h |  1 -
- 3 files changed, 3 insertions(+), 25 deletions(-)
+ drivers/of/platform.c | 11 +----------
+ 1 file changed, 1 insertion(+), 10 deletions(-)
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index cb4242a..95351b2 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -498,8 +498,7 @@ static u64 __of_translate_address(struct device_node *dev,
- 	/* Count address cells & copy address locally */
- 	bus->count_cells(dev, &na, &ns);
- 	if (!OF_CHECK_COUNTS(na, ns)) {
--		printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
--		       of_node_full_name(dev));
-+		pr_debug("OF: Bad cell count for %s\n", of_node_full_name(dev));
- 		goto bail;
- 	}
- 	memcpy(addr, in_addr, na * 4);
-@@ -564,25 +563,6 @@ u64 of_translate_dma_address(struct device_node *dev, const __be32 *in_addr)
- }
- EXPORT_SYMBOL(of_translate_dma_address);
- 
--bool of_can_translate_address(struct device_node *dev)
--{
--	struct device_node *parent;
--	struct of_bus *bus;
--	int na, ns;
--
--	parent = of_get_parent(dev);
--	if (parent == NULL)
--		return false;
--
--	bus = of_match_bus(parent);
--	bus->count_cells(dev, &na, &ns);
--
--	of_node_put(parent);
--
--	return OF_CHECK_COUNTS(na, ns);
--}
--EXPORT_SYMBOL(of_can_translate_address);
--
- const __be32 *of_get_address(struct device_node *dev, int index, u64 *size,
- 		    unsigned int *flags)
- {
 diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index d827ceb..07cfd1b 100644
+index 622aeb3..d827ceb 100644
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -140,9 +140,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 		return NULL;
+@@ -78,7 +78,6 @@ void of_device_make_bus_id(struct device *dev)
+ 	struct device_node *node = dev->of_node;
+ 	const __be32 *reg;
+ 	u64 addr;
+-	const __be32 *addrp;
+ 	int magic;
  
- 	/* count the io and irq resources */
--	if (of_can_translate_address(np))
--		while (of_address_to_resource(np, num_reg, &temp_res) == 0)
--			num_reg++;
-+	while (of_address_to_resource(np, num_reg, &temp_res) == 0)
-+		num_reg++;
- 	num_irq = of_irq_count(np);
- 
- 	/* Populate the resource table */
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 5f6ed6b..906ca76 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -40,7 +40,6 @@ extern u64 of_translate_dma_address(struct device_node *dev,
- 
- #ifdef CONFIG_OF_ADDRESS
- extern u64 of_translate_address(struct device_node *np, const __be32 *addr);
--extern bool of_can_translate_address(struct device_node *dev);
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
- extern struct device_node *of_find_matching_node_by_address(
+ #ifdef CONFIG_PPC_DCR
+@@ -106,15 +105,7 @@ void of_device_make_bus_id(struct device *dev)
+ 	 */
+ 	reg = of_get_property(node, "reg", NULL);
+ 	if (reg) {
+-		if (of_can_translate_address(node)) {
+-			addr = of_translate_address(node, reg);
+-		} else {
+-			addrp = of_get_address(node, 0, NULL, NULL);
+-			if (addrp)
+-				addr = of_read_number(addrp, 1);
+-			else
+-				addr = OF_BAD_ADDR;
+-		}
++		addr = of_translate_address(node, reg);
+ 		if (addr != OF_BAD_ADDR) {
+ 			dev_set_name(dev, "%llx.%s",
+ 				     (unsigned long long)addr, node->name);
 -- 
 1.9.1
