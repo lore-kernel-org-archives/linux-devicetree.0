@@ -1,58 +1,57 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 1/7] reset: sunxi: document sunxi's reset
- controllers bindings
-Date: Wed,  7 May 2014 19:25:48 +0200
-Message-ID: <1399483554-8824-2-git-send-email-boris.brezillon@free-electrons.com>
-References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBNGZVGNQKGQE5AMV37A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1399483554-8824-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 0/7] mfd: add basic sun6i A31 PRCM support
+Date: Wed,  7 May 2014 19:25:47 +0200
+Message-ID: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings documentation for sunxi's reset controllers.
+Hello,
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../bindings/reset/allwinner,sunxi-clock-reset.txt  | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
+This patch series adds support for some functions provided by the PRCM
+(Power/Reset/Clock Management) unit:
+- AR100, AHB0 and APB0 clocks
+- APB0 reset controller
+
+These functions are needed to get the P2WI driver working, but more
+subdevices might be added later.
+
+Best Regards,
+
+Boris
+
+Changes since v1:
+- fix prcm and prcm-clks DT documentation
+- remove unneeded iounmap and kfree calls from sunxi_reset_remove function
+- rework the AR100 clk implementation
+
+Boris BREZILLON (7):
+  reset: sunxi: document sunxi's reset controllers bindings
+  reset: sunxi: allow MFD subdevices probe
+  mfd: add support for sun6i PRCM (Power/Reset/Clock Management) unit
+  mfd: sun6i-prcm: document DT bindings
+  clk: sunxi: add PRCM (Power/Reset/Clock Management) clks support
+  clk: sunxi: document PRCM clock compatible strings
+  ARM: sunxi: dt: add PRCM clk and reset controller subdevices
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   4 +
+ .../devicetree/bindings/mfd/sun6i-prcm.txt         |  59 ++++
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 ++
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |  51 ++-
+ drivers/clk/sunxi/Makefile                         |   2 +
+ drivers/clk/sunxi/clk-sun6i-prcm.c                 | 343 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sun6i-prcm.c                           | 151 +++++++++
+ drivers/reset/reset-sunxi.c                        |  21 +-
+ 10 files changed, 657 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
  create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm.c
+ create mode 100644 drivers/mfd/sun6i-prcm.c
 
-diff --git a/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
-new file mode 100644
-index 0000000..c8f7757
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
-@@ -0,0 +1,21 @@
-+Allwinner sunxi Peripheral Reset Controller
-+===========================================
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+- compatible: Should be one of the following:
-+  "allwinner,sun6i-a31-ahb1-reset"
-+  "allwinner,sun6i-a31-clock-reset"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- #reset-cells: 1, see below
-+
-+example:
-+
-+ahb1_rst: reset@01c202c0 {
-+	#reset-cells = <1>;
-+	compatible = "allwinner,sun6i-a31-ahb1-reset";
-+	reg = <0x01c202c0 0xc>;
-+};
 -- 
 1.8.3.2
+
