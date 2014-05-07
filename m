@@ -1,39 +1,94 @@
-From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
-Subject: Re: [PATCHv4 01/20] usb: ehci-orion: use platform_get_irq() for DT
- probing
-Date: Wed, 7 May 2014 11:09:21 -0400 (EDT)
-Message-ID: <Pine.LNX.4.44L0.1405071108540.1325-100000@iolanthe.rowland.org>
-References: <1399470746-2948-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
+ Armada 38x
+Date: Wed, 7 May 2014 10:10:08 -0500
+Message-ID: <20140507151008.GD769@saruman.home>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+ <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
+ <20140506153953.GF25849@saruman.home>
+ <20140507122326.54f3febc@free-electrons.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399470746-2948-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140507122326.54f3febc@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: balbi@ti.com, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 7 May 2014, Thomas Petazzoni wrote:
+--xB0nW4MQa6jZONgY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Commit 77dae54ab385033e488d8b07045bc7f8d931740f ('ARM: Kirkwood:
-> ehci-orion: Add device tree binding') added the Device Tree binding
-> for the ehci-orion driver. To achieve that with the irq, it used the
-> irq_of_parse_and_map() function when probed in DT-mode, and
-> platform_get_irq() when probed in non-DT mode.
-> 
-> This is not necessary: platform_get_irq() works just as fine in
-> DT-mode, since the conversion from DT information to 'struct resource'
-> is done by the generic layers of the kernel.
-> 
-> Therefore, this commit switches back to use just platform_get_irq().
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+On Wed, May 07, 2014 at 12:23:26PM +0200, Thomas Petazzoni wrote:
+> Dear Felipe Balbi,
+>=20
+> On Tue, 6 May 2014 10:39:53 -0500, Felipe Balbi wrote:
+>=20
+> > >  config USB_EHCI_HCD
+> > > diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+> > > index 7530468c9a4f..7a8db7f7dc01 100644
+> > > --- a/drivers/usb/host/Makefile
+> > > +++ b/drivers/usb/host/Makefile
+> > > @@ -19,6 +19,7 @@ xhci-hcd-$(CONFIG_PCI)	+=3D xhci-pci.o
+> > > =20
+> > >  ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
+> > >  	xhci-hcd-y		+=3D xhci-plat.o
+> > > +	xhci-hcd-$(CONFIG_USB_XHCI_MVEBU)	+=3D xhci-mvebu.o
+> >=20
+> > hmm, this has the potential of resulting in:
+> >=20
+> > 	xhci-hcd-m +=3D xhci-mvebu.o
+> >=20
+> > I guess it's best to turn this into:
+> >=20
+> > ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
+> > 	xhci-hcd-y +=3D xhci-mvebu.o
+> > endif
+>=20
+> I guess you meant:
+>=20
+> ifneq ($(CONFIG_USB_XHCI_MVEBU), )
+> 	xhci-hcd-y +=3D xhci-mvebu.o
+> endif
+>=20
+> Right?
 
-For patches 1 - 4:
+correct :-)
 
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+> If so, then what about instead making CONFIG_USB_XHCI_MVEBU a bool
+> instead of a tristate? It's more an option for the xhci-platform
+> driver than an additional separate module, IMO. What do you think?
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+fine by me too. It simply adds a quirk callback to xhci-plat.
+
+--=20
+balbi
+
+--xB0nW4MQa6jZONgY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTakzQAAoJEIaOsuA1yqREwfEQAJBL7O3PXnZSswB6kDXKSmIu
+Ps8lqIJ6lozGmDcaOAlekqVUEyouCEFxqyC3hGiIAYalqeGT+joiqUGcDrGYoKzv
+uVGR2B+8Fm2a545cifyKhYsxMP1PlCjtT0/QGOGcioOzsbLAFlBxJHc1sOw6lYRr
+bF0LM99aYr+2fMFUIVp+uL9gZ/gCULnRImmSRBa8O9o1FL2VeD1ov03BO3FG07EG
+cdY15hp46BJYvZ3QOFruTOGQSP1HqrMNdg5vJV7L0MsHB6gnmoZltN4T7Ahd8aoa
+dRIu0vczUCHjD2U9yAMy2e04sdZ5wpP/Tn4KasPmdlfX2pI1O5cLiUMdHz5ZwATu
+9ykhoWcNW0PvEUz6Wf895TvamKM5430K+JxOQdgRJESAM23dMSjZ02gXoXoJTt1v
+kh6GwG41s74OkSVU+40gWlKd72gkcxwbi2Mqh/CPsxnkhvvraC7ecyqpXcV0SNZS
+gejNMi6Us05gBx7pazgrfjD9MloS1vUduE7dAdIhS61qJnhxZ/aSRfmA2/hdzNTj
+F9z5lP9NK516nzYU1M4bgxCJ8+zED2YXMO3A35xqcxqsxXoXVYKgXZbEDKeQd4RF
+HP6txbPtU4oFK7okJuJ8U+jb03wjN99x/adACqa7ImxukK/ozG4YVvLMvP31NNmC
+BNs8jbjhUfEuK1NTMngE
+=kBvc
+-----END PGP SIGNATURE-----
+
+--xB0nW4MQa6jZONgY--
