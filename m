@@ -1,85 +1,62 @@
-From: =?UTF-8?Q?Ezequiel_Garc=C3=ADa?= <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [PATCH] input: rotary encoder: implement quarter period mode
-Date: Wed, 7 May 2014 11:51:31 -0300
-Message-ID: <CAAEAJfC3a6F3xORs9+-8q1vqAdbO=b8fA1QiUgEXC3GpdNeDpw@mail.gmail.com>
-References: <1387377798-22344-1-git-send-email-s.hauer@pengutronix.de>
-	<20140507144543.GE27177@e106331-lin.cambridge.arm.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Wed, 7 May 2014 15:53:27 +0100
+Message-ID: <20140507145327.GB2563@arm.com>
+References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
+ <201404301734.14478.arnd@arndb.de>
+ <CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
+ <4288313.uDFYZQS3W7@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140507144543.GE27177-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?Q?Guido_Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4288313.uDFYZQS3W7@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Srikanth Thokala <sthokal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <michal.simek@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, marc.zyngier@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On 7 May 2014 11:45, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Dec 18, 2013 at 02:43:18PM +0000, Sascha Hauer wrote:
->> Some rotary encoders have a stable state in all output state
->> combinations. Add support for this type of encoder.
->>
->> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> Cc: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
->> Cc: linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> ---
->>  .../devicetree/bindings/input/rotary-encoder.txt   |  1 +
->>  Documentation/input/rotary-encoder.txt             |  9 +++++--
->>  drivers/input/misc/rotary_encoder.c                | 30 +++++++++++=
-+++++++++--
->>  include/linux/rotary_encoder.h                     |  1 +
->>  4 files changed, 37 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.=
-txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
->> index 3315495..cbdb29b 100644
->> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
->> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
->> @@ -15,6 +15,7 @@ Optional properties:
->>  - rotary-encoder,rollover: Automatic rollove when the rotary value =
-becomes
->>    greater than the specified steps or smaller than 0. For absolute =
-axis only.
->>  - rotary-encoder,half-period: Makes the driver work on half-period =
-mode.
->> +- rotary-encoder,quarter-period: Makes the driver work on quarter-p=
-eriod mode.
->
-> The new property looks as sane to me as the half-period property, so =
-for
-> the binding addition:
->
-> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->
+Hi all,
 
-Thanks!
+Thanks for CC'ing me, Arnd.
 
-> As a general nitpick it would be nicer if the binding didn't refer to
-> the driver and had a description of {half,quarter} period modes inlin=
-e,
-> but that might be a bit tricky and shouldn't block this.
->
+On Wed, May 07, 2014 at 03:35:48PM +0100, Arnd Bergmann wrote:
+> On Wednesday 07 May 2014 17:21:13 Srikanth Thokala wrote:
+> > On Wed, Apr 30, 2014 at 9:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > Would it be possible to split the config space access out into
+> > > a separate file? It would be nice to share that with the generic
+> > > ECAM driver that Will Deacon has sent.
+> > 
+> > Yes, it should be possible.  Is it ok, if I work on top of this driver?
+> 
+> Do you mean as a follow-on patch? My feeling is that since we are trying
+> to merge both for 3.16, it would be good to get it done right away if
+> it doesn't cause too much extra work.
 
-I can submit a follow-up patch to clean the binding. It shouldn't be
-too hard to re-phrase
-the properties so it's clear it's a hardware property.
+Do you mean something as simple as a helper for base + offset ECAM
+addressing, or something more involved that handles the mapping as well? The
+latter would need some alignment on sys->private_data, I think.
 
-Dmitry, Do you think you can merge this for v3.16? I've posted a
-completely equivalent
-patch a while ago [1], which was acked by Daniel, but it was never
-merged. Sascha's patch
-looks fine as well:
+Srikanth: I'll CC you on the next version of my patches (I'll send them
+now).
 
-Acked-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+> > > As a general comment about the MSI implementation, I wonder if this is actually
+> > > generic enough to be shared with other host controllers. It could be moved
+> > > into a separate file like the config space access in that case.
+> > 
+> > I feel the MSI implementation is not generic by looking into the other
+> > host controllers,
+> > it is more specific to the hardware.  Correct me, if am wrong.
+> 
+> The other host controllers are certainly incompatible, but this one looks
+> like it could be used on other controllers easily.
+> 
+> Splitting it out would also make it easier to use another MSI implementation
+> like the one in the GIC.
 
-[1] https://lkml.org/lkml/2013/10/4/167
---=20
-Ezequiel Garc=C3=ADa, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Actually, MarcZ and I already have my driver working with GICv3 + MSI. The
+code basically amounts to implementing {add,remove}_bus callbacks to set
+the msi_chip for the pci_bus, based on what we got out of the devicetree.
+I don't think we needed anything else... Marc?
+
+Will
