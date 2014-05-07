@@ -1,58 +1,86 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 6/6] clk: shmobile: Add r8a7740, sh73a0 SoCs to MSTP bindings
-Date: Wed, 7 May 2014 16:59:51 +0200
-Message-ID: <CAMuHMdXOgWdA3hO2oX3+KENURvmB2d+Btq-KDoTN7wP1pMJA=g@mail.gmail.com>
-References: <1399386233-11928-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1399386233-11928-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Wed, 7 May 2014 08:03:43 -0700
+Message-ID: <20140507150343.GA9502@atomide.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com>
+ <1398815562-24113-4-git-send-email-tony@atomide.com>
+ <5369EAE7.3030705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1399386233-11928-7-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht@gmail.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5369EAE7.3030705@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [140507 01:13]:
+> On 30/04/14 02:52, Tony Lindgren wrote:
+> > We can pass the GPIO configuration for ls037v7dw01 in a standard
+> > gpios property.
+> > 
+> > Signed-off-by: Tony Lindgren <tony@atomide.com>
+> > ---
+> >  .../bindings/panel/sharp,ls037v7dw01.txt           | 53 ++++++++++++++
+> >  .../omap2/displays-new/panel-sharp-ls037v7dw01.c   | 84 ++++++++++++++++++++--
+> >  2 files changed, 133 insertions(+), 4 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
+> > new file mode 100644
+> > index 0000000..7f6f5e1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
+> > @@ -0,0 +1,53 @@
+> > +SHARP LS037V7DW01 TFT-LCD panel
+> > +
+> > +Required properties:
+> > +- compatible: should be "sharp,ls037v7dw01"
+> > +
+> > +Optional properties:
+> > +- reset-gpios: a GPIO spec for the optional reset pin
+> > +- enable-gpios: a GPIO array for the optional configuration GPIOs
+> > +  ordered MO, LR, UD, INI as specified in the LS037V7DW01.pdf file.
+> > +
+> > +This binding is compatible with the simple-panel binding, which is specified
+> > +in simple-panel.txt in this directory.
+> > +
+> > +This panel can have zero to five GPIOs to configure
+> > +to change configuration between QVGA and VGA mode
+> > +and the scan direction. As these pins can be also
+> > +configured with external pulls, all the GPIOs are
+> > +considered optional with holes in the array.
+> > +
+> > +Example when connected to a omap2+ based device:
+> > +
+> > +	lcd0: display {
+> > +		compatible = "sharp,ls037v7dw01";
+> > +		power-supply = <&lcd_3v3>;
+> > +		reset-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB */
+> > +		enable-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
+> > +				&gpio1 2 GPIO_ACTIVE_HIGH	/* gpio2, lcd LR */
+> > +				&gpio1 3 GPIO_ACTIVE_HIGH	/* gpio3, lcd UD */
+> > +				&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */
+> 
+> Why are most of the gpios in 'enable-gpios'? MO, LR and UD don't really
+> have anything to do with enabling the panel. Why not just have one
+> 'gpios' array with all the gpios, as they are quite a mixed bunch?
 
-Thanks for your patch!
+Yeah that's what I had initially, but reading simple-panel.txt noticed
+there are some standardized GPIOs for reset and enable.
 
-CC devicetree + one comment below
+How about we set up one reset-gpios, one enable-gpios and an array of
+three unlabelled GPIOs?
 
-On Tue, May 6, 2014 at 4:23 PM, Ulrich Hecht <ulrich.hecht@gmail.com> wrote:
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> ---
->  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> index 5992dce..8514088 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
-> @@ -10,8 +10,10 @@ index in the group, from 0 to 31.
->  Required Properties:
->
->    - compatible: Must be one of the following
-> +    - "renesas,r8a7740-mstp-clocks" for R8A7740 MSTP gate clocks
+Or if we want to add something generic, we could add new mode-gpios
+property that other panels might be able to use too?
 
-Also known as "R-Mobile A1"
+BTW, I'm also personally fine with all five gpios showing in a single
+gpios property, I'm not too exited about naming anything in DT..
 
->      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
->      - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
-> +    - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
->      - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
->    - reg: Base address and length of the I/O mapped registers used by the MSTP
->      clocks. The first register is the clock control register and is mandatory.
-> --
-> 1.8.4.5
+Regards,
 
-Gr{oetje,eeting}s,
+Tony
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
