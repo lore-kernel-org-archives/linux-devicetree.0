@@ -1,69 +1,74 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Wed, 7 May 2014 10:59:20 -0700
-Message-ID: <20140507175919.GH9502@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-4-git-send-email-tony@atomide.com>
- <5369EAE7.3030705@ti.com>
- <20140507150343.GA9502@atomide.com>
- <536A5920.1020908@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: KConfig and DTS files
+Date: Wed, 7 May 2014 14:01:20 -0400
+Message-ID: <20140507180120.GG28159@titan.lakedaemon.net>
+References: <536A697D.3020002@boundarydevices.com>
+ <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <536A5920.1020908@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+In-Reply-To: <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140507 09:03]:
-> On 07/05/14 18:03, Tony Lindgren wrote:
-> 
-> >>> +	lcd0: display {
-> >>> +		compatible = "sharp,ls037v7dw01";
-> >>> +		power-supply = <&lcd_3v3>;
-> >>> +		reset-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB */
-> >>> +		enable-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
-> >>> +				&gpio1 2 GPIO_ACTIVE_HIGH	/* gpio2, lcd LR */
-> >>> +				&gpio1 3 GPIO_ACTIVE_HIGH	/* gpio3, lcd UD */
-> >>> +				&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */
-> >>
-> >> Why are most of the gpios in 'enable-gpios'? MO, LR and UD don't really
-> >> have anything to do with enabling the panel. Why not just have one
-> >> 'gpios' array with all the gpios, as they are quite a mixed bunch?
-> > 
-> > Yeah that's what I had initially, but reading simple-panel.txt noticed
-> > there are some standardized GPIOs for reset and enable.
-> 
-> I'm not sure if it's worth to try to make it compatible with
-> simple-panel. simple-panel bindings do not work with omapdss anyway, and
-> simple-panel doesn't have the support for input ports/endpoints.
-> 
-> Can the panel be used with only one gpio (I guess that would be INI or
-> RESB)? If not, simple-panel doesn't work.
+Eric,
 
-I guess in theory yes.
- 
-> > How about we set up one reset-gpios, one enable-gpios and an array of
-> > three unlabelled GPIOs?
-> > 
-> > Or if we want to add something generic, we could add new mode-gpios
-> > property that other panels might be able to use too?
-> > 
-> > BTW, I'm also personally fine with all five gpios showing in a single
-> > gpios property, I'm not too exited about naming anything in DT..
+To add to what Olof said:
+
+On Wed, May 07, 2014 at 10:24:46AM -0700, Olof Johansson wrote:
+> Hi,
 > 
-> I don't have a strong opinion here. I don't have much experience with
-> DT, especially with making bindings compatible with other ones.
+> On Wed, May 7, 2014 at 10:12 AM, Eric Nelson
+> <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
+> > Hi all,
+> >
+> > I suspect that this has been discussed previously, but I'm a
+> > N00b to DT and Google hasn't helped identify a discussion
+> > on the list.
+> >
+> > While getting my feet wet with DTS, I was quite surprised to
+> > see that there's no support for making parts of DTS files
+> > conditional on the kernel configuration.
+> >
+> > We often cost-optimize BOMs for our standard boards and omit
+> > bits and pieces not needed for a particular build, and
+> > it would be nice to surround optional components with
+> > conditionals:
+> >
+> >     #ifdef CONFIG_BLAH
+> >     #endif
+> >
+> > Please advise,
 > 
-> I'd just forget the simple-panel, and have single gpio array.
+> The DTS is independent on what drivers the kernel is actually
+> enabling. It should focus on what is actually there on hardware, and
+> not what is enabled in software.
 
-Well if it's a don't care flag for both of us, let's try to use
-the existing standard for simple-panel.txt and add mode-gpios
-property. I'll post a patch for that.
+I think what your looking for is handled by the dtsi/dts paradigm (yeah,
+I hate that word, but it fits).  Take the kirkwood.dtsi file for
+example.  It lists a bunch of nodes with status = 'disabled'.  The
+individual boardfiles then enable the nodes they actually have on the
+board.
 
-Regards,
+Say your family of boards used the kirkwood SoC, you could create a
+kirkwood-bounddev.dtsi, then a kirkwood-bounddev-boardA.dts and so on
+for each board.
 
-Tony
+The .dtsi lists all the nodes your product family uses.  The .dts
+enables only those found on boardA.
+
+If you have a node common to all products (say uart0) you could enable
+it in the .dtsi and skip mentioning it in all the .dts board files.
+
+Does that help?
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
