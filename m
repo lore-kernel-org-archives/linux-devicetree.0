@@ -1,95 +1,182 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 4/7] mfd: sun6i-prcm: document DT bindings
-Date: Wed,  7 May 2014 19:25:51 +0200
-Message-ID: <1399483554-8824-5-git-send-email-boris.brezillon@free-electrons.com>
-References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v4 1/2] Update Micrel KSZ90x1 binding documentation
+Date: Wed, 7 May 2014 10:31:02 -0700
+Message-ID: <CAGVrzcY=RaWEPFwsifw_RymBZ7zNVEV=-ZByn8HG-QWV9+2uVw@mail.gmail.com>
+References: <1399362017-25787-1-git-send-email-hchaumette@adeneo-embedded.com> <1399362017-25787-2-git-send-email-hchaumette@adeneo-embedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBOOZVGNQKGQEA562LAY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1399483554-8824-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399362017-25787-2-git-send-email-hchaumette@adeneo-embedded.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hubert Chaumette <hchaumette@adeneo-embedded.com>
+Cc: netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, xobs@kosagi.com, David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Document DT bindings of the PRCM (Power/Reset/Clock Management) unit.
+2014-05-06 0:40 GMT-07:00 Hubert Chaumette <hchaumette@adeneo-embedded.com>:
+> Renames micrel-ksz9021.txt to micrel-ksz90x1.txt and adds documentation for
+> the KSZ9031 binding from patch 1. Also adds step increment information, and
+> note about phy fixups.
+>
+> Signed-off-by: Hubert Chaumette <hchaumette@adeneo-embedded.com>
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- .../devicetree/bindings/mfd/sun6i-prcm.txt         | 59 ++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
 
-diff --git a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
-new file mode 100644
-index 0000000..1f5a31f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
-@@ -0,0 +1,59 @@
-+* Allwinner PRCM (Power/Reset/Clock Management) Multi-Functional Device
-+
-+PRCM is an MFD device exposing several Power Management related devices
-+(like clks and reset controllers).
-+
-+Required properties:
-+ - compatible: "allwinner,sun6i-a31-prcm"
-+ - reg: The PRCM registers range
-+
-+The prcm node may contain several subdevices definitions:
-+ - see Documentation/devicetree/clk/sunxi.txt for clock devices
-+ - see Documentation/devicetree/reset/allwinner,sunxi-clock-reset.txt for reset
-+   controller devices
-+
-+
-+Example:
-+
-+	prcm: prcm@01f01400 {
-+		compatible = "allwinner,sun6i-a31-prcm";
-+		reg = <0x01f01400 0x200>;
-+
-+		/* Put subdevices here */
-+		ar100: ar100_clk {
-+			compatible = "allwinner,sun6i-a31-ar100-clk";
-+			#clock-cells = <0>;
-+			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
-+		};
-+
-+		ahb0: ahb0_clk {
-+			compatible = "fixed-factor-clock";
-+			#clock-cells = <0>;
-+			clock-div = <1>;
-+			clock-mult = <1>;
-+			clocks = <&ar100_div>;
-+			clock-output-names = "ahb0";
-+		};
-+
-+		apb0: apb0_clk {
-+			compatible = "allwinner,sun6i-a31-apb0-clk";
-+			#clock-cells = <0>;
-+			clocks = <&ahb0>;
-+			clock-output-names = "apb0";
-+		};
-+
-+		apb0_gates: apb0_gates_clk {
-+			compatible = "allwinner,sun6i-a31-apb0-gates-clk";
-+			#clock-cells = <1>;
-+			clocks = <&apb0>;
-+			clock-output-names = "apb0_pio", "apb0_ir",
-+					"apb0_timer01", "apb0_p2wi",
-+					"apb0_uart", "apb0_1wire",
-+					"apb0_i2c";
-+		};
-+
-+		apb0_rst: apb0_rst {
-+			compatible = "allwinner,sun6i-a31-clock-reset";
-+			#reset-cells = <1>;
-+		};
-+	};
+> ---
+>  .../devicetree/bindings/net/micrel-ksz9021.txt     | 49 -------------
+>  .../devicetree/bindings/net/micrel-ksz90x1.txt     | 83 ++++++++++++++++++++++
+>  2 files changed, 83 insertions(+), 49 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/net/micrel-ksz9021.txt
+>  create mode 100644 Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/micrel-ksz9021.txt b/Documentation/devicetree/bindings/net/micrel-ksz9021.txt
+> deleted file mode 100644
+> index 997a63f..0000000
+> --- a/Documentation/devicetree/bindings/net/micrel-ksz9021.txt
+> +++ /dev/null
+> @@ -1,49 +0,0 @@
+> -Micrel KSZ9021 Gigabit Ethernet PHY
+> -
+> -Some boards require special tuning values, particularly when it comes to
+> -clock delays.  You can specify clock delay values by adding
+> -micrel-specific properties to an Ethernet OF device node.
+> -
+> -All skew control options are specified in picoseconds.  The minimum
+> -value is 0, and the maximum value is 3000.
+> -
+> -Optional properties:
+> - - rxc-skew-ps : Skew control of RXC pad
+> - - rxdv-skew-ps : Skew control of RX CTL pad
+> - - txc-skew-ps : Skew control of TXC pad
+> - - txen-skew-ps : Skew control of TX_CTL pad
+> - - rxd0-skew-ps : Skew control of RX data 0 pad
+> - - rxd1-skew-ps : Skew control of RX data 1 pad
+> - - rxd2-skew-ps : Skew control of RX data 2 pad
+> - - rxd3-skew-ps : Skew control of RX data 3 pad
+> - - txd0-skew-ps : Skew control of TX data 0 pad
+> - - txd1-skew-ps : Skew control of TX data 1 pad
+> - - txd2-skew-ps : Skew control of TX data 2 pad
+> - - txd3-skew-ps : Skew control of TX data 3 pad
+> -
+> -Examples:
+> -
+> -       /* Attach to an Ethernet device with autodetected PHY */
+> -       &enet {
+> -               rxc-skew-ps = <3000>;
+> -               rxdv-skew-ps = <0>;
+> -               txc-skew-ps = <3000>;
+> -               txen-skew-ps = <0>;
+> -               status = "okay";
+> -       };
+> -
+> -       /* Attach to an explicitly-specified PHY */
+> -       mdio {
+> -               phy0: ethernet-phy@0 {
+> -                       rxc-skew-ps = <3000>;
+> -                       rxdv-skew-ps = <0>;
+> -                       txc-skew-ps = <3000>;
+> -                       txen-skew-ps = <0>;
+> -                       reg = <0>;
+> -               };
+> -       };
+> -       ethernet@70000 {
+> -               status = "okay";
+> -               phy = <&phy0>;
+> -               phy-mode = "rgmii-id";
+> -       };
+> diff --git a/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+> new file mode 100644
+> index 0000000..692076f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/micrel-ksz90x1.txt
+> @@ -0,0 +1,83 @@
+> +Micrel KSZ9021/KSZ9031 Gigabit Ethernet PHY
+> +
+> +Some boards require special tuning values, particularly when it comes to
+> +clock delays. You can specify clock delay values by adding
+> +micrel-specific properties to an Ethernet OF device node.
+> +
+> +Note that these settings are applied after any phy-specific fixup from
+> +phy_fixup_list (see phy_init_hw() from drivers/net/phy/phy_device.c),
+> +and therefore may overwrite them.
+> +
+> +KSZ9021:
+> +
+> +  All skew control options are specified in picoseconds. The minimum
+> +  value is 0, the maximum value is 3000, and it is incremented by 200ps
+> +  steps.
+> +
+> +  Optional properties:
+> +
+> +    - rxc-skew-ps : Skew control of RXC pad
+> +    - rxdv-skew-ps : Skew control of RX CTL pad
+> +    - txc-skew-ps : Skew control of TXC pad
+> +    - txen-skew-ps : Skew control of TX CTL pad
+> +    - rxd0-skew-ps : Skew control of RX data 0 pad
+> +    - rxd1-skew-ps : Skew control of RX data 1 pad
+> +    - rxd2-skew-ps : Skew control of RX data 2 pad
+> +    - rxd3-skew-ps : Skew control of RX data 3 pad
+> +    - txd0-skew-ps : Skew control of TX data 0 pad
+> +    - txd1-skew-ps : Skew control of TX data 1 pad
+> +    - txd2-skew-ps : Skew control of TX data 2 pad
+> +    - txd3-skew-ps : Skew control of TX data 3 pad
+> +
+> +KSZ9031:
+> +
+> +  All skew control options are specified in picoseconds. The minimum
+> +  value is 0, and the maximum is property-dependent. The increment
+> +  step is 60ps.
+> +
+> +  Optional properties:
+> +
+> +    Maximum value of 1860:
+> +
+> +      - rxc-skew-ps : Skew control of RX clock pad
+> +      - txc-skew-ps : Skew control of TX clock pad
+> +
+> +    Maximum value of 900:
+> +
+> +      - rxdv-skew-ps : Skew control of RX CTL pad
+> +      - txen-skew-ps : Skew control of TX CTL pad
+> +      - rxd0-skew-ps : Skew control of RX data 0 pad
+> +      - rxd1-skew-ps : Skew control of RX data 1 pad
+> +      - rxd2-skew-ps : Skew control of RX data 2 pad
+> +      - rxd3-skew-ps : Skew control of RX data 3 pad
+> +      - txd0-skew-ps : Skew control of TX data 0 pad
+> +      - txd1-skew-ps : Skew control of TX data 1 pad
+> +      - txd2-skew-ps : Skew control of TX data 2 pad
+> +      - txd3-skew-ps : Skew control of TX data 3 pad
+> +
+> +Examples:
+> +
+> +       /* Attach to an Ethernet device with autodetected PHY */
+> +       &enet {
+> +               rxc-skew-ps = <3000>;
+> +               rxdv-skew-ps = <0>;
+> +               txc-skew-ps = <3000>;
+> +               txen-skew-ps = <0>;
+> +               status = "okay";
+> +       };
+> +
+> +       /* Attach to an explicitly-specified PHY */
+> +       mdio {
+> +               phy0: ethernet-phy@0 {
+> +                       rxc-skew-ps = <3000>;
+> +                       rxdv-skew-ps = <0>;
+> +                       txc-skew-ps = <3000>;
+> +                       txen-skew-ps = <0>;
+> +                       reg = <0>;
+> +               };
+> +       };
+> +       ethernet@70000 {
+> +               status = "okay";
+> +               phy = <&phy0>;
+> +               phy-mode = "rgmii-id";
+> +       };
+> --
+> 2.0.0.rc0
+>
+
+
+
 -- 
-1.8.3.2
+Florian
