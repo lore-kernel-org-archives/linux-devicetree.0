@@ -1,55 +1,154 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2 2/2] Documentation: dt: add an optional dma-desc-enable
- property for dwc2 usb
-Date: Wed, 07 May 2014 20:22:42 +0400
-Message-ID: <536A5DD2.6030705@cogentembedded.com>
-References: <1399417243-4614-1-git-send-email-dinguyen@altera.com> <1399417243-4614-2-git-send-email-dinguyen@altera.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v2 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM
+ bindings
+Date: Wed, 07 May 2014 19:03:27 +0200
+Message-ID: <536A675F.9040204@samsung.com>
+References: <1399363824-23543-1-git-send-email-sachin.kamat@linaro.org>
+ <53691187.80101@gmail.com>
+ <CAK9yfHz6PVT2C-TZkFHqtdj4rT-R8w+aU=jTTnLMF5k4JOXGxg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399417243-4614-2-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAK9yfHz6PVT2C-TZkFHqtdj4rT-R8w+aU=jTTnLMF5k4JOXGxg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 06.05.2014 20:09, Sachin Kamat wrote:
+[snip]
+> On 6 May 2014 22:14, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+[snip]
+>> On 06.05.2014 10:10, Sachin Kamat wrote:
+[snip]
+>>> diff --git a/arch/arm/mach-exynos/platsmp.c
+>>> b/arch/arm/mach-exynos/platsmp.c
+>>> index 03e5e9f94705..ccbcdd7b8a86 100644
+>>> --- a/arch/arm/mach-exynos/platsmp.c
+>>> +++ b/arch/arm/mach-exynos/platsmp.c
+>>> @@ -20,6 +20,7 @@
+>>>   #include <linux/jiffies.h>
+>>>   #include <linux/smp.h>
+>>>   #include <linux/io.h>
+>>> +#include <linux/of_address.h>
+>>>
+>>>   #include <asm/cacheflush.h>
+>>>   #include <asm/smp_plat.h>
+>>> @@ -33,11 +34,35 @@
+>>>
+>>>   extern void exynos4_secondary_startup(void);
+>>>
+>>> +static void __iomem *sram_base_addr;
+>>> +void __iomem *sram_ns_base_addr;
+>>
+>>
+>> This is probably just a matter of preference, but I'd make this static and
+>> provide a getter function, like exynos_get_sram_ns_base();
+>>
+>> Also this address seems to be used by the firmware code exclusively. If we
+>> want to make the firmware code more self-contained, maybe the mapping of
+>> firmware-specific SRAM region could be handled there, instead? This would
+>> also eliminate the need for having an exported variable or getter function.
+>> What do you think?
+> 
+> I thought of the same. However 2 reasons prevented me from implementing this.
+> 
+> 1. Code duplication
+> 2. This code should be executed only once. I put it in exynos_firmware_init.
+> However it gave a crash while doing of_iomap. So moved it back to the current
+> location.
+>
 
-On 07-05-2014 3:00, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
+Right, exynos_firmware_init() is called too early, before ioremap() is
+available, so there is no good place to put this in firmware code. So,
+let's keep this as is for now and eventually move it to firmware if
+needed and/or a proper method of initialization is available.
 
-> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+>>
+>>
+>>> +
+>>> +static void __init exynos_smp_prepare_sram(void)
+>>> +{
+>>> +       struct device_node *node;
+>>> +
+>>> +       for_each_compatible_node(node, NULL, "samsung,exynos4210-sram") {
+>>> +               if (of_device_is_available(node)) {
+>>> +                       sram_base_addr = of_iomap(node, 0);
+>>> +                       if (!sram_base_addr)
+>>> +                               pr_err("Secondary CPU boot address not
+>>> found\n");
+>>
+>>
+>> I don't think this is an error at this stage. Some platforms might not have
+>> either of these SRAM reserved regions (such as those using INFORM registers
+>> instead). Instead, the base address should be checked whenever it is needed
+>> and errors should be handled then, like in exynos_set_cpu_boot_addr().
+> 
+> Yes. This is more from an information perspective. Probably pr_warn or
+> pr_info would
+> be better?
+> 
 
-> The "dma-desc-enable" property can be used to enable descriptor DMA mode
-> for the DWC2 USB IP.
+IMHO this shouldn't produce any messages at this stage. Just whenever
+either of addresses is actually needed and is not initialized a message
+should be printed.
 
-> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
-> ---
-> v2: Reword property description to enable instead of disable
-> ---
->   Documentation/devicetree/bindings/usb/dwc2.txt |    7 +++++++
->   1 file changed, 7 insertions(+)
+>>> +}
+>>> +
+>>>   static inline void __iomem *cpu_boot_reg_base(void)
+>>>   {
+>>>         if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_1_1)
+>>>                 return S5P_INFORM5;
+>>> -       return S5P_VA_SYSRAM;
+>>> +       return sram_base_addr;
+>>>   }
+>>>
+>>>   static inline void __iomem *cpu_boot_reg(int cpu)
+>>> @@ -147,7 +172,8 @@ static int exynos_boot_secondary(unsigned int cpu,
+>>> struct task_struct *idle)
+>>>                  * and fall back to boot register if it fails.
+>>>                  */
+>>>                 if (call_firmware_op(set_cpu_boot_addr, phys_cpu,
+>>> boot_addr))
+>>> -                       __raw_writel(boot_addr, cpu_boot_reg(phys_cpu));
+>>> +                       if (cpu_boot_reg_base())
+>>> +                               __raw_writel(boot_addr,
+>>> cpu_boot_reg(phys_cpu));
+>>
+>>
+>> I'd rework this for proper error handling, e.g.
+>>
+>>         int ret;
+>>
+>>         /* ... */
+>>
+>>         ret = call_firmware_op(set_cpu_boot_addr, phys_cpu, boot_addr);
+>>         if (ret && ret != -ENOSYS)
+>>                 goto fail;
+>>         if (ret == -ENOSYS) {
+>>                 /* Fall back to firmware-less way. */
+>>                 void __iomem *boot_reg = cpu_boot_reg(phys_cpu);
+>>
+>>                 if (IS_ERR(boot_reg)) {
+>>                         ret = PTR_ERR(boot_reg);
+>>                         goto fail;
+>>                 }
+>>         }
+>>
+>>         /* ... */
+>>
+>> fail:
+>>         /* Clean-up after error */
+>>
+>> Of course, cpu_boot_reg() will need to be converted to follow the ERR_PTR()
+>> model, but IMHO proper error handling is a good reason to do so.
+> 
+> How about handling this separately outside this patch?
+> 
 
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index b8b6871..9b471b5 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -14,6 +14,13 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
->   Optional properties:
->   - phys: phy provider specifier
->   - phy-names: shall be "device"
-> +- dma-desc-enable: Should be <1> to enable descriptor dma mode. This
-> +	property is used to enable descriptor DMA support. The reason why
-> +	this property is needed is because the HW supports descriptor DMA
-> +	mode, but descriptor dma mode will not support SPLIT transactions.
-> +	So this property can be used to optionally enable descriptor DMA
-> +	support.
+This patch is already changing surroundings of this code, so I'd say it
+should do it the right way from the start.
 
-    Why not make this property boolean?
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
