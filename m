@@ -1,83 +1,59 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH V2 2/2] ARM: dts: Add sound node for Peach-pit board
-Date: Wed,  7 May 2014 10:22:28 +0530
-Message-ID: <1399438348-10819-3-git-send-email-tushar.behera@linaro.org>
-References: <1399438348-10819-1-git-send-email-tushar.behera@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399438348-10819-1-git-send-email-tushar.behera@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kgene.kim@samsung.com, robh+dt@kernel.org
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH v2 0/3] Add display support for gta04 device
+Date: Wed, 7 May 2014 07:35:26 +0200
+Message-ID: <CAAfyv34a3FfKUzwz7UDt-77V692eLdJL+h4c0pve2V+g351Weg@mail.gmail.com>
+References: <1398284120-4986-1-git-send-email-marek@goldelico.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1398284120-4986-1-git-send-email-marek@goldelico.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, rdunlap@infradead.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-The audio setup on Peach-pit board is similar to Snow board, hence the
-sound-card driver used on Snow board can be reused on Peach-pit board.
+Tomi,
 
-Peach-pit board uses MAX98090 audio codec.
+any objections to this patch set? If not can you please take it? Thanks.
 
-Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
----
-Changes for V2:
-1. Rebased on now-accepted exynos5420-peach-pit.dts file
+On Wed, Apr 23, 2014 at 10:15 PM, Marek Belisko <marek@goldelico.com> wrote:
+> This 3 patches adding display support for openmoko gta04 device.
+> First patch add DT bindings for topolly td028 panel. Second add description for
+> dss + panel and third fix panel probing when panel is compiled as module.
+>
+> Changes from v1:
+> - extend panel compatible string by 'omapdss'
+> - add tpo-td028 panel to dss_compat_conv_list
+> - add MODULE_ALIAS macro to properly probe panel when is compiled as module
+>
+> Marek Belisko (3):
+>   omapdss: panel-tpo-td028ec1: Add DT support.
+>   ARM: dts: oma3-gta04: Add display support
+>   omapdss: panel-tpo-td028ec1: Add module alias
+>
+>  .../bindings/video/toppoly,td028ttec1.txt          | 30 ++++++++
+>  arch/arm/boot/dts/omap3-gta04.dts                  | 86 ++++++++++++++++++++++
+>  arch/arm/mach-omap2/display.c                      |  1 +
+>  .../omap2/displays-new/panel-tpo-td028ttec1.c      | 33 ++++++++-
+>  4 files changed, 149 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/video/toppoly,td028ttec1.txt
+>
+> --
+> 1.8.3.2
+>
 
- arch/arm/boot/dts/exynos5420-peach-pit.dts |   31 ++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+BR,
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index fae33dd..9902183 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -58,9 +58,23 @@
- 		pinctrl-0 = <&pwm0_out>;
- 		pinctrl-names = "default";
- 	};
-+
-+	sound {
-+		compatible = "google,snow-audio-max98090";
-+
-+		samsung,i2s-controller = <&i2s0>;
-+		samsung,audio-codec = <&max98090>;
-+	};
- };
- 
- &pinctrl_0 {
-+	max98090_irq: max98090-irq {
-+		samsung,pins = "gpx0-2";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
- 	tpm_irq: tpm-irq {
- 		samsung,pins = "gpx1-0";
- 		samsung,pin-function = <0>;
-@@ -123,6 +137,19 @@
- 	};
- };
- 
-+&hsi2c_7 {
-+	status = "okay";
-+
-+	max98090: codec@10 {
-+		compatible = "maxim,max98090";
-+		reg = <0x10>;
-+		interrupts = <2 0>;
-+		interrupt-parent = <&gpx0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&max98090_irq>;
-+	};
-+};
-+
- &hsi2c_9 {
- 	status = "okay";
- 	clock-frequency = <400000>;
-@@ -145,3 +172,7 @@
- &watchdog {
- 	timeout-sec = <32>;
- };
-+
-+&i2s0 {
-+	status = "okay";
-+};
+marek
+
 -- 
-1.7.9.5
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
