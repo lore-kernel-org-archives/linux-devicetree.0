@@ -1,91 +1,52 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH 5/5] ARM: dts: enable dp-controller for exynos5420 based
- peach-pit board
-Date: Wed, 7 May 2014 19:11:36 +0530
-Message-ID: <CAPdUM4PZLAOfdtH8xO9C4x0CKhWmX2PstqNkAE2cffTnn45VfQ@mail.gmail.com>
-References: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
-	<1397994525-18537-6-git-send-email-rahul.sharma@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1397994525-18537-6-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>, Jingoo Han <jg1.han@samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv4 01/20] usb: ehci-orion: use platform_get_irq() for DT probing
+Date: Wed,  7 May 2014 15:52:07 +0200
+Message-ID: <1399470746-2948-2-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1399470746-2948-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399470746-2948-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+Commit 77dae54ab385033e488d8b07045bc7f8d931740f ('ARM: Kirkwood:
+ehci-orion: Add device tree binding') added the Device Tree binding
+for the ehci-orion driver. To achieve that with the irq, it used the
+irq_of_parse_and_map() function when probed in DT-mode, and
+platform_get_irq() when probed in non-DT mode.
 
-I have same update for this patch. The new DT property is Acked at
-http://oascentral.opensubscriber.com/message/dri-devel@lists.freedesktop.org/17150750.html
+This is not necessary: platform_get_irq() works just as fine in
+DT-mode, since the conversion from DT information to 'struct resource'
+is done by the generic layers of the kernel.
 
-Please consider it for merge.
+Therefore, this commit switches back to use just platform_get_irq().
 
-Regards,
-Rahul Sharma.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/usb/host/ehci-orion.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-On 20 April 2014 17:18, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> From: Rahul Sharma <Rahul.Sharma@samsung.com>
->
-> Enable dp-controller for peach-pit board.
->
-> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5420-peach-pit.dts |   34 ++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> index d6eaa1f..e6199e1 100644
-> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> @@ -61,6 +61,13 @@
->                         samsung,pin-pud = <1>;
->                         samsung,pin-drv = <0>;
->                 };
-> +
-> +               dp_hpd: dp_hpd {
-> +                       samsung,pins = "gpx2-6";
-> +                       samsung,pin-function = <0>;
-> +                       samsung,pin-pud = <3>;
-> +                       samsung,pin-drv = <0>;
-> +               };
->         };
->
->         pinctrl@14010000 {
-> @@ -249,6 +256,33 @@
->                 status = "okay";
->         };
->
-> +       dp-controller@145B0000 {
-> +               status = "okay";
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&dp_hpd>;
-> +               samsung,color-space = <0>;
-> +               samsung,dynamic-range = <0>;
-> +               samsung,ycbcr-coeff = <0>;
-> +               samsung,color-depth = <1>;
-> +               samsung,link-rate = <0x06>;
-> +               samsung,lane-count = <2>;
-> +               samsung,hpd-gpio = <&gpx2 6 0>;
-> +               display-timings {
-> +                       native-mode = <&timing1>;
-> +                       timing1: timing@1 {
-> +                               clock-frequency = <70589280>;
-> +                               hactive = <1366>;
-> +                               vactive = <768>;
-> +                               hfront-porch = <40>;
-> +                               hback-porch = <40>;
-> +                               hsync-len = <32>;
-> +                               vback-porch = <10>;
-> +                               vfront-porch = <12>;
-> +                               vsync-len = <6>;
-> +                       };
-> +               };
-> +       };
-> +
->         fimd@14400000 {
->                 status = "okay";
->                 samsung,invert-vclk;
-> --
-> 1.7.9.5
->
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index 30d35e5..7728e83 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -154,10 +154,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 
+ 	pr_debug("Initializing Orion-SoC USB Host Controller\n");
+ 
+-	if (pdev->dev.of_node)
+-		irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+-	else
+-		irq = platform_get_irq(pdev, 0);
++	irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+ 		dev_err(&pdev->dev,
+ 			"Found HC with no IRQ. Check %s setup!\n",
+-- 
+1.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
