@@ -1,108 +1,78 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH 1/1] ARM: dts: am437x-gp-evm: Add ethernet support for GP EVM
-Date: Wed, 7 May 2014 15:00:53 +0530
-Message-ID: <1399455053-10324-1-git-send-email-mugunthanvnm@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 01/20] usb: ehci-orion: Fix clock reference leaking
+Date: Wed, 7 May 2014 11:38:48 +0200
+Message-ID: <20140507113848.037bb94d@free-electrons.com>
+References: <1399335255-589-2-git-send-email-gregory.clement@free-electrons.com>
+	<Pine.LNX.4.44L0.1405061027490.1312-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.44L0.1405061027490.1312-100000@iolanthe.rowland.org>
+Sender: stable-owner@vger.kernel.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add CPSW ethernet support for AM437x GP EVM which has one slave pinned out
+Dear Alan Stern,
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- arch/arm/boot/dts/am437x-gp-evm.dts | 72 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
+On Tue, 6 May 2014 10:30:57 -0400 (EDT), Alan Stern wrote:
 
-diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-index 2e0c636..30ace1b 100644
---- a/arch/arm/boot/dts/am437x-gp-evm.dts
-+++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-@@ -98,6 +98,58 @@
- 			0x264 (PIN_INPUT_PULLUP | MUX_MODE7)  /* spi2_d0.gpio3_22 */
- 		>;
- 	};
-+
-+	cpsw_default: cpsw_default {
-+		pinctrl-single,pins = <
-+			/* Slave 1 */
-+			0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txen.rgmii1_txen */
-+			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxdv.rgmii1_rxctl */
-+			0x11c (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_txd3 */
-+			0x120 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_txd2 */
-+			0x124 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_txd1 */
-+			0x128 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_txd0 */
-+			0x12c (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txclk.rmii1_tclk */
-+			0x130 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxclk.rmii1_rclk */
-+			0x134 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rxd3 */
-+			0x138 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rxd2 */
-+			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rxd1 */
-+			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rxd0 */
-+		>;
-+	};
-+
-+	cpsw_sleep: cpsw_sleep {
-+		pinctrl-single,pins = <
-+			/* Slave 1 reset value */
-+			0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x11c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x120 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x124 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x128 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x12c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x130 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x134 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x138 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
-+
-+	davinci_mdio_default: davinci_mdio_default {
-+		pinctrl-single,pins = <
-+			/* MDIO */
-+			0x148 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
-+			0x14c (PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-+		>;
-+	};
-+
-+	davinci_mdio_sleep: davinci_mdio_sleep {
-+		pinctrl-single,pins = <
-+			/* MDIO reset value */
-+			0x148 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+			0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-+		>;
-+	};
- };
- 
- &i2c0 {
-@@ -174,3 +226,23 @@
- 	dr_mode = "host";
- 	status = "okay";
- };
-+
-+&mac {
-+	slaves = <1>;
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&cpsw_default>;
-+	pinctrl-1 = <&cpsw_sleep>;
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+	pinctrl-1 = <&davinci_mdio_sleep>;
-+	status = "okay";
-+};
-+
-+&cpsw_emac0 {
-+	phy_id = <&davinci_mdio>, <0>;
-+	phy-mode = "rgmii";
-+};
+> >  err2:
+> > -	if (!IS_ERR(clk))
+> > -		clk_disable_unprepare(clk);
+> > +	usb_put_hcd(hcd);
+> 
+> At this point, priv has just become a dangling pointer, because it
+> points to something that was allocated along with hcd.
+
+Right.
+
+> > +
+> > +	if (!IS_ERR(priv->clk))
+> > +		clk_disable_unprepare(priv->clk);
+> 
+> And now you are dereferencing memory that has been deallocated.  The
+> real problem is that you get and enable the clock _after_ creating hcd,
+> but you don't disable it _before_ deallocating hcd.
+
+Correct.
+
+> 
+> >  err1:
+> >  	dev_err(&pdev->dev, "init %s fail, %d\n",
+> >  		dev_name(&pdev->dev), err);
+> > @@ -260,14 +273,14 @@ err1:
+> >  static int ehci_orion_drv_remove(struct platform_device *pdev)
+> >  {
+> >  	struct usb_hcd *hcd = platform_get_drvdata(pdev);
+> > -	struct clk *clk;
+> > +	struct orion_ehci_hcd *priv = hcd_to_orion_priv(hcd);
+> >  
+> >  	usb_remove_hcd(hcd);
+> >  	usb_put_hcd(hcd);
+> >  
+> > -	clk = devm_clk_get(&pdev->dev, NULL);
+> > -	if (!IS_ERR(clk))
+> > -		clk_disable_unprepare(clk);
+> > +	if (!IS_ERR(priv->clk))
+> > +		clk_disable_unprepare(priv->clk);
+> 
+> This has the same problem as above.
+
+Indeed. Will fix in v4.
+
+> Also, for both this patch and 02/20, it would be better to replace the
+> "errN" labels with something more descriptive, so that it's not
+> necessary to renumber them every time something changes.
+
+Sure. I've added an additional commit prior to this patch that renames
+the goto labels to something more meaningful. This will be part of v4.
+
+Thanks for the review!
+
+Thomas
 -- 
-1.9.2.459.g68773ac
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
