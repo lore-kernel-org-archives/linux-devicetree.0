@@ -1,73 +1,54 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v2 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Wed, 7 May 2014 09:35:20 +0530
-Message-ID: <CAK9yfHwXC1rc71-GiP3JxF2hpQGkA-GVv-1=MT9+GsA+Vq3o4w@mail.gmail.com>
-References: <1399363824-23543-1-git-send-email-sachin.kamat@linaro.org>
-	<53691187.80101@gmail.com>
-	<CAK9yfHz6PVT2C-TZkFHqtdj4rT-R8w+aU=jTTnLMF5k4JOXGxg@mail.gmail.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v4 5/5] ARM: DRA7: Add support for soc_is_dra74x() and
+ soc_is_dra72x() varients
+Date: Wed, 7 May 2014 10:08:10 +0530
+Message-ID: <5369B8B2.3090902@ti.com>
+References: <1398769513-8736-1-git-send-email-rnayak@ti.com> <1398769513-8736-6-git-send-email-rnayak@ti.com> <4792826.emf6IohHd6@wuerfel> <535F8ADF.6090702@ti.com> <20140506162800.GJ18474@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHz6PVT2C-TZkFHqtdj4rT-R8w+aU=jTTnLMF5k4JOXGxg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140506162800.GJ18474@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, bcousson@baylibre.com, nm@ti.com, s-anna@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
-
-On 6 May 2014 23:39, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> Hi Tomasz,
->
-> On 6 May 2014 22:14, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> Hi Sachin,
->>
->> Thanks for addressing the comments. I need to verify few things on Universal
->> C210 board first, before I could give my Reviewed-by tag or further
->> comments.
->>
->> I also have some general comments that I missed before, due to limited time
->> for review. Please see inline.
->
-> Thanks for your review.
->
->>
->>
->> On 06.05.2014 10:10, Sachin Kamat wrote:
+On Tuesday 06 May 2014 09:58 PM, Tony Lindgren wrote:
+> * Rajendra Nayak <rnayak@ti.com> [140429 04:22]:
+>> On Tuesday 29 April 2014 04:48 PM, Arnd Bergmann wrote:
+>>> On Tuesday 29 April 2014 16:35:13 Rajendra Nayak wrote:
+>>>> @@ -393,7 +395,12 @@ IS_OMAP_TYPE(3430, 0x3430)
+>>>>  
+>>>>  #if defined(CONFIG_SOC_DRA7XX)
+>>>>  #undef soc_is_dra7xx
+>>>> +#undef soc_is_dra74x
+>>>> +#undef soc_is_dra72x
+>>>>  #define soc_is_dra7xx()        (of_machine_is_compatible("ti,dra7"))
+>>>> +#define soc_is_dra74x()        (of_machine_is_compatible("ti,dra74"))
+>>>> +#define soc_is_dra72x()        (of_machine_is_compatible("ti,dra72"))
+>>>> +
 >>>
->>> Instead of hardcoding the SYSRAM details for each SoC,
->>> pass this information through device tree (DT) and make
->>> the code SoC agnostic. Generic SRAM bindings are used
->>> for achieving this.
+>>> You shouldn't normally have to define these. Why are they needed?
 >>>
->>> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>> Acked-by: Heiko Stuebner <heiko@sntech.de>
->>> ---
-[snip]
-
+>>> Maybe it's better to wait for a user to show up, and then we can decide
+>>> whether we actually want to have them this way, or if there is a better
+>>> solution for the particular use case.
 >>>
->>>   static int exynos_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
->>>   {
->>> -       void __iomem *boot_reg = S5P_VA_SYSRAM_NS + 0x1c + 4*cpu;
->>> +       void __iomem *boot_reg;
->>> +
->>> +       if (!sram_ns_base_addr)
->>> +               return 0;
+>>> Normally, we'd want to make run-time decisions based on properties
+>>> of the nodes a driver is working on, not the global machine compatible
+>>> string.
 >>
->>
->> Shouldn't this return an error instead? I'm not sure which one would be
->> appropriate, though, probably one of -ENODEV, -ENXIO or -EFAULT.
->
-> IIRC, returning error here causes the system to hang and even primary
-> cpu does not boot.
-> Since any error or absence of sram nodes should atleast boot the
-> primary CPU, I thought
-> this is better.
+>> Yeah, actually this can be dropped. There is no user for it now.
+> 
+> OK applying all but the last patch into omap-for-v3.16/dt branch,
+> it seems there's no need to separate out the fixes in this case.
 
-Small correction. The above explanation was for the absence of the check.
-Sorry about the confusion. Will add -ENODEV here.
+Thanks Tony.
 
--- 
-With warm regards,
-Sachin
+> 
+> Regards,
+> 
+> Tony
+> 
+
