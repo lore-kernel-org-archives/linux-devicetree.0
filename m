@@ -1,107 +1,133 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 2/4] OMAPDSS: panel-sharp-ls037v7dw01: update to use gpiod
-Date: Wed, 7 May 2014 11:15:12 +0300
-Message-ID: <5369EB90.8060007@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-3-git-send-email-tony@atomide.com>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+Subject: Re: Re: [PATCH 0/2] ARM: sunxi: Enable syscon for the
+ system controller
+Date: Wed, 7 May 2014 10:19:19 +0200
+Message-ID: <CAOQ7t2byRX3HmVjUKYZ-VEocR3S2ATLpSTPV8bdFD98_Q2sY9Q@mail.gmail.com>
+References: <1399212160-26934-1-git-send-email-carlo@caione.org>
+	<20140505225517.GE9464@lukather>
+	<CAGb2v66JBM_Rv8ie=7iuTPrXGPJECTeevnf9LLXNS=FSYs1+Tg@mail.gmail.com>
+	<CAOQ7t2akOEr7o4Q5ze5QPr_RHj6MWmA-u5NTuq2q1epy2LBr8w@mail.gmail.com>
+	<20140507032502.GM9464@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0027326360646278318=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1398815562-24113-3-git-send-email-tony@atomide.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDWJTUUC5UCBBB6ZU6NQKGQEFNDPPUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140507032502.GM9464@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Hans De Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, wens Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============0027326360646278318==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="01KEpad7JTjQsvFkc0WExh7SPSGvkDhDE"
+On Wed, May 7, 2014 at 5:25 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Tue, May 06, 2014 at 10:03:19AM +0200, Carlo Caione wrote:
+>> On Tue, May 6, 2014 at 8:36 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+>> > Hi,
+>>
+>> Hi,
+>>
+>> > On Tue, May 6, 2014 at 6:55 AM, Maxime Ripard
+>> > <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >> On Sun, May 04, 2014 at 04:02:38PM +0200, Carlo Caione wrote:
+>> >>> The so called "system controller" in Allwinner A20 and A31 SoCs is
+>> >>> multi-purpose controller that tries to add misc functionality to one
+>> >>> memory region.
+>> >>> In these SoCs it controls the internal SRAM partitioning but it also
+>> >>> includes registers for chip versioning and NMI control.
+>> >>> This patch adds the proper nodes in the DTS files and enable the syscon
+>> >>> in the defconfig files.
+>> >>>
+>> >>> Even though the system controller includes also register for managing the
+>> >>> NMI controller, these register are not mapped in the syscon since they
+>> >>> are directly used and mapped by the NMI controller itself.
+>> >>
+>> >> Hmmm, what exactly do you want to achieve with this?
+>> >>
+>> >> The NMI controller won't be able to use it, since it's initialized
+>> >> much earlier than syscon and regmap.
+>>
+>> This is what I meant with that phrase. NMI controller doesn't use the
+>> syscon but we can use it for several other drivers.
+>
+> I'm sorry, but I believe this should be more handled by the soon-to-be
+> drivers/soc "framework".
 
---01KEpad7JTjQsvFkc0WExh7SPSGvkDhDE
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Oh, didn't know of this framework. Is it supposed to replace syscon?
 
-On 30/04/14 02:52, Tony Lindgren wrote:
-> Using gpiod will make it easier to add device tree support
-> for this panel in the following patches.
->=20
-> Note that all the GPIOs for this panel are optional, any
-> of the the GPIOs could be configured with external pulls
-> instead of GPIOs, so let's not error out if GPIOs are not
-> found to make the panel more generic.
->=20
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> ---
->  .../omap2/displays-new/panel-sharp-ls037v7dw01.c   | 92 +++++++++-----=
---------
->  1 file changed, 38 insertions(+), 54 deletions(-)
+>> In fact the registers for NMI controller are excluded from the range
+>> of syscon registers.
+>
+> Then you are lying in the DT :)
 
-<snip>
+Uhm, in DT I have:
 
-> +static struct gpio_desc *
-> +sharp_ls_get_gpio(struct device *dev, int gpio, unsigned long flags,
-> +		  char *desc)
-> +{
-> +	int r;
-> +
-> +	r =3D devm_gpio_request_one(dev, gpio, flags, desc);
-> +	if (r) {
-> +		dev_err(dev, "no %s gpio\n", desc);
+reg = <0x01c00000 0x27>;
 
-As it's fine to not have a gpio, I guess this error print should be remov=
-ed.
+that is I'm mapping the first three registers: SRAM_CTRL_REG0,
+SRAM_CTRL_REG1, VER_REG, leaving out the three register (from offset
+0x30) of the NMI controller.
+I'm not lying :)
 
-Also, if the error is EPROBE_DEFER, the driver should fail and return
-that. The same goes for the DT version in the next patch.
+>> > I believe this will be used for toggling the SRAM mappings. (Am I right?)
+>>
+>> Definitely right.
+>>
+>> > The second register toggles mappings for MUSB FIFO, EMAC, and a few of
+>> > the other IP blocks we currently don't support.
+>>
+>> Not yet :)
+>
+> I wonder how other SoCs are actually handling this mapping between CPU
+> & DMA vs device of some SRAMs. Did you look at this?
 
- Tomi
+It seems quite a few grepping for syscon
 
+>> >> Moreover, the A31 doesn't seem to have this system controller, or at
+>> >> least this overlap.
+>>
+>> I admit that I didn't check the A31 manual but I trusted the wiki page
+>> at http://linux-sunxi.org/SRAM_Controller and
+>> http://linux-sunxi.org/A31/Memory_map
+>>
+>> > There should be something similar, as does the A23. There is no overlap AFAIK.
+>>
+>> I agree and will check also A23.
+>>
+>> >> And since on the A20, registers seem to have one usage only, so I
+>> >> guess we can just split this IP into several nodes, just like we did
+>> >> with the NMI.
+>> >
+>> > As stated above, the second register toggles SRAM mappings for at most
+>> > 4 SRAM blocks (for EMAC, MUSB, ACE, ISP).
+>> >
+>> > syscon would be a good way to share this register among the various drivers.
+>> > We do not toggle it in the current EMAC driver. The driver seems to assume
+>> > it is setup by the bootloader, and on the A20, it seems to be mapped to
+>> > EMAC by default.
+>> >
+>> > The MUSB glue layer driver must toggle this.
+>>
+>> This is exactly why I wrote these patches. I started hacking /
+>> studying your MUSB driver and I think that using syscon is a better
+>> way to manage these registers instead of mapping them in several
+>> drivers also because most of the time a single register has to be used
+>> by multiple drivers (i.e. SRAM_CTL1_CFG is used for USB,  EMAC,
+>> etc...)
+>>
+>> > I think this approach is better than all the individual drivers mapping
+>> > the registers and toggling a single bit. In fact I did something similar
+>> > when working on preliminary musb support.
+>
+> I agree with that.
 
+So do you suggest to drop the syscon idea waiting for the new soc framework?
 
---01KEpad7JTjQsvFkc0WExh7SPSGvkDhDE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTaeuQAAoJEPo9qoy8lh711swP/0Z8usacElSZgblnBscYXQV+
-abLMe+nOUiSyUJ9JRe5uVW7oRWIlulOJsAUAXMg85UGya12RhW8jmmfyqLoWAuN3
-ym8794Hqy/CMLcgwhhybP3RZjxykk/WHQCTo5bOZ7/R+TpIZWyobd48aGYS7r0bU
-dXpl4URUSy6MPkWAT9dG+GG7sZTnHjdJ6AeUxFTbey25rtobWIQ8WohFA2mOwt8W
-WREGSRP5SS0P+r5vKneYyarETpYgtMbHV++RPnbQaOceOeo379q386wQ/u/C+Tc1
-Sx/ED6QrYYduKf44f8fEq3GqsLi4HZ2pueNscXadKIrFBMnXcMP3TMW6KO4wbv9v
-0+NgtXaiT17VhpySvIG+AroThzzQoY0yhf4OOlVMKPfgTklKFUC4AVgTpuEx1FjZ
-vABIkYgI5JFPIrbXBG6hYenTtrk/LmgltKN9p/0vVoyfEr1bB6ks8ZxmF2EpRJwd
-WMeXdjhId3epmTNATIWjaOyFx+8kEfQucOmmp0JDyKw/1zv/zrgUzc/AfxIckmEy
-MioBAskQwk1ZxGwFxpL7u7FidNunjzHPW9/MIck9N3MoyF04XQMZ5j8x1ulqbNs/
-yXRwkhartj6Zw08YXOD6XqnmBc2/uk0iQFgRlbI1MvTJ9bWa8ehmGDaPz3bxVVWX
-5z3HSiylVq2XORKECNln
-=Ns5W
------END PGP SIGNATURE-----
-
---01KEpad7JTjQsvFkc0WExh7SPSGvkDhDE--
-
-
---===============0027326360646278318==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============0027326360646278318==--
+-- 
+Carlo Caione
