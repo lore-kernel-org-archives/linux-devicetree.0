@@ -1,46 +1,456 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 5/6] powerpc/corenet: Add DPAA FMan support to the SoC
- device tree(s)
-Date: Wed, 7 May 2014 18:14:02 -0500
-Message-ID: <1399504442.15726.353.camel@snotra.buserror.net>
-References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
-	 <1397823693-27977-5-git-send-email-Shruti@Freescale.com>
-	 <1398118442.1694.190.camel__272.432543761347$1398129129$gmane$org@snotra.buserror.net>
-	 <53661DAB.10808@Freescale.com>
-	 <1399332886.15726.161.camel@snotra.buserror.net>
-	 <5368811A.3060609@Freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH] devicetree: bindings: separate CPU enable method descriptions
+Date: Wed,  7 May 2014 18:23:53 -0500
+Message-ID: <1399505033-3368-1-git-send-email-elder@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5368811A.3060609-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: Kanetkar Shruti-B44454 <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-05-06 at 01:28 -0500, Emil Medve wrote:
-> Hello Scott,
-> 
-> 
-> On 05/05/2014 06:34 PM, Scott Wood wrote:
-> > On Sun, 2014-05-04 at 05:59 -0500, Emil Medve wrote:
-> >>  Anyway, most days PHYs can be discovered so they don't use/need
-> >> compatible properties. That's I guess part of the reason we don't have
-> >> bindings for them PHY nodes
-> > 
-> > I don't see why there couldn't be a compatible that describes the
-> > standard programming interface.
-> 
-> Because it can be detected at runtime and I guess stuff like that should
-> stay out of the device tree. I'm using PCI as an analogy here
+The bindings for CPU enable methods are defined in ".../arm/cpus.txt".  As
+additional 32-bit ARM CPUS are converted to use the "enable-method" CPU
+property to imply a particular set of SMP operations to use, the list of these
+methods is likely to become unwieldy.  The current documentation already
+contains several property descriptions that are meaningful only for certain
+enable methods.
 
-But in this case aren't you using a standardized component of the
-programming model itself to probe the specific PHY type?  I think a
-better analogy is the "cfi-flash" compatible.
+This patch defines a new Documentation subdirectory whose purpose is to give
+each CPU enable method its own place to define how and when it's used, as
+well as what other properties (optional or required) are associated with
+the method.  The existing enable method documentation is expanded and moved
+from ".../arm/cpus.txt" into new files accordingly.
 
--Scott
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+This series is available here:
+	http://git.linaro.org/landing-teams/working/broadcom/kernel.git
+        Branch review/enable-method-bindings
 
+ .../bindings/arm/cpu-enable-method/README          | 20 +++++
+ .../bindings/arm/cpu-enable-method/arm,psci.txt    | 69 ++++++++++++++++
+ .../arm/cpu-enable-method/qcom,gcc-msm8660         | 30 +++++++
+ .../arm/cpu-enable-method/qcom,kpss-acc-v1         | 56 +++++++++++++
+ .../arm/cpu-enable-method/qcom,kpss-acc-v2         | 56 +++++++++++++
+ .../bindings/arm/cpu-enable-method/spin-table.txt  | 96 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     | 29 +------
+ 7 files changed, 330 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/README
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/arm,psci.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/README b/Documentation/devicetree/bindings/arm/cpu-enable-method/README
+new file mode 100644
+index 0000000..cc9431e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/README
+@@ -0,0 +1,20 @@
++==========================
++CPU enable-method bindings
++==========================
++
++The device tree describes the layout of CPUs in a machine in a single "cpus"
++node, which in turn contains a number of "cpu" sub-nodes defining properties
++for each cpu.
++
++For multiprocessing configurations, CPU cores can be individually enabled
++and disabled.  The enabling capability is used for SMP startup as well as
++CPU hotplug.  A CPU enable method--normally specified in the device tree
++using an "enable-method" property--defines how cores are enabled.  If all
++CPUs in a machine use the same enable method and related property values,
++these properties should be defined in the "cpus" node, which associates the
++property values with all CPUs.  Alternatively, every "cpu" node can define
++its "enable-method" separately.
++
++Documents in this directory define how each of the CPU enable methods are to
++be used, as well the names and possible values of related properties that
++are required by or affect each enable method.
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/arm,psci.txt b/Documentation/devicetree/bindings/arm/cpu-enable-method/arm,psci.txt
+new file mode 100644
+index 0000000..c80d68e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/arm,psci.txt
+@@ -0,0 +1,69 @@
++====================================
++CPU enable-method "arm,psci" binding
++====================================
++
++This document describes the "arm,psci" method for enabling secondary CPUs.
++This is different from other CPU enable methods, in that CPU cores are
++enabled and disabled using the ARM PSCI interface, which is defined in the
++device tree independent of the CPUs.  Instead, a separate node compatible
++with "arm,psci" defines the PSCI functions supported; if a "cpu_on" function
++is defined, that is used for enabling a CPU core.
++
++Enable method:		Distinct node with compatible = "arm,psci" property
++Compatible cpus:	(???)  (both 32- and 64-bit ARM have a hook)
++Properties:
++	- method
++		Usage:		required
++		Value type:	<string>
++		Definition:
++			A string defining the specific instruction
++			used to enable the core.  The value must be
++			either "hvc" or "smc".
++	- cpu_suspend
++		Usage:		optional
++		Value type:	<u32>
++		Definition:
++			If present, this value defines the PSCI function id
++			used to suspend execution on a CPU core.
++	- cpu_off
++		Usage:		optional
++		Value type:	<u32>
++		Definition:
++			If present, this value defines the PSCI function id
++			used to power down a CPU core.
++	- cpu_on
++		Usage:		optional
++		Value type:	<u32>
++		Definition:
++			If present, this value defines the PSCI function id
++			used to power up a CPU core.
++	- migrate
++		Usage:		optional
++		Value type:	<u32>
++		Definition:
++			If present, this value defines the PSCI function id
++			used to migrate context to a different CPU core.
++
++Example (contrived 2-core ARM Cortex-A57 64-bit system):
++
++	psci {
++		compatible = "arm,psci";
++		method = "smc";
++		cpu_on = 0x1;
++	};
++	cpus {
++		#size-cells = <0>;
++		#address-cells = <2>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";	/* ??? */
++			reg = <0x0 0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+new file mode 100644
+index 0000000..1e002d9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+@@ -0,0 +1,30 @@
++======================================================
++Secondary CPU enable-method "qcom,gcc-msm8660" binding
++======================================================
++
++This document describes the "qcom,gcc-msm8660" method for enabling
++secondary CPUs.  A "qcom,gcc-msm8660" enable method should only be
++used in the "cpus" node, to apply to all CPUs.
++
++Enable method name:	"qcom,gcc-msm8660"
++Compatible cpu:		"qcom,scorpion"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,scorpion";
++		enable-method = "qcom,gcc-msm8660";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+new file mode 100644
+index 0000000..3f6ce56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+@@ -0,0 +1,56 @@
++======================================================
++Secondary CPU enable-method "qcom,kpss-acc-v1" binding
++======================================================
++
++This document describes the "qcom,kpss-acc-v1" method for enabling CPUs.
++This enable method can be used in either the "cpus" node or in individual
++"cpu" nodes.  Note that each "cpu" node must have both "qcom,saw" and
++"qcom,acc" properties defined (even if the "enable-method" property was
++defined only in the "cpus" node).
++
++Enable method name:	"qcom,kpss-acc-v1"
++Compatible machine:	"qcom,msm8960"
++Compatible cpu:		"qcom,krait"
++Related properties:
++	- qcom,saw
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the SAW[1] node associated with this CPU.
++
++	- qcom,acc
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the ACC[2] node associated with this CPU.
++
++Example:
++
++/ {
++	compatible = "qcom,msm8960";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v1";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++	};
++};
++
++--
++[1] arm/msm/qcom,saw2.txt
++[2] arm/msm/qcom,kpss-acc.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+new file mode 100644
+index 0000000..4368d904
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+@@ -0,0 +1,56 @@
++======================================================
++Secondary CPU enable-method "qcom,kpss-acc-v2" binding
++======================================================
++
++This document describes the "qcom,kpss-acc-v2" method for enabling CPUs.
++This enable method can be used in either the "cpus" node or in individual
++"cpu" nodes.  Note that each "cpu" node must have both "qcom,saw" and
++"qcom,acc" properties defined (even if the "enable-method" property was
++defined only in the "cpus" node).
++
++Enable method name:	"qcom,kpss-acc-v2"
++Compatible machine:	"qcom,msm8974"
++Compatible cpu:		"qcom,krait"
++Related properties:
++	- qcom,saw
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the SAW[1] node associated with this CPU.
++
++	- qcom,acc
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the ACC[2] node associated with this CPU.
++
++Example:
++
++/ {
++	compatible = "qcom,msm8974";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v2";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++	};
++};
++
++--
++[1] arm/msm/qcom,saw2.txt
++[2] arm/msm/qcom,kpss-acc.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt b/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+new file mode 100644
+index 0000000..f57955a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+@@ -0,0 +1,96 @@
++================================================
++Secondary CPU enable-method "spin-table" binding
++================================================
++
++This document describes the "spin-table" method for enabling secondary CPUs.
++See the "README" file in this directory for more information on CPU enable
++methods.  A "spin-table" enable method can be used in either the "cpus" node
++or in individual "cpu" nodes.
++
++Enable method name:	"spin-table"
++Compatible cpus:	"arm,cortex-a57" (?)
++Related properties:
++	- cpu-release-addr
++		Usage:		required
++		Value type:	<prop-encoded-array>
++		Definition:
++			A two cell value identifying a 64-bit memory location
++			used by the boot CPU to inform a secondary CPU it
++			should begin its kernel bootstrap.  Memory at this
++			location must initially be zeroed.
++
++Examples (contrived 4-core ARM Cortex-A57 64-bit systems):
++
++The first example uses the same enable method for all cores.
++
++	cpus {
++		#size-cells = <0>;
++		#address-cells = <2>;
++		enable-method = "spin-table";
++		cpu-release-addr = <0 0x20000000>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x1>;
++		};
++
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x100>;
++		};
++
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x101>;
++		};
++	};
++
++
++The second example uses specifies distinct enable method properties for each
++CPU core.
++
++	cpus {
++		#size-cells = <0>;
++		#address-cells = <2>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x0>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000000>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x1>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000008>;
++		};
++
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x100>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000010>;
++		};
++
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x101>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000018>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 333f4ae..2bb2a3e 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -185,30 +185,8 @@ nodes to be present and contain the properties described below.
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
+-
+-	- cpu-release-addr
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "spin-table".
+-		Value type: <prop-encoded-array>
+-		Definition:
+-			# On ARM v8 64-bit systems must be a two cell
+-			  property identifying a 64-bit zero-initialised
+-			  memory location.
+-
+-	- qcom,saw
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "qcom,kpss-acc-v1" or
+-		       "qcom,kpss-acc-v2"
+-		Value type: <phandle>
+-		Definition: Specifies the SAW[1] node associated with this CPU.
+-
+-	- qcom,acc
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "qcom,kpss-acc-v1" or
+-		       "qcom,kpss-acc-v2"
+-		Value type: <phandle>
+-		Definition: Specifies the ACC[2] node associated with this CPU.
+-
++		Details about use of these CPU enable methods is documented
++		elsewhere[1].
+ 
+ Example 1 (dual-cluster big.LITTLE system 32-bit):
+ 
+@@ -403,5 +381,4 @@ cpus {
+ };
+ 
+ --
+-[1] arm/msm/qcom,saw2.txt
+-[2] arm/msm/qcom,kpss-acc.txt
++[1] arm/cpu-enable-method/
+-- 
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
