@@ -1,108 +1,71 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: KConfig and DTS files
-Date: Wed, 7 May 2014 10:55:27 -0700
-Message-ID: <CAOesGMhMeLkzEeVKHM2G9Vqth6qypURN6mxbNdySVvKhQBCs5A@mail.gmail.com>
-References: <536A697D.3020002@boundarydevices.com>
-	<CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com>
-	<536A71AF.1010907@boundarydevices.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <536A71AF.1010907-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 0/2] i2c: sunxi: add P2WI controller support
+Date: Wed,  7 May 2014 19:58:33 +0200
+Message-ID: <1399485515-11243-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 7, 2014 at 10:47 AM, Eric Nelson
-<eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
-> Hi Olof,
->
->
-> On 05/07/2014 10:24 AM, Olof Johansson wrote:
->>
->> Hi,
->>
->> On Wed, May 7, 2014 at 10:12 AM, Eric Nelson
->> <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
->>>
->>> Hi all,
->>>
->>> I suspect that this has been discussed previously, but I'm a
->>> N00b to DT and Google hasn't helped identify a discussion
->>> on the list.
->>>
->>> While getting my feet wet with DTS, I was quite surprised to
->>> see that there's no support for making parts of DTS files
->>> conditional on the kernel configuration.
->>>
->>> We often cost-optimize BOMs for our standard boards and omit
->>> bits and pieces not needed for a particular build, and
->>> it would be nice to surround optional components with
->>> conditionals:
->>>
->>>      #ifdef CONFIG_BLAH
->>>      #endif
->>>
->>> Please advise,
->>
->>
->> The DTS is independent on what drivers the kernel is actually
->> enabling. It should focus on what is actually there on hardware, and
->> not what is enabled in software.
->>
->> I think I know where you're coming from on this -- on some board-file
->> setups people used to not register the platform_device if the driver
->> wasn't configured. That was also not really a good way to do it, but
->> it made a bit more sense there, since you'd save the few bytes used by
->> the platform_device/platform_data structures.
->>
->
-> It's not a question of space, but functionality.
->
-> We had this come up recently when optimizing a BOM for use
-> without Wi-Fi. If we omit the device and associated buffers,
-> the SDIO lines are left floating, so the detection code will
-> complain.
->
-> It seems reasonable to tell the kernel to skip this if the
-> WiFi driver isn't configured into the kernel (i.e. there's
-> no point in enumerating), so I was hoping to surround this
-> USDHC2 block with #ifdefs:
->
->
-> https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.0_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi#L640
->
-> The alternative aren't very nice:
->         populate extra parts to drive these signals, or
->         copy the DTB and strip out the unused parts
->
-> The first is wasteful (and environmentally un-friendly), and
-> the second doesn't scale very well and pollutes the Git tree.
->
-> Prior to DT, we surrounded the device startup calls with #ifdefs
-> like this:
->
-> https://github.com/boundarydevices/linux-imx6/blob/boundary-jb4.3_1.0.0-ga/arch/arm/mach-mx6/board-mx6_nitrogen6x.c#L1409
+Hello,
 
-It is really annoying that you can't include a DTS in another DTS
-(only DTSIs). This is a major shortcoming of the tools, as far as I am
-concerned.
+This series adds support for the P2WI block used by some Allwinner
+boards to interface with the AXP221 PMIC.
 
-So, the best way we've found to do this is to create a shared dtsi
-that has practically everything in it, then a skeleton DTS for the
-"full" product, and a separate DTS for the cost-reduced version. The
-cost-reduced DTS would insert a status = "disabled"; for the sdio
-controller. That's a solution that scales very poorly as well, though.
+I'm still not sure on how this bus should be integrated into the I2C
+subsystem:
+There was a discussion about adding new I2C flags: [1], but, I want
+to reuse the existing axp209 driver [2] which in turn uses a regmap,
+and the regmap over I2C driver does not support setting specific flags
+when launching I2C transfer (thought this could be added to the regmap
+code ;-)).
 
-Best would be if a DTS could just include another DTS for minor
-updates, such as disabling the sdio controller in this case. I'm sure
-there were some language-puritan reasons for not allowing that though.
-Someone care to fill in the history?
+I decided to get rid of these new flags (I2C_PUSHPULL,
+I2C_M_DROP_ADDRESS, ...) in my first proposal, but let me know if
+you think this should be re-introduced.
+
+Most of the parts missing in v1 have been implemented:
+ - the bus frequency config:
+   the requested frequency is retrieved from DT and configured according
+   to the P2WI parent clk rate.
+ - the initialization (or I2C to P2WI mode switch) process:
+   the mode register and mode value needed to launch the initialization
+   are both retrieved from DT ("allwinner,p2wi-mode-reg" and
+   "allwinner,p2wi-mode-val" properties on the first child node of the
+   P2WI bus)
+ - address consistency check:
+   The slave address is now retrieved from the DT ("reg" property) during
+   probe and stored in the p2wi struct.
+   This slave address is then checked for each transfer.
 
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best Regards,
+
+Boris
+
+Changes since v1:
+- implement P2WI initilization
+- implement P2WI bus frequency configuration
+- implement address consistency check
+- fix devm_request_and_ioremap return check
+- rework the macro definitions
+- fix typos
+
+[1] http://www.spinics.net/lists/linux-i2c/msg15066.html
+[2] http://comments.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/8947
+Boris BREZILLON (2):
+  i2c: sunxi: add P2WI DT bindings documentation
+  i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface) controller support
+
+ .../devicetree/bindings/i2c/i2c-sunxi-p2wi.txt     |  27 ++
+ drivers/i2c/busses/Kconfig                         |  12 +
+ drivers/i2c/busses/Makefile                        |   1 +
+ drivers/i2c/busses/i2c-sun6i-p2wi.c                | 375 +++++++++++++++++++++
+ 4 files changed, 415 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sunxi-p2wi.txt
+ create mode 100644 drivers/i2c/busses/i2c-sun6i-p2wi.c
+
+-- 
+1.8.3.2
+
