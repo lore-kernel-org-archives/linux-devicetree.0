@@ -1,61 +1,55 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V6 2/5] arm64: dts: Add X-Gene reboot driver dts node
-Date: Wed,  7 May 2014 09:18:01 -0700
-Message-ID: <1399479484-2605-3-git-send-email-fkan@apm.com>
-References: <1399479484-2605-1-git-send-email-fkan@apm.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv2 2/2] Documentation: dt: add an optional dma-desc-enable
+ property for dwc2 usb
+Date: Wed, 07 May 2014 20:22:42 +0400
+Message-ID: <536A5DD2.6030705@cogentembedded.com>
+References: <1399417243-4614-1-git-send-email-dinguyen@altera.com> <1399417243-4614-2-git-send-email-dinguyen@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1399479484-2605-1-git-send-email-fkan@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com
-Cc: Feng Kan <fkan@apm.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399417243-4614-2-git-send-email-dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, paulz-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Cc: dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add X-Gene platform reboot driver dts node.
+Hello.
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   12 ++++++++++++
- 1 files changed, 12 insertions(+), 0 deletions(-)
+On 07-05-2014 3:00, dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 93f4b2d..306a9cd 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -103,6 +103,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		scu: system-clk-controller@17000000 {
-+			compatible = "apm,xgene-scu","syscon";
-+			reg = <0x0 0x17000000 0x0 0x400>;
-+		};
-+
- 		clocks {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
-@@ -339,5 +344,12 @@
- 			phys = <&phy3 0>;
- 			phy-names = "sata-phy";
- 		};
-+
-+		reboot@17000014 {
-+			compatible = "syscon-reboot";
-+			regmap = <&scu>;
-+			offset = <0x14>;
-+			mask = <0x1>;
-+		};
- 	};
- };
--- 
-1.7.6.1
+> From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+
+> The "dma-desc-enable" property can be used to enable descriptor DMA mode
+> for the DWC2 USB IP.
+
+> Signed-off-by: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> ---
+> v2: Reword property description to enable instead of disable
+> ---
+>   Documentation/devicetree/bindings/usb/dwc2.txt |    7 +++++++
+>   1 file changed, 7 insertions(+)
+
+> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
+> index b8b6871..9b471b5 100644
+> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
+> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
+> @@ -14,6 +14,13 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
+>   Optional properties:
+>   - phys: phy provider specifier
+>   - phy-names: shall be "device"
+> +- dma-desc-enable: Should be <1> to enable descriptor dma mode. This
+> +	property is used to enable descriptor DMA support. The reason why
+> +	this property is needed is because the HW supports descriptor DMA
+> +	mode, but descriptor dma mode will not support SPLIT transactions.
+> +	So this property can be used to optionally enable descriptor DMA
+> +	support.
+
+    Why not make this property boolean?
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
