@@ -1,56 +1,74 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH V5 0/3] arm: dts: dra7: Updates for adding crossbar device
-Date: Wed, 7 May 2014 10:10:27 +0530
-Message-ID: <5369B93B.5060203@ti.com>
-References: <1399384579-25620-1-git-send-email-r.sricharan@ti.com> <20140506214526.GF2626@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140506214526.GF2626@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Darren Etheridge <detheridge@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, nm@ti.com, bcousson@baylibre.com, robherring2@gmail.com
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH V2 1/2] ARM: dts: Add sound node for Snow board
+Date: Wed,  7 May 2014 10:22:27 +0530
+Message-ID: <1399438348-10819-2-git-send-email-tushar.behera@linaro.org>
+References: <1399438348-10819-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399438348-10819-1-git-send-email-tushar.behera@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 May 2014 03:15 AM, Darren Etheridge wrote:
-> Sricharan R <r.sricharan@ti.com> wrote on Tue [2014-May-06 19:26:16 +0530]:
->> Some socs have a large number of interrupts requests to service
->> the needs of its many peripherals and subsystems. All of the interrupt
->> requests lines from the subsystems are not needed at the same
->> time, so they have to be muxed to the controllers appropriately.
->> In such places a interrupt controllers are preceded by an
->> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
->> requests to the controller inputs.
->>
->> The dts file update to support the crossbar device and convert
->> peripheral irq numbers to crossbar number are added here.
->>
->> This is a rebase of V4 series on top of 3.15-rc4
->>
->> This series depends on crossbar-driver-fixes sent below
->> http://marc.info/?l=linux-omap&m=139929963420299&w=2
->>
->> Sricharan R (3):
->>   arm: dts: dra7: Add crossbar device binding
->>   arm: dts: dra7: Replace peripheral interrupt numbers with crossbar
->>     inputs
->>   arm: dts: dra7: Add routable-irqs property for gic node
->>
-> 
-> OK, assuming the bisectability issues discussed earlier on this thread
-> are addressed.  I have tested the earlier crossbar patch series in
-> conjunction with this dts series with VIP capture and DSS display
-> running together on DRA7.  Looks good with this combination of
-> devices. VIP is one of the modules that must have a crossbar mapping as
-> there is no default interrupt mapping for it, therefore VIP makes a good
-> test case.
-> 
-> So please feel free to add:
-> 
-> Tested-by: Darren Etheridge <detheridge@ti.com>
+The audio codec on Snow board, MAX98095 is connected on I2C7 bus.
+Also it requires the GPX1-7 line to be pulled up.
 
-  Thanks for the testing. Will reorder and repost.
+Updated Snow DTS file to incorporate above changes and added a
+sound node to instantiate the I2S-based sound card.
 
-Regards,
- Sricharan
+Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+---
+Changes for V2:
+1. GPX1-7 gpio is now configured through pincontrol, earlier
+it was configured through a fixed-regualtor.
+
+ arch/arm/boot/dts/exynos5250-snow.dts |   27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index 1ce1088..809af33 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -37,6 +37,13 @@
+ 		sd3_bus4: sd3-bus-width4 {
+ 			samsung,pin-drv = <0>;
+ 		};
++
++		max98095_en: max98095-en {
++			samsung,pins = "gpx1-7";
++			samsung,pin-function = <0>;
++			samsung,pin-pud = <3>;
++			samsung,pin-drv = <0>;
++		};
+ 	};
+ 
+ 	gpio-keys {
+@@ -196,6 +203,26 @@
+ 		};
+ 	};
+ 
++	i2c@12CD0000 {
++		max98095: codec@11 {
++			compatible = "maxim,max98095";
++			reg = <0x11>;
++			pinctrl-0 = <&max98095_en>;
++			pinctrl-names = "default";
++		};
++	};
++
++	i2s0: i2s@03830000 {
++		status = "okay";
++	};
++
++	sound {
++		compatible = "google,snow-audio-max98095";
++
++		samsung,i2s-controller = <&i2s0>;
++		samsung,audio-codec = <&max98095>;
++	};
++
+ 	usb@12110000 {
+ 		samsung,vbus-gpio = <&gpx1 1 0>;
+ 	};
+-- 
+1.7.9.5
