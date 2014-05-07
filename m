@@ -1,54 +1,141 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] input: rotary encoder: implement quarter period mode
-Date: Wed, 7 May 2014 15:45:43 +0100
-Message-ID: <20140507144543.GE27177@e106331-lin.cambridge.arm.com>
-References: <1387377798-22344-1-git-send-email-s.hauer@pengutronix.de>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH 0/3] devicetree, qcomm PMIC: fix node name conflict
+Date: Wed, 7 May 2014 15:51:03 +0100
+Message-ID: <CACxGe6scdipc8uTM2JfHLdX4Ch+=bwP8PAEN=UBH=fKnE9ShEw@mail.gmail.com>
+References: <536982E3.10303@gmail.com> <CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1387377798-22344-1-git-send-email-s.hauer@pengutronix.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Mack <daniel@zonque.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, May 7, 2014 at 2:32 AM, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, May 6, 2014 at 7:48 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> An issue with the path of SPMI nodes under /sys/bus/... was reported in
+>> https://lkml.org/lkml/2014/4/23/312.  The symptom is that two different
+>> grandchild nodes of the spmi with the same node-name@unit-address will
+>> result in attempting to create duplicate links at
+>> /sys/bus/platform/devices/unit-address.node-name.  It turns out that the
+>> specific example provided might not be an expected configuration for
+>> current hardware, but the reported trap remains an issue.
+>>
+>> I have been poking at the problem, trying to figure out how to cleanly
+>> fix the issue without breaking devicetree device creation.
+>>
+>> The first patch in the series is the one that may be a very bad idea.  Or
+>> it may help show the way forward to deal with what I think is the major
+>> underlying problem.  I have not finished investigating the possible negative
+>> side effects.  And I am still thinking whether this is a conceptually good
+>> approach, or whether it is simply an expediant hack that hides the underlying
+>> problem.  But I am throwing this out prematurely because I have mentioned
+>> it to several people, and I want to make it visible to everyone involved.
+>>
+>> The underlying architectural problem (in my opinion) is that a lot of devices
+>> are created by the device tree infrastructure as platform devices, when they
+>> truly should not be platform devices.  They should not be platform devices
+>> because they are not physically on a platform bus, they are instead somewhere
+>> below some other bus.  The first patch in this series is a hack which
+>> results in the devices still being represented by "struct platform_device"
+>> objects, but with a link to their parent's "struct bus_type" instead of
+>> to &platform_bus_type.
+>>
+>> The second patch does not require the first patch.  The second patch provides
+>> a mechanism to allow subsystems to provide a method of naming devices to
+>> avoid name collisions.
+>>
+>> The third patch provides an example of a subsystem using the new feature
+>> provided by the second patch.
+>>
+>
+> I think the primary question to ask is there any added benefit to
+> having the additional hierarchy of devices. I don't think there is
+> much support to have more hierarchy from what I have seen of past
+> discussions.
+>
+> Another approach could be to support having multiple platform bus
+> instances. Then drivers can easily create a new instance for each set
+> of sub-devices.
+>
 
-On Wed, Dec 18, 2013 at 02:43:18PM +0000, Sascha Hauer wrote:
-> Some rotary encoders have a stable state in all output state
-> combinations. Add support for this type of encoder.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Cc: Daniel Mack <daniel@zonque.org>
-> Cc: linux-input@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../devicetree/bindings/input/rotary-encoder.txt   |  1 +
->  Documentation/input/rotary-encoder.txt             |  9 +++++--
->  drivers/input/misc/rotary_encoder.c                | 30 ++++++++++++++++++++--
->  include/linux/rotary_encoder.h                     |  1 +
->  4 files changed, 37 insertions(+), 4 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> index 3315495..cbdb29b 100644
-> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> @@ -15,6 +15,7 @@ Optional properties:
->  - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
->    greater than the specified steps or smaller than 0. For absolute axis only.
->  - rotary-encoder,half-period: Makes the driver work on half-period mode.
-> +- rotary-encoder,quarter-period: Makes the driver work on quarter-period mode.
+I fear that it will be more invasive that you think it will be. Right
+now the bus_type abstraction is a mechanism for matching drivers and
+devices. The bus type contains a bag of device drivers, and it tries
+to match one of them to a device when a device gets registered to that
+device (or when a driver gets registered, try to match it to one of
+the devices it already knows about). You can see this in the
+/sys/bus/<type>/drivers and /sys/bus/<type>/devices directories.
 
-The new property looks as sane to me as the half-period property, so for
-the binding addition:
+Splitting the platform bus type into multiple instances is not trivial
+because the drivers will only be available to one instance. You'd need
+to figure out how to make a device driver available to multiple
+bus_type instances (ideally without having to manually add the driver
+to each bus_type at module load time).
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+> This can be solved in a much less invasive way just in the DT naming
+> algorithm. This is slightly different from what I had suggested of
+> just dropping the unit address. It keeps the unit address, but adds
+> the unique index on untranslate-able addresses. The diff is bigger due
+> to refactoring to reduce the indentation levels. It is untested and
+> whitespace corrupted:
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 404d1da..c77dd7a 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -105,23 +105,33 @@ void of_device_make_bus_id(struct device *dev)
+>          * For MMIO, get the physical address
+>          */
+>         reg = of_get_property(node, "reg", NULL);
+> -       if (reg) {
+> -               if (of_can_translate_address(node)) {
+> -                       addr = of_translate_address(node, reg);
+> -               } else {
+> -                       addrp = of_get_address(node, 0, NULL, NULL);
+> -                       if (addrp)
+> -                               addr = of_read_number(addrp, 1);
+> -                       else
+> -                               addr = OF_BAD_ADDR;
+> -               }
+> -               if (addr != OF_BAD_ADDR) {
+> -                       dev_set_name(dev, "%llx.%s",
+> -                                    (unsigned long long)addr, node->name);
+> -                       return;
+> -               }
+> +       if (!reg)
+> +               goto no_bus_id;
+> +
+> +       if (of_can_translate_address(node)) {
+> +               addr = of_translate_address(node, reg);
+> +               if (addr == OF_BAD_ADDR)
+> +                       goto no_bus_id;
+> +
+> +               dev_set_name(dev, "%llx.%s",
+> +                            (unsigned long long)addr, node->name);
+> +               return;
+>         }
+>
+> +       addrp = of_get_address(node, 0, NULL, NULL);
+> +       if (!addrp)
+> +               goto no_bus_id;
+> +
+> +       addr = of_read_number(addrp, 1);
+> +       if (addr == OF_BAD_ADDR)
+> +               goto no_bus_id;
+> +
+> +       magic = atomic_add_return(1, &bus_no_reg_magic);
+> +       dev_set_name(dev, "%llx.%s.%d", (unsigned long long)addr,
+> +                    node->name, magic - 1);
+> +       return;
+> +
+> +no_bus_id:
 
-As a general nitpick it would be nicer if the binding didn't refer to
-the driver and had a description of {half,quarter} period modes inline,
-but that might be a bit tricky and shouldn't block this.
+Looks like a reasonable change to me.
 
-Cheers,
-Mark.
+g.
+
+>         /*
+>          * No BusID, use the node name and add a globally incremented
+>          * counter (and pray...)
