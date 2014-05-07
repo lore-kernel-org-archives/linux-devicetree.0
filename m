@@ -1,109 +1,106 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH/RFC v3 5/5] media: Add registration helpers for V4L2
- flash sub-devices
-Date: Wed, 7 May 2014 10:58:28 +0300
-Message-ID: <20140507075828.GD8753@valkosipuli.retiisi.org.uk>
-References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
- <1397228216-6657-6-git-send-email-j.anaszewski@samsung.com>
- <20140416182141.GG8753@valkosipuli.retiisi.org.uk>
- <534F9044.6080508@samsung.com>
- <20140423152435.GJ8753@valkosipuli.retiisi.org.uk>
- <535E3A95.6010206@samsung.com>
- <20140502110651.GX8753@valkosipuli.retiisi.org.uk>
- <536884D9.4050104@samsung.com>
- <20140506091059.GB8753@valkosipuli.retiisi.org.uk>
- <5369DEB1.2060803@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Wed, 7 May 2014 11:12:23 +0300
+Message-ID: <5369EAE7.3030705@ti.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-4-git-send-email-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-leds-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5369DEB1.2060803@samsung.com>
-Sender: linux-leds-owner@vger.kernel.org
-To: Jacek Anaszewski <j.anaszewski@samsung.com>
-Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="njBMUIJkiSwSwLILJCHsCciWP7Kw9FQ7A"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1398815562-24113-4-git-send-email-tony@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jacek,
+--njBMUIJkiSwSwLILJCHsCciWP7Kw9FQ7A
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2014 at 09:20:17AM +0200, Jacek Anaszewski wrote:
-> On 05/06/2014 11:10 AM, Sakari Ailus wrote:
-> >Hi Jacek,
-> >
-> >On Tue, May 06, 2014 at 08:44:41AM +0200, Jacek Anaszewski wrote:
-> >>Hi Sakari,
-> >>
-> >>On 05/02/2014 01:06 PM, Sakari Ailus wrote:
-> >>
-> >>>>>>[...]
-> >>>>>>>>+static inline enum led_brightness v4l2_flash_intensity_to_led_brightness(
-> >>>>>>>>+					struct led_ctrl *config,
-> >>>>>>>>+					u32 intensity)
-> >>>>>>>
-> >>>>>>>Fits on a single line.
-> >>>>>>>
-> >>>>>>>>+{
-> >>>>>>>>+	return intensity / config->step;
-> >>>>>>>
-> >>>>>>>Shouldn't you first decrement the minimum before the division?
-> >>>>>>
-> >>>>>>Brightness level 0 means that led is off. Let's consider following case:
-> >>>>>>
-> >>>>>>intensity - 15625
-> >>>>>>config->step - 15625
-> >>>>>>intensity / config->step = 1 (the lowest possible current level)
-> >>>>>
-> >>>>>In V4L2 controls the minimum is not off, and zero might not be a possible
-> >>>>>value since minimum isn't divisible by step.
-> >>>>>
-> >>>>>I wonder how to best take that into account.
-> >>>>
-> >>>>I've assumed that in MODE_TORCH a led is always on. Switching
-> >>>>the mode to MODE_FLASH or MODE_OFF turns the led off.
-> >>>>This way we avoid the problem with converting 0 uA value to
-> >>>>led_brightness, as available torch brightness levels start from
-> >>>>the minimum current level value and turning the led off is
-> >>>>accomplished on transition to MODE_OFF or MODE_FLASH, by
-> >>>>calling brightness_set op with led_brightness = 0.
-> >>>
-> >>>I'm not sure if we understood the issue the same way. My concern was that if
-> >>>the intensity isn't a multiple of step (but intensity - min is), the above
-> >>>formula won't return a valid result (unless I miss something).
-> >>>
-> >>
-> >>Please note that v4l2_flash_intensity_to_led_brightness is called only
-> >>from s_ctrl callback, and thus it expects to get the intensity aligned
-> >>to the step value, so it will always be a multiple of step.
-> >>Is it possible that s_ctrl callback would be passed a non-aligned
-> >>control value?
-> >
-> >In a nutshell: value - min is aligned but value is not. Please see
-> >validate_new() in drivers/media/v4l2-core/v4l2-ctrls.c .
-> >
-> 
-> Still, to my mind, value is aligned.
-> 
-> Below I execute the calculation steps one by one
-> according to the V4L2_CTRL_TYPE_INTEGER case in the
-> validate_new function:
-> 
-> c->value = 35000
-> 
-> val = c->value + step / 2;       // 35000 + 15625 / 2 = 42812
-> val = clamp(val, min, max);      // val = 42812
-> offset = val - min;              // 42812 - 15625 = 27187
-> offset = step * (offset / step); // 15625 * (27187 / 15625) = 15625
-> c->value = min + offset;         // 15625 + 15625 = 31250
-> 
-> Value is aligned to the nearest step.
-> 
-> Please spot any discrepancies in my way of thinking if there
-> are any :)
+On 30/04/14 02:52, Tony Lindgren wrote:
+> We can pass the GPIO configuration for ls037v7dw01 in a standard
+> gpios property.
+>=20
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../bindings/panel/sharp,ls037v7dw01.txt           | 53 ++++++++++++++=
 
-min is aligned to step above. This is not necessarily the case. And if min
-is not aligned, neither is value.
+>  .../omap2/displays-new/panel-sharp-ls037v7dw01.c   | 84 ++++++++++++++=
+++++++--
+>  2 files changed, 133 insertions(+), 4 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls037=
+v7dw01.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.=
+txt b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
+> new file mode 100644
+> index 0000000..7f6f5e1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
+> @@ -0,0 +1,53 @@
+> +SHARP LS037V7DW01 TFT-LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "sharp,ls037v7dw01"
+> +
+> +Optional properties:
+> +- reset-gpios: a GPIO spec for the optional reset pin
+> +- enable-gpios: a GPIO array for the optional configuration GPIOs
+> +  ordered MO, LR, UD, INI as specified in the LS037V7DW01.pdf file.
+> +
+> +This binding is compatible with the simple-panel binding, which is spe=
+cified
+> +in simple-panel.txt in this directory.
+> +
+> +This panel can have zero to five GPIOs to configure
+> +to change configuration between QVGA and VGA mode
+> +and the scan direction. As these pins can be also
+> +configured with external pulls, all the GPIOs are
+> +considered optional with holes in the array.
+> +
+> +Example when connected to a omap2+ based device:
+> +
+> +	lcd0: display {
+> +		compatible =3D "sharp,ls037v7dw01";
+> +		power-supply =3D <&lcd_3v3>;
+> +		reset-gpios =3D <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB *=
+/
+> +		enable-gpios =3D <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
+> +				&gpio1 2 GPIO_ACTIVE_HIGH	/* gpio2, lcd LR */
+> +				&gpio1 3 GPIO_ACTIVE_HIGH	/* gpio3, lcd UD */
+> +				&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */
 
--- 
-Kind regards,
+Why are most of the gpios in 'enable-gpios'? MO, LR and UD don't really
+have anything to do with enabling the panel. Why not just have one
+'gpios' array with all the gpios, as they are quite a mixed bunch?
 
-Sakari Ailus
-e-mail: sakari.ailus@iki.fi	XMPP: sailus@retiisi.org.uk
+ Tomi
+
+
+
+--njBMUIJkiSwSwLILJCHsCciWP7Kw9FQ7A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTaernAAoJEPo9qoy8lh71hS8P/AnVbcpWVabEakHTYDcT9cze
+OcorYIGkP4O6c4klKlgGRCw2oFJNT1s8Y9obaeuNC1uDAasU24YHS3W5Ulz5h4h9
+agAQaWWaBQO06fY/AviYK66WhOGfkPFbI7B02Muep2cclnhT0E9Q3bYnWkSyMUHC
+wzkmkhC555M1DNTyjius9JPRXT7/Y0wskMH1v5dIb8SHtbGfDuHZ5vmSSxCz60ts
+cwIwog5ShkIIVrBsYBcBkQfbBTE4ESwRvPaitt0GpQJtKtqAwTLQfJW9aGIn0eS4
+mXZtnDbBQpKXd4ItKZ6NhvqlSskUPH2/HkfwYLkEPITi4Z/2JUVlWUdS8iAfiXcN
+Qid7zZGAEMzCgvYCudFtWuVqr+KX3Z5wAmXcUeyoym9Kx9nsKO5Ip05Jp2lKdeWm
+GI3o1rfNJmJim5BuKt9FXE5IqHoqjTwYVN50+B6t8t6e1C8C1NbDc+itiKRer9Lq
+mIF3lAVu7U7n9IkPHOwmKluIJ/5cFe3Pt9U2ar73D8JjRhiE2na5yiFe3Qq77kkh
+hLeszbIIiJux1zmJh5MBq1pMH5ixPEctmjKb4FD/dbZvxH2vyJjk1matxo9bODxo
+uzQBCnKuEyvDX1JdjydBRI9lo4wh/gyB4Z7+RCa3BrhzC5tF9asTlWTp05xhsJj1
+oYQnWhLL+7icVPAgxCcd
+=/Mat
+-----END PGP SIGNATURE-----
+
+--njBMUIJkiSwSwLILJCHsCciWP7Kw9FQ7A--
