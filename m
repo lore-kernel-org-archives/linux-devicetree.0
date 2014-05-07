@@ -1,164 +1,57 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v2 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Wed, 7 May 2014 23:56:19 +0530
-Message-ID: <CAK9yfHwH_nwjKjOa3ea3RYK8VEgVbo1ax9xOwvSB8zhoksDHog@mail.gmail.com>
-References: <1399363824-23543-1-git-send-email-sachin.kamat@linaro.org>
-	<53691187.80101@gmail.com>
-	<CAK9yfHz6PVT2C-TZkFHqtdj4rT-R8w+aU=jTTnLMF5k4JOXGxg@mail.gmail.com>
-	<536A675F.9040204@samsung.com>
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: Re: KConfig and DTS files
+Date: Wed, 07 May 2014 11:35:12 -0700
+Message-ID: <536A7CE0.6070005@boundarydevices.com>
+References: <536A697D.3020002@boundarydevices.com> <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com> <536A71AF.1010907@boundarydevices.com> <6261287.BoJ6nRgupA@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <536A675F.9040204@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6261287.BoJ6nRgupA@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Thanks Arnd.
 
-On 7 May 2014 22:33, Tomasz Figa <t.figa@samsung.com> wrote:
-> On 06.05.2014 20:09, Sachin Kamat wrote:
-> [snip]
->> On 6 May 2014 22:14, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> [snip]
->>> On 06.05.2014 10:10, Sachin Kamat wrote:
-> [snip]
->>>> diff --git a/arch/arm/mach-exynos/platsmp.c
->>>> b/arch/arm/mach-exynos/platsmp.c
->>>> index 03e5e9f94705..ccbcdd7b8a86 100644
->>>> --- a/arch/arm/mach-exynos/platsmp.c
->>>> +++ b/arch/arm/mach-exynos/platsmp.c
->>>> @@ -20,6 +20,7 @@
->>>>   #include <linux/jiffies.h>
->>>>   #include <linux/smp.h>
->>>>   #include <linux/io.h>
->>>> +#include <linux/of_address.h>
->>>>
->>>>   #include <asm/cacheflush.h>
->>>>   #include <asm/smp_plat.h>
->>>> @@ -33,11 +34,35 @@
->>>>
->>>>   extern void exynos4_secondary_startup(void);
->>>>
->>>> +static void __iomem *sram_base_addr;
->>>> +void __iomem *sram_ns_base_addr;
->>>
->>>
->>> This is probably just a matter of preference, but I'd make this static and
->>> provide a getter function, like exynos_get_sram_ns_base();
->>>
->>> Also this address seems to be used by the firmware code exclusively. If we
->>> want to make the firmware code more self-contained, maybe the mapping of
->>> firmware-specific SRAM region could be handled there, instead? This would
->>> also eliminate the need for having an exported variable or getter function.
->>> What do you think?
+On 05/07/2014 11:10 AM, Arnd Bergmann wrote:
+> On Wednesday 07 May 2014 10:47:27 Eric Nelson wrote:
 >>
->> I thought of the same. However 2 reasons prevented me from implementing this.
+>> It seems reasonable to tell the kernel to skip this if the
+>> WiFi driver isn't configured into the kernel (i.e. there's
+>> no point in enumerating), so I was hoping to surround this
+>> USDHC2 block with #ifdefs:
 >>
->> 1. Code duplication
->> 2. This code should be executed only once. I put it in exynos_firmware_init.
->> However it gave a crash while doing of_iomap. So moved it back to the current
->> location.
+>>          https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.0_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi#L640
+>>
+>> The alternative aren't very nice:
+>>          populate extra parts to drive these signals, or
+>>          copy the DTB and strip out the unused parts
+>>
+>> The first is wasteful (and environmentally un-friendly), and
+>> the second doesn't scale very well and pollutes the Git tree.
 >>
 >
-> Right, exynos_firmware_init() is called too early, before ioremap() is
-> available, so there is no good place to put this in firmware code. So,
-> let's keep this as is for now and eventually move it to firmware if
-> needed and/or a proper method of initialization is available.
-
-OK.
-
+> It's fine to have two .dtb files (as Olof and Jason also suggested)
+> and you can even have both in the kernel and just pick the right
+> one for your machine.
 >
->>>
->>>
->>>> +
->>>> +static void __init exynos_smp_prepare_sram(void)
->>>> +{
->>>> +       struct device_node *node;
->>>> +
->>>> +       for_each_compatible_node(node, NULL, "samsung,exynos4210-sram") {
->>>> +               if (of_device_is_available(node)) {
->>>> +                       sram_base_addr = of_iomap(node, 0);
->>>> +                       if (!sram_base_addr)
->>>> +                               pr_err("Secondary CPU boot address not
->>>> found\n");
->>>
->>>
->>> I don't think this is an error at this stage. Some platforms might not have
->>> either of these SRAM reserved regions (such as those using INFORM registers
->>> instead). Instead, the base address should be checked whenever it is needed
->>> and errors should be handled then, like in exynos_set_cpu_boot_addr().
->>
->> Yes. This is more from an information perspective. Probably pr_warn or
->> pr_info would
->> be better?
->>
+> Another option that works is to have the boot loader set up the
+> present devices. With u-boot, you can easily manipulate the binary dtb
+> and change a 'status="disabled"' to 'status="ok"' or vice versa
+> for devices that are only sometimes populated, or you can change
+> the amount of installed RAM as detected by the loader.
 >
-> IMHO this shouldn't produce any messages at this stage. Just whenever
-> either of addresses is actually needed and is not initialized a message
-> should be printed.
 
-OK.
+Easily is such a relative term ;)
 
->>>> +}
->>>> +
->>>>   static inline void __iomem *cpu_boot_reg_base(void)
->>>>   {
->>>>         if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_1_1)
->>>>                 return S5P_INFORM5;
->>>> -       return S5P_VA_SYSRAM;
->>>> +       return sram_base_addr;
->>>>   }
->>>>
->>>>   static inline void __iomem *cpu_boot_reg(int cpu)
->>>> @@ -147,7 +172,8 @@ static int exynos_boot_secondary(unsigned int cpu,
->>>> struct task_struct *idle)
->>>>                  * and fall back to boot register if it fails.
->>>>                  */
->>>>                 if (call_firmware_op(set_cpu_boot_addr, phys_cpu,
->>>> boot_addr))
->>>> -                       __raw_writel(boot_addr, cpu_boot_reg(phys_cpu));
->>>> +                       if (cpu_boot_reg_base())
->>>> +                               __raw_writel(boot_addr,
->>>> cpu_boot_reg(phys_cpu));
->>>
->>>
->>> I'd rework this for proper error handling, e.g.
->>>
->>>         int ret;
->>>
->>>         /* ... */
->>>
->>>         ret = call_firmware_op(set_cpu_boot_addr, phys_cpu, boot_addr);
->>>         if (ret && ret != -ENOSYS)
->>>                 goto fail;
->>>         if (ret == -ENOSYS) {
->>>                 /* Fall back to firmware-less way. */
->>>                 void __iomem *boot_reg = cpu_boot_reg(phys_cpu);
->>>
->>>                 if (IS_ERR(boot_reg)) {
->>>                         ret = PTR_ERR(boot_reg);
->>>                         goto fail;
->>>                 }
->>>         }
->>>
->>>         /* ... */
->>>
->>> fail:
->>>         /* Clean-up after error */
->>>
->>> Of course, cpu_boot_reg() will need to be converted to follow the ERR_PTR()
->>> model, but IMHO proper error handling is a good reason to do so.
->>
->> How about handling this separately outside this patch?
->>
->
-> This patch is already changing surroundings of this code, so I'd say it
-> should do it the right way from the start.
+Thanks for the advice.
 
-Yes, I have incorporated it in my patch. Will send the same tomorrow.
 
--- 
-With warm regards,
-Sachin
+Eric
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
