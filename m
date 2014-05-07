@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv4 11/20] Documentation: dt-bindings: document the Armada 375 USB cluster binding
-Date: Wed,  7 May 2014 15:52:17 +0200
-Message-ID: <1399470746-2948-12-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv4 18/20] ARM: mvebu: add Device Tree description of USB cluster controller on Armada 375
+Date: Wed,  7 May 2014 15:52:24 +0200
+Message-ID: <1399470746-2948-19-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1399470746-2948-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1399470746-2948-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -12,43 +12,32 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Armada 375 comes with an USB2 host and device controller and an USB3
-controller. The USB cluster control register allows to manage common
-features of both USB controllers. This commit adds the Device Tree
-binding documentation for this piece of hardware.
+On Armada 375, the USB cluster allows to control the cluster composed
+of the USB2 and USB3 host controllers.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../bindings/phy/armada-375-usb-phy-cluster.txt       | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
+ arch/arm/boot/dts/armada-375.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt b/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
-new file mode 100644
-index 0000000..258407c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
-@@ -0,0 +1,19 @@
-+Armada 375 USB cluster
-+----------------------
+diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+index 3877693..6724c10 100644
+--- a/arch/arm/boot/dts/armada-375.dtsi
++++ b/arch/arm/boot/dts/armada-375.dtsi
+@@ -320,6 +320,12 @@
+ 				clocks = <&coreclk 0>;
+ 			};
+ 
++			usbcluster: usb-cluster@18400 {
++				compatible = "marvell,armada-375-usb-cluster";
++				reg = <0x18400 0x4>;
++				#phy-cells = <1>;
++			};
 +
-+Armada 375 comes with an USB2 host and device controller and an USB3
-+controller. The USB cluster control register allows to manage common
-+features of both USB controllers.
-+
-+Required properties:
-+
-+- compatible: "marvell,armada-375-usb-cluster"
-+- reg: Should contain usb cluster register location and length.
-+- #phy-cells : from the generic phy bindings, must be 1
-+
-+Example:
-+	usbcluster: usb-cluster@18400 {
-+		compatible = "marvell,armada-375-usb-cluster";
-+		reg = <0x18400 0x4>;
-+		#phy-cells = <1>
-+	};
+ 			xor@60800 {
+ 				compatible = "marvell,orion-xor";
+ 				reg = <0x60800 0x100
 -- 
 1.9.2
 
