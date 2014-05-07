@@ -1,7 +1,7 @@
 From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V6 3/5] Documentation: power: reset: Add documentation for generic SYSCON reboot driver
-Date: Wed,  7 May 2014 09:18:02 -0700
-Message-ID: <1399479484-2605-4-git-send-email-fkan@apm.com>
+Subject: [PATCH V6 5/5] arm64: Select reboot driver for X-Gene platform
+Date: Wed,  7 May 2014 09:18:04 -0700
+Message-ID: <1399479484-2605-6-git-send-email-fkan@apm.com>
 References: <1399479484-2605-1-git-send-email-fkan@apm.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1399479484-2605-1-git-send-email-fkan@apm.com>
@@ -10,46 +10,25 @@ To: dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arn
 Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation for generic SYSCON reboot driver.
+Select reboot driver for X-Gene platform.
 
 Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- .../bindings/power/reset/syscon-reboot.txt         |   27 ++++++++++++++++++++
- 1 files changed, 27 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+ arch/arm64/Kconfig |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-new file mode 100644
-index 0000000..79942a3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
-@@ -0,0 +1,27 @@
-+Generic SYSCON mapped register reset driver
-+
-+This is a generic reset driver using syscon to map the reset register.
-+The reset is generally performed with a write to the reset register
-+defined by the register map pointed by syscon reference plus the offset
-+with the mask defined in the reboot node.
-+
-+Required properties:
-+- compatible: should contain "syscon-reboot"
-+- regmap: this is phandle to the register map node 
-+- offset: offset in the register map for the reboot register (in bytes)
-+- mask: the reset value written to the reboot register (32 bit access)
-+
-+Default will be little endian mode, 32 bit access only.
-+
-+Examples:
-+	regmapnode {
-+		compatible = "apm,xgene-scu","syscon";
-+		reg = <0xXXXXXXXX 0xXXXXXXXX>;
-+	}
-+
-+	reboot {
-+	   compatible = "syscon-reboot";
-+	   regmap = <&regmapnode>;
-+	   offset = <0x0>;
-+	   mask = <0x1>;
-+	};
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 9711a5f..007f340 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -129,6 +129,8 @@ config ARCH_VEXPRESS
+ 
+ config ARCH_XGENE
+ 	bool "AppliedMicro X-Gene SOC Family"
++	select MFD_SYSCON
++	select POWER_RESET_SYSCON
+ 	help
+ 	  This enables support for AppliedMicro X-Gene SOC Family
+ 
 -- 
 1.7.6.1
