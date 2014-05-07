@@ -1,110 +1,45 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH v2 06/11] dt-bindings: add documentation for rk3188 clock and reset unit
-Date: Wed, 07 May 2014 23:14:10 +0200
-Message-ID: <2003795.Fases3iJaR@diego>
-References: <3477211.Gkyeur83TV@diego>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/4] DT platform device name collision fixes
+Date: Wed,  7 May 2014 16:48:14 -0500
+Message-ID: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <3477211.Gkyeur83TV@diego>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This add bindings documentation for the clock and reset unit found on
-rk3188 SoCs from Rockchip.
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
----
- .../bindings/clock/rockchip,rk3188-cru.txt         | 74 ++++++++++++++++++++++
- 1 file changed, 74 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+This series fixes the device naming collisions that can occur with 
+nultiple devices having the same name and non-translatable unit 
+addresses. This issue was raised in this thread[1]. I intend to merge 
+this regardless of whether or not some hierarchy in sysfs is created. 
+That is really a separate issue independent of these fixes.
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-new file mode 100644
-index 0000000..8165c0c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
-@@ -0,0 +1,74 @@
-+* Rockchip RK3188 Clock and Reset Unit
-+
-+The RK3188 clock controller generates and supplies clock to various controllers
-+within the SoC and also implements a reset controller for SoC peripherals.
-+There exist two variants of the rk3188 SoC, the rk3188 and rk3188a, with
-+slight differences in the pll handling.
-+
-+Required Properties:
-+
-+- compatible: should be "rockchip,rk3188-cru" or "rockchip,rk3188a-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region. The first element should be the cru register space and the second
-+  element should be the address of the GRF_SOC_STATUS register providing the
-+  pll lock status.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+- rockchip,armclk-divider-table: when the frequency of the APLL is changed
-+  some core divider clocks also need to be updated. These divider clocks have
-+  SoC specific divider clock output requirements for a specific APLL clock
-+  speeds. When APLL clock rate is changed, these divider clocks are
-+  reprogrammed with pre-determined values in order to maintain the SoC
-+  specific divider clock outputs. This property lists the divider values
-+  for these clocks for supported APLL clock speeds.
-+  The format of each entry included in the arm-frequency-table should be
-+  defined as
-+
-+      cell #1: arm clock parent frequency
-+      cell #2 ~ cell 3#: value of clock divider of core_peri and aclk_core.
-+
-+- #rockchip,armclk-cells: defines the number of cells in
-+  rockchip,armclk-divider-table property. The value of this property depends on
-+  the SoC type. For RK3188 SoCs it should be 3.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in dt-bindings/clock/rk3188-cru.h header and can be used
-+in device tree sources.
-+
-+External clocks:
-+
-+The basic input clock is generated outside the SoC. It is expected that it is
-+defined using standard clock bindings with a clock-output-name of "xin24m".
-+
-+Example: Clock controller node:
-+
-+	cru: cru@20000000 {
-+		compatible = "rockchip,rk3188-cru";
-+		reg = <0x20000000 0x1000>,
-+		      <0x200080ac 0x4>;
-+
-+		#clock-cells = <1>;
-+
-+		#rockchip,armclk-cells = <3>;
-+		rockchip,armclk-divider-table =	<1608000 2 3>,
-+						<1416000 2 3>,
-+						<1200000 2 3>,
-+						<1008000 2 3>,
-+						< 816000 2 3>,
-+						< 504000 1 3>,
-+						< 312000 0 1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@10124000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x10124000 0x400>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <1>;
-+		clocks = <&cru SCLK_UART0>;
-+	};
+I found and fix a couple of other issues in the process of testing the 
+fix.
+
+Rob
+
+[1] https://lkml.org/lkml/2014/4/23/312
+
+Rob Herring (4):
+  of/selftest: add testcase for nodes with same name and address
+  of/platform: return error on of_platform_device_create_pdata failure
+  of/platform: fix device naming for non-translatable addresses
+  of: kill off of_can_translate_address
+
+ drivers/of/address.c                         | 22 +----------------
+ drivers/of/platform.c                        | 20 +++++-----------
+ drivers/of/selftest.c                        | 23 ++++++++++++++++++
+ drivers/of/testcase-data/testcases.dtsi      |  1 +
+ drivers/of/testcase-data/tests-platform.dtsi | 35 ++++++++++++++++++++++++++++
+ include/linux/of_address.h                   |  1 -
+ 6 files changed, 66 insertions(+), 36 deletions(-)
+ create mode 100644 drivers/of/testcase-data/tests-platform.dtsi
+
 -- 
-1.9.0
-
+1.9.1
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
