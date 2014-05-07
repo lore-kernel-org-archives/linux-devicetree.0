@@ -1,55 +1,216 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
-Date: Wed, 7 May 2014 16:08:53 +0530
-Message-ID: <CAPdUM4N+2VXpiFSiWW9gKfbte1zkpDbCOSF+KvEo4T1KLqqwjw@mail.gmail.com>
-References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
- <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
- <534506B1.4040908@samsung.com>
- <CAPdUM4M109_kzY6cUMJQPSwgazvWmNDWL1JeXgiqnzvH8dhK2Q@mail.gmail.com>
- <53451A60.4050803@samsung.com> <53675D72.70103@ti.com>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Wed, 7 May 2014 17:21:13 +0530
+Message-ID: <CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
+References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
+	<201404301734.14478.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53675D72.70103@ti.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, sunil joshi <joshi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@linaro.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <201404301734.14478.arnd-r2nGTMty4D4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5 May 2014 15:14, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> Hi,
+On Wed, Apr 30, 2014 at 9:04 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 15 April 2014, Srikanth Thokala wrote:
+>> +Required properties:
+>> +- #address-cells: Address representation for root ports, set to <3>
+>> +- #size-cells: Size representation for root ports, set to <2>
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +     interrupt source. The value must be 1.
+>> +- compatible: Should contain "xlnx,axi-pcie-host-1.00.a"
+>> +- reg: Should contain AXI PCIe registers location and length
+>> +- device_type: must be "pci"
+>> +- interrupts: Should contain AXI PCIe interrupt
+>> +- interrupt-map-mask,
+>> +  interrupt-map: standard PCI properties to define the mapping of the
+>> +     PCI interface to interrupt numbers.
+>> +- ranges: ranges for the PCI memory regions (I/O space region is noti
 >
-> On Wednesday 09 April 2014 03:31 PM, Sylwester Nawrocki wrote:
->> Hi,
->>
->> On 09/04/14 11:12, Rahul Sharma wrote:
->>> Idea looks good. How about keeping compatible which is independent
->>> of SoC, something like "samsung,exynos-simple-phy" and provide Reg
->>> and Bit through phy provider node. This way we can avoid SoC specific
->>> hardcoding in phy driver and don't need to look into dt bindings for
->>> each new SoC.
->>
->> I believe it is a not recommended approach.
+> typo: noti -> not
+
+Ok, will fix.
+
 >
-> Why not? We should try to avoid hard coding in the driver code. Moreover by
-> avoiding hardcoding we can make it a generic driver for single bit PHYs.
+>> +     supported by hardware)
+>> +     Please refer to the standard PCI bus binding document for a more
+>> +     detailed explanation
+>> +
+>> +Optional properties:
+>> +- bus-range: PCI bus numbers covered
+>> +
+>> +Interrupt controller child node
+>> ++++++++++++++++++++++++++++++++
+>> +Required properties:
+>> +- interrupt-controller: identifies the node as an interrupt controller
+>> +- #address-cells: specifies the number of cells needed to encode an
+>> +     address. The value must be 0.
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +     interrupt source. The value must be 1.
+>> +
+>> +NOTE:
+>> +The core provides a single interrupt for both INTx/MSI messages. So,
+>> +created a interrupt controller node to support 'interrupt-map' DT
+>> +functionality.  The driver will create an IRQ domain for this map, decode
+>> +the four INTx interrupts in ISR and route them to this domain.
 >
+> How does this work if the pci core is combined with a GIC version that
+> also has MSI support. Presumably you'd want to use that for performance
+> reason rather than the integrated MSI chip.
+>
+> Shouldn't there be a way to pick between the two?
 
-+1.
+I will check and come back to you on this.
 
-@Tomasz, any plans to consider this approach for simple phy driver?
+>
+>> +/**
+>> + * xilinx_pcie_get_config_base - Get configuration base
+>> + * @bus: Bus structure of current bus
+>> + * @devfn: Device/function
+>> + * @where: Offset from base
+>> + *
+>> + * Return: Base address of the configuration space needed to be
+>> + *      accessed.
+>> + */
+>> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
+>> +                                              unsigned int devfn,
+>> +                                              int where)
+>> +{
+>> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
+>> +     int relbus;
+>> +
+>> +     relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
+>> +              (devfn << ECAM_DEV_NUM_SHIFT);
+>> +
+>> +     return port->reg_base + relbus + where;
+>> +}
+>
+> Does this mean you have an ECAM-compliant config space? Nice!
+>
+> Would it be possible to split the config space access out into
+> a separate file? It would be nice to share that with the generic
+> ECAM driver that Will Deacon has sent.
 
-Regards,
-Rahul Sharma.
+Yes, it should be possible.  Is it ok, if I work on top of this driver?
 
-> Cheers
-> Kishon
+>
+>> +
+>> +     msg.address_hi = 0;
+>> +     msg.address_lo = virt_to_phys((void *)port->msg_addr);
+>> +     msg.data = irq;
+>> +
+>> +     write_msi_msg(irq, &msg);
+>
+> It seems strange to pass the msg_addr as an integer referring to
+> a virtual address. I'd suggest using phys_addr_t for the type
+> and converting it at the point the page gets allocated, and then
+> always assigning both the high and low part here. You'll need
+> that anyway for 64-bit operation.
+
+Ok, I will fix it. Thanks.
+
+>
+>> +/**
+>> + * xilinx_pcie_enable_msi - Enable MSI support
+>> + * @port: PCIe port information
+>> + */
+>> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+>> +{
+>> +     port->msg_addr = __get_free_pages(GFP_KERNEL, 0);
+>> +
+>> +     pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+>> +     pcie_write(port, virt_to_phys((void *)port->msg_addr),
+>> +                XILINX_PCIE_REG_MSIBASE2);
+>> +}
+>
+> here too.
+>
+> As a general comment about the MSI implementation, I wonder if this is actually
+> generic enough to be shared with other host controllers. It could be moved
+> into a separate file like the config space access in that case.
+
+I feel the MSI implementation is not generic by looking into the other
+host controllers,
+it is more specific to the hardware.  Correct me, if am wrong.
+
+>
+>> +/**
+>> + * xilinx_pcie_init_irq_domain - Initialize IRQ domain
+>> + * @port: PCIe port information
+>> + *
+>> + * Return: '0' on success and error value on failure
+>> + */
+>> +static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
+>> +{
+>> +     struct device *dev = port->dev;
+>> +     struct device_node *node = dev->of_node;
+>> +
+>> +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
+>> +             /* Setup MSI */
+>> +             int i;
+>> +
+>> +             port->irq_domain = irq_domain_add_linear(node,
+>> +                                                      XILINX_NUM_MSI_IRQS,
+>> +                                                      &msi_domain_ops,
+>> +                                                      &xilinx_pcie_msi_chip);
+>> +             if (!port->irq_domain) {
+>> +                     dev_err(dev, "Failed to get a MSI IRQ domain\n");
+>> +                     return PTR_ERR(port->irq_domain);
+>> +             }
+>> +
+>> +             for (i = 0; i < XILINX_NUM_MSI_IRQS; i++)
+>> +                     irq_create_mapping(port->irq_domain, i);
+>
+> I'm still not that familiar with the irqdomain code, but shouldn't you
+> do the irq_create_mapping() in xilinx_pcie_assign_msi()?
+>
+> It seems wasteful to create all 128 mappings upfront.
+
+Ok, I agree with you.  I will fix it.
+
+>
+>> +/**
+>> + * xilinx_pcie_setup - Setup memory resources
+>> + * @nr: Bus number
+>> + * @sys: Per controller structure
+>> + *
+>> + * Return: '1' on success and error value on failure
+>> + */
+>> +static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
+>> +{
+>
+> I think if you move most of the code from this function into the probe()
+> function, it will be easier later to add arm64 support, and you can handle
+> errors better.
+>
+> AFAICT, the only thing you need here is to list_move() the resources
+> from the xilinx_pcie_port to sys->resources. Ideally, the entire range
+> parsing can go away soon, once we have generic infrastructure for that.
+
+Sure.  I will do.
+
+>
+>
+>> +     /* Register the device */
+>> +     pci_common_init_dev(dev, &hw);
+>> +
+>> +     platform_set_drvdata(pdev, port);
+>
+> Don't you have to do the platform_set_drvdata() before pci_common_init_dev()?
+
+It should be fine, as I don't see any dependencies.
+
+Srikanth
+
+>
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
