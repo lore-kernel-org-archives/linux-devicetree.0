@@ -1,91 +1,62 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Wed, 7 May 2014 19:02:40 +0300
-Message-ID: <536A5920.1020908@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-4-git-send-email-tony@atomide.com> <5369EAE7.3030705@ti.com> <20140507150343.GA9502@atomide.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 0/3] devicetree, qcomm PMIC: fix node name conflict
+Date: Wed, 7 May 2014 11:08:12 -0500
+Message-ID: <CAL_JsqK5-kAHTgk=nbHToU9sU5fVW+mGXX9rBaYqw57x0Vkqdw@mail.gmail.com>
+References: <536982E3.10303@gmail.com>
+	<CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
+	<CAJAp7OiyjefyPMu2p8jTkbfQWYUKeYV62pVTtJ2JOP-6YOOGKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="MB3F0saapg1aMl86Q2fNJxgwV2mp2KnAh"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140507150343.GA9502@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJAp7OiyjefyPMu2p8jTkbfQWYUKeYV62pVTtJ2JOP-6YOOGKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---MB3F0saapg1aMl86Q2fNJxgwV2mp2KnAh
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Wed, May 7, 2014 at 10:12 AM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
+> On Tue, May 6, 2014 at 6:32 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Tue, May 6, 2014 at 7:48 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> An issue with the path of SPMI nodes under /sys/bus/... was reported in
+>>> https://lkml.org/lkml/2014/4/23/312.  The symptom is that two different
+>>> grandchild nodes of the spmi with the same node-name@unit-address will
+>>> result in attempting to create duplicate links at
+>>> /sys/bus/platform/devices/unit-address.node-name.  It turns out that the
+>>> specific example provided might not be an expected configuration for
+>>> current hardware, but the reported trap remains an issue.
 
-On 07/05/14 18:03, Tony Lindgren wrote:
+[...]
 
->>> +	lcd0: display {
->>> +		compatible =3D "sharp,ls037v7dw01";
->>> +		power-supply =3D <&lcd_3v3>;
->>> +		reset-gpios =3D <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB=
- */
->>> +		enable-gpios =3D <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */=
+>> This can be solved in a much less invasive way just in the DT naming
+>> algorithm. This is slightly different from what I had suggested of
+>> just dropping the unit address. It keeps the unit address, but adds
+>> the unique index on untranslate-able addresses. The diff is bigger due
+>> to refactoring to reduce the indentation levels. It is untested and
+>> whitespace corrupted:
+>
+> The unique index leads to an interesting dependency between the order
+> of nodes in the DTB and userspace; paths to e.g. our the path to our
+> block devices contains soc.X where X changes now and then. Fortunately
+> soc.X won't change that often, but forcing more peripheral nodes to use
+> the same schema would show the problem quite often.
 
->>> +				&gpio1 2 GPIO_ACTIVE_HIGH	/* gpio2, lcd LR */
->>> +				&gpio1 3 GPIO_ACTIVE_HIGH	/* gpio3, lcd UD */
->>> +				&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */
->>
->> Why are most of the gpios in 'enable-gpios'? MO, LR and UD don't reall=
-y
->> have anything to do with enabling the panel. Why not just have one
->> 'gpios' array with all the gpios, as they are quite a mixed bunch?
->=20
-> Yeah that's what I had initially, but reading simple-panel.txt noticed
-> there are some standardized GPIOs for reset and enable.
+Userspace depending on the device names is broken and device names are
+not considered part of the sysfs ABI. So devices having randomish
+names is a feature. The names and location change when platforms
+convert to DT. The location changes when someone decides to add an soc
+device to a platform as well.
 
-I'm not sure if it's worth to try to make it compatible with
-simple-panel. simple-panel bindings do not work with omapdss anyway, and
-simple-panel doesn't have the support for input ports/endpoints.
+> Does translatable/untranslatable refer to if this is an address translatable
+> my the cpu or that it's just a translatable address on this specific bus?
+> As far as I can see it's the latter and in our case (revid { reg =
+> <0x100, 0x100>; })
+> seem to be translatable with the current implementation.
 
-Can the panel be used with only one gpio (I guess that would be INI or
-RESB)? If not, simple-panel doesn't work.
+It should be the former. If the current behavior is the latter, then
+the problem is in a different spot.
 
-> How about we set up one reset-gpios, one enable-gpios and an array of
-> three unlabelled GPIOs?
->=20
-> Or if we want to add something generic, we could add new mode-gpios
-> property that other panels might be able to use too?
->=20
-> BTW, I'm also personally fine with all five gpios showing in a single
-> gpios property, I'm not too exited about naming anything in DT..
-
-I don't have a strong opinion here. I don't have much experience with
-DT, especially with making bindings compatible with other ones.
-
-I'd just forget the simple-panel, and have single gpio array.
-
- Tomi
-
-
-
---MB3F0saapg1aMl86Q2fNJxgwV2mp2KnAh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTalkhAAoJEPo9qoy8lh71yuoQAJFJE52MYlem81uE1m9G6Vyc
-pkzRUMtjnrHXAeDSvfxW4PbFFHZ3PpgXtC4PXCEGMb4iGf/H7u9M3ke+GPGc80wO
-wMVVPT5hYLfYvMRkvh7nQRVTC5mJuM1d2Q9/E0SCx2gJsA4iuazM4EniYYcCqUcC
-E808VJqQ9vuQ7WhUngioOb6wcXO+/A0N2ldrOaR2pziTgqgfIZo9WuOtulElnAEN
-RPn2t+Ws4UydjJNtSPR6hhDiYFgGp6dqqFn6/e9jDKpRRIarBD/07lANmtRPWmzv
-XaSFlqqkbM22J7ReqUoLj2/IPIDOb4/tx+TYj7M7wLjj8atxukasZCyZ+x9ACdj/
-5qnwgVeEnVgk4/GVqsYBBKLpG1uMmhLz5gZDm8/Q+tpCQl/lWoBZ2/hEV3Sct5u8
-464ULhqe2rWyLZ6O9Ax8YHO4+ZDVajwqd/zsas63mR6MuVytbBxrR8CCnRlXlBE/
-D6+/6avSP6Zxjlv6PHf4+o1oHJ5KLVQViLF7wYuWd1zx76S3QwpFPoxR/vNwO0Sl
-TvKpMK47Ku8nkoIXu85gDiyvAv9AlEPHmBHTsv/1vUFGpq9I7GKt17qHBeK2DLZ9
-n/zEOAiVJVzgMp0ggkpEAhKoAt35ERWWRmN01hNxUC8xhrKuTpGGM0t4dPLjmAg9
-zj0AyhPSPl3uZeWMei11
-=m1/F
------END PGP SIGNATURE-----
-
---MB3F0saapg1aMl86Q2fNJxgwV2mp2KnAh--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
