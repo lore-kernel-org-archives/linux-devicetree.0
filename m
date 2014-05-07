@@ -1,88 +1,54 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v4 14/15] clk: exynos5420: add misc clocks
-Date: Wed, 07 May 2014 19:16:43 +0200
-Message-ID: <536A6A7B.2000609@samsung.com>
-References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
- <1399393610-23394-15-git-send-email-shaik.ameer@samsung.com>
- <536920A5.1090502@gmail.com>
- <CAOD6ATo2AL8AFDbhRK8FSNVE+XYGai2Z7D-S-bxtA70h7RLvzQ@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: KConfig and DTS files
+Date: Wed, 7 May 2014 10:24:46 -0700
+Message-ID: <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com>
+References: <536A697D.3020002@boundarydevices.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAOD6ATo2AL8AFDbhRK8FSNVE+XYGai2Z7D-S-bxtA70h7RLvzQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Shaik Ameer Basha <shaik.samsung@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, alim.akhtar@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <536A697D.3020002-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07.05.2014 14:00, Shaik Ameer Basha wrote:
-> Hi Tomasz,
-> 
-> On Tue, May 6, 2014 at 11:19 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->> Shaik,
->>
->>
->> On 06.05.2014 18:26, Shaik Ameer Basha wrote:
->>>
->>> This patch adds some missing miscellaneous clocks specific
->>> to exynos5420.
->>>
->>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
->>> ---
->>>   drivers/clk/samsung/clk-exynos5420.c   |   14 +++++++++++---
->>>   include/dt-bindings/clock/exynos5420.h |    2 ++
->>>   2 files changed, 13 insertions(+), 3 deletions(-)
->>>
->>> diff --git a/drivers/clk/samsung/clk-exynos5420.c
->>> b/drivers/clk/samsung/clk-exynos5420.c
->>> index e0e749d..e69e820 100644
->>> --- a/drivers/clk/samsung/clk-exynos5420.c
->>> +++ b/drivers/clk/samsung/clk-exynos5420.c
->>> @@ -273,7 +273,8 @@ PNAME(mout_group5_p) = {"mout_sclk_vpll",
->>> "mout_sclk_dpll"};
->>>
->>>   PNAME(mout_fimd1_final_p) = {"mout_fimd1", "mout_fimd1_opt"};
->>>   PNAME(mout_sw_aclk66_p)       = {"dout_aclk66", "mout_sclk_spll"};
->>> -PNAME(mout_user_aclk66_peric_p)        = { "fin_pll", "mout_sw_aclk66" };
->>> +PNAME(mout_user_aclk66_peric_p)        = { "fin_pll", "mout_sw_aclk66"};
->>> +PNAME(mout_user_pclk66_gpio_p) = {"mout_sw_aclk66", "ffactor_sw_aclk66"};
->>>
->>>   PNAME(mout_sw_aclk200_fsys_p) = {"dout_aclk200_fsys", "mout_sclk_spll"};
->>>   PNAME(mout_sw_pclk200_fsys_p) = {"dout_pclk200_fsys", "mout_sclk_spll"};
->>> @@ -372,10 +373,13 @@ static struct samsung_fixed_rate_clock
->>> exynos5420_fixed_rate_clks[] __initdata =
->>>   };
->>>
->>>   static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[]
->>> __initdata = {
->>> -       FFACTOR(0, "sclk_hsic_12m", "fin_pll", 1, 2, 0),
->>> +       FFACTOR(0, "ffactor_hsic_12m", "fin_pll", 1, 2, 0),
->>> +       FFACTOR(0, "ffactor_sw_aclk66", "mout_sw_aclk66", 1, 2, 0),
->>
->>
->> Is the "ffactor_" prefix also present in the datasheet? If not, it should be
->> removed from clock names as well.
-> 
-> Its not there in manual.
-> As we are differentiating muxes and dividers with "mout" and "dout"
-> this prefix is added
-> to differentiate fixed factor clocks.
-> 
-> shall I keep it or not?
+Hi,
 
-mout and div prefixes are also used in documentation, at least in case
-of previous Exynos SoCs. In case of Exynos5420 I can see CLKDIV_ prefix
-used for dividers, so after stripping the CLK part which is simply
-redundant, we are left with div_ prefix as in Exynos4 - not sure why in
-Exynos5420 driver dout_ prefix was used, I must have missed that in
-review, but I simply didn't have any the documentation for this chip at
-that time.
+On Wed, May 7, 2014 at 10:12 AM, Eric Nelson
+<eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
+> Hi all,
+>
+> I suspect that this has been discussed previously, but I'm a
+> N00b to DT and Google hasn't helped identify a discussion
+> on the list.
+>
+> While getting my feet wet with DTS, I was quite surprised to
+> see that there's no support for making parts of DTS files
+> conditional on the kernel configuration.
+>
+> We often cost-optimize BOMs for our standard boards and omit
+> bits and pieces not needed for a particular build, and
+> it would be nice to surround optional components with
+> conditionals:
+>
+>     #ifdef CONFIG_BLAH
+>     #endif
+>
+> Please advise,
 
-I don't see those hsic_12m and sw_aclk66 clocks in my version of the
-datasheet (probably an old version) so I can't say what would be the
-proper names for both, but I wouldn't add ffactor_ there.
+The DTS is independent on what drivers the kernel is actually
+enabling. It should focus on what is actually there on hardware, and
+not what is enabled in software.
 
-Best regards,
-Tomasz
+I think I know where you're coming from on this -- on some board-file
+setups people used to not register the platform_device if the driver
+wasn't configured. That was also not really a good way to do it, but
+it made a bit more sense there, since you'd save the few bytes used by
+the platform_device/platform_data structures.
+
+
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
