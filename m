@@ -1,59 +1,44 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH v2 0/3] Add display support for gta04 device
-Date: Wed, 7 May 2014 07:35:26 +0200
-Message-ID: <CAAfyv34a3FfKUzwz7UDt-77V692eLdJL+h4c0pve2V+g351Weg@mail.gmail.com>
-References: <1398284120-4986-1-git-send-email-marek@goldelico.com>
+From: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] powerpc/fsl: Updated corenet-cf compatible string for
+ corenet1-cf chips
+Date: Wed, 7 May 2014 09:14:22 +0300
+Message-ID: <5369CF3E.2000608@freescale.com>
+References: <1399388176-25257-1-git-send-email-diana.craciun@freescale.com>
+ <1399395448.15726.185.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398284120-4986-1-git-send-email-marek@goldelico.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, rdunlap@infradead.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, Marek Belisko <marek@goldelico.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399395448.15726.185.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tomi,
-
-any objections to this patch set? If not can you please take it? Thanks.
-
-On Wed, Apr 23, 2014 at 10:15 PM, Marek Belisko <marek@goldelico.com> wrote:
-> This 3 patches adding display support for openmoko gta04 device.
-> First patch add DT bindings for topolly td028 panel. Second add description for
-> dss + panel and third fix panel probing when panel is compiled as module.
+On 05/06/2014 07:57 PM, Scott Wood wrote:
+> On Tue, 2014-05-06 at 17:56 +0300, Diana Craciun wrote:
+>> From: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>
+>> Updated the device trees according to the corenet-cf
+>> binding definition.
+>>
+>> Signed-off-by: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> ---
+>>   arch/powerpc/boot/dts/fsl/p2041si-post.dtsi | 2 +-
+>>   arch/powerpc/boot/dts/fsl/p3041si-post.dtsi | 2 +-
+>>   arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 2 +-
+>>   arch/powerpc/boot/dts/fsl/p5020si-post.dtsi | 2 +-
+>>   4 files changed, 4 insertions(+), 4 deletions(-)
+> Oops, I meant to include this in the patch I sent, but forgot to squash
+> the two patches together. :-P
 >
-> Changes from v1:
-> - extend panel compatible string by 'omapdss'
-> - add tpo-td028 panel to dss_compat_conv_list
-> - add MODULE_ALIAS macro to properly probe panel when is compiled as module
->
-> Marek Belisko (3):
->   omapdss: panel-tpo-td028ec1: Add DT support.
->   ARM: dts: oma3-gta04: Add display support
->   omapdss: panel-tpo-td028ec1: Add module alias
->
->  .../bindings/video/toppoly,td028ttec1.txt          | 30 ++++++++
->  arch/arm/boot/dts/omap3-gta04.dts                  | 86 ++++++++++++++++++++++
->  arch/arm/mach-omap2/display.c                      |  1 +
->  .../omap2/displays-new/panel-tpo-td028ttec1.c      | 33 ++++++++-
->  4 files changed, 149 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/video/toppoly,td028ttec1.txt
->
-> --
-> 1.8.3.2
->
+> Where's p5040?
 
-BR,
+Ups, somehow I failed to commit that file, respinning....
 
-marek
+Diana
 
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
