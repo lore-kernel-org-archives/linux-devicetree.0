@@ -1,62 +1,60 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 00/20] USB support for Armada 38x and Armada 375
-Date: Wed, 07 May 2014 11:21:58 +0200
-Message-ID: <5369FB36.7040404@gmail.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com> <loom.20140507T102941-222@post.gmane.org>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for pcie-dra7xx
+ controller
+Date: Wed, 7 May 2014 14:52:47 +0530
+Message-ID: <5369FB67.6040905@ti.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-6-git-send-email-kishon@ti.com> <20140506163507.GA15542@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <loom.20140507T102941-222-eS7Uydv5nfjZ+VzJOa5vwg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140506163507.GA15542@obsidianresearch.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, Marek Vasut <marex@denx.de>, balajitk@ti.com, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-[Adding back the original Cc-List]
+Hi,
 
-On 05/07/2014 10:33 AM, Hans de Goede wrote:
-> Hi Gregory,
->
-> Gregory CLEMENT <gregory.clement <at> free-electrons.com> writes:
->
->> This patch set adds the USB support for the Armada 38x Armada
->> 375. These SoCs use an xHCI but still need specific initialization,
->> mainly to setup the windows memory on the mbus. They also use the same
->> controller that the other mvebu SoC for EHCI.
->
-> <snip>
->
->> Gregory CLEMENT (20):
->>    usb: ehci-orion: Fix clock reference leaking
->>    usb: ehci-orion: Add the optional PHY support
->
-> If you're using a proper phy driver, do you really need a soc specific ehci
-> driver? I've spend a lot of time during the last release cycle to make
-> ehci-platform a lot more generic, including adding (optional) phy support to
-> it. It would be great if the new Armada SoCs could use ehci-platform instead
-> of extending ehci-orion to cover more models (ideally most ehci-foo drivers
-> would go away completely). I've no idea how feasible it is to use
-> ehci-platform in your case, but IMHO it should at least be considered.
+On Tuesday 06 May 2014 10:05 PM, Jason Gunthorpe wrote:
+> On Tue, May 06, 2014 at 07:03:51PM +0530, Kishon Vijay Abraham I wrote:
+>> +Example:
+>> +pcie@51000000 {
+>> +	compatible = "ti,dra7xx-pcie";
+>> +	reg = <0x51002000 0x14c>, <0x51000000 0x2000>;
+>> +	reg-names = "ti_conf", "rc_dbics";
+>> +	interrupts = <0 232 0x4>, <0 233 0x4>;
+>> +	#address-cells = <3>;
+>> +	#size-cells = <2>;
+>> +	device_type = "pci";
+>> +	ti,device_type = <3>;
+>> +	ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* Configuration Space */
+> 
+> Configuration space should not show up in the ranges, please don't
+> copy that mistake from other drivers, put it in reg.
 
-Hans,
+But then it needs pcie-designware.c to be modified and it will be breaking
+other platforms no?
+> 
+>> +	interrupt-map-mask = <0 0 0 0>;
+>> +	interrupt-map = <0x0 0 &gic 134>;
+> 
+> The HW cannot decode INTA/B/C/D?
+> 
+>> +#define	PCIECTRL_DRA7XX_CONF_IRQSTATUS_MSI		0x0034
+>> +#define	PCIECTRL_DRA7XX_CONF_IRQENABLE_SET_MSI		0x0038
+>> +#define	INTA						BIT(0)
+>> +#define	INTB						BIT(1)
+>> +#define	INTC						BIT(2)
+>> +#define	INTD						BIT(3)
+>> +#define	MSI						BIT(4)
+>> +#define	LEG_EP_INTERRUPTS (INTA | INTB | INTC | INTD)
+> 
+> Oh, it can, it would be wise to export this from the driver. Look at
+> the latest patches from Srikanth Thokala for the Xilinx PCI driver to
+> see how this should look
 
-unfortunately we currently have no USB-PHY driver for the other mvebu
-SoCs. I have started some code grabbing for barebox bootloader and plan
-to add proper USB-PHYs for Linux later.
+ok.. will have a look at it.
 
-There is one thing very specific to mvebu SoCs, which is the mbus:
-you need to setup upstream memory windows for the usb bus master.
- From my current understanding, that will require at least a minimal
-stub to remain for ehci-orion.
-
-I do think that most of the stuff in ehci-orion can (and should) be
-replaced with ehci-platform then. So, we definitely consider reusing
-the generic foo-platform drivers on all opportunities but IMHO we are
-not yet ready for it.
-
-Sebastian
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
