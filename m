@@ -1,54 +1,61 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] devicetree: provide hook to allow setting
- devicetree device name
-Date: Wed, 7 May 2014 16:21:09 +0100
-Message-ID: <CACxGe6tdOytQT5D0ykptya1gaPeMeeJ0a0K4ZvUE9RmRmGMD0g@mail.gmail.com>
-References: <536982E3.10303@gmail.com> <536983D0.8090307@gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH V6 0/2] arm: dts: dra7: Updates for adding crossbar device
+Date: Wed, 7 May 2014 10:29:35 -0500
+Message-ID: <536A515F.3010402@ti.com>
+References: <1399464998-23216-1-git-send-email-r.sricharan@ti.com> <20140507145656.GG2626@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <536983D0.8090307-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140507145656.GG2626@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Darren Etheridge <detheridge@ti.com>, Sricharan R <r.sricharan@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, bcousson@baylibre.com, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 7, 2014 at 1:52 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
->
-> Optionally push devicetree device naming into a function called dynamically by
-> of_device_alloc().
->
-> TODO:
->    Change made to of_device_alloc() could also be made to
->    of_amba_device_create()
->
-> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
->  drivers/of/platform.c |    2 ++
->  include/linux/of.h    |    2 ++
->  3 files changed, 43 insertions(+)
->
-> Index: b/drivers/of/platform.c
-> ===================================================================
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -179,6 +179,8 @@ struct platform_device *of_device_alloc(
->
->         if (bus_id)
->                 dev_set_name(&dev->dev, "%s", bus_id);
-> +       else if (np->parent->of_device_make_bus_id)
-> +               np->parent->of_device_make_bus_id(&dev->dev);
+Tony,
 
-This isn't dangerous in the way the first patch is, but I don't want
-to expose control over the naming scheme outside of the core code. It
-would be too easy to get wrong and mess up other drivers. The problem
-that is being hit is clearly a bug in the core DT code. It should be
-naming devices so that there isn't a conflict. I think Rob's suggested
-patch is the best fix.
+On 05/07/2014 09:56 AM, Darren Etheridge wrote:
+> Sricharan R <r.sricharan@ti.com> wrote on Wed [2014-May-07 17:46:36 +0530]:
+>> Some socs have a large number of interrupts requests to service
+>> the needs of its many peripherals and subsystems. All of the interrupt
+>> requests lines from the subsystems are not needed at the same
+>> time, so they have to be muxed to the controllers appropriately.
+>> In such places a interrupt controllers are preceded by an
+>> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
+>> requests to the controller inputs.
+>>
+>> The dts file update to support the crossbar device and convert
+>> peripheral irq numbers to crossbar number are added here.
+>>
+>> This is a rebase on top of 3.15-rc4
+>>
+>> This series depends on crossbar-driver-fixes sent below
+>> http://marc.info/?l=linux-omap&m=139929963420299&w=2
+>>
+>> [V6] Reordered patch 3 to patch 1 and
+>>      squashed patch 2 and 3 from V5 in to patch 2
+>>
+>> Sricharan R (2):
+>>   arm: dts: dra7: Add routable-irqs property for gic node
+>>   arm: dts: dra7: Add crossbar device binding
+>>
+> 
+> Just for thoroughness I dropped the previous 3 patch series from my
+> build and replaced with this two patch series.  Everything still works
+> with my test setup so I consider these patches good.
+> 
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+It looks like in further tests, there may be more interrupts like irq
+10 which are not documented properly and if mapped results in the
+feature not working. It does seem that we might need more detailed
+validation as this seems to have skipped our "non-OS validation" flow
+unfortunately. we are in discussion with silicon folks on these
+"undocumented behavior" we are discovering :(.
+
+I suggest holding the series till we have done complete validation of
+the same and explanation for the behavior we see.
+
+-- 
+Regards,
+Nishanth Menon
