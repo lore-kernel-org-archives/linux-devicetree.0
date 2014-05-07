@@ -1,69 +1,40 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH 5/7] clk: sunxi: add PRCM (Power/Reset/Clock Management)
- clks support
-Date: Wed, 07 May 2014 19:12:30 +0200
-Message-ID: <536A697E.5000107@free-electrons.com>
-References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com> <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com> <20140428234039.GT3134@lukather>
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: KConfig and DTS files
+Date: Wed, 07 May 2014 10:12:29 -0700
+Message-ID: <536A697D.3020002@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140428234039.GT3134@lukather>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
-On 29/04/2014 01:40, Maxime Ripard wrote:
-> On Mon, Apr 28, 2014 at 04:58:48PM +0200, Boris BREZILLON wrote:
->> The PRCM (Power/Reset/Clock Management) unit provides several clock
->> devices:
->> - AR100 clk: used to clock the Power Management co-processor
->> - AHB0 clk: used to clock the AHB0 bus
->> - APB0 clk and gates: used to clk
-> Used to clk?
-"Used to clk peripherals connected on the APB0 bus"
+I suspect that this has been discussed previously, but I'm a
+N00b to DT and Google hasn't helped identify a discussion
+on the list.
 
-I'll add the missing words in the next version :-).
+While getting my feet wet with DTS, I was quite surprised to
+see that there's no support for making parts of DTS files
+conditional on the kernel configuration.
 
->
-[...]
-> Ditto.
->
-> And you'll probably want to use devm_ioremap_resource when you'll have
-> a single clock for the AR100.
+We often cost-optimize BOMs for our standard boards and omit
+bits and pieces not needed for a particular build, and
+it would be nice to surround optional components with
+conditionals:
 
-Absolutely.
+     #ifdef CONFIG_BLAH
+     #endif
 
->
->> +
->> +	clk_parent = of_clk_get_parent_name(np, 0);
->> +	if (!clk_parent)
->> +		return -EINVAL;
-[...]
->> +
->> +static struct platform_driver sun6i_a31_prcm_clk_driver = {
->> +	.driver = {
->> +		.name = "sun6i-a31-prcm-clk",
->> +		.owner = THIS_MODULE,
->> +		.of_match_table = sun6i_a31_prcm_clk_dt_ids,
->> +	},
->> +	.probe = sun6i_a31_prcm_clk_probe,
-> You're not calling the of_clk_del_provider, and you should probably
-> unregister your clocks too.
+Please advise,
 
-This driver cannot be compiled as a module, and as a result the probed
-clks will never be removed.
 
-Do you really want to support clk removal for this HW block ?
-
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
+Eric Nelson
+Boundary Devices
+http://boundarydevices.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
