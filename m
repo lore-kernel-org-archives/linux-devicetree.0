@@ -1,157 +1,86 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v4 2/2] ARM: i.MX6: Add OF configuration support for ksz9031
-Date: Wed, 7 May 2014 10:31:45 -0700
-Message-ID: <CAGVrzcb6MP-LMrQDmeP8EcpN9y_RZe=_3hTYP6zZD_U5cJgdHw@mail.gmail.com>
-References: <1399362017-25787-1-git-send-email-hchaumette@adeneo-embedded.com> <1399362017-25787-3-git-send-email-hchaumette@adeneo-embedded.com>
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: Re: KConfig and DTS files
+Date: Wed, 07 May 2014 10:47:27 -0700
+Message-ID: <536A71AF.1010907@boundarydevices.com>
+References: <536A697D.3020002@boundarydevices.com> <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1399362017-25787-3-git-send-email-hchaumette@adeneo-embedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hubert Chaumette <hchaumette@adeneo-embedded.com>
-Cc: netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, xobs@kosagi.com, David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-06 0:40 GMT-07:00 Hubert Chaumette <hchaumette@adeneo-embedded.com>:
-> Adds support for ksz9031 PAD skew configuration over devicetree.
->
-> Signed-off-by: Hubert Chaumette <hchaumette@adeneo-embedded.com>
+Hi Olof,
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-> ---
->  drivers/net/phy/micrel.c | 106 ++++++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 105 insertions(+), 1 deletion(-)
+On 05/07/2014 10:24 AM, Olof Johansson wrote:
+> Hi,
 >
-> diff --git a/drivers/net/phy/micrel.c b/drivers/net/phy/micrel.c
-> index d849684..bc7c7d2 100644
-> --- a/drivers/net/phy/micrel.c
-> +++ b/drivers/net/phy/micrel.c
-> @@ -283,6 +283,110 @@ static int ksz9021_config_init(struct phy_device *phydev)
->         return 0;
->  }
+> On Wed, May 7, 2014 at 10:12 AM, Eric Nelson
+> <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
+>> Hi all,
+>>
+>> I suspect that this has been discussed previously, but I'm a
+>> N00b to DT and Google hasn't helped identify a discussion
+>> on the list.
+>>
+>> While getting my feet wet with DTS, I was quite surprised to
+>> see that there's no support for making parts of DTS files
+>> conditional on the kernel configuration.
+>>
+>> We often cost-optimize BOMs for our standard boards and omit
+>> bits and pieces not needed for a particular build, and
+>> it would be nice to surround optional components with
+>> conditionals:
+>>
+>>      #ifdef CONFIG_BLAH
+>>      #endif
+>>
+>> Please advise,
 >
-> +#define MII_KSZ9031RN_MMD_CTRL_REG     0x0d
-> +#define MII_KSZ9031RN_MMD_REGDATA_REG  0x0e
-> +#define OP_DATA                                1
-> +#define KSZ9031_PS_TO_REG              60
-> +
-> +/* Extended registers */
-> +#define MII_KSZ9031RN_CONTROL_PAD_SKEW 4
-> +#define MII_KSZ9031RN_RX_DATA_PAD_SKEW 5
-> +#define MII_KSZ9031RN_TX_DATA_PAD_SKEW 6
-> +#define MII_KSZ9031RN_CLK_PAD_SKEW     8
-> +
-> +static int ksz9031_extended_write(struct phy_device *phydev,
-> +                                 u8 mode, u32 dev_addr, u32 regnum, u16 val)
-> +{
-> +       phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, dev_addr);
-> +       phy_write(phydev, MII_KSZ9031RN_MMD_REGDATA_REG, regnum);
-> +       phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, (mode << 14) | dev_addr);
-> +       return phy_write(phydev, MII_KSZ9031RN_MMD_REGDATA_REG, val);
-> +}
-> +
-> +static int ksz9031_extended_read(struct phy_device *phydev,
-> +                                u8 mode, u32 dev_addr, u32 regnum)
-> +{
-> +       phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, dev_addr);
-> +       phy_write(phydev, MII_KSZ9031RN_MMD_REGDATA_REG, regnum);
-> +       phy_write(phydev, MII_KSZ9031RN_MMD_CTRL_REG, (mode << 14) | dev_addr);
-> +       return phy_read(phydev, MII_KSZ9031RN_MMD_REGDATA_REG);
-> +}
-> +
-> +static int ksz9031_of_load_skew_values(struct phy_device *phydev,
-> +                                      struct device_node *of_node,
-> +                                      u16 reg, size_t field_sz,
-> +                                      char *field[], u8 numfields)
-> +{
-> +       int val[4] = {-1, -2, -3, -4};
-> +       int matches = 0;
-> +       u16 mask;
-> +       u16 maxval;
-> +       u16 newval;
-> +       int i;
-> +
-> +       for (i = 0; i < numfields; i++)
-> +               if (!of_property_read_u32(of_node, field[i], val + i))
-> +                       matches++;
-> +
-> +       if (!matches)
-> +               return 0;
-> +
-> +       if (matches < numfields)
-> +               newval = ksz9031_extended_read(phydev, OP_DATA, 2, reg);
-> +       else
-> +               newval = 0;
-> +
-> +       maxval = (field_sz == 4) ? 0xf : 0x1f;
-> +       for (i = 0; i < numfields; i++)
-> +               if (val[i] != -(i + 1)) {
-> +                       mask = 0xffff;
-> +                       mask ^= maxval << (field_sz * i);
-> +                       newval = (newval & mask) |
-> +                               (((val[i] / KSZ9031_PS_TO_REG) & maxval)
-> +                                       << (field_sz * i));
-> +               }
-> +
-> +       return ksz9031_extended_write(phydev, OP_DATA, 2, reg, newval);
-> +}
-> +
-> +static int ksz9031_config_init(struct phy_device *phydev)
-> +{
-> +       struct device *dev = &phydev->dev;
-> +       struct device_node *of_node = dev->of_node;
-> +       char *clk_skews[2] = {"rxc-skew-ps", "txc-skew-ps"};
-> +       char *rx_data_skews[4] = {
-> +               "rxd0-skew-ps", "rxd1-skew-ps",
-> +               "rxd2-skew-ps", "rxd3-skew-ps"
-> +       };
-> +       char *tx_data_skews[4] = {
-> +               "txd0-skew-ps", "txd1-skew-ps",
-> +               "txd2-skew-ps", "txd3-skew-ps"
-> +       };
-> +       char *control_skews[2] = {"txen-skew-ps", "rxdv-skew-ps"};
-> +
-> +       if (!of_node && dev->parent->of_node)
-> +               of_node = dev->parent->of_node;
-> +
-> +       if (of_node) {
-> +               ksz9031_of_load_skew_values(phydev, of_node,
-> +                               MII_KSZ9031RN_CLK_PAD_SKEW, 5,
-> +                               clk_skews, 2);
-> +
-> +               ksz9031_of_load_skew_values(phydev, of_node,
-> +                               MII_KSZ9031RN_CONTROL_PAD_SKEW, 4,
-> +                               control_skews, 2);
-> +
-> +               ksz9031_of_load_skew_values(phydev, of_node,
-> +                               MII_KSZ9031RN_RX_DATA_PAD_SKEW, 4,
-> +                               rx_data_skews, 4);
-> +
-> +               ksz9031_of_load_skew_values(phydev, of_node,
-> +                               MII_KSZ9031RN_TX_DATA_PAD_SKEW, 4,
-> +                               tx_data_skews, 4);
-> +       }
-> +       return 0;
-> +}
-> +
->  #define KSZ8873MLL_GLOBAL_CONTROL_4    0x06
->  #define KSZ8873MLL_GLOBAL_CONTROL_4_DUPLEX     (1 << 6)
->  #define KSZ8873MLL_GLOBAL_CONTROL_4_SPEED      (1 << 4)
-> @@ -469,7 +573,7 @@ static struct phy_driver ksphy_driver[] = {
->         .features       = (PHY_GBIT_FEATURES | SUPPORTED_Pause
->                                 | SUPPORTED_Asym_Pause),
->         .flags          = PHY_HAS_MAGICANEG | PHY_HAS_INTERRUPT,
-> -       .config_init    = kszphy_config_init,
-> +       .config_init    = ksz9031_config_init,
->         .config_aneg    = genphy_config_aneg,
->         .read_status    = genphy_read_status,
->         .ack_interrupt  = kszphy_ack_interrupt,
-> --
-> 2.0.0.rc0
+> The DTS is independent on what drivers the kernel is actually
+> enabling. It should focus on what is actually there on hardware, and
+> not what is enabled in software.
+>
+> I think I know where you're coming from on this -- on some board-file
+> setups people used to not register the platform_device if the driver
+> wasn't configured. That was also not really a good way to do it, but
+> it made a bit more sense there, since you'd save the few bytes used by
+> the platform_device/platform_data structures.
 >
 
+It's not a question of space, but functionality.
+
+We had this come up recently when optimizing a BOM for use
+without Wi-Fi. If we omit the device and associated buffers,
+the SDIO lines are left floating, so the detection code will
+complain.
+
+It seems reasonable to tell the kernel to skip this if the
+WiFi driver isn't configured into the kernel (i.e. there's
+no point in enumerating), so I was hoping to surround this
+USDHC2 block with #ifdefs:
+
+	https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.0_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi#L640
+
+The alternative aren't very nice:
+	populate extra parts to drive these signals, or
+	copy the DTB and strip out the unused parts
+
+The first is wasteful (and environmentally un-friendly), and
+the second doesn't scale very well and pollutes the Git tree.
+
+Prior to DT, we surrounded the device startup calls with #ifdefs
+like this:
+	https://github.com/boundarydevices/linux-imx6/blob/boundary-jb4.3_1.0.0-ga/arch/arm/mach-mx6/board-mx6_nitrogen6x.c#L1409
+
+Regards,
 
 
--- 
-Florian
+Eric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
