@@ -1,164 +1,206 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] devicetree, qcomm PMIC: fix node name conflict
-Date: Tue, 06 May 2014 19:49:12 -0700
-Message-ID: <53699F28.4070409@gmail.com>
-References: <536982E3.10303@gmail.com> <CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH 4/6] powerpc/corenet: Create the dts components for the
+ DPAA FMan
+Date: Tue, 6 May 2014 21:54:08 -0500
+Message-ID: <1399431248.15726.255.camel@snotra.buserror.net>
+References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
+ <1397823693-27977-4-git-send-email-Shruti@Freescale.com>
+ <1398118262.1694.188.camel__8135.6513932862$1398128944$gmane$org@snotra.buserror.net>
+ <5364BEB3.6000904@Freescale.com>
+ <1399332359.15726.154.camel@snotra.buserror.net>
+ <53687913.70900@Freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <53687913.70900@Freescale.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Emil Medve <Emilian.Medve@Freescale.com>
+Cc: devicetree@vger.kernel.org, Shruti Kanetkar <Shruti@Freescale.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/6/2014 6:32 PM, Rob Herring wrote:
-> On Tue, May 6, 2014 at 7:48 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> An issue with the path of SPMI nodes under /sys/bus/... was reported in
->> https://lkml.org/lkml/2014/4/23/312.  The symptom is that two different
-
-< snip >
-
->>
-> 
-> I think the primary question to ask is there any added benefit to
-> having the additional hierarchy of devices. I don't think there is
-> much support to have more hierarchy from what I have seen of past
-> discussions.
-
-The hierarchy avoids the name space conflict.
-
-It also maps the physical reality better than pretending all devices
-are on the platform bus.
-
-It follows the model that non-device tree systems use.  For example,
-why should a usb device show up under /sys/bus/platform/ instead of
-under /sys/bus/usb/ ?  (I'm not positive this actually happens, but
-let me pretend it would.)
-
-> Another approach could be to support having multiple platform bus
-> instances. Then drivers can easily create a new instance for each set
-> of sub-devices.
-> 
-> This can be solved in a much less invasive way just in the DT naming
-> algorithm. This is slightly different from what I had suggested of
-> just dropping the unit address. It keeps the unit address, but adds
-> the unique index on untranslate-able addresses. The diff is bigger due
-> to refactoring to reduce the indentation levels. It is untested and
-> whitespace corrupted:
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 404d1da..c77dd7a 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -105,23 +105,33 @@ void of_device_make_bus_id(struct device *dev)
->          * For MMIO, get the physical address
->          */
->         reg = of_get_property(node, "reg", NULL);
-> -       if (reg) {
-> -               if (of_can_translate_address(node)) {
-> -                       addr = of_translate_address(node, reg);
-> -               } else {
-> -                       addrp = of_get_address(node, 0, NULL, NULL);
-> -                       if (addrp)
-> -                               addr = of_read_number(addrp, 1);
-> -                       else
-> -                               addr = OF_BAD_ADDR;
-> -               }
-> -               if (addr != OF_BAD_ADDR) {
-> -                       dev_set_name(dev, "%llx.%s",
-> -                                    (unsigned long long)addr, node->name);
-> -                       return;
-> -               }
-> +       if (!reg)
-> +               goto no_bus_id;
-> +
-> +       if (of_can_translate_address(node)) {
-> +               addr = of_translate_address(node, reg);
-> +               if (addr == OF_BAD_ADDR)
-> +                       goto no_bus_id;
-> +
-> +               dev_set_name(dev, "%llx.%s",
-> +                            (unsigned long long)addr, node->name);
-> +               return;
->         }
-> 
-> +       addrp = of_get_address(node, 0, NULL, NULL);
-> +       if (!addrp)
-> +               goto no_bus_id;
-> +
-> +       addr = of_read_number(addrp, 1);
-> +       if (addr == OF_BAD_ADDR)
-> +               goto no_bus_id;
-> +
-> +       magic = atomic_add_return(1, &bus_no_reg_magic);
-> +       dev_set_name(dev, "%llx.%s.%d", (unsigned long long)addr,
-> +                    node->name, magic - 1);
-> +       return;
-> +
-> +no_bus_id:
->         /*
->          * No BusID, use the node name and add a globally incremented
->          * counter (and pray...)
-> 
-
-I think the refactored code is easier to read.  (End of bike shed...)
-
-The result of that patch is an even uglier set of device names.  I would love to get rid of
-the bus_no_reg_magic instead of making more extensive use of it.  The new names for the
-system that started this discussion are:
-
-$ ls /sys/devices/soc.2/fc4cf000.qcom,spmi/spmi-0/0-00/
-100.qcom,revid.19            gpios.21
-3100.qcom,pm8x41-adc-usr.20  power
-6000.qcom,rtc.18             subsystem
-driver                       uevent
-
-$ ls /sys/bus/platform/devices/soc.2/fc4cf000.qcom,spmi/spmi-0/0-00/
-100.qcom,revid.19            gpios.21
-3100.qcom,pm8x41-adc-usr.20  power
-6000.qcom,rtc.18             subsystem
-driver                       uevent
-
-$ ls /sys/bus/platform/devices/soc.2/fc4cf000.qcom,spmi/spmi-0/0-01/
-b040.pm8xxx-pwm.22      driver                  uevent
-d000.pm8xxx-pwm-led.23  power
-d800.pm8xxx-wled.24     subsystem
-
-$ ls /sys/bus/platform/devices/soc.2/fc4cf000.qcom,spmi/spmi-0/0-04/
-100.qcom,revid.25  power              uevent
-driver             subsystem
-
-$ ls /sys/bus/platform/devices/
-100.qcom,revid.19              fc4ab000.restart
-100.qcom,revid.25              fc4cf000.qcom,spmi
-3100.qcom,pm8x41-adc-usr.20    fd484000.hwlock
-6000.qcom,rtc.18               fd510000.pinctrl
-alarmtimer                     fd8c0000.clock-controller
-b040.pm8xxx-pwm.22             gpio_keys.5
-cpu-pmu.1                      gpios.21
-cpus.0                         iio-thermal.4
-d000.pm8xxx-pwm-led.23         pm8841-s1.6
-d800.pm8xxx-wled.24            pm8841-s2.7
-f9000000.interrupt-controller  pm8941-l3.11
-f9011000.smem                  pm8941-l6.12
-f9012000.regulator             reg-dummy
-f9020000.timer                 regulator-l11.14
-f9088000.clock-controller      regulator-l19.15
-f9098000.clock-controller      regulator-l20.16
-f90a8000.clock-controller      regulator-l22.17
-f90b8000.clock-controller      regulator-l9.13
-f9824900.sdhc                  regulator-s1.8
-f991e000.serial                regulator-s2.9
-f9924000.i2c2                  regulator-s3.10
-f9928000.i2c6                  regulatory.0
-f9bff000.rng                   snd-soc-dummy
-fc400000.clock-controller      soc.2
-fc4281d0.qcom,mpm              timer.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAyMDE0LTA1LTA2IGF0IDAwOjU0IC0wNTAwLCBFbWlsIE1lZHZlIHdyb3RlOgo+IEhl
+bGxvIFNjb3R0LAo+IAo+IAo+IE9uIDA1LzA1LzIwMTQgMDY6MjUgUE0sIFNjb3R0IFdvb2Qgd3Jv
+dGU6Cj4gPiBPbiBTYXQsIDIwMTQtMDUtMDMgYXQgMDU6MDIgLTA1MDAsIEVtaWwgTWVkdmUgd3Jv
+dGU6Cj4gPj4gSGVsbG8gU2NvdHQsCj4gPj4KPiA+Pgo+ID4+IE9uIDA0LzIxLzIwMTQgMDU6MTEg
+UE0sIFNjb3R0IFdvb2Qgd3JvdGU6Cj4gPj4+IE9uIEZyaSwgMjAxNC0wNC0xOCBhdCAwNzoyMSAt
+MDUwMCwgU2hydXRpIEthbmV0a2FyIHdyb3RlOgo+ID4+Pj4gK2ZtYW5ANDAwMDAwIHsKPiA+Pj4+
+ICsJbWRpb0BmMTAwMCB7Cj4gPj4+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+Pj4+ICsJ
+CSNzaXplLWNlbGxzID0gPDA+Owo+ID4+Pj4gKwkJY29tcGF0aWJsZSA9ICJmc2wsZm1hbi14bWRp
+byI7Cj4gPj4+PiArCQlyZWcgPSA8MHhmMTAwMCAweDEwMDA+Owo+ID4+Pj4gKwl9Owo+ID4+Pj4g
+K307Cj4gPj4+Cj4gPj4+IEknZCBsaWtlIHRvIHNlZSBhIGNvbXBsZXRlIGZtYW4gYmluZGluZyBi
+ZWZvcmUgd2Ugc3RhcnQgYWRkaW5nIHBpZWNlcy4KPiA+Pgo+ID4+IFRoZSBkcml2ZXIgZm9yIHRo
+ZSBGTWFuIDEwIEdiL3MgTURJTyBoYXMgdXBzdHJlYW1lZCBhIGNvdXBsZSBvZiB5ZWFycwo+ID4+
+IGFnbzogJzlmMzVhNzMgbmV0L2ZzbDogaW50cm9kdWNlIEZyZWVzY2FsZSAxMEcgTURJTyBkcml2
+ZXInLCBncmFudGVkCj4gPj4gd2l0aG91dCBhIGJpbmRpbmcgd3JpdGV1cC4KPiA+IAo+ID4gUHVz
+aGluZyBkcml2ZXIgY29kZSB0aHJvdWdoIHRoZSBuZXRkZXYgdHJlZSBkb2VzIG5vdCBlc3RhYmxp
+c2ggZGV2aWNlCj4gPiB0cmVlIEFCSS4gIEJpbmRpbmcgZG9jdW1lbnRzIGFuZCBkdHMgZmlsZXMg
+ZG8uCj4gCj4gU3VyZSwgaWRlYWxseSBhbmQgZm9ybWFsbHkuIEJ1dCB1cHN0cmVhbWluZyBhIGRy
+aXZlciByZXByZXNlbnRzLCBpZgo+IG5vdGhpbmcgZWxzZSwgYSBzdGF0ZW1lbnQgb2YgaW50ZW50
+IHRvIG9ic2VydmUgYSBkZXZpY2UgdHJlZSBBQkkuCgpJZGVhbGx5LCB5ZXMgKG9yIHJhdGhlciwg
+aWRlYWxseSB0aGUgZHJpdmVyIHBhdGNoIHNob3VsZCBoYXZlIGJlZW4KcmVqZWN0ZWQgZHVlIHRv
+IGxhY2sgb2YgYSBiaW5kaW5nIGRvY3VtZW50KS4gIEJ1dCBpbiBwcmFjdGljZSBpdCdzIHdheQp0
+b28gZWFzeSBmb3IgYmFkIHN0dWZmIHRvIHNsaXAgaW4gdmlhIGRyaXZlciBjb2RlLCBlc3BlY2lh
+bGx5IHdoZW4gaXQKZ29lcyB2aWEgYSBzdWJzeXN0ZW0gbWFpbnRhaW5lciB0aGF0IGlzIGRpZmZl
+cmVudCBmcm9tIHRoZSBvbmUgd2hvIHdvdWxkCmJlIHJldmlld2luZyB0aGUgYmluZGluZy4KCj4g
+IFZpYSB0aGUgU0RLLCBGU0wgY3VzdG9tZXJzIGFyZSB1c2luZyB0aGUgZGV2aWNlIHRyZWUgQUJJ
+IHRoZSBkcml2ZXIgZGUKPiBmYWN0byBlc3RhYmxpc2hlcy4KCkFCSSBvZiBhbnkgc29ydCBlc3Rh
+Ymxpc2hlZCBieSB0aGUgU0RLIG9yIG90aGVyIG5vbi11cHN0cmVhbSB0cmVlcyBpcwpub3QgYmlu
+ZGluZyBvbiB1cHN0cmVhbS4gIFllcywgaXQncyBhIHBhaW4gZm9yIGN1c3RvbWVycywgd2hpY2gg
+aXMgd2h5CkFCSSBzaG91bGQgZ28gdXBzdHJlYW0gQVNBUC4KCj4gPj4gVGhpcyBwYXRjaCBzZXJp
+ZXMgc2hvdWxkIHByb2JhYmx5IGluY2x1ZGUgYQo+ID4+IGJpbmRpbmcgYmx1cmIuIEhvd2V2ZXIs
+IGxldCdzIG5vdCBnYXRlIHRoaXMgcGF0Y2hzZXQgb24gYSBjb21wbGV0ZQo+ID4+IGJpbmRpbmcg
+Zm9yIHRoZSBGTWFuCj4gPiAKPiA+IEkgYXQgbGVhc3Qgd2FudCB0byBzZWUgZW5vdWdoIG9mIHRo
+ZSBGTWFuIGJpbmRpbmcgdG8gaGF2ZSBjb25maWRlbmNlCj4gPiB0aGF0IHdoYXQgd2UncmUgYWRk
+aW5nIG5vdyBpcyBjb3JyZWN0Lgo+IAo+IEknbSBub3Qgc3VyZSB3aGF0IHlvdSdyZSBsb29raW5n
+IGZvci4gVGhlIG5vZGVzIHdlJ3JlIGFkZGluZyBhcmUKPiBkZXNjcmliaW5nIGEgdmVyeSBjb21t
+b24gQ0NTUiBzcGFjZSBpbnRlcmZhY2UgZm9yIHF1aXRlIGNvbW1vbiBkZXZpY2UgYmxvY2tzCgou
+Li5lbWJlZGRlZCBpbiBhIHZhcmlldHkgb2YgZGlmZmVyZW50IGJsb2Nrcy4KCklmIHRoZSBtZGlv
+IGNhbiB0cnVseSBzdGFuZCBhbG9uZSwgdGhlbiBtYXliZSBqdXN0IHN1Ym1pdCB0aGUgbWRpbyBu
+b2RlCndpdGhvdXQgYmVpbmcgZW5jbG9zZWQgaW4gYW4gZm1hbiBub2RlLgoKPiA+PiBBcyB5b3Ug
+a25vdyB3ZSBkb24ndCBvd24gdGhlIEZNYW4gd29yayBhbmQgdGhlIEZNYW4gd29yayBpcy4uLiBu
+b3QgcmVhZHkKPiA+PiBmb3IgdXBzdHJlYW1pbmcuCj4gPiAKPiA+IEknbSBub3QgYXNraW5nIGZv
+ciBhIGRyaXZlciwganVzdCBhIGJpbmRpbmcgdGhhdCBkZXNjcmliZXMgaGFyZHdhcmUuICBJcwo+
+ID4gdGhlcmUgYW55IHJlYXNvbiB3aHkgdGhlIGZtYW4gbm9kZSBuZWVkcyB0byBiZSBhbnl3aGVy
+ZSBuZWFyIGFzCj4gPiBjb21wbGljYXRlZCBhcyBpdCBpcyBpbiB0aGUgU0RLLCBpZiB3ZSdyZSBs
+aW1pdGluZyBpdCB0byBhY3R1YWwgaGFyZHdhcmUKPiA+IGRlc2NyaXB0aW9uPwo+IAo+IElzIHRo
+aXMgYSB0cmljayBxdWVzdGlvbj8gOi0pIE9mIGNvdXJzZSBpdCBkb2Vzbid0IG5lZWQgdG8gYmUg
+bW9yZQo+IGNvbXBsaWNhdGVkIHRoYW4gYWN0dWFsIGhhcmR3YXJlLiBCdXQsIHRvIHJlcGVhdCBt
+eXNlbGYsIHNhaWQKPiBkZXNjcmlwdGlvbiBpcyBub3QuLi4gcmVhZHkgYW5kIEkgZG9uJ3Qga25v
+dyB3aGVuIGl0IHdpbGwgYmUuIFNvbWVib2R5Cj4gZWxzZSBvd25zIHB1c2hpbmcgdGhlIGJ1bGsg
+b2YgRk1hbiB1cHN0cmVhbSBhbmQgSSdkIHJhdGhlciBub3Qgc3RlcCBvbgo+IHRoZWlyIHR1cmYg
+cXVpdGUgbGlrZSB0aGlzCgpJZiB0aGV5IHdhbnQgdG8gZGVmZW5kIHRoZWlyICJ0dXJmIiB0aGV5
+IGNhbiBzdWJtaXQgYSBwYXRjaC4gIE5vdy4gIFRoaXMKaGFzIGdvbmUgb24gbG9uZyBlbm91Z2gu
+CgpJJ20gdGVtcHRlZCB0byBzdWJtaXQgYSBiaW5kaW5nIG15c2VsZi4gIEkgZG9uJ3Qga25vdyBt
+dWNoIGFib3V0CmRhdGFwYXRoLCBzbyBJJ2xsIHByb2JhYmx5IHNjcmV3IGl0IHVwLiAgUGxlYXNl
+IGJlYXQgbWUgdG8gaXQuIDotKQoKPiA+IERvIHdlIHJlYWxseSBuZWVkIHRvIGhhdmUgbm9kZXMg
+Zm9yIGFsbCB0aGUgc3ViLWJsb2Nrcz8KPiAKPiBEZWZpbml0ZWx5IG5vLCBhbmQgaW50ZXJuYWxs
+eSBJJ20gcHVzaGluZyB0byBjbGVhbiB0aGF0IHVwLiBIb3dldmVyLCB5b3UKPiBzdXJlbHkgcmVt
+ZW1iZXIgd2UndmUgYmVlbiBwdXNoaW5nIGZyb20gdGhlIGVhcmx5IGRheXMgb2YgUDQwODAgYW5k
+IGl0J3MKPiBiZWVuLCB0byBwdXQgaXQgb3B0aW1pc3RpY2FsbHksIHNsb3cKClN0b3AgcHVzaGlu
+ZyB0aGVtIGFuZCBzdGFydCBwdXNoaW5nIHBhdGNoZXMuCgpKdXN0IGRvIGl0IGluIHRoZSByaWdo
+dCBvcmRlci4gOi0pCgo+ID4+IEluIGFuIGF0dGVtcHQgdG8gbWFrZSBzb21lIHNvcnQgb2YgcHJv
+Z3Jlc3Mgd2UndmUKPiA+PiBkZWNpZGVkIHRvIHVwc3RyZWFtIHRoZSBwaWVjZXMgdGhhdCBhcmUg
+bGVzcyBjb250cm92ZXJzaWFsIGFuZCBNRElPIGlzCj4gPj4gYW4gb2J2aW91cyBjYW5kaWRhdGUK
+PiA+Pgo+ID4+Pj4gK2ZtYW5ANDAwMDAwIHsKPiA+Pj4+ICsJbWRpbzA6IG1kaW9AZTExMjAgewo+
+ID4+Pj4gKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4+PiArCQkjc2l6ZS1jZWxscyA9IDww
+PjsKPiA+Pj4+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGZtYW4tbWRpbyI7Cj4gPj4+PiArCQlyZWcg
+PSA8MHhlMTEyMCAweGVlMD47Cj4gPj4+PiArCX07Cj4gPj4+PiArfTsKPiA+Pj4KPiA+Pj4gV2hh
+dCBpcyB0aGUgZGlmZmVyZW5jZSBiZXR3ZWVuICJmc2wsZm1hbi1tZGlvIiBhbmQgImZzbCxmbWFu
+LXhtZGlvIj8gIEkKPiA+Pj4gZG9uJ3Qgc2VlIHRoZSBsYXR0ZXIgb24gdGhlIGxpc3Qgb2YgY29t
+cGF0aWJsZXMgaW4gcGF0Y2ggMy82Lgo+ID4+Cj4gPj4gJ2ZzbCxmbWFuLW1kaW8nIGlzIHRoZSAx
+IEdiL3MgTURJTyAoQ2xhdXNlIDIyIG9ubHkpLiAnZnNsLGZtYW4teG1kaW8nIGlzCj4gPj4gdGhl
+IDEwIEdiL3MgTURJTyAoQ2xhdXNlIDQ1IG9ubHkpLiBXZSBjYW4gcmVzcGluIHRoaXMgcGF0Y2gg
+d2kKPiA+Pgo+ID4gCj4gPiAicmVzcGluIHRoaXMgcGF0Y2ggd2kuLi4iPwo+IAo+IE5vdCBzdXJl
+IHdoZXJlIHRoZSBlbmQgb2YgdGhhdCBzZW50ZW5jZSB3ZW50LiBJIG1lYW50IHdlJ2xsIHJlLXNw
+aW4gd2l0aAo+IGEgYmluZGluZyBmb3IgdGhlIDEwIEdiL3MgTURJTyBibG9jawo+IAo+ID4+IEkg
+YmVsaWV2ZSAnZnNsLGZtYW4tbWRpbycgKGFuZCBvdGhlcnMgb24gdGhhdCBsaXN0KSB3YXMgYWRk
+ZWQKPiA+PiBncmF0dWl0b3VzbHkgYXMgdGhlIEZNYW4gTURJTyBpcyBjb21wbGV0ZWx5IGNvbXBh
+dGlibGUgd2l0aCB0aGUKPiA+PiBlVFNFQy9naWFuZmFyIE1ESU8gZHJpdmVyLCBidXQgd2UgY2Fu
+IGRlYWwgd2l0aCB0aGF0IGxhdGVyCj4gPiAKPiA+IEl0J3Mgc3RpbGwgZ29vZCB0byBpZGVudGlm
+eSB0aGUgc3BlY2lmaWMgZGV2aWNlLCBldmVuIGlmIGl0J3MgYmVsaWV2ZWQKPiA+IHRvIGJlIDEw
+MCUgY29tcGF0aWJsZS4KPiAKPiBZb3Ugc3VnZ2VzdGluZyB3ZSBjcmVhdGUgbmV3IGNvbXBhdGli
+bGVzIGZvciBldmVyeSBpbnN0YW5jZS9pbnRlZ3JhdGlvbgo+IG9mIGEgaGFyZHdhcmUgYmxvY2sg
+ZXZlbiB0aG91Z2ggaXMgaWRlbnRpY2FsIHdpdGggYW4gZWFybGllciBoYXJkd2FyZQo+IGludGVn
+cmF0aW9uPwoKIjEwMCUgY29tcGF0aWJsZSIgaXMgYSBkaWZmZXJlbnQgc3RhdGVtZW50IGZyb20g
+YWN0dWFsbHkgYmVpbmcgaWRlbnRpY2FsCmxvZ2ljLiAgSG93IGRvIHlvdSBrbm93IHRoYXQgYWJz
+b2x1dGVseSBub3RoaW5nIGNoYW5nZWQ/Cgo+ICBXZWxsLCBJIGd1ZXNzIHRoYXQncyBiZWVuIGRv
+bmUgdGhhdCBhbmQgbm93IHdlIGhhdmUgYWJvdXQgOAo+IGRpZmZlcmVudCBjb21wYXRpYmxlcyB0
+aGF0IGNvbnZleSBubyByZWFsIGRpZmZlcmVuY2UgYXQgYWxsCgpTbz8gIFJlbWVtYmVyIHRoYXQg
+YSBub2RlIGNhbiBoYXZlIG11bHRpcGxlIGNvbXBhdGlibGUgc3RyaW5ncy4gIEFmdGVyCnlvdSBp
+ZGVudGlmeSB0aGUgZXhhY3QgbG9naWMgYmVpbmcgdXNlZCwgeW91IGNhbiBsaXN0IG9sZGVyIGlu
+c3RhbmNlcwp0aGF0IGFyZSBiZWxpZXZlZCB0byBiZSBjb21wYXRpYmxlLgoKPiA+Pj4gV2l0aGlu
+IGVhY2ggY2F0ZWdvcnksIGlzIHRoZSBleGFjdCBmbWFuIHZlcnNpb24gZGlzY292ZXJhYmxlIGZy
+b20gdGhlCj4gPj4+IG1kaW8gcmVnaXN0ZXJzPwo+ID4+Cj4gPj4gTm8sIGJ1dCB0aGF0J3MgaXJy
+ZWxldmFudCBhcyB0aGF0J3Mgbm90IHRoZSBkaWZmZXJlbmNlIGJldHdlZW4gdGhlIHR3bwo+ID4+
+IGNvbXBhdGlibGVzCj4gPiAKPiA+IEl0J3MgcmVsZXZhbnQgYmVjYXVzZSBpdCBtZWFucyB0aGUg
+Y29tcGF0aWJsZSBzdHJpbmcgc2hvdWxkIGhhdmUgYSBibG9jawo+ID4gdmVyc2lvbiBudW1iZXIg
+aW4gaXQsIG9yIGF0IGxlYXN0IHNvbWUgb3RoZXIgd2F5IGluIHRoZSBNRElPIG5vZGUgdG8KPiA+
+IGluZGljYXRlIHRoZSBibG9jayB2ZXJzaW9uLgo+IAo+IFRoZSAxIEdiL3MgTURJTyBibG9jayBk
+b2Vzbid0IHRyYWNrIGEgdmVyc2lvbiBvZiBpdHMgb3duIGFuZCBmcm9tIGEKPiBwcm9ncmFtbWlu
+ZyBpbnRlcmZhY2UgcGVyc3BlY3RpdmUgaXQgaGFzIG5vIHZpc2libGUgZGlmZmVyZW5jZSBzaW5j
+ZQo+IGVUU0VDLiBUaGUgMTAgR2IvcyBNRElPIGRvZXNuJ3QgdHJhY2sgYSB2ZXJzaW9uIG9mIGl0
+cyBvd24gZWl0aGVyIGFuZAo+IGFjcm9zcyB0aGUgZXhpc3RpbmcgRk1hbiB2ZXJzaW9ucyBpcyBp
+ZGVudGljYWwgZnJvbSBhIHByb2dyYW1taW5nCj4gaW50ZXJmYWNlIHBlcnNwZWN0aXZlCj4gCj4g
+SSBndWVzcyB3ZSBjYW4gYXBwZW5kIGEgJ3YxLjAnIHRvIHRoZSBNRElPIGNvbXBhdGlibGUocyku
+IEhvd2V2ZXIsIGdpdmVuCj4gdGhlIFNESyB3ZSdsbCBoYXZlIHRvIHN1cHBvcnQgdGhlIGNvbXBh
+dGlibGVzIHRoZSAoYWxyZWFkeSB1cHN0cmVhbSkKPiBkcml2ZXJzIHN1cHBvcnQuIERlYWxpbmcg
+d2l0aCBhbGwgdGhhdCBsZWdhY3kgaXMgZ29pbmcgdG8gYmUgc28gdGVkaW91cwoKSSdtIG5vdCBn
+b2luZyB0byBpbnNpc3QgdGhhdCB0aGUgZHJpdmVycyBzdG9wIHN1cHBvcnRpbmcgd2hhdCB0aGV5
+CmN1cnJlbnRseSBzdXBwb3J0LCBidXQgSSBkb24ndCBhZ3JlZSB3aXRoIHRoZSBzdGF0ZW1lbnQg
+dGhhdCAiZ2l2ZW4gdGhlClNESyB3ZSdsbCBoYXZlIHRvLi4uIi4KCj4gPj4+PiArZm1hbkA1MDAw
+MDAgewo+ID4+Pj4gKwkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+Pj4+ICsJI3NpemUtY2VsbHMg
+PSA8MT47Cj4gPj4+PiArCWNvbXBhdGlibGUgPSAic2ltcGxlLWJ1cyI7Cj4gPj4+Cj4gPj4+IFdo
+eSBpcyB0aGlzIHNpbXBsZS1idXM/Cj4gPj4KPiA+PiBCZWNhdXNlIHRoYXQncyB0aGUgdHJhbnNs
+YXRpb24gdHlwZSBmb3IgdGhlIEZNYW4gc3ViLW5vZGVzLgo+ID4gCj4gPiBXaGF0IGRvIHlvdSBt
+ZWFuIGJ5ICJ0cmFuc2xhdGlvbiB0eXBlIj8KPiAKPiBJIG1lYW4gYWRkcmVzcyB0cmFuc2xhdGlv
+biBhY3Jvc3MgYnVzZXMKCldoYXQgdHJhbnNsYXRpb24gYWNyb3NzIGJ1c2VzPwoKPiA+PiBXZSBu
+ZWVkIGl0IG5vdyB0byBnZXQgdGhlIE1ESU8gbm9kZXMgcHJvYmVkCj4gPiAKPiA+IE5vLiAgInNp
+bXBsZS1idXMiIGlzIHN0YXRpbmcgYW4gYXR0cmlidXRlIG9mIHRoZSBoYXJkd2FyZSwgdGhhdCB0
+aGUKPiA+IGNoaWxkIG5vZGVzIHJlcHJlc2VudCBzaW1wbGUgbWVtb3J5LW1hcHBlZCBkZXZpY2Vz
+IHRoYXQgY2FuIGJlIHVzZWQKPiA+IHdpdGhvdXQgc3BlY2lhbCBidXMga25vd2xlZGdlLiAgSSBk
+b24ndCB0aGluayB0aGF0IGFwcGxpZXMgaGVyZS4KPiAKPiBZZXMgaXQgZG9lcy4gVGhlIEZNYW4g
+c3ViLW5vZGVzIGFyZSAic2ltcGxlIG1lbW9yeS1tYXBwZWQgZGV2aWNlcyB0aGF0Cj4gY2FuIGJl
+IHVzZWQgd2l0aG91dCBzcGVjaWFsIGJ1cyBrbm93bGVkZ2UiLiBQZXJoYXBzIHlvdSdyZSB0aGlu
+a2luZwo+IGFib3V0IHRoZSBQSFkgZGV2aWNlcyBvbiB0aGUgTURJTyBidXMKCk5vLCBJJ20gbm90
+IHRoaW5raW5nIGFib3V0IHRoYXQuCgpXaGF0IEkgZmluZCBwYXJ0aWN1bGFybHkgZGlzdHVyYmlu
+ZyBhYm91dCBwdXR0aW5nIHNpbXBsZS1idXMgb24gdGhlIGZtYW4Kbm9kZSBpcyB0aGF0IGl0IGFw
+cGxpZXMgdG8gd2hhdGV2ZXIgb3RoZXIgc3Vibm9kZXMgZ2V0IGFkZGVkIGluIHRoZQpmdXR1cmUs
+IGFuZCB3ZSBkb24ndCB5ZXQgaGF2ZSBhbnkgaWRlYSB3aGF0IHRob3NlIG5vZGVzIHdpbGwgYmUg
+KG9yIGF0CmxlYXN0IEkgZG9uJ3QpLgoKPiA+IFlvdSBjYW4gZ2V0IHRoZSBNRElPIG5vZGUgcHJv
+YmVkIHdpdGhvdXQgbWlzdXNpbmcgc2ltcGxlLWJ1cyBieSBhZGRpbmcKPiA+IHRoZSBmbWFuIG5v
+ZGUncyBjb21wYXRpYmxlIHRvIHRoZSBwcm9iZSBsaXN0IGluIHRoZSBrZXJuZWwgY29kZS4KPiAK
+PiBJIHRoaW5rIHRoYXQncyBncmF0dWl0b3VzIGFuZCBpdCdzIGJlZW4gZG9uZSBncmF0dWl0b3Vz
+bHkgaW4gdGhlIHBhc3QKPiBmb3IgQ0NTUiBzcGFjZSAoc3ViLSlub2RlcwoKQ0NTUiBpcyBhIHNp
+bXBsZS1idXMsIHNvIEknbSBub3Qgc3VyZSB3aGF0IHlvdSdyZSByZWZlcnJpbmcgdG8uCgo+ID4g
+VGhpcyBzb3J0IG9mIHRoaW5nIGlzIHdoeSBJIHdhbnQgdG8gc2VlIHdoYXQgdGhlIHJlc3Qgb2Yg
+dGhlIGZtYW4KPiA+IGJpbmRpbmcgd2lsbCBsb29rIGxpa2UuCj4gPiAKPiA+PiAgYW5kIHdlJ2xs
+IG5lZWRlZCBsYXRlciB0byBwcm9iZSBvdGhlciBub2Rlcy9kZXZpY2VzIHRoYXQgd2lsbCBoYXZl
+Cj4gPj4gc3RhbmRhbG9uZSBkcml2ZXJzOiBNQUMsIE1VUkFNLiBldGMuIAo+ID4gCj4gPiBIb3cg
+YXJlIHRoZXkgdHJ1bHkgc3RhbmRhbG9uZT8KPiAKPiBJIG1lYW50IHRoYXQgdGhleSBoYXZlIGlu
+ZGl2aWR1YWwgZHJpdmVycyBhbmQgdGhleSBhcmUgbm90IGhhbmRsZWQgYnkKPiB0aGUgaGlnaC1s
+ZXZlbCBGTWFuIGRyaXZlcgoKVGhhdCdzIHNvZnR3YXJlIGRlc2NyaXB0aW9uLCBub3QgaGFyZHdh
+cmUgZGVzY3JpcHRpb24uICBTdXJlbHkgdGhvc2UKZHJpdmVycyBjb29wZXJhdGUgaW4gc29tZSBt
+YW5uZXIuCgo+ID4gVGhlIGV4aXN0IGluIHNlcnZpY2UgdG8gdGhlIGdyZWF0ZXIKPiA+IGVudGl0
+eSB0aGF0IGlzIGZtYW4uICBUaGV5IHByZXN1bWFibHkgd29yayB0b2dldGhlciBpbiBzb21lIGZh
+c2hpb24uCj4gCj4gU29tZSBibG9ja3MgY2FuIHdvcmsgaW5kZXBlbmRlbnRseS4gCgpJZiBhbnkg
+Y2Fubm90LCB0aGVuIHNpbXBsZS1idXMgaXMgd3JvbmcuCgo+IFRoZSBNVVJBTSBpcyBhbiBleGFt
+cGxlIGFuZCBpdCBzZWVtcyB0aGUgZXhpc3RpbmcgQ1BNL1FFIE1VUkFNIGNvZGUKPiBhbGxvd3Mg
+aXQgdG8gYmUgdXNlZCBhcyByZWd1bGFyIG1lbW9yeS4KCkJ1dCBpdCdzIHN1cHBvc2VkIHRvIGJl
+IHVzZWQgZm9yIENQTS9RRS9GbWFuLiAgSWYgYW4gT1MgY2hvb3NlcyB0bwppZ25vcmUgdGhhdCBh
+bmQgYmluZCBhIGdlbmVyaWMgZHJpdmVyIHRvIGl0LCB0aGF0J3MgdGhlIE9TJ3MgY2hvaWNlLCBi
+dXQKdGhlIGRldmljZSB0cmVlIHNob3VsZG4ndCBwcmV0ZW5kIHRoYXQgdGhpcyBpcyBhbiB1bnJl
+bGF0ZWQgYmFnIG9mCmRldmljZXMuCgo+ICBUaGUgTURJTyBibG9jayBjb3VsZCBoYW5kbGUKPiBQ
+SFkocykgZm9yIG90aGVyIE1BQ3MgaW4gdGhlIHN5c3RlbS4KClRoYXQgZG9lc24ndCBuZWNlc3Nh
+cmlseSBtZWFuIHRoZSBNRElPIGlzIHRvdGFsbHkgaW5kZXBlbmRlbnQuICBFLmcuCnNvbWUgdmVy
+c2lvbnMgb2YgZVRTRUMgaGF2ZSBhIFRCSVBBIHJlZ2lzdGVyIHRoYXQgYWZmZWN0cyB0aGUgb3Bl
+cmF0aW9uCm9mIHRoZSBNRElPIGNvbnRyb2xsZXIsIGJ1dCBpcyBub3QgaW4gdGhlIE1ESU8gcmVn
+aXN0ZXIgYXJlYS4KCj4gPj4+IFdoZXJlJ3MgdGhlIGNvbXBhdGlibGU/ICBXaHkgaXMgdGhpcyBm
+aWxlIGRpZmZlcmVudCBmcm9tIGFsbCB0aGUgb3RoZXJzPwo+ID4+Cj4gPj4gVGhlIEZNYW4gdjMg
+TURJTyBibG9jayAoc3VwcG9ydHMgYm90aCBDbGF1c2UgMjIvNDUpIGlzIGNvbXBhdGlibGUgd2l0
+aAo+ID4+IHRoZSBGTWFuIHYyIDEwIEdiL3MgTURJTyAodGhlIHhnbWFjLW1kaW8gZHJpdmVyKS4g
+SG93ZXZlciwgdGhlIGRyaXZlcgo+ID4+IG5lZWRzIGEgc21hbGwgY2xlYW4tdXAgcGF0Y2ggKHN0
+aWxsIGluIGludGVybmFsIHJldmlldykgdGhhdCB3aWxsIGdldCBpdAo+ID4+IHdvcmtpbmcgZm9y
+IEZNYW4gdjMgTURJTy4KPiA+IAo+ID4gVGhpcyBzdWdnZXN0cyB0aGF0IGl0IGlzIG5vdCAxMDAl
+IGJhY2t3YXJkcyBjb21wYXRpYmxlLgo+IAo+IEl0IGlzLiBUaGUgY29kZSBpcyBqdXN0IG5vdCBl
+dmVyeXRoaW5nIGl0IHNob3VsZCBiZQoKVGhlIGNvZGUgd29ya3Mgd2l0aCBvbmUgdjIsIGFuZCBi
+cmVha3Mgd2l0aCB2My4gIFRodXMsIHNvbWV0aGluZyBpcwpkaWZmZXJlbnQuICBXaGV0aGVyIHRo
+ZSBkaWZmZXJlbmNlIGlzIGVub3VnaCB0byBwcmV2ZW50IGNsYWltaW5nCmNvbXBhdGliaWxpdHkg
+ZGVwZW5kcyBvbiB0aGUgZGV0aWFscyAoZS5nLiBpZiB0aGUgZGlmZmVyZW5jZSBpcwpwYXJhbWV0
+ZXJpemVkIHRocm91Z2ggYW5vdGhlciBEVCBwcm9wZXJ0eSwgb3IgaWYgdGhlIGRpZmZlcmVuY2Ug
+aXMKd2l0aGluIHdoYXQgaXMgYWxsb3dlZCBieSB0aGUgc3BlY3Mgb2YgdGhlIG9yaWdpbmFsIGRl
+dmljZSksIGJ1dCBpdApzdWdnZXN0cyB0aGV5IGFyZSBub3QgbGl0ZXJhbGx5IHRoZSBzYW1lIGxv
+Z2ljLiAgVW5sZXMgdGhlIGRpZmZlcmVuY2UgaXMKbm90IGR1ZSB0byB2MiB2ZXJzdXMgdjMgYnV0
+IHNvbWUgZGlmZmVyZW5jZSBlbHNld2hlcmUgaW4gdGhlIHN5c3RlbT8KCi1TY290dAoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBt
+YWlsaW5nIGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5v
+emxhYnMub3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
