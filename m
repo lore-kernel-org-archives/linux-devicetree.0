@@ -1,68 +1,98 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: [GIT PULL] DT dma proprties support and ARM arch updates for 3.16
-Date: Wed, 7 May 2014 10:05:10 -0400
-Message-ID: <1399471510-22382-1-git-send-email-santosh.shilimkar@ti.com>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
+Date: Wed, 7 May 2014 19:49:10 +0530
+Message-ID: <CAPdUM4M6uk2KN_L487_cRkOqbgJrhhMRx9zpczA6-3LzSM3FSg@mail.gmail.com>
+References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
+ <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
+ <534506B1.4040908@samsung.com>
+ <CAPdUM4M109_kzY6cUMJQPSwgazvWmNDWL1JeXgiqnzvH8dhK2Q@mail.gmail.com>
+ <53451A60.4050803@samsung.com> <53675D72.70103@ti.com>
+ <CAPdUM4N+2VXpiFSiWW9gKfbte1zkpDbCOSF+KvEo4T1KLqqwjw@mail.gmail.com>
+ <536A36F5.5080303@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <536A36F5.5080303@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomasz Stanislawski <t.stanislaws@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Russell and ARM-SOC folks,
+On 7 May 2014 19:06, Tomasz Stanislawski <t.stanislaws@samsung.com> wrote:
+> On 05/07/2014 12:38 PM, Rahul Sharma wrote:
+>> On 5 May 2014 15:14, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>> Hi,
+>>>
+>>> On Wednesday 09 April 2014 03:31 PM, Sylwester Nawrocki wrote:
+>>>> Hi,
+>>>>
+>>>> On 09/04/14 11:12, Rahul Sharma wrote:
+>>>>> Idea looks good. How about keeping compatible which is independent
+>>>>> of SoC, something like "samsung,exynos-simple-phy" and provide Reg
+>>>>> and Bit through phy provider node. This way we can avoid SoC specific
+>>>>> hardcoding in phy driver and don't need to look into dt bindings for
+>>>>> each new SoC.
+>>>>
+>>>> I believe it is a not recommended approach.
+>>>
+>>> Why not? We should try to avoid hard coding in the driver code. Moreover by
+>>> avoiding hardcoding we can make it a generic driver for single bit PHYs.
+>>>
+>>
+>> +1.
+>>
+>> @Tomasz, any plans to consider this approach for simple phy driver?
+>>
+>> Regards,
+>> Rahul Sharma.
+>>
+>
+> Hi Rahul,
+> Initially, I wanted to make a very generic driver and to add bit and
+> register (or its offset) attribute to the PHY node.
+> However, there was a very strong opposition from DT maintainers
+> to adding any bit related configuration to DT.
+> The current solution was designed to be a trade-off between
+> being generic and being accepted :).
+>
 
-Please pull below series which adds device tree support for dma
-properties (dma-ranges and dma-coherent) and respective ARM
-architecture updates. As aligned, this series needs to be pulled in
-RMK's tree as well as ARM-SOC tree to avoid any merge conflicts with
-other changes. Rob H has already acked the dt part to be merged via above
-trees. Once the series is pulled in ARM-SOC tree, I will send Keystone
-SOC update which makes use of it.
+Thanks Tomasz,
+Ok got it. lets discuss it again and conclude it.
 
-The following changes since commit c9eaa447e77efe77b7fa4c953bd62de8297fd6c5:
+@Kishon, DT-folks,
 
-  Linux 3.15-rc1 (2014-04-13 14:18:35 -0700)
+The original RFC patch from Tomasz (at https://lkml.org/lkml/2013/10/21/313)
+added simple phy driver as "Generic-simple-phy" with these properties:
 
-are available in the git repository at:
++ of_property_read_u32(dev->of_node, "mask", &sphy->mask);
++ of_property_read_u32(dev->of_node, "on-value", &sphy->on_value);
++ of_property_read_u32(dev->of_node, "off-value", &sphy->off_value);
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/ssantosh/linux-keystone.git tags/dt-dma-properties-for-arm
+Shall we consider the same solution again for generic simple phy
+driver which just expose on/off control through register bit.
 
-for you to fetch changes up to 2161c2485d03520060f6094359b22f33913eefa2:
+Regards,
+Rahul Sharma
 
-  ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu] (2014-05-07 09:21:45 -0400)
-
-----------------------------------------------------------------
-DT support for 'dma-ranges'and 'dma-coherent' properties with ARM updates
-
-- The 'dma-ranges' helps to take care of few DMAable system memory
-        restrictions by use of dma_pfn_offset which is maintained per
-        device. Arch code then uses it for dma address translations for such
-        cases. We update the dma_pfn_offset accordingly during DT the device
-        creation process.
-- The 'dma-coherent' property is used to setup arch's coherent dma_ops.
-
-----------------------------------------------------------------
-Grygorii Strashko (2):
-      of: introduce of_dma_get_range() helper
-      ARM: dma: Use dma_pfn_offset for dma address translation
-
-Santosh Shilimkar (5):
-      device: introduce per device dma_pfn_offset
-      of: introduce of_dma_is_coherent() helper
-      of: configure the platform device dma parameters
-      ARM: dma: implement set_arch_dma_coherent_ops()
-      ARM: dma: use phys_addr_t in __dma_page_[cpu_to_dev/dev_to_cpu]
-
- arch/arm/include/asm/dma-mapping.h |   25 +++++++-
- arch/arm/mm/dma-mapping.c          |    4 +-
- drivers/of/address.c               |  110 ++++++++++++++++++++++++++++++++++++
- drivers/of/platform.c              |   65 +++++++++++++++++++--
- include/linux/device.h             |    2 +
- include/linux/dma-mapping.h        |    7 +++
- include/linux/of_address.h         |   14 +++++
- 7 files changed, 218 insertions(+), 9 deletions(-)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Regards,
+> Tomasz Stanislawski
+>
+>
+>
+>>> Cheers
+>>> Kishon
+>>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
