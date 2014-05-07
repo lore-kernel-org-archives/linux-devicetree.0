@@ -1,83 +1,51 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [RFC PATCH 0/3] devicetree, qcomm PMIC: fix node name conflict
-Date: Wed, 7 May 2014 08:12:17 -0700
-Message-ID: <CAJAp7OiyjefyPMu2p8jTkbfQWYUKeYV62pVTtJ2JOP-6YOOGKA@mail.gmail.com>
-References: <536982E3.10303@gmail.com>
-	<CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
+ Armada 38x
+Date: Wed, 7 May 2014 17:14:56 +0200
+Message-ID: <20140507171456.3124ec71@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+	<1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
+	<20140506153953.GF25849@saruman.home>
+	<20140507122326.54f3febc@free-electrons.com>
+	<20140507151008.GD769@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
+In-Reply-To: <20140507151008.GD769@saruman.home>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To: balbi@ti.com
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 6, 2014 at 6:32 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Tue, May 6, 2014 at 7:48 PM, Frank Rowand <frowand.list@gmail.com> wrote:
->> An issue with the path of SPMI nodes under /sys/bus/... was reported in
->> https://lkml.org/lkml/2014/4/23/312.  The symptom is that two different
->> grandchild nodes of the spmi with the same node-name@unit-address will
->> result in attempting to create duplicate links at
->> /sys/bus/platform/devices/unit-address.node-name.  It turns out that the
->> specific example provided might not be an expected configuration for
->> current hardware, but the reported trap remains an issue.
->>
->> I have been poking at the problem, trying to figure out how to cleanly
->> fix the issue without breaking devicetree device creation.
->>
->> The first patch in the series is the one that may be a very bad idea.  Or
->> it may help show the way forward to deal with what I think is the major
->> underlying problem.  I have not finished investigating the possible negative
->> side effects.  And I am still thinking whether this is a conceptually good
->> approach, or whether it is simply an expediant hack that hides the underlying
->> problem.  But I am throwing this out prematurely because I have mentioned
->> it to several people, and I want to make it visible to everyone involved.
->>
->> The underlying architectural problem (in my opinion) is that a lot of devices
->> are created by the device tree infrastructure as platform devices, when they
->> truly should not be platform devices.  They should not be platform devices
->> because they are not physically on a platform bus, they are instead somewhere
->> below some other bus.  The first patch in this series is a hack which
->> results in the devices still being represented by "struct platform_device"
->> objects, but with a link to their parent's "struct bus_type" instead of
->> to &platform_bus_type.
->>
->> The second patch does not require the first patch.  The second patch provides
->> a mechanism to allow subsystems to provide a method of naming devices to
->> avoid name collisions.
->>
->> The third patch provides an example of a subsystem using the new feature
->> provided by the second patch.
->>
->
-> I think the primary question to ask is there any added benefit to
-> having the additional hierarchy of devices. I don't think there is
-> much support to have more hierarchy from what I have seen of past
-> discussions.
->
-> Another approach could be to support having multiple platform bus
-> instances. Then drivers can easily create a new instance for each set
-> of sub-devices.
->
-> This can be solved in a much less invasive way just in the DT naming
-> algorithm. This is slightly different from what I had suggested of
-> just dropping the unit address. It keeps the unit address, but adds
-> the unique index on untranslate-able addresses. The diff is bigger due
-> to refactoring to reduce the indentation levels. It is untested and
-> whitespace corrupted:
+Dear Felipe Balbi,
 
-The unique index leads to an interesting dependency between the order
-of nodes in the DTB and userspace; paths to e.g. our the path to our
-block devices contains soc.X where X changes now and then. Fortunately
-soc.X won't change that often, but forcing more peripheral nodes to use
-the same schema would show the problem quite often.
+On Wed, 7 May 2014 10:10:08 -0500, Felipe Balbi wrote:
 
-Does translatable/untranslatable refer to if this is an address translatable
-my the cpu or that it's just a translatable address on this specific bus?
-As far as I can see it's the latter and in our case (revid { reg =
-<0x100, 0x100>; })
-seem to be translatable with the current implementation.
+> > ifneq ($(CONFIG_USB_XHCI_MVEBU), )
+> > 	xhci-hcd-y += xhci-mvebu.o
+> > endif
+> > 
+> > Right?
+> 
+> correct :-)
+> 
+> > If so, then what about instead making CONFIG_USB_XHCI_MVEBU a bool
+> > instead of a tristate? It's more an option for the xhci-platform
+> > driver than an additional separate module, IMO. What do you think?
+> 
+> fine by me too. It simply adds a quirk callback to xhci-plat.
 
-Regards,
-Bjorn
+In the end, I settled on keeping the tristate, and used your
+suggestion. Because since xhci-plat itself is a blind option, and
+xhci-mvebu selects it, if xhci-mvebu is a bool, there would no longer
+be a way to have xhci-plat as a module. At least that's my
+understanding of the kconfig stuff :)
+
+Thanks!
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
