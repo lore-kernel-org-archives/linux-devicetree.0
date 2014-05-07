@@ -1,94 +1,205 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Wed, 07 May 2014 16:35:48 +0200
-Message-ID: <4288313.uDFYZQS3W7@wuerfel>
-References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com> <201404301734.14478.arnd@arndb.de> <CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] of: Keep track of populated platform devices
+Date: Wed, 07 May 2014 15:37:17 +0100
+Message-ID: <1399473437.3706.25.camel@hornet>
+References: <1398858529.24255.3.camel@hornet>
+	 <1398866717-20268-1-git-send-email-pawel.moll@arm.com>
+	 <CAL_JsqL=mxqEKpAsXm7Du0vEDpKk4n+dp5-DyvbuGhTA6bP5Lg@mail.gmail.com>
+	 <20140501092635.05011C409DA@trevor.secretlab.ca>
+	 <CACxGe6usWdey1qQT2JF=7LuE62H-_xtd1QkRT9z_Tj2pxdQEjQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Srikanth Thokala <sthokal@xilinx.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <michal.simek@xilinx.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, will.deacon@arm.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6usWdey1qQT2JF=7LuE62H-_xtd1QkRT9z_Tj2pxdQEjQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 May 2014 17:21:13 Srikanth Thokala wrote:
-> On Wed, Apr 30, 2014 at 9:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > On Tuesday 15 April 2014, Srikanth Thokala wrote:
-> >> +/**
-> >> + * xilinx_pcie_get_config_base - Get configuration base
-> >> + * @bus: Bus structure of current bus
-> >> + * @devfn: Device/function
-> >> + * @where: Offset from base
-> >> + *
-> >> + * Return: Base address of the configuration space needed to be
-> >> + *      accessed.
-> >> + */
-> >> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
-> >> +                                              unsigned int devfn,
-> >> +                                              int where)
-> >> +{
-> >> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
-> >> +     int relbus;
-> >> +
-> >> +     relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
-> >> +              (devfn << ECAM_DEV_NUM_SHIFT);
-> >> +
-> >> +     return port->reg_base + relbus + where;
-> >> +}
+On Thu, 2014-05-01 at 10:43 +0100, Grant Likely wrote:
+> > That doesn't work in the case where drivers use of_platform_populate().
+> > MFD devices in particular make use of it. If the driver does not get
+> > cleared on removal of the devices, then all MFD users will be broken on
+> > driver unbind/rebind. *
 > >
-> > Does this mean you have an ECAM-compliant config space? Nice!
-> >
-> > Would it be possible to split the config space access out into
-> > a separate file? It would be nice to share that with the generic
-> > ECAM driver that Will Deacon has sent.
+> > We really need to have the inverse of of_platform_populate which will
+> > remove all child and child's child devices and clear all flags and such.
+> > Right now moany drivers are open-coding the removal.
+
+Agreed, but, unless I'm missing some fundamental issue, I believe we can
+solve the flag clearing problem in a generic way:
+
+--8<-----------
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 3cf61a1..0f489fb 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -17,6 +17,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/amba/bus.h>
+ #include <linux/sizes.h>
++#include <linux/of_device.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -268,6 +269,7 @@ static void amba_device_release(struct device *dev)
+ {
+ 	struct amba_device *d = to_amba_device(dev);
+ 
++	of_device_node_put(dev);
+ 	if (d->res.parent)
+ 		release_resource(&d->res);
+ 	kfree(d);
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index ef37021..fd14d46 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -41,6 +41,8 @@ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env
+ 
+ static inline void of_device_node_put(struct device *dev)
+ {
++	if (dev->of_node)
++		of_node_clear_flag(dev->of_node, OF_POPULATED);
+ 	of_node_put(dev->of_node);
+ }
+--8<-----------
+
+This will work even if one manually unregisters a DT-originating device,
+because of_device_node_put() would be called in both amba and platform
+device (kobj) release path.
+
+By the way, the fact that today amba_device_release() doesn't do
+of_device_node_put() seems like a bug to me? (node's reference counter
+won't be decremented)
+
+> The function shouldn't be too difficult. I would expect it to look
+> something like this. You'll need to check the details.
+
+8<-----------
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index dd4328c..b6b5a2b 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -493,4 +493,49 @@ int of_platform_populate(struct device_node *root,
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(of_platform_populate);
++
++static int of_platform_device_destroy(struct device *dev, void *data)
++{
++	int *parents_children_left = data;
++	int my_children_left = 0;
++
++	/* Do not touch devices not populated from the device tree */
++	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED)) {
++		*parents_children_left++;
++		return 0;
++	}
++
++	device_for_each_child(dev, &my_children_left,
++			of_platform_device_destroy);
++	if (my_children_left) {
++		*parents_children_left++;
++		return 0;
++	}
++
++	if (dev->bus == &platform_bus_type)
++		platform_device_unregister(to_platform_device(dev));
++	else if (dev->bus == &amba_bustype)
++		amba_device_unregister(to_amba_device(dev));
++
++	return 0;
++}
++
++/**
++ * of_platform_depopulate() - Remove devices populated from device tree
++ * @parent: device which childred will be removed
++ *
++ * Complementary to of_platform_populate(), this function removes children
++ * of the given device (and, recurrently, their children) that have been
++ * created from their respective device tree nodes (and only those,
++ * leaving others - eg. manually created - unharmed). */
++ */
++int of_platform_depopulate(struct device *parent)
++{
++	int children_left = 0;
++
++	device_for_each_child(dev, &children_left, of_platform_device_destroy);
++
++	return children_left ? -EBUSY : 0;
++}
++EXPORT_SYMBOL_GPL(of_platform_depopulate);
+ #endif /* CONFIG_OF_ADDRESS */
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 05cb4a9..ef4f4ad 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -72,6 +72,7 @@ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
+ 				const struct of_dev_auxdata *lookup,
+ 				struct device *parent);
++static inline int of_platform_depopulate(struct device *parent);
+ #else
+ static inline int of_platform_populate(struct device_node *root,
+ 					const struct of_device_id *matches,
+@@ -80,6 +81,10 @@ static inline int of_platform_populate(struct device_node *root,
+ {
+ 	return -ENODEV;
+ }
++static inline int of_platform_depopulate(struct device *parent)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ #endif	/* _LINUX_OF_PLATFORM_H */
+8<-----------
+
+> static int __of_platform_unpopulate_device(struct device *dev, void *c)
+> {
+>     if (!dev->of_node || !of_node_get_flag(dev->of_node, OF_POPULATED)
+>         return 0;
 > 
-> Yes, it should be possible.  Is it ok, if I work on top of this driver?
+>     // recursively remove the children too --- I'd like to find a way
+> to do this non-recursively
+>     device_for_each_child(dev, NULL, __of_platform_unpopulate_device);
 
-Do you mean as a follow-on patch? My feeling is that since we are trying
-to merge both for 3.16, it would be good to get it done right away if
-it doesn't cause too much extra work.
+As of_platform_populate() is recursive itself, I don't see much problem
+with this.
 
-> >> +/**
-> >> + * xilinx_pcie_enable_msi - Enable MSI support
-> >> + * @port: PCIe port information
-> >> + */
-> >> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
-> >> +{
-> >> +     port->msg_addr = __get_free_pages(GFP_KERNEL, 0);
-> >> +
-> >> +     pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
-> >> +     pcie_write(port, virt_to_phys((void *)port->msg_addr),
-> >> +                XILINX_PCIE_REG_MSIBASE2);
-> >> +}
-> >
-> > As a general comment about the MSI implementation, I wonder if this is actually
-> > generic enough to be shared with other host controllers. It could be moved
-> > into a separate file like the config space access in that case.
+>     // Need to check if the device should be explicitly unbound from
+> it's driver before removing it. However, I think the driver core takes
+> care of this for us.
+
+Yep, removing either a driver or a device unbinds all existing pairs.
+
+>     // Remove based on the bus type
+>     switch (dev->bus) {
+>         case &platform_bus_type:
+
+To my surprise gcc said "error: pointers are not permitted as case
+values". One learns every day ;-)
+
+>             platform_device_remove(to_platform_device(dev));
+>             break;
+>         case &amba_bus_type:
+>             amba_device_remove(to_platform_device(dev));
+>             break;
+>     }
 > 
-> I feel the MSI implementation is not generic by looking into the other
-> host controllers,
-> it is more specific to the hardware.  Correct me, if am wrong.
+>     // Should check here if there are any other children to the
+> device. It is probably bad to remove a device that still has children.
+> Need to check what the driver core will do.
+> }
 
-The other host controllers are certainly incompatible, but this one looks
-like it could be used on other controllers easily.
+The reference count will be still be greater than 0, so the parent won't
+be harmed. Nevertheless it's better to consciously handle such case. At
+least I tried.
 
-Splitting it out would also make it easier to use another MSI implementation
-like the one in the GIC.
+Pawel
 
-
-> >> +     /* Register the device */
-> >> +     pci_common_init_dev(dev, &hw);
-> >> +
-> >> +     platform_set_drvdata(pdev, port);
-> >
-> > Don't you have to do the platform_set_drvdata() before pci_common_init_dev()?
-> 
-> It should be fine, as I don't see any dependencies.
-
-Ah, it's only used in the remove function. It looks correct then, but I think
-it would be better to set it first anyway, in case another function starts using
-the drvdata later and that function may get called by the PCI initialization.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
