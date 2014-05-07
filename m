@@ -1,154 +1,69 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v2 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM
- bindings
-Date: Wed, 07 May 2014 19:03:27 +0200
-Message-ID: <536A675F.9040204@samsung.com>
-References: <1399363824-23543-1-git-send-email-sachin.kamat@linaro.org>
- <53691187.80101@gmail.com>
- <CAK9yfHz6PVT2C-TZkFHqtdj4rT-R8w+aU=jTTnLMF5k4JOXGxg@mail.gmail.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH 5/7] clk: sunxi: add PRCM (Power/Reset/Clock Management)
+ clks support
+Date: Wed, 07 May 2014 19:12:30 +0200
+Message-ID: <536A697E.5000107@free-electrons.com>
+References: <1398697130-8338-1-git-send-email-boris.brezillon@free-electrons.com> <1398697130-8338-6-git-send-email-boris.brezillon@free-electrons.com> <20140428234039.GT3134@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHz6PVT2C-TZkFHqtdj4rT-R8w+aU=jTTnLMF5k4JOXGxg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Arnd Bergmann <arnd@arndb.de>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140428234039.GT3134@lukather>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On 06.05.2014 20:09, Sachin Kamat wrote:
-[snip]
-> On 6 May 2014 22:14, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-[snip]
->> On 06.05.2014 10:10, Sachin Kamat wrote:
-[snip]
->>> diff --git a/arch/arm/mach-exynos/platsmp.c
->>> b/arch/arm/mach-exynos/platsmp.c
->>> index 03e5e9f94705..ccbcdd7b8a86 100644
->>> --- a/arch/arm/mach-exynos/platsmp.c
->>> +++ b/arch/arm/mach-exynos/platsmp.c
->>> @@ -20,6 +20,7 @@
->>>   #include <linux/jiffies.h>
->>>   #include <linux/smp.h>
->>>   #include <linux/io.h>
->>> +#include <linux/of_address.h>
->>>
->>>   #include <asm/cacheflush.h>
->>>   #include <asm/smp_plat.h>
->>> @@ -33,11 +34,35 @@
->>>
->>>   extern void exynos4_secondary_startup(void);
->>>
->>> +static void __iomem *sram_base_addr;
->>> +void __iomem *sram_ns_base_addr;
->>
->>
->> This is probably just a matter of preference, but I'd make this static and
->> provide a getter function, like exynos_get_sram_ns_base();
->>
->> Also this address seems to be used by the firmware code exclusively. If we
->> want to make the firmware code more self-contained, maybe the mapping of
->> firmware-specific SRAM region could be handled there, instead? This would
->> also eliminate the need for having an exported variable or getter function.
->> What do you think?
-> 
-> I thought of the same. However 2 reasons prevented me from implementing this.
-> 
-> 1. Code duplication
-> 2. This code should be executed only once. I put it in exynos_firmware_init.
-> However it gave a crash while doing of_iomap. So moved it back to the current
-> location.
+
+On 29/04/2014 01:40, Maxime Ripard wrote:
+> On Mon, Apr 28, 2014 at 04:58:48PM +0200, Boris BREZILLON wrote:
+>> The PRCM (Power/Reset/Clock Management) unit provides several clock
+>> devices:
+>> - AR100 clk: used to clock the Power Management co-processor
+>> - AHB0 clk: used to clock the AHB0 bus
+>> - APB0 clk and gates: used to clk
+> Used to clk?
+"Used to clk peripherals connected on the APB0 bus"
+
+I'll add the missing words in the next version :-).
+
 >
+[...]
+> Ditto.
+>
+> And you'll probably want to use devm_ioremap_resource when you'll have
+> a single clock for the AR100.
 
-Right, exynos_firmware_init() is called too early, before ioremap() is
-available, so there is no good place to put this in firmware code. So,
-let's keep this as is for now and eventually move it to firmware if
-needed and/or a proper method of initialization is available.
+Absolutely.
 
->>
->>
->>> +
->>> +static void __init exynos_smp_prepare_sram(void)
->>> +{
->>> +       struct device_node *node;
->>> +
->>> +       for_each_compatible_node(node, NULL, "samsung,exynos4210-sram") {
->>> +               if (of_device_is_available(node)) {
->>> +                       sram_base_addr = of_iomap(node, 0);
->>> +                       if (!sram_base_addr)
->>> +                               pr_err("Secondary CPU boot address not
->>> found\n");
->>
->>
->> I don't think this is an error at this stage. Some platforms might not have
->> either of these SRAM reserved regions (such as those using INFORM registers
->> instead). Instead, the base address should be checked whenever it is needed
->> and errors should be handled then, like in exynos_set_cpu_boot_addr().
-> 
-> Yes. This is more from an information perspective. Probably pr_warn or
-> pr_info would
-> be better?
-> 
+>
+>> +
+>> +	clk_parent = of_clk_get_parent_name(np, 0);
+>> +	if (!clk_parent)
+>> +		return -EINVAL;
+[...]
+>> +
+>> +static struct platform_driver sun6i_a31_prcm_clk_driver = {
+>> +	.driver = {
+>> +		.name = "sun6i-a31-prcm-clk",
+>> +		.owner = THIS_MODULE,
+>> +		.of_match_table = sun6i_a31_prcm_clk_dt_ids,
+>> +	},
+>> +	.probe = sun6i_a31_prcm_clk_probe,
+> You're not calling the of_clk_del_provider, and you should probably
+> unregister your clocks too.
 
-IMHO this shouldn't produce any messages at this stage. Just whenever
-either of addresses is actually needed and is not initialized a message
-should be printed.
+This driver cannot be compiled as a module, and as a result the probed
+clks will never be removed.
 
->>> +}
->>> +
->>>   static inline void __iomem *cpu_boot_reg_base(void)
->>>   {
->>>         if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_1_1)
->>>                 return S5P_INFORM5;
->>> -       return S5P_VA_SYSRAM;
->>> +       return sram_base_addr;
->>>   }
->>>
->>>   static inline void __iomem *cpu_boot_reg(int cpu)
->>> @@ -147,7 +172,8 @@ static int exynos_boot_secondary(unsigned int cpu,
->>> struct task_struct *idle)
->>>                  * and fall back to boot register if it fails.
->>>                  */
->>>                 if (call_firmware_op(set_cpu_boot_addr, phys_cpu,
->>> boot_addr))
->>> -                       __raw_writel(boot_addr, cpu_boot_reg(phys_cpu));
->>> +                       if (cpu_boot_reg_base())
->>> +                               __raw_writel(boot_addr,
->>> cpu_boot_reg(phys_cpu));
->>
->>
->> I'd rework this for proper error handling, e.g.
->>
->>         int ret;
->>
->>         /* ... */
->>
->>         ret = call_firmware_op(set_cpu_boot_addr, phys_cpu, boot_addr);
->>         if (ret && ret != -ENOSYS)
->>                 goto fail;
->>         if (ret == -ENOSYS) {
->>                 /* Fall back to firmware-less way. */
->>                 void __iomem *boot_reg = cpu_boot_reg(phys_cpu);
->>
->>                 if (IS_ERR(boot_reg)) {
->>                         ret = PTR_ERR(boot_reg);
->>                         goto fail;
->>                 }
->>         }
->>
->>         /* ... */
->>
->> fail:
->>         /* Clean-up after error */
->>
->> Of course, cpu_boot_reg() will need to be converted to follow the ERR_PTR()
->> model, but IMHO proper error handling is a good reason to do so.
-> 
-> How about handling this separately outside this patch?
-> 
+Do you really want to support clk removal for this HW block ?
 
-This patch is already changing surroundings of this code, so I'd say it
-should do it the right way from the start.
+Best Regards,
 
-Best regards,
-Tomasz
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
