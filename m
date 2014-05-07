@@ -1,161 +1,62 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 3/6] clk: shmobile: div6: support selectable-input clocks
-Date: Wed, 7 May 2014 11:01:52 +0200
-Message-ID: <CAMuHMdXyaNKBO5k1iBJBHjkT4JEH0VV4RJSUOL-SWvqmf+8Q9g@mail.gmail.com>
-References: <1399386233-11928-1-git-send-email-ulrich.hecht+renesas@gmail.com>
-	<1399386233-11928-4-git-send-email-ulrich.hecht+renesas@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1399386233-11928-4-git-send-email-ulrich.hecht+renesas@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ulrich Hecht <ulrich.hecht@gmail.com>
-Cc: Linux-sh list <linux-sh@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 00/20] USB support for Armada 38x and Armada 375
+Date: Wed, 07 May 2014 11:21:58 +0200
+Message-ID: <5369FB36.7040404@gmail.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com> <loom.20140507T102941-222@post.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <loom.20140507T102941-222-eS7Uydv5nfjZ+VzJOa5vwg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ulrich,
+[Adding back the original Cc-List]
 
-CC devicetree@vger.kernel.org
-and a few comments below
+On 05/07/2014 10:33 AM, Hans de Goede wrote:
+> Hi Gregory,
+>
+> Gregory CLEMENT <gregory.clement <at> free-electrons.com> writes:
+>
+>> This patch set adds the USB support for the Armada 38x Armada
+>> 375. These SoCs use an xHCI but still need specific initialization,
+>> mainly to setup the windows memory on the mbus. They also use the same
+>> controller that the other mvebu SoC for EHCI.
+>
+> <snip>
+>
+>> Gregory CLEMENT (20):
+>>    usb: ehci-orion: Fix clock reference leaking
+>>    usb: ehci-orion: Add the optional PHY support
+>
+> If you're using a proper phy driver, do you really need a soc specific ehci
+> driver? I've spend a lot of time during the last release cycle to make
+> ehci-platform a lot more generic, including adding (optional) phy support to
+> it. It would be great if the new Armada SoCs could use ehci-platform instead
+> of extending ehci-orion to cover more models (ideally most ehci-foo drivers
+> would go away completely). I've no idea how feasible it is to use
+> ehci-platform in your case, but IMHO it should at least be considered.
 
-On Tue, May 6, 2014 at 4:23 PM, Ulrich Hecht <ulrich.hecht@gmail.com> wrote:
-> From: Ulrich Hecht <ulrich.hecht@gmail.com>
->
-> Adds support for DIV6 clocks with selectable parents as found in the r8a7740,
-> sh73a0, and other SoCs.
->
-> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
-> ---
->  .../bindings/clock/renesas,cpg-div6-clocks.txt     | 11 +++++++-
->  drivers/clk/shmobile/clk-div6.c                    | 32 ++++++++++++++++++----
->  2 files changed, 36 insertions(+), 7 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> index 952e373..d8c6577 100644
-> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-div6-clocks.txt
-> @@ -7,14 +7,23 @@ to 64.
->  Required Properties:
->
->    - compatible: Must be one of the following
-> +    - "renesas,r8a7740-div6-clock" for R8A7740 DIV6 clocks
->      - "renesas,r8a7790-div6-clock" for R8A7790 (R-Car H2) DIV6 clocks
->      - "renesas,r8a7791-div6-clock" for R8A7791 (R-Car M2) DIV6 clocks
-> +    - "renesas,sh73a0-div6-clock" for SH73A0 (SH-MobileAG5) DIV6 clocks
->      - "renesas,cpg-div6-clock" for generic DIV6 clocks
->    - reg: Base address and length of the memory resource used by the DIV6 clock
-> -  - clocks: Reference to the parent clock
-> +  - clocks: Reference to the parent clock(s)
->    - #clock-cells: Must be 0
->    - clock-output-names: The name of the clock as a free-form string
->
-> +Optional Properties:
-> +
-> +  - renesas,src-shift: Bit position of the input clock selector (default:
-> +    fixed input clock)
-> +  - renesas,src-width: Bit width of the input clock selector (default: fixed
-> +    input clock)
-> +
->
->  Example
->  -------
-> diff --git a/drivers/clk/shmobile/clk-div6.c b/drivers/clk/shmobile/clk-div6.c
-> index f065f69..fbd1c31 100644
-> --- a/drivers/clk/shmobile/clk-div6.c
-> +++ b/drivers/clk/shmobile/clk-div6.c
-> @@ -38,9 +38,12 @@ struct div6_clock {
->
->  static int cpg_div6_clock_enable(struct clk_hw *hw)
->  {
-> +       unsigned int val;
+Hans,
 
-As clk_readl() returns u32, please use u32 for val, too.
+unfortunately we currently have no USB-PHY driver for the other mvebu
+SoCs. I have started some code grabbing for barebox bootloader and plan
+to add proper USB-PHYs for Linux later.
 
->         struct div6_clock *clock = to_div6_clock(hw);
->
-> -       clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-> +       val = (clk_readl(clock->reg) & ~(CPG_DIV6_DIV_MASK | CPG_DIV6_CKSTP))
-> +               | CPG_DIV6_DIV(clock->div - 1);
-> +       clk_writel(val, clock->reg);
->
->         return 0;
->  }
-> @@ -52,8 +55,8 @@ static void cpg_div6_clock_disable(struct clk_hw *hw)
->         /* DIV6 clocks require the divisor field to be non-zero when stopping
->          * the clock.
->          */
-> -       clk_writel(CPG_DIV6_CKSTP | CPG_DIV6_DIV(CPG_DIV6_DIV_MASK),
-> -                  clock->reg);
-> +       clk_writel(clk_readl(clock->reg) | CPG_DIV6_CKSTP | CPG_DIV6_DIV_MASK,
-> +               clock->reg);
->  }
->
->  static int cpg_div6_clock_is_enabled(struct clk_hw *hw)
-> @@ -94,12 +97,14 @@ static int cpg_div6_clock_set_rate(struct clk_hw *hw, unsigned long rate,
->  {
->         struct div6_clock *clock = to_div6_clock(hw);
->         unsigned int div = cpg_div6_clock_calc_div(rate, parent_rate);
-> +       unsigned int val;
+There is one thing very specific to mvebu SoCs, which is the mbus:
+you need to setup upstream memory windows for the usb bus master.
+ From my current understanding, that will require at least a minimal
+stub to remain for ehci-orion.
 
-u32
+I do think that most of the stuff in ehci-orion can (and should) be
+replaced with ehci-platform then. So, we definitely consider reusing
+the generic foo-platform drivers on all opportunities but IMHO we are
+not yet ready for it.
 
->
->         clock->div = div;
->
-> +       val = clk_readl(clock->reg) & ~CPG_DIV6_DIV_MASK;
->         /* Only program the new divisor if the clock isn't stopped. */
-> -       if (!(clk_readl(clock->reg) & CPG_DIV6_CKSTP))
-> -               clk_writel(CPG_DIV6_DIV(clock->div - 1), clock->reg);
-> +       if (!(val & CPG_DIV6_CKSTP))
-> +               clk_writel(val | CPG_DIV6_DIV(clock->div - 1), clock->reg);
->
->         return 0;
->  }
-> @@ -121,6 +126,7 @@ static void __init cpg_div6_clock_init(struct device_node *np)
->         const char *name;
->         struct clk *clk;
->         int ret;
-> +       u32 src_shift, src_width;
->
->         clock = kzalloc(sizeof(*clock), GFP_KERNEL);
->         if (!clock) {
-> @@ -150,7 +156,21 @@ static void __init cpg_div6_clock_init(struct device_node *np)
->                 goto error;
->         }
->
-> -       parent_name = of_clk_get_parent_name(np, 0);
-> +       if (!of_property_read_u32(np, "renesas,src-shift", &src_shift)) {
-> +               if (!of_property_read_u32(np, "renesas,src-width",
-> +                                       &src_width)) {
-> +                       unsigned int parent_idx =
-> +                               (clk_readl(clock->reg) >> src_shift) &
-> +                               (BIT(src_width) - 1);
-> +                       parent_name = of_clk_get_parent_name(np, parent_idx);
-> +               } else {
-> +                       pr_err("%s: renesas,src-shift without renesas,"
-> +                              "src-width in %s\n", __func__, np->name);
-
-Please don't split the string literal, as it makes it more difficult to look
-up the error message this way.
-
-> +                       goto error;
-> +               }
-> +       } else
-> +               parent_name = of_clk_get_parent_name(np, 0);
-> +
->         if (parent_name == NULL) {
->                 pr_err("%s: failed to get %s DIV6 clock parent name\n",
->                        __func__, np->name);
-> --
-> 1.8.4.5
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Sebastian
 
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
