@@ -1,54 +1,39 @@
-From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: Re: KConfig and DTS files
-Date: Wed, 07 May 2014 16:06:49 -0700
-Message-ID: <536ABC89.8060301@boundarydevices.com>
-References: <536A697D.3020002@boundarydevices.com>	<142702592.Qpp2HrZZke@wuerfel>	<536A8456.1040208@boundarydevices.com>	<5898724.4EExDycMZy@wuerfel>	<536A8F03.5070509@boundarydevices.com> <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: [PATCH 0/3] Add Rockchip PWM driver
+Date: Thu,  8 May 2014 01:08:32 +0200
+Message-ID: <1399504115-16257-1-git-send-email-b.galvani@gmail.com>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+This series adds support for the PWM controller found on Rockchip
+RK29, RK30 and RK31 SoCs. It is based on the documentation publicly
+available [0] and kernel sources from Rockchip [1].
 
-On 05/07/2014 03:20 PM, Bjorn Andersson wrote:
-> On Wed, May 7, 2014 at 12:52 PM, Eric Nelson
-> <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
-> [...]
->>
->> I still wonder about the choice of not allowing inclusion
->> of at least include/generated/autoconf.h.
->
-> Because what you just showed is the use case where you have 1 defconfig, build 1
-> zImage and then you can have a completely separate delivery of X number of
-> dtbs, all defining some variant of your original board.
-> All without recompiling, or even have the source available.
->
+The last patch, which adds device tree nodes in the dts, depends on
+the clocks introduced by Heiko in his recent submission of a clk
+driver for Rockchip RK3188.
 
-I agree that there's some benefit in being able to generate
-different DTBs, and it's an advantage (size, speed) to customize
-the .config as well.
+[0] http://dl.radxa.com/rock/docs/hw/ds/Rockchip%20RK30xx%20TRM%20V2.0.pdf
+[1] https://github.com/rkchrome/kernel
 
-When those clearly go together, it seems natural to define them as
-such.
+Beniamino Galvani (3):
+  pwm: add Rockchip SoC PWM support
+  pwm: rockchip: document device tree bindings
+  ARM: dts: rk3xxx: add PWM nodes
 
-I've heard (and appreciate) the pointers about how to get
-past our current issue(s), but what's the rationale
-for not allowing the inclusion of autoconf.h and
-conditionals in the DTS?
+ .../devicetree/bindings/pwm/pwm-rockchip.txt       |   17 ++
+ arch/arm/boot/dts/rk3188.dtsi                      |   40 +++++
+ arch/arm/boot/dts/rk3xxx.dtsi                      |   32 ++++
+ drivers/pwm/Kconfig                                |    8 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-rockchip.c                         |  180 ++++++++++++++++++++
+ 6 files changed, 278 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
+ create mode 100644 drivers/pwm/pwm-rockchip.c
 
-Is it a concern that things will become polluted and
-hard to read?
+-- 
+1.7.10.4
 
-Please advise,
-
-
-Eric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
