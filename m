@@ -1,42 +1,99 @@
 From: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] powerpc/fsl: Updated corenet-cf compatible string for
- corenet1-cf chips
-Date: Wed, 7 May 2014 09:14:22 +0300
-Message-ID: <5369CF3E.2000608@freescale.com>
-References: <1399388176-25257-1-git-send-email-diana.craciun@freescale.com>
- <1399395448.15726.185.camel@snotra.buserror.net>
+Subject: [PATCH v2] powerpc/fsl: Updated corenet-cf compatible string for corenet1-cf chips
+Date: Wed, 7 May 2014 09:29:17 +0300
+Message-ID: <1399444157-1207-1-git-send-email-diana.craciun@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399395448.15726.185.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2014 07:57 PM, Scott Wood wrote:
-> On Tue, 2014-05-06 at 17:56 +0300, Diana Craciun wrote:
->> From: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->>
->> Updated the device trees according to the corenet-cf
->> binding definition.
->>
->> Signed-off-by: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->> ---
->>   arch/powerpc/boot/dts/fsl/p2041si-post.dtsi | 2 +-
->>   arch/powerpc/boot/dts/fsl/p3041si-post.dtsi | 2 +-
->>   arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 2 +-
->>   arch/powerpc/boot/dts/fsl/p5020si-post.dtsi | 2 +-
->>   4 files changed, 4 insertions(+), 4 deletions(-)
-> Oops, I meant to include this in the patch I sent, but forgot to squash
-> the two patches together. :-P
->
-> Where's p5040?
+From: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Ups, somehow I failed to commit that file, respinning....
+Updated the device trees according to the corenet-cf
+binding definition.
 
-Diana
+Signed-off-by: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+v2:
+	Added missing p5040
+
+ arch/powerpc/boot/dts/fsl/p2041si-post.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/p3041si-post.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/p4080si-post.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/p5020si-post.dtsi | 2 +-
+ arch/powerpc/boot/dts/fsl/p5040si-post.dtsi | 2 +-
+ 5 files changed, 5 insertions(+), 5 deletions(-)
+
+diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+index e2987a3..b5daa4c 100644
+--- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
+@@ -246,7 +246,7 @@
+ 	};
+ 
+ 	corenet-cf@18000 {
+-		compatible = "fsl,corenet-cf";
++		compatible = "fsl,corenet1-cf", "fsl,corenet-cf";
+ 		reg = <0x18000 0x1000>;
+ 		interrupts = <16 2 1 31>;
+ 		fsl,ccf-num-csdids = <32>;
+diff --git a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+index 7af6d45..5abd1fc 100644
+--- a/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p3041si-post.dtsi
+@@ -273,7 +273,7 @@
+ 	};
+ 
+ 	corenet-cf@18000 {
+-		compatible = "fsl,corenet-cf";
++		compatible = "fsl,corenet1-cf", "fsl,corenet-cf";
+ 		reg = <0x18000 0x1000>;
+ 		interrupts = <16 2 1 31>;
+ 		fsl,ccf-num-csdids = <32>;
+diff --git a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+index 2415e1f..bf0e7c9 100644
+--- a/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p4080si-post.dtsi
+@@ -281,7 +281,7 @@
+ 	};
+ 
+ 	corenet-cf@18000 {
+-		compatible = "fsl,corenet-cf";
++		compatible = "fsl,corenet1-cf", "fsl,corenet-cf";
+ 		reg = <0x18000 0x1000>;
+ 		interrupts = <16 2 1 31>;
+ 		fsl,ccf-num-csdids = <32>;
+diff --git a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+index 2985de4..f7ca9f4 100644
+--- a/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5020si-post.dtsi
+@@ -278,7 +278,7 @@
+ 	};
+ 
+ 	corenet-cf@18000 {
+-		compatible = "fsl,corenet-cf";
++		compatible = "fsl,corenet1-cf", "fsl,corenet-cf";
+ 		reg = <0x18000 0x1000>;
+ 		interrupts = <16 2 1 31>;
+ 		fsl,ccf-num-csdids = <32>;
+diff --git a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+index 546a899..91477b5 100644
+--- a/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
++++ b/arch/powerpc/boot/dts/fsl/p5040si-post.dtsi
+@@ -233,7 +233,7 @@
+ 	};
+ 
+ 	corenet-cf@18000 {
+-		compatible = "fsl,corenet-cf";
++		compatible = "fsl,corenet1-cf", "fsl,corenet-cf";
+ 		reg = <0x18000 0x1000>;
+ 		interrupts = <16 2 1 31>;
+ 		fsl,ccf-num-csdids = <32>;
+-- 
+1.7.11.7
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
