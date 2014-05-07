@@ -1,61 +1,110 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH V6 0/2] arm: dts: dra7: Updates for adding crossbar device
-Date: Wed, 7 May 2014 10:29:35 -0500
-Message-ID: <536A515F.3010402@ti.com>
-References: <1399464998-23216-1-git-send-email-r.sricharan@ti.com> <20140507145656.GG2626@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
+Date: Wed, 07 May 2014 17:33:44 +0200
+Message-ID: <536A5258.3080104@samsung.com>
+References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
+ <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
+ <534506B1.4040908@samsung.com>
+ <CAPdUM4M109_kzY6cUMJQPSwgazvWmNDWL1JeXgiqnzvH8dhK2Q@mail.gmail.com>
+ <53451A60.4050803@samsung.com> <53675D72.70103@ti.com>
+ <CAPdUM4N+2VXpiFSiWW9gKfbte1zkpDbCOSF+KvEo4T1KLqqwjw@mail.gmail.com>
+ <536A36F5.5080303@samsung.com>
+ <CAPdUM4M6uk2KN_L487_cRkOqbgJrhhMRx9zpczA6-3LzSM3FSg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140507145656.GG2626@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Darren Etheridge <detheridge@ti.com>, Sricharan R <r.sricharan@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linus.walleij@linaro.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, marc.zyngier@arm.com, grant.likely@linaro.org, mark.rutland@arm.com, tglx@linutronix.de, galak@codeaurora.org, santosh.shilimkar@ti.com, bcousson@baylibre.com, robherring2@gmail.com
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAPdUM4M6uk2KN_L487_cRkOqbgJrhhMRx9zpczA6-3LzSM3FSg@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rahul Sharma <rahul.sharma@samsung.com>, Tomasz Stanislawski <t.stanislaws@samsung.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, sunil joshi <joshi@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Tony,
+[CCing more DT-folks :)]
 
-On 05/07/2014 09:56 AM, Darren Etheridge wrote:
-> Sricharan R <r.sricharan@ti.com> wrote on Wed [2014-May-07 17:46:36 +0530]:
->> Some socs have a large number of interrupts requests to service
->> the needs of its many peripherals and subsystems. All of the interrupt
->> requests lines from the subsystems are not needed at the same
->> time, so they have to be muxed to the controllers appropriately.
->> In such places a interrupt controllers are preceded by an
->> IRQ CROSSBAR that provides flexibility in muxing the device interrupt
->> requests to the controller inputs.
+On 07.05.2014 16:19, Rahul Sharma wrote:
+> On 7 May 2014 19:06, Tomasz Stanislawski <t.stanislaws@samsung.com> wrote:
+>> On 05/07/2014 12:38 PM, Rahul Sharma wrote:
+>>> On 5 May 2014 15:14, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>> Hi,
+>>>>
+>>>> On Wednesday 09 April 2014 03:31 PM, Sylwester Nawrocki wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On 09/04/14 11:12, Rahul Sharma wrote:
+>>>>>> Idea looks good. How about keeping compatible which is independent
+>>>>>> of SoC, something like "samsung,exynos-simple-phy" and provide Reg
+>>>>>> and Bit through phy provider node. This way we can avoid SoC specific
+>>>>>> hardcoding in phy driver and don't need to look into dt bindings for
+>>>>>> each new SoC.
+>>>>>
+>>>>> I believe it is a not recommended approach.
+>>>>
+>>>> Why not? We should try to avoid hard coding in the driver code. Moreover by
+>>>> avoiding hardcoding we can make it a generic driver for single bit PHYs.
+>>>>
+>>>
+>>> +1.
+>>>
+>>> @Tomasz, any plans to consider this approach for simple phy driver?
+>>>
+>>> Regards,
+>>> Rahul Sharma.
+>>>
 >>
->> The dts file update to support the crossbar device and convert
->> peripheral irq numbers to crossbar number are added here.
->>
->> This is a rebase on top of 3.15-rc4
->>
->> This series depends on crossbar-driver-fixes sent below
->> http://marc.info/?l=linux-omap&m=139929963420299&w=2
->>
->> [V6] Reordered patch 3 to patch 1 and
->>      squashed patch 2 and 3 from V5 in to patch 2
->>
->> Sricharan R (2):
->>   arm: dts: dra7: Add routable-irqs property for gic node
->>   arm: dts: dra7: Add crossbar device binding
+>> Hi Rahul,
+>> Initially, I wanted to make a very generic driver and to add bit and
+>> register (or its offset) attribute to the PHY node.
+>> However, there was a very strong opposition from DT maintainers
+>> to adding any bit related configuration to DT.
+>> The current solution was designed to be a trade-off between
+>> being generic and being accepted :).
 >>
 > 
-> Just for thoroughness I dropped the previous 3 patch series from my
-> build and replaced with this two patch series.  Everything still works
-> with my test setup so I consider these patches good.
+> Thanks Tomasz,
+> Ok got it. lets discuss it again and conclude it.
+> 
+> @Kishon, DT-folks,
+> 
+> The original RFC patch from Tomasz (at https://lkml.org/lkml/2013/10/21/313)
+> added simple phy driver as "Generic-simple-phy" with these properties:
+> 
+> + of_property_read_u32(dev->of_node, "mask", &sphy->mask);
+> + of_property_read_u32(dev->of_node, "on-value", &sphy->on_value);
+> + of_property_read_u32(dev->of_node, "off-value", &sphy->off_value);
+> 
+> Shall we consider the same solution again for generic simple phy
+> driver which just expose on/off control through register bit.
+> 
+> Regards,
+> Rahul Sharma
+> 
+>> Regards,
+>> Tomasz Stanislawski
+>>
+>>
+>>
+>>>> Cheers
+>>>> Kishon
+>>>
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
 
-It looks like in further tests, there may be more interrupts like irq
-10 which are not documented properly and if mapped results in the
-feature not working. It does seem that we might need more detailed
-validation as this seems to have skipped our "non-OS validation" flow
-unfortunately. we are in discussion with silicon folks on these
-"undocumented behavior" we are discovering :(.
-
-I suggest holding the series till we have done complete validation of
-the same and explanation for the behavior we see.
-
--- 
-Regards,
-Nishanth Menon
+Best regards,
+Tomasz
