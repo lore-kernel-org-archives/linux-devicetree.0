@@ -1,57 +1,156 @@
-From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: Re: KConfig and DTS files
-Date: Wed, 07 May 2014 11:35:12 -0700
-Message-ID: <536A7CE0.6070005@boundarydevices.com>
-References: <536A697D.3020002@boundarydevices.com> <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com> <536A71AF.1010907@boundarydevices.com> <6261287.BoJ6nRgupA@wuerfel>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
+Date: Wed, 7 May 2014 13:35:54 -0500
+Message-ID: <CAL_JsqLWxbmWEiE4qxBPK+4KHoBKP+s-7Ubg6ef6GdR9NMaDjQ@mail.gmail.com>
+References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+	<1398259168.4724.217.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6261287.BoJ6nRgupA@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1398259168.4724.217.camel@iivanov-dev>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>, Frank Rowand <frowand.list@gmail.com>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn@kryo.se>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Arnd.
-
-On 05/07/2014 11:10 AM, Arnd Bergmann wrote:
-> On Wednesday 07 May 2014 10:47:27 Eric Nelson wrote:
+On Wed, Apr 23, 2014 at 8:19 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
+>
+> Hi,
+>
+> On Tue, 2014-04-22 at 17:31 -0700, Courtney Cavin wrote:
+>> From: Josh Cartwright <joshc@codeaurora.org>
 >>
->> It seems reasonable to tell the kernel to skip this if the
->> WiFi driver isn't configured into the kernel (i.e. there's
->> no point in enumerating), so I was hoping to surround this
->> USDHC2 block with #ifdefs:
->>
->>          https://github.com/boundarydevices/linux-imx6/blob/boundary-imx_3.10.17_1.0.0_ga/arch/arm/boot/dts/imx6qdl-nitrogen6x.dtsi#L640
->>
->> The alternative aren't very nice:
->>          populate extra parts to drive these signals, or
->>          copy the DTB and strip out the unused parts
->>
->> The first is wasteful (and environmentally un-friendly), and
->> the second doesn't scale very well and pollutes the Git tree.
+>> The Qualcomm 8941 and 8841 PMICs are components used with the Snapdragon
+>> 800 series SoC family.  This driver exists largely as a glue mfd component,
+>> it exists to be an owner of an SPMI regmap for children devices
+>> described in device tree.
 >>
 >
-> It's fine to have two .dtb files (as Olof and Jason also suggested)
-> and you can even have both in the kernel and just pick the right
-> one for your machine.
+> Thanks. This is exactly what I have planed to do :-)
 >
-> Another option that works is to have the boot loader set up the
-> present devices. With u-boot, you can easily manipulate the binary dtb
-> and change a 'status="disabled"' to 'status="ok"' or vice versa
-> for devices that are only sometimes populated, or you can change
-> the amount of installed RAM as detected by the loader.
+>> Signed-off-by: Josh Cartwright <joshc@codeaurora.org>
+>> Signed-off-by: Courtney Cavin <courtney.cavin@sonymobile.com>
+>> ---
+>>  drivers/mfd/Kconfig  | 13 +++++++++++
+>>  drivers/mfd/Makefile |  1 +
+>>  drivers/mfd/pm8x41.c | 63 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 77 insertions(+)
+>>  create mode 100644 drivers/mfd/pm8x41.c
+>>
+>
+> <snip>
+>
+>> +
+>> +static int pm8x41_probe(struct spmi_device *sdev)
+>> +{
+>> +     struct regmap *regmap;
+>> +
+>> +     regmap = devm_regmap_init_spmi_ext(sdev, &pm8x41_regmap_config);
+>> +     if (IS_ERR(regmap)) {
+>> +             dev_dbg(&sdev->dev, "regmap creation failed.\n");
+>> +             return PTR_ERR(regmap);
+>> +     }
+>> +
+>> +     return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
+>
+> I think that this will not going to work. For example in this particular
+> case, both controllers have "qcom,qpnp-revid" peripheral which is
+> located at offset 0x100.
+>
+> And the result is:
+>
+> [    0.963944] sysfs: cannot create duplicate filename '/bus/platform/devices/100.revid'
+>
+> DT looks like this:
+>
+> spmi {
+>         compatible = "qcom,spmi-pmic-arb";
+>         reg-names = "core", "intr", "cnfg";
+>         reg = <0xfc4cf000 0x1000>,
+>               <0xfc4cb000 0x1000>,
+>               <0xfc4ca000 0x1000>;
+>
+>         interrupt-names = "periph_irq";
+>         interrupts = <0 190 0>;
+>
+>         qcom,ee = <0>;
+>         qcom,channel = <0>;
+>
+>         #address-cells = <2>;
+>         #size-cells = <0>;
+>
+>         interrupt-controller;
+>         #interrupt-cells = <4>;
+>
+>         pm8941@0 {
+>                 compatible = "qcom,pm8941";
+>                 reg = <0x0 SPMI_USID>;
+>
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+>                 revid@100 {
+>                         compatible = "qcom,qpnp-revid";
+>                         reg = <0x100 0x100>;
+>                 };
+>         };
+>
+>         pm8841@4 {
+>                 compatible = "qcom,pm8941";
+>                 reg = <0x4 SPMI_USID>;
+>
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+>
+>                 revid@100 {
+>                         compatible = "qcom,qpnp-revid";
+>                         reg = <0x100 0x100>;
+>                 };
+>         };
+> };
 >
 
-Easily is such a relative term ;)
+I've created a similar test case, but do not reproduce the duplicate
+name issue. In my test, the lack of ranges property causes translation
+to fail so devices are named dev.N. The above should have similar
+behavior.1
 
-Thanks for the advice.
+Here's the test case:
+
+/ {
+        testcase-data {
+                platform-tests {
+                        #address-cells = <1>;
+                        #size-cells = <1>;
+
+                        test-device@0 {
+                                compatible = "test-device";
+                                reg = <0x0 0>;
+
+                                #address-cells = <1>;
+                                #size-cells = <1>;
+
+                                dev@100 {
+                                        compatible = "test-sub-device";
+                                        reg = <0x100 0x100>;
+                                };
+                        };
+
+                        test-device@1 {
+                                compatible = "test-device";
+                                reg = <0x1 0>;
+
+                                #address-cells = <1>;
+                                #size-cells = <1>;
+
+                                dev@100 {
+                                        compatible = "test-sub-device";
+                                        reg = <0x100 0x100>;
+                                };
+                        };
+                };
+        };
+};
 
 
-Eric
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
