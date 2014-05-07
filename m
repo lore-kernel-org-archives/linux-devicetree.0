@@ -1,216 +1,209 @@
-From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Wed, 7 May 2014 17:21:13 +0530
-Message-ID: <CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
-References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
-	<201404301734.14478.arnd@arndb.de>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v4 6/7] ARM: dts: dra7: Add USB related nodes
+Date: Wed, 7 May 2014 14:55:35 +0300
+Message-ID: <536A1F37.4010202@ti.com>
+References: <1399283686-6127-1-git-send-email-rogerq@ti.com> <1399283686-6127-7-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201404301734.14478.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399283686-6127-7-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: kishon-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 30, 2014 at 9:04 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 15 April 2014, Srikanth Thokala wrote:
->> +Required properties:
->> +- #address-cells: Address representation for root ports, set to <3>
->> +- #size-cells: Size representation for root ports, set to <2>
->> +- #interrupt-cells: specifies the number of cells needed to encode an
->> +     interrupt source. The value must be 1.
->> +- compatible: Should contain "xlnx,axi-pcie-host-1.00.a"
->> +- reg: Should contain AXI PCIe registers location and length
->> +- device_type: must be "pci"
->> +- interrupts: Should contain AXI PCIe interrupt
->> +- interrupt-map-mask,
->> +  interrupt-map: standard PCI properties to define the mapping of the
->> +     PCI interface to interrupt numbers.
->> +- ranges: ranges for the PCI memory regions (I/O space region is noti
->
-> typo: noti -> not
+Add nodes for the Super Speed USB controllers, omap-control-usb,
+USB2 PHY and USB3 PHY devices.
 
-Ok, will fix.
+Use IRQ crossbar for interrupts.
 
->
->> +     supported by hardware)
->> +     Please refer to the standard PCI bus binding document for a more
->> +     detailed explanation
->> +
->> +Optional properties:
->> +- bus-range: PCI bus numbers covered
->> +
->> +Interrupt controller child node
->> ++++++++++++++++++++++++++++++++
->> +Required properties:
->> +- interrupt-controller: identifies the node as an interrupt controller
->> +- #address-cells: specifies the number of cells needed to encode an
->> +     address. The value must be 0.
->> +- #interrupt-cells: specifies the number of cells needed to encode an
->> +     interrupt source. The value must be 1.
->> +
->> +NOTE:
->> +The core provides a single interrupt for both INTx/MSI messages. So,
->> +created a interrupt controller node to support 'interrupt-map' DT
->> +functionality.  The driver will create an IRQ domain for this map, decode
->> +the four INTx interrupts in ISR and route them to this domain.
->
-> How does this work if the pci core is combined with a GIC version that
-> also has MSI support. Presumably you'd want to use that for performance
-> reason rather than the integrated MSI chip.
->
-> Shouldn't there be a way to pick between the two?
+Remove ocp2scp1 address space from hwmod data as it is
+now provided via device tree.
 
-I will check and come back to you on this.
+CC: Beno=C3=AEt Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/dra7.dtsi               | 148 ++++++++++++++++++++++=
+++++++++
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  10 --
+ 2 files changed, 148 insertions(+), 10 deletions(-)
 
->
->> +/**
->> + * xilinx_pcie_get_config_base - Get configuration base
->> + * @bus: Bus structure of current bus
->> + * @devfn: Device/function
->> + * @where: Offset from base
->> + *
->> + * Return: Base address of the configuration space needed to be
->> + *      accessed.
->> + */
->> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
->> +                                              unsigned int devfn,
->> +                                              int where)
->> +{
->> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
->> +     int relbus;
->> +
->> +     relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
->> +              (devfn << ECAM_DEV_NUM_SHIFT);
->> +
->> +     return port->reg_base + relbus + where;
->> +}
->
-> Does this mean you have an ECAM-compliant config space? Nice!
->
-> Would it be possible to split the config space access out into
-> a separate file? It would be nice to share that with the generic
-> ECAM driver that Will Deacon has sent.
-
-Yes, it should be possible.  Is it ok, if I work on top of this driver?
-
->
->> +
->> +     msg.address_hi = 0;
->> +     msg.address_lo = virt_to_phys((void *)port->msg_addr);
->> +     msg.data = irq;
->> +
->> +     write_msi_msg(irq, &msg);
->
-> It seems strange to pass the msg_addr as an integer referring to
-> a virtual address. I'd suggest using phys_addr_t for the type
-> and converting it at the point the page gets allocated, and then
-> always assigning both the high and low part here. You'll need
-> that anyway for 64-bit operation.
-
-Ok, I will fix it. Thanks.
-
->
->> +/**
->> + * xilinx_pcie_enable_msi - Enable MSI support
->> + * @port: PCIe port information
->> + */
->> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
->> +{
->> +     port->msg_addr = __get_free_pages(GFP_KERNEL, 0);
->> +
->> +     pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
->> +     pcie_write(port, virt_to_phys((void *)port->msg_addr),
->> +                XILINX_PCIE_REG_MSIBASE2);
->> +}
->
-> here too.
->
-> As a general comment about the MSI implementation, I wonder if this is actually
-> generic enough to be shared with other host controllers. It could be moved
-> into a separate file like the config space access in that case.
-
-I feel the MSI implementation is not generic by looking into the other
-host controllers,
-it is more specific to the hardware.  Correct me, if am wrong.
-
->
->> +/**
->> + * xilinx_pcie_init_irq_domain - Initialize IRQ domain
->> + * @port: PCIe port information
->> + *
->> + * Return: '0' on success and error value on failure
->> + */
->> +static int xilinx_pcie_init_irq_domain(struct xilinx_pcie_port *port)
->> +{
->> +     struct device *dev = port->dev;
->> +     struct device_node *node = dev->of_node;
->> +
->> +     if (IS_ENABLED(CONFIG_PCI_MSI)) {
->> +             /* Setup MSI */
->> +             int i;
->> +
->> +             port->irq_domain = irq_domain_add_linear(node,
->> +                                                      XILINX_NUM_MSI_IRQS,
->> +                                                      &msi_domain_ops,
->> +                                                      &xilinx_pcie_msi_chip);
->> +             if (!port->irq_domain) {
->> +                     dev_err(dev, "Failed to get a MSI IRQ domain\n");
->> +                     return PTR_ERR(port->irq_domain);
->> +             }
->> +
->> +             for (i = 0; i < XILINX_NUM_MSI_IRQS; i++)
->> +                     irq_create_mapping(port->irq_domain, i);
->
-> I'm still not that familiar with the irqdomain code, but shouldn't you
-> do the irq_create_mapping() in xilinx_pcie_assign_msi()?
->
-> It seems wasteful to create all 128 mappings upfront.
-
-Ok, I agree with you.  I will fix it.
-
->
->> +/**
->> + * xilinx_pcie_setup - Setup memory resources
->> + * @nr: Bus number
->> + * @sys: Per controller structure
->> + *
->> + * Return: '1' on success and error value on failure
->> + */
->> +static int xilinx_pcie_setup(int nr, struct pci_sys_data *sys)
->> +{
->
-> I think if you move most of the code from this function into the probe()
-> function, it will be easier later to add arm64 support, and you can handle
-> errors better.
->
-> AFAICT, the only thing you need here is to list_move() the resources
-> from the xilinx_pcie_port to sys->resources. Ideally, the entire range
-> parsing can go away soon, once we have generic infrastructure for that.
-
-Sure.  I will do.
-
->
->
->> +     /* Register the device */
->> +     pci_common_init_dev(dev, &hw);
->> +
->> +     platform_set_drvdata(pdev, port);
->
-> Don't you have to do the platform_set_drvdata() before pci_common_init_dev()?
-
-It should be fine, as I don't see any dependencies.
-
-Srikanth
-
->
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
+index cec826f..8bc48bd 100644
+--- a/arch/arm/boot/dts/dra7.dtsi
++++ b/arch/arm/boot/dts/dra7.dtsi
+@@ -798,6 +798,154 @@
+ 			dma-names =3D "tx0", "rx0";
+ 			status =3D "disabled";
+ 		};
++
++		omap_control_usb2phy1: control-phy@4a002300 {
++			compatible =3D "ti,control-phy-usb2";
++			reg =3D <0x4a002300 0x4>;
++			reg-names =3D "power";
++		};
++
++		omap_control_usb3phy1: control-phy@4a002370 {
++			compatible =3D "ti,control-phy-pipe3";
++			reg =3D <0x4a002370 0x4>;
++			reg-names =3D "power";
++		};
++
++		omap_control_usb2phy2: control-phy@0x4a002e74 {
++			compatible =3D "ti,control-phy-usb2-dra7";
++			reg =3D <0x4a002e74 0x4>;
++			reg-names =3D "power";
++		};
++
++		/* OCP2SCP1 */
++		ocp2scp@4a080000 {
++			compatible =3D "ti,omap-ocp2scp";
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			ranges;
++			reg =3D <0x4a080000 0x20>;
++			ti,hwmods =3D "ocp2scp1";
++
++			usb2_phy1: phy@4a084000 {
++				compatible =3D "ti,omap-usb2";
++				reg =3D <0x4a084000 0x400>;
++				ctrl-module =3D <&omap_control_usb2phy1>;
++				clocks =3D <&usb_phy1_always_on_clk32k>,
++					 <&usb_otg_ss1_refclk960m>;
++				clock-names =3D	"wkupclk",
++						"refclk";
++				#phy-cells =3D <0>;
++			};
++
++			usb2_phy2: phy@4a085000 {
++				compatible =3D "ti,omap-usb2";
++				reg =3D <0x4a085000 0x400>;
++				ctrl-module =3D <&omap_control_usb2phy2>;
++				clocks =3D <&usb_phy2_always_on_clk32k>,
++					 <&usb_otg_ss2_refclk960m>;
++				clock-names =3D	"wkupclk",
++						"refclk";
++				#phy-cells =3D <0>;
++			};
++
++			usb3_phy1: phy@4a084400 {
++				compatible =3D "ti,omap-usb3";
++				reg =3D <0x4a084400 0x80>,
++				      <0x4a084800 0x64>,
++				      <0x4a084c00 0x40>;
++				reg-names =3D "phy_rx", "phy_tx", "pll_ctrl";
++				ctrl-module =3D <&omap_control_usb3phy1>;
++				clocks =3D <&usb_phy3_always_on_clk32k>,
++					 <&sys_clkin1>,
++					 <&usb_otg_ss1_refclk960m>;
++				clock-names =3D	"wkupclk",
++						"sysclk",
++						"refclk";
++				#phy-cells =3D <0>;
++			};
++		};
++
++		omap_dwc3_1@48880000 {
++			compatible =3D "ti,dwc3";
++			ti,hwmods =3D "usb_otg_ss1";
++			reg =3D <0x48880000 0x10000>;
++			interrupts =3D <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			utmi-mode =3D <2>;
++			ranges;
++			usb1: usb@48890000 {
++				compatible =3D "snps,dwc3";
++				reg =3D <0x48890000 0x17000>;
++				interrupts =3D <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
++				phys =3D <&usb2_phy1>, <&usb3_phy1>;
++				phy-names =3D "usb2-phy", "usb3-phy";
++				tx-fifo-resize;
++				maximum-speed =3D "super-speed";
++				dr_mode =3D "otg";
++			};
++		};
++
++		omap_dwc3_2@488c0000 {
++			compatible =3D "ti,dwc3";
++			ti,hwmods =3D "usb_otg_ss2";
++			reg =3D <0x488c0000 0x10000>;
++			interrupts =3D <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			utmi-mode =3D <2>;
++			ranges;
++			usb2: usb@488d0000 {
++				compatible =3D "snps,dwc3";
++				reg =3D <0x488d0000 0x17000>;
++				interrupts =3D <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
++				phys =3D <&usb2_phy2>;
++				phy-names =3D "usb2-phy";
++				tx-fifo-resize;
++				maximum-speed =3D "high-speed";
++				dr_mode =3D "otg";
++			};
++		};
++
++		omap_dwc3_3@48900000 {
++			compatible =3D "ti,dwc3";
++			ti,hwmods =3D "usb_otg_ss3";
++			reg =3D <0x48900000 0x10000>;
++			interrupts =3D <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			utmi-mode =3D <2>;
++			ranges;
++			status =3D "disabled";
++			usb3: usb@48910000 {
++				compatible =3D "snps,dwc3";
++				reg =3D <0x48910000 0x17000>;
++				interrupts =3D <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
++				tx-fifo-resize;
++				maximum-speed =3D "high-speed";
++				dr_mode =3D "otg";
++			};
++		};
++
++		omap_dwc3_4@48940000 {
++			compatible =3D "ti,dwc3";
++			ti,hwmods =3D "usb_otg_ss4";
++			reg =3D <0x48940000 0x10000>;
++			interrupts =3D <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH>;
++			#address-cells =3D <1>;
++			#size-cells =3D <1>;
++			utmi-mode =3D <2>;
++			ranges;
++			status =3D "disabled";
++			usb4: usb@48950000 {
++				compatible =3D "snps,dwc3";
++				reg =3D <0x48950000 0x17000>;
++				interrupts =3D <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>;
++				tx-fifo-resize;
++				maximum-speed =3D "high-speed";
++				dr_mode =3D "otg";
++			};
++		};
+ 	};
+=20
+ 	crossbar_mpu: crossbar@4a020000 {
+diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-=
+omap2/omap_hwmod_7xx_data.c
+index 067d322..d6f9709 100644
+--- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+@@ -2330,21 +2330,11 @@ static struct omap_hwmod_ocp_if dra7xx_l4_cfg__=
+mpu =3D {
+ 	.user		=3D OCP_USER_MPU | OCP_USER_SDMA,
+ };
+=20
+-static struct omap_hwmod_addr_space dra7xx_ocp2scp1_addrs[] =3D {
+-	{
+-		.pa_start	=3D 0x4a080000,
+-		.pa_end		=3D 0x4a08001f,
+-		.flags		=3D ADDR_TYPE_RT
+-	},
+-	{ }
+-};
