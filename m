@@ -1,61 +1,60 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/3] devicetree, qcomm PMIC: fix node name conflict
-Date: Wed, 7 May 2014 11:08:12 -0500
-Message-ID: <CAL_JsqK5-kAHTgk=nbHToU9sU5fVW+mGXX9rBaYqw57x0Vkqdw@mail.gmail.com>
-References: <536982E3.10303@gmail.com>
-	<CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
-	<CAJAp7OiyjefyPMu2p8jTkbfQWYUKeYV62pVTtJ2JOP-6YOOGKA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH V6 0/5] Generic syscon reboot driver for APM X-Gene platforms
+Date: Wed,  7 May 2014 09:17:59 -0700
+Message-ID: <1399479484-2605-1-git-send-email-fkan@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJAp7OiyjefyPMu2p8jTkbfQWYUKeYV62pVTtJ2JOP-6YOOGKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+To: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 7, 2014 at 10:12 AM, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org> wrote:
-> On Tue, May 6, 2014 at 6:32 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Tue, May 6, 2014 at 7:48 PM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> An issue with the path of SPMI nodes under /sys/bus/... was reported in
->>> https://lkml.org/lkml/2014/4/23/312.  The symptom is that two different
->>> grandchild nodes of the spmi with the same node-name@unit-address will
->>> result in attempting to create duplicate links at
->>> /sys/bus/platform/devices/unit-address.node-name.  It turns out that the
->>> specific example provided might not be an expected configuration for
->>> current hardware, but the reported trap remains an issue.
+Enable reboot driver for the X-Gene platform. Add generic syscon reboot
+driver.
 
-[...]
+V6 Change:
+	- Added reference in documenation for reference phandle
 
->> This can be solved in a much less invasive way just in the DT naming
->> algorithm. This is slightly different from what I had suggested of
->> just dropping the unit address. It keeps the unit address, but adds
->> the unique index on untranslate-able addresses. The diff is bigger due
->> to refactoring to reduce the indentation levels. It is untested and
->> whitespace corrupted:
->
-> The unique index leads to an interesting dependency between the order
-> of nodes in the DTB and userspace; paths to e.g. our the path to our
-> block devices contains soc.X where X changes now and then. Fortunately
-> soc.X won't change that often, but forcing more peripheral nodes to use
-> the same schema would show the problem quite often.
+V5 Change:
+	- Documentation update, endian and access size.
 
-Userspace depending on the device names is broken and device names are
-not considered part of the sysfs ABI. So devices having randomish
-names is a feature. The names and location change when platforms
-convert to DT. The location changes when someone decides to add an soc
-device to a platform as well.
+V4 Change:
+	- Remove old X-Gene reboot driver
+	- Add generic syscon reboot driver
+	- Add DTS and Kconfig for X-Gene reboot using syscon method
 
-> Does translatable/untranslatable refer to if this is an address translatable
-> my the cpu or that it's just a translatable address on this specific bus?
-> As far as I can see it's the latter and in our case (revid { reg =
-> <0x100, 0x100>; })
-> seem to be translatable with the current implementation.
+V3 Change:
+	- Remove the reboot driver's use of acpi resource patch.
+	- Change the reboot driver to use syscon to parse out 
+	  system clock register. Remove the old method of getting
+	  register from the reboot driver directly.
+	- Remove documentation since its now simple.
 
-It should be the former. If the current behavior is the latter, then
-the problem is in a different spot.
+V2 Change:
+	- Add support for using ACPI resource.
 
-Rob
+Feng Kan (5):
+  power: reset: Add generic SYSCON register mapped reset
+  power: reset: Remove X-Gene reboot driver
+  arm64: dts: Add X-Gene reboot driver dts node
+  arm64: Select reboot driver for X-Gene platform
+  Documentation: power: reset: Add documentation for generic SYSCON
+    reboot driver
+
+ .../bindings/power/reset/syscon-reboot.txt         |   27 +++++
+ arch/arm64/Kconfig                                 |    2 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   13 +++
+ drivers/power/reset/Kconfig                        |    8 +-
+ drivers/power/reset/Makefile                       |    2 +-
+ drivers/power/reset/syscon-reboot.c                |  100 +++++++++++++++++++
+ drivers/power/reset/xgene-reboot.c                 |  103 --------------------
+ 7 files changed, 147 insertions(+), 108 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+ create mode 100644 drivers/power/reset/syscon-reboot.c
+ delete mode 100644 drivers/power/reset/xgene-reboot.c
+
+-- 
+1.7.6.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
