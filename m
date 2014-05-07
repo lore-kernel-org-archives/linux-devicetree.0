@@ -1,69 +1,83 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v3 02/20] usb: ehci-orion: Add the optional PHY support
-Date: Wed, 7 May 2014 15:21:50 +0200
-Message-ID: <20140507132150.GA23936@lunn.ch>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-3-git-send-email-gregory.clement@free-electrons.com>
- <20140506133341.GE6503@lunn.ch>
- <20140507114006.466347a0@free-electrons.com>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCH 3/5] ARM: dts: enable dp-controller for exynos5250 based
+ snow board
+Date: Wed, 7 May 2014 19:06:45 +0530
+Message-ID: <CAPdUM4PLdY+qQF3zs2CYF9SP8E2W4sDESD6jYD9uF+WwhVX3pg@mail.gmail.com>
+References: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
+	<1397994525-18537-4-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140507114006.466347a0@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1397994525-18537-4-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>, Jingoo Han <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 07, 2014 at 11:40:06AM +0200, Thomas Petazzoni wrote:
-> Dear Andrew Lunn,
-> 
-> On Tue, 6 May 2014 15:33:41 +0200, Andrew Lunn wrote:
-> 
-> > > +	priv->phy = devm_phy_get(&pdev->dev, "usb");
-> > > +	if (!IS_ERR(priv->phy)) {
-> > > +		err = phy_init(priv->phy);
-> > > +		if (err)
-> > > +			goto err2;
-> > > +
-> > > +		err = phy_power_on(priv->phy);
-> > > +		if (err)
-> > > +			goto err3;
-> > > +	}
-> > 
-> > Hi Gregory
-> > 
-> > What about EPROBE_DEFERRED?
-> 
-> In v4 (to be submitted soon), I've changed this to:
-> 
-> 	priv->phy = devm_phy_optional_get(&pdev->dev, "usb");
-> 	if (IS_ERR(priv->phy)) {
-> 		err = PTR_ERR(priv->phy);
-> 		goto err_phy_get;
-> 	} else {
-> 		err = phy_init(priv->phy);
-> 		if (err)
-> 			goto err_phy_init;
-> 
-> 		err = phy_power_on(priv->phy);
-> 		if (err)
-> 			goto err_phy_power_on;
-> 	}
-> 
-> Thanks to devm_phy_optional_get(), the fact of not having a PHY in the
-> DT is not considered an error. So on any error from
-> devm_phy_optional_get() (including -EPROBE_DEFER), we simply bail out.
-> Does this looks good?
+Hi Kukjin,
 
-Hi Thomas
+The only dependency for this patch is new property "samsung,hpd-gpio" which
+is acked by Jingoo Han, Maintainer, exynos DP at
+http://oascentral.opensubscriber.com/message/dri-devel@lists.freedesktop.org/17150750.html.
 
-That looks good.
+All remaining properties are as per existing DT bindings.
 
-To avoid the SATA phy problems we had last time, i would like to test
-this on a few systems. Please could you let me know what branch v4 is
-in when it is ready.
+@Jingoo, I want to request you to review the dp-controller nodes for
+exynos5420 and 5250.
 
-   Thanks
-	Andrew
+Please consider it for merge.
+
+Regards,
+Rahul Sharma.
+
+On 20 April 2014 17:18, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> From: Rahul Sharma <Rahul.Sharma@samsung.com>
+>
+> Ennable dp-controller for snow board.
+>
+> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250-snow.dts |   27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+> index 09f363d..60cc2a8 100644
+> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+> @@ -344,6 +344,33 @@
+>                 };
+>         };
+>
+> +       dp-controller@145B0000 {
+> +               status = "okay";
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&dp_hpd>;
+> +               samsung,color-space = <0>;
+> +               samsung,dynamic-range = <0>;
+> +               samsung,ycbcr-coeff = <0>;
+> +               samsung,color-depth = <1>;
+> +               samsung,link-rate = <0x0a>;
+> +               samsung,lane-count = <2>;
+> +               samsung,hpd-gpio = <&gpx0 7 0>;
+> +               display-timings {
+> +                       native-mode = <&timing1>;
+> +                       timing1: timing@1 {
+> +                               clock-frequency = <70589280>;
+> +                               hactive = <1366>;
+> +                               vactive = <768>;
+> +                               hfront-porch = <40>;
+> +                               hback-porch = <40>;
+> +                               hsync-len = <32>;
+> +                               vback-porch = <10>;
+> +                               vfront-porch = <12>;
+> +                               vsync-len = <6>;
+> +                       };
+> +               };
+> +       };
+> +
+>         fimd@14400000 {
+>                 status = "okay";
+>                 samsung,invert-vclk;
+> --
+> 1.7.9.5
+>
