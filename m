@@ -1,82 +1,76 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH v5 4/4] ARM: dts: dra7: add OCP2SCP3 and SATA nodes
-Date: Wed, 7 May 2014 14:58:58 +0300
-Message-ID: <536A2002.4020603@ti.com>
-References: <1398274237-24510-1-git-send-email-rogerq@ti.com> <1398274575-24818-1-git-send-email-rogerq@ti.com>
+From: Shaik Ameer Basha <shaik.samsung@gmail.com>
+Subject: Re: [PATCH v4 14/15] clk: exynos5420: add misc clocks
+Date: Wed, 7 May 2014 17:30:17 +0530
+Message-ID: <CAOD6ATo2AL8AFDbhRK8FSNVE+XYGai2Z7D-S-bxtA70h7RLvzQ@mail.gmail.com>
+References: <1399393610-23394-1-git-send-email-shaik.ameer@samsung.com>
+ <1399393610-23394-15-git-send-email-shaik.ameer@samsung.com> <536920A5.1090502@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1398274575-24818-1-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: kishon@ti.com, george.cherian@ti.com, balbi@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Benoit Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <536920A5.1090502@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Shaik Ameer Basha <shaik.ameer@samsung.com>, Linux Samsung SOC <linux-samsung-soc@vger.kernel.org>, Linux DeviceTree <devicetree@vger.kernel.org>, Linux ARM Kernel <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, alim.akhtar@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Balaji T K <balajitk@ti.com>
+Hi Tomasz,
 
-Add nodes for OCP2SCP3 bus, SATA controller and SATA PHY.
+On Tue, May 6, 2014 at 11:19 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Shaik,
+>
+>
+> On 06.05.2014 18:26, Shaik Ameer Basha wrote:
+>>
+>> This patch adds some missing miscellaneous clocks specific
+>> to exynos5420.
+>>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+>> ---
+>>   drivers/clk/samsung/clk-exynos5420.c   |   14 +++++++++++---
+>>   include/dt-bindings/clock/exynos5420.h |    2 ++
+>>   2 files changed, 13 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/clk/samsung/clk-exynos5420.c
+>> b/drivers/clk/samsung/clk-exynos5420.c
+>> index e0e749d..e69e820 100644
+>> --- a/drivers/clk/samsung/clk-exynos5420.c
+>> +++ b/drivers/clk/samsung/clk-exynos5420.c
+>> @@ -273,7 +273,8 @@ PNAME(mout_group5_p) = {"mout_sclk_vpll",
+>> "mout_sclk_dpll"};
+>>
+>>   PNAME(mout_fimd1_final_p) = {"mout_fimd1", "mout_fimd1_opt"};
+>>   PNAME(mout_sw_aclk66_p)       = {"dout_aclk66", "mout_sclk_spll"};
+>> -PNAME(mout_user_aclk66_peric_p)        = { "fin_pll", "mout_sw_aclk66" };
+>> +PNAME(mout_user_aclk66_peric_p)        = { "fin_pll", "mout_sw_aclk66"};
+>> +PNAME(mout_user_pclk66_gpio_p) = {"mout_sw_aclk66", "ffactor_sw_aclk66"};
+>>
+>>   PNAME(mout_sw_aclk200_fsys_p) = {"dout_aclk200_fsys", "mout_sclk_spll"};
+>>   PNAME(mout_sw_pclk200_fsys_p) = {"dout_pclk200_fsys", "mout_sclk_spll"};
+>> @@ -372,10 +373,13 @@ static struct samsung_fixed_rate_clock
+>> exynos5420_fixed_rate_clks[] __initdata =
+>>   };
+>>
+>>   static struct samsung_fixed_factor_clock exynos5420_fixed_factor_clks[]
+>> __initdata = {
+>> -       FFACTOR(0, "sclk_hsic_12m", "fin_pll", 1, 2, 0),
+>> +       FFACTOR(0, "ffactor_hsic_12m", "fin_pll", 1, 2, 0),
+>> +       FFACTOR(0, "ffactor_sw_aclk66", "mout_sw_aclk66", 1, 2, 0),
+>
+>
+> Is the "ffactor_" prefix also present in the datasheet? If not, it should be
+> removed from clock names as well.
 
-[Roger Q] Clean up. Updated IRQ for interrupt crossbar.
+Its not there in manual.
+As we are differentiating muxes and dividers with "mout" and "dout"
+this prefix is added
+to differentiate fixed factor clocks.
 
-CC: Benoit Cousson <bcousson@baylibre.com>
-Signed-off-by: Balaji T K <balajitk@ti.com>
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+shall I keep it or not?
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index cec826f..1f42e72 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -798,6 +798,45 @@
- 			dma-names = "tx0", "rx0";
- 			status = "disabled";
- 		};
-+
-+		omap_control_sata: control-phy@4a002374 {
-+			compatible = "ti,control-phy-pipe3";
-+			reg = <0x4a002374 0x4>;
-+			reg-names = "power";
-+			clocks = <&sys_clkin1>;
-+			clock-names = "sysclk";
-+		};
-+
-+		/* OCP2SCP3 */
-+		ocp2scp@4a090000 {
-+			compatible = "ti,omap-ocp2scp";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			reg = <0x4a090000 0x20>;
-+			ti,hwmods = "ocp2scp3";
-+			sata_phy: phy@4A096000 {
-+				compatible = "ti,phy-pipe3-sata";
-+				reg = <0x4A096000 0x80>, /* phy_rx */
-+				      <0x4A096400 0x64>, /* phy_tx */
-+				      <0x4A096800 0x40>; /* pll_ctrl */
-+				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
-+				ctrl-module = <&omap_control_sata>;
-+				clocks = <&sys_clkin1>;
-+				clock-names = "sysclk";
-+				#phy-cells = <0>;
-+			};
-+		};
-+
-+		sata: sata@4a141100 {
-+			compatible = "snps,dwc-ahci";
-+			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
-+			phys = <&sata_phy>;
-+			phy-names = "sata-phy";
-+			clocks = <&sata_ref_clk>;
-+			ti,hwmods = "sata";
-+		};
- 	};
- 
- 	crossbar_mpu: crossbar@4a020000 {
--- 
-1.8.3.2
+Regards,
+Shaik Ameer Basha
 
-
+>
+> Best regards,
+> Tomasz
