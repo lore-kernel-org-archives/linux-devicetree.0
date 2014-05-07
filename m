@@ -1,94 +1,83 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
- Armada 38x
-Date: Wed, 7 May 2014 10:10:08 -0500
-Message-ID: <20140507151008.GD769@saruman.home>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
- <1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
- <20140506153953.GF25849@saruman.home>
- <20140507122326.54f3febc@free-electrons.com>
-Reply-To: <balbi@ti.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [RFC PATCH 0/3] devicetree, qcomm PMIC: fix node name conflict
+Date: Wed, 7 May 2014 08:12:17 -0700
+Message-ID: <CAJAp7OiyjefyPMu2p8jTkbfQWYUKeYV62pVTtJ2JOP-6YOOGKA@mail.gmail.com>
+References: <536982E3.10303@gmail.com>
+	<CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xB0nW4MQa6jZONgY"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140507122326.54f3febc@free-electrons.com>
+In-Reply-To: <CAL_JsqL6+i_ED+s6kODsadszefaZUcA7VHCfZ4k4yj62iXsarQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: balbi@ti.com, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
---xB0nW4MQa6jZONgY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, May 6, 2014 at 6:32 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On Tue, May 6, 2014 at 7:48 PM, Frank Rowand <frowand.list@gmail.com> wrote:
+>> An issue with the path of SPMI nodes under /sys/bus/... was reported in
+>> https://lkml.org/lkml/2014/4/23/312.  The symptom is that two different
+>> grandchild nodes of the spmi with the same node-name@unit-address will
+>> result in attempting to create duplicate links at
+>> /sys/bus/platform/devices/unit-address.node-name.  It turns out that the
+>> specific example provided might not be an expected configuration for
+>> current hardware, but the reported trap remains an issue.
+>>
+>> I have been poking at the problem, trying to figure out how to cleanly
+>> fix the issue without breaking devicetree device creation.
+>>
+>> The first patch in the series is the one that may be a very bad idea.  Or
+>> it may help show the way forward to deal with what I think is the major
+>> underlying problem.  I have not finished investigating the possible negative
+>> side effects.  And I am still thinking whether this is a conceptually good
+>> approach, or whether it is simply an expediant hack that hides the underlying
+>> problem.  But I am throwing this out prematurely because I have mentioned
+>> it to several people, and I want to make it visible to everyone involved.
+>>
+>> The underlying architectural problem (in my opinion) is that a lot of devices
+>> are created by the device tree infrastructure as platform devices, when they
+>> truly should not be platform devices.  They should not be platform devices
+>> because they are not physically on a platform bus, they are instead somewhere
+>> below some other bus.  The first patch in this series is a hack which
+>> results in the devices still being represented by "struct platform_device"
+>> objects, but with a link to their parent's "struct bus_type" instead of
+>> to &platform_bus_type.
+>>
+>> The second patch does not require the first patch.  The second patch provides
+>> a mechanism to allow subsystems to provide a method of naming devices to
+>> avoid name collisions.
+>>
+>> The third patch provides an example of a subsystem using the new feature
+>> provided by the second patch.
+>>
+>
+> I think the primary question to ask is there any added benefit to
+> having the additional hierarchy of devices. I don't think there is
+> much support to have more hierarchy from what I have seen of past
+> discussions.
+>
+> Another approach could be to support having multiple platform bus
+> instances. Then drivers can easily create a new instance for each set
+> of sub-devices.
+>
+> This can be solved in a much less invasive way just in the DT naming
+> algorithm. This is slightly different from what I had suggested of
+> just dropping the unit address. It keeps the unit address, but adds
+> the unique index on untranslate-able addresses. The diff is bigger due
+> to refactoring to reduce the indentation levels. It is untested and
+> whitespace corrupted:
 
-On Wed, May 07, 2014 at 12:23:26PM +0200, Thomas Petazzoni wrote:
-> Dear Felipe Balbi,
->=20
-> On Tue, 6 May 2014 10:39:53 -0500, Felipe Balbi wrote:
->=20
-> > >  config USB_EHCI_HCD
-> > > diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> > > index 7530468c9a4f..7a8db7f7dc01 100644
-> > > --- a/drivers/usb/host/Makefile
-> > > +++ b/drivers/usb/host/Makefile
-> > > @@ -19,6 +19,7 @@ xhci-hcd-$(CONFIG_PCI)	+=3D xhci-pci.o
-> > > =20
-> > >  ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
-> > >  	xhci-hcd-y		+=3D xhci-plat.o
-> > > +	xhci-hcd-$(CONFIG_USB_XHCI_MVEBU)	+=3D xhci-mvebu.o
-> >=20
-> > hmm, this has the potential of resulting in:
-> >=20
-> > 	xhci-hcd-m +=3D xhci-mvebu.o
-> >=20
-> > I guess it's best to turn this into:
-> >=20
-> > ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
-> > 	xhci-hcd-y +=3D xhci-mvebu.o
-> > endif
->=20
-> I guess you meant:
->=20
-> ifneq ($(CONFIG_USB_XHCI_MVEBU), )
-> 	xhci-hcd-y +=3D xhci-mvebu.o
-> endif
->=20
-> Right?
+The unique index leads to an interesting dependency between the order
+of nodes in the DTB and userspace; paths to e.g. our the path to our
+block devices contains soc.X where X changes now and then. Fortunately
+soc.X won't change that often, but forcing more peripheral nodes to use
+the same schema would show the problem quite often.
 
-correct :-)
+Does translatable/untranslatable refer to if this is an address translatable
+my the cpu or that it's just a translatable address on this specific bus?
+As far as I can see it's the latter and in our case (revid { reg =
+<0x100, 0x100>; })
+seem to be translatable with the current implementation.
 
-> If so, then what about instead making CONFIG_USB_XHCI_MVEBU a bool
-> instead of a tristate? It's more an option for the xhci-platform
-> driver than an additional separate module, IMO. What do you think?
-
-fine by me too. It simply adds a quirk callback to xhci-plat.
-
---=20
-balbi
-
---xB0nW4MQa6jZONgY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTakzQAAoJEIaOsuA1yqREwfEQAJBL7O3PXnZSswB6kDXKSmIu
-Ps8lqIJ6lozGmDcaOAlekqVUEyouCEFxqyC3hGiIAYalqeGT+joiqUGcDrGYoKzv
-uVGR2B+8Fm2a545cifyKhYsxMP1PlCjtT0/QGOGcioOzsbLAFlBxJHc1sOw6lYRr
-bF0LM99aYr+2fMFUIVp+uL9gZ/gCULnRImmSRBa8O9o1FL2VeD1ov03BO3FG07EG
-cdY15hp46BJYvZ3QOFruTOGQSP1HqrMNdg5vJV7L0MsHB6gnmoZltN4T7Ahd8aoa
-dRIu0vczUCHjD2U9yAMy2e04sdZ5wpP/Tn4KasPmdlfX2pI1O5cLiUMdHz5ZwATu
-9ykhoWcNW0PvEUz6Wf895TvamKM5430K+JxOQdgRJESAM23dMSjZ02gXoXoJTt1v
-kh6GwG41s74OkSVU+40gWlKd72gkcxwbi2Mqh/CPsxnkhvvraC7ecyqpXcV0SNZS
-gejNMi6Us05gBx7pazgrfjD9MloS1vUduE7dAdIhS61qJnhxZ/aSRfmA2/hdzNTj
-F9z5lP9NK516nzYU1M4bgxCJ8+zED2YXMO3A35xqcxqsxXoXVYKgXZbEDKeQd4RF
-HP6txbPtU4oFK7okJuJ8U+jb03wjN99x/adACqa7ImxukK/ozG4YVvLMvP31NNmC
-BNs8jbjhUfEuK1NTMngE
-=kBvc
------END PGP SIGNATURE-----
-
---xB0nW4MQa6jZONgY--
+Regards,
+Bjorn
