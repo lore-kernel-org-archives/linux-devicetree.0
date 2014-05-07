@@ -1,62 +1,55 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH v3 06/20] usb: host: xhci-plat: Add support for the
- Armada 38x
-Date: Wed, 7 May 2014 12:23:26 +0200
-Message-ID: <20140507122326.54f3febc@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-	<1399335255-589-7-git-send-email-gregory.clement@free-electrons.com>
-	<20140506153953.GF25849@saruman.home>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
+Date: Wed, 7 May 2014 16:08:53 +0530
+Message-ID: <CAPdUM4N+2VXpiFSiWW9gKfbte1zkpDbCOSF+KvEo4T1KLqqwjw@mail.gmail.com>
+References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
+ <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
+ <534506B1.4040908@samsung.com>
+ <CAPdUM4M109_kzY6cUMJQPSwgazvWmNDWL1JeXgiqnzvH8dhK2Q@mail.gmail.com>
+ <53451A60.4050803@samsung.com> <53675D72.70103@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140506153953.GF25849@saruman.home>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53675D72.70103@ti.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, sunil joshi <joshi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@linaro.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Felipe Balbi,
+On 5 May 2014 15:14, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi,
+>
+> On Wednesday 09 April 2014 03:31 PM, Sylwester Nawrocki wrote:
+>> Hi,
+>>
+>> On 09/04/14 11:12, Rahul Sharma wrote:
+>>> Idea looks good. How about keeping compatible which is independent
+>>> of SoC, something like "samsung,exynos-simple-phy" and provide Reg
+>>> and Bit through phy provider node. This way we can avoid SoC specific
+>>> hardcoding in phy driver and don't need to look into dt bindings for
+>>> each new SoC.
+>>
+>> I believe it is a not recommended approach.
+>
+> Why not? We should try to avoid hard coding in the driver code. Moreover by
+> avoiding hardcoding we can make it a generic driver for single bit PHYs.
+>
 
-On Tue, 6 May 2014 10:39:53 -0500, Felipe Balbi wrote:
++1.
 
-> >  config USB_EHCI_HCD
-> > diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> > index 7530468c9a4f..7a8db7f7dc01 100644
-> > --- a/drivers/usb/host/Makefile
-> > +++ b/drivers/usb/host/Makefile
-> > @@ -19,6 +19,7 @@ xhci-hcd-$(CONFIG_PCI)	+= xhci-pci.o
-> >  
-> >  ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
-> >  	xhci-hcd-y		+= xhci-plat.o
-> > +	xhci-hcd-$(CONFIG_USB_XHCI_MVEBU)	+= xhci-mvebu.o
-> 
-> hmm, this has the potential of resulting in:
-> 
-> 	xhci-hcd-m += xhci-mvebu.o
-> 
-> I guess it's best to turn this into:
-> 
-> ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
-> 	xhci-hcd-y += xhci-mvebu.o
-> endif
+@Tomasz, any plans to consider this approach for simple phy driver?
 
-I guess you meant:
+Regards,
+Rahul Sharma.
 
-ifneq ($(CONFIG_USB_XHCI_MVEBU), )
-	xhci-hcd-y += xhci-mvebu.o
-endif
-
-Right?
-
-If so, then what about instead making CONFIG_USB_XHCI_MVEBU a bool
-instead of a tristate? It's more an option for the xhci-platform
-driver than an additional separate module, IMO. What do you think?
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> Cheers
+> Kishon
