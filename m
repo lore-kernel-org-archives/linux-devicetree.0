@@ -1,96 +1,46 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv4 02/20] usb: ehci-orion: rename error goto labels in ehci_orion_drv_probe()
-Date: Wed,  7 May 2014 15:52:08 +0200
-Message-ID: <1399470746-2948-3-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1399470746-2948-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399470746-2948-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH v3 02/20] usb: ehci-orion: Add the optional PHY support
+Date: Wed, 7 May 2014 15:56:03 +0200
+Message-ID: <20140507155603.4496b9e0@free-electrons.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
+	<1399335255-589-3-git-send-email-gregory.clement@free-electrons.com>
+	<20140506133341.GE6503@lunn.ch>
+	<20140507114006.466347a0@free-electrons.com>
+	<20140507132150.GA23936@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140507132150.GA23936@lunn.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation to the introduction of additional initialization steps
-in ehci_orion_drv_probe(), we rename the error goto labels from err1,
-err2 and err3 names to some more meaningful names.
+Dear Andrew Lunn,
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- drivers/usb/host/ehci-orion.c | 18 +++++++++---------
- 1 file changed, 9 insertions(+), 9 deletions(-)
+On Wed, 7 May 2014 15:21:50 +0200, Andrew Lunn wrote:
 
-diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index 7728e83..9298be7 100644
---- a/drivers/usb/host/ehci-orion.c
-+++ b/drivers/usb/host/ehci-orion.c
-@@ -160,7 +160,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 			"Found HC with no IRQ. Check %s setup!\n",
- 			dev_name(&pdev->dev));
- 		err = -ENODEV;
--		goto err1;
-+		goto err;
- 	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -169,7 +169,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 			"Found HC with no register addr. Check %s setup!\n",
- 			dev_name(&pdev->dev));
- 		err = -ENODEV;
--		goto err1;
-+		goto err;
- 	}
- 
- 	/*
-@@ -179,12 +179,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 	 */
- 	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
- 	if (err)
--		goto err1;
-+		goto err;
- 
- 	regs = devm_ioremap_resource(&pdev->dev, res);
- 	if (IS_ERR(regs)) {
- 		err = PTR_ERR(regs);
--		goto err1;
-+		goto err;
- 	}
- 
- 	/* Not all platforms can gate the clock, so it is not
-@@ -197,7 +197,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 			&pdev->dev, dev_name(&pdev->dev));
- 	if (!hcd) {
- 		err = -ENOMEM;
--		goto err2;
-+		goto err_create_hcd;
- 	}
- 
- 	hcd->rsrc_start = res->start;
-@@ -237,17 +237,17 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err)
--		goto err3;
-+		goto err_add_hcd;
- 
- 	device_wakeup_enable(hcd->self.controller);
- 	return 0;
- 
--err3:
-+err_add_hcd:
- 	usb_put_hcd(hcd);
--err2:
-+err_create_hcd:
- 	if (!IS_ERR(clk))
- 		clk_disable_unprepare(clk);
--err1:
-+err:
- 	dev_err(&pdev->dev, "init %s fail, %d\n",
- 		dev_name(&pdev->dev), err);
- 
+> > Thanks to devm_phy_optional_get(), the fact of not having a PHY in the
+> > DT is not considered an error. So on any error from
+> > devm_phy_optional_get() (including -EPROBE_DEFER), we simply bail out.
+> > Does this looks good?
+> 
+> Hi Thomas
+> 
+> That looks good.
+> 
+> To avoid the SATA phy problems we had last time, i would like to test
+> this on a few systems. Please could you let me know what branch v4 is
+> in when it is ready.
+
+Sure. It's now up at
+https://github.com/MISL-EBU-System-SW/mainline-public/tree/USB-375-38x-3.15-rc1-V4.
+
+Thanks!
+
+Thomas
 -- 
-1.9.2
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
