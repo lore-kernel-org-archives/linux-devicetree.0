@@ -1,86 +1,39 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Wed, 7 May 2014 08:03:43 -0700
-Message-ID: <20140507150343.GA9502@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-4-git-send-email-tony@atomide.com>
- <5369EAE7.3030705@ti.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [PATCHv4 01/20] usb: ehci-orion: use platform_get_irq() for DT
+ probing
+Date: Wed, 7 May 2014 11:09:21 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1405071108540.1325-100000@iolanthe.rowland.org>
+References: <1399470746-2948-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5369EAE7.3030705@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399470746-2948-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140507 01:13]:
-> On 30/04/14 02:52, Tony Lindgren wrote:
-> > We can pass the GPIO configuration for ls037v7dw01 in a standard
-> > gpios property.
-> > 
-> > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > ---
-> >  .../bindings/panel/sharp,ls037v7dw01.txt           | 53 ++++++++++++++
-> >  .../omap2/displays-new/panel-sharp-ls037v7dw01.c   | 84 ++++++++++++++++++++--
-> >  2 files changed, 133 insertions(+), 4 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
-> > new file mode 100644
-> > index 0000000..7f6f5e1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
-> > @@ -0,0 +1,53 @@
-> > +SHARP LS037V7DW01 TFT-LCD panel
-> > +
-> > +Required properties:
-> > +- compatible: should be "sharp,ls037v7dw01"
-> > +
-> > +Optional properties:
-> > +- reset-gpios: a GPIO spec for the optional reset pin
-> > +- enable-gpios: a GPIO array for the optional configuration GPIOs
-> > +  ordered MO, LR, UD, INI as specified in the LS037V7DW01.pdf file.
-> > +
-> > +This binding is compatible with the simple-panel binding, which is specified
-> > +in simple-panel.txt in this directory.
-> > +
-> > +This panel can have zero to five GPIOs to configure
-> > +to change configuration between QVGA and VGA mode
-> > +and the scan direction. As these pins can be also
-> > +configured with external pulls, all the GPIOs are
-> > +considered optional with holes in the array.
-> > +
-> > +Example when connected to a omap2+ based device:
-> > +
-> > +	lcd0: display {
-> > +		compatible = "sharp,ls037v7dw01";
-> > +		power-supply = <&lcd_3v3>;
-> > +		reset-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB */
-> > +		enable-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
-> > +				&gpio1 2 GPIO_ACTIVE_HIGH	/* gpio2, lcd LR */
-> > +				&gpio1 3 GPIO_ACTIVE_HIGH	/* gpio3, lcd UD */
-> > +				&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */
+On Wed, 7 May 2014, Thomas Petazzoni wrote:
+
+> Commit 77dae54ab385033e488d8b07045bc7f8d931740f ('ARM: Kirkwood:
+> ehci-orion: Add device tree binding') added the Device Tree binding
+> for the ehci-orion driver. To achieve that with the irq, it used the
+> irq_of_parse_and_map() function when probed in DT-mode, and
+> platform_get_irq() when probed in non-DT mode.
 > 
-> Why are most of the gpios in 'enable-gpios'? MO, LR and UD don't really
-> have anything to do with enabling the panel. Why not just have one
-> 'gpios' array with all the gpios, as they are quite a mixed bunch?
+> This is not necessary: platform_get_irq() works just as fine in
+> DT-mode, since the conversion from DT information to 'struct resource'
+> is done by the generic layers of the kernel.
+> 
+> Therefore, this commit switches back to use just platform_get_irq().
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Yeah that's what I had initially, but reading simple-panel.txt noticed
-there are some standardized GPIOs for reset and enable.
+For patches 1 - 4:
 
-How about we set up one reset-gpios, one enable-gpios and an array of
-three unlabelled GPIOs?
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 
-Or if we want to add something generic, we could add new mode-gpios
-property that other panels might be able to use too?
-
-BTW, I'm also personally fine with all five gpios showing in a single
-gpios property, I'm not too exited about naming anything in DT..
-
-Regards,
-
-Tony
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
