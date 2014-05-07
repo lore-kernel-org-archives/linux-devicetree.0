@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: [PATCH 3/4] of/platform: fix device naming for non-translatable addresses
-Date: Wed,  7 May 2014 16:48:17 -0500
-Message-ID: <1399499298-8830-4-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 2/4] of/platform: return error on of_platform_device_create_pdata failure
+Date: Wed,  7 May 2014 16:48:16 -0500
+Message-ID: <1399499298-8830-3-git-send-email-robherring2@gmail.com>
 References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
@@ -12,52 +12,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh@kernel.org>
 
-Using non-translatable addresses in platform device names is wrong
-because they may not be globally unique. Just use the default naming with
-a global index if the address cannot be translated instead.
+of_platform_populate does not return an error if creating the platform
+device fails. This means almost any error from driver core cannot be
+detected by the caller. Fix this.
 
-of_can_translate_address has the same checks as of_translate_address, so
-we can remove it here as well.
-
-Reported-by: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Josh Cartwright <joshc@codeaurora.org>
-Cc: Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Bjorn Andersson <bjorn@kryo.se>
-Cc: Frank Rowand <frowand.list@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- drivers/of/platform.c | 11 +----------
- 1 file changed, 1 insertion(+), 10 deletions(-)
+ drivers/of/platform.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 622aeb3..d827ceb 100644
+index 404d1da..622aeb3 100644
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -78,7 +78,6 @@ void of_device_make_bus_id(struct device *dev)
- 	struct device_node *node = dev->of_node;
- 	const __be32 *reg;
- 	u64 addr;
--	const __be32 *addrp;
- 	int magic;
+@@ -391,7 +391,9 @@ static int of_platform_bus_create(struct device_node *bus,
+ 	}
  
- #ifdef CONFIG_PPC_DCR
-@@ -106,15 +105,7 @@ void of_device_make_bus_id(struct device *dev)
- 	 */
- 	reg = of_get_property(node, "reg", NULL);
- 	if (reg) {
--		if (of_can_translate_address(node)) {
--			addr = of_translate_address(node, reg);
--		} else {
--			addrp = of_get_address(node, 0, NULL, NULL);
--			if (addrp)
--				addr = of_read_number(addrp, 1);
--			else
--				addr = OF_BAD_ADDR;
--		}
-+		addr = of_translate_address(node, reg);
- 		if (addr != OF_BAD_ADDR) {
- 			dev_set_name(dev, "%llx.%s",
- 				     (unsigned long long)addr, node->name);
+ 	dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
+-	if (!dev || !of_match_node(matches, bus))
++	if (!dev)
++		return -ENODEV;
++	if (!of_match_node(matches, bus))
+ 		return 0;
+ 
+ 	for_each_child_of_node(bus, child) {
 -- 
 1.9.1
