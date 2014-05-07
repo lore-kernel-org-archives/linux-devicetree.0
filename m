@@ -1,66 +1,65 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 02/20] usb: ehci-orion: Add the optional PHY support
-Date: Wed, 7 May 2014 11:40:06 +0200
-Message-ID: <20140507114006.466347a0@free-electrons.com>
-References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com>
-	<1399335255-589-3-git-send-email-gregory.clement@free-electrons.com>
-	<20140506133341.GE6503@lunn.ch>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v3 00/20] USB support for Armada 38x and Armada 375
+Date: Wed, 07 May 2014 11:48:16 +0200
+Message-ID: <536A0160.8070805@redhat.com>
+References: <1399335255-589-1-git-send-email-gregory.clement@free-electrons.com> <loom.20140507T102941-222@post.gmane.org> <5369FB36.7040404@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140506133341.GE6503-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5369FB36.7040404@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux ARM <linux-arm-kernel@lists.infradead.org>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Andrew Lunn,
+Hi,
 
-On Tue, 6 May 2014 15:33:41 +0200, Andrew Lunn wrote:
-
-> > +	priv->phy = devm_phy_get(&pdev->dev, "usb");
-> > +	if (!IS_ERR(priv->phy)) {
-> > +		err = phy_init(priv->phy);
-> > +		if (err)
-> > +			goto err2;
-> > +
-> > +		err = phy_power_on(priv->phy);
-> > +		if (err)
-> > +			goto err3;
-> > +	}
+On 05/07/2014 11:21 AM, Sebastian Hesselbarth wrote:
+> [Adding back the original Cc-List]
 > 
-> Hi Gregory
+> On 05/07/2014 10:33 AM, Hans de Goede wrote:
+>> Hi Gregory,
+>>
+>> Gregory CLEMENT <gregory.clement <at> free-electrons.com> writes:
+>>
+>>> This patch set adds the USB support for the Armada 38x Armada
+>>> 375. These SoCs use an xHCI but still need specific initialization,
+>>> mainly to setup the windows memory on the mbus. They also use the same
+>>> controller that the other mvebu SoC for EHCI.
+>>
+>> <snip>
+>>
+>>> Gregory CLEMENT (20):
+>>>    usb: ehci-orion: Fix clock reference leaking
+>>>    usb: ehci-orion: Add the optional PHY support
+>>
+>> If you're using a proper phy driver, do you really need a soc specific ehci
+>> driver? I've spend a lot of time during the last release cycle to make
+>> ehci-platform a lot more generic, including adding (optional) phy support to
+>> it. It would be great if the new Armada SoCs could use ehci-platform instead
+>> of extending ehci-orion to cover more models (ideally most ehci-foo drivers
+>> would go away completely). I've no idea how feasible it is to use
+>> ehci-platform in your case, but IMHO it should at least be considered.
 > 
-> What about EPROBE_DEFERRED?
+> Hans,
+> 
+> unfortunately we currently have no USB-PHY driver for the other mvebu
+> SoCs. I have started some code grabbing for barebox bootloader and plan
+> to add proper USB-PHYs for Linux later.
+> 
+> There is one thing very specific to mvebu SoCs, which is the mbus:
+> you need to setup upstream memory windows for the usb bus master.
+> From my current understanding, that will require at least a minimal
+> stub to remain for ehci-orion.
+> 
+> I do think that most of the stuff in ehci-orion can (and should) be
+> replaced with ehci-platform then. So, we definitely consider reusing
+> the generic foo-platform drivers on all opportunities but IMHO we are
+> not yet ready for it.
 
-In v4 (to be submitted soon), I've changed this to:
+Ok, thanks for explaining.
 
-	priv->phy = devm_phy_optional_get(&pdev->dev, "usb");
-	if (IS_ERR(priv->phy)) {
-		err = PTR_ERR(priv->phy);
-		goto err_phy_get;
-	} else {
-		err = phy_init(priv->phy);
-		if (err)
-			goto err_phy_init;
+Regards,
 
-		err = phy_power_on(priv->phy);
-		if (err)
-			goto err_phy_power_on;
-	}
-
-Thanks to devm_phy_optional_get(), the fact of not having a PHY in the
-DT is not considered an error. So on any error from
-devm_phy_optional_get() (including -EPROBE_DEFER), we simply bail out.
-Does this looks good?
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Hans
