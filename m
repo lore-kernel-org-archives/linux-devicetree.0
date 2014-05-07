@@ -1,54 +1,58 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: KConfig and DTS files
-Date: Wed, 7 May 2014 10:24:46 -0700
-Message-ID: <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com>
-References: <536A697D.3020002@boundarydevices.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/7] reset: sunxi: document sunxi's reset
+ controllers bindings
+Date: Wed,  7 May 2014 19:25:48 +0200
+Message-ID: <1399483554-8824-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <536A697D.3020002-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBNGZVGNQKGQE5AMV37A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1399483554-8824-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Add DT bindings documentation for sunxi's reset controllers.
 
-On Wed, May 7, 2014 at 10:12 AM, Eric Nelson
-<eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
-> Hi all,
->
-> I suspect that this has been discussed previously, but I'm a
-> N00b to DT and Google hasn't helped identify a discussion
-> on the list.
->
-> While getting my feet wet with DTS, I was quite surprised to
-> see that there's no support for making parts of DTS files
-> conditional on the kernel configuration.
->
-> We often cost-optimize BOMs for our standard boards and omit
-> bits and pieces not needed for a particular build, and
-> it would be nice to surround optional components with
-> conditionals:
->
->     #ifdef CONFIG_BLAH
->     #endif
->
-> Please advise,
+Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt  | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
 
-The DTS is independent on what drivers the kernel is actually
-enabling. It should focus on what is actually there on hardware, and
-not what is enabled in software.
-
-I think I know where you're coming from on this -- on some board-file
-setups people used to not register the platform_device if the driver
-wasn't configured. That was also not really a good way to do it, but
-it made a bit more sense there, since you'd save the few bytes used by
-the platform_device/platform_data structures.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+new file mode 100644
+index 0000000..c8f7757
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+@@ -0,0 +1,21 @@
++Allwinner sunxi Peripheral Reset Controller
++===========================================
++
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
++
++Required properties:
++- compatible: Should be one of the following:
++  "allwinner,sun6i-a31-ahb1-reset"
++  "allwinner,sun6i-a31-clock-reset"
++- reg: should be register base and length as documented in the
++  datasheet
++- #reset-cells: 1, see below
++
++example:
++
++ahb1_rst: reset@01c202c0 {
++	#reset-cells = <1>;
++	compatible = "allwinner,sun6i-a31-ahb1-reset";
++	reg = <0x01c202c0 0xc>;
++};
+-- 
+1.8.3.2
