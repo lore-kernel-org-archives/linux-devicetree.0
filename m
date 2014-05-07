@@ -1,56 +1,53 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] DT platform device name collision fixes
-Date: Wed, 07 May 2014 15:52:15 -0700
-Message-ID: <536AB91F.3010302@gmail.com>
-References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: Re: KConfig and DTS files
+Date: Wed, 07 May 2014 16:06:49 -0700
+Message-ID: <536ABC89.8060301@boundarydevices.com>
+References: <536A697D.3020002@boundarydevices.com>	<142702592.Qpp2HrZZke@wuerfel>	<536A8456.1040208@boundarydevices.com>	<5898724.4EExDycMZy@wuerfel>	<536A8F03.5070509@boundarydevices.com> <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399499298-8830-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+To: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/7/2014 2:48 PM, Rob Herring wrote:
-> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> 
-> This series fixes the device naming collisions that can occur with 
-> nultiple devices having the same name and non-translatable unit 
-> addresses. This issue was raised in this thread[1]. I intend to merge 
-> this regardless of whether or not some hierarchy in sysfs is created. 
-> That is really a separate issue independent of these fixes.
-> 
-> I found and fix a couple of other issues in the process of testing the 
-> fix.
-> 
-> Rob
-> 
-> [1] https://lkml.org/lkml/2014/4/23/312
-> 
-> Rob Herring (4):
->   of/selftest: add testcase for nodes with same name and address
->   of/platform: return error on of_platform_device_create_pdata failure
->   of/platform: fix device naming for non-translatable addresses
->   of: kill off of_can_translate_address
+Hi Bjorn,
 
-My opinion is that this approach is not a good approach to solving the
-problem.  It is papering over a symptom, instead of dealing with the
-root cause.
+On 05/07/2014 03:20 PM, Bjorn Andersson wrote:
+> On Wed, May 7, 2014 at 12:52 PM, Eric Nelson
+> <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
+> [...]
+>>
+>> I still wonder about the choice of not allowing inclusion
+>> of at least include/generated/autoconf.h.
+>
+> Because what you just showed is the use case where you have 1 defconfig, build 1
+> zImage and then you can have a completely separate delivery of X number of
+> dtbs, all defining some variant of your original board.
+> All without recompiling, or even have the source available.
+>
 
-But despite my opinion, you can add to patches 2-4 (I did not test
-the self-test added in patch 1):
+I agree that there's some benefit in being able to generate
+different DTBs, and it's an advantage (size, speed) to customize
+the .config as well.
 
-   Tested-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+When those clearly go together, it seems natural to define them as
+such.
 
-The patches resolve the name conflict originally reported for the
-qcomm PMIC, tested on 3.15-rc1, with a bunch of out of tree
-patches.
+I've heard (and appreciate) the pointers about how to get
+past our current issue(s), but what's the rationale
+for not allowing the inclusion of autoconf.h and
+conditionals in the DTS?
 
--Frank
+Is it a concern that things will become polluted and
+hard to read?
 
+Please advise,
+
+
+Eric
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
