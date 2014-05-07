@@ -1,61 +1,161 @@
-From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH V6 0/5] Generic syscon reboot driver for APM X-Gene platforms
-Date: Wed,  7 May 2014 09:17:59 -0700
-Message-ID: <1399479484-2605-1-git-send-email-fkan@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
-Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V6 4/5] power: reset: Remove X-Gene reboot driver
+Date: Wed,  7 May 2014 09:18:03 -0700
+Message-ID: <1399479484-2605-5-git-send-email-fkan@apm.com>
+References: <1399479484-2605-1-git-send-email-fkan@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399479484-2605-1-git-send-email-fkan@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable reboot driver for the X-Gene platform. Add generic syscon reboot
-driver.
+Remove X-Gene reboot driver.
 
-V6 Change:
-	- Added reference in documenation for reference phandle
-
-V5 Change:
-	- Documentation update, endian and access size.
-
-V4 Change:
-	- Remove old X-Gene reboot driver
-	- Add generic syscon reboot driver
-	- Add DTS and Kconfig for X-Gene reboot using syscon method
-
-V3 Change:
-	- Remove the reboot driver's use of acpi resource patch.
-	- Change the reboot driver to use syscon to parse out 
-	  system clock register. Remove the old method of getting
-	  register from the reboot driver directly.
-	- Remove documentation since its now simple.
-
-V2 Change:
-	- Add support for using ACPI resource.
-
-Feng Kan (5):
-  power: reset: Add generic SYSCON register mapped reset
-  power: reset: Remove X-Gene reboot driver
-  arm64: dts: Add X-Gene reboot driver dts node
-  arm64: Select reboot driver for X-Gene platform
-  Documentation: power: reset: Add documentation for generic SYSCON
-    reboot driver
-
- .../bindings/power/reset/syscon-reboot.txt         |   27 +++++
- arch/arm64/Kconfig                                 |    2 +
- arch/arm64/boot/dts/apm-storm.dtsi                 |   13 +++
- drivers/power/reset/Kconfig                        |    8 +-
- drivers/power/reset/Makefile                       |    2 +-
- drivers/power/reset/syscon-reboot.c                |  100 +++++++++++++++++++
- drivers/power/reset/xgene-reboot.c                 |  103 --------------------
- 7 files changed, 147 insertions(+), 108 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
- create mode 100644 drivers/power/reset/syscon-reboot.c
+Signed-off-by: Feng Kan <fkan@apm.com>
+---
+ drivers/power/reset/Kconfig        |    7 ---
+ drivers/power/reset/Makefile       |    1 -
+ drivers/power/reset/xgene-reboot.c |  103 ------------------------------------
+ 3 files changed, 0 insertions(+), 111 deletions(-)
  delete mode 100644 drivers/power/reset/xgene-reboot.c
 
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index 9931b61..7a8424b 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -51,13 +51,6 @@ config POWER_RESET_VEXPRESS
+ 	  Power off and reset support for the ARM Ltd. Versatile
+ 	  Express boards.
+ 
+-config POWER_RESET_XGENE
+-	bool "APM SoC X-Gene reset driver"
+-	depends on ARM64
+-	depends on POWER_RESET
+-	help
+-	  Reboot support for the APM SoC X-Gene Eval boards.
+-
+ config POWER_RESET_SYSCON
+ 	bool "Generic SYSCON regmap reset driver"
+ 	depends on MFD_SYSCON
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index 94883ed..ae1711a 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -4,5 +4,4 @@ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
+ obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
+ obj-$(CONFIG_POWER_RESET_RESTART) += restart-poweroff.o
+ obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
+-obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
+ obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
+diff --git a/drivers/power/reset/xgene-reboot.c b/drivers/power/reset/xgene-reboot.c
+deleted file mode 100644
+index ecd55f8..0000000
+--- a/drivers/power/reset/xgene-reboot.c
++++ /dev/null
+@@ -1,103 +0,0 @@
+-/*
+- * AppliedMicro X-Gene SoC Reboot Driver
+- *
+- * Copyright (c) 2013, Applied Micro Circuits Corporation
+- * Author: Feng Kan <fkan@apm.com>
+- * Author: Loc Ho <lho@apm.com>
+- *
+- * This program is free software; you can redistribute it and/or
+- * modify it under the terms of the GNU General Public License as
+- * published by the Free Software Foundation; either version 2 of
+- * the License, or (at your option) any later version.
+- *
+- * This program is distributed in the hope that it will be useful,
+- * but WITHOUT ANY WARRANTY; without even the implied warranty of
+- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- * GNU General Public License for more details.
+- *
+- * You should have received a copy of the GNU General Public License
+- * along with this program; if not, write to the Free Software
+- * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
+- * MA 02111-1307 USA
+- *
+- * This driver provides system reboot functionality for APM X-Gene SoC.
+- * For system shutdown, this is board specify. If a board designer
+- * implements GPIO shutdown, use the gpio-poweroff.c driver.
+- */
+-#include <linux/io.h>
+-#include <linux/of_device.h>
+-#include <linux/of_address.h>
+-#include <linux/platform_device.h>
+-#include <linux/stat.h>
+-#include <linux/slab.h>
+-#include <asm/system_misc.h>
+-
+-struct xgene_reboot_context {
+-	struct platform_device *pdev;
+-	void *csr;
+-	u32 mask;
+-};
+-
+-static struct xgene_reboot_context *xgene_restart_ctx;
+-
+-static void xgene_restart(char str, const char *cmd)
+-{
+-	struct xgene_reboot_context *ctx = xgene_restart_ctx;
+-	unsigned long timeout;
+-
+-	/* Issue the reboot */
+-	if (ctx)
+-		writel(ctx->mask, ctx->csr);
+-
+-	timeout = jiffies + HZ;
+-	while (time_before(jiffies, timeout))
+-		cpu_relax();
+-
+-	dev_emerg(&ctx->pdev->dev, "Unable to restart system\n");
+-}
+-
+-static int xgene_reboot_probe(struct platform_device *pdev)
+-{
+-	struct xgene_reboot_context *ctx;
+-
+-	ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+-	if (!ctx) {
+-		dev_err(&pdev->dev, "out of memory for context\n");
+-		return -ENODEV;
+-	}
+-
+-	ctx->csr = of_iomap(pdev->dev.of_node, 0);
+-	if (!ctx->csr) {
+-		devm_kfree(&pdev->dev, ctx);
+-		dev_err(&pdev->dev, "can not map resource\n");
+-		return -ENODEV;
+-	}
+-
+-	if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+-		ctx->mask = 0xFFFFFFFF;
+-
+-	ctx->pdev = pdev;
+-	arm_pm_restart = xgene_restart;
+-	xgene_restart_ctx = ctx;
+-
+-	return 0;
+-}
+-
+-static struct of_device_id xgene_reboot_of_match[] = {
+-	{ .compatible = "apm,xgene-reboot" },
+-	{}
+-};
+-
+-static struct platform_driver xgene_reboot_driver = {
+-	.probe = xgene_reboot_probe,
+-	.driver = {
+-		.name = "xgene-reboot",
+-		.of_match_table = xgene_reboot_of_match,
+-	},
+-};
+-
+-static int __init xgene_reboot_init(void)
+-{
+-	return platform_driver_register(&xgene_reboot_driver);
+-}
+-device_initcall(xgene_reboot_init);
 -- 
 1.7.6.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
