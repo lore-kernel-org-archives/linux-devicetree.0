@@ -1,73 +1,65 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH 1/3] devicetree: set bus type same as parent
-Date: Tue, 06 May 2014 17:51:12 -0700
-Message-ID: <53698380.1060006@gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: [RFC PATCH 2/3] devicetree: provide hook to allow setting devicetree
+ device name
+Date: Tue, 06 May 2014 17:52:32 -0700
+Message-ID: <536983D0.8090307@gmail.com>
 References: <536982E3.10303@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <536982E3.10303-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <536982E3.10303@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+From: Frank Rowand <frank.rowand@sonymobile.com>
 
-This is a somewhat scary patch since it touches a path that is central to
-device creation based on the device tree.  It should not be applied without
-careful consideration.
+Optionally push devicetree device naming into a function called dynamically by
+of_device_alloc().
 
-I am not sure if this patch is a good idea, even if it does not break
-anything.
+TODO:
+   Change made to of_device_alloc() could also be made to
+   of_amba_device_create()
 
-An issue with the path of SPMI nodes under /sys/bus/... was reported in
-https://lkml.org/lkml/2014/4/23/312.  The symptom is that two different
-grandchild nodes of the spmi with the same node-name@unit-address will
-result in attempting to create duplicate links at
-/sys/bus/platform/devices/unit-address.node-name.  It turns out that the
-specific example provided might not be an expected configuration for
-current hardware, but the reported trap remains an issue.
-
-The common pattern exposed is a driver probe function calling
-of_platform_populate() to create child devices.  As the reporting
-email noted, the devices are created with dev.bus set to
-platform_bus_type.  Thus all devices created via this pattern will
-result in a link in /sys/bus/platform/devices/, with the risk that
-a name collision will occur.
-
-This patch reduces the scope of possible name collisions to devices
-on the same bus type.  This is still not ideal, because a legal
-device tree source file can result in run time errors.  In the case
-of SPMI nodes, the collisions will occur in /bus/spmi/devices/.
-
-I have not investigated whether other drivers would be negatively impacted
-by this change - there are 26 drivers in tree that call of_platform_populate().
-
-Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
 ---
- drivers/of/platform.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/of/platform.c |    2 ++
+ include/linux/of.h    |    2 ++
+ 3 files changed, 43 insertions(+)
 
 Index: b/drivers/of/platform.c
 ===================================================================
 --- a/drivers/of/platform.c
 +++ b/drivers/of/platform.c
-@@ -217,7 +217,10 @@ static struct platform_device *of_platfo
- 	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 	if (!dev->dev.dma_mask)
- 		dev->dev.dma_mask = &dev->dev.coherent_dma_mask;
--	dev->dev.bus = &platform_bus_type;
-+	if (parent && parent->bus)
-+		dev->dev.bus = parent->bus;
-+	else
-+		dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
+@@ -179,6 +179,8 @@ struct platform_device *of_device_alloc(
  
- 	/* We do not fill the DMA ops for platform devices by default.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ 	if (bus_id)
+ 		dev_set_name(&dev->dev, "%s", bus_id);
++	else if (np->parent->of_device_make_bus_id)
++		np->parent->of_device_make_bus_id(&dev->dev);
+ 	else
+ 		of_device_make_bus_id(&dev->dev);
+ 
+Index: b/include/linux/of.h
+===================================================================
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -17,6 +17,7 @@
+  */
+ #include <linux/types.h>
+ #include <linux/bitops.h>
++#include <linux/device.h>
+ #include <linux/errno.h>
+ #include <linux/kobject.h>
+ #include <linux/mod_devicetable.h>
+@@ -60,6 +61,7 @@ struct device_node {
+ 	struct	kobject kobj;
+ 	unsigned long _flags;
+ 	void	*data;
++	void    (*of_device_make_bus_id)(struct device *dev);
+ #if defined(CONFIG_SPARC)
+ 	const char *path_component_name;
+ 	unsigned int unique_id;
