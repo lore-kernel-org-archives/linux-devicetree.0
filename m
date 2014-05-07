@@ -1,95 +1,163 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: [RFC PATCH 3/3] devicetree, qcomm PMIC: use new hook to make PMIC
- device names unique
-Date: Tue, 06 May 2014 17:53:51 -0700
-Message-ID: <5369841F.5060805@gmail.com>
-References: <536982E3.10303@gmail.com>
-Reply-To: frowand.list@gmail.com
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [RFC v3 PATCH v6 11/16] ARM: dts: s6e3fa0: add DT bindings
+Date: Wed, 07 May 2014 10:05:46 +0900
+Message-ID: <536986EA.2050103@samsung.com>
+References: <1398563412-21781-1-git-send-email-yj44.cho@samsung.com>
+ <1398563412-21781-12-git-send-email-yj44.cho@samsung.com>
+ <53676965.4020800@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <536982E3.10303@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <53676965.4020800@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sonymobile.com>
+Hi Andrzej
 
-The previous patch in the series does:
+Thank you for comments.
 
-   Optionally push device naming into a function called dynamically by
-   of_device_alloc().
+On 05/05/2014 07:35 PM, Andrzej Hajda wrote:
+> On 04/27/2014 03:50 AM, YoungJun Cho wrote:
+>> This patch adds DT bindings for s6e3fa0 panel.
+>> The bindings describes panel resources, display timings and cpu mode timings.
+>>
+>> Changelog v2:
+>> - Adds unit address (commented by Sachin Kamat)
+>> Changelog v3:
+>> - Removes optional delay, size properties (commented by Laurent Pinchart)
+>> - Adds OLED detection, TE gpio properties
+>> Changelog v4:
+>> - Moves CPU timings relevant properties from FIMD DT
+>>    (commeted by Laurent Pinchart, Andrzej Hajda)
+>> Changelog v5:
+>> - Fixes gpio property names (commented by Andrzej Hajda)
+>> Changelog v6:
+>> - Renames CPU timings to CPU mode timings
+>> - Modifies CPU mode timings internal properties relevant things
+>>    (commeted by Laurent Pinchart, Andrzej Hajda)
+>>
+>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   68 ++++++++++++++++++++
+>>   1 file changed, 68 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+>> new file mode 100644
+>> index 0000000..9f06645
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+>> @@ -0,0 +1,68 @@
+>> +Samsung S6E3FA0 AMOLED LCD 5.7 inch panel
+>> +
+>> +Required properties:
+>> +  - compatible: "samsung,s6e3fa0"
+>> +  - reg: the virtual channel number of a DSI peripheral
+>> +  - vdd3-supply: core voltage supply
+>> +  - vci-supply: voltage supply for analog circuits
+>> +  - reset-gpios: a GPIO spec for the reset pin
+>> +  - det-gpios: a GPIO spec for the OLED detection pin
+>> +  - te-gpios: a GPIO spec for the TE pin
+>> +  - display-timings: timings for the connected panel as described by [1]
+>
+> This still bothers me, it forces users to provide bunch of fake
+> properties (four porches, two syncs and clock-frequency) just because we
+> need to pass somehow pixel width and height. And do we really need pixel
+> dimension to be passed via DT? I guess it could be:
+> - hardcoded into the driver,
+> - derived from the panel id,
+> - maybe read from the panel, this is the best option I guess but I am
+> not sure if panel provides an API for this.
+>
 
-This patch adds an example of using that capability.
+I have been trying to only use cpu-mode-timings without display-timings 
+for next RFC v4.
 
-Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
----
- drivers/mfd/pm8x41.c |   39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+As you mentioned, the only required things in display-timings are 
+clock-frequency, hactive and vactive.
+I put them into cpu-mode-timings, but strictly speaking, 
+cpu-mode-timings is not related with display timing, it is data 
+transmission mode switch timing.
+And there is no interface for this in drm (display) mode yet.
+So I'm not sure what is the generic method to treat them.
 
-Index: b/drivers/mfd/pm8x41.c
-===================================================================
---- a/drivers/mfd/pm8x41.c
-+++ b/drivers/mfd/pm8x41.c
-@@ -13,6 +13,7 @@
- #include <linux/module.h>
- #include <linux/spmi.h>
- #include <linux/regmap.h>
-+#include <linux/of_address.h>
- #include <linux/of_platform.h>
- 
- static const struct regmap_config pm8x41_regmap_config = {
-@@ -32,6 +33,43 @@ static void pm8x41_remove(struct spmi_de
- 	device_for_each_child(&sdev->dev, NULL, pm8x41_remove_child);
- }
- 
-+static void spmi_of_device_make_bus_id(struct device *dev)
-+{
-+	struct device_node *node = dev->of_node;
-+	const __be32 *reg;
-+	u64 addr;
-+	const __be32 *addrp;
-+	struct spmi_device *sdev;
-+
-+	sdev = container_of(dev->parent, struct spmi_device, dev);
-+
-+	/*
-+	 * For MMIO, get the physical address
-+	 */
-+	reg = of_get_property(node, "reg", NULL);
-+	if (reg) {
-+		if (of_can_translate_address(node)) {
-+			addr = of_translate_address(node, reg);
-+		} else {
-+			addrp = of_get_address(node, 0, NULL, NULL);
-+			if (addrp)
-+				addr = of_read_number(addrp, 1);
-+			else
-+				addr = OF_BAD_ADDR;
-+		}
-+		if (addr != OF_BAD_ADDR) {
-+			dev_set_name(dev, "%d-%02x:%llx.%s",
-+				     sdev->ctrl->nr, sdev->usid,
-+				     (unsigned long long)addr, node->name);
-+			return;
-+		}
-+	}
-+
-+	dev_set_name(dev, "%d-%02x:%s",
-+		     sdev->ctrl->nr, sdev->usid,
-+		     node->name);
-+}
-+
- static int pm8x41_probe(struct spmi_device *sdev)
- {
- 	struct regmap *regmap;
-@@ -42,6 +80,7 @@ static int pm8x41_probe(struct spmi_devi
- 		return PTR_ERR(regmap);
- 	}
- 
-+	sdev->dev.of_node->of_device_make_bus_id = spmi_of_device_make_bus_id;
- 	return of_platform_populate(sdev->dev.of_node, NULL, NULL, &sdev->dev);
- }
- 
+Thank you.
+Best regards YJ
+
+> Regards
+> Andrzej
+>
+>
+>> +  - cpu-mode-timings: CPU interface timings for the connected panel,
+>> +      and it contains following properties.
+>> +        Required properties:
+>> +          - wr-active: clock cycles for the active period of CS enable in CPU
+>> +              interface.
+>> +        Optional properties:
+>> +          - cs-setup: clock cycles for the active period of address signal
+>> +              enable until chip select is enable in CPU interface.
+>> +              If not specified, the default value(0) will be used.
+>> +          - wr-setup: clock cycles for the active period of CS signal enable
+>> +              until write signal is enable in CPU interface.
+>> +              If not specified, the default value(0) will be used.
+>> +          - wr-hold: clock cycles for the active period of CS disable until
+>> +              write signal is disable in CPU interface.
+>> +              If not specified, the default value(0) will be used.
+>> +
+>> +Optional properties:
+>> +
+>> +The device node can contain one 'port' child node with one child 'endpoint'
+>> +node, according to the bindings defined in [2]. This node should describe
+>> +panel's video bus.
+>> +
+>> +[1]: Documentation/devicetree/bindings/video/display-timing.txt
+>> +[2]: Documentation/devicetree/bindings/media/video-interfaces.txt
+>> +
+>> +Example:
+>> +
+>> +	panel@0 {
+>> +		compatible = "samsung,s6e3fa0";
+>> +		reg = <0>;
+>> +		vdd3-supply = <&vcclcd_reg>;
+>> +		vci-supply = <&vlcd_reg>;
+>> +		reset-gpios = <&gpy7 4 0>;
+>> +		det-gpios = <&gpg0 6 0>;
+>> +		te-gpios = <&gpd1 7 0>;
+>> +
+>> +		display-timings {
+>> +			timing0: timing-0 {
+>> +				clock-frequency = <0>;
+>> +				hactive = <1080>;
+>> +				vactive = <1920>;
+>> +				hfront-porch = <2>;
+>> +				hback-porch = <2>;
+>> +				hsync-len = <1>;
+>> +				vfront-porch = <1>;
+>> +				vback-porch = <4>;
+>> +				vsync-len = <1>;
+>> +			};
+>> +		};
+>> +
+>> +		cpu-mode-timings {
+>> +			cs-setup = <0>;
+>> +			wr-setup = <0>;
+>> +			wr-active = <1>;
+>> +			wr-hold = <0>;
+>> +		};
+>> +	};
+>>
+>
+>
