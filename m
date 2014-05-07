@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv4 05/20] Documentation: dt-bindings: update ehci-orion binding documentation
-Date: Wed,  7 May 2014 15:52:11 +0200
-Message-ID: <1399470746-2948-6-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv4 12/20] ARM: mvebu: add USB3 support for Armada 38x
+Date: Wed,  7 May 2014 15:52:18 +0200
+Message-ID: <1399470746-2948-13-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1399470746-2948-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1399470746-2948-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,31 +10,29 @@ To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg 
 Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This commit updates the Device Tree binding documentation of
-ehci-orion to take into account the fact that we can now optionally
-pass a clock and a PHY reference.
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
+This patch adds the selection of the config symbol needed to build the
+USB3 support for Armada 38x into mvebu_v7_defconfig.
+
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/usb/ehci-orion.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-mvebu/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
-index 6bc09ec..17c3bc8 100644
---- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
-+++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
-@@ -6,6 +6,11 @@ Required properties:
-   region.
- - interrupts: The EHCI interrupt
- 
-+Optional properties:
-+- clocks: reference to the clock
-+- phys: reference to the USB PHY
-+- phy-names: name of the USB PHY, should be "usb"
-+
- Example:
- 
- 	ehci@50000 {
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index 3f73eec..7960f21 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -54,6 +54,7 @@ config MACH_ARMADA_38X
+ 	select CPU_V7
+ 	select MACH_MVEBU_V7
+ 	select PINCTRL_ARMADA_38X
++	select USB_ARCH_HAS_XHCI
+ 	help
+ 	  Say 'Y' here if you want your kernel to support boards based
+ 	  on the Marvell Armada 380/385 SoC with device tree.
 -- 
 1.9.2
 
