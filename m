@@ -1,69 +1,58 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Wed, 07 May 2014 15:58:48 +0100
-Message-ID: <87d2fpoct3.fsf@approximate.cambridge.arm.com>
-References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
-	<201404301734.14478.arnd@arndb.de>
-	<CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
-	<4288313.uDFYZQS3W7@wuerfel> <20140507145327.GB2563@arm.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 6/6] clk: shmobile: Add r8a7740, sh73a0 SoCs to MSTP bindings
+Date: Wed, 7 May 2014 16:59:51 +0200
+Message-ID: <CAMuHMdXOgWdA3hO2oX3+KENURvmB2d+Btq-KDoTN7wP1pMJA=g@mail.gmail.com>
+References: <1399386233-11928-1-git-send-email-ulrich.hecht+renesas@gmail.com>
+	<1399386233-11928-7-git-send-email-ulrich.hecht+renesas@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140507145327.GB2563@arm.com> (Will Deacon's message of "Wed, 7
-	May 2014 15:53:27 +0100")
-Sender: linux-pci-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Srikanth Thokala <sthokal@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <michal.simek@xilinx.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1399386233-11928-7-git-send-email-ulrich.hecht+renesas@gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ulrich Hecht <ulrich.hecht@gmail.com>
+Cc: Linux-sh list <linux-sh@vger.kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 07 2014 at  3:53:27 pm BST, Will Deacon <will.deacon@arm.com> wrote:
-> Hi all,
->
-> Thanks for CC'ing me, Arnd.
->
-> On Wed, May 07, 2014 at 03:35:48PM +0100, Arnd Bergmann wrote:
->> On Wednesday 07 May 2014 17:21:13 Srikanth Thokala wrote:
->> > On Wed, Apr 30, 2014 at 9:04 PM, Arnd Bergmann <arnd@arndb.de> wrote:
->> > > Would it be possible to split the config space access out into
->> > > a separate file? It would be nice to share that with the generic
->> > > ECAM driver that Will Deacon has sent.
->> > 
->> > Yes, it should be possible.  Is it ok, if I work on top of this driver?
->> 
->> Do you mean as a follow-on patch? My feeling is that since we are trying
->> to merge both for 3.16, it would be good to get it done right away if
->> it doesn't cause too much extra work.
->
-> Do you mean something as simple as a helper for base + offset ECAM
-> addressing, or something more involved that handles the mapping as well? The
-> latter would need some alignment on sys->private_data, I think.
->
-> Srikanth: I'll CC you on the next version of my patches (I'll send them
-> now).
->
->> > > As a general comment about the MSI implementation, I wonder if
->> > > this is actually
->> > > generic enough to be shared with other host controllers. It could be moved
->> > > into a separate file like the config space access in that case.
->> > 
->> > I feel the MSI implementation is not generic by looking into the other
->> > host controllers,
->> > it is more specific to the hardware.  Correct me, if am wrong.
->> 
->> The other host controllers are certainly incompatible, but this one looks
->> like it could be used on other controllers easily.
->> 
->> Splitting it out would also make it easier to use another MSI implementation
->> like the one in the GIC.
->
-> Actually, MarcZ and I already have my driver working with GICv3 + MSI. The
-> code basically amounts to implementing {add,remove}_bus callbacks to set
-> the msi_chip for the pci_bus, based on what we got out of the devicetree.
-> I don't think we needed anything else... Marc?
+Hi Ulrich,
 
-No, that's it, really. I use the "msi-parent" property to find the
-msi_chip, which should have been registered as a "msi-controller".
+Thanks for your patch!
 
-	M.
--- 
-Jazz is not dead. It just smells funny.
+CC devicetree + one comment below
+
+On Tue, May 6, 2014 at 4:23 PM, Ulrich Hecht <ulrich.hecht@gmail.com> wrote:
+> Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> index 5992dce..8514088 100644
+> --- a/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> +++ b/Documentation/devicetree/bindings/clock/renesas,cpg-mstp-clocks.txt
+> @@ -10,8 +10,10 @@ index in the group, from 0 to 31.
+>  Required Properties:
+>
+>    - compatible: Must be one of the following
+> +    - "renesas,r8a7740-mstp-clocks" for R8A7740 MSTP gate clocks
+
+Also known as "R-Mobile A1"
+
+>      - "renesas,r8a7790-mstp-clocks" for R8A7790 (R-Car H2) MSTP gate clocks
+>      - "renesas,r8a7791-mstp-clocks" for R8A7791 (R-Car M2) MSTP gate clocks
+> +    - "renesas,sh73a0-mstp-clocks" for SH73A0 (SH-MobileAG5) MSTP gate clocks
+>      - "renesas,cpg-mstp-clock" for generic MSTP gate clocks
+>    - reg: Base address and length of the I/O mapped registers used by the MSTP
+>      clocks. The first register is the clock control register and is mandatory.
+> --
+> 1.8.4.5
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
