@@ -1,48 +1,98 @@
-From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 4/6] powerpc/corenet: Create the dts components for the
- DPAA FMan
-Date: Wed, 7 May 2014 22:36:31 -0500
-Message-ID: <1399520191.15726.371.camel@snotra.buserror.net>
-References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
-	 <1397823693-27977-4-git-send-email-Shruti@Freescale.com>
-	 <1398118262.1694.188.camel__8135.6513932862$1398128944$gmane$org@snotra.buserror.net>
-	 <5364BEB3.6000904@Freescale.com>
-	 <1399332359.15726.154.camel@snotra.buserror.net>
-	 <53687913.70900@Freescale.com>
-	 <1399431248.15726.255.camel@snotra.buserror.net>
-	 <536AF8C7.8080304@Freescale.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v2 7/7] ARM: sunxi: dt: add PRCM clk and
+ reset controller subdevices
+Date: Thu, 8 May 2014 11:40:59 +0800
+Message-ID: <CAGb2v664vFwezKVp+C1UYdsUktRhrZDxjsyf9L=kwVHGCUV=HA@mail.gmail.com>
+References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399483554-8824-8-git-send-email-boris.brezillon@free-electrons.com> <20140508031700.GO7047@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <536AF8C7.8080304-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
-Cc: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB2XZVONQKGQESQLJJLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140508031700.GO7047@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin <kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dev <dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-05-07 at 22:23 -0500, Emil Medve wrote:
-> Hello Scott,
-> 
-> 
-> At this point, I'm getting a bit lost in this thread and I feel we're
-> getting into more generic comments. I'll continue to answer to some of
-> your comments to make sure I understand them. However, one major comment
-> I feel you made was about seeing a full FMan binding. If that's a deal
-> breaker, please let me know and we'll just drop the patches
+On Thu, May 8, 2014 at 11:17 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Wed, May 07, 2014 at 07:25:54PM +0200, Boris BREZILLON wrote:
+>> Add DT definitions for PRCM (Power/Reset/Clock Management) clock and reset
+>> controller subdevices.
+>>
+>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/sun6i-a31.dtsi | 39 ++++++++++++++++++++++++++++++++++++++-
+>>  1 file changed, 38 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> index ec3253a..b69be0b 100644
+>> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+>> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+>> @@ -498,9 +498,46 @@
+>>                       reg = <0x01f01c00 0x300>;
+>>               };
+>>
+>> -             prcm@01f01c00 {
+>> +             prcm@01f01400 {
+>
+> This has already been fixed by Hans.
+>
+>>                       compatible = "allwinner,sun6i-a31-prcm";
+>>                       reg = <0x01f01400 0x200>;
+>> +
+>> +                     ar100: ar100_clk {
+>> +                             compatible = "allwinner,sun6i-a31-ar100-clk";
+>> +                             #clock-cells = <0>;
+>> +                             clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
+>> +                     };
+>> +
+>> +                     ahb0: ahb0_clk {
+>> +                             compatible = "fixed-factor-clock";
+>> +                             #clock-cells = <0>;
+>> +                             clock-div = <1>;
+>> +                             clock-mult = <1>;
+>> +                             clocks = <&ar100>;
+>> +                             clock-output-names = "ahb0";
+>> +                     };
+>> +
+>> +                     apb0: apb0_clk {
+>> +                             compatible = "allwinner,sun6i-a31-apb0-clk";
+>> +                             #clock-cells = <0>;
+>> +                             clocks = <&ahb0>;
+>> +                             clock-output-names = "apb0";
+>> +                     };
+>> +
+>> +                     apb0_gates: apb0_gates_clk {
+>> +                             compatible = "allwinner,sun6i-a31-apb0-gates-clk";
+>> +                             #clock-cells = <1>;
+>> +                             clocks = <&apb0>;
+>> +                             clock-output-names = "apb0_pio", "apb0_ir",
+>> +                                             "apb0_timer01", "apb0_p2wi",
+>
+> timer01 ? is this a typo?
 
-It's not an absolute deal breaker -- I did suggest the possibility of
-providing the mdio node as an ordinary ccsr node, not underneath an fman
-container.
+A23 manual lists the clock gate as "r_timer0_1", so I put the name on the wiki.
+Allwinner sun6i code uses "r_tmr" or just "tmr". I see no problem naming this
+clock output as "apb0_timer" though.
 
-I'm just frustrated that getting a proper fman node is such a big deal.
-That should have been the first step of the upstreaming process -- not
-something that waits until everything is finished.
-
--Scott
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> +                                             "apb0_uart", "apb0_1wire",
+>> +                                             "apb0_i2c";
+>> +                     };
+>> +
+>> +                     apb0_rst: apb0_rst {
+>> +                             compatible = "allwinner,sun6i-a31-clock-reset";
+>> +                             #reset-cells = <1>;
+>> +                     };
+>>               };
+>>       };
+>>  };
+>> --
+>> 1.8.3.2
+>>
