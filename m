@@ -1,68 +1,43 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] DT instantiation of sound on T5325
-Date: Thu, 8 May 2014 19:37:48 +0200
-Message-ID: <20140508173748.GK27377@lunn.ch>
-References: <1399141819-23924-1-git-send-email-andrew@lunn.ch>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
+Date: Thu, 08 May 2014 21:52:05 +0400
+Message-ID: <536BC445.8080007@cogentembedded.com>
+References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be>	<1399494750-31996-2-git-send-email-geert+renesas@glider.be>	<536B7FD3.5090506@cogentembedded.com>	<CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com>	<536B8340.4010901@cogentembedded.com> <CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399141819-23924-1-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 03, 2014 at 08:30:10PM +0200, Andrew Lunn wrote:
-> This patchset uses DT to instantiate sound on the T5325. It adds a DT
-> binding to the codec, then removes the platform device for the codec
-> and adds a DT node. simple-card is extended to support mlck_fs. The
-> platform device for the audio device is then replaced with a DT node.
-> Lastly, two _defconfig's are updated to build the needed modules.
+On 05/08/2014 05:21 PM, Geert Uytterhoeven wrote:
 
-Hi Folks
+>>>>> +               /* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
 
-The ARM mvebu maintainer is happy with these patches. Does anybody
-have any comments on the sound/soc parts? Mark, will you take the
-alc5623 and simple-card patches?
+>>>>      This property is mandatory, according to the bindings.
 
-Thanks
-	Andrew
+>>> Indeed, but you cannot put anything there until the platform has CCF, as
+>>> mstp3_clks doesn't exist yet.
 
-> 
-> Andrew Lunn (9):
->   ASoC: alc5623: Add device tree binding
->   ARM: Kirkwood: Remove platform driver for codec
->   ARM: Kirkwood: Add node for audio codec
->   ARM: Kirkwood: DT: Add missing #sound-dai-cells property
->   ASoC: simple-card: Support setting mclk via a fixed factor
->   ARM: Kirkwood: t5325: Remove platform device to instantiate audio
->   ARM: Kirkwood: t5325: Use simple card to instantiate audio
->   ARM: mvebu_v5_defconfig: Enable sound modules needed for t5325
->   ARM: multi_v5_defconfig: Enable sound modules needed for t5325
-> 
->  .../devicetree/bindings/sound/alc5623.txt          | 25 +++++++++++++
->  .../devicetree/bindings/sound/simple-card.txt      |  2 ++
->  arch/arm/boot/dts/kirkwood-t5325.dts               | 33 +++++++++++++++++
->  arch/arm/boot/dts/kirkwood.dtsi                    |  1 +
->  arch/arm/configs/multi_v5_defconfig                |  3 +-
->  arch/arm/configs/mvebu_v5_defconfig                |  3 +-
->  arch/arm/mach-mvebu/Kconfig                        |  7 ----
->  arch/arm/mach-mvebu/Makefile                       |  1 -
->  arch/arm/mach-mvebu/board-t5325.c                  | 41 ----------------------
->  arch/arm/mach-mvebu/board.h                        |  6 ----
->  arch/arm/mach-mvebu/kirkwood.c                     |  3 --
->  sound/soc/codecs/Kconfig                           |  2 +-
->  sound/soc/codecs/alc5623.c                         | 20 +++++++++++
->  sound/soc/generic/simple-card.c                    | 28 +++++++++++++++
->  14 files changed, 114 insertions(+), 61 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/alc5623.txt
->  delete mode 100644 arch/arm/mach-mvebu/board-t5325.c
-> 
-> -- 
-> 2.0.0.rc0
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>     Yes, that was the main obstacle to accepting those bindings sooner. This
+>> patch therefore seems somewhat premature.
+
+> My main objective is to provide working Ethernet support for Armadillo
+> reference now.
+
+    Mine was the same (but for BOCK-W board) but DT people didn't give a damn. 
+:-) So there's still no Ethernet support in BOCK-W DT.
+
+> The DTS already has other nodes without "clocks" properties.
+
+    It means not everybody submitting the bindings had the same bad luck as 
+me. :-)
+
+> Gr{oetje,eeting}s,
+>                          Geert
+
+WBR, Sergei
+
