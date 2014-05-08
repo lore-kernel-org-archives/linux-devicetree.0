@@ -1,59 +1,67 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2 2/3] ARM: dts: oma3-gta04: Add display support
-Date: Thu, 8 May 2014 12:39:12 +0300
-Message-ID: <536B50C0.7030002@ti.com>
-References: <1398284120-4986-1-git-send-email-marek@goldelico.com>	<1398284120-4986-3-git-send-email-marek@goldelico.com>	<5369DAC6.6050608@ti.com> <CAAfyv36L_vh+iwrqsePsF8oOxOJ=JXUAk2nJ6F120w+0ivAn8w@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ARM: realview: basic device tree implementation
+Date: Thu, 8 May 2014 12:27:50 +0200
+Message-ID: <CACRpkdZ7WoBMBMJjpKcsOeOA5E1erSioOeSDt1xOG=W04RoeCg@mail.gmail.com>
+References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org>
+	<CAL_JsqKYR1aujNhOASivsg-ED6xDPCsSCcGVnQn5vy4sD1PhAQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="0X6NiaduQ530BqCsLEa230vGmNPsx4d1r"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAAfyv36L_vh+iwrqsePsF8oOxOJ=JXUAk2nJ6F120w+0ivAn8w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Belisko Marek <marek.belisko@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, rdunlap@infradead.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKYR1aujNhOASivsg-ED6xDPCsSCcGVnQn5vy4sD1PhAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---0X6NiaduQ530BqCsLEa230vGmNPsx4d1r
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Wed, Mar 26, 2014 at 6:59 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Wed, Mar 26, 2014 at 4:27 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
 
-On 07/05/14 10:21, Belisko Marek wrote:
+>> +       if (of_machine_is_compatible("arm,realview-eb"))
+>> +               /*
+>> +                * 1MB (128KB/way), 8-way associativity,
+>> +                * evmon/parity/share enabled
+>> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
+>> +                */
+>> +               l2x0_of_init(0x00790000, 0xfe000fff);
+>> +       else if (of_machine_is_compatible("arm,realview-pb1176"))
+>> +               /*
+>> +                * 128Kb (16Kb/way) 8-way associativity.
+>> +                * evmon/parity/share enabled.
+>> +                */
+>> +               l2x0_of_init(0x00730000, 0xfe000fff);
+>> +       else if (of_machine_is_compatible("arm,realview-pb11mp"))
+>> +               /*
+>> +                * 1MB (128KB/way), 8-way associativity,
+>> +                * evmon/parity/share enabled
+>> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
+>> +                */
+>> +               l2x0_of_init(0x00730000, 0xfe000fff);
+>> +       else if (of_machine_is_compatible("arm,realview-pbx"))
+>> +               /*
+>> +                * 16KB way size, 8-way associativity, parity disabled
+>> +                * Bits:  .. 0 0 0 0 1 00 1 0 1 001 0 000 0 .... .... ....
+>> +                */
+>> +               l2x0_of_init(0x02520000, 0xc0000fff);
+>> +#endif
+>
+> As Arnd pointed out, see Russell's recent L2x0 emails. Since these are
+> L220s, you do need the way size and associativity to be initialized at
+> least. There are standard ePAPR definitions for these which should be
+> used.
+>
+> Documenting the initial and final aux ctrl values on these platforms
+> would be helpful for Russell's clean-up.
 
->> Did you try this on 3.15-rc? The above is not right, and I don't think=
+The PB1176 board has the initial value:
+L2X0_AUX_CTRL = 0x02020fff
 
->> it works. You need 'port' node for the dpi_out endpoint.
-> This patches was tested against 3.15 series and it works. I'l recheck.
+I don't know how I can help out best here unfortunately, it's a little
+bit of a moving target I guess and admittedly my understanding of
+l2x0 is pretty shallow. :-/
 
-Ah, we still have some code that makes that work. But it's against the
-bindings documentations, and that code will be removed. So better add
-the port node.
-
- Tomi
-
-
-
---0X6NiaduQ530BqCsLEa230vGmNPsx4d1r
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTa1DAAAoJEPo9qoy8lh717lUQAJlZNBw7np66+7mlexo9qudI
-Rkf4xodGxwpdsx9yc6UxayUZ2cllCyM8eMsDsDwzQvtOwMluIY7qa5PrpABTSDcO
-NADo80/NLLDkJCelL2G9Dq61Vb4wLyKTZwqvgYVHJUBan7e0XqrKBNEnB/dHvAGM
-3QeinB+swFc5FQJczNVF2wIAbvUBmQwz2r8oFxheAgewwDO+mf8Jett2wqteU0Rd
-2dajhWOcH4rrIsrv8QfkR9pQKmUlAQMev7gJqAuDpZ0EhakPHvKmgGP6zy/e3f74
-yow8S8r8yPc23Hoj6ZYoPAwFKTrxFH4zUMUiNxP0syheSARg3mhMWaD9l43PQyPy
-PfqlFz4dgnNB94WZjdg8dU+gtR946wWphv1nUsdwCPtUU0C+z/BPolkR+HBIq4+D
-F4HSxTZRLhOCe86uftk1L/0v4PNO6SCcyBcL+7fY0n6s1NU2al7134kEgQJcYs+8
-ruFk1IsH/yKfKM4560VEpRXTmK65wgZ0surfk/+lalfkJKJ1KWWFjJvyVZPKnK6N
-5Ma3Ws2YFJ6V+EgoHf5hthFTBi+gn6YFAAahsq/tnuGRgeV6v1cyN8A+kj4JLnlc
-F2HbjmJX2n+V6G13GmdN8/j7B8XAB4U82izO/JUUIOq7zOv7Zfm0Ki1VJ0L6lnXW
-Jr+ailpb96Z0dfaDAwOk
-=GPMt
------END PGP SIGNATURE-----
-
---0X6NiaduQ530BqCsLEa230vGmNPsx4d1r--
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
