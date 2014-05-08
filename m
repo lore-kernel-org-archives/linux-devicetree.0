@@ -1,49 +1,67 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 3/3] ARM: dts: Add peach-pi board support
-Date: Thu, 8 May 2014 15:22:21 -0700
-Message-ID: <CAJAp7Og3SHC+KPO3oZKc8r4ok0PYQbj_zn1nD_F5i8wHhi-F8A@mail.gmail.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
-	<1399035821-25096-4-git-send-email-arun.kk@samsung.com>
-	<5363D176.80601@gmail.com>
-	<CAD=FV=XYjMg7V9=OzAy_ifwaM83QS0tiTrp5+nxvG236kkSjRQ@mail.gmail.com>
-	<53644DDB.7050503@gmail.com>
-	<CAD=FV=U_b_n=V_mEFYNPFZ1wyrgjjr5jEGrVb5TviP0Z33popg@mail.gmail.com>
-	<5367D5E1.9070709@ti.com>
-	<CAJAp7Og6Bqnbq5b=Ki5vLaVkvSXxqsKaFaxCoqbX+fRkgouh=A@mail.gmail.com>
-	<536C0254.8050108@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <536C0254.8050108@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tom Rini <trini@ti.com>
-Cc: Doug Anderson <dianders@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>, Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olofj@google.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tushar Behera <tushar.behera@linaro.org>, Arun Kumar <arunkk.samsung@gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 0/6] DT early console initialization
+Date: Thu,  8 May 2014 17:23:37 -0500
+Message-ID: <1399587823-17701-1-git-send-email-robherring2@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 8, 2014 at 3:16 PM, Tom Rini <trini@ti.com> wrote:
-> On 05/08/2014 05:55 PM, Bjorn Andersson wrote:
->> On Mon, May 5, 2014 at 11:18 AM, Tom Rini <trini@ti.com> wrote:
->> [...]
->>> The problem I was raising at the ELC BoF is that today we can't just
->>> stop overwriting values in the non-zero case as many boards lie about
->>> their memory size, in non-zero ways, but no one noticed as they only
->>> tested with U-Boot which was performing the fixup.
->>
->> So, should we conclude are we stuck being bug-compatible forever?
->>
->> I was hoping to add this logic to the kernel by [1], but of course
->> this won't fly
->> based on the argument you highlighted (as was pointed out by Uwe).
->>
->> [1] https://lkml.org/lkml/2014/5/7/28
->
-> Well, device tree should always win and once passed to the kernel, be
-> correct.  If you have control of the kernel but not bootloader, like Uwe
-> says, drop the ATAG support.
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Yeah, that would be all nice and dandy, except for the bootloader passing
-device specific parameters on the command line. Maybe I can recreate
-enough of the data later on to actually go with that though...
+This series adds support for early serial console initialization using 
+DT. This enables determining the serial port type and address using the 
+FDT and allows enabling the console before platform specific 
+initialization runs. I've tested this on arm64. ARM support is dependent 
+on adding fixmap support.
 
-Regards,
-Bjorn
+Currently, the earlycon is only enabled if "earlycon" is present on the 
+kernel command line. The FDT needs to have /chosen/stdout-path set to 
+the path of the serial port.
+
+This series is dependent on generic earlycon[1], libfdt support[2], and 
+vmlinux.lds.h clean-ups[3]. The first 2 are in linux-next already. A git 
+branch is available here:
+
+git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git earlycon-dt
+
+Rob
+
+[1] https://lkml.org/lkml/2014/4/18/573
+[2] https://lkml.org/lkml/2014/4/22/1202
+[3] https://lkml.org/lkml/2014/3/27/285
+
+Rob Herring (6):
+  of: align RESERVEDMEM_OF_DECLARE function callbacks to other callbacks
+  of: consolidate linker section OF match table declarations
+  serial: earlycon: add DT support
+  of/fdt: add FDT address translation support
+  of/fdt: add FDT serial scanning for earlycon
+  tty/serial: pl011: add DT based earlycon support
+
+ drivers/clocksource/clksrc-of.c   |   2 +-
+ drivers/irqchip/irqchip.h         |   7 +-
+ drivers/of/Makefile               |   2 +
+ drivers/of/fdt.c                  |  56 +++++++++
+ drivers/of/fdt_address.c          | 241 ++++++++++++++++++++++++++++++++++++++
+ drivers/of/of_reserved_mem.c      |   2 +-
+ drivers/tty/serial/amba-pl011.c   |   1 +
+ drivers/tty/serial/earlycon.c     |  27 +++++
+ include/asm-generic/vmlinux.lds.h |   4 +-
+ include/linux/clk-provider.h      |   5 +-
+ include/linux/clocksource.h       |  16 +--
+ include/linux/of.h                |  22 ++++
+ include/linux/of_fdt.h            |   1 +
+ include/linux/of_reserved_mem.h   |  22 +---
+ include/linux/serial_core.h       |   6 +
+ 15 files changed, 372 insertions(+), 42 deletions(-)
+ create mode 100644 drivers/of/fdt_address.c
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
