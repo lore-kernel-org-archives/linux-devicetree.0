@@ -1,47 +1,116 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
-Date: Thu, 8 May 2014 15:21:37 +0200
-Message-ID: <CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>
-References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be>
-	<1399494750-31996-2-git-send-email-geert+renesas@glider.be>
-	<536B7FD3.5090506@cogentembedded.com>
-	<CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com>
-	<536B8340.4010901@cogentembedded.com>
+From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
+Date: Thu, 8 May 2014 18:58:25 +0530
+Message-ID: <CA+mB=1LiwKEZgOF7wUMfhpNCv2+n00QLibjznvP_FuZ6eTb3=g@mail.gmail.com>
+References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
+	<201404301734.14478.arnd@arndb.de>
+	<CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
+	<4288313.uDFYZQS3W7@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <536B8340.4010901@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4288313.uDFYZQS3W7@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
-
-On Thu, May 8, 2014 at 3:14 PM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
->>>> +               /* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
+On Wed, May 7, 2014 at 8:05 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 07 May 2014 17:21:13 Srikanth Thokala wrote:
+>> On Wed, Apr 30, 2014 at 9:04 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Tuesday 15 April 2014, Srikanth Thokala wrote:
+>> >> +/**
+>> >> + * xilinx_pcie_get_config_base - Get configuration base
+>> >> + * @bus: Bus structure of current bus
+>> >> + * @devfn: Device/function
+>> >> + * @where: Offset from base
+>> >> + *
+>> >> + * Return: Base address of the configuration space needed to be
+>> >> + *      accessed.
+>> >> + */
+>> >> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
+>> >> +                                              unsigned int devfn,
+>> >> +                                              int where)
+>> >> +{
+>> >> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
+>> >> +     int relbus;
+>> >> +
+>> >> +     relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
+>> >> +              (devfn << ECAM_DEV_NUM_SHIFT);
+>> >> +
+>> >> +     return port->reg_base + relbus + where;
+>> >> +}
+>> >
+>> > Does this mean you have an ECAM-compliant config space? Nice!
+>> >
+>> > Would it be possible to split the config space access out into
+>> > a separate file? It would be nice to share that with the generic
+>> > ECAM driver that Will Deacon has sent.
+>>
+>> Yes, it should be possible.  Is it ok, if I work on top of this driver?
 >
->>>     This property is mandatory, according to the bindings.
+> Do you mean as a follow-on patch? My feeling is that since we are trying
+> to merge both for 3.16, it would be good to get it done right away if
+> it doesn't cause too much extra work.
+
+Sure, I will work with Will and let you know.
+
 >
->> Indeed, but you cannot put anything there until the platform has CCF, as
->> mstp3_clks doesn't exist yet.
+>> >> +/**
+>> >> + * xilinx_pcie_enable_msi - Enable MSI support
+>> >> + * @port: PCIe port information
+>> >> + */
+>> >> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
+>> >> +{
+>> >> +     port->msg_addr = __get_free_pages(GFP_KERNEL, 0);
+>> >> +
+>> >> +     pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
+>> >> +     pcie_write(port, virt_to_phys((void *)port->msg_addr),
+>> >> +                XILINX_PCIE_REG_MSIBASE2);
+>> >> +}
+>> >
+>> > As a general comment about the MSI implementation, I wonder if this is actually
+>> > generic enough to be shared with other host controllers. It could be moved
+>> > into a separate file like the config space access in that case.
+>>
+>> I feel the MSI implementation is not generic by looking into the other
+>> host controllers,
+>> it is more specific to the hardware.  Correct me, if am wrong.
 >
->    Yes, that was the main obstacle to accepting those bindings sooner. This
-> patch therefore seems somewhat premature.
+> The other host controllers are certainly incompatible, but this one looks
+> like it could be used on other controllers easily.
+>
+> Splitting it out would also make it easier to use another MSI implementation
+> like the one in the GIC.
 
-My main objective is to provide working Ethernet support for Armadillo
-reference now.
+I need to look into this and I will come back to you.
 
-The DTS already has other nodes without "clocks" properties.
+>
+>
+>> >> +     /* Register the device */
+>> >> +     pci_common_init_dev(dev, &hw);
+>> >> +
+>> >> +     platform_set_drvdata(pdev, port);
+>> >
+>> > Don't you have to do the platform_set_drvdata() before pci_common_init_dev()?
+>>
+>> It should be fine, as I don't see any dependencies.
+>
+> Ah, it's only used in the remove function. It looks correct then, but I think
+> it would be better to set it first anyway, in case another function starts using
+> the drvdata later and that function may get called by the PCI initialization.
 
-Gr{oetje,eeting}s,
+Ok.
 
-                        Geert
+Srikanth
 
+>
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
