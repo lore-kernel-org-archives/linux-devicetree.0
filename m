@@ -1,40 +1,36 @@
-From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Subject: Re: [PATCH 3/4] of/platform: fix device naming for non-translatable
- addresses
-Date: Thu, 08 May 2014 14:47:34 +0300
-Message-ID: <1399549654.8165.1.camel@iivanov-dev>
-References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
-	 <1399499298-8830-4-git-send-email-robherring2@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: realview: basic device tree implementation
+Date: Thu, 08 May 2014 13:49:23 +0200
+Message-ID: <6858054.UjaoSyhELL@wuerfel>
+References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org> <26412341.aCOKep5CZC@wuerfel> <CACRpkdbH4WrMgmj+sdgx83KncV4iGTqvve_QisP14uuLP6XS2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399499298-8830-4-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn@kryo.se>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdbH4WrMgmj+sdgx83KncV4iGTqvve_QisP14uuLP6XS2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-05-07 at 16:48 -0500, Rob Herring wrote:
-> From: Rob Herring <robh@kernel.org>
+On Thursday 08 May 2014 13:20:19 Linus Walleij wrote:
+> On Wed, Mar 26, 2014 at 10:09 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 > 
-> Using non-translatable addresses in platform device names is wrong
-> because they may not be globally unique. Just use the default naming with
-> a global index if the address cannot be translated instead.
+> > Catalin originally added the sparsemem hack. I asked him today about
+> > it, and he also thinks that sparsemem without the hack should work,
+> > as long as there is highmem support. I think we can either do away
+> > with it entirely, or use the patch below to keep it alive.
 > 
-> of_can_translate_address has the same checks as of_translate_address, so
-> we can remove it here as well.
+> IMO the patch make things worse. I'd just say we switch it to use highmem
+> and get rid of the madness.
 > 
-> Reported-by: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-> Cc: Josh Cartwright <joshc@codeaurora.org>
-> Cc: Courtney Cavin <courtney.cavin@sonymobile.com>
-> Cc: Bjorn Andersson <bjorn@kryo.se>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+> Anyone claiming to be running performance-critical loads on the PBX
+> is either insane or a liar.
 
-Thanks. It works for me. 
+Ok, definitely fine with me.
 
-Tested-by: Ivan T. Ivanov <iivanov@mm-sol.com>
-
-Regards.
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
