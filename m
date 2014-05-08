@@ -1,157 +1,47 @@
-From: Thor Thayer <tthayer.linux@gmail.com>
-Subject: Re: [PATCHv3 3/3] edac: altera: Add EDAC support for Altera SDRAM
-Date: Thu, 8 May 2014 15:37:19 -0500
-Message-ID: <CAF03EBecxtMr1670ktQKTAZX_kHeZWz1SwuEk373B99BoVjbDw@mail.gmail.com>
-References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
-	<1399330337-16748-4-git-send-email-tthayer@altera.com>
-	<20140508120524.GF12548@pd.tnic>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: k2e-evm: add AEMIF/NAND device entry
+Date: Thu, 8 May 2014 17:21:30 -0400
+Message-ID: <536BF55A.6030406@ti.com>
+References: <1399575560-31090-1-git-send-email-ivan.khoronzhuk@ti.com> <536BD85E.8090505@ti.com> <536BE875.2070005@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140508120524.GF12548@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <536BE875.2070005-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Cc: grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 8, 2014 at 7:05 AM, Borislav Petkov <bp@alien8.de> wrote:
-> On Mon, May 05, 2014 at 05:52:17PM -0500, tthayer@altera.com wrote:
->> From: Thor Thayer <tthayer@altera.com>
->
-> Missing commit message.
-
-Whoops. I don't know what happened there. I'll fix it.
-
->
->> ---
->> v2: Use the SDRAM controller registers to calculate memory size
->>     instead of the Device Tree. Update To & Cc list. Add maintainer
->>     information.
+On Thursday 08 May 2014 04:26 PM, Ivan Khoronzhuk wrote:
+> 
+> On 05/08/2014 10:17 PM, Santosh Shilimkar wrote:
+>> On Thursday 08 May 2014 02:59 PM, Ivan Khoronzhuk wrote:
+>>> Add AEMIF/NAND device entry.
+>>>
+>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/k2e-evm.dts | 52 +++++++++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 52 insertions(+)
+>>>
+>> Thanks. Will pick this up for 3.16
 >>
->> v3: EDAC driver cleanup based on comments from Mailing list.
->>
->> Signed-off-by: Thor Thayer <tthayer@altera.com>
->> ---
->>  MAINTAINERS                |    5 +
->>  drivers/edac/Kconfig       |    9 +
->>  drivers/edac/Makefile      |    2 +
->>  drivers/edac/altera_edac.c |  411 ++++++++++++++++++++++++++++++++++++++++++++
->>  4 files changed, 427 insertions(+)
->>  create mode 100644 drivers/edac/altera_edac.c
->>
+> 
+> Ups. Seems I've not changed ubifs partition size, always think about 128 Mb, but here 512 Mb.
+> I will send updated version with correct partition size.
+> 
+> 
+I was about to reply that patch wasn't applying cleanly. V2 applied
+to for_3.16/dts branch.
 
-<snip>
+Can you also rebase the ke2 patch against the dts branch and
+repost it ?
 
->> --- /dev/null
->> +++ b/drivers/edac/altera_edac.c
->> @@ -0,0 +1,411 @@
->> +/*
->> + *  Copyright Altera Corporation (C) 2014. All rights reserved.
->> + *  Copyright 2011-2012 Calxeda, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * This file is subject to the terms and conditions of the GNU General Public
->> + * License.  See the file "COPYING" in the main directory of this archive
->> + * for more details.
->
-> I'm guessing your lawyers want this boilerplate after all?
->
+Thanks !!
 
-Yes. Their reasoning is that they want to retain the rights and
-warranty language with the file (just in case the COPYING file
-changes).
-
-> ...
->
->> +static irqreturn_t altr_sdram_mc_err_handler(int irq, void *dev_id)
->> +{
->> +     struct mem_ctl_info *mci = dev_id;
->> +     struct altr_sdram_mc_data *drvdata = mci->pvt_info;
->> +     u32 status = 0, err_count = 0, err_addr = 0;
->> +
->> +     /* Error Address is shared by both SBE & DBE */
->> +     regmap_read(drvdata->mc_vbase, ERRADDR, &err_addr);
->> +
->> +     regmap_read(drvdata->mc_vbase, DRAMSTS, &status);
->> +
->> +     if (status & DRAMSTS_DBEERR) {
->> +             regmap_read(drvdata->mc_vbase, DBECOUNT, &err_count);
->> +             edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci, err_count,
->> +                                  err_addr >> PAGE_SHIFT,
->> +                                  err_addr & ~PAGE_MASK, 0,
->> +                                  0, 0, -1, mci->ctl_name, "");
->
-> So, are we setting edac_mc_panic_on_ue now or what are we planning to do
-> for uncorrectable errors?
-
-Yes. I tested using edac_core.edac_mc_panic_on_ue=1 from the command
-line and it worked fine. I'll add a comment to clarify. BTW, thanks
-for your help on that.
-
->
->> +     if (status & DRAMSTS_SBEERR) {
->> +             regmap_read(drvdata->mc_vbase, SBECOUNT, &err_count);
-
-<snip>
-
->> +     if (count == 3) {
->> +             edac_printk(KERN_ALERT, EDAC_MC,
->> +                         "EDAC Inject Double bit error\n");
->> +             regmap_write(drvdata->mc_vbase, CTLCFG,
->> +                          (read_reg | CTLCFG_GEN_DB_ERR));
->> +     } else {
->> +             edac_printk(KERN_ALERT, EDAC_MC,
->> +                         "EDAC Inject Single bit error\n");
->> +             regmap_write(drvdata->mc_vbase, CTLCFG,
->> +                          (read_reg | CTLCFG_GEN_SB_ERR));
->
-> You can remove the "EDAC " string from those printks above as
-> edac_printk already adds the prefix.
-
-Great. Will do.
-
->
->> +     }
->> +
->> +     ptemp[0] = 0x5A5A5A5A;
->> +     ptemp[1] = 0xA5A5A5A5;
->> +     regmap_write(drvdata->mc_vbase, CTLCFG, read_reg);
->> +     /* Ensure it has been written out */
->> +     wmb();
->> +
->> +     reg = ptemp[0];
->> +     read_reg = ptemp[1];
->> +     /* Force Read */
->> +     rmb();
->
-> Have you checked whether those reads don't get optimized away by the
-> compiler? I know, you need them for triggering the error condition.
->
-> Also, you should add a comment here to explain why the reads are being
-> done.
-
-I considered using "volatile" variables, but decided against it after
-I read Documentation/volatile-considered-harmful.txt and my situation
-doesn't fit into the exemptions. Is there a better way to handle this?
-
-I'll add the comment.
-
-Thanks for reviewing and your comments.
-
-Thor
-
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> Sent from a fat crate under my desk. Formatting is fine.
-> --
+regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
