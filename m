@@ -1,61 +1,40 @@
-From: Shaik Ameer Basha <shaik.ameer@samsung.com>
-Subject: [PATCH v5 15/15] clk: exynos5420: add more registers to restore list
-Date: Thu, 08 May 2014 16:58:04 +0530
-Message-ID: <1399548484-20626-16-git-send-email-shaik.ameer@samsung.com>
-References: <1399548484-20626-1-git-send-email-shaik.ameer@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399548484-20626-1-git-send-email-shaik.ameer@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, t.figa@samsung.com, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 3/4] of/platform: fix device naming for non-translatable
+ addresses
+Date: Thu, 08 May 2014 14:47:34 +0300
+Message-ID: <1399549654.8165.1.camel@iivanov-dev>
+References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
+	 <1399499298-8830-4-git-send-email-robherring2@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399499298-8830-4-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn@kryo.se>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds more register offsets to the list for
-preserving their values during S2R.
+On Wed, 2014-05-07 at 16:48 -0500, Rob Herring wrote:
+> From: Rob Herring <robh@kernel.org>
+> 
+> Using non-translatable addresses in platform device names is wrong
+> because they may not be globally unique. Just use the default naming with
+> a global index if the address cannot be translated instead.
+> 
+> of_can_translate_address has the same checks as of_translate_address, so
+> we can remove it here as well.
+> 
+> Reported-by: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> Cc: Josh Cartwright <joshc@codeaurora.org>
+> Cc: Courtney Cavin <courtney.cavin@sonymobile.com>
+> Cc: Bjorn Andersson <bjorn@kryo.se>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
----
- drivers/clk/samsung/clk-exynos5420.c |   12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Thanks. It works for me. 
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index dd9e98d..4014e86 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -27,6 +27,7 @@
- #define DIV_CPU1		0x504
- #define GATE_BUS_CPU		0x700
- #define GATE_SCLK_CPU		0x800
-+#define CLKOUT_CMU_CPU		0xa00
- #define GATE_IP_G2D		0x8800
- #define CPLL_LOCK		0x10020
- #define DPLL_LOCK		0x10030
-@@ -39,7 +40,11 @@
- #define CPLL_CON0		0x10120
- #define DPLL_CON0		0x10128
- #define EPLL_CON0		0x10130
-+#define EPLL_CON1		0x10134
-+#define EPLL_CON2		0x10138
- #define RPLL_CON0		0x10140
-+#define RPLL_CON1		0x10144
-+#define RPLL_CON2		0x10148
- #define IPLL_CON0		0x10150
- #define SPLL_CON0		0x10160
- #define VPLL_CON0		0x10170
-@@ -140,6 +145,13 @@ static unsigned long exynos5420_clk_regs[] __initdata = {
- 	DIV_CPU1,
- 	GATE_BUS_CPU,
- 	GATE_SCLK_CPU,
-+	CLKOUT_CMU_CPU,
-+	EPLL_CON0,
-+	EPLL_CON1,
-+	EPLL_CON2,
-+	RPLL_CON0,
-+	RPLL_CON1,
-+	RPLL_CON2,
- 	SRC_TOP0,
- 	SRC_TOP1,
- 	SRC_TOP2,
--- 
-1.7.9.5
+Tested-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+
+Regards.
