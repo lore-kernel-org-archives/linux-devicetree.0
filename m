@@ -1,56 +1,79 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PULL #2/2] ARM: dts: DRA7/AM437x l3noc dts updates
-Date: Thu, 8 May 2014 08:04:18 -0700
-Message-ID: <20140508150417.GC26833@atomide.com>
-References: <1397492726-17203-1-git-send-email-nm@ti.com>
- <1398698101-25513-1-git-send-email-nm@ti.com>
- <20140505200322.GA9863@kahuna>
- <20140505200635.GB9863@kahuna>
+From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Subject: Re: KConfig and DTS files
+Date: Thu, 08 May 2014 08:06:46 -0700
+Message-ID: <536B9D86.3020806@boundarydevices.com>
+References: <536A697D.3020002@boundarydevices.com> <142702592.Qpp2HrZZke@wuerfel> <536A8456.1040208@boundarydevices.com> <5898724.4EExDycMZy@wuerfel> <536A8F03.5070509@boundarydevices.com> <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw@mail.gmail.com> <536ABC89.8060301@boundarydevices.com> <20140508115532.GJ28159@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140505200635.GB9863@kahuna>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140508115532.GJ28159-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Nishanth Menon <nm@ti.com> [140505 13:07]:
-> Hi Tony,
-> 
->    Please pull the following to the dts support of AM437x and DRA7
->    support for l3_noc for the upcoming 3.16 window. This series was posted
->    http://marc.info/?l=linux-omap&m=139750288003978&w=2 and the
->    functionality enabled by the first pull request for driver.
-> 
-> The following changes since commit 455c6fdbd219161bd09b1165f11699d6d73de11c:
-> 
->   Linux 3.14 (2014-03-30 20:40:15 -0700)
-> 
-> are available in the git repository at:
-> 
->   https://github.com/nmenon/linux-2.6-playground.git pull/l3noc/dts-fixes
-> 
-> for you to fetch changes up to 2eeddb8a5356e088021a8dd84de870de89bf793d:
-> 
->   ARM: dts: AM4372: add l3-noc information (2014-05-05 14:35:29 -0500)
+Hi Jason,
 
-Thanks pulling into omap-for-v3.16/fixes-not-urgent.
+On 05/08/2014 04:55 AM, Jason Cooper wrote:
+> On Wed, May 07, 2014 at 04:06:49PM -0700, Eric Nelson wrote:
+>> Hi Bjorn,
+>>
+>> On 05/07/2014 03:20 PM, Bjorn Andersson wrote:
+>>> On Wed, May 7, 2014 at 12:52 PM, Eric Nelson
+>>> <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
+>>> [...]
+>>>>
+>>>> I still wonder about the choice of not allowing inclusion
+>>>> of at least include/generated/autoconf.h.
+>>>
+>>> Because what you just showed is the use case where you have 1 defconfig, build 1
+>>> zImage and then you can have a completely separate delivery of X number of
+>>> dtbs, all defining some variant of your original board.
+>>> All without recompiling, or even have the source available.
+>>>
+>>
+>> I agree that there's some benefit in being able to generate
+>> different DTBs, and it's an advantage (size, speed) to customize
+>> the .config as well.
+>>
+>> When those clearly go together, it seems natural to define them as
+>> such.
+>
+> But they don't.  The end goal is that the dtb and the Linux kernel
+> _aren't_ tied together.  The dtb is shipped with the board, and you
+> configure/build your kernel how you want, and boot it.
+>
+> Look at the dtb as replacement for the mach-type or boardid number.
+> It's handed to the OS (not necessarily Linux) by the bootloader to say
+> "Here's what you're running on".  It's *not* a reflection of the
+> configuration of the Linux Kernel.  The dtb describes the hardware for a
+> specific board.  Nothing more, nothing less.
+>
+Therein lies the rub...
 
-Tony
- 
-> ----------------------------------------------------------------
-> Afzal Mohammed (1):
->       ARM: dts: AM4372: add l3-noc information
-> 
-> Rajendra Nayak (1):
->       ARM: dts: DRA7: Use dra7-l3-noc instead of omap4-l3-noc
-> 
->  arch/arm/boot/dts/am4372.dtsi |    6 +++++-
->  arch/arm/boot/dts/dra7.dtsi   |    6 +++---
->  2 files changed, 8 insertions(+), 4 deletions(-)
-> -- 
-> Regards,
-> Nishanth Menon
-> 
+In these days of SOCs with pin-muxing, a single description of
+"the board" is overly simplistic.
+
+> Several other projects use the dts files from the kernel tree.  Ian
+> Campbell even set up a filter-branch version of the dts files and the
+> binding docs so that other projects could clone that repo without
+> getting the entire Linux commit history.  If we tied the dts files to
+> Kconfig symbols, we'd make other projects lives much more difficult.
+> Not to mention possibly driving Ian to drink excessively. :)
+>
+Again, this highlights differing goals.
+
+My original question stemmed from a **desire** for customized
+DTBs to reflect customization of a board. We have dozens
+of custom and semi-custom versions of our tying these parts
+together would make things a bit easier.
+
+Regards,
+
+
+Eric
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
