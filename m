@@ -1,59 +1,139 @@
-From: Grant Likely <grant.likely@linaro.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 1/4] of/selftest: add testcase for nodes with same name
  and address
-Date: Thu, 8 May 2014 09:59:53 +0100
-Message-ID: <CACxGe6seW1MYC5iqZriXzrR1_hcR_DfLs5exUCLEZY3CRb28pw@mail.gmail.com>
-References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
- <1399499298-8830-2-git-send-email-robherring2@gmail.com> <536AF13F.6000502@gmail.com>
+Date: Thu, 8 May 2014 10:00:57 +0100
+Message-ID: <CACxGe6sWJwjPnbNYK9Uew8dXrFRukwFUB0PAKqX1sdc4udYUYw@mail.gmail.com>
+References: <1399499298-8830-1-git-send-email-robherring2@gmail.com> <1399499298-8830-2-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <536AF13F.6000502@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn@kryo.se>, Rob Herring <robh@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399499298-8830-2-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 8, 2014 at 3:51 AM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 5/7/2014 2:48 PM, Rob Herring wrote:
->> From: Rob Herring <robh@kernel.org>
->>
->> Add a test case for nodes which have the same name and same
->> non-translatable unit address.
+On Wed, May 7, 2014 at 10:48 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
-> If I apply patch 1 and 2 without applying 3 and 4 then console
-> warnings are printed, but from a different area of code than
-> the original problem reported.  This probably is not a big deal,
-> but I'm trying to figure out if I can modify the test to also
-> show the original problem.
+> Add a test case for nodes which have the same name and same
+> non-translatable unit address.
 >
-> The test case also properly reports the failure.
->
-> Once all 4 patches are applied, then the test case passes.
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-When adding testcases I do prefer the addition of the test to appear
-before the fix while the patch is under review. Makes it easy to see
-that, yes the bug exists, and yes the later patch resolves it.
+Looks good to me.
 
-When the patches are actually committed for merging then it is
-probably a good idea to reverse them. Thanks for the testing.
+Reviewed-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-g.
-
+> ---
+>  drivers/of/selftest.c                        | 23 ++++++++++++++++++
+>  drivers/of/testcase-data/testcases.dtsi      |  1 +
+>  drivers/of/testcase-data/tests-platform.dtsi | 35 ++++++++++++++++++++++++++++
+>  3 files changed, 59 insertions(+)
+>  create mode 100644 drivers/of/testcase-data/tests-platform.dtsi
 >
-> Thus:
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+> index ae44500..c93cb4a 100644
+> --- a/drivers/of/selftest.c
+> +++ b/drivers/of/selftest.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+>  #include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+>  #include <linux/list.h>
+>  #include <linux/mutex.h>
+>  #include <linux/slab.h>
+> @@ -427,6 +428,27 @@ static void __init of_selftest_match_node(void)
+>         }
+>  }
 >
->    Tested-by: Frank Rowand <frank.rowand@sonymobile.com>
+> +static void __init of_selftest_platform_populate(void)
+> +{
+> +       struct device_node *np, *child;
+> +       int rc;
+> +       struct of_device_id match[] = {
+> +               { .compatible = "test-device", },
+> +               {}
+> +       };
+> +
+> +       np = of_find_node_by_path("/testcase-data/platform-tests");
+> +       if (!np) {
+> +               pr_err("No testcase data in device tree\n");
+> +               return;
+> +       }
+> +
+> +       for_each_child_of_node(np, child) {
+> +               rc = of_platform_populate(child, match, NULL, NULL);
+> +               selftest(!rc, "Could not create device for node '%s'\n", child->name);
+> +       }
+> +}
+> +
+>  static int __init of_selftest(void)
+>  {
+>         struct device_node *np;
+> @@ -445,6 +467,7 @@ static int __init of_selftest(void)
+>         of_selftest_parse_interrupts();
+>         of_selftest_parse_interrupts_extended();
+>         of_selftest_match_node();
+> +       of_selftest_platform_populate();
+>         pr_info("end of selftest - %i passed, %i failed\n",
+>                 selftest_results.passed, selftest_results.failed);
+>         return 0;
+> diff --git a/drivers/of/testcase-data/testcases.dtsi b/drivers/of/testcase-data/testcases.dtsi
+> index 3a5b75a..6d8d980a 100644
+> --- a/drivers/of/testcase-data/testcases.dtsi
+> +++ b/drivers/of/testcase-data/testcases.dtsi
+> @@ -1,3 +1,4 @@
+>  #include "tests-phandle.dtsi"
+>  #include "tests-interrupts.dtsi"
+>  #include "tests-match.dtsi"
+> +#include "tests-platform.dtsi"
+> diff --git a/drivers/of/testcase-data/tests-platform.dtsi b/drivers/of/testcase-data/tests-platform.dtsi
+> new file mode 100644
+> index 0000000..eb20eeb
+> --- /dev/null
+> +++ b/drivers/of/testcase-data/tests-platform.dtsi
+> @@ -0,0 +1,35 @@
+> +
+> +/ {
+> +       testcase-data {
+> +               platform-tests {
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +
+> +                       test-device@0 {
+> +                               compatible = "test-device";
+> +                               reg = <0x0>;
+> +
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               dev@100 {
+> +                                       compatible = "test-sub-device";
+> +                                       reg = <0x100>;
+> +                               };
+> +                       };
+> +
+> +                       test-device@1 {
+> +                               compatible = "test-device";
+> +                               reg = <0x1>;
+> +
+> +                               #address-cells = <1>;
+> +                               #size-cells = <0>;
+> +
+> +                               dev@100 {
+> +                                       compatible = "test-sub-device";
+> +                                       reg = <0x100>;
+> +                               };
+> +                       };
+> +               };
+> +       };
+> +};
+> --
+> 1.9.1
 >
->>
->> Signed-off-by: Rob Herring <robh@kernel.org>
->> ---
->>  drivers/of/selftest.c                        | 23 ++++++++++++++++++
->>  drivers/of/testcase-data/testcases.dtsi      |  1 +
->>  drivers/of/testcase-data/tests-platform.dtsi | 35 ++++++++++++++++++++++++++++
->>  3 files changed, 59 insertions(+)
->>  create mode 100644 drivers/of/testcase-data/tests-platform.dtsi
->>
->
-> < snip >
->
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
