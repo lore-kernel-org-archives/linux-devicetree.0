@@ -1,90 +1,88 @@
-From: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Subject: Re: KConfig and DTS files
-Date: Thu, 08 May 2014 07:56:07 -0700
-Message-ID: <536B9B07.6060506@boundarydevices.com>
-References: <536A697D.3020002@boundarydevices.com> <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw@mail.gmail.com> <536ABC89.8060301@boundarydevices.com> <5266451.XWDQiRgflU@wuerfel>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [GIT PULL #1/2] bus: omap_l3_noc: driver fixes and DRA7/AM437x
+ support
+Date: Thu, 8 May 2014 08:03:58 -0700
+Message-ID: <20140508150357.GB26833@atomide.com>
+References: <1397492726-17203-1-git-send-email-nm@ti.com>
+ <1398698101-25513-1-git-send-email-nm@ti.com>
+ <20140505200322.GA9863@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5266451.XWDQiRgflU@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140505200322.GA9863@kahuna>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+* Nishanth Menon <nm@ti.com> [140505 13:03]:
+> Hi Tony,
+> 
+>    Please pull the following driver fixes based on V3 of l3noc fixes and
+>    support for DRA7 and AM437x for upcoming 3.16 window.
+>    http://marc.info/?l=linux-omap&m=139869922030493&w=2
+> 
+>    This is part 1 of the pull request containing purely the driver
+>    updates.
+> 
+> The following changes since commit 455c6fdbd219161bd09b1165f11699d6d73de11c:
+> 
+>   Linux 3.14 (2014-03-30 20:40:15 -0700)
+> 
+> are available in the git repository at:
+> 
+>   https://github.com/nmenon/linux-2.6-playground.git pull/l3noc/driver-fixes
+> 
+> for you to fetch changes up to 27b7d5f3cc49f2e5cd6c005d73696058b7140c5c:
+> 
+>   bus: omap_l3_noc: Add AM4372 interconnect error data (2014-05-05 14:34:37 -0500)
 
-On 05/08/2014 03:37 AM, Arnd Bergmann wrote:
-> On Wednesday 07 May 2014 16:06:49 Eric Nelson wrote:
->> On 05/07/2014 03:20 PM, Bjorn Andersson wrote:
->>> On Wed, May 7, 2014 at 12:52 PM, Eric Nelson
->>> <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
->>> [...]
->>>>
->>>> I still wonder about the choice of not allowing inclusion
->>>> of at least include/generated/autoconf.h.
->>>
->>> Because what you just showed is the use case where you have 1 defconfig, build 1
->>> zImage and then you can have a completely separate delivery of X number of
->>> dtbs, all defining some variant of your original board.
->>> All without recompiling, or even have the source available.
->>>
->>
->> I agree that there's some benefit in being able to generate
->> different DTBs, and it's an advantage (size, speed) to customize
->> the .config as well.
->>
->> When those clearly go together, it seems natural to define them as
->> such.
->>
->> I've heard (and appreciate) the pointers about how to get
->> past our current issue(s), but what's the rationale
->> for not allowing the inclusion of autoconf.h and
->> conditionals in the DTS?
->>
->> Is it a concern that things will become polluted and
->> hard to read?
->
-> You should be able to take any recent enough
-> Fedora/Debian/OpenSUSE/Ubuntu/OpenWRT kernel binary and install it on
-> all ARMv7 machines to get a working system, keeping your existing .dtb
-> file.
->
-> There are still a few issues to be worked out for that (e.g. some drivers
-> still can't be described in DT, and in some exceptional cases we break backwards
-> compatibility), but if the .dtb file depends on the kernel configuration,
-> it can never work, because the person building the kernel does not know
-> what hardware you have.
->
+Thanks pulling this into omap-for-v3.16/l3-noc.
 
-I think this highlights the difference in perspective.
-
-Your comments (and Bjorn's) reflect a goal of being able to
-build a single kernel/DTB that runs on multiple platforms.
-
-My goal(s) are quite different, and center on building
-an optimized system for a single purpose. Most customers
-of our boards target a single app, and essentially
-all of them use a sub-set of a board's functionality.
-
-We encourage them to optimize their kernel configurations to
-only include the meaningful pieces, which reduces boot time and
-memory usage, log file spew, et cetera. The same goes for userspace
-components: only include what you need.
-
-(Re)building the kernel is not seen as an onerous task, as it's
-a small piece of the puzzle.
-
-I appreciate the feedback, and I don't want to make a big
-deal of this. We have ways of achieving the goal, even if
-I do think that judicious use of #ifdef would be helpful.
-
-Regards,
-
-
-Eric
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
+ 
+> ----------------------------------------------------------------
+> Afzal Mohammed (2):
+>       bus: omap_l3_noc: ignore masked out unclearable targets
+>       bus: omap_l3_noc: Add AM4372 interconnect error data
+> 
+> Nishanth Menon (14):
+>       bus: omap_l3_noc: Fix copyright information
+>       bus: omap_l3_noc: remove iclk from omap_l3 struct
+>       bus: omap_l3_noc: populate l3->dev and use it
+>       bus: omap_l3_noc: switch over to relaxed variants of readl/writel
+>       bus: omap_l3_noc: un-obfuscate l3_targ address computation
+>       bus: omap_l3_noc: move L3 master data structure out
+>       bus: omap_l3_noc: convert target information into a structure
+>       bus: omap_l3_noc: convert flagmux information into a structure
+>       bus: omap_l3_noc: fix masterid detection
+>       bus: omap_l3_noc: make error reporting and handling common
+>       bus: omap_l3_noc: improve readability by using helper for slave event parsing
+>       bus: omap_l3_noc: add information about the type of operation
+>       bus: omap_l3_noc: Add information about the context of operation
+>       bus: omap_l3_noc: introduce concept of submodule
+> 
+> Peter Ujfalusi (5):
+>       drivers: bus: omap_l3: Convert to use devm_kzalloc
+>       drivers: bus: omap_l3: Convert to use devm_ioremap_resource()
+>       drivers: bus: omap_l3: Convert to use devm_request_irq()
+>       drivers: bus: omap_l3: Remove the platform driver's remove function
+>       drivers: bus: omap_l3: Change pr_crit() to dev_err() when IRQ request fails
+> 
+> Rajendra Nayak (2):
+>       bus: omap_l3_noc: Add support for discountinous flag mux input numbers
+>       bus: omap_l3_noc: Add DRA7 interconnect error data
+> 
+> Sricharan R (2):
+>       bus: omap_l3_noc: rename functions and data to omap_l3
+>       bus: omap_l3_noc: use of_match_data to pick up SoC information
+> 
+>  .../devicetree/bindings/arm/omap/l3-noc.txt        |    2 +
+>  drivers/bus/omap_l3_noc.c                          |  406 ++++++++-------
+>  drivers/bus/omap_l3_noc.h                          |  545 +++++++++++++++-----
+>  3 files changed, 653 insertions(+), 300 deletions(-)
+> -- 
+> Regards,
+> Nishanth Menon
+> 
