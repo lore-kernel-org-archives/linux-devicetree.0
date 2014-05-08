@@ -1,78 +1,296 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: KConfig and DTS files
-Date: Wed, 7 May 2014 22:25:13 -0500
-Message-ID: <20140508032513.GR7047@lukather>
-References: <536A697D.3020002@boundarydevices.com>
- <CAOesGMiHRQV+XngH4ABSeT8KDeP=iKn1ogvTA0j1BdyBwAaWSA@mail.gmail.com>
- <536A71AF.1010907@boundarydevices.com>
- <CAOesGMhMeLkzEeVKHM2G9Vqth6qypURN6mxbNdySVvKhQBCs5A@mail.gmail.com>
+From: Emil Medve <Emilian.Medve-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 4/6] powerpc/corenet: Create the dts components for the
+ DPAA FMan
+Date: Wed, 7 May 2014 22:23:51 -0500
+Message-ID: <536AF8C7.8080304@Freescale.com>
+References: <1397823693-27977-1-git-send-email-Shruti@Freescale.com>
+	 <1397823693-27977-4-git-send-email-Shruti@Freescale.com>
+	 <1398118262.1694.188.camel__8135.6513932862$1398128944$gmane$org@snotra.buserror.net>
+	 <5364BEB3.6000904@Freescale.com>
+	 <1399332359.15726.154.camel@snotra.buserror.net>
+	 <53687913.70900@Freescale.com>
+ <1399431248.15726.255.camel@snotra.buserror.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="X35wERi4JU/f1kly"
-Return-path: <devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMhMeLkzEeVKHM2G9Vqth6qypURN6mxbNdySVvKhQBCs5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-compiler-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-compiler-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399431248.15726.255.camel-88ow+0ZRuxG2UiBs7uKeOtHuzzzSOjJt@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Scott Wood <scottwood-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>
+Cc: Shruti Kanetkar <Shruti-eDlz3WWmN0ll57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Scott,
 
---X35wERi4JU/f1kly
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 07, 2014 at 10:55:27AM -0700, Olof Johansson wrote:
-> It is really annoying that you can't include a DTS in another DTS
-> (only DTSIs). This is a major shortcoming of the tools, as far as I am
-> concerned.
->=20
-> So, the best way we've found to do this is to create a shared dtsi
-> that has practically everything in it, then a skeleton DTS for the
-> "full" product, and a separate DTS for the cost-reduced version. The
-> cost-reduced DTS would insert a status =3D "disabled"; for the sdio
-> controller. That's a solution that scales very poorly as well, though.
->=20
-> Best would be if a DTS could just include another DTS for minor
-> updates, such as disabling the sdio controller in this case. I'm sure
-> there were some language-puritan reasons for not allowing that though.
-> Someone care to fill in the history?
+At this point, I'm getting a bit lost in this thread and I feel we're
+getting into more generic comments. I'll continue to answer to some of
+your comments to make sure I understand them. However, one major comment
+I feel you made was about seeing a full FMan binding. If that's a deal
+breaker, please let me know and we'll just drop the patches
 
-I don't know wether it's actually good or not, but we're using just
-this for the imx28-cfa* boards, and it works quite well.
 
-Maxime
+Cheers,
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
 
---X35wERi4JU/f1kly
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTavkYAAoJEBx+YmzsjxAg42UP+wXrOOICpfDGFPhg7ZhuJDSv
-Ainei0mYUv5j/tYJCtuY36uE2Y6Szgjwv9+nliK2l26Hfsm55rMm4OWcmtdPXOQl
-RAjlyg0/BW/kLKfv2pXeIM3fD7aQ7/Cx+gJWqmkuUreNEbiyJzwMvP3yZBl+xlQ3
-KpK1qD5yJVjqdbXS9eRrWT+6ONFcf8O+t5/IRqHpwed1ZTlcBlpmUmMK0UtBduAp
-6Y2/qQ/h+sVAuurtzSNV906fnZG2jfEuVUJPRuk/u0DKvavqsL9JUM8F17sWsmNe
-v1iI2U22qbO4MkN0vSvNJEp//DR78yThWn78jB40NkJoNDyYeRzO2kE4gyBI/Ool
-ntr1Fp+/2nMnBPqZWStknPo+O27BAjmliR7CLtzofCBQhkH5wNoqDM2FwPJu3lwa
-VeDzq9Dv/hs/ywcfM6LlSRMhfRnsM4UEFgbiRDjXOJOlxRpbcygddoSF5wc7eS4L
-AnOIkCiCUGwt87hzZapKfRBye+/BQDMSUW8ZGip/x8yvgjdNi84Gz3DS14oXzX27
-Fr2WXZhp1fFGdOtBfhdn1ZGu2ysysRd5q4IIS+IOElj9Aq/DIaZFQMZWxvZ551zn
-Hnml82FHPtskyDu5rOEwhiJSy9FCf/MUgPgcT6AhBKXOk8Gf7hq0YEzDSkdJPwHG
-S3bL/KBodF5KdD/Wllll
-=ucCQ
------END PGP SIGNATURE-----
-
---X35wERi4JU/f1kly--
+On 05/06/2014 09:54 PM, Scott Wood wrote:
+> On Tue, 2014-05-06 at 00:54 -0500, Emil Medve wrote:
+>> Hello Scott,
+>>
+>>
+>> On 05/05/2014 06:25 PM, Scott Wood wrote:
+>>> On Sat, 2014-05-03 at 05:02 -0500, Emil Medve wrote:
+>>>> Hello Scott,
+>>>>
+>>>>
+>>>> On 04/21/2014 05:11 PM, Scott Wood wrote:
+>>>>> On Fri, 2014-04-18 at 07:21 -0500, Shruti Kanetkar wrote:
+>>>>>> +fman@400000 {
+>>>>>> +	mdio@f1000 {
+>>>>>> +		#address-cells = <1>;
+>>>>>> +		#size-cells = <0>;
+>>>>>> +		compatible = "fsl,fman-xmdio";
+>>>>>> +		reg = <0xf1000 0x1000>;
+>>>>>> +	};
+>>>>>> +};
+>>>>>
+>>>>> I'd like to see a complete fman binding before we start adding pieces.
+>>>>
+>>>> The driver for the FMan 10 Gb/s MDIO has upstreamed a couple of years
+>>>> ago: '9f35a73 net/fsl: introduce Freescale 10G MDIO driver', granted
+>>>> without a binding writeup.
+>>>
+>>> Pushing driver code through the netdev tree does not establish device
+>>> tree ABI.  Binding documents and dts files do.
+>>
+>> Sure, ideally and formally. But upstreaming a driver represents, if
+>> nothing else, a statement of intent to observe a device tree ABI.
+> 
+> Ideally, yes (or rather, ideally the driver patch should have been
+> rejected due to lack of a binding document).  But in practice it's way
+> too easy for bad stuff to slip in via driver code, especially when it
+> goes via a subsystem maintainer that is different from the one who would
+> be reviewing the binding.
+> 
+>>  Via the SDK, FSL customers are using the device tree ABI the driver de
+>> facto establishes.
+> 
+> ABI of any sort established by the SDK or other non-upstream trees is
+> not binding on upstream.  Yes, it's a pain for customers, which is why
+> ABI should go upstream ASAP.
+> 
+>>>> This patch series should probably include a
+>>>> binding blurb. However, let's not gate this patchset on a complete
+>>>> binding for the FMan
+>>>
+>>> I at least want to see enough of the FMan binding to have confidence
+>>> that what we're adding now is correct.
+>>
+>> I'm not sure what you're looking for. The nodes we're adding are
+>> describing a very common CCSR space interface for quite common device blocks
+> 
+> ...embedded in a variety of different blocks.
+> 
+> If the mdio can truly stand alone, then maybe just submit the mdio node
+> without being enclosed in an fman node.
+> 
+>>>> As you know we don't own the FMan work and the FMan work is... not ready
+>>>> for upstreaming.
+>>>
+>>> I'm not asking for a driver, just a binding that describes hardware.  Is
+>>> there any reason why the fman node needs to be anywhere near as
+>>> complicated as it is in the SDK, if we're limiting it to actual hardware
+>>> description?
+>>
+>> Is this a trick question? :-) Of course it doesn't need to be more
+>> complicated than actual hardware. But, to repeat myself, said
+>> description is not... ready and I don't know when it will be. Somebody
+>> else owns pushing the bulk of FMan upstream and I'd rather not step on
+>> their turf quite like this
+> 
+> If they want to defend their "turf" they can submit a patch.  Now.  This
+> has gone on long enough.
+> 
+> I'm tempted to submit a binding myself.  I don't know much about
+> datapath, so I'll probably screw it up.  Please beat me to it. :-)
+> 
+>>> Do we really need to have nodes for all the sub-blocks?
+>>
+>> Definitely no, and internally I'm pushing to clean that up. However, you
+>> surely remember we've been pushing from the early days of P4080 and it's
+>> been, to put it optimistically, slow
+> 
+> Stop pushing them and start pushing patches.
+> 
+> Just do it in the right order. :-)
+> 
+>>>> In an attempt to make some sort of progress we've
+>>>> decided to upstream the pieces that are less controversial and MDIO is
+>>>> an obvious candidate
+>>>>
+>>>>>> +fman@400000 {
+>>>>>> +	mdio0: mdio@e1120 {
+>>>>>> +		#address-cells = <1>;
+>>>>>> +		#size-cells = <0>;
+>>>>>> +		compatible = "fsl,fman-mdio";
+>>>>>> +		reg = <0xe1120 0xee0>;
+>>>>>> +	};
+>>>>>> +};
+>>>>>
+>>>>> What is the difference between "fsl,fman-mdio" and "fsl,fman-xmdio"?  I
+>>>>> don't see the latter on the list of compatibles in patch 3/6.
+>>>>
+>>>> 'fsl,fman-mdio' is the 1 Gb/s MDIO (Clause 22 only). 'fsl,fman-xmdio' is
+>>>> the 10 Gb/s MDIO (Clause 45 only). We can respin this patch wi
+>>>>
+>>>
+>>> "respin this patch wi..."?
+>>
+>> Not sure where the end of that sentence went. I meant we'll re-spin with
+>> a binding for the 10 Gb/s MDIO block
+>>
+>>>> I believe 'fsl,fman-mdio' (and others on that list) was added
+>>>> gratuitously as the FMan MDIO is completely compatible with the
+>>>> eTSEC/gianfar MDIO driver, but we can deal with that later
+>>>
+>>> It's still good to identify the specific device, even if it's believed
+>>> to be 100% compatible.
+>>
+>> You suggesting we create new compatibles for every instance/integration
+>> of a hardware block even though is identical with an earlier hardware
+>> integration?
+> 
+> "100% compatible" is a different statement from actually being identical
+> logic.  How do you know that absolutely nothing changed?
+> 
+>>  Well, I guess that's been done that and now we have about 8
+>> different compatibles that convey no real difference at all
+> 
+> So?  Remember that a node can have multiple compatible strings.  After
+> you identify the exact logic being used, you can list older instances
+> that are believed to be compatible.
+> 
+>>>>> Within each category, is the exact fman version discoverable from the
+>>>>> mdio registers?
+>>>>
+>>>> No, but that's irrelevant as that's not the difference between the two
+>>>> compatibles
+>>>
+>>> It's relevant because it means the compatible string should have a block
+>>> version number in it, or at least some other way in the MDIO node to
+>>> indicate the block version.
+>>
+>> The 1 Gb/s MDIO block doesn't track a version of its own and from a
+>> programming interface perspective it has no visible difference since
+>> eTSEC. The 10 Gb/s MDIO doesn't track a version of its own either and
+>> across the existing FMan versions is identical from a programming
+>> interface perspective
+>>
+>> I guess we can append a 'v1.0' to the MDIO compatible(s). However, given
+>> the SDK we'll have to support the compatibles the (already upstream)
+>> drivers support. Dealing with all that legacy is going to be so tedious
+> 
+> I'm not going to insist that the drivers stop supporting what they
+> currently support, but I don't agree with the statement that "given the
+> SDK we'll have to...".
+> 
+>>>>>> +fman@500000 {
+>>>>>> +	#address-cells = <1>;
+>>>>>> +	#size-cells = <1>;
+>>>>>> +	compatible = "simple-bus";
+>>>>>
+>>>>> Why is this simple-bus?
+>>>>
+>>>> Because that's the translation type for the FMan sub-nodes.
+>>>
+>>> What do you mean by "translation type"?
+>>
+>> I mean address translation across buses
+> 
+> What translation across buses?
+> 
+>>>> We need it now to get the MDIO nodes probed
+>>>
+>>> No.  "simple-bus" is stating an attribute of the hardware, that the
+>>> child nodes represent simple memory-mapped devices that can be used
+>>> without special bus knowledge.  I don't think that applies here.
+>>
+>> Yes it does. The FMan sub-nodes are "simple memory-mapped devices that
+>> can be used without special bus knowledge". Perhaps you're thinking
+>> about the PHY devices on the MDIO bus
+> 
+> No, I'm not thinking about that.
+> 
+> What I find particularly disturbing about putting simple-bus on the fman
+> node is that it applies to whatever other subnodes get added in the
+> future, and we don't yet have any idea what those nodes will be (or at
+> least I don't).
+> 
+>>> You can get the MDIO node probed without misusing simple-bus by adding
+>>> the fman node's compatible to the probe list in the kernel code.
+>>
+>> I think that's gratuitous and it's been done gratuitously in the past
+>> for CCSR space (sub-)nodes
+> 
+> CCSR is a simple-bus, so I'm not sure what you're referring to.
+> 
+>>> This sort of thing is why I want to see what the rest of the fman
+>>> binding will look like.
+>>>
+>>>>  and we'll needed later to probe other nodes/devices that will have
+>>>> standalone drivers: MAC, MURAM. etc. 
+>>>
+>>> How are they truly standalone?
+>>
+>> I meant that they have individual drivers and they are not handled by
+>> the high-level FMan driver
+> 
+> That's software description, not hardware description.  Surely those
+> drivers cooperate in some manner.
+> 
+>>> The exist in service to the greater
+>>> entity that is fman.  They presumably work together in some fashion.
+>>
+>> Some blocks can work independently. 
+> 
+> If any cannot, then simple-bus is wrong.
+> 
+>> The MURAM is an example and it seems the existing CPM/QE MURAM code
+>> allows it to be used as regular memory.
+> 
+> But it's supposed to be used for CPM/QE/Fman.  If an OS chooses to
+> ignore that and bind a generic driver to it, that's the OS's choice, but
+> the device tree shouldn't pretend that this is an unrelated bag of
+> devices.
+> 
+>>  The MDIO block could handle
+>> PHY(s) for other MACs in the system.
+> 
+> That doesn't necessarily mean the MDIO is totally independent.  E.g.
+> some versions of eTSEC have a TBIPA register that affects the operation
+> of the MDIO controller, but is not in the MDIO register area.
+> 
+>>>>> Where's the compatible?  Why is this file different from all the others?
+>>>>
+>>>> The FMan v3 MDIO block (supports both Clause 22/45) is compatible with
+>>>> the FMan v2 10 Gb/s MDIO (the xgmac-mdio driver). However, the driver
+>>>> needs a small clean-up patch (still in internal review) that will get it
+>>>> working for FMan v3 MDIO.
+>>>
+>>> This suggests that it is not 100% backwards compatible.
+>>
+>> It is. The code is just not everything it should be
+> 
+> The code works with one v2, and breaks with v3.  Thus, something is
+> different.  Whether the difference is enough to prevent claiming
+> compatibility depends on the detials (e.g. if the difference is
+> parameterized through another DT property, or if the difference is
+> within what is allowed by the specs of the original device), but it
+> suggests they are not literally the same logic.  Unles the difference is
+> not due to v2 versus v3 but some difference elsewhere in the system?
+> 
+> -Scott
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree-compiler" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
