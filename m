@@ -1,116 +1,83 @@
-From: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v3] pcie: Add Xilinx PCIe Host Bridge IP driver
-Date: Thu, 8 May 2014 18:58:25 +0530
-Message-ID: <CA+mB=1LiwKEZgOF7wUMfhpNCv2+n00QLibjznvP_FuZ6eTb3=g@mail.gmail.com>
-References: <1397561911-11647-1-git-send-email-sthokal@xilinx.com>
-	<201404301734.14478.arnd@arndb.de>
-	<CA+mB=1K_AU5cLsW0J9OhVXmpvc+nYSZwpS5iyNXVTFpibfHq6g@mail.gmail.com>
-	<4288313.uDFYZQS3W7@wuerfel>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 0/3] ARM: sunxi: Add support for consumer
+ infrared devices
+Date: Thu, 08 May 2014 15:55:41 +0200
+Message-ID: <536B8CDD.7040600@redhat.com>
+References: <1398871010-30681-1-git-send-email-bay@hackerdom.ru>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4288313.uDFYZQS3W7@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Srikanth Thokala <sthokal-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, will.deacon-5wv7dgnIgG8@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB7EZV2NQKGQEMC3LRMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1398871010-30681-1-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 7, 2014 at 8:05 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 07 May 2014 17:21:13 Srikanth Thokala wrote:
->> On Wed, Apr 30, 2014 at 9:04 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> > On Tuesday 15 April 2014, Srikanth Thokala wrote:
->> >> +/**
->> >> + * xilinx_pcie_get_config_base - Get configuration base
->> >> + * @bus: Bus structure of current bus
->> >> + * @devfn: Device/function
->> >> + * @where: Offset from base
->> >> + *
->> >> + * Return: Base address of the configuration space needed to be
->> >> + *      accessed.
->> >> + */
->> >> +static void __iomem *xilinx_pcie_get_config_base(struct pci_bus *bus,
->> >> +                                              unsigned int devfn,
->> >> +                                              int where)
->> >> +{
->> >> +     struct xilinx_pcie_port *port = sys_to_pcie(bus->sysdata);
->> >> +     int relbus;
->> >> +
->> >> +     relbus = (bus->number << ECAM_BUS_NUM_SHIFT) |
->> >> +              (devfn << ECAM_DEV_NUM_SHIFT);
->> >> +
->> >> +     return port->reg_base + relbus + where;
->> >> +}
->> >
->> > Does this mean you have an ECAM-compliant config space? Nice!
->> >
->> > Would it be possible to split the config space access out into
->> > a separate file? It would be nice to share that with the generic
->> > ECAM driver that Will Deacon has sent.
->>
->> Yes, it should be possible.  Is it ok, if I work on top of this driver?
->
-> Do you mean as a follow-on patch? My feeling is that since we are trying
-> to merge both for 3.16, it would be good to get it done right away if
-> it doesn't cause too much extra work.
+Hi,
 
-Sure, I will work with Will and let you know.
+On 04/30/2014 05:16 PM, Alexander Bersenev wrote:
+> This patch introduces Consumer IR(CIR) support for sunxi boards.
+> 
+> This is based on Alexsey Shestacov's work based on the original driver 
+> supplied by Allwinner.
+> 
+> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
 
->
->> >> +/**
->> >> + * xilinx_pcie_enable_msi - Enable MSI support
->> >> + * @port: PCIe port information
->> >> + */
->> >> +static void xilinx_pcie_enable_msi(struct xilinx_pcie_port *port)
->> >> +{
->> >> +     port->msg_addr = __get_free_pages(GFP_KERNEL, 0);
->> >> +
->> >> +     pcie_write(port, 0x0, XILINX_PCIE_REG_MSIBASE1);
->> >> +     pcie_write(port, virt_to_phys((void *)port->msg_addr),
->> >> +                XILINX_PCIE_REG_MSIBASE2);
->> >> +}
->> >
->> > As a general comment about the MSI implementation, I wonder if this is actually
->> > generic enough to be shared with other host controllers. It could be moved
->> > into a separate file like the config space access in that case.
->>
->> I feel the MSI implementation is not generic by looking into the other
->> host controllers,
->> it is more specific to the hardware.  Correct me, if am wrong.
->
-> The other host controllers are certainly incompatible, but this one looks
-> like it could be used on other controllers easily.
->
-> Splitting it out would also make it easier to use another MSI implementation
-> like the one in the GIC.
+Alexander, v5 still has various issues which need fixing,
+do you plan to do a v6 soon ?
 
-I need to look into this and I will come back to you.
+Regards,
 
->
->
->> >> +     /* Register the device */
->> >> +     pci_common_init_dev(dev, &hw);
->> >> +
->> >> +     platform_set_drvdata(pdev, port);
->> >
->> > Don't you have to do the platform_set_drvdata() before pci_common_init_dev()?
->>
->> It should be fine, as I don't see any dependencies.
->
-> Ah, it's only used in the remove function. It looks correct then, but I think
-> it would be better to set it first anyway, in case another function starts using
-> the drvdata later and that function may get called by the PCI initialization.
+Hans
 
-Ok.
-
-Srikanth
-
->
->         Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> ---
+> Changes since version 1: 
+>  - Fix timer memory leaks 
+>  - Fix race condition when driver unloads while interrupt handler is active
+>  - Support Cubieboard 2(need testing)
+> 
+> Changes since version 2:
+> - More reliable keydown events
+> - Documentation fixes
+> - Rename registers accurding to A20 user manual
+> - Remove some includes, order includes alphabetically
+> - Use BIT macro
+> - Typo fixes
+> 
+> Changes since version 3:
+> - Split the patch on smaller parts
+> - More documentation fixes
+> - Add clock-names in DT
+> - Use devm_clk_get function to get the clocks
+> - Removed gpios property from ir's DT
+> - Changed compatible from allwinner,sunxi-ir to allwinner,sun7i-a20-ir in DT
+> - Use spin_lock_irq instead spin_lock_irqsave in interrupt handler
+> - Add myself in the copyright ;)
+> - Coding style and indentation fixes
+> 
+> Changes since version 4:
+> - Try to fix indentation errors by sending patches with git send-mail
+> 
+> Alexander Bersenev (3):
+>   ARM: sunxi: Add documentation for sunxi consumer infrared devices
+>   ARM: sunxi: Add driver for sunxi IR controller
+>   ARM: sunxi: Add IR controller support in DT on A20
+> 
+>  .../devicetree/bindings/media/sunxi-ir.txt         |  23 ++
+>  arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |   6 +
+>  arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |   6 +
+>  arch/arm/boot/dts/sun7i-a20.dtsi                   |  31 +++
+>  drivers/media/rc/Kconfig                           |  10 +
+>  drivers/media/rc/Makefile                          |   1 +
+>  drivers/media/rc/sunxi-ir.c                        | 303 +++++++++++++++++++++
+>  7 files changed, 380 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/sunxi-ir.txt
+>  create mode 100644 drivers/media/rc/sunxi-ir.c
+> 
