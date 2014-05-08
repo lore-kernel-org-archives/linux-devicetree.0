@@ -1,34 +1,93 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] of: Add of_device_destroy_children() function
-Date: Thu, 8 May 2014 14:33:39 -0600
-Message-ID: <20140508203339.GA542@obsidianresearch.com>
-References: <1399567069-3174-1-git-send-email-s.nawrocki@samsung.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: k2e-evm: add AEMIF/NAND device entry
+Date: Thu, 8 May 2014 23:33:37 +0300
+Message-ID: <536BEA21.8020603@ti.com>
+References: <1399575560-31090-1-git-send-email-ivan.khoronzhuk@ti.com> <1399581089-2505-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399567069-3174-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1399581089-2505-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 08, 2014 at 06:37:49PM +0200, Sylwester Nawrocki wrote:
-> This patch adds a helper function to unregister devices which
-> were created by an of_platform_populate() call. The pattern
-> used here can already be found in multiple drivers. This helper
-> can now be used instead of repeating similar code in drivers.
+ignore this
 
-I have a driver that does this as well, and what I found is that the
-remove must be in reverse order from the create or things explode, and
-that assumes the DT is topologically sorted according to dependency
-(so no deferred probe).
+On 05/08/2014 11:31 PM, Ivan Khoronzhuk wrote:
+> Add AEMIF/NAND device entry.
+>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+> ---
+>   arch/arm/boot/dts/k2e-evm.dts | 52 +++++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 52 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
+> index 74b3b63..0370e2f 100644
+> --- a/arch/arm/boot/dts/k2e-evm.dts
+> +++ b/arch/arm/boot/dts/k2e-evm.dts
+> @@ -58,3 +58,55 @@
+>   &usb1 {
+>   	status = "okay";
+>   };
+> +
+> +&aemif {
+> +	cs0 {
+> +		#address-cells = <2>;
+> +		#size-cells = <1>;
+> +		clock-ranges;
+> +		ranges;
+> +
+> +		ti,cs-chipselect = <0>;
+> +		/* all timings in nanoseconds */
+> +		ti,cs-min-turnaround-ns = <12>;
+> +		ti,cs-read-hold-ns = <6>;
+> +		ti,cs-read-strobe-ns = <23>;
+> +		ti,cs-read-setup-ns = <9>;
+> +		ti,cs-write-hold-ns = <8>;
+> +		ti,cs-write-strobe-ns = <23>;
+> +		ti,cs-write-setup-ns = <8>;
+> +
+> +		nand@0,0 {
+> +			compatible = "ti,keystone-nand","ti,davinci-nand";
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +			reg = <0 0 0x4000000
+> +			       1 0 0x0000100>;
+> +
+> +			ti,davinci-chipselect = <0>;
+> +			ti,davinci-mask-ale = <0x2000>;
+> +			ti,davinci-mask-cle = <0x4000>;
+> +			ti,davinci-mask-chipsel = <0>;
+> +			nand-ecc-mode = "hw";
+> +			ti,davinci-ecc-bits = <4>;
+> +			nand-on-flash-bbt;
+> +
+> +			partition@0 {
+> +				label = "u-boot";
+> +				reg = <0x0 0x100000>;
+> +				read-only;
+> +			};
+> +
+> +			partition@100000 {
+> +				label = "params";
+> +				reg = <0x100000 0x80000>;
+> +				read-only;
+> +			};
+> +
+> +			partition@180000 {
+> +				label = "ubifs";
+> +				reg = <0x180000 0x7E80000>;
+> +			};
+> +		};
+> +	};
+> +};
 
-AFAIK, there is no analog to deferred probe for removal, and
-attempting to remove, say, a GPIO driver while an I2C bit bang is using
-it just fails.
+-- 
+Regards,
+Ivan Khoronzhuk
 
-Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
