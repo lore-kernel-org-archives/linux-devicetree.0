@@ -1,88 +1,59 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 3/4] irqchip: gic: Add support for per CPU bank offset
- specification in DT
-Date: Thu, 8 May 2014 13:04:11 -0500
-Message-ID: <CAL_JsqKwSuRebXdtfmrRCxhfwFOk8AMYUdeYX7SFu=ssM3=_hg@mail.gmail.com>
-References: <1397832181-5153-1-git-send-email-t.figa@samsung.com>
-	<1397832181-5153-4-git-send-email-t.figa@samsung.com>
-	<CAL_Jsq+wCDWnZ-wemMPc1tvpnK3kd=bx5fkT5GAP_QyLPjQfJQ@mail.gmail.com>
-	<536BBA3F.4020908@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
+Date: Thu, 8 May 2014 20:46:34 +0200
+Message-ID: <CAMuHMdVR9n8E-LyHn1B0REE4oTVbfJf-9v1Bo70bHCH_=r4-Vw@mail.gmail.com>
+References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be>
+	<1399494750-31996-2-git-send-email-geert+renesas@glider.be>
+	<536B7FD3.5090506@cogentembedded.com>
+	<CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com>
+	<536B8340.4010901@cogentembedded.com>
+	<CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>
+	<536BC445.8080007@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <536BBA3F.4020908@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <536BC445.8080007@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 8, 2014 at 12:09 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-> On 08.05.2014 19:04, Rob Herring wrote:
->> On Fri, Apr 18, 2014 at 9:43 AM, Tomasz Figa <t.figa@samsung.com> wrote:
->>> On most platforms GIC registers are banked, so each CPU can access its
->>> registers at the same address. However there is a small number of SoCs
->>> on which the banking is not implemented and each CPU has its GIC
->>> register set at different offset from GIC base address.
->>>
->>> Originally the driver used simple maths to calculate the address, i.e.
->>> multiplying constant percpu_offset by cpu_logical_map(cpu). However this
->>> assumed the namespace of cpu_logical_map() to be from 0 to num_cpus-1,
->>> but if CPU topology is specified via DT, this changes to full ID in
->>> the same format as MPIDR register and thus breaks the assumption.
->>>
->>> This patch adds support for per CPU GIC bank offset specification
->>> through device tree to separate SoC-internal core wiring from CPU
->>> multi-processor IDs.
->>>
->>> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
->>> ---
->>>  Documentation/devicetree/bindings/arm/cpus.txt |  7 ++
->>>  Documentation/devicetree/bindings/arm/gic.txt  | 34 +++++++++-
->>>  drivers/irqchip/irq-gic.c                      | 94 ++++++++++++++++++--------
->>>  3 files changed, 105 insertions(+), 30 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->>> index 333f4ae..47654e6 100644
->>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->>> @@ -209,6 +209,13 @@ nodes to be present and contain the properties described below.
->>>                 Value type: <phandle>
->>>                 Definition: Specifies the ACC[2] node associated with this CPU.
->>>
->>> +       - gic-offset
->>> +               Usage: required for systems that have non-banked GIC
->>> +                      implementation that requires each CPU to use different
->>> +                      offset to access its set of GIC registers
->>> +               Value type: <u32>
->>> +               Definition: Specifies the offset of GIC registers specific to
->>> +                           this CPU.
->>
->> What if you have 1 distributor address and a per cpu address which is
->> allowed in the gicv2 spec IIRC.
+Hi Sergei,
+
+On Thu, May 8, 2014 at 7:52 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>>>>>> +               /* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
 >
-> Hmm, I need to take a look at GIC v2 spec... but I think my proposed
-> binding would still cover this, as the implementation (if modified to
-> support this) would simply ignore the offset for distributor in this case.
-
-How does the implementation know whether to ignore the offset for the
-distributor or not?
-
->> I think I would rather see this stay contained within the gic node and
->> use reg property.
+>>>>>      This property is mandatory, according to the bindings.
 >
-> How do we match reg entries with CPUs then? The first idea that comes to
-> my mind would be adding arm,cpu-map property that would list MPIDR
-> values of CPUs in the same order as register banks are listed in reg
-> property but I'm not sure this is a good idea.
+>>>> Indeed, but you cannot put anything there until the platform has CCF, as
+>>>> mstp3_clks doesn't exist yet.
+>
+>>>     Yes, that was the main obstacle to accepting those bindings sooner.
+>>> This patch therefore seems somewhat premature.
+>
+>> My main objective is to provide working Ethernet support for Armadillo
+>> reference now.
+>
+>    Mine was the same (but for BOCK-W board) but DT people didn't give a
+> damn. :-) So there's still no Ethernet support in BOCK-W DT.
 
-How do you do it currently?
+Yes there is: ethernet@18300000.
 
-The issue with putting properties in the cpu node is it does not
-scale. What if you had 10 per cpu properties on 10 different blocks.
+>> The DTS already has other nodes without "clocks" properties.
+>
+>    It means not everybody submitting the bindings had the same bad luck as me. :-)
 
-Using the MPIDR directly is a bit specific. I would perhaps just do
-something like this:
+I think we have to be pragmatic here. The clocks properties will be added to
+the dtsi as soon as we have CCF support.
 
-gic-cpu-map = <&CPU0 &CPU1>;
+Gr{oetje,eeting}s,
 
-Rob
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
