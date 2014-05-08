@@ -1,51 +1,59 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH v2 2/5] ARM: dts: enable fimd for exynos5250 based snow board
-Date: Thu, 8 May 2014 14:57:01 +0530
-Message-ID: <CAK9yfHxC9-y57PyJHj1W7ys8RMA8fVcWM4UT2AOfMHt3KmSbMw@mail.gmail.com>
-References: <1399529995-8656-1-git-send-email-rahul.sharma@samsung.com>
-	<1399529995-8656-3-git-send-email-rahul.sharma@samsung.com>
-	<002701cf6a8d$ef7b4540$ce71cfc0$%han@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2 2/3] ARM: dts: oma3-gta04: Add display support
+Date: Thu, 8 May 2014 12:39:12 +0300
+Message-ID: <536B50C0.7030002@ti.com>
+References: <1398284120-4986-1-git-send-email-marek@goldelico.com>	<1398284120-4986-3-git-send-email-marek@goldelico.com>	<5369DAC6.6050608@ti.com> <CAAfyv36L_vh+iwrqsePsF8oOxOJ=JXUAk2nJ6F120w+0ivAn8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <002701cf6a8d$ef7b4540$ce71cfc0$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="0X6NiaduQ530BqCsLEa230vGmNPsx4d1r"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAAfyv36L_vh+iwrqsePsF8oOxOJ=JXUAk2nJ6F120w+0ivAn8w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Belisko Marek <marek.belisko@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, rdunlap@infradead.org, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8 May 2014 12:50, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Thursday, May 08, 2014 3:20 PM, Rahul Sharma wrote:
->>
->> From: Rahul Sharma <Rahul.Sharma@samsung.com>
->>
->> Enable fimd node for snow board.
->>
->> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5250-snow.dts |    6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
->> index 1ce1088..796954c 100644
->> --- a/arch/arm/boot/dts/exynos5250-snow.dts
->> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
->> @@ -206,4 +206,10 @@
->>                       clock-frequency = <24000000>;
->>               };
->>       };
->> +
->> +     fimd@14400000 {
->> +             status = "okay";
->
-> (+cc Sachin Kamat, Tomasz Figa)
->
-> For readability, how about moving 'status' to the last entry of
-> the node? The same comment applies to other patches, too.
+--0X6NiaduQ530BqCsLEa230vGmNPsx4d1r
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Either at the top or bottom is fine rather than somewhere in between.
-However no need to re-spin the patch just for this change.
+On 07/05/14 10:21, Belisko Marek wrote:
 
--- 
-With warm regards,
-Sachin
+>> Did you try this on 3.15-rc? The above is not right, and I don't think=
+
+>> it works. You need 'port' node for the dpi_out endpoint.
+> This patches was tested against 3.15 series and it works. I'l recheck.
+
+Ah, we still have some code that makes that work. But it's against the
+bindings documentations, and that code will be removed. So better add
+the port node.
+
+ Tomi
+
+
+
+--0X6NiaduQ530BqCsLEa230vGmNPsx4d1r
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTa1DAAAoJEPo9qoy8lh717lUQAJlZNBw7np66+7mlexo9qudI
+Rkf4xodGxwpdsx9yc6UxayUZ2cllCyM8eMsDsDwzQvtOwMluIY7qa5PrpABTSDcO
+NADo80/NLLDkJCelL2G9Dq61Vb4wLyKTZwqvgYVHJUBan7e0XqrKBNEnB/dHvAGM
+3QeinB+swFc5FQJczNVF2wIAbvUBmQwz2r8oFxheAgewwDO+mf8Jett2wqteU0Rd
+2dajhWOcH4rrIsrv8QfkR9pQKmUlAQMev7gJqAuDpZ0EhakPHvKmgGP6zy/e3f74
+yow8S8r8yPc23Hoj6ZYoPAwFKTrxFH4zUMUiNxP0syheSARg3mhMWaD9l43PQyPy
+PfqlFz4dgnNB94WZjdg8dU+gtR946wWphv1nUsdwCPtUU0C+z/BPolkR+HBIq4+D
+F4HSxTZRLhOCe86uftk1L/0v4PNO6SCcyBcL+7fY0n6s1NU2al7134kEgQJcYs+8
+ruFk1IsH/yKfKM4560VEpRXTmK65wgZ0surfk/+lalfkJKJ1KWWFjJvyVZPKnK6N
+5Ma3Ws2YFJ6V+EgoHf5hthFTBi+gn6YFAAahsq/tnuGRgeV6v1cyN8A+kj4JLnlc
+F2HbjmJX2n+V6G13GmdN8/j7B8XAB4U82izO/JUUIOq7zOv7Zfm0Ki1VJ0L6lnXW
+Jr+ailpb96Z0dfaDAwOk
+=GPMt
+-----END PGP SIGNATURE-----
+
+--0X6NiaduQ530BqCsLEa230vGmNPsx4d1r--
