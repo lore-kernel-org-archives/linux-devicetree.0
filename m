@@ -1,146 +1,81 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v10 03/15] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Thu, 08 May 2014 13:26:50 +0200
-Message-ID: <536B69FA.5090600@redhat.com>
-References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>	<1399046249-19472-4-git-send-email-hdegoede@redhat.com>	<CAPDyKFoinhyob7GZLgH4Dm7KdHCxj1+OpuZYKDK3OkU8RFsY8A@mail.gmail.com>	<53678DB4.60209@redhat.com> <CAPDyKFpAGNLaKagJ_RPt1vbz70pNWJzo-s6Ao50Mh0gFrRLN0g@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBBGUVWNQKGQEYRCVQLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAPDyKFpAGNLaKagJ_RPt1vbz70pNWJzo-s6Ao50Mh0gFrRLN0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?B?RGF2aWQgTGFuemVuZMO2cmZlcg==?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v5 00/15] exynos5420: clock file cleanup
+Date: Thu, 08 May 2014 16:57:49 +0530
+Message-ID: <1399548484-20626-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, t.figa@samsung.com, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, shaik.samsung@gmail.com, r.sh.open@gmail.com, alim.akhtar@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Many changes/fixes have been identified for clock file for exynos5420.
+These include correct parents, bit fields, new clocks etc. Existing
+files needs some correction in terms of names of the clock and
+indentation. These issues are addressed in this patch series.
 
-On 05/05/2014 10:33 PM, Ulf Hansson wrote:
-> [snip]
-> 
->> On 05/05/2014 02:41 PM, Ulf Hansson wrote:
->>>> +struct sunxi_mmc_host {
->>>> +       struct mmc_host *mmc;
->>>> +       struct regulator *vmmc;
->>>
->>> Instead of having a specific regulator for this driver, please use the
->>> mmc_regulator_get_supply API.
->>
->> We cannot use mmc_regulator_get_supply because for the sunxi mmc controller
->> not only vqmmc but also vmmc itself is optional, and mmc_regulator_get_supply
->> calls devm_regulator_get rather then devm_regulator_get_optional for vmmc.
-> 
-> Is that because the mmc controller handle the power to the card or
-> because you have a fixed supply?
-> 
-> Having a fixed regulator supply could easily be set up in DT, which
-> then also dynamically gives you the ocr mask instead of having a them
-> "hard coded".
+This patch series is rebased on,
+git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git:3.15-rc4
 
-It is because the sdcard slot power tends to be hooked directly to the 3.3V
-of the board. So in a sense this is a fixed regulator, but I really, REALLY
-don't want to add fixed regulator boilerplate to all sunxi dts files for this.
+This patch is also dependent on the following patch.
+clk: exynos5420: Add clock IDs needed by GPU
+    -- http://www.spinics.net/lists/arm-kernel/msg326461.html
 
-In other subsystems where there are similar cases (ie ahci-platform, supply for
-various ethernet phys), the regulator is always optional and does not need
-to be specified in the dts when the device is just hardwired to the power.
+This patch series is tested on Exynos5420 based peach-pit board.
+    -- [PATCH v4 0/2] Add peach-pit board support
 
-> 
->>
->> Using mmc_regulator_get_supply would lead to false postive errors being logged
->> on 99/100 boards.
-> 
-> I was kind of expecting a response like this. :-) Actually I would
-> prefer if we could make the API suit drivers like this one as well.
-> 
-> For reference, there are currently a patch being discussed which
-> relates to this topic.
-> "mmc: core: Improve support for deferred regulators"
+Clock Summary before and after applying this patch series:
+----------------------------------------------------------
+http://slexy.org/view/s2KMWxI3wv
 
-Ok, so that patch seems to replace the somewhat alarming message
-reported by devm_regulator_get by an acceptable:
+As per Tomasz Figa's sugession, one more patch will be sent on
+top of this patch series to remove the unnecessary clocks
+related to GATE_BUS_* offsets.
 
-dev_info(dev, "No vmmc regulator found\n");
+Changes since v4:
+-----------------
+Addressed review comments from Tomasz Figa related to
+CLK_SET_RATE_PARENT and CLK_IGNORE_UNUSED.
 
-I can live with that, so I'm going to assume that something like that
-patch will get merged in the near future and I'll switch to mmc_regulator_get_supply
-in the next version and just live with the error messages this causes for now.
+Changes since v3:
+-----------------
+Addressed review comments from Tomasz Figa and Alim Akhtar
+Some of the changes includes,
+1] Adding clock IDs for all the added gate clocks.
+2] Followed bit ordering while defining new clocks.
+3] Adding SET_RATE_PARENT flag for all the clocks having
+   dividers as parents.
 
->>>> +       struct reset_control *reset;
->>>> +
->>>> +       /* IO mapping base */
->>>> +       void __iomem    *reg_base;
->>>> +
->>>> +       spinlock_t      lock;
->>>> +       struct tasklet_struct manual_stop_tasklet;
->>>
->>> Any reason why you can't use a threaded IRQ handler instead of a tasklet?
->>
->> AFAIK IRQ threaded handlers always have the highest priority. When
->> the manual_stop_tasklet runs we disable irqs and start polling to
->> recover from an error condition, which is nothing something I want
->> todo with the highest priority on the system.
-> 
-> To me, that seems like a good match for a threaded irq handler.
+Changes since v2:
+-----------------
+1] Addressed review comments from Gerhard Sittig and Tomasz Figa.
 
-Ok, I've done some reading up on threaded irq handlers and I'll
-I'll convert this to a threaded irq handler (only using the thread for the error
-handling case).
+Changes since v1:
+-----------------
+1] Addressed review comments from Tomasz Figa.
+    http://www.spinics.net/lists/devicetree/msg16759.html
+    http://www.spinics.net/lists/devicetree/msg16760.html
 
-<snip>
+Shaik Ameer Basha (15):
+  clk: exynos5420: Rename mux parent arrays
+  clk: exynos5420: add clocks for ISP block
+  clk: exynos5420: update clocks for GSCL and MSCL blocks
+  clk: exynos5420: fix parent clocks for mscl sysmmu
+  clk: exynos5420: update clocks for G2D and G3D blocks
+  clk: exynos5420: update clocks for DISP1 block
+  clk: exynos5420: update clocks for PERIC block
+  clk: exynos5420: update clocks for PERIS and GEN blocks
+  clk: exynos5420: update clocks for WCORE block
+  clk: exynos5420: update clocks for FSYS and FSYS2 blocks
+  clk: exynos5420: correct sysmmu-mfc parent clocks
+  clk: exynos5420: fix register offset for sclk_bpll
+  clk: exynos5420: update clocks for MAU Block
+  clk: exynos5420: add misc clocks
+  clk: exynos5420: add more registers to restore list
 
->>>> +               if (err) {
->>>> +                       host->ferror = 1;
->>>> +                       return;
->>>> +               }
->>>> +
->>>> +               enable_irq(host->irq);
-> 
-> Just realize that I also think you should move the enable|disable_irq
-> to ->probe|remove().
-> 
-> That will mean you will be better prepared to implement runtime PM
-> support and thus make it possible to disable irqs during request
-> inactivity.
+ arch/arm/boot/dts/exynos5420.dtsi      |   14 +-
+ drivers/clk/samsung/clk-exynos5420.c   |  853 ++++++++++++++++++++------------
+ include/dt-bindings/clock/exynos5420.h |   37 +-
+ 3 files changed, 576 insertions(+), 328 deletions(-)
 
-Ok.
-
-<snip>
-
->>>> +       /* set up clock */
->>>> +       if (ios->clock && ios->power_mode) {
->>>> +               dev_dbg(mmc_dev(host->mmc), "ios->clock: %d\n", ios->clock);
->>>> +               sunxi_mmc_clk_set_rate(host, ios->clock);
->>>> +               usleep_range(50000, 55000);
->>>
->>> Is those values for usleep really correct? I am not sure how many
->>> times we execute this path while detecting/powering the card, but
->>> quite a few.
->>> Detecting/powering the card is also done during each system
->>> suspend/resume cycle - thus this will heavily affect these cycles.
->>
->> The problem is we've no docs, so this is all based on android code, the
->> android code has 2 drivers, lets call them the old and the new one.
->>
->> This works is based on the new driver as that one was significantly
->> cleaner then the old driver. This bit comes directly from the new driver,
->> but it seems that the old driver has no delay at all. And clk_set_rate
->> already does a busy-wait waiting for the hardware to acknowledge the
->> clock rate change, so I think this is not really necessary. I'll run
->> some tests with it removed and if everything still works I'll drop it.
-> 
-> Okay, great!
-> 
-> Maybe we could add some comments, no matter what!?
-
-Yeah I'll add a comment that there used to be a usleep there :)
-
-Regards,
-
-Hans
+-- 
+1.7.9.5
