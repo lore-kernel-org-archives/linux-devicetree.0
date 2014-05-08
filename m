@@ -1,61 +1,40 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: KConfig and DTS files
-Date: Thu, 08 May 2014 12:37:09 +0200
-Message-ID: <5266451.XWDQiRgflU@wuerfel>
-References: <536A697D.3020002@boundarydevices.com> <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw@mail.gmail.com> <536ABC89.8060301@boundarydevices.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <536ABC89.8060301-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
-Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v2 2/4] ARM: dts: change to correct compatible string for
+ exynos5420 hdmi
+Date: Thu, 08 May 2014 16:07:57 +0530
+Message-ID: <1399545479-20086-3-git-send-email-rahul.sharma@samsung.com>
+References: <1399545479-20086-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1399545479-20086-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 May 2014 16:06:49 Eric Nelson wrote:
-> On 05/07/2014 03:20 PM, Bjorn Andersson wrote:
-> > On Wed, May 7, 2014 at 12:52 PM, Eric Nelson
-> > <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
-> > [...]
-> >>
-> >> I still wonder about the choice of not allowing inclusion
-> >> of at least include/generated/autoconf.h.
-> >
-> > Because what you just showed is the use case where you have 1 defconfig, build 1
-> > zImage and then you can have a completely separate delivery of X number of
-> > dtbs, all defining some variant of your original board.
-> > All without recompiling, or even have the source available.
-> >
-> 
-> I agree that there's some benefit in being able to generate
-> different DTBs, and it's an advantage (size, speed) to customize
-> the .config as well.
-> 
-> When those clearly go together, it seems natural to define them as
-> such.
-> 
-> I've heard (and appreciate) the pointers about how to get
-> past our current issue(s), but what's the rationale
-> for not allowing the inclusion of autoconf.h and
-> conditionals in the DTS?
-> 
-> Is it a concern that things will become polluted and
-> hard to read?
+From: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-You should be able to take any recent enough
-Fedora/Debian/OpenSUSE/Ubuntu/OpenWRT kernel binary and install it on
-all ARMv7 machines to get a working system, keeping your existing .dtb
-file.
+Replace compatible string for HDMI node in Exynos5420. Since
+latest restructring in Drm hdmi driver, it is agreed to use
+a seperate compatible string for Exynos5420 HDMI IP siince it
+uses APB mapped Phy.
 
-There are still a few issues to be worked out for that (e.g. some drivers
-still can't be described in DT, and in some exceptional cases we break backwards
-compatibility), but if the .dtb file depends on the kernel configuration,
-it can never work, because the person building the kernel does not know
-what hardware you have.
+Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+---
+ arch/arm/boot/dts/exynos5420.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 0d1dea8..f1f6a06 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -633,7 +633,7 @@
+ 	};
+ 
+ 	hdmi: hdmi@14530000 {
+-		compatible = "samsung,exynos4212-hdmi";
++		compatible = "samsung,exynos5420-hdmi";
+ 		reg = <0x14530000 0x70000>;
+ 		interrupts = <0 95 0>;
+ 		clocks = <&clock CLK_HDMI>, <&clock CLK_SCLK_HDMI>,
+-- 
+1.7.9.5
