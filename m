@@ -1,30 +1,145 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/4] of/platform: fix device naming for non-translatable addresses
-Date: Thu, 08 May 2014 12:41:10 +0200
-Message-ID: <4314054.Zr5Mecf9vm@wuerfel>
-References: <1399499298-8830-1-git-send-email-robherring2@gmail.com> <1399499298-8830-4-git-send-email-robherring2@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399499298-8830-4-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn@kryo.se>, Frank Rowand <frowand.list@gmail.com>, Rob Herring <robh@kernel.org>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v6 2/2] ARM: vexpress: Add CLCD Device Tree properties
+Date: Thu,  8 May 2014 12:00:30 +0100
+Message-ID: <1399546830-2931-2-git-send-email-pawel.moll@arm.com>
+References: <1399546830-2931-1-git-send-email-pawel.moll@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399546830-2931-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 07 May 2014 16:48:17 Rob Herring wrote:
-> From: Rob Herring <robh@kernel.org>
-> 
-> Using non-translatable addresses in platform device names is wrong
-> because they may not be globally unique. Just use the default naming with
-> a global index if the address cannot be translated instead.
-> 
-> of_can_translate_address has the same checks as of_translate_address, so
-> we can remove it here as well.
+... for V2M-P1 motherboard CLCD (limited to 640x480 16bpp and using
+dedicated video RAM bank) and for V2P-CA9 (up to 1024x768 16bpp).
 
-Have you checked that this doesn't break platforms using clkdev lookup
-based on names with local addresses? It's quite possible that nobody
-does that, but it would be good to have someone confirm it.
+Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 21 ++++++++++++++++++++-
+ arch/arm/boot/dts/vexpress-v2m.dtsi     | 21 ++++++++++++++++++++-
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts  | 18 ++++++++++++++++++
+ 3 files changed, 58 insertions(+), 2 deletions(-)
 
-	Arnd
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+index ac870fb..c95a4cb 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -230,9 +230,28 @@
+ 			clcd@1f0000 {
+ 				compatible = "arm,pl111", "arm,primecell";
+ 				reg = <0x1f0000 0x1000>;
++				interrupt-names = "combined";
+ 				interrupts = <14>;
+ 				clocks = <&v2m_oscclk1>, <&smbclk>;
+ 				clock-names = "clcdclk", "apb_pclk";
++
++				arm,pl11x,framebuffer-base = <0x18000000 0x00800000>;
++				arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
++				max-memory-bandwidth = <36864000>; /* Bps, 640x480@60 16bpp */
++				display-timings {
++					native-mode = <&v2m_clcd_timing0>;
++					v2m_clcd_timing0: vga {
++						clock-frequency = <25175000>;
++						hactive = <640>;
++						hback-porch = <40>;
++						hfront-porch = <24>;
++						hsync-len = <96>;
++						vactive = <480>;
++						vback-porch = <32>;
++						vfront-porch = <11>;
++						vsync-len = <2>;
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -282,7 +301,7 @@
+ 				/* CLCD clock */
+ 				compatible = "arm,vexpress-osc";
+ 				arm,vexpress-sysreg,func = <1 1>;
+-				freq-range = <23750000 63500000>;
++				freq-range = <23750000 65000000>;
+ 				#clock-cells = <0>;
+ 				clock-output-names = "v2m:oscclk1";
+ 			};
+diff --git a/arch/arm/boot/dts/vexpress-v2m.dtsi b/arch/arm/boot/dts/vexpress-v2m.dtsi
+index f142036..9224834 100644
+--- a/arch/arm/boot/dts/vexpress-v2m.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m.dtsi
+@@ -229,9 +229,28 @@
+ 			clcd@1f000 {
+ 				compatible = "arm,pl111", "arm,primecell";
+ 				reg = <0x1f000 0x1000>;
++				interrupt-names = "combined";
+ 				interrupts = <14>;
+ 				clocks = <&v2m_oscclk1>, <&smbclk>;
+ 				clock-names = "clcdclk", "apb_pclk";
++
++				arm,pl11x,framebuffer-base = <0x4c000000 0x00800000>;
++				arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
++				max-memory-bandwidth = <36864000>; /* Bps, 640x480@60 16bpp */
++				display-timings {
++					native-mode = <&v2m_clcd_timing0>;
++					v2m_clcd_timing0: vga {
++						clock-frequency = <25175000>;
++						hactive = <640>;
++						hback-porch = <40>;
++						hfront-porch = <24>;
++						hsync-len = <96>;
++						vactive = <480>;
++						vback-porch = <32>;
++						vfront-porch = <11>;
++						vsync-len = <2>;
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -281,7 +300,7 @@
+ 				/* CLCD clock */
+ 				compatible = "arm,vexpress-osc";
+ 				arm,vexpress-sysreg,func = <1 1>;
+-				freq-range = <23750000 63500000>;
++				freq-range = <23750000 65000000>;
+ 				#clock-cells = <0>;
+ 				clock-output-names = "v2m:oscclk1";
+ 			};
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index 62d9b22..ed4f223 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -70,9 +70,27 @@
+ 	clcd@10020000 {
+ 		compatible = "arm,pl111", "arm,primecell";
+ 		reg = <0x10020000 0x1000>;
++		interrupt-names = "combined";
+ 		interrupts = <0 44 4>;
+ 		clocks = <&oscclk1>, <&oscclk2>;
+ 		clock-names = "clcdclk", "apb_pclk";
++
++		arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
++		max-memory-bandwidth = <94371840>; /* Bps, 1024x768@60 16bpp */
++		display-timings {
++			native-mode = <&clcd_timing0>;
++			clcd_timing0: xga {
++				clock-frequency = <63500127>;
++				hactive = <1024>;
++				hback-porch = <152>;
++				hfront-porch = <48>;
++				hsync-len = <104>;
++				vactive = <768>;
++				vback-porch = <23>;
++				vfront-porch = <3>;
++				vsync-len = <4>;
++			};
++		};
+ 	};
+ 
+ 	memory-controller@100e0000 {
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
