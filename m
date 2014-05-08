@@ -1,7 +1,7 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: k2e-evm: add AEMIF/NAND device entry
-Date: Thu, 8 May 2014 23:31:29 +0300
-Message-ID: <1399581089-2505-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [PATCH v2] ARM: dts: k2e-evm: add AEMIF/NAND device entry
+Date: Thu, 8 May 2014 23:32:54 +0300
+Message-ID: <1399581174-2561-1-git-send-email-ivan.khoronzhuk@ti.com>
 References: <1399575560-31090-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -20,12 +20,12 @@ Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
  1 file changed, 52 insertions(+)
 
 diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
-index 74b3b63..0370e2f 100644
+index d60ce34..fb7afab 100644
 --- a/arch/arm/boot/dts/k2e-evm.dts
 +++ b/arch/arm/boot/dts/k2e-evm.dts
-@@ -58,3 +58,55 @@
- &usb1 {
- 	status = "okay";
+@@ -65,3 +65,55 @@
+ 		reg = <0x50>;
+ 	};
  };
 +
 +&aemif {
@@ -74,7 +74,7 @@ index 74b3b63..0370e2f 100644
 +
 +			partition@180000 {
 +				label = "ubifs";
-+				reg = <0x180000 0x7E80000>;
++				reg = <0x180000 0x1FE80000>;
 +			};
 +		};
 +	};
