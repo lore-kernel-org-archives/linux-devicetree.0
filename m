@@ -1,65 +1,78 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v10 03/15] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Thu, 08 May 2014 14:30:55 +0200
-Message-ID: <536B78FF.2020808@redhat.com>
-References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>	<1399046249-19472-4-git-send-email-hdegoede@redhat.com>	<CAPDyKFoinhyob7GZLgH4Dm7KdHCxj1+OpuZYKDK3OkU8RFsY8A@mail.gmail.com>	<53678DB4.60209@redhat.com>	<CAPDyKFpAGNLaKagJ_RPt1vbz70pNWJzo-s6Ao50Mh0gFrRLN0g@mail.gmail.com>	<536B69FA.5090600@redhat.com> <CAPDyKFqbN61EgiTbktL-vm+L7q06OTeedCTVXJsP16ZZZd8g8A@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBCHSVWNQKGQEDZ2ZOXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAPDyKFqbN61EgiTbktL-vm+L7q06OTeedCTVXJsP16ZZZd8g8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?B?RGF2aWQgTGFuemVuZMO2cmZlcg==?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: [PATCH v4 0/3] Generic Device Tree based power domain look-up
+Date: Thu, 08 May 2014 14:45:06 +0200
+Message-ID: <1399553109-6487-1-git-send-email-t.figa@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Rafael J. Wysocki" <rjw@sisk.pl>, Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, Stephen Boyd <sboyd@codeaurora.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Ulf Hansson <ulf.hansson@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Kevin Hilman <khilman@linaro.org>, Philipp Zabel <philipp.zabel@gmail.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Up till now there was no single generic method to bind devices to their
+power domains using Device Tree. Each platform has been doing this using
+its own way, example of which are Exynos power domain bindings [1] and
+look-up code [2].
 
-On 05/08/2014 02:17 PM, Ulf Hansson wrote:
-> On 8 May 2014 13:26, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi,
->>
->> On 05/05/2014 10:33 PM, Ulf Hansson wrote:
->>> [snip]
->>>
->>>> On 05/05/2014 02:41 PM, Ulf Hansson wrote:
->>>>>> +struct sunxi_mmc_host {
->>>>>> +       struct mmc_host *mmc;
->>>>>> +       struct regulator *vmmc;
->>>>>
->>>>> Instead of having a specific regulator for this driver, please use the
->>>>> mmc_regulator_get_supply API.
->>>>
->>>> We cannot use mmc_regulator_get_supply because for the sunxi mmc controller
->>>> not only vqmmc but also vmmc itself is optional, and mmc_regulator_get_supply
->>>> calls devm_regulator_get rather then devm_regulator_get_optional for vmmc.
->>>
->>> Is that because the mmc controller handle the power to the card or
->>> because you have a fixed supply?
->>>
->>> Having a fixed regulator supply could easily be set up in DT, which
->>> then also dynamically gives you the ocr mask instead of having a them
->>> "hard coded".
->>
->> It is because the sdcard slot power tends to be hooked directly to the 3.3V
->> of the board. So in a sense this is a fixed regulator, but I really, REALLY
->> don't want to add fixed regulator boilerplate to all sunxi dts files for this.
-> 
-> So, how would you then distinguish between let's say a 3.1V and 3.3V
-> fixed regulator? That is something that is board specific, thus I
-> don't think you can get away from not adding them to DT.
+This series is intended to change this and provide generic DT bindings for
+power domain specification and generic code performing look-up of power
+domains and binding them to devices.
 
-All boards I've seen sofar use 3.3V which seems sensible since that is
-what the spec says you must supply to SDSC cards. I agree that if a board
-differs from the standard 3.3V, a fixed regulator node specifying the
-voltage should be added.
+First two patches are the most important part of this series, as they
+introduce $subject. Patch 3 converts mach-exynos to use the new generic
+method. Further patches are adding one more user of the new code,
+mach-s3c64xx, with first 3 patches (4-6) required to clean-up its power
+domain driver a bit and last 3 patches (9-11) adding display support for
+Mini6410 board, including a node for display controller (FIMD) which is
+a power domain consumer.
 
-Regards,
+The design of DT bindings and provider code is heavily inspired by
+implementation of clock providers in Common Clock Framework, while
+the code binding devices to power domains by my Exynos power domain
+implementation (now removed by this series ;)).
 
-Hans
+Successfully tested on Exynos4210-based Trats and Exynos4412-based Trats2
+boards using MFC, 
+
+[1] Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+[2] arch/arm/mach-exynos/pm_domains.c
+
+Changes since v3:
+(http://thread.gmane.org/gmane.linux.power-management.general/44571)
+ - rebased onto current Rafael's linux-pm bleeding-edge branch (0a112bf),
+ - renamed "power-domain" property to "power-domains" to facilitate further
+   extension to support multiple power domains per device in future.
+
+Changes since v2:
+(http://thread.gmane.org/gmane.linux.kernel/1658926)
+ - rebased onto current Rafael's linux-pm bleeding-edge branch,
+ - dropped patches for s3c64xx for now. I will send them in separate series,
+ - do not call pm_genpd_dev_need_restore(true) in genpd_bind_domain(),
+ - fixed various stylistic issues reported in review comments.
+
+Changes since v1 (RFC):
+[https://lkml.org/lkml/2014/1/11/141]
+ - rebased onto current Rafael's linux-pm bleeding-edge branch,
+ - reordered the patches a bit (to have the generic ones first),
+ - dropped renaming of S3C64xx power domains (as suggested by Mark Brown),
+ - added support for deferred probing (as suggested by Stephen Boyd),
+ - fixed several minor issues pointed by Stephen Boyd,
+ - replaced notifiers with direct hooks in driver core to make power domain
+   support independent from specific bus type and allow error handling.
+
+Tomasz Figa (3):
+  base: power: Add generic OF-based power domain look-up
+  drivercore: Bind/unbind power domain on probe/remove
+  ARM: exynos: Move to generic power domain bindings
+
+ .../bindings/arm/exynos/power_domain.txt           |  12 +-
+ .../devicetree/bindings/power/power_domain.txt     |  51 ++++
+ arch/arm/mach-exynos/pm_domains.c                  |  81 +-----
+ drivers/base/dd.c                                  |   9 +-
+ drivers/base/power/domain.c                        | 283 +++++++++++++++++++++
+ include/linux/pm_domain.h                          |  46 ++++
+ kernel/power/Kconfig                               |   4 +
+ 7 files changed, 398 insertions(+), 88 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
+
+-- 
+1.9.2
