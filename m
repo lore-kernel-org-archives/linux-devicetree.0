@@ -1,83 +1,52 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v2 3/5] ARM: dts: enable dp-controller for exynos5250 based
- snow board
-Date: Thu, 08 May 2014 16:42:46 +0900
-Message-ID: <002801cf6a91$1a891f70$4f9b5e50$%han@samsung.com>
-References: <1399529995-8656-1-git-send-email-rahul.sharma@samsung.com>
- <1399529995-8656-4-git-send-email-rahul.sharma@samsung.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen
+ A0/1/10/11/12
+Date: Thu, 8 May 2014 09:03:44 +0100
+Message-ID: <20140508080344.GE5307@lee--X1>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1399305223-18703-2-git-send-email-gabriel.fernandez@linaro.org>
+ <20140506071843.GD5206@lee--X1>
+ <CAG374jD+msPPbPtFS+ji=8jS9+D-YHu31k7zzzC7Ty7jw9n7jQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399529995-8656-4-git-send-email-rahul.sharma@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rahul Sharma' <rahul.sharma@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAG374jD+msPPbPtFS+ji=8jS9+D-YHu31k7zzzC7Ty7jw9n7jQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, May 08, 2014 3:20 PM, Rahul Sharma wrote:
-> 
-> From: Rahul Sharma <Rahul.Sharma@samsung.com>
-> 
-> Enable dp-controller for snow board.
-> 
-> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos5250-snow.dts |   27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-> index 796954c..28a755f 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -207,6 +207,33 @@
->  		};
->  	};
-> 
-> +	dp-controller@145B0000 {
-> +		status = "okay";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&dp_hpd>;
-> +		samsung,color-space = <0>;
-> +		samsung,dynamic-range = <0>;
-> +		samsung,ycbcr-coeff = <0>;
-> +		samsung,color-depth = <1>;
-> +		samsung,link-rate = <0x0a>;
-> +		samsung,lane-count = <2>;
-> +		samsung,hpd-gpio = <&gpx0 7 0>;
-> +		display-timings {
+> >> Patch adds DT entries for clockgen A0/1/10/11/12
+> >>
+> >> Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+> >> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >> ---
+> >>  arch/arm/boot/dts/stih416-clks.h     |  15 ++
+> >
+> > This should live in include/dt-bindings/clk
+> >
+> include/dt-bindings/clk or  include/dt-bindings/clock ?
 
-For readability, please insert one line as below.
+I have no idea what the difference between the two are.  I guess you
+are in a better position to answer that.  My point was just that the
+includes should be in the include directory, rather than being held
+locally in the 'dts' directory.
 
-+		samsung,hpd-gpio = <&gpx0 7 0>;
-+
-+		display-timings {
+> >>  arch/arm/boot/dts/stih416-clock.dtsi | 477 ++++++++++++++++++++++=
+++++++++++++
+> >>  arch/arm/boot/dts/stih416.dtsi       |  10 +-
+> >>  3 files changed, 497 insertions(+), 5 deletions(-)
+> >>  create mode 100644 arch/arm/boot/dts/stih416-clks.h
 
-The same comment applies to the 5th patch.
-([PATCH v2 5/5] ARM: dts: enable dp-controller for exynos5420
-based peach-pit board)
-
-Best regards,
-Jingoo Han
-
-> +			native-mode = <&timing1>;
-> +			timing1: timing@1 {
-> +				clock-frequency = <70589280>;
-> +				hactive = <1366>;
-> +				vactive = <768>;
-> +				hfront-porch = <40>;
-> +				hback-porch = <40>;
-> +				hsync-len = <32>;
-> +				vback-porch = <10>;
-> +				vfront-porch = <12>;
-> +				vsync-len = <6>;
-> +			};
-> +		};
-> +	};
-> +
->  	fimd@14400000 {
->  		status = "okay";
->  		samsung,invert-vclk;
-> --
-> 1.7.9.5
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
