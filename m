@@ -1,83 +1,100 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] ARM: sunxi: Add support for consumer
- infrared devices
-Date: Thu, 08 May 2014 15:55:41 +0200
-Message-ID: <536B8CDD.7040600@redhat.com>
-References: <1398871010-30681-1-git-send-email-bay@hackerdom.ru>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB7EZV2NQKGQEMC3LRMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1398871010-30681-1-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH v2] powerpc/fsl: Added binding for Freescale CoreNet coherency fabric (CCF)
+Date: Thu, 8 May 2014 07:00:44 -0700
+Message-ID: <6CE62BBF-BFF4-4F2C-8EFF-B6F87EE6EEE9@kernel.crashing.org>
+References: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397833917-12611-1-git-send-email-diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 04/30/2014 05:16 PM, Alexander Bersenev wrote:
-> This patch introduces Consumer IR(CIR) support for sunxi boards.
-> 
-> This is based on Alexsey Shestacov's work based on the original driver 
-> supplied by Allwinner.
-> 
-> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
+On Apr 18, 2014, at 8:11 AM, Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org=
+> wrote:
 
-Alexander, v5 still has various issues which need fixing,
-do you plan to do a v6 soon ?
-
-Regards,
-
-Hans
-
-> 
+> From: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>=20
+> The CoreNet coherency fabric is a fabric-oriented, conectivity
+> infrastructure that enables the implementation of coherent, multicore
+> systems. The CCF acts as a central interconnect for cores,
+> platform-level caches, memory subsystem, peripheral devices and I/O h=
+ost
+> bridges in the system.
+>=20
+> Signed-off-by: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > ---
-> Changes since version 1: 
->  - Fix timer memory leaks 
->  - Fix race condition when driver unloads while interrupt handler is active
->  - Support Cubieboard 2(need testing)
-> 
-> Changes since version 2:
-> - More reliable keydown events
-> - Documentation fixes
-> - Rename registers accurding to A20 user manual
-> - Remove some includes, order includes alphabetically
-> - Use BIT macro
-> - Typo fixes
-> 
-> Changes since version 3:
-> - Split the patch on smaller parts
-> - More documentation fixes
-> - Add clock-names in DT
-> - Use devm_clk_get function to get the clocks
-> - Removed gpios property from ir's DT
-> - Changed compatible from allwinner,sunxi-ir to allwinner,sun7i-a20-ir in DT
-> - Use spin_lock_irq instead spin_lock_irqsave in interrupt handler
-> - Add myself in the copyright ;)
-> - Coding style and indentation fixes
-> 
-> Changes since version 4:
-> - Try to fix indentation errors by sending patches with git send-mail
-> 
-> Alexander Bersenev (3):
->   ARM: sunxi: Add documentation for sunxi consumer infrared devices
->   ARM: sunxi: Add driver for sunxi IR controller
->   ARM: sunxi: Add IR controller support in DT on A20
-> 
->  .../devicetree/bindings/media/sunxi-ir.txt         |  23 ++
->  arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |   6 +
->  arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |   6 +
->  arch/arm/boot/dts/sun7i-a20.dtsi                   |  31 +++
->  drivers/media/rc/Kconfig                           |  10 +
->  drivers/media/rc/Makefile                          |   1 +
->  drivers/media/rc/sunxi-ir.c                        | 303 +++++++++++++++++++++
->  7 files changed, 380 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/sunxi-ir.txt
->  create mode 100644 drivers/media/rc/sunxi-ir.c
-> 
+> .../devicetree/bindings/powerpc/fsl/ccf.txt        | 36 +++++++++++++=
++++++++++
+> 1 file changed, 36 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/ccf.=
+txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/ccf.txt b/=
+Documentation/devicetree/bindings/powerpc/fsl/ccf.txt
+> new file mode 100644
+> index 0000000..f0b7143
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/ccf.txt
+> @@ -0,0 +1,36 @@
+> +Freescale CoreNet Coherency Fabric(CCF) Device Tree Binding
+> +
+> +DESCRIPTION
+> +
+> +The CoreNet coherency fabric is a fabric-oriented, connectivity infr=
+astructure
+> +that enables the implementation of coherent, multicore systems.
+> +
+> +Required properties:
+> +
+> +- compatible : <string>
+> +		Must include "fsl,corenetX-cf", "fsl,corenet-cf" - CoreNet coheren=
+cy=20
+> +		fabric version X
+
+Can we make this =91fsl,corenet-vX-cf=92.
+
+corenet-v1-cf/corenet-v2-cf looks nicer than corenet1-cf/corenet2-cf
+
+> +
+> +- reg : <prop-encoded-array>
+> +		A standard property. Represents the CCF registers.
+> +
+> +- interrupts : <prop-encoded-array>
+> +		Interrupt mapping for CCF error interrupt.
+> +
+> +- fsl,ccf-num-csdids: <u32>
+> +		Specifies the number of Coherency Subdomain ID Port Mapping
+> +		Registers that are supported by the CCF.
+> +
+> +- fsl,ccf-num-snoopids: <u32>
+> +		Specifies the number of Snoop ID Port Mapping Registers that
+> +		are supported by CCF.
+> +
+> +Example:
+> +
+> +	corenet-cf@18000 {
+> +		compatible =3D "fsl,corenet2-cf", "fsl,corenet-cf";
+> +		reg =3D <0x18000 0x1000>;
+> +		interrupts =3D <16 2 1 31>;
+> +		fsl,ccf-num-csdids =3D <32>;
+> +		fsl,ccf-num-snoopids =3D <32>;
+> +	};
+> --=20
+> 1.7.11.7
+>=20
+>=20
+> _______________________________________________
+> Linuxppc-dev mailing list
+> Linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/linuxppc-dev
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
