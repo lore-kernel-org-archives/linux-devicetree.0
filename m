@@ -1,114 +1,87 @@
-From: Sebastian Capella <sebastian.capella@linaro.org>
-Subject: Re: [PATCH RFC v3 3/6] drivers: cpuidle: implement OF based idle states
- infrastructure
-Date: Thu, 08 May 2014 16:12:19 -0700
-Message-ID: <536c0f39.90ab420a.3da7.ffff86ca@mx.google.com>
-References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1399399483-17112-4-git-send-email-lorenzo.pieralisi@arm.com>
+From: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH v2] powerpc/fsl: Added binding for Freescale CoreNet
+ coherency fabric (CCF)
+Date: Thu, 8 May 2014 18:18:08 -0500
+Message-ID: <1399591088.15726.402.camel@snotra.buserror.net>
+References: <1397833917-12611-1-git-send-email-diana.craciun@freescale.com>
+	 <6CE62BBF-BFF4-4F2C-8EFF-B6F87EE6EEE9@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1399399483-17112-4-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Capella <capellas@broadcom.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6CE62BBF-BFF4-4F2C-8EFF-B6F87EE6EEE9-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: Diana Craciun <diana.craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Lorenzo Pieralisi (2014-05-06 11:04:40)
+On Thu, 2014-05-08 at 07:00 -0700, Kumar Gala wrote:
+> On Apr 18, 2014, at 8:11 AM, Diana Craciun <diana.craciun@freescale.c=
+om> wrote:
+>=20
+> > From: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >=20
+> > The CoreNet coherency fabric is a fabric-oriented, conectivity
+> > infrastructure that enables the implementation of coherent, multico=
+re
+> > systems. The CCF acts as a central interconnect for cores,
+> > platform-level caches, memory subsystem, peripheral devices and I/O=
+ host
+> > bridges in the system.
+> >=20
+> > Signed-off-by: Diana Craciun <Diana.Craciun-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > ---
+> > .../devicetree/bindings/powerpc/fsl/ccf.txt        | 36 +++++++++++=
++++++++++++
+> > 1 file changed, 36 insertions(+)
+> > create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/cc=
+f.txt
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/powerpc/fsl/ccf.txt =
+b/Documentation/devicetree/bindings/powerpc/fsl/ccf.txt
+> > new file mode 100644
+> > index 0000000..f0b7143
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/ccf.txt
+> > @@ -0,0 +1,36 @@
+> > +Freescale CoreNet Coherency Fabric(CCF) Device Tree Binding
+> > +
+> > +DESCRIPTION
+> > +
+> > +The CoreNet coherency fabric is a fabric-oriented, connectivity in=
+frastructure
+> > +that enables the implementation of coherent, multicore systems.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : <string>
+> > +		Must include "fsl,corenetX-cf", "fsl,corenet-cf" - CoreNet coher=
+ency=20
+> > +		fabric version X
+>=20
+> Can we make this =E2=80=98fsl,corenet-vX-cf=E2=80=99.
+>=20
+> corenet-v1-cf/corenet-v2-cf looks nicer than corenet1-cf/corenet2-cf
 
-> diff --git a/drivers/cpuidle/of_idle_states.c b/drivers/cpuidle/of_idle_states.c
-> new file mode 100644
-> index 0000000..360b7ad
-> --- /dev/null
-> +++ b/drivers/cpuidle/of_idle_states.c
-> @@ -0,0 +1,293 @@
-...
-> +static int __init add_state_node(cpumask_t *cpumask,
-> +                                struct device_node *state_node)
-> +{
-> +       struct state_elem *el;
-> +       u32 tmp, val = 0;
-> +
-> +       pr_debug(" * %s...\n", state_node->full_name);
-> +
-> +       if (!state_cpus_valid(cpumask, state_node))
-> +               return -EINVAL;
-> +       /*
-> +        * Parse just the properties required to sort the states.
-> +        * Since we are missing a value defining the energy
-> +        * efficiency of a state, for now the sorting code uses
-> +        *
-> +        * min-residency-us+exit-latency-us
-> +        *
-> +        * as sorting rank.
-> +        */
-> +       if (of_property_read_u32(state_node, "min-residency-us",
-> +                                &tmp)) {
-> +               pr_debug(" * %s missing min-residency-us property\n",
-> +                        state_node->full_name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       val += tmp;
-> +
-> +       if (of_property_read_u32(state_node, "exit-latency-us",
-> +                                &tmp)) {
-> +               pr_debug(" * %s missing exit-latency-us property\n",
-> +                            state_node->full_name);
-> +               return -EINVAL;
-> +       }
-> +
-> +       val += tmp;
+How important is this?  We've already got corenet2-cf in SDK device
+trees -- and while I know that's not binding on upstream in any way,
+it's purely a cosmetic change.  Even if you disregard the SDK, is this
+really worth going back and amending several pending patches over
+(including a driver that I was waiting for this binding to settle befor=
+e
+sending)? =20
 
-Sorry if i'm rehashing old stuff, but I prefer not to use the
-min-residency + exit-latency to sort.  I saw Rob's comment suggesting it
-and your reply.  I'm not sure when it was decided.
+=46WIW, we have other instances of "deviceN", such as "fsl,etsec2",
+"fsl,cpm2-<foo>","fsl,usb2-<foo>", and "fsl,elo3-dma".  We also call it
+"corenet2" in U-Boot a lot.
 
-Would it be possible to sort instead based on the order in the
-cpus->cpu-idle-states?  If not, my preference would be to either use
-index like you had before, or specify another sort order / rank value.
+If we must change it, I'd prefer "fsl,corenet-cf-vX.0".
 
-I think there's potential for us to create lower power states that
-have lower min-residencies (reduced power consumption in the state,
-allowing us to more quickly recover the higher entrance cost)
-with higher exit latencies in such a way that the formula would not
-sort as we expect.  Having a separate value would allow us to control
-the sorting in those cases.
+-Scott
 
-> +
-> +/*
 
-For kernel-doc, I think you need a /** here, and a () after the
-of_init_idle_driver below.  Also maybe Return: instead of Returns:
-and I think the return paragraph goes at the end, but am not positive.
-
-kernel-doc-nano-HOWTO.txt
-
-> + * of_init_idle_driver - Parse the DT idle states and initialize the
-> + *                      idle driver states array
-> + *
-> + * @drv:         Pointer to CPU idle driver to be initialized
-> + * @state_nodes:  Array of struct device_nodes to be initialized if
-> + *               init_nodes == true. Must be sized CPUIDLE_STATE_MAX
-> + * @start_idx:    First idle state index to be initialized
-> + * @init_nodes:   Boolean to request device nodes initialization
-> + *
-> + * Returns:
-> + *     0 on success
-> + *     <0 on failure
-> + *
-> + *     On success the states array in the cpuidle driver contains
-> + *     initialized entries in the states array, starting from index start_idx.
-> + *     If init_nodes == true, on success the state_nodes array is initialized
-> + *     with idle state DT node pointers, starting from index start_idx,
-> + *     in a 1:1 relation with the idle driver states array.
-> + */
-> +int __init of_init_idle_driver(struct cpuidle_driver *drv,
-> +                              struct device_node *state_nodes[],
-> +                              unsigned int start_idx, bool init_nodes)
-> +{
-
-Thanks!
-
-Sebastian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
