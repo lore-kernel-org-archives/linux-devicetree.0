@@ -1,139 +1,59 @@
-From: Johan Hovold <jhovold@gmail.com>
-Subject: [PATCH] ARM: dts: AM33XX: fix ethernet and mdio default state
-Date: Thu,  8 May 2014 10:57:36 +0200
-Message-ID: <1399539456-555-1-git-send-email-jhovold@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Johan Hovold <jhovold@gmail.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 1/4] of/selftest: add testcase for nodes with same name
+ and address
+Date: Thu, 8 May 2014 09:59:53 +0100
+Message-ID: <CACxGe6seW1MYC5iqZriXzrR1_hcR_DfLs5exUCLEZY3CRb28pw@mail.gmail.com>
+References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
+ <1399499298-8830-2-git-send-email-robherring2@gmail.com> <536AF13F.6000502@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <536AF13F.6000502@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Frank Rowand <frowand.list@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn@kryo.se>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Make sure ethernet and mdio nodes are disabled by default and enable
-them explicitly only on boards that actually use them.
+On Thu, May 8, 2014 at 3:51 AM, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 5/7/2014 2:48 PM, Rob Herring wrote:
+>> From: Rob Herring <robh@kernel.org>
+>>
+>> Add a test case for nodes which have the same name and same
+>> non-translatable unit address.
+>
+> If I apply patch 1 and 2 without applying 3 and 4 then console
+> warnings are printed, but from a different area of code than
+> the original problem reported.  This probably is not a big deal,
+> but I'm trying to figure out if I can modify the test to also
+> show the original problem.
+>
+> The test case also properly reports the failure.
+>
+> Once all 4 patches are applied, then the test case passes.
 
-Signed-off-by: Johan Hovold <jhovold@gmail.com>
----
- arch/arm/boot/dts/am335x-bone-common.dtsi | 3 ++-
- arch/arm/boot/dts/am335x-evm.dts          | 2 ++
- arch/arm/boot/dts/am335x-evmsk.dts        | 2 ++
- arch/arm/boot/dts/am335x-igep0033.dtsi    | 8 ++++++++
- arch/arm/boot/dts/am335x-nano.dts         | 5 +++++
- arch/arm/boot/dts/am33xx.dtsi             | 2 ++
- 6 files changed, 21 insertions(+), 1 deletion(-)
+When adding testcases I do prefer the addition of the test to appear
+before the fix while the patch is under review. Makes it easy to see
+that, yes the bug exists, and yes the later patch resolves it.
 
-diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-index 2e7d932887b5..26a1fa958f37 100644
---- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-+++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-@@ -280,13 +280,14 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
--
-+	status = "okay";
- };
- 
- &davinci_mdio {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
-+	status = "okay";
- };
- 
- &mmc1 {
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 6028217ace0f..44c63d1c4f12 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -614,12 +614,14 @@
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
-+	status = "okay";
- };
- 
- &davinci_mdio {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
-+	status = "okay";
- };
- 
- &cpsw_emac0 {
-diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
-index ab238850a7b2..365383f7f617 100644
---- a/arch/arm/boot/dts/am335x-evmsk.dts
-+++ b/arch/arm/boot/dts/am335x-evmsk.dts
-@@ -484,12 +484,14 @@
- 	pinctrl-0 = <&cpsw_default>;
- 	pinctrl-1 = <&cpsw_sleep>;
- 	dual_emac = <1>;
-+	status = "okay";
- };
- 
- &davinci_mdio {
- 	pinctrl-names = "default", "sleep";
- 	pinctrl-0 = <&davinci_mdio_default>;
- 	pinctrl-1 = <&davinci_mdio_sleep>;
-+	status = "okay";
- };
- 
- &cpsw_emac0 {
-diff --git a/arch/arm/boot/dts/am335x-igep0033.dtsi b/arch/arm/boot/dts/am335x-igep0033.dtsi
-index 9f22c189f636..27445d07f953 100644
---- a/arch/arm/boot/dts/am335x-igep0033.dtsi
-+++ b/arch/arm/boot/dts/am335x-igep0033.dtsi
-@@ -95,6 +95,14 @@
- 	};
- };
- 
-+&mac {
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	status = "okay";
-+};
-+
- &cpsw_emac0 {
- 	phy_id = <&davinci_mdio>, <0>;
- };
-diff --git a/arch/arm/boot/dts/am335x-nano.dts b/arch/arm/boot/dts/am335x-nano.dts
-index 9907b494b99c..a3466455b171 100644
---- a/arch/arm/boot/dts/am335x-nano.dts
-+++ b/arch/arm/boot/dts/am335x-nano.dts
-@@ -344,6 +344,11 @@
- 
- &mac {
- 	dual_emac = <1>;
-+	status = "okay";
-+};
-+
-+&davinci_mdio {
-+	status = "okay";
- };
- 
- &cpsw_emac0 {
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index cb6811e5ae5a..0fb5df4ad498 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -688,6 +688,7 @@
- 			 */
- 			interrupts = <40 41 42 43>;
- 			ranges;
-+			status = "disabled";
- 
- 			davinci_mdio: mdio@4a101000 {
- 				compatible = "ti,davinci_mdio";
-@@ -696,6 +697,7 @@
- 				ti,hwmods = "davinci_mdio";
- 				bus_freq = <1000000>;
- 				reg = <0x4a101000 0x100>;
-+				status = "disabled";
- 			};
- 
- 			cpsw_emac0: slave@4a100200 {
--- 
-1.8.3.2
+When the patches are actually committed for merging then it is
+probably a good idea to reverse them. Thanks for the testing.
 
+g.
+
+>
+> Thus:
+>
+>    Tested-by: Frank Rowand <frank.rowand@sonymobile.com>
+>
+>>
+>> Signed-off-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  drivers/of/selftest.c                        | 23 ++++++++++++++++++
+>>  drivers/of/testcase-data/testcases.dtsi      |  1 +
+>>  drivers/of/testcase-data/tests-platform.dtsi | 35 ++++++++++++++++++++++++++++
+>>  3 files changed, 59 insertions(+)
+>>  create mode 100644 drivers/of/testcase-data/tests-platform.dtsi
+>>
+>
+> < snip >
+>
