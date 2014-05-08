@@ -1,90 +1,74 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH v2 3/5] ARM: dts: enable dp-controller for exynos5250
- based snow board
-Date: Thu, 8 May 2014 14:46:13 +0530
-Message-ID: <CAPdUM4MDYe5s=_8v3o85bALOzK1d_8Qr8xSTW=8A381Ps4qLyg@mail.gmail.com>
-References: <1399529995-8656-1-git-send-email-rahul.sharma@samsung.com>
-	<1399529995-8656-4-git-send-email-rahul.sharma@samsung.com>
-	<002801cf6a91$1a891f70$4f9b5e50$%han@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for pcie-dra7xx controller
+Date: Thu, 08 May 2014 11:16:16 +0200
+Message-ID: <4266819.iBi1FzBIBZ@wuerfel>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com> <5525000.bPgPLB3ZrT@wuerfel> <000101cf6a9b$6c96c8d0$45c45a70$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <002801cf6a91$1a891f70$4f9b5e50$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <000101cf6a9b$6c96c8d0$45c45a70$%han@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
 To: Jingoo Han <jg1.han@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Marek Vasut' <marex@denx.de>, devicetree@vger.kernel.org, balajitk@ti.com, linux-doc@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, 'Mohit Kumar' <mohit.kumar@st.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, linux-omap@vger.kernel.org, rogerq@ti.com, 'Pratyush Anand' <pratyush.anand@st.com>, 'Thierry Reding' <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 8 May 2014 13:12, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Thursday, May 08, 2014 3:20 PM, Rahul Sharma wrote:
->>
->> From: Rahul Sharma <Rahul.Sharma@samsung.com>
->>
->> Enable dp-controller for snow board.
->>
->> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5250-snow.dts |   27 +++++++++++++++++++++++++++
->>  1 file changed, 27 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
->> index 796954c..28a755f 100644
->> --- a/arch/arm/boot/dts/exynos5250-snow.dts
->> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
->> @@ -207,6 +207,33 @@
->>               };
->>       };
->>
->> +     dp-controller@145B0000 {
->> +             status = "okay";
->> +             pinctrl-names = "default";
->> +             pinctrl-0 = <&dp_hpd>;
->> +             samsung,color-space = <0>;
->> +             samsung,dynamic-range = <0>;
->> +             samsung,ycbcr-coeff = <0>;
->> +             samsung,color-depth = <1>;
->> +             samsung,link-rate = <0x0a>;
->> +             samsung,lane-count = <2>;
->> +             samsung,hpd-gpio = <&gpx0 7 0>;
->> +             display-timings {
->
-> For readability, please insert one line as below.
->
-> +               samsung,hpd-gpio = <&gpx0 7 0>;
-> +
-> +               display-timings {
->
-> The same comment applies to the 5th patch.
-> ([PATCH v2 5/5] ARM: dts: enable dp-controller for exynos5420
-> based peach-pit board)
->
+On Thursday 08 May 2014 17:56:38 Jingoo Han wrote:
+> On Wednesday, May 07, 2014 6:26 PM, Arnd Bergmann wrote:
+> > On Wednesday 07 May 2014 14:52:47 Kishon Vijay Abraham I wrote:
+> > > On Tuesday 06 May 2014 10:05 PM, Jason Gunthorpe wrote:
+> > > > On Tue, May 06, 2014 at 07:03:51PM +0530, Kishon Vijay Abraham I wrote:
+> > > >> +Example:
+> > > >> +pcie@51000000 {
+> > > >> +    compatible = "ti,dra7xx-pcie";
+> > > >> +    reg = <0x51002000 0x14c>, <0x51000000 0x2000>;
+> > > >> +    reg-names = "ti_conf", "rc_dbics";
+> > > >> +    interrupts = <0 232 0x4>, <0 233 0x4>;
+> > > >> +    #address-cells = >;
+> > > >> +    #size-cells = <2>;
+> > > >> +    device_type = "pci";
+> > > >> +    ti,device_type = >;
+> > > >> +    ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* Configuration Space */
+> > > >
+> > > > Configuration space should not show up in the ranges, please don't
+> > > > copy that mistake from other drivers, put it in reg.
+> > >
+> > > But then it needs pcie-designware.c to be modified and it will be breaking
+> > > other platforms no?
+> > 
+> > I think the pcie-designware driver should be changed to allow either way.
+> > Ideally we would deprecate the existing method in a way that for new front-ends
+> > it doesn't work, but the old front-ends can still deal with it but also work
+> > if you put it into the reg property.
+> 
+> (+cc Pratyush Anand, Thierry Reding)
+> 
+> Hi Arnd,
+> 
+> Thank you for your comment.
+> Do you mean the case of Tegra PCIe as below?
+> 
+> ./arch/arm/boot/dts/tegra20.dts
+>         pcie-controller@80003000 {
+>                 ...
+>                 reg = <0x80003000 0x00000800   /* PADS registers */
+>                          0x80003800 0x00000200   /* AFI registers */
+>                          0x90000000 0x10000000>; /* configuration space */
+>                 ...
+>                 ranges = <0x82000000 0 0x80000000 0x80000000 0 0x00001000   /* port 0 registers */
+>                         0x82000000 0 0x80001000 0x80001000 0 0x00001000   /* port 1 registers */
+>                         0x81000000 0 0          0x82000000 0 0x00010000   /* downstream I/O */
+>                         0x82000000 0 0xa0000000 0xa0000000 0 0x08000000   /* non-prefetchable memory */
+>                         0xc2000000 0 0xa8000000 0xa8000000 0 0x18000000>; /* prefetchable memory */
+>                 ...
+> 
+> ./drivers/pci/host/pci-tegra.c
+>         /* request configuration space, but remap later, on demand */
+>         res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "cs");
+>         ...
+>         pcie->cs = devm_request_mem_region(pcie->dev, res->start,
+>                                                 resource_size(res), res->name);
 
-Ok. Will do that.
+Yes, that is how the config space should be handled normally.
 
-Regards,
-Rahul Sharma.
-
-> Best regards,
-> Jingoo Han
->
->> +                     native-mode = <&timing1>;
->> +                     timing1: timing@1 {
->> +                             clock-frequency = <70589280>;
->> +                             hactive = <1366>;
->> +                             vactive = <768>;
->> +                             hfront-porch = <40>;
->> +                             hback-porch = <40>;
->> +                             hsync-len = <32>;
->> +                             vback-porch = <10>;
->> +                             vfront-porch = <12>;
->> +                             vsync-len = <6>;
->> +                     };
->> +             };
->> +     };
->> +
->>       fimd@14400000 {
->>               status = "okay";
->>               samsung,invert-vclk;
->> --
->> 1.7.9.5
->
+	Arnd
