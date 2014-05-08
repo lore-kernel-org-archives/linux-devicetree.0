@@ -1,91 +1,49 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/2] ARM: dts: Enable USB 3503 hub on exynos5250-snow
-Date: Thu, 08 May 2014 18:07:09 +0200
-Message-ID: <536BABAD.5030605@samsung.com>
-References: <1399293056-17143-1-git-send-email-gautam.vivek@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: S5PV210: Remove camera support from mach-goni.c
+Date: Thu, 08 May 2014 18:09:24 +0200
+Message-ID: <536BAC34.2020904@samsung.com>
+References: <1397583272-28295-1-git-send-email-s.nawrocki@samsung.com>
+ <1397583272-28295-2-git-send-email-s.nawrocki@samsung.com>
+ <081001cf65cc$cbef8700$63ce9500$@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399293056-17143-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, arunkk.samsung@gmail.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <081001cf65cc$cbef8700$63ce9500$@samsung.com>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
-
-On 05.05.2014 14:30, Vivek Gautam wrote:
-> The exynos5250-snow has a SMSC USB3503 connected in
-> hardware only mode like a PHY. Enable support for it,
-> and add necessary 'reset-gpio' for it.
+On 02/05/14 08:07, Kukjin Kim wrote:
+> Sylwester Nawrocki wrote:
+>> > 
+>> > S5PV210 is going to get DT support, so we can remove the camera
+>> > bits from the only board using camera on S5PV210. This allows to
+>> > clean the exynos4-is driver by dropping code for non-dt platforms.
+>> > This patch can be dropped if a patch removing the whole board
+>> > file is applied first.
+>> > 
+>> > Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> > Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> Hi Sylwester,
 > 
-> This is in correspondance to similar patch by Mark Brown
-> 7c1b0ec ARM: dts: Enable USB hub on Arndale
+> Cleanup is always welcome ;-)
 > 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> ---
+> I think, when this series is ready for mainline, this will be handled in
+> media tree. So,
 > 
-> Based on 'for-next' branch of kgene's linux-samsung tree.
-> 
->  arch/arm/boot/dts/exynos5250-pinctrl.dtsi |    7 +++++++
->  arch/arm/boot/dts/exynos5250-snow.dts     |   14 ++++++++++++++
->  2 files changed, 21 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-> index 9a49e68..bd8c8f1 100644
-> --- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
-> @@ -706,6 +706,13 @@
->  			samsung,pin-pud = <0>;
->  			samsung,pin-drv = <0>;
->  		};
-> +
-> +		usb_hub_reset: usb-hub-reset {
-> +			samsung,pins = "gpe1-0";
-> +			samsung,pin-function = <1>;
-> +			samsung,pin-pud = <0>;
-> +			samsung,pin-drv = <0>;
-> +		};
+> Acked-by: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-This is not a generic pin config group and should not be added to this
-file. Btw. it just sets the pin to output, which is what the consumer
-driver can do as well by calling gpio_direction_output. Do you really
-need this?
+Hi Kukjin,
 
->  	};
->  
->  	pinctrl@10d10000 {
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-> index 1ce1088..2e48f27 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -200,6 +200,20 @@
->  		samsung,vbus-gpio = <&gpx1 1 0>;
->  	};
->  
-> +	usb_hub_bus {
-> +		compatible = "simple-bus";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
+Thank you, patch queued up for the media tree!
 
-Why do you need this bus?
-
-> +
-> +		// SMSC USB3503 connected in hardware only mode as a PHY
-
-Wrong comment style. Also basically the comment says exactly the same as
-could be inferred from the node below.
-
-> +		usb_hub {
-> +			compatible = "smsc,usb3503a";
-> +			reset-gpios = <&gpe1 0 1>;
-> +			pinctrl-0 = <&usb_hub_reset>;
-> +			pinctrl-names = "default";
-
-As above, do you really need to use pinctrl here?
-
-I believe the same comments apply for patch 2/2 as well.
-
-Best regards,
-Tomasz
+--
+Regards,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
