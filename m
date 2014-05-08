@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] ARM: realview: basic device tree implementation
-Date: Thu, 8 May 2014 13:13:22 +0200
-Message-ID: <CACRpkdbiiahjY6n++MJqX=JyoiJoQAVVaDnsj5DM5kS2rOyXAg@mail.gmail.com>
+Date: Thu, 8 May 2014 13:20:19 +0200
+Message-ID: <CACRpkdbH4WrMgmj+sdgx83KncV4iGTqvve_QisP14uuLP6XS2w@mail.gmail.com>
 References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org>
 	<4327457.yKTHVHA17K@wuerfel>
 	<26412341.aCOKep5CZC@wuerfel>
@@ -16,15 +16,16 @@ List-Id: devicetree@vger.kernel.org
 
 On Wed, Mar 26, 2014 at 10:09 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-> I don't know if the ATAGS are actually correct in common boot loaders,
-> since the kernel has been overriding them for ages.
+> Catalin originally added the sparsemem hack. I asked him today about
+> it, and he also thinks that sparsemem without the hack should work,
+> as long as there is highmem support. I think we can either do away
+> with it entirely, or use the patch below to keep it alive.
 
-The RealView U-Boot has not seen a commit since 2010 when
-Peter Pearse retired but appears to pass incorrect ATAGs, 128MiB
-@ 0x0 for all RealView variants.
+IMO the patch make things worse. I'd just say we switch it to use highmem
+and get rid of the madness.
 
-But we need not worry about that for the DT boot path so much
-as we can fix that up, just for legacy boots.
+Anyone claiming to be running performance-critical loads on the PBX
+is either insane or a liar.
 
 Yours,
 Linus Walleij
