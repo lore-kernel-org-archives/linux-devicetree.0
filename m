@@ -1,38 +1,50 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 3/4] of/platform: fix device naming for non-translatable addresses
-Date: Thu, 8 May 2014 07:55:06 -0500
-Message-ID: <CAL_JsqJEW_Xrfi7OiF6caHVup1Y6-8SvyOJawov8o3oiYiFvXQ@mail.gmail.com>
-References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
-	<1399499298-8830-4-git-send-email-robherring2@gmail.com>
-	<4314054.Zr5Mecf9vm@wuerfel>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
+Date: Thu, 08 May 2014 17:00:03 +0400
+Message-ID: <536B7FD3.5090506@cogentembedded.com>
+References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be> <1399494750-31996-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4314054.Zr5Mecf9vm@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1399494750-31996-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Bastian Hecht <hechtb+renesas@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 8, 2014 at 5:41 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Wednesday 07 May 2014 16:48:17 Rob Herring wrote:
->> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> Using non-translatable addresses in platform device names is wrong
->> because they may not be globally unique. Just use the default naming with
->> a global index if the address cannot be translated instead.
->>
->> of_can_translate_address has the same checks as of_translate_address, so
->> we can remove it here as well.
+Hello.
+
+On 05/08/2014 12:32 AM, Geert Uytterhoeven wrote:
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> The "clocks" entry should be uncommented after the conversion to CCF is
+> integrated.
+
+>   arch/arm/boot/dts/r8a7740.dtsi |   13 +++++++++++++
+>   1 file changed, 13 insertions(+)
+
+> diff --git a/arch/arm/boot/dts/r8a7740.dtsi b/arch/arm/boot/dts/r8a7740.dtsi
+> index 3834b94dc02a..560d8d71cea4 100644
+> --- a/arch/arm/boot/dts/r8a7740.dtsi
+> +++ b/arch/arm/boot/dts/r8a7740.dtsi
+> @@ -122,6 +122,19 @@
+>   			      0 149 IRQ_TYPE_LEVEL_HIGH>;
+>   	};
 >
-> Have you checked that this doesn't break platforms using clkdev lookup
-> based on names with local addresses? It's quite possible that nobody
-> does that, but it would be good to have someone confirm it.
+> +	ether: ethernet@e9a00000 {
 
-I had not, but now I have. There don't appear to be any cases of that.
+    Are you really going to refer to this node somewhere, using its label?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +		compatible = "renesas,gether-r8a7740";
+> +		reg = <0xe9a00000 0x800>,
+> +		      <0xe9a01800 0x800>;
+> +		interrupt-parent = <&gic>;
+> +		interrupts = <0 110 IRQ_TYPE_LEVEL_HIGH>;
+> +		/* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
+
+    This property is mandatory, according to the bindings.
+
+WBR, Sergei
+
