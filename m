@@ -1,29 +1,51 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v2] devicetree: bindings: separate CPU enable method descriptions
-Date: Thu, 08 May 2014 13:50:27 -0500
-Message-ID: <536BD1F3.8010602@linaro.org>
-References: <1399574905-6478-1-git-send-email-elder@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
+Date: Thu, 08 May 2014 22:52:48 +0400
+Message-ID: <536BD280.9070808@cogentembedded.com>
+References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be>	<1399494750-31996-2-git-send-email-geert+renesas@glider.be>	<536B7FD3.5090506@cogentembedded.com>	<CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com>	<536B8340.4010901@cogentembedded.com>	<CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>	<536BC445.8080007@cogentembedded.com> <CAMuHMdVR9n8E-LyHn1B0REE4oTVbfJf-9v1Bo70bHCH_=r4-Vw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1399574905-6478-1-git-send-email-elder@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: mark.rutland@arm.com, sboyd@codeaurora.org, robh+dt@kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, lorenzo.pieralisi@arm.com, jason@lakedaemon.net, gregory.clement@free-electrons.com, rvaswani@codeaurora.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVR9n8E-LyHn1B0REE4oTVbfJf-9v1Bo70bHCH_=r4-Vw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/08/2014 01:48 PM, Alex Elder wrote:
-> The bindings for CPU enable methods are defined in ".../arm/cpus.txt".  As
-> additional 32-bit ARM CPUS are converted to use the "enable-method" CPU
-> property to imply a particular set of SMP operations to use, the list of these
-> methods is likely to become unwieldy.  The current documentation already
-> contains several property descriptions that are meaningful only for certain
-> enable methods.
-...
+On 05/08/2014 10:46 PM, Geert Uytterhoeven wrote:
 
-I forgot to mention, this patch is available here:
-	http://git.linaro.org/landing-teams/working/broadcom/kernel.git
-        Branch review/enable-method-bindings-v2
+>>>>>>> +               /* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
 
-					-Alex
+>>>>>>       This property is mandatory, according to the bindings.
+
+>>>>> Indeed, but you cannot put anything there until the platform has CCF, as
+>>>>> mstp3_clks doesn't exist yet.
+
+>>>>      Yes, that was the main obstacle to accepting those bindings sooner.
+>>>> This patch therefore seems somewhat premature.
+
+>>> My main objective is to provide working Ethernet support for Armadillo
+>>> reference now.
+
+>>     Mine was the same (but for BOCK-W board) but DT people didn't give a
+>> damn. :-) So there's still no Ethernet support in BOCK-W DT.
+
+> Yes there is: ethernet@18300000.
+
+    That's for an on-board SMSC911x, not for sh_eth.
+
+>>> The DTS already has other nodes without "clocks" properties.
+
+>>     It means not everybody submitting the bindings had the same bad luck as me. :-)
+
+> I think we have to be pragmatic here. The clocks properties will be added to
+> the dtsi as soon as we have CCF support.
+
+    I'd agree, so if there's no objections from DT people, I won't object anymore.
+
+> Gr{oetje,eeting}s,
+>                          Geert
+
+WBR, Sergei
+
