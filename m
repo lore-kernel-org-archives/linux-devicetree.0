@@ -1,40 +1,47 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 3/4] of/platform: fix device naming for non-translatable addresses
-Date: Thu, 08 May 2014 15:15:07 +0200
-Message-ID: <4916948.fjAQXx11x1@wuerfel>
-References: <1399499298-8830-1-git-send-email-robherring2@gmail.com> <4314054.Zr5Mecf9vm@wuerfel> <CAL_JsqJEW_Xrfi7OiF6caHVup1Y6-8SvyOJawov8o3oiYiFvXQ@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
+Date: Thu, 8 May 2014 15:21:37 +0200
+Message-ID: <CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>
+References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be>
+	<1399494750-31996-2-git-send-email-geert+renesas@glider.be>
+	<536B7FD3.5090506@cogentembedded.com>
+	<CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com>
+	<536B8340.4010901@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJEW_Xrfi7OiF6caHVup1Y6-8SvyOJawov8o3oiYiFvXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <536B8340.4010901@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 08 May 2014 07:55:06 Rob Herring wrote:
-> On Thu, May 8, 2014 at 5:41 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 07 May 2014 16:48:17 Rob Herring wrote:
-> >> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>
-> >> Using non-translatable addresses in platform device names is wrong
-> >> because they may not be globally unique. Just use the default naming with
-> >> a global index if the address cannot be translated instead.
-> >>
-> >> of_can_translate_address has the same checks as of_translate_address, so
-> >> we can remove it here as well.
-> >
-> > Have you checked that this doesn't break platforms using clkdev lookup
-> > based on names with local addresses? It's quite possible that nobody
-> > does that, but it would be good to have someone confirm it.
-> 
-> I had not, but now I have. There don't appear to be any cases of that.
+Hi Sergei,
 
-Ok, thanks for checking.
+On Thu, May 8, 2014 at 3:14 PM, Sergei Shtylyov
+<sergei.shtylyov@cogentembedded.com> wrote:
+>>>> +               /* clocks = <&mstp3_clks R8A7740_CLK_GETHER>; */
+>
+>>>     This property is mandatory, according to the bindings.
+>
+>> Indeed, but you cannot put anything there until the platform has CCF, as
+>> mstp3_clks doesn't exist yet.
+>
+>    Yes, that was the main obstacle to accepting those bindings sooner. This
+> patch therefore seems somewhat premature.
 
-	Arnd
+My main objective is to provide working Ethernet support for Armadillo
+reference now.
+
+The DTS already has other nodes without "clocks" properties.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
