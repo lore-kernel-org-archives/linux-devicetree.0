@@ -1,130 +1,114 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 4/4] arm64: Add APM X-Gene SoC EDAC DTS entries
-Date: Thu,  8 May 2014 17:03:19 -0600
-Message-ID: <1399590199-12256-5-git-send-email-lho@apm.com>
-References: <1399590199-12256-1-git-send-email-lho@apm.com>
- <1399590199-12256-2-git-send-email-lho@apm.com>
- <1399590199-12256-3-git-send-email-lho@apm.com>
- <1399590199-12256-4-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399590199-12256-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+From: Sebastian Capella <sebastian.capella@linaro.org>
+Subject: Re: [PATCH RFC v3 3/6] drivers: cpuidle: implement OF based idle states
+ infrastructure
+Date: Thu, 08 May 2014 16:12:19 -0700
+Message-ID: <536c0f39.90ab420a.3da7.ffff86ca@mx.google.com>
+References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1399399483-17112-4-git-send-email-lorenzo.pieralisi@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1399399483-17112-4-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Capella <capellas@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC EDAC DTS entries.
+Quoting Lorenzo Pieralisi (2014-05-06 11:04:40)
 
-Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   89 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 89 insertions(+), 0 deletions(-)
+> diff --git a/drivers/cpuidle/of_idle_states.c b/drivers/cpuidle/of_idle_states.c
+> new file mode 100644
+> index 0000000..360b7ad
+> --- /dev/null
+> +++ b/drivers/cpuidle/of_idle_states.c
+> @@ -0,0 +1,293 @@
+...
+> +static int __init add_state_node(cpumask_t *cpumask,
+> +                                struct device_node *state_node)
+> +{
+> +       struct state_elem *el;
+> +       u32 tmp, val = 0;
+> +
+> +       pr_debug(" * %s...\n", state_node->full_name);
+> +
+> +       if (!state_cpus_valid(cpumask, state_node))
+> +               return -EINVAL;
+> +       /*
+> +        * Parse just the properties required to sort the states.
+> +        * Since we are missing a value defining the energy
+> +        * efficiency of a state, for now the sorting code uses
+> +        *
+> +        * min-residency-us+exit-latency-us
+> +        *
+> +        * as sorting rank.
+> +        */
+> +       if (of_property_read_u32(state_node, "min-residency-us",
+> +                                &tmp)) {
+> +               pr_debug(" * %s missing min-residency-us property\n",
+> +                        state_node->full_name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       val += tmp;
+> +
+> +       if (of_property_read_u32(state_node, "exit-latency-us",
+> +                                &tmp)) {
+> +               pr_debug(" * %s missing exit-latency-us property\n",
+> +                            state_node->full_name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       val += tmp;
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 93f4b2d..aff6821 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -269,6 +269,95 @@
- 			interrupts = <0x0 0x4c 0x4>;
- 		};
- 
-+		edacmc0: edacmc0@7e800000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e800000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>;
-+		};
-+
-+		edacmc1: edacmc1@7e840000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e840000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>;
-+		};
-+
-+		edacmc2: edacmc2@7e880000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e880000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>;
-+		};
-+
-+		edacmc3: edacmc3@7e8c0000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e8c0000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>;
-+		};
-+
-+		edacpmd0: edacpmd0@7c000000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c000000 0x0 0x200000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd1: edacpmd1@7c200000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c200000 0x0 0x200000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd2: edacpmd2@7c400000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c400000 0x0 0x200000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd3: edacpmd3@7c600000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c600000 0x0 0x200000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacl3: edacl3@7e600000 {
-+			compatible = "apm,xgene-edac-l3";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e600000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacsoc: edacsoc@7e930000 {
-+			compatible = "apm,xgene-edac-soc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e930000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>,
-+				     <0x0 0x27 0x4>;
-+		};
-+
- 		phy1: phy@1f21a000 {
- 			compatible = "apm,xgene-phy";
- 			reg = <0x0 0x1f21a000 0x0 0x100>;
--- 
-1.5.5
+Sorry if i'm rehashing old stuff, but I prefer not to use the
+min-residency + exit-latency to sort.  I saw Rob's comment suggesting it
+and your reply.  I'm not sure when it was decided.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Would it be possible to sort instead based on the order in the
+cpus->cpu-idle-states?  If not, my preference would be to either use
+index like you had before, or specify another sort order / rank value.
+
+I think there's potential for us to create lower power states that
+have lower min-residencies (reduced power consumption in the state,
+allowing us to more quickly recover the higher entrance cost)
+with higher exit latencies in such a way that the formula would not
+sort as we expect.  Having a separate value would allow us to control
+the sorting in those cases.
+
+> +
+> +/*
+
+For kernel-doc, I think you need a /** here, and a () after the
+of_init_idle_driver below.  Also maybe Return: instead of Returns:
+and I think the return paragraph goes at the end, but am not positive.
+
+kernel-doc-nano-HOWTO.txt
+
+> + * of_init_idle_driver - Parse the DT idle states and initialize the
+> + *                      idle driver states array
+> + *
+> + * @drv:         Pointer to CPU idle driver to be initialized
+> + * @state_nodes:  Array of struct device_nodes to be initialized if
+> + *               init_nodes == true. Must be sized CPUIDLE_STATE_MAX
+> + * @start_idx:    First idle state index to be initialized
+> + * @init_nodes:   Boolean to request device nodes initialization
+> + *
+> + * Returns:
+> + *     0 on success
+> + *     <0 on failure
+> + *
+> + *     On success the states array in the cpuidle driver contains
+> + *     initialized entries in the states array, starting from index start_idx.
+> + *     If init_nodes == true, on success the state_nodes array is initialized
+> + *     with idle state DT node pointers, starting from index start_idx,
+> + *     in a 1:1 relation with the idle driver states array.
+> + */
+> +int __init of_init_idle_driver(struct cpuidle_driver *drv,
+> +                              struct device_node *state_nodes[],
+> +                              unsigned int start_idx, bool init_nodes)
+> +{
+
+Thanks!
+
+Sebastian
