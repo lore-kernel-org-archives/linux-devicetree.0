@@ -1,35 +1,146 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: realview: basic device tree implementation
-Date: Thu, 8 May 2014 13:20:19 +0200
-Message-ID: <CACRpkdbH4WrMgmj+sdgx83KncV4iGTqvve_QisP14uuLP6XS2w@mail.gmail.com>
-References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org>
-	<4327457.yKTHVHA17K@wuerfel>
-	<26412341.aCOKep5CZC@wuerfel>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v10 03/15] ARM: sunxi: Add driver for SD/MMC
+ hosts found on Allwinner sunxi SoCs
+Date: Thu, 08 May 2014 13:26:50 +0200
+Message-ID: <536B69FA.5090600@redhat.com>
+References: <1399046249-19472-1-git-send-email-hdegoede@redhat.com>	<1399046249-19472-4-git-send-email-hdegoede@redhat.com>	<CAPDyKFoinhyob7GZLgH4Dm7KdHCxj1+OpuZYKDK3OkU8RFsY8A@mail.gmail.com>	<53678DB4.60209@redhat.com> <CAPDyKFpAGNLaKagJ_RPt1vbz70pNWJzo-s6Ao50Mh0gFrRLN0g@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <26412341.aCOKep5CZC@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBBGUVWNQKGQEYRCVQLQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <CAPDyKFpAGNLaKagJ_RPt1vbz70pNWJzo-s6Ao50Mh0gFrRLN0g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: =?UTF-8?B?RGF2aWQgTGFuemVuZMO2cmZlcg==?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 10:09 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+Hi,
 
-> Catalin originally added the sparsemem hack. I asked him today about
-> it, and he also thinks that sparsemem without the hack should work,
-> as long as there is highmem support. I think we can either do away
-> with it entirely, or use the patch below to keep it alive.
+On 05/05/2014 10:33 PM, Ulf Hansson wrote:
+> [snip]
+> 
+>> On 05/05/2014 02:41 PM, Ulf Hansson wrote:
+>>>> +struct sunxi_mmc_host {
+>>>> +       struct mmc_host *mmc;
+>>>> +       struct regulator *vmmc;
+>>>
+>>> Instead of having a specific regulator for this driver, please use the
+>>> mmc_regulator_get_supply API.
+>>
+>> We cannot use mmc_regulator_get_supply because for the sunxi mmc controller
+>> not only vqmmc but also vmmc itself is optional, and mmc_regulator_get_supply
+>> calls devm_regulator_get rather then devm_regulator_get_optional for vmmc.
+> 
+> Is that because the mmc controller handle the power to the card or
+> because you have a fixed supply?
+> 
+> Having a fixed regulator supply could easily be set up in DT, which
+> then also dynamically gives you the ocr mask instead of having a them
+> "hard coded".
 
-IMO the patch make things worse. I'd just say we switch it to use highmem
-and get rid of the madness.
+It is because the sdcard slot power tends to be hooked directly to the 3.3V
+of the board. So in a sense this is a fixed regulator, but I really, REALLY
+don't want to add fixed regulator boilerplate to all sunxi dts files for this.
 
-Anyone claiming to be running performance-critical loads on the PBX
-is either insane or a liar.
+In other subsystems where there are similar cases (ie ahci-platform, supply for
+various ethernet phys), the regulator is always optional and does not need
+to be specified in the dts when the device is just hardwired to the power.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>
+>> Using mmc_regulator_get_supply would lead to false postive errors being logged
+>> on 99/100 boards.
+> 
+> I was kind of expecting a response like this. :-) Actually I would
+> prefer if we could make the API suit drivers like this one as well.
+> 
+> For reference, there are currently a patch being discussed which
+> relates to this topic.
+> "mmc: core: Improve support for deferred regulators"
+
+Ok, so that patch seems to replace the somewhat alarming message
+reported by devm_regulator_get by an acceptable:
+
+dev_info(dev, "No vmmc regulator found\n");
+
+I can live with that, so I'm going to assume that something like that
+patch will get merged in the near future and I'll switch to mmc_regulator_get_supply
+in the next version and just live with the error messages this causes for now.
+
+>>>> +       struct reset_control *reset;
+>>>> +
+>>>> +       /* IO mapping base */
+>>>> +       void __iomem    *reg_base;
+>>>> +
+>>>> +       spinlock_t      lock;
+>>>> +       struct tasklet_struct manual_stop_tasklet;
+>>>
+>>> Any reason why you can't use a threaded IRQ handler instead of a tasklet?
+>>
+>> AFAIK IRQ threaded handlers always have the highest priority. When
+>> the manual_stop_tasklet runs we disable irqs and start polling to
+>> recover from an error condition, which is nothing something I want
+>> todo with the highest priority on the system.
+> 
+> To me, that seems like a good match for a threaded irq handler.
+
+Ok, I've done some reading up on threaded irq handlers and I'll
+I'll convert this to a threaded irq handler (only using the thread for the error
+handling case).
+
+<snip>
+
+>>>> +               if (err) {
+>>>> +                       host->ferror = 1;
+>>>> +                       return;
+>>>> +               }
+>>>> +
+>>>> +               enable_irq(host->irq);
+> 
+> Just realize that I also think you should move the enable|disable_irq
+> to ->probe|remove().
+> 
+> That will mean you will be better prepared to implement runtime PM
+> support and thus make it possible to disable irqs during request
+> inactivity.
+
+Ok.
+
+<snip>
+
+>>>> +       /* set up clock */
+>>>> +       if (ios->clock && ios->power_mode) {
+>>>> +               dev_dbg(mmc_dev(host->mmc), "ios->clock: %d\n", ios->clock);
+>>>> +               sunxi_mmc_clk_set_rate(host, ios->clock);
+>>>> +               usleep_range(50000, 55000);
+>>>
+>>> Is those values for usleep really correct? I am not sure how many
+>>> times we execute this path while detecting/powering the card, but
+>>> quite a few.
+>>> Detecting/powering the card is also done during each system
+>>> suspend/resume cycle - thus this will heavily affect these cycles.
+>>
+>> The problem is we've no docs, so this is all based on android code, the
+>> android code has 2 drivers, lets call them the old and the new one.
+>>
+>> This works is based on the new driver as that one was significantly
+>> cleaner then the old driver. This bit comes directly from the new driver,
+>> but it seems that the old driver has no delay at all. And clk_set_rate
+>> already does a busy-wait waiting for the hardware to acknowledge the
+>> clock rate change, so I think this is not really necessary. I'll run
+>> some tests with it removed and if everything still works I'll drop it.
+> 
+> Okay, great!
+> 
+> Maybe we could add some comments, no matter what!?
+
+Yeah I'll add a comment that there used to be a usleep there :)
+
+Regards,
+
+Hans
