@@ -1,37 +1,47 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 3/3] ARM: dts: Add peach-pi board support
-Date: Thu, 8 May 2014 14:55:14 -0700
-Message-ID: <CAJAp7Og6Bqnbq5b=Ki5vLaVkvSXxqsKaFaxCoqbX+fRkgouh=A@mail.gmail.com>
-References: <1399035821-25096-1-git-send-email-arun.kk@samsung.com>
-	<1399035821-25096-4-git-send-email-arun.kk@samsung.com>
-	<5363D176.80601@gmail.com>
-	<CAD=FV=XYjMg7V9=OzAy_ifwaM83QS0tiTrp5+nxvG236kkSjRQ@mail.gmail.com>
-	<53644DDB.7050503@gmail.com>
-	<CAD=FV=U_b_n=V_mEFYNPFZ1wyrgjjr5jEGrVb5TviP0Z33popg@mail.gmail.com>
-	<5367D5E1.9070709@ti.com>
+From: Stanimir Vabanov <svarbanov@mm-sol.com>
+Subject: Re: [RFC PATCH v2 1/9] crypto: qce: Add core driver implementation
+Date: Fri, 09 May 2014 00:57:39 +0300
+Message-ID: <536BFDD3.9090609@mm-sol.com>
+References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com> <1397479725-20954-2-git-send-email-svarbanov@mm-sol.com> <20140428085928.GA16310@gondor.apana.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5367D5E1.9070709@ti.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tom Rini <trini@ti.com>
-Cc: Doug Anderson <dianders@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>, Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olofj@google.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Tushar Behera <tushar.behera@linaro.org>, Arun Kumar <arunkk.samsung@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140428085928.GA16310@gondor.apana.org.au>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Herbert Xu <herbert@gondor.apana.org.au>
+Cc: "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 5, 2014 at 11:18 AM, Tom Rini <trini@ti.com> wrote:
-[...]
-> The problem I was raising at the ELC BoF is that today we can't just
-> stop overwriting values in the non-zero case as many boards lie about
-> their memory size, in non-zero ways, but no one noticed as they only
-> tested with U-Boot which was performing the fixup.
+Hi Herbert,
 
-So, should we conclude are we stuck being bug-compatible forever?
+On 04/28/2014 11:59 AM, Herbert Xu wrote:
+> On Mon, Apr 14, 2014 at 03:48:37PM +0300, Stanimir Varbanov wrote:
+>>
+>> +#define QCE_MAJOR_VERSION5	0x05
+>> +#define QCE_QUEUE_LENGTH	50
+> 
+> What is the purpose of this software queue? Why can't you directly
+> feed the requests to the hardware?
+> 
+> If the hardware can't handle more than 50 requests in-flight,
+> then your software queue has failed to handle this since you're
+> taking requests off the queue before you touch the hardware so
+> you're not really limiting it to 50.  That is, for users that
+> can wait you're potentially dropping their requests instead
+> of letting them wait through the backlog mechanism.
 
-I was hoping to add this logic to the kernel by [1], but of course
-this won't fly
-based on the argument you highlighted (as was pointed out by Uwe).
+My assumption was that crypto_ablkcipher_encrypt/decrypt couldn't sleep
+and I should take the request almost immediately and return the
+appropriate error value - EINPROGRESS if the hardware is idle and EBUSY
+if the hardware working on some previous request. Thus if the returned
+error is EBUSY and the request could be backlogged I should call
+backlog->complete() when this request is taken actually for processing.
 
-[1] https://lkml.org/lkml/2014/5/7/28
+What I've done in practice is another story.
 
-Regards,
-Bjorn
+Is that assumption correct? If so, is crypto_enqueue|dequeue_request()
+are the proper tools to implement this behaviour?
+
+regards,
+Stan
