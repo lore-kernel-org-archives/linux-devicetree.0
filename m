@@ -1,94 +1,157 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: k2e-evm: add AEMIF/NAND device entry
-Date: Thu, 8 May 2014 23:33:37 +0300
-Message-ID: <536BEA21.8020603@ti.com>
-References: <1399575560-31090-1-git-send-email-ivan.khoronzhuk@ti.com> <1399581089-2505-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Thor Thayer <tthayer.linux@gmail.com>
+Subject: Re: [PATCHv3 3/3] edac: altera: Add EDAC support for Altera SDRAM
+Date: Thu, 8 May 2014 15:37:19 -0500
+Message-ID: <CAF03EBecxtMr1670ktQKTAZX_kHeZWz1SwuEk373B99BoVjbDw@mail.gmail.com>
+References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
+	<1399330337-16748-4-git-send-email-tthayer@altera.com>
+	<20140508120524.GF12548@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399581089-2505-1-git-send-email-ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140508120524.GF12548@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-ignore this
-
-On 05/08/2014 11:31 PM, Ivan Khoronzhuk wrote:
-> Add AEMIF/NAND device entry.
+On Thu, May 8, 2014 at 7:05 AM, Borislav Petkov <bp@alien8.de> wrote:
+> On Mon, May 05, 2014 at 05:52:17PM -0500, tthayer@altera.com wrote:
+>> From: Thor Thayer <tthayer@altera.com>
 >
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-> ---
->   arch/arm/boot/dts/k2e-evm.dts | 52 +++++++++++++++++++++++++++++++++++++++++++
->   1 file changed, 52 insertions(+)
+> Missing commit message.
+
+Whoops. I don't know what happened there. I'll fix it.
+
 >
-> diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
-> index 74b3b63..0370e2f 100644
-> --- a/arch/arm/boot/dts/k2e-evm.dts
-> +++ b/arch/arm/boot/dts/k2e-evm.dts
-> @@ -58,3 +58,55 @@
->   &usb1 {
->   	status = "okay";
->   };
-> +
-> +&aemif {
-> +	cs0 {
-> +		#address-cells = <2>;
-> +		#size-cells = <1>;
-> +		clock-ranges;
-> +		ranges;
-> +
-> +		ti,cs-chipselect = <0>;
-> +		/* all timings in nanoseconds */
-> +		ti,cs-min-turnaround-ns = <12>;
-> +		ti,cs-read-hold-ns = <6>;
-> +		ti,cs-read-strobe-ns = <23>;
-> +		ti,cs-read-setup-ns = <9>;
-> +		ti,cs-write-hold-ns = <8>;
-> +		ti,cs-write-strobe-ns = <23>;
-> +		ti,cs-write-setup-ns = <8>;
-> +
-> +		nand@0,0 {
-> +			compatible = "ti,keystone-nand","ti,davinci-nand";
-> +			#address-cells = <1>;
-> +			#size-cells = <1>;
-> +			reg = <0 0 0x4000000
-> +			       1 0 0x0000100>;
-> +
-> +			ti,davinci-chipselect = <0>;
-> +			ti,davinci-mask-ale = <0x2000>;
-> +			ti,davinci-mask-cle = <0x4000>;
-> +			ti,davinci-mask-chipsel = <0>;
-> +			nand-ecc-mode = "hw";
-> +			ti,davinci-ecc-bits = <4>;
-> +			nand-on-flash-bbt;
-> +
-> +			partition@0 {
-> +				label = "u-boot";
-> +				reg = <0x0 0x100000>;
-> +				read-only;
-> +			};
-> +
-> +			partition@100000 {
-> +				label = "params";
-> +				reg = <0x100000 0x80000>;
-> +				read-only;
-> +			};
-> +
-> +			partition@180000 {
-> +				label = "ubifs";
-> +				reg = <0x180000 0x7E80000>;
-> +			};
-> +		};
-> +	};
-> +};
+>> ---
+>> v2: Use the SDRAM controller registers to calculate memory size
+>>     instead of the Device Tree. Update To & Cc list. Add maintainer
+>>     information.
+>>
+>> v3: EDAC driver cleanup based on comments from Mailing list.
+>>
+>> Signed-off-by: Thor Thayer <tthayer@altera.com>
+>> ---
+>>  MAINTAINERS                |    5 +
+>>  drivers/edac/Kconfig       |    9 +
+>>  drivers/edac/Makefile      |    2 +
+>>  drivers/edac/altera_edac.c |  411 ++++++++++++++++++++++++++++++++++++++++++++
+>>  4 files changed, 427 insertions(+)
+>>  create mode 100644 drivers/edac/altera_edac.c
+>>
 
--- 
-Regards,
-Ivan Khoronzhuk
+<snip>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> --- /dev/null
+>> +++ b/drivers/edac/altera_edac.c
+>> @@ -0,0 +1,411 @@
+>> +/*
+>> + *  Copyright Altera Corporation (C) 2014. All rights reserved.
+>> + *  Copyright 2011-2012 Calxeda, Inc.
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms and conditions of the GNU General Public License,
+>> + * version 2, as published by the Free Software Foundation.
+>> + *
+>> + * This program is distributed in the hope it will be useful, but WITHOUT
+>> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+>> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+>> + * more details.
+>> + *
+>> + * This file is subject to the terms and conditions of the GNU General Public
+>> + * License.  See the file "COPYING" in the main directory of this archive
+>> + * for more details.
+>
+> I'm guessing your lawyers want this boilerplate after all?
+>
+
+Yes. Their reasoning is that they want to retain the rights and
+warranty language with the file (just in case the COPYING file
+changes).
+
+> ...
+>
+>> +static irqreturn_t altr_sdram_mc_err_handler(int irq, void *dev_id)
+>> +{
+>> +     struct mem_ctl_info *mci = dev_id;
+>> +     struct altr_sdram_mc_data *drvdata = mci->pvt_info;
+>> +     u32 status = 0, err_count = 0, err_addr = 0;
+>> +
+>> +     /* Error Address is shared by both SBE & DBE */
+>> +     regmap_read(drvdata->mc_vbase, ERRADDR, &err_addr);
+>> +
+>> +     regmap_read(drvdata->mc_vbase, DRAMSTS, &status);
+>> +
+>> +     if (status & DRAMSTS_DBEERR) {
+>> +             regmap_read(drvdata->mc_vbase, DBECOUNT, &err_count);
+>> +             edac_mc_handle_error(HW_EVENT_ERR_UNCORRECTED, mci, err_count,
+>> +                                  err_addr >> PAGE_SHIFT,
+>> +                                  err_addr & ~PAGE_MASK, 0,
+>> +                                  0, 0, -1, mci->ctl_name, "");
+>
+> So, are we setting edac_mc_panic_on_ue now or what are we planning to do
+> for uncorrectable errors?
+
+Yes. I tested using edac_core.edac_mc_panic_on_ue=1 from the command
+line and it worked fine. I'll add a comment to clarify. BTW, thanks
+for your help on that.
+
+>
+>> +     if (status & DRAMSTS_SBEERR) {
+>> +             regmap_read(drvdata->mc_vbase, SBECOUNT, &err_count);
+
+<snip>
+
+>> +     if (count == 3) {
+>> +             edac_printk(KERN_ALERT, EDAC_MC,
+>> +                         "EDAC Inject Double bit error\n");
+>> +             regmap_write(drvdata->mc_vbase, CTLCFG,
+>> +                          (read_reg | CTLCFG_GEN_DB_ERR));
+>> +     } else {
+>> +             edac_printk(KERN_ALERT, EDAC_MC,
+>> +                         "EDAC Inject Single bit error\n");
+>> +             regmap_write(drvdata->mc_vbase, CTLCFG,
+>> +                          (read_reg | CTLCFG_GEN_SB_ERR));
+>
+> You can remove the "EDAC " string from those printks above as
+> edac_printk already adds the prefix.
+
+Great. Will do.
+
+>
+>> +     }
+>> +
+>> +     ptemp[0] = 0x5A5A5A5A;
+>> +     ptemp[1] = 0xA5A5A5A5;
+>> +     regmap_write(drvdata->mc_vbase, CTLCFG, read_reg);
+>> +     /* Ensure it has been written out */
+>> +     wmb();
+>> +
+>> +     reg = ptemp[0];
+>> +     read_reg = ptemp[1];
+>> +     /* Force Read */
+>> +     rmb();
+>
+> Have you checked whether those reads don't get optimized away by the
+> compiler? I know, you need them for triggering the error condition.
+>
+> Also, you should add a comment here to explain why the reads are being
+> done.
+
+I considered using "volatile" variables, but decided against it after
+I read Documentation/volatile-considered-harmful.txt and my situation
+doesn't fit into the exemptions. Is there a better way to handle this?
+
+I'll add the comment.
+
+Thanks for reviewing and your comments.
+
+Thor
+
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Sent from a fat crate under my desk. Formatting is fine.
+> --
