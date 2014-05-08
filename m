@@ -1,60 +1,234 @@
-From: Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH] input: rotary encoder: implement quarter period mode
-Date: Thu, 8 May 2014 14:01:33 -0300
-Message-ID: <20140508170133.GA1199@arch.cereza>
-References: <1387377798-22344-1-git-send-email-s.hauer@pengutronix.de>
- <20140507144543.GE27177@e106331-lin.cambridge.arm.com>
- <20140507185932.GA22973@core.coreip.homeip.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/4] irqchip: gic: Add support for per CPU bank offset
+ specification in DT
+Date: Thu, 8 May 2014 12:04:08 -0500
+Message-ID: <CAL_Jsq+wCDWnZ-wemMPc1tvpnK3kd=bx5fkT5GAP_QyLPjQfJQ@mail.gmail.com>
+References: <1397832181-5153-1-git-send-email-t.figa@samsung.com>
+	<1397832181-5153-4-git-send-email-t.figa@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140507185932.GA22973@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Daniel Mack <daniel@zonque.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1397832181-5153-4-git-send-email-t.figa@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 07 May 11:59 AM, Dmitry Torokhov wrote:
-> On Wed, May 07, 2014 at 03:45:43PM +0100, Mark Rutland wrote:
-> > Hi,
-> > 
-> > On Wed, Dec 18, 2013 at 02:43:18PM +0000, Sascha Hauer wrote:
-> > > Some rotary encoders have a stable state in all output state
-> > > combinations. Add support for this type of encoder.
-> > > 
-> > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > Cc: Daniel Mack <daniel@zonque.org>
-> > > Cc: linux-input@vger.kernel.org
-> > > Cc: devicetree@vger.kernel.org
-> > > ---
-> > >  .../devicetree/bindings/input/rotary-encoder.txt   |  1 +
-> > >  Documentation/input/rotary-encoder.txt             |  9 +++++--
-> > >  drivers/input/misc/rotary_encoder.c                | 30 ++++++++++++++++++++--
-> > >  include/linux/rotary_encoder.h                     |  1 +
-> > >  4 files changed, 37 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > > index 3315495..cbdb29b 100644
-> > > --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > > @@ -15,6 +15,7 @@ Optional properties:
-> > >  - rotary-encoder,rollover: Automatic rollove when the rotary value becomes
-> > >    greater than the specified steps or smaller than 0. For absolute axis only.
-> > >  - rotary-encoder,half-period: Makes the driver work on half-period mode.
-> > > +- rotary-encoder,quarter-period: Makes the driver work on quarter-period mode.
-> > 
-> > The new property looks as sane to me as the half-period property, so for
-> > the binding addition:
-> 
-> Actually, maybe we should deprecate rotary-encoder,half-period and
-> instead add rotary-encoder,type property?
-> 
+On Fri, Apr 18, 2014 at 9:43 AM, Tomasz Figa <t.figa@samsung.com> wrote:
+> On most platforms GIC registers are banked, so each CPU can access its
+> registers at the same address. However there is a small number of SoCs
+> on which the banking is not implemented and each CPU has its GIC
+> register set at different offset from GIC base address.
+>
+> Originally the driver used simple maths to calculate the address, i.e.
+> multiplying constant percpu_offset by cpu_logical_map(cpu). However this
+> assumed the namespace of cpu_logical_map() to be from 0 to num_cpus-1,
+> but if CPU topology is specified via DT, this changes to full ID in
+> the same format as MPIDR register and thus breaks the assumption.
+>
+> This patch adds support for per CPU GIC bank offset specification
+> through device tree to separate SoC-internal core wiring from CPU
+> multi-processor IDs.
+>
+> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt |  7 ++
+>  Documentation/devicetree/bindings/arm/gic.txt  | 34 +++++++++-
+>  drivers/irqchip/irq-gic.c                      | 94 ++++++++++++++++++--------
+>  3 files changed, 105 insertions(+), 30 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> index 333f4ae..47654e6 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -209,6 +209,13 @@ nodes to be present and contain the properties described below.
+>                 Value type: <phandle>
+>                 Definition: Specifies the ACC[2] node associated with this CPU.
+>
+> +       - gic-offset
+> +               Usage: required for systems that have non-banked GIC
+> +                      implementation that requires each CPU to use different
+> +                      offset to access its set of GIC registers
+> +               Value type: <u32>
+> +               Definition: Specifies the offset of GIC registers specific to
+> +                           this CPU.
 
-Mark: what do you say?
+What if you have 1 distributor address and a per cpu address which is
+allowed in the gicv2 spec IIRC.
 
-I can fix a few patches if everyone agrees...
--- 
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
+I think I would rather see this stay contained within the gic node and
+use reg property.
+
+Rob
+
+>
+>  Example 1 (dual-cluster big.LITTLE system 32-bit):
+>
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 5573c08..2bd03406 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -48,7 +48,7 @@ Optional
+>
+>  - cpu-offset   : per-cpu offset within the distributor and cpu interface
+>    regions, used when the GIC doesn't have banked registers. The offset is
+> -  cpu-offset * cpu-nr.
+> +  cpu-offset * cpu-nr. (DEPRECATED, see per-CPU 'gic-offset' property.)
+>
+>  - arm,routable-irqs : Total number of gic irq inputs which are not directly
+>                   connected from the peripherals, but are routed dynamically
+> @@ -67,6 +67,38 @@ Example:
+>                       <0xfff10100 0x100>;
+>         };
+>
+> +* Per-CPU register offset specification for non-banked GIC
+> +
+> +On most platforms GIC registers are banked, so each CPU can access its
+> +registers at the same address. However there is a small number of SoCs
+> +on which the banking is not implemented and each CPU has its GIC
+> +register set at different offset from GIC base address. These offsets
+> +need to be be provided from device tree, as described below.
+> +
+> +Optional properties in node of each CPU in the system:
+> +
+> + - gic-offset : A single u32 value that needs to be added to GIC base
+> +   address to calculate address of GIC registers for that CPU.
+> +
+> +See [1] for more details about ARM CPU bindings.
+> +
+> +Example:
+> +
+> +       cpus {
+> +               /* ... */
+> +
+> +               cpu@a00 {
+> +                       /* ... */
+> +                       gic-offset = <0x0000>;
+> +               };
+> +
+> +               cpu@a01 {
+> +                       /* ... */
+> +                       gic-offset = <0x8000>;
+> +               };
+> +       };
+> +
+> +[1] Documentation/devicetree/bindings/arm/cpus.txt
+>
+>  * GIC virtualization extensions (VGIC)
+>
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 4300b66..ad6f4fe 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -924,6 +924,69 @@ const struct irq_domain_ops gic_default_routable_irq_domain_ops = {
+>  const struct irq_domain_ops *gic_routable_irq_domain_ops =
+>                                         &gic_default_routable_irq_domain_ops;
+>
+> +static int gic_setup_bases(struct gic_chip_data *gic, void __iomem *dist_base,
+> +                          void __iomem *cpu_base, u32 percpu_offset)
+> +{
+> +       bool use_cpu_nodes = true;
+> +       u32 offset;
+> +       unsigned int cpu;
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               struct device_node *cpu_node = of_get_cpu_node(cpu, NULL);
+> +
+> +               if (!cpu_node
+> +                   || of_property_read_u32(cpu_node, "gic-offset", &offset)) {
+> +                       use_cpu_nodes = false;
+> +                       break;
+> +               }
+> +       }
+> +
+> +       if (!(percpu_offset || use_cpu_nodes)
+> +           || !IS_ENABLED(CONFIG_GIC_NON_BANKED)) {
+> +               /* Normal, sane GIC... (or non-banked unsupported) */
+> +               WARN(percpu_offset || use_cpu_nodes,
+> +                    "GIC_NON_BANKED not enabled, ignoring %08x offset!",
+> +                    percpu_offset);
+> +
+> +               gic->dist_base.common_base = dist_base;
+> +               gic->cpu_base.common_base = cpu_base;
+> +               gic_set_base_accessor(gic, gic_get_common_base);
+> +
+> +               return 0;
+> +       }
+> +
+> +       /* Frankein-GIC without banked registers... */
+> +       gic->dist_base.percpu_base = alloc_percpu(void __iomem *);
+> +       gic->cpu_base.percpu_base = alloc_percpu(void __iomem *);
+> +       if (WARN_ON(!gic->dist_base.percpu_base ||
+> +                       !gic->cpu_base.percpu_base)) {
+> +               free_percpu(gic->dist_base.percpu_base);
+> +               free_percpu(gic->cpu_base.percpu_base);
+> +
+> +               return -ENOMEM;
+> +       }
+> +
+> +       for_each_possible_cpu(cpu) {
+> +               if (use_cpu_nodes) {
+> +                       struct device_node *cpu_node =
+> +                                               of_get_cpu_node(cpu, NULL);
+> +
+> +                       of_property_read_u32(cpu_node, "gic-offset", &offset);
+> +               } else {
+> +                       offset = percpu_offset * cpu_logical_map(cpu);
+> +               }
+> +
+> +               *per_cpu_ptr(gic->dist_base.percpu_base, cpu) =
+> +                                                       dist_base + offset;
+> +               *per_cpu_ptr(gic->cpu_base.percpu_base, cpu) =
+> +                                                       cpu_base + offset;
+> +       }
+> +
+> +       gic_set_base_accessor(gic, gic_get_percpu_base);
+> +
+> +       return 0;
+> +}
+> +
+>  void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>                            void __iomem *dist_base, void __iomem *cpu_base,
+>                            u32 percpu_offset, struct device_node *node)
+> @@ -936,36 +999,9 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+>         BUG_ON(gic_nr >= MAX_GIC_NR);
+>
+>         gic = &gic_data[gic_nr];
+> -#ifdef CONFIG_GIC_NON_BANKED
+> -       if (percpu_offset) { /* Frankein-GIC without banked registers... */
+> -               unsigned int cpu;
+> -
+> -               gic->dist_base.percpu_base = alloc_percpu(void __iomem *);
+> -               gic->cpu_base.percpu_base = alloc_percpu(void __iomem *);
+> -               if (WARN_ON(!gic->dist_base.percpu_base ||
+> -                           !gic->cpu_base.percpu_base)) {
+> -                       free_percpu(gic->dist_base.percpu_base);
+> -                       free_percpu(gic->cpu_base.percpu_base);
+> -                       return;
+> -               }
+>
+> -               for_each_possible_cpu(cpu) {
+> -                       unsigned long offset = percpu_offset * cpu_logical_map(cpu);
+> -                       *per_cpu_ptr(gic->dist_base.percpu_base, cpu) = dist_base + offset;
+> -                       *per_cpu_ptr(gic->cpu_base.percpu_base, cpu) = cpu_base + offset;
+> -               }
+> -
+> -               gic_set_base_accessor(gic, gic_get_percpu_base);
+> -       } else
+> -#endif
+> -       {                       /* Normal, sane GIC... */
+> -               WARN(percpu_offset,
+> -                    "GIC_NON_BANKED not enabled, ignoring %08x offset!",
+> -                    percpu_offset);
+> -               gic->dist_base.common_base = dist_base;
+> -               gic->cpu_base.common_base = cpu_base;
+> -               gic_set_base_accessor(gic, gic_get_common_base);
+> -       }
+> +       if (gic_setup_bases(gic, dist_base, cpu_base, percpu_offset))
+> +               return;
+>
+>         /*
+>          * Initialize the CPU interface map to all CPUs.
+> --
+> 1.9.2
+>
