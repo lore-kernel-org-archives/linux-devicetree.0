@@ -1,66 +1,60 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] ARM: realview: basic device tree implementation
-Date: Thu, 8 May 2014 12:27:50 +0200
-Message-ID: <CACRpkdZ7WoBMBMJjpKcsOeOA5E1erSioOeSDt1xOG=W04RoeCg@mail.gmail.com>
-References: <1395826060-26662-1-git-send-email-linus.walleij@linaro.org>
-	<CAL_JsqKYR1aujNhOASivsg-ED6xDPCsSCcGVnQn5vy4sD1PhAQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: KConfig and DTS files
+Date: Thu, 08 May 2014 12:37:09 +0200
+Message-ID: <5266451.XWDQiRgflU@wuerfel>
+References: <536A697D.3020002@boundarydevices.com> <CAJAp7OjNdmsomhm9jJ9-jP01z1Uz9snVgRCD07zOFdMYAhQ6Lw@mail.gmail.com> <536ABC89.8060301@boundarydevices.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKYR1aujNhOASivsg-ED6xDPCsSCcGVnQn5vy4sD1PhAQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <536ABC89.8060301-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Eric Nelson <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org>
+Cc: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 6:59 AM, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Mar 26, 2014 at 4:27 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+On Wednesday 07 May 2014 16:06:49 Eric Nelson wrote:
+> On 05/07/2014 03:20 PM, Bjorn Andersson wrote:
+> > On Wed, May 7, 2014 at 12:52 PM, Eric Nelson
+> > <eric.nelson-Q5RJGjKts06CY9SHAMCTRUEOCMrvLtNR@public.gmane.org> wrote:
+> > [...]
+> >>
+> >> I still wonder about the choice of not allowing inclusion
+> >> of at least include/generated/autoconf.h.
+> >
+> > Because what you just showed is the use case where you have 1 defconfig, build 1
+> > zImage and then you can have a completely separate delivery of X number of
+> > dtbs, all defining some variant of your original board.
+> > All without recompiling, or even have the source available.
+> >
+> 
+> I agree that there's some benefit in being able to generate
+> different DTBs, and it's an advantage (size, speed) to customize
+> the .config as well.
+> 
+> When those clearly go together, it seems natural to define them as
+> such.
+> 
+> I've heard (and appreciate) the pointers about how to get
+> past our current issue(s), but what's the rationale
+> for not allowing the inclusion of autoconf.h and
+> conditionals in the DTS?
+> 
+> Is it a concern that things will become polluted and
+> hard to read?
 
->> +       if (of_machine_is_compatible("arm,realview-eb"))
->> +               /*
->> +                * 1MB (128KB/way), 8-way associativity,
->> +                * evmon/parity/share enabled
->> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
->> +                */
->> +               l2x0_of_init(0x00790000, 0xfe000fff);
->> +       else if (of_machine_is_compatible("arm,realview-pb1176"))
->> +               /*
->> +                * 128Kb (16Kb/way) 8-way associativity.
->> +                * evmon/parity/share enabled.
->> +                */
->> +               l2x0_of_init(0x00730000, 0xfe000fff);
->> +       else if (of_machine_is_compatible("arm,realview-pb11mp"))
->> +               /*
->> +                * 1MB (128KB/way), 8-way associativity,
->> +                * evmon/parity/share enabled
->> +                * Bits:  .... ...0 0111 1001 0000 .... .... ....
->> +                */
->> +               l2x0_of_init(0x00730000, 0xfe000fff);
->> +       else if (of_machine_is_compatible("arm,realview-pbx"))
->> +               /*
->> +                * 16KB way size, 8-way associativity, parity disabled
->> +                * Bits:  .. 0 0 0 0 1 00 1 0 1 001 0 000 0 .... .... ....
->> +                */
->> +               l2x0_of_init(0x02520000, 0xc0000fff);
->> +#endif
->
-> As Arnd pointed out, see Russell's recent L2x0 emails. Since these are
-> L220s, you do need the way size and associativity to be initialized at
-> least. There are standard ePAPR definitions for these which should be
-> used.
->
-> Documenting the initial and final aux ctrl values on these platforms
-> would be helpful for Russell's clean-up.
+You should be able to take any recent enough
+Fedora/Debian/OpenSUSE/Ubuntu/OpenWRT kernel binary and install it on
+all ARMv7 machines to get a working system, keeping your existing .dtb
+file.
 
-The PB1176 board has the initial value:
-L2X0_AUX_CTRL = 0x02020fff
+There are still a few issues to be worked out for that (e.g. some drivers
+still can't be described in DT, and in some exceptional cases we break backwards
+compatibility), but if the .dtb file depends on the kernel configuration,
+it can never work, because the person building the kernel does not know
+what hardware you have.
 
-I don't know how I can help out best here unfortunately, it's a little
-bit of a moving target I guess and admittedly my understanding of
-l2x0 is pretty shallow. :-/
-
-Yours,
-Linus Walleij
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
