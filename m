@@ -1,38 +1,37 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH V2 0/4] Exynos4 SoC camera subsystem driver cleanups
-Date: Thu, 08 May 2014 19:34:07 +0200
-Message-ID: <1399570448-29737-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
+Subject: [PATCH V2 1/4] exynos4-is: Free FIMC-IS CPU memory only when allocated
+Date: Thu, 08 May 2014 19:35:15 +0200
+Message-ID: <1399570516-29782-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-media@vger.kernel.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, kyungmin.park@samsung.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch series includes some bug fixes for the Exynos4/S5P SoC camera
-interface drivers and removes (ab)use of "simple-bus" compatible string.
+Ensure dma_free_coherent() is not called with incorrect arguments
+and only when the memory was actually allocated. This will prevent
+possible crashes on error paths of the top level media device driver,
+when fimc-is device gets unregistered and its driver detached.
 
-Comparing to previous version I've excluded patches dropping support
-for non-dt platforms and added two further bug fixes.
-of_platform_populate() is used instead of manually parsing the device
-tree and creating devices and the cleanup function has been moved to
-the core. This series depends on patch:
-http://www.kernelhub.org/?msg=466319&p=2
+Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ drivers/media/platform/exynos4-is/fimc-is.c |    3 +++
+ 1 file changed, 3 insertions(+)
 
-Sylwester Nawrocki (4):
-  exynos4-is: Free FIMC-IS CPU memory only when allocated
-  exynos4-is: Move firmware request to subdev open()
-  exynos4-is: Remove requirement for "simple-bus" compatible
-  ARM: dts: exynos4: Remove simple-bus compatibles from the camera
-    subsystem
-
- .../devicetree/bindings/media/samsung-fimc.txt     |    6 +--
- arch/arm/boot/dts/exynos4.dtsi                     |    2 +-
- arch/arm/boot/dts/exynos4x12.dtsi                  |    2 +-
- drivers/media/platform/exynos4-is/fimc-is.c        |   50 ++++++++++----------
- drivers/media/platform/exynos4-is/fimc-is.h        |    2 +-
- drivers/media/platform/exynos4-is/fimc-isp.c       |   10 +++-
- drivers/media/platform/exynos4-is/media-dev.c      |   21 ++++++--
- 7 files changed, 58 insertions(+), 35 deletions(-)
-
---
+diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
+index 128b73b..5476dce 100644
+--- a/drivers/media/platform/exynos4-is/fimc-is.c
++++ b/drivers/media/platform/exynos4-is/fimc-is.c
+@@ -367,6 +367,9 @@ static void fimc_is_free_cpu_memory(struct fimc_is *is)
+ {
+ 	struct device *dev = &is->pdev->dev;
+ 
++	if (is->memory.vaddr == NULL)
++		return;
++
+ 	dma_free_coherent(dev, is->memory.size, is->memory.vaddr,
+ 			  is->memory.paddr);
+ }
+-- 
 1.7.9.5
