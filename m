@@ -1,25 +1,26 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 2/2] gpio: pca953x: request a shared interrupt
-Date: Fri, 9 May 2014 12:58:48 +0200
-Message-ID: <CACRpkdZC5_5J1cA6_OVmp9TdT0JW7vBPSqk3SJxjuqkCCFMobA@mail.gmail.com>
-References: <cover.1398844809.git.toby@tismith.id.au>
-	<8d517ae1adc265643ff9de4b1a2d1b65a4bb6997.1398844809.git.toby@tismith.id.au>
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Subject: [PATCH 0/2] Add DRA7xx platform support in cpsw-phy-sel driver
+Date: Fri, 9 May 2014 16:33:22 +0530
+Message-ID: <1399633404-5818-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8d517ae1adc265643ff9de4b1a2d1b65a4bb6997.1398844809.git.toby@tismith.id.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Toby Smith <toby@tismith.id.au>, Aaron Sierra <asierra@xes-inc.com>, Graeme Smecher <gsmecher@threespeedlogic.com>, Andrew Ruder <andy@aeruder.net>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: davem@davemloft.net, devicetree@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 30, 2014 at 10:01 AM, Toby Smith <toby@tismith.id.au> wrote:
+Adding DRA7xx platform support to cpsw-phy-sel driver to select phy mode in
+control driver and fixing the uninitialized dev by initializing to platform
+device structure pointer.
 
-> Request a shared interrupt when requesting a pca953x GPIO interrupt
->
-> Signed-off-by: Toby Smith <toby@tismith.id.au>
+Mugunthan V N (2):
+  drivers: net: cpsw-phy-sel: add dra7xx support for phy sel
+  drivers: net: cpsw-phy-sel: add am43xx platform support
 
-Patch applied.
+ .../devicetree/bindings/net/cpsw-phy-sel.txt       |  4 +-
+ drivers/net/ethernet/ti/cpsw-phy-sel.c             | 61 +++++++++++++++++++++-
+ 2 files changed, 63 insertions(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+-- 
+1.9.2.459.g68773ac
