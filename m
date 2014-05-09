@@ -1,57 +1,73 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Fri, 9 May 2014 08:30:09 -0700
-Message-ID: <20140509153008.GC17814@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-4-git-send-email-tony@atomide.com>
- <5369EAE7.3030705@ti.com>
- <20140507150343.GA9502@atomide.com>
- <536A5920.1020908@ti.com>
- <20140507175919.GH9502@atomide.com>
- <20140508233300.GI2198@atomide.com>
- <536C924E.5000307@ti.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator device
+ node
+Date: Fri, 9 May 2014 17:30:38 +0200
+Message-ID: <536CF49E.1050708@atmel.com>
+References: <1398054547-5834-1-git-send-email-wenyou.yang@atmel.com> <20140421095443.GA3461@piout.net> <20140421122205.GB3461@piout.net> <B256D81BAE5131468A838E5D7A24364180A876DA@penmbx01>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536C924E.5000307@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <B256D81BAE5131468A838E5D7A24364180A876DA@penmbx01>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140509 01:31]:
-> On 09/05/14 02:33, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [140507 11:00]:
-> >> * Tomi Valkeinen <tomi.valkeinen@ti.com> [140507 09:03]:
-> >>> On 07/05/14 18:03, Tony Lindgren wrote:
-> >>>>
-> >>>> BTW, I'm also personally fine with all five gpios showing in a single
-> >>>> gpios property, I'm not too exited about naming anything in DT..
-> >>>
-> >>> I don't have a strong opinion here. I don't have much experience with
-> >>> DT, especially with making bindings compatible with other ones.
-> >>>
-> >>> I'd just forget the simple-panel, and have single gpio array.
-> >>
-> >> Well if it's a don't care flag for both of us, let's try to use
-> >> the existing standard for simple-panel.txt and add mode-gpios
-> >> property. I'll post a patch for that.
-> > 
-> > Here's an updated version using enable-gpios, reset-gpios and
-> > mode-gpios. So it follows simple-panel.txt and adds mode-gpios
-> > that's currently specific to this panel only.
-> > 
-> > Also updated for -EPROBE_DEFER handling, tested that by changing
-> > one of the GPIOs to be a twl4030 GPIO.
+On 22/04/2014 03:37, Yang, Wenyou :
+> Hi,
 > 
-> To speed things up a bit, I made the changes I suggested. Compile tested
-> only.
+>> -----Original Message-----
+>> From: Alexandre Belloni [mailto:alexandre.belloni@free-electrons.com]
+>> Sent: Monday, April 21, 2014 8:22 PM
+>> To: Yang, Wenyou
+>> Cc: devicetree@vger.kernel.org; Ferre, Nicolas; linux-
+>> kernel@vger.kernel.org; robh+dt@kernel.org; broonie@kernel.org; linux-
+>> arm-kernel@lists.infradead.org
+>> Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator
+>> device node
+>>
+>> On 21/04/2014 at 11:54:43 +0200, Alexandre Belloni wrote :
+>>> Hi,
+>>>
+>>> On 21/04/2014 at 12:29:07 +0800, Wenyou Yang wrote :
+>>>> +
+>>>> +						vddana_reg: LDO_REG2 {
+>>>> +							regulator-name = "VDDANA";
+>>>> +							regulator-min-microvolt =
+>> <3300000>;
+>>>> +							regulator-max-microvolt =
+>> <3300000>;
+>>>> +							regulator-always-on;
+>>>
+>>> I'm pretty sure that one is not always on as you actually have to
+>>> configure it to get any voltage. Are you sure you want to set the
+>>> regulator-always-on property here ?
+>>>
+>>
+>> Just to clarify my though, wouldn't it be better to make the ADC driver
+>> handle that regulator instead of using regulator-always-on ?
+> Yes, you are right. 
+> It should not use regulator-always-on property for this regulator.
+> It is ADC driver and ISI driver to handle it(The ISI takes PCK for clock).
 
-OK thanks did not get the penguin with it so need to look at it a bit
-more.
+Hi Wenyou and Alexandre,
 
-Regards,
+After talking to our system engineers, it not usual to avoid to power
+the VDDANA rail. In fact it will prevent you to use all the pads that
+are powered by VDDANA: PD20-PD31. Moreover, even if you do not activate
+the ADC output on these lines you won't be able to use them as plain
+GPIO... (Cf. package and pinout section of the datasheet).
 
-Tony
+As the ADVREF pin of the SoC is connected to the VDDANA on this board
+(even if this default configuration can be modified with a soldering
+iron), we have to note that we may consume a little bit more power.
+
+But still, I would recommend to keep the "regulator-always-on" property
+on this node. Do you agree and allow me to take your first revision of
+the patch?
+
+
+Bye,
+-- 
+Nicolas Ferre
