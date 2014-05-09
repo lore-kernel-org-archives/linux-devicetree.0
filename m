@@ -1,311 +1,140 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
-Date: Fri, 9 May 2014 11:10:19 -0600
-Message-ID: <20140509171019.GA16780@obsidianresearch.com>
-References: <20140501173248.GD3732@e103592.cambridge.arm.com>
- <6774053.rAccqTeoiQ@wuerfel>
- <20140502173120.GD3805@e103592.cambridge.arm.com>
- <20140502181750.GD3179@obsidianresearch.com>
- <20140509141633.GD3921@e103592.cambridge.arm.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun6i-a31-app4-evb1.dts: Use sunxi-common-regulators.dtsi
+Date: Fri, 9 May 2014 12:27:40 -0500
+Message-ID: <20140509172740.GE7047@lukather>
+References: <1399624987-12381-1-git-send-email-hdegoede@redhat.com>
+ <536C97FD.3070906@free-electrons.com>
+ <536C9A53.2060302@redhat.com>
+ <536CA092.50300@free-electrons.com>
+ <536CCC75.7050407@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="jYUWvSWTDpDT74zJ"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBIFBWSNQKGQE3T4HKJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140509141633.GD3921-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <536CCC75.7050407-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 09, 2014 at 03:16:33PM +0100, Dave Martin wrote:
-> On Fri, May 02, 2014 at 12:17:50PM -0600, Jason Gunthorpe wrote:
 
-> > I wonder if this might be a better naming scheme, I actually don't
-> > really like 'slave' for this, it really only applies well to AXI style
-> > unidirectional busses, and any sort of message-based bus architectures
-> > (HT, PCI, QPI, etc) just have the concept of an initiator and target.
-> > 
-> > Since initiator/target applies equally well to master/slave buses,
-> > that seems like better, clearer, naming.
-> 
-> Sure, I wouldn't have a problem with such a suggestion.  A more neutral
-> naming is less likely to cause confusion.
-> 
-> > Using a nomenclature where
-> >   'reg' describes a target reachable from the CPU initiator via the
-> >         natural DT hierarchy
-> 
-> I would say, reachable from the parent device node (which implies your
-> statement).  This is consistent with the way ePAPR describes device-to-
-> device DMA (even if Linux doesn't usually make a lot of use of that).
+--jYUWvSWTDpDT74zJ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Trying to simplify, but yes, that is right..
+On Fri, May 09, 2014 at 02:39:17PM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 05/09/2014 11:32 AM, Boris BREZILLON wrote:
+> >=20
+> > On 09/05/2014 11:05, Hans de Goede wrote:
+> >> Hi,
+> >>
+> >> On 05/09/2014 10:55 AM, Boris BREZILLON wrote:
+> >>> On 09/05/2014 10:43, Hans de Goede wrote:
+> >>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >>>> ---
+> >>>>  arch/arm/boot/dts/sun6i-a31-app4-evb1.dts | 8 +-------
+> >>>>  1 file changed, 1 insertion(+), 7 deletions(-)
+> >>>>
+> >>>> diff --git a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts b/arch/arm/bo=
+ot/dts/sun6i-a31-app4-evb1.dts
+> >>>> index 270ab97..2bbf886 100644
+> >>>> --- a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+> >>>> +++ b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+> >>>> @@ -13,6 +13,7 @@
+> >>>> =20
+> >>>>  /dts-v1/;
+> >>>>  /include/ "sun6i-a31.dtsi"
+> >>>> +/include/ "sunxi-common-regulators.dtsi"
+> >>>> =20
+> >>>>  / {
+> >>>>  	model =3D "Allwinner A31 APP4 EVB1 Evaluation Board";
+> >>>> @@ -49,15 +50,8 @@
+> >>>>  	};
+> >>>> =20
+> >>>>  	reg_usb1_vbus: usb1-vbus {
+> >>>> -		compatible =3D "regulator-fixed";
+> >>>> -		pinctrl-names =3D "default";
+> >>>>  		pinctrl-0 =3D <&usb1_vbus_pin_a>;
+> >>>> -		regulator-name =3D "usb1-vbus";
+> >>>> -		regulator-min-microvolt =3D <5000000>;
+> >>>> -		regulator-max-microvolt =3D <5000000>;
+> >>>> -		enable-active-high;
+> >>>>  		gpio =3D <&pio 7 27 0>;
+> >>>>  		status =3D "okay";
+> >>>>  	};
+> >>> I guess we could do the same for usb1_vbus_pin_a (keep the common
+> >>> definition and change the allwinner,pins property).
+> >> Hmm, what we do with other boards when the pin does not match the
+> >> default is change the node name to something baord specific, ie
+> >> usb1_vbus_pin_app4_evb1
+> >=20
+> > Okay.
+> > How did you decide which pins should be put in the default definitions
+> > (the most used ones among available boards ?) ?
+>=20
+> The pins used there are used on all-most all A10 and A20 boards,
+> the sun5i (A10s / A13) boards seem to not really have any standard gpio
+> they use, and I have not seen enough A31 boards yet to say anything sensi=
+ble.
+>=20
+> We may need to rename the standard pins to include the platform name if
+> A31 also uses the same pin everywhere (but a different one from A10).
+>=20
+> > I'm not sure defining new pin states for each board is a good solution,
+> > because you'll embed unneeded pin states in your DTB.
+> > Anyway, this is your call :-).
+> >=20
+> >> Which is why I did not remove the common bits from the pin,
+> >> I did not notice you did not use a board specific name here.
+> >=20
+> > Then I guess it should be fixed in the same series.
+> > BTW, AFAIK the original patch adding support for the APP4 EVB1 board has
+> > not been applied yet, so I think we can fix it send a v2 of this patch.
+>=20
+> It is already in Maxime's dt-for-3.16 tree, so it is probably better to f=
+ix
+> this with a followup patch.
 
-> >   'initiator' describes a non-CPU (eg 'DMA') source of ops, and
-> >         travels via the path described to memory (which is the
-> > 	target).
-> 
-> CPUs are initiators only; non-mastering devices are targets only.
-> 
-> We might want some terminology to distinguish between mastering 
-> devices and bridges, both of which act as initiators and targets.
+Actually, it's not (yet). I'll squash it into my serie.
 
-I was hoping to simplify a bit. What the kernel needs, really, is the
-node that initates a transaction, the node that is the ultimate
-completing target of that transaction and the path through all
-intervening (transformative or not) components.
+Thanks!
+Maxime
 
-The fact a bridge is bus-level slave on one side and a bus-level
-master on another is not relevant to the above - a bridge is not an
-initiator and it is not a completing target.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-> We could have a concept of a "forwarder" or "gateway".  But a bus
-> may still be a target as well as forwarder: if the bus contains some
-> control registers for example.  There is nothing to stop "reg" and
-> "ranges" being present on the same node.
+--jYUWvSWTDpDT74zJ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Then the node is a 'target', and a 'bridge'. The key is to carefully
-define how the DT properties are used for each view-point.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-> >   'upstream' path direction toward the target, typically memory.
-> 
-> I'm not keen on that, because we would describe the hop between /
-> and /memory as downstream or upstream depending on who initiates the
-> transaction.  (I appreciate you weren't including CPUs in your
-> discussion, but if the termology works for the whole system it
-> would be a bonus).
+iQIcBAEBAgAGBQJTbRAMAAoJEBx+YmzsjxAgNYIP/3oUmMlBKhZpWgnPck3Q6SZD
+NaGSEk7pYsh6Wuo1sk/WDbZAQ8KRRL6SPT+jrYdnlHfMXJtUDB3iATgwQKr8VsGc
+VnBtr3+c2njn3dOgPM62tyQcQcQCLAuDvcKTSznPV7T9l/6+Oo7l69VIxTnXP4xd
+Yp+tdEkk3ANe70WbAbmoAsvBYhOHs1ah+8IRAiMCk9KDVLfsGmjRRH9yF7BSSas9
+RzSfw0U26bInQ5zoRt2HHTaVci0RnlXuc3svsXSIbBHq0EosHLlEY3NEEOYfifok
+1XPWE92O1tN1ma4Cj6zxm4qDdIIh1wqWo+qkaov9d8fDhFkc/j5o5Qqu6MVMb8uh
+17j2b8gg4SkcilekZ6w/B8BCmjuO33Ko6DvG+5OfrF1gJ8/LWOY3cCC2qoS0mwTw
+XYF7y5IyzwbGoGRkPXl4+IsCw1GcHu77rgnjQbLka4ON3l2995brisWI/SL5X73S
+w4vLecPyjL2jUCmtxCJAjnANdJ++263jyjoA6LCCP4R2pyHd2b7K/YECB7ZOQ23w
+c89+Wo6z/5J59FxgVDIaJljrPLW8TfZTF5a7NucZLSkvwCtbAqZAjhpk2O8/XSVS
+mYtiT5lIgcp31Tdy+Eb397Un6nwKOnqIvJoNm/zBMy9eZqF+tRHSLV/uNggZGExE
+da/XkP+H42g7g00NUpBU
+=1oAr
+-----END PGP SIGNATURE-----
 
-I'm just using the word 'upstream' as meaning 'moving closer to the
-completing target'.
-
-It isn't a great word, 'forward path' would do better to borrow
-a networking term.
-
-Then we have the 'return path' which, on message based busses is the
-path a completion message from 'completing target' travels to reach
-the 'initiator'.
-
-They actually can be asymmetric in some situations, but I'm not sure
-that is worth considering in DT, we can just assume completions travel
-a reverse path that hits every transformative bridge.
-
-> >   'upstream-bridge' The next hop on a path between an initiator/target
-> 
-> Maybe.  I'm still not sure quite why this is considered different
-> from the downward path through the DT, except that you consider
-> the cross-links in the DT to be "upward", but I considered them
-> "downward" (which I think are mostly equivalent approaches).
-> 
-> Can you elaborate?
-
-Let us not worry about upstream/downstream and just talk about the
-next bridge on the 'forward path' toward the 'completing target'.
-
-> > But I would encourage you to think about the various limitations this
-> > still has
-> >  - NUMA systems. How does one describe the path from each
-> >    CPU to a target regs, and target memory? This is important for
-> >    automatically setting affinities.
-> 
-> This is a good point.
-> 
-> Currently I had only been considering visibility, not affinity.
-> We actually have a similar problem with GIC, where there may
-> be multiple MSI mailboxes visible to a device, but one that is
-> preferred (due to being fewer hops away in the silicon, even though
-> the routing may be transparent).
-
-Really, the MSI affinity isn't handled by the architecture like x86?
-Funky.
- 
-> We could describe a whole separate bus for each CPU, with links
-> to common interconnect subtrees downstream.  But that might involve
-> a lot of duplication.  Your example below doesn't look too bad
-> though.
-
-Unfortunately my example ignores the ePAPR scheme of having a /cpu
-node, I didn't think too hard to fix that though.
-
-> >  - Peer-to-Peer DMA, this is where a non-CPU initiator speaks to a
-> >    non-memory target, possibly through IOMMUs and what not. ie
-> >    a graphics card in a PCI-E slot DMA'ing through a QPI bus to
-> >    a graphics card in a PCI-E slot attached to a different socket.
-> 
-> Actually, I do intend to describe that and I think I achieved it :)
-> 
-> To try to keep the length of this mail down a bit I won't try to
-> give an example here, but I'm happy to follow up later if this is
-> still not answered elsewhere in the thread.
-
-I think you got most of it, if I understand properly. The tricky bit I
-was concerned with, is where the CPU and DMA paths are not the same.
-
-> >                 intiator1 {
-> >                         ranges = < ... >;
-> >                         // View from this DMA initiator back to memory
-> >                         upstream-bridge = <&interconnect0>;
-> >                 };
-> > 		/* For some reason this peripheral has two DMA
-> > 		   initiation ports. */
-> >                 intiator2 {
-> >                         ranges = < ... >;
-> >                         upstream-bridge = <&interconnect0>;
-> >                 };
-> 
-> Describing separate masters within a device in this way looks quite nice.
-> 
-> Understanding what to do with them can still be left up to the driver
-> for the parent node (peripheral@0 in this case).
-
-I was thinking the DMA API could learn to have a handle to the
-initiator, with no handle it assumes the device node is itself the
-initiator (eg dma-rages case)
-
-> >              peripheral@1 {
-> >                 ranges = < ... >;
-> >    		regs = <>;
-> >                 intiator {
-> >                         ranges = < ... >;
-> >                         // View from this DMA initiator back to memory
-> >                         upstream-bridge = <&interconnect1>;
-> >                 };
-> >                 target {
-> > 		        reg = <..>
-> >                         /* This peripheral has integrated memory!
-> >                            But notice the CPU path is
-> >                              smp_system -> socket1 -> interconnect1_control -> target
-> > 			   While a DMA path is
-> >                              intiator1 -> interconnect0 -> interconnect1 -> target
-> > 			 */
-> >                 };
-> 
-> By hiding slaves (as opposed to masters) inside subnodes, can DT do
-> generic reachability analysis?  Maybe the answer is "yes".  I know
-> devices hanging of buses whose compatible string is not "simple-bus" are
-> not automatically probed, but there are other reasons for that, such as
-> bus-specific power-on and probing methods.
-
-Again, in this instance, it becomes up to the driver for peripheral@1
-to do something sensible with the buried nodes.
-
-The generic DT machinery will happily convert the reg of target into a
-CPU address for you.
-
-> >             };
-> >             peripheral2@0 {
-> >    		regs = <>;
-> > 
-> > 		// Or we can write the simplest case like this.
-> > 		dma-ranges = <>;
-> > 		upstream-bridge = <&interconnect1>;
-> >                 /* if upstream-bridge is omitted then it defaults to
-> > 	           &parent, eg interconnect1_control */
-> 
-> This doesn't seem so different from my approach, though I need to
-> think about it a bit more.
-
-This is how I was thinking to unify the language with the existing
-syntax.
- - dma-ranges alone in an initiator context is equivalent to using an
-   implicit buried node:
-    initiator {
-       ranges == dma_ranges
-       upstream-bridge = <&parent>;
-    }
- - While in a bridge context it it attached to the
-   'forward path edge'.
-
-Now we have a very precise definition for dma-ranges in the same
-language as the rest, and we can identify every involved node as
-'initiator', 'target' or 'bridge'
-
-> > It is computable that ops from initator2 -> target flow through
-> > interconnect0, interconnect1, and then are delivered to target.
-> > 
-> > It has a fair symmetry with the interrupt-parent mechanism..
-> 
-> Although that language is rather different from mine, I think my
-> proposal could describe this.  
-
-Yes, I think it did, I was mostly thinking to tighten up the language.
-
-> It doesn't preclude multi-rooted trees etc.; we could give a CPU a
-> "slaves" property to override the default child for transaction
-> rooting (which for CPUs is / -- somewhat illogical, but that's the
-> way ePAPR has it).
-
-Right..
-
-> There's no reason why buses can't be cross-connected using slaves
-> properties.  I'd avoided such things so far, because it introduces
-> new cycle risks, such as
-> socket@0 -> cross -> socket@1 -> cross -> socket@0 in the following.
-
-That is actually really how hardware works though. The socket-routers
-are configured to not have cycles on an address-by-address basis, but
-the actual high level topology is cyclic.
-
-> / {
-> 	cpus {
-> 		cpu@0 {
-> 			slaves = <&socket0_interconnect>;
-> 		};
-> 		cpu@1 {
-> 			slaves = <&socket0_interconnect>;
-> 		};
-> 		cpu@2 {
-> 			slaves = <&socket1_interconnect>;
-> 		};
-> 		cpu@3 {
-> 			slaves = <&socket1_interconnect>;
-> 		};
-> 	};
-> 
-
-So, this has dis-aggregated the sockets, which looses the coherent
-address view.
-
-I feel it is important to have a single top level node that represents
-the start point for *any* CPU issued transaction. This is the coherent
-memory space of the system. The DT tree follows a representative
-physical topology, eg from the cpu0, socket 0 view.
-
-Knowing affinity should be computable later on top of that.
-
-> Of course, nothing about this tells an OS anything about affinity,
-> except what it can guess from the number of nodes that must be traversed
-> between two points -- which may be misleading, particular if extra nodes
-> are inserted in order to describe mappings and linkages.
-
-Right, now you have to start adding a 'cost' to edges in the graph :)
-
-Or maybe this is wrong headed and nodes should simply have an
- affinity = <&cpu0 &cpu1 &memory0 &memory1>
-
-> Cycles could be avoided via the cross-connector ranges properties -- I
-> would sincerely hope that the hardware really does something
-> equivalent -- but then you cannot answer questions like "is the path
-> from X to Y cycle-free" without also specifying an address.
-
-Correct, and that is how HW works.
-
-The DT description for a bridge might actually need to include address
-based routing :(
-
-next-hop = <BASE SIZE &target
-            BASE SIZE &memory>
-
-> The downside of this approach is that the DT is unparseable to any
-> parser that doesn't understand the new concepts.
-
-This is why I feel the top level 'coherent view' node is so
-important. It retains the compatability.
-
-Or go back to the suggestion I gave last time - keep the DT tree
-basically as-is today and store a graph edge list separately.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--jYUWvSWTDpDT74zJ--
