@@ -1,88 +1,65 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Fri, 9 May 2014 08:55:04 -0700
-Message-ID: <20140509155504.GE17814@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-4-git-send-email-tony@atomide.com>
- <5369EAE7.3030705@ti.com>
- <20140507150343.GA9502@atomide.com>
- <536A5920.1020908@ti.com>
- <20140507175919.GH9502@atomide.com>
- <20140508233300.GI2198@atomide.com>
- <536C8293.4070506@ti.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH 1/4] mmc: sdhci: add a driver for Berlin SoCs
+Date: Fri, 09 May 2014 16:55:36 +0100
+Message-ID: <536CFA78.9050609@codethink.co.uk>
+References: <1397652011-21284-1-git-send-email-antoine.tenart@free-electrons.com> <1397652011-21284-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536C8293.4070506@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1397652011-21284-2-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, chris@printf.net, anton@enomsg.org
+Cc: alexandre.belloni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140509 00:24]:
-> On 09/05/14 02:33, Tony Lindgren wrote:
-> > +Example when connected to a omap2+ based device:
-> > +
-> > +	lcd0: display {
-> > +		compatible = "sharp,ls037v7dw01";
-> > +		power-supply = <&lcd_3v3>;
-> > +		enable-gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */
-> > +		reset-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB */
-> > +		mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
-> > +			      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
-> > +			      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
-> > +
-> > +		panel-timing {
-> > +			clock-frequency = <19200000>;
-> > +			hback-porch = <28>;
-> > +			hactive = <480>;
-> > +			hfront-porch = <1>;
-> > +			hsync-len = <2>;
-> > +			vback-porch = <1>;
-> > +			vactive = <640>;
-> > +			vfront-porch = <1>;
-> > +			vsync-len = <1>;
-> > +			hsync-active = <0>;
-> > +			vsync-active = <0>;
-> > +			de-active = <1>;
-> > +			pixelclk-active = <1>;
-> > +		};
-> 
-> I don't think we should define panel-timing here. We know it's
-> sharp,ls037v7dw01, so the driver knows the video timings. Also, if we
-> would extend the driver to support both resolution modes, it needs to
-> support two different timings, so the above doesn't work in that case
-> either.
+On 16/04/14 13:40, Antoine T=C3=A9nart wrote:
+> Add a Driver to support the SDHCI controller of the Marvell Berlin So=
+Cs.
+> This controller supports 3 sockets.
 
-OK. It seems we can have at least two different timings for this panel,
-the VGA timing above and the QVGA timings that LDP uses that are listed
-in the .dts changes.
- 
-> Although if the MO gpio is not controlled by the driver, we should tell
-> the driver whether that gpio is high or low.
+[snip]
 
-What do you have in mind for telling that? We should also tell the
-orientation of the panel:
+> +
+> +static struct sdhci_ops sdhci_berlin_ops =3D {
+> +	.get_max_clock =3D sdhci_pltfm_clk_get_max_clock,
+> +};
+> +
+> +static struct sdhci_pltfm_data sdhci_berlin2_pdata =3D {
+> +	.quirks	=3D SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +		  SDHCI_QUIRK_BROKEN_ADMA |
+> +		  SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
+> +	.ops =3D &sdhci_berlin_ops,
+> +};
+> +
+> +static struct sdhci_pltfm_data sdhci_berlin2q_pdata =3D {
+> +	.quirks	=3D SDHCI_QUIRK_CAP_CLOCK_BASE_BROKEN |
+> +		  SDHCI_QUIRK_INVERTED_WRITE_PROTECT |
+> +		  SDHCI_QUIRK_BROKEN_TIMEOUT_VAL,
+> +	.ops =3D &sdhci_berlin_ops,
+> +};
+> +
+> +static const struct of_device_id sdhci_berlin_of_match_table[] =3D {
+> +	{
+> +		.compatible =3D "marvell,berlin2-sdhci",
+> +		.data =3D &sdhci_berlin2_pdata,
+> +	},
+> +	{
+> +		.compatible =3D "marvell,berlin2cd-sdhci",
+> +		.data =3D &sdhci_berlin2_pdata,
+> +	},
+> +	{
+> +		.compatible =3D "marvell,berlin2q-sdhci",
+> +		.data =3D &sdhci_berlin2q_pdata,
+> +	},
+> +	{}
 
-EVM	VGA	omapfb.rotate=3
-LDP	QVGA	omapfb.rotate=0
+I think the hardware names should be used instead of the
+quirks the hardware has (broken wp / broken adma)
 
-Do you have something in mind for that?
- 
-> At the moment our display drivers are OMAP specific, and for that reason
-> we should prefix the compatible strings with "omapdss,". For example,
-> drivers/video/fbdev/omap2/displays-new/panel-dsi-cm.c:
-> 
-> 	{ .compatible = "omapdss,panel-dsi-cm", },
-> 
-> But we should still have the right compatible string in the .dts, so we
-> convert the compatible name in arch/arm/mach-omap2/display.c, with
-> 'dss_compat_conv_list' array, to which this panel's name should be added.
 
-Oh so what do you want to have in the .dts file then?
 
-Regards,
-
-Tony 
+--=20
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
