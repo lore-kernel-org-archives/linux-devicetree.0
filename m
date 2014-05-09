@@ -1,58 +1,55 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
-Date: Fri, 9 May 2014 07:06:10 +0200
-Message-ID: <20140509050610.GB2624@katana>
-References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
- <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
- <536C1945.1000601@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536C1945.1000601@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@sang-engineering.com>
+From: Matt Ranostay <mranostay@gmail.com>
+Subject: [PATCH] ARM: dts: am335x-bone-common: Add i2c2 definition
+Date: Thu,  8 May 2014 22:56:23 -0700
+Message-ID: <1399614983-552-1-git-send-email-mranostay@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pantelis.antoniou@gmail.com, matt.porter@linaro.org, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Add missing i2c2 bus define to access various cape and
+prototype/breakout board devices.
 
---4SFOXa2GPu3tIq4H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Matt Ranostay <mranostay@gmail.com>
+---
+ arch/arm/boot/dts/am335x-bone-common.dtsi | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
+diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+index 2e7d932..2aedfee 100644
+--- a/arch/arm/boot/dts/am335x-bone-common.dtsi
++++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+@@ -84,6 +84,13 @@
+ 		>;
+ 	};
+ 
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)	/* i2c2_sda.uart1_ctsn */
++			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)	/* i2c2_scl.uart1_rtsn */
++		>;
++	};
++
+ 	uart0_pins: pinmux_uart0_pins {
+ 		pinctrl-single,pins = <
+ 			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
+@@ -222,6 +229,15 @@
+ 
+ };
+ 
++
++&i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
++	status = "okay";
++	clock-frequency = <400000>;
++};
++
+ /include/ "tps65217.dtsi"
+ 
+ &tps {
+-- 
+1.8.3.2
 
-> >+	eeprom@50 {
-> >+		compatible =3D "renesas,24c02";
->=20
->    This is not quite right: Renesas' part is called differently, and
-> you're carrying the other vendor's naming onto Renesas parts. I'd
-> just say "24c02" (which I'll do in the Henninger board patch).
-
-What about "generic"?
-
-
---4SFOXa2GPu3tIq4H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTbGJCAAoJEBQN5MwUoCm2i/QP/iaeXucXLG/+TAXh1ulpgFzw
-70sef2Er/aE+CVfBWtFk1mdhCGKujB2cAUUQ+09PgdIbp4TaD76GawHL9c2hjpZx
-bz4YeTg+LDjKubyhdo+FTRclUpoboARyq35PirVQCnNwatD9oTvaaL7RoPlQiYdT
-K5inc/cIdD1GGitwjWAaxFeln3+jPBaXa6Dca5ZHL6HTNJ03l/vDtkC3Gex2a4Fy
-ffxDrx6mkZ6far2GSc0G0MamLZrSQr/YWFE36EqKoDncfiXNZfSe+d1MyH8tbMJI
-3o57bVsIhAPmtg9ehRs7CR8NzwX5qjeHqkFcugWr/4uBGyFQ3MeZD67/m9omQ/TF
-4kzLo5H9vYbzZ0AfrJG4aKeFwxW9KsrE7rWbee5GusBC9PkzTFSSpubXha0ie0HT
-jCybJZYrT7tA2akP9QcR28IMG30sdyUERhNeQUmOXQPF5Eeyw+1IMn8aftolcaju
-3Db+puB2Mc6MCX07dRB1jDz8O6cWi/HnLpPij0KnnkZSRa4tLwHld+fqFLbwAoEN
-Xjgik7xCZZYVfThCmy5SXG2mrrp1XRBwT+BbN3vR/K+9gr8uQXWTH4sOZ9wTIDwj
-hAWMsG94Zo2RGHRT75cGomtSecgqTPt8zN+OzPCN6sER1/G5ReQyJyU5UNZgIA55
-1PUyjBcA+P4XNxCKVblQ
-=UuiL
------END PGP SIGNATURE-----
-
---4SFOXa2GPu3tIq4H--
