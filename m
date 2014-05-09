@@ -1,61 +1,37 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v3 3/7] mfd: add support for sun6i PRCM (Power/Reset/Clock
- Management) unit
-Date: Fri, 09 May 2014 16:01:18 +0200
-Message-ID: <536CDFAE.8070208@free-electrons.com>
-References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com> <1399633911-7094-4-git-send-email-boris.brezillon@free-electrons.com> <20140509135251.GY5767@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: [RFC PATCH 0/2] drm/panel: add simple-panel description using DT
+Date: Fri,  9 May 2014 16:16:40 +0200
+Message-ID: <1399645002-18000-1-git-send-email-boris.brezillon@free-electrons.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140509135251.GY5767@lee--X1>
 Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>, David Airlie <airlied@linux.ie>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
+Hello Thierry,
 
-On 09/05/2014 15:52, Lee Jones wrote:
->> The PRCM (Power/Reset/Clock Management) block exposes several subdevices
->> in different subsystems (clk, reset ...)
->>
->> Add basic support for the PRCM unit with clk (AR100, AHB0, and APB0 clks)
->> and reset controller subdevices.
->>
->> Other subdevices might be added later (if needed).
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
->> ---
->>  drivers/mfd/Kconfig      |   8 +++
->>  drivers/mfd/Makefile     |   1 +
->>  drivers/mfd/sun6i-prcm.c | 134 +++++++++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 143 insertions(+)
->>  create mode 100644 drivers/mfd/sun6i-prcm.c
-> [...]
->
->> +/*
->> + * Copyright (C) 2014 Free Electrons
->> + *
->> + * License Terms: GNU General Public License v2
->> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> + *
->> + * Allwinner PRCM (Power/Reset/Clock Management) driver
->> + *
->> + */
->> +
->> +#include <linux/mfd/core.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
-> Ah, now isn't that better?
+I noticed you're describing each new panel with a new entry in the
+of_platform_match table and a new compatible string.
+I guess you have a good reason to do it this way, because retrieving
+panel description from DT would be pretty easy (see this series ;-)).
 
-Absolutely :-).
+Could tell me why you chose this approach ?
 
-> Acked-by: Lee Jones <lee.jones@linaro.org>
->
+Best Regards,
+
+Boris
+
+Boris BREZILLON (2):
+  drm/panel: add support for simple-panel description definition using
+    DT
+  drm/panel: update simple-panel DT bindings doc with panel desc
+    properties
+
+ .../devicetree/bindings/panel/simple-panel.txt     | 34 +++++++++++
+ drivers/gpu/drm/panel/Kconfig                      |  1 +
+ drivers/gpu/drm/panel/panel-simple.c               | 70 ++++++++++++++++++++++
+ 3 files changed, 105 insertions(+)
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.8.3.2
 
