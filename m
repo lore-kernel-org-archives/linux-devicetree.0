@@ -1,124 +1,63 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv4 7/7] ARM: dts: Add device tree sources for Exynos3250
-Date: Fri, 09 May 2014 15:49:58 +0900
-Message-ID: <536C7A96.3000906@samsung.com>
-References: <1398388572-30239-1-git-send-email-cw00.choi@samsung.com>
- <1398388572-30239-8-git-send-email-cw00.choi@samsung.com>
- <535B0324.50705@gmail.com> <535B9A98.3060206@gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH] of/irq: provide int of_irq_parse_and_map_pci wrapper
+Date: Fri, 09 May 2014 08:58:37 +0200
+Message-ID: <4527717.yJh2gX3xCP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <535B9A98.3060206@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: kgene.kim@samsung.com, t.figa@samsung.com, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, arnd@arndb.de, olof@lixom.net, marc.zyngier@arm.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, hyunhee.kim@samsung.com, yj44.cho@samsung.com, chanho61.park@samsung.com, sajjan.linux@gmail.com, tushar.behera@linaro.org, sachin.kamat@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+The pci-rcar driver is enabled for compile tests, and this has
+now shown that the driver cannot build without CONFIG_OF,
+following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+interrupt mapping when possible":
 
-On 04/26/2014 08:38 PM, Tomasz Figa wrote:
-> On 26.04.2014 02:51, Tomasz Figa wrote:
->> Hi Chanwoo,
->>
->> On 25.04.2014 03:16, Chanwoo Choi wrote:
->>> From: Tomasz Figa <t.figa@samsung.com>
->>>
->>> This patch add new exynos3250.dtsi to support Exynos3250 SoC based on
->>> Cortex-A7
->>> dual core and includes following dt nodes:
->>>
->>> - GIC interrupt controller
->>> - Pinctrl to control GPIOs
->>> - Clock controller
->>> - CPU information (Cortex-A7 dual core)
->>> - UART to support serial port
->>> - MCT (Multi Core Timer)
->>> - ADC (Analog Digital Converter)
->>> - I2C/SPI bus
->>> - Power domain
->>> - PMU (Performance Monitoring Unit)
->>> - MSHC (Mobile Storage Host Controller)
->>> - PWM (Pluse Width Modulation)
->>> - AMBA bus
->>>
->>> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
->>> Signed-off-by: Inki Dae <inki.dae@samsung.com>
->>> Signed-off-by: Hyunhee Kim <hyunhee.kim@samsung.com>
->>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->>> Cc: Ben Dooks <ben-linux@fluff.org>
->>> Cc: Kukjin Kim <kgene.kim@samsung.com>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Pawel Moll <pawel.moll@arm.com>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->>> Cc: Kumar Gala <galak@codeaurora.org>
->>> Cc: Russell King <linux@arm.linux.org.uk>
->>> Cc: devicetree@vger.kernel.org
->>> ---
->>>   arch/arm/boot/dts/exynos3250-pinctrl.dtsi | 477 +++++++++++++++
->>>   arch/arm/boot/dts/exynos3250.dtsi         | 405 +++++++++++++
->>>   arch/arm/boot/dts/exynos4212-tizenw.dts   | 926
->>> ++++++++++++++++++++++++++++++
->>>   3 files changed, 1808 insertions(+)
->>>   create mode 100644 arch/arm/boot/dts/exynos3250-pinctrl.dtsi
->>>   create mode 100644 arch/arm/boot/dts/exynos3250.dtsi
->>>   create mode 100644 arch/arm/boot/dts/exynos4212-tizenw.dts
->>>
->>> diff --git a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
->>> b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
->>> new file mode 100644
->>> index 0000000..976490b
->>> --- /dev/null
->>> +++ b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
->>> @@ -0,0 +1,477 @@
->>> +/*
->>> + * Samsung's Exynos3250 SoCs pin-mux and pin-config device tree source
->>> + *
->>> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
->>> + *        http://www.samsung.com
->>> + *
->>> + * Samsung's Exynos3250 SoCs pin-mux and pin-config optiosn are
->>> listed as device
->>> + * tree nodes are listed in this file.
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License version 2 as
->>> + * published by the Free Software Foundation.
->>> +*/
->>> +
->>> +/ {
->>> +    pinctrl@11400000 {
->>
->> Could you use references instead of re-specifying the whole tree
->> hierarchy in every file a node is used?
->>
->> Instead of
->>
->> / {
->>      pinctrl@11400000 {
->>
->>      };
->> };
->>
->> one may simply use
->>
->> &pinctrl_0 {
->>
->> };
->>
->> You might just need to change the location of #include
->> "exynos3250-pinctrl.dtsi" from top of exynos3250.dtsi to bottom of it.
-> 
-> Oh, well, you also should move all nodes of on-SoC devices under a simple-bus node called soc. You can see the patch adding dts file for Exynos5260 for an example [1].
-> 
-> [1] http://thread.gmane.org/gmane.linux.kernel.samsung-soc/29360/focus=29361
+drivers/built-in.o: In function `rcar_pci_map_irq':
+:(.text+0x1cc7c): undefined reference to `of_irq_parse_and_map_pci'
 
+As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+supposed to build fine, which we can achieve if we make the
+declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+and provide an empty inline function otherwise, as we do for
+a lot of other of interfaces.
 
-OK, I'll move nodes dependent on SoC under 'soc' dt node as example patch[1] except for 'amba-bus' dt node.
+This lets us build the rcar_pci driver again without CONFIG_OF,
+which won't work but give us compile time coverage.
 
-Thanks,
-Chanwoo Choi
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Magnus Damm <damm@opensource.se>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 1a1f5ff..1e29bf4 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -7,13 +7,18 @@
+ struct pci_dev;
+ struct of_phandle_args;
+ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq);
+-int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+ 
+ struct device_node;
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn);
+ int of_pci_get_devfn(struct device_node *np);
+ int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
++#ifdef CONFIG_OF
++int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
++#else
++static inline int
++of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin) { return 0; }
++#endif
+ 
+ #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
+ int of_pci_msi_chip_add(struct msi_chip *chip);
+
