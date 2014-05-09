@@ -1,63 +1,92 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for
- configuring the iATU
-Date: Fri, 9 May 2014 17:20:09 +0530
-Message-ID: <536CC0F1.301@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <4764413.ZAEU5S5p0p@wuerfel> <000201cf6a9c$9dd295e0$d977c1a0$%han@samsung.com> <6882241.amuhzvbd8n@wuerfel>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v3 3/6] drivers: cpuidle: implement OF based idle
+ states infrastructure
+Date: Fri, 9 May 2014 13:04:19 +0100
+Message-ID: <20140509120419.GA5040@e102568-lin.cambridge.arm.com>
+References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1399399483-17112-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <536c0f39.90ab420a.3da7.ffff86ca@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6882241.amuhzvbd8n@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: 'Santosh Shilimkar' <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, 'Bjorn Helgaas' <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, 'Marek Vasut' <marex-ynQEQJNshbs@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <536c0f39.90ab420a.3da7.ffff86ca@mx.google.com>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Capella <sebastian.capella@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Capella <capellas@>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thursday 08 May 2014 02:48 PM, Arnd Bergmann wrote:
-> On Thursday 08 May 2014 18:05:11 Jingoo Han wrote:
->> On Tuesday, May 06, 2014 10:59 PM, Arnd Bergmann wrote:
->>> On Tuesday 06 May 2014 19:03:52 Kishon Vijay Abraham I wrote:
->>>> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
->>>> address. So whenever the cpu issues a read/write request, the 4 most
->>>> significant bits are used by L3 to determine the target controller.
->>>> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
->>>> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
->>>> the outbound translation window the *base* should be programmed as 0x000_0000.
->>>> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
->>>> we have programmed in the translation window with base as 0x000_0000.
->>>>
->>>> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
->>>> Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->>>> Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>> Acked-by: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
->>>
->>> Sorry, but NAK.
->>>
->>> We have a standard 'dma-ranges' property to handle this, so use it.
->>>
->>> See the x-gene PCIe driver patches for an example. Please also talk
->>> to Santosh about it, as he is implementing generic support for
->>> parsing dma-ranges in platform devices at the moment.
->>
->> Hi Arnd,
->>
->> Do you mean the following patch?
->> http://www.spinics.net/lists/kernel/msg1737725.html
->>
+On Fri, May 09, 2014 at 12:12:19AM +0100, Sebastian Capella wrote:
+> Quoting Lorenzo Pieralisi (2014-05-06 11:04:40)
 > 
-> That is the patch Santosh did for platform devices, which is related but not
-> what I meant here. For the PCI inbound window setup, please have a look
-> at https://lkml.org/lkml/2014/3/19/607
+> > diff --git a/drivers/cpuidle/of_idle_states.c b/drivers/cpuidle/of_idle_states.c
+> > new file mode 100644
+> > index 0000000..360b7ad
+> > --- /dev/null
+> > +++ b/drivers/cpuidle/of_idle_states.c
+> > @@ -0,0 +1,293 @@
+> ...
+> > +static int __init add_state_node(cpumask_t *cpumask,
+> > +                                struct device_node *state_node)
+> > +{
+> > +       struct state_elem *el;
+> > +       u32 tmp, val = 0;
+> > +
+> > +       pr_debug(" * %s...\n", state_node->full_name);
+> > +
+> > +       if (!state_cpus_valid(cpumask, state_node))
+> > +               return -EINVAL;
+> > +       /*
+> > +        * Parse just the properties required to sort the states.
+> > +        * Since we are missing a value defining the energy
+> > +        * efficiency of a state, for now the sorting code uses
+> > +        *
+> > +        * min-residency-us+exit-latency-us
+> > +        *
+> > +        * as sorting rank.
+> > +        */
+> > +       if (of_property_read_u32(state_node, "min-residency-us",
+> > +                                &tmp)) {
+> > +               pr_debug(" * %s missing min-residency-us property\n",
+> > +                        state_node->full_name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       val += tmp;
+> > +
+> > +       if (of_property_read_u32(state_node, "exit-latency-us",
+> > +                                &tmp)) {
+> > +               pr_debug(" * %s missing exit-latency-us property\n",
+> > +                            state_node->full_name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       val += tmp;
+> 
+> Sorry if i'm rehashing old stuff, but I prefer not to use the
+> min-residency + exit-latency to sort.  I saw Rob's comment suggesting it
+> and your reply.  I'm not sure when it was decided.
+> 
+> Would it be possible to sort instead based on the order in the
+> cpus->cpu-idle-states?  If not, my preference would be to either use
+> index like you had before, or specify another sort order / rank value.
+> 
+> I think there's potential for us to create lower power states that
+> have lower min-residencies (reduced power consumption in the state,
+> allowing us to more quickly recover the higher entrance cost)
+> with higher exit latencies in such a way that the formula would not
+> sort as we expect.  Having a separate value would allow us to control
+> the sorting in those cases.
 
-For some reason lkml is not showing any contents. Do you have a different link?
+Ok, so adding to my previous comment, would exit_latency by itself be
+enough ? Can we think of a system where ranking by exit_latency is wrong ?
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If yes, we need a power rank, and this patch is wrong too:
+
+http://marc.info/?l=linux-kernel&m=139924292401056&w=2
+
+If answer is not, I can just rely on exit_latency to sort the states.
+
+Lorenzo
+
