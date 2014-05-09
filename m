@@ -1,146 +1,44 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
- controller support
-Date: Fri, 09 May 2014 16:50:02 +0200
-Message-ID: <536CEB1A.2060206@free-electrons.com>
-References: <1399485515-11243-1-git-send-email-boris.brezillon@free-electrons.com> <1399485515-11243-3-git-send-email-boris.brezillon@free-electrons.com> <20140509143116.GD7047@lukather>
+From: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 9 May 2014 07:59:44 -0700
+Message-ID: <CANEJEGuBD7RH32=YTjPmBt=Ykq21bSQ6gMtfU4H1qTbFPcWLYA@mail.gmail.com>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
+	<6555552.UqkKQIAsih@wuerfel>
+	<20140502174301.GE3805@e103592.cambridge.arm.com>
+	<4735818.FvYoTFuExd@wuerfel>
+	<20140509103309.GA3875@e103592.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140509143116.GD7047@lukather>
+In-Reply-To: <20140509103309.GA3875-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Dave,
+Mostly agree with your assessment. My $0.02 on one comment:
 
-On 09/05/2014 16:31, Maxime Ripard wrote:
-> Hi Boris,
->
-> On Wed, May 07, 2014 at 07:58:35PM +0200, Boris BREZILLON wrote:
->
-[...]
-> +
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	p2wi->regs = devm_ioremap_resource(dev, r);
-> +	if (IS_ERR(p2wi->regs)) {
-> +		dev_err(dev, "failed to retrieve iomem resource\n");
-> +		return PTR_ERR(p2wi->regs);
-> You seem to be returning the error code in the next error messages. It
-> would probably be a good idea to put it there too.
 
-Yes, I'll print the err code in the error message.
+On Fri, May 9, 2014 at 3:33 AM, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org> wrote:
+....
+> The downside is that is any path flows through a dynamically
+> configurable component, such as an IOMMU or a bridge that can be
+> remapped, turned off etc., then unless we describe how the path is
+> really linked together the kernel will need all sorts of baked-in
+> knowledge in order to manage the system safely.
 
->
->> +	}
->> +
->> +	snprintf(p2wi->adapter.name, sizeof(p2wi->adapter.name), pdev->name);
->> +	ret = platform_get_irq(pdev, 0);
->> +	if (ret < 0) {
->> +		dev_err(dev, "failed to retrieve irq: %d\n", ret);
->> +		return ret;
->> +	}
->> +	p2wi->irq = ret;
->> +
->> +	p2wi->clk = devm_clk_get(dev, NULL);
->> +	if (IS_ERR(p2wi->clk)) {
->> +		ret = PTR_ERR(p2wi->clk);
->> +		dev_err(dev, "failed to retrieve clk: %d\n",
->> +			ret);
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_prepare_enable(p2wi->clk);
->> +	if (ret) {
->> +		dev_err(dev, "failed to enable clk: %d\n", ret);
->> +		return ret;
->> +	}
->> +
->> +	parent_clk_freq = clk_get_rate(p2wi->clk);
->> +
->> +	p2wi->rstc = devm_reset_control_get(dev, NULL);
->> +	if (IS_ERR(p2wi->rstc)) {
->> +		ret = PTR_ERR(p2wi->rstc);
->> +		dev_err(dev, "failed to retrieve reset controller: %d\n",
->> +			ret);
->> +		goto err_clk_disable;
->> +	}
->> +
->> +	ret = reset_control_deassert(p2wi->rstc);
->> +	if (ret) {
->> +		dev_err(dev, "failed to deassert reset line: %d\n",
->> +			ret);
->> +		goto err_clk_disable;
->> +	}
->> +
->> +	init_completion(&p2wi->complete);
->> +	p2wi->adapter.dev.parent = dev;
->> +	p2wi->adapter.algo = &p2wi_algo;
->> +	p2wi->adapter.owner = THIS_MODULE;
->> +	p2wi->adapter.dev.of_node = pdev->dev.of_node;
->> +	platform_set_drvdata(pdev, p2wi);
->> +	i2c_set_adapdata(&p2wi->adapter, p2wi);
->> +
->> +	ret = devm_request_irq(dev, p2wi->irq, p2wi_interrupt, 0, pdev->name,
->> +			       p2wi);
->> +	if (ret) {
->> +		dev_err(dev, "can't register interrupt handler irq%d: %d\n",
->> +			p2wi->irq, ret);
->> +		goto err_reset_assert;
->> +	}
->> +
->> +	writel(P2WI_CTRL_SOFT_RST, p2wi->regs + P2WI_CTRL);
->> +
->> +	clk_div = parent_clk_freq / clk_freq;
->> +	if (!clk_div) {
->> +		dev_warn(dev,
->> +			 "clock-frequency is too high, setting it to %lu Hz\n",
->> +			 parent_clk_freq);
->> +		clk_div = 1;
->> +	} else if (clk_div > P2WI_CCR_MAX_CLK_DIV) {
->> +		dev_warn(dev,
->> +			 "clock-frequency is too low, setting it to %lu Hz\n",
->> +			 parent_clk_freq / P2WI_CCR_MAX_CLK_DIV);
->> +		clk_div = P2WI_CCR_MAX_CLK_DIV;
->> +	}
->> +
->> +	writel(P2WI_CCR_SDA_OUT_DELAY(1) | P2WI_CCR_CLK_DIV(clk_div),
->> +	       p2wi->regs + P2WI_CCR);
->> +
->> +	if (p2wi_mode_reg >= 0 && p2wi_mode_val >= 0) {
->> +		writel(P2WI_PMCR_PMU_INIT_SEND |
->> +		       P2WI_PMCR_PMU_MODE_REG(p2wi_mode_reg) |
->> +		       P2WI_PMCR_PMU_INIT_DATA(p2wi_mode_val) |
->> +		       P2WI_PMCR_PMU_DEV_ADDR(p2wi->slave_addr),
->> +		       p2wi->regs + P2WI_PMCR);
->> +
->> +		while (readl(p2wi->regs + P2WI_PMCR) &
->> +		       P2WI_PMCR_PMU_INIT_SEND)
->> +			cpu_relax();
->> +	}
-> Did we actually encounter such a case? From what I've seen so far,
-> both community's u-boot and Allwinner's bootloader already do this.
->
-> As you know, I'm really not fond of putting random values and
-> registers offsets into the DT itself. Making the assumption that the
-> PMIC is already switched to P2WI by the bootloader seems pretty safe
-> to me.
+Absolutely. Some knowledge (assumptions) will be "baked in" as code
+and some knowledge (explicit parameters) as device tree.
 
-Hans, any opinion ?
+My understanding of device tree is it essentially specifies
+"parameters" and "methods" (code provided in the kernel). All methods
+make some assumptions about the behavior of the HW it's operating on
+and as long as all users of a method share that assumption, all is
+well. We don't need device tree to describe those assumptions.
 
-If everybody agrees on that point, I'll remove the initialization part
-from the probe (and drop the allwinner,reg-xx properties retrieval).
-
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
+cheers,
+grant
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
