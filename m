@@ -1,82 +1,97 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
- for omap3-evm and ldp
-Date: Fri, 9 May 2014 08:37:23 -0700
-Message-ID: <20140509153723.GD17814@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-5-git-send-email-tony@atomide.com>
- <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com>
- <20140430174751.GA12362@atomide.com>
- <20140505183919.GA15463@atomide.com>
- <20140508233628.GJ2198@atomide.com>
- <536C7EA7.5000306@ti.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 1/9] mtd: nand: define struct nand_timings
+Date: Fri, 09 May 2014 17:47:19 +0200
+Message-ID: <536CF887.7020903@free-electrons.com>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com> <1394647664-8258-2-git-send-email-b.brezillon.dev@gmail.com> <20140430175157.GB2497@norris-Latitude-E6410> <20140508142930.GC5767@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536C7EA7.5000306@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Joachim Eastwood <manabian@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140508142930.GC5767@lee--X1>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Brian Norris <computersforpeace@gmail.com>
+Cc: devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, linux-mtd@lists.infradead.org, Maxime Ripard <maxime.ripard@free-electrons.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Lucas Stach <l.stach@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140509 00:08]:
-> On 09/05/14 02:36, Tony Lindgren wrote:
-> 
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi
-> > @@ -0,0 +1,82 @@
-> > +/*
-> > + * Common file for omap dpi panels with QVGA and reset pins
-> > + *
-> > + * Note that the board specifc DTS file needs to specify
-> > + * at minimum the GPIO enable-gpios for display, and
-> > + * gpios for gpio-backlight.
-> > + */
-> 
-> This looks very board specific to me... The regulator and the use of
-> mcspi1 depend on the board, so this file can't be used on just any omap
-> board with the same panel. And this can (probably) only be used on
-> boards with a single display. Do those boards have tv-out?
 
-Yes there's also TV out and DVI on omap3-evm, LDP just has DVI.
+On 08/05/2014 16:29, Lee Jones wrote:
+>>> Define a struct containing the standard NAND timings as described in NAND
+>>> datasheets.
+>>>
+>>> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+>>> ---
+>>>  include/linux/mtd/nand.h |   49 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 49 insertions(+)
+>>>
+>>> diff --git a/include/linux/mtd/nand.h b/include/linux/mtd/nand.h
+>>> index 389b3c5..f3ff3a3 100644
+>>> --- a/include/linux/mtd/nand.h
+>>> +++ b/include/linux/mtd/nand.h
+> [...]
+>
+>>> + * Parameters)
+>> Please document the units for these fields here. It looks like you're
+>> using picoseconds.
+> Can't we leave this open to interpretation?  For instance, it's more
+> convenient for our driver to handle these as nano second values.
+>
+>>> + *
+>>> + */
+>>> +
+>> Extra blank line.
+>>
+>>> +struct nand_sdr_timings {
+>>> +	u32 tALH_min;
+>>> +	u32 tADL_min;
+>>> +	u32 tALS_min;
+>>> +	u32 tAR_min;
+>>> +	u32 tCEA_max;
+>>> +	u32 tCEH_min;
+>>> +	u32 tCH_min;
+>>> +	u32 tCHZ_max;
+>>> +	u32 tCLH_min;
+>>> +	u32 tCLR_min;
+>>> +	u32 tCLS_min;
+>>> +	u32 tCOH_min;
+>>> +	u32 tCS_min;
+> 	u32 tCSD_min;
 
-It seems that all omap3 boards using this are pretty much wired
-the same way.
- 
-> So I have nothing against having common files, but shouldn't this be
-> named something more specific? If the boards involved are TI's OMAP3
-> development boards, maybe this should be something like...
-> omap3-ti-dev-panel-sharp-ls037v7dw01.dtsi. Well, that's a quite long one.
+This is related to ddr2 timings, and this structure only define sdr
+related timings.
 
-Yeah let's use omap3-panel-sharp-ls037v7dw01.dtsi. Looking at the
-legacy board files that should cover quite a few of them.
+>>> +	u32 tDH_min;
+>>> +	u32 tDS_min;
+>>> +	u32 tFEAT_max;
+>>> +	u32 tIR_min;
+>>> +	u32 tITC_max;
+> 	u32 tR_max;
 
-I guess it might also work on 2430sdp, but let's assume omap3
-for now.
- 
-> > +/ {
-> > +	aliases {
-> > +		display0 = &lcd0;
-> > +	};
-> > +
-> > +	backlight0: backlight {
-> > +		compatible = "gpio-backlight";
-> > +	};
-> > +
-> > +	/* 3.3V GPIO controlled regulator for LCD_ENVDD */
-> > +	lcd_3v3: regulator-lcd-3v3 {
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "lcd_3v3";
-> > +		regulator-min-microvolt = <3300000>;
-> > +		regulator-max-microvolt = <3300000>;
-> > +		startup-delay-us = <70000>;
-> > +		regulator-always-on;
-> 
-> Why always-on?
+Actually this one cannot be retrieved from the ONFI timing mode, you'll
+have to read bytes 137 and 138 in the parameter page.
+Hence I got rid of it in the first place. Then I considered adding all
+those missing timings in another structure (see [1]).
 
-Oops, yeah that should not be there. The GPIO is board specific.
+I noticed you posted something similar on the MTD mailing list (and
+Lucas was waiting for the feature too).
+Could we work together to propose something that fulfills all our needs ?
 
-Regards,
+Here's what I need:
+- get detailled timings to be able to configure the sunxi NAND
+controller appropriately
+- a way to get these timings on non-ONFi NANDs (the proposed solution is
+exposing the closest  supported ONFI timing mode in the NAND chip DT
+node, but I'm open to any new proposal).
 
-Tony
+
+Best Regards,
+
+Boris
+
+[1] http://lists.infradead.org/pipermail/linux-mtd/2014-March/052525.html
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
