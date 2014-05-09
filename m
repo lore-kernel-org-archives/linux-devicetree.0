@@ -1,94 +1,104 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun6i-a31-app4-evb1.dts: Use sunxi-common-regulators.dtsi
-Date: Fri, 09 May 2014 14:39:17 +0200
-Message-ID: <536CCC75.7050407@redhat.com>
-References: <1399624987-12381-1-git-send-email-hdegoede@redhat.com> <536C97FD.3070906@free-electrons.com> <536C9A53.2060302@redhat.com> <536CA092.50300@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Subject: Re: [PATCH 1/2] mfd: pm8x41: add support for Qualcomm 8x41 PMICs
+Date: Fri, 09 May 2014 15:45:30 +0300
+Message-ID: <1399639530.8165.32.camel@iivanov-dev>
+References: <1398213110-28135-1-git-send-email-courtney.cavin@sonymobile.com>
+	 <20140423214626.GA3215@joshc.qualcomm.com>
+	 <20140423233621.GM17066@sonymobile.com>
+	 <20140424181829.GA19254@joshc.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB64YWONQKGQE6HBJ26Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <536CA092.50300-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20140424181829.GA19254@joshc.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Josh Cartwright <joshc@codeaurora.org>
+Cc: Courtney Cavin <courtney.cavin@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, David Collins <collinsd@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 05/09/2014 11:32 AM, Boris BREZILLON wrote:
+Hi, 
+
+On Thu, 2014-04-24 at 13:18 -0500, Josh Cartwright wrote:
+> On Wed, Apr 23, 2014 at 04:36:22PM -0700, Courtney Cavin wrote:
+> > On Wed, Apr 23, 2014 at 11:46:26PM +0200, Josh Cartwright wrote:
+> > > On Tue, Apr 22, 2014 at 05:31:49PM -0700, Courtney Cavin wrote:
+> [..]
+
+<snip>
 > 
-> On 09/05/2014 11:05, Hans de Goede wrote:
->> Hi,
->>
->> On 05/09/2014 10:55 AM, Boris BREZILLON wrote:
->>> On 09/05/2014 10:43, Hans de Goede wrote:
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>  arch/arm/boot/dts/sun6i-a31-app4-evb1.dts | 8 +-------
->>>>  1 file changed, 1 insertion(+), 7 deletions(-)
->>>>
->>>> diff --git a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
->>>> index 270ab97..2bbf886 100644
->>>> --- a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
->>>> +++ b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
->>>> @@ -13,6 +13,7 @@
->>>>  
->>>>  /dts-v1/;
->>>>  /include/ "sun6i-a31.dtsi"
->>>> +/include/ "sunxi-common-regulators.dtsi"
->>>>  
->>>>  / {
->>>>  	model = "Allwinner A31 APP4 EVB1 Evaluation Board";
->>>> @@ -49,15 +50,8 @@
->>>>  	};
->>>>  
->>>>  	reg_usb1_vbus: usb1-vbus {
->>>> -		compatible = "regulator-fixed";
->>>> -		pinctrl-names = "default";
->>>>  		pinctrl-0 = <&usb1_vbus_pin_a>;
->>>> -		regulator-name = "usb1-vbus";
->>>> -		regulator-min-microvolt = <5000000>;
->>>> -		regulator-max-microvolt = <5000000>;
->>>> -		enable-active-high;
->>>>  		gpio = <&pio 7 27 0>;
->>>>  		status = "okay";
->>>>  	};
->>> I guess we could do the same for usb1_vbus_pin_a (keep the common
->>> definition and change the allwinner,pins property).
->> Hmm, what we do with other boards when the pin does not match the
->> default is change the node name to something baord specific, ie
->> usb1_vbus_pin_app4_evb1
+> 	$ git grep spmi-slave-container arch/arm/boot/dts
+> 	arch/arm/boot/dts/qcom/msm-pm8019.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8019.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8110.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8110.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8226.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8226.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8841.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8841.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8916.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8916.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8941.dtsi:	spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pm8941.dtsi:	spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pma8084.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pma8084.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmd9635.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmd9635.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmi8962.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmi8962.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmiplutonium.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmiplutonium.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmplutonium.dtsi:		spmi-slave-container;
+> 	arch/arm/boot/dts/qcom/msm-pmplutonium.dtsi:		spmi-slave-container;
 > 
-> Okay.
-> How did you decide which pins should be put in the default definitions
-> (the most used ones among available boards ?) ?
-
-The pins used there are used on all-most all A10 and A20 boards,
-the sun5i (A10s / A13) boards seem to not really have any standard gpio
-they use, and I have not seen enough A31 boards yet to say anything sensible.
-
-We may need to rename the standard pins to include the platform name if
-A31 also uses the same pin everywhere (but a different one from A10).
-
-> I'm not sure defining new pin states for each board is a good solution,
-> because you'll embed unneeded pin states in your DTB.
-> Anyway, this is your call :-).
+> [..]
+> > > > +static const struct of_device_id pm8x41_id_table[] = {
+> > > > +	{ .compatible = "qcom,pm8841", },
+> > > > +	{ .compatible = "qcom,pm8941", },
+> > > > +	{},
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, pm8x41_id_table);
+> > > 
+> > > I'm thinking we should probably have a generic compatible entry as well,
+> > > "qcom,pmic-qpnp" or similar.  We should still specify in the binding
+> > > that PMIC slaves specify a version-specific string as well as the
+> > > generic string.  That is, a slave should have:
+> > > 
+> > > 	compatible = "qcom,pm8841", "qcom,pmic-qpnp";
+> > > 
+> > > ...in case we would ever need to differentiate in the future.
+> > > 
+> > > (I recall that in a previous version I had done this, but I don't
+> > > remember why I had changed it..)
+> >
+> > I gave this some thought but came to the conclusion that there is no
+> > benefit of adding a generic compatible to a new binding.  Please clarify
+> > a use-case where this would be ... useful.
 > 
->> Which is why I did not remove the common bits from the pin,
->> I did not notice you did not use a board specific name here.
+> Having a generic compatible entry allows for easily supporting new PMICs
+> without having to add yet another vacuous entry in the ID table.  In
+> this case I think it's perfectly acceptable given that this driver isn't
+> really defining a programming model for a specific device, but rather
+> acting much more like a bus.
 > 
-> Then I guess it should be fixed in the same series.
-> BTW, AFAIK the original patch adding support for the APP4 EVB1 board has
-> not been applied yet, so I think we can fix it send a v2 of this patch.
+> Requiring a specific PMIC listed before a generic one allows us an
+> escape hatch in the future if for some reason we need to add a quirk for
+> a specific PMIC.
 
-It is already in Maxime's dt-for-3.16 tree, so it is probably better to fix
-this with a followup patch.
+Is there a conclusion on this issue? I am voting for generic name :-)
+"qcom,pm-qpnp".
+
+Further complication is that several sub function drivers expect to
+runtime detect the exact version of the controller ("qcom, qpnp-iadc",
+"qcom, qpnp-vadc", "qcom, qpnp-linear-charger").  This is realized by the
+exported function of the driver "qcom, qpnp-revid". Would it be good
+idea to merge qpnp-revid and "qcom,pm-qpnp" driver?
 
 Regards,
+Ivan
 
-Hans
+> 
+>   Josh
+> 
+> [1]: git://codeaurora.org/quic/la/kernel/msm-3.10#msm-3.10
+> 
