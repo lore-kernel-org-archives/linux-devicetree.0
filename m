@@ -1,130 +1,166 @@
-From: Jacek Anaszewski <j.anaszewski@samsung.com>
-Subject: Re: [PATCH/RFC v3 5/5] media: Add registration helpers for V4L2 flash
- sub-devices
-Date: Fri, 09 May 2014 09:18:55 +0200
-Message-ID: <536C815F.8060906@samsung.com>
-References: <1397228216-6657-1-git-send-email-j.anaszewski@samsung.com>
- <1397228216-6657-6-git-send-email-j.anaszewski@samsung.com>
- <20140416182141.GG8753@valkosipuli.retiisi.org.uk>
- <534F9044.6080508@samsung.com>
- <20140423152435.GJ8753@valkosipuli.retiisi.org.uk>
- <535E3A95.6010206@samsung.com>
- <20140502110651.GX8753@valkosipuli.retiisi.org.uk>
- <536884D9.4050104@samsung.com>
- <20140506091059.GB8753@valkosipuli.retiisi.org.uk>
- <5369DEB1.2060803@samsung.com>
- <20140507075828.GD8753@valkosipuli.retiisi.org.uk>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Fri, 9 May 2014 10:24:03 +0300
+Message-ID: <536C8293.4070506@ti.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-4-git-send-email-tony@atomide.com> <5369EAE7.3030705@ti.com> <20140507150343.GA9502@atomide.com> <536A5920.1020908@ti.com> <20140507175919.GH9502@atomide.com> <20140508233300.GI2198@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-leds-owner@vger.kernel.org>
-In-reply-to: <20140507075828.GD8753@valkosipuli.retiisi.org.uk>
-Sender: linux-leds-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: linux-media@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, s.nawrocki@samsung.com, a.hajda@samsung.com, kyungmin.park@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140508233300.GI2198@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sakari,
+--vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 05/07/2014 09:58 AM, Sakari Ailus wrote:
-> Hi Jacek,
->
-> On Wed, May 07, 2014 at 09:20:17AM +0200, Jacek Anaszewski wrote:
->> On 05/06/2014 11:10 AM, Sakari Ailus wrote:
->>> Hi Jacek,
->>>
->>> On Tue, May 06, 2014 at 08:44:41AM +0200, Jacek Anaszewski wrote:
->>>> Hi Sakari,
->>>>
->>>> On 05/02/2014 01:06 PM, Sakari Ailus wrote:
->>>>
->>>>>>>> [...]
->>>>>>>>>> +static inline enum led_brightness v4l2_flash_intensity_to_led_brightness(
->>>>>>>>>> +					struct led_ctrl *config,
->>>>>>>>>> +					u32 intensity)
->>>>>>>>>
->>>>>>>>> Fits on a single line.
->>>>>>>>>
->>>>>>>>>> +{
->>>>>>>>>> +	return intensity / config->step;
->>>>>>>>>
->>>>>>>>> Shouldn't you first decrement the minimum before the division?
->>>>>>>>
->>>>>>>> Brightness level 0 means that led is off. Let's consider following case:
->>>>>>>>
->>>>>>>> intensity - 15625
->>>>>>>> config->step - 15625
->>>>>>>> intensity / config->step = 1 (the lowest possible current level)
->>>>>>>
->>>>>>> In V4L2 controls the minimum is not off, and zero might not be a possible
->>>>>>> value since minimum isn't divisible by step.
->>>>>>>
->>>>>>> I wonder how to best take that into account.
->>>>>>
->>>>>> I've assumed that in MODE_TORCH a led is always on. Switching
->>>>>> the mode to MODE_FLASH or MODE_OFF turns the led off.
->>>>>> This way we avoid the problem with converting 0 uA value to
->>>>>> led_brightness, as available torch brightness levels start from
->>>>>> the minimum current level value and turning the led off is
->>>>>> accomplished on transition to MODE_OFF or MODE_FLASH, by
->>>>>> calling brightness_set op with led_brightness = 0.
->>>>>
->>>>> I'm not sure if we understood the issue the same way. My concern was that if
->>>>> the intensity isn't a multiple of step (but intensity - min is), the above
->>>>> formula won't return a valid result (unless I miss something).
->>>>>
->>>>
->>>> Please note that v4l2_flash_intensity_to_led_brightness is called only
->>> >from s_ctrl callback, and thus it expects to get the intensity aligned
->>>> to the step value, so it will always be a multiple of step.
->>>> Is it possible that s_ctrl callback would be passed a non-aligned
->>>> control value?
->>>
->>> In a nutshell: value - min is aligned but value is not. Please see
->>> validate_new() in drivers/media/v4l2-core/v4l2-ctrls.c .
->>>
->>
->> Still, to my mind, value is aligned.
->>
->> Below I execute the calculation steps one by one
->> according to the V4L2_CTRL_TYPE_INTEGER case in the
->> validate_new function:
->>
->> c->value = 35000
->>
->> val = c->value + step / 2;       // 35000 + 15625 / 2 = 42812
->> val = clamp(val, min, max);      // val = 42812
->> offset = val - min;              // 42812 - 15625 = 27187
->> offset = step * (offset / step); // 15625 * (27187 / 15625) = 15625
->> c->value = min + offset;         // 15625 + 15625 = 31250
->>
->> Value is aligned to the nearest step.
->>
->> Please spot any discrepancies in my way of thinking if there
->> are any :)
->
-> min is aligned to step above. This is not necessarily the case. And if min
-> is not aligned, neither is value.
->
+On 09/05/14 02:33, Tony Lindgren wrote:
 
-Thanks for spotting this. Below are improved versions of the conversion
-functions. Please let me know if you have any comments.
+> We can pass the GPIO configuration for ls037v7dw01 in a standard
+> gpios property.
+>=20
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>=20
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
+> @@ -0,0 +1,56 @@
+> +SHARP LS037V7DW01 TFT-LCD panel
+> +
+> +Required properties:
+> +- compatible: should be "sharp,ls037v7dw01"
+> +
+> +Optional properties:
+> +- enable-gpios: a GPIO spec for the optional enable pin
+> +  this pin is the INI pin as specified in the LS037V7DW01.pdf file.
+> +- reset-gpios: a GPIO spec for the optional reset pin
+> +  this pin is the RESB pin as specified in the LS037V7DW01.pdf file.
+> +- mode-gpios: a GPIO=20
+> +  ordered MO, LR, and UD as specified in the LS037V7DW01.pdf file.
+> +
+> +This binding is compatible with the simple-panel binding, which is spe=
+cified
+> +in simple-panel.txt in this directory.
 
-static inline
-enum led_brightnessv4l2_flash_intensity_to_led_brightness(
-                                         struct led_ctrl *config,
-                                         u32 intensity)
-{
-         return ((intensity - config->min) / config->step) + 1;
-}
+The video port data is required also. See for example
+Documentation/devicetree/bindings/video/panel-dsi-cm.txt or
+Documentation/devicetree/bindings/video/hdmi-connector.txt.
 
-static inline
-u32 v4l2_flash_led_brightness_to_intensity(
-                                         struct led_ctrl *config,
-                                         enum led_brightness brightness)
-{
-         return ((brightness - 1) * config->step) + config->min;
-}
+Also, all the bindings I've made are in
+Documentation/devicetree/bindings/video/, and I'd rather keep the video
+bindings OMAP uses in the same place.
 
-Regards,
-Jacek Anaszewski
+> +This panel can have zero to five GPIOs to configure
+> +to change configuration between QVGA and VGA mode
+> +and the scan direction. As these pins can be also
+> +configured with external pulls, all the GPIOs are
+> +considered optional with holes in the array.
+> +
+> +Example when connected to a omap2+ based device:
+> +
+> +	lcd0: display {
+> +		compatible =3D "sharp,ls037v7dw01";
+> +		power-supply =3D <&lcd_3v3>;
+> +		enable-gpios =3D <&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI *=
+/
+> +		reset-gpios =3D <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB *=
+/
+> +		mode-gpios =3D <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
+> +			      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
+> +			      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
+> +
+> +		panel-timing {
+> +			clock-frequency =3D <19200000>;
+> +			hback-porch =3D <28>;
+> +			hactive =3D <480>;
+> +			hfront-porch =3D <1>;
+> +			hsync-len =3D <2>;
+> +			vback-porch =3D <1>;
+> +			vactive =3D <640>;
+> +			vfront-porch =3D <1>;
+> +			vsync-len =3D <1>;
+> +			hsync-active =3D <0>;
+> +			vsync-active =3D <0>;
+> +			de-active =3D <1>;
+> +			pixelclk-active =3D <1>;
+> +		};
+
+I don't think we should define panel-timing here. We know it's
+sharp,ls037v7dw01, so the driver knows the video timings. Also, if we
+would extend the driver to support both resolution modes, it needs to
+support two different timings, so the above doesn't work in that case
+either.
+
+Although if the MO gpio is not controlled by the driver, we should tell
+the driver whether that gpio is high or low.
+
+> +static int sharp_ls_probe_of(struct platform_device *pdev)
+> +{
+> +	struct panel_drv_data *ddata =3D platform_get_drvdata(pdev);
+> +	struct device_node *node =3D pdev->dev.of_node;
+> +	struct omap_dss_device *in;
+> +	struct display_timing timing;
+> +	struct videomode vm;
+> +	int r;
+> +
+> +	ddata->vcc =3D devm_regulator_get(&pdev->dev, "envdd");
+> +	if (IS_ERR(ddata->vcc)) {
+> +		dev_err(&pdev->dev, "failed to get regulator\n");
+> +		return PTR_ERR(ddata->vcc);
+> +	}
+> +
+> +	r =3D regulator_enable(ddata->vcc);
+> +	if (r !=3D 0) {
+> +		dev_err(&pdev->dev, "failed to enable regulator\n");
+> +		return r;
+> +	}
+
+The regulator should be enabled when the panel is enabled, not at probe
+time.
+
+> +static const struct of_device_id sharp_ls_of_match[] =3D {
+> +	{ .compatible =3D "sharp,ls037v7dw01", },
+
+At the moment our display drivers are OMAP specific, and for that reason
+we should prefix the compatible strings with "omapdss,". For example,
+drivers/video/fbdev/omap2/displays-new/panel-dsi-cm.c:
+
+	{ .compatible =3D "omapdss,panel-dsi-cm", },
+
+But we should still have the right compatible string in the .dts, so we
+convert the compatible name in arch/arm/mach-omap2/display.c, with
+'dss_compat_conv_list' array, to which this panel's name should be added.=
+
+
+ Tomi
+
+
+
+--vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTbIKTAAoJEPo9qoy8lh71Q80P/1hwp0WNhOuLmu2VfPeOJ0Sv
+vFgB6LslH0G1ijki32dZtjnyjkiZQxfPOQ+EVyNhq4qmu8lsT78o7OAweJ+/BWlP
+4lIgfQgZ7JpJOX1Ig3r0VkN2IYhjl75bV1V2eM3cb/1MTDpqJTbr2L/PSvHqZf0G
+TPUgsa+42St6LY7+kk6bXtJiHH6C+tMupR+HX8C0D32Zjw/IJMHbZavFtBY5Cc1t
+uE5qxftOSDWTL+M3vb+K3w+mFUEoAkr5rdMb7FsXaBUzrrHqxpRQkJiSO4dn90Yj
+51w+hy5GDwwzGllsTeM43F3tVWM06uA469cvrwa8S2+iXrxEkk7LrCZ+e3Xj1TGp
+IHxAZhket2W2E3aqoNQQGyzoYUWLnyMPtNMzz1J67yHl/qSF5wjJDJfNZIE+VSZy
+ZJy35ciiUPpzoqiZc74RNpbLtkK+77Nzniu5A5ZaPJ7+LftuKc13mGzfHwdXYFqS
+OMoBYy7vvc/d5B/+D5laqkDxkZIJHN1u1gjZ/Gt/dGZlsrEzmh6SZDwOl3BOrHXY
+UNJyzkx3HD95txwEZ9YEXkiI8sFTfAi+J2TELDPmgQpTs0nXhVJ0AREeUcmY1XsV
+Ss9hmWIH7pOVMBU85ZXkLOBUqmX2tOuxLlZhlqElt4Ix0/ADNL8INHWDDr2LfrLz
+iBYkswmYoWnyAHPKfdgu
+=XPwt
+-----END PGP SIGNATURE-----
+
+--vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L--
