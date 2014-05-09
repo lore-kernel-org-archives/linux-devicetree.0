@@ -1,52 +1,76 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] of/irq: provide int of_irq_parse_and_map_pci wrapper
-Date: Fri, 9 May 2014 09:11:21 +0200
-Message-ID: <CAMuHMdVn3UTKymxq3uqXbNVjkBhuSWzSG5GzhXWW89ceviLYzA@mail.gmail.com>
-References: <4527717.yJh2gX3xCP@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [linux-sunxi] Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Fri, 9 May 2014 08:11:47 +0100
+Message-ID: <20140509071147.GD5767@lee--X1>
+References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com>
+ <20140508110205.GB5767@lee--X1>
+ <536BE366.8080907@free-electrons.com>
+ <1399611909.13870.0.camel@chi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <4527717.yJh2gX3xCP@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399611909.13870.0.camel@chi>
+Sender: linux-doc-owner@vger.kernel.org
+To: Priit Laes <plaes@plaes.org>
+Cc: linux-sunxi@googlegroups.com, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 9, 2014 at 8:58 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> The pci-rcar driver is enabled for compile tests, and this has
-> now shown that the driver cannot build without CONFIG_OF,
-> following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
-> interrupt mapping when possible":
->
-> drivers/built-in.o: In function `rcar_pci_map_irq':
-> :(.text+0x1cc7c): undefined reference to `of_irq_parse_and_map_pci'
->
-> As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
-> supposed to build fine, which we can achieve if we make the
-> declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
-> and provide an empty inline function otherwise, as we do for
-> a lot of other of interfaces.
->
-> This lets us build the rcar_pci driver again without CONFIG_OF,
-> which won't work but give us compile time coverage.
->
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Magnus Damm <damm@opensource.se>
-> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
-> Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-> Cc: linux-pci@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
+> > >> The PRCM (Power/Reset/Clock Management) block exposes several su=
+bdevices
+> > >> in different subsystems (clk, reset ...)
+> > >>
+> > >> Add basic support for the PRCM unit with clk (AR100, AHB0, and A=
+PB0 clks)
+> > >> and reset controller subdevices.
+> > >>
+> > >> Other subdevices might be added later (if needed).
+> > >>
+> > >> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.c=
+om>
+> > >> ---
+> > >>  drivers/mfd/Kconfig      |   8 +++
+> > >>  drivers/mfd/Makefile     |   1 +
+> > >>  drivers/mfd/sun6i-prcm.c | 151 ++++++++++++++++++++++++++++++++=
++++++++++++++++
+> > >>  3 files changed, 160 insertions(+)
+> > >>  create mode 100644 drivers/mfd/sun6i-prcm.c
+> > > [...]
+> > >
+> > >> +#include <linux/module.h>
+> > >> +#include <linux/kernel.h>
+> > >> +#include <linux/errno.h>
+> > >> +#include <linux/err.h>
+> > >> +#include <linux/spinlock.h>
+> > >> +#include <linux/io.h>
+> > >> +#include <linux/slab.h>
+> > >> +#include <linux/mutex.h>
+> > >> +#include <linux/completion.h>
+> > >> +#include <linux/irq.h>
+> > >> +#include <linux/jiffies.h>
+> > >> +#include <linux/bitops.h>
+> > >> +#include <linux/fs.h>
+> > >> +#include <linux/of.h>
+> > >> +#include <linux/of_irq.h>
+> > >> +#include <linux/platform_device.h>
+> > >> +#include <linux/uaccess.h>
+> > >> +#include <linux/mfd/core.h>
+> > > I'm pretty sure you don't need half of these.  Please only add th=
+e
+> > > ones you make use of.
+> >=20
+> > Sure (this is what happens when you copy/paste from another driver =
+:-))
+>=20
+> Also, alphabetic order would be nice.
 
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
+No, please don't do that, it's a waste of time.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
