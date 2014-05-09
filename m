@@ -1,37 +1,94 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 5/5] Doc/DT: hdmi-connector: add HPD GPIO documentation
-Date: Fri, 9 May 2014 15:32:07 +0300
-Message-ID: <1399638727-23254-5-git-send-email-tomi.valkeinen@ti.com>
-References: <1399638727-23254-1-git-send-email-tomi.valkeinen@ti.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun6i-a31-app4-evb1.dts: Use sunxi-common-regulators.dtsi
+Date: Fri, 09 May 2014 14:39:17 +0200
+Message-ID: <536CCC75.7050407@redhat.com>
+References: <1399624987-12381-1-git-send-email-hdegoede@redhat.com> <536C97FD.3070906@free-electrons.com> <536C9A53.2060302@redhat.com> <536CA092.50300@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1399638727-23254-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: Archit Taneja <archit@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB64YWONQKGQE6HBJ26Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <536CA092.50300-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for HDMI connector's HPD GPIO.
+Hi,
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/video/hdmi-connector.txt | 1 +
- 1 file changed, 1 insertion(+)
+On 05/09/2014 11:32 AM, Boris BREZILLON wrote:
+> 
+> On 09/05/2014 11:05, Hans de Goede wrote:
+>> Hi,
+>>
+>> On 05/09/2014 10:55 AM, Boris BREZILLON wrote:
+>>> On 09/05/2014 10:43, Hans de Goede wrote:
+>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/sun6i-a31-app4-evb1.dts | 8 +-------
+>>>>  1 file changed, 1 insertion(+), 7 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+>>>> index 270ab97..2bbf886 100644
+>>>> --- a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+>>>> +++ b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+>>>> @@ -13,6 +13,7 @@
+>>>>  
+>>>>  /dts-v1/;
+>>>>  /include/ "sun6i-a31.dtsi"
+>>>> +/include/ "sunxi-common-regulators.dtsi"
+>>>>  
+>>>>  / {
+>>>>  	model = "Allwinner A31 APP4 EVB1 Evaluation Board";
+>>>> @@ -49,15 +50,8 @@
+>>>>  	};
+>>>>  
+>>>>  	reg_usb1_vbus: usb1-vbus {
+>>>> -		compatible = "regulator-fixed";
+>>>> -		pinctrl-names = "default";
+>>>>  		pinctrl-0 = <&usb1_vbus_pin_a>;
+>>>> -		regulator-name = "usb1-vbus";
+>>>> -		regulator-min-microvolt = <5000000>;
+>>>> -		regulator-max-microvolt = <5000000>;
+>>>> -		enable-active-high;
+>>>>  		gpio = <&pio 7 27 0>;
+>>>>  		status = "okay";
+>>>>  	};
+>>> I guess we could do the same for usb1_vbus_pin_a (keep the common
+>>> definition and change the allwinner,pins property).
+>> Hmm, what we do with other boards when the pin does not match the
+>> default is change the node name to something baord specific, ie
+>> usb1_vbus_pin_app4_evb1
+> 
+> Okay.
+> How did you decide which pins should be put in the default definitions
+> (the most used ones among available boards ?) ?
 
-diff --git a/Documentation/devicetree/bindings/video/hdmi-connector.txt b/Documentation/devicetree/bindings/video/hdmi-connector.txt
-index ccccc19e2573..acd5668b1ce1 100644
---- a/Documentation/devicetree/bindings/video/hdmi-connector.txt
-+++ b/Documentation/devicetree/bindings/video/hdmi-connector.txt
-@@ -7,6 +7,7 @@ Required properties:
- 
- Optional properties:
- - label: a symbolic name for the connector
-+- hpd-gpios: HPD GPIO number
- 
- Required nodes:
- - Video port for HDMI input
--- 
-1.9.1
+The pins used there are used on all-most all A10 and A20 boards,
+the sun5i (A10s / A13) boards seem to not really have any standard gpio
+they use, and I have not seen enough A31 boards yet to say anything sensible.
 
+We may need to rename the standard pins to include the platform name if
+A31 also uses the same pin everywhere (but a different one from A10).
+
+> I'm not sure defining new pin states for each board is a good solution,
+> because you'll embed unneeded pin states in your DTB.
+> Anyway, this is your call :-).
+> 
+>> Which is why I did not remove the common bits from the pin,
+>> I did not notice you did not use a board specific name here.
+> 
+> Then I guess it should be fixed in the same series.
+> BTW, AFAIK the original patch adding support for the APP4 EVB1 board has
+> not been applied yet, so I think we can fix it send a v2 of this patch.
+
+It is already in Maxime's dt-for-3.16 tree, so it is probably better to fix
+this with a followup patch.
+
+Regards,
+
+Hans
