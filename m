@@ -1,73 +1,44 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator device
- node
-Date: Fri, 9 May 2014 17:30:38 +0200
-Message-ID: <536CF49E.1050708@atmel.com>
-References: <1398054547-5834-1-git-send-email-wenyou.yang@atmel.com> <20140421095443.GA3461@piout.net> <20140421122205.GB3461@piout.net> <B256D81BAE5131468A838E5D7A24364180A876DA@penmbx01>
+From: Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
+Subject: Re: [PATCH 2/5] arm64: dts: APM X-Gene SoC Ethernet device tree nodes
+Date: Fri, 09 May 2014 16:29:22 +0100
+Message-ID: <87ppjnc6nh.fsf@linaro.org>
+References: <1387597376-29303-1-git-send-email-isubramanian@apm.com>
+ <1387597376-29303-3-git-send-email-isubramanian@apm.com>
+ <1390582906.12454.26.camel@deneb.redhat.com>
+ <CAKh23FmGYGkCbeh4DbL4_NO6ypkw4F70J0X__KxFyHTo-=WtKg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B256D81BAE5131468A838E5D7A24364180A876DA@penmbx01>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Yang, Wenyou" <Wenyou.Yang@atmel.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <CAKh23FmGYGkCbeh4DbL4_NO6ypkw4F70J0X__KxFyHTo-=WtKg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Iyappan Subramanian <isubramanian@apm.com>
+Cc: devicetree@vger.kernel.org, "jcm@redhat.com" <jcm@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Salter <msalter@redhat.com>, patches <patches@apm.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Keyur Chudgar <kchudgar@apm.com>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, Ravi Patel <rapatel@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22/04/2014 03:37, Yang, Wenyou :
-> Hi,
-> 
->> -----Original Message-----
->> From: Alexandre Belloni [mailto:alexandre.belloni@free-electrons.com]
->> Sent: Monday, April 21, 2014 8:22 PM
->> To: Yang, Wenyou
->> Cc: devicetree@vger.kernel.org; Ferre, Nicolas; linux-
->> kernel@vger.kernel.org; robh+dt@kernel.org; broonie@kernel.org; linux-
->> arm-kernel@lists.infradead.org
->> Subject: Re: [PATCH] ARM: dts: at91-sama5d3_xplained: add the regulator
->> device node
->>
->> On 21/04/2014 at 11:54:43 +0200, Alexandre Belloni wrote :
->>> Hi,
->>>
->>> On 21/04/2014 at 12:29:07 +0800, Wenyou Yang wrote :
->>>> +
->>>> +						vddana_reg: LDO_REG2 {
->>>> +							regulator-name = "VDDANA";
->>>> +							regulator-min-microvolt =
->> <3300000>;
->>>> +							regulator-max-microvolt =
->> <3300000>;
->>>> +							regulator-always-on;
->>>
->>> I'm pretty sure that one is not always on as you actually have to
->>> configure it to get any voltage. Are you sure you want to set the
->>> regulator-always-on property here ?
->>>
->>
->> Just to clarify my though, wouldn't it be better to make the ADC driver
->> handle that regulator instead of using regulator-always-on ?
-> Yes, you are right. 
-> It should not use regulator-always-on property for this regulator.
-> It is ADC driver and ISI driver to handle it(The ISI takes PCK for clock).
-
-Hi Wenyou and Alexandre,
-
-After talking to our system engineers, it not usual to avoid to power
-the VDDANA rail. In fact it will prevent you to use all the pads that
-are powered by VDDANA: PD20-PD31. Moreover, even if you do not activate
-the ADC output on these lines you won't be able to use them as plain
-GPIO... (Cf. package and pinout section of the datasheet).
-
-As the ADVREF pin of the SoC is connected to the VDDANA on this board
-(even if this default configuration can be modified with a soldering
-iron), we have to note that we may consume a little bit more power.
-
-But still, I would recommend to keep the "regulator-always-on" property
-on this node. Do you agree and allow me to take your first revision of
-the patch?
-
-
-Bye,
--- 
-Nicolas Ferre
+Ckl5YXBwYW4gU3VicmFtYW5pYW4gPGlzdWJyYW1hbmlhbkBhcG0uY29tPiB3cml0ZXM6Cgo+IEhp
+IE1hcmssCj4KPiBUaGFua3MgZm9yIHRoZSByZXZpZXcgY29tbWVudCBhbmQgSSBhcG9sb2dpemUg
+Zm9yIG5vdCByZXBseWluZyBzb29uZXIuCj4KPiBXZSBhcmUgY29tcGxldGVseSByZWRlc2lnbmlu
+ZyB0aGUgZXRoZXJuZXQgZHJpdmVyIHRvIG1ha2UgaXQgc2ltcGxlCj4gYW5kIGNsZWFuZXIgYW5k
+IHdpbGwgYmUgcG9zdGVkIHNob3J0bHkuCgpIaSBJeWFwcGFuLAoKRGlkIHRoaXMgZXZlciBnZXQg
+cG9zdGVkPyBJJ20gdHJ5aW5nIHRvIGdldCBhIGNsb3NlLXRvLUhFQUQga2VybmVsIHVwCmFuZCBy
+dW5uaW5nIG9uIG91ciBBUE0gaGFyZHdhcmUgYnV0IGhhdmUgcnVuIGFmb3VsIG9mIHRoZSBkaWZm
+ZXJlbmNlcwpiZXR3ZWVuIHRoZSBsYXRlc3QgWEdFTkVfTUJPWCBwYXRjaCBzZXQgYW5kIHRoZSBv
+bGRlciBORVRfWEdFTkUgcGF0Y2gKc2V0LgoKSWYgaXQncyBub3QgbG9uZyBhd2F5IHRoZW4gSSBz
+aGFsbCB3YWl0IGEgYml0IG90aGVyd2lzZSBJJ2xsIHNlZSBpZiB0aGUKbWlzc2luZyBiaXRzIGNh
+biBiZSBmb3J3YXJkIHBvcnRlZCBmcm9tIG91ciB3b3JraW5nCjMuOC4wLW11c3Rhbmdfc3dfMS4w
+OC4xMi1iZXRhX3JjLmpjbTE1IGtlcm5lbCAocHVyZWx5IGZvciB0ZXN0aW5nCnB1cnBvc2VzKS4K
+CkRvIHlvdSBoYXZlIGEgcHVibGljIHRyZWUgd2hlcmUgeW91ciBsYXRlc3Qga2VybmVscyBhcmUg
+dmlzaWJsZT8KCkNoZWVycywKCi0tCkFsZXggQmVubsOpZQpRRU1VL0tWTSBIYWNrZXIgZm9yIExp
+bmFybwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
