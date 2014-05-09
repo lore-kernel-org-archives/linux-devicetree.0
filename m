@@ -1,59 +1,90 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/8] pinctrl-rockchip: Change wrong initial assumptions
-Date: Fri, 9 May 2014 11:19:10 +0200
-Message-ID: <CACRpkdbhfVj2-aW2-mJa0c6uq52EKgKJEFy=BJoiqR98F52RaA@mail.gmail.com>
-References: <11862890.WUjscWaP3U@diego>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH] ARM: dts: sun6i-a31-app4-evb1.dts: Use sunxi-common-regulators.dtsi
+Date: Fri, 09 May 2014 11:32:02 +0200
+Message-ID: <536CA092.50300@free-electrons.com>
+References: <1399624987-12381-1-git-send-email-hdegoede@redhat.com> <536C97FD.3070906@free-electrons.com> <536C9A53.2060302@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <11862890.WUjscWaP3U@diego>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBFGBWKNQKGQEEXILVXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <536C9A53.2060302-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 5, 2014 at 1:57 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> wr=
-ote:
 
-> Initially due to lack of documentation and (personal) understanding
-> I assumed that the area holding the iomux settings would be separate
-> from everything else, while in fact the grf registers contain not onl=
-y
-> pinctrl stuff but also dma, usb-phy and general soc-status settings.
-> Also things like drive-strength we do not support currently are inter=
-mixed.
+On 09/05/2014 11:05, Hans de Goede wrote:
+> Hi,
 >
-> The same is true for the pmu, which does not only contain power domai=
-ns
-> but also the system reset as well as well as general registers surviv=
-ing
-> system-resets. Additionally the rk3188 moved parts of the pull-settin=
-g
-> registers into the pmu space.
->
-> While this wasn't a problem until now, the upcoming rk3288 introduces
-> additional changes to both the grf and pmu areas. On it even part of
-> the pinmux registers move into the pmu space.
->
-> The code in it's current form supports both the old as well as the
-> changed bindings.
->
-> As stated in the v1 thread, this is also a first step to deprecate th=
-e
-> wrongly included gpio-controllers which now duplicate the recently ad=
-ded
-> gpio-dwapb, that should be used instead.
+> On 05/09/2014 10:55 AM, Boris BREZILLON wrote:
+>> On 09/05/2014 10:43, Hans de Goede wrote:
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  arch/arm/boot/dts/sun6i-a31-app4-evb1.dts | 8 +-------
+>>>  1 file changed, 1 insertion(+), 7 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+>>> index 270ab97..2bbf886 100644
+>>> --- a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+>>> +++ b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
+>>> @@ -13,6 +13,7 @@
+>>>  
+>>>  /dts-v1/;
+>>>  /include/ "sun6i-a31.dtsi"
+>>> +/include/ "sunxi-common-regulators.dtsi"
+>>>  
+>>>  / {
+>>>  	model = "Allwinner A31 APP4 EVB1 Evaluation Board";
+>>> @@ -49,15 +50,8 @@
+>>>  	};
+>>>  
+>>>  	reg_usb1_vbus: usb1-vbus {
+>>> -		compatible = "regulator-fixed";
+>>> -		pinctrl-names = "default";
+>>>  		pinctrl-0 = <&usb1_vbus_pin_a>;
+>>> -		regulator-name = "usb1-vbus";
+>>> -		regulator-min-microvolt = <5000000>;
+>>> -		regulator-max-microvolt = <5000000>;
+>>> -		enable-active-high;
+>>>  		gpio = <&pio 7 27 0>;
+>>>  		status = "okay";
+>>>  	};
+>> I guess we could do the same for usb1_vbus_pin_a (keep the common
+>> definition and change the allwinner,pins property).
+> Hmm, what we do with other boards when the pin does not match the
+> default is change the node name to something baord specific, ie
+> usb1_vbus_pin_app4_evb1
 
-Patched 1 thru 7 applied to the pin control tree.
+Okay.
+How did you decide which pins should be put in the default definitions
+(the most used ones among available boards ?) ?
+I'm not sure defining new pin states for each board is a good solution,
+because you'll embed unneeded pin states in your DTB.
+Anyway, this is your call :-).
 
-We knew this would be a bumpy ride when the merging started so this
-is all expected.
+> Which is why I did not remove the common bits from the pin,
+> I did not notice you did not use a board specific name here.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Then I guess it should be fixed in the same series.
+BTW, AFAIK the original patch adding support for the APP4 EVB1 board has
+not been applied yet, so I think we can fix it send a v2 of this patch.
+
+> Regards,
+>
+> Hans
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
