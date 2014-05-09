@@ -1,55 +1,211 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 1/7] reset: sunxi: document sunxi's reset controllers bindings
-Date: Fri,  9 May 2014 13:11:45 +0200
-Message-ID: <1399633911-7094-2-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Fri,  9 May 2014 13:11:47 +0200
+Message-ID: <1399633911-7094-4-git-send-email-boris.brezillon@free-electrons.com>
 References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBB7QWKNQKGQEMWJFOGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1399633911-7094-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT bindings documentation for sunxi's reset controllers.
+The PRCM (Power/Reset/Clock Management) block exposes several subdevices
+in different subsystems (clk, reset ...)
+
+Add basic support for the PRCM unit with clk (AR100, AHB0, and APB0 clks)
+and reset controller subdevices.
+
+Other subdevices might be added later (if needed).
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- .../bindings/reset/allwinner,sunxi-clock-reset.txt  | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+ drivers/mfd/Kconfig      |   8 +++
+ drivers/mfd/Makefile     |   1 +
+ drivers/mfd/sun6i-prcm.c | 134 +++++++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 143 insertions(+)
+ create mode 100644 drivers/mfd/sun6i-prcm.c
 
-diff --git a/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index 2d347c9..56794fe 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -731,6 +731,14 @@ config MFD_STA2X11
+ 	select MFD_CORE
+ 	select REGMAP_MMIO
+ 
++config MFD_SUN6I_PRCM
++	bool "Allwinner A31 PRCM controller"
++	depends on ARCH_SUNXI
++	select MFD_CORE
++	help
++	  Support for the PRCM (Power/Reset/Clock Management) unit available
++	  in A31 SoC.
++
+ config MFD_SYSCON
+ 	bool "System Controller Register R/W Based on Regmap"
+ 	select REGMAP_MMIO
+diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+index 1efecf2..df7823c 100644
+--- a/drivers/mfd/Makefile
++++ b/drivers/mfd/Makefile
+@@ -29,6 +29,7 @@ obj-$(CONFIG_MFD_STA2X11)	+= sta2x11-mfd.o
+ obj-$(CONFIG_MFD_STMPE)		+= stmpe.o
+ obj-$(CONFIG_STMPE_I2C)		+= stmpe-i2c.o
+ obj-$(CONFIG_STMPE_SPI)		+= stmpe-spi.o
++obj-$(CONFIG_MFD_SUN6I_PRCM)	+= sun6i-prcm.o
+ obj-$(CONFIG_MFD_TC3589X)	+= tc3589x.o
+ obj-$(CONFIG_MFD_T7L66XB)	+= t7l66xb.o tmio_core.o
+ obj-$(CONFIG_MFD_TC6387XB)	+= tc6387xb.o tmio_core.o
+diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
 new file mode 100644
-index 0000000..c8f7757
+index 0000000..718fc4d
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
-@@ -0,0 +1,21 @@
-+Allwinner sunxi Peripheral Reset Controller
-+===========================================
++++ b/drivers/mfd/sun6i-prcm.c
+@@ -0,0 +1,134 @@
++/*
++ * Copyright (C) 2014 Free Electrons
++ *
++ * License Terms: GNU General Public License v2
++ * Author: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * Allwinner PRCM (Power/Reset/Clock Management) driver
++ *
++ */
 +
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
++#include <linux/mfd/core.h>
++#include <linux/module.h>
++#include <linux/of.h>
 +
-+Required properties:
-+- compatible: Should be one of the following:
-+  "allwinner,sun6i-a31-ahb1-reset"
-+  "allwinner,sun6i-a31-clock-reset"
-+- reg: should be register base and length as documented in the
-+  datasheet
-+- #reset-cells: 1, see below
-+
-+example:
-+
-+ahb1_rst: reset@01c202c0 {
-+	#reset-cells = <1>;
-+	compatible = "allwinner,sun6i-a31-ahb1-reset";
-+	reg = <0x01c202c0 0xc>;
++struct prcm_data {
++	int nsubdevs;
++	const struct mfd_cell *subdevs;
 +};
++
++static const struct resource sun6i_a31_ar100_clk_res[] = {
++	{
++		.start = 0x0,
++		.end = 0x3,
++		.flags = IORESOURCE_MEM,
++	},
++};
++
++static const struct resource sun6i_a31_apb0_clk_res[] = {
++	{
++		.start = 0xc,
++		.end = 0xf,
++		.flags = IORESOURCE_MEM,
++	},
++};
++
++static const struct resource sun6i_a31_apb0_gates_clk_res[] = {
++	{
++		.start = 0x28,
++		.end = 0x2b,
++		.flags = IORESOURCE_MEM,
++	},
++};
++
++static const struct resource sun6i_a31_apb0_rstc_res[] = {
++	{
++		.start = 0xb0,
++		.end = 0xb3,
++		.flags = IORESOURCE_MEM,
++	},
++};
++
++static const struct mfd_cell sun6i_a31_prcm_subdevs[] = {
++	{
++		.name = "sun6i-a31-ar100-clk",
++		.of_compatible = "allwinner,sun6i-a31-ar100-clk",
++		.num_resources = ARRAY_SIZE(sun6i_a31_ar100_clk_res),
++		.resources = sun6i_a31_ar100_clk_res,
++	},
++	{
++		.name = "sun6i-a31-apb0-clk",
++		.of_compatible = "allwinner,sun6i-a31-apb0-clk",
++		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_clk_res),
++		.resources = sun6i_a31_apb0_clk_res,
++	},
++	{
++		.name = "sun6i-a31-apb0-gates-clk",
++		.of_compatible = "allwinner,sun6i-a31-apb0-gates-clk",
++		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_gates_clk_res),
++		.resources = sun6i_a31_apb0_gates_clk_res,
++	},
++	{
++		.name = "sun6i-a31-apb0-clock-reset",
++		.of_compatible = "allwinner,sun6i-a31-clock-reset",
++		.num_resources = ARRAY_SIZE(sun6i_a31_apb0_rstc_res),
++		.resources = sun6i_a31_apb0_rstc_res,
++	},
++};
++
++static const struct prcm_data sun6i_a31_prcm_data = {
++	.nsubdevs = ARRAY_SIZE(sun6i_a31_prcm_subdevs),
++	.subdevs = sun6i_a31_prcm_subdevs,
++};
++
++static const struct of_device_id sun6i_prcm_dt_ids[] = {
++	{
++		.compatible = "allwinner,sun6i-a31-prcm",
++		.data = &sun6i_a31_prcm_data,
++	},
++	{ /* sentinel */ },
++};
++
++static int sun6i_prcm_probe(struct platform_device *pdev)
++{
++	struct device_node *np = pdev->dev.of_node;
++	const struct of_device_id *match;
++	const struct prcm_data *data;
++	struct resource *res;
++	int ret;
++
++	match = of_match_node(sun6i_prcm_dt_ids, np);
++	if (!match)
++		return -EINVAL;
++
++	data = match->data;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(&pdev->dev, "no prcm memory region provided\n");
++		return -ENOENT;
++	}
++
++	ret = mfd_add_devices(&pdev->dev, 0, data->subdevs, data->nsubdevs,
++			      res, -1, NULL);
++	if (ret) {
++		dev_err(&pdev->dev, "failed to add subdevices\n");
++		return ret;
++	}
++
++	return 0;
++}
++
++static struct platform_driver sun6i_prcm_driver = {
++	.driver = {
++		.name = "sun6i-prcm",
++		.owner = THIS_MODULE,
++		.of_match_table = sun6i_prcm_dt_ids,
++	},
++	.probe = sun6i_prcm_probe,
++};
++module_platform_driver(sun6i_prcm_driver);
++
++MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
++MODULE_DESCRIPTION("Allwinner sun6i PRCM driver");
++MODULE_LICENSE("GPL v2");
 -- 
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
