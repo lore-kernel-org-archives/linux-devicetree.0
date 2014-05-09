@@ -1,135 +1,58 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv4 7/7] ARM: dts: Add device tree sources for Exynos3250
-Date: Fri, 09 May 2014 07:02:45 +0200
-Message-ID: <536C6175.5000302@gmail.com>
-References: <1398388572-30239-1-git-send-email-cw00.choi@samsung.com> <1398388572-30239-8-git-send-email-cw00.choi@samsung.com> <535B0324.50705@gmail.com> <536C2A1C.6030807@samsung.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
+Date: Fri, 9 May 2014 07:06:10 +0200
+Message-ID: <20140509050610.GB2624@katana>
+References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
+ <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
+ <536C1945.1000601@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <536C2A1C.6030807@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: kgene.kim@samsung.com, t.figa@samsung.com, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, arnd@arndb.de, olof@lixom.net, marc.zyngier@arm.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, hyunhee.kim@samsung.com, yj44.cho@samsung.com, chanho61.park@samsung.com, sajjan.linux@gmail.com, tushar.behera@linaro.org, sachin.kamat@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <536C1945.1000601@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
 
-On 09.05.2014 03:06, Chanwoo Choi wrote:
-> On 04/26/2014 09:51 AM, Tomasz Figa wrote:
->> On 25.04.2014 03:16, Chanwoo Choi wrote:
+--4SFOXa2GPu3tIq4H
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[snip]
 
->>> +    cpus {
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
->>> +
->>> +        cpu@0 {
->>> +            device_type = "cpu";
->>> +            compatible = "arm,cortex-a7";
->>> +            reg = <0>;
->>> +            clock-frequency = <1000000000>;
->>> +        };
->>
->> Why only one CPU? I believe Exynos3250 is dual core.
->
-> I'll add cpu1 information.
->
->> Also are physical IDs of the cores really 0 and 1? On Exynos4210 for example they are 0x900 and 0x901, while on Exynos4212 they are 0xa00 and 0xa01. Please check this.
->
-> The 'reg' property means only hardware id(hwid) of CPU.
-> You can check it on arm_dt_init_cpu_maps() in arch/arm/kernel/devtree.c.h.
-> or Documentation/devicetree/bindings/arm/cpus.txt.
->
+> >+	eeprom@50 {
+> >+		compatible =3D "renesas,24c02";
+>=20
+>    This is not quite right: Renesas' part is called differently, and
+> you're carrying the other vendor's naming onto Renesas parts. I'd
+> just say "24c02" (which I'll do in the Henninger board patch).
 
-Well, as described in Documentation/devicetree/bindings/arm/cpus.txt, on 
-32-bit ARM v7 or later CPUs the "reg" property should be equal to the 
-lower 24-bits of MPIDR value of given CPU, which in addition to core ID 
-includes also cluster ID, which can be non-zero, even on single cluster 
-SoCs (like it is on Exynos4210 and 4x12).
+What about "generic"?
 
->>> +    };
->>> +
->>> +    fixed-rate-clocks {
->>> +        compatible = "simple-bus";
->>> +        #address-cells = <1>;
->>> +        #size-cells = <0>;
 
-[snip]
+--4SFOXa2GPu3tIq4H
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->>> +    cmu: clock-controller@10030000 {
->>> +        compatible = "samsung,exynos3250-cmu";
->>> +        reg = <0x10030000 0x20000>;
->>> +        #clock-cells = <1>;
->>> +    };
->>> +
->>> +    rtc@10070000 {
->>
->> Please add label to the node, so it can be referenced from board dts files added later (using the method I explained above).
->
-> OK, I'll add lable as following:
->
-> 	rtc_0: rtc@10070000 {
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
 
-There is no need to suffix the RTC with _0, as there is just one RTC in 
-the SoC. So in this case rtc: rtc@10070000 will be enough.
+iQIcBAEBAgAGBQJTbGJCAAoJEBQN5MwUoCm2i/QP/iaeXucXLG/+TAXh1ulpgFzw
+70sef2Er/aE+CVfBWtFk1mdhCGKujB2cAUUQ+09PgdIbp4TaD76GawHL9c2hjpZx
+bz4YeTg+LDjKubyhdo+FTRclUpoboARyq35PirVQCnNwatD9oTvaaL7RoPlQiYdT
+K5inc/cIdD1GGitwjWAaxFeln3+jPBaXa6Dca5ZHL6HTNJ03l/vDtkC3Gex2a4Fy
+ffxDrx6mkZ6far2GSc0G0MamLZrSQr/YWFE36EqKoDncfiXNZfSe+d1MyH8tbMJI
+3o57bVsIhAPmtg9ehRs7CR8NzwX5qjeHqkFcugWr/4uBGyFQ3MeZD67/m9omQ/TF
+4kzLo5H9vYbzZ0AfrJG4aKeFwxW9KsrE7rWbee5GusBC9PkzTFSSpubXha0ie0HT
+jCybJZYrT7tA2akP9QcR28IMG30sdyUERhNeQUmOXQPF5Eeyw+1IMn8aftolcaju
+3Db+puB2Mc6MCX07dRB1jDz8O6cWi/HnLpPij0KnnkZSRa4tLwHld+fqFLbwAoEN
+Xjgik7xCZZYVfThCmy5SXG2mrrp1XRBwT+BbN3vR/K+9gr8uQXWTH4sOZ9wTIDwj
+hAWMsG94Zo2RGHRT75cGomtSecgqTPt8zN+OzPCN6sER1/G5ReQyJyU5UNZgIA55
+1PUyjBcA+P4XNxCKVblQ
+=UuiL
+-----END PGP SIGNATURE-----
 
->
->>
->>> +        compatible = "samsung,s3c6410-rtc";
->>> +        reg = <0x10070000 0x100>;
->>> +        interrupts = <0 73 0>, <0 74 0>;
->>> +        status = "disabled";
->>> +    };
-
-[snip]
-
->>> +    adc: adc@126C0000 {
->>> +        compatible = "samsung,exynos-adc-v3";
->>> +        reg = <0x126C0000 0x100>, <0x10020718 0x4>;
->>> +        interrupts = <0 137 0>;
->>> +        clock-names = "adc", "sclk_tsadc";
->>> +        clocks = <&cmu CLK_TSADC>, <&cmu CLK_SCLK_TSADC>;
->>> +        #io-channel-cells = <1>;
->>> +        io-channel-ranges;
->>> +        status = "disabled";
->>> +    };
->>> +
->>> +    serial@13800000 {
->>
->> Please add label.
->
-> OK, I'll add lable as following:
->
-> 	serial_0: serial@13800000 {
->
-
-OK. In this case there are multiple instances of serial controller 
-available so the _0 suffix is fine.
-
->>
->>> +        compatible = "samsung,exynos4210-uart";
->>> +        reg = <0x13800000 0x100>;
->>> +        interrupts = <0 109 0>;
->>> +        clocks = <&cmu CLK_UART0>, <&cmu CLK_SCLK_UART0>;
->>> +        clock-names = "uart", "clk_uart_baud0";
->>> +        status = "disabled";
->>> +    };
->>> +
->>> +    serial@13810000 {
->
-> OK, I'll add lable as following:
->
-> 	serial_1: serial@13800000 {
->
-
-OK.
-
->
-> Thanks for your review.
-
-You're welcome. Thanks for addressing my comments.
-
-Best regards,
-Tomasz
+--4SFOXa2GPu3tIq4H--
