@@ -1,65 +1,135 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
- (Power/Reset/Clock Management) unit
-Date: Fri, 9 May 2014 09:08:07 +0100
-Message-ID: <20140509080807.GH5767@lee--X1>
-References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
- <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com>
- <20140508110205.GB5767@lee--X1>
- <536BE366.8080907@free-electrons.com>
- <20140509071246.GE5767@lee--X1>
- <536C84F6.2050701@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv4 7/7] ARM: dts: Add device tree sources for Exynos3250
+Date: Fri, 09 May 2014 17:15:12 +0900
+Message-ID: <536C8E90.6030607@samsung.com>
+References: <1398388572-30239-1-git-send-email-cw00.choi@samsung.com>
+ <1398388572-30239-8-git-send-email-cw00.choi@samsung.com>
+ <535B0324.50705@gmail.com> <535B9A98.3060206@gmail.com>
+ <536C7A96.3000906@samsung.com> <536C8B48.90706@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBB5EZWKNQKGQEY5V7YGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <536C84F6.2050701-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <536C8B48.90706@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, kgene.kim@samsung.com, linux-kernel@vger.kernel.org, linux@arm.linux.org.uk, ben-linux@fluff.org, arnd@arndb.de, olof@lixom.net, marc.zyngier@arm.com, thomas.abraham@linaro.org, kyungmin.park@samsung.com, inki.dae@samsung.com, sw0312.kim@samsung.com, hyunhee.kim@samsung.com, yj44.cho@samsung.com, chanho61.park@samsung.com, sajjan.linux@gmail.com, tushar.behera@linaro.org, sachin.kamat@linaro.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-> >>>> +static struct platform_driver sun6i_prcm_driver =3D {
-> >>>> +	.driver =3D {
-> >>>> +		.name =3D "sun6i-prcm",
-> >>>> +		.owner =3D THIS_MODULE,
-> >>>> +		.of_match_table =3D sun6i_prcm_dt_ids,
-> >>>> +	},
-> >>>> +	.probe =3D sun6i_prcm_probe,
-> >>> You need a .remove() call-back.
-> >>
-> >> This driver cannot be compiled as module (see the Kconfig definition)
-> >> and the devices are not hotpluggable, as a result a probed device will
-> >> never be removed.
-> >>
-> >> Do you still want me to implement the remove function ?
-> >=20
-> > .remove() also be run on shut down.
->=20
-> That is not true, if your device needs to do anything special at shutdown
-> you need to add a shutdown callback. Devices are kept as is (not torn dow=
-n)
-> on shutdown.
+Hi Tomasz,
 
-Ah okay, I'll bow to your knowledge.  So there's no reason for this
-driver to ever call mfd_remove_devices() then?
+On 05/09/2014 05:01 PM, Tomasz Figa wrote:
+> On 09.05.2014 08:49, Chanwoo Choi wrote:
+>> Hi Tomasz,
+>>
+>> On 04/26/2014 08:38 PM, Tomasz Figa wrote:
+>>> On 26.04.2014 02:51, Tomasz Figa wrote:
+>>>> Hi Chanwoo,
+>>>>
+>>>> On 25.04.2014 03:16, Chanwoo Choi wrote:
+>>>>> From: Tomasz Figa <t.figa@samsung.com>
+>>>>>
+>>>>> This patch add new exynos3250.dtsi to support Exynos3250 SoC based on
+>>>>> Cortex-A7
+>>>>> dual core and includes following dt nodes:
+>>>>>
+>>>>> - GIC interrupt controller
+>>>>> - Pinctrl to control GPIOs
+>>>>> - Clock controller
+>>>>> - CPU information (Cortex-A7 dual core)
+>>>>> - UART to support serial port
+>>>>> - MCT (Multi Core Timer)
+>>>>> - ADC (Analog Digital Converter)
+>>>>> - I2C/SPI bus
+>>>>> - Power domain
+>>>>> - PMU (Performance Monitoring Unit)
+>>>>> - MSHC (Mobile Storage Host Controller)
+>>>>> - PWM (Pluse Width Modulation)
+>>>>> - AMBA bus
+>>>>>
+>>>>> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+>>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>>> Signed-off-by: Inki Dae <inki.dae@samsung.com>
+>>>>> Signed-off-by: Hyunhee Kim <hyunhee.kim@samsung.com>
+>>>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>>>>> Signed-off-by: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+>>>>> Cc: Ben Dooks <ben-linux@fluff.org>
+>>>>> Cc: Kukjin Kim <kgene.kim@samsung.com>
+>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>> Cc: Pawel Moll <pawel.moll@arm.com>
+>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>>>> Cc: Kumar Gala <galak@codeaurora.org>
+>>>>> Cc: Russell King <linux@arm.linux.org.uk>
+>>>>> Cc: devicetree@vger.kernel.org
+>>>>> ---
+>>>>>   arch/arm/boot/dts/exynos3250-pinctrl.dtsi | 477 +++++++++++++++
+>>>>>   arch/arm/boot/dts/exynos3250.dtsi         | 405 +++++++++++++
+>>>>>   arch/arm/boot/dts/exynos4212-tizenw.dts   | 926
+>>>>> ++++++++++++++++++++++++++++++
+>>>>>   3 files changed, 1808 insertions(+)
+>>>>>   create mode 100644 arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+>>>>>   create mode 100644 arch/arm/boot/dts/exynos3250.dtsi
+>>>>>   create mode 100644 arch/arm/boot/dts/exynos4212-tizenw.dts
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+>>>>> b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+>>>>> new file mode 100644
+>>>>> index 0000000..976490b
+>>>>> --- /dev/null
+>>>>> +++ b/arch/arm/boot/dts/exynos3250-pinctrl.dtsi
+>>>>> @@ -0,0 +1,477 @@
+>>>>> +/*
+>>>>> + * Samsung's Exynos3250 SoCs pin-mux and pin-config device tree source
+>>>>> + *
+>>>>> + * Copyright (c) 2014 Samsung Electronics Co., Ltd.
+>>>>> + *        http://www.samsung.com
+>>>>> + *
+>>>>> + * Samsung's Exynos3250 SoCs pin-mux and pin-config optiosn are
+>>>>> listed as device
+>>>>> + * tree nodes are listed in this file.
+>>>>> + *
+>>>>> + * This program is free software; you can redistribute it and/or modify
+>>>>> + * it under the terms of the GNU General Public License version 2 as
+>>>>> + * published by the Free Software Foundation.
+>>>>> +*/
+>>>>> +
+>>>>> +/ {
+>>>>> +    pinctrl@11400000 {
+>>>>
+>>>> Could you use references instead of re-specifying the whole tree
+>>>> hierarchy in every file a node is used?
+>>>>
+>>>> Instead of
+>>>>
+>>>> / {
+>>>>      pinctrl@11400000 {
+>>>>
+>>>>      };
+>>>> };
+>>>>
+>>>> one may simply use
+>>>>
+>>>> &pinctrl_0 {
+>>>>
+>>>> };
+>>>>
+>>>> You might just need to change the location of #include
+>>>> "exynos3250-pinctrl.dtsi" from top of exynos3250.dtsi to bottom of it.
+>>>
+>>> Oh, well, you also should move all nodes of on-SoC devices under a simple-bus node called soc. You can see the patch adding dts file for Exynos5260 for an example [1].
+>>>
+>>> [1] http://thread.gmane.org/gmane.linux.kernel.samsung-soc/29360/focus=29361
+>>
+>>
+>> OK, I'll move nodes dependent on SoC under 'soc' dt node as example patch[1] except for 'amba-bus' dt node.
+> 
+> I don't see any reason why amba-bus node shouldn't be under soc node as
+> well. Any on-chip devices should be.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+I didn't understand the correct meaning of 'simple-bus'.
+OK, I'll move 'amba-bus' dt node under 'soc' dt node.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Best Regards,
+Chanwoo Choi
