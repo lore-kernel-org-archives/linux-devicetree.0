@@ -1,66 +1,82 @@
-From: Balaji T K <balajitk@ti.com>
-Subject: [PATCH] mmc: core: Add DT bindings for card detect debounce time
-Date: Fri, 9 May 2014 21:07:17 +0530
-Message-ID: <1399649837-27286-1-git-send-email-balajitk@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
+ for omap3-evm and ldp
+Date: Fri, 9 May 2014 08:37:23 -0700
+Message-ID: <20140509153723.GD17814@atomide.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com>
+ <1398815562-24113-5-git-send-email-tony@atomide.com>
+ <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com>
+ <20140430174751.GA12362@atomide.com>
+ <20140505183919.GA15463@atomide.com>
+ <20140508233628.GJ2198@atomide.com>
+ <536C7EA7.5000306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <536C7EA7.5000306@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Joachim Eastwood <manabian@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Provide an option to get CD debounce time from DT
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [140509 00:08]:
+> On 09/05/14 02:36, Tony Lindgren wrote:
+> 
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/omap-panel-sharp-ls037v7dw01.dtsi
+> > @@ -0,0 +1,82 @@
+> > +/*
+> > + * Common file for omap dpi panels with QVGA and reset pins
+> > + *
+> > + * Note that the board specifc DTS file needs to specify
+> > + * at minimum the GPIO enable-gpios for display, and
+> > + * gpios for gpio-backlight.
+> > + */
+> 
+> This looks very board specific to me... The regulator and the use of
+> mcspi1 depend on the board, so this file can't be used on just any omap
+> board with the same panel. And this can (probably) only be used on
+> boards with a single display. Do those boards have tv-out?
 
-Signed-off-by: Balaji T K <balajitk@ti.com>
----
- Documentation/devicetree/bindings/mmc/mmc.txt |    1 +
- drivers/mmc/core/host.c                       |    6 +++++-
- 2 files changed, 6 insertions(+), 1 deletions(-)
+Yes there's also TV out and DVI on omap3-evm, LDP just has DVI.
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 9dce540..fae590b 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -17,6 +17,7 @@ Optional properties:
- - bus-width: Number of data lines, can be <1>, <4>, or <8>.  The default
-   will be <1> if the property is absent.
- - wp-gpios: Specify GPIOs for write protection, see gpio binding
-+- cd-debounce-us: debounce time in microseconds for card detect gpio.
- - cd-inverted: when present, polarity on the CD line is inverted. See the note
-   below for the case, when a GPIO is used for the CD line
- - wp-inverted: when present, polarity on the WP line is inverted. See the note
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index fdea825..59cd3a0 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -313,6 +313,7 @@ int mmc_of_parse(struct mmc_host *host)
- 	bool explicit_inv_wp, gpio_inv_wp = false;
- 	enum of_gpio_flags flags;
- 	int len, ret, gpio;
-+	unsigned int debounce;
+It seems that all omap3 boards using this are pretty much wired
+the same way.
  
- 	if (!host->parent || !host->parent->of_node)
- 		return 0;
-@@ -367,6 +368,9 @@ int mmc_of_parse(struct mmc_host *host)
- 		if (of_find_property(np, "broken-cd", &len))
- 			host->caps |= MMC_CAP_NEEDS_POLL;
- 
-+		if (of_property_read_u32(np, "cd-debounce-us", &debounce) < 0)
-+			debounce = 0;
-+
- 		gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
- 		if (gpio == -EPROBE_DEFER)
- 			return gpio;
-@@ -374,7 +378,7 @@ int mmc_of_parse(struct mmc_host *host)
- 			if (!(flags & OF_GPIO_ACTIVE_LOW))
- 				gpio_inv_cd = true;
- 
--			ret = mmc_gpio_request_cd(host, gpio, 0);
-+			ret = mmc_gpio_request_cd(host, gpio, debounce);
- 			if (ret < 0) {
- 				dev_err(host->parent,
- 					"Failed to request CD GPIO #%d: %d!\n",
--- 
-1.7.5.4
+> So I have nothing against having common files, but shouldn't this be
+> named something more specific? If the boards involved are TI's OMAP3
+> development boards, maybe this should be something like...
+> omap3-ti-dev-panel-sharp-ls037v7dw01.dtsi. Well, that's a quite long one.
 
+Yeah let's use omap3-panel-sharp-ls037v7dw01.dtsi. Looking at the
+legacy board files that should cover quite a few of them.
+
+I guess it might also work on 2430sdp, but let's assume omap3
+for now.
+ 
+> > +/ {
+> > +	aliases {
+> > +		display0 = &lcd0;
+> > +	};
+> > +
+> > +	backlight0: backlight {
+> > +		compatible = "gpio-backlight";
+> > +	};
+> > +
+> > +	/* 3.3V GPIO controlled regulator for LCD_ENVDD */
+> > +	lcd_3v3: regulator-lcd-3v3 {
+> > +		compatible = "regulator-fixed";
+> > +		regulator-name = "lcd_3v3";
+> > +		regulator-min-microvolt = <3300000>;
+> > +		regulator-max-microvolt = <3300000>;
+> > +		startup-delay-us = <70000>;
+> > +		regulator-always-on;
+> 
+> Why always-on?
+
+Oops, yeah that should not be there. The GPIO is board specific.
+
+Regards,
+
+Tony
