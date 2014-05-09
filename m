@@ -1,83 +1,65 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
- probably 3630
-Date: Fri, 9 May 2014 11:01:52 +0300
-Message-ID: <536C8B70.1000306@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-2-git-send-email-tony@atomide.com> <20140508232006.GG2198@atomide.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Fri, 9 May 2014 09:08:07 +0100
+Message-ID: <20140509080807.GH5767@lee--X1>
+References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com>
+ <20140508110205.GB5767@lee--X1>
+ <536BE366.8080907@free-electrons.com>
+ <20140509071246.GE5767@lee--X1>
+ <536C84F6.2050701@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140508232006.GG2198-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBB5EZWKNQKGQEY5V7YGA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <536C84F6.2050701-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 09/05/14 02:20, Tony Lindgren wrote:
-> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [140429 16:53]:
->> Otherwise we can get often errors like the following and the
->> display won't come on:
->>
->> omapdss APPLY error: FIFO UNDERFLOW on gfx, disabling the overlay
->> omapdss APPLY error: SYNC_LOST on channel lcd, restarting
->> the output with video overlays disabled
->>
->> There are some earlier references to this issue:
->>
->> http://www.spinics.net/lists/linux-omap/msg59511.html
->> http://www.spinics.net/lists/linux-omap/msg59724.html
->>
->> It seems that it's safe to set the lower values even for 3630.
->> If we can confirm that 3630 works with the higher values
->> reliably we can add further detection.
+> >>>> +static struct platform_driver sun6i_prcm_driver =3D {
+> >>>> +	.driver =3D {
+> >>>> +		.name =3D "sun6i-prcm",
+> >>>> +		.owner =3D THIS_MODULE,
+> >>>> +		.of_match_table =3D sun6i_prcm_dt_ids,
+> >>>> +	},
+> >>>> +	.probe =3D sun6i_prcm_probe,
+> >>> You need a .remove() call-back.
+> >>
+> >> This driver cannot be compiled as module (see the Kconfig definition)
+> >> and the devices are not hotpluggable, as a result a probed device will
+> >> never be removed.
+> >>
+> >> Do you still want me to implement the remove function ?
+> >=20
+> > .remove() also be run on shut down.
 >=20
-> BTW, I'm also seeing this warning on 3730-evm it may be related:
->=20
-> [    3.523101] ------------[ cut here ]------------
-> [    3.528015] WARNING: CPU: 0 PID: 6 at drivers/video/fbdev/omap2/dss/=
-dss.c:483 dss_set_fck_rate+0x6c/0x8c()
-> [    3.538360] clk rate mismatch: 108000000 !=3D 115200000
-> [    3.543518] Modules linked in:
+> That is not true, if your device needs to do anything special at shutdown
+> you need to add a shutdown callback. Devices are kept as is (not torn dow=
+n)
+> on shutdown.
 
-Hmm... Can you paste the clk_summary from debugfs? Somehow the clock
-framework calculates the clock rate differently than the dss. Or do we
-have different clock.dts files used for 3730 and 3630?
+Ah okay, I'll bow to your knowledge.  So there's no reason for this
+driver to ever call mfd_remove_devices() then?
 
- Tomi
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-
-
---3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTbItwAAoJEPo9qoy8lh71tFcP/1p90wC6hphrF0G+gPZX/AEX
-An0Mzt0BXvPzVBsyy/KQxMtpr/YFRPvNiGL52zYkMsLWaSkzfExGxfj5VboCWr6D
-1uspLD+dr12EUKYpk2rlGARLh2OiNvoC0p8nDmbvWCL4Eo+aWPEB24lFg6EbCChy
-VyMZzpaNultkwAxCH7/PJ3WIFuVGl1TptWM2a7mLIfdmeFr1nPfrz1JNrBgDlqbi
-3NhuJJK2zroTM8h2U3RufLu+EwpFuVXf+N72/ZkOcqPb+YuF0+H4ahNHqDXAq6FW
-cA/9B6qFzKSgI5/t9peEYbSLjneKPSApnMjluUabxjmQ8RoA0DSruidODwdbBaLj
-AfLz4pZJky7XwawxVwCUgRouQbdjxVMnPAqOCCysiqVLCSwsbXepP3W46vXHHpKe
-P4BD14G0WpJETzMdtrh+8PnNCmxeV+cdvj/d1RZWz8XGEkjaw/ecsWeBKoyP80q6
-9j2Vo2QeC2EP8q3QT/W9S5fQkL2/KTfpKyb3TYAZVTIiyyK2csjqCMTRs1VmMUA7
-MtZp8iUXAaqPg8KADcL/ab/K4o16AXpmVsAA37Bhw05auXtMPwijb1PEKzydjheF
-IkD49RImPplb+yhsWD+PzdB88H99Li8dVjehseO4/qj7DUT/jm++w8L9mqDrvDN+
-8yKOaA5gWBjImaheoX2b
-=Oyw8
------END PGP SIGNATURE-----
-
---3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
