@@ -1,53 +1,46 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ARM: dts: sun6i-a31-app4-evb1.dts: Use sunxi-common-regulators.dtsi
-Date: Fri,  9 May 2014 10:43:07 +0200
-Message-ID: <1399624987-12381-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] of/irq: provide int of_irq_parse_and_map_pci wrapper
+Date: Fri, 09 May 2014 10:45:53 +0200
+Message-ID: <4975430.zMeeu7d2Xc@wuerfel>
+References: <4527717.yJh2gX3xCP@wuerfel> <1399624119.4833.3.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBINKWKNQKGQEBWHE4UA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Boris Brezillon <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1399624119.4833.3.camel@weser.hi.pengutronix.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31-app4-evb1.dts | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+On Friday 09 May 2014 10:28:39 Lucas Stach wrote:
+> Am Freitag, den 09.05.2014, 08:58 +0200 schrieb Arnd Bergmann:
+> > The pci-rcar driver is enabled for compile tests, and this has
+> > now shown that the driver cannot build without CONFIG_OF,
+> > following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+> > interrupt mapping when possible":
+> > 
+> > drivers/built-in.o: In function `rcar_pci_map_irq':
+> > :(.text+0x1cc7c): undefined reference to `of_irq_parse_and_map_pci'
+> > 
+> > As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+> > supposed to build fine, which we can achieve if we make the
+> > declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+> > and provide an empty inline function otherwise, as we do for
+> > a lot of other of interfaces.
+> > 
+> > This lets us build the rcar_pci driver again without CONFIG_OF,
+> > which won't work but give us compile time coverage.
+> > 
+> This part of the commit message is confusing. The driver is explicitly
+> written to fall back to a platform irq when OF interrupt mapping doesn't
+> work (return 0 or error), to keep non DT enabled boards working.
+> 
+> I hadn't thought of the compile time dependency, so thanks for fixing
+> this up.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
-index 270ab97..2bbf886 100644
---- a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
-+++ b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
-@@ -13,6 +13,7 @@
- 
- /dts-v1/;
- /include/ "sun6i-a31.dtsi"
-+/include/ "sunxi-common-regulators.dtsi"
- 
- / {
- 	model = "Allwinner A31 APP4 EVB1 Evaluation Board";
-@@ -49,15 +50,8 @@
- 	};
- 
- 	reg_usb1_vbus: usb1-vbus {
--		compatible = "regulator-fixed";
--		pinctrl-names = "default";
- 		pinctrl-0 = <&usb1_vbus_pin_a>;
--		regulator-name = "usb1-vbus";
--		regulator-min-microvolt = <5000000>;
--		regulator-max-microvolt = <5000000>;
--		enable-active-high;
- 		gpio = <&pio 7 27 0>;
- 		status = "okay";
- 	};
--
- };
--- 
-1.9.0
+I thought it was meant to keep old DTBs working. AFAIK, there is no
+legacy board file support for rcar-gen2, so we don't actually have to
+worry about that.
+
+	Arnd
