@@ -1,34 +1,36 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch
- dt
-Date: Sat, 10 May 2014 02:59:15 +0400
-Message-ID: <536D5DC3.3070409@cogentembedded.com>
-References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de> <1392633882-12142-2-git-send-email-wsa@the-dreams.de> <536C1945.1000601@cogentembedded.com> <20140509050610.GB2624@katana>
+From: Sebastian Capella <sebastian.capella@linaro.org>
+Subject: Re: [PATCH RFC v3 4/6] arm64: add PSCI CPU_SUSPEND based cpu_suspend support
+Date: Fri, 09 May 2014 16:11:23 -0700
+Message-ID: <536d609c.0458440a.0ea9.77a3@mx.google.com>
+References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1399399483-17112-5-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140509050610.GB2624@katana>
-Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@sang-engineering.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1399399483-17112-5-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Quoting Lorenzo Pieralisi (2014-05-06 11:04:41)
+> This patch implements the cpu_suspend cpu operations method through
+> the PSCI CPU_SUSPEND API. The PSCI implementation translates the idle state
+> index passed by the cpu_suspend core call into a valid PSCI state according to
+> the PSCI states initialized at boot by the PSCI suspend backend.
+> 
+> Entry point is set to cpu_resume physical address, that represents the
+> default kernel execution address following a CPU reset.
+> 
+> Idle state indices missing a DT node description are initialized to power
+> state standby WFI so that if called by the idle driver they provide the
+> default behaviour.
+> 
+> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 
-On 05/09/2014 09:06 AM, Wolfram Sang wrote:
+Reviewed-by: Sebastian Capella <sebastian.capella@linaro.org>
 
->>> +	eeprom@50 {
->>> +		compatible = "renesas,24c02";
+Thanks!
 
->>     This is not quite right: Renesas' part is called differently, and
->> you're carrying the other vendor's naming onto Renesas parts. I'd
->> just say "24c02" (which I'll do in the Henninger board patch).
-
-> What about "generic"?
-
-    I don't know, really. However, you're right in that there should be some 
-vendor prefix -- I've just seen Documentation/devicetree/bindings/eeprom.txt.
-
-WBR, Sergei
-
+Sebastian
