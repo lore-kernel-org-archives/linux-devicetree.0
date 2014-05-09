@@ -1,156 +1,103 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 1/5] ARM: dts: move dp hpd line to the board file for
- exynos5420
-Date: Fri, 09 May 2014 09:45:23 +0900
-Message-ID: <003d01cf6b1f$f5f9c9e0$e1ed5da0$%han@samsung.com>
-References: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
- <1397994525-18537-2-git-send-email-rahul.sharma@samsung.com>
- <001f01cf6a87$56a86740$03f935c0$%han@samsung.com>
- <CAPdUM4N1Y_hQikf47yijMqbNrecfJQuy3C-M10J5oaUuodPmaw@mail.gmail.com>
+From: Sebastian Capella <sebastian.capella@linaro.org>
+Subject: Re: [PATCH RFC v3 5/6] drivers: cpuidle: CPU idle ARM64 driver
+Date: Thu, 08 May 2014 17:48:38 -0700
+Message-ID: <536c25e8.82e6440a.6af4.ffffa583@mx.google.com>
+References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1399399483-17112-6-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAPdUM4N1Y_hQikf47yijMqbNrecfJQuy3C-M10J5oaUuodPmaw@mail.gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rahul Sharma' <rahul.sharma@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, 'Kukjin Kim' <kgene.kim@samsung.com>, 'Inki Dae' <inki.dae@samsung.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, 'sunil joshi' <joshi@samsung.com>, 'Doug Anderson' <dianders@chromium.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1399399483-17112-6-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Capella <capellas@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, May 08, 2014 6:08 PM, Rahul Sharma wrote:
-> On 8 May 2014 12:02, Jingoo Han <jg1.han@samsung.com> wrote:
-> > On Sunday, April 20, 2014 8:49 PM, Rahul Sharma wrote:
-> >>
-> >> From: Rahul Sharma <Rahul.Sharma@samsung.com>
-> >>
-> >> Display controller HPD Gpio line is board specific. This patch
-> >> is moving the pinctrl for hpd gpio line to the respective board
-> >> file.
-> >>
-> >> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
-> >> ---
-> >>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi |    7 -------
-> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts |    7 +++++++
-> >>  2 files changed, 7 insertions(+), 7 deletions(-)
-> >>
-> >> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> >> index e62c8eb..5848c42 100644
-> >> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> >> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-> >> @@ -59,13 +59,6 @@
-> >>                       interrupt-controller;
-> >>                       #interrupt-cells = <2>;
-> >>               };
-> >> -
-> >> -             dp_hpd: dp_hpd {
-> >> -                     samsung,pins = "gpx0-7";
-> >> -                     samsung,pin-function = <3>;
-> >> -                     samsung,pin-pud = <0>;
-> >> -                     samsung,pin-drv = <0>;
-> >> -             };
-> >>       };
-> >
-> > (+cc Doug Anderson, Tomasz Figa)
-> >
-> > 'gpx0-7' pin is assigned for standard HPD pin. This is chip specific.
-> > So, there should be "gpx0-7" part on chip specific dts file such as
-> > 'exynos5420-pinctrl.dtsi'.
-> >
-> > However, some boards use GPIO as HPD pin, instead of 'gpx0-7' pin.
-> > This is board specific. In my opinion, the following would look
-> > better. In this way, this patch is not necessary.
-> >
-> > 1. case: Standard HPD pin is used. (smdk5420)
-> > arch/arm/boot/dts/exynos5420-pinctrl.dts
-> >         pinctrl@13400000 {
-> >                 dp_hpd: dp_hpd {
-> >                         samsung,pins = "gpx0-7";
-> >                         samsung,pin-function = <3>;
-> >                         samsung,pin-pud = <0>;
-> >                         samsung,pin-drv = <0>;
-> >                 };
-> > arch/arm/boot/dts/exynos5420-smdk5420.dts
-> >         dp-controller@145B0000 {
-> >                 pinctrl-names = "default";
-> >                 pinctrl-0 = <&dp_hpd>;
-> >                 ...
-> >
-> >
-> > 2. case: non-standard HPD pin such as GPIO is used. (peach pit)
-> > arch/arm/boot/dts/exynos5420-peach-pit.dts
-> >         pinctrl@13400000 {
-> >                 dp_hpd: dp_hpd {
-> >                         samsung,pins = "gpx2-6";
-> >                         samsung,pin-function = <0>;
-> >                         samsung,pin-pud = <3>;
-> >                         samsung,pin-drv = <0>;
-> >                 };
-> >         dp-controller@145B0000 {
-> >                 pinctrl-names = "default";
-> >                 pinctrl-0 = <&dp_hpd>;
-> >                 ...
-> >                 samsung,hpd-gpio = <&gpx2 6 0>;
-> >
-> > Even though, there is 'dp_hpd' in exynos5420-pinctrl.dts,
-> > 'smdk5420' and 'peach pit' can use "gpx0-7" and "gpx2-6",
-> > respectively.
-> >
-> > A year ago, Doug Anderson and me agreed that standard HPD pin
-> > part should be included to 'exynos5250-pinctrl.dtsi'.
-> > (https://lkml.org/lkml/2013/5/11/134)
-> >
-> 
-> I wasn't aware of this discussion. It make sense. I will drop this patch.
-> I need to choose some other name for this pin, say "peach_dp_hpd".
-> Let me know if any concern.
+Quoting Lorenzo Pieralisi (2014-05-06 11:04:42)
+> diff --git a/drivers/cpuidle/cpuidle-arm64.c b/drivers/cpuidle/cpuidle-arm64.c
+> new file mode 100644
+> index 0000000..fef1fad
+> --- /dev/null
+> +++ b/drivers/cpuidle/cpuidle-arm64.c
+> @@ -0,0 +1,161 @@
+...
+> +/*
 
-In my opinion, "dp_hpd_gpio" looks better as below.
+Is this intended to be kernel-docs?  If so, should maybe use the /** and
+() after the function below.  Otherwise, should you remove the @ in the
+argument list below?
 
-arch/arm/boot/dts/exynos5420-peach-pit.dts
-	pinctrl@13400000 {
-		dp_hpd_gpio: dp_hpd_gpio {
-			samsung,pins = "gpx2-6";
-			samsung,pin-function = <0>;
-			samsung,pin-pud = <3>;
-			samsung,pin-drv = <0>;
-		};
-	dp-controller@145B0000 {
-		pinctrl-names = "default";
-		pinctrl-0 = <&dp_hpd_gpio>;
-		...
-		samsung,hpd-gpio = <&gpx2 6 0>;
+> + * arm_enter_idle_state - Programs CPU to enter the specified state
+> + *
+> + * @dev: cpuidle device
+> + * @drv: cpuidle driver
+> + * @idx: state index
+> + *
+> + * Called from the CPUidle framework to program the device to the
+> + * specified target state selected by the governor.
+> + */
+> +static int arm_enter_idle_state(struct cpuidle_device *dev,
+> +                               struct cpuidle_driver *drv, int idx)
 
-Best regards,
-Jingoo Han
+...
 
-> 
-> Regards,
-> Rahul Sharma.
-> 
-> > Best regards,
-> > Jingoo Han
-> >
-> >>
-> >>       pinctrl@13410000 {
-> >> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> >> index 6910485..62d38c8 100644
-> >> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> >> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> >> @@ -138,6 +138,13 @@
-> >>                       samsung,pin-pud = <1>;
-> >>                       samsung,pin-drv = <0>;
-> >>               };
-> >> +
-> >> +             dp_hpd: dp_hpd {
-> >> +                     samsung,pins = "gpx0-7";
-> >> +                     samsung,pin-function = <3>;
-> >> +                     samsung,pin-pud = <0>;
-> >> +                     samsung,pin-drv = <0>;
-> >> +             };
-> >>       };
-> >>
-> >>       hdmi@14530000 {
-> >> --
-> >> 1.7.9.5
-> >
+> +static int __init arm64_idle_init(void)
+> +{
+> +       int i, ret;
+> +       const char *entry_method;
+> +       struct device_node *idle_states_node;
+> +       const struct cpu_suspend_ops *suspend_init;
+> +       struct cpuidle_driver *drv = &arm64_idle_driver;
+> +
+> +       idle_states_node = of_find_node_by_path("/cpus/idle-states");
+> +       if (!idle_states_node)
+> +               return -ENOENT;
+> +
+> +       if (of_property_read_string(idle_states_node, "entry-method",
+> +                                   &entry_method)) {
+> +               pr_warn(" * %s missing entry-method property\n",
+> +                           idle_states_node->full_name);
+> +               of_node_put(idle_states_node);
+> +               return -EOPNOTSUPP;
+> +       }
+> +
+> +       suspend_init = get_suspend_ops(entry_method);
+> +       if (!suspend_init) {
+> +               pr_warn("Missing suspend initializer\n");
+> +               of_node_put(idle_states_node);
+> +               return -EOPNOTSUPP;
+> +       }
+> +
+> +       /*
+> +        * State at index 0 is standby wfi and considered standard
+> +        * on all ARM platforms. If in some platforms simple wfi
+> +        * can't be used as "state 0", DT bindings must be implemented
+> +        * to work around this issue and allow installing a special
+> +        * handler for idle state index 0.
+> +        */
+> +       drv->states[0].exit_latency = 1;
+> +       drv->states[0].target_residency = 1;
+> +       drv->states[0].flags = CPUIDLE_FLAG_TIME_VALID;
+> +       strncpy(drv->states[0].name, "ARM WFI", CPUIDLE_NAME_LEN);
+> +       strncpy(drv->states[0].desc, "ARM WFI", CPUIDLE_DESC_LEN);
+> +
+> +       drv->cpumask = (struct cpumask *) cpu_possible_mask;
+> +       /*
+> +        * Start at index 1, request idle state nodes to be filled
+> +        */
+> +       ret = of_init_idle_driver(drv, state_nodes, 1, true);
+> +       if (ret)
+> +               return ret;
+> +
+> +       if (suspend_init->init_fn(drv, state_nodes))
+> +               return -EOPNOTSUPP;
+> +
+> +       for (i = 0; i < drv->state_count; i++)
+> +               drv->states[i].enter = arm_enter_idle_state;
+
+Is this missing an of_node_put(idle_states_node)?
+
+Thanks!
+
+Sebastian
