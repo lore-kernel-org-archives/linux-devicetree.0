@@ -1,59 +1,86 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
- (Power/Reset/Clock Management) unit
-Date: Fri, 09 May 2014 10:28:22 +0200
-Message-ID: <536C91A6.6000500@free-electrons.com>
-References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com> <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com> <20140508110205.GB5767@lee--X1> <536BE366.8080907@free-electrons.com> <20140509071246.GE5767@lee--X1> <536C84F6.2050701@redhat.com> <20140509080807.GH5767@lee--X1> <536C8F71.5040604@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] of/irq: provide int of_irq_parse_and_map_pci wrapper
+Date: Fri, 09 May 2014 10:28:39 +0200
+Message-ID: <1399624119.4833.3.camel@weser.hi.pengutronix.de>
+References: <4527717.yJh2gX3xCP@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBLNDWKNQKGQEBOA6ZQQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <536C8F71.5040604-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4527717.yJh2gX3xCP@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Am Freitag, den 09.05.2014, 08:58 +0200 schrieb Arnd Bergmann:
+> The pci-rcar driver is enabled for compile tests, and this has
+> now shown that the driver cannot build without CONFIG_OF,
+> following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+> interrupt mapping when possible":
+> 
+> drivers/built-in.o: In function `rcar_pci_map_irq':
+> :(.text+0x1cc7c): undefined reference to `of_irq_parse_and_map_pci'
+> 
+> As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+> supposed to build fine, which we can achieve if we make the
+> declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+> and provide an empty inline function otherwise, as we do for
+> a lot of other of interfaces.
+> 
+> This lets us build the rcar_pci driver again without CONFIG_OF,
+> which won't work but give us compile time coverage.
+> 
+This part of the commit message is confusing. The driver is explicitly
+written to fall back to a platform irq when OF interrupt mapping doesn't
+work (return 0 or error), to keep non DT enabled boards working.
 
-On 09/05/2014 10:18, Hans de Goede wrote:
-> Hi,
->
-> On 05/09/2014 10:08 AM, Lee Jones wrote:
->>>>>>> +static struct platform_driver sun6i_prcm_driver = {
->>>>>>> +	.driver = {
->>>>>>> +		.name = "sun6i-prcm",
->>>>>>> +		.owner = THIS_MODULE,
->>>>>>> +		.of_match_table = sun6i_prcm_dt_ids,
->>>>>>> +	},
->>>>>>> +	.probe = sun6i_prcm_probe,
->>>>>> You need a .remove() call-back.
->>>>> This driver cannot be compiled as module (see the Kconfig definition)
->>>>> and the devices are not hotpluggable, as a result a probed device will
->>>>> never be removed.
->>>>>
->>>>> Do you still want me to implement the remove function ?
->>>> .remove() also be run on shut down.
->>> That is not true, if your device needs to do anything special at shutdown
->>> you need to add a shutdown callback. Devices are kept as is (not torn down)
->>> on shutdown.
->> Ah okay, I'll bow to your knowledge.  So there's no reason for this
->> driver to ever call mfd_remove_devices() then?
-> No, this is an integral part of the SOC, which never gets removed in any way.
+I hadn't thought of the compile time dependency, so thanks for fixing
+this up.
 
-Lee, I'm about to send a 3rd version of this series, is it okay for you
-if I leave the remove function unimplemented ?
-
->
-> Regards,
->
-> Hans
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Magnus Damm <damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org>
+> Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+> Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+> Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
+> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+> index 1a1f5ff..1e29bf4 100644
+> --- a/include/linux/of_pci.h
+> +++ b/include/linux/of_pci.h
+> @@ -7,13 +7,18 @@
+>  struct pci_dev;
+>  struct of_phandle_args;
+>  int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq);
+> -int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+>  
+>  struct device_node;
+>  struct device_node *of_pci_find_child_device(struct device_node *parent,
+>  					     unsigned int devfn);
+>  int of_pci_get_devfn(struct device_node *np);
+>  int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
+> +#ifdef CONFIG_OF
+> +int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+> +#else
+> +static inline int
+> +of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin) { return 0; }
+> +#endif
+>  
+>  #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
+>  int of_pci_msi_chip_add(struct msi_chip *chip);
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
