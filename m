@@ -1,53 +1,126 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv3 3/3] edac: altera: Add EDAC support for Altera SDRAM
-Date: Fri, 9 May 2014 15:52:59 +0200
-Message-ID: <20140509135259.GC16260@pd.tnic>
-References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
- <1399330337-16748-4-git-send-email-tthayer@altera.com>
- <20140508120524.GF12548@pd.tnic>
- <CAF03EBecxtMr1670ktQKTAZX_kHeZWz1SwuEk373B99BoVjbDw@mail.gmail.com>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Fri, 9 May 2014 19:25:34 +0530
+Message-ID: <CAFp+6iFJ1aXEvss1Wwx=Y=sk5j3m57zwL5Hh3wYUorUNi96MGA@mail.gmail.com>
+References: <1398665874-31238-1-git-send-email-gautam.vivek@samsung.com>
+	<5368F136.6070804@samsung.com>
+	<CAFp+6iHN-W-k6ow5YykK_QWgBJ+GgzXwPX6suWtizxwJWOiGtg@mail.gmail.com>
+	<CAFp+6iF=Z_dkd+YJm2-ODmvgZ6PCt+bUx+vSVm_5RtobVN0WfA@mail.gmail.com>
+	<536CAA4F.8050404@samsung.com>
+	<CAFp+6iEGvy71s=-Vt37TKkVDUX1wO6GZdwL=uBfPjng78yE5-A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAF03EBecxtMr1670ktQKTAZX_kHeZWz1SwuEk373B99BoVjbDw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thor Thayer <tthayer.linux@gmail.com>
-Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAFp+6iEGvy71s=-Vt37TKkVDUX1wO6GZdwL=uBfPjng78yE5-A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, robh+dt <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linux USB Mailing List <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kamil Debski <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 08, 2014 at 03:37:19PM -0500, Thor Thayer wrote:
-> Yes. Their reasoning is that they want to retain the rights and
-> warranty language with the file (just in case the COPYING file
-> changes).
+On Fri, May 9, 2014 at 4:21 PM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi Sylwester,
+>
+>
+> On Fri, May 9, 2014 at 3:43 PM, Sylwester Nawrocki
+> <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Hi Vivek,
+>>
+>> On 08/05/14 11:03, Vivek Gautam wrote:
+>>>>>> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>>>>>> >>> index b422e38..51efe4c 100644
+>>>>>> >>> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>>>>>> >>> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>>>>>> >>> @@ -114,3 +114,43 @@ Example:
+>>>>>> >>>               compatible = "samsung,exynos-sataphy-i2c";
+>>>>>> >>>               reg = <0x38>;
+>>>>>> >>>       };
+>>>>>> >>> +
+>>>>>> >>> +Samsung Exynos5 SoC series USB DRD PHY controller
+>>>>>> >>> +--------------------------------------------------
+>>>>>> >>> +
+>>>>>> >>> +Required properties:
+>>>>>> >>> +- compatible : Should be set to one of the following supported values:
+>>>>>> >>> +     - "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
+>>>>>> >>> +     - "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
+>>>>>> >>> +- reg : Register offset and length of USB DRD PHY register set;
+>>>>>> >>> +- clocks: Clock IDs array as required by the controller
+>>>>>> >>> +- clock-names: names of clocks correseponding to IDs in the clock property;
+>>>>>> >>> +            Required clocks:
+>>>>>> >>> +     - phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
+>>>>>> >>> +            used for register access.
+>>>>>> >>> +     - ref: PHY's reference clock (usually crystal clock), used for
+>>>>>> >>> +            PHY operations, associated by phy name. It is used to
+>>>>>> >>> +            determine bit values for clock settings register.
+>>>>>> >>> +            For Exynos5420 this is given as 'sclk_usbphy30' in CMU.
+>>>>>> >>> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
+>>>>>> >>> +                   control pmu registers for power isolation.
+>>>>>> >>> +- samsung,pmu-offset: phy power control register offset to pmu-system-controller
+>>>>>> >>> +                   base.
+>>>>> >>
+>>>>> >> It doesn't seem right to have register offset encoded in the device tree
+>>>>> >> like this. I think it'd be more appropriate to associate such an offset
+>>>>> >> with the compatible string's value in the driver.
+>>>> >
+>>>> > Ok, it makes more sense.
+>>>> > Just out of curiosity, what difference would this make ?
+>>>
+>>> Moreover, in case of Exynos5420 (and may be in future SoCs), where we
+>>> have 2 USB DRD PHY controllers,
+>>> we will need to have a way around to deal with two separate offsets in
+>>> the driver for one compatible string.
+>>
+>> It could be handled by creating a list of offsets per compatible string and
+>> then adding some way to identify the PHY device instance. So I believe that's
+>> not a big issue.
+>
+> True, we had tried to make use of 'aliases' for multiple controllers
+> on Exynos5420,
+> in earlier version V3 of this patch, to handle the pmu-register
+> offsets in _somewhat_ similar fashion. [1]
+> But then we had to drop that as per the suggestions in the mailing list.
+>
+>> Now you'd be encoding a list of registers offsets in the
+>> device tree, without encoding bit layout of each register. It's unlikely that
+>> each instance would have different bits layout, but describing individual
+>> registers in DT I thought is something that we're not supposed to do.
+>
+> Ok, so this is information to me, i was not very much aware of this.
+> Thanks for explaining it here.
+>
+>>
+>>> Getting the offsets from DT seems a cleaner way to handle this case of
+>>> multi controllers.
+>>
+>> I think it's easier from the driver POV, but isn't it violating the device
+>> tree rules ?
+>> Anyway. I'm just pointing this minor issue in the binding as it appears
+>> to me. The final word of course belongs to a DT binding maintainer.
+>
+> Thanks Sylwester, for pointing this out here.
+> Meantime, please let me know if the approach using aliases is one
+> possible solution for this or not ?
 
-Ok, thanks for checking up on this.
+I shall be sending v8 patch series for this, in order to use 'aliases'
+in the driver
+to get the distinction between pmu-offsets.
+So, v8 will give an alternative approach for getting pmu-offsets using
+macro definitions from a header file.
 
-> Yes. I tested using edac_core.edac_mc_panic_on_ue=1 from the command
-> line and it worked fine. I'll add a comment to clarify. BTW, thanks
-> for your help on that.
+Mark and Rob can suggest us which can be a better approach.
 
-Sure, but the question still remains: do you want to panic on
-uncorrectable errors by default or want the user to decide? I guess this
-is something you can answer for your hardware...
+>
+>
+> [1] [PATCH v3] phy: Add new Exynos5 USB 3.0 PHY driver
+>      https://lkml.org/lkml/2014/1/21/46
 
-> I considered using "volatile" variables, but decided against it after
-> I read Documentation/volatile-considered-harmful.txt and my situation
-> doesn't fit into the exemptions. Is there a better way to handle this?
 
-Off the top of my head, I'd first look at compiler asm output to
-check what my compiler does with those writes and then take a look at
-employing the ACCESS_ONCE macro or something similar where we use the
-asm volatile() as an optimization stop for the compiler, among others.
-
-And then I'll look at asm again to make sure it does what it is supposed
-to do. Something to that effect, in any case...
-
-HTH.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
 --
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
