@@ -1,73 +1,48 @@
-From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: am335x-bone-common: Add i2c2 definition
-Date: Fri, 9 May 2014 07:57:53 -0500
-Message-ID: <536CD0D1.4080903@ti.com>
-References: <1399614983-552-1-git-send-email-mranostay@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/4] Add framework to support clkout
+Date: Fri,  9 May 2014 18:30:06 +0530
+Message-ID: <1399640410-30957-1-git-send-email-tushar.behera@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399614983-552-1-git-send-email-mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 09 May 2014 12:56:23 AM CDT, Matt Ranostay wrote:
-> Add missing i2c2 bus define to access various cape and
-> prototype/breakout board devices.
->
-> Signed-off-by: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am335x-bone-common.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 2e7d932..2aedfee 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -84,6 +84,13 @@
->  		>;
->  	};
->
-> +	i2c2_pins: pinmux_i2c2_pins {
-> +		pinctrl-single,pins = <
-> +			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)	/* i2c2_sda.uart1_ctsn */
-> +			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)	/* i2c2_scl.uart1_rtsn */
+The MUX/GATE register for XCLKOUT doesn't resides within PMU domain,
+this can be accessed through a regmap provided by syscon driver. Adding
+another clock provider to handle regmap based handing of XCLKOUT.
 
-I dont understand the comment -> i2c2_sda is being muxed to uart1_cstsn?
+Dependency:
+1. [PATCH v3] mfd: syscon: Support early initialization
+http://article.gmane.org/gmane.linux.kernel/1679446
 
-> +		>;
-> +	};
-> +
->  	uart0_pins: pinmux_uart0_pins {
->  		pinctrl-single,pins = <
->  			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
-> @@ -222,6 +229,15 @@
->
->  };
->
-> +
-> +&i2c2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_pins>;
-> +
-> +	status = "okay";
-> +	clock-frequency = <400000>;
+Also we need to find a suitable place to call early_syscon_init(), after
+the device tree has been unflattened and before clock initialization.
 
-How did we decide on 400KHz -> do all all i2c2 devices on ALL capes 
-work in full speed? OR should we consider a conservative 100KHz?
+While testing, I called this before of_clk_init() in arch/arm/kernel/time.c,
+but that place is too generic. Calling anywhere from exynos.c is not
+working ATM.
 
-> +};
-> +
->  /include/ "tps65217.dtsi"
->
->  &tps {
+Tushar Behera (4):
+  clk: samsung: out: Add infrastructure to register CLKOUT
+  clk: samsung: exynos5420: Add xclkout debug clock
+  clk: samsung: exynos5250: Add xclkout debug clock
+  ARM: dts: Add pmu-syscon handle for Exynos5420/Exynos5250 clock
 
+ arch/arm/boot/dts/exynos5250.dtsi      |    1 +
+ arch/arm/boot/dts/exynos5420.dtsi      |    1 +
+ drivers/clk/samsung/Makefile           |    2 +-
+ drivers/clk/samsung/clk-exynos5250.c   |   14 +++
+ drivers/clk/samsung/clk-exynos5420.c   |   14 +++
+ drivers/clk/samsung/clk-out.c          |  181 ++++++++++++++++++++++++++++++++
+ drivers/clk/samsung/clk.h              |   33 ++++++
+ include/dt-bindings/clock/exynos5250.h |    3 +
+ include/dt-bindings/clock/exynos5420.h |    5 +-
+ 9 files changed, 252 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/clk/samsung/clk-out.c
 
---
-Regards,
-Nishanth Menon
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
