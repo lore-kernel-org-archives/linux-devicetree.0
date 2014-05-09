@@ -1,51 +1,72 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch
- dt
-Date: Fri, 09 May 2014 03:54:45 +0400
-Message-ID: <536C1945.1000601@cogentembedded.com>
-References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de> <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
+Subject: [PATCH] ARM: shmobile: henninger: add I2C2 DT support
+Date: Fri, 9 May 2014 04:19:41 +0400
+Message-ID: <201405090419.42435.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
 Sender: linux-sh-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>, linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Wolfram Sang <wsa@sang-engineering.com>
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Define the Henninger board dependent part of the I2C2 device node.
+Add device nodes for Analog Devices ADV7180 video decoder and Renesas EEPROM
+connected to this I2C bus.
 
-On 02/17/2014 01:44 PM, Wolfram Sang wrote:
+Based on the Koelsch I2C2 device tree patch by Wolfram Sang.
 
-> From: Wolfram Sang <wsa@sang-engineering.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
-> ---
->   arch/arm/boot/dts/r8a7791-koelsch.dts | 19 +++++++++++++++++++
->   1 file changed, 19 insertions(+)
+---
+This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
+'renesas.git' repo plus SDHI0/2, QSPI, and MSIOF0 DT support patches posted
+recently.
 
-> diff --git a/arch/arm/boot/dts/r8a7791-koelsch.dts b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> index d4b9bba..b3f75d7 100644
-> --- a/arch/arm/boot/dts/r8a7791-koelsch.dts
-> +++ b/arch/arm/boot/dts/r8a7791-koelsch.dts
-> @@ -108,10 +108,29 @@
->   	clock-frequency = <20000000>;
->   };
->
-> +&i2c2 {
-> +	pinctrl-0 = <&i2c2_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +
-> +	eeprom@50 {
-> +		compatible = "renesas,24c02";
+ arch/arm/boot/dts/r8a7791-henninger.dts |   24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-    This is not quite right: Renesas' part is called differently, and you're 
-carrying the other vendor's naming onto Renesas parts. I'd just say "24c02" 
-(which I'll do in the Henninger board patch).
-
-WBR, Sergei
-
+Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
++++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+@@ -110,6 +110,11 @@
+ 		renesas,function = "sdhi2";
+ 	};
+ 
++	i2c2_pins: i2c2 {
++		renesas,groups = "i2c2";
++		renesas,function = "i2c2";
++	};
++
+ 	qspi_pins: spi0 {
+ 		renesas,groups = "qspi_ctrl", "qspi_data4";
+ 		renesas,function = "qspi";
+@@ -170,6 +175,25 @@
+ 	status = "okay";
+ };
+ 
++&i2c2 {
++	pinctrl-0 = <&i2c2_pins>;
++	pinctrl-names = "default";
++
++	status = "okay";
++	clock-frequency = <400000>;
++
++	video@20 {
++		compatible = "adi,adv7180";
++		reg = <0x20>;
++	};
++
++	eeprom@50 {
++		compatible = "24c02";
++		reg = <0x50>;
++		pagesize = <16>;
++	};
++};
++
+ &qspi {
+ 	pinctrl-0 = <&qspi_pins>;
+ 	pinctrl-names = "default";
