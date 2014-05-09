@@ -1,44 +1,136 @@
-From: Alex =?utf-8?Q?Benn=C3=A9e?= <alex.bennee@linaro.org>
-Subject: Re: [PATCH 2/5] arm64: dts: APM X-Gene SoC Ethernet device tree nodes
-Date: Fri, 09 May 2014 16:29:22 +0100
-Message-ID: <87ppjnc6nh.fsf@linaro.org>
-References: <1387597376-29303-1-git-send-email-isubramanian@apm.com>
- <1387597376-29303-3-git-send-email-isubramanian@apm.com>
- <1390582906.12454.26.camel@deneb.redhat.com>
- <CAKh23FmGYGkCbeh4DbL4_NO6ypkw4F70J0X__KxFyHTo-=WtKg@mail.gmail.com>
+From: "Karicheri, Muralidharan" <m-karicheri2@ti.com>
+Subject: RE: [PATCH v2] serial: uart: add hw flow control support
+ configuration
+Date: Fri, 9 May 2014 15:30:02 +0000
+Message-ID: <3E54258959B69E4282D79E01AB1F32B704735082@DFLE11.ent.ti.com>
+References: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <CAKh23FmGYGkCbeh4DbL4_NO6ypkw4F70J0X__KxFyHTo-=WtKg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Iyappan Subramanian <isubramanian@apm.com>
-Cc: devicetree@vger.kernel.org, "jcm@redhat.com" <jcm@redhat.com>, Greg KH <gregkh@linuxfoundation.org>, Mark Salter <msalter@redhat.com>, patches <patches@apm.com>, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, Keyur Chudgar <kchudgar@apm.com>, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, Ravi Patel <rapatel@apm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Ckl5YXBwYW4gU3VicmFtYW5pYW4gPGlzdWJyYW1hbmlhbkBhcG0uY29tPiB3cml0ZXM6Cgo+IEhp
-IE1hcmssCj4KPiBUaGFua3MgZm9yIHRoZSByZXZpZXcgY29tbWVudCBhbmQgSSBhcG9sb2dpemUg
-Zm9yIG5vdCByZXBseWluZyBzb29uZXIuCj4KPiBXZSBhcmUgY29tcGxldGVseSByZWRlc2lnbmlu
-ZyB0aGUgZXRoZXJuZXQgZHJpdmVyIHRvIG1ha2UgaXQgc2ltcGxlCj4gYW5kIGNsZWFuZXIgYW5k
-IHdpbGwgYmUgcG9zdGVkIHNob3J0bHkuCgpIaSBJeWFwcGFuLAoKRGlkIHRoaXMgZXZlciBnZXQg
-cG9zdGVkPyBJJ20gdHJ5aW5nIHRvIGdldCBhIGNsb3NlLXRvLUhFQUQga2VybmVsIHVwCmFuZCBy
-dW5uaW5nIG9uIG91ciBBUE0gaGFyZHdhcmUgYnV0IGhhdmUgcnVuIGFmb3VsIG9mIHRoZSBkaWZm
-ZXJlbmNlcwpiZXR3ZWVuIHRoZSBsYXRlc3QgWEdFTkVfTUJPWCBwYXRjaCBzZXQgYW5kIHRoZSBv
-bGRlciBORVRfWEdFTkUgcGF0Y2gKc2V0LgoKSWYgaXQncyBub3QgbG9uZyBhd2F5IHRoZW4gSSBz
-aGFsbCB3YWl0IGEgYml0IG90aGVyd2lzZSBJJ2xsIHNlZSBpZiB0aGUKbWlzc2luZyBiaXRzIGNh
-biBiZSBmb3J3YXJkIHBvcnRlZCBmcm9tIG91ciB3b3JraW5nCjMuOC4wLW11c3Rhbmdfc3dfMS4w
-OC4xMi1iZXRhX3JjLmpjbTE1IGtlcm5lbCAocHVyZWx5IGZvciB0ZXN0aW5nCnB1cnBvc2VzKS4K
-CkRvIHlvdSBoYXZlIGEgcHVibGljIHRyZWUgd2hlcmUgeW91ciBsYXRlc3Qga2VybmVscyBhcmUg
-dmlzaWJsZT8KCkNoZWVycywKCi0tCkFsZXggQmVubsOpZQpRRU1VL0tWTSBIYWNrZXIgZm9yIExp
-bmFybwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+>-----Original Message-----
+>From: Karicheri, Muralidharan
+>Sent: Thursday, May 01, 2014 3:05 PM
+>To: devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-kernel@vger.kernel.org;
+>linux-serial@vger.kernel.org
+>Cc: Karicheri, Muralidharan; Rob Herring; Pawel Moll; Mark Rutland; Ian Campbell; Kumar
+>Gala; Randy Dunlap; Greg Kroah-Hartman; Jiri Slaby; Shilimkar, Santosh
+>Subject: [PATCH v2] serial: uart: add hw flow control support configuration
+>
+>8250 uart driver currently supports only software assisted hw flow control. The software
+>assisted hw flow control maintains a hw_stopped flag in the tty structure to stop and start
+>transmission and use modem status interrupt for the event to drive the handshake signals.
+>This is not needed if hw has flow control capabilities. This patch adds a DT attribute for
+>enabling hw flow control for a uart port. Also skip stop and start if this flag is present in flag
+>field of the port structure.
+>
+>Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>
+>CC: Rob Herring <robh+dt@kernel.org>
+>CC: Pawel Moll <pawel.moll@arm.com>
+>CC: Mark Rutland <mark.rutland@arm.com>
+>CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>CC: Kumar Gala <galak@codeaurora.org>
+>CC: Randy Dunlap <rdunlap@infradead.org>
+>CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>CC: Jiri Slaby <jslaby@suse.cz>
+>CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>---
+> .../devicetree/bindings/serial/of-serial.txt       |    1 +
+> drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+> drivers/tty/serial/of_serial.c                     |    4 ++++
+> drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+> 4 files changed, 18 insertions(+), 5 deletions(-)
+>
+>diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt
+>b/Documentation/devicetree/bindings/serial/of-serial.txt
+>index 1928a3e..7705477 100644
+>--- a/Documentation/devicetree/bindings/serial/of-serial.txt
+>+++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+>@@ -37,6 +37,7 @@ Optional properties:
+> - auto-flow-control: one way to enable automatic flow control support. The
+>   driver is allowed to detect support for the capability even without this
+>   property.
+>+- has-hw-flow-control: the hardware has flow control capability.
+>
+> Example:
+>
+>diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+>index 0e1bf88..b69aff2 100644
+>--- a/drivers/tty/serial/8250/8250_core.c
+>+++ b/drivers/tty/serial/8250/8250_core.c
+>@@ -2338,9 +2338,11 @@ serial8250_do_set_termios(struct uart_port *port, struct
+>ktermios *termios,
+> 	 * the trigger, or the MCR RTS bit is cleared.  In the case where
+> 	 * the remote UART is not using CTS auto flow control, we must
+> 	 * have sufficient FIFO entries for the latency of the remote
+>-	 * UART to respond.  IOW, at least 32 bytes of FIFO.
+>+	 * UART to respond.  IOW, at least 32 bytes of FIFO. Also enable
+>+	 * AFE if hw flow control is supported
+> 	 */
+>-	if (up->capabilities & UART_CAP_AFE && port->fifosize >= 32) {
+>+	if ((up->capabilities & UART_CAP_AFE && (port->fifosize >= 32)) ||
+>+	    (port->flags & UPF_HARD_FLOW)) {
+> 		up->mcr &= ~UART_MCR_AFE;
+> 		if (termios->c_cflag & CRTSCTS)
+> 			up->mcr |= UART_MCR_AFE;
+>diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c index
+>9924660..77ec6a1 100644
+>--- a/drivers/tty/serial/of_serial.c
+>+++ b/drivers/tty/serial/of_serial.c
+>@@ -182,6 +182,10 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+> 					  "auto-flow-control"))
+> 			port8250.capabilities |= UART_CAP_AFE;
+>
+>+		if (of_property_read_bool(ofdev->dev.of_node,
+>+					  "has-hw-flow-control"))
+>+			port8250.port.flags |= UPF_HARD_FLOW;
+>+
+> 		ret = serial8250_register_8250_port(&port8250);
+> 		break;
+> 	}
+>diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+>index b68550d..851707a 100644
+>--- a/drivers/tty/serial/serial_core.c
+>+++ b/drivers/tty/serial/serial_core.c
+>@@ -174,8 +174,12 @@ static int uart_port_startup(struct tty_struct *tty, struct
+>uart_state *state,
+> 			if (tty->termios.c_cflag & CBAUD)
+> 				uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
+> 		}
+>-
+>-		if (tty_port_cts_enabled(port)) {
+>+		/*
+>+		 * if hw support flow control without software intervention,
+>+		 * then skip the below check
+>+		 */
+>+		if (tty_port_cts_enabled(port) &&
+>+		    !(uport->flags & UPF_HARD_FLOW)) {
+> 			spin_lock_irq(&uport->lock);
+> 			if (!(uport->ops->get_mctrl(uport) & TIOCM_CTS))
+> 				tty->hw_stopped = 1;
+>@@ -2772,7 +2776,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned
+>int status)
+>
+> 	uport->icount.cts++;
+>
+>-	if (tty_port_cts_enabled(port)) {
+>+	/* skip below code if the hw flow control is supported */
+>+	if (tty_port_cts_enabled(port) &&
+>+	    !(uport->flags & UPF_HARD_FLOW)) {
+> 		if (tty->hw_stopped) {
+> 			if (status) {
+> 				tty->hw_stopped = 0;
+>--
+>1.7.9.5
+
+Any idea who is going to pick this patch for merge?
+
+Murali
