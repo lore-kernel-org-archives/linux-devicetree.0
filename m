@@ -1,58 +1,36 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
- (Power/Reset/Clock Management) unit
-Date: Fri, 09 May 2014 09:34:14 +0200
-Message-ID: <536C84F6.2050701@redhat.com>
-References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com> <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com> <20140508110205.GB5767@lee--X1> <536BE366.8080907@free-electrons.com> <20140509071246.GE5767@lee--X1>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 1/4] edac: Fix MC scrub mode comparsion bug for
+ correctable error
+Date: Fri, 9 May 2014 09:38:03 +0200
+Message-ID: <20140509073803.GD8844@pd.tnic>
+References: <1399590199-12256-1-git-send-email-lho@apm.com>
+ <1399590199-12256-2-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBMUKWKNQKGQEF3A2AXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140509071246.GE5767@lee--X1>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1399590199-12256-2-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 05/09/2014 09:12 AM, Lee Jones wrote:
->>>> +static struct platform_driver sun6i_prcm_driver = {
->>>> +	.driver = {
->>>> +		.name = "sun6i-prcm",
->>>> +		.owner = THIS_MODULE,
->>>> +		.of_match_table = sun6i_prcm_dt_ids,
->>>> +	},
->>>> +	.probe = sun6i_prcm_probe,
->>> You need a .remove() call-back.
->>
->> This driver cannot be compiled as module (see the Kconfig definition)
->> and the devices are not hotpluggable, as a result a probed device will
->> never be removed.
->>
->> Do you still want me to implement the remove function ?
+On Thu, May 08, 2014 at 05:03:16PM -0600, Loc Ho wrote:
+> This patch fixes the MC scrub mode comparsion bug by replacing
+> '&' with '=='. The MC structure field scrub_mode is integer
+> type - not bit field.
 > 
-> .remove() also be run on shut down.
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 
-That is not true, if your device needs to do anything special at shutdown
-you need to add a shutdown callback. Devices are kept as is (not torn down)
-on shutdown.
+Applied, thanks.
 
-> It's best practice to have one.
-> 
->>>> +module_platform_driver(sun6i_prcm_driver);
->>>> +
->>>> +MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
->>>> +MODULE_DESCRIPTION("Allwinner sun6i PRCM driver");
->>>> +MODULE_LICENSE("GPL v2");
->>
-> 
+-- 
+Regards/Gruss,
+    Boris.
 
-Regards,
-
-Hans
+Sent from a fat crate under my desk. Formatting is fine.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
