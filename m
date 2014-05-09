@@ -1,90 +1,69 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: Re: [PATCH] ARM: dts: sun6i-a31-app4-evb1.dts: Use sunxi-common-regulators.dtsi
-Date: Fri, 09 May 2014 11:32:02 +0200
-Message-ID: <536CA092.50300@free-electrons.com>
-References: <1399624987-12381-1-git-send-email-hdegoede@redhat.com> <536C97FD.3070906@free-electrons.com> <536C9A53.2060302@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 0/4] OMAPDSS: Add support for panel ls037v7dw01
+Date: Fri, 9 May 2014 12:34:03 +0300
+Message-ID: <536CA10B.9040702@ti.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com> <20140505184138.GB15463@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBFGBWKNQKGQEEXILVXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <536C9A53.2060302-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="B2b105InfVMfGnj26AW1mIrEGS8NasbhO"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140505184138.GB15463@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+--B2b105InfVMfGnj26AW1mIrEGS8NasbhO
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-On 09/05/2014 11:05, Hans de Goede wrote:
-> Hi,
->
-> On 05/09/2014 10:55 AM, Boris BREZILLON wrote:
->> On 09/05/2014 10:43, Hans de Goede wrote:
->>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  arch/arm/boot/dts/sun6i-a31-app4-evb1.dts | 8 +-------
->>>  1 file changed, 1 insertion(+), 7 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
->>> index 270ab97..2bbf886 100644
->>> --- a/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
->>> +++ b/arch/arm/boot/dts/sun6i-a31-app4-evb1.dts
->>> @@ -13,6 +13,7 @@
->>>  
->>>  /dts-v1/;
->>>  /include/ "sun6i-a31.dtsi"
->>> +/include/ "sunxi-common-regulators.dtsi"
->>>  
->>>  / {
->>>  	model = "Allwinner A31 APP4 EVB1 Evaluation Board";
->>> @@ -49,15 +50,8 @@
->>>  	};
->>>  
->>>  	reg_usb1_vbus: usb1-vbus {
->>> -		compatible = "regulator-fixed";
->>> -		pinctrl-names = "default";
->>>  		pinctrl-0 = <&usb1_vbus_pin_a>;
->>> -		regulator-name = "usb1-vbus";
->>> -		regulator-min-microvolt = <5000000>;
->>> -		regulator-max-microvolt = <5000000>;
->>> -		enable-active-high;
->>>  		gpio = <&pio 7 27 0>;
->>>  		status = "okay";
->>>  	};
->> I guess we could do the same for usb1_vbus_pin_a (keep the common
->> definition and change the allwinner,pins property).
-> Hmm, what we do with other boards when the pin does not match the
-> default is change the node name to something baord specific, ie
-> usb1_vbus_pin_app4_evb1
+On 05/05/14 21:41, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [140429 16:53]:
+>> Hi all,
+>>
+>> Here are few patches to add devicetree support for panel ls037v7dw01
+>> that's found on many omap3 boards. They seem to be often mis-configure=
+d
+>> as various panel dpi entries, but really should be move to use panel
+>> ls037v7dw01 instead. This panel is found at least on the omap3 sdp,
+>> ldp, omap3 evm and few other development boards.
+>=20
+> Tomi, assuming no more comments, do you want to pick up the first
+> three patches of this series? I can queue the .dts changes or you
+> can also set up a separate .dts changes branch for DSS that I can
+> merge in too.
 
-Okay.
-How did you decide which pins should be put in the default definitions
-(the most used ones among available boards ?) ?
-I'm not sure defining new pin states for each board is a good solution,
-because you'll embed unneeded pin states in your DTB.
-Anyway, this is your call :-).
+If it's all the same to you, I'd like to collect all display related
+arch/arm/ patches into my tree, and I'll send you a merge request when
+it's stable.
 
-> Which is why I did not remove the common bits from the pin,
-> I did not notice you did not use a board specific name here.
+I already have OMAP5 and AM43xx stuff there.
 
-Then I guess it should be fixed in the same series.
-BTW, AFAIK the original patch adding support for the APP4 EVB1 board has
-not been applied yet, so I think we can fix it send a v2 of this patch.
+ Tomi
 
-> Regards,
->
-> Hans
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+
+--B2b105InfVMfGnj26AW1mIrEGS8NasbhO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTbKELAAoJEPo9qoy8lh71Wm0P/04/5kITL2Ga250U0XuM1p2x
+ZOgwhvv5886Z+WiuRZnXwg5G99NvFwPTTC1q172oFj2uOwOUNDAYfVALK5YNHLBR
+odNxx4Qanlug0G0LZktrNkcGx6JuTONZhyCZs2LwXURohoU9SeM6elN4or/APNjK
+GMM1LVoeQ2wTntX/PLwcQYNDrTjqq9ZYfhP7j/N0p4r6CTMYAbA6KpDHXGkD2O4i
+06/NMlTMeaykMcivyf+yvbCEZRr/Fv8ffKae7aUsPS5TwATnW/BRB+9lzjdx+jsc
+FIPWJy+z1FZTvWKtO4dVCbxVwhdA+LKIoJSfJUc9bKrJfiNWyJoYWpi2lyHduNNT
+wrF1UY8xPkVB4K9jEJMwyU8QaG8xF6K2o01QHUlmZ0moFUNFAt/Y+SQglf17et2o
+qKaGZgQMtKoPvKKZhZN1K+wOuGjIuYxpVBPpEDE6rDpjNdmmok7mSxeMZ6RYEI3U
+vVmPaRJwpgTr4ouW9BL3usHgeysB36jCxklPyds0DnUiGkuPVjIP+9rBcb9W45k0
+3LhlL7mA3B/6I6ZfTUOPlHCIexYh/3VP1aer6vJgWwXd5Fs5rqbFf0XXZWt0t3Qz
+7aTdLE4Ntndu9pcTh0i/NX509mIGBpjHRuwhAn5p3rrDq9ZDev1WN7FsIcDKc6Qp
+ypuzDGZuKDP8nBp/ebgx
+=lnIj
+-----END PGP SIGNATURE-----
+
+--B2b105InfVMfGnj26AW1mIrEGS8NasbhO--
