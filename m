@@ -1,45 +1,130 @@
-From: Pavel Machek <pavel-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH 05/17] pci: host: pcie-dra7xx: add support for
- pcie-dra7xx controller
-Date: Fri, 9 May 2014 11:43:30 +0200
-Message-ID: <20140509094330.GB4877@xo-6d-61-c0.localdomain>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com>
- <1399383244-14556-6-git-send-email-kishon@ti.com>
- <201405061544.28738.marex@denx.de>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH RFC v3 3/6] drivers: cpuidle: implement OF based idle
+ states infrastructure
+Date: Fri, 9 May 2014 10:47:19 +0100
+Message-ID: <20140509094718.GD32007@e102568-lin.cambridge.arm.com>
+References: <1399399483-17112-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1399399483-17112-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <536c0f39.90ab420a.3da7.ffff86ca@mx.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <536c0f39.90ab420a.3da7.ffff86ca@mx.google.com>
 Content-Disposition: inline
-In-Reply-To: <201405061544.28738.marex-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Sebastian Capella <sebastian.capella@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Capella <capellas@>
 List-Id: devicetree@vger.kernel.org
 
-> > +	writel(value, base + offset);
-> > +}
-> > +
-> > +static int dra7xx_pcie_link_up(struct pcie_port *pp)
-> > +{
-> > +	struct dra7xx_pcie *dra7xx = to_dra7xx_pcie(pp);
-> > +	u32 reg = dra7xx_pcie_readl(dra7xx->base, PCIECTRL_DRA7XX_CONF_PHY_CS);
-> > +
-> > +	if (reg & LINK_UP)
-> > +		return true;
-> > +	return false;
+On Fri, May 09, 2014 at 12:12:19AM +0100, Sebastian Capella wrote:
+> Quoting Lorenzo Pieralisi (2014-05-06 11:04:40)
 > 
-> return reg & LINK_UP;
+> > diff --git a/drivers/cpuidle/of_idle_states.c b/drivers/cpuidle/of_idle_states.c
+> > new file mode 100644
+> > index 0000000..360b7ad
+> > --- /dev/null
+> > +++ b/drivers/cpuidle/of_idle_states.c
+> > @@ -0,0 +1,293 @@
+> ...
+> > +static int __init add_state_node(cpumask_t *cpumask,
+> > +                                struct device_node *state_node)
+> > +{
+> > +       struct state_elem *el;
+> > +       u32 tmp, val = 0;
+> > +
+> > +       pr_debug(" * %s...\n", state_node->full_name);
+> > +
+> > +       if (!state_cpus_valid(cpumask, state_node))
+> > +               return -EINVAL;
+> > +       /*
+> > +        * Parse just the properties required to sort the states.
+> > +        * Since we are missing a value defining the energy
+> > +        * efficiency of a state, for now the sorting code uses
+> > +        *
+> > +        * min-residency-us+exit-latency-us
+> > +        *
+> > +        * as sorting rank.
+> > +        */
+> > +       if (of_property_read_u32(state_node, "min-residency-us",
+> > +                                &tmp)) {
+> > +               pr_debug(" * %s missing min-residency-us property\n",
+> > +                        state_node->full_name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       val += tmp;
+> > +
+> > +       if (of_property_read_u32(state_node, "exit-latency-us",
+> > +                                &tmp)) {
+> > +               pr_debug(" * %s missing exit-latency-us property\n",
+> > +                            state_node->full_name);
+> > +               return -EINVAL;
+> > +       }
+> > +
+> > +       val += tmp;
+> 
+> Sorry if i'm rehashing old stuff, but I prefer not to use the
+> min-residency + exit-latency to sort.  I saw Rob's comment suggesting it
+> and your reply.  I'm not sure when it was decided.
+> 
+> Would it be possible to sort instead based on the order in the
+> cpus->cpu-idle-states?  If not, my preference would be to either use
+> index like you had before, or specify another sort order / rank value.
 
-Function int returning true. I'd change the prototype and would
-return !!(reg & ...);
+"power-rank" property ? We can't rely on the DT state nodes ordering.
 
-									Pavel
+I am ok with adding a power-rank property, as long as it is not frowned
+upon by DT maintainers, I am running short of ideas for states sorting if
+I can't use idle state properties to pull that off.
 
+> I think there's potential for us to create lower power states that
+> have lower min-residencies (reduced power consumption in the state,
+> allowing us to more quickly recover the higher entrance cost)
+> with higher exit latencies in such a way that the formula would not
+> sort as we expect.  Having a separate value would allow us to control
+> the sorting in those cases.
+> 
+> > +
+> > +/*
+> 
+> For kernel-doc, I think you need a /** here, and a () after the
+> of_init_idle_driver below.  Also maybe Return: instead of Returns:
+> and I think the return paragraph goes at the end, but am not positive.
+> 
+> kernel-doc-nano-HOWTO.txt
 
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ok changes done.
+
+Thanks,
+Lorenzo
+
+> > + * of_init_idle_driver - Parse the DT idle states and initialize the
+> > + *                      idle driver states array
+> > + *
+> > + * @drv:         Pointer to CPU idle driver to be initialized
+> > + * @state_nodes:  Array of struct device_nodes to be initialized if
+> > + *               init_nodes == true. Must be sized CPUIDLE_STATE_MAX
+> > + * @start_idx:    First idle state index to be initialized
+> > + * @init_nodes:   Boolean to request device nodes initialization
+> > + *
+> > + * Returns:
+> > + *     0 on success
+> > + *     <0 on failure
+> > + *
+> > + *     On success the states array in the cpuidle driver contains
+> > + *     initialized entries in the states array, starting from index start_idx.
+> > + *     If init_nodes == true, on success the state_nodes array is initialized
+> > + *     with idle state DT node pointers, starting from index start_idx,
+> > + *     in a 1:1 relation with the idle driver states array.
+> > + */
+> > +int __init of_init_idle_driver(struct cpuidle_driver *drv,
+> > +                              struct device_node *state_nodes[],
+> > +                              unsigned int start_idx, bool init_nodes)
+> > +{
+> 
+> Thanks!
+> 
+> Sebastian
+> 
+
