@@ -1,50 +1,147 @@
-From: Darren Etheridge <detheridge@ti.com>
-Subject: Re: [PATCH] arm/dts: am335x-evmsk enable display and lcd panel
- support
-Date: Fri, 9 May 2014 09:47:49 -0500
-Message-ID: <20140509144748.GI2626@ti.com>
-References: <1398199063-3026-1-git-send-email-detheridge@ti.com>
- <20140506161001.GH18474@atomide.com>
- <536CBBFE.40508@ti.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
+ controller support
+Date: Fri, 09 May 2014 16:50:02 +0200
+Message-ID: <536CEB1A.2060206@free-electrons.com>
+References: <1399485515-11243-1-git-send-email-boris.brezillon@free-electrons.com> <1399485515-11243-3-git-send-email-boris.brezillon@free-electrons.com> <20140509143116.GD7047@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536CBBFE.40508@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, bcousson@baylibre.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140509143116.GD7047@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tomi Valkeinen <tomi.valkeinen@ti.com> wrote on Fri [2014-May-09 14:29:02 +0300]:
-> On 06/05/14 19:10, Tony Lindgren wrote:
-> > * Darren Etheridge <detheridge@ti.com> [140422 13:39]:
-> >> Add the necessary nodes to enable the LCD controller and the
-> >> LCD panel that is attached to the Texas Instruments AM335x
-> >> EVMSK platform.  Also setup the necessary pin mux within the
-> >> DT file to drive the LCD connector and add the correct
-> >> pinmux settings for the lcd pins to be configured to when
-> >> the SoC goes into sleep state for the minimum power
-> >> consumption.
-> >>
-> >> For the sleep mode LCD pin settings, MUX_MODE7 is chosen as
-> >> this corresponds to switching the pins into input GPIO's with
-> >> an internal pulldown.  Which has been determined to offer the
-> >> lowest power solution vs leaving the pins configured in LCD
-> >> mode.
-> > 
-> > Probably best that Tomi queues all the panel .dts changes into
-> > a separate immutable branch that I can merge too.
-> 
-> This is not for OMAP DSS, but for the LCDC used in beaglebone, so there
-> are no dependencies to any of my work.
-> 
 
-Benoit had always queued these LCDC dts patches in the past.  This is
-exactly the same as what had been done for AM335x-EVM and
-AM335x-BeagleBone both of which are already in the mainline kernel.  I
-had just missed the EVMSK previously.
+On 09/05/2014 16:31, Maxime Ripard wrote:
+> Hi Boris,
+>
+> On Wed, May 07, 2014 at 07:58:35PM +0200, Boris BREZILLON wrote:
+>
+[...]
+> +
+> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	p2wi->regs = devm_ioremap_resource(dev, r);
+> +	if (IS_ERR(p2wi->regs)) {
+> +		dev_err(dev, "failed to retrieve iomem resource\n");
+> +		return PTR_ERR(p2wi->regs);
+> You seem to be returning the error code in the next error messages. It
+> would probably be a good idea to put it there too.
 
-Darren
+Yes, I'll print the err code in the error message.
 
+>
+>> +	}
+>> +
+>> +	snprintf(p2wi->adapter.name, sizeof(p2wi->adapter.name), pdev->name);
+>> +	ret = platform_get_irq(pdev, 0);
+>> +	if (ret < 0) {
+>> +		dev_err(dev, "failed to retrieve irq: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +	p2wi->irq = ret;
+>> +
+>> +	p2wi->clk = devm_clk_get(dev, NULL);
+>> +	if (IS_ERR(p2wi->clk)) {
+>> +		ret = PTR_ERR(p2wi->clk);
+>> +		dev_err(dev, "failed to retrieve clk: %d\n",
+>> +			ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	ret = clk_prepare_enable(p2wi->clk);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to enable clk: %d\n", ret);
+>> +		return ret;
+>> +	}
+>> +
+>> +	parent_clk_freq = clk_get_rate(p2wi->clk);
+>> +
+>> +	p2wi->rstc = devm_reset_control_get(dev, NULL);
+>> +	if (IS_ERR(p2wi->rstc)) {
+>> +		ret = PTR_ERR(p2wi->rstc);
+>> +		dev_err(dev, "failed to retrieve reset controller: %d\n",
+>> +			ret);
+>> +		goto err_clk_disable;
+>> +	}
+>> +
+>> +	ret = reset_control_deassert(p2wi->rstc);
+>> +	if (ret) {
+>> +		dev_err(dev, "failed to deassert reset line: %d\n",
+>> +			ret);
+>> +		goto err_clk_disable;
+>> +	}
+>> +
+>> +	init_completion(&p2wi->complete);
+>> +	p2wi->adapter.dev.parent = dev;
+>> +	p2wi->adapter.algo = &p2wi_algo;
+>> +	p2wi->adapter.owner = THIS_MODULE;
+>> +	p2wi->adapter.dev.of_node = pdev->dev.of_node;
+>> +	platform_set_drvdata(pdev, p2wi);
+>> +	i2c_set_adapdata(&p2wi->adapter, p2wi);
+>> +
+>> +	ret = devm_request_irq(dev, p2wi->irq, p2wi_interrupt, 0, pdev->name,
+>> +			       p2wi);
+>> +	if (ret) {
+>> +		dev_err(dev, "can't register interrupt handler irq%d: %d\n",
+>> +			p2wi->irq, ret);
+>> +		goto err_reset_assert;
+>> +	}
+>> +
+>> +	writel(P2WI_CTRL_SOFT_RST, p2wi->regs + P2WI_CTRL);
+>> +
+>> +	clk_div = parent_clk_freq / clk_freq;
+>> +	if (!clk_div) {
+>> +		dev_warn(dev,
+>> +			 "clock-frequency is too high, setting it to %lu Hz\n",
+>> +			 parent_clk_freq);
+>> +		clk_div = 1;
+>> +	} else if (clk_div > P2WI_CCR_MAX_CLK_DIV) {
+>> +		dev_warn(dev,
+>> +			 "clock-frequency is too low, setting it to %lu Hz\n",
+>> +			 parent_clk_freq / P2WI_CCR_MAX_CLK_DIV);
+>> +		clk_div = P2WI_CCR_MAX_CLK_DIV;
+>> +	}
+>> +
+>> +	writel(P2WI_CCR_SDA_OUT_DELAY(1) | P2WI_CCR_CLK_DIV(clk_div),
+>> +	       p2wi->regs + P2WI_CCR);
+>> +
+>> +	if (p2wi_mode_reg >= 0 && p2wi_mode_val >= 0) {
+>> +		writel(P2WI_PMCR_PMU_INIT_SEND |
+>> +		       P2WI_PMCR_PMU_MODE_REG(p2wi_mode_reg) |
+>> +		       P2WI_PMCR_PMU_INIT_DATA(p2wi_mode_val) |
+>> +		       P2WI_PMCR_PMU_DEV_ADDR(p2wi->slave_addr),
+>> +		       p2wi->regs + P2WI_PMCR);
+>> +
+>> +		while (readl(p2wi->regs + P2WI_PMCR) &
+>> +		       P2WI_PMCR_PMU_INIT_SEND)
+>> +			cpu_relax();
+>> +	}
+> Did we actually encounter such a case? From what I've seen so far,
+> both community's u-boot and Allwinner's bootloader already do this.
+>
+> As you know, I'm really not fond of putting random values and
+> registers offsets into the DT itself. Making the assumption that the
+> PMIC is already switched to P2WI by the bootloader seems pretty safe
+> to me.
 
+Hans, any opinion ?
+
+If everybody agrees on that point, I'll remove the initialization part
+from the probe (and drop the allwinner,reg-xx properties retrieval).
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
