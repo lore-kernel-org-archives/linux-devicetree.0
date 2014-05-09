@@ -1,166 +1,58 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Fri, 9 May 2014 10:24:03 +0300
-Message-ID: <536C8293.4070506@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-4-git-send-email-tony@atomide.com> <5369EAE7.3030705@ti.com> <20140507150343.GA9502@atomide.com> <536A5920.1020908@ti.com> <20140507175919.GH9502@atomide.com> <20140508233300.GI2198@atomide.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Fri, 09 May 2014 09:34:14 +0200
+Message-ID: <536C84F6.2050701@redhat.com>
+References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com> <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com> <20140508110205.GB5767@lee--X1> <536BE366.8080907@free-electrons.com> <20140509071246.GE5767@lee--X1>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140508233300.GI2198@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBMUKWKNQKGQEF3A2AXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140509071246.GE5767@lee--X1>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On 09/05/14 02:33, Tony Lindgren wrote:
+On 05/09/2014 09:12 AM, Lee Jones wrote:
+>>>> +static struct platform_driver sun6i_prcm_driver = {
+>>>> +	.driver = {
+>>>> +		.name = "sun6i-prcm",
+>>>> +		.owner = THIS_MODULE,
+>>>> +		.of_match_table = sun6i_prcm_dt_ids,
+>>>> +	},
+>>>> +	.probe = sun6i_prcm_probe,
+>>> You need a .remove() call-back.
+>>
+>> This driver cannot be compiled as module (see the Kconfig definition)
+>> and the devices are not hotpluggable, as a result a probed device will
+>> never be removed.
+>>
+>> Do you still want me to implement the remove function ?
+> 
+> .remove() also be run on shut down.
 
-> We can pass the GPIO configuration for ls037v7dw01 in a standard
-> gpios property.
->=20
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
->=20
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/sharp,ls037v7dw01.txt
-> @@ -0,0 +1,56 @@
-> +SHARP LS037V7DW01 TFT-LCD panel
-> +
-> +Required properties:
-> +- compatible: should be "sharp,ls037v7dw01"
-> +
-> +Optional properties:
-> +- enable-gpios: a GPIO spec for the optional enable pin
-> +  this pin is the INI pin as specified in the LS037V7DW01.pdf file.
-> +- reset-gpios: a GPIO spec for the optional reset pin
-> +  this pin is the RESB pin as specified in the LS037V7DW01.pdf file.
-> +- mode-gpios: a GPIO=20
-> +  ordered MO, LR, and UD as specified in the LS037V7DW01.pdf file.
-> +
-> +This binding is compatible with the simple-panel binding, which is spe=
-cified
-> +in simple-panel.txt in this directory.
+That is not true, if your device needs to do anything special at shutdown
+you need to add a shutdown callback. Devices are kept as is (not torn down)
+on shutdown.
 
-The video port data is required also. See for example
-Documentation/devicetree/bindings/video/panel-dsi-cm.txt or
-Documentation/devicetree/bindings/video/hdmi-connector.txt.
+> It's best practice to have one.
+> 
+>>>> +module_platform_driver(sun6i_prcm_driver);
+>>>> +
+>>>> +MODULE_AUTHOR("Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+>>>> +MODULE_DESCRIPTION("Allwinner sun6i PRCM driver");
+>>>> +MODULE_LICENSE("GPL v2");
+>>
+> 
 
-Also, all the bindings I've made are in
-Documentation/devicetree/bindings/video/, and I'd rather keep the video
-bindings OMAP uses in the same place.
+Regards,
 
-> +This panel can have zero to five GPIOs to configure
-> +to change configuration between QVGA and VGA mode
-> +and the scan direction. As these pins can be also
-> +configured with external pulls, all the GPIOs are
-> +considered optional with holes in the array.
-> +
-> +Example when connected to a omap2+ based device:
-> +
-> +	lcd0: display {
-> +		compatible =3D "sharp,ls037v7dw01";
-> +		power-supply =3D <&lcd_3v3>;
-> +		enable-gpios =3D <&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI *=
-/
-> +		reset-gpios =3D <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB *=
-/
-> +		mode-gpios =3D <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
-> +			      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
-> +			      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
-> +
-> +		panel-timing {
-> +			clock-frequency =3D <19200000>;
-> +			hback-porch =3D <28>;
-> +			hactive =3D <480>;
-> +			hfront-porch =3D <1>;
-> +			hsync-len =3D <2>;
-> +			vback-porch =3D <1>;
-> +			vactive =3D <640>;
-> +			vfront-porch =3D <1>;
-> +			vsync-len =3D <1>;
-> +			hsync-active =3D <0>;
-> +			vsync-active =3D <0>;
-> +			de-active =3D <1>;
-> +			pixelclk-active =3D <1>;
-> +		};
-
-I don't think we should define panel-timing here. We know it's
-sharp,ls037v7dw01, so the driver knows the video timings. Also, if we
-would extend the driver to support both resolution modes, it needs to
-support two different timings, so the above doesn't work in that case
-either.
-
-Although if the MO gpio is not controlled by the driver, we should tell
-the driver whether that gpio is high or low.
-
-> +static int sharp_ls_probe_of(struct platform_device *pdev)
-> +{
-> +	struct panel_drv_data *ddata =3D platform_get_drvdata(pdev);
-> +	struct device_node *node =3D pdev->dev.of_node;
-> +	struct omap_dss_device *in;
-> +	struct display_timing timing;
-> +	struct videomode vm;
-> +	int r;
-> +
-> +	ddata->vcc =3D devm_regulator_get(&pdev->dev, "envdd");
-> +	if (IS_ERR(ddata->vcc)) {
-> +		dev_err(&pdev->dev, "failed to get regulator\n");
-> +		return PTR_ERR(ddata->vcc);
-> +	}
-> +
-> +	r =3D regulator_enable(ddata->vcc);
-> +	if (r !=3D 0) {
-> +		dev_err(&pdev->dev, "failed to enable regulator\n");
-> +		return r;
-> +	}
-
-The regulator should be enabled when the panel is enabled, not at probe
-time.
-
-> +static const struct of_device_id sharp_ls_of_match[] =3D {
-> +	{ .compatible =3D "sharp,ls037v7dw01", },
-
-At the moment our display drivers are OMAP specific, and for that reason
-we should prefix the compatible strings with "omapdss,". For example,
-drivers/video/fbdev/omap2/displays-new/panel-dsi-cm.c:
-
-	{ .compatible =3D "omapdss,panel-dsi-cm", },
-
-But we should still have the right compatible string in the .dts, so we
-convert the compatible name in arch/arm/mach-omap2/display.c, with
-'dss_compat_conv_list' array, to which this panel's name should be added.=
-
-
- Tomi
-
-
-
---vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTbIKTAAoJEPo9qoy8lh71Q80P/1hwp0WNhOuLmu2VfPeOJ0Sv
-vFgB6LslH0G1ijki32dZtjnyjkiZQxfPOQ+EVyNhq4qmu8lsT78o7OAweJ+/BWlP
-4lIgfQgZ7JpJOX1Ig3r0VkN2IYhjl75bV1V2eM3cb/1MTDpqJTbr2L/PSvHqZf0G
-TPUgsa+42St6LY7+kk6bXtJiHH6C+tMupR+HX8C0D32Zjw/IJMHbZavFtBY5Cc1t
-uE5qxftOSDWTL+M3vb+K3w+mFUEoAkr5rdMb7FsXaBUzrrHqxpRQkJiSO4dn90Yj
-51w+hy5GDwwzGllsTeM43F3tVWM06uA469cvrwa8S2+iXrxEkk7LrCZ+e3Xj1TGp
-IHxAZhket2W2E3aqoNQQGyzoYUWLnyMPtNMzz1J67yHl/qSF5wjJDJfNZIE+VSZy
-ZJy35ciiUPpzoqiZc74RNpbLtkK+77Nzniu5A5ZaPJ7+LftuKc13mGzfHwdXYFqS
-OMoBYy7vvc/d5B/+D5laqkDxkZIJHN1u1gjZ/Gt/dGZlsrEzmh6SZDwOl3BOrHXY
-UNJyzkx3HD95txwEZ9YEXkiI8sFTfAi+J2TELDPmgQpTs0nXhVJ0AREeUcmY1XsV
-Ss9hmWIH7pOVMBU85ZXkLOBUqmX2tOuxLlZhlqElt4Ix0/ADNL8INHWDDr2LfrLz
-iBYkswmYoWnyAHPKfdgu
-=XPwt
------END PGP SIGNATURE-----
-
---vI58sMfFIcR4jq3JjchL1C5S3Sn4Jhw4L--
+Hans
