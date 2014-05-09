@@ -1,12 +1,13 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3 2/7] reset: sunxi: allow MFD subdevices probe
-Date: Fri,  9 May 2014 13:11:46 +0200
-Message-ID: <1399633911-7094-3-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 7/7] ARM: sunxi: dt: add PRCM clk and reset
+ controller subdevices
+Date: Fri,  9 May 2014 13:11:51 +0200
+Message-ID: <1399633911-7094-8-git-send-email-boris.brezillon@free-electrons.com>
 References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBB7QWKNQKGQEMWJFOGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBCHQWKNQKGQEPR5E3HI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1399633911-7094-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -18,59 +19,61 @@ To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The current implementation uses sunxi_reset_init function for both early
-init and platform device probe.
-
-The sunxi_reset_init function uses DT to retrieve device resources, which
-will be an issue if reset controllers are registered from an MFD device
-that define resources from mfd_cell definition.
-
-Moreover, we can make of devm functions when we're in the probe context.
+Add DT definitions for PRCM (Power/Reset/Clock Management) clock and reset
+controller subdevices.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/reset/reset-sunxi.c | 21 ++++++++++++++++++---
- 1 file changed, 18 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 37 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/drivers/reset/reset-sunxi.c b/drivers/reset/reset-sunxi.c
-index 695bd34..a94e7a7 100644
---- a/drivers/reset/reset-sunxi.c
-+++ b/drivers/reset/reset-sunxi.c
-@@ -145,7 +145,24 @@ MODULE_DEVICE_TABLE(of, sunxi_reset_dt_ids);
- 
- static int sunxi_reset_probe(struct platform_device *pdev)
- {
--	return sunxi_reset_init(pdev->dev.of_node);
-+	struct sunxi_reset_data *data;
-+	struct resource *res;
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index 9feb3f4..03d5258 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -496,6 +496,43 @@
+ 		prcm@01f01400 {
+ 			compatible = "allwinner,sun6i-a31-prcm";
+ 			reg = <0x01f01400 0x200>;
 +
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
++			ar100: ar100_clk {
++				compatible = "allwinner,sun6i-a31-ar100-clk";
++				#clock-cells = <0>;
++				clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
++			};
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	data->membase = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(data->membase))
-+		return PTR_ERR(data->membase);
++			ahb0: ahb0_clk {
++				compatible = "fixed-factor-clock";
++				#clock-cells = <0>;
++				clock-div = <1>;
++				clock-mult = <1>;
++				clocks = <&ar100>;
++				clock-output-names = "ahb0";
++			};
 +
-+	data->rcdev.owner = THIS_MODULE;
-+	data->rcdev.nr_resets = resource_size(res) * 32;
-+	data->rcdev.ops = &sunxi_reset_ops;
-+	data->rcdev.of_node = pdev->dev.of_node;
++			apb0: apb0_clk {
++				compatible = "allwinner,sun6i-a31-apb0-clk";
++				#clock-cells = <0>;
++				clocks = <&ahb0>;
++				clock-output-names = "apb0";
++			};
 +
-+	return reset_controller_register(&data->rcdev);
- }
++			apb0_gates: apb0_gates_clk {
++				compatible = "allwinner,sun6i-a31-apb0-gates-clk";
++				#clock-cells = <1>;
++				clocks = <&apb0>;
++				clock-output-names = "apb0_pio", "apb0_ir",
++						"apb0_timer", "apb0_p2wi",
++						"apb0_uart", "apb0_1wire",
++						"apb0_i2c";
++			};
++
++			apb0_rst: apb0_rst {
++				compatible = "allwinner,sun6i-a31-clock-reset";
++				#reset-cells = <1>;
++			};
+ 		};
  
- static int sunxi_reset_remove(struct platform_device *pdev)
-@@ -153,8 +170,6 @@ static int sunxi_reset_remove(struct platform_device *pdev)
- 	struct sunxi_reset_data *data = platform_get_drvdata(pdev);
- 
- 	reset_controller_unregister(&data->rcdev);
--	iounmap(data->membase);
--	kfree(data);
- 
- 	return 0;
- }
+ 		cpucfg@01f01c00 {
 -- 
 1.8.3.2
