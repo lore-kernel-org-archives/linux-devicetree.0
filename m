@@ -1,94 +1,111 @@
-From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v12 18/31] iommu/exynos: allow having multiple System MMUs
-	for a master H/W
-Date: Fri, 09 May 2014 19:54:40 +0900
-Message-ID: <20140509195440.ae989be464cde24ade92eec2@samsung.com>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<1398584283-22846-19-git-send-email-shaik.ameer@samsung.com>
-	<5369245A.1060001@gmail.com>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 9 May 2014 11:56:38 +0100
+Message-ID: <20140509105638.GB3921@e103592.cambridge.arm.com>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
+ <20140502132327.GA14612@ulmo>
+ <5363E8E9.6000908@wwwdotorg.org>
+ <4356389.0gMcB71fJD@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <5369245A.1060001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4356389.0gMcB71fJD@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 06 May 2014 20:05:14 +0200, Tomasz Figa wrote:
-> On 27.04.2014 09:37, Shaik Ameer Basha wrote:
-> > From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> >
-> > Some master device descriptor like fimc-is which is an abstraction
-> > of very complex H/W may have multiple System MMUs. For those devices,
-> > the design of the link between System MMU and its master H/W is needed
-> > to be reconsidered.
-> >
-> > A link structure, sysmmu_list_data is introduced that provides a link
-> > to master H/W and that has a pointer to the device descriptor of a
-> > System MMU. Given a device descriptor of a master H/W, it is possible
-> > to traverse all System MMUs that must be controlled along with the
-> > master H/W.
-> >
-> > Signed-off-by: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >   drivers/iommu/exynos-iommu.c |  545 ++++++++++++++++++++++++++----------------
-> >   1 file changed, 335 insertions(+), 210 deletions(-)
-> >
-> > diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
-> > index fefedec3..c2e6365 100755
-> > --- a/drivers/iommu/exynos-iommu.c
-> > +++ b/drivers/iommu/exynos-iommu.c
-> > @@ -117,6 +117,10 @@
-> >   #define REG_PB1_EADDR		0x058
-> >
-> >   #define has_sysmmu(dev)		(dev->archdata.iommu != NULL)
-> > +#define for_each_sysmmu_list(dev, list_data)				\
-> > +	list_for_each_entry(list_data,					\
-> > +		&((struct exynos_iommu_owner *)dev->archdata.iommu)->mmu_list, \
-> > +		entry)
+On Fri, May 02, 2014 at 09:06:43PM +0200, Arnd Bergmann wrote:
+> On Friday 02 May 2014 12:50:17 Stephen Warren wrote:
+> > On 05/02/2014 07:23 AM, Thierry Reding wrote:
+> > > On Fri, May 02, 2014 at 02:32:08PM +0200, Arnd Bergmann wrote:
+> > >> On Friday 02 May 2014 13:05:58 Thierry Reding wrote:
+> > >>>
+> > >>> Let me see if I understood the above proposal by trying to translate it
+> > >>> into a simple example for a specific use-case. On Tegra for example we
+> > >>> have various units that can either access system memory directly or use
+> > >>> the IOMMU to translate accesses for them. One such unit would be the
+> > >>> display controller that scans out a framebuffer from memory.
+> > >>
+> > >> Can you explain how the decision is made whether the IOMMU gets used
+> > >> or not? In all cases I've seen so far, I think we can hardwire this
+> > >> in DT, and only expose one or the other. Are both ways used
+> > >> concurrently?
+> > > 
+> > > It should be possible to hardcode this in DT for Tegra. As I understand
+> > > it, both interfaces can't be used at the same time. Once translation has
+> > > been enabled for one client, all accesses generated by that client will
+> > > be translated.
+> > > 
+> > > Hiroshi, please correct me if I'm wrong.
+> > 
+> > I believe the HW connectivity is always as follows:
+> > 
+> > Bus master (e.g. display controller) ---> IOMMU (Tegra SMMU) ---> RAM
+> > 
+> > In the IOMMU, there is a bit per bus master that indicates whether the
+> > IOMMU translates the bus master's accesses or not. If that bit is
+> > enabled, then page tables in the IOMMU are used to perform the translation.
+> > 
+> > You could also look at the HW setup as:
+> > 
+> > Bus master (e.g. display controller)
+> >     v
+> >    ----
+> >   /    \
+> >   ------
+> >    |  \
+> >    |   ------------------
+> >    |                     \
+> >    v                     v
+> > IOMMU (Tegra SMMU) ---> RAM
+> > 
+> > But IIRC the bit that controls that demux is in the IOMMU, so this
+> > distinction probably isn't relevant.
 > 
-> Sorry, NAK.
+> Ok. I think this case can be dealt with easily enough without
+> having to represent it as two master ports on one device. There
+> really is just one master, and it can be configured in two ways.
+
+I think in this case, this is effectively a "bypass" control in
+the IOMMU, so it can be treated as part of the IOMMU.
+
+Whether any real system will require us to describe dynamic forking
+is unclear.
+
+By "dynamic forking" I mean where a transaction really does flow down
+different paths or through different sets of components based on more
+than just the destination address, possibly under runtime control.
+
 > 
-> Please don't add this kind of complexity and business logic to low level 
-> code. We want the configuration functions to be simple, easy to read, 
-> maintain and extend.
+> We can either choose to make the DT representation decide which
+> way is used, or we can always point to the IOMMU, and let the
+> IOMMU driver decide.
 > 
-> The proper way to do it is to let the IOMMUs be grouped together on 
-> IOMMU subsystem level, so that each IOMMU consumer driver would see just 
-> one IOMMU, but then IOMMU driver callbacks would handle just particular 
-> instances of the IOMMU IP blocks, without any loops, lists and other 
-> crazy code...
+> > Now, perhaps there are devices which themselves control whether
+> > transactions are sent to the IOMMU or direct to RAM, but I'm not
+> > familiar with them. Is the GPU in that category, since it has its own
+> > GMMU, albeit chained into the SMMU IIRC?
 > 
+> Devices with a built-in IOMMU such as most GPUs are also easy enough
+> to handle: There is no reason to actually show the IOMMU in DT and
+> we can just treat the GPU as a black box.
 
-It is done in IOMMU driver internally.
-IOMMU consumer driver(IOMMU client device driver?) sees IOMMU domain
-but IOMMU itself. How to handle IOMMUs of the client device is just
-in charge of IOMMU driver according to the hardwired bus topology.
+It's impossible for such a built-in IOMMU to be shared with other
+devices, so that's probably reasonable.
 
-If a master and IOMMU device should be 1:1 relationship as you contend,
-the master device driver should be responsible for express the bus
-topology in its business logic. I think it is not good as I told earlier.
+For an IOMMU out in the interconnect, the OS needs to understand
+that it is shared, so that it knows not to mess up other flows
+when poking the IOMMU.
 
-IOMMU group is different from the grouping System MMUs in Exynos IOMMU driver.
-IOMMU group is invented to group several IOMMUs on different bus with different
-masters to assign the same IOMMU domain.
-It is useful for user level virtualization but for expressing bus topology.
-Exynos IOMMU driver just groups System MMUs that have the same master device.
-Even though Exynos IOMMU driver implements IOMMU group which is already
-implemented by 20/31 patch, such looping is still required.
+Cheers
+---Dave
 
-However, I will consider other elegant way of interation of multiple System MMUs.
-
-Regards,
-
-KyongHo
+> 
+> Note that you don't really have to support the dma-mapping.h API on
+> GPUs, they usually need to go down to the IOMMU level anyway.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
