@@ -1,164 +1,77 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH 1/5] ARM: dts: move dp hpd line to the board file for exynos5420
-Date: Fri, 9 May 2014 06:47:20 +0530
-Message-ID: <CAPdUM4OLN4zr3n6=QDig6wez4Rd4AT-zwGf=J_YMSLrOapWOtQ@mail.gmail.com>
-References: <1397994525-18537-1-git-send-email-rahul.sharma@samsung.com>
-	<1397994525-18537-2-git-send-email-rahul.sharma@samsung.com>
-	<001f01cf6a87$56a86740$03f935c0$%han@samsung.com>
-	<CAPdUM4N1Y_hQikf47yijMqbNrecfJQuy3C-M10J5oaUuodPmaw@mail.gmail.com>
-	<003d01cf6b1f$f5f9c9e0$e1ed5da0$%han@samsung.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM
+ bindings
+Date: Fri, 09 May 2014 11:14:07 +0900
+Message-ID: <034b01cf6b2c$5b5d06b0$12171410$@samsung.com>
+References: <1399522592-23618-1-git-send-email-sachin.kamat@linaro.org>
+ <536BAE39.70504@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <003d01cf6b1f$f5f9c9e0$e1ed5da0$%han@samsung.com>
+In-reply-to: <536BAE39.70504@samsung.com>
+Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: Doug Anderson <dianders@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: 'Tomasz Figa' <t.figa@samsung.com>, 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, arnd@arndb.de, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 9 May 2014 06:15, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Thursday, May 08, 2014 6:08 PM, Rahul Sharma wrote:
->> On 8 May 2014 12:02, Jingoo Han <jg1.han@samsung.com> wrote:
->> > On Sunday, April 20, 2014 8:49 PM, Rahul Sharma wrote:
->> >>
->> >> From: Rahul Sharma <Rahul.Sharma@samsung.com>
->> >>
->> >> Display controller HPD Gpio line is board specific. This patch
->> >> is moving the pinctrl for hpd gpio line to the respective board
->> >> file.
->> >>
->> >> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
->> >> ---
->> >>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi |    7 -------
->> >>  arch/arm/boot/dts/exynos5420-smdk5420.dts |    7 +++++++
->> >>  2 files changed, 7 insertions(+), 7 deletions(-)
->> >>
->> >> diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
->> >> index e62c8eb..5848c42 100644
->> >> --- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
->> >> +++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
->> >> @@ -59,13 +59,6 @@
->> >>                       interrupt-controller;
->> >>                       #interrupt-cells = <2>;
->> >>               };
->> >> -
->> >> -             dp_hpd: dp_hpd {
->> >> -                     samsung,pins = "gpx0-7";
->> >> -                     samsung,pin-function = <3>;
->> >> -                     samsung,pin-pud = <0>;
->> >> -                     samsung,pin-drv = <0>;
->> >> -             };
->> >>       };
->> >
->> > (+cc Doug Anderson, Tomasz Figa)
->> >
->> > 'gpx0-7' pin is assigned for standard HPD pin. This is chip specific.
->> > So, there should be "gpx0-7" part on chip specific dts file such as
->> > 'exynos5420-pinctrl.dtsi'.
->> >
->> > However, some boards use GPIO as HPD pin, instead of 'gpx0-7' pin.
->> > This is board specific. In my opinion, the following would look
->> > better. In this way, this patch is not necessary.
->> >
->> > 1. case: Standard HPD pin is used. (smdk5420)
->> > arch/arm/boot/dts/exynos5420-pinctrl.dts
->> >         pinctrl@13400000 {
->> >                 dp_hpd: dp_hpd {
->> >                         samsung,pins = "gpx0-7";
->> >                         samsung,pin-function = <3>;
->> >                         samsung,pin-pud = <0>;
->> >                         samsung,pin-drv = <0>;
->> >                 };
->> > arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >         dp-controller@145B0000 {
->> >                 pinctrl-names = "default";
->> >                 pinctrl-0 = <&dp_hpd>;
->> >                 ...
->> >
->> >
->> > 2. case: non-standard HPD pin such as GPIO is used. (peach pit)
->> > arch/arm/boot/dts/exynos5420-peach-pit.dts
->> >         pinctrl@13400000 {
->> >                 dp_hpd: dp_hpd {
->> >                         samsung,pins = "gpx2-6";
->> >                         samsung,pin-function = <0>;
->> >                         samsung,pin-pud = <3>;
->> >                         samsung,pin-drv = <0>;
->> >                 };
->> >         dp-controller@145B0000 {
->> >                 pinctrl-names = "default";
->> >                 pinctrl-0 = <&dp_hpd>;
->> >                 ...
->> >                 samsung,hpd-gpio = <&gpx2 6 0>;
->> >
->> > Even though, there is 'dp_hpd' in exynos5420-pinctrl.dts,
->> > 'smdk5420' and 'peach pit' can use "gpx0-7" and "gpx2-6",
->> > respectively.
->> >
->> > A year ago, Doug Anderson and me agreed that standard HPD pin
->> > part should be included to 'exynos5250-pinctrl.dtsi'.
->> > (https://lkml.org/lkml/2013/5/11/134)
->> >
->>
->> I wasn't aware of this discussion. It make sense. I will drop this patch.
->> I need to choose some other name for this pin, say "peach_dp_hpd".
->> Let me know if any concern.
->
-> In my opinion, "dp_hpd_gpio" looks better as below.
->
-> arch/arm/boot/dts/exynos5420-peach-pit.dts
->         pinctrl@13400000 {
->                 dp_hpd_gpio: dp_hpd_gpio {
->                         samsung,pins = "gpx2-6";
->                         samsung,pin-function = <0>;
->                         samsung,pin-pud = <3>;
->                         samsung,pin-drv = <0>;
->                 };
->         dp-controller@145B0000 {
->                 pinctrl-names = "default";
->                 pinctrl-0 = <&dp_hpd_gpio>;
->                 ...
->                 samsung,hpd-gpio = <&gpx2 6 0>;
+Tomasz Figa wrote:
+> 
+> Hi Sachin,
+> 
+> On 08.05.2014 06:16, Sachin Kamat wrote:
+> > Instead of hardcoding the SYSRAM details for each SoC,
+> > pass this information through device tree (DT) and make
+> > the code SoC agnostic. Generic SRAM bindings are used
+> > for achieving this.
+> >
+> > Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> > Acked-by: Arnd Bergmann <arnd@arndb.de>
+> > Acked-by: Heiko Stuebner <heiko@sntech.de>
+> > ---
+> > Changes since v2.
+> > * Updated sysram node for Universal C210 board - Thanks to
+> > Tomasz Figa for testing and updating the same.
+> > * Added error handling code.
+> > * Break if matching node found.
+> > * Remove unnecessary error messages.
+> >
+> > This patch is based on linux next (next-20140501) on top of
+> > my Kconfig consolidation patch
+> > http://comments.gmane.org/gmane.linux.kernel.samsung-soc/28642
+> >
+> > Tested on 4210/4412 Origen, 5250/5420 Arndale and SMDK5420 boards.
+> > ---
+> >  arch/arm/Kconfig                                |    1 +
+> >  arch/arm/boot/dts/exynos4210-universal_c210.dts |   15 ++++++
+> >  arch/arm/boot/dts/exynos4210.dtsi               |   18 +++++++
+> >  arch/arm/boot/dts/exynos4x12.dtsi               |   18 +++++++
+> >  arch/arm/boot/dts/exynos5250.dtsi               |   18 +++++++
+> >  arch/arm/boot/dts/exynos5420.dtsi               |   18 +++++++
+> >  arch/arm/mach-exynos/common.h                   |    1 +
+> >  arch/arm/mach-exynos/exynos.c                   |   64
+----------------------
+> -
+> >  arch/arm/mach-exynos/firmware.c                 |    8 ++-
+> >  arch/arm/mach-exynos/include/mach/map.h         |    7 ---
+> >  arch/arm/mach-exynos/platsmp.c                  |   56
+++++++++++++++++++--
+> >  11 files changed, 148 insertions(+), 76 deletions(-)
+> >
+> 
+> Looks good, thanks.
+> 
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> 
+Looks good to me but I think, we need to change the name of 'sram' because
+it can cause some confusing, actually it is not matching _real_ sram area on
+the SoCs. When we upstreamed regarding patch, I decided the name to use
+'SYSRAM', it was called another name in datasheet though. So, I'd like to
+use 'sysram' instead of 'sram' as we used before.
 
-Ok.
+I will change the name when I apply this series in this weekend, if you guys
+have no objection.
 
->
-> Best regards,
-> Jingoo Han
->
->>
->> Regards,
->> Rahul Sharma.
->>
->> > Best regards,
->> > Jingoo Han
->> >
->> >>
->> >>       pinctrl@13410000 {
->> >> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> index 6910485..62d38c8 100644
->> >> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
->> >> @@ -138,6 +138,13 @@
->> >>                       samsung,pin-pud = <1>;
->> >>                       samsung,pin-drv = <0>;
->> >>               };
->> >> +
->> >> +             dp_hpd: dp_hpd {
->> >> +                     samsung,pins = "gpx0-7";
->> >> +                     samsung,pin-function = <3>;
->> >> +                     samsung,pin-pud = <0>;
->> >> +                     samsung,pin-drv = <0>;
->> >> +             };
->> >>       };
->> >>
->> >>       hdmi@14530000 {
->> >> --
->> >> 1.7.9.5
->> >
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks,
+Kukjin
