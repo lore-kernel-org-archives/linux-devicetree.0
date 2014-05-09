@@ -1,63 +1,68 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
- (Power/Reset/Clock Management) unit
-Date: Fri, 9 May 2014 09:59:41 +0100
-Message-ID: <20140509085941.GM5767@lee--X1>
-References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
- <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com>
- <20140508110205.GB5767@lee--X1>
- <536BE366.8080907@free-electrons.com>
- <20140509071246.GE5767@lee--X1>
- <536C84F6.2050701@redhat.com>
- <20140509080807.GH5767@lee--X1>
- <536C8F71.5040604@redhat.com>
- <536C91A6.6000500@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2] of/irq: provide int of_irq_parse_and_map_pci wrapper
+Date: Fri, 09 May 2014 11:03:11 +0200
+Message-ID: <5744457.bgUFy9g0ST@wuerfel>
+References: <4527717.yJh2gX3xCP@wuerfel> <1399624119.4833.3.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536C91A6.6000500@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Hans de Goede <hdegoede@redhat.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1399624119.4833.3.camel@weser.hi.pengutronix.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> >>>>>>> +static struct platform_driver sun6i_prcm_driver =3D {
-> >>>>>>> +	.driver =3D {
-> >>>>>>> +		.name =3D "sun6i-prcm",
-> >>>>>>> +		.owner =3D THIS_MODULE,
-> >>>>>>> +		.of_match_table =3D sun6i_prcm_dt_ids,
-> >>>>>>> +	},
-> >>>>>>> +	.probe =3D sun6i_prcm_probe,
-> >>>>>> You need a .remove() call-back.
-> >>>>> This driver cannot be compiled as module (see the Kconfig defin=
-ition)
-> >>>>> and the devices are not hotpluggable, as a result a probed devi=
-ce will
-> >>>>> never be removed.
-> >>>>>
-> >>>>> Do you still want me to implement the remove function ?
-> >>>> .remove() also be run on shut down.
-> >>> That is not true, if your device needs to do anything special at =
-shutdown
-> >>> you need to add a shutdown callback. Devices are kept as is (not =
-torn down)
-> >>> on shutdown.
-> >> Ah okay, I'll bow to your knowledge.  So there's no reason for thi=
-s
-> >> driver to ever call mfd_remove_devices() then?
-> > No, this is an integral part of the SOC, which never gets removed i=
-n any way.
->=20
-> Lee, I'm about to send a 3rd version of this series, is it okay for y=
-ou
-> if I leave the remove function unimplemented ?
+The pci-rcar driver is enabled for compile tests, and this has
+now shown that the driver cannot build without CONFIG_OF,
+following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+interrupt mapping when possible":
 
-It is.
+drivers/built-in.o: In function `rcar_pci_map_irq':
+:(.text+0x1cc7c): undefined reference to `of_irq_parse_and_map_pci'
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+supposed to build fine, which we can achieve if we make the
+declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+and provide an empty inline function otherwise, as we do for
+a lot of other of interfaces.
+
+This lets us build the rcar_pci driver again without CONFIG_OF
+for build testing. All platforms using this driver select OF,
+so this doesn't change anything for the users.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Magnus Damm <damm@opensource.se>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-pci@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+---
+v2: clarified commit text.
+
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 1a1f5ff..1e29bf4 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -7,13 +7,18 @@
+ struct pci_dev;
+ struct of_phandle_args;
+ int of_irq_parse_pci(const struct pci_dev *pdev, struct of_phandle_args *out_irq);
+-int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
+ 
+ struct device_node;
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn);
+ int of_pci_get_devfn(struct device_node *np);
+ int of_pci_parse_bus_range(struct device_node *node, struct resource *res);
++#ifdef CONFIG_OF
++int of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin);
++#else
++static inline int
++of_irq_parse_and_map_pci(const struct pci_dev *dev, u8 slot, u8 pin) { return 0; }
++#endif
+ 
+ #if defined(CONFIG_OF) && defined(CONFIG_PCI_MSI)
+ int of_pci_msi_chip_add(struct msi_chip *chip);
+
