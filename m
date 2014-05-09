@@ -1,81 +1,81 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Fri, 09 May 2014 06:49:04 +0200
-Message-ID: <536C5E40.90405@gmail.com>
-References: <1399522592-23618-1-git-send-email-sachin.kamat@linaro.org> <536BAE39.70504@samsung.com> <034b01cf6b2c$5b5d06b0$12171410$@samsung.com>
+From: "Priit Laes" <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Fri, 09 May 2014 08:05:09 +0300
+Message-ID: <1399611909.13870.0.camel@chi>
+References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
+	 <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com>
+	 <20140508110205.GB5767@lee--X1> <536BE366.8080907@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <034b01cf6b2c$5b5d06b0$12171410$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, arnd@arndb.de, robh+dt@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDJLTBEBXENBBMWBWGNQKGQE55QY3NQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <536BE366.8080907-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio =?ISO-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+=C3=9Chel kenal p=C3=A4eval, N, 08.05.2014 kell 22:04, kirjutas Boris BREZI=
+LLON:
+> On 08/05/2014 13:02, Lee Jones wrote:
+> >> The PRCM (Power/Reset/Clock Management) block exposes several subdevic=
+es
+> >> in different subsystems (clk, reset ...)
+> >>
+> >> Add basic support for the PRCM unit with clk (AR100, AHB0, and APB0 cl=
+ks)
+> >> and reset controller subdevices.
+> >>
+> >> Other subdevices might be added later (if needed).
+> >>
+> >> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >> ---
+> >>  drivers/mfd/Kconfig      |   8 +++
+> >>  drivers/mfd/Makefile     |   1 +
+> >>  drivers/mfd/sun6i-prcm.c | 151 ++++++++++++++++++++++++++++++++++++++=
++++++++++
+> >>  3 files changed, 160 insertions(+)
+> >>  create mode 100644 drivers/mfd/sun6i-prcm.c
+> > [...]
+> >
+> >> +#include <linux/module.h>
+> >> +#include <linux/kernel.h>
+> >> +#include <linux/errno.h>
+> >> +#include <linux/err.h>
+> >> +#include <linux/spinlock.h>
+> >> +#include <linux/io.h>
+> >> +#include <linux/slab.h>
+> >> +#include <linux/mutex.h>
+> >> +#include <linux/completion.h>
+> >> +#include <linux/irq.h>
+> >> +#include <linux/jiffies.h>
+> >> +#include <linux/bitops.h>
+> >> +#include <linux/fs.h>
+> >> +#include <linux/of.h>
+> >> +#include <linux/of_irq.h>
+> >> +#include <linux/platform_device.h>
+> >> +#include <linux/uaccess.h>
+> >> +#include <linux/mfd/core.h>
+> > I'm pretty sure you don't need half of these.  Please only add the
+> > ones you make use of.
+>=20
+> Sure (this is what happens when you copy/paste from another driver :-))
 
-On 09.05.2014 04:14, Kukjin Kim wrote:
-> Tomasz Figa wrote:
->>
->> Hi Sachin,
->>
->> On 08.05.2014 06:16, Sachin Kamat wrote:
->>> Instead of hardcoding the SYSRAM details for each SoC,
->>> pass this information through device tree (DT) and make
->>> the code SoC agnostic. Generic SRAM bindings are used
->>> for achieving this.
->>>
->>> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>> Acked-by: Heiko Stuebner <heiko@sntech.de>
->>> ---
->>> Changes since v2.
->>> * Updated sysram node for Universal C210 board - Thanks to
->>> Tomasz Figa for testing and updating the same.
->>> * Added error handling code.
->>> * Break if matching node found.
->>> * Remove unnecessary error messages.
->>>
->>> This patch is based on linux next (next-20140501) on top of
->>> my Kconfig consolidation patch
->>> http://comments.gmane.org/gmane.linux.kernel.samsung-soc/28642
->>>
->>> Tested on 4210/4412 Origen, 5250/5420 Arndale and SMDK5420 boards.
->>> ---
->>>   arch/arm/Kconfig                                |    1 +
->>>   arch/arm/boot/dts/exynos4210-universal_c210.dts |   15 ++++++
->>>   arch/arm/boot/dts/exynos4210.dtsi               |   18 +++++++
->>>   arch/arm/boot/dts/exynos4x12.dtsi               |   18 +++++++
->>>   arch/arm/boot/dts/exynos5250.dtsi               |   18 +++++++
->>>   arch/arm/boot/dts/exynos5420.dtsi               |   18 +++++++
->>>   arch/arm/mach-exynos/common.h                   |    1 +
->>>   arch/arm/mach-exynos/exynos.c                   |   64
-> ----------------------
->> -
->>>   arch/arm/mach-exynos/firmware.c                 |    8 ++-
->>>   arch/arm/mach-exynos/include/mach/map.h         |    7 ---
->>>   arch/arm/mach-exynos/platsmp.c                  |   56
-> ++++++++++++++++++--
->>>   11 files changed, 148 insertions(+), 76 deletions(-)
->>>
->>
->> Looks good, thanks.
->>
->> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
->>
-> Looks good to me but I think, we need to change the name of 'sram' because
-> it can cause some confusing, actually it is not matching _real_ sram area on
-> the SoCs. When we upstreamed regarding patch, I decided the name to use
-> 'SYSRAM', it was called another name in datasheet though. So, I'd like to
-> use 'sysram' instead of 'sram' as we used before.
->
-> I will change the name when I apply this series in this weekend, if you guys
-> have no objection.
+Also, alphabetic order would be nice.
 
-You mean s/sram/sysram/ in compatible strings of Exynos-specific 
-reserved areas? If yes, I'm fine, it might be even better. Just remember 
-to update documentation in patch 2/2 as well.
+P=C3=A4ikest,
+Priit Laes :)
 
-Best regards,
-Tomasz
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
