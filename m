@@ -1,52 +1,62 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH 2/2] drivers: net: cpsw-phy-sel: add am43xx platform support
-Date: Fri, 9 May 2014 16:33:24 +0530
-Message-ID: <1399633404-5818-3-git-send-email-mugunthanvnm@ti.com>
-References: <1399633404-5818-1-git-send-email-mugunthanvnm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1399633404-5818-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, devicetree@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v3 0/7] mfd: add basic sun6i A31 PRCM support
+Date: Fri,  9 May 2014 13:11:44 +0200
+Message-ID: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-AM43xx phy mode selection is similar to AM33xx platform, so adding only
-the compatibility string to the driver
+Hello,
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- Documentation/devicetree/bindings/net/cpsw-phy-sel.txt | 1 +
- drivers/net/ethernet/ti/cpsw-phy-sel.c                 | 4 ++++
- 2 files changed, 5 insertions(+)
+This patch series adds support for some functions provided by the PRCM
+(Power/Reset/Clock Management) unit:
+- AR100, AHB0 and APB0 clocks
+- APB0 reset controller
 
-diff --git a/Documentation/devicetree/bindings/net/cpsw-phy-sel.txt b/Documentation/devicetree/bindings/net/cpsw-phy-sel.txt
-index d9da911..764c0c7 100644
---- a/Documentation/devicetree/bindings/net/cpsw-phy-sel.txt
-+++ b/Documentation/devicetree/bindings/net/cpsw-phy-sel.txt
-@@ -4,6 +4,7 @@ TI CPSW Phy mode Selection Device Tree Bindings
- Required properties:
- - compatible		: Should be "ti,am3352-cpsw-phy-sel" for am335x platform and
- 			  "ti,dra7xx-cpsw-phy-sel" for dra7xx platform
-+			  "ti,am43xx-cpsw-phy-sel" for am43xx platform
- - reg			: physical base address and size of the cpsw
- 			  registers map
- - reg-names		: names of the register map given in "reg" node
-diff --git a/drivers/net/ethernet/ti/cpsw-phy-sel.c b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-index b93838d..aa8bf45 100644
---- a/drivers/net/ethernet/ti/cpsw-phy-sel.c
-+++ b/drivers/net/ethernet/ti/cpsw-phy-sel.c
-@@ -167,6 +167,10 @@ static const struct of_device_id cpsw_phy_sel_id_table[] = {
- 		.compatible	= "ti,dra7xx-cpsw-phy-sel",
- 		.data		= &cpsw_gmii_sel_dra7xx,
- 	},
-+	{
-+		.compatible	= "ti,am43xx-cpsw-phy-sel",
-+		.data		= &cpsw_gmii_sel_am3352,
-+	},
- 	{}
- };
- MODULE_DEVICE_TABLE(of, cpsw_phy_sel_id_table);
+These functions are needed to get the P2WI driver working, but more
+subdevices might be added later.
+
+Best Regards,
+
+Boris
+
+Changes since v2:
+- use devm_ioremap_resource instead of devm_request_and_ioremap
+- remove unnecessary header inclusions
+- remove info trace when the probe succeed
+- rename apb0_timer01 clk into apb0_timer
+Changes since v1:
+- fix prcm and prcm-clks DT documentation
+- remove unneeded iounmap and kfree calls from sunxi_reset_remove function
+- rework the AR100 clk implementation
+
+Boris BREZILLON (7):
+  reset: sunxi: document sunxi's reset controllers bindings
+  reset: sunxi: allow MFD subdevices probe
+  mfd: add support for sun6i PRCM (Power/Reset/Clock Management) unit
+  mfd: sun6i-prcm: document DT bindings
+  clk: sunxi: add PRCM (Power/Reset/Clock Management) clks support
+  clk: sunxi: document PRCM clock compatible strings
+  ARM: sunxi: dt: add PRCM clk and reset controller subdevices
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   4 +
+ .../devicetree/bindings/mfd/sun6i-prcm.txt         |  59 ++++
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 ++
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |  37 +++
+ drivers/clk/sunxi/Makefile                         |   2 +
+ drivers/clk/sunxi/clk-sun6i-prcm.c                 | 343 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sun6i-prcm.c                           | 134 ++++++++
+ drivers/reset/reset-sunxi.c                        |  21 +-
+ 10 files changed, 627 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-prcm.c
+ create mode 100644 drivers/mfd/sun6i-prcm.c
+
 -- 
-1.9.2.459.g68773ac
+1.8.3.2
+
