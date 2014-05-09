@@ -1,50 +1,80 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCHv3 3/3] edac: altera: Add EDAC support for Altera SDRAM
-Date: Fri, 9 May 2014 22:52:18 +0200
-Message-ID: <20140509205218.GA16051@pd.tnic>
-References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
- <1399330337-16748-4-git-send-email-tthayer@altera.com>
- <20140508120524.GF12548@pd.tnic>
- <CAF03EBecxtMr1670ktQKTAZX_kHeZWz1SwuEk373B99BoVjbDw@mail.gmail.com>
- <20140509135259.GC16260@pd.tnic>
- <CAF03EBeKbXr-7+qeARkBRXjystMjs4yEWnmw7q8tgJv9-SPgXA@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@googlemail.com>
+Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
+ probably 3630
+Date: Fri, 9 May 2014 23:06:55 +0200
+Message-ID: <CALbNGRR3U1veFgXmOWpfG3yNVESdxi2t79WDrJwOZ1oShuG1yA@mail.gmail.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com>
+	<1398815562-24113-2-git-send-email-tony@atomide.com>
+	<536C860E.1000501@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAF03EBeKbXr-7+qeARkBRXjystMjs4yEWnmw7q8tgJv9-SPgXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thor Thayer <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <536C860E.1000501@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 09, 2014 at 03:31:53PM -0500, Thor Thayer wrote:
-> Yes, good point. Our hardware can't recover from Double Bit Errors so
-> I'll go back to the panic() in that path. I like the flexibility of
-> the command line parameter though...
+On Fri, May 9, 2014 at 9:38 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 30/04/14 02:52, Tony Lindgren wrote:
+>> Otherwise we can get often errors like the following and the
+>> display won't come on:
+>>
+>> omapdss APPLY error: FIFO UNDERFLOW on gfx, disabling the overlay
+>> omapdss APPLY error: SYNC_LOST on channel lcd, restarting
+>> the output with video overlays disabled
+>>
+>> There are some earlier references to this issue:
+>>
+>> http://www.spinics.net/lists/linux-omap/msg59511.html
+>> http://www.spinics.net/lists/linux-omap/msg59724.html
+>
+resend - my client had HTML enabled...
 
-Like to panic by default when the machine is booted normally but to be
-able to turn off the panicking with a module parameter?
+FWIW: I have had issues long time ago [1]. With mainline 3.14.3 I had
+still the reboot problem on old 600MHz OMAP 3530. Applying this patch
+solved the issues. For other versions I had no chance to reproduce the
+original wakup issue mentioned in old thread
 
-If so, then you could probably implement a trivial setter called
+[1] http://marc.info/?l=linux-omap&m=136250904607413&w=2
 
-edac_mc_set_panic_on_ue() in a separate patch.
-
-Then, you call it at the end of altr_sdram_probe().
-
-If you want to turn it off again, you do
-
-echo "0" > /sys/module/edac_core/parameters/edac_mc_panic_on_ue
-
-Something like that...
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Andreas
+> Those don't sound like the same issue, but it's hard to say. What kind
+> of clock rates do you get? Cat you paste debugfs/omapdss/clk, with and
+> without this patch?
+>
+> What resolution do you have? If it's a very high resolution (say, DVI
+> output to a monitor), it could just be an issue of
+> not-enough-memory-bandwidth.
+>
+>> It seems that it's safe to set the lower values even for 3630.
+>> If we can confirm that 3630 works with the higher values
+>> reliably we can add further detection.
+>>
+>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>> ---
+>>  drivers/video/fbdev/omap2/dss/dss.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/fbdev/omap2/dss/dss.c
+>> index d55266c..ad6561f 100644
+>> --- a/drivers/video/fbdev/omap2/dss/dss.c
+>> +++ b/drivers/video/fbdev/omap2/dss/dss.c
+>> @@ -707,9 +707,10 @@ static const struct dss_features omap34xx_dss_feats __initconst = {
+>>       .dpi_select_source      =       &dss_dpi_select_source_omap2_omap3,
+>>  };
+>>
+>> +/* Supposedly 3630 can use div 32 mult 2, but that needs to be rechecked */
+>>  static const struct dss_features omap3630_dss_feats __initconst = {
+>> -     .fck_div_max            =       32,
+>> -     .dss_fck_multiplier     =       1,
+>> +     .fck_div_max            =       16,
+>> +     .dss_fck_multiplier     =       2,
+>
+> These values tell about the clock hardware, they are not settings that
+> can be changed to change the clock. OMAP3630 has a fixed x2 multiplier
+> and a divider with maximum value of 16.
+>
+>  Tomi
+>
+>
