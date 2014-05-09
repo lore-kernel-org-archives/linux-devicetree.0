@@ -1,69 +1,112 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 0/4] OMAPDSS: Add support for panel ls037v7dw01
-Date: Fri, 9 May 2014 12:34:03 +0300
-Message-ID: <536CA10B.9040702@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com> <20140505184138.GB15463@atomide.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v7 1/2] phy: Add new Exynos5 USB 3.0 PHY driver
+Date: Fri, 09 May 2014 11:36:57 +0200
+Message-ID: <536CA1B9.5070605@samsung.com>
+References: <1398665874-31238-1-git-send-email-gautam.vivek@samsung.com>
+ <5368F136.6070804@samsung.com>
+ <CAFp+6iHN-W-k6ow5YykK_QWgBJ+GgzXwPX6suWtizxwJWOiGtg@mail.gmail.com>
+ <CAFp+6iF=Z_dkd+YJm2-ODmvgZ6PCt+bUx+vSVm_5RtobVN0WfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="B2b105InfVMfGnj26AW1mIrEGS8NasbhO"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140505184138.GB15463@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <CAFp+6iF=Z_dkd+YJm2-ODmvgZ6PCt+bUx+vSVm_5RtobVN0WfA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <Mark.Rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kamil Debski <k.debski@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Linux USB Mailing List <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, kishon <kishon@ti.com>, Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---B2b105InfVMfGnj26AW1mIrEGS8NasbhO
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+[CCing DT maintainers]
 
-On 05/05/14 21:41, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [140429 16:53]:
->> Hi all,
+On 08.05.2014 11:03, Vivek Gautam wrote:
+> On Thu, May 8, 2014 at 11:35 AM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+>> Hi Sylwester,
 >>
->> Here are few patches to add devicetree support for panel ls037v7dw01
->> that's found on many omap3 boards. They seem to be often mis-configure=
-d
->> as various panel dpi entries, but really should be move to use panel
->> ls037v7dw01 instead. This panel is found at least on the omap3 sdp,
->> ldp, omap3 evm and few other development boards.
->=20
-> Tomi, assuming no more comments, do you want to pick up the first
-> three patches of this series? I can queue the .dts changes or you
-> can also set up a separate .dts changes branch for DSS that I can
-> merge in too.
+>>
+>> On Tue, May 6, 2014 at 7:57 PM, Sylwester Nawrocki
+>> <s.nawrocki@samsung.com> wrote:
+>>> On 28/04/14 08:17, Vivek Gautam wrote:
+>>>> Add a new driver for the USB 3.0 PHY on Exynos5 series of SoCs.
+>>>> The new driver uses the generic PHY framework and will interact
+>>>> with DWC3 controller present on Exynos5 series of SoCs.
+>>>> Thereby, removing old phy-samsung-usb3 driver and related code
+>>>> used untill now which was based on usb/phy framework.
+>>>>
+>>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>>> ---
+>>>>
+>>>> Changes from v6:
+>>>>  - Addressed review comments:
+>>>>    -- Sorted config entries in Kconfig and Makefile
+>>>>    -- Made #define to_usbdrd_phy(inst) to a static inline routine.
+>>>>    -- Restructured exynos5_rate_to_clk() as suggested.
+>>>>    -- Amended 'val' field for regmap_update_bits() in the routine
+>>>>       exynos5_usbdrd_phy_isol().
+>>>>    -- Removed sentinel entry from exynos5_usbdrd_phy_cfg[] struct.
+>>>>    -- Removed check for 'match' entry in probe().
+>>>>
+>>>>  .../devicetree/bindings/phy/samsung-phy.txt        |   40 ++
+>>>>  drivers/phy/Kconfig                                |   11 +
+>>>>  drivers/phy/Makefile                               |    1 +
+>>>>  drivers/phy/phy-exynos5-usbdrd.c                   |  627 ++++++++++++++++++++
+>>>>  4 files changed, 679 insertions(+)
+>>>>  create mode 100644 drivers/phy/phy-exynos5-usbdrd.c
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>>>> index b422e38..51efe4c 100644
+>>>> --- a/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>>>> +++ b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+>>>> @@ -114,3 +114,43 @@ Example:
+>>>>               compatible = "samsung,exynos-sataphy-i2c";
+>>>>               reg = <0x38>;
+>>>>       };
+>>>> +
+>>>> +Samsung Exynos5 SoC series USB DRD PHY controller
+>>>> +--------------------------------------------------
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : Should be set to one of the following supported values:
+>>>> +     - "samsung,exynos5250-usbdrd-phy" - for exynos5250 SoC,
+>>>> +     - "samsung,exynos5420-usbdrd-phy" - for exynos5420 SoC.
+>>>> +- reg : Register offset and length of USB DRD PHY register set;
+>>>> +- clocks: Clock IDs array as required by the controller
+>>>> +- clock-names: names of clocks correseponding to IDs in the clock property;
+>>>> +            Required clocks:
+>>>> +     - phy: main PHY clock (same as USB DRD controller i.e. DWC3 IP clock),
+>>>> +            used for register access.
+>>>> +     - ref: PHY's reference clock (usually crystal clock), used for
+>>>> +            PHY operations, associated by phy name. It is used to
+>>>> +            determine bit values for clock settings register.
+>>>> +            For Exynos5420 this is given as 'sclk_usbphy30' in CMU.
+>>>> +- samsung,pmu-syscon: phandle for PMU system controller interface, used to
+>>>> +                   control pmu registers for power isolation.
+>>>> +- samsung,pmu-offset: phy power control register offset to pmu-system-controller
+>>>> +                   base.
+>>>
+>>> It doesn't seem right to have register offset encoded in the device tree
+>>> like this. I think it'd be more appropriate to associate such an offset
+>>> with the compatible string's value in the driver.
+>>
+>> Ok, it makes more sense.
+>> Just out of curiosity, what difference would this make ?
+> 
+> Moreover, in case of Exynos5420 (and may be in future SoCs), where we
+> have 2 USB DRD PHY controllers,
+> we will need to have a way around to deal with two separate offsets in
+> the driver for one compatible string.
+> 
+> Getting the offsets from DT seems a cleaner way to handle this case of
+> multi controllers.
 
-If it's all the same to you, I'd like to collect all display related
-arch/arm/ patches into my tree, and I'll send you a merge request when
-it's stable.
+Mark, Rob, what is your opinion on this?
 
-I already have OMAP5 and AM43xx stuff there.
-
- Tomi
-
-
-
---B2b105InfVMfGnj26AW1mIrEGS8NasbhO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTbKELAAoJEPo9qoy8lh71Wm0P/04/5kITL2Ga250U0XuM1p2x
-ZOgwhvv5886Z+WiuRZnXwg5G99NvFwPTTC1q172oFj2uOwOUNDAYfVALK5YNHLBR
-odNxx4Qanlug0G0LZktrNkcGx6JuTONZhyCZs2LwXURohoU9SeM6elN4or/APNjK
-GMM1LVoeQ2wTntX/PLwcQYNDrTjqq9ZYfhP7j/N0p4r6CTMYAbA6KpDHXGkD2O4i
-06/NMlTMeaykMcivyf+yvbCEZRr/Fv8ffKae7aUsPS5TwATnW/BRB+9lzjdx+jsc
-FIPWJy+z1FZTvWKtO4dVCbxVwhdA+LKIoJSfJUc9bKrJfiNWyJoYWpi2lyHduNNT
-wrF1UY8xPkVB4K9jEJMwyU8QaG8xF6K2o01QHUlmZ0moFUNFAt/Y+SQglf17et2o
-qKaGZgQMtKoPvKKZhZN1K+wOuGjIuYxpVBPpEDE6rDpjNdmmok7mSxeMZ6RYEI3U
-vVmPaRJwpgTr4ouW9BL3usHgeysB36jCxklPyds0DnUiGkuPVjIP+9rBcb9W45k0
-3LhlL7mA3B/6I6ZfTUOPlHCIexYh/3VP1aer6vJgWwXd5Fs5rqbFf0XXZWt0t3Qz
-7aTdLE4Ntndu9pcTh0i/NX509mIGBpjHRuwhAn5p3rrDq9ZDev1WN7FsIcDKc6Qp
-ypuzDGZuKDP8nBp/ebgx
-=lnIj
------END PGP SIGNATURE-----
-
---B2b105InfVMfGnj26AW1mIrEGS8NasbhO--
+Best regards,
+Tomasz
