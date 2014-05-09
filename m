@@ -1,108 +1,44 @@
-From: Nicolas Ferre <nicolas.ferre@atmel.com>
-Subject: Re: [PATCH v3 00/11] ARM: at91: rework main and slow clk implementation
-Date: Fri, 9 May 2014 12:07:26 +0200
-Message-ID: <536CA8DE.9080505@atmel.com>
-References: <1398172360-7837-1-git-send-email-boris.brezillon@free-electrons.com> <53613D23.3020503@atmel.com> <20140430190742.5718.938@quantum>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140430190742.5718.938@quantum>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v3 0/4] ARM: dts: enable display for peach-pit and snow boards
+Date: Fri, 09 May 2014 15:39:42 +0530
+Message-ID: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30/04/2014 21:07, Mike Turquette :
-> Quoting Nicolas Ferre (2014-04-30 11:12:51)
->> On 22/04/2014 06:12, Boris BREZILLON :
->>> Hello,
->>>
->>> This series introduce the real clock model (as described in atmel datasheets)
->>> for slow and main clocks.
->>>
->>> The modifications introduced by this series break the DT compat, but, as the
->>> at91 CCF based implementation is pretty new (introduced in 3.14 only for sama5
->>> eval boards) I think it won't impact a lot of users.
->>>
->>> Nicolas, Mike, if this series is accepted, I'd like to get it merged as soon as
->>> possible to prevent other developpers from using a deprecated DT binding.
->>> Moreover, I think this series should go through the same path for both clk
->>> and DT changes (whatever path is chosen: either at91 or clk tree) because the
->>> changes are tightly coupled.
->>
->> Boris,
->>
->> First of all, well...
->> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
->>
->> I didn't find something to add but the little comment about the
->> documentation that you already fixed in this v3 version.
->>
->> Mike,
->>
->> I would like to merge this whole series through my tree and then the
->> arm-soc tree. If it is okay for you, can you give your acknowledgement
->> before that I build a pull-request for the arm-soc guys?
-> 
-> Patches #1-4:
-> 
-> Acked-by: Mike Turquette <mturquette@linaro.org>
+From: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-Whole series stacked on top of at91-3.16-cleanup branch (with v4
-corrections from Boris).
+Add nodes for fimd and dp controller for exynos5250 based snow
+and exynos5420 based peach-pit board.
 
-Thanks, bye,
+This series is based on Kukjin Kims, for-next branch.
 
->>> Changes since v2:
->>>  - add missing compatible in pmc.c
->>>  - fix sam9261 slow clock definition
->>>  - move xtal nodes out of /clocks node
->>>  - fix DT bindings documentation
->>>  - fix main RC oscillator initilization
->>>
->>> Changes since v1:
->>> - fix sam9rl main clk definition
->>> Boris BREZILLON (11):
->>>   clk: at91: rework main clk implementation
->>>   clk: at91: update main clk documentation
->>>   clk: at91: add slow clks driver
->>>   clk: at91: add slow clk documentation
->>>   ARM: at91/dt: move sama5d3 SoC to the new main/slow clk model
->>>   ARM: at91/dt: add xtal frequencies to sama5d3xcm boards
->>>   ARM: at91/dt: add xtal frequencies to sama5d3 xplained board
->>>   ARM: at91/dt: move at91sam9261 SoC to the new main clock model
->>>   ARM: at91/dt: define main xtal frequency of the at91sam9261ek board
->>>   ARM: at91/dt: move at91sam9rl SoC to the new slow/main clock models
->>>   ARM: at91/dt: define sam9rlek crystal frequencies
->>>
->>>  .../devicetree/bindings/clock/at91-clock.txt       | 128 ++++-
->>>  arch/arm/boot/dts/at91-sama5d3_xplained.dts        |   8 +
->>>  arch/arm/boot/dts/at91sam9261.dtsi                 |  23 +-
->>>  arch/arm/boot/dts/at91sam9261ek.dts                |   4 +
->>>  arch/arm/boot/dts/at91sam9rl.dtsi                  |  46 +-
->>>  arch/arm/boot/dts/at91sam9rlek.dts                 |   9 +
->>>  arch/arm/boot/dts/sama5d3.dtsi                     |  61 ++-
->>>  arch/arm/boot/dts/sama5d3xcm.dtsi                  |   8 +
->>>  drivers/clk/at91/Makefile                          |   4 +-
->>>  drivers/clk/at91/clk-main.c                        | 577 ++++++++++++++++++---
->>>  drivers/clk/at91/clk-slow.c                        | 467 +++++++++++++++++
->>>  drivers/clk/at91/pmc.c                             |  17 +
->>>  drivers/clk/at91/pmc.h                             |   9 +
->>>  drivers/clk/at91/sckc.c                            |  57 ++
->>>  drivers/clk/at91/sckc.h                            |  22 +
->>>  include/linux/clk/at91_pmc.h                       |   1 +
->>>  16 files changed, 1352 insertions(+), 89 deletions(-)
->>>  create mode 100644 drivers/clk/at91/clk-slow.c
->>>  create mode 100644 drivers/clk/at91/sckc.c
->>>  create mode 100644 drivers/clk/at91/sckc.h
->>>
->>
->>
->> -- 
->> Nicolas Ferre
-> 
+V3:
+1) Dropped 1 patch "ARM: dts: move dp hpd line to the board file for
+ exynos5420".
+2) Extra blank lines for readability.
+3) dp hpd gpio name change (dp_hpd -> dp_hpd_gpio)
 
+V2:
+1) Rebase on Peach-pit dependent patches.
+
+It is dependent on
+1) Andrew Bresticker's patch for hpd gpio addition, avilable at
+http://www.spinics.net/lists/linux-samsung-soc/msg28827.html [Patch is 'ACK'ed.]
+2) Arun's patch for adding peach-pit board dts file at
+http://www.spinics.net/lists/linux-samsung-soc/msg30103.html. [Patch is 'ACK'ed.]
+
+Rahul Sharma (4):
+  ARM: dts: enable fimd for exynos5250 based snow board
+  ARM: dts: enable dp-controller for exynos5250 based snow board
+  ARM: dts: enable fimd for exynos5420 based peach-pit board
+  ARM: dts: enable dp-controller for exynos5420 based peach-pit board
+
+ arch/arm/boot/dts/exynos5250-snow.dts      |   35 ++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |   41 ++++++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
 
 -- 
-Nicolas Ferre
+1.7.9.5
