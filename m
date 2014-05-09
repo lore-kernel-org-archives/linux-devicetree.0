@@ -1,48 +1,165 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCHv4 1/2] dt/bindings: Add the DT binding documentation
- for endianness
-Date: Fri, 9 May 2014 19:12:11 +0100
-Message-ID: <20140509181211.GF16418@e106331-lin.cambridge.arm.com>
-References: <1399601073-19278-1-git-send-email-Li.Xiubo@freescale.com>
- <1399601073-19278-2-git-send-email-Li.Xiubo@freescale.com>
- <20140509163243.GD16418@e106331-lin.cambridge.arm.com>
- <20140509170255.GR12304@sirena.org.uk>
+From: Darren Etheridge <detheridge@ti.com>
+Subject: [PATCH v2] arm/dts: am335x-evmsk enable display and lcd panel support
+Date: Fri, 9 May 2014 13:49:14 -0500
+Message-ID: <1399661354-10022-1-git-send-email-detheridge@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140509170255.GR12304@sirena.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Xiubo Li <Li.Xiubo@freescale.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: Wolfram Sang <wsa@sang-engineering.com>, linux-arm-kernel@lists.infradead.org, tomi.valkeinen@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Darren Etheridge <detheridge@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 09, 2014 at 06:02:55PM +0100, Mark Brown wrote:
-> On Fri, May 09, 2014 at 05:32:43PM +0100, Mark Rutland wrote:
-> > On Fri, May 09, 2014 at 03:04:32AM +0100, Xiubo Li wrote:
-> 
-> > > {big,little}-endian{,-*}: these are boolean properties, if absent
-> > > meaning that the CPU and the Device are in the same endianness mode.
-> 
-> > That's not really true though. A device might usually be little-endian,
-> > regardless of the endianness of a CPU. Some vendors may integrate it as
-> > big-endian after a binding is added, and in the absence of a specified
-> > endianness a driver is likely to assume LE.
-> 
-> The default should be device specific rather than binding specific.
+Add the necessary nodes to enable the LCD controller and the
+LCD panel that is attached to the Texas Instruments AM335x
+EVMSK platform.  Also setup the necessary pin mux within the
+DT file to drive the LCD connector and add the correct
+pinmux settings for the lcd pins to be configured to when
+the SoC goes into sleep state for the minimum power
+consumption.
 
-I'm taking binding here to mean the binding for a praticular device
-rather than a class binding, so there's only a subtle distinction
-between the two.
+For the sleep mode LCD pin settings, MUX_MODE7 is chosen as
+this corresponds to switching the pins into input GPIO's with
+an internal pulldown.  Which has been determined to offer the
+lowest power solution vs leaving the pins configured in LCD
+mode.
 
-It's entirely possible that two developers independently come up with
-bindings for something that is later realised to be the same device
-(just integrated differently), for which they choose opposite defaults.
+Signed-off-by: Darren Etheridge <detheridge@ti.com>
+---
 
-In that case the default is binding-specific rather than device
-specific, though I would hope that in the vast majority of cases there
-is only one binding per device, at which point the distinction is
-meaningless.
+v2:
+Fixed up the incorrect label ordering in the pinmux comments for LCD pins
+16 through 23 as reported by Wolfram Sang <wsa@sang-engineering.com>
 
-Cheers,
-Mark.
+ arch/arm/boot/dts/am335x-evmsk.dts | 105 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index ab23885..d99c1b1 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -138,12 +138,113 @@
+ 			"Headphone Jack",       "HPLOUT",
+ 			"Headphone Jack",       "HPROUT";
+ 	};
++
++	panel {
++		compatible = "ti,tilcdc,panel";
++		pinctrl-names = "default", "sleep";
++		pinctrl-0 = <&lcd_pins_default>;
++		pinctrl-1 = <&lcd_pins_sleep>;
++		status = "okay";
++		panel-info {
++			ac-bias           = <255>;
++			ac-bias-intrpt    = <0>;
++			dma-burst-sz      = <16>;
++			bpp               = <32>;
++			fdd               = <0x80>;
++			sync-edge         = <0>;
++			sync-ctrl         = <1>;
++			raster-order      = <0>;
++			fifo-th           = <0>;
++		};
++		display-timings {
++			480x272 {
++				hactive         = <480>;
++				vactive         = <272>;
++				hback-porch     = <43>;
++				hfront-porch    = <8>;
++				hsync-len       = <4>;
++				vback-porch     = <12>;
++				vfront-porch    = <4>;
++				vsync-len       = <10>;
++				clock-frequency = <9000000>;
++				hsync-active    = <0>;
++				vsync-active    = <0>;
++			};
++		};
++	};
+ };
+ 
+ &am33xx_pinmux {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&gpio_keys_s0 &clkout2_pin>;
+ 
++	lcd_pins_default: lcd_pins_default {
++		pinctrl-single,pins = <
++			0x20 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad8.lcd_data23 */
++			0x24 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad9.lcd_data22 */
++			0x28 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad10.lcd_data21 */
++			0x2c (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad11.lcd_data20 */
++			0x30 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad12.lcd_data19 */
++			0x34 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad13.lcd_data18 */
++			0x38 (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad14.lcd_data17 */
++			0x3c (PIN_OUTPUT | MUX_MODE1)	/* gpmc_ad15.lcd_data16 */
++			0xa0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data0.lcd_data0 */
++			0xa4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data1.lcd_data1 */
++			0xa8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data2.lcd_data2 */
++			0xac (PIN_OUTPUT | MUX_MODE0)	/* lcd_data3.lcd_data3 */
++			0xb0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data4.lcd_data4 */
++			0xb4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data5.lcd_data5 */
++			0xb8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data6.lcd_data6 */
++			0xbc (PIN_OUTPUT | MUX_MODE0)	/* lcd_data7.lcd_data7 */
++			0xc0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data8.lcd_data8 */
++			0xc4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data9.lcd_data9 */
++			0xc8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data10.lcd_data10 */
++			0xcc (PIN_OUTPUT | MUX_MODE0)	/* lcd_data11.lcd_data11 */
++			0xd0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data12.lcd_data12 */
++			0xd4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data13.lcd_data13 */
++			0xd8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_data14.lcd_data14 */
++			0xdc (PIN_OUTPUT | MUX_MODE0)	/* lcd_data15.lcd_data15 */
++			0xe0 (PIN_OUTPUT | MUX_MODE0)	/* lcd_vsync.lcd_vsync */
++			0xe4 (PIN_OUTPUT | MUX_MODE0)	/* lcd_hsync.lcd_hsync */
++			0xe8 (PIN_OUTPUT | MUX_MODE0)	/* lcd_pclk.lcd_pclk */
++			0xec (PIN_OUTPUT | MUX_MODE0)	/* lcd_ac_bias_en.lcd_ac_bias_en */
++		>;
++	};
++
++	lcd_pins_sleep: lcd_pins_sleep {
++		pinctrl-single,pins = <
++			0x20 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad8.lcd_data23 */
++			0x24 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad9.lcd_data22 */
++			0x28 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad10.lcd_data21 */
++			0x2c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad11.lcd_data20 */
++			0x30 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad12.lcd_data19 */
++			0x34 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad13.lcd_data18 */
++			0x38 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad14.lcd_data17 */
++			0x3c (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad15.lcd_data16 */
++			0xa0 (PULL_DISABLE | MUX_MODE7)	/* lcd_data0.lcd_data0 */
++			0xa4 (PULL_DISABLE | MUX_MODE7)	/* lcd_data1.lcd_data1 */
++			0xa8 (PULL_DISABLE | MUX_MODE7)	/* lcd_data2.lcd_data2 */
++			0xac (PULL_DISABLE | MUX_MODE7)	/* lcd_data3.lcd_data3 */
++			0xb0 (PULL_DISABLE | MUX_MODE7)	/* lcd_data4.lcd_data4 */
++			0xb4 (PULL_DISABLE | MUX_MODE7)	/* lcd_data5.lcd_data5 */
++			0xb8 (PULL_DISABLE | MUX_MODE7)	/* lcd_data6.lcd_data6 */
++			0xbc (PULL_DISABLE | MUX_MODE7)	/* lcd_data7.lcd_data7 */
++			0xc0 (PULL_DISABLE | MUX_MODE7)	/* lcd_data8.lcd_data8 */
++			0xc4 (PULL_DISABLE | MUX_MODE7)	/* lcd_data9.lcd_data9 */
++			0xc8 (PULL_DISABLE | MUX_MODE7)	/* lcd_data10.lcd_data10 */
++			0xcc (PULL_DISABLE | MUX_MODE7)	/* lcd_data11.lcd_data11 */
++			0xd0 (PULL_DISABLE | MUX_MODE7)	/* lcd_data12.lcd_data12 */
++			0xd4 (PULL_DISABLE | MUX_MODE7)	/* lcd_data13.lcd_data13 */
++			0xd8 (PULL_DISABLE | MUX_MODE7)	/* lcd_data14.lcd_data14 */
++			0xdc (PULL_DISABLE | MUX_MODE7)	/* lcd_data15.lcd_data15 */
++			0xe0 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_vsync.lcd_vsync */
++			0xe4 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_hsync.lcd_hsync */
++			0xe8 (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_pclk.lcd_pclk */
++			0xec (PIN_INPUT_PULLDOWN | MUX_MODE7)	/* lcd_ac_bias_en.lcd_ac_bias_en */
++		>;
++	};
++
++
+ 	user_leds_s0: user_leds_s0 {
+ 		pinctrl-single,pins = <
+ 			0x10 (PIN_OUTPUT_PULLDOWN | MUX_MODE7)	/* gpmc_ad4.gpio1_4 */
+@@ -560,3 +661,7 @@
+ 		ti,wire-config = <0x00 0x11 0x22 0x33>;
+ 	};
+ };
++
++&lcdc {
++      status = "okay";
++};
+-- 
+1.8.4
+
