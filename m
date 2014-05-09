@@ -1,90 +1,75 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
-Date: Fri, 9 May 2014 11:45:26 +0100
-Message-ID: <20140509104506.GA3921@e103592.cambridge.arm.com>
-References: <20140501173248.GD3732@e103592.cambridge.arm.com>
- <6555552.UqkKQIAsih@wuerfel>
- <5363EA31.3000509@wwwdotorg.org>
- <4187263.LG1S8D1FYU@wuerfel>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/6] of: align RESERVEDMEM_OF_DECLARE function callbacks to
+ other callbacks
+Date: Fri, 09 May 2014 12:46:07 +0200
+Message-ID: <536CB1EF.2090204@samsung.com>
+References: <1399587823-17701-1-git-send-email-robherring2@gmail.com>
+ <1399587823-17701-2-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4187263.LG1S8D1FYU@wuerfel>
+In-reply-to: <1399587823-17701-2-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 02, 2014 at 09:02:20PM +0200, Arnd Bergmann wrote:
-> On Friday 02 May 2014 12:55:45 Stephen Warren wrote:
-> > On 05/02/2014 09:19 AM, Arnd Bergmann wrote:
-> > > On Friday 02 May 2014 15:23:29 Thierry Reding wrote:
-> > ...
-> > >> To some degree this also depends on how we want to handle IOMMUs. If
-> > >> they should remain transparently handled via dma_map_ops, then it makes
-> > >> sense to set this up at device instantiation time. But how can we handle
-> > >> this in situations where one device needs to master on two IOMMUs at the
-> > >> same time? Or if the device needs physically contiguous memory for
-> > >> purposes other than device I/O. Using dma_map_ops we can't control which
-> > >> allocations get mapped via the IOMMU and which don't.
-> > > 
-> > > I still hope we can handle this in common code by selecting the right
-> > > dma_map_ops when the devices are instantiated, at least for 99% of the
-> > > cases. I'm not convinced we really need to handle the 'multiple IOMMUs
-> > > on one device' case in a generic way. If there are no common use cases
-> > > for that, we can probably get away with having multiple device nodes
-> > > and an ugly driver for the exception, instead of making life complicated
-> > > for everybody.
-> > 
-> > By "multiple device nodes", I assume you mean device tree nodes? I'm not
-> > sure I like the sound of that.
-> > 
-> > I believe that DT should represent the structure of the HW in terms of
-> > HW modules or blocks. If there's a single cohesive HW module that
-> > happens to talk to multiple MMUs, or indeed has any kind of unusual case
-> > at all, I don't think that should force the DT representation to be
-> > broken up into multiple nodes. We should have a DT node for that HW
-> > module, and it should be up to the device driver to make the internal SW
-> > representation work correctly.
+Hello,
 
-This is rather fuzzy.  On-SoC, it is often non-obvious what counts as a
-single component and what counts as a collection of multiple components.
+On 2014-05-09 00:23, Rob Herring wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> All the parameters for RESERVEDMEM_OF_DECLARE function callbacks are
+> members of struct reserved_mem, so just pass the struct ptr to callback
+> functions so the function callback is more in line with other OF match
+> table callbacks.
+>
+> Cc: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-For DT, we are concerned whether there is anything configurable in the
-relationship between the components, or how each component connects to
-the rest of the system that it is worthwhile to abstract.
+Acked-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-> I agree we should in general try our best to have the DT representation
-> match exactly what the hardware looks like. However we already have some
-> areas where we violate that, typically when things are not trees.
+> ---
+>   drivers/of/of_reserved_mem.c    | 2 +-
+>   include/linux/of_reserved_mem.h | 4 ++--
+>   2 files changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/of/of_reserved_mem.c b/drivers/of/of_reserved_mem.c
+> index e420eb5..632aae8 100644
+> --- a/drivers/of/of_reserved_mem.c
+> +++ b/drivers/of/of_reserved_mem.c
+> @@ -188,7 +188,7 @@ static int __init __reserved_mem_init_node(struct reserved_mem *rmem)
+>   		if (!of_flat_dt_is_compatible(rmem->fdt_node, compat))
+>   			continue;
+>   
+> -		if (initfn(rmem, rmem->fdt_node, rmem->name) == 0) {
+> +		if (initfn(rmem) == 0) {
+>   			pr_info("Reserved memory: initialized node %s, compatible id %s\n",
+>   				rmem->name, compat);
+>   			return 0;
+> diff --git a/include/linux/of_reserved_mem.h b/include/linux/of_reserved_mem.h
+> index 9b1fbb7..4c81b84 100644
+> --- a/include/linux/of_reserved_mem.h
+> +++ b/include/linux/of_reserved_mem.h
+> @@ -21,8 +21,8 @@ struct reserved_mem_ops {
+>   				  struct device *dev);
+>   };
+>   
+> -typedef int (*reservedmem_of_init_fn)(struct reserved_mem *rmem,
+> -				      unsigned long node, const char *uname);
+> +typedef int (*reservedmem_of_init_fn)(struct reserved_mem *rmem);
+> +
+>   
+>   #ifdef CONFIG_OF_RESERVED_MEM
+>   void fdt_init_reserved_mem(void);
 
-The DT is an abstraction: it needs to describe all the OS-relevant
-aspects of platform *behaviour* that can vary between configurations.
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
-The most reliable way to describe behaviour perfectly is to describe the
-hardware exactly in every detail, but it's not much help to an OS
-because the useful information is spread all over the place and not in a
-usable form.
-
-I deliberately went hard down the "describe the hardware" route to
-get the discussion going, but this doesn't always mean it is the best
-answer.
-
-We have to trade off the false economy of not describing enough against
-the pointless expense of describing too much...
-
-> If there is no real use case but only a theoretical possibility, I don't
-> have a problem with being less strict about the general rule on hardware
-> representation.
-
-I agree that this is all a bit hypothetical -- good for batting ideas
-around, but not so good for reaching practical conclusions.
-
-I'll try to come up with something a bit more concrete.
-
-Cheers
----Dave
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
