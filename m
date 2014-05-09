@@ -1,66 +1,82 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv4 7/7] ARM: dts: Add device tree sources for Exynos3250
-Date: Fri, 09 May 2014 10:01:39 +0200
-Message-ID: <536C8B63.3000400@samsung.com>
-References: <1398388572-30239-1-git-send-email-cw00.choi@samsung.com>
- <1398388572-30239-8-git-send-email-cw00.choi@samsung.com>
- <535B0324.50705@gmail.com> <536C2A1C.6030807@samsung.com>
- <536C6175.5000302@gmail.com> <536C7F65.50503@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
+ probably 3630
+Date: Fri, 9 May 2014 11:01:52 +0300
+Message-ID: <536C8B70.1000306@ti.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-2-git-send-email-tony@atomide.com> <20140508232006.GG2198@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <536C7F65.50503-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20140508232006.GG2198-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, hyunhee.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chanho61.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sajjan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+--3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 09/05/14 02:20, Tony Lindgren wrote:
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [140429 16:53]:
+>> Otherwise we can get often errors like the following and the
+>> display won't come on:
+>>
+>> omapdss APPLY error: FIFO UNDERFLOW on gfx, disabling the overlay
+>> omapdss APPLY error: SYNC_LOST on channel lcd, restarting
+>> the output with video overlays disabled
+>>
+>> There are some earlier references to this issue:
+>>
+>> http://www.spinics.net/lists/linux-omap/msg59511.html
+>> http://www.spinics.net/lists/linux-omap/msg59724.html
+>>
+>> It seems that it's safe to set the lower values even for 3630.
+>> If we can confirm that 3630 works with the higher values
+>> reliably we can add further detection.
+>=20
+> BTW, I'm also seeing this warning on 3730-evm it may be related:
+>=20
+> [    3.523101] ------------[ cut here ]------------
+> [    3.528015] WARNING: CPU: 0 PID: 6 at drivers/video/fbdev/omap2/dss/=
+dss.c:483 dss_set_fck_rate+0x6c/0x8c()
+> [    3.538360] clk rate mismatch: 108000000 !=3D 115200000
+> [    3.543518] Modules linked in:
+
+Hmm... Can you paste the clk_summary from debugfs? Somehow the clock
+framework calculates the clock rate differently than the dss. Or do we
+have different clock.dts files used for 3730 and 3630?
+
+ Tomi
 
 
-On 09.05.2014 09:10, Chanwoo Choi wrote:
-> Hi Tomasz,
-> 
-> On 05/09/2014 02:02 PM, Tomasz Figa wrote:
->> Hi Chanwoo,
->>
->> On 09.05.2014 03:06, Chanwoo Choi wrote:
->>> On 04/26/2014 09:51 AM, Tomasz Figa wrote:
->>>> On 25.04.2014 03:16, Chanwoo Choi wrote:
->>
->> [snip]
->>
->>>>> +    cpus {
->>>>> +        #address-cells = <1>;
->>>>> +        #size-cells = <0>;
->>>>> +
->>>>> +        cpu@0 {
->>>>> +            device_type = "cpu";
->>>>> +            compatible = "arm,cortex-a7";
->>>>> +            reg = <0>;
->>>>> +            clock-frequency = <1000000000>;
->>>>> +        };
->>>>
->>>> Why only one CPU? I believe Exynos3250 is dual core.
->>>
->>> I'll add cpu1 information.
->>>
->>>> Also are physical IDs of the cores really 0 and 1? On Exynos4210 for example they are 0x900 and 0x901, while on Exynos4212 they are 0xa00 and 0xa01. Please check this.
->>>
->>> The 'reg' property means only hardware id(hwid) of CPU.
->>> You can check it on arm_dt_init_cpu_maps() in arch/arm/kernel/devtree.c.h.
->>> or Documentation/devicetree/bindings/arm/cpus.txt.
->>>
->>
->> Well, as described in Documentation/devicetree/bindings/arm/cpus.txt, on 32-bit ARM v7 or later CPUs the "reg" property should be equal to the lower 24-bits of MPIDR value of given CPU, which in addition to core ID includes also cluster ID, which can be non-zero, even on single cluster SoCs (like it is on Exynos4210 and 4x12).
-> 
-> I checked the lower 24-bit of MPIDR value for Exynos3250 in arm_dt_init_cpu_maps().
-> - the lower 24-bit of MPIDR for CPU0 is '0x0'.
 
-Fair enough. Thanks.
+--3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Best regards,
-Tomasz
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTbItwAAoJEPo9qoy8lh71tFcP/1p90wC6hphrF0G+gPZX/AEX
+An0Mzt0BXvPzVBsyy/KQxMtpr/YFRPvNiGL52zYkMsLWaSkzfExGxfj5VboCWr6D
+1uspLD+dr12EUKYpk2rlGARLh2OiNvoC0p8nDmbvWCL4Eo+aWPEB24lFg6EbCChy
+VyMZzpaNultkwAxCH7/PJ3WIFuVGl1TptWM2a7mLIfdmeFr1nPfrz1JNrBgDlqbi
+3NhuJJK2zroTM8h2U3RufLu+EwpFuVXf+N72/ZkOcqPb+YuF0+H4ahNHqDXAq6FW
+cA/9B6qFzKSgI5/t9peEYbSLjneKPSApnMjluUabxjmQ8RoA0DSruidODwdbBaLj
+AfLz4pZJky7XwawxVwCUgRouQbdjxVMnPAqOCCysiqVLCSwsbXepP3W46vXHHpKe
+P4BD14G0WpJETzMdtrh+8PnNCmxeV+cdvj/d1RZWz8XGEkjaw/ecsWeBKoyP80q6
+9j2Vo2QeC2EP8q3QT/W9S5fQkL2/KTfpKyb3TYAZVTIiyyK2csjqCMTRs1VmMUA7
+MtZp8iUXAaqPg8KADcL/ab/K4o16AXpmVsAA37Bhw05auXtMPwijb1PEKzydjheF
+IkD49RImPplb+yhsWD+PzdB88H99Li8dVjehseO4/qj7DUT/jm++w8L9mqDrvDN+
+8yKOaA5gWBjImaheoX2b
+=Oyw8
+-----END PGP SIGNATURE-----
+
+--3jIX68OOgDqkWAxTqG5EtkJ1weIGNAqvK--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
