@@ -1,125 +1,373 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 0/3] ARM: sunxi: Add support for consumer
- infrared devices
-Date: Fri, 09 May 2014 15:26:52 +0200
-Message-ID: <536CD79C.8080800@redhat.com>
-References: <1398871010-30681-1-git-send-email-bay@hackerdom.ru> <536B8CDD.7040600@redhat.com> <E54FF549-B53A-406B-9871-E2C3B1ED8157@hackerdom.ru>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Fri, 9 May 2014 14:26:37 +0100
+Message-ID: <20140509132637.GC3921@e103592.cambridge.arm.com>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
+ <6774053.rAccqTeoiQ@wuerfel>
+ <20140502173120.GD3805@e103592.cambridge.arm.com>
+ <4327552.i65x7H2WQr@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBMFPWONQKGQEUM6NX2A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <E54FF549-B53A-406B-9871-E2C3B1ED8157-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "david-0WFrdVpeebksCylrc8G9yg@public.gmane.org" <david-0WFrdVpeebksCylrc8G9yg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org" <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt@kernel.>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4327552.i65x7H2WQr@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, May 02, 2014 at 10:36:43PM +0200, Arnd Bergmann wrote:
+> On Friday 02 May 2014 18:31:20 Dave Martin wrote:
+> > No, but I didn't state it very clearly.
+> > 
+> > In this:
+> > 
+> >         parent {
+> >                 child {
+> >                         ranges = < ... >;
+> >                         dma-ranges = < ... >;
+> >                 };
+> >         };
+> 
+> The ranges and dma-ranges properties belong into parent, not child here.
+> I guess that's what you meant at least.
+> 
+> > There are two transaction flows being described.  There are transactions
+> > from parent -> child, for which "ranges" describes the mappings, and
+> > there are transactions from child -> parent, for which "dma-ranges"
+> > describes the mappings.
+> 
+> Right.
+> 
+> > The name "dma-ranges" obfuscates this symmetry, so it took me a while
+> > to figure out what it really means -- maybe I'm still confused, but
+> > I think that's the gist of it.
+> > 
+> > 
+> > For the purposes of cross-links, my plan was that we interpret all
+> > those links as "forward" (i.e., parent -> child) links, where the
+> > referencing node is deemed to be the parent, and the referenced node is
+> > deemed to be the child. Just as in the ePAPR case, the associated mapping
+> > is then described by "ranges".
+> 
+> That seems counterintuitive to me. When a device initiates a transaction,
+> it should look at the "dma-ranges" of its parent. The "slaves" property
+> would be a way to redirect the parent for these transactions, but it
+> doesn't mean that the device suddenly translates ranges as seen from
+> its parent.
+> 
+> In other words, "ranges" should always move from CPU to MMIO target
+> (slave), while "dma-ranges" should always move from a DMA master towards
+> memory. If you want to represent a device-to-device DMA, you may have
+> to move up a few levels using "dma-ranges" and then move down again
+> using "ranges".
 
-On 05/09/2014 03:21 PM, Alexander Bersenev wrote:
-> Hello, I am in Austria/Germany in 1-11 may. I plan to make v6 after retur=
-ning back to Russia.
+In unidirectional bus architectures with non-CPU bus masters, the
+classification of flows as "upstream" or "downstream" is nonsensical.
+There is only a single direction at any point: the topology derives
+completely from how things are linked together.
 
-Ok, when you do please also pick up this fix:
-https://github.com/jwrdegoede/linux-sunxi/commit/180a3e59361ceddeed26543529=
-ca757cc8112fb0
+Trying to orient the topology of SoC architectures can be like trying to
+decide which way is up in an M. C. Escher drawing, but with less elegant
+symmetry.  While the CPUs would be clearly placed at the top by almost
+everybody, it's generally impossible to draw things so that some of the
+topology isn't upside-down.
 
-Which fixes an oops at startup.
+This wouldn't matter, except ePAPR DT does make a fundamental difference
+between upstream and downstream: only a single destination is permitted
+for upstream via "dma-ranges": the parent node.  For downstream,
+multiple destinations are permitted, because a node can have multiple
+children.  We can add additional logical children to a node without
+radical change to the way traversal works.  But allowing multiple
+parents is likely to be a good deal more disruptive.
 
-Other then needing that fix + coding style fixes it works well for me on
-the cubietruck. I'll try to also test it on sun4i and sun5i if I can find s=
-ome
-time to do so.
+With dma-ranges, unless multiple logical parent nodes are permitted for
+traversal then we have no way to describe independent properties
+or mappings for paths to different destinations: ePAPR does not allow
+you to pingpong between upstream and downstream directions.  You
+traverse in the upstream until you reach a common ancestor of the
+destination, then you traverse downstream.  Towards the common 
+ancestor there is no chance to describe different paths, because
+there is only a single parent node at each point.  From the common
+ansestor transactions from all masters follow the same paths through
+the DT, so there is still no way to describe per-master-per-slave
+mappings.
 
-Regards,
+The "ranges" approach solves this problem, which I believe may
+be important if we want to describe how ID signals are mapped via
+the same mechanisms: we know that there really will be per-master-
+per-slave mappings for IDs.
 
-Hans
+There may be other solutions, or aspects of the problem I still don't
+understand properly ... (likely!)
 
+> 
+> > > Don't you need arguments to the phandle? It seems that in most
+> > > cases, you need at least one of a dma-ranges like translation
+> > > or a master ID. What you need would be specific to the slave.
+> > 
+> > For any 1:N relationship between nodes, you can describe the
+> > _relationship_ by putting properties on the nodes at the "1" end.  This
+> > is precisely how "ranges" and "dma-ranges" work.
+> 
+> That doesn't seem very helpful or intuitive though. If I have
+> an IOMMU that N DMA masters can target, I don't want to have
+> information about all the masters in the IOMMU, that information
+> belongs into the masters, but the format in which it is stored
+> must be specific to the IOMMU.
+> 
+> > The N:M case can be resolved by inserting simple-bus nodes into any
+> > links with non-default mappings: i.e., you split each affected link in
+> > two, with a simple-bus node in the middle describing the mapping:
+> 
+> Ok, ignoring those oddball cases for now, I'd like to first
+> try to come to a more useful representation for the common case.
+> 
+> > root: / {
+> >         ranges;
+> >         ...
+> > 
+> >         master@1 {
+> >                 slave {
+> >                         ranges = < ... >;
+> >                         slaves = <&root>;
+> >                 };
+> >         };
+> 
+> The "ranges" property here is really weird. I understand you
+> mean this to be a device that has a unique mapping into its
+> the slave (the root device here). I would reduce this to one
+> of two cases:
 
->=20
-> Best,
-> Alexander Bersenev
->=20
->> 08 =D0=BC=D0=B0=D1=8F 2014 =D0=B3., =D0=B2 15:55, Hans de Goede <hdegoed=
-e@redhat.com> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB(=D0=B0):
->>
->> Hi,
->>
->>> On 04/30/2014 05:16 PM, Alexander Bersenev wrote:
->>> This patch introduces Consumer IR(CIR) support for sunxi boards.
->>>
->>> This is based on Alexsey Shestacov's work based on the original driver=
-=20
->>> supplied by Allwinner.
->>>
->>> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
->>> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
->>
->> Alexander, v5 still has various issues which need fixing,
->> do you plan to do a v6 soon ?
->>
->> Regards,
->>
->> Hans
->>
->>>
->>> ---
->>> Changes since version 1:=20
->>> - Fix timer memory leaks=20
->>> - Fix race condition when driver unloads while interrupt handler is act=
-ive
->>> - Support Cubieboard 2(need testing)
->>>
->>> Changes since version 2:
->>> - More reliable keydown events
->>> - Documentation fixes
->>> - Rename registers accurding to A20 user manual
->>> - Remove some includes, order includes alphabetically
->>> - Use BIT macro
->>> - Typo fixes
->>>
->>> Changes since version 3:
->>> - Split the patch on smaller parts
->>> - More documentation fixes
->>> - Add clock-names in DT
->>> - Use devm_clk_get function to get the clocks
->>> - Removed gpios property from ir's DT
->>> - Changed compatible from allwinner,sunxi-ir to allwinner,sun7i-a20-ir =
-in DT
->>> - Use spin_lock_irq instead spin_lock_irqsave in interrupt handler
->>> - Add myself in the copyright ;)
->>> - Coding style and indentation fixes
->>>
->>> Changes since version 4:
->>> - Try to fix indentation errors by sending patches with git send-mail
->>>
->>> Alexander Bersenev (3):
->>>  ARM: sunxi: Add documentation for sunxi consumer infrared devices
->>>  ARM: sunxi: Add driver for sunxi IR controller
->>>  ARM: sunxi: Add IR controller support in DT on A20
->>>
->>> .../devicetree/bindings/media/sunxi-ir.txt         |  23 ++
->>> arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |   6 +
->>> arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |   6 +
->>> arch/arm/boot/dts/sun7i-a20.dtsi                   |  31 +++
->>> drivers/media/rc/Kconfig                           |  10 +
->>> drivers/media/rc/Makefile                          |   1 +
->>> drivers/media/rc/sunxi-ir.c                        | 303 ++++++++++++++=
-+++++++
->>> 7 files changed, 380 insertions(+)
->>> create mode 100644 Documentation/devicetree/bindings/media/sunxi-ir.txt
->>> create mode 100644 drivers/media/rc/sunxi-ir.c
->>>
+We should probably revisit this.  It sounds like you got what I
+was trying to do here, but my text above may make the rationale
+a bit clearer.  Maybe.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> a) it sits on an intermediate bus by itself, and that bus
+> has the non-default mapping:
+> 
+> / {
+> 	dma-ranges;
+> 	ranges;
+> 
+> 	bus@x {
+> 		ranges;
+> 		dma-ranges = < ... >; // this is the mapping
+> 		master@1 {
+> 			...
+> 		};
+> 	};
+> 
+> b) the device itself is strange, but it's a property of the
+> device that the driver knows about (e.g. it can only do
+> a 30-bit DMA mask rather than 32 bit, for a realistic case),
+> so we don't have represent this at all and let the driver
+> deal with the translation:
+
+We have a ready-made way to describe things like 30-bit DMA in
+a quite generic way, if traversal is through a node with
+
+	ranges = < 0x00000000 0x00000000 0x3fffffff >;
+
+(or similarly, dma-ranges).  Deducing a 30-bit mask from that
+is not hard.  A DMA mask actually does the same thing as a ranges
+property, but in a much more limited way (which can be a good thing).
+
+> 
+> / {
+> 	dma-ranges;
+> 	ranges;
+> 
+> 	master@1 {
+> 		...
+> 	};
+> 
+> };
+> 
+> >         master@2 {
+> >                 slave {
+> >                         slaves = < &root &master2_dma_slave >;
+> >                         slave-names = "config-fetch", "dma";
+> > 
+> >                	   master2_dma_slave: dma-slave {
+> >                                 ranges = < ... >;
+> >                                 slaves = <&root>;
+> >                         };
+> >                 };
+> >         };
+> 
+> As I said before, I'd consider this a non-issue until anyone
+> can come up with a case that needs the complexity.
+> 
+> A possible representation would be to have two masters
+> as child nodes of the actual device to avoid having a 'slaves'
+> property with multiple entries, and if the device is the only
+> one with a weird translation, that can go to some other bus
+> node we make up for this purpose:
+> 
+> / {
+> 	ranges;
+> 	dma-ranges;
+> 
+> 	fake-bus {
+> 		dma-ranges = < ... >;
+> 		slaves = < &{/} >; // is the default, so can be ommitted
+> 	};
+> 
+> 	bus {
+> 		ranges;
+> 		// no dma-ranges --> no default DMA translation
+> 
+> 		device@1 {
+> 			master@1 {
+> 				// hopefully will never be
+> 				// needed in real life
+> 				slaves = < &{/fake-bus}>;
+> 			};
+> 
+> 			master@2 {
+> 				slaves = < &{/} >;
+> 			};
+> 		};
+> 	};
+> };
+> 
+> >         master@3 {
+> >                 slaves = <&root>;
+> >         };
+> > };
+> 
+> Here, the slave is the parent device, which is the default
+> anyway, so I wouldn't require listing anything at all,
+> besides an empty dma-ranges in the parent node.
+> 
+> If we can get away with just a single entry in 'slaves' all
+> the time, we could actually rename that property to 'dma-parent',
+> for consistency with 'interrupt-parent' and a few other things.
+> 
+> Freescale already has 'fsl,iommu-parent' for this case, a
+> 'dma-parent' would be a generalization of that, but less general
+> than your 'slaves' property.
+> 
+> > > It may be best to make the ranges explicit here and then also
+> > > allow additional fields depending on e.g. a #dma-slave-cells
+> > > property in the slave.
+> > > 
+> > > For instance, a 32-bit master on a a 64-bit bus that has master-id
+> > > 23 would look like
+> > > 
+> > >       otherbus: axi@somewhere{
+> > >               #address-cells = <2>;
+> > >               #size-cells = <2>;
+> > >       };
+> > > 
+> > >       somemaster@somewhere {
+> > >               #address-cells = <1>;
+> > >               #size-cells = <1>;
+> > >               slaves = <&otherbus  // phandle
+> > >                               0     // local address
+> > >                               0 0   // remote address
+> > >                               0x1 0 // size
+> > >                               23>;  // master id
+> > >       };
+> > 
+> > I thought about this possibility, but was worried that the "slaves"
+> > property would become awkward to parse, where except for the "master id"
+> > concept, all these attributes are well described by ePAPR already for
+> > bus nodes if we can figure out how to piggyback on them -- hence my
+> > alternative approach explained above.
+> > 
+> > How to describe the "master id" is particularly problematic and may
+> > be a separate discussion.  It can get munged or remapped as it
+> > passes through the interconnect: for example, a PCI device's ID 
+> > accompanying an MSI write may be translated once as it passes from
+> > the PCI RC to an IOMMU, then again before it reaches the GIC.
+
+As commented on the other branch of this thread, I think I agree with
+this general approach.  We shouldn't have to do it that often, and it
+keeps some complexity out of the core binding.
+
+Cheers
+---Dave
+
+(Leaving the remainder of your reply for context -- thanks for this.)
+
+> 
+> Hmm, that would actually mean we'd have to do complex "dma-ranges"
+> properties with more than one entry, which I had hoped to avoid.
+> 
+> > In the "windowed IOMMU" case, address bits are effectively being
+> > mapped to ID bits as they reach IOMMU.
+> > 
+> > An IOMMU also does a complete mapping of ID+address -> ID'+address'
+> > (although programmable rather than static and unprobeable, so the
+> > actual mappings for an IOMMU won't be in the DT).
+> 
+> right.
+> 
+> > > > 2) The generic "slave" node(s) are for convenience and readability.
+> > > >    They could be made eliminated by using child nodes with
+> > > >    binding-specific names and referencing them in "slaves".  This is a
+> > > >    bit more awkward, but has the same expressive power.
+> > > > 
+> > > >    Should the generic "slave" nodes go away?
+> > > 
+> > > I would prefer not having to have subnodes for the simple case
+> > > where you just need to reference one slave iommu from a master
+> > > device.
+> > 
+> > My expectation is that subnodes would only be useful in special cases in
+> > any case.
+> > 
+> > We can remove the special "slave" name, because there's nothing to
+> > stop us referencing other random nested nodes with the "slaves" property.
+> 
+> Ok.
+> 
+> > > I wouldn't be worried about cycles. We can just declare them forbidden
+> > > in the binding. Anything can break if you supply a broken DT, this
+> > > is the least of the problems.
+> > 
+> > That's my thought.  If there turns out to be a really good reason to
+> > describe cycles then we can cross that bridge* when we come to it,
+> > but it's best to forbid it until/unless the need for it is proven.
+> > 
+> > (*no pun intended)
+> 
+> Right.
+> 
+> > Note that a certain kind of trivial cycle will always be created
+> > when a node refers back to its parent:
+> > 
+> > root: / {
+> >         ranges;
+> > 
+> >         iommu {
+> >                 reg = < ... >;
+> >                 slaves = <&root>;
+> >         };
+> > };
+> > 
+> > ePAPR says that if there is no "ranges" property, then the parent
+> > node cannot access any address of the child -- we can interpret
+> > this as saying that transactions do not propagate.  "ranges" with
+> > an empty value imples a complete 1:1 mapping, which we can interpret
+> > as transactions being forwarded without any transformation.
+> > 
+> > Crucially, "iommu" must not have a "ranges" property in this case,
+> > because this would permit a static routing cycle root -> iommu ->
+> > root.
+> 
+> Makes sense.
+> 
+> 	Arnd
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
