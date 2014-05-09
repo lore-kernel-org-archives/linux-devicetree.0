@@ -1,65 +1,63 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] of/irq: provide int of_irq_parse_and_map_pci wrapper
-Date: Fri, 9 May 2014 10:56:01 +0200
-Message-ID: <CAMuHMdU_H3_vzP84UwfSUShJ3_x+t3Q6enn=YNdC2tEDzgOOmg@mail.gmail.com>
-References: <4527717.yJh2gX3xCP@wuerfel>
-	<1399624119.4833.3.camel@weser.hi.pengutronix.de>
-	<4975430.zMeeu7d2Xc@wuerfel>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Fri, 9 May 2014 09:59:41 +0100
+Message-ID: <20140509085941.GM5767@lee--X1>
+References: <1399483554-8824-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399483554-8824-4-git-send-email-boris.brezillon@free-electrons.com>
+ <20140508110205.GB5767@lee--X1>
+ <536BE366.8080907@free-electrons.com>
+ <20140509071246.GE5767@lee--X1>
+ <536C84F6.2050701@redhat.com>
+ <20140509080807.GH5767@lee--X1>
+ <536C8F71.5040604@redhat.com>
+ <536C91A6.6000500@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <4975430.zMeeu7d2Xc@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lucas Stach <l.stach@pengutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-pci <linux-pci@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <536C91A6.6000500@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Hans de Goede <hdegoede@redhat.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+> >>>>>>> +static struct platform_driver sun6i_prcm_driver =3D {
+> >>>>>>> +	.driver =3D {
+> >>>>>>> +		.name =3D "sun6i-prcm",
+> >>>>>>> +		.owner =3D THIS_MODULE,
+> >>>>>>> +		.of_match_table =3D sun6i_prcm_dt_ids,
+> >>>>>>> +	},
+> >>>>>>> +	.probe =3D sun6i_prcm_probe,
+> >>>>>> You need a .remove() call-back.
+> >>>>> This driver cannot be compiled as module (see the Kconfig defin=
+ition)
+> >>>>> and the devices are not hotpluggable, as a result a probed devi=
+ce will
+> >>>>> never be removed.
+> >>>>>
+> >>>>> Do you still want me to implement the remove function ?
+> >>>> .remove() also be run on shut down.
+> >>> That is not true, if your device needs to do anything special at =
+shutdown
+> >>> you need to add a shutdown callback. Devices are kept as is (not =
+torn down)
+> >>> on shutdown.
+> >> Ah okay, I'll bow to your knowledge.  So there's no reason for thi=
+s
+> >> driver to ever call mfd_remove_devices() then?
+> > No, this is an integral part of the SOC, which never gets removed i=
+n any way.
+>=20
+> Lee, I'm about to send a 3rd version of this series, is it okay for y=
+ou
+> if I leave the remove function unimplemented ?
 
-On Fri, May 9, 2014 at 10:45 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 09 May 2014 10:28:39 Lucas Stach wrote:
->> Am Freitag, den 09.05.2014, 08:58 +0200 schrieb Arnd Bergmann:
->> > The pci-rcar driver is enabled for compile tests, and this has
->> > now shown that the driver cannot build without CONFIG_OF,
->> > following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
->> > interrupt mapping when possible":
->> >
->> > drivers/built-in.o: In function `rcar_pci_map_irq':
->> > :(.text+0x1cc7c): undefined reference to `of_irq_parse_and_map_pci'
->> >
->> > As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
->> > supposed to build fine, which we can achieve if we make the
->> > declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
->> > and provide an empty inline function otherwise, as we do for
->> > a lot of other of interfaces.
->> >
->> > This lets us build the rcar_pci driver again without CONFIG_OF,
->> > which won't work but give us compile time coverage.
->> >
->> This part of the commit message is confusing. The driver is explicitly
->> written to fall back to a platform irq when OF interrupt mapping doesn't
->> work (return 0 or error), to keep non DT enabled boards working.
->>
->> I hadn't thought of the compile time dependency, so thanks for fixing
->> this up.
->
-> I thought it was meant to keep old DTBs working. AFAIK, there is no
-> legacy board file support for rcar-gen2, so we don't actually have to
-> worry about that.
+It is.
 
-arch/arm/mach-shmobile/board-lager.c does intantiate platform devices
-for it, and I guess they're still to be added to .../board-koelsch.c.
-
-However, all legacy board configs in arch/arm/mach-shmobile/Kconfig
-do "select USE_OF", so the file will always be build with OF=y.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
