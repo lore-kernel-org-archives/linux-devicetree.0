@@ -1,88 +1,68 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v3 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Fri, 09 May 2014 22:46:34 +0900
-Message-ID: <536CDC3A.4050700@samsung.com>
-References: <1399522592-23618-1-git-send-email-sachin.kamat@linaro.org> <536BAE39.70504@samsung.com> <034b01cf6b2c$5b5d06b0$12171410$@samsung.com> <536C5E40.90405@gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Fri, 9 May 2014 14:52:51 +0100
+Message-ID: <20140509135251.GY5767@lee--X1>
+References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399633911-7094-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <536C5E40.90405@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, 'Tomasz Figa' <t.figa@samsung.com>, 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, heiko@sntech.de, arnd@arndb.de, robh+dt@kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1399633911-7094-4-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/09/14 13:49, Tomasz Figa wrote:
-> Hi Kukjin,
->
-Hi Tomasz,
+> The PRCM (Power/Reset/Clock Management) block exposes several subdevi=
+ces
+> in different subsystems (clk, reset ...)
+>=20
+> Add basic support for the PRCM unit with clk (AR100, AHB0, and APB0 c=
+lks)
+> and reset controller subdevices.
+>=20
+> Other subdevices might be added later (if needed).
+>=20
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/mfd/Kconfig      |   8 +++
+>  drivers/mfd/Makefile     |   1 +
+>  drivers/mfd/sun6i-prcm.c | 134 +++++++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 143 insertions(+)
+>  create mode 100644 drivers/mfd/sun6i-prcm.c
 
-> On 09.05.2014 04:14, Kukjin Kim wrote:
->> Tomasz Figa wrote:
->>>
->>> Hi Sachin,
->>>
->>> On 08.05.2014 06:16, Sachin Kamat wrote:
->>>> Instead of hardcoding the SYSRAM details for each SoC,
->>>> pass this information through device tree (DT) and make
->>>> the code SoC agnostic. Generic SRAM bindings are used
->>>> for achieving this.
->>>>
->>>> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
->>>> Acked-by: Heiko Stuebner <heiko@sntech.de>
->>>> ---
->>>> Changes since v2.
->>>> * Updated sysram node for Universal C210 board - Thanks to
->>>> Tomasz Figa for testing and updating the same.
->>>> * Added error handling code.
->>>> * Break if matching node found.
->>>> * Remove unnecessary error messages.
->>>>
->>>> This patch is based on linux next (next-20140501) on top of
->>>> my Kconfig consolidation patch
->>>> http://comments.gmane.org/gmane.linux.kernel.samsung-soc/28642
->>>>
->>>> Tested on 4210/4412 Origen, 5250/5420 Arndale and SMDK5420 boards.
->>>> ---
->>>> arch/arm/Kconfig | 1 +
->>>> arch/arm/boot/dts/exynos4210-universal_c210.dts | 15 ++++++
->>>> arch/arm/boot/dts/exynos4210.dtsi | 18 +++++++
->>>> arch/arm/boot/dts/exynos4x12.dtsi | 18 +++++++
->>>> arch/arm/boot/dts/exynos5250.dtsi | 18 +++++++
->>>> arch/arm/boot/dts/exynos5420.dtsi | 18 +++++++
->>>> arch/arm/mach-exynos/common.h | 1 +
->>>> arch/arm/mach-exynos/exynos.c | 64
->> ----------------------
->>> -
->>>> arch/arm/mach-exynos/firmware.c | 8 ++-
->>>> arch/arm/mach-exynos/include/mach/map.h | 7 ---
->>>> arch/arm/mach-exynos/platsmp.c | 56
->> ++++++++++++++++++--
->>>> 11 files changed, 148 insertions(+), 76 deletions(-)
->>>>
->>>
->>> Looks good, thanks.
->>>
->>> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
->>>
->> Looks good to me but I think, we need to change the name of 'sram'
->> because
->> it can cause some confusing, actually it is not matching _real_ sram
->> area on
->> the SoCs. When we upstreamed regarding patch, I decided the name to use
->> 'SYSRAM', it was called another name in datasheet though. So, I'd like to
->> use 'sysram' instead of 'sram' as we used before.
->>
->> I will change the name when I apply this series in this weekend, if
->> you guys
->> have no objection.
->
-> You mean s/sram/sysram/ in compatible strings of Exynos-specific
-> reserved areas? If yes, I'm fine, it might be even better. Just remember
-> to update documentation in patch 2/2 as well.
->
-Yes, of course ;-)
+[...]
 
-- Kukjin
+> +/*
+> + * Copyright (C) 2014 Free Electrons
+> + *
+> + * License Terms: GNU General Public License v2
+> + * Author: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * Allwinner PRCM (Power/Reset/Clock Management) driver
+> + *
+> + */
+> +
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+
+Ah, now isn't that better?
+
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
