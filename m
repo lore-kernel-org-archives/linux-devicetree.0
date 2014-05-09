@@ -1,89 +1,39 @@
-From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv4 1/2] dt/bindings: Add the DT binding documentation for endianness
-Date: Fri, 9 May 2014 10:04:32 +0800
-Message-ID: <1399601073-19278-2-git-send-email-Li.Xiubo@freescale.com>
-References: <1399601073-19278-1-git-send-email-Li.Xiubo@freescale.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399601073-19278-1-git-send-email-Li.Xiubo@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, gregkh@linuxfoundation.org, robh+dt@kernel.org, pawel.moll@arm.com, linux@arm.linux.org.uk
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Xiubo Li <Li.Xiubo@freescale.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RESEND] Documentation: clock: fixed-clock: Remove unsupported 'gpios' property
+Date: Fri,  9 May 2014 00:01:50 -0300
+Message-ID: <1399604510-3043-1-git-send-email-festevam@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device-Tree binding for device endianness
+From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-The endianness mode of CPU & Device scenarios:
-Index    CPU       Device     Endianness properties
-------------------------------------------------------------
-1        LE        LE         -
-2        LE        BE         'big-endian{,-*}'
-3        BE        BE         -
-4        BE        LE         'little-endian{,-*}'
+Remove the 'gpios' property from the documentation as this is something that the
+current fixed clock driver does not handle.
 
-{big,little}-endian{,-*}: these are boolean properties, if absent
-meaning that the CPU and the Device are in the same endianness mode.
-
-Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
+Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- .../devicetree/bindings/endianness/endianness.txt  | 48 ++++++++++++++++++++++
- 1 file changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/endianness/endianness.txt
+ Documentation/devicetree/bindings/clock/fixed-clock.txt | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/endianness/endianness.txt b/Documentation/devicetree/bindings/endianness/endianness.txt
-new file mode 100644
-index 0000000..cc5f7f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/endianness/endianness.txt
-@@ -0,0 +1,48 @@
-+Device-Tree binding for device endianness
-+
-+The endianness mode of CPU & Device scenarios:
-+Index    CPU       Device     Endianness properties
-+------------------------------------------------------------
-+1        LE        LE         -
-+2        LE        BE         'big-endian{,-*}'
-+3        BE        BE         -
-+4        BE        LE         'little-endian{,-*}'
-+
-+For one device driver, which will run in different scenarios above
-+on different SoCs using the devicetree, we need one way to simplify
-+this.
-+
-+Required properties:
-+- {big,little}-endian{,-*}: these are boolean properties, if absent
-+  meaning that the CPU and the Device are in the same endianness mode.
-+
-+Examples:
-+Scenario 1 : CPU in LE mode & device in LE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+};
-+
-+Scenario 2 : CPU in LE mode & device in BE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+	      big-endian{,-*};
-+};
-+
-+Scenario 3 : CPU in BE mode & device in BE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+};
-+
-+Scenario 4 : CPU in BE mode & device in LE mode.
-+dev: dev@40031000 {
-+	      compatible = "name";
-+	      reg = <0x40031000 0x1000>;
-+	      ...
-+	      little-endian{,-*};
-+};
+diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.txt b/Documentation/devicetree/bindings/clock/fixed-clock.txt
+index 48ea0ad..0641a663 100644
+--- a/Documentation/devicetree/bindings/clock/fixed-clock.txt
++++ b/Documentation/devicetree/bindings/clock/fixed-clock.txt
+@@ -12,7 +12,6 @@ Required properties:
+ Optional properties:
+ - clock-accuracy : accuracy of clock in ppb (parts per billion).
+ 		   Should be a single cell.
+-- gpios : From common gpio binding; gpio connection to clock enable pin.
+ - clock-output-names : From common clock binding.
+ 
+ Example:
 -- 
-1.8.4
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
