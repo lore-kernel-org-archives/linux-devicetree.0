@@ -1,144 +1,120 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC 0/3] Berlin SoC clock tree - DT or not DT?
-Date: Sat, 10 May 2014 18:13:05 +0200
-Message-ID: <536E5011.4020304@gmail.com>
-References: <1399580212-30183-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399580212-30183-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: [PATCHv5 00/10] OMAP SSI driver / N900 modem support
+Date: Sat, 10 May 2014 18:37:40 +0200
+Message-ID: <1399739870-13526-1-git-send-email-sre@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?=D0=98=D0=B2=D0=B0=D0=B9=D0=BB=D0=BE=20=D0=94=D0=B8=D0=BC=D0=B8=D1=82=D1=80=D0=BE=D0=B2?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-Sorry for the noise,
+Hi,
 
-I just noticed that I didn't send the cover letter itself to the
-list. Anyway, I decided to review the whole clock mess again and
-came up with a quite nice set of patches which split clocks between
-DT- and code-registered clocks.
+This is the ninth round of the OMAP SSI driver patches. I plan
+to move all the whole patchset (except DTS changes) to for-next
+on 2014-05-15 23:42 if nobody objects until then. @Tony: Is this
+sufficiently early to get the DTS changes into 3.16 via your
+tree?
 
-Actually, I need Alexandre to (re-)add BG2Q support first, but if he
-is busy, I'll send the preliminary version on Sunday or Monday.
+Changes since PATCHv4 [0]:
+ * Removed first three patches (HSI Documentation, MAINTAINER file
+   update and hsi-char fix) from the patchset. I added them to
+   for-next already.
+ * Added module parameter pm to the nokia-modem kernel module, which
+   can be used to disable requesting the gpios (needed by fremantle).
+   The same parameter will be used later to enable full-kernel
+   based power management. This is not yet implemented in the driver
+   and would break all existing userspace applications.
+ * Added Tested-By from Ivaylo Dimitrov, who successfully tested it
+   with Maemo fremantle (with some additional patches not directly
+   touching the modem, but needed to boot Maemo).
+ * Export ssi-protocol reset function, so that nokia-n900 can call
+   it if ssi-protocol is built as module.
+ * Updated KConfig, so that n900-modem / ssi-protocol and omap-ssi
+   can be built independently.
+ * Updated KConfig omap-ssi entry to depend on omap3 or compile-test.
+ * Fix build for disabled CONFIG_OF
 
-@Mike: I know it is late in the cycle, but I'd love to see this in
-for the next release already. There are functional bugs for sure,
-but actually Berlin SoC support is so minimal, there is nothing we
-can really break. I'll put that in the real patch set's cover letter
-again, but when I send it, I will have prepared a topic branch of it
-and put it into linux-next to make sure, it doesn't break others.
+For testing you can either apply this patchset to current mainline
+kernel or use the n900-modem-support-4 branch available on [1].
+Feedback is highly appreciated :)
 
-If you NAK taking it for the next release, we would have to squeeze
-in some DT tweaks with fixed-clocks as placeholders for the missing
-clocks. Antonine and Alexandre are doing a great job adding
-functionality to Berlin SoCs but, of course, lack clocks here and
-there. Using DT fixed-clocks would be ok now, but proper clock nodes
-even if the corresponding drivers are buggy would be best.
+For testing the patchset you should build the kernel with all config
+entries in the HSI subsystem activated and boot using the updated
+device tree information (platform data based booting is not
+supported!). Testing the patchset with ofono works like this:
 
-I have compared driver generated frequencies with Marvell's BSP
-u-boot clock report and they match, so it isn't too buggy :P
+ # provide cmt device for ofono
+ ln -sf /sys/bus/hsi/n900-modem /dev/cmt
+ # start ofono
+ ofono --nodetach --debug
+ # enable the modem
+ mdbus2 -s org.ofono /n900_0 org.ofono.Modem.SetProperty Powered true
+ # enable modem's RF parts
+ mdbus2 -s org.ofono /n900_0 org.ofono.Modem.SetProperty Online true
+ # scan for available networks (takes some time)
+ mdbus2 -s org.ofono /n900_0 org.ofono.NetworkRegistration.Scan
 
-@Alexandre, Antoine:
-The latest set of patches is at
-https://github.com/shesselba/linux-berlin.git topic/clk
+TODO (post-merge):
+* Central Message Queue in HSI framework
+* Remove the hwmod DT hack
+* Implement proper context loss detection
+* Implement full N900 modem PM (in-kernel)
+* Remove wakeline checks (thus removing the FIXMEs)
 
-Please have a look at it and prepare BG2Q patches that I can
-add/squeeze to it. Also, if you have comments already, do not
-hesitate to send them directly to me.
+[0] https://lkml.org/lkml/2014/4/25/520
+[1] git://git.kernel.org/pub/scm/linux/kernel/git/sre/linux-hsi.git
 
-Sebastian
+-- Sebastian
 
-On 05/08/2014 10:16 PM, Sebastian Hesselbarth wrote:
-> This is a RFC providing a counter-approach to some patches set by
-> Alexandre Belloni [1][2] to bring clock support for Berlin SoCs.
-> It is based on those and final patches will include Alexandre's
-> Signed-off again, I just dropped it for the RFC.
-> 
-> I am really unsure what is the best way to represent this in DT
-> and/or code, i.e. where to split this up. I's appreciate any
-> valuable discussion about it.
-> 
-> On Berlin SoCs, clock registers reside in global registers together
-> with e.g. pin ctrl, pad ctrl, reset, and general purpose regs used
-> for secondary boot address.
-> 
-> Actually, the situation isn't as bad as I initially thought, i.e.
-> regarding clocks there is only two types of PLLs, some
-> mux/divider/gate cells, and some separate muxes and gates.
-> 
-> What bothers me most is, there is *always* one that is different from
-> the others, e.g.
-> 
-> - mux/divider/gate cells either have some bits in registers shared
->   with other cells *or* have their own register
-> - some cells are missing the gate, some have no mux
-> - some m/d/g cells have their shared bits in the same register, some
->   in consecutive registers
-> 
-> To find a good representation in either code or DT that fits all,
-> quickly becomes messy. Anyway, we somehow have to deal with it, so
-> here is what I think are the three options:
-> 
-> a) One single "Berlin2 Clock Tree" DT node (this RFC)
-> 
-> We basically hide all the gory details of the register mess above
-> behind a single clock provider and index each leaf-clock by some
-> number. The pro is that DT doesn't get messed up, the con is that
-> there is a bunch of structs that each MULTIARCH kernel has to carry
-> around (currently ~13k). I tried to put it all in __initconst/data
-> so at least it can be free'd later.
-> 
-> b) Represent each PLL, M/D/G cell, and the single muxes/gates in DT
-> 
-> Well, the opposite of (a) i.e. exposing all the different register
-> offsets and shifts as properties. The pro is that most of the code
-> will move to DT which is only used by Berlin SoCs. The con is
-> definitely that we have to link all the clocks in DT and therefore
-> quickly get up to ~30 clock providers with a lot of clocks each.
-> 
-> c) Find the way in the middle
-> 
-> After looking long enough on the register mess, there is some blocks
-> that can be separated from each other. Basically it is each of the
-> PLLs, the single register dividers, and the rest. This still requires
-> a bunch of DT clocks but has far less clock providers. We still need
-> to provide some offset/shift properties as BG2/BG2CD's and BG2Q's cells
-> are slightly different.
-> 
-> I know, (c) sounds like the best option. But given the pain I went
-> through reading this register set includes (no datasheet available
-> of course), I really want some opinions about all three alternatives
-> first before touching this code ever again.
-> 
-> I'd appreciate any review and comments about the three patches attached
-> to this RFC *and* to the general approaches above. I just sent the
-> drivers and left out anything else, e.g. DT binding docs, Makefile/
-> Kconfigs, aso. Also, the patches are not in the correct (bisectable)
-> order but sorted by "controversity".
-> 
-> Sebastian
-> 
-> [1] https://lkml.org/lkml/2014/4/23/831
-> [2] https://lkml.org/lkml/2014/4/24/624
-> 
-> Sebastian Hesselbarth (3):
->   clk: berlin: add clock tree driver for BG2/BG2CD
->   clk: berlin: add driver for BG2x complex divider cells
->   clk: berlin: add driver for BG2x simple PLLs
-> 
->  drivers/clk/berlin/berlin2-div.c | 261 +++++++++++++++++
->  drivers/clk/berlin/berlin2-pll.c | 104 +++++++
->  drivers/clk/berlin/bg2.c         | 615 +++++++++++++++++++++++++++++++++++++++
->  drivers/clk/berlin/common.h      | 124 ++++++++
->  4 files changed, 1104 insertions(+)
->  create mode 100644 drivers/clk/berlin/berlin2-div.c
->  create mode 100644 drivers/clk/berlin/berlin2-pll.c
->  create mode 100644 drivers/clk/berlin/bg2.c
->  create mode 100644 drivers/clk/berlin/common.h
-> 
+Sebastian Reichel (10):
+  HSI: method to unregister clients from an hsi port
+  HSI: Add channel resource support to HSI clients
+  HSI: export method to (un)register clients
+  HSI: Add common DT binding for HSI client devices
+  HSI: Introduce OMAP SSI driver
+  Documentation: DT: omap-ssi binding documentation
+  HSI: Introduce driver for SSI Protocol
+  HSI: Introduce Nokia N900 modem driver
+  DTS: ARM: OMAP3-N900: Add SSI support
+  DTS: ARM: OMAP3-N900: Add modem support
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ .../devicetree/bindings/hsi/client-devices.txt     |   44 +
+ .../devicetree/bindings/hsi/nokia-modem.txt        |   57 +
+ Documentation/devicetree/bindings/hsi/omap-ssi.txt |   97 ++
+ arch/arm/boot/dts/omap3-n900.dts                   |   65 +
+ arch/arm/boot/dts/omap3.dtsi                       |   45 +
+ arch/arm/boot/dts/omap34xx.dtsi                    |   11 +
+ arch/arm/boot/dts/omap36xx.dtsi                    |   11 +
+ drivers/hsi/Kconfig                                |    1 +
+ drivers/hsi/Makefile                               |    1 +
+ drivers/hsi/clients/Kconfig                        |   17 +
+ drivers/hsi/clients/Makefile                       |    4 +-
+ drivers/hsi/clients/hsi_char.c                     |   12 +-
+ drivers/hsi/clients/nokia-modem.c                  |  285 ++++
+ drivers/hsi/clients/ssi_protocol.c                 | 1191 +++++++++++++++++
+ drivers/hsi/controllers/Kconfig                    |   19 +
+ drivers/hsi/controllers/Makefile                   |    6 +
+ drivers/hsi/controllers/omap_ssi.c                 |  625 +++++++++
+ drivers/hsi/controllers/omap_ssi.h                 |  166 +++
+ drivers/hsi/controllers/omap_ssi_port.c            | 1399 ++++++++++++++++++++
+ drivers/hsi/controllers/omap_ssi_regs.h            |  171 +++
+ drivers/hsi/hsi.c                                  |  275 +++-
+ include/linux/hsi/hsi.h                            |   39 +-
+ include/linux/hsi/ssi_protocol.h                   |   42 +
+ 23 files changed, 4566 insertions(+), 17 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/hsi/client-devices.txt
+ create mode 100644 Documentation/devicetree/bindings/hsi/nokia-modem.txt
+ create mode 100644 Documentation/devicetree/bindings/hsi/omap-ssi.txt
+ create mode 100644 drivers/hsi/clients/nokia-modem.c
+ create mode 100644 drivers/hsi/clients/ssi_protocol.c
+ create mode 100644 drivers/hsi/controllers/Kconfig
+ create mode 100644 drivers/hsi/controllers/Makefile
+ create mode 100644 drivers/hsi/controllers/omap_ssi.c
+ create mode 100644 drivers/hsi/controllers/omap_ssi.h
+ create mode 100644 drivers/hsi/controllers/omap_ssi_port.c
+ create mode 100644 drivers/hsi/controllers/omap_ssi_regs.h
+ create mode 100644 include/linux/hsi/ssi_protocol.h
+
+-- 
+2.0.0.rc0
