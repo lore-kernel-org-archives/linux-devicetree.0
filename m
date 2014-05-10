@@ -1,38 +1,62 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v2] DMA: add a driver for AMBA AXI NBPF DMAC IP cores
-Date: Sat, 10 May 2014 15:44:00 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1405101541230.30489@axis700.grange>
-References: <Pine.LNX.4.64.1404261344520.21367@axis700.grange>
- <20140507064453.GJ28638@intel.com> <Pine.LNX.4.64.1405101009220.29796@axis700.grange>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Why do we assign a unique (and non-deterministic) name in
+ of_device_make_bus_id()
+Date: Sat, 10 May 2014 12:32:28 -0300
+Message-ID: <20140510153227.GA18722@arch.cereza>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.64.1405101009220.29796-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>
+Cc: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido@vanguardiasur.com.ar>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 10 May 2014, Guennadi Liakhovetski wrote:
+I have a devicetree for a custom board with several nodes with no
+applicable reg property, such as:
 
-[snip]
+/ {
+	backlight {
+		compatible = "pwm-backlight";
+	};
 
-> > > +	nbpf = devm_kzalloc(dev, sizeof(*nbpf) + num_channels *
-> > > +			    sizeof(nbpf->chan[0]), GFP_KERNEL);
-> > I think we have devm_kcalloc for these things?
-> 
-> Ah, ok, missed this, thanks, will update!
+	gpio-keys {
+		compatible = "gpio-keys";
+	};
 
-Sorry, don't think it's suitable here. The allocation size is "y + x * n" 
-and not just "x * n."
+	rotary-encoder {
+		compatible = "rotary-encoder";
+	};
+};
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+These nodes are then registered as devices with unique names:
+
+$ ls /sys/devices
+gpio_keys.8/	rotary_encoder.9/	backlight.6/
+
+... among others.
+
+The uniqueness is guaranteed by of_device_make_bus_id() which uses a global
+counter for all nodes with no reg property. The relevant snippet is:
+
+[..]
+/*
+ * No BusID, use the node name and add a globally incremented
+ * counter (and pray...)
+ */
+magic = atomic_add_return(1, &bus_no_reg_magic);
+dev_set_name(dev, "%s.%d", node->name, magic - 1);
+
+Two nodes can't have the same name and get registered, hence my confusion:
+Is the unique number addition absolutely necessary? What am I missing here?
+
+Isn't a bit problematic to register devices with names that depend solely
+on probe order (i.e. non-deterministic)?
+
+For instance, hotplug event listeners matching the device name may fail if
+the device suddenly change for whatever reason.
+
+Regards,
+-- 
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
