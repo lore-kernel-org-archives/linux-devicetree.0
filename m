@@ -1,128 +1,142 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH v3 2/2] dmaengine: add device tree binding documentation for
- the nbpfaxi driver
-Date: Sat, 10 May 2014 18:11:06 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1405101809380.30489@axis700.grange>
-References: <Pine.LNX.4.64.1405101757070.30489@axis700.grange>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC 0/3] Berlin SoC clock tree - DT or not DT?
+Date: Sat, 10 May 2014 18:13:05 +0200
+Message-ID: <536E5011.4020304@gmail.com>
+References: <1399580212-30183-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.64.1405101757070.30489-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+In-Reply-To: <1399580212-30183-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The nbpfaxi dmaengine driver doesn't define any new bindings, it only
-uses standard dmaengine bindings and defines 3 flags for the 3rd parameter
-of the "dmas" property.
+Sorry for the noise,
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
+I just noticed that I didn't send the cover letter itself to the
+list. Anyway, I decided to review the whole clock mess again and
+came up with a quite nice set of patches which split clocks between
+DT- and code-registered clocks.
 
-v3: split out from v2, no changes otherwise
+Actually, I need Alexandre to (re-)add BG2Q support first, but if he
+is busy, I'll send the preliminary version on Sunday or Monday.
 
- Documentation/devicetree/bindings/dma/nbpfaxi.txt | 61 +++++++++++++++++++++++
- include/dt-bindings/dma/nbpfaxi.h                 | 20 ++++++++
- 2 files changed, 81 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/nbpfaxi.txt
- create mode 100644 include/dt-bindings/dma/nbpfaxi.h
+@Mike: I know it is late in the cycle, but I'd love to see this in
+for the next release already. There are functional bugs for sure,
+but actually Berlin SoC support is so minimal, there is nothing we
+can really break. I'll put that in the real patch set's cover letter
+again, but when I send it, I will have prepared a topic branch of it
+and put it into linux-next to make sure, it doesn't break others.
 
-diff --git a/Documentation/devicetree/bindings/dma/nbpfaxi.txt b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
-new file mode 100644
-index 0000000..d5e2522
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
-@@ -0,0 +1,61 @@
-+* Renesas "Type-AXI" NBPFAXI* DMA controllers
-+
-+* DMA controller
-+
-+Required properties
-+
-+- compatible:	must be one of
-+		"renesas,nbpfaxi64dmac1b4"
-+		"renesas,nbpfaxi64dmac1b8"
-+		"renesas,nbpfaxi64dmac1b16"
-+		"renesas,nbpfaxi64dmac4b4"
-+		"renesas,nbpfaxi64dmac4b8"
-+		"renesas,nbpfaxi64dmac4b16"
-+		"renesas,nbpfaxi64dmac8b4"
-+		"renesas,nbpfaxi64dmac8b8"
-+		"renesas,nbpfaxi64dmac8b16"
-+- #dma-cells:	must be 2: the first integer is a terminal number, to which this
-+		slave is connected, the second one is flags. Flags is a bitmask
-+		with the following bits defined:
-+
-+#define NBPF_SLAVE_RQ_HIGH	1
-+#define NBPF_SLAVE_RQ_LOW	2
-+#define NBPF_SLAVE_RQ_LEVEL	4
-+
-+Optional properties:
-+
-+You can use dma-channels and dma-requests as described in dma.txt, although they
-+won't be used, this information is derived from the compatibility string.
-+
-+Example:
-+
-+	dma: dma-controller@48000000 {
-+		compatible = "renesas,nbpfaxi64dmac8b4";
-+		reg = <0x48000000 0x400>;
-+		interrupts = <0 12 0x4
-+			      0 13 0x4
-+			      0 14 0x4
-+			      0 15 0x4
-+			      0 16 0x4
-+			      0 17 0x4
-+			      0 18 0x4
-+			      0 19 0x4>;
-+		#dma-cells = <2>;
-+		dma-channels = <8>;
-+		dma-requests = <8>;
-+	};
-+
-+* DMA client
-+
-+Required properties:
-+
-+dmas and dma-names are required, as described in dma.txt.
-+
-+Example:
-+
-+#include <dt-bindings/dma/nbpfaxi.h>
-+
-+...
-+		dmas = <&dma 0 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)
-+			&dma 1 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)>;
-+		dma-names = "rx", "tx";
-diff --git a/include/dt-bindings/dma/nbpfaxi.h b/include/dt-bindings/dma/nbpfaxi.h
-new file mode 100644
-index 0000000..c1a5b9e
---- /dev/null
-+++ b/include/dt-bindings/dma/nbpfaxi.h
-@@ -0,0 +1,20 @@
-+/*
-+ * Copyright (C) 2013-2014 Renesas Electronics Europe Ltd.
-+ * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of version 2 of the GNU General Public License as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef DT_BINDINGS_NBPFAXI_H
-+#define DT_BINDINGS_NBPFAXI_H
-+
-+/**
-+ * Use "#dma-cells = <2>;" with the second integer defining slave DMA flags:
-+ */
-+#define NBPF_SLAVE_RQ_HIGH	1
-+#define NBPF_SLAVE_RQ_LOW	2
-+#define NBPF_SLAVE_RQ_LEVEL	4
-+
-+#endif
--- 
-2.0.0.rc0
+If you NAK taking it for the next release, we would have to squeeze
+in some DT tweaks with fixed-clocks as placeholders for the missing
+clocks. Antonine and Alexandre are doing a great job adding
+functionality to Berlin SoCs but, of course, lack clocks here and
+there. Using DT fixed-clocks would be ok now, but proper clock nodes
+even if the corresponding drivers are buggy would be best.
+
+I have compared driver generated frequencies with Marvell's BSP
+u-boot clock report and they match, so it isn't too buggy :P
+
+@Alexandre, Antoine:
+The latest set of patches is at
+https://github.com/shesselba/linux-berlin.git topic/clk
+
+Please have a look at it and prepare BG2Q patches that I can
+add/squeeze to it. Also, if you have comments already, do not
+hesitate to send them directly to me.
+
+Sebastian
+
+On 05/08/2014 10:16 PM, Sebastian Hesselbarth wrote:
+> This is a RFC providing a counter-approach to some patches set by
+> Alexandre Belloni [1][2] to bring clock support for Berlin SoCs.
+> It is based on those and final patches will include Alexandre's
+> Signed-off again, I just dropped it for the RFC.
+> 
+> I am really unsure what is the best way to represent this in DT
+> and/or code, i.e. where to split this up. I's appreciate any
+> valuable discussion about it.
+> 
+> On Berlin SoCs, clock registers reside in global registers together
+> with e.g. pin ctrl, pad ctrl, reset, and general purpose regs used
+> for secondary boot address.
+> 
+> Actually, the situation isn't as bad as I initially thought, i.e.
+> regarding clocks there is only two types of PLLs, some
+> mux/divider/gate cells, and some separate muxes and gates.
+> 
+> What bothers me most is, there is *always* one that is different from
+> the others, e.g.
+> 
+> - mux/divider/gate cells either have some bits in registers shared
+>   with other cells *or* have their own register
+> - some cells are missing the gate, some have no mux
+> - some m/d/g cells have their shared bits in the same register, some
+>   in consecutive registers
+> 
+> To find a good representation in either code or DT that fits all,
+> quickly becomes messy. Anyway, we somehow have to deal with it, so
+> here is what I think are the three options:
+> 
+> a) One single "Berlin2 Clock Tree" DT node (this RFC)
+> 
+> We basically hide all the gory details of the register mess above
+> behind a single clock provider and index each leaf-clock by some
+> number. The pro is that DT doesn't get messed up, the con is that
+> there is a bunch of structs that each MULTIARCH kernel has to carry
+> around (currently ~13k). I tried to put it all in __initconst/data
+> so at least it can be free'd later.
+> 
+> b) Represent each PLL, M/D/G cell, and the single muxes/gates in DT
+> 
+> Well, the opposite of (a) i.e. exposing all the different register
+> offsets and shifts as properties. The pro is that most of the code
+> will move to DT which is only used by Berlin SoCs. The con is
+> definitely that we have to link all the clocks in DT and therefore
+> quickly get up to ~30 clock providers with a lot of clocks each.
+> 
+> c) Find the way in the middle
+> 
+> After looking long enough on the register mess, there is some blocks
+> that can be separated from each other. Basically it is each of the
+> PLLs, the single register dividers, and the rest. This still requires
+> a bunch of DT clocks but has far less clock providers. We still need
+> to provide some offset/shift properties as BG2/BG2CD's and BG2Q's cells
+> are slightly different.
+> 
+> I know, (c) sounds like the best option. But given the pain I went
+> through reading this register set includes (no datasheet available
+> of course), I really want some opinions about all three alternatives
+> first before touching this code ever again.
+> 
+> I'd appreciate any review and comments about the three patches attached
+> to this RFC *and* to the general approaches above. I just sent the
+> drivers and left out anything else, e.g. DT binding docs, Makefile/
+> Kconfigs, aso. Also, the patches are not in the correct (bisectable)
+> order but sorted by "controversity".
+> 
+> Sebastian
+> 
+> [1] https://lkml.org/lkml/2014/4/23/831
+> [2] https://lkml.org/lkml/2014/4/24/624
+> 
+> Sebastian Hesselbarth (3):
+>   clk: berlin: add clock tree driver for BG2/BG2CD
+>   clk: berlin: add driver for BG2x complex divider cells
+>   clk: berlin: add driver for BG2x simple PLLs
+> 
+>  drivers/clk/berlin/berlin2-div.c | 261 +++++++++++++++++
+>  drivers/clk/berlin/berlin2-pll.c | 104 +++++++
+>  drivers/clk/berlin/bg2.c         | 615 +++++++++++++++++++++++++++++++++++++++
+>  drivers/clk/berlin/common.h      | 124 ++++++++
+>  4 files changed, 1104 insertions(+)
+>  create mode 100644 drivers/clk/berlin/berlin2-div.c
+>  create mode 100644 drivers/clk/berlin/berlin2-pll.c
+>  create mode 100644 drivers/clk/berlin/bg2.c
+>  create mode 100644 drivers/clk/berlin/common.h
+> 
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
