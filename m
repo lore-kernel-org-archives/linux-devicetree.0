@@ -1,202 +1,355 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv5 RFC 12/15] hwspinlock/core: add OF helper to parse reserved
- locks
-Date: Fri, 9 May 2014 20:17:12 -0500
-Message-ID: <536D7E18.4040502@ti.com>
-References: <1398904476-26200-1-git-send-email-s-anna@ti.com> <1398904476-26200-13-git-send-email-s-anna@ti.com> <53680639.1080405@ti.com> <20140505215422.GD5546@joshc.qualcomm.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
+ controller support
+Date: Fri, 9 May 2014 20:16:59 -0500
+Message-ID: <20140510011659.GH7047@lukather>
+References: <1399485515-11243-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399654570-30962-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140505215422.GD5546@joshc.qualcomm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Josh Cartwright <joshc@codeaurora.org>, Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Tony Lindgren <tony@atomide.com>, Bjorn Andersson <bjorn@kryo.se>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OWym5pP/pDvoNOpg"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399654570-30962-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Wolfram Sang <wsa@the-dreams.de>, Randy Dunlap <rdunlap@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Josh,
 
-On 05/05/2014 04:54 PM, Josh Cartwright wrote:
-> On Mon, May 05, 2014 at 04:44:25PM -0500, Suman Anna wrote:
->> Hi Rob,
->>
->> On 04/30/2014 07:34 PM, Suman Anna wrote:
->>> The property 'hwlock-reserved-locks' will be used to represent
->>> the number of locks to be reserved for clients that would need
->>> to request/operate on specific locks. A new OF helper function,
->>> of_hwspin_lock_get_num_reserved_locks(), is added to minimize
->>> duplication in different platform implementations.
->>>
->>> The function will return a value of 0 if the property is not
->>> defined, so as to support a default behavior of marking all
->>> locks as unused and open for anonymous allocations.
->>>
->>> Signed-off-by: Suman Anna <s-anna@ti.com>
->>> ---
->>>  .../devicetree/bindings/hwlock/hwlock.txt          |  3 +++
->>>  drivers/hwspinlock/hwspinlock_core.c               | 25 ++++++++++++++++++++++
->>>  include/linux/hwspinlock.h                         |  1 +
->>>  3 files changed, 29 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/hwlock/hwlock.txt b/Documentation/devicetree/bindings/hwlock/hwlock.txt
->>> index d538a9b..88d16d2 100644
->>> --- a/Documentation/devicetree/bindings/hwlock/hwlock.txt
->>> +++ b/Documentation/devicetree/bindings/hwlock/hwlock.txt
->>> @@ -18,6 +18,9 @@ Common properties:
->>>  			property is needed on hwlock devices, where the number
->>>  			of supported locks within a hwlock device cannot be
->>>  			read from a register.
->>> +- hwlock-reserved-locks: Number of locks to reserve for clients requiring
->>> +			specific locks. This value cannot exceed the value of
->>> +			hwlock-num-locks.
->>
->> Any suggestions here on the approach? This property falls into a gray
->> area as well, as the current approach is somewhat limiting (it doesn't
->> support sparse reserved locks, and expects them at the beginning of the
->> lock range).
-> 
-> Is it possible to implement a pinctrl-like hogging approach, whereby the
-> specific locks that need to be reserved are consumed by the controller
-> itself?
-> 
+--OWym5pP/pDvoNOpg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for the suggestion. I did take a look at pinctrl and while it is
-possible to implement something similar, I feel it is a bit heavy for
-hwspinlock framework with no added advantages. It requires that the
-controller and clients always need to be updated together. Ohad had
-already brought this up [1]. Here's an alternate approach that does not
-require any additional property to the controller itself, while the
-client node usage is as before. The logic is based on parsing through
-the DT blob and marking only those that are used by any clients. The RFC
-patch below is a replacement for Patches 11 to 15, and do not require
-any changes to platform implementations or additional DT properties.
+On Fri, May 09, 2014 at 06:56:10PM +0200, Boris BREZILLON wrote:
+> The P2WI looks like an SMBus controller which only supports byte data
+> transfers. But, it differs from standard SMBus protocol on several
+> aspects:
+> - it supports only one slave device, and thus drop the address field
+> - it adds a parity bit every 8bits of data
+> - only one read access is required to read a byte (instead of a read
+>   followed by a write access in standard SMBus protocol)
+> - there's no Ack bit after each byte transfer
+>=20
+> This means this bus cannot be used to interface with standard SMBus
+> devices (the only known device to support this interface is the AXP221
+> PMIC).
+>=20
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+> Changes since v2:
+> - drop the initialization (switch from I2C to P2WI mode) part
+> - print devm_ioremap_resource err code
 
-It currently marks locks as reserved even for disabled client nodes
-(very easy to change that behavior). It will also impose a standard
-property name "hwlocks" on the client nodes. What do you think of this
-approach?
+You'll also need to update the documentation of the DT bindings.
 
-regards
-Suman
+>=20
+>  drivers/i2c/busses/Kconfig          |  12 ++
+>  drivers/i2c/busses/Makefile         |   1 +
+>  drivers/i2c/busses/i2c-sun6i-p2wi.c | 352 ++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 365 insertions(+)
+>  create mode 100644 drivers/i2c/busses/i2c-sun6i-p2wi.c
+>=20
+> diff --git a/drivers/i2c/busses/Kconfig b/drivers/i2c/busses/Kconfig
+> index c94db1c..09bce1c 100644
+> --- a/drivers/i2c/busses/Kconfig
+> +++ b/drivers/i2c/busses/Kconfig
+> @@ -771,6 +771,18 @@ config I2C_STU300
+>  	  This driver can also be built as a module. If so, the module
+>  	  will be called i2c-stu300.
+> =20
+> +config I2C_SUN6I_P2WI
+> +	tristate "Allwinner sun6i internal P2WI controller"
+> +	depends on ARCH_SUNXI
+> +	help
+> +	  If you say yes to this option, support will be included for the
+> +	  P2WI (Push/Pull 2 Wire Interface) controller embedded in some sunxi
+> +	  SOCs.
+> +	  The P2WI looks like an SMBus controller (which supports only byte
+> +	  accesses), except that it only supports one slave device.
+> +	  This interface is used to connect to specific PMIC devices (like the
+> +	  AXP221).
+> +
+>  config I2C_TEGRA
+>  	tristate "NVIDIA Tegra internal I2C controller"
+>  	depends on ARCH_TEGRA
+> diff --git a/drivers/i2c/busses/Makefile b/drivers/i2c/busses/Makefile
+> index 18d18ff..58feeb9 100644
+> --- a/drivers/i2c/busses/Makefile
+> +++ b/drivers/i2c/busses/Makefile
+> @@ -75,6 +75,7 @@ obj-$(CONFIG_I2C_SIMTEC)	+=3D i2c-simtec.o
+>  obj-$(CONFIG_I2C_SIRF)		+=3D i2c-sirf.o
+>  obj-$(CONFIG_I2C_ST)		+=3D i2c-st.o
+>  obj-$(CONFIG_I2C_STU300)	+=3D i2c-stu300.o
+> +obj-$(CONFIG_I2C_SUN6I_P2WI)	+=3D i2c-sun6i-p2wi.o
+>  obj-$(CONFIG_I2C_TEGRA)		+=3D i2c-tegra.o
+>  obj-$(CONFIG_I2C_VERSATILE)	+=3D i2c-versatile.o
+>  obj-$(CONFIG_I2C_WMT)		+=3D i2c-wmt.o
+> diff --git a/drivers/i2c/busses/i2c-sun6i-p2wi.c b/drivers/i2c/busses/i2c=
+-sun6i-p2wi.c
+> new file mode 100644
+> index 0000000..7c859ee
+> --- /dev/null
+> +++ b/drivers/i2c/busses/i2c-sun6i-p2wi.c
+> @@ -0,0 +1,352 @@
+> +/*
+> + * P2WI (Push-Pull Two Wire Interface) bus driver.
+> + *
+> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public Licen=
+se
+> + * version 2.  This program is licensed "as is" without any warranty of =
+any
+> + * kind, whether express or implied.
+> + */
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/module.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/i2c.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/clk.h>
+> +#include <linux/err.h>
+> +#include <linux/delay.h>
+> +#include <linux/clk.h>
+> +#include <linux/reset.h>
+> +
+> +
+> +/* P2WI registers */
+> +#define P2WI_CTRL		0x0
+> +#define P2WI_CCR		0x4
+> +#define P2WI_INTE		0x8
+> +#define P2WI_INTS		0xc
+> +#define P2WI_DADDR0		0x10
+> +#define P2WI_DADDR1		0x14
+> +#define P2WI_DLEN		0x18
+> +#define P2WI_DATA0		0x1c
+> +#define P2WI_DATA1		0x20
+> +#define P2WI_LCR		0x24
+> +#define P2WI_PMCR		0x28
+> +
+> +/* CTRL fields */
+> +#define P2WI_CTRL_START_TRANS		BIT(7)
+> +#define P2WI_CTRL_ABORT_TRANS		BIT(6)
+> +#define P2WI_CTRL_GLOBAL_INT_ENB	BIT(1)
+> +#define P2WI_CTRL_SOFT_RST		BIT(0)
+> +
+> +/* CLK CTRL fields */
+> +#define P2WI_CCR_SDA_OUT_DELAY(v)	(((v) & 0x7) << 8)
+> +#define P2WI_CCR_MAX_CLK_DIV		0xff
+> +#define P2WI_CCR_CLK_DIV(v)		((v) & P2WI_CCR_MAX_CLK_DIV)
+> +
+> +/* STATUS fields */
+> +#define P2WI_INTS_TRANS_ERR_ID(v)	(((v) >> 8) & 0xff)
+> +#define P2WI_INTS_LOAD_BSY		BIT(2)
+> +#define P2WI_INTS_TRANS_ERR		BIT(1)
+> +#define P2WI_INTS_TRANS_OVER		BIT(0)
+> +
+> +/* DATA LENGTH fields*/
+> +#define P2WI_DLEN_READ			BIT(4)
+> +#define P2WI_DLEN_DATA_LENGTH(v)	((v - 1) & 0x7)
+> +
+> +/* LINE CTRL fields*/
+> +#define P2WI_LCR_SCL_STATE		BIT(5)
+> +#define P2WI_LCR_SDA_STATE		BIT(4)
+> +#define P2WI_LCR_SCL_CTL		BIT(3)
+> +#define P2WI_LCR_SCL_CTL_EN		BIT(2)
+> +#define P2WI_LCR_SDA_CTL		BIT(1)
+> +#define P2WI_LCR_SDA_CTL_EN		BIT(0)
+> +
+> +/* PMU MODE CTRL fields */
+> +#define P2WI_PMCR_PMU_INIT_SEND		BIT(31)
+> +#define P2WI_PMCR_PMU_INIT_DATA(v)	(((v) & 0xff) << 16)
+> +#define P2WI_PMCR_PMU_MODE_REG(v)	(((v) & 0xff) << 8)
+> +#define P2WI_PMCR_PMU_DEV_ADDR(v)	((v) & 0xff)
+> +
+> +#define P2WI_MAX_FREQ			6000000
+> +
+> +struct p2wi {
+> +	struct i2c_adapter adapter;
+> +	struct completion complete;
+> +	unsigned int irq;
+> +	unsigned int status;
+> +	void __iomem *regs;
+> +	struct clk *clk;
+> +	struct reset_control *rstc;
+> +	int slave_addr;
+> +};
+> +
+> +static irqreturn_t p2wi_interrupt(int irq, void *dev_id)
+> +{
+> +	struct p2wi *p2wi =3D dev_id;
+> +	unsigned long status;
+> +
+> +	status =3D readl(p2wi->regs + P2WI_INTS);
+> +	p2wi->status =3D status;
+> +
+> +	/* Clear interrupts */
+> +	status &=3D (P2WI_INTS_LOAD_BSY | P2WI_INTS_TRANS_ERR |
+> +		   P2WI_INTS_TRANS_OVER);
+> +	writel(status, p2wi->regs + P2WI_INTS);
+> +
+> +	complete(&p2wi->complete);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static u32 p2wi_functionality(struct i2c_adapter *adap)
+> +{
+> +	return I2C_FUNC_SMBUS_BYTE_DATA;
+> +}
+> +
+> +static int p2wi_smbus_xfer(struct i2c_adapter *adap, u16 addr,
+> +			   unsigned short flags, char read_write,
+> +			   u8 command, int size, union i2c_smbus_data *data)
+> +{
+> +	struct p2wi *p2wi =3D i2c_get_adapdata(adap);
+> +	unsigned long dlen =3D P2WI_DLEN_DATA_LENGTH(1);
+> +
+> +	if (addr > 0xff ||
+> +	    (p2wi->slave_addr >=3D 0 && addr !=3D p2wi->slave_addr)) {
+> +		dev_err(&adap->dev, "invalid P2WI address\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (!data)
+> +		return -EINVAL;
+> +
+> +	writel(command, p2wi->regs + P2WI_DADDR0);
+> +
+> +	if (read_write =3D=3D I2C_SMBUS_READ)
+> +		dlen |=3D P2WI_DLEN_READ;
+> +	else
+> +		writel(data->byte, p2wi->regs + P2WI_DATA0);
+> +
+> +	writel(dlen, p2wi->regs + P2WI_DLEN);
+> +
+> +	if (readl(p2wi->regs + P2WI_CTRL) & P2WI_CTRL_START_TRANS) {
+> +		dev_err(&adap->dev, "P2WI bus busy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	reinit_completion(&p2wi->complete);
+> +
+> +	writel(P2WI_INTS_LOAD_BSY | P2WI_INTS_TRANS_ERR | P2WI_INTS_TRANS_OVER,
+> +	       p2wi->regs + P2WI_INTE);
+> +
+> +	writel(P2WI_CTRL_START_TRANS | P2WI_CTRL_GLOBAL_INT_ENB,
+> +	       p2wi->regs + P2WI_CTRL);
+> +
+> +	wait_for_completion(&p2wi->complete);
+> +
+> +	if (p2wi->status & P2WI_INTS_LOAD_BSY) {
+> +		dev_err(&adap->dev, "P2WI bus busy\n");
+> +		return -EBUSY;
+> +	}
+> +
+> +	if (p2wi->status & P2WI_INTS_TRANS_ERR) {
+> +		dev_err(&adap->dev, "P2WI bus xfer error\n");
+> +		return -ENXIO;
+> +	}
+> +
+> +	if (read_write =3D=3D I2C_SMBUS_READ)
+> +		data->byte =3D readl(p2wi->regs + P2WI_DATA0);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct i2c_algorithm p2wi_algo =3D {
+> +	.smbus_xfer =3D p2wi_smbus_xfer,
+> +	.functionality =3D p2wi_functionality,
+> +};
+> +
+> +static const struct of_device_id p2wi_of_match_table[] =3D {
+> +	{ .compatible =3D "allwinner,sun6i-a31-p2wi" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, p2wi_of_match_table);
+> +
+> +static int p2wi_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct device_node *np =3D dev->of_node;
+> +	struct device_node *childnp;
+> +	unsigned long parent_clk_freq;
+> +	u32 clk_freq =3D 100000;
+> +	struct resource *r;
+> +	struct p2wi *p2wi;
+> +	u32 slave_addr;
+> +	int clk_div;
+> +	int ret;
+> +
+> +	of_property_read_u32(np, "clock-frequency", &clk_freq);
+> +	if (clk_freq > P2WI_MAX_FREQ) {
+> +		dev_err(dev,
+> +			"required clock-frequency (%u Hz) is too high (max =3D 6MHz)",
+> +			clk_freq);
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_get_child_count(np) > 1) {
+> +		dev_err(dev, "P2WI only supports one slave device\n");
+> +		return -EINVAL;
+> +	}
 
-[1] http://marc.info/?l=linux-omap&m=139514977622964&w=2
+If you return whenever you have more than one child here...
 
-----
->From 4f4cbe91e56c1be8faa6a3ee863add4df6e6714b Mon Sep 17 00:00:00 2001
-From: Suman Anna <s-anna@ti.com>
-Date: Fri, 9 May 2014 14:26:54 -0500
-Subject: [RFC PATCH] hwspinlock/core: add support for reserved locks
+> +	p2wi =3D devm_kzalloc(dev, sizeof(struct p2wi), GFP_KERNEL);
+> +	if (!p2wi) {
+> +		dev_err(dev, "failed to allocate p2wi struct\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	p2wi->slave_addr =3D -1;
+> +
+> +	/*
+> +	 * Authorize a p2wi node without any children to be able to use an
+> +	 * i2c-dev from userpace.
+> +	 * In this case the slave_addr is set to -1 and won't be checked when
+> +	 * launching a P2WI transfer.
+> +	 *
+> +	 * If the p2wi node contains more than one child, the first one will
+> +	 * be considered as the only slave node.
 
-The HwSpinlock core allows requesting either a specific lock or an
-available normal lock. The specific locks are usually reserved during
-board init time, while the normal available locks are intended to be
-assigned at runtime.
+=2E.. how does the second part of this comment make any sense? You won't
+even get there in such a case.
 
-The HwSpinlock core has been enhanced to mark certain locks as 'reserved'
-by parsing through the DT blob. Thes
+Thanks,
+Maxime
 
-The HwSpinlock core has been enhanced to:
-  1. mark certain locks as 'reserved' by parsing the DT blob for any
-     locks used by client nodes.
-  2. restrict the anonymous hwspin_lock_request() API to allocate only
-     from non-reserved locks for DT boots.
-  3. limit these reserved locks to be allocated only using the
-     _request_specific() API variants for DT boots.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-Signed-off-by: Suman Anna <s-anna@ti.com>
----
- drivers/hwspinlock/hwspinlock_core.c | 50
-++++++++++++++++++++++++++++++++++--
- 1 file changed, 48 insertions(+), 2 deletions(-)
+--OWym5pP/pDvoNOpg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-diff --git a/drivers/hwspinlock/hwspinlock_core.c
-b/drivers/hwspinlock/hwspinlock_core.c
-index c2063bc..0c924c9 100644
---- a/drivers/hwspinlock/hwspinlock_core.c
-+++ b/drivers/hwspinlock/hwspinlock_core.c
-@@ -425,6 +425,42 @@ static int hwspinlock_device_add(struct
-hwspinlock_device *bank)
-        return ret;
- }
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
 
-+static void hwspin_mark_reserved_locks(struct hwspinlock_device *bank)
-+{
-+       struct device_node *np = bank->dev->of_node;
-+       const char *prop_name = "hwlocks";
-+       const char *cells_name = "#hwlock-cells";
-+       struct device_node *node = NULL;
-+       struct of_phandle_args args;
-+       struct hwspinlock *hwlock;
-+       int i, id, count, ret;
-+
-+       for_each_node_with_property(node, prop_name) {
-+               count = of_count_phandle_with_args(node, prop_name,
-cells_name);
-+               if (count <= 0)
-+                       continue;
-+
-+               for (i = 0; i < count; i++) {
-+                       ret = of_parse_phandle_with_args(node, prop_name,
-+                                                        cells_name, i,
-&args);
-+                       if (ret || np != args.np)
-+                               continue;
-+
-+                       id = bank->ops->of_xlate(bank, &args);
-+                       if (id < 0 || id >= bank->num_locks)
-+                               continue;
-+
-+                       hwlock = &bank->lock[id];
-+                       if (hwlock->type == HWSPINLOCK_RESERVED) {
-+                               dev_err(bank->dev, "potential reuse of
-hwspinlock %d between multiple clients on %s\n",
-+                                       id, np->full_name);
-+                               continue;
-+                       }
-+                       hwlock->type = HWSPINLOCK_RESERVED;
-+               }
-+       }
-+}
-+
- /**
-  * hwspin_lock_register() - register a new hw spinlock device
-  * @bank: the hwspinlock device, which usually provides numerous hw locks
-@@ -463,12 +499,16 @@ int hwspin_lock_register(struct hwspinlock_device
-*bank, struct device *dev,
-        if (ret)
-                return ret;
+iQIcBAEBAgAGBQJTbX4KAAoJEBx+YmzsjxAgH4cP+wT/ltg096A70aOMP51bN6wR
++Svm0ZpNHtaf85rAyJnX0yQdY5FmXLg8HIPQRxmN1nXSZVQVMI6ymU4M0ZmPa+30
+VXqkbeocv++1OUKczVsY5Gm2HNSaGYsuDlDnRxDDNeASJ03o1hWTGgQ2JSjGvCvk
+xxokId3LOISUGDUZu/WZdzjRvNZy04r2OelT9YphAZzZ+FTIonviz2efRjUlQDZ7
+aJYwoWJQAtTmN+ET4qgar66+KLdlbrC1paq2G8caEFwnL3mIRQclVRgZpzdI4hgJ
+poU3DZKL0I6oEfEyJgbKZ3Vpj/zrBD5/2QYn6oD4tdQaeKu4breokNvewauqT6iZ
+J9qZlZuTm3MwNyRbENgje66ZnQyjww2tiyita7lfWNeTWmA3CCC7Is5wAjh051Ot
+uFX6hnUi42MYicvQ668222Qb4hJI+QvqkSH/dzu7wsFULkI/n9bU7AElmd+gzATx
+hDqugwRiFNVmN5Ee+Feo69IFpHLXR1v/4ziYoqEA2vsKqHeHSJEfeSLf3l9hQjBa
+Z5EOv6JoY+kzLyxIpzNDbv+pND5vgF1CQC0RtIl68aoWPpILFo610OnpvNorZ4N9
+0os2oRb4gW71Z7GERLNd5O8ael3P7MqAoRo4ajf3YbE3jMKdhXz+yaWmUfs4S167
+6erGBQr17JwOE+rVFMeT
+=emhp
+-----END PGP SIGNATURE-----
 
-+       if (dev->of_node)
-+               hwspin_mark_reserved_locks(bank);
-+
-        for (i = 0; i < num_locks; i++) {
-                hwlock = &bank->lock[i];
-
-                spin_lock_init(&hwlock->lock);
-                hwlock->bank = bank;
--               hwlock->type = HWSPINLOCK_UNUSED;
-+               if (hwlock->type != HWSPINLOCK_RESERVED)
-+                       hwlock->type = HWSPINLOCK_UNUSED;
-
-                ret = hwspin_lock_register_single(hwlock, base_id + i);
-                if (ret)
-@@ -651,7 +691,13 @@ struct hwspinlock
-*hwspin_lock_request_specific(unsigned int id)
-        /* sanity check (this shouldn't happen) */
-        WARN_ON(hwlock_to_id(hwlock) != id);
-
--       /* make sure this hwspinlock is unused */
-+       if (hwlock->type != HWSPINLOCK_RESERVED) {
-+               pr_warn("hwspinlock %u is not a reserved lock\n", id);
-+               hwlock = NULL;
-+               goto out;
-+       }
-+
-+       /* make sure this hwspinlock is an unused reserved lock */
-        ret = radix_tree_tag_get(&hwspinlock_tree, id, hwlock->type);
-        if (ret == 0) {
-                pr_warn("hwspinlock %u is already in use\n", id);
--- 
-1.9.2
-
-
+--OWym5pP/pDvoNOpg--
