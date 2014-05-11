@@ -1,58 +1,91 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv5 01/10] HSI: method to unregister clients from an hsi port
-Date: Sat, 10 May 2014 18:37:41 +0200
-Message-ID: <1399739870-13526-2-git-send-email-sre@kernel.org>
-References: <1399739870-13526-1-git-send-email-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399739870-13526-1-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?q?Pali=20Roh=C3=A1r?= <pali.rohar@gmail.com>, =?UTF-8?q?=D0=98=D0=B2=D0=B0=D0=B9=D0=BB=D0=BE=20=D0=94=D0=B8=D0=BC=D0=B8=D1=82=D1=80=D0=BE=D0=B2?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v2 0/4] arm: Add basic support for Mediatek Cortex-A7 SoCs
+Date: Sun, 11 May 2014 03:40:59 +0200
+Message-ID: <1399772463-859-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This exports a method to unregister all clients from
-an hsi port.
+Second round for the basic support of the mt6589 SoC from Mediatek.
 
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
-Tested-By: Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>
+I droped the patch which introduced low-level-debug for the Soc, because of
+the missing serial device driver. This would prohibit the use of a multi-
+platform kernel with this series. I will re-submit the patch for low-level-
+debugging, when the serial driver got committed.
+
+I added support for the Aquaris5 mobile phone, although at the moment you can't
+really do anything with the phone. I also renamed the mtk6589.dtsi to 
+mt6589.dtsi as it better reflects the SoC name given by Mediatek.
+
 ---
- drivers/hsi/hsi.c       | 10 ++++++++++
- include/linux/hsi/hsi.h |  1 +
- 2 files changed, 11 insertions(+)
+This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
+Support is quite basic, as the only component working up to now are the
+timers.
 
-diff --git a/drivers/hsi/hsi.c b/drivers/hsi/hsi.c
-index 749f7b5..e96a987 100644
---- a/drivers/hsi/hsi.c
-+++ b/drivers/hsi/hsi.c
-@@ -130,6 +130,16 @@ static void hsi_port_release(struct device *dev)
- }
- 
- /**
-+ * hsi_unregister_port - Unregister an HSI port
-+ * @port: The HSI port to unregister
-+ */
-+void hsi_port_unregister_clients(struct hsi_port *port)
-+{
-+	device_for_each_child(&port->device, NULL, hsi_remove_client);
-+}
-+EXPORT_SYMBOL_GPL(hsi_port_unregister_clients);
-+
-+/**
-  * hsi_unregister_controller - Unregister an HSI controller
-  * @hsi: The HSI controller to register
-  */
-diff --git a/include/linux/hsi/hsi.h b/include/linux/hsi/hsi.h
-index 39bfd5b..5a9f121 100644
---- a/include/linux/hsi/hsi.h
-+++ b/include/linux/hsi/hsi.h
-@@ -282,6 +282,7 @@ struct hsi_controller *hsi_alloc_controller(unsigned int n_ports, gfp_t flags);
- void hsi_put_controller(struct hsi_controller *hsi);
- int hsi_register_controller(struct hsi_controller *hsi);
- void hsi_unregister_controller(struct hsi_controller *hsi);
-+void hsi_port_unregister_clients(struct hsi_port *port);
- 
- static inline void hsi_controller_set_drvdata(struct hsi_controller *hsi,
- 								void *data)
+The patch series is build against torvalds/master tree.
+
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+Changes for v2:
+1. Clocksource timer
+- Delete unused parts for sched_clock_source
+- Use irq_request instead of setup_irq
+- Remove unused SMP parts
+- Fix some style issues
+- use of_address_to resource and request_mem_region
+- delete use of named clock
+- select CLKSRC_MMIO in driver Kconfig
+
+2. DT bindings
+- delete named clock bindings
+
+3. Basic SoC support
+- Clean-up Kconfig
+- Add documentation of the SoC compatible property 
+- DTS: rename SoC file to mt6589.dts
+- DTS: Delete not present cache controller
+- DTS: Add missing GICv2 properties
+- DTS: Change clock names
+- DTS: Add Aquaris5 board
+
+4. Add earlyprintk
+- patch droped until serial driver is available
+
+5. Add support for Aquaris5 mobile phone
+
+---
+
+Matthias Brugger (4):
+  clocksource: Add support for the Mediatek SoCs
+  dt-bindings: add mtk-timer bindings
+  arm: add basic support for Mediatek MT6589 boards
+  arm: mediatek: add dts for Aquaris5 mobile phone
+
+ .../devicetree/bindings/arm/mediatek-mt65xx.txt    |   8 +
+ .../bindings/timer/mediatek,mtk-timer.txt          |  17 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |  25 +++
+ arch/arm/boot/dts/mt6589.dtsi                      |  93 ++++++++
+ arch/arm/mach-mediatek/Kconfig                     |   6 +
+ arch/arm/mach-mediatek/Makefile                    |   1 +
+ arch/arm/mach-mediatek/mediatek.c                  |  38 ++++
+ drivers/clocksource/Kconfig                        |   4 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/mtk_timer.c                    | 240 +++++++++++++++++++++
+ 13 files changed, 437 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+ create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
+ create mode 100644 arch/arm/boot/dts/mt6589.dtsi
+ create mode 100644 arch/arm/mach-mediatek/Kconfig
+ create mode 100644 arch/arm/mach-mediatek/Makefile
+ create mode 100644 arch/arm/mach-mediatek/mediatek.c
+ create mode 100644 drivers/clocksource/mtk_timer.c
+
 -- 
-2.0.0.rc0
+1.8.1.2
+
