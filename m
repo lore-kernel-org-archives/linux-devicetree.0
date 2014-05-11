@@ -1,83 +1,31 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: henninger: add I2C2 DT support
-Date: Sun, 11 May 2014 09:09:38 +0900
-Message-ID: <20140511000938.GN31760@verge.net.au>
-References: <201405090419.42435.sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: henninger: add SDHI0/2 DT support
+Date: Sun, 11 May 2014 09:20:34 +0900
+Message-ID: <20140511002034.GQ31760@verge.net.au>
+References: <201405032104.35276.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201405090419.42435.sergei.shtylyov@cogentembedded.com>
+In-Reply-To: <201405032104.35276.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 09, 2014 at 04:19:41AM +0400, Sergei Shtylyov wrote:
-> Define the Henninger board dependent part of the I2C2 device node.
-> Add device nodes for Analog Devices ADV7180 video decoder and Renesas EEPROM
-> connected to this I2C bus.
-> 
-> Based on the Koelsch I2C2 device tree patch by Wolfram Sang.
+On Sat, May 03, 2014 at 09:04:34PM +0400, Sergei Shtylyov wrote:
+> Define the Henninger board dependent part of the SDHI0/2 device nodes along with
+> the necessary voltage regulators (note that the Vcc regulators are dummy -- they
+> are required but don't actually exist on the board). Also, GPIOs have to be used
+> for the CD and WP signals due to the SDHI driver constraints...
 > 
 > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > 
 > ---
 > This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
-> 'renesas.git' repo plus SDHI0/2, QSPI, and MSIOF0 DT support patches posted
-> recently.
+> 'renesas.git' repo.
 > 
->  arch/arm/boot/dts/r8a7791-henninger.dts |   24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-> +++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-> @@ -110,6 +110,11 @@
->  		renesas,function = "sdhi2";
->  	};
->  
-> +	i2c2_pins: i2c2 {
-> +		renesas,groups = "i2c2";
-> +		renesas,function = "i2c2";
-> +	};
-> +
->  	qspi_pins: spi0 {
->  		renesas,groups = "qspi_ctrl", "qspi_data4";
->  		renesas,function = "qspi";
-> @@ -170,6 +175,25 @@
->  	status = "okay";
->  };
->  
-> +&i2c2 {
-> +	pinctrl-0 = <&i2c2_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	status = "okay";
-> +	clock-frequency = <400000>;
-> +
-> +	video@20 {
-> +		compatible = "adi,adv7180";
-> +		reg = <0x20>;
-> +	};
-> +
-> +	eeprom@50 {
-> +		compatible = "24c02";
+>  arch/arm/boot/dts/r8a7791-henninger.dts |   76 ++++++++++++++++++++++++++++++++
+>  1 file changed, 76 insertions(+)
 
-I am holding off until a conclusion is reached on the discussion
-elsewhere on the desired compatible string for the eeprom.
-
-> +		reg = <0x50>;
-> +		pagesize = <16>;
-> +	};
-> +};
-> +
->  &qspi {
->  	pinctrl-0 = <&qspi_pins>;
->  	pinctrl-names = "default";
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Thanks, I have queued this up.
