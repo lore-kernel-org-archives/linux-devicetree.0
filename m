@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv5 06/20] usb: host: xhci-plat: sort the headers in alphabetic order
-Date: Sun, 11 May 2014 20:17:54 +0200
-Message-ID: <1399832288-19899-7-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv5 14/20] ARM: configs: enable XHCI mvebu support in mvebu_v7_defconfig
+Date: Sun, 11 May 2014 20:18:02 +0200
+Message-ID: <1399832288-19899-15-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1399832288-19899-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -12,35 +12,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Sorting the headers in alphabetic order will help to reduce the conflict
-when adding new headers later.
+The Marvell Armada 38x platform needs the xhci_mvebu driver enabled
+for the xHCI USB hosts, so this commit enables the corresponding
+Kconfig option in mvebu_v7_defconfig.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/usb/host/xhci-plat.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/configs/mvebu_v7_defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 151901c..f5351af 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -11,11 +11,11 @@
-  * version 2 as published by the Free Software Foundation.
-  */
- 
--#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/module.h>
--#include <linux/slab.h>
- #include <linux/of.h>
--#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
- 
- #include "xhci.h"
- 
+diff --git a/arch/arm/configs/mvebu_v7_defconfig b/arch/arm/configs/mvebu_v7_defconfig
+index a34713d..e881106 100644
+--- a/arch/arm/configs/mvebu_v7_defconfig
++++ b/arch/arm/configs/mvebu_v7_defconfig
+@@ -78,6 +78,7 @@ CONFIG_USB_EHCI_HCD=y
+ CONFIG_USB_EHCI_ROOT_HUB_TT=y
+ CONFIG_USB_STORAGE=y
+ CONFIG_USB_XHCI_HCD=y
++CONFIG_USB_XHCI_MVEBU=y
+ CONFIG_MMC=y
+ CONFIG_MMC_MVSDIO=y
+ CONFIG_NEW_LEDS=y
 -- 
 1.9.2
 
