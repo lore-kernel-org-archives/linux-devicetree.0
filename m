@@ -1,41 +1,113 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
-Date: Sun, 11 May 2014 17:48:38 +0400
-Message-ID: <536F7FB6.5090508@cogentembedded.com>
-References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be> <1399494750-31996-2-git-send-email-geert+renesas@glider.be> <536B7FD3.5090506@cogentembedded.com> <CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com> <536B8340.4010901@cogentembedded.com> <CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com> <536BC445.8080007@cogentembedded.com> <CAMuHMdVR9n8E-LyHn1B0REE4oTVbfJf-9v1Bo70bHCH_=r4-Vw@mail.gmail.com> <536BD280.9070808@cogentembedded.com> <CAMuHMdXggzywt8q0DPrBVCyNVPKFXxwk5dKNaqmXHv+wTDRQhw@mail.gmail.com> <20140511010043.GZ31760@verge.net.au>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
+ probably 3630
+Date: Sun, 11 May 2014 07:42:10 -0700
+Message-ID: <20140511144209.GA28266@atomide.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com>
+ <1398815562-24113-2-git-send-email-tony@atomide.com>
+ <536C860E.1000501@ti.com>
+ <CALbNGRR3U1veFgXmOWpfG3yNVESdxi2t79WDrJwOZ1oShuG1yA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140511010043.GZ31760@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALbNGRR3U1veFgXmOWpfG3yNVESdxi2t79WDrJwOZ1oShuG1yA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Andreas =?utf-8?Q?M=C3=BCller?= <schnitzeltony@googlemail.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+* Andreas M=C3=BCller <schnitzeltony@googlemail.com> [140509 14:07]:
+> On Fri, May 9, 2014 at 9:38 AM, Tomi Valkeinen <tomi.valkeinen@ti.com=
+> wrote:
+> > On 30/04/14 02:52, Tony Lindgren wrote:
+> >> Otherwise we can get often errors like the following and the
+> >> display won't come on:
+> >>
+> >> omapdss APPLY error: FIFO UNDERFLOW on gfx, disabling the overlay
+> >> omapdss APPLY error: SYNC_LOST on channel lcd, restarting
+> >> the output with video overlays disabled
+> >>
+> >> There are some earlier references to this issue:
+> >>
+> >> http://www.spinics.net/lists/linux-omap/msg59511.html
+> >> http://www.spinics.net/lists/linux-omap/msg59724.html
+> >
+> resend - my client had HTML enabled...
+>=20
+> FWIW: I have had issues long time ago [1]. With mainline 3.14.3 I had
+> still the reboot problem on old 600MHz OMAP 3530. Applying this patch
+> solved the issues. For other versions I had no chance to reproduce th=
+e
+> original wakup issue mentioned in old thread
 
-On 05/11/2014 05:00 AM, Simon Horman wrote:
+Sorry I'm a bit confused now. Is the reboot issue a separate issue
+related to the twl4030 generic scripts for 3530?
 
->>>>>      Mine was the same (but for BOCK-W board) but DT people didn't give a
->>>>> damn. :-) So there's still no Ethernet support in BOCK-W DT.
+And then this patch fixes dm3730 wake-up (from suspend?) issues?
 
->>>> Yes there is: ethernet@18300000.
+Or do we have some other bug where we wrongly hit omap3630_dss_feats
+on 3530 somehow?
 
->>>     That's for an on-board SMSC911x, not for sh_eth.
+Regards,
 
->> Oh, it has two Ethernet ports? Didn't know that.
-
-> IIRC only the SMSC911x is exposed on the Bock-W board.
-
-    Not really. You're probably mixing it with Marzen.
-
-> From my point of view I would be happy to accept support for
-> the other port if there was some way (for someone to) verify it.
-
-    There is, and you have accepted such support in the legacy board file.
-I had to postpone Ether DT support to the time when CCF support is available, 
-though I have posted corresponding patches without the "clocks" property already.
-
-WBR, Sergei
-
+Tony
+=20
+> [1] http://marc.info/?l=3Dlinux-omap&m=3D136250904607413&w=3D2
+>=20
+> Andreas
+> > Those don't sound like the same issue, but it's hard to say. What k=
+ind
+> > of clock rates do you get? Cat you paste debugfs/omapdss/clk, with =
+and
+> > without this patch?
+> >
+> > What resolution do you have? If it's a very high resolution (say, D=
+VI
+> > output to a monitor), it could just be an issue of
+> > not-enough-memory-bandwidth.
+> >
+> >> It seems that it's safe to set the lower values even for 3630.
+> >> If we can confirm that 3630 works with the higher values
+> >> reliably we can add further detection.
+> >>
+> >> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> >> ---
+> >>  drivers/video/fbdev/omap2/dss/dss.c | 5 +++--
+> >>  1 file changed, 3 insertions(+), 2 deletions(-)
+> >>
+> >> diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/f=
+bdev/omap2/dss/dss.c
+> >> index d55266c..ad6561f 100644
+> >> --- a/drivers/video/fbdev/omap2/dss/dss.c
+> >> +++ b/drivers/video/fbdev/omap2/dss/dss.c
+> >> @@ -707,9 +707,10 @@ static const struct dss_features omap34xx_dss=
+_feats __initconst =3D {
+> >>       .dpi_select_source      =3D       &dss_dpi_select_source_oma=
+p2_omap3,
+> >>  };
+> >>
+> >> +/* Supposedly 3630 can use div 32 mult 2, but that needs to be re=
+checked */
+> >>  static const struct dss_features omap3630_dss_feats __initconst =3D=
+ {
+> >> -     .fck_div_max            =3D       32,
+> >> -     .dss_fck_multiplier     =3D       1,
+> >> +     .fck_div_max            =3D       16,
+> >> +     .dss_fck_multiplier     =3D       2,
+> >
+> > These values tell about the clock hardware, they are not settings t=
+hat
+> > can be changed to change the clock. OMAP3630 has a fixed x2 multipl=
+ier
+> > and a divider with maximum value of 16.
+> >
+> >  Tomi
+> >
+> >
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
