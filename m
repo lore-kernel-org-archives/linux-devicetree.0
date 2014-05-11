@@ -1,31 +1,48 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: henninger: add SDHI0/2 DT support
-Date: Sun, 11 May 2014 09:20:34 +0900
-Message-ID: <20140511002034.GQ31760@verge.net.au>
-References: <201405032104.35276.sergei.shtylyov@cogentembedded.com>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
+Date: Sun, 11 May 2014 09:08:35 +0900
+Message-ID: <20140511000834.GM31760@verge.net.au>
+References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
+ <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
+ <536C1945.1000601@cogentembedded.com>
+ <20140509050610.GB2624@katana>
+ <536D5DC3.3070409@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201405032104.35276.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <536D5DC3.3070409-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 03, 2014 at 09:04:34PM +0400, Sergei Shtylyov wrote:
-> Define the Henninger board dependent part of the SDHI0/2 device nodes along with
-> the necessary voltage regulators (note that the Vcc regulators are dummy -- they
-> are required but don't actually exist on the board). Also, GPIOs have to be used
-> for the CD and WP signals due to the SDHI driver constraints...
+On Sat, May 10, 2014 at 02:59:15AM +0400, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> On 05/09/2014 09:06 AM, Wolfram Sang wrote:
 > 
-> ---
-> This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
-> 'renesas.git' repo.
+> >>>+	eeprom@50 {
+> >>>+		compatible = "renesas,24c02";
 > 
->  arch/arm/boot/dts/r8a7791-henninger.dts |   76 ++++++++++++++++++++++++++++++++
->  1 file changed, 76 insertions(+)
+> >>    This is not quite right: Renesas' part is called differently, and
+> >>you're carrying the other vendor's naming onto Renesas parts. I'd
+> >>just say "24c02" (which I'll do in the Henninger board patch).
+> 
+> >What about "generic"?
+> 
+>    I don't know, really. However, you're right in that there should
+> be some vendor prefix -- I've just seen
+> Documentation/devicetree/bindings/eeprom.txt.
 
-Thanks, I have queued this up.
+A quick survey of arch/arm/boot/dts/ yields:
+
+"atmel,24c02" (22 times)
+"microchip,24c02" (once)
+"mcp,24c02" (once)
+
+So it seems to me that precedence is in favour of using "renesas,24c02".
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
