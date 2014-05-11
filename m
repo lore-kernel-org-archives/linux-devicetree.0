@@ -1,48 +1,44 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
-Date: Sun, 11 May 2014 09:08:35 +0900
-Message-ID: <20140511000834.GM31760@verge.net.au>
-References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
- <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
- <536C1945.1000601@cogentembedded.com>
- <20140509050610.GB2624@katana>
- <536D5DC3.3070409@cogentembedded.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
+Date: Sun, 11 May 2014 10:00:43 +0900
+Message-ID: <20140511010043.GZ31760@verge.net.au>
+References: <1399494750-31996-1-git-send-email-geert+renesas@glider.be>
+ <1399494750-31996-2-git-send-email-geert+renesas@glider.be>
+ <536B7FD3.5090506@cogentembedded.com>
+ <CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com>
+ <536B8340.4010901@cogentembedded.com>
+ <CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>
+ <536BC445.8080007@cogentembedded.com>
+ <CAMuHMdVR9n8E-LyHn1B0REE4oTVbfJf-9v1Bo70bHCH_=r4-Vw@mail.gmail.com>
+ <536BD280.9070808@cogentembedded.com>
+ <CAMuHMdXggzywt8q0DPrBVCyNVPKFXxwk5dKNaqmXHv+wTDRQhw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <536D5DC3.3070409-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wolfram Sang <wsa-jBu1N2QxHDJrcw3mvpCnnVaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <CAMuHMdXggzywt8q0DPrBVCyNVPKFXxwk5dKNaqmXHv+wTDRQhw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb+renesas@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 10, 2014 at 02:59:15AM +0400, Sergei Shtylyov wrote:
-> Hello.
+On Thu, May 08, 2014 at 09:01:55PM +0200, Geert Uytterhoeven wrote:
+> Hi Sergey,
 > 
-> On 05/09/2014 09:06 AM, Wolfram Sang wrote:
+> On Thu, May 8, 2014 at 8:52 PM, Sergei Shtylyov
+> <sergei.shtylyov@cogentembedded.com> wrote:
+> >>>     Mine was the same (but for BOCK-W board) but DT people didn't give a
+> >>> damn. :-) So there's still no Ethernet support in BOCK-W DT.
+> >
+> >> Yes there is: ethernet@18300000.
+> >
+> >    That's for an on-board SMSC911x, not for sh_eth.
 > 
-> >>>+	eeprom@50 {
-> >>>+		compatible = "renesas,24c02";
-> 
-> >>    This is not quite right: Renesas' part is called differently, and
-> >>you're carrying the other vendor's naming onto Renesas parts. I'd
-> >>just say "24c02" (which I'll do in the Henninger board patch).
-> 
-> >What about "generic"?
-> 
->    I don't know, really. However, you're right in that there should
-> be some vendor prefix -- I've just seen
-> Documentation/devicetree/bindings/eeprom.txt.
+> Oh, it has two Ethernet ports? Didn't know that.
 
-A quick survey of arch/arm/boot/dts/ yields:
+IIRC only the SMSC911x is exposed on the Bock-W board.
 
-"atmel,24c02" (22 times)
-"microchip,24c02" (once)
-"mcp,24c02" (once)
-
-So it seems to me that precedence is in favour of using "renesas,24c02".
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>From my point of view I would be happy to accept support for
+the other port if there was some way (for someone to) verify it.
+In particular to have the necessary hardware to test it.
+I do not believe that I am in a position to do so myself at this time.
