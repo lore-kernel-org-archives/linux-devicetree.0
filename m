@@ -1,45 +1,72 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv4 08/20] usb: host: xhci-plat: add support for the
- Armada 375/38x XHCI controllers
-Date: Sun, 11 May 2014 20:12:47 +0200
-Message-ID: <20140511201247.182d5f48@free-electrons.com>
-References: <1399470746-2948-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1399470746-2948-9-git-send-email-thomas.petazzoni@free-electrons.com>
-	<536AEFA0.3070806@renesas.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: henninger: add QSPI DT support
+Date: Sun, 11 May 2014 22:17:27 +0400
+Message-ID: <536FBEB7.9080605@cogentembedded.com>
+References: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <536AEFA0.3070806-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Shimoda, Yoshihiro,
+Hello.
 
-On Thu, 8 May 2014 11:44:48 +0900, Shimoda, Yoshihiro wrote:
+On 05/06/2014 02:45 AM, Sergei Shtylyov wrote:
 
-> > +#ifndef __LINUX_XHCI_MVEBU_H
-> > +#define __LINUX_XHCI_MVEBU_H
-> > +#if IS_ENABLED(CONFIG_USB_XHCI_MVEBU)
-> > +int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev);
-> > +#else
-> > +static inline int xhci_mvebu_mbus_init_quirk(struct device dev)
-> 
-> I could not compile this code when I disabled CONFIG_USB_XHCI_MVEBU:
-> 	incompatible type for argument 1 of 'xhci_mvebu_mbus_init_quirk'.
-> 
-> So, the "struct device dev" should be changed to "struct platform_device *pdev".
+> Define the Henninger board dependent part of the QSPI device node.
+> Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
 
-Ah, yes, correct, thanks! Will fix in v5.
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+> This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
+> 'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
+
+>   arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
+>   1 file changed, 38 insertions(+)
+
+> Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
+> +++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+[...]
+> @@ -158,3 +163,36 @@
+>   	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
+>   	status = "okay";
+>   };
+> +
+> +&qspi {
+> +	pinctrl-0 = <&qspi_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	status = "okay";
+> +
+> +	flash@0 {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "spansion,s25fl512s";
+> +		reg = <0>;
+> +		spi-max-frequency = <30000000>;
+> +		spi-tx-bus-width = <4>;
+> +		spi-rx-bus-width = <4>;
+> +		m25p,fast-read;
+> +
+> +		partition@0 {
+> +			label = "loader_prg";
+> +			reg = <0x00000000 0x00040000>;
+> +			read-only;
+> +		};
+> +		partition@40000 {
+> +			label = "user_prg";
+> +			reg = <0x00040000 0x00400000>;
+> +			read-only;
+
+    Oops, there shouldn't be "read-only" here, I forgot to refresh the patch 
+as I'm now seeing... too bad it's too late to resend now. :-(
+
+WBR, Sergei
+
