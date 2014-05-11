@@ -1,76 +1,82 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 0/2] input: Add new sun4i-ts driver for
- Allwinner sunxi SoC's rtp controller
-Date: Sun, 11 May 2014 23:04:57 +0200
-Message-ID: <20140511210457.GU7047@lukather>
-References: <1399795586-18919-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v3 4/9] dt-bindings: add documentation for s3c2410 clock controller
+Date: Mon, 12 May 2014 00:08:43 +0200
+Message-ID: <2606697.NdCSMtyESx@phil>
+References: <3427359.fjFAW0MSIR@phil>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YSDgblk1kzV93dSz"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB76LX6NQKGQEVANHWMY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399795586-18919-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LM Sensors <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3427359.fjFAW0MSIR@phil>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: t.figa@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Describe the clock controller of s3c2410, s3c2440 and s3c2442.
 
---YSDgblk1kzV93dSz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Acked-by: Tomasz Figa <t.figa@samsung.com>
+---
+ .../bindings/clock/samsung,s3c2410-clock.txt       | 50 ++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
 
-Hi Hans,
-
-On Sun, May 11, 2014 at 10:06:24AM +0200, Hans de Goede wrote:
-> Hi All,
->=20
-> Since Maxime rightfully pointed out an error in my resend of v3, here is =
-v4
-> with that fixed.
->=20
-> Note the second patch which adds hwmon functionality has been reviewed by
-> the hwon subsystem maintainer, and the sun?i*.dts changes to enable this
-> have already been upstreamed.
-
-For both patches,
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---YSDgblk1kzV93dSz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTb+X4AAoJEBx+YmzsjxAgdgIQALhQyVcGDAoLZb0dntVyQJpP
-Svw7gqLiPDz6cPEiJC7uW5QQGSv0QMyr67jR6AX9VFkCi9ay05iDTqHsglS7uwzP
-My2xvK8Sk8k8HE/VQaLPhkj/maIoXdaRuKD9Yu0SBnr3HEvF0AV9wdjC2eoSrNKK
-//pVGfRwfrkqGXf5A6cATTPa24+K0gr+h+Acy8QA1irAJq1mQ417c/KROCCMR4xl
-Jfxo0JiU0Rr6uTpnTZ1e7MsXl3IiqLhWoy3MigZ8kgtGpQruUpJLdtYljS591Kwg
-24JxTcd/AdYh6Y+g3RRW2uXoQ9a3ZoYwrtruLQvs/IRM6aREIBB+2Upr66SaB/56
-+XaUDVL18QN0Gz7PYwWSaTprZijaceCKJzbTMCv/+ZIOcQ/TJBRb6mjebIsxiOjY
-kFkmThYoc1AMMzgKAdNyvacW3/vNWi7dZ2lLgsZcWumbK+Th3gUGQdNe06i84z50
-QyOqCx7+CZJP4klPQNIaxluIFVt/rx96eN6Kj0R3pCDDC2XdqGvFQ0QUXtFwwZXf
-dVVIfaO3E2papwXfa5//Pohxj6gU6Iiv3VdfmDpICOyxUrskCSZKhLYI4vopvlJq
-y8la5eSaNSXh+eVq57sX7WP6YJE3+AaKcWkxHvPTOp39aS6nWb6WbJtzBB4d6IRc
-XpxfXiLAOVJsPMrwUk+m
-=I7Jk
------END PGP SIGNATURE-----
-
---YSDgblk1kzV93dSz--
+diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
+new file mode 100644
+index 0000000..822505e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
+@@ -0,0 +1,50 @@
++* Samsung S3C2410 Clock Controller
++
++The S3C2410 clock controller generates and supplies clock to various controllers
++within the SoC. The clock binding described here is applicable to the s3c2410,
++s3c2440 and s3c2442 SoCs in the s3c24x family.
++
++Required Properties:
++
++- compatible: should be one of the following.
++  - "samsung,s3c2410-clock" - controller compatible with S3C2410 SoC.
++  - "samsung,s3c2440-clock" - controller compatible with S3C2440 SoC.
++  - "samsung,s3c2442-clock" - controller compatible with S3C2442 SoC.
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. Some of the clocks are available only
++on a particular SoC.
++
++All available clocks are defined as preprocessor macros in
++dt-bindings/clock/s3c2410.h header and can be used in device
++tree sources.
++
++External clocks:
++
++The xti clock used as input for the plls is generated outside the SoC. It is
++expected that is are defined using standard clock bindings with a
++clock-output-names value of "xti".
++
++Example: Clock controller node:
++
++	clocks: clock-controller@4c000000 {
++		compatible = "samsung,s3c2410-clock";
++		reg = <0x4c000000 0x20>;
++		#clock-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller (refer to the standard clock bindings for information about
++  "clocks" and "clock-names" properties):
++
++	serial@50004000 {
++		compatible = "samsung,s3c2440-uart";
++		reg = <0x50004000 0x4000>;
++		interrupts = <1 23 3 4>, <1 23 4 4>;
++		clock-names = "uart", "clk_uart_baud2";
++		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>;
++		status = "disabled";
++	};
+-- 
+1.9.0
