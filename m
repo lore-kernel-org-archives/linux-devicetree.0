@@ -1,113 +1,81 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
- probably 3630
-Date: Sun, 11 May 2014 07:42:10 -0700
-Message-ID: <20140511144209.GA28266@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-2-git-send-email-tony@atomide.com>
- <536C860E.1000501@ti.com>
- <CALbNGRR3U1veFgXmOWpfG3yNVESdxi2t79WDrJwOZ1oShuG1yA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v12 0/6] ARM: sunxi: Add driver for SD/MMC
+ hosts found on Allwinner sunxi SoCs
+Date: Sun, 11 May 2014 19:08:43 +0200
+Message-ID: <20140511170843.GT7047@lukather>
+References: <1399794417-9291-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uc+LCsvbRhlIZa01"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2W5X2NQKGQESW4EFLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CALbNGRR3U1veFgXmOWpfG3yNVESdxi2t79WDrJwOZ1oShuG1yA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Andreas =?utf-8?Q?M=C3=BCller?= <schnitzeltony@googlemail.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+In-Reply-To: <1399794417-9291-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Andreas M=C3=BCller <schnitzeltony@googlemail.com> [140509 14:07]:
-> On Fri, May 9, 2014 at 9:38 AM, Tomi Valkeinen <tomi.valkeinen@ti.com=
-> wrote:
-> > On 30/04/14 02:52, Tony Lindgren wrote:
-> >> Otherwise we can get often errors like the following and the
-> >> display won't come on:
-> >>
-> >> omapdss APPLY error: FIFO UNDERFLOW on gfx, disabling the overlay
-> >> omapdss APPLY error: SYNC_LOST on channel lcd, restarting
-> >> the output with video overlays disabled
-> >>
-> >> There are some earlier references to this issue:
-> >>
-> >> http://www.spinics.net/lists/linux-omap/msg59511.html
-> >> http://www.spinics.net/lists/linux-omap/msg59724.html
-> >
-> resend - my client had HTML enabled...
+
+--uc+LCsvbRhlIZa01
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Hans,
+
+On Sun, May 11, 2014 at 09:46:51AM +0200, Hans de Goede wrote:
+> Hi All,
 >=20
-> FWIW: I have had issues long time ago [1]. With mainline 3.14.3 I had
-> still the reboot problem on old 600MHz OMAP 3530. Applying this patch
-> solved the issues. For other versions I had no chance to reproduce th=
-e
-> original wakup issue mentioned in old thread
-
-Sorry I'm a bit confused now. Is the reboot issue a separate issue
-related to the twl4030 generic scripts for 3530?
-
-And then this patch fixes dm3730 wake-up (from suspend?) issues?
-
-Or do we have some other bug where we wrongly hit omap3630_dss_feats
-on 3530 somehow?
-
-Regards,
-
-Tony
-=20
-> [1] http://marc.info/?l=3Dlinux-omap&m=3D136250904607413&w=3D2
+> Here is v12 of the sunxi-mmc patch-set David Lanzend=F6rfer and I have be=
+en
+> working on, the mmc driver itself is unchanged from v11. New this version=
+ are
+> some dts patch changes, see below.
 >=20
-> Andreas
-> > Those don't sound like the same issue, but it's hard to say. What k=
-ind
-> > of clock rates do you get? Cat you paste debugfs/omapdss/clk, with =
+> The first patch in this series is the patch adding the actual mmc driver =
 and
-> > without this patch?
-> >
-> > What resolution do you have? If it's a very high resolution (say, D=
-VI
-> > output to a monitor), it could just be an issue of
-> > not-enough-memory-bandwidth.
-> >
-> >> It seems that it's safe to set the lower values even for 3630.
-> >> If we can confirm that 3630 works with the higher values
-> >> reliably we can add further detection.
-> >>
-> >> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> >> ---
-> >>  drivers/video/fbdev/omap2/dss/dss.c | 5 +++--
-> >>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/drivers/video/fbdev/omap2/dss/dss.c b/drivers/video/f=
-bdev/omap2/dss/dss.c
-> >> index d55266c..ad6561f 100644
-> >> --- a/drivers/video/fbdev/omap2/dss/dss.c
-> >> +++ b/drivers/video/fbdev/omap2/dss/dss.c
-> >> @@ -707,9 +707,10 @@ static const struct dss_features omap34xx_dss=
-_feats __initconst =3D {
-> >>       .dpi_select_source      =3D       &dss_dpi_select_source_oma=
-p2_omap3,
-> >>  };
-> >>
-> >> +/* Supposedly 3630 can use div 32 mult 2, but that needs to be re=
-checked */
-> >>  static const struct dss_features omap3630_dss_feats __initconst =3D=
- {
-> >> -     .fck_div_max            =3D       32,
-> >> -     .dss_fck_multiplier     =3D       1,
-> >> +     .fck_div_max            =3D       16,
-> >> +     .dss_fck_multiplier     =3D       2,
-> >
-> > These values tell about the clock hardware, they are not settings t=
-hat
-> > can be changed to change the clock. OMAP3630 has a fixed x2 multipl=
-ier
-> > and a divider with maximum value of 16.
-> >
-> >  Tomi
-> >
-> >
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> should go in through the mmc tree.
+>=20
+> All the other patches are devicetree patches adding / using the new fixed
+> reg_vcc3v3 supply to all sunxi board files, and should go upstream through
+> Maxime's sunxi-dts tree.
+
+I just merged the last 5 patches.
+
+Thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--uc+LCsvbRhlIZa01
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.14 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTb66bAAoJEBx+YmzsjxAgTU4P/1Eexy8NCvbZGMQnK+fKgESW
+XKE3MQn/RibyUJkQdsTFf8FQ6Sx56y1yQ+ZiFfXjAPz2RjjGVuqnZwCVFquaRohm
+xaty83t1Dvb8LbjJa5pKQd3NHJkDl3uHuR0kX9fEVafdiE/93m7A9l4rcWn7yBAf
+dSY4Pgp/r62TPWh418R/FSl84TpvKgGc0gtEkKly/xdlo/k+fYNw7LcgXsJGAeVb
+37dO9tLzckpJZwbwrCPRk2rssPmabTWHPeKTTNiasS3CiEj8Y90YUbIJIE+MYcI/
+c4loZUZC9/5XWyr7d1P+lheBqwDLFBrS7ak555WAIlTGLnvppuMNwELRw2OGbl5H
+i5X0305d1wBgbX41jGTY9vu/PHpjo4xhC7Bce1sTc4Gks0cXLow36N7S3ekzgdRJ
+CYVoEm9MoCvGLAA6NvGhKvlZ1gEu7/W90Ny14GN2KAP5AaMhMlqlyMkYZSAinMvr
+MF1ZyvX6xav8eS53MaC5rJgd7aKt1SiQYPOR+fMUDAFiTWejJXJofUwGzs/0nrfI
+0Pgc9SwfpDLaMhsKWtuWA7iJy2I0QAOmTPMCdFsp7iAKDNRS0M+selPmjrgewg/C
+nJoM2JrxZO+GZGAy9Z9oqR16dp1d3oQbjxuSbbF1jkwE2VTSgk1AqE39TMLTfhOf
+JAal5GLPFXZl/xVg//Vt
+=EiU0
+-----END PGP SIGNATURE-----
+
+--uc+LCsvbRhlIZa01--
