@@ -1,72 +1,170 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: henninger: add QSPI DT support
-Date: Sun, 11 May 2014 22:17:27 +0400
-Message-ID: <536FBEB7.9080605@cogentembedded.com>
-References: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv5 00/20] USB support for Armada 38x and Armada 375
+Date: Sun, 11 May 2014 20:17:48 +0200
+Message-ID: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hello,
 
-On 05/06/2014 02:45 AM, Sergei Shtylyov wrote:
+This patch set adds the USB support for the Armada 38x and Armada 375
+SOCs. These SoCs use an xHCI but still need specific initialization,
+mainly to setup the MBus memory windows. They also have another USB
+controller for EHCI, identical to the one used on other mvebu SOCs.
 
-> Define the Henninger board dependent part of the QSPI device node.
-> Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
+This series is also available in
+the branch USB-375-38x-3.15-rc1-V5
+https://github.com/MISL-EBU-System-SW/mainline-public.git
 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Changes between v4 and v5:
 
-> ---
-> This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
-> 'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
+ * Fixed a compile time problem when CONFIG_USB_XHCI_MVEBU was
+   disabled. Noticed by Shimoda, Yoshihiro
+   <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>.
 
->   arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
->   1 file changed, 38 insertions(+)
+ * Added Acked-by from Alan Stern on patches 1 to 4.
 
-> Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-> +++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-[...]
-> @@ -158,3 +163,36 @@
->   	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
->   	status = "okay";
->   };
-> +
-> +&qspi {
-> +	pinctrl-0 = <&qspi_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	status = "okay";
-> +
-> +	flash@0 {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "spansion,s25fl512s";
-> +		reg = <0>;
-> +		spi-max-frequency = <30000000>;
-> +		spi-tx-bus-width = <4>;
-> +		spi-rx-bus-width = <4>;
-> +		m25p,fast-read;
-> +
-> +		partition@0 {
-> +			label = "loader_prg";
-> +			reg = <0x00000000 0x00040000>;
-> +			read-only;
-> +		};
-> +		partition@40000 {
-> +			label = "user_prg";
-> +			reg = <0x00040000 0x00400000>;
-> +			read-only;
+Changes between v3 and v4:
 
-    Oops, there shouldn't be "read-only" here, I forgot to refresh the patch 
-as I'm now seeing... too bad it's too late to resend now. :-(
+ * Additional patch that removes the use of of_irq_parse_and_map() in
+   ehci-orion, and just uses platform_get_irq() instead, to avoid a
+   different case between DT and non-T.
 
-WBR, Sergei
+ * Additional patch that renames the ehci-orion error handling goto
+   labels to have more meaningful names, in preparation for handling
+   of additional error cases in followup patches.
 
+ * Additional patch to update the ehci-orion Device Tree binding
+   documentation.
+
+ * Merge of 375/38x XHCI support patches: one patch for the driver,
+   one patch for the Device Tree binding documentation (instead of one
+   patch of these, for each SoC).
+
+ * Update of the XHCI Device Tree binding documentation to indicate
+   the new optional clocks property.
+
+ * Update of armada-375.dtsi to add missing spaces in the phy-names
+   definition.
+
+ * Update of armada-38x.dtsi to use 0x4000 instead of 0x3fff for the
+   register area length. Noticed by Andrew Lunn.
+
+ * Changed the PHY driver Kconfig option to only be enabled either
+   when MACH_ARMADA_375 or COMPILE_TEST are enabled. In the previous
+   version, the PHY driver was always enabled, regardless of the
+   platform.
+
+ * Various improvements to the PHY driver:
+
+    - Rename USB2_PHY_CONFIG_ENABLE to USB2_PHY_CONFIG_DISABLE, as
+      suggested by Ezequiel Garcia.
+    - Simplify the logic of armada375_usb_phy_init() by handling the
+      !cluster_phy->enable case first.
+    - Use devm_ioremap_resource() in the ->probe() function instead of
+      of_iomap().
+    - Bail out from ->probe() when a PHY cannot be created.
+    - Fix typos in comments.
+
+ * Reworded the Kconfig prompt and help text of XHCI_MVEBU to indicate
+   that it's for both 375 and 38x (it was only indicating 38x until
+   now).
+
+ * Changed the Makefile bit of the xhci-mvebu driver according to the
+   suggestion of Felipe Balbi, so that things work properly when
+   CONFIG_USB_XHCI_MVEBU is 'm'.
+
+ * Various improvements in the ehci-orion driver:
+
+    - Use better goto labels for error handling in ->probe().
+    - Use devm_phy_optional_get() instead of devm_phy_get(), which
+      allows to handle EPROBE_DEFER cases nicely.
+    - Call phy_power_off() when needed (probe error handling, and
+      remove).
+    - Use __initconst instead of __initdata for override structure, as
+      noticed by checkpatch.
+    - Fix use after free errors noticed by Felipe Balbi.
+
+ * Various improvements to the XHCI driver:
+
+    - Don't make xhci_mvebu_mbus_config() an __init function, since
+      it's called from probe(), which isn't in __init.
+    - Don't use the buggy 'priv[0]' solution implemented in the
+      previous version of the patch set (see in
+      http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/253871.html
+      the details of why it doesn't work). Instead, add a 'struct
+      clk*' field in xhci_hcd to support the clock in xhci-plat,
+      exactly like xhci_hcd has msix_count and msix_entries for
+      xhci-pci.
+    - Misc minor code style improvements.
+
+Thomas
+
+Gregory CLEMENT (17):
+  usb: ehci-orion: fix clock reference leaking
+  usb: ehci-orion: add optional PHY support
+  usb: host: xhci-plat: sort the headers in alphabetic order
+  usb: host: xhci-plat: add clock support
+  usb: host: xhci-plat: add support for the Armada 375/38x XHCI
+    controllers
+  Documentation: dt-bindings: update xhci-platform DT binding
+  phy: add support for USB cluster on the Armada 375 SoC
+  Documentation: dt-bindings: document the Armada 375 USB cluster
+    binding
+  ARM: mvebu: add USB3 support for Armada 38x
+  ARM: mvebu: add USB3 support for Armada 375
+  ARM: configs: enable XHCI mvebu support in mvebu_v7_defconfig
+  ARM: configs: enable XHCI mvebu support in multi_v7_defconfig
+  ARM: mvebu: add Device Tree description of xHCI controllers on Armada
+    38x
+  ARM: mvebu: add Device Tree description of the EHCI controller on
+    Armada 38x
+  ARM: mvebu: add Device Tree description of USB cluster controller on
+    Armada 375
+  ARM: mvebu: add Device Tree description of the xHCI controller on
+    Armada 375
+  ARM: mvebu: add Device Tree description of the EHCI controller on
+    Armada 375
+
+Thomas Petazzoni (3):
+  usb: ehci-orion: use platform_get_irq() for DT probing
+  usb: ehci-orion: rename error goto labels in ehci_orion_drv_probe()
+  Documentation: dt-bindings: update ehci-orion binding documentation
+
+ .../bindings/phy/armada-375-usb-phy-cluster.txt    |  19 +++
+ .../devicetree/bindings/usb/ehci-orion.txt         |   5 +
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |   7 +-
+ arch/arm/boot/dts/armada-375-db.dts                |   8 ++
+ arch/arm/boot/dts/armada-375.dtsi                  |  34 +++++
+ arch/arm/boot/dts/armada-385-db.dts                |  12 ++
+ arch/arm/boot/dts/armada-385-rd.dts                |   4 +
+ arch/arm/boot/dts/armada-38x.dtsi                  |  25 ++++
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ arch/arm/configs/mvebu_v7_defconfig                |   1 +
+ arch/arm/mach-mvebu/Kconfig                        |   2 +
+ drivers/phy/Kconfig                                |   6 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-armada375-usb2.c                   | 157 +++++++++++++++++++++
+ drivers/usb/host/Kconfig                           |   8 ++
+ drivers/usb/host/Makefile                          |   3 +
+ drivers/usb/host/ehci-orion.c                      |  92 ++++++++----
+ drivers/usb/host/xhci-mvebu.c                      |  70 +++++++++
+ drivers/usb/host/xhci-mvebu.h                      |  21 +++
+ drivers/usb/host/xhci-plat.c                       |  42 +++++-
+ drivers/usb/host/xhci.h                            |   2 +
+ 21 files changed, 488 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
+ create mode 100644 drivers/phy/phy-armada375-usb2.c
+ create mode 100644 drivers/usb/host/xhci-mvebu.c
+ create mode 100644 drivers/usb/host/xhci-mvebu.h
+
+-- 
+1.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
