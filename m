@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv5 16/20] ARM: mvebu: add Device Tree description of xHCI controllers on Armada 38x
-Date: Sun, 11 May 2014 20:18:04 +0200
-Message-ID: <1399832288-19899-17-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv5 13/20] ARM: mvebu: add USB3 support for Armada 375
+Date: Sun, 11 May 2014 20:18:01 +0200
+Message-ID: <1399832288-19899-14-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1399832288-19899-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -12,81 +12,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-The Marvell Armada 38x SoCs contains two xHCI controllers. This commit
-adds the Device Tree description of those interfaces at the SoC level,
-and also enables the two USB3 ports on the Armada 385 DB platform and
-one USB3 port on the Armada 385 RD platform.
+This patch add the selection of the config symbol to build the USB3
+support for Armada 375.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
- arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
- arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
- 3 files changed, 29 insertions(+)
+ arch/arm/mach-mvebu/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-index 6828d77..d5db146 100644
---- a/arch/arm/boot/dts/armada-385-db.dts
-+++ b/arch/arm/boot/dts/armada-385-db.dts
-@@ -101,6 +101,14 @@
- 					reg = <0x1000000 0x3f000000>;
- 				};
- 			};
-+
-+			usb3@f0000 {
-+				status = "okay";
-+			};
-+
-+			usb3@f8000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		pcie-controller {
-diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
-index 45250c8..a505fe9 100644
---- a/arch/arm/boot/dts/armada-385-rd.dts
-+++ b/arch/arm/boot/dts/armada-385-rd.dts
-@@ -77,6 +77,10 @@
- 					reg = <1>;
- 				};
- 			};
-+
-+			usb3@f0000 {
-+				status = "okay";
-+			};
- 		};
- 
- 		pcie-controller {
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index a064f59..6f97f3d 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -355,6 +355,23 @@
- 				clocks = <&coredivclk 0>;
- 				status = "disabled";
- 			};
-+
-+			usb3@f0000 {
-+				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
-+				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 9>;
-+				status = "disabled";
-+			};
-+
-+			usb3@f8000 {
-+				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 10>;
-+				status = "disabled";
-+			};
-+
- 		};
- 	};
- 
+diff --git a/arch/arm/mach-mvebu/Kconfig b/arch/arm/mach-mvebu/Kconfig
+index 7960f21..95afc76 100644
+--- a/arch/arm/mach-mvebu/Kconfig
++++ b/arch/arm/mach-mvebu/Kconfig
+@@ -41,6 +41,7 @@ config MACH_ARMADA_375
+ 	select CPU_V7
+ 	select MACH_MVEBU_V7
+ 	select PINCTRL_ARMADA_375
++	select USB_ARCH_HAS_XHCI
+ 	help
+ 	  Say 'Y' here if you want your kernel to support boards based
+ 	  on the Marvell Armada 375 SoC with device tree.
 -- 
 1.9.2
 
