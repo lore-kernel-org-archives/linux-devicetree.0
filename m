@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv5 04/20] usb: ehci-orion: add optional PHY support
-Date: Sun, 11 May 2014 20:17:52 +0200
-Message-ID: <1399832288-19899-5-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv5 08/20] usb: host: xhci-plat: add support for the Armada 375/38x XHCI controllers
+Date: Sun, 11 May 2014 20:17:56 +0200
+Message-ID: <1399832288-19899-9-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1399832288-19899-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -12,89 +12,199 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-This commit extends the ehci-orion so that it can optionally be passed
-a reference to a PHY through the Device Tree. It will be useful for
-the Armada 375 SoCs. If no PHY is provided then the behavior of the
-driver is unchanged.
+The Armada 375 and 38x SoCs come with an XHCI controller that requires
+some specific initialization related to the MBus windows
+configuration. This patch adds the support for this special
+configuration as an XHCI quirk executed during probe.
 
-[Thomas: use devm_phy_optional_get() so that we handle -EPROBE_DEFER
-properly. Also call phy_power_off() when needed, and rename goto
-labels.]
+Two new compatible strings are added to identify the Armada 375 and
+Armada 38x XHCI controllers, and therefore enable the relevant quirk.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 ---
- drivers/usb/host/ehci-orion.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ drivers/usb/host/Kconfig      |  8 +++++
+ drivers/usb/host/Makefile     |  3 ++
+ drivers/usb/host/xhci-mvebu.c | 70 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-mvebu.h | 21 +++++++++++++
+ drivers/usb/host/xhci-plat.c  | 12 ++++++++
+ 5 files changed, 114 insertions(+)
+ create mode 100644 drivers/usb/host/xhci-mvebu.c
+ create mode 100644 drivers/usb/host/xhci-mvebu.h
 
-diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index 9c98bac..22e15ca 100644
---- a/drivers/usb/host/ehci-orion.c
-+++ b/drivers/usb/host/ehci-orion.c
-@@ -15,6 +15,7 @@
- #include <linux/clk.h>
- #include <linux/platform_data/usb-ehci-orion.h>
- #include <linux/of.h>
-+#include <linux/phy/phy.h>
- #include <linux/of_device.h>
- #include <linux/of_irq.h>
- #include <linux/usb.h>
-@@ -46,6 +47,7 @@
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 3d9e540..9247ad2 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -29,6 +29,14 @@ if USB_XHCI_HCD
+ config USB_XHCI_PLATFORM
+ 	tristate
  
- struct orion_ehci_hcd {
- 	struct clk *clk;
-+	struct phy *phy;
++config USB_XHCI_MVEBU
++	tristate "xHCI support for Marvell Armada 375/38x"
++	select USB_XHCI_PLATFORM
++	depends on ARCH_MVEBU || COMPILE_TEST
++	---help---
++	  Say 'Y' to enable the support for the xHCI host controller
++	  found in Marvell Armada 375/38x ARM SOCs.
++
+ endif # USB_XHCI_HCD
+ 
+ config USB_EHCI_HCD
+diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+index 7530468..7c0886a 100644
+--- a/drivers/usb/host/Makefile
++++ b/drivers/usb/host/Makefile
+@@ -19,6 +19,9 @@ xhci-hcd-$(CONFIG_PCI)	+= xhci-pci.o
+ 
+ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
+ 	xhci-hcd-y		+= xhci-plat.o
++ifneq ($(CONFIG_USB_XHCI_MVEBU), )
++	xhci-hcd-y		+= xhci-mvebu.o
++endif
+ endif
+ 
+ obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
+diff --git a/drivers/usb/host/xhci-mvebu.c b/drivers/usb/host/xhci-mvebu.c
+new file mode 100644
+index 0000000..fab9d6f
+--- /dev/null
++++ b/drivers/usb/host/xhci-mvebu.c
+@@ -0,0 +1,70 @@
++/*
++ * Copyright (C) 2014 Marvell
++ * Author: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ */
++
++#include <linux/io.h>
++#include <linux/mbus.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++
++#define USB3_MAX_WINDOWS	4
++#define USB3_WIN_CTRL(w)	(0x0 + ((w) * 8))
++#define USB3_WIN_BASE(w)	(0x4 + ((w) * 8))
++
++static void xhci_mvebu_mbus_config(void __iomem *base,
++			const struct mbus_dram_target_info *dram)
++{
++	int win;
++
++	/* Clear all existing windows */
++	for (win = 0; win < USB3_MAX_WINDOWS; win++) {
++		writel(0, base + USB3_WIN_CTRL(win));
++		writel(0, base + USB3_WIN_BASE(win));
++	}
++
++	/* Program each DRAM CS in a seperate window */
++	for (win = 0; win < dram->num_cs; win++) {
++		const struct mbus_dram_window *cs = dram->cs + win;
++
++		writel(((cs->size - 1) & 0xffff0000) | (cs->mbus_attr << 8) |
++		       (dram->mbus_dram_target_id << 4) | 1,
++		       base + USB3_WIN_CTRL(win));
++
++		writel((cs->base & 0xffff0000), base + USB3_WIN_BASE(win));
++	}
++}
++
++int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev)
++{
++	struct resource	*res;
++	void __iomem *base;
++	const struct mbus_dram_target_info *dram;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res)
++		return -ENODEV;
++
++	/*
++	 * We don't use devm_ioremap() because this mapping should
++	 * only exists for the duration of this probe function.
++	 */
++	base = ioremap(res->start, resource_size(res));
++	if (!base)
++		return -ENODEV;
++
++	dram = mv_mbus_dram_info();
++	xhci_mvebu_mbus_config(base, dram);
++
++	/*
++	 * This memory area was only needed to configure the MBus
++	 * windows, and is therefore no longer useful.
++	 */
++	iounmap(base);
++
++	return 0;
++}
+diff --git a/drivers/usb/host/xhci-mvebu.h b/drivers/usb/host/xhci-mvebu.h
+new file mode 100644
+index 0000000..7ede92a
+--- /dev/null
++++ b/drivers/usb/host/xhci-mvebu.h
+@@ -0,0 +1,21 @@
++/*
++ * Copyright (C) 2014 Marvell
++ *
++ * Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#ifndef __LINUX_XHCI_MVEBU_H
++#define __LINUX_XHCI_MVEBU_H
++#if IS_ENABLED(CONFIG_USB_XHCI_MVEBU)
++int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev);
++#else
++static inline int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev)
++{
++	return 0;
++}
++#endif
++#endif /* __LINUX_XHCI_MVEBU_H */
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index 8108e58..0f5f4c8 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -19,6 +19,7 @@
+ #include <linux/slab.h>
+ 
+ #include "xhci.h"
++#include "xhci-mvebu.h"
+ 
+ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+ {
+@@ -109,6 +110,15 @@ static int xhci_plat_probe(struct platform_device *pdev)
+ 	if (!res)
+ 		return -ENODEV;
+ 
++	if (of_device_is_compatible(pdev->dev.of_node,
++				    "marvell,armada-375-xhci") ||
++	    of_device_is_compatible(pdev->dev.of_node,
++				    "marvell,armada-380-xhci")) {
++		ret = xhci_mvebu_mbus_init_quirk(pdev);
++		if (ret)
++			return ret;
++	}
++
+ 	/* Initialize dma_mask and coherent_dma_mask to 32-bits */
+ 	ret = dma_set_coherent_mask(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (ret)
+@@ -253,6 +263,8 @@ static const struct dev_pm_ops xhci_plat_pm_ops = {
+ static const struct of_device_id usb_xhci_of_match[] = {
+ 	{ .compatible = "generic-xhci" },
+ 	{ .compatible = "xhci-platform" },
++	{ .compatible = "marvell,armada-375-xhci"},
++	{ .compatible = "marvell,armada-380-xhci"},
+ 	{ },
  };
- 
- static const char hcd_name[] = "ehci-orion";
-@@ -221,6 +223,20 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 	if (!IS_ERR(priv->clk))
- 		clk_prepare_enable(priv->clk);
- 
-+	priv->phy = devm_phy_optional_get(&pdev->dev, "usb");
-+	if (IS_ERR(priv->phy)) {
-+		err = PTR_ERR(priv->phy);
-+		goto err_phy_get;
-+	} else {
-+		err = phy_init(priv->phy);
-+		if (err)
-+			goto err_phy_init;
-+
-+		err = phy_power_on(priv->phy);
-+		if (err)
-+			goto err_phy_power_on;
-+	}
-+
- 	/*
- 	 * (Re-)program MBUS remapping windows if we are asked to.
- 	 */
-@@ -256,6 +272,13 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_add_hcd:
-+	if (!IS_ERR(priv->phy))
-+		phy_power_off(priv->phy);
-+err_phy_power_on:
-+	if (!IS_ERR(priv->phy))
-+		phy_exit(priv->phy);
-+err_phy_init:
-+err_phy_get:
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
- 	usb_put_hcd(hcd);
-@@ -273,6 +296,11 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
- 
- 	usb_remove_hcd(hcd);
- 
-+	if (!IS_ERR(priv->phy)) {
-+		phy_power_off(priv->phy);
-+		phy_exit(priv->phy);
-+	}
-+
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
- 
+ MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
 -- 
 1.9.2
 
