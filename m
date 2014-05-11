@@ -1,82 +1,57 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v3 4/9] dt-bindings: add documentation for s3c2410 clock controller
-Date: Mon, 12 May 2014 00:08:43 +0200
-Message-ID: <2606697.NdCSMtyESx@phil>
-References: <3427359.fjFAW0MSIR@phil>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: shmobile: r8a7740 dtsi: Add Ethernet support
+Date: Mon, 12 May 2014 07:49:50 +0900
+Message-ID: <20140511224948.GA6451@verge.net.au>
+References: <536B7FD3.5090506@cogentembedded.com>
+ <CAMuHMdVoYnRcOVht0_Bt5_NJA3vZ40svftRXN-xbqHSMHZR5dg@mail.gmail.com>
+ <536B8340.4010901@cogentembedded.com>
+ <CAMuHMdUW3ENmykZGNQB8Qo3EVk+7RYzVHa6L-=WsxZZ06mfUTQ@mail.gmail.com>
+ <536BC445.8080007@cogentembedded.com>
+ <CAMuHMdVR9n8E-LyHn1B0REE4oTVbfJf-9v1Bo70bHCH_=r4-Vw@mail.gmail.com>
+ <536BD280.9070808@cogentembedded.com>
+ <CAMuHMdXggzywt8q0DPrBVCyNVPKFXxwk5dKNaqmXHv+wTDRQhw@mail.gmail.com>
+ <20140511010043.GZ31760@verge.net.au>
+ <536F7FB6.5090508@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <3427359.fjFAW0MSIR@phil>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: t.figa@samsung.com, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <536F7FB6.5090508-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bastian Hecht <hechtb+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Describe the clock controller of s3c2410, s3c2440 and s3c2442.
+On Sun, May 11, 2014 at 05:48:38PM +0400, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 05/11/2014 05:00 AM, Simon Horman wrote:
+> 
+> >>>>>     Mine was the same (but for BOCK-W board) but DT people didn't give a
+> >>>>>damn. :-) So there's still no Ethernet support in BOCK-W DT.
+> 
+> >>>>Yes there is: ethernet@18300000.
+> 
+> >>>    That's for an on-board SMSC911x, not for sh_eth.
+> 
+> >>Oh, it has two Ethernet ports? Didn't know that.
+> 
+> >IIRC only the SMSC911x is exposed on the Bock-W board.
+> 
+>    Not really. You're probably mixing it with Marzen.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
-Acked-by: Tomasz Figa <t.figa@samsung.com>
----
- .../bindings/clock/samsung,s3c2410-clock.txt       | 50 ++++++++++++++++++++++
- 1 file changed, 50 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
+Probably, sorry for my confusion.
 
-diff --git a/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
-new file mode 100644
-index 0000000..822505e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/samsung,s3c2410-clock.txt
-@@ -0,0 +1,50 @@
-+* Samsung S3C2410 Clock Controller
-+
-+The S3C2410 clock controller generates and supplies clock to various controllers
-+within the SoC. The clock binding described here is applicable to the s3c2410,
-+s3c2440 and s3c2442 SoCs in the s3c24x family.
-+
-+Required Properties:
-+
-+- compatible: should be one of the following.
-+  - "samsung,s3c2410-clock" - controller compatible with S3C2410 SoC.
-+  - "samsung,s3c2440-clock" - controller compatible with S3C2440 SoC.
-+  - "samsung,s3c2442-clock" - controller compatible with S3C2442 SoC.
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. Some of the clocks are available only
-+on a particular SoC.
-+
-+All available clocks are defined as preprocessor macros in
-+dt-bindings/clock/s3c2410.h header and can be used in device
-+tree sources.
-+
-+External clocks:
-+
-+The xti clock used as input for the plls is generated outside the SoC. It is
-+expected that is are defined using standard clock bindings with a
-+clock-output-names value of "xti".
-+
-+Example: Clock controller node:
-+
-+	clocks: clock-controller@4c000000 {
-+		compatible = "samsung,s3c2410-clock";
-+		reg = <0x4c000000 0x20>;
-+		#clock-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller (refer to the standard clock bindings for information about
-+  "clocks" and "clock-names" properties):
-+
-+	serial@50004000 {
-+		compatible = "samsung,s3c2440-uart";
-+		reg = <0x50004000 0x4000>;
-+		interrupts = <1 23 3 4>, <1 23 4 4>;
-+		clock-names = "uart", "clk_uart_baud2";
-+		clocks = <&clocks PCLK_UART0>, <&clocks PCLK_UART0>;
-+		status = "disabled";
-+	};
--- 
-1.9.0
+> >From my point of view I would be happy to accept support for
+> >the other port if there was some way (for someone to) verify it.
+> 
+>    There is, and you have accepted such support in the legacy board file.
+> I had to postpone Ether DT support to the time when CCF support is
+> available, though I have posted corresponding patches without the
+> "clocks" property already.
+
+Understood.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
