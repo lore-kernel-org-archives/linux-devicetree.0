@@ -1,81 +1,45 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v12 0/6] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Sun, 11 May 2014 19:08:43 +0200
-Message-ID: <20140511170843.GT7047@lukather>
-References: <1399794417-9291-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv4 08/20] usb: host: xhci-plat: add support for the
+ Armada 375/38x XHCI controllers
+Date: Sun, 11 May 2014 20:12:47 +0200
+Message-ID: <20140511201247.182d5f48@free-electrons.com>
+References: <1399470746-2948-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1399470746-2948-9-git-send-email-thomas.petazzoni@free-electrons.com>
+	<536AEFA0.3070806@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uc+LCsvbRhlIZa01"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2W5X2NQKGQESW4EFLA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399794417-9291-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <536AEFA0.3070806-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Shimoda, Yoshihiro" <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear Shimoda, Yoshihiro,
 
---uc+LCsvbRhlIZa01
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 8 May 2014 11:44:48 +0900, Shimoda, Yoshihiro wrote:
 
-Hi Hans,
+> > +#ifndef __LINUX_XHCI_MVEBU_H
+> > +#define __LINUX_XHCI_MVEBU_H
+> > +#if IS_ENABLED(CONFIG_USB_XHCI_MVEBU)
+> > +int xhci_mvebu_mbus_init_quirk(struct platform_device *pdev);
+> > +#else
+> > +static inline int xhci_mvebu_mbus_init_quirk(struct device dev)
+> 
+> I could not compile this code when I disabled CONFIG_USB_XHCI_MVEBU:
+> 	incompatible type for argument 1 of 'xhci_mvebu_mbus_init_quirk'.
+> 
+> So, the "struct device dev" should be changed to "struct platform_device *pdev".
 
-On Sun, May 11, 2014 at 09:46:51AM +0200, Hans de Goede wrote:
-> Hi All,
->=20
-> Here is v12 of the sunxi-mmc patch-set David Lanzend=F6rfer and I have be=
-en
-> working on, the mmc driver itself is unchanged from v11. New this version=
- are
-> some dts patch changes, see below.
->=20
-> The first patch in this series is the patch adding the actual mmc driver =
-and
-> should go in through the mmc tree.
->=20
-> All the other patches are devicetree patches adding / using the new fixed
-> reg_vcc3v3 supply to all sunxi board files, and should go upstream through
-> Maxime's sunxi-dts tree.
+Ah, yes, correct, thanks! Will fix in v5.
 
-I just merged the last 5 patches.
-
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
-
---uc+LCsvbRhlIZa01
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.14 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTb66bAAoJEBx+YmzsjxAgTU4P/1Eexy8NCvbZGMQnK+fKgESW
-XKE3MQn/RibyUJkQdsTFf8FQ6Sx56y1yQ+ZiFfXjAPz2RjjGVuqnZwCVFquaRohm
-xaty83t1Dvb8LbjJa5pKQd3NHJkDl3uHuR0kX9fEVafdiE/93m7A9l4rcWn7yBAf
-dSY4Pgp/r62TPWh418R/FSl84TpvKgGc0gtEkKly/xdlo/k+fYNw7LcgXsJGAeVb
-37dO9tLzckpJZwbwrCPRk2rssPmabTWHPeKTTNiasS3CiEj8Y90YUbIJIE+MYcI/
-c4loZUZC9/5XWyr7d1P+lheBqwDLFBrS7ak555WAIlTGLnvppuMNwELRw2OGbl5H
-i5X0305d1wBgbX41jGTY9vu/PHpjo4xhC7Bce1sTc4Gks0cXLow36N7S3ekzgdRJ
-CYVoEm9MoCvGLAA6NvGhKvlZ1gEu7/W90Ny14GN2KAP5AaMhMlqlyMkYZSAinMvr
-MF1ZyvX6xav8eS53MaC5rJgd7aKt1SiQYPOR+fMUDAFiTWejJXJofUwGzs/0nrfI
-0Pgc9SwfpDLaMhsKWtuWA7iJy2I0QAOmTPMCdFsp7iAKDNRS0M+selPmjrgewg/C
-nJoM2JrxZO+GZGAy9Z9oqR16dp1d3oQbjxuSbbF1jkwE2VTSgk1AqE39TMLTfhOf
-JAal5GLPFXZl/xVg//Vt
-=EiU0
------END PGP SIGNATURE-----
-
---uc+LCsvbRhlIZa01--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
