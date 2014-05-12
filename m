@@ -1,43 +1,49 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 0/4] ARM: at91: move sam9n12 SoC and boards to the CCF
-Date: Mon, 12 May 2014 18:26:26 +0200
-Message-ID: <1399911990-5086-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 1/4] ARM: at91: prepare common clk transition for sam9n12 SoC
+Date: Mon, 12 May 2014 18:26:27 +0200
+Message-ID: <1399911990-5086-2-git-send-email-boris.brezillon@free-electrons.com>
+References: <1399911990-5086-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399911990-5086-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This patch encloses sam9n12 old clk registration in
+"#if defined(CONFIG_OLD_CLK_AT91) #endif" sections.
 
-This series moves the at91sam9n12 SoC and the at91sam9n12-ek board to
-the Common Clock Framework.
+Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Tested-by: Bo Shen <voice.shen@atmel.com>
+---
+ arch/arm/mach-at91/at91sam9n12.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-It depends on these series: [1], [2].
-
-Best Regards,
-
-Boris
-
-[1] http://lkml.iu.edu/hypermail/linux/kernel/1403.3/00074.html
-[2] http://comments.gmane.org/gmane.linux.kernel.samsung-soc/27632
-
-Boris BREZILLON (4):
-  ARM: at91: prepare common clk transition for sam9n12 SoC
-  ARM: at91/dt: define sam9n12 clocks
-  ARM: at91/dt: define sam9n12ek crystal frequencies
-  ARM: at91: move sam9n12 SoC to the CCF
-
- arch/arm/boot/dts/at91sam9n12.dtsi  | 348 +++++++++++++++++++++++++++++++++++-
- arch/arm/boot/dts/at91sam9n12ek.dts |   8 +
- arch/arm/mach-at91/Kconfig          |   1 -
- arch/arm/mach-at91/at91sam9n12.c    |   6 +-
- 4 files changed, 359 insertions(+), 4 deletions(-)
-
+diff --git a/arch/arm/mach-at91/at91sam9n12.c b/arch/arm/mach-at91/at91sam9n12.c
+index f2ea7b0..c8988fe 100644
+--- a/arch/arm/mach-at91/at91sam9n12.c
++++ b/arch/arm/mach-at91/at91sam9n12.c
+@@ -19,9 +19,10 @@
+ #include "board.h"
+ #include "soc.h"
+ #include "generic.h"
+-#include "clock.h"
+ #include "sam9_smc.h"
+ 
++#if defined(CONFIG_OLD_CLK_AT91)
++#include "clock.h"
+ /* --------------------------------------------------------------------
+  *  Clocks
+  * -------------------------------------------------------------------- */
+@@ -215,6 +216,9 @@ static void __init at91sam9n12_register_clocks(void)
+ 			 ARRAY_SIZE(periph_clocks_lookups));
+ 
+ }
++#else
++#define at91sam9n12_register_clocks NULL
++#endif
+ 
+ /* --------------------------------------------------------------------
+  *  AT91SAM9N12 processor initialization
 -- 
 1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
