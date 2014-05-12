@@ -1,63 +1,150 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch
- dt
-Date: Mon, 12 May 2014 16:10:51 +0400
-Message-ID: <5370BA4B.6070003@cogentembedded.com>
-References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>	<1392633882-12142-2-git-send-email-wsa@the-dreams.de>	<536C1945.1000601@cogentembedded.com>	<20140509050610.GB2624@katana>	<536D5DC3.3070409@cogentembedded.com>	<20140511000834.GM31760@verge.net.au> <CAMuHMdX_19vLyO7fqaBO7=WpdoZ8fYm9BU9Zmj6cXSNDNYE+Kw@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun5i: Add new A10s r7 hdmi tv dongle board
+Date: Mon, 12 May 2014 14:11:06 +0200
+Message-ID: <1399896666-6366-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdX_19vLyO7fqaBO7=WpdoZ8fYm9BU9Zmj6cXSNDNYE+Kw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
-Cc: Wolfram Sang <wsa@the-dreams.de>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBX7UYKNQKGQE2C3T66Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+The R7 tv-dongle is an A10s based hdmi tv dongle, with 1G RAM, 4G nand flash,
+and rtl8189es sdio wifi. It has a standard male hdmi connector, an USB host
+port using an USB-A receptacle and a micro-usb receptacle for both power
+and USB OTG.
 
-On 05/12/2014 11:35 AM, Geert Uytterhoeven wrote:
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile                    |   1 +
+ arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts | 100 ++++++++++++++++++++++++++
+ 2 files changed, 101 insertions(+)
+ create mode 100644 arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts
 
->>>>>> +  eeprom@50 {
->>>>>> +          compatible = "renesas,24c02";
-
->>>>>     This is not quite right: Renesas' part is called differently, and
->>>>> you're carrying the other vendor's naming onto Renesas parts. I'd
->>>>> just say "24c02" (which I'll do in the Henninger board patch).
-
->>>> What about "generic"?
-
->>>     I don't know, really. However, you're right in that there should
->>> be some vendor prefix -- I've just seen
->>> Documentation/devicetree/bindings/eeprom.txt.
-
->> A quick survey of arch/arm/boot/dts/ yields:
-
->> "atmel,24c02" (22 times)
->> "microchip,24c02" (once)
->> "mcp,24c02" (once)
-
->> So it seems to me that precedence is in favour of using "renesas,24c02".
-
-> Except that the Renesas part is called differently (as Sergei already pointed
-> out), unlike the Atmel and Microchip parts.
-
-> So it should be:
-
->          compatible = "renesas,r1ex24002", "<something>,24c02";
-
-    Unfortunately, that way the legacy I2C driver matching used now won't work 
-anymore. :-(
-
-> Unfortunately the datasheet doesn't mention compatibility with parts from
-> other manufacturers.
-
-> So let's <something> be "atmel"?
-
-    Yes, probably. But the "renesas,r1ex24002" part have to be dropped.
-
-> Gr{oetje,eeting}s,
->                          Geert
-
-WBR, Sergei
-
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 3a38a66..e4c5a79 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -341,6 +341,7 @@ dtb-$(CONFIG_ARCH_SUNXI) += \
+ 	sun4i-a10-olinuxino-lime.dtb \
+ 	sun4i-a10-pcduino.dtb \
+ 	sun5i-a10s-olinuxino-micro.dtb \
++	sun5i-a10s-r7-tv-dongle.dtb \
+ 	sun5i-a13-olinuxino.dtb \
+ 	sun5i-a13-olinuxino-micro.dtb \
+ 	sun6i-a31-app4-evb1.dtb \
+diff --git a/arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts b/arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts
+new file mode 100644
+index 0000000..43a9376
+--- /dev/null
++++ b/arch/arm/boot/dts/sun5i-a10s-r7-tv-dongle.dts
+@@ -0,0 +1,100 @@
++/*
++ * Copyright 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++/include/ "sun5i-a10s.dtsi"
++/include/ "sunxi-common-regulators.dtsi"
++
++/ {
++	model = "R7 A10s hdmi tv-stick";
++	compatible = "allwinner,r7-tv-dongle", "allwinner,sun5i-a10s";
++
++	soc@01c00000 {
++		mmc0: mmc@01c0f000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc0_pins_a>, <&mmc0_cd_pin_r7>;
++			vmmc-supply = <&reg_vcc3v3>;
++			bus-width = <4>;
++			cd-gpios = <&pio 6 1 0>; /* PG1 */
++			cd-inverted;
++			status = "okay";
++		};
++
++		mmc1: mmc@01c10000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc1_pins_a>;
++			vmmc-supply = <&reg_vcc3v3>;
++			bus-width = <4>;
++			non-removable;
++			status = "okay";
++		};
++
++		usbphy: phy@01c13400 {
++			usb1_vbus-supply = <&reg_usb1_vbus>;
++			status = "okay";
++		};
++
++		ehci0: usb@01c14000 {
++			status = "okay";
++		};
++
++		ohci0: usb@01c14400 {
++			status = "okay";
++		};
++
++		pinctrl@01c20800 {
++			mmc0_cd_pin_r7: mmc0_cd_pin@0 {
++				allwinner,pins = "PG1";
++				allwinner,function = "gpio_in";
++				allwinner,drive = <0>;
++				allwinner,pull = <1>;
++			};
++
++			led_pins_r7: led_pins@0 {
++				allwinner,pins = "PB2";
++				allwinner,function = "gpio_out";
++				allwinner,drive = <1>;
++				allwinner,pull = <0>;
++			};
++
++			usb1_vbus_pin_r7: usb1_vbus_pin@0 {
++				allwinner,pins = "PG13";
++				allwinner,function = "gpio_out";
++				allwinner,drive = <0>;
++				allwinner,pull = <0>;
++			};
++		};
++
++		uart0: serial@01c28000 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&uart0_pins_a>;
++			status = "okay";
++		};
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&led_pins_r7>;
++
++		green {
++			label = "r7-tv-dongle:green:usr";
++			gpios = <&pio 1 2 0>;
++			default-state = "on";
++		};
++	};
++
++	reg_usb1_vbus: usb1-vbus {
++		pinctrl-0 = <&usb1_vbus_pin_r7>;
++		gpio = <&pio 6 13 0>;
++		status = "okay";
++	};
++};
+-- 
+1.9.0
