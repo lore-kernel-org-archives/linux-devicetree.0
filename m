@@ -1,68 +1,65 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for
- configuring the iATU
-Date: Mon, 12 May 2014 10:44:07 +0900
-Message-ID: <006501cf6d83$a9f39510$fddabf30$%han@samsung.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com>
- <4764413.ZAEU5S5p0p@wuerfel> <000201cf6a9c$9dd295e0$d977c1a0$%han@samsung.com>
- <6882241.amuhzvbd8n@wuerfel> <536CC0F1.301@ti.com>
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: Re: [PATCH v3 0/4] ARM: dts: enable display for peach-pit and snow boards
+Date: Mon, 12 May 2014 09:33:45 +0530
+Message-ID: <CALt3h7-zRZp0HWE8VHUmnovfNESfu6c8f=4xScNRV1ZZcP_1vA@mail.gmail.com>
+References: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-reply-to: <536CC0F1.301@ti.com>
-Content-language: ko
-Sender: linux-omap-owner@vger.kernel.org
-To: 'Kishon Vijay Abraham I' <kishon@ti.com>
-Cc: 'Arnd Bergmann' <arnd@arndb.de>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, inki.dae@samsung.com, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday, May 09, 2014 8:50 PM, Kishon Vijay Abraham I wrote:
-> On Thursday 08 May 2014 02:48 PM, Arnd Bergmann wrote:
-> > On Thursday 08 May 2014 18:05:11 Jingoo Han wrote:
-> >> On Tuesday, May 06, 2014 10:59 PM, Arnd Bergmann wrote:
-> >>> On Tuesday 06 May 2014 19:03:52 Kishon Vijay Abraham I wrote:
-> >>>> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
-> >>>> address. So whenever the cpu issues a read/write request, the 4 most
-> >>>> significant bits are used by L3 to determine the target controller.
-> >>>> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
-> >>>> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
-> >>>> the outbound translation window the *base* should be programmed as 0x000_0000.
-> >>>> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
-> >>>> we have programmed in the translation window with base as 0x000_0000.
-> >>>>
-> >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> >>>> Cc: Marek Vasut <marex@denx.de>
-> >>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >>>> Acked-by: Jingoo Han <jg1.han@samsung.com>
-> >>>> Acked-by: Mohit Kumar <mohit.kumar@st.com>
-> >>>
-> >>> Sorry, but NAK.
-> >>>
-> >>> We have a standard 'dma-ranges' property to handle this, so use it.
-> >>>
-> >>> See the x-gene PCIe driver patches for an example. Please also talk
-> >>> to Santosh about it, as he is implementing generic support for
-> >>> parsing dma-ranges in platform devices at the moment.
-> >>
-> >> Hi Arnd,
-> >>
-> >> Do you mean the following patch?
-> >> http://www.spinics.net/lists/kernel/msg1737725.html
-> >>
-> >
-> > That is the patch Santosh did for platform devices, which is related but not
-> > what I meant here. For the PCI inbound window setup, please have a look
-> > at https://lkml.org/lkml/2014/3/19/607
-> 
-> For some reason lkml is not showing any contents. Do you have a different link?
+Hi Rahul,
 
-Hi Kishon,
+On Fri, May 9, 2014 at 3:39 PM, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> From: Rahul Sharma <Rahul.Sharma@samsung.com>
+>
+> Add nodes for fimd and dp controller for exynos5250 based snow
+> and exynos5420 based peach-pit board.
+>
 
-Please refer to the following link. :-)
-http://www.spinics.net/lists/linux-pci/msg29855.html
+It would be great to include the display support for 5800 peach-pi board also
+in this series. Most of the values would remain the same except for the changes
+for bigger display in peach-pi.
 
+Regards
+Arun
 
-Best regards,
-Jingoo Han
-
+> This series is based on Kukjin Kims, for-next branch.
+>
+> V3:
+> 1) Dropped 1 patch "ARM: dts: move dp hpd line to the board file for
+>  exynos5420".
+> 2) Extra blank lines for readability.
+> 3) dp hpd gpio name change (dp_hpd -> dp_hpd_gpio)
+>
+> V2:
+> 1) Rebase on Peach-pit dependent patches.
+>
+> It is dependent on
+> 1) Andrew Bresticker's patch for hpd gpio addition, avilable at
+> http://www.spinics.net/lists/linux-samsung-soc/msg28827.html [Patch is 'ACK'ed.]
+> 2) Arun's patch for adding peach-pit board dts file at
+> http://www.spinics.net/lists/linux-samsung-soc/msg30103.html. [Patch is 'ACK'ed.]
+>
+> Rahul Sharma (4):
+>   ARM: dts: enable fimd for exynos5250 based snow board
+>   ARM: dts: enable dp-controller for exynos5250 based snow board
+>   ARM: dts: enable fimd for exynos5420 based peach-pit board
+>   ARM: dts: enable dp-controller for exynos5420 based peach-pit board
+>
+>  arch/arm/boot/dts/exynos5250-snow.dts      |   35 ++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts |   41 ++++++++++++++++++++++++++++
+>  2 files changed, 76 insertions(+)
+>
+> --
+> 1.7.9.5
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
