@@ -1,74 +1,69 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: henninger: add QSPI DT support
-Date: Mon, 12 May 2014 07:53:54 +0900
-Message-ID: <20140511225354.GC6451@verge.net.au>
-References: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
- <536FBEB7.9080605@cogentembedded.com>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: [PATCH] powerpc: fix skipping call to
+ early_init_fdt_scan_reserved_mem
+Date: Mon, 12 May 2014 10:42:04 +1000
+Message-ID: <1399855324.17624.53.camel@pasglop>
+References: <1398837832-30052-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536FBEB7.9080605@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398837832-30052-1-git-send-email-robherring2@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 11, 2014 at 10:17:27PM +0400, Sergei Shtylyov wrote:
-> Hello.
+On Wed, 2014-04-30 at 01:03 -0500, Rob Herring wrote:
+> From: Rob Herring <robh@kernel.org>
 > 
-> On 05/06/2014 02:45 AM, Sergei Shtylyov wrote:
+> The call to early_init_fdt_scan_reserved_mem will be skipped if
+> reserved-ranges is not found. Move the call earlier so that it is called
+> unconditionally.
 > 
-> >Define the Henninger board dependent part of the QSPI device node.
-> >Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
-> 
-> >Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> >---
-> >This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
-> >'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
-> 
-> >  arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
-> >  1 file changed, 38 insertions(+)
-> 
-> >Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-> >===================================================================
-> >--- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-> >+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-> [...]
-> >@@ -158,3 +163,36 @@
-> >  	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
-> >  	status = "okay";
-> >  };
-> >+
-> >+&qspi {
-> >+	pinctrl-0 = <&qspi_pins>;
-> >+	pinctrl-names = "default";
-> >+
-> >+	status = "okay";
-> >+
-> >+	flash@0 {
-> >+		#address-cells = <1>;
-> >+		#size-cells = <1>;
-> >+		compatible = "spansion,s25fl512s";
-> >+		reg = <0>;
-> >+		spi-max-frequency = <30000000>;
-> >+		spi-tx-bus-width = <4>;
-> >+		spi-rx-bus-width = <4>;
-> >+		m25p,fast-read;
-> >+
-> >+		partition@0 {
-> >+			label = "loader_prg";
-> >+			reg = <0x00000000 0x00040000>;
-> >+			read-only;
-> >+		};
-> >+		partition@40000 {
-> >+			label = "user_prg";
-> >+			reg = <0x00040000 0x00400000>;
-> >+			read-only;
-> 
->    Oops, there shouldn't be "read-only" here, I forgot to refresh
-> the patch as I'm now seeing... too bad it's too late to resend now.
-> :-(
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
 
-Could you send an incremental fix for me to queue up?
+Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Tested-by: Stephen Chivers <schivers@csc.com>
+> ---
+> I found this issue in testing of my fdt clean-up series (thanks to 
+> Stephen). Since the reserved memory support is new, I don't think it is 
+> critical to fix this for 3.15. I plan to include this with my fdt series 
+> for 3.16 unless I hear otherwise.
+
+Sure, go for it.
+
+Cheers,
+Ben.
+
+> Rob
+> 
+>  arch/powerpc/kernel/prom.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
+> index 668aa47..d657549 100644
+> --- a/arch/powerpc/kernel/prom.c
+> +++ b/arch/powerpc/kernel/prom.c
+> @@ -567,6 +567,8 @@ static void __init early_reserve_mem_dt(void)
+>  	unsigned long i, len, dt_root;
+>  	const __be32 *prop;
+>  
+> +	early_init_fdt_scan_reserved_mem();
+> +
+>  	dt_root = of_get_flat_dt_root();
+>  
+>  	prop = of_get_flat_dt_prop(dt_root, "reserved-ranges", &len);
+> @@ -589,8 +591,6 @@ static void __init early_reserve_mem_dt(void)
+>  			memblock_reserve(base, size);
+>  		}
+>  	}
+> -
+> -	early_init_fdt_scan_reserved_mem();
+>  }
+>  
+>  static void __init early_reserve_mem(void)
