@@ -1,7 +1,7 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 02/12] clk: st: Adds Flexgen clock binding
-Date: Mon, 12 May 2014 18:06:30 +0200
-Message-ID: <1399910800-12847-3-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 06/12] drivers: clk: st: Add polarity bit indication
+Date: Mon, 12 May 2014 18:06:34 +0200
+Message-ID: <1399910800-12847-7-git-send-email-gabriel.fernandez@linaro.org>
 References: <1399910800-12847-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,93 +21,72 @@ To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@
 Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-A Flexgen structure is composed by:
-- a clock cross bar (represented by a mux element)
-- a pre and final dividers (represented by a divider and gate elements)
+This patch introduces polarity indication for pll power up bit
+and for standby bit in order to have same code between Orly 2
+and CAN.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- .../devicetree/bindings/clock/st/st,clkgen.txt     |  5 +++
- .../devicetree/bindings/clock/st/st,flexgen.txt    | 48 ++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+ drivers/clk/st/clkgen-fsyn.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-index 55506c2..afb65e6 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-@@ -32,6 +32,10 @@ address is common of all subnode.
- 		vcc_node {
- 			...
- 		};
-+
-+		flexgen_node {
-+			...
-+		};
- 		...
- 	};
+diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
+index 4f53ee0..5aae17c 100644
+--- a/drivers/clk/st/clkgen-fsyn.c
++++ b/drivers/clk/st/clkgen-fsyn.c
+@@ -67,6 +67,8 @@ struct clkgen_quadfs_data {
+ 	bool reset_present;
+ 	bool bwfilter_present;
+ 	bool lockstatus_present;
++	bool powerup_polarity;
++	bool standby_polarity;
+ 	bool nsdiv_present;
+ 	struct clkgen_field ndiv;
+ 	struct clkgen_field ref_bw;
+@@ -308,7 +310,7 @@ static int quadfs_pll_enable(struct clk_hw *hw)
+ 	/*
+ 	 * Power up the PLL
+ 	 */
+-	CLKGEN_WRITE(pll, npda, 1);
++	CLKGEN_WRITE(pll, npda, !pll->data->powerup_polarity);
  
-@@ -45,6 +49,7 @@ Each subnode should use the binding discribe in [2]..[7]
- [5] Documentation/devicetree/bindings/clock/st,clkgen-prediv.txt
- [6] Documentation/devicetree/bindings/clock/st,vcc.txt
- [7] Documentation/devicetree/bindings/clock/st,quadfs.txt
-+[8] Documentation/devicetree/bindings/clock/st,flexgen.txt
+ 	if (pll->lock)
+ 		spin_unlock_irqrestore(pll->lock, flags);
+@@ -335,7 +337,7 @@ static void quadfs_pll_disable(struct clk_hw *hw)
+ 	 * Powerdown the PLL and then put block into soft reset if we have
+ 	 * reset control.
+ 	 */
+-	CLKGEN_WRITE(pll, npda, 0);
++	CLKGEN_WRITE(pll, npda, pll->data->powerup_polarity);
  
+ 	if (pll->data->reset_present)
+ 		CLKGEN_WRITE(pll, nreset, 0);
+@@ -611,7 +613,7 @@ static int quadfs_fsynth_enable(struct clk_hw *hw)
+ 	if (fs->lock)
+ 		spin_lock_irqsave(fs->lock, flags);
  
- Required properties:
-diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-new file mode 100644
-index 0000000..ce908dd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-@@ -0,0 +1,48 @@
-+Binding for a type of flexgen structure found on certain
-+STMicroelectronics consumer electronics SoC devices
-+
-+This structure includes:
-+- a clock cross bar (represented by a mux element)
-+- a pre and final dividers (represented by a divider and gate elements)
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be:
-+  "st,flexgen"
-+
-+- #clock-cells : from common clock binding; shall be set to 1.
-+
-+- clocks : from common clock binding
-+
-+- clock-output-names : From common clock binding. The block has 4
-+                       clock outputs but not all of them in a specific instance
-+                       have to be used in the SoC. If a clock name is left as
-+                       an empty string then no clock will be created for the
-+                       output associated with that string index. If fewer than
-+                       4 strings are provided then no clocks will be created
-+                       for the remaining outputs.
-+
-+Example:
-+
-+	clockgenD2@x9106000 {
-+		compatible = "st,clkgen-c32";
-+		reg = <0x9106000 0x1000>;
-+
-+		CLK_S_D2_FLEXGEN: CLK_S_D2_FLEXGEN {
-+			compatible = "st,flexgen";
-+
-+			#clock-cells = <1>;
-+			clocks = <&CLK_S_D2_QUADFS 0>,
-+				 <&CLK_S_D2_QUADFS 1>,
-+				 <&CLK_S_D2_QUADFS 2>,
-+				 <&CLK_S_D2_QUADFS 3>;
-+
-+			clock-output-names = "CLK_PIX_MAIN_DISP",
-+					     "CLK_PIX_PIP",
-+					     "CLK_PIX_GDP1",
-+					     "CLK_PIX_GDP2";
-+		};
-+	};
+-	CLKGEN_WRITE(fs, nsb[fs->chan], 1);
++	CLKGEN_WRITE(fs, nsb[fs->chan], !fs->data->standby_polarity);
+ 
+ 	if (fs->lock)
+ 		spin_unlock_irqrestore(fs->lock, flags);
+@@ -631,7 +633,7 @@ static void quadfs_fsynth_disable(struct clk_hw *hw)
+ 	if (fs->lock)
+ 		spin_lock_irqsave(fs->lock, flags);
+ 
+-	CLKGEN_WRITE(fs, nsb[fs->chan], 0);
++	CLKGEN_WRITE(fs, nsb[fs->chan], !fs->data->standby_polarity);
+ 
+ 	if (fs->lock)
+ 		spin_unlock_irqrestore(fs->lock, flags);
+@@ -645,7 +647,7 @@ static int quadfs_fsynth_is_enabled(struct clk_hw *hw)
+ 	pr_debug("%s: %s enable bit = 0x%x\n",
+ 		 __func__, __clk_get_name(hw->clk), nsb);
+ 
+-	return !!nsb;
++	return fs->data->standby_polarity ? !nsb : !!nsb;
+ }
+ 
+ #define P15			(uint64_t)(1 << 15)
 -- 
 1.9.1
