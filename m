@@ -1,15 +1,15 @@
 From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v3 1/4] ARM: dts: enable fimd for exynos5250 based snow
- board
-Date: Mon, 12 May 2014 13:50:31 +0900
-Message-ID: <001501cf6d9d$b3ed4c40$1bc7e4c0$%han@samsung.com>
+Subject: Re: [PATCH v3 2/4] ARM: dts: enable dp-controller for exynos5250 based
+ snow board
+Date: Mon, 12 May 2014 13:51:21 +0900
+Message-ID: <001601cf6d9d$d21bbd00$76533700$%han@samsung.com>
 References: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
- <1399630186-22610-2-git-send-email-rahul.sharma@samsung.com>
+ <1399630186-22610-3-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399630186-22610-2-git-send-email-rahul.sharma@samsung.com>
+In-reply-to: <1399630186-22610-3-git-send-email-rahul.sharma@samsung.com>
 Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: 'Rahul Sharma' <rahul.sharma@samsung.com>
@@ -20,7 +20,7 @@ On Friday, May 09, 2014 7:10 PM, Rahul Sharma wrote:
 > 
 > From: Rahul Sharma <Rahul.Sharma@samsung.com>
 > 
-> Enable fimd node for snow board.
+> Enable dp-controller for snow board.
 > 
 > Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
 
@@ -30,23 +30,48 @@ Best regards,
 Jingoo Han
 
 > ---
->  arch/arm/boot/dts/exynos5250-snow.dts |    6 ++++++
->  1 file changed, 6 insertions(+)
+>  arch/arm/boot/dts/exynos5250-snow.dts |   29 +++++++++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
 > 
 > diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-> index 1ce1088..796954c 100644
+> index 796954c..7b10e32 100644
 > --- a/arch/arm/boot/dts/exynos5250-snow.dts
 > +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -206,4 +206,10 @@
->  			clock-frequency = <24000000>;
+> @@ -207,6 +207,35 @@
 >  		};
 >  	};
-> +
-> +	fimd@14400000 {
+> 
+> +	dp-controller@145B0000 {
 > +		status = "okay";
-> +		samsung,invert-vclk;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&dp_hpd>;
+> +		samsung,color-space = <0>;
+> +		samsung,dynamic-range = <0>;
+> +		samsung,ycbcr-coeff = <0>;
+> +		samsung,color-depth = <1>;
+> +		samsung,link-rate = <0x0a>;
+> +		samsung,lane-count = <2>;
+> +		samsung,hpd-gpio = <&gpx0 7 0>;
+> +
+> +		display-timings {
+> +			native-mode = <&timing1>;
+> +
+> +			timing1: timing@1 {
+> +				clock-frequency = <70589280>;
+> +				hactive = <1366>;
+> +				vactive = <768>;
+> +				hfront-porch = <40>;
+> +				hback-porch = <40>;
+> +				hsync-len = <32>;
+> +				vback-porch = <10>;
+> +				vfront-porch = <12>;
+> +				vsync-len = <6>;
+> +			};
+> +		};
 > +	};
 > +
->  };
+>  	fimd@14400000 {
+>  		status = "okay";
+>  		samsung,invert-vclk;
 > --
 > 1.7.9.5
