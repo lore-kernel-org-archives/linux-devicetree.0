@@ -1,78 +1,34 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: shmobile: henninger: add QSPI DT support
-Date: Tue, 13 May 2014 02:57:30 +0400
-Message-ID: <537151DA.8000101@cogentembedded.com>
-References: <201405060245.32952.sergei.shtylyov@cogentembedded.com> <536FBEB7.9080605@cogentembedded.com> <20140511225354.GC6451@verge.net.au>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 3/9] dt: deps: dtc: Add option to print initialization
+ order
+Date: Tue, 13 May 2014 00:58:07 +0200
+Message-ID: <537151FF.8070104@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-4-git-send-email-holler@ahsoftware.de> <CAJgR-BhnFngGr9qxa7NvF7GExiCAr1=HS16AtN20uj7nCmLcKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140511225354.GC6451@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAJgR-BhnFngGr9qxa7NvF7GExiCAr1=HS16AtN20uj7nCmLcKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jon Loeliger <loeliger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Am 12.05.2014 22:38, schrieb Jon Loeliger:
+> So, this should be rebased on the actual DTC repository,
+> and not the kernel's copy of the DTC under scripts.
 
-On 05/12/2014 02:53 AM, Simon Horman wrote:
+I have patches for the standalone dtc too. I just didn't want to poste
+almost the same patches twice and wanted to wait for feedback if people
+do like this stuff at all.
 
->>> Define the Henninger board dependent part of the QSPI device node.
->>> Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
+Do you already want those 3 patches for the standalone dtc?
 
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Regards,
 
->>> ---
->>> This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
->>> 'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
+Alexander Holler
 
->>>   arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
->>>   1 file changed, 38 insertions(+)
-
->>> Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
->>> ===================================================================
->>> --- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
->>> +++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
->> [...]
->>> @@ -158,3 +163,36 @@
->>>   	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
->>>   	status = "okay";
->>>   };
->>> +
->>> +&qspi {
->>> +	pinctrl-0 = <&qspi_pins>;
->>> +	pinctrl-names = "default";
->>> +
->>> +	status = "okay";
->>> +
->>> +	flash@0 {
->>> +		#address-cells = <1>;
->>> +		#size-cells = <1>;
->>> +		compatible = "spansion,s25fl512s";
->>> +		reg = <0>;
->>> +		spi-max-frequency = <30000000>;
->>> +		spi-tx-bus-width = <4>;
->>> +		spi-rx-bus-width = <4>;
->>> +		m25p,fast-read;
->>> +
->>> +		partition@0 {
->>> +			label = "loader_prg";
->>> +			reg = <0x00000000 0x00040000>;
->>> +			read-only;
->>> +		};
->>> +		partition@40000 {
->>> +			label = "user_prg";
->>> +			reg = <0x00040000 0x00400000>;
->>> +			read-only;
-
->>     Oops, there shouldn't be "read-only" here, I forgot to refresh
->> the patch as I'm now seeing... too bad it's too late to resend now.
->> :-(
-
-> Could you send an incremental fix for me to queue up?
-
-    Oops, I've rechecked and it should indeed be read-only, so the patch was 
-correct. Sorry. :-)
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
