@@ -1,84 +1,42 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree support
-Date: Mon, 12 May 2014 12:00:17 +0200
-Message-ID: <CABxcv=mY0a+yJgmCTPN=BhSQD57Pw022zOd5_KxEgvvF_-=O7Q@mail.gmail.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
-	<1398815562-24113-4-git-send-email-tony@atomide.com>
-	<5369EAE7.3030705@ti.com>
-	<20140507150343.GA9502@atomide.com>
-	<536A5920.1020908@ti.com>
-	<20140507175919.GH9502@atomide.com>
-	<20140508233300.GI2198@atomide.com>
-	<536C8293.4070506@ti.com>
-	<20140509155504.GE17814@atomide.com>
-	<53707A64.2060203@ti.com>
-	<CABxcv=kwhodeFTHoVpn1nHeh9+kV5fwMN9s3Kbk6h7_xJp4UYA@mail.gmail.com>
-	<53709706.10501@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v13 00/19] iommu/exynos: Fixes and Enhancements of System
+	MMU driver with DT
+Date: Mon, 12 May 2014 12:07:52 +0200
+Message-ID: <5576160.rCaFbvon4G@wuerfel>
+References: <1399875304-19948-1-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53709706.10501@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1399875304-19948-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Tomi,
+On Monday 12 May 2014 11:44:45 Shaik Ameer Basha wrote:
+> This is the subset of previous v12 series and includes only the fixes and
+> enhancements, leaving out the private DT bindings as discussed in the below thread.
+>     -- http://www.gossamer-threads.com/lists/linux/kernel/1918178
+> 
+> This patch series includes,
+> 1] fixes for exynos-iommu driver build break
+> 2] includes several bug fixes and enhancements for the exynos-iommu driver
+> 3] code to handle multiple exynos sysmmu versions
+> 4] adding support for device tree
+>         Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
 
-On Mon, May 12, 2014 at 11:40 AM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> On 12/05/14 12:34, Javier Martinez Canillas wrote:
->
->> Maybe we can remove this hackery by relying on the fact that a
->> compatible string can have a set of values that goes from more
->> specific to more general. So you can have something like:
->>
->> compatible = "sony,panel-foobar", "omapdss,panel-foobar"
->>
->> So right now only "omapdss,panel-foobar" will be matched and later
->> when we have common panel drivers then that driver could handle the
->> "sony,panel-foobar" compatible string.
->>
->> Other platforms could do something similar and have
->>
->> compatible = "sony,panel-foobar", "baz,panel-foobar"
->>
->> That way you won't break DT backward compatible but still not require
->> hacks on arch/arm/mach-omap2/display.c.
->>
->> We do the same for OMAP boards, we now have the following compatible string:
->>
->> compatible = "isee,omap3-igep0020", "ti,omap36xx", "ti,omap3";
->>
->> There isn't a struct machine_desc that matches "isee,omap3-igep0020"
->> but later if we find that we need some board specific initialization
->> we could add one without breaking existing DTS. In fact it used to be
->> a single machine_desc that matched "ti,omap3" for both omap36xx and
->> omap34xx but later when some DT clocks changes were introduced we
->> needed to split both SoC families.
->
-> I think that's a different thing. "isee,omap3-igep0020" is a proper
-> compatible string, if the board is "isee,...".  No matter what software
-> you run, that's correct and fine.
->
-> The omapdss case is different, there the "omapdss" points to a sw thing,
-> it does not describe the hardware. It's only needed as we don't have
-> proper sw drivers for the devices.
->
-> That said, I think what you describe would work. But I would rather keep
-> the .dts files clean and correct, and keep that hacks hidden inside the
-> kernel.
->
+The patches look good to me, but please add a note into the samsung,sysmmu.txt
+file explaining that the binding is incomplete and that it's possible to
+change in incompatible ways when we add support for attaching devices to
+the IOMMU through the generic IOMMU binding.
 
-Thanks for the explanation. Since DT are meant to describe hardware
-and not software I agree with you that we shouldn't leak an
-implementation detail to the DeviceTrees.
-
-And after all fortunately we don't have a stable API in the kernel
-like the one that is enforced in the DT so we can fix it later ;-)
-
->  Tomi
->
->
-
-Bets regards,
-Javier
+	Arnd
