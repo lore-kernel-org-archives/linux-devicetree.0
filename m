@@ -1,52 +1,36 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH v2 5/6] ARM: berlin: add the AHCI node for the BG2Q
-Date: Mon, 12 May 2014 11:16:56 +0200
-Message-ID: <1399886217-20474-6-git-send-email-antoine.tenart@free-electrons.com>
-References: <1399886217-20474-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 3/4] arm: add basic support for Mediatek MT6589 boards
+Date: Mon, 12 May 2014 11:30:15 +0200
+Message-ID: <80525303.7Oax6ZBozr@wuerfel>
+References: <1399772463-859-1-git-send-email-matthias.bgg@gmail.com> <1399772463-859-4-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399886217-20474-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399772463-859-4-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The BG2Q has an AHCI SATA controller. Add the corresponding nodes
-(AHCI, SATA PHY) in its device tree.
+On Sunday 11 May 2014 03:41:02 Matthias Brugger wrote:
+> +
+> +static void __init mediatek_dt_init(void)
+> +{
+> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +}
+> +
+> +static const char * const mediatek_board_dt_compat[] = {
+> +       "mediatek,mt6589",
+> +       NULL,
+> +};
+> +
+> +DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
+> +       .init_machine   = mediatek_dt_init,
+> +       .dt_compat      = mediatek_board_dt_compat,
+> +MACHINE_END
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- arch/arm/boot/dts/berlin2q.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Since the mediatek_dt_init function now only does the default populate
+call, you can leave it out completely and keep only the compat list.
 
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
-2q.dtsi
-index 07452a7483fa..99338a2d11a6 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -183,6 +183,20 @@
- 			};
- 		};
-=20
-+		ahci: sata@e90000 {
-+			compatible =3D "marvell,berlin-ahci";
-+			reg =3D <0xe90000 0x1000>;
-+			interrupts =3D <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
-+			status =3D "disabled";
-+		};
-+
-+		sata_phy: phy@e900a0 {
-+			compatible =3D "marvell,berlin-sata-phy";
-+			reg =3D <0xe900a0 0x10>;
-+			#phy-cells =3D <1>;
-+			status =3D "disabled";
-+		};
-+
- 		apb@fc0000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
---=20
-1.9.1
+	Arnd
