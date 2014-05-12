@@ -1,58 +1,64 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH] ARM: shmobile: r8a7791: Correct SYS-DMAC clock defines
-Date: Mon, 12 May 2014 21:48:59 +0200
-Message-ID: <1879564.Q0Zk545mJH@avalon>
-References: <1399920573-30947-1-git-send-email-geert+renesas@glider.be>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2] ARM: dts: am335x-bone-common: Add i2c2 definition
+Date: Mon, 12 May 2014 12:50:50 -0700
+Message-ID: <20140512195050.GB5668@atomide.com>
+References: <1399686184-1594-1-git-send-email-mranostay@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1399920573-30947-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm@opensource.se>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399686184-1594-1-git-send-email-mranostay@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Matt Ranostay <mranostay@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, pantelis.antoniou@gmail.com, matt.porter@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-Thank you for the patch.
-
-On Monday 12 May 2014 20:49:33 Geert Uytterhoeven wrote:
-> R-Car M2 has two MSTP bits for SYS-DMAC, not one.
-> Also bring the naming in sync with the documentation.
+* Matt Ranostay <mranostay@gmail.com> [140509 18:43]:
+> Add missing i2c2 bus define to access various cape and
+> prototype/breakout board devices.
 > 
-> This issue was introduced in v3.14, in commit
-> 4d8864c9e94ec727f1c675b9f6921525c360334b ("ARM: shmobile: r8a7791: Add
-> clock index macros for DT sources").
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
+> Signed-off-by: Matt Ranostay <mranostay@gmail.com>
 > ---
-> I believe there are no users of the incorrect definition.
-> ---
->  include/dt-bindings/clock/r8a7791-clock.h |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  arch/arm/boot/dts/am335x-bone-common.dtsi | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
 > 
-> diff --git a/include/dt-bindings/clock/r8a7791-clock.h
-> b/include/dt-bindings/clock/r8a7791-clock.h index
-> 29b0f3355ffb..b050d18437ce 100644
-> --- a/include/dt-bindings/clock/r8a7791-clock.h
-> +++ b/include/dt-bindings/clock/r8a7791-clock.h
-> @@ -43,7 +43,8 @@
->  #define R8A7791_CLK_SCIFB1		7
->  #define R8A7791_CLK_MSIOF1		8
->  #define R8A7791_CLK_SCIFB2		16
-> -#define R8A7791_CLK_DMAC		18
-> +#define R8A7791_CLK_SYS_DMAC1		18
-> +#define R8A7791_CLK_SYS_DMAC0		19
-> 
->  /* MSTP3 */
->  #define R8A7791_CLK_TPU0		4
+> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> index 2e7d932..5fdae2e 100644
+> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
+> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
+> @@ -84,6 +84,13 @@
+>  		>;
+>  	};
+>  
+> +	i2c2_pins: pinmux_i2c2_pins {
+> +		pinctrl-single,pins = <
+> +			0x178 (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_ctsn.i2c2_sda */
+> +			0x17c (PIN_INPUT_PULLUP | MUX_MODE3)	/* uart1_rtsn.i2c2_scl */
+> +		>;
+> +	};
+> +
+>  	uart0_pins: pinmux_uart0_pins {
+>  		pinctrl-single,pins = <
+>  			0x170 (PIN_INPUT_PULLUP | MUX_MODE0)	/* uart0_rxd.uart0_rxd */
+>
+> @@ -222,6 +229,15 @@
+>  
+>  };
+>  
+> +
+> +&i2c2 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins>;
+> +
+> +	status = "okay";
+> +	clock-frequency = <100000>;
+> +};
+> +
 
--- 
+If these pins are not used for i2c2 on some capes, this device
+should be set to status = "disabled" state by default. Then
+u-boot could re-enable it on the boards that have i2c2 in use.
+
 Regards,
 
-Laurent Pinchart
-
+Tony
