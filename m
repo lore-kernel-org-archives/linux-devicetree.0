@@ -1,36 +1,52 @@
 From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v2 4/4] ARM: at91: move sam9n12 SoC to the CCF
-Date: Mon, 12 May 2014 18:26:30 +0200
-Message-ID: <1399911990-5086-5-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v2 3/4] ARM: at91/dt: define sam9n12ek crystal frequencies
+Date: Mon, 12 May 2014 18:26:29 +0200
+Message-ID: <1399911990-5086-4-git-send-email-boris.brezillon@free-electrons.com>
 References: <1399911990-5086-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1399911990-5086-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, linux-kernel@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Bo Shen <voice.shen@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch removes the selection of AT91_USE_OLD_CLK when selecting
-sam9n12 SoC support. This will automatically enable COMMON_CLK_AT91 option
-and add support for at91 common clk implementation.
+Define sam9n12ek's main and slow crystal frequencies.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
 Tested-by: Bo Shen <voice.shen@atmel.com>
 ---
- arch/arm/mach-at91/Kconfig | 1 -
- 1 file changed, 1 deletion(-)
+ arch/arm/boot/dts/at91sam9n12ek.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index b2d2cf4..a1ac430 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -183,7 +183,6 @@ config SOC_AT91SAM9N12
- 	select HAVE_AT91_DBGU0
- 	select HAVE_FB_ATMEL
- 	select SOC_AT91SAM9
--	select AT91_USE_OLD_CLK
- 	select HAVE_AT91_USB_CLK
- 	help
- 	  Select this if you are using Atmel's AT91SAM9N12 SoC.
+diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
+index 924a6a6..64bbe46 100644
+--- a/arch/arm/boot/dts/at91sam9n12ek.dts
++++ b/arch/arm/boot/dts/at91sam9n12ek.dts
+@@ -21,6 +21,14 @@
+ 		reg = <0x20000000 0x8000000>;
+ 	};
+ 
++	slow_xtal {
++		clock-frequency = <32768>;
++	};
++
++	main_xtal {
++		clock-frequency = <16000000>;
++	};
++
+ 	clocks {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
 -- 
 1.8.3.2
