@@ -1,90 +1,82 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Mon, 12 May 2014 08:51:32 -0700
-Message-ID: <20140512155132.GH31772@atomide.com>
-References: <20140507175919.GH9502@atomide.com>
- <20140508233300.GI2198@atomide.com>
- <536C8293.4070506@ti.com>
- <20140509155504.GE17814@atomide.com>
- <53707A64.2060203@ti.com>
- <CABxcv=kwhodeFTHoVpn1nHeh9+kV5fwMN9s3Kbk6h7_xJp4UYA@mail.gmail.com>
- <53709706.10501@ti.com>
- <CABxcv=mY0a+yJgmCTPN=BhSQD57Pw022zOd5_KxEgvvF_-=O7Q@mail.gmail.com>
- <20140512142646.GA31772@atomide.com>
- <5370E0C9.8050201@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv5 05/20] Documentation: dt-bindings: update ehci-orion
+ binding documentation
+Date: Mon, 12 May 2014 18:00:37 +0200
+Message-ID: <5370F025.90601@free-electrons.com>
+References: <Pine.LNX.4.44L0.1405121145220.1202-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5370E0C9.8050201@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.44L0.1405121145220.1202-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140512 07:55]:
-> On 12/05/14 17:26, Tony Lindgren wrote:
+On 12/05/2014 17:46, Alan Stern wrote:
+> On Mon, 12 May 2014, Gregory CLEMENT wrote:
 > 
-> >>> The omapdss case is different, there the "omapdss" points to a sw thing,
-> >>> it does not describe the hardware. It's only needed as we don't have
-> >>> proper sw drivers for the devices.
-> >>>
-> >>> That said, I think what you describe would work. But I would rather keep
-> >>> the .dts files clean and correct, and keep that hacks hidden inside the
-> >>> kernel.
-> >>>
-> >>
-> >> Thanks for the explanation. Since DT are meant to describe hardware
-> >> and not software I agree with you that we shouldn't leak an
-> >> implementation detail to the DeviceTrees.
-> >>
-> >> And after all fortunately we don't have a stable API in the kernel
-> >> like the one that is enforced in the DT so we can fix it later ;-)
-> > 
-> > This remapping of compatible flags sounds smelly to me, please discuss
-> > it first with the device tree people.
+>> Hi Alan,
+>>
+>> On 11/05/2014 20:17, Thomas Petazzoni wrote:
+>>> This commit updates the Device Tree binding documentation of
+>>> ehci-orion to take into account the fact that we can now optionally
+>>> pass a clock and a PHY reference.
+>>
+>> Would you agree to take this patch with the 4 first ones?
+>>
+>> For this kind of change in the device tree the agreement was that it
+>> can be directly taken by the maintainer of the subsystem. Indeed here
+>> we don't introduce a new kind of device tree node, we just add a optional
+>> resource already used in many place.
 > 
-> It's already in v3.15.
+> Sorry, I missed this one.  Is it okay with the DT people?  If it is, 
 
-Oh great.. And you dumped it into arch/arm/mach-omap2 too and I somehow
-even acked it :( Looks like there's also the custom mux hacks. And
-custom hwmod hacks. And ongoing soc_is_xxx tinkering. Now let's not add
-_any_ new crap into arch/arm/mach-omap2/display.c.
+Rob, Mark,
 
-So please consider this a huge eternal NAK to add any more crap to
-arch/arm/mach-omap2/display.c from me. No more new soc_is beyond
-the soc_is_am43xx() you have in linux next. No more adding 
-of_find_compatible_node() beyond ti,omap5-dss you have in linux next.
+could you confirm that for this kind of change in the dts documentation
+you agree that the maintainer take it?
 
-And no more new panel remapping in this file as soon as you have found
-a better solution. Preferrably by v3.17 merge window. This file just
-needs to disappear. Yuk.
 
-> I agree it's smelly, but it smelly only inside the kernel, not visible
-> anywhere, and we can remove it when we have common panel drivers,
-> without any modifications to .dts files.
+> you can submit it directly to Greg KH and he'll merge it.
+
+OK thanks!
+
 > 
-> > I think we're better off just using the compatible properties limited
-> > to the simple-panel.txt for now and actually describe the real
-> > hardware. The fact that the panel is connected to DSS should be possible
-> > to find out based on the phandles.
+> Alan Stern
 > 
-> I'm not sure what you mean. We do describe only the real hardware. The
-> compatible string in the .dts file is "sharp,ls037v7dw01".
+>>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/usb/ehci-orion.txt | 5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+>>> index 6bc09ec..17c3bc8 100644
+>>> --- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
+>>> +++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
+>>> @@ -6,6 +6,11 @@ Required properties:
+>>>    region.
+>>>  - interrupts: The EHCI interrupt
+>>>  
+>>> +Optional properties:
+>>> +- clocks: reference to the clock
+>>> +- phys: reference to the USB PHY
+>>> +- phy-names: name of the USB PHY, should be "usb"
+>>> +
+>>>  Example:
+>>>  
+>>>  	ehci@50000 {
+>>>
 > 
-> Prepending the "omapdss" to the compatible string is required for the
-> device/driver matching to work, because we can't use the
-> "sharp,ls037v7dw01" compatible string in our omap specific panel driver.
-> 
-> I'm not sure what it would give us to try to be compatible with
-> simple-panel.txt. The simple-panel bindings won't probably be compatible
-> with the future common display drivers in any case, as the simple-panel
-> binding is just too limited and doesn't describe the hardware fully.
 
-Hmm what else does a panel need where the existing binding cannot be
-extended? 
 
-Regards,
-
-Tony
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
