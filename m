@@ -1,128 +1,46 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v12 1/6] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Mon, 12 May 2014 11:15:30 +0200
-Message-ID: <CAPDyKFrYeBdB20qhmkcUf5ykw=SbBo6VUPXd=By9dNOvTnvFww@mail.gmail.com>
-References: <1399794417-9291-1-git-send-email-hdegoede@redhat.com>
-	<1399794417-9291-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v2 6/6] ARM: berlin: enable the eSATA interface on the BG2Q DMP
+Date: Mon, 12 May 2014 11:16:57 +0200
+Message-ID: <1399886217-20474-7-git-send-email-antoine.tenart@free-electrons.com>
+References: <1399886217-20474-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDF57NG2XIHRBMVCYKNQKGQE6UZCDJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1399794417-9291-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399886217-20474-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11 May 2014 09:46, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> From: David Lanzend=C3=B6rfer <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
->
-> The Allwinner sunxi mmc host uses dma in bus-master mode using a built-in
-> designware idmac controller, which is identical to the one found in the m=
-mc-dw
-> hosts. However the rest of the host is not identical to mmc-dw, it deals =
-with
-> sending stop commands in hardware which makes it significantly different
-> from the mmc-dw devices.
->
-> HdG: Various cleanups and fixes.
->
-> Signed-off-by: David Lanzend=C3=B6rfer <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+The BG2Q has an AHCI SATA controller with an eSATA interface. Enable it=
+=2E
+Also use the SATA PHY 0, the BG2Q DMP does not has the SATA PHY 1.
 
-[snip]
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+---
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-> +
-> +static int sunxi_mmc_clk_set_rate(struct sunxi_mmc_host *host,
-> +                                 struct mmc_ios *ios)
-> +{
-> +       u32 rate, oclk_dly, rval, sclk_dly, src_clk;
-> +       struct clk_hw *hw =3D __clk_get_hw(host->clk_mmc);
-
-Hi Hans,
-
-This seems like the wrong approach. But I guess it's related to the
-"clock phase control" API you have been discussing with the clk
-maintainer, Mike Turquette!?
-
-__clk_get_hw is supposed to be used by clk providers, not clk consumers.
-
-> +       int ret;
-> +
-> +       rate =3D clk_round_rate(host->clk_mmc, ios->clock);
-> +       dev_dbg(mmc_dev(host->mmc), "setting clk to %d, rounded %d\n",
-> +               ios->clock, rate);
-> +
-> +       /* setting clock rate */
-> +       ret =3D clk_set_rate(host->clk_mmc, rate);
-> +       if (ret) {
-> +               dev_err(mmc_dev(host->mmc), "error setting clk to %d: %d\=
-n",
-> +                       rate, ret);
-> +               return ret;
-> +       }
-> +
-> +       ret =3D sunxi_mmc_oclk_onoff(host, 0);
-> +       if (ret)
-> +               return ret;
-> +
-> +       /* clear internal divider */
-> +       rval =3D mmc_readl(host, REG_CLKCR);
-> +       rval &=3D ~0xff;
-> +       mmc_writel(host, REG_CLKCR, rval);
-> +
-> +       /* determine delays */
-> +       if (rate <=3D 400000) {
-> +               oclk_dly =3D 0;
-> +               sclk_dly =3D 7;
-> +       } else if (rate <=3D 25000000) {
-> +               oclk_dly =3D 0;
-> +               sclk_dly =3D 5;
-> +       } else if (rate <=3D 50000000) {
-> +               if (ios->timing =3D=3D MMC_TIMING_UHS_DDR50) {
-> +                       oclk_dly =3D 2;
-> +                       sclk_dly =3D 4;
-> +               } else {
-> +                       oclk_dly =3D 3;
-> +                       sclk_dly =3D 5;
-> +               }
-> +       } else {
-> +               /* rate > 50000000 */
-> +               oclk_dly =3D 2;
-> +               sclk_dly =3D 4;
-> +       }
-> +
-> +       src_clk =3D clk_get_rate(clk_get_parent(host->clk_mmc));
-> +       if (src_clk >=3D 300000000 && src_clk <=3D 400000000) {
-> +               if (oclk_dly)
-> +                       oclk_dly--;
-> +               if (sclk_dly)
-> +                       sclk_dly--;
-> +       }
-> +
-> +       clk_sunxi_mmc_phase_control(hw, sclk_dly, oclk_dly);
-> +
-> +       return sunxi_mmc_oclk_onoff(host, 1);
-> +}
-> +
-
-[snip]
-
-Besides the above, I think this looks good!
-
-Kind regards
-Ulf Hansson
-
+diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot=
+/dts/berlin2q-marvell-dmp.dts
+index 2da9c41e29d8..3782204100d8 100644
+--- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
++++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+@@ -26,3 +26,13 @@
+ &uart0 {
+ 	status =3D "okay";
+ };
++
++&ahci {
++	phys =3D <&sata_phy 0>;
++	phy-names =3D "port0";
++	status =3D "okay";
++};
++
++&sata_phy {
++	status =3D "okay";
++};
 --=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+1.9.1
