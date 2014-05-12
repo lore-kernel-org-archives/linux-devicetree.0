@@ -1,1728 +1,1121 @@
-Return-Path: <anish.khurana130181@gmail.com>
+Return-Path: <loeliger@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20140509151946.GM6455@distanz.ch>
-References: <201405081450.14449.Andreas.Irestal@axis.com>
-	<20140509151946.GM6455@distanz.ch>
-Date: Sat, 10 May 2014 15:49:14 +0530
-Message-ID: <CANKiNjUewie02AAe1z+NWGKLAZ_0ayPYnEnrfd3X8QCjXKzFPw@mail.gmail.com>
-Subject: Re: [RFC PATCH] net:Add basic DWC Ethernet QoS Driver
-From: Anish Khurana <anish.khurana130181@gmail.com>
-Content-Type: multipart/alternative; boundary=089e016354d4ca9e8a04f9090bf6
-To: Tobias Klauser <tklauser@distanz.ch>
-Cc: Andreas Irestal <andreas.irestal@axis.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "maxime.ripard@free-electrons.com" <maxime.ripard@free-electrons.com>, "abrodkin@synopsys.com" <abrodkin@synopsys.com>, "jeffrey.t.kirsher@intel.com" <jeffrey.t.kirsher@intel.com>, "ben@decadent.org.uk" <ben@decadent.org.uk>, "sr@denx.de" <sr@denx.de>, "jonas.jensen@gmail.com" <jonas.jensen@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jesper Nilsson <jespern@axis.com>
+In-Reply-To: <1399913280-6915-4-git-send-email-holler@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
+	<1399913280-6915-4-git-send-email-holler@ahsoftware.de>
+Date: Mon, 12 May 2014 15:38:40 -0500
+Message-ID: <CAJgR-BhnFngGr9qxa7NvF7GExiCAr1=HS16AtN20uj7nCmLcKQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 3/9] dt: deps: dtc: Add option to print initialization order
+From: Jon Loeliger <loeliger@gmail.com>
+Content-Type: multipart/alternative; boundary=001a1134a45cb8ab9104f939ee28
+To: Alexander Holler <holler@ahsoftware.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
---089e016354d4ca9e8a04f9090bf6
+--001a1134a45cb8ab9104f939ee28
 Content-Type: text/plain; charset=UTF-8
 
-small suggestions regarding interrupt registration ( request_irq()) call:
-1. instead of request_irq() call in probe function , i think interrupt can
-be registered in dwceqos_open() call . since packet only come when we make
-interface up( ifconfig up) .
-2. in request_irq() thier is flag parameter can either be zero or flag as :
-IRQF_DISABLED
-IRQF_SHARED
-...
-normally if we have to share the irq line with other device we use
-IRQF_SHARED .
+So, this should be rebased on the actual DTC repository,
+and not the kernel's copy of the DTC under scripts.
+
+Thanks,
+jdl
 
 
 
+On Mon, May 12, 2014 at 11:47 AM, Alexander Holler <holler@ahsoftware.de>wrote:
 
-
-
-On Fri, May 9, 2014 at 8:49 PM, Tobias Klauser <tklauser@distanz.ch> wrote:
-
-> On 2014-05-08 at 14:50:14 +0200, Andreas Irestal <andreas.irestal@axis.com>
-> wrote:
-> > This is an early version of a driver for the Synopsys DWC Ethernet QoS IP
-> > version 4. Unfortunately, version 4.00a and onwards of this IP is totally
-> > different from earlier versions used in the STMicroelectronics drivers.
-> Both
-> > functionality and registers are different. As this is my first network
-> driver
-> > I am submitting an RFC to catch design flaws and bad coding standards at
-> an
-> > early stage. Also, others looking at this IP could hopefully be helped
-> by this
-> > early code.
-> >
-> > The driver is quite inefficient, yet still functional (Gbit only) and
-> uses a
-> > polling-driven TX-approach. For the RX side NAPI and interrupts are used.
-> > There are still quite a lot of work to do. Link handling, more robust
-> > error-handling, HW Checksumming, scatter-gather and TCP Segmentation and
-> > checksum offloading to name a few.
-> >
-> > All code has been developed and tested using an FPGA implementation of
-> the IP,
-> > with an ARM Cortex A9 as the main CPU, running Linux 3.13.
-> >
-> > Signed-off-by: Andreas Irestaal <Andreas.Irestal@axis.com>
-> > ---
-> >  drivers/net/ethernet/Kconfig                |    1 +
-> >  drivers/net/ethernet/Makefile               |    1 +
-> >  drivers/net/ethernet/synopsys/Kconfig       |   24 +
-> >  drivers/net/ethernet/synopsys/Makefile      |    5 +
-> >  drivers/net/ethernet/synopsys/dwc_eth_qos.c |  706
-> +++++++++++++++++++++++++++
-> >  drivers/net/ethernet/synopsys/dwc_eth_qos.h |  308 ++++++++++++
-> >  6 files changed, 1045 insertions(+), 0 deletions(-)
-> >  create mode 100644 drivers/net/ethernet/synopsys/Kconfig
-> >  create mode 100644 drivers/net/ethernet/synopsys/Makefile
-> >  create mode 100644 drivers/net/ethernet/synopsys/dwc_eth_qos.c
-> >  create mode 100644 drivers/net/ethernet/synopsys/dwc_eth_qos.h
+> Add option -t to print the default initialization order.
+> No other output will be generated.
 >
-> [...]
+> To print the order, just use something like this:
 >
-> > diff --git a/drivers/net/ethernet/synopsys/dwc_eth_qos.c
-> b/drivers/net/ethernet/synopsys/dwc_eth_qos.c
-> > new file mode 100644
-> > index 0000000..20b1a9e
-> > --- /dev/null
-> > +++ b/drivers/net/ethernet/synopsys/dwc_eth_qos.c
-> > @@ -0,0 +1,706 @@
+>         CROSS_COMPILE=gcc-foo ARCH=arm make foo.dtb
+>         scripts/dtc/dtc -I dtb -t arch/arm/boot/dts/foo.dtb
 >
-> [...]
+> Since it's now possible to check to for cycles in the dependency graph,
+> this is now done too.
 >
-> > +struct net_local {
-> > +       void __iomem *baseaddr;
-> > +       struct clk *phy_ref_clk;
-> > +       struct clk *apb_pclk;
-> > +
-> > +       struct net_device *ndev;
-> > +       struct platform_device *pdev;
-> > +
-> > +       volatile struct dwc_eth_qos_txdesc *tx_descs;
-> > +       volatile struct dwc_eth_qos_rxdesc *rx_descs;
-> > +
-> > +       void *tx_buf;
-> > +
-> > +       struct ring_info *rx_skb;
-> > +
-> > +       dma_addr_t tx_descs_addr;
-> > +       dma_addr_t rx_descs_addr;
-> > +
-> > +       u32 next_tx;
-> > +       u32 next_rx;
-> > +
-> > +       struct napi_struct napi;
-> > +
-> > +       struct net_device_stats stats;
+> Signed-off-by: Alexander Holler <holler@ahsoftware.de>
+> ---
+>  scripts/dtc/dependencies.c | 346
+> +++++++++++++++++++++++++++++++++++++++++++++
+>  scripts/dtc/dtc.c          |  24 +++-
+>  scripts/dtc/dtc.h          |   2 +
+>  3 files changed, 371 insertions(+), 1 deletion(-)
 >
-> You don't need a private copy of struct net_device_stats, just use the
-> one from struct net_device. It looks like the driver is not returning
-> these stats currently anyway. If you use ndev->stats, they will be
-> picked up by dev_get_stats() and i.e. show up in ifconfig output.
->
-> > +       spinlock_t rx_lock;
-> > +};
-> > +
-> > +/* Allocate DMA helper structure at position given by index */
-> > +static void dwceqos_alloc_rxring_desc(struct net_local *lp, int index)
-> > +{
-> > +       struct sk_buff *new_skb;
-> > +       u32 new_skb_baddr = 0;
-> > +       new_skb = netdev_alloc_skb(lp->ndev, DWCEQOS_RX_BUF_SIZE);
-> > +       if (!new_skb) {
-> > +               dev_err(&lp->ndev->dev, "alloc_skb error for desc %d\n",
-> index);
-> > +               goto out;
-> > +       }
-> > +
-> > +       /* Get dma handle of skb->data */
-> > +       new_skb_baddr = (u32)dma_map_single(lp->ndev->dev.parent,
-> > +               new_skb->data, DWCEQOS_RX_BUF_SIZE, DMA_FROM_DEVICE);
-> > +       if (dma_mapping_error(lp->ndev->dev.parent, new_skb_baddr)) {
-> > +               dev_err(&lp->pdev->dev, "DMA map error\n");
-> > +               dev_kfree_skb(new_skb);
-> > +               new_skb = NULL;
-> > +       }
-> > +out:
-> > +       lp->rx_skb[index].skb = new_skb;
-> > +       lp->rx_skb[index].mapping = new_skb_baddr;
-> > +       lp->rx_skb[index].len = DWCEQOS_RX_BUF_SIZE;
-> > +
-> > +       return;
-> > +}
-> > +
-> > +static void dwceqos_mtl_init(struct net_local *lp)
-> > +{
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MTL_OP_MODE, 0x00000060);
-> > +}
-> > +
-> > +static void dwceqos_mtl_tx_init(struct net_local *lp)
-> > +{
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MTL_TXQ0_OP_MODE,
-> > +                       DWCEQOS_MTL_TXQ_EN);
-> > +}
-> > +
-> > +static void dwceqos_mtl_rx_init(struct net_local *lp)
-> > +{
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MTL_RXQ0_OP_MODE,
-> > +               DWCEQOS_MTL_RXQ_RQS256 | DWCEQOS_MTL_RXQ_DIS_TCP_EF |
-> > +               DWCEQOS_MTL_RXQ_FEP | DWCEQOS_MTL_RXQ_FUP |
-> > +               DWCEQOS_MTL_RXQ_RTC32);
-> > +}
-> > +
-> > +static void dwceqos_mac_rx_init(struct net_local *lp)
-> > +{
-> > +       u32 val;
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MAC_RXQ_CTRL0, 2);
-> > +       val = DWCEQOS_MAC_PKT_FILTER_RX_ALL |
-> DWCEQOS_MAC_PKT_FILTER_PCF_ALL |
-> > +               DWCEQOS_MAC_PKT_FILTER_PROMISCUOUS;
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MAC_PKT_FILTER, val);
-> > +}
-> > +
-> > +static int dwceqos_mac_enable(struct net_local *lp)
-> > +{
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MAC_CFG,
-> > +               DWCEQOS_MAC_CFG_DM | DWCEQOS_MAC_CFG_TE |
-> > +               DWCEQOS_MAC_CFG_RE);
-> > +       return 0;
-> > +}
-> > +
-> > +static void dwceqos_dma_wake_rx(struct net_local *lp)
-> > +{
-> > +       u32 offset;
-> > +       offset = DWCEQOS_RX_DCNT * sizeof(struct dwc_eth_qos_rxdesc);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_RXDESC_TAIL,
-> > +               (u32)lp->rx_descs_addr + offset);
-> > +}
-> > +
-> > +static inline void dwceqos_dma_rx_start(struct net_local *lp)
-> > +{
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_RX_CTRL,
-> > +               DWCEQOS_DMA_CH0_TXRX_CONTROL_START |
-> > +               DWCEQOS_DMA_CH0_TXRX_CONTROL_PBL16 |
-> > +               DWCEQOS_RX_BUF_SIZE);
-> > +       dwceqos_dma_wake_rx(lp);
-> > +}
-> > +
-> > +static inline void dwceqos_dma_tx_start(struct net_local *lp)
-> > +{
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_TX_CTRL,
-> > +               DWCEQOS_DMA_CH0_TXRX_CONTROL_START |
-> > +               DWCEQOS_DMA_CH0_TXRX_CONTROL_PBL16);
-> > +}
-> > +
-> > +static void dwceqos_dma_setmode(struct net_local *lp)
-> > +{
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_MODE,
-> > +               DWCEQOS_DMA_MODE_TXPR | DWCEQOS_DMA_MODE_DA);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_SYSBUS_MODE,
-> > +               DWCEQOS_DMA_SYSBUS_MB);
-> > +}
-> > +
-> > +static void dwceqos_dma_txenable(struct net_local *lp)
-> > +{
-> > +       u32 val;
-> > +       val = DWCEQOS_DMA_CH0_TXRX_CONTROL_PBL16 |
-> > +               DWCEQOS_DMA_CH0_TXRX_CONTROL_START;
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_TX_CTRL, val);
-> > +}
-> > +
-> > +static void dwceqos_dma_rx_enable(struct net_local *lp)
-> > +{
-> > +       u32 val;
-> > +       val = DWCEQOS_DMA_CH0_TXRX_CONTROL_PBL16 |
-> > +               DWCEQOS_RX_BUF_SIZE | DWCEQOS_DMA_CH0_TXRX_CONTROL_START;
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_RX_CTRL, val);
-> > +}
-> > +
-> > +/* Initialize DMA descriptors to their start values */
-> > +static void dwceqos_dma_prepare(struct net_local *lp)
-> > +{
-> > +       int i;
-> > +       for (i = 0; i < DWCEQOS_TX_DCNT; ++i) {
-> > +               lp->tx_descs[i].tdes0.raw = 0;
-> > +               lp->tx_descs[i].tdes1.raw = 0;
-> > +               lp->tx_descs[i].tdes2.raw = 0;
-> > +               lp->tx_descs[i].tdes3.raw = 0;
-> > +       }
-> > +
-> > +       for (i = 0; i < DWCEQOS_RX_DCNT; ++i) {
-> > +               lp->rx_descs[i].rdes0.rd.buffer1 = lp->rx_skb[i].mapping;
-> > +               lp->rx_descs[i].rdes1.raw = 0;
-> > +               lp->rx_descs[i].rdes2.rd.buffer2 = 0;
-> > +               lp->rx_descs[i].rdes3.raw = 0;
-> > +               lp->rx_descs[i].rdes3.rd.buf1v = 1;
-> > +               lp->rx_descs[i].rdes3.rd.inte = 1;
-> > +               lp->rx_descs[i].rdes3.rd.own = 1;
-> > +       }
-> > +       lp->next_tx = 0;
-> > +       lp->next_rx = 0;
-> > +}
-> > +
-> > +/* Allocate and initiate DMA rings for TX and RX. Also allocates RX
-> buffers for
-> > + * incoming packets.
-> > + */
-> > +static int dwceqos_dma_alloc(struct net_local *lp)
-> > +{
-> > +       u32 size;
-> > +       int i;
-> > +
-> > +       size = DWCEQOS_RX_DCNT * sizeof(struct ring_info);
-> > +       lp->rx_skb = kzalloc(size, GFP_KERNEL);
-> > +       if (!lp->rx_skb) {
-> > +               dev_err(&lp->pdev->dev, "Unable to allocate ring
-> descriptor area\n");
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> > +       /* Allocate DMA descriptors */
-> > +       size = DWCEQOS_TX_DCNT * sizeof(struct dwc_eth_qos_txdesc);
-> > +       lp->tx_descs = dma_alloc_coherent(&lp->pdev->dev, size,
-> > +                       &lp->tx_descs_addr, 0);
-> > +       if (!lp->tx_descs) {
-> > +               dev_err(&lp->pdev->dev, "Failed to allocate TX DMA
-> descriptors\n");
-> > +               /* Should deallocate memory here */
-> > +               return -ENOMEM;
-> > +       }
-> > +       size = DWCEQOS_RX_DCNT * sizeof(struct dwc_eth_qos_rxdesc);
-> > +       lp->rx_descs = dma_alloc_coherent(&lp->pdev->dev, size,
-> > +                       &lp->rx_descs_addr, 0);
-> > +       if (!lp->rx_descs) {
-> > +               dev_err(&lp->pdev->dev, "Failed to allocate RX DMA
-> descriptors\n");
-> > +               /* Should deallocate memory here */
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> > +       for (i = 0; i < DWCEQOS_RX_DCNT; ++i) {
-> > +               dwceqos_alloc_rxring_desc(lp, i);
-> > +               if (!(lp->rx_skb[lp->next_rx].skb)) {
-> > +                       dev_err(&lp->pdev->dev, "Unable to map
-> descriptor %d to DMA\n",
-> > +                               lp->next_rx);
-> > +                       /* What error code to return for mapping error?
+> diff --git a/scripts/dtc/dependencies.c b/scripts/dtc/dependencies.c
+> index dd4658c..8fe1a8c 100644
+> --- a/scripts/dtc/dependencies.c
+> +++ b/scripts/dtc/dependencies.c
+> @@ -106,3 +106,349 @@ void add_dependencies(struct boot_info *bi)
+>  {
+>         process_nodes_props(bi->dt, bi->dt);
+>  }
+> +
+> +/*
+> + * The code below is in large parts a copy of drivers/of/of_dependencies.c
+> + * in the Linux kernel. So both files do share the same bugs.
+> + * The next few ugly defines do exist to keep the differences at a
+> minimum.
+> + */
+> +static struct node *tree;
+> +#define pr_cont(format, ...) printf(format, ##__VA_ARGS__)
+> +#define pr_info(format, ...) printf(format, ##__VA_ARGS__)
+> +#define pr_warn(format, ...) printf(format, ##__VA_ARGS__)
+> +#define pr_err(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
+> +typedef cell_t __be32;
+> +#define device_node node
+> +#define full_name fullpath
+> +#define __initdata
+> +#define __init
+> +#define unlikely(a) (a)
+> +#define of_node_put(a)
+> +#define of_find_node_by_phandle(v) get_node_by_phandle(tree, v)
+> +#define __of_get_property(a, b, c) get_property(a, b)
+> +#define for_each_child_of_node(a, b) for_each_child(a, b)
+> +
+> +
+> +#define MAX_DT_NODES 1000 /* maximum number of vertices */
+> +#define MAX_EDGES (MAX_DT_NODES*2) /* maximum number of edges
+> (dependencies) */
+> +
+> +struct edgenode {
+> +       uint32_t y; /* phandle */
+> +       struct edgenode *next; /* next edge in list */
+> +};
+> +
+> +/*
+> + * Vertex numbers do correspond to phandle numbers. That means the graph
+> + * does contain as much vertices as the maximum of all phandles.
+> + * Or in other words, we assume that for all phandles in the device tree
+> + * 0 < phandle < MAX_DT_NODES+1 is true.
+> + */
+> +struct dep_graph {
+> +       struct edgenode edge_slots[MAX_EDGES]; /* used to avoid kmalloc */
+> +       struct edgenode *edges[MAX_DT_NODES+1]; /* adjacency info */
+> +       unsigned nvertices; /* number of vertices in graph */
+> +       unsigned nedges; /* number of edges in graph */
+> +       bool processed[MAX_DT_NODES+1]; /* which vertices have been
+> processed */
+> +       bool include_node[MAX_DT_NODES+1]; /* which nodes to consider */
+> +       bool discovered[MAX_DT_NODES+1]; /* which vertices have been found
 > */
-> > +                       return -1;
-> > +               }
-> > +       }
-> > +
-> > +       dwceqos_dma_prepare(lp);
-> > +
-> > +       /* Tell HW where to look*/
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_RXDESC_RING_LEN,
-> > +               DWCEQOS_RX_DCNT-1);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_TXDESC_RING_LEN,
-> > +               DWCEQOS_TX_DCNT-1);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_RXDESC_LIST_ADDR,
-> > +               (u32)lp->rx_descs_addr);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_TXDESC_LIST_ADDR,
-> > +               (u32)lp->tx_descs_addr);
-> > +       return 0;
-> > +}
-> > +
-> > +/* Checks if there are any available incoming packets ready for
-> processing */
-> > +int dwceqos_packet_avail(struct net_local *lp)
->
-> Make this function static.
->
-> > +{
-> > +       return !lp->rx_descs[lp->next_rx].rdes3.wr.own;
-> > +}
-> > +
-> > +/* Free DMA descriptor area */
-> > +static void dwceqos_dma_free(struct net_local *lp)
-> > +{
-> > +       u32 size;
-> > +       size = DWCEQOS_TX_DCNT * sizeof(struct dwc_eth_qos_txdesc);
-> > +       if (lp->tx_descs)
-> > +               dma_free_coherent(&lp->pdev->dev, size,
-> > +                       lp->tx_descs, lp->tx_descs_addr);
-> > +       size = DWCEQOS_RX_DCNT * sizeof(struct dwc_eth_qos_rxdesc);
-> > +       if (lp->rx_descs)
-> > +               dma_free_coherent(&lp->pdev->dev, size,
-> > +                       lp->rx_descs, lp->rx_descs_addr);
-> > +}
-> > +
-> > +/* HW transmit function. */
-> > +static void dwceqos_dma_xmit(struct net_local *lp, void *data, int len)
-> > +{
-> > +       u32 regval;
-> > +       int i = lp->next_tx;
-> > +       int dwc_wait;
-> > +       dma_addr_t dma_handle;
-> > +
-> > +       dma_handle = dma_map_single(lp->ndev->dev.parent,
-> > +               data, DWCEQOS_RX_BUF_SIZE, DMA_TO_DEVICE);
-> > +       if (dma_mapping_error(lp->ndev->dev.parent, dma_handle)) {
-> > +               dev_err(&lp->pdev->dev, "DMA Mapping error\n");
-> > +               return;
-> > +       }
-> > +
-> > +       lp->tx_descs[i].tdes0.rd.buffer1 = dma_handle;
-> > +       lp->tx_descs[i].tdes2.rd.buf1len = len;
-> > +       lp->tx_descs[i].tdes3.rd.fl = len;
-> > +       lp->tx_descs[i].tdes3.rd.fd = 1;
-> > +       lp->tx_descs[i].tdes3.rd.ld = 1;
-> > +       lp->tx_descs[i].tdes3.rd.own = 1;
-> > +
-> > +       /* Issue Transmit Poll by writing address of next free
-> descriptor */
-> > +       regval = lp->tx_descs_addr + (i+1) * sizeof(struct
-> dwc_eth_qos_txdesc);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_TXDESC_TAIL, regval);
-> > +
-> > +       /* Set poll wait timeout to 2 seconds */
-> > +       dwc_wait = 200;
-> > +
-> > +       while (lp->tx_descs[i].tdes3.wr.own) {
-> > +               mdelay(10);
-> > +               if (!dwc_wait--)
-> > +                       break;
-> > +       }
-> > +       if (lp->tx_descs[i].tdes3.wr.own)
-> > +               dev_err(&lp->pdev->dev, "Failed to transmit: Timed
-> out\n");
-> > +
-> > +       lp->next_tx = (lp->next_tx + 1) % DWCEQOS_TX_DCNT;
-> > +       dma_unmap_single(lp->ndev->dev.parent,
-> > +                       dma_handle, DWCEQOS_RX_BUF_SIZE, DMA_TO_DEVICE);
-> > +}
-> > +
-> > +/* Store HW Addr in MAC registers. Source Address Replacement not used
-> yet */
-> > +static void dwceqos_set_hwaddr(struct net_local *lp)
-> > +{
-> > +       u32 val;
-> > +
-> > +       val = DWCEQOS_MAC_ADDR_HI_EN | (lp->ndev->dev_addr[0] << 8) |
-> > +               (lp->ndev->dev_addr[1]);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MAC_ADDR_HI, val);
-> > +       val = (lp->ndev->dev_addr[2] << 24) | (lp->ndev->dev_addr[3] <<
-> 16) |
-> > +               (lp->ndev->dev_addr[4] << 8)  | (lp->ndev->dev_addr[5]);
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_MAC_ADDR_LO, val);
-> > +}
-> > +
-> > +/* DMA reset. When issued also resets all MTL and MAC registers as well
+> +       bool finished; /* if true, cut off search immediately */
+> +};
+> +static struct dep_graph graph __initdata;
+> +
+> +struct init_order {
+> +       uint32_t max_phandle; /* the max used phandle */
+> +       uint32_t old_max_phandle; /* used to keep track of added phandles
 > */
-> > +static void dwceqos_dma_reset(struct net_local *lp)
-> > +{
-> > +       /* Wait 5 seconds for DMA reset*/
-> > +       int i = 5000;
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_MODE, 1);
-> > +
-> > +       do {
-> > +               mdelay(1);
-> > +       } while ((dwceqos_read(lp->baseaddr, DWCEQOS_DMA_MODE) & 0x1) &&
-> i--);
-> > +}
-> > +
-> > +/* Interrupt handler. So far only RX interrupts are used */
-> > +static irqreturn_t dwceqos_interrupt(int irq, void *dev_id)
-> > +{
-> > +       struct net_device *ndev = dev_id;
-> > +       struct net_local *lp = netdev_priv(ndev);
-> > +
-> > +       u32 cause;
-> > +       u32 val;
-> > +
-> > +       cause = dwceqos_read(lp->baseaddr, DWCEQOS_DMA_INT_STAT);
-> > +       if (cause & 0x00000001) {
-> > +               /* DMA Channel 0 Interrupt. Assume RX interrupt for now
-> */
-> > +               val = dwceqos_read(lp->baseaddr, DWCEQOS_DMA_CH0_STAT);
-> > +               /* Ack */
-> > +               dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_STAT, val);
-> > +               if (val & 0x00000040)
-> > +                       napi_schedule(&lp->napi);
-> > +       } else if (unlikely(!cause)) {
-> > +               return IRQ_NONE;
-> > +       }
-> > +       return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int dwceqos_open(struct net_device *ndev)
-> > +{
-> > +       /* Allocate Buffers & DMA Descr. + Initiate DMA descriptors */
-> > +       struct net_local *lp = netdev_priv(ndev);
-> > +
-> > +       /* Set up hardware. It looks like order of writes is important
-> here.
-> > +        * Only gigatbit support, no advanced MTL or MAC configuration
-> yet.
-> > +        */
-> > +       dwceqos_dma_reset(lp);
-> > +       dwceqos_mtl_init(lp);
-> > +       dwceqos_mtl_tx_init(lp);
-> > +       dwceqos_dma_setmode(lp);
-> > +       dwceqos_dma_alloc(lp);
-> > +       dwceqos_dma_wake_rx(lp);
-> > +       dwceqos_dma_txenable(lp);
-> > +       dwceqos_mtl_rx_init(lp);
-> > +       dwceqos_mac_rx_init(lp);
-> > +       dwceqos_dma_rx_enable(lp);
-> > +       dwceqos_dma_wake_rx(lp);
-> > +       dwceqos_set_hwaddr(lp);
-> > +       dwceqos_mac_enable(lp);
-> > +
-> > +       /* Enable RX Interrupts */
-> > +       dwceqos_write(lp->baseaddr, DWCEQOS_DMA_CH0_INT_EN, 0x00010040);
-> > +
-> > +       napi_enable(&lp->napi);
-> > +       netif_carrier_on(ndev);
-> > +       netif_start_queue(ndev);
-> > +       return 0;
-> > +}
-> > +
-> > +
-> > +int dwceqos_stop(struct net_device *ndev)
+> +       struct device_node *order[MAX_DT_NODES+1];
+> +       unsigned count;
+> +       /* Used to keep track of parent devices in regard to the DT */
+> +       uint32_t parent_by_phandle[MAX_DT_NODES+1];
+> +       struct device *device_by_phandle[MAX_DT_NODES+1];
+> +};
+> +static struct init_order order __initdata;
+> +
+> +
+> +/* Copied from drivers/of/base.c (because it's lockless). */
+> +static int __init __of_device_is_available(struct device_node *device)
+> +{
+> +       struct property *status;
+> +
+> +       if (!device)
+> +               return 0;
+> +
+> +       status = get_property(device, "status");
+> +       if (status == NULL)
+> +               return 1;
+> +
+> +       if (status->val.len > 0) {
+> +               if (!strcmp(status->val.val, "okay") ||
+> +                               !strcmp(status->val.val, "ok"))
+> +                       return 1;
+> +       }
+> +
+> +       return 0;
+> +}
+> +
+> +/*
+> + * x is a dependant of y or in other words
+> + * y will be initialized before x.
+> + */
+> +static int __init insert_edge(uint32_t x, uint32_t y)
+> +{
+> +       struct edgenode *p; /* temporary pointer */
+> +
+> +       if (unlikely(x > MAX_DT_NODES || y > MAX_DT_NODES)) {
+> +               pr_err("Node found with phandle 0x%x > MAX_DT_NODES
+> (%d)!\n",
+> +                       x > MAX_DT_NODES ? x : y, MAX_DT_NODES);
+> +               return -EINVAL;
+> +       }
+> +       if (unlikely(!x || !y))
+> +               return 0;
+> +       if (unlikely(graph.nedges >= MAX_EDGES)) {
+> +               pr_err("Maximum number of edges (%d) reached!\n",
+> MAX_EDGES);
+> +               return -EINVAL;
+> +       }
+> +       p = &graph.edge_slots[graph.nedges++];
+> +       graph.include_node[x] = 1;
+> +       graph.include_node[y] = 1;
+> +       p->y = y;
+> +       p->next = graph.edges[x];
+> +       graph.edges[x] = p; /* insert at head of list */
+> +
+> +       graph.nvertices = (x > graph.nvertices) ? x : graph.nvertices;
+> +       graph.nvertices = (y > graph.nvertices) ? y : graph.nvertices;
+> +       return 0;
+> +}
+> +
+> +static void __init print_node_name(uint32_t v)
+> +{
+> +       struct device_node *node;
+> +
+> +       node = of_find_node_by_phandle(v);
+> +       if (!node) {
+> +               pr_err("Node for phandle 0x%x not found", v);
+> +               return;
+> +       }
+> +       if (node->name)
+> +               pr_err("%s", node->name);
+> +       if (node->full_name)
+> +               pr_err(" (%s)", node->full_name);
+> +       of_node_put(node);
+> +}
+> +
+> +/*
+> + * I would prefer to use the BGL (Boost Graph Library), but as I can't
+> use it
+> + * here (for obvious reasons), the next four functions below are based on
+> + * code of Steven Skiena's book 'The Algorithm Design Manual'.
+> + */
+> +
+> +static void __init process_edge(uint32_t x, uint32_t y)
+> +{
+> +       if (unlikely(graph.discovered[y] && !graph.processed[y])) {
+> +               pr_err("Cycle found 0x%x ", x);
+> +               print_node_name(x);
+> +               pr_cont(" <-> 0x%x ", y);
+> +               print_node_name(y);
+> +               pr_cont("!\n");
+> +               graph.finished = 1;
+> +       }
+> +}
+> +
+> +static void __init process_vertex_late(uint32_t v)
+> +{
+> +       struct device_node *node;
+> +
+> +       node = of_find_node_by_phandle(v);
+> +       if (!node) {
+> +               pr_err("No node for phandle 0x%x not found", v);
+> +               return;
+> +       }
+> +       order.order[order.count++] = node;
+> +}
+> +
+> +static void __init depth_first_search(uint32_t v)
+> +{
+> +       struct edgenode *p;
+> +       uint32_t y; /* successor vertex */
+> +
+> +       if (graph.finished)
+> +               return;
+> +       graph.discovered[v] = 1;
+> +       p = graph.edges[v];
+> +       while (p) {
+> +               y = p->y;
+> +               if (!graph.discovered[y]) {
+> +                       process_edge(v, y);
+> +                       depth_first_search(y);
+> +               } else
+> +                       process_edge(v, y);
+> +               if (graph.finished)
+> +                       return;
+> +               p = p->next;
+> +       }
+> +       process_vertex_late(v);
+> +       graph.processed[v] = 1;
+> +}
+> +
+> +static void __init topological_sort(void)
+> +{
+> +       unsigned i;
+> +
+> +       for (i = 1; i <= graph.nvertices; ++i)
+> +               if (!graph.discovered[i] && graph.include_node[i])
+> +                       depth_first_search(i);
+> +}
+> +
+> +static int __init add_dep_list(struct device_node *node)
+> +{
+> +       const __be32 *list, *list_end;
+> +       uint32_t ph;
+> +       struct property *prop;
+> +       int rc = 0;
+> +       struct device_node *dep;
+> +
+> +       prop = get_property(node, "dependencies");
+> +       if (!prop || !prop->val.len || prop->val.len%sizeof(*list))
+> +               return 0;
+> +       list = (const __be32 *)prop->val.val;
+> +       list_end = list + prop->val.len / sizeof(*list);
+> +       while (list < list_end) {
+> +               ph = fdt32_to_cpu(*list++);
+> +               if (unlikely(!ph)) {
+> +                       /* Should never happen */
+> +                       if (node->name)
+> +                               pr_warn("phandle == 0 for %s\n",
+> node->name);
+> +                       continue;
+> +               }
+> +               dep = of_find_node_by_phandle(ph);
+> +               if (unlikely(!dep)) {
+> +                       pr_err("No DT node for dependency with phandle
+> 0x%x found\n",
+> +                               ph);
+> +                       continue;
+> +               }
+> +               rc = insert_edge(node->phandle, ph);
+> +               if (rc)
+> +                       break;
+> +       }
+> +
+> +       return rc;
+> +}
+> +
+> +/* Copied from drivers/of/base.c */
+> +static const char *of_prop_next_string(struct property *prop, const char
+> *cur)
+> +{
+> +       const char *curv = cur;
+> +
+> +       if (!prop)
+> +               return NULL;
+> +
+> +       if (!cur)
+> +               return prop->val.val;
+> +
+> +       curv += strlen(cur) + 1;
+> +       if (curv >= prop->val.val + prop->val.len)
+> +               return NULL;
+> +
+> +       return curv;
+> +}
+> +
+> +static int __init add_deps_lnx(struct device_node *parent,
+> +                               struct device_node *node)
+> +{
+> +       struct device_node *child;
+> +       int rc = 0;
+> +
+> +       if (!__of_device_is_available(node))
+> +               return 0;
+> +       if (__of_get_property(node, "compatible", NULL)) {
+> +               if (!parent->phandle) {
+> +                       if (__of_get_property(parent, "compatible", NULL))
+> +                               parent->phandle = 1 + order.max_phandle++;
+> +               }
+> +               if (!node->phandle)
+> +                       node->phandle = 1 + order.max_phandle++;
+> +               rc = insert_edge(node->phandle, parent->phandle);
+> +               if (rc)
+> +                       return rc;
+> +               if (unlikely(order.parent_by_phandle[node->phandle])) {
+> +                       /* sanity check */
+> +                       pr_err("0x%x already has a parent!\n",
+> node->phandle);
+> +                       return -EINVAL;
+> +               }
+> +               order.parent_by_phandle[node->phandle] = parent->phandle;
+> +               rc = add_dep_list(node);
+> +               if (unlikely(rc))
+> +                       return rc;
+> +               parent = node; /* change the parent only if node is a
+> driver */
+> +       }
+> +       for_each_child_of_node(node, child) {
+> +               rc = add_deps_lnx(parent, child);
+> +               if (unlikely(rc))
+> +                       break;
+> +       }
+> +
+> +       return rc;
+> +}
+> +
+> +static void calc_max_phandle(struct node *np)
+> +{
+> +       struct node *child;
+> +
+> +       if (!np || np->deleted)
+> +               return;
+> +       if (np->phandle > order.max_phandle)
+> +               order.max_phandle = np->phandle;
+> +
+> +       for_each_child(np, child)
+> +               calc_max_phandle(child);
+> +
+> +       return;
+> +}
+> +
+> +void __init of_init_print_order(const char *name)
+> +{
+> +       unsigned i;
+> +       struct property *prop;
+> +       const char *cp;
+> +
+> +       pr_info("Default initialization order for %s:\n", name);
+> +       for (i = 0; i < order.count; ++i) {
+> +               pr_info("init %u 0x%x", i, order.order[i]->phandle);
+> +               if (order.order[i]->name)
+> +                       pr_cont(" %s", order.order[i]->name);
+> +               if (order.order[i]->full_name)
+> +                       pr_cont(" (%s)", order.order[i]->full_name);
+> +               prop = get_property(order.order[i], "compatible");
+> +               for (cp = of_prop_next_string(prop, NULL); cp;
+> +                    cp = of_prop_next_string(prop, cp))
+> +                       pr_cont(" %s", cp);
+> +               pr_cont(" (parent 0x%x)\n",
+> +                       order.parent_by_phandle[order.order[i]->phandle]);
+> +       }
+> +}
+> +
+> +int __init of_init_build_order(struct device_node *root)
+> +{
+> +       struct device_node *child;
+> +       int rc = 0;
+> +
+> +       tree = root;
+> +       if (unlikely(!root))
+> +               return -EINVAL;
+> +
+> +       calc_max_phandle(root);
+> +       order.old_max_phandle = order.max_phandle;
+> +
+> +       for_each_child_of_node(root, child) {
+> +               rc = add_deps_lnx(root, child);
+> +               if (unlikely(rc))
+> +                       break;
+> +       }
+> +
+> +       of_node_put(root);
+> +       topological_sort();
+> +
+> +       if (graph.finished)
+> +               return -EINVAL; /* cycle found */
+> +
+> +       return rc;
+> +}
+> diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c
+> index fbe49d9..ac9858c 100644
+> --- a/scripts/dtc/dtc.c
+> +++ b/scripts/dtc/dtc.c
+> @@ -88,6 +88,8 @@ static void  __attribute__ ((noreturn)) usage(void)
+>         fprintf(stderr, "\t\tSort nodes and properties before outputting
+> (only useful for\n\t\tcomparing trees)\n");
+>         fprintf(stderr, "\t-D\n");
+>         fprintf(stderr, "\t\tDo not automatically add dependencies for
+> phandle references\n");
+> +       fprintf(stderr, "\t-t\n");
+> +       fprintf(stderr, "\t\tPrint (default) initialization order\n");
+>         fprintf(stderr, "\t-v\n");
+>         fprintf(stderr, "\t\tPrint DTC version and exit\n");
+>         fprintf(stderr, "\t-H <phandle format>\n");
+> @@ -110,6 +112,7 @@ int main(int argc, char *argv[])
+>         const char *depname = NULL;
+>         int force = 0, sort = 0;
+>         int dependencies = 1;
+> +       int init_order = 0;
+>         const char *arg;
+>         int opt;
+>         FILE *outf = NULL;
+> @@ -121,7 +124,7 @@ int main(int argc, char *argv[])
+>         minsize    = 0;
+>         padsize    = 0;
 >
-> Make this function static.
+> -       while ((opt = getopt(argc, argv,
+> "hI:O:o:V:d:R:S:p:fqb:i:vH:sDW:E:"))
+> +       while ((opt = getopt(argc, argv,
+> "hI:O:o:V:d:R:S:p:fqb:i:vH:sDtW:E:"))
+>                         != EOF) {
+>                 switch (opt) {
+>                 case 'I':
+> @@ -183,6 +186,10 @@ int main(int argc, char *argv[])
+>                         dependencies = false;
+>                         break;
 >
-> > +{
-> > +       struct net_local *lp = netdev_priv(ndev);
-> > +       dwceqos_dma_free(lp);
-> > +       netif_stop_queue(ndev);
-> > +       napi_disable(&lp->napi);
-> > +       netif_carrier_off(ndev);
-> > +       return 0;
-> > +}
-> > +
-> > +/* Receive one packet and return skb */
-> > +struct sk_buff *
-> > +dwceqos_recv_packet(struct net_local *lp)
+> +               case 't':
+> +                       init_order = true;
+> +                       break;
+> +
+>                 case 'W':
+>                         parse_checks_option(true, false, optarg);
+>                         break;
+> @@ -245,6 +252,13 @@ int main(int argc, char *argv[])
+>         if (dependencies)
+>                 add_dependencies(bi);
 >
-> Make this function static.
+> +       if (init_order) {
+> +               if (of_init_build_order(bi->dt))
+> +                       exit(2);
+> +               of_init_print_order(arg);
+> +               exit(0);
+> +       }
+> +
+>         if (streq(outname, "-")) {
+>                 outf = stdout;
+>         } else {
+> @@ -266,5 +280,13 @@ int main(int argc, char *argv[])
+>                 die("Unknown output format \"%s\"\n", outform);
+>         }
 >
-> > +{
-> > +       struct sk_buff *skb;
-> > +       u32 len;
-> > +
-> > +       skb = lp->rx_skb[lp->next_rx].skb;
-> > +       len = lp->rx_descs[lp->next_rx].rdes3.wr.length;
-> > +
-> > +       /* Unmap old buffer */
-> > +       dma_unmap_single(lp->ndev->dev.parent,
-> lp->rx_skb[lp->next_rx].mapping,
-> > +               lp->rx_skb[lp->next_rx].len, DMA_FROM_DEVICE);
-> > +       skb_put(skb, len);
-> > +       skb->protocol = eth_type_trans(skb, lp->ndev);
-> > +       skb->ip_summed = 0;
-> > +
-> > +       /* Initialize new Buffer descriptor */
-> > +       dwceqos_alloc_rxring_desc(lp, lp->next_rx);
-> > +       if (!(lp->rx_skb[lp->next_rx].skb)) {
-> > +               dev_err(&lp->pdev->dev, "Unable to map descriptor %d to
-> DMA\n",
-> > +                       lp->next_rx);
-> > +               return NULL;
-> > +       }
-> > +
-> > +       /* Initialize new DMA descriptor */
-> > +       lp->rx_descs[lp->next_rx].rdes0.rd.buffer1 =
-> > +               lp->rx_skb[lp->next_rx].mapping;
-> > +       lp->rx_descs[lp->next_rx].rdes1.raw = 0;
-> > +       lp->rx_descs[lp->next_rx].rdes2.rd.buffer2 = 0;
-> > +       lp->rx_descs[lp->next_rx].rdes3.raw = 0;
-> > +       lp->rx_descs[lp->next_rx].rdes3.rd.buf1v = 1;
-> > +       lp->rx_descs[lp->next_rx].rdes3.rd.inte = 1;
-> > +       lp->rx_descs[lp->next_rx].rdes3.rd.own = 1;
-> > +       lp->next_rx = (lp->next_rx + 1) % DWCEQOS_RX_DCNT;
-> > +       return skb;
-> > +}
-> > +
-> > +
-> > +/* NAPI poll routine */
-> > +int dwceqos_rx_poll(struct napi_struct *napi, int budget)
-> > +{
-> > +       struct net_local *lp = container_of(napi, struct net_local,
-> napi);
-> > +       int npackets = 0;
-> > +       struct sk_buff *skb;
-> > +
-> > +       spin_lock(&lp->rx_lock);
-> > +       while (npackets < budget && dwceqos_packet_avail(lp)) {
-> > +
-> > +               skb = dwceqos_recv_packet(lp);
-> > +               if (!skb)
-> > +                       break;
-> > +
-> > +               netif_receive_skb(skb);
-> > +
-> > +               lp->stats.rx_packets++;
-> > +               lp->stats.rx_bytes += skb->len;
-> > +               npackets++;
-> > +       }
-> > +       if (npackets < budget)
-> > +               napi_complete(napi);
-> > +
-> > +       spin_unlock(&lp->rx_lock);
-> > +       return npackets;
-> > +}
-> > +
-> > +/* Main transmit function called from kernel */
-> > +int dwceqos_start_xmit(struct sk_buff *skb, struct net_device *ndev)
+> +       /*
+> +        * Check for cycles by building the initialzation order.
+> +        * This is done after the output was saved because it
+> +        * changes the tree slightly.
+> +        */
+> +       if (of_init_build_order(bi->dt))
+> +               exit(2);
+> +
+>         exit(0);
+>  }
+> diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h
+> index c3dbeac..b89e08a 100644
+> --- a/scripts/dtc/dtc.h
+> +++ b/scripts/dtc/dtc.h
+> @@ -269,5 +269,7 @@ struct boot_info *dt_from_fs(const char *dirname);
 >
-> Make this function static.
+>  /* Dependencies */
+>  void add_dependencies(struct boot_info *bi);
+> +void of_init_print_order(const char *name);
+> +int of_init_build_order(struct node *root);
 >
-> > +{
-> > +       int len;
-> > +       struct net_local *lp = netdev_priv(ndev);
-> > +       char *data;
-> > +       data = skb->data;
-> > +       len = skb->len;
-> > +
-> > +       /* Send packet on wire */
-> > +       dwceqos_dma_xmit(lp, data, len);
-> > +
-> > +       skb_tx_timestamp(skb);
-> > +
-> > +       ndev->stats.tx_bytes += len;
-> > +       dev_kfree_skb(skb);
-> > +
-> > +       return 0;
-> > +}
-> > +
-> > +struct net_device_ops dwceq_netdev_ops;
->
-> Why not initialize this here?
->
-> > +#ifdef CONFIG_OF
-> > +static inline int dwceqos_probe_config_dt(struct platform_device *pdev)
-> > +{
-> > +       struct net_device *ndev;
-> > +       const void *mac_address;
-> > +
-> > +       ndev = platform_get_drvdata(pdev);
-> > +       /* Set the MAC address. */
-> > +       mac_address = of_get_mac_address(pdev->dev.of_node);
-> > +       if (mac_address)
-> > +               memcpy(ndev->dev_addr, mac_address, ETH_ALEN);
-> > +       else
-> > +               dev_warn(&pdev->dev, "No MAC address found\n");
-> > +       return 0;
-> > +}
-> > +#else
-> > +static inline int dwceqos_probe_config_dt()
-> > +{
-> > +       return -ENOSYS;
-> > +}
-> > +#endif
-> > +
-> > +
-> > +/**
-> > + * dwceqos_probe - Platform driver probe
-> > + * @pdev: Pointer to platform device structure
-> > + *
-> > + * Return 0 on success, negative value if error
-> > + */
-> > +int dwceqos_probe(struct platform_device *pdev)
->
-> Make this function static.
->
-> > +{
-> > +       struct resource *r_mem = NULL;
-> > +       struct resource *r_irq = NULL;
-> > +       struct net_device *ndev;
-> > +       struct net_local *lp;
-> > +       int ret = -ENXIO;
-> > +
-> > +       r_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       r_irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> > +       if (!r_mem || !r_irq) {
-> > +               dev_err(&pdev->dev, "no IO resource defined.\n");
-> > +               return -ENXIO;
-> > +       }
-> > +       ndev = alloc_etherdev(sizeof(*lp));
-> > +       if (!ndev) {
-> > +               dev_err(&pdev->dev, "etherdev allocation failed.\n");
-> > +               return -ENOMEM;
-> > +       }
-> > +
-> > +       SET_NETDEV_DEV(ndev, &pdev->dev);
-> > +
-> > +       lp = netdev_priv(ndev);
-> > +       lp->ndev = ndev;
-> > +       lp->pdev = pdev;
-> > +
-> > +       lp->baseaddr = devm_ioremap_resource(&pdev->dev, r_mem);
-> > +       if (IS_ERR(lp->baseaddr)) {
-> > +               dev_err(&pdev->dev, "failed to map baseaddress.\n");
-> > +               ret = PTR_ERR(lp->baseaddr);
-> > +               goto err_out_free_netdev;
-> > +       }
-> > +
-> > +
-> > +       dev_dbg(&lp->pdev->dev, "BASEADDRESS hw: %p virt: %p\n",
-> > +                       (void *)r_mem->start, lp->baseaddr);
-> > +
-> > +       ndev->irq = platform_get_irq(pdev, 0);
-> > +       ndev->netdev_ops = &dwceq_netdev_ops;
-> > +       ndev->base_addr = r_mem->start;
-> > +       ndev->features = 0;
-> > +
-> > +       netif_napi_add(ndev, &lp->napi, dwceqos_rx_poll, 64);
-> > +
-> > +       ret = register_netdev(ndev);
-> > +       if (ret) {
-> > +               dev_err(&pdev->dev, "Cannot register net device,
-> aborting.\n");
-> > +               goto err_out_free_netdev;
-> > +       }
-> > +
-> > +       lp->apb_pclk = devm_clk_get(&pdev->dev, "apb_pclk");
-> > +       if (IS_ERR(lp->apb_pclk)) {
-> > +               dev_err(&pdev->dev, "apb_pclk clock not found.\n");
-> > +               ret = PTR_ERR(lp->apb_pclk);
-> > +               goto err_out_unregister_netdev;
-> > +       }
-> > +       lp->phy_ref_clk = devm_clk_get(&pdev->dev, "phy_ref_clk");
-> > +       if (IS_ERR(lp->phy_ref_clk)) {
-> > +               dev_err(&pdev->dev, "phy_ref_clk clock not found.\n");
-> > +               ret = PTR_ERR(lp->phy_ref_clk);
-> > +               goto err_out_unregister_netdev;
-> > +       }
-> > +
-> > +       ret = clk_prepare_enable(lp->apb_pclk);
-> > +       if (ret) {
-> > +               dev_err(&pdev->dev, "Unable to enable APER clock.\n");
-> > +               goto err_out_unregister_netdev;
-> > +       }
-> > +       ret = clk_prepare_enable(lp->phy_ref_clk);
-> > +       if (ret) {
-> > +               dev_err(&pdev->dev, "Unable to enable device clock.\n");
-> > +               goto err_out_clk_dis_aper;
-> > +       }
-> > +
-> > +       platform_set_drvdata(pdev, ndev);
-> > +       dwceqos_probe_config_dt(pdev);
-> > +       dev_info(&lp->pdev->dev, "pdev->id %d, baseaddr 0x%08lx, irq
-> %d\n",
-> > +                       pdev->id, ndev->base_addr, ndev->irq);
-> > +
-> > +       ret = devm_request_irq(&pdev->dev, ndev->irq,
-> &dwceqos_interrupt, 0,
-> > +               ndev->name, ndev);
-> > +       if (ret) {
-> > +               dev_err(&lp->pdev->dev, "Unable to request IRQ %p, error
-> %d\n",
-> > +                       r_irq, ret);
-> > +               goto err_out_unregister_clk_notifier;
-> > +       }
-> > +
-> > +       return 0;
-> > +
-> > +err_out_unregister_clk_notifier:
-> > +       clk_disable_unprepare(lp->phy_ref_clk);
-> > +err_out_clk_dis_aper:
-> > +       clk_disable_unprepare(lp->apb_pclk);
-> > +err_out_unregister_netdev:
-> > +       unregister_netdev(ndev);
-> > +err_out_free_netdev:
-> > +       free_netdev(ndev);
-> > +       platform_set_drvdata(pdev, NULL);
-> > +       return ret;
-> > +}
-> > +
-> > +int dwceqos_remove(struct platform_device *pdev)
->
-> Make this function static.
->
-> > +{
-> > +       struct net_device *ndev = platform_get_drvdata(pdev);
-> > +       unregister_netdev(ndev);
-> > +       free_netdev(ndev);
-> > +       return 0;
-> > +}
-> > +
-> > +struct net_device_ops dwceq_netdev_ops = {
-> > +       .ndo_open       = dwceqos_open,
-> > +       .ndo_stop       = dwceqos_stop,
-> > +       .ndo_start_xmit = dwceqos_start_xmit,
-> > +};
->
-> Move initialization to where it is declared and make the struct static.
->
-> > +
-> > +struct of_device_id dwceq_of_match[] = {
-> > +       { .compatible = "dwc,qos-ethernet", },
-> > +       {}
-> > +};
->
-> Make this struct static.
->
-> Make this struct static.
-> > +MODULE_DEVICE_TABLE(of, dwceq_of_match);
-> > +
-> > +struct platform_driver dwceqos_driver = {
-> > +       .probe   = dwceqos_probe,
-> > +       .remove  = dwceqos_remove,
-> > +       .driver  = {
-> > +               .name  = DRIVER_NAME,
-> > +               .owner = THIS_MODULE,
-> > +               .of_match_table = dwceq_of_match,
-> > +       },
-> > +};
->
-> Make this struct static.
+>  #endif /* _DTC_H */
 > --
-> To unsubscribe from this list: send the line "unsubscribe netdev" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 1.8.3.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 >
 
---089e016354d4ca9e8a04f9090bf6
+--001a1134a45cb8ab9104f939ee28
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><div>small suggestions regarding interrupt registrati=
-on ( request_irq()) call:<br>1. instead of request_irq() call in probe func=
-tion , i think interrupt can be registered in dwceqos_open() call . since p=
-acket only come when we make interface up( ifconfig up) .<br>
-</div>2. in request_irq() thier is flag parameter can either be zero or fla=
-g as :<br>IRQF_DISABLED=C2=A0=C2=A0=C2=A0=C2=A0 <br>IRQF_SHARED=C2=A0=C2=A0=
-=C2=A0 =C2=A0=C2=A0=C2=A0 <br>...<br></div>normally if we have to share the=
- irq line with other device we use IRQF_SHARED . <br>
-<br><br><br><div><br></div></div><div class=3D"gmail_extra"><br><br><div cl=
-ass=3D"gmail_quote">On Fri, May 9, 2014 at 8:49 PM, Tobias Klauser <span di=
-r=3D"ltr">&lt;<a href=3D"mailto:tklauser@distanz.ch" target=3D"_blank">tkla=
-user@distanz.ch</a>&gt;</span> wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div class=3D"h5">On 2=
-014-05-08 at 14:50:14 +0200, Andreas Irestal &lt;<a href=3D"mailto:andreas.=
-irestal@axis.com">andreas.irestal@axis.com</a>&gt; wrote:<br>
-
-&gt; This is an early version of a driver for the Synopsys DWC Ethernet QoS=
- IP<br>
-&gt; version 4. Unfortunately, version 4.00a and onwards of this IP is tota=
-lly<br>
-&gt; different from earlier versions used in the STMicroelectronics drivers=
-. Both<br>
-&gt; functionality and registers are different. As this is my first network=
- driver<br>
-&gt; I am submitting an RFC to catch design flaws and bad coding standards =
-at an<br>
-&gt; early stage. Also, others looking at this IP could hopefully be helped=
- by this<br>
-&gt; early code.<br>
-&gt;<br>
-&gt; The driver is quite inefficient, yet still functional (Gbit only) and =
-uses a<br>
-&gt; polling-driven TX-approach. For the RX side NAPI and interrupts are us=
-ed.<br>
-&gt; There are still quite a lot of work to do. Link handling, more robust<=
-br>
-&gt; error-handling, HW Checksumming, scatter-gather and TCP Segmentation a=
-nd<br>
-&gt; checksum offloading to name a few.<br>
-&gt;<br>
-&gt; All code has been developed and tested using an FPGA implementation of=
- the IP,<br>
-&gt; with an ARM Cortex A9 as the main CPU, running Linux 3.13.<br>
-&gt;<br>
-&gt; Signed-off-by: Andreas Irestaal &lt;<a href=3D"mailto:Andreas.Irestal@=
-axis.com">Andreas.Irestal@axis.com</a>&gt;<br>
-&gt; ---<br>
-&gt; =C2=A0drivers/net/ethernet/Kconfig =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 =C2=A0| =C2=A0 =C2=A01 +<br>
-&gt; =C2=A0drivers/net/ethernet/Makefile =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- =C2=A0 =C2=A0 | =C2=A0 =C2=A01 +<br>
-&gt; =C2=A0drivers/net/ethernet/synopsys/Kconfig =C2=A0 =C2=A0 =C2=A0 | =C2=
-=A0 24 +<br>
-&gt; =C2=A0drivers/net/ethernet/synopsys/Makefile =C2=A0 =C2=A0 =C2=A0| =C2=
-=A0 =C2=A05 +<br>
-&gt; =C2=A0drivers/net/ethernet/synopsys/dwc_eth_qos.c | =C2=A0706 ++++++++=
-+++++++++++++++++++<br>
-&gt; =C2=A0drivers/net/ethernet/synopsys/dwc_eth_qos.h | =C2=A0308 ++++++++=
-++++<br>
-&gt; =C2=A06 files changed, 1045 insertions(+), 0 deletions(-)<br>
-&gt; =C2=A0create mode 100644 drivers/net/ethernet/synopsys/Kconfig<br>
-&gt; =C2=A0create mode 100644 drivers/net/ethernet/synopsys/Makefile<br>
-&gt; =C2=A0create mode 100644 drivers/net/ethernet/synopsys/dwc_eth_qos.c<b=
-r>
-&gt; =C2=A0create mode 100644 drivers/net/ethernet/synopsys/dwc_eth_qos.h<b=
-r>
+<div dir=3D"ltr">So, this should be rebased on the actual DTC repository,<b=
+r>and not the kernel&#39;s copy of the DTC under scripts.<br><br>Thanks,<br=
+>jdl<br><br></div><div class=3D"gmail_extra"><br><br><div class=3D"gmail_qu=
+ote">
+On Mon, May 12, 2014 at 11:47 AM, Alexander Holler <span dir=3D"ltr">&lt;<a=
+ href=3D"mailto:holler@ahsoftware.de" target=3D"_blank">holler@ahsoftware.d=
+e</a>&gt;</span> wrote:<br><blockquote class=3D"gmail_quote" style=3D"margi=
+n:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+Add option -t to print the default initialization order.<br>
+No other output will be generated.<br>
 <br>
-</div></div>[...]<br>
-<div class=3D""><br>
-&gt; diff --git a/drivers/net/ethernet/synopsys/dwc_eth_qos.c b/drivers/net=
-/ethernet/synopsys/dwc_eth_qos.c<br>
-&gt; new file mode 100644<br>
-&gt; index 0000000..20b1a9e<br>
-&gt; --- /dev/null<br>
-&gt; +++ b/drivers/net/ethernet/synopsys/dwc_eth_qos.c<br>
-&gt; @@ -0,0 +1,706 @@<br>
+To print the order, just use something like this:<br>
 <br>
-</div>[...]<br>
-<div class=3D""><br>
-&gt; +struct net_local {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 void __iomem *baseaddr;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct clk *phy_ref_clk;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct clk *apb_pclk;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_device *ndev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct platform_device *pdev;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 volatile struct dwc_eth_qos_txdesc *tx_descs;<b=
-r>
-&gt; + =C2=A0 =C2=A0 =C2=A0 volatile struct dwc_eth_qos_rxdesc *rx_descs;<b=
-r>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 void *tx_buf;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct ring_info *rx_skb;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dma_addr_t tx_descs_addr;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dma_addr_t rx_descs_addr;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 next_tx;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 next_rx;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct napi_struct napi;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_device_stats stats;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 CROSS_COMPILE=3Dgcc-foo ARCH=3Darm make foo.dtb=
 <br>
-</div>You don&#39;t need a private copy of struct net_device_stats, just us=
-e the<br>
-one from struct net_device. It looks like the driver is not returning<br>
-these stats currently anyway. If you use ndev-&gt;stats, they will be<br>
-picked up by dev_get_stats() and i.e. show up in ifconfig output.<br>
-<div><div class=3D"h5"><br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 spinlock_t rx_lock;<br>
-&gt; +};<br>
-&gt; +<br>
-&gt; +/* Allocate DMA helper structure at position given by index */<br>
-&gt; +static void dwceqos_alloc_rxring_desc(struct net_local *lp, int index=
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 scripts/dtc/dtc -I dtb -t arch/arm/boot/dts/foo=
+.dtb<br>
+<br>
+Since it&#39;s now possible to check to for cycles in the dependency graph,=
+<br>
+this is now done too.<br>
+<br>
+Signed-off-by: Alexander Holler &lt;<a href=3D"mailto:holler@ahsoftware.de"=
+>holler@ahsoftware.de</a>&gt;<br>
+---<br>
+=C2=A0scripts/dtc/dependencies.c | 346 ++++++++++++++++++++++++++++++++++++=
++++++++++<br>
+=C2=A0scripts/dtc/dtc.c =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| =C2=A024 +++-<b=
+r>
+=C2=A0scripts/dtc/dtc.h =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0| =C2=A0 2 +<br>
+=C2=A03 files changed, 371 insertions(+), 1 deletion(-)<br>
+<br>
+diff --git a/scripts/dtc/dependencies.c b/scripts/dtc/dependencies.c<br>
+index dd4658c..8fe1a8c 100644<br>
+--- a/scripts/dtc/dependencies.c<br>
++++ b/scripts/dtc/dependencies.c<br>
+@@ -106,3 +106,349 @@ void add_dependencies(struct boot_info *bi)<br>
+=C2=A0{<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 process_nodes_props(bi-&gt;dt, bi-&gt;dt);<br>
+=C2=A0}<br>
++<br>
++/*<br>
++ * The code below is in large parts a copy of drivers/of/of_dependencies.c=
+<br>
++ * in the Linux kernel. So both files do share the same bugs.<br>
++ * The next few ugly defines do exist to keep the differences at a minimum=
+.<br>
++ */<br>
++static struct node *tree;<br>
++#define pr_cont(format, ...) printf(format, ##__VA_ARGS__)<br>
++#define pr_info(format, ...) printf(format, ##__VA_ARGS__)<br>
++#define pr_warn(format, ...) printf(format, ##__VA_ARGS__)<br>
++#define pr_err(format, ...) fprintf(stderr, format, ##__VA_ARGS__)<br>
++typedef cell_t __be32;<br>
++#define device_node node<br>
++#define full_name fullpath<br>
++#define __initdata<br>
++#define __init<br>
++#define unlikely(a) (a)<br>
++#define of_node_put(a)<br>
++#define of_find_node_by_phandle(v) get_node_by_phandle(tree, v)<br>
++#define __of_get_property(a, b, c) get_property(a, b)<br>
++#define for_each_child_of_node(a, b) for_each_child(a, b)<br>
++<br>
++<br>
++#define MAX_DT_NODES 1000 /* maximum number of vertices */<br>
++#define MAX_EDGES (MAX_DT_NODES*2) /* maximum number of edges (dependencie=
+s) */<br>
++<br>
++struct edgenode {<br>
++ =C2=A0 =C2=A0 =C2=A0 uint32_t y; /* phandle */<br>
++ =C2=A0 =C2=A0 =C2=A0 struct edgenode *next; /* next edge in list */<br>
++};<br>
++<br>
++/*<br>
++ * Vertex numbers do correspond to phandle numbers. That means the graph<b=
+r>
++ * does contain as much vertices as the maximum of all phandles.<br>
++ * Or in other words, we assume that for all phandles in the device tree<b=
+r>
++ * 0 &lt; phandle &lt; MAX_DT_NODES+1 is true.<br>
++ */<br>
++struct dep_graph {<br>
++ =C2=A0 =C2=A0 =C2=A0 struct edgenode edge_slots[MAX_EDGES]; /* used to av=
+oid kmalloc */<br>
++ =C2=A0 =C2=A0 =C2=A0 struct edgenode *edges[MAX_DT_NODES+1]; /* adjacency=
+ info */<br>
++ =C2=A0 =C2=A0 =C2=A0 unsigned nvertices; /* number of vertices in graph *=
+/<br>
++ =C2=A0 =C2=A0 =C2=A0 unsigned nedges; /* number of edges in graph */<br>
++ =C2=A0 =C2=A0 =C2=A0 bool processed[MAX_DT_NODES+1]; /* which vertices ha=
+ve been processed */<br>
++ =C2=A0 =C2=A0 =C2=A0 bool include_node[MAX_DT_NODES+1]; /* which nodes to=
+ consider */<br>
++ =C2=A0 =C2=A0 =C2=A0 bool discovered[MAX_DT_NODES+1]; /* which vertices h=
+ave been found */<br>
++ =C2=A0 =C2=A0 =C2=A0 bool finished; /* if true, cut off search immediatel=
+y */<br>
++};<br>
++static struct dep_graph graph __initdata;<br>
++<br>
++struct init_order {<br>
++ =C2=A0 =C2=A0 =C2=A0 uint32_t max_phandle; /* the max used phandle */<br>
++ =C2=A0 =C2=A0 =C2=A0 uint32_t old_max_phandle; /* used to keep track of a=
+dded phandles */<br>
++ =C2=A0 =C2=A0 =C2=A0 struct device_node *order[MAX_DT_NODES+1];<br>
++ =C2=A0 =C2=A0 =C2=A0 unsigned count;<br>
++ =C2=A0 =C2=A0 =C2=A0 /* Used to keep track of parent devices in regard to=
+ the DT */<br>
++ =C2=A0 =C2=A0 =C2=A0 uint32_t parent_by_phandle[MAX_DT_NODES+1];<br>
++ =C2=A0 =C2=A0 =C2=A0 struct device *device_by_phandle[MAX_DT_NODES+1];<br=
+>
++};<br>
++static struct init_order order __initdata;<br>
++<br>
++<br>
++/* Copied from drivers/of/base.c (because it&#39;s lockless). */<br>
++static int __init __of_device_is_available(struct device_node *device)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct property *status;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (!device)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 status =3D get_property(device, &quot;status&quot;);=
+<br>
++ =C2=A0 =C2=A0 =C2=A0 if (status =3D=3D NULL)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 1;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (status-&gt;val.len &gt; 0) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!strcmp(status-&gt;v=
+al.val, &quot;okay&quot;) ||<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 !strcmp(status-&gt;val.val, &quot;ok&quot;)=
 )<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct sk_buff *new_skb;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 new_skb_baddr =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 new_skb =3D netdev_alloc_skb(lp-&gt;ndev, DWCEQ=
-OS_RX_BUF_SIZE);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (!new_skb) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;ndev-&gt;dev, &quot;alloc_skb error for desc %d\n&quot;, index);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto out;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Get dma handle of skb-&gt;data */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 new_skb_baddr =3D (u32)dma_map_single(lp-&gt;nd=
-ev-&gt;dev.parent,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 new_skb-&gt;data, D=
-WCEQOS_RX_BUF_SIZE, DMA_FROM_DEVICE);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (dma_mapping_error(lp-&gt;ndev-&gt;dev.paren=
-t, new_skb_baddr)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;DMA map error\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_kfree_skb(new_s=
-kb);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 new_skb =3D NULL;<b=
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 return 1;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 return 0;<br>
++}<br>
++<br>
++/*<br>
++ * x is a dependant of y or in other words<br>
++ * y will be initialized before x.<br>
++ */<br>
++static int __init insert_edge(uint32_t x, uint32_t y)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct edgenode *p; /* temporary pointer */<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (unlikely(x &gt; MAX_DT_NODES || y &gt; MAX_DT_NO=
+DES)) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err(&quot;Node found =
+with phandle 0x%x &gt; MAX_DT_NODES (%d)!\n&quot;,<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 x &gt; MAX_DT_NODES ? x : y, MAX_DT_NODES);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 if (unlikely(!x || !y))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;<br>
++ =C2=A0 =C2=A0 =C2=A0 if (unlikely(graph.nedges &gt;=3D MAX_EDGES)) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err(&quot;Maximum num=
+ber of edges (%d) reached!\n&quot;, MAX_EDGES);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 p =3D &amp;graph.edge_slots[graph.nedges++];<br>
++ =C2=A0 =C2=A0 =C2=A0 graph.include_node[x] =3D 1;<br>
++ =C2=A0 =C2=A0 =C2=A0 graph.include_node[y] =3D 1;<br>
++ =C2=A0 =C2=A0 =C2=A0 p-&gt;y =3D y;<br>
++ =C2=A0 =C2=A0 =C2=A0 p-&gt;next =3D graph.edges[x];<br>
++ =C2=A0 =C2=A0 =C2=A0 graph.edges[x] =3D p; /* insert at head of list */<b=
 r>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +out:<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_skb[index].skb =3D new_skb;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_skb[index].mapping =3D new_skb_baddr;=
++<br>
++ =C2=A0 =C2=A0 =C2=A0 graph.nvertices =3D (x &gt; graph.nvertices) ? x : g=
+raph.nvertices;<br>
++ =C2=A0 =C2=A0 =C2=A0 graph.nvertices =3D (y &gt; graph.nvertices) ? y : g=
+raph.nvertices;<br>
++ =C2=A0 =C2=A0 =C2=A0 return 0;<br>
++}<br>
++<br>
++static void __init print_node_name(uint32_t v)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct device_node *node;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 node =3D of_find_node_by_phandle(v);<br>
++ =C2=A0 =C2=A0 =C2=A0 if (!node) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err(&quot;Node for ph=
+andle 0x%x not found&quot;, v);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 if (node-&gt;name)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err(&quot;%s&quot;, n=
+ode-&gt;name);<br>
++ =C2=A0 =C2=A0 =C2=A0 if (node-&gt;full_name)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err(&quot; (%s)&quot;=
+, node-&gt;full_name);<br>
++ =C2=A0 =C2=A0 =C2=A0 of_node_put(node);<br>
++}<br>
++<br>
++/*<br>
++ * I would prefer to use the BGL (Boost Graph Library), but as I can&#39;t=
+ use it<br>
++ * here (for obvious reasons), the next four functions below are based on<=
+br>
++ * code of Steven Skiena&#39;s book &#39;The Algorithm Design Manual&#39;.=
 <br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_skb[index].len =3D DWCEQOS_RX_BUF_SIZ=
-E;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_mtl_init(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MTL_OP_M=
-ODE, 0x00000060);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_mtl_tx_init(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MTL_TXQ0=
-_OP_MODE,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 DWCEQOS_MTL_TXQ_EN);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_mtl_rx_init(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MTL_RXQ0=
-_OP_MODE,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_MTL_RXQ_RQS=
-256 | DWCEQOS_MTL_RXQ_DIS_TCP_EF |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_MTL_RXQ_FEP=
- | DWCEQOS_MTL_RXQ_FUP |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_MTL_RXQ_RTC=
-32);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_mac_rx_init(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 val;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MAC_RXQ_=
-CTRL0, 2);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 val =3D DWCEQOS_MAC_PKT_FILTER_RX_ALL | DWCEQOS=
-_MAC_PKT_FILTER_PCF_ALL |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_MAC_PKT_FIL=
-TER_PROMISCUOUS;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MAC_PKT_=
-FILTER, val);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int dwceqos_mac_enable(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MAC_CFG,=
-<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_MAC_CFG_DM =
-| DWCEQOS_MAC_CFG_TE |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_MAC_CFG_RE)=
++ */<br>
++<br>
++static void __init process_edge(uint32_t x, uint32_t y)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 if (unlikely(graph.discovered[y] &amp;&amp; !graph.p=
+rocessed[y])) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err(&quot;Cycle found=
+ 0x%x &quot;, x);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 print_node_name(x);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_cont(&quot; &lt;-&gt;=
+ 0x%x &quot;, y);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 print_node_name(y);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_cont(&quot;!\n&quot;)=
 ;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_dma_wake_rx(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 offset;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 offset =3D DWCEQOS_RX_DCNT * sizeof(struct dwc_=
-eth_qos_rxdesc);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-RXDESC_TAIL,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (u32)lp-&gt;rx_desc=
-s_addr + offset);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static inline void dwceqos_dma_rx_start(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-RX_CTRL,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_DMA_CH0_TXR=
-X_CONTROL_START |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_DMA_CH0_TXR=
-X_CONTROL_PBL16 |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_RX_BUF_SIZE=
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 graph.finished =3D 1;<br=
+>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++}<br>
++<br>
++static void __init process_vertex_late(uint32_t v)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct device_node *node;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 node =3D of_find_node_by_phandle(v);<br>
++ =C2=A0 =C2=A0 =C2=A0 if (!node) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_err(&quot;No node for=
+ phandle 0x%x not found&quot;, v);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 order.order[order.count++] =3D node;<br>
++}<br>
++<br>
++static void __init depth_first_search(uint32_t v)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct edgenode *p;<br>
++ =C2=A0 =C2=A0 =C2=A0 uint32_t y; /* successor vertex */<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (graph.finished)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;<br>
++ =C2=A0 =C2=A0 =C2=A0 graph.discovered[v] =3D 1;<br>
++ =C2=A0 =C2=A0 =C2=A0 p =3D graph.edges[v];<br>
++ =C2=A0 =C2=A0 =C2=A0 while (p) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 y =3D p-&gt;y;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!graph.discovered[y]=
+) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 process_edge(v, y);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 depth_first_search(y);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 } else<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 process_edge(v, y);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (graph.finished)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 return;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 p =3D p-&gt;next;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 process_vertex_late(v);<br>
++ =C2=A0 =C2=A0 =C2=A0 graph.processed[v] =3D 1;<br>
++}<br>
++<br>
++static void __init topological_sort(void)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 unsigned i;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 for (i =3D 1; i &lt;=3D graph.nvertices; ++i)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!graph.discovered[i]=
+ &amp;&amp; graph.include_node[i])<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 depth_first_search(i);<br>
++}<br>
++<br>
++static int __init add_dep_list(struct device_node *node)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 const __be32 *list, *list_end;<br>
++ =C2=A0 =C2=A0 =C2=A0 uint32_t ph;<br>
++ =C2=A0 =C2=A0 =C2=A0 struct property *prop;<br>
++ =C2=A0 =C2=A0 =C2=A0 int rc =3D 0;<br>
++ =C2=A0 =C2=A0 =C2=A0 struct device_node *dep;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 prop =3D get_property(node, &quot;dependencies&quot;=
 );<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_wake_rx(lp);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static inline void dwceqos_dma_tx_start(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-TX_CTRL,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_DMA_CH0_TXR=
-X_CONTROL_START |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_DMA_CH0_TXR=
-X_CONTROL_PBL16);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_dma_setmode(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_MODE=
-,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_DMA_MODE_TX=
-PR | DWCEQOS_DMA_MODE_DA);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_SYSB=
-US_MODE,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_DMA_SYSBUS_=
-MB);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_dma_txenable(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 val;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 val =3D DWCEQOS_DMA_CH0_TXRX_CONTROL_PBL16 |<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_DMA_CH0_TXR=
-X_CONTROL_START;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-TX_CTRL, val);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static void dwceqos_dma_rx_enable(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 val;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 val =3D DWCEQOS_DMA_CH0_TXRX_CONTROL_PBL16 |<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_RX_BUF_SIZE=
- | DWCEQOS_DMA_CH0_TXRX_CONTROL_START;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-RX_CTRL, val);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Initialize DMA descriptors to their start values */<br>
-&gt; +static void dwceqos_dma_prepare(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int i;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 for (i =3D 0; i &lt; DWCEQOS_TX_DCNT; ++i) {<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].=
-tdes0.raw =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].=
-tdes1.raw =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].=
-tdes2.raw =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].=
-tdes3.raw =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 for (i =3D 0; i &lt; DWCEQOS_RX_DCNT; ++i) {<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[i].=
-rdes0.rd.buffer1 =3D lp-&gt;rx_skb[i].mapping;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[i].=
-rdes1.raw =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[i].=
-rdes2.rd.buffer2 =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[i].=
-rdes3.raw =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[i].=
-rdes3.rd.buf1v =3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[i].=
-rdes3.rd.inte =3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[i].=
-rdes3.rd.own =3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;next_tx =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;next_rx =3D 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Allocate and initiate DMA rings for TX and RX. Also allocates RX b=
-uffers for<br>
-&gt; + * incoming packets.<br>
-&gt; + */<br>
-&gt; +static int dwceqos_dma_alloc(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 size;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int i;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 size =3D DWCEQOS_RX_DCNT * sizeof(struct ring_i=
-nfo);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_skb =3D kzalloc(size, GFP_KERNEL);<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (!lp-&gt;rx_skb) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;Unable to allocate ring descriptor area\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Allocate DMA descriptors */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 size =3D DWCEQOS_TX_DCNT * sizeof(struct dwc_et=
-h_qos_txdesc);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs =3D dma_alloc_coherent(&amp;lp-=
-&gt;pdev-&gt;dev, size,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 &amp;lp-&gt;tx_descs_addr, 0);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (!lp-&gt;tx_descs) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;Failed to allocate TX DMA descriptors\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* Should deallocat=
-e memory here */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 size =3D DWCEQOS_RX_DCNT * sizeof(struct dwc_et=
-h_qos_rxdesc);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs =3D dma_alloc_coherent(&amp;lp-=
-&gt;pdev-&gt;dev, size,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 &amp;lp-&gt;rx_descs_addr, 0);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (!lp-&gt;rx_descs) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;Failed to allocate RX DMA descriptors\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* Should deallocat=
-e memory here */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 for (i =3D 0; i &lt; DWCEQOS_RX_DCNT; ++i) {<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dwceqos_alloc_rxrin=
-g_desc(lp, i);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!(lp-&gt;rx_skb=
-[lp-&gt;next_rx].skb)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 dev_err(&amp;lp-&gt;pdev-&gt;dev, &quot;Unable to map descriptor=
- %d to DMA\n&quot;,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;next_rx);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 /* What error code to return for mapping error? */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 return -1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_prepare(lp);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Tell HW where to look*/<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-RXDESC_RING_LEN,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_RX_DCNT-1);=
-<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-TXDESC_RING_LEN,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 DWCEQOS_TX_DCNT-1);=
-<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-RXDESC_LIST_ADDR,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (u32)lp-&gt;rx_desc=
-s_addr);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-TXDESC_LIST_ADDR,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (u32)lp-&gt;tx_desc=
-s_addr);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Checks if there are any available incoming packets ready for proce=
-ssing */<br>
-&gt; +int dwceqos_packet_avail(struct net_local *lp)<br>
-<br>
-</div></div>Make this function static.<br>
-<div><div class=3D"h5"><br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return !lp-&gt;rx_descs[lp-&gt;next_rx].rdes3.w=
-r.own;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Free DMA descriptor area */<br>
-&gt; +static void dwceqos_dma_free(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 size;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 size =3D DWCEQOS_TX_DCNT * sizeof(struct dwc_et=
-h_qos_txdesc);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (lp-&gt;tx_descs)<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dma_free_coherent(&=
-amp;lp-&gt;pdev-&gt;dev, size,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 lp-&gt;tx_descs, lp-&gt;tx_descs_addr);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 size =3D DWCEQOS_RX_DCNT * sizeof(struct dwc_et=
-h_qos_rxdesc);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (lp-&gt;rx_descs)<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dma_free_coherent(&=
-amp;lp-&gt;pdev-&gt;dev, size,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 lp-&gt;rx_descs, lp-&gt;rx_descs_addr);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* HW transmit function. */<br>
-&gt; +static void dwceqos_dma_xmit(struct net_local *lp, void *data, int le=
-n)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 regval;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int i =3D lp-&gt;next_tx;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int dwc_wait;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dma_addr_t dma_handle;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dma_handle =3D dma_map_single(lp-&gt;ndev-&gt;d=
-ev.parent,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 data, DWCEQOS_RX_BU=
-F_SIZE, DMA_TO_DEVICE);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (dma_mapping_error(lp-&gt;ndev-&gt;dev.paren=
-t, dma_handle)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;DMA Mapping error\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].tdes0.rd.buffer1 =3D dma_han=
-dle;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].tdes2.rd.buf1len =3D len;<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].tdes3.rd.fl =3D len;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].tdes3.rd.fd =3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].tdes3.rd.ld =3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;tx_descs[i].tdes3.rd.own =3D 1;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Issue Transmit Poll by writing address of ne=
-xt free descriptor */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 regval =3D lp-&gt;tx_descs_addr + (i+1) * sizeo=
-f(struct dwc_eth_qos_txdesc);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-TXDESC_TAIL, regval);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Set poll wait timeout to 2 seconds */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwc_wait =3D 200;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 while (lp-&gt;tx_descs[i].tdes3.wr.own) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mdelay(10);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!dwc_wait--)<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 break;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (lp-&gt;tx_descs[i].tdes3.wr.own)<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;Failed to transmit: Timed out\n&quot;);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;next_tx =3D (lp-&gt;next_tx + 1) % DWCEQ=
-OS_TX_DCNT;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dma_unmap_single(lp-&gt;ndev-&gt;dev.parent,<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 dma_handle, DWCEQOS_RX_BUF_SIZE, DMA_TO_DEVICE);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Store HW Addr in MAC registers. Source Address Replacement not use=
-d yet */<br>
-&gt; +static void dwceqos_set_hwaddr(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 val;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 val =3D DWCEQOS_MAC_ADDR_HI_EN | (lp-&gt;ndev-&=
-gt;dev_addr[0] &lt;&lt; 8) |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (lp-&gt;ndev-&gt;de=
-v_addr[1]);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MAC_ADDR=
-_HI, val);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 val =3D (lp-&gt;ndev-&gt;dev_addr[2] &lt;&lt; 2=
-4) | (lp-&gt;ndev-&gt;dev_addr[3] &lt;&lt; 16) |<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 (lp-&gt;ndev-&gt;de=
-v_addr[4] &lt;&lt; 8) =C2=A0| (lp-&gt;ndev-&gt;dev_addr[5]);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_MAC_ADDR=
-_LO, val);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* DMA reset. When issued also resets all MTL and MAC registers as we=
-ll */<br>
-&gt; +static void dwceqos_dma_reset(struct net_local *lp)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Wait 5 seconds for DMA reset*/<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int i =3D 5000;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_MODE=
-, 1);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 do {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 mdelay(1);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 } while ((dwceqos_read(lp-&gt;baseaddr, DWCEQOS=
-_DMA_MODE) &amp; 0x1) &amp;&amp; i--);<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Interrupt handler. So far only RX interrupts are used */<br>
-&gt; +static irqreturn_t dwceqos_interrupt(int irq, void *dev_id)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_device *ndev =3D dev_id;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_local *lp =3D netdev_priv(ndev);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 cause;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 val;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 cause =3D dwceqos_read(lp-&gt;baseaddr, DWCEQOS=
-_DMA_INT_STAT);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (cause &amp; 0x00000001) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* DMA Channel 0 In=
-terrupt. Assume RX interrupt for now */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 val =3D dwceqos_rea=
-d(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_STAT);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 /* Ack */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&g=
-t;baseaddr, DWCEQOS_DMA_CH0_STAT, val);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (val &amp; 0x000=
-00040)<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 napi_schedule(&amp;lp-&gt;napi);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 } else if (unlikely(!cause)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return IRQ_NONE;<br=
->
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return IRQ_HANDLED;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +static int dwceqos_open(struct net_device *ndev)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Allocate Buffers &amp; DMA Descr. + Initiate=
- DMA descriptors */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_local *lp =3D netdev_priv(ndev);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Set up hardware. It looks like order of writ=
-es is important here.<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0* Only gigatbit support, no advanced MTL =
-or MAC configuration yet.<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0*/<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_reset(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_mtl_init(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_mtl_tx_init(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_setmode(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_alloc(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_wake_rx(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_txenable(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_mtl_rx_init(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_mac_rx_init(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_rx_enable(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_wake_rx(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_set_hwaddr(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_mac_enable(lp);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Enable RX Interrupts */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_write(lp-&gt;baseaddr, DWCEQOS_DMA_CH0_=
-INT_EN, 0x00010040);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 napi_enable(&amp;lp-&gt;napi);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 netif_carrier_on(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 netif_start_queue(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +<br>
-&gt; +int dwceqos_stop(struct net_device *ndev)<br>
-<br>
-</div></div>Make this function static.<br>
-<div class=3D""><br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_local *lp =3D netdev_priv(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_free(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 netif_stop_queue(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 napi_disable(&amp;lp-&gt;napi);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 netif_carrier_off(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Receive one packet and return skb */<br>
-&gt; +struct sk_buff *<br>
-&gt; +dwceqos_recv_packet(struct net_local *lp)<br>
-<br>
-</div>Make this function static.<br>
-<div><div class=3D"h5"><br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct sk_buff *skb;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 u32 len;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 skb =3D lp-&gt;rx_skb[lp-&gt;next_rx].skb;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 len =3D lp-&gt;rx_descs[lp-&gt;next_rx].rdes3.w=
-r.length;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Unmap old buffer */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dma_unmap_single(lp-&gt;ndev-&gt;dev.parent, lp=
--&gt;rx_skb[lp-&gt;next_rx].mapping,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_skb[lp-&g=
-t;next_rx].len, DMA_FROM_DEVICE);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 skb_put(skb, len);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 skb-&gt;protocol =3D eth_type_trans(skb, lp-&gt=
-;ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 skb-&gt;ip_summed =3D 0;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Initialize new Buffer descriptor */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_alloc_rxring_desc(lp, lp-&gt;next_rx);<=
-br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (!(lp-&gt;rx_skb[lp-&gt;next_rx].skb)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;Unable to map descriptor %d to DMA\n&quot;,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 lp-&gt;next_rx);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return NULL;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Initialize new DMA descriptor */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[lp-&gt;next_rx].rdes0.rd.buffer=
-1 =3D<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_skb[lp-&g=
-t;next_rx].mapping;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[lp-&gt;next_rx].rdes1.raw =3D 0=
++ =C2=A0 =C2=A0 =C2=A0 if (!prop || !prop-&gt;val.len || prop-&gt;val.len%s=
+izeof(*list))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;<br>
++ =C2=A0 =C2=A0 =C2=A0 list =3D (const __be32 *)prop-&gt;val.val;<br>
++ =C2=A0 =C2=A0 =C2=A0 list_end =3D list + prop-&gt;val.len / sizeof(*list)=
 ;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[lp-&gt;next_rx].rdes2.rd.buffer=
-2 =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[lp-&gt;next_rx].rdes3.raw =3D 0=
-;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[lp-&gt;next_rx].rdes3.rd.buf1v =
-=3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[lp-&gt;next_rx].rdes3.rd.inte =
-=3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;rx_descs[lp-&gt;next_rx].rdes3.rd.own =
-=3D 1;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;next_rx =3D (lp-&gt;next_rx + 1) % DWCEQ=
-OS_RX_DCNT;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return skb;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +<br>
-&gt; +/* NAPI poll routine */<br>
-&gt; +int dwceqos_rx_poll(struct napi_struct *napi, int budget)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_local *lp =3D container_of(napi, str=
-uct net_local, napi);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int npackets =3D 0;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct sk_buff *skb;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 spin_lock(&amp;lp-&gt;rx_lock);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 while (npackets &lt; budget &amp;&amp; dwceqos_=
-packet_avail(lp)) {<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 skb =3D dwceqos_rec=
-v_packet(lp);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!skb)<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 break;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 netif_receive_skb(s=
-kb);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;stats.rx_pac=
-kets++;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 lp-&gt;stats.rx_byt=
-es +=3D skb-&gt;len;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 npackets++;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (npackets &lt; budget)<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 napi_complete(napi)=
-;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 spin_unlock(&amp;lp-&gt;rx_lock);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return npackets;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +/* Main transmit function called from kernel */<br>
-&gt; +int dwceqos_start_xmit(struct sk_buff *skb, struct net_device *ndev)<=
-br>
-<br>
-</div></div>Make this function static.<br>
-<div class=3D""><br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int len;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_local *lp =3D netdev_priv(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 char *data;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 data =3D skb-&gt;data;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 len =3D skb-&gt;len;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Send packet on wire */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_dma_xmit(lp, data, len);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 skb_tx_timestamp(skb);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ndev-&gt;stats.tx_bytes +=3D len;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dev_kfree_skb(skb);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +struct net_device_ops dwceq_netdev_ops;<br>
-<br>
-</div>Why not initialize this here?<br>
-<div><div class=3D"h5"><br>
-&gt; +#ifdef CONFIG_OF<br>
-&gt; +static inline int dwceqos_probe_config_dt(struct platform_device *pde=
-v)<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_device *ndev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 const void *mac_address;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ndev =3D platform_get_drvdata(pdev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 /* Set the MAC address. */<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 mac_address =3D of_get_mac_address(pdev-&gt;dev=
-.of_node);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (mac_address)<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 memcpy(ndev-&gt;dev=
-_addr, mac_address, ETH_ALEN);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 else<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_warn(&amp;pdev-=
-&gt;dev, &quot;No MAC address found\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +}<br>
-&gt; +#else<br>
-&gt; +static inline int dwceqos_probe_config_dt()<br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return -ENOSYS;<br>
-&gt; +}<br>
-&gt; +#endif<br>
-&gt; +<br>
-&gt; +<br>
-&gt; +/**<br>
-&gt; + * dwceqos_probe - Platform driver probe<br>
-&gt; + * @pdev: Pointer to platform device structure<br>
-&gt; + *<br>
-&gt; + * Return 0 on success, negative value if error<br>
-&gt; + */<br>
-&gt; +int dwceqos_probe(struct platform_device *pdev)<br>
-<br>
-</div></div>Make this function static.<br>
-<div><div class=3D"h5"><br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct resource *r_mem =3D NULL;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct resource *r_irq =3D NULL;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_device *ndev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_local *lp;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 int ret =3D -ENXIO;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 r_mem =3D platform_get_resource(pdev, IORESOURC=
-E_MEM, 0);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 r_irq =3D platform_get_resource(pdev, IORESOURC=
-E_IRQ, 0);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (!r_mem || !r_irq) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;no IO resource defined.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENXIO;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ndev =3D alloc_etherdev(sizeof(*lp));<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (!ndev) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;etherdev allocation failed.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -ENOMEM;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 SET_NETDEV_DEV(ndev, &amp;pdev-&gt;dev);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp =3D netdev_priv(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;ndev =3D ndev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;pdev =3D pdev;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;baseaddr =3D devm_ioremap_resource(&amp;=
-pdev-&gt;dev, r_mem);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (IS_ERR(lp-&gt;baseaddr)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;failed to map baseaddress.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D PTR_ERR(lp-=
-&gt;baseaddr);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err_out_free_n=
-etdev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dev_dbg(&amp;lp-&gt;pdev-&gt;dev, &quot;BASEADD=
-RESS hw: %p virt: %p\n&quot;,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 (void *)r_mem-&gt;start, lp-&gt;baseaddr);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ndev-&gt;irq =3D platform_get_irq(pdev, 0);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ndev-&gt;netdev_ops =3D &amp;dwceq_netdev_ops;<=
-br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ndev-&gt;base_addr =3D r_mem-&gt;start;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ndev-&gt;features =3D 0;<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 netif_napi_add(ndev, &amp;lp-&gt;napi, dwceqos_=
-rx_poll, 64);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ret =3D register_netdev(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (ret) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;Cannot register net device, aborting.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err_out_free_n=
-etdev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;apb_pclk =3D devm_clk_get(&amp;pdev-&gt;=
-dev, &quot;apb_pclk&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (IS_ERR(lp-&gt;apb_pclk)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;apb_pclk clock not found.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D PTR_ERR(lp-=
-&gt;apb_pclk);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err_out_unregi=
-ster_netdev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 lp-&gt;phy_ref_clk =3D devm_clk_get(&amp;pdev-&=
-gt;dev, &quot;phy_ref_clk&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (IS_ERR(lp-&gt;phy_ref_clk)) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;phy_ref_clk clock not found.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ret =3D PTR_ERR(lp-=
-&gt;phy_ref_clk);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err_out_unregi=
-ster_netdev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ret =3D clk_prepare_enable(lp-&gt;apb_pclk);<br=
++ =C2=A0 =C2=A0 =C2=A0 while (list &lt; list_end) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ph =3D fdt32_to_cpu(*lis=
+t++);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(!ph)) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 /* Should never happen */<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 if (node-&gt;name)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_warn(&quot;phandle =3D=3D 0 for %s\n&quo=
+t;, node-&gt;name);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 continue;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dep =3D of_find_node_by_=
+phandle(ph);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(!dep)) {<br=
 >
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (ret) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;Unable to enable APER clock.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err_out_unregi=
-ster_netdev;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ret =3D clk_prepare_enable(lp-&gt;phy_ref_clk);=
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 pr_err(&quot;No DT node for dependency with phandle 0x%x found\n&quot;,=
 <br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (ret) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;pdev-&=
-gt;dev, &quot;Unable to enable device clock.\n&quot;);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err_out_clk_di=
-s_aper;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 platform_set_drvdata(pdev, ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dwceqos_probe_config_dt(pdev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 dev_info(&amp;lp-&gt;pdev-&gt;dev, &quot;pdev-&=
-gt;id %d, baseaddr 0x%08lx, irq %d\n&quot;,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 pdev-&gt;id, ndev-&gt;base_addr, ndev-&gt;irq);<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 ret =3D devm_request_irq(&amp;pdev-&gt;dev, nde=
-v-&gt;irq, &amp;dwceqos_interrupt, 0,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ndev-&gt;name, ndev=
-);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 if (ret) {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 dev_err(&amp;lp-&gt=
-;pdev-&gt;dev, &quot;Unable to request IRQ %p, error %d\n&quot;,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
-=A0 =C2=A0 r_irq, ret);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 goto err_out_unregi=
-ster_clk_notifier;<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 }<br>
-&gt; +<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +<br>
-&gt; +err_out_unregister_clk_notifier:<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 clk_disable_unprepare(lp-&gt;phy_ref_clk);<br>
-&gt; +err_out_clk_dis_aper:<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 clk_disable_unprepare(lp-&gt;apb_pclk);<br>
-&gt; +err_out_unregister_netdev:<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 unregister_netdev(ndev);<br>
-&gt; +err_out_free_netdev:<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 free_netdev(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 platform_set_drvdata(pdev, NULL);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return ret;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +int dwceqos_remove(struct platform_device *pdev)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 ph);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 continue;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rc =3D insert_edge(node-=
+&gt;phandle, ph);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (rc)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 break;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 return rc;<br>
++}<br>
++<br>
++/* Copied from drivers/of/base.c */<br>
++static const char *of_prop_next_string(struct property *prop, const char *=
+cur)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 const char *curv =3D cur;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (!prop)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return NULL;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (!cur)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return prop-&gt;val.val;=
 <br>
-</div></div>Make this function static.<br>
-<div class=3D""><br>
-&gt; +{<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 struct net_device *ndev =3D platform_get_drvdat=
-a(pdev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 unregister_netdev(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 free_netdev(ndev);<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 return 0;<br>
-&gt; +}<br>
-&gt; +<br>
-&gt; +struct net_device_ops dwceq_netdev_ops =3D {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 .ndo_open =C2=A0 =C2=A0 =C2=A0 =3D dwceqos_open=
-,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 .ndo_stop =C2=A0 =C2=A0 =C2=A0 =3D dwceqos_stop=
-,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 .ndo_start_xmit =3D dwceqos_start_xmit,<br>
-&gt; +};<br>
-<br>
-</div>Move initialization to where it is declared and make the struct stati=
-c.<br>
-<div class=3D""><br>
-&gt; +<br>
-&gt; +struct of_device_id dwceq_of_match[] =3D {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 { .compatible =3D &quot;dwc,qos-ethernet&quot;,=
- },<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 {}<br>
-&gt; +};<br>
-<br>
-</div>Make this struct static.<br>
-<br>
-Make this struct static.<br>
-<div class=3D"">&gt; +MODULE_DEVICE_TABLE(of, dwceq_of_match);<br>
-&gt; +<br>
-&gt; +struct platform_driver dwceqos_driver =3D {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 .probe =C2=A0 =3D dwceqos_probe,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 .remove =C2=A0=3D dwceqos_remove,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 .driver =C2=A0=3D {<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .name =C2=A0=3D DRI=
-VER_NAME,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .owner =3D THIS_MOD=
-ULE,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 .of_match_table =3D=
- dwceq_of_match,<br>
-&gt; + =C2=A0 =C2=A0 =C2=A0 },<br>
-&gt; +};<br>
-<br>
-</div>Make this struct static.<br>
-<div class=3D"HOEnZb"><div class=3D"h5">--<br>
-To unsubscribe from this list: send the line &quot;unsubscribe netdev&quot;=
- in<br>
-the body of a message to <a href=3D"mailto:majordomo@vger.kernel.org">major=
-domo@vger.kernel.org</a><br>
-More majordomo info at =C2=A0<a href=3D"http://vger.kernel.org/majordomo-in=
-fo.html" target=3D"_blank">http://vger.kernel.org/majordomo-info.html</a><b=
++<br>
++ =C2=A0 =C2=A0 =C2=A0 curv +=3D strlen(cur) + 1;<br>
++ =C2=A0 =C2=A0 =C2=A0 if (curv &gt;=3D prop-&gt;val.val + prop-&gt;val.len=
+)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return NULL;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 return curv;<br>
++}<br>
++<br>
++static int __init add_deps_lnx(struct device_node *parent,<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 struct device_node *node)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct device_node *child;<br>
++ =C2=A0 =C2=A0 =C2=A0 int rc =3D 0;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (!__of_device_is_available(node))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return 0;<br>
++ =C2=A0 =C2=A0 =C2=A0 if (__of_get_property(node, &quot;compatible&quot;, =
+NULL)) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!parent-&gt;phandle)=
+ {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 if (__of_get_property(parent, &quot;compatible&quot;, NULL))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 parent-&gt;phandle =3D 1 + order.max_phandl=
+e++;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (!node-&gt;phandle)<b=
 r>
-</div></div></blockquote></div><br></div>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 node-&gt;phandle =3D 1 + order.max_phandle++;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rc =3D insert_edge(node-=
+&gt;phandle, parent-&gt;phandle);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (rc)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 return rc;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(order.paren=
+t_by_phandle[node-&gt;phandle])) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 /* sanity check */<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 pr_err(&quot;0x%x already has a parent!\n&quot;, node-&gt;phandle);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 return -EINVAL;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 order.parent_by_phandle[=
+node-&gt;phandle] =3D parent-&gt;phandle;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rc =3D add_dep_list(node=
+);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(rc))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 return rc;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 parent =3D node; /* chan=
+ge the parent only if node is a driver */<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++ =C2=A0 =C2=A0 =C2=A0 for_each_child_of_node(node, child) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rc =3D add_deps_lnx(pare=
+nt, child);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(rc))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 break;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 return rc;<br>
++}<br>
++<br>
++static void calc_max_phandle(struct node *np)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct node *child;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (!np || np-&gt;deleted)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return;<br>
++ =C2=A0 =C2=A0 =C2=A0 if (np-&gt;phandle &gt; order.max_phandle)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 order.max_phandle =3D np=
+-&gt;phandle;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 for_each_child(np, child)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 calc_max_phandle(child);=
+<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 return;<br>
++}<br>
++<br>
++void __init of_init_print_order(const char *name)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 unsigned i;<br>
++ =C2=A0 =C2=A0 =C2=A0 struct property *prop;<br>
++ =C2=A0 =C2=A0 =C2=A0 const char *cp;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 pr_info(&quot;Default initialization order for %s:\n=
+&quot;, name);<br>
++ =C2=A0 =C2=A0 =C2=A0 for (i =3D 0; i &lt; order.count; ++i) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_info(&quot;init %u 0x=
+%x&quot;, i, order.order[i]-&gt;phandle);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (order.order[i]-&gt;n=
+ame)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 pr_cont(&quot; %s&quot;, order.order[i]-&gt;name);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (order.order[i]-&gt;f=
+ull_name)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 pr_cont(&quot; (%s)&quot;, order.order[i]-&gt;full_name);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 prop =3D get_property(or=
+der.order[i], &quot;compatible&quot;);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 for (cp =3D of_prop_next=
+_string(prop, NULL); cp;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0cp =
+=3D of_prop_next_string(prop, cp))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 pr_cont(&quot; %s&quot;, cp);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 pr_cont(&quot; (parent 0=
+x%x)\n&quot;,<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 order.parent_by_phandle[order.order[i]-&gt;phandle]);<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++}<br>
++<br>
++int __init of_init_build_order(struct device_node *root)<br>
++{<br>
++ =C2=A0 =C2=A0 =C2=A0 struct device_node *child;<br>
++ =C2=A0 =C2=A0 =C2=A0 int rc =3D 0;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 tree =3D root;<br>
++ =C2=A0 =C2=A0 =C2=A0 if (unlikely(!root))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 calc_max_phandle(root);<br>
++ =C2=A0 =C2=A0 =C2=A0 order.old_max_phandle =3D order.max_phandle;<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 for_each_child_of_node(root, child) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 rc =3D add_deps_lnx(root=
+, child);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (unlikely(rc))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 break;<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 of_node_put(root);<br>
++ =C2=A0 =C2=A0 =C2=A0 topological_sort();<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 if (graph.finished)<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 return -EINVAL; /* cycle=
+ found */<br>
++<br>
++ =C2=A0 =C2=A0 =C2=A0 return rc;<br>
++}<br>
+diff --git a/scripts/dtc/dtc.c b/scripts/dtc/dtc.c<br>
+index fbe49d9..ac9858c 100644<br>
+--- a/scripts/dtc/dtc.c<br>
++++ b/scripts/dtc/dtc.c<br>
+@@ -88,6 +88,8 @@ static void =C2=A0__attribute__ ((noreturn)) usage(void)<=
+br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t\tSort nodes and proper=
+ties before outputting (only useful for\n\t\tcomparing trees)\n&quot;);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t-D\n&quot;);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t\tDo not automatically =
+add dependencies for phandle references\n&quot;);<br>
++ =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t-t\n&quot;);<br>
++ =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t\tPrint (default) initializa=
+tion order\n&quot;);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t-v\n&quot;);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t\tPrint DTC version and=
+ exit\n&quot;);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 fprintf(stderr, &quot;\t-H &lt;phandle format&g=
+t;\n&quot;);<br>
+@@ -110,6 +112,7 @@ int main(int argc, char *argv[])<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 const char *depname =3D NULL;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 int force =3D 0, sort =3D 0;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 int dependencies =3D 1;<br>
++ =C2=A0 =C2=A0 =C2=A0 int init_order =3D 0;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 const char *arg;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 int opt;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 FILE *outf =3D NULL;<br>
+@@ -121,7 +124,7 @@ int main(int argc, char *argv[])<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 minsize =C2=A0 =C2=A0=3D 0;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 padsize =C2=A0 =C2=A0=3D 0;<br>
+<br>
+- =C2=A0 =C2=A0 =C2=A0 while ((opt =3D getopt(argc, argv, &quot;hI:O:o:V:d:=
+R:S:p:fqb:i:vH:sDW:E:&quot;))<br>
++ =C2=A0 =C2=A0 =C2=A0 while ((opt =3D getopt(argc, argv, &quot;hI:O:o:V:d:=
+R:S:p:fqb:i:vH:sDtW:E:&quot;))<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 !=3D EOF) {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 switch (opt) {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 case &#39;I&#39;:<b=
+r>
+@@ -183,6 +186,10 @@ int main(int argc, char *argv[])<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 dependencies =3D false;<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 break;<br>
+<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 case &#39;t&#39;:<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 init_order =3D true;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 break;<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 case &#39;W&#39;:<b=
+r>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 parse_checks_option(true, false, optarg);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 break;<br>
+@@ -245,6 +252,13 @@ int main(int argc, char *argv[])<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (dependencies)<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 add_dependencies(bi=
+);<br>
+<br>
++ =C2=A0 =C2=A0 =C2=A0 if (init_order) {<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 if (of_init_build_order(=
+bi-&gt;dt))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 exit(2);<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 of_init_print_order(arg)=
+;<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exit(0);<br>
++ =C2=A0 =C2=A0 =C2=A0 }<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 if (streq(outname, &quot;-&quot;)) {<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 outf =3D stdout;<br=
+>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 } else {<br>
+@@ -266,5 +280,13 @@ int main(int argc, char *argv[])<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 die(&quot;Unknown o=
+utput format \&quot;%s\&quot;\n&quot;, outform);<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 }<br>
+<br>
++ =C2=A0 =C2=A0 =C2=A0 /*<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0* Check for cycles by building the initialzati=
+on order.<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0* This is done after the output was saved beca=
+use it<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0* changes the tree slightly.<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0*/<br>
++ =C2=A0 =C2=A0 =C2=A0 if (of_init_build_order(bi-&gt;dt))<br>
++ =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 exit(2);<br>
++<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 exit(0);<br>
+=C2=A0}<br>
+diff --git a/scripts/dtc/dtc.h b/scripts/dtc/dtc.h<br>
+index c3dbeac..b89e08a 100644<br>
+--- a/scripts/dtc/dtc.h<br>
++++ b/scripts/dtc/dtc.h<br>
+@@ -269,5 +269,7 @@ struct boot_info *dt_from_fs(const char *dirname);<br>
+<br>
+=C2=A0/* Dependencies */<br>
+=C2=A0void add_dependencies(struct boot_info *bi);<br>
++void of_init_print_order(const char *name);<br>
++int of_init_build_order(struct node *root);<br>
+<br>
+=C2=A0#endif /* _DTC_H */<br>
+<span class=3D"HOEnZb"><font color=3D"#888888">--<br>
+1.8.3.1<br>
+<br>
+<br>
+_______________________________________________<br>
+linux-arm-kernel mailing list<br>
+<a href=3D"mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@li=
+sts.infradead.org</a><br>
+<a href=3D"http://lists.infradead.org/mailman/listinfo/linux-arm-kernel" ta=
+rget=3D"_blank">http://lists.infradead.org/mailman/listinfo/linux-arm-kerne=
+l</a><br>
+</font></span></blockquote></div><br></div>
 
---089e016354d4ca9e8a04f9090bf6--
+--001a1134a45cb8ab9104f939ee28--
