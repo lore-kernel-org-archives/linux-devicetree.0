@@ -1,51 +1,78 @@
-From: Thor Thayer <tthayer.linux@gmail.com>
-Subject: Re: [PATCHv3 3/3] edac: altera: Add EDAC support for Altera SDRAM
-Date: Mon, 12 May 2014 16:58:20 -0500
-Message-ID: <CAF03EBey1QXo4e0bXQtiMnRYT5OZ_cxD5ShJbmsDYpcxuTx=Fw@mail.gmail.com>
-References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
-	<1399330337-16748-4-git-send-email-tthayer@altera.com>
-	<20140508120524.GF12548@pd.tnic>
-	<CAF03EBecxtMr1670ktQKTAZX_kHeZWz1SwuEk373B99BoVjbDw@mail.gmail.com>
-	<20140509135259.GC16260@pd.tnic>
-	<CAF03EBeKbXr-7+qeARkBRXjystMjs4yEWnmw7q8tgJv9-SPgXA@mail.gmail.com>
-	<20140509205218.GA16051@pd.tnic>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] ARM: shmobile: henninger: add QSPI DT support
+Date: Tue, 13 May 2014 02:57:30 +0400
+Message-ID: <537151DA.8000101@cogentembedded.com>
+References: <201405060245.32952.sergei.shtylyov@cogentembedded.com> <536FBEB7.9080605@cogentembedded.com> <20140511225354.GC6451@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140509205218.GA16051@pd.tnic>
-Sender: linux-doc-owner@vger.kernel.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140511225354.GC6451@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 9, 2014 at 3:52 PM, Borislav Petkov <bp@alien8.de> wrote:
-> On Fri, May 09, 2014 at 03:31:53PM -0500, Thor Thayer wrote:
->> Yes, good point. Our hardware can't recover from Double Bit Errors so
->> I'll go back to the panic() in that path. I like the flexibility of
->> the command line parameter though...
->
-> Like to panic by default when the machine is booted normally but to be
-> able to turn off the panicking with a module parameter?
->
-> If so, then you could probably implement a trivial setter called
->
-> edac_mc_set_panic_on_ue() in a separate patch.
->
-> Then, you call it at the end of altr_sdram_probe().
->
-> If you want to turn it off again, you do
->
-> echo "0" > /sys/module/edac_core/parameters/edac_mc_panic_on_ue
->
-> Something like that...
->
-> --
-> Regards/Gruss,
->     Boris.
->
-> Sent from a fat crate under my desk. Formatting is fine.
-> --
+Hello.
 
-Hi Boris. Yes. this would be a nice solution. I'll use the panic for
-now in my next revision of the patch - we know a DBE is bad news.
-Thanks!
+On 05/12/2014 02:53 AM, Simon Horman wrote:
+
+>>> Define the Henninger board dependent part of the QSPI device node.
+>>> Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
+
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>>> ---
+>>> This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
+>>> 'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
+
+>>>   arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
+>>>   1 file changed, 38 insertions(+)
+
+>>> Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+>>> ===================================================================
+>>> --- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
+>>> +++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+>> [...]
+>>> @@ -158,3 +163,36 @@
+>>>   	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
+>>>   	status = "okay";
+>>>   };
+>>> +
+>>> +&qspi {
+>>> +	pinctrl-0 = <&qspi_pins>;
+>>> +	pinctrl-names = "default";
+>>> +
+>>> +	status = "okay";
+>>> +
+>>> +	flash@0 {
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <1>;
+>>> +		compatible = "spansion,s25fl512s";
+>>> +		reg = <0>;
+>>> +		spi-max-frequency = <30000000>;
+>>> +		spi-tx-bus-width = <4>;
+>>> +		spi-rx-bus-width = <4>;
+>>> +		m25p,fast-read;
+>>> +
+>>> +		partition@0 {
+>>> +			label = "loader_prg";
+>>> +			reg = <0x00000000 0x00040000>;
+>>> +			read-only;
+>>> +		};
+>>> +		partition@40000 {
+>>> +			label = "user_prg";
+>>> +			reg = <0x00040000 0x00400000>;
+>>> +			read-only;
+
+>>     Oops, there shouldn't be "read-only" here, I forgot to refresh
+>> the patch as I'm now seeing... too bad it's too late to resend now.
+>> :-(
+
+> Could you send an incremental fix for me to queue up?
+
+    Oops, I've rechecked and it should indeed be read-only, so the patch was 
+correct. Sorry. :-)
+
+WBR, Sergei
+
