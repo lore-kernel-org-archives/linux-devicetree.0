@@ -1,42 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v13 00/19] iommu/exynos: Fixes and Enhancements of System
-	MMU driver with DT
-Date: Mon, 12 May 2014 12:07:52 +0200
-Message-ID: <5576160.rCaFbvon4G@wuerfel>
-References: <1399875304-19948-1-git-send-email-shaik.ameer@samsung.com>
+From: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Mon, 12 May 2014 03:22:09 -0700
+Message-ID: <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
+References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
+ <20140422103642.GF7484@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
+ <20140423170821.GJ5649@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
+ <5360FB07.5030407@arm.com>
+ <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1399875304-19948-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, varun.sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6106CAF835F351419ADA79E4836E6EC71B6A53C826-r8ILAu4/owuq90oVIqnETxL4W9x8LtSr@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Sudeep Holla' <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, 'Will Deacon' <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "'linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org'" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org'" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "'linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 12 May 2014 11:44:45 Shaik Ameer Basha wrote:
-> This is the subset of previous v12 series and includes only the fixes and
-> enhancements, leaving out the private DT bindings as discussed in the below thread.
->     -- http://www.gossamer-threads.com/lists/linux/kernel/1918178
-> 
-> This patch series includes,
-> 1] fixes for exynos-iommu driver build break
-> 2] includes several bug fixes and enhancements for the exynos-iommu driver
-> 3] code to handle multiple exynos sysmmu versions
-> 4] adding support for device tree
->         Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
-
-The patches look good to me, but please add a note into the samsung,sysmmu.txt
-file explaining that the binding is incomplete and that it's possible to
-change in incompatible ways when we add support for attaching devices to
-the IOMMU through the generic IOMMU binding.
-
-	Arnd
+V2lsbCAmIFN1ZGVlcCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBO
+ZWlsIFpoYW5nDQo+IFNlbnQ6IDIwMTTlubQ15pyINeaXpSAxNDoyOA0KPiBUbzogU3VkZWVwIEhv
+bGxhOyBXaWxsIERlYWNvbg0KPiBDYzogbGludXhAYXJtLmxpbnV4Lm9yZy51azsgbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHY0
+XSBBUk06IHBlcmY6IHNhdmUvcmVzdG9yZSBwbXUgcmVnaXN0ZXJzIGluIHBtIG5vdGlmaWVyDQo+
+IA0KPiBTdWRlZXAsDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJv
+bTogU3VkZWVwIEhvbGxhIFttYWlsdG86c3VkZWVwLmhvbGxhQGFybS5jb21dDQo+ID4gU2VudDog
+MjAxNOW5tDTmnIgzMOaXpSAyMTozMQ0KPiA+IFRvOiBOZWlsIFpoYW5nOyBXaWxsIERlYWNvbg0K
+PiA+IENjOiBTdWRlZXAgSG9sbGE7IGxpbnV4QGFybS5saW51eC5vcmcudWs7DQo+ID4gbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+ID4gU3ViamVjdDogUmU6IFtQ
+QVRDSCB2NF0gQVJNOiBwZXJmOiBzYXZlL3Jlc3RvcmUgcG11IHJlZ2lzdGVycyBpbiBwbQ0KPiA+
+IG5vdGlmaWVyDQo+ID4NCj4gPiBIaSBOZWlsLA0KPiA+DQo+ID4gT24gMzAvMDQvMTQgMDM6MjEs
+IE5laWwgWmhhbmcgd3JvdGU6DQo+ID4gPg0KPiA+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQo+ID4gPj4gRnJvbTogV2lsbCBEZWFjb24gW21haWx0bzp3aWxsLmRlYWNvbkBhcm0uY29t
+XQ0KPiA+DQo+ID4gWy4uLl0NCj4gPg0KPiA+ID4+DQo+ID4gPj4gSSB0aGluayB3ZSBuZWVkIHNv
+bWUgaW5wdXQgZnJvbSB0aGUgZGV2aWNlLXRyZWUgZ3V5cyB0byBzZWUgd2hldGhlcg0KPiA+ID4+
+IHRoZXkgd291bGQgb2JqZWN0IHRvIHVzIHNvbHZpbmcgdGhpcyBsb2NhbGx5IChpbiB0aGUgUE1V
+IG5vZGUpIG9yIG5vdC4NCj4gPiA+PiBQZXJzb25hbGx5LCBJJ2QgbXVjaCBwcmVmZXIgYSBnZW5l
+cmFsIHdheSB0byBkZXNjcmliZSB0aGUgbmVlZCBmb3INCj4gPiA+PiBwbS1ub3RpZmllcnMsIGJ1
+dCBpZiB0aGF0J3Mgbm90IGJlaW5nIGxvb2tlZCBhdCB0aGVuIHdlIGNhbiBjb29rDQo+ID4gPj4g
+c29tZXRoaW5nIHNwZWNpZmljYWxseSBmb3Igb3VyIG5lZWRzLg0KPiA+ID4+DQo+ID4gPg0KPiA+
+ID4gTm8gaW5wdXQgZnJvbSBkZXZpY2UtdHJlZSBndXlzIDooDQo+ID4NCj4gPiBUaGUgZGV2aWNl
+IHRyZWUgYmluZGluZ3MgZm9yIHBvd2VyIGRvbWFpbnMgaXMgdW5kZXIgZGlzY3Vzc2lvbiBbMV0N
+Cj4gDQo+IFRoYW5rcyBmb3IgdGhlIGluZm9ybWF0aW9uLg0KPiBCdXQgaXQgY3VycmVudGx5IGZv
+ciBkZXZpY2Ugb25seSwgY29yZSByZWxhdGVkIHN0dWZmIGFyZSBub3Qgc3VwcG9ydGVkLg0KPiBB
+bmQgaXMgaXQgcmVhbGx5IGdvb2QgdG8gcmVnaXN0ZXIgcG93ZXIgcHJvdmlkZXIgZm9yIGNvcmUg
+YW5kIGxldCB2ZnAgLyBwbXUgZXRjDQo+IHRvIGdldCBpdD8NCj4gDQoNCldoYXQncyB5b3VyIHN1
+Z2dlc3Rpb24gYWJvdXQgaXQ/DQpJcyBpdCBPSyB0aGF0IEkgYWRkIGl0IHVuZGVyIHRoZSBQTVUg
+bm9kZT8NCg0KPiA+DQo+ID4gUmVnYXJkcywNCj4gPiBTdWRlZXANCj4gPg0KPiA+IFsxXSBodHRw
+czovL2xrbWwub3JnL2xrbWwvMjAxNC80LzIzLzc1NQ0KPiANCj4gDQo+IEJlc3QgUmVnYXJkcywN
+Cj4gTmVpbCBaaGFuZw0KDQpCZXN0IFJlZ2FyZHMsDQpOZWlsIFpoYW5nDQo=
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
