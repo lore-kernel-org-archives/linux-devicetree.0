@@ -1,552 +1,204 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 2/4] ARM: at91/dt: define sam9n12 clocks
-Date: Mon, 12 May 2014 18:26:28 +0200
-Message-ID: <1399911990-5086-3-git-send-email-boris.brezillon@free-electrons.com>
-References: <1399911990-5086-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399911990-5086-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization order based on the DT)
+Date: Mon, 12 May 2014 18:47:51 +0200
+Message-ID: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Define sam9n12 clocks and make use of them in peripheral definitions.
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Tested-by: Bo Shen <voice.shen-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/at91sam9n12.dtsi | 348 ++++++++++++++++++++++++++++++++++++-
- 1 file changed, 346 insertions(+), 2 deletions(-)
+Hello,
 
-diff --git a/arch/arm/boot/dts/at91sam9n12.dtsi b/arch/arm/boot/dts/at91sam9n12.dtsi
-index 9f04808..d1b82e6 100644
---- a/arch/arm/boot/dts/at91sam9n12.dtsi
-+++ b/arch/arm/boot/dts/at91sam9n12.dtsi
-@@ -12,6 +12,7 @@
- #include <dt-bindings/pinctrl/at91.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/clock/at91.h>
- 
- / {
- 	model = "Atmel AT91SAM9N12 SoC";
-@@ -49,6 +50,18 @@
- 		reg = <0x20000000 0x10000000>;
- 	};
- 
-+	slow_xtal: slow_xtal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
-+	main_xtal: main_xtal {
-+		compatible = "fixed-clock";
-+		#clock-cells = <0>;
-+		clock-frequency = <0>;
-+	};
-+
- 	ahb {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-@@ -75,8 +88,280 @@
- 			};
- 
- 			pmc: pmc@fffffc00 {
--				compatible = "atmel,at91rm9200-pmc";
--				reg = <0xfffffc00 0x100>;
-+				compatible = "atmel,at91sam9n12-pmc";
-+				reg = <0xfffffc00 0x200>;
-+				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				interrupt-controller;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				#interrupt-cells = <1>;
-+
-+				main_rc_osc: main_rc_osc {
-+					compatible = "atmel,at91sam9x5-clk-main-rc-osc";
-+					#clock-cells = <0>;
-+					interrupts-extended = <&pmc AT91_PMC_MOSCRCS>;
-+					clock-frequency = <12000000>;
-+					clock-accuracy = <50000000>;
-+				};
-+
-+				main_osc: main_osc {
-+					compatible = "atmel,at91rm9200-clk-main-osc";
-+					#clock-cells = <0>;
-+					interrupts-extended = <&pmc AT91_PMC_MOSCS>;
-+					clocks = <&main_xtal>;
-+				};
-+
-+				main: mainck {
-+					compatible = "atmel,at91sam9x5-clk-main";
-+					#clock-cells = <0>;
-+					interrupts-extended = <&pmc AT91_PMC_MOSCSELS>;
-+					clocks = <&main_rc_osc>, <&main_osc>;
-+				};
-+
-+				plla: pllack {
-+					compatible = "atmel,at91rm9200-clk-pll";
-+					#clock-cells = <0>;
-+					interrupts-extended = <&pmc AT91_PMC_LOCKA>;
-+					clocks = <&main>;
-+					reg = <0>;
-+					atmel,clk-input-range = <2000000 32000000>;
-+					#atmel,pll-clk-output-range-cells = <4>;
-+					atmel,pll-clk-output-ranges = <745000000 800000000 0 0>,
-+								      <695000000 750000000 1 0>,
-+								      <645000000 700000000 2 0>,
-+								      <595000000 650000000 3 0>,
-+								      <545000000 600000000 0 1>,
-+								      <495000000 555000000 1 1>,
-+								      <445000000 500000000 1 2>,
-+								      <400000000 450000000 1 3>;
-+				};
-+
-+				plladiv: plladivck {
-+					compatible = "atmel,at91sam9x5-clk-plldiv";
-+					#clock-cells = <0>;
-+					clocks = <&plla>;
-+				};
-+
-+				pllb: pllbck {
-+					compatible = "atmel,at91rm9200-clk-pll";
-+					#clock-cells = <0>;
-+					interrupts-extended = <&pmc AT91_PMC_LOCKB>;
-+					clocks = <&main>;
-+					reg = <1>;
-+					atmel,clk-input-range = <2000000 32000000>;
-+					#atmel,pll-clk-output-range-cells = <3>;
-+					atmel,pll-clk-output-ranges = <30000000 100000000 0>;
-+				};
-+
-+				mck: masterck {
-+					compatible = "atmel,at91sam9x5-clk-master";
-+					#clock-cells = <0>;
-+					interrupts-extended = <&pmc AT91_PMC_MCKRDY>;
-+					clocks = <&clk32k>, <&main>, <&plladiv>, <&pllb>;
-+					atmel,clk-output-range = <0 133333333>;
-+					atmel,clk-divisors = <1 2 4 3>;
-+					atmel,master-clk-have-div3-pres;
-+				};
-+
-+				usb: usbck {
-+					compatible = "atmel,at91sam9n12-clk-usb";
-+					#clock-cells = <0>;
-+					clocks = <&pllb>;
-+				};
-+
-+				prog: progck {
-+					compatible = "atmel,at91sam9x5-clk-programmable";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					interrupt-parent = <&pmc>;
-+					clocks = <&clk32k>, <&main>, <&plladiv>, <&pllb>, <&mck>;
-+
-+					prog0: prog0 {
-+						#clock-cells = <0>;
-+						reg = <0>;
-+						interrupts = <AT91_PMC_PCKRDY(0)>;
-+					};
-+
-+					prog1: prog1 {
-+						#clock-cells = <0>;
-+						reg = <1>;
-+						interrupts = <AT91_PMC_PCKRDY(1)>;
-+					};
-+				};
-+
-+				systemck {
-+					compatible = "atmel,at91rm9200-clk-system";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+
-+					ddrck: ddrck {
-+						#clock-cells = <0>;
-+						reg = <2>;
-+						clocks = <&mck>;
-+					};
-+
-+					lcdck: lcdck {
-+						#clock-cells = <0>;
-+						reg = <3>;
-+						clocks = <&mck>;
-+					};
-+
-+					uhpck: uhpck {
-+						#clock-cells = <0>;
-+						reg = <6>;
-+						clocks = <&usb>;
-+					};
-+
-+					udpck: udpck {
-+						#clock-cells = <0>;
-+						reg = <7>;
-+						clocks = <&usb>;
-+					};
-+
-+					pck0: pck0 {
-+						#clock-cells = <0>;
-+						reg = <8>;
-+						clocks = <&prog0>;
-+					};
-+
-+					pck1: pck1 {
-+						#clock-cells = <0>;
-+						reg = <9>;
-+						clocks = <&prog1>;
-+					};
-+				};
-+
-+				periphck {
-+					compatible = "atmel,at91sam9x5-clk-peripheral";
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					clocks = <&mck>;
-+
-+					pioAB_clk: pioAB_clk {
-+						#clock-cells = <0>;
-+						reg = <2>;
-+					};
-+
-+					pioCD_clk: pioCD_clk {
-+						#clock-cells = <0>;
-+						reg = <3>;
-+					};
-+
-+					fuse_clk: fuse_clk {
-+						#clock-cells = <0>;
-+						reg = <4>;
-+					};
-+
-+					usart0_clk: usart0_clk {
-+						#clock-cells = <0>;
-+						reg = <5>;
-+					};
-+
-+					usart1_clk: usart1_clk {
-+						#clock-cells = <0>;
-+						reg = <6>;
-+					};
-+
-+					usart2_clk: usart2_clk {
-+						#clock-cells = <0>;
-+						reg = <7>;
-+					};
-+
-+					usart3_clk: usart3_clk {
-+						#clock-cells = <0>;
-+						reg = <8>;
-+					};
-+
-+					twi0_clk: twi0_clk {
-+						reg = <9>;
-+						#clock-cells = <0>;
-+					};
-+
-+					twi1_clk: twi1_clk {
-+						#clock-cells = <0>;
-+						reg = <10>;
-+					};
-+
-+					mci0_clk: mci0_clk {
-+						#clock-cells = <0>;
-+						reg = <12>;
-+					};
-+
-+					spi0_clk: spi0_clk {
-+						#clock-cells = <0>;
-+						reg = <13>;
-+					};
-+
-+					spi1_clk: spi1_clk {
-+						#clock-cells = <0>;
-+						reg = <14>;
-+					};
-+
-+					uart0_clk: uart0_clk {
-+						#clock-cells = <0>;
-+						reg = <15>;
-+					};
-+
-+					uart1_clk: uart1_clk {
-+						#clock-cells = <0>;
-+						reg = <16>;
-+					};
-+
-+					tcb_clk: tcb_clk {
-+						#clock-cells = <0>;
-+						reg = <17>;
-+					};
-+
-+					pwm_clk: pwm_clk {
-+						#clock-cells = <0>;
-+						reg = <18>;
-+					};
-+
-+					adc_clk: adc_clk {
-+						#clock-cells = <0>;
-+						reg = <19>;
-+					};
-+
-+					dma0_clk: dma0_clk {
-+						#clock-cells = <0>;
-+						reg = <20>;
-+					};
-+
-+					uhphs_clk: uhphs_clk {
-+						#clock-cells = <0>;
-+						reg = <22>;
-+					};
-+
-+					udphs_clk: udphs_clk {
-+						#clock-cells = <0>;
-+						reg = <23>;
-+					};
-+
-+					lcdc_clk: lcdc_clk {
-+						#clock-cells = <0>;
-+						reg = <25>;
-+					};
-+
-+					sha_clk: sha_clk {
-+						#clock-cells = <0>;
-+						reg = <27>;
-+					};
-+
-+					ssc0_clk: ssc0_clk {
-+						#clock-cells = <0>;
-+						reg = <28>;
-+					};
-+
-+					aes_clk: aes_clk {
-+						#clock-cells = <0>;
-+						reg = <29>;
-+					};
-+
-+					trng_clk: trng_clk {
-+						#clock-cells = <0>;
-+						reg = <30>;
-+					};
-+				};
- 			};
- 
- 			rstc@fffffe00 {
-@@ -88,6 +373,7 @@
- 				compatible = "atmel,at91sam9260-pit";
- 				reg = <0xfffffe30 0xf>;
- 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
-+				clocks = <&mck>;
- 			};
- 
- 			shdwc@fffffe10 {
-@@ -95,12 +381,38 @@
- 				reg = <0xfffffe10 0x10>;
- 			};
- 
-+			sckc@fffffe50 {
-+				compatible = "atmel,at91sam9x5-sckc";
-+				reg = <0xfffffe50 0x4>;
-+
-+				slow_osc: slow_osc {
-+					compatible = "atmel,at91sam9x5-clk-slow-osc";
-+					#clock-cells = <0>;
-+					clocks = <&slow_xtal>;
-+				};
-+
-+				slow_rc_osc: slow_rc_osc {
-+					compatible = "atmel,at91sam9x5-clk-slow-rc-osc";
-+					#clock-cells = <0>;
-+					clock-frequency = <32768>;
-+					clock-accuracy = <50000000>;
-+				};
-+
-+				clk32k: slck {
-+					compatible = "atmel,at91sam9x5-clk-slow";
-+					#clock-cells = <0>;
-+					clocks = <&slow_rc_osc>, <&slow_osc>;
-+				};
-+			};
-+
- 			mmc0: mmc@f0008000 {
- 				compatible = "atmel,hsmci";
- 				reg = <0xf0008000 0x600>;
- 				interrupts = <12 IRQ_TYPE_LEVEL_HIGH 0>;
- 				dmas = <&dma 1 AT91_DMA_CFG_PER_ID(0)>;
- 				dma-names = "rxtx";
-+				clocks = <&mci0_clk>;
-+				clock-names = "mci_clk";
- 				#address-cells = <1>;
- 				#size-cells = <0>;
- 				status = "disabled";
-@@ -110,12 +422,16 @@
- 				compatible = "atmel,at91sam9x5-tcb";
- 				reg = <0xf8008000 0x100>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 0>;
-+				clocks = <&tcb_clk>;
-+				clock-names = "t0_clk";
- 			};
- 
- 			tcb1: timer@f800c000 {
- 				compatible = "atmel,at91sam9x5-tcb";
- 				reg = <0xf800c000 0x100>;
- 				interrupts = <17 IRQ_TYPE_LEVEL_HIGH 0>;
-+				clocks = <&tcb_clk>;
-+				clock-names = "t0_clk";
- 			};
- 
- 			dma: dma-controller@ffffec00 {
-@@ -123,6 +439,8 @@
- 				reg = <0xffffec00 0x200>;
- 				interrupts = <20 IRQ_TYPE_LEVEL_HIGH 0>;
- 				#dma-cells = <2>;
-+				clocks = <&dma0_clk>;
-+				clock-names = "dma_clk";
- 			};
- 
- 			pinctrl@fffff400 {
-@@ -392,6 +710,7 @@
- 					gpio-controller;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
-+					clocks = <&pioAB_clk>;
- 				};
- 
- 				pioB: gpio@fffff600 {
-@@ -402,6 +721,7 @@
- 					gpio-controller;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
-+					clocks = <&pioAB_clk>;
- 				};
- 
- 				pioC: gpio@fffff800 {
-@@ -412,6 +732,7 @@
- 					gpio-controller;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
-+					clocks = <&pioCD_clk>;
- 				};
- 
- 				pioD: gpio@fffffa00 {
-@@ -422,6 +743,7 @@
- 					gpio-controller;
- 					interrupt-controller;
- 					#interrupt-cells = <2>;
-+					clocks = <&pioCD_clk>;
- 				};
- 			};
- 
-@@ -431,6 +753,8 @@
- 				interrupts = <1 IRQ_TYPE_LEVEL_HIGH 7>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_dbgu>;
-+				clocks = <&mck>;
-+				clock-names = "usart";
- 				status = "disabled";
- 			};
- 
-@@ -443,6 +767,8 @@
- 				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_ssc0_tx &pinctrl_ssc0_rx>;
-+				clocks = <&ssc0_clk>;
-+				clock-names = "pclk";
- 				status = "disabled";
- 			};
- 
-@@ -452,6 +778,8 @@
- 				interrupts = <5 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_usart0>;
-+				clocks = <&usart0_clk>;
-+				clock-names = "usart";
- 				status = "disabled";
- 			};
- 
-@@ -461,6 +789,8 @@
- 				interrupts = <6 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_usart1>;
-+				clocks = <&usart1_clk>;
-+				clock-names = "usart";
- 				status = "disabled";
- 			};
- 
-@@ -470,6 +800,8 @@
- 				interrupts = <7 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_usart2>;
-+				clocks = <&usart2_clk>;
-+				clock-names = "usart";
- 				status = "disabled";
- 			};
- 
-@@ -479,6 +811,8 @@
- 				interrupts = <8 IRQ_TYPE_LEVEL_HIGH 5>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_usart3>;
-+				clocks = <&usart3_clk>;
-+				clock-names = "usart";
- 				status = "disabled";
- 			};
- 
-@@ -493,6 +827,7 @@
- 				#size-cells = <0>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_i2c0>;
-+				clocks = <&twi0_clk>;
- 				status = "disabled";
- 			};
- 
-@@ -507,6 +842,7 @@
- 				#size-cells = <0>;
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_i2c1>;
-+				clocks = <&twi1_clk>;
- 				status = "disabled";
- 			};
- 
-@@ -521,6 +857,8 @@
- 				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_spi0>;
-+				clocks = <&spi0_clk>;
-+				clock-names = "spi_clk";
- 				status = "disabled";
- 			};
- 
-@@ -535,6 +873,8 @@
- 				dma-names = "tx", "rx";
- 				pinctrl-names = "default";
- 				pinctrl-0 = <&pinctrl_spi1>;
-+				clocks = <&spi1_clk>;
-+				clock-names = "spi_clk";
- 				status = "disabled";
- 			};
- 
-@@ -554,6 +894,7 @@
- 				reg = <0xf8034000 0x300>;
- 				interrupts = <18 IRQ_TYPE_LEVEL_HIGH 4>;
- 				#pwm-cells = <3>;
-+				clocks = <&pwm_clk>;
- 				status = "disabled";
- 			};
- 		};
-@@ -584,6 +925,9 @@
- 			compatible = "atmel,at91rm9200-ohci", "usb-ohci";
- 			reg = <0x00500000 0x00100000>;
- 			interrupts = <22 IRQ_TYPE_LEVEL_HIGH 2>;
-+			clocks = <&usb>, <&uhphs_clk>, <&udphs_clk>,
-+				 <&uhpck>;
-+			clock-names = "usb_clk", "ohci_clk", "hclk", "uhpck";
- 			status = "disabled";
- 		};
- 	};
--- 
-1.8.3.2
+if I would have to describe the Linux kernels init system (before userspace
+starts), it would be like:
+Unknown functions with almost unknown functionality are called in an almost
+random order.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+That reminded me that a kernel-maintainer once said to me:
+"We should aim to make things synchronous, deterministic and
+stuff-happens-in-the-correct-order."
+
+Looks like either the target moved or no Wilhelm Tell was around. ;)
+
+This is an attempt to reach the target for the case of (platform-)drivers.
+It is a mere starting point to reach the final target but it works on two
+DT enabled ARM devices I have and it hasn't any implications on other
+architectures, platforms or whatever. If the new configuration option,
+which is only available if DT is enabled, isn't turned on, there is no
+increase of code size or similiar.
+
+So what are these patches I'm posting here?
+They offer an imho solid base to fix the 3. problem. they build a deterministic
+order in which (platform-)drivers should be initialized, based on datas
+(dependencies) found in the device tree. They also offer a starting point to fix
+the other 2 problems (unknown functions and unknown functionality) by showing a
+way how the long range target of known functions with known functionality could
+be reached.
+
+Unfortunately work still isn't done. As written above, this is just a starting
+point, neiter complete nor perfect. It is what I could do behind closed doors,
+by spending a limited amount of time and resources (I've started to look at
+that stuff 3-4 weeks ago, sometimes after 3.14 appeared), so it can be blamed
+quick & dirty. But it should be already enough to explain and test the concepts.
+
+Enough forewords.
+
+This is a small patch series to use a deterministic dependency based device
+and driver initialization order on machines which are using device tree.
+The dependency graph will not only be build based on the device tree itself,
+but will use dependencies based on phandle references in the .dts,
+automatically added by dtc through a new property.
+Manualy adding dependencies to the .dts is possible too.
+
+Advantages:
+
+- Correct order of initialization without any "dirty tricks" in drivers or the
+  machine init code. The order in which devices/drivers will be initialized
+  depends only on the DT and the topological sort algorithm used by the
+  kernel, not some code elsewhere. That means less code and more homogeneity
+  across different SOCs.
+- Might be(come) a little faster because the number of deferred probes should
+  be minimized (they might not even be necessary anymore at all).
+- Using a modified algorithm, it's possible to build a list of drivers which
+  can be initialized in parallel, e.g. using n threads, where n equals the
+  number of cores. I have not tested nor implemented it, because I don't have
+  any multicore DT based board with which I easily can use a (patched) mainline
+  kernel, just locked down multicore things I don't want to go through the
+  pain of unlocking them.
+- Funny dependency graphs when using Graphviz.
+
+Disadvantages:
+
+- To use this feature correctly, binary blobs must be regenerated by
+  recompiling them to include properties with dependencies. Without
+  recompiling them there will be no advantage.
+- Binary blobs will be slightly larger (some kb, see numbers below).
+- Many .dts might need manual work to add some dependencies. Also most
+  dependencies will be discovered automatically (based on phandle references
+  in the .dts, some devices might need additional dependencies.
+
+
+Some numbers (using kernel 3.14.3):
+
+Dockstar (Kirkwood):
+	Works out of the box.
+	Size of dtb without dependencies:	9166
+	Size of dtb with dependencies:		9579
+	Graph with 34 nodes, 56 edges
+	Boot to panic (no root) no deps run 1-4:
+	1.325474 1.325458 1.325449 1.325494
+	Boot to panic (no root) deps run 1-4:
+	4.509989 4.484608 4.316221 4.485310
+	The large difference in time isn't because of the depency based
+	init but because ehci detected the connected hd before the panic
+	occured when deps were enabled. Withoout deps, the panic
+	already happend without any discovered usb-storage. I haven't
+	checked why.
+	The actual times to boot from USB-HD are 3.417248 without
+	dependencies versus 5.618293 with. I still have to check where
+	the difference of more than a second does come from, a difference
+	like on the BBB (see below) should be more reasonable.
+
+BeagleBoneBlack A5C (AM3359):
+	Had to disable ethernet (driver crashes).
+	Size of dtb without dependencies:	31379
+	Size of dtb with dependencies:		33300
+	Graph with 145 nodes, 266 edges
+	Boot to panic (no root) no deps run 1-4:
+	1.229431 1.229516 1.229509 1.229557
+	Boot to panic (no root) deps run 1-4:
+	1.361780 1.361442 1.361532 1.361699
+
+BeagleBoard C4 (OMAP34xx):
+	Had to disable usb (driver crashes) and several other problems,
+	but an unpatched 3.14.y doesn't really work too (which was the
+	reason I looked at what happes and did these patches).
+	Size of dtb without dependencies:	57003
+	Size of dtb with dependencies:		62580
+	Graph with 390 nodes, 848 edges
+	Boot to panic (no root) no deps run 1-4:
+	3.386535 3.343566 3.381469 3.357208
+	Boot to panic (no root) deps run 1-4:
+	5.961425 5.907714 6.053680 5.957855
+
+The difference in boot time is mainly based on the function which
+matches drivers to devices based on the compatible string. This
+is currently not solved very elegant and walks through multiple
+list multiple times. The actual sorting is very fast (just some ms).
+
+For people which do like pictures, I've put the dependency graph for
+the Dockstar online: http://ahsoftware.de/dt-kirkwood-dockstar.svg
+And a far more complicated dependency graph for the BeagleBoard:
+http://ahsoftware.de/dt-omap3-beagle.svg
+
+These pictures makes it easy to see what this feature is about. All the cyan
+arrows are the new dependencies, the black ones are the dependecies as
+currently used (for device but not driver initialization). So you see, there
+is quiet a difference.
+If I'm right, those pictures also visualize which drivers could be initialized
+in parallel (I haven't checked it, I would have to read the Graphviz
+documentation or check the whole graph to be sure). But on a first look at it,
+it looks like dot (Graphviz) placed all the nodes which can be initialized in
+parallel on the same row. So there are quiet some drivers which could be
+initialized in parallel, taking advantage of multiple cores to reduce boot time.
+
+(Just in case you wonder what the first number in the nodes in the pictures
+might be, it is the phandle of the device tree node and is usually generated
+automatically by dtc and might change when the .dts changes. This number
+doesn't have any meaning in regard to the initialization order.)
+
+What follows are the patches I've done, ready to test this feature. These are
+
+- 3 patches for the in-kernel dtc (to add dependencies to the dtb),
+- 1 patch for the kernel to use these dependencies to build the initialization
+  order and create devices,
+- 1 patch to register drivers based on the built order,
+- 1 patch to show which changes are necessary for some drivers,
+- 2 patches to use this feature on kirkwood (very good as small example),
+- 1 patch to use this feature on omap2+ (and am33xx),
+
+These patches are based on 3.14.3 and unfortunately don't apply cleanly to
+3.15-rcN. But I'm currently too lazy to rebase them as I usually use a stable
+kernel to test things I change. And as this is just a RFC, please use 3.14.x
+to test these patches.
+
+All patches do explain further what and how they do. And if I get the OK
+that they will be merged (after any necessary clean up), I would write
+a document for Documentation too (if really wanted, I assume you already have
+noticed that I'm not a native english speaker/writer).
+
+My suggestion to continue:
+
+- Merge the first 5 patches (maybe after they got cleaned up). So they won't
+disappear and people will find a starting point in the kernel to continue
+work on. They don't do any harm and don't increase codesize if the new
+kernel option they introduce is disabled. It also might be a good idea to
+merge them in order to get the new dependencies into binary DT blobs
+as early as possible, even if it might still need some time until they
+really will be used.
+
+- Have a look at the other patches. Especially the one for the Kirkwood which
+changes the initializazion order by just adding one dependency (ehci vs.
+regulator) to the .dts. This shows how such could be done without any changes
+on the drivers source code.
+
+
+If you ask why I did those patches: For the same reason a mountain climber
+does climb a mountain. That also explains my limited motivation and
+resources. ;)
+
+
+Regards,
+
+Alexander Holler
+
+
+LKML-disclaimer (unfortunately necessary):
+Please keep away with comments about style, typos or spelling errors in
+comments and similiar silly stuff if you have nothing else to say.
+Feel free to comment functionality or real errors, but not style, form or
+other bureaucrazy things.
+And please keep in mind that I'm neiter your intern, your student, your pupil,
+nor your child.
