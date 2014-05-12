@@ -1,72 +1,296 @@
-From: =?UTF-8?Q?Andreas_M=C3=BCller?= <schnitzeltony@googlemail.com>
-Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
- probably 3630
-Date: Mon, 12 May 2014 10:20:12 +0200
-Message-ID: <CALbNGRQpieZ+b-PvC+K2Zxb3hOd6KOCrPVOnveds-fXENn8GJg@mail.gmail.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
-	<1398815562-24113-2-git-send-email-tony@atomide.com>
-	<536C860E.1000501@ti.com>
-	<CALbNGRR3U1veFgXmOWpfG3yNVESdxi2t79WDrJwOZ1oShuG1yA@mail.gmail.com>
-	<20140511144209.GA28266@atomide.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v4 2/2] input: sun4i-ts: Add support for
+ temperature sensor
+Date: Mon, 12 May 2014 16:44:51 +0800
+Message-ID: <CAGb2v66EiYy3XbLqBXmOhOfHF=2DC_tOyQpdM8Q05iR6+X66zg@mail.gmail.com>
+References: <1399795586-18919-1-git-send-email-hdegoede@redhat.com> <1399795586-18919-3-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140511144209.GA28266@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBF4UYKNQKGQEJRH27JQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1399795586-18919-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LM Sensors <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 11, 2014 at 4:42 PM, Tony Lindgren <tony@atomide.com> wrote=
-:
-> * Andreas M=C3=BCller <schnitzeltony@googlemail.com> [140509 14:07]:
->> On Fri, May 9, 2014 at 9:38 AM, Tomi Valkeinen <tomi.valkeinen@ti.co=
-m> wrote:
->> > On 30/04/14 02:52, Tony Lindgren wrote:
->> >> Otherwise we can get often errors like the following and the
->> >> display won't come on:
->> >>
->> >> omapdss APPLY error: FIFO UNDERFLOW on gfx, disabling the overlay
->> >> omapdss APPLY error: SYNC_LOST on channel lcd, restarting
->> >> the output with video overlays disabled
->> >>
->> >> There are some earlier references to this issue:
->> >>
->> >> http://www.spinics.net/lists/linux-omap/msg59511.html
->> >> http://www.spinics.net/lists/linux-omap/msg59724.html
->> >
->> resend - my client had HTML enabled...
->>
->> FWIW: I have had issues long time ago [1]. With mainline 3.14.3 I ha=
-d
->> still the reboot problem on old 600MHz OMAP 3530. Applying this patc=
-h
->> solved the issues. For other versions I had no chance to reproduce t=
-he
->> original wakup issue mentioned in old thread
->
-> Sorry I'm a bit confused now. Is the reboot issue a separate issue
-> related to the twl4030 generic scripts for 3530?
->
-> And then this patch fixes dm3730 wake-up (from suspend?) issues?
->
-> Or do we have some other bug where we wrongly hit omap3630_dss_feats
-> on 3530 somehow?
-(What I think) I have done: Have 3.14.3 still booting with legacy
-board init (please don't kill me for that). Without applying your
-patch old OMAP3530 crashed at every reboot with SYNCH_LOST.
+Hi,
 
-After applying your patch reboot works fine.
+On Sun, May 11, 2014 at 4:06 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The sun4i resisitive touchscreen controller also comes with a built-in
+> temperature sensor. This commit adds support for it.
+>
+> This commit also introduces a new "ts-attached" device-tree property,
+> when this is not set, the input part of the driver won't register. This way
+> the internal temperature sensor can be used to measure the SoC temperature
+> independent of there actually being a touchscreen attached to the controller.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> Reviewed-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> ---
+>  .../bindings/input/touchscreen/sun4i.txt           |   5 +
+>  drivers/input/touchscreen/sun4i-ts.c               | 140 ++++++++++++++++-----
+>  2 files changed, 114 insertions(+), 31 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
+> index 881aea7..aef5779 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/sun4i.txt
+> @@ -6,10 +6,15 @@ Required properties:
+>   - reg: mmio address range of the chip
+>   - interrupts: interrupt to which the chip is connected
+>
+> +Optional properties:
+> + - allwinner,ts-attached: boolean indicating that an actual touchscreen is
+> +                         attached to the controller
+> +
+>  Example:
+>
+>         rtp: rtp@01c25000 {
+>                 compatible = "allwinner,sun4i-a10-ts";
+>                 reg = <0x01c25000 0x100>;
+>                 interrupts = <29>;
+> +               allwinner,ts-attached;
+>         };
+> diff --git a/drivers/input/touchscreen/sun4i-ts.c b/drivers/input/touchscreen/sun4i-ts.c
+> index c5acdfb..f366221 100644
+> --- a/drivers/input/touchscreen/sun4i-ts.c
+> +++ b/drivers/input/touchscreen/sun4i-ts.c
+> @@ -3,6 +3,9 @@
+>   *
+>   * Copyright (C) 2013 - 2014 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>   *
+> + * The hwmon parts are based on work by Corentin LABBE which is:
+> + * Copyright (C) 2013 Corentin LABBE <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+>   * This program is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License as published by
+>   * the Free Software Foundation; either version 2 of the License, or
+> @@ -30,6 +33,7 @@
+>   */
+>
+>  #include <linux/err.h>
+> +#include <linux/hwmon.h>
+>  #include <linux/init.h>
+>  #include <linux/input.h>
+>  #include <linux/interrupt.h>
+> @@ -106,14 +110,12 @@ struct sun4i_ts_data {
+>         void __iomem *base;
+>         unsigned int irq;
+>         bool ignore_fifo_data;
+> +       int temp_data;
+>  };
+>
+> -static irqreturn_t sun4i_ts_irq(int irq, void *dev_id)
+> +static void sun4i_ts_irq_handle_input(struct sun4i_ts_data *ts, u32 reg_val)
+>  {
+> -       struct sun4i_ts_data *ts = dev_id;
+> -       u32 reg_val, x, y;
+> -
+> -       reg_val  = readl(ts->base + TP_INT_FIFOS);
+> +       u32 x, y;
+>
+>         if (reg_val & FIFO_DATA_PENDING) {
+>                 x = readl(ts->base + TP_DATA);
+> @@ -139,6 +141,20 @@ static irqreturn_t sun4i_ts_irq(int irq, void *dev_id)
+>                 input_report_key(ts->input, BTN_TOUCH, 0);
+>                 input_sync(ts->input);
+>         }
+> +}
+> +
+> +static irqreturn_t sun4i_ts_irq(int irq, void *dev_id)
+> +{
+> +       struct sun4i_ts_data *ts = dev_id;
+> +       u32 reg_val;
+> +
+> +       reg_val  = readl(ts->base + TP_INT_FIFOS);
+> +
+> +       if (reg_val & TEMP_DATA_PENDING)
+> +               ts->temp_data = readl(ts->base + TEMP_DATA);
+> +
+> +       if (ts->input)
+> +               sun4i_ts_irq_handle_input(ts, reg_val);
+>
+>         writel(reg_val, ts->base + TP_INT_FIFOS);
+>
+> @@ -149,9 +165,9 @@ static int sun4i_ts_open(struct input_dev *dev)
+>  {
+>         struct sun4i_ts_data *ts = input_get_drvdata(dev);
+>
+> -       /* Flush, set trig level to 1, enable data and up irqs */
+> -       writel(DATA_IRQ_EN(1) | FIFO_TRIG(1) | FIFO_FLUSH(1) | TP_UP_IRQ_EN(1),
+> -              ts->base + TP_INT_FIFOC);
+> +       /* Flush, set trig level to 1, enable temp, data and up irqs */
+> +       writel(TEMP_IRQ_EN(1) | DATA_IRQ_EN(1) | FIFO_TRIG(1) | FIFO_FLUSH(1) |
+> +               TP_UP_IRQ_EN(1), ts->base + TP_INT_FIFOC);
+>
+>         return 0;
+>  }
+> @@ -160,15 +176,48 @@ static void sun4i_ts_close(struct input_dev *dev)
+>  {
+>         struct sun4i_ts_data *ts = input_get_drvdata(dev);
+>
+> -       /* Deactivate all IRQs */
+> -       writel(0, ts->base + TP_INT_FIFOC);
+> +       /* Deactivate all input IRQs */
+> +       writel(TEMP_IRQ_EN(1), ts->base + TP_INT_FIFOC);
+> +}
+> +
+> +static ssize_t show_temp(struct device *dev, struct device_attribute *devattr,
+> +                        char *buf)
+> +{
+> +       struct sun4i_ts_data *ts = dev_get_drvdata(dev);
+> +
+> +       /* No temp_data until the first irq */
+> +       if (ts->temp_data == -1)
+> +               return -EAGAIN;
+> +
+> +       return sprintf(buf, "%d\n", (ts->temp_data - 1447) * 100);
+> +}
+> +
+> +static ssize_t show_temp_label(struct device *dev,
+> +                             struct device_attribute *devattr, char *buf)
+> +{
+> +       return sprintf(buf, "SoC temperature\n");
+>  }
+>
+> +static DEVICE_ATTR(temp1_input, S_IRUGO, show_temp, NULL);
+> +static DEVICE_ATTR(temp1_label, S_IRUGO, show_temp_label, NULL);
+> +
+> +static struct attribute *sun4i_ts_attrs[] = {
+> +       &dev_attr_temp1_input.attr,
+> +       &dev_attr_temp1_label.attr,
+> +       NULL
+> +};
+> +ATTRIBUTE_GROUPS(sun4i_ts);
+> +
+>  static int sun4i_ts_probe(struct platform_device *pdev)
+>  {
+>         struct sun4i_ts_data *ts;
+>         struct device *dev = &pdev->dev;
+> +       struct device_node *np = dev->of_node;
+> +       struct device *hwmon;
+>         int ret;
+> +       bool ts_attached;
+> +
+> +       ts_attached = of_property_read_bool(np, "allwinner,ts-attached");
+>
+>         ts = devm_kzalloc(dev, sizeof(struct sun4i_ts_data), GFP_KERNEL);
+>         if (!ts)
+> @@ -176,24 +225,27 @@ static int sun4i_ts_probe(struct platform_device *pdev)
+>
+>         ts->dev = dev;
+>         ts->ignore_fifo_data = true;
+> -
+> -       ts->input = devm_input_allocate_device(dev);
+> -       if (!ts->input)
+> -               return -ENOMEM;
+> -
+> -       ts->input->name = pdev->name;
+> -       ts->input->phys = "sun4i_ts/input0";
+> -       ts->input->open = sun4i_ts_open;
+> -       ts->input->close = sun4i_ts_close;
+> -       ts->input->id.bustype = BUS_HOST;
+> -       ts->input->id.vendor = 0x0001;
+> -       ts->input->id.product = 0x0001;
+> -       ts->input->id.version = 0x0100;
+> -       ts->input->evbit[0] =  BIT(EV_SYN) | BIT(EV_KEY) | BIT(EV_ABS);
+> -       set_bit(BTN_TOUCH, ts->input->keybit);
+> -       input_set_abs_params(ts->input, ABS_X, 0, 4095, 0, 0);
+> -       input_set_abs_params(ts->input, ABS_Y, 0, 4095, 0, 0);
+> -       input_set_drvdata(ts->input, ts);
+> +       ts->temp_data = -1;
+> +
+> +       if (ts_attached) {
+> +               ts->input = devm_input_allocate_device(dev);
+> +               if (!ts->input)
+> +                       return -ENOMEM;
+> +
+> +               ts->input->name = pdev->name;
+> +               ts->input->phys = "sun4i_ts/input0";
+> +               ts->input->open = sun4i_ts_open;
+> +               ts->input->close = sun4i_ts_close;
+> +               ts->input->id.bustype = BUS_HOST;
+> +               ts->input->id.vendor = 0x0001;
+> +               ts->input->id.product = 0x0001;
+> +               ts->input->id.version = 0x0100;
+> +               ts->input->evbit[0] =  BIT(EV_SYN) | BIT(EV_KEY) | BIT(EV_ABS);
+> +               set_bit(BTN_TOUCH, ts->input->keybit);
+> +               input_set_abs_params(ts->input, ABS_X, 0, 4095, 0, 0);
+> +               input_set_abs_params(ts->input, ABS_Y, 0, 4095, 0, 0);
+> +               input_set_drvdata(ts->input, ts);
+> +       }
+>
+>         ts->base = devm_ioremap_resource(dev,
+>                               platform_get_resource(pdev, IORESOURCE_MEM, 0));
+> @@ -232,14 +284,39 @@ static int sun4i_ts_probe(struct platform_device *pdev)
+>         writel(STYLUS_UP_DEBOUN(5) | STYLUS_UP_DEBOUN_EN(1) | TP_MODE_EN(1),
+>                ts->base + TP_CTRL1);
+>
+> -       ret = input_register_device(ts->input);
+> -       if (ret)
+> -               return ret;
+> +       hwmon = devm_hwmon_device_register_with_groups(ts->dev, "sun4i_ts",
+> +                                                      ts, sun4i_ts_groups);
 
-Looking into id-code makes me wonder what changes on 36xx-features do
-to 35xx devices (treated as 34xx - right?). The only way that this
-happens is for unknown hawkeye fallthough. I suggest you simply forget
-my note and I will find out what really 'fixed' dss reboot problem.
+This fails to compile when HWMON is not selected:
 
-Andreas
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+drivers/built-in.o: In function `sun4i_ts_probe':
+/home/wens/cubieboard/linux/drivers/input/touchscreen/sun4i-ts.c:287:
+undefined reference to `devm_hwmon_device_register_with_groups'
+
+Best do a wrapper around the hwmon related code.
+drivers/input/touchscreen/ads7846.c has something similar, albeit for voltage.
+
+
+ChenYu
+
+> +       if (IS_ERR(hwmon))
+> +               return PTR_ERR(hwmon);
+> +
+> +       writel(TEMP_IRQ_EN(1), ts->base + TP_INT_FIFOC);
+> +
+> +       if (ts_attached) {
+> +               ret = input_register_device(ts->input);
+> +               if (ret) {
+> +                       writel(0, ts->base + TP_INT_FIFOC);
+> +                       return ret;
+> +               }
+> +       }
+>
+>         platform_set_drvdata(pdev, ts);
+>         return 0;
+>  }
+>
+> +static int sun4i_ts_remove(struct platform_device *pdev)
+> +{
+> +       struct sun4i_ts_data *ts = platform_get_drvdata(pdev);
+> +
+> +       /* Explicit unregister to avoid open/close changing the imask later */
+> +       if (ts->input)
+> +               input_unregister_device(ts->input);
+> +
+> +       /* Deactivate all IRQs */
+> +       writel(0, ts->base + TP_INT_FIFOC);
+> +
+> +       return 0;
+> +}
+> +
+>  static const struct of_device_id sun4i_ts_of_match[] = {
+>         { .compatible = "allwinner,sun4i-a10-ts", },
+>         { /* sentinel */ }
+> @@ -253,6 +330,7 @@ static struct platform_driver sun4i_ts_driver = {
+>                 .of_match_table = of_match_ptr(sun4i_ts_of_match),
+>         },
+>         .probe  = sun4i_ts_probe,
+> +       .remove = sun4i_ts_remove,
+>  };
+>
+>  module_platform_driver(sun4i_ts_driver);
+> --
+> 1.9.0
