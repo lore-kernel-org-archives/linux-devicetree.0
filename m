@@ -1,94 +1,74 @@
-From: Phil Edworthy <phil.edworthy@renesas.com>
-Subject: [PATCH v8 3/3] dt-bindings: pci: rcar pcie device tree bindings
-Date: Mon, 12 May 2014 11:57:50 +0100
-Message-ID: <1399892270-25021-4-git-send-email-phil.edworthy@renesas.com>
-References: <1399892270-25021-1-git-send-email-phil.edworthy@renesas.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1399892270-25021-1-git-send-email-phil.edworthy@renesas.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, LAKML <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, Valentine Barshak <valentine.barshak@cogentembedded.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Lucas Stach <l.stach@pengutronix.de>, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCH v3 0/5] ARM: dts: enable hdmi for exynos5 based peach and
+ snow boards
+Date: Mon, 12 May 2014 16:28:10 +0530
+Message-ID: <CAPdUM4M1xR1jGPxhuUi6nnAXuzA8_-9Hbgux66g+3mobhxNwyA@mail.gmail.com>
+References: <1399890248-27409-1-git-send-email-rahul.sharma@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399890248-27409-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the bindings for the R-Car PCIe driver. The driver
-resides under drivers/pci/host/pcie-rcar.c
+On 12 May 2014 15:54, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> From: Rahul Sharma <Rahul.Sharma@samsung.com>
+>
+> Enable hdmi for exynos5250 based snow board and exynos5420
+> based peach pit board. It also adds properties to hdmi nodes
+> for accessing hdmiphy as simple phys.
+>
+> V3:
+> 1) Re-spin on dependent patches.
+> 2) Added patch to enable hdmi for Peach-pi board.
+>
+> V2:
+> 1) Re-spin on dependent patches.
+> 2) Added patch to remove chip specific hdmi hpd gpio from
+> board file top SoC file.
+>
+> This series is based on Kukjin Kims, for-next branch.
+>
+> It is dependent on
+> 1) Arun's patch for adding peach-pit board dts file at
+> http://www.spinics.net/lists/linux-samsung-soc/msg30103.html. [Patch is 'ACK'ed.]
+> 2) Sachin's patch for snow board dts file at
+> https://patches.linaro.org/28325/
+> 3) DRM Hdmi driver patch which is changing the DT binding at
+> http://www.spinics.net/lists/linux-samsung-soc/msg28052.html
+> 4) Arun's patches for basic Exynos5800 support, available at
+> http://comments.gmane.org/gmane.linux.kernel.samsung-soc/30667
+> [Already Applied in Kukjin's v3.16-next/soc-exynos]
+>
 
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
-Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Updating the dependency:
+1) Sachin's patch for snow board dts file at
+       https://patches.linaro.org/28325/
+2) DRM Hdmi driver patch which is changing the DT binding at
+       http://www.spinics.net/lists/linux-samsung-soc/msg28052.html
 
-v8:
- - Split interrupt bindings into separate cells
- - Add explicit bus number range
+All other patches are already Applied in Kukjin's for-next and
+v3.16-next/soc-exynos branches.
 
-v7:
- - Change binding description of clocks to 'clock specifiers'
-
-v6:
- - Correct DT bindings description for reg and clocks
-
-v5:
- - Add PCIe bus clock reference
- - Add additional interrupt bindings
- - Use dma-ranges property to specify inbound memory regions
-
-Signed-off-by: Phil Edworthy <phil.edworthy@renesas.com>
----
- Documentation/devicetree/bindings/pci/rcar-pci.txt | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci.txt
-
-diff --git a/Documentation/devicetree/bindings/pci/rcar-pci.txt b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-new file mode 100644
-index 0000000..29d3b98
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/rcar-pci.txt
-@@ -0,0 +1,47 @@
-+* Renesas RCar PCIe interface
-+
-+Required properties:
-+- compatible: should contain one of the following
-+	"renesas,pcie-r8a7779", "renesas,pcie-r8a7790", "renesas,pcie-r8a7791"
-+- reg: base address and length of the pcie controller registers.
-+- #address-cells: set to <3>
-+- #size-cells: set to <2>
-+- bus-range: PCI bus numbers covered
-+- device_type: set to "pci"
-+- ranges: ranges for the PCI memory and I/O regions.
-+- dma-ranges: ranges for the inbound memory regions.
-+- interrupts: two interrupt sources for MSI interrupts, followed by interrupt
-+	source for hardware related interrupts (e.g. link speed change).
-+- #interrupt-cells: set to <1>
-+- interrupt-map-mask and interrupt-map: standard PCI properties
-+	to define the mapping of the PCIe interface to interrupt
-+	numbers.
-+- clocks: from common clock binding: clock specifiers for the PCIe controller
-+	and PCIe bus clocks.
-+- clock-names: from common clock binding: should be "pcie" and "pcie_bus".
-+
-+Example:
-+
-+SoC specific DT Entry:
-+
-+	pcie: pcie@fe000000 {
-+		compatible = "renesas,pcie-r8a7791";
-+		reg = <0 0xfe000000 0 0x80000>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		bus-range = <0x00 0xff>;
-+		device_type = "pci";
-+		ranges = <0x01000000 0 0x00000000 0 0xfe100000 0 0x00100000
-+			  0x02000000 0 0xfe200000 0 0xfe200000 0 0x00200000
-+			  0x02000000 0 0x30000000 0 0x30000000 0 0x08000000
-+			  0x42000000 0 0x38000000 0 0x38000000 0 0x08000000>;
-+		dma-ranges = <0x42000000 0 0x40000000 0 0x40000000 0 0x40000000
-+			      0x42000000 2 0x00000000 2 0x00000000 0 0x40000000>;
-+		interrupts = <0 116 4>, <0 117 4>, <0 118 4>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0 0 0 0>;
-+		interrupt-map = <0 0 0 0 &gic 0 116 4>;
-+		clocks = <&mstp3_clks R8A7791_CLK_PCIE>, <&pcie_bus_clk>;
-+		clock-names = "pcie", "pcie_bus";
-+		status = "disabled";
-+	};
--- 
-1.9.1
+> Rahul Sharma (5):
+>   ARM: dts: enable hdmi for exynos5250 based snow board
+>   ARM: dts: change to correct compatible string for exynos5420 hdmi
+>   ARM: dts: enable hdmi for exynos5420 based peach-pit board
+>   ARM: dts: remove chip specific hdmi hpd pin from board
+>   ARM: dts: enable hdmi for exynos5800 based peach-pi board
+>
+>  arch/arm/boot/dts/exynos5250-cros-common.dtsi |    6 +++++-
+>  arch/arm/boot/dts/exynos5250-pinctrl.dtsi     |    7 +++++++
+>  arch/arm/boot/dts/exynos5250-snow.dts         |    7 +++++++
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts    |   19 ++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420-pinctrl.dtsi     |    7 +++++++
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts     |    9 ---------
+>  arch/arm/boot/dts/exynos5420.dtsi             |    7 ++++++-
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts     |   26 +++++++++++++++++++++++++
+>  8 files changed, 77 insertions(+), 11 deletions(-)
+>
+> --
+> 1.7.9.5
+>
