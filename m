@@ -1,69 +1,68 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: [PATCH] powerpc: fix skipping call to
- early_init_fdt_scan_reserved_mem
-Date: Mon, 12 May 2014 10:42:04 +1000
-Message-ID: <1399855324.17624.53.camel@pasglop>
-References: <1398837832-30052-1-git-send-email-robherring2@gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for
+ configuring the iATU
+Date: Mon, 12 May 2014 10:44:07 +0900
+Message-ID: <006501cf6d83$a9f39510$fddabf30$%han@samsung.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com>
+ <4764413.ZAEU5S5p0p@wuerfel> <000201cf6a9c$9dd295e0$d977c1a0$%han@samsung.com>
+ <6882241.amuhzvbd8n@wuerfel> <536CC0F1.301@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398837832-30052-1-git-send-email-robherring2@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Paul Mackerras <paulus@samba.org>, linuxppc-dev@lists.ozlabs.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-reply-to: <536CC0F1.301@ti.com>
+Content-language: ko
+Sender: linux-omap-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>
+Cc: 'Arnd Bergmann' <arnd@arndb.de>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2014-04-30 at 01:03 -0500, Rob Herring wrote:
-> From: Rob Herring <robh@kernel.org>
+On Friday, May 09, 2014 8:50 PM, Kishon Vijay Abraham I wrote:
+> On Thursday 08 May 2014 02:48 PM, Arnd Bergmann wrote:
+> > On Thursday 08 May 2014 18:05:11 Jingoo Han wrote:
+> >> On Tuesday, May 06, 2014 10:59 PM, Arnd Bergmann wrote:
+> >>> On Tuesday 06 May 2014 19:03:52 Kishon Vijay Abraham I wrote:
+> >>>> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
+> >>>> address. So whenever the cpu issues a read/write request, the 4 most
+> >>>> significant bits are used by L3 to determine the target controller.
+> >>>> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
+> >>>> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
+> >>>> the outbound translation window the *base* should be programmed as 0x000_0000.
+> >>>> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
+> >>>> we have programmed in the translation window with base as 0x000_0000.
+> >>>>
+> >>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>>> Cc: Marek Vasut <marex@denx.de>
+> >>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >>>> Acked-by: Jingoo Han <jg1.han@samsung.com>
+> >>>> Acked-by: Mohit Kumar <mohit.kumar@st.com>
+> >>>
+> >>> Sorry, but NAK.
+> >>>
+> >>> We have a standard 'dma-ranges' property to handle this, so use it.
+> >>>
+> >>> See the x-gene PCIe driver patches for an example. Please also talk
+> >>> to Santosh about it, as he is implementing generic support for
+> >>> parsing dma-ranges in platform devices at the moment.
+> >>
+> >> Hi Arnd,
+> >>
+> >> Do you mean the following patch?
+> >> http://www.spinics.net/lists/kernel/msg1737725.html
+> >>
+> >
+> > That is the patch Santosh did for platform devices, which is related but not
+> > what I meant here. For the PCI inbound window setup, please have a look
+> > at https://lkml.org/lkml/2014/3/19/607
 > 
-> The call to early_init_fdt_scan_reserved_mem will be skipped if
-> reserved-ranges is not found. Move the call earlier so that it is called
-> unconditionally.
-> 
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> For some reason lkml is not showing any contents. Do you have a different link?
 
-Acked-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Hi Kishon,
 
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Tested-by: Stephen Chivers <schivers@csc.com>
-> ---
-> I found this issue in testing of my fdt clean-up series (thanks to 
-> Stephen). Since the reserved memory support is new, I don't think it is 
-> critical to fix this for 3.15. I plan to include this with my fdt series 
-> for 3.16 unless I hear otherwise.
+Please refer to the following link. :-)
+http://www.spinics.net/lists/linux-pci/msg29855.html
 
-Sure, go for it.
 
-Cheers,
-Ben.
+Best regards,
+Jingoo Han
 
-> Rob
-> 
->  arch/powerpc/kernel/prom.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-> index 668aa47..d657549 100644
-> --- a/arch/powerpc/kernel/prom.c
-> +++ b/arch/powerpc/kernel/prom.c
-> @@ -567,6 +567,8 @@ static void __init early_reserve_mem_dt(void)
->  	unsigned long i, len, dt_root;
->  	const __be32 *prop;
->  
-> +	early_init_fdt_scan_reserved_mem();
-> +
->  	dt_root = of_get_flat_dt_root();
->  
->  	prop = of_get_flat_dt_prop(dt_root, "reserved-ranges", &len);
-> @@ -589,8 +591,6 @@ static void __init early_reserve_mem_dt(void)
->  			memblock_reserve(base, size);
->  		}
->  	}
-> -
-> -	early_init_fdt_scan_reserved_mem();
->  }
->  
->  static void __init early_reserve_mem(void)
