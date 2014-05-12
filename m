@@ -1,94 +1,82 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH v4 01/03] ARM: sunxi: Add documentation
- for sunxi consumer infrared devices
-Date: Mon, 12 May 2014 16:55:51 +0800
-Message-ID: <CAGb2v66OgDgznWF5_2Yoiy_zb2_YNV-REsfhZ3QqBN-tkOJpZQ@mail.gmail.com>
-References: <d641a69a-01b4-443d-b121-48d13f46ee03@googlegroups.com> <6a8ffca8-d586-46f6-96e5-4e132ba0f368@googlegroups.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
+Date: Mon, 12 May 2014 10:59:43 +0200
+Message-ID: <1399885183.5016.4.camel@weser.hi.pengutronix.de>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
+	 <20140424175844.GD29593@google.com>
+	 <1398421265.4657.25.camel@weser.hi.pengutronix.de>
+	 <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
+	 <1398774686.4677.12.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBK4ZYKNQKGQEKF5AS3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <6a8ffca8-d586-46f6-96e5-4e132ba0f368-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "maxime.ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1398774686.4677.12.camel@weser.hi.pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Richard Zhu <r65037@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Tim Harvey <tharvey@gateworks.com>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org, kernel@pengutronix.de, Mark Rutland <mark.rutland@arm.com>, Sean Cross <xobs@kosagi.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Bjorn,
 
-On Wed, Apr 30, 2014 at 6:54 PM, =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=
-=D0=B4=D1=80 =D0=91=D0=B5=D1=80=D1=81=D0=B5=D0=BD=D0=B5=D0=B2 <bay@hackerdo=
-m.ru> wrote:
-> [PATCH v4 01/03] ARM: sunxi: Add documentation for sunxi consumer infrare=
-d
-> devices
->
-> This patch adds documentation for Device-Tree bindings for sunxi IR
-> controller.
->
-> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
->
-> diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> new file mode 100644
-> index 0000000..d502cf4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> @@ -0,0 +1,23 @@
-> +Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
-> +
-> +Required properties:
-> +- compatible    : should be "allwinner,sun7i-a20-ir";
-> +- clocks    : list of clock specifiers, corresponding to
-> +      entries in clock-names property;
-> +- clock-names    : should contain "apb0_ir0" and "ir0" entries;
-> +- interrupts    : should contain IR IRQ number;
-> +- reg    : should contain IO map address for IR.
-> +
-> +Optional properties:
-> +- linux,rc-map-name : Remote control map name.
-> +
-> +Example:
-> +
-> +ir0: ir@01c21800 {
-> +       compatible =3D "allwinner,sun7i-a20-ir";
-> +       clocks =3D <&apb0_gates 6>, <&ir0_clk>;
-> +       clock-names =3D "apb0_ir0", "ir0";
-> +       interrupts =3D <0 5 1>;
-> +       reg =3D <0x01C21800 0x40>;
-> +       linux,rc-map-name =3D "rc-rc6-mce";
+just a friendly reminder. It would be nice if you could pull those in.
 
-You seem to be mixing spaces and tabs here, with spaces in front.
-(Gmail messed this up. See the original post.)
-Please stick to using tabs first, and spaces for alignment.
+Shawn already pulled the DT change and as it is a binding change this
+means PCIe on i.MX6 is broken in -next, as long as the remaining patches
+are missing.
+
+Regards,
+Lucas
+ 
+Am Dienstag, den 29.04.2014, 14:31 +0200 schrieb Lucas Stach:
+> Hi Bjorn,
+> 
+> Am Freitag, den 25.04.2014, 08:39 -0600 schrieb Bjorn Helgaas:
+> [...]
+> > >> >   PCI: designware: split Exynos and i.MX bindings
+> > >> >   ARM: dts: imx6: update pcie to bring in line with new binding
+> > >> >   PCI: imx6: use new clock names
+> > >> >   PCI: imx6: drop old irq mapping
+> > >> >   PCI: imx6: rip out optional (and unused) irqs
+> > >> >   PCI: designware: make MSI isr shared irq aware
+> > >> >   PCI: imx6: add support for MSI
+> > >>
+> > >> What's the status of all these?  I would normally apply patches 4-8 of this
+> > >> series through my tree, given the appropriate acks, but I haven't seen
+> > >> those yet.  And I'm not sure what dependencies there are between the
+> > >> non-PCI patches and the PCI ones.
+> > >>
+> > > It's a complete binding change, so applying one part without the other
+> > > is going to horribly break things.
+> > >
+> > > So I would at least want to see an ack for the binding change on the
+> > > i.MX side from Shawn and Richard. This will need some follow on patches,
+> > > as some boards adding PCIe using the old binding have cropped up in
+> > > linux-next, but I can do the patches on short notice if everyone agrees
+> > > to merge this patchset.
+> > >
+> > > The designware part is pretty simple and doesn't change anything for
+> > > other users than i.MX. Though I would like to see an ack from Jingoo for
+> > > those.
+> > >
+> > > I have some more stuff in the pipes regarding multiple MSI irqs, that
+> > > depend on this series and also the Keystone people are waiting for this
+> > > to be applied in order to consolidate the clock handling of the
+> > > designware core driver, so it would be nice to get this moving again.
+> > 
+> > OK, just poke me again when you're ready for me to do something with these.
+> > 
+> 
+> As both Richard and Jingoo gave their ack for the respective patches I
+> think this is good to go in and I would expect all the PCI patches to go
+> through your tree for 3.16.
+> 
+> Shawn, if you are not okay with this change, please speak up now.
+> Otherwise please pick the dts change for 3.16. I'll go over linux-next
+> and prepare the patches to fix up the boards there.
+> 
 
 
-ChenYu
-
-> +};
->
->
-> =D1=81=D1=80=D0=B5=D0=B4=D0=B0, 30 =D0=B0=D0=BF=D1=80=D0=B5=D0=BB=D1=8F 2=
-014 =D0=B3., 16:51:12 UTC+6 =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=
-=B0=D1=82=D0=B5=D0=BB=D1=8C =D0=90=D0=BB=D0=B5=D0=BA=D1=81=D0=B0=D0=BD=D0=
-=B4=D1=80 =D0=91=D0=B5=D1=80=D1=81=D0=B5=D0=BD=D0=B5=D0=B2
-> =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:
->>
->> This patch introduces Consumer IR(CIR) support for sunxi boards.
->>
->> This is based on Alexsey Shestacov's work based on the original driver
->> supplied by Allwinner.
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
