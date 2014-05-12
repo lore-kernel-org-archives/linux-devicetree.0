@@ -1,36 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 3/4] arm: add basic support for Mediatek MT6589 boards
-Date: Mon, 12 May 2014 11:30:15 +0200
-Message-ID: <80525303.7Oax6ZBozr@wuerfel>
-References: <1399772463-859-1-git-send-email-matthias.bgg@gmail.com> <1399772463-859-4-git-send-email-matthias.bgg@gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH] printk/of_serial: fix serial console cessation part way
+ through boot.
+Date: Mon, 12 May 2014 11:33:17 +0200
+Message-ID: <CAMuHMdXQaOewxwe4UoiWj4KoT2Lybug2Spg4TzXd5g_Mfi-1Dg@mail.gmail.com>
+References: <20140510053734.AF4E9E0692@canberra.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1399772463-859-4-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140510053734.AF4E9E0692@canberra.localdomain>
+Sender: linux-serial-owner@vger.kernel.org
+To: Stephen Chivers <schivers@csc.com>
+Cc: Jiri Slaby <jslaby@suse.cz>, Greg KH <gregkh@linuxfoundation.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, rob+dt@kernel.org, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Proctor <cproctor@csc.com>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 11 May 2014 03:41:02 Matthias Brugger wrote:
-> +
-> +static void __init mediatek_dt_init(void)
-> +{
-> +       of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-> +}
-> +
-> +static const char * const mediatek_board_dt_compat[] = {
-> +       "mediatek,mt6589",
-> +       NULL,
-> +};
-> +
-> +DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
-> +       .init_machine   = mediatek_dt_init,
-> +       .dt_compat      = mediatek_board_dt_compat,
-> +MACHINE_END
+Hi Stephen,
 
-Since the mediatek_dt_init function now only does the default populate
-call, you can leave it out completely and keep only the compat list.
+On Sat, May 10, 2014 at 7:37 AM, Stephen Chivers <schivers@csc.com> wrote:
+> Commit 5f5c9ae56c38942623f69c3e6dc6ec78e4da2076
+> "serial_core: Unregister console in uart_remove_one_port()"
+> fixed a crash where a serial port was removed but
+> not deregistered as a console.
+>
+> There is a side effect of that commit for platforms having serial consoles
+> and of_serial configured (CONFIG_SERIAL_OF_PLATFORM). The serial console
+> is disabled midway through the boot process.
+>
+> This cessation of the serial console affects PowerPC computers
+> such as the MVME5100 and SAM440EP.
+>
+> The sequence is:
+>
+>         bootconsole [udbg0] enabled
+>         ....
+>         serial8250/16550 driver initialises and registers its UARTS,
+>         one of these is the serial console.
+>         console [ttyS0] enabled
+>         ....
+>         of_serial probes "platform" devices, registering them as it goes.
+>         One of these is the serial console.
+>         console [ttyS0] disabled.
+>
+> The disabling of the serial console is due to:
+>
+>         a.  unregister_console in printk not clearing the
+>             CONS_ENABLED bit in the console flags,
+>             even though it has announced that the console is disabled; and
 
-	Arnd
+This part re-attaches the serial console on unbind/bind with the sh-sci driver,
+too, which didn't work before. Cool, thanks!
+
+>         b.  of_platform_serial_probe in of_serial not setting the port type
+>             before it registers with serial8250_register_8250_port.
+
+This part I couldn't test.
+
+> This patch ensures that the serial console is re-enabled when of_serial
+> registers a serial port that corresponds to the designated console.
+>
+> Signed-off-by: Stephen Chivers <schivers@csc.com>
+> Tested-by: Stephen Chivers <schivers@csc.com>
+
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> [unregister_console]
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
