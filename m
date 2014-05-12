@@ -1,93 +1,45 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3 4/4] mtd: nand: omap: Documentation: How to select
- correct ECC scheme for your device ?
-Date: Mon, 12 May 2014 12:54:05 -0700
-Message-ID: <20140512195405.GN28907@ld-irv-0074>
-References: <1399625955-20882-1-git-send-email-pekon@ti.com>
- <1399625955-20882-5-git-send-email-pekon@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Mon, 12 May 2014 21:53:41 +0200
+Message-ID: <5235938.KqUI5iMopI@wuerfel>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com> <25333129.urqEa0mCI8@wuerfel> <537112FC.1040204@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399625955-20882-5-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pekon Gupta <pekon@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap <linux-omap@vger.kernel.org>, linux-mtd <linux-mtd@lists.infradead.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Stefan Roese <sr@denx.de>, Felipe Balbi <balbi@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537112FC.1040204-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-+ devicetree@vger.kernel.org
-
-On Fri, May 09, 2014 at 02:29:15PM +0530, Pekon Gupta wrote:
->  - Adds DT binding property for BCH16 ECC scheme
->  - Adds describes on factors which determine choice of ECC scheme for particular device
+On Monday 12 May 2014 12:29:16 Stephen Warren wrote:
+> On 05/12/2014 12:10 PM, Arnd Bergmann wrote:
+> > On Monday 12 May 2014 10:19:16 Stephen Warren wrote:
+> >> IIRC, the current Nouveau support for Tegra even makes use of that
+> >> feature, although I think that's a temporary thing that we're hoping to
+> >> get rid of once the Tegra support in Nouveau gets more mature.
+> > 
+> > But the important point here is that you wouldn't use the dma-mapping
+> > API to manage this. First of all, the CPU is special anyway, but also
+> > if you do a device-to-device DMA into the GPU address space and that
+> > ends up being redirected to memory through the IOMMU, you still wouldn't
+> > manage the I/O page tables through the interfaces of the device doing the
+> > DMA, but through some private interface of the GPU.
 > 
-> Signed-off-by: Pekon Gupta <pekon@ti.com>
-> ---
->  .../devicetree/bindings/mtd/gpmc-nand.txt          | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index 5e1f31b..f2dbb33 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -28,6 +28,8 @@ Optional properties:
->  		"ham1"		1-bit Hamming ecc code
->  		"bch4"		4-bit BCH ecc code
->  		"bch8"		8-bit BCH ecc code
-> +		"bch16"		16-bit BCH ECC code
-> +		Refer below "How to select correct ECC scheme for your device ?"
->  
->   - ti,nand-xfer-type:		A string setting the data transfer type. One of:
->  
-> @@ -90,3 +92,40 @@ Example for an AM33xx board:
->  		};
->  	};
->  
-> +How to select correct ECC scheme for your device ?
-> +--------------------------------------------------
-> +Higher ECC scheme usually means better protection against bit-flips and
-> +increased system lifetime. However, selection of ECC scheme is dependent
-> +on various other factors like;
-> +(1) Presence of supporting hardware engines on SoC.
-> +	Some legacy OMAP SoC do not have ELM h/w engine thus such SoC cannot
-> +	support BCHx_HW ECC schemes. But such SoC can support
-> +	BCHx_HW_DETECTION_SW ECC schemes which use s/w library with slight
-> +	CPU performance panalty only when too bit-flips are detected.
+> Why not? If something wants to DMA to a memory region, irrespective of
+> whether the GPU MMU (or any MMU) is in between those master transactions
+> and the RAM or not, surely the driver should always use the DMA mapping
+> API to set that up? Anything else just means using custom APIs, and
+> isn't the whole point of the DMA mapping API to provide a standard API
+> for that purpose?
 
-s/panalty/penalty/
+It sounds like an abuse of the hardware if you use the GPU's IOMMU
+to set up DMA for a random non-GPU DMA master. I'd prefer not to go
+there and instead use swiotlb.
 
-Please do not refer to Linux Kconfig symbols and jargon. It's already
-confusing to understand what your various permutations of
-BCHx_HW_DETECTION_SW mean. Please simply speak of hardware support and
-software library support that can be used to fill in the gaps, using
-plain English. This is not the place to discuss Linux details.
-
-> +(2) Device parameters like OOBSIZE
-> +	Higher ECC schemes require more OOB/Spare area to store ECC.
-> +	So choice of ECC scheme is limited by NAND oobsize. In general
-> +	following expression help determine whether given device can
-> +	accomodate ECC syndrome or not:
-> +	"2 + (PAGESIZE / 512) * ECC_BYTES" >= OOBSIZE
-> +	where
-> +		OOBSIZE		number of bytes in OOB/spare area
-> +		PAGESIZE	number of bytes in main-area of device page
-> +		ECC_BYTES	number of ECC bytes generated to protect
-> +		                512 bytes of data, which is:
-> +				'3' for HAM1_xx ecc schemes
-> +				'7' for BCH4_xx ecc schemes
-> +				'14' for BCH8_xx ecc schemes
-> +				'26' for BCH16_xx ecc schemes
-> +
-> +	Example(a): For a device with PAGESIZE = 2048 and OOBSIZE = 64
-> +		Number of spare/OOB bytes required for using BCH16 ecc-scheme
-> +		"(2 + (2048 / 512) * 26) = 106 bytes" is greater than OOBSIZE
-> +		(As per above table for BCH16 ecc-scheme, ECC_BYTES = 26)
-> +		Thus BCH16 cannot be supported on 2K NAND with OOBSIZE=64 bytes
-> +
-> +	Example(b): For a device with PAGESIZE = 2048 and OOBSIZE = 128
-> +		Number of spare/OOB bytes required for using BCH16 ecc-scheme
-> +		"(2 + (2048 / 512) * 26) = 106 bytes" is less than OOBSIZE
-> +		(As per above table for BCH16 ecc-scheme, ECC_BYTES = 26)
-> +		Thus BCH16 can be supported on 4K NAND with OOBSIZE=128 bytes
-
-Brian
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
