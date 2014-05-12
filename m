@@ -1,36 +1,58 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v3 5/6] dt-bindings: add documentation for Mediatek SoC
-Date: Tue, 13 May 2014 01:49:29 +0200
-Message-ID: <1399938570-11356-6-git-send-email-matthias.bgg@gmail.com>
+Subject: [PATCH v3 2/6] dt-bindings: add mtk-timer bindings
+Date: Tue, 13 May 2014 01:49:26 +0200
+Message-ID: <1399938570-11356-3-git-send-email-matthias.bgg@gmail.com>
 References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, andrew@lunn.ch, linux-doc@vger.kernel.org, gregory.clement@free-electrons.com, thierry.reding@gmail.com, heiko.stuebner@bq.com, linux@arm.linux.org.uk, arnd@arndb.de, daniel.lezcano@linaro.org, florian.vaussard@epfl.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, robh+dt@kernel.org, matthias.bgg@gmail.com, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, rdunlap@infradead.org, sboyd@codeaurora.org, silvio.fricke@gmail.com, galak@codeaurora.org, olof@lixom.net, maxime.ripard@free-electrons.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a DT binding documentation for the MT6589 SoC from Mediatek.
+Add binding documentation for the General Porpose Timer driver of
+the Mediatek SoCs.
 
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
+ .../devicetree/bindings/timer/mediatek,mtk-timer.txt   | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt b/Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
+diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
 new file mode 100644
-index 0000000..d6ac71f
+index 0000000..d0f2df3
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
-@@ -0,0 +1,8 @@
-+Mediatek MT6589 Platforms Device Tree Bindings
++++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+@@ -0,0 +1,18 @@
++Mediatek MT6589, MT6577 and MT6572 Timers
++---------------------------------------
 +
-+Boards with a SoC of the Mediatek MT6589 shall have the following property:
++Required properties:
++- compatible: Should be "mediatek,mtk6589-timer"
++- reg: Should contain location and length for timers register.
++- clocks: phandle to the clock source; the first refers to a 13 MHz fixed
++		system clock and the second handle to a 32 KHz fixed RTC
++		clock.
 +
-+Required root node property:
++Examples:
 +
-+compatible: must contain "mediatek,mt6589"
-+
++	timer {
++		compatible = "mediatek,mtk6589-timer";
++		reg = <0x10008000 0x80>;
++		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&system_clk>, <&rtc_clk>;
++	};
 -- 
 1.8.1.2
