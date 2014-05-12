@@ -1,68 +1,45 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 10/12] drivers: clk: st: STiH407: Support for clockgenA9
-Date: Mon, 12 May 2014 18:06:38 +0200
-Message-ID: <1399910800-12847-11-git-send-email-gabriel.fernandez@linaro.org>
-References: <1399910800-12847-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Mon, 12 May 2014 10:19:16 -0600
+Message-ID: <5370F484.9030209@wwwdotorg.org>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com> <20140502132327.GA14612@ulmo> <5363E8E9.6000908@wwwdotorg.org> <4356389.0gMcB71fJD@wuerfel> <20140509105638.GB3921@e103592.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1399910800-12847-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, Olivier Bideau <olivier.bideau@st.com>, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140509105638.GB3921-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The patch added support for DT registration of ClockGenA9
-It includes c32 type PLL.
+On 05/09/2014 04:56 AM, Dave Martin wrote:
+> On Fri, May 02, 2014 at 09:06:43PM +0200, Arnd Bergmann wrote:
+>> On Friday 02 May 2014 12:50:17 Stephen Warren wrote:
+...
+>>> Now, perhaps there are devices which themselves control whether
+>>> transactions are sent to the IOMMU or direct to RAM, but I'm not
+>>> familiar with them. Is the GPU in that category, since it has its own
+>>> GMMU, albeit chained into the SMMU IIRC?
+>>
+>> Devices with a built-in IOMMU such as most GPUs are also easy enough
+>> to handle: There is no reason to actually show the IOMMU in DT and
+>> we can just treat the GPU as a black box.
+> 
+> It's impossible for such a built-in IOMMU to be shared with other
+> devices, so that's probably reasonable.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
----
- drivers/clk/st/clkgen-pll.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+I don't believe that's true.
 
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index cb4e5b6..2c6bba7 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -216,6 +216,18 @@ static struct clkgen_pll_data st_pll3200c32_407_c0_1 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
- 
-+static struct clkgen_pll_data st_pll3200c32_407_a9 = {
-+	/* 407 A9 */
-+	.pdn_status	= CLKGEN_FIELD(0x1a8,	0x1,			0),
-+	.locked_status	= CLKGEN_FIELD(0x87c,	0x1,			0),
-+	.ndiv		= CLKGEN_FIELD(0x1b0,	C32_NDIV_MASK,		0),
-+	.idf		= CLKGEN_FIELD(0x1a8,	C32_IDF_MASK,		25),
-+	.num_odfs = 1,
-+	.odf		= { CLKGEN_FIELD(0x1b0, C32_ODF_MASK,		8) },
-+	.odf_gate	= { CLKGEN_FIELD(0x1ac, 0x1,			28) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
-+
- /**
-  * DOC: Clock Generated by PLL, rate set and enabled by bootloader
-  *
-@@ -618,6 +630,10 @@ static struct of_device_id c32_pll_of_match[] = {
- 		.compatible = "st,stih407-plls-c32-c0_1",
- 		.data = &st_pll3200c32_407_c0_1,
- 	},
-+	{
-+		.compatible = "st,stih407-plls-c32-a9",
-+		.data = &st_pll3200c32_407_a9,
-+	},
- 	{}
- };
- 
--- 
-1.9.1
+For example, on Tegra, the CPU (and likely anything that can bus-master
+the relevant bus) can send transactions into the GPU, which can then
+turn them around towards RAM, and those likely then go through the MMU
+inside the GPU.
+
+IIRC, the current Nouveau support for Tegra even makes use of that
+feature, although I think that's a temporary thing that we're hoping to
+get rid of once the Tegra support in Nouveau gets more mature.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
