@@ -1,139 +1,61 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 08/12] drivers: clk: st: STiH407: Support for clockgenC0
-Date: Mon, 12 May 2014 18:06:36 +0200
-Message-ID: <1399910800-12847-9-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 07/12] drivers: clk: st: Add quadfs reset handling
+Date: Mon, 12 May 2014 18:06:35 +0200
+Message-ID: <1399910800-12847-8-git-send-email-gabriel.fernandez@linaro.org>
 References: <1399910800-12847-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1399910800-12847-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Olivier Bideau <olivier.bideau@st.com>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, Olivier Bideau <olivier.bideau@st.com>, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The patch added support for DT registration of ClockGenC0
-It includes 2 c32 type PLL and a 660 Quadfs.
+This patch adds the support of quadfs reset handling.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
 ---
- drivers/clk/st/clkgen-fsyn.c | 47 ++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/st/clkgen-pll.c  | 32 ++++++++++++++++++++++++++++++
- 2 files changed, 79 insertions(+)
+ drivers/clk/st/clkgen-fsyn.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
-index 46b29c4..68c6786 100644
+index 5aae17c..46b29c4 100644
 --- a/drivers/clk/st/clkgen-fsyn.c
 +++ b/drivers/clk/st/clkgen-fsyn.c
-@@ -255,6 +255,49 @@ static struct clkgen_quadfs_data st_fs660c32_F_416 = {
- 	.get_rate	= clk_fs660c32_dig_get_rate,
- };
+@@ -70,12 +70,14 @@ struct clkgen_quadfs_data {
+ 	bool powerup_polarity;
+ 	bool standby_polarity;
+ 	bool nsdiv_present;
++	bool nrst_present;
+ 	struct clkgen_field ndiv;
+ 	struct clkgen_field ref_bw;
+ 	struct clkgen_field nreset;
+ 	struct clkgen_field npda;
+ 	struct clkgen_field lock_status;
  
-+static struct clkgen_quadfs_data st_fs660c32_C_407 = {
-+	.nrst_present = true,
-+	.nrst	= { CLKGEN_FIELD(0x2f0, 0x1, 0),
-+		    CLKGEN_FIELD(0x2f0, 0x1, 1),
-+		    CLKGEN_FIELD(0x2f0, 0x1, 2),
-+		    CLKGEN_FIELD(0x2f0, 0x1, 3) },
-+	.npda	= CLKGEN_FIELD(0x2f0, 0x1, 12),
-+	.nsb	= { CLKGEN_FIELD(0x2f0, 0x1, 8),
-+		    CLKGEN_FIELD(0x2f0, 0x1, 9),
-+		    CLKGEN_FIELD(0x2f0, 0x1, 10),
-+		    CLKGEN_FIELD(0x2f0, 0x1, 11) },
-+	.nsdiv_present = true,
-+	.nsdiv	= { CLKGEN_FIELD(0x304, 0x1, 24),
-+		    CLKGEN_FIELD(0x308, 0x1, 24),
-+		    CLKGEN_FIELD(0x30c, 0x1, 24),
-+		    CLKGEN_FIELD(0x310, 0x1, 24) },
-+	.mdiv	= { CLKGEN_FIELD(0x304, 0x1f, 15),
-+		    CLKGEN_FIELD(0x308, 0x1f, 15),
-+		    CLKGEN_FIELD(0x30c, 0x1f, 15),
-+		    CLKGEN_FIELD(0x310, 0x1f, 15) },
-+	.en	= { CLKGEN_FIELD(0x2fc, 0x1, 0),
-+		    CLKGEN_FIELD(0x2fc, 0x1, 1),
-+		    CLKGEN_FIELD(0x2fc, 0x1, 2),
-+		    CLKGEN_FIELD(0x2fc, 0x1, 3) },
-+	.ndiv	= CLKGEN_FIELD(0x2f4, 0x7, 16),
-+	.pe	= { CLKGEN_FIELD(0x304, 0x7fff, 0),
-+		    CLKGEN_FIELD(0x308, 0x7fff, 0),
-+		    CLKGEN_FIELD(0x30c, 0x7fff, 0),
-+		    CLKGEN_FIELD(0x310, 0x7fff, 0) },
-+	.sdiv	= { CLKGEN_FIELD(0x304, 0xf, 20),
-+		    CLKGEN_FIELD(0x308, 0xf, 20),
-+		    CLKGEN_FIELD(0x30c, 0xf, 20),
-+		    CLKGEN_FIELD(0x310, 0xf, 20) },
-+	.lockstatus_present = true,
-+	.lock_status = CLKGEN_FIELD(0x2A0, 0x1, 24),
-+	.powerup_polarity = 1,
-+	.standby_polarity = 1,
-+	.pll_ops	= &st_quadfs_pll_c32_ops,
-+	.rtbl		= fs660c32_rtbl,
-+	.rtbl_cnt	= ARRAY_SIZE(fs660c32_rtbl),
-+	.get_rate	= clk_fs660c32_dig_get_rate,
-+};
-+
- /**
-  * DOC: A Frequency Synthesizer that multiples its input clock by a fixed factor
-  *
-@@ -938,6 +981,10 @@ static struct of_device_id quadfs_of_match[] = {
- 		.compatible = "st,stih416-quadfs660-F",
- 		.data = (void *)&st_fs660c32_F_416
- 	},
-+	{
-+		.compatible = "st,stih407-quadfs660-C",
-+		.data = (void *)&st_fs660c32_C_407
-+	},
- 	{}
- };
++	struct clkgen_field nrst[QUADFS_MAX_CHAN];
+ 	struct clkgen_field nsb[QUADFS_MAX_CHAN];
+ 	struct clkgen_field en[QUADFS_MAX_CHAN];
+ 	struct clkgen_field mdiv[QUADFS_MAX_CHAN];
+@@ -615,6 +617,9 @@ static int quadfs_fsynth_enable(struct clk_hw *hw)
  
-diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
-index f1e27f9..cb4e5b6 100644
---- a/drivers/clk/st/clkgen-pll.c
-+++ b/drivers/clk/st/clkgen-pll.c
-@@ -192,6 +192,30 @@ static struct clkgen_pll_data st_pll3200c32_407_a0 = {
- 	.ops		= &stm_pll3200c32_ops,
- };
+ 	CLKGEN_WRITE(fs, nsb[fs->chan], !fs->data->standby_polarity);
  
-+static struct clkgen_pll_data st_pll3200c32_407_c0_0 = {
-+	/* 407 C0 PLL0 */
-+	.pdn_status	= CLKGEN_FIELD(0x2a0,	0x1,			8),
-+	.locked_status	= CLKGEN_FIELD(0x2a0,	0x1,			24),
-+	.ndiv		= CLKGEN_FIELD(0x2a4,	C32_NDIV_MASK,		16),
-+	.idf		= CLKGEN_FIELD(0x2a4,	C32_IDF_MASK,		0x0),
-+	.num_odfs = 1,
-+	.odf		= { CLKGEN_FIELD(0x2b4, C32_ODF_MASK,		0) },
-+	.odf_gate	= { CLKGEN_FIELD(0x2b4, 0x1,			6) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
++	if (fs->data->nrst_present)
++		CLKGEN_WRITE(fs, nrst[fs->chan], 0);
 +
-+static struct clkgen_pll_data st_pll3200c32_407_c0_1 = {
-+	/* 407 C0 PLL1 */
-+	.pdn_status	= CLKGEN_FIELD(0x2c8,	0x1,			8),
-+	.locked_status	= CLKGEN_FIELD(0x2c8,	0x1,			24),
-+	.ndiv		= CLKGEN_FIELD(0x2cc,	C32_NDIV_MASK,		16),
-+	.idf		= CLKGEN_FIELD(0x2cc,	C32_IDF_MASK,		0x0),
-+	.num_odfs = 1,
-+	.odf		= { CLKGEN_FIELD(0x2dc, C32_ODF_MASK,		0) },
-+	.odf_gate	= { CLKGEN_FIELD(0x2dc, 0x1,			6) },
-+	.ops		= &stm_pll3200c32_ops,
-+};
-+
- /**
-  * DOC: Clock Generated by PLL, rate set and enabled by bootloader
-  *
-@@ -586,6 +610,14 @@ static struct of_device_id c32_pll_of_match[] = {
- 		.compatible = "st,stih407-plls-c32-a0",
- 		.data = &st_pll3200c32_407_a0,
- 	},
-+	{
-+		.compatible = "st,stih407-plls-c32-c0_0",
-+		.data = &st_pll3200c32_407_c0_0,
-+	},
-+	{
-+		.compatible = "st,stih407-plls-c32-c0_1",
-+		.data = &st_pll3200c32_407_c0_1,
-+	},
- 	{}
- };
+ 	if (fs->lock)
+ 		spin_unlock_irqrestore(fs->lock, flags);
  
 -- 
 1.9.1
