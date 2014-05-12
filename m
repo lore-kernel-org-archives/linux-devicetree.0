@@ -1,53 +1,71 @@
-From: Robert Nelson <robertcnelson@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: am335x-bone-common: Add i2c2 definition
-Date: Mon, 12 May 2014 14:59:18 -0500
-Message-ID: <CAOCHtYiYwx_bEsyqkbUTTAbhBYESzvfBOOYeVuFXPS1dDy0ZKA@mail.gmail.com>
-References: <1399686184-1594-1-git-send-email-mranostay@gmail.com>
-	<20140512195050.GB5668@atomide.com>
+From: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC] Describing arbitrary bus mastering relationships in DT
+Date: Mon, 12 May 2014 13:02:13 -0700
+Message-ID: <CANEJEGuCbE0THLvK-6pXuN+QUA=LZON97KTpPK-0QUJPToXkdQ@mail.gmail.com>
+References: <20140501173248.GD3732@e103592.cambridge.arm.com>
+	<20140509105638.GB3921@e103592.cambridge.arm.com>
+	<5370F484.9030209@wwwdotorg.org>
+	<25333129.urqEa0mCI8@wuerfel>
+	<537112FC.1040204@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140512195050.GB5668@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Matt Ranostay <mranostay@gmail.com>, robh+dt@kernel.org, mark.rutland@arm.com, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux kernel <linux-kernel@vger.kernel.org>, pantelis.antoniou@gmail.com, matt.porter@linaro.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537112FC.1040204-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Linux DeviceTree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
->>
->> +     i2c2_pins: pinmux_i2c2_pins {
->> +             pinctrl-single,pins = <
->> +                     0x178 (PIN_INPUT_PULLUP | MUX_MODE3)    /* uart1_ctsn.i2c2_sda */
->> +                     0x17c (PIN_INPUT_PULLUP | MUX_MODE3)    /* uart1_rtsn.i2c2_scl */
->> +             >;
->> +     };
->> +
->>       uart0_pins: pinmux_uart0_pins {
->>               pinctrl-single,pins = <
->>                       0x170 (PIN_INPUT_PULLUP | MUX_MODE0)    /* uart0_rxd.uart0_rxd */
->>
->> @@ -222,6 +229,15 @@
->>
->>  };
->>
->> +
->> +&i2c2 {
->> +     pinctrl-names = "default";
->> +     pinctrl-0 = <&i2c2_pins>;
->> +
->> +     status = "okay";
->> +     clock-frequency = <100000>;
->> +};
->> +
+On Mon, May 12, 2014 at 11:29 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+....
+>> But the important point here is that you wouldn't use the dma-mapping
+>> API to manage this. First of all, the CPU is special anyway, but also
+>> if you do a device-to-device DMA into the GPU address space and that
+>> ends up being redirected to memory through the IOMMU, you still wouldn't
+>> manage the I/O page tables through the interfaces of the device doing the
+>> DMA, but through some private interface of the GPU.
 >
-> If these pins are not used for i2c2 on some capes, this device
-> should be set to status = "disabled" state by default. Then
-> u-boot could re-enable it on the boards that have i2c2 in use.
+> Why not? If something wants to DMA to a memory region, irrespective of
+> whether the GPU MMU (or any MMU) is in between those master transactions
+> and the RAM or not, surely the driver should always use the DMA mapping
+> API to set that up?
 
-To-date, this is the i2c bus that all capes have placed an at24 eeprom
-for cape identification.
+No.  As one of the contributors to DMA API, I'm pretty confident it's
+not. It _could_ be used that way but it's certainly not the original
+design. P2P transactions are different since they are "less likely"
+(depends on arch and implementation) to participate in the CPU cache
+coherency or even be visible to the CPU. In particular, think of case
+where all transactions are locally routed behind a PCI bridge (or
+other fabric) and CPU/IOMMU/RAM controller never sees those.
 
-Regards,
+A long standing real example is in drivers/scsi/sym53c8xx_2 driver.
+The "scripts" engine needs to access local (on chip) RAM through PCI
+bus transactions. So it uses it's own PCI BAR registers to sort that
+out.
+In essence, "local PCI physical" addresses.  I believe the code is in
+sym_iomap_device(). No CPU or IOMMU is involved with this.  This
+driver otherwise uses the DMA API for all other host RAM accesses.
 
--- 
-Robert Nelson
-http://www.rcn-ee.com/
+> Anything else just means using custom APIs, and
+> isn't the whole point of the DMA mapping API to provide a standard API
+> for that purpose?
+
+yes and no. Yes, the generic DMA API is to provide DMA mapping
+services to hide the (or lack of) IOMMU AND provide Cache Coherency
+for DMA transactions to RAM that is visible to the CPU cache.
+
+In general, I'd argue transactions that route through an IOMMU need to
+work with the existing DMA API. Historically those transactions are
+routed "upstream" - away from other IO devices and thus not the case
+referred to here.
+
+If the IOMMU is part of a "graph topology" (vs a tree topology), the
+drivers will have to know if they use DMA API or not to access the
+intended target.
+
+cheers,
+grant
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
