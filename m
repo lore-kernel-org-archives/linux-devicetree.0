@@ -1,132 +1,33 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: keystone-evm: add spi nor flash support
-Date: Mon, 12 May 2014 16:02:37 +0300
-Message-ID: <1399899757-15767-1-git-send-email-grygorii.strashko@ti.com>
+From: Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun5i: Add new A10s r7 hdmi tv
+ dongle board
+Date: Mon, 12 May 2014 14:15:26 +0200
+Message-ID: <20140512121526.GA22297@skynet.be>
+References: <1399896666-6366-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDUNF5EHS4MBBYXWYKNQKGQESKU66KY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1399896666-6366-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+On Mon, May 12, 2014 at 02:11:06PM +0200, Hans de Goede wrote:
+> The R7 tv-dongle is an A10s based hdmi tv dongle, with 1G RAM, 4G nand flash,
+> and rtl8189es sdio wifi. It has a standard male hdmi connector, an USB host
+> port using an USB-A receptacle and a micro-usb receptacle for both power
+> and USB OTG.
+> 
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-k2hk, k2e, k2l EVM board have the same Micron N25Q128A11
-SPI NOR Flash installed on SPI0 bus.
+And where is this one documented?
 
-The NOR Flash is splitted on two partistions:
-partition@0
-	label = "u-boot-spl";
-	reg = <0x0 0x80000>;
-partition@1
-	label = "misc";
-	reg = <0x80000 0xf80000>;
-
-Hence, add SPI NOR Flash nodes to all k2hk, k2e, k2l EVM boards.
-
-Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/k2e-evm.dts  |   22 ++++++++++++++++++++++
- arch/arm/boot/dts/k2hk-evm.dts |   22 ++++++++++++++++++++++
- arch/arm/boot/dts/k2l-evm.dts  |   22 ++++++++++++++++++++++
- 3 files changed, 66 insertions(+)
-
-diff --git a/arch/arm/boot/dts/k2e-evm.dts b/arch/arm/boot/dts/k2e-evm.dts
-index fb7afab..c568f06 100644
---- a/arch/arm/boot/dts/k2e-evm.dts
-+++ b/arch/arm/boot/dts/k2e-evm.dts
-@@ -117,3 +117,25 @@
- 		};
- 	};
- };
-+
-+&spi0 {
-+	nor_flash: n25q128a11@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "Micron,n25q128a11";
-+		spi-max-frequency = <54000000>;
-+		m25p,fast-read;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "u-boot-spl";
-+			reg = <0x0 0x80000>;
-+			read-only;
-+		};
-+
-+		partition@1 {
-+			label = "misc";
-+			reg = <0x80000 0xf80000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/k2hk-evm.dts b/arch/arm/boot/dts/k2hk-evm.dts
-index d2aa102..1f90cbf 100644
---- a/arch/arm/boot/dts/k2hk-evm.dts
-+++ b/arch/arm/boot/dts/k2hk-evm.dts
-@@ -145,3 +145,25 @@
- 		reg = <0x50>;
- 	};
- };
-+
-+&spi0 {
-+	nor_flash: n25q128a11@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "Micron,n25q128a11";
-+		spi-max-frequency = <54000000>;
-+		m25p,fast-read;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "u-boot-spl";
-+			reg = <0x0 0x80000>;
-+			read-only;
-+		};
-+
-+		partition@1 {
-+			label = "misc";
-+			reg = <0x80000 0xf80000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/k2l-evm.dts b/arch/arm/boot/dts/k2l-evm.dts
-index 8ff2d33..fec4312 100644
---- a/arch/arm/boot/dts/k2l-evm.dts
-+++ b/arch/arm/boot/dts/k2l-evm.dts
-@@ -94,3 +94,25 @@
- 		};
- 	};
- };
-+
-+&spi0 {
-+	nor_flash: n25q128a11@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "Micron,n25q128a11";
-+		spi-max-frequency = <54000000>;
-+		m25p,fast-read;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "u-boot-spl";
-+			reg = <0x0 0x80000>;
-+			read-only;
-+		};
-+
-+		partition@1 {
-+			label = "misc";
-+			reg = <0x80000 0xf80000>;
-+		};
-+	};
-+};
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Luc Verhaegen.
