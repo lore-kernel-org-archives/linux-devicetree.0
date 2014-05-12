@@ -1,59 +1,58 @@
-From: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
-Date: Mon, 12 May 2014 03:22:09 -0700
-Message-ID: <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
-References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
- <20140422103642.GF7484@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
- <20140423170821.GJ5649@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
- <5360FB07.5030407@arm.com>
- <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6106CAF835F351419ADA79E4836E6EC71B6A53C826-r8ILAu4/owuq90oVIqnETxL4W9x8LtSr@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: 'Sudeep Holla' <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, 'Will Deacon' <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "'linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org'" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org'" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "'linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v3 0/5] ARM: dts: enable hdmi for exynos5 based peach and snow
+ boards
+Date: Mon, 12 May 2014 15:54:03 +0530
+Message-ID: <1399890248-27409-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-V2lsbCAmIFN1ZGVlcCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBO
-ZWlsIFpoYW5nDQo+IFNlbnQ6IDIwMTTlubQ15pyINeaXpSAxNDoyOA0KPiBUbzogU3VkZWVwIEhv
-bGxhOyBXaWxsIERlYWNvbg0KPiBDYzogbGludXhAYXJtLmxpbnV4Lm9yZy51azsgbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSRTogW1BBVENIIHY0
-XSBBUk06IHBlcmY6IHNhdmUvcmVzdG9yZSBwbXUgcmVnaXN0ZXJzIGluIHBtIG5vdGlmaWVyDQo+
-IA0KPiBTdWRlZXAsDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJv
-bTogU3VkZWVwIEhvbGxhIFttYWlsdG86c3VkZWVwLmhvbGxhQGFybS5jb21dDQo+ID4gU2VudDog
-MjAxNOW5tDTmnIgzMOaXpSAyMTozMQ0KPiA+IFRvOiBOZWlsIFpoYW5nOyBXaWxsIERlYWNvbg0K
-PiA+IENjOiBTdWRlZXAgSG9sbGE7IGxpbnV4QGFybS5saW51eC5vcmcudWs7DQo+ID4gbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
-b3JnOw0KPiA+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnDQo+ID4gU3ViamVjdDogUmU6IFtQ
-QVRDSCB2NF0gQVJNOiBwZXJmOiBzYXZlL3Jlc3RvcmUgcG11IHJlZ2lzdGVycyBpbiBwbQ0KPiA+
-IG5vdGlmaWVyDQo+ID4NCj4gPiBIaSBOZWlsLA0KPiA+DQo+ID4gT24gMzAvMDQvMTQgMDM6MjEs
-IE5laWwgWmhhbmcgd3JvdGU6DQo+ID4gPg0KPiA+ID4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
-LS0tDQo+ID4gPj4gRnJvbTogV2lsbCBEZWFjb24gW21haWx0bzp3aWxsLmRlYWNvbkBhcm0uY29t
-XQ0KPiA+DQo+ID4gWy4uLl0NCj4gPg0KPiA+ID4+DQo+ID4gPj4gSSB0aGluayB3ZSBuZWVkIHNv
-bWUgaW5wdXQgZnJvbSB0aGUgZGV2aWNlLXRyZWUgZ3V5cyB0byBzZWUgd2hldGhlcg0KPiA+ID4+
-IHRoZXkgd291bGQgb2JqZWN0IHRvIHVzIHNvbHZpbmcgdGhpcyBsb2NhbGx5IChpbiB0aGUgUE1V
-IG5vZGUpIG9yIG5vdC4NCj4gPiA+PiBQZXJzb25hbGx5LCBJJ2QgbXVjaCBwcmVmZXIgYSBnZW5l
-cmFsIHdheSB0byBkZXNjcmliZSB0aGUgbmVlZCBmb3INCj4gPiA+PiBwbS1ub3RpZmllcnMsIGJ1
-dCBpZiB0aGF0J3Mgbm90IGJlaW5nIGxvb2tlZCBhdCB0aGVuIHdlIGNhbiBjb29rDQo+ID4gPj4g
-c29tZXRoaW5nIHNwZWNpZmljYWxseSBmb3Igb3VyIG5lZWRzLg0KPiA+ID4+DQo+ID4gPg0KPiA+
-ID4gTm8gaW5wdXQgZnJvbSBkZXZpY2UtdHJlZSBndXlzIDooDQo+ID4NCj4gPiBUaGUgZGV2aWNl
-IHRyZWUgYmluZGluZ3MgZm9yIHBvd2VyIGRvbWFpbnMgaXMgdW5kZXIgZGlzY3Vzc2lvbiBbMV0N
-Cj4gDQo+IFRoYW5rcyBmb3IgdGhlIGluZm9ybWF0aW9uLg0KPiBCdXQgaXQgY3VycmVudGx5IGZv
-ciBkZXZpY2Ugb25seSwgY29yZSByZWxhdGVkIHN0dWZmIGFyZSBub3Qgc3VwcG9ydGVkLg0KPiBB
-bmQgaXMgaXQgcmVhbGx5IGdvb2QgdG8gcmVnaXN0ZXIgcG93ZXIgcHJvdmlkZXIgZm9yIGNvcmUg
-YW5kIGxldCB2ZnAgLyBwbXUgZXRjDQo+IHRvIGdldCBpdD8NCj4gDQoNCldoYXQncyB5b3VyIHN1
-Z2dlc3Rpb24gYWJvdXQgaXQ/DQpJcyBpdCBPSyB0aGF0IEkgYWRkIGl0IHVuZGVyIHRoZSBQTVUg
-bm9kZT8NCg0KPiA+DQo+ID4gUmVnYXJkcywNCj4gPiBTdWRlZXANCj4gPg0KPiA+IFsxXSBodHRw
-czovL2xrbWwub3JnL2xrbWwvMjAxNC80LzIzLzc1NQ0KPiANCj4gDQo+IEJlc3QgUmVnYXJkcywN
-Cj4gTmVpbCBaaGFuZw0KDQpCZXN0IFJlZ2FyZHMsDQpOZWlsIFpoYW5nDQo=
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+From: Rahul Sharma <Rahul.Sharma@samsung.com>
+
+Enable hdmi for exynos5250 based snow board and exynos5420
+based peach pit board. It also adds properties to hdmi nodes
+for accessing hdmiphy as simple phys.
+
+V3:
+1) Re-spin on dependent patches.
+2) Added patch to enable hdmi for Peach-pi board.
+
+V2:
+1) Re-spin on dependent patches.
+2) Added patch to remove chip specific hdmi hpd gpio from
+board file top SoC file.
+
+This series is based on Kukjin Kims, for-next branch.
+
+It is dependent on
+1) Arun's patch for adding peach-pit board dts file at
+http://www.spinics.net/lists/linux-samsung-soc/msg30103.html. [Patch is 'ACK'ed.]
+2) Sachin's patch for snow board dts file at
+https://patches.linaro.org/28325/
+3) DRM Hdmi driver patch which is changing the DT binding at
+http://www.spinics.net/lists/linux-samsung-soc/msg28052.html
+4) Arun's patches for basic Exynos5800 support, available at
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/30667
+[Already Applied in Kukjin's v3.16-next/soc-exynos]
+
+Rahul Sharma (5):
+  ARM: dts: enable hdmi for exynos5250 based snow board
+  ARM: dts: change to correct compatible string for exynos5420 hdmi
+  ARM: dts: enable hdmi for exynos5420 based peach-pit board
+  ARM: dts: remove chip specific hdmi hpd pin from board
+  ARM: dts: enable hdmi for exynos5800 based peach-pi board
+
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi |    6 +++++-
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi     |    7 +++++++
+ arch/arm/boot/dts/exynos5250-snow.dts         |    7 +++++++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts    |   19 ++++++++++++++++++
+ arch/arm/boot/dts/exynos5420-pinctrl.dtsi     |    7 +++++++
+ arch/arm/boot/dts/exynos5420-smdk5420.dts     |    9 ---------
+ arch/arm/boot/dts/exynos5420.dtsi             |    7 ++++++-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts     |   26 +++++++++++++++++++++++++
+ 8 files changed, 77 insertions(+), 11 deletions(-)
+
+-- 
+1.7.9.5
