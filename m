@@ -1,75 +1,51 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [alsa-devel] [PATCH 00/19] Rework OMAP4+ HDMI audio support
-Date: Mon, 12 May 2014 23:13:14 +0200
-Message-ID: <CAGhQ9VzjndCBp+ZHS3XPPvS4ors6u9BfHf4NY_HNYN5ynyQOYQ@mail.gmail.com>
-References: <cover.1399884780.git.jsarha@ti.com>
+From: Thor Thayer <tthayer.linux@gmail.com>
+Subject: Re: [PATCHv3 3/3] edac: altera: Add EDAC support for Altera SDRAM
+Date: Mon, 12 May 2014 16:58:20 -0500
+Message-ID: <CAF03EBey1QXo4e0bXQtiMnRYT5OZ_cxD5ShJbmsDYpcxuTx=Fw@mail.gmail.com>
+References: <1399330337-16748-1-git-send-email-tthayer@altera.com>
+	<1399330337-16748-4-git-send-email-tthayer@altera.com>
+	<20140508120524.GF12548@pd.tnic>
+	<CAF03EBecxtMr1670ktQKTAZX_kHeZWz1SwuEk373B99BoVjbDw@mail.gmail.com>
+	<20140509135259.GC16260@pd.tnic>
+	<CAF03EBeKbXr-7+qeARkBRXjystMjs4yEWnmw7q8tgJv9-SPgXA@mail.gmail.com>
+	<20140509205218.GA16051@pd.tnic>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <cover.1399884780.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, broonie@kernel.org, peter.ujfalusi@ti.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Benoit Cousson <bcousson@baylibre.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140509205218.GA16051@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12 May 2014 11:12, Jyri Sarha <jsarha@ti.com> wrote:
-> Since RFC version of the patch set:
-> - Split callbacks removal patch away from "Integrated ASoC DAI
->   component driver implementation" patches for easier reading
+On Fri, May 9, 2014 at 3:52 PM, Borislav Petkov <bp@alien8.de> wrote:
+> On Fri, May 09, 2014 at 03:31:53PM -0500, Thor Thayer wrote:
+>> Yes, good point. Our hardware can't recover from Double Bit Errors so
+>> I'll go back to the panic() in that path. I like the flexibility of
+>> the command line parameter though...
 >
-> This set of patches fixes OMAP4+ HDMI audio. The structure of the
-> implementatin looks a bit different than before. Instead of creating a
-> driver specific API for a separate ASoC component driver to connect
-> to, this implementation integrates an the component driver into the
-> HDMI driver.
+> Like to panic by default when the machine is booted normally but to be
+> able to turn off the panicking with a module parameter?
 >
-> The idea is to use an existing ASoC component driver API instead of
-> creating a new custom API for each HDMI IP and to avoid splitting the
-> driver to half for separate video and audio parts connected with the
-> API.
+> If so, then you could probably implement a trivial setter called
 >
-> The new implementation also uses simple-audio-card for a machine
-> driver instead of having its own HW specific machine driver.
+> edac_mc_set_panic_on_ue() in a separate patch.
 >
-> The patches are based on 3.15-rc2 merged with
-> git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-next
-> and
-> git://git.kernel.org/pub/scm/linux/kernel/git/tomba/linux.git work/dss-dt-omap5
+> Then, you call it at the end of altr_sdram_probe().
 >
-> Everything is pushed here here:
-> git://git.ti.com/~jyrisarha/ti-linux-kernel/jyrisarhas-audio-video-linux-feature-tree.git omap-hdmi-audio
+> If you want to turn it off again, you do
+>
+> echo "0" > /sys/module/edac_core/parameters/edac_mc_panic_on_ue
+>
+> Something like that...
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Sent from a fat crate under my desk. Formatting is fine.
+> --
 
-hey, this worked straight away :)
-
-But there seems to be something wrong with the channel mapping.
-
-For stereo (speaker-test -c 2) the mapping is correct.
-
-But for -c 4 and -c 8 it gets weird:
-speaker-test -c 4 -s X # where X is 1-4
-1: Front Left is Rear Left
-2: Front Right is Rear Right
-3: Rear Right is Front Right
-4: Rear Left is Front Left
-
-speaker-test -c 8 -s X # where X is 1-8
-1: Front Left is Rear Left
-2: Center is Rear Left
-3: Front Right is Rear Right
-4: Side Right is Front Right
-5: Rear Right is silent
-6: Rear Left is Center
-7: Side Left is Front Left
-8: LFE - Rear Right
-
-I think you need to check what channel order ALSA expects. I believe
-speaker-test does the right thing on my HTPC normally connected to my
-receiver.
-
-Note: I am not 100% sure about the -c 8 results. I might have to do
-the test again.
-
-Tested on VAR-DVK-OM44 (OMAP4460) with Yamaha RX-A1030 Surround receiver.
-
-regards
-Joachim Eastwood
+Hi Boris. Yes. this would be a nice solution. I'll use the panic for
+now in my next revision of the patch - we know a DBE is bad news.
+Thanks!
