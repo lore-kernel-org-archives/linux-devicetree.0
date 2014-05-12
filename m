@@ -1,97 +1,259 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Mon, 12 May 2014 17:55:05 +0300
-Message-ID: <5370E0C9.8050201@ti.com>
-References: <20140507150343.GA9502@atomide.com> <536A5920.1020908@ti.com> <20140507175919.GH9502@atomide.com> <20140508233300.GI2198@atomide.com> <536C8293.4070506@ti.com> <20140509155504.GE17814@atomide.com> <53707A64.2060203@ti.com> <CABxcv=kwhodeFTHoVpn1nHeh9+kV5fwMN9s3Kbk6h7_xJp4UYA@mail.gmail.com> <53709706.10501@ti.com> <CABxcv=mY0a+yJgmCTPN=BhSQD57Pw022zOd5_KxEgvvF_-=O7Q@mail.gmail.com> <20140512142646.GA31772@atomide.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv5 10/20] phy: add support for USB cluster on the Armada
+ 375 SoC
+Date: Mon, 12 May 2014 16:57:45 +0200
+Message-ID: <5370E169.2010502@free-electrons.com>
+References: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com> <1399832288-19899-11-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Ujt9mCI21xMm5QlwAq6oCkDSJO5x0DdVH"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140512142646.GA31772@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399832288-19899-11-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Ujt9mCI21xMm5QlwAq6oCkDSJO5x0DdVH
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Felipe, Kishon,
 
-On 12/05/14 17:26, Tony Lindgren wrote:
+On 11/05/2014 20:17, Thomas Petazzoni wrote:
+> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+> The Armada 375 SoC comes with an USB2 host and device controller and
+> an USB3 controller. The USB cluster control register allows to manage
+> common features of both USB controllers.
+> 
+> This commit adds a driver integrated in the generic PHY framework to
+> control this USB cluster feature.
 
->>> The omapdss case is different, there the "omapdss" points to a sw thi=
-ng,
->>> it does not describe the hardware. It's only needed as we don't have
->>> proper sw drivers for the devices.
->>>
->>> That said, I think what you describe would work. But I would rather k=
-eep
->>> the .dts files clean and correct, and keep that hacks hidden inside t=
-he
->>> kernel.
->>>
->>
->> Thanks for the explanation. Since DT are meant to describe hardware
->> and not software I agree with you that we shouldn't leak an
->> implementation detail to the DeviceTrees.
->>
->> And after all fortunately we don't have a stable API in the kernel
->> like the one that is enforced in the DT so we can fix it later ;-)
->=20
-> This remapping of compatible flags sounds smelly to me, please discuss
-> it first with the device tree people.
+Kishon,
 
-It's already in v3.15.
+it seems that we forgot to send you this email as the PHY framework
+maintainer. Sorry for this. However did you have the opportunity to
+have a look on it and do you think this driver would be OK to be
+merged?
 
-I agree it's smelly, but it smelly only inside the kernel, not visible
-anywhere, and we can remove it when we have common panel drivers,
-without any modifications to .dts files.
+Felipe,
 
-> I think we're better off just using the compatible properties limited
-> to the simple-panel.txt for now and actually describe the real
-> hardware. The fact that the panel is connected to DSS should be possibl=
-e
-> to find out based on the phandles.
+you are the USB PHY layer maintainer, so your opinion on this
+driver would be valuable.
 
-I'm not sure what you mean. We do describe only the real hardware. The
-compatible string in the .dts file is "sharp,ls037v7dw01".
+Thanks,
 
-Prepending the "omapdss" to the compatible string is required for the
-device/driver matching to work, because we can't use the
-"sharp,ls037v7dw01" compatible string in our omap specific panel driver.
-
-I'm not sure what it would give us to try to be compatible with
-simple-panel.txt. The simple-panel bindings won't probably be compatible
-with the future common display drivers in any case, as the simple-panel
-binding is just too limited and doesn't describe the hardware fully.
-
- Tomi
+Gregory
 
 
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/phy/Kconfig              |   6 ++
+>  drivers/phy/Makefile             |   1 +
+>  drivers/phy/phy-armada375-usb2.c | 157 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 164 insertions(+)
+>  create mode 100644 drivers/phy/phy-armada375-usb2.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 3bb05f1..e63cf9d 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -15,6 +15,12 @@ config GENERIC_PHY
+>  	  phy users can obtain reference to the PHY. All the users of this
+>  	  framework should select this config.
+>  
+> +config ARMADA375_USBCLUSTER_PHY
+> +	def_bool y
+> +	depends on MACH_ARMADA_375 || COMPILE_TEST
+> +	depends on OF
+> +	select GENERIC_PHY
+> +
+>  config PHY_EXYNOS_MIPI_VIDEO
+>  	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 2faf78e..47d5a86 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -3,6 +3,7 @@
+>  #
+>  
+>  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+> +obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+> diff --git a/drivers/phy/phy-armada375-usb2.c b/drivers/phy/phy-armada375-usb2.c
+> new file mode 100644
+> index 0000000..a6f746d
+> --- /dev/null
+> +++ b/drivers/phy/phy-armada375-usb2.c
+> @@ -0,0 +1,157 @@
+> +/*
+> + * USB cluster support for Armada 375 platform.
+> + *
+> + * Copyright (C) 2014 Marvell
+> + *
+> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2 or later. This program is licensed "as is"
+> + * without any warranty of any kind, whether express or implied.
+> + *
+> + * Armada 375 comes with an USB2 host and device controller and an
+> + * USB3 controller. The USB cluster control register allows to manage
+> + * common features of both USB controllers.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#define USB2_PHY_CONFIG_DISABLE BIT(0)
+> +
+> +/* The USB cluster allows to choose between two PHYs */
+> +#define NB_PHY 2
+> +
+> +enum {
+> +	PHY_USB2 = 0,
+> +	PHY_USB3 = 1,
+> +};
+> +
+> +struct armada375_cluster_phy {
+> +	struct phy *phy;
+> +	void __iomem *reg;
+> +	bool enable;
+> +	bool use_usb3;
+> +};
+> +
+> +struct armada375_cluster_phy usb_cluster_phy[NB_PHY];
+> +
+> +static int armada375_usb_phy_init(struct phy *phy)
+> +{
+> +	struct armada375_cluster_phy *cluster_phy = phy_get_drvdata(phy);
+> +	u32 reg;
+> +
+> +	if (!cluster_phy->enable)
+> +		return -ENODEV;
+> +
+> +	reg = readl(cluster_phy->reg);
+> +	if (cluster_phy->use_usb3)
+> +		reg |= USB2_PHY_CONFIG_DISABLE;
+> +	else
+> +		reg &= ~USB2_PHY_CONFIG_DISABLE;
+> +	writel(reg, cluster_phy->reg);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy_ops armada375_usb_phy_ops = {
+> +	.init = armada375_usb_phy_init,
+> +	.owner		= THIS_MODULE,
+> +};
+> +
+> +static struct phy *armada375_usb_phy_xlate(struct device *dev,
+> +					struct of_phandle_args *args)
+> +{
+> +	if (WARN_ON(args->args[0] >= NB_PHY))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return usb_cluster_phy[args->args[0]].phy;
+> +}
+> +
+> +static int armada375_usb_phy_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct phy *phy;
+> +	struct phy_provider *phy_provider;
+> +	void __iomem *usb_cluster_base;
+> +	struct device_node *xhci_node;
+> +	struct resource *res;
+> +	int i;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	usb_cluster_base = devm_ioremap_resource(&pdev->dev, res);
+> +	if (!usb_cluster_base)
+> +		return -ENOMEM;
+> +
+> +	for (i = 0; i < NB_PHY; i++) {
+> +		phy = devm_phy_create(dev, &armada375_usb_phy_ops, NULL);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create PHY n%d\n", i);
+> +			return PTR_ERR(phy);
+> +		}
+> +
+> +		usb_cluster_phy[i].phy = phy;
+> +		usb_cluster_phy[i].reg = usb_cluster_base;
+> +		usb_cluster_phy[i].enable = false;
+> +		phy_set_drvdata(phy, &usb_cluster_phy[i]);
+> +	}
+> +
+> +	usb_cluster_phy[PHY_USB2].use_usb3 = false;
+> +	usb_cluster_phy[PHY_USB3].use_usb3 = true;
+> +
+> +	/*
+> +	 * We can't use the first usb2 unit and usb3 at the same time
+> +	 * to manage a USB2 device, so let's disable usb2 if usb3 is
+> +	 * selected. In this case the USB2 device will be managed by
+> +	 * the xhci controller.
+> +	 */
+> +
+> +	xhci_node = of_find_compatible_node(NULL, NULL,
+> +					"marvell,armada-375-xhci");
+> +
+> +	if (xhci_node && of_device_is_available(xhci_node)) {
+> +		usb_cluster_phy[PHY_USB3].enable = true;
+> +	} else {
+> +		struct device_node *ehci_node;
+> +		ehci_node = of_find_compatible_node(NULL, NULL,
+> +					"marvell,orion-ehci");
+> +		if (ehci_node && of_device_is_available(ehci_node))
+> +			usb_cluster_phy[PHY_USB2].enable = true;
+> +		of_node_put(ehci_node);
+> +	}
+> +
+> +	of_node_put(xhci_node);
+> +
+> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
+> +						     armada375_usb_phy_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id of_usb_cluster_table[] = {
+> +	{ .compatible = "marvell,armada-375-usb-cluster", },
+> +	{ /* end of list */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, of_usb_cluster_table);
+> +
+> +static struct platform_driver armada375_usb_phy_driver = {
+> +	.probe	= armada375_usb_phy_probe,
+> +	.driver = {
+> +		.of_match_table	= of_usb_cluster_table,
+> +		.name  = "armada-375-usb-cluster",
+> +		.owner = THIS_MODULE,
+> +	}
+> +};
+> +module_platform_driver(armada375_usb_phy_driver);
+> +
+> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
+> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+> +MODULE_LICENSE("GPL");
+> 
 
---Ujt9mCI21xMm5QlwAq6oCkDSJO5x0DdVH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTcODJAAoJEPo9qoy8lh71bgkP/Rdv+TTwx5W9V3BmWRNvfdZJ
-FlN6/WaYYBjzZqbQtzK/Wpe08ZINIgCZY+Y+g784fiZDPLH3friVwLvtBNodiQF6
-e5Z/JNQjZNDGCrJvVv6KGjRcHYP5U0AeYTRuGf1lr+oaJkSWRdh1ThhiWRCl8NHw
-WH9xmJKTGZvlTTnhBUdK2Hl9gCMjG2ILdcg8M9toGiXBMA27IyhfeP0KcDHVcKrK
-JLDgSENncj/MX7Ug7A1jYGM1R67oas7h3qki9xuIK7AeEngCwei4ppaXz6HGYYm/
-WstJfejv6hq3KVUvhqLjcmMNn+HIvDWHbJ956xtiodZ9mhfR21MvwvmncaTMhTgt
-iyzbTknNWEPINo0qZn4psZgAu/eWTpgZlQngFbJ8Z69f/ZqSRQFdurzFdFaDyw2o
-YjqupZIkC+D7tXHSQt37ovFkR3iECnPEVeMB0JjnBYmLYnmw3O6B2lyPzdRXsOlT
-1llaJw0mEPznu4zR12tw1t1UHDFu8S8varkt1S0CflDYFOBcqs7/CMru8vwNtgs2
-7wFmtkk2cQBWgxYcHZ9NKSa2QxJnFn3iNUyL7PdcuFtItlRYiFMjcwDJvBuGyiPQ
-sW4UJhlToYSMeqVGF4SiMUtm7YAdp3/XWzpMgv6kcx+EqXmOyzYUOxVdo//qkmZ+
-C1znj2iJHxd/7MkrL3ZE
-=XD6Y
------END PGP SIGNATURE-----
-
---Ujt9mCI21xMm5QlwAq6oCkDSJO5x0DdVH--
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
