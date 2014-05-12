@@ -1,39 +1,36 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] irqchip: armada-370-xp: Move the devicetree binding
- documentation
-Date: Mon, 12 May 2014 16:36:42 +0200
-Message-ID: <20140512163642.0cac3359@free-electrons.com>
-References: <1399904860-937-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
+ probably 3630
+Date: Mon, 12 May 2014 07:39:34 -0700
+Message-ID: <20140512143934.GC31772@atomide.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com>
+ <1398815562-24113-2-git-send-email-tony@atomide.com>
+ <536C860E.1000501@ti.com>
+ <20140509143703.GA17814@atomide.com>
+ <5370B222.7050702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399904860-937-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5370B222.7050702@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Ezequiel Garcia,
-
-On Mon, 12 May 2014 11:27:40 -0300, Ezequiel Garcia wrote:
-> Move the devicetree binding documentation to the interrupt-controller
-> directory, where it belongs.
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [140512 04:36]:
+> On 09/05/14 17:37, Tony Lindgren wrote:
+> > 
+> > This is just the 3730-evm with the Sharp VGA panel mentioned in
+> > this series.
 > 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/armada-370-xp-mpic.txt | 38 ----------------------
->  .../marvell,armada-370-xp-mpic.txt                 | 38 ++++++++++++++++++++++
->  2 files changed, 38 insertions(+), 38 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-mpic.txt
->  create mode 100644 Documentation/devicetree/bindings/interrupt-controller/marvell,armada-370-xp-mpic.txt
+> Hmm, well, those both look fine. The fck is well below the maximum,
+> which is somewhere around 170MHz-180MHz. The lck/pck ratio is higher
+> with this patch, but that should affect the GFX overlay.
+> 
+> So you're just booting, and there are no applications that use the
+> framebuffer? And there is no rotation or such configured?
 
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Right. The rotation is set to 3 though.
+
+Tony
