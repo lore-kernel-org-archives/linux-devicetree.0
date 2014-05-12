@@ -1,82 +1,88 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv5 05/20] Documentation: dt-bindings: update ehci-orion
- binding documentation
-Date: Mon, 12 May 2014 18:00:37 +0200
-Message-ID: <5370F025.90601@free-electrons.com>
-References: <Pine.LNX.4.44L0.1405121145220.1202-100000@iolanthe.rowland.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <Pine.LNX.4.44L0.1405121145220.1202-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH 09/12] drivers: clk: st: STiH407: Support for clockgenD0/D2/D3
+Date: Mon, 12 May 2014 18:06:37 +0200
+Message-ID: <1399910800-12847-10-git-send-email-gabriel.fernandez@linaro.org>
+References: <1399910800-12847-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399910800-12847-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Olivier Bideau <olivier.bideau@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/05/2014 17:46, Alan Stern wrote:
-> On Mon, 12 May 2014, Gregory CLEMENT wrote:
-> 
->> Hi Alan,
->>
->> On 11/05/2014 20:17, Thomas Petazzoni wrote:
->>> This commit updates the Device Tree binding documentation of
->>> ehci-orion to take into account the fact that we can now optionally
->>> pass a clock and a PHY reference.
->>
->> Would you agree to take this patch with the 4 first ones?
->>
->> For this kind of change in the device tree the agreement was that it
->> can be directly taken by the maintainer of the subsystem. Indeed here
->> we don't introduce a new kind of device tree node, we just add a optional
->> resource already used in many place.
-> 
-> Sorry, I missed this one.  Is it okay with the DT people?  If it is, 
+The patch added support for ClockGenD0/D2/D3
+It includes one 660 Quadfs.
 
-Rob, Mark,
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+---
+ drivers/clk/st/clkgen-fsyn.c | 46 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-could you confirm that for this kind of change in the dts documentation
-you agree that the maintainer take it?
-
-
-> you can submit it directly to Greg KH and he'll merge it.
-
-OK thanks!
-
-> 
-> Alan Stern
-> 
->>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/usb/ehci-orion.txt | 5 +++++
->>>  1 file changed, 5 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/ehci-orion.txt b/Documentation/devicetree/bindings/usb/ehci-orion.txt
->>> index 6bc09ec..17c3bc8 100644
->>> --- a/Documentation/devicetree/bindings/usb/ehci-orion.txt
->>> +++ b/Documentation/devicetree/bindings/usb/ehci-orion.txt
->>> @@ -6,6 +6,11 @@ Required properties:
->>>    region.
->>>  - interrupts: The EHCI interrupt
->>>  
->>> +Optional properties:
->>> +- clocks: reference to the clock
->>> +- phys: reference to the USB PHY
->>> +- phy-names: name of the USB PHY, should be "usb"
->>> +
->>>  Example:
->>>  
->>>  	ehci@50000 {
->>>
-> 
-
-
+diff --git a/drivers/clk/st/clkgen-fsyn.c b/drivers/clk/st/clkgen-fsyn.c
+index 68c6786..d7a0341 100644
+--- a/drivers/clk/st/clkgen-fsyn.c
++++ b/drivers/clk/st/clkgen-fsyn.c
+@@ -298,6 +298,48 @@ static struct clkgen_quadfs_data st_fs660c32_C_407 = {
+ 	.get_rate	= clk_fs660c32_dig_get_rate,
+ };
+ 
++static struct clkgen_quadfs_data st_fs660c32_D_407 = {
++	.nrst_present = true,
++	.nrst	= { CLKGEN_FIELD(0x2a0, 0x1, 0),
++		    CLKGEN_FIELD(0x2a0, 0x1, 1),
++		    CLKGEN_FIELD(0x2a0, 0x1, 2),
++		    CLKGEN_FIELD(0x2a0, 0x1, 3) },
++	.ndiv	= CLKGEN_FIELD(0x2a4, 0x7, 16),
++	.pe	= { CLKGEN_FIELD(0x2b4, 0x7fff, 0),
++		    CLKGEN_FIELD(0x2b8, 0x7fff, 0),
++		    CLKGEN_FIELD(0x2bc, 0x7fff, 0),
++		    CLKGEN_FIELD(0x2c0, 0x7fff, 0) },
++	.sdiv	= { CLKGEN_FIELD(0x2b4, 0xf, 20),
++		    CLKGEN_FIELD(0x2b8, 0xf, 20),
++		    CLKGEN_FIELD(0x2bc, 0xf, 20),
++		    CLKGEN_FIELD(0x2c0, 0xf, 20) },
++	.npda	= CLKGEN_FIELD(0x2a0, 0x1, 12),
++	.nsb	= { CLKGEN_FIELD(0x2a0, 0x1, 8),
++		    CLKGEN_FIELD(0x2a0, 0x1, 9),
++		    CLKGEN_FIELD(0x2a0, 0x1, 10),
++		    CLKGEN_FIELD(0x2a0, 0x1, 11) },
++	.nsdiv_present = true,
++	.nsdiv	= { CLKGEN_FIELD(0x2b4, 0x1, 24),
++		    CLKGEN_FIELD(0x2b8, 0x1, 24),
++		    CLKGEN_FIELD(0x2bc, 0x1, 24),
++		    CLKGEN_FIELD(0x2c0, 0x1, 24) },
++	.mdiv	= { CLKGEN_FIELD(0x2b4, 0x1f, 15),
++		    CLKGEN_FIELD(0x2b8, 0x1f, 15),
++		    CLKGEN_FIELD(0x2bc, 0x1f, 15),
++		    CLKGEN_FIELD(0x2c0, 0x1f, 15) },
++	.en	= { CLKGEN_FIELD(0x2ac, 0x1, 0),
++		    CLKGEN_FIELD(0x2ac, 0x1, 1),
++		    CLKGEN_FIELD(0x2ac, 0x1, 2),
++		    CLKGEN_FIELD(0x2ac, 0x1, 3) },
++	.lockstatus_present = true,
++	.lock_status = CLKGEN_FIELD(0x2A0, 0x1, 24),
++	.powerup_polarity = 1,
++	.standby_polarity = 1,
++	.pll_ops	= &st_quadfs_pll_c32_ops,
++	.rtbl		= fs660c32_rtbl,
++	.rtbl_cnt	= ARRAY_SIZE(fs660c32_rtbl),
++	.get_rate	= clk_fs660c32_dig_get_rate,};
++
+ /**
+  * DOC: A Frequency Synthesizer that multiples its input clock by a fixed factor
+  *
+@@ -985,6 +1027,10 @@ static struct of_device_id quadfs_of_match[] = {
+ 		.compatible = "st,stih407-quadfs660-C",
+ 		.data = (void *)&st_fs660c32_C_407
+ 	},
++	{
++		.compatible = "st,stih407-quadfs660-D",
++		.data = (void *)&st_fs660c32_D_407
++	},
+ 	{}
+ };
+ 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
