@@ -1,81 +1,92 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
-Date: Tue, 13 May 2014 09:07:13 +0900
-Message-ID: <20140513000713.GB18157@verge.net.au>
-References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
- <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
- <536C1945.1000601@cogentembedded.com>
- <20140509050610.GB2624@katana>
- <536D5DC3.3070409@cogentembedded.com>
- <20140511000834.GM31760@verge.net.au>
- <CAMuHMdX_19vLyO7fqaBO7=WpdoZ8fYm9BU9Zmj6cXSNDNYE+Kw@mail.gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 1/2] ARM: dts: enable display controller for exynos5800
+ based peach-pi board
+Date: Tue, 13 May 2014 10:13:49 +0900
+Message-ID: <004601cf6e48$98c8a260$ca59e720$%han@samsung.com>
+References: <1399877120-4634-1-git-send-email-rahul.sharma@samsung.com>
+ <1399877120-4634-2-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdX_19vLyO7fqaBO7=WpdoZ8fYm9BU9Zmj6cXSNDNYE+Kw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Wolfram Sang <wsa@the-dreams.de>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1399877120-4634-2-git-send-email-rahul.sharma@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Rahul Sharma' <rahul.sharma@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 12, 2014 at 09:35:46AM +0200, Geert Uytterhoeven wrote:
-> On Sun, May 11, 2014 at 2:08 AM, Simon Horman <horms@verge.net.au> wrote:
-> > On Sat, May 10, 2014 at 02:59:15AM +0400, Sergei Shtylyov wrote:
-> >> Hello.
-> >>
-> >> On 05/09/2014 09:06 AM, Wolfram Sang wrote:
-> >>
-> >> >>>+  eeprom@50 {
-> >> >>>+          compatible = "renesas,24c02";
-> >>
-> >> >>    This is not quite right: Renesas' part is called differently, and
-> >> >>you're carrying the other vendor's naming onto Renesas parts. I'd
-> >> >>just say "24c02" (which I'll do in the Henninger board patch).
-> >>
-> >> >What about "generic"?
-> >>
-> >>    I don't know, really. However, you're right in that there should
-> >> be some vendor prefix -- I've just seen
-> >> Documentation/devicetree/bindings/eeprom.txt.
-> >
-> > A quick survey of arch/arm/boot/dts/ yields:
-> >
-> > "atmel,24c02" (22 times)
-> > "microchip,24c02" (once)
-> > "mcp,24c02" (once)
-> >
-> > So it seems to me that precedence is in favour of using "renesas,24c02".
+On Monday, May 12, 2014 3:45 PM, Rahul Sharma wrote:
 > 
-> Except that the Renesas part is called differently (as Sergei already pointed
-> out), unlike the Atmel and Microchip parts.
+> From: Rahul Sharma <Rahul.Sharma@samsung.com>
 > 
-> So it should be:
+> Enable display controller with timing information for 1080p
+> panel in Exynos5800 peach-pi board.
 > 
->         compatible = "renesas,r1ex24002", "<something>,24c02";
-> 
-> Unfortunately the datasheet doesn't mention compatibility with parts from
-> other manufacturers.
-> 
-> So let's <something> be "atmel"?
+> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-If <something> isn't documented as being compatible then
-I feel that we should not add it to the list.
+Reviewed-by: Jingoo Han <jg1.han@samsung.com>
 
-> BTW, we have a similar issue with Genmai, which has an R1EX24128.
+Best regards,
+Jingoo Han
+
+> ---
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts |   36 +++++++++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
 > 
-> Gr{oetje,eeting}s,
+> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> index 742655b..426705a 100644
+> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> @@ -72,6 +72,13 @@
+>  		samsung,pin-pud = <0>;
+>  		samsung,pin-drv = <0>;
+>  	};
+> +
+> +	dp_hpd_gpio: dp_hpd_gpio {
+> +		samsung,pins = "gpx2-6";
+> +		samsung,pin-function = <0>;
+> +		samsung,pin-pud = <3>;
+> +		samsung,pin-drv = <0>;
+> +	};
+>  };
 > 
->                         Geert
+>  &rtc {
+> @@ -121,6 +128,35 @@
+>  	};
+>  };
 > 
+> +&dp {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&dp_hpd_gpio>;
+> +	samsung,color-space = <0>;
+> +	samsung,dynamic-range = <0>;
+> +	samsung,ycbcr-coeff = <0>;
+> +	samsung,color-depth = <1>;
+> +	samsung,link-rate = <0x0a>;
+> +	samsung,lane-count = <2>;
+> +	samsung,hpd-gpio = <&gpx2 6 0>;
+> +
+> +	display-timings {
+> +		native-mode = <&timing1>;
+> +
+> +		timing1: timing@1 {
+> +			clock-frequency = <150660000>;
+> +			hactive = <1920>;
+> +			vactive = <1080>;
+> +			hfront-porch = <60>;
+> +			hback-porch = <172>;
+> +			hsync-len = <80>;
+> +			vback-porch = <25>;
+> +			vfront-porch = <10>;
+> +			vsync-len = <10>;
+> +		};
+> +	};
+> +};
+> +
+>  &hsi2c_9 {
+>  	status = "okay";
+>  	clock-frequency = <400000>;
 > --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+> 1.7.9.5
