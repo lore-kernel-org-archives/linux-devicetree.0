@@ -1,95 +1,53 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/1] ARM: dts: am437x-gp-evm: Add ethernet support for GP
- EVM
-Date: Tue, 13 May 2014 10:20:39 -0700
-Message-ID: <20140513172038.GH16837@atomide.com>
-References: <1399455053-10324-1-git-send-email-mugunthanvnm@ti.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzNdIG1lZGlhOiBteDItZW1tYXBycDogQWRkIGRldmlj?=
+ =?UTF-8?B?ZXRyZWUgc3VwcG9ydA==?=
+Date: Tue, 13 May 2014 21:23:49 +0400
+Message-ID: <1400001829.645600850@f332.i.mail.ru>
+References: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
+ <537251CA.3070005@samsung.com>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399455053-10324-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537251CA.3070005-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?U3lsd2VzdGVyIE5hd3JvY2tp?= <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?TWF1cm8gQ2FydmFsaG8gQ2hlaGFi?= <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Mugunthan V N <mugunthanvnm@ti.com> [140507 02:31]:
-> Add CPSW ethernet support for AM437x GP EVM which has one slave pinned out
-> 
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->  arch/arm/boot/dts/am437x-gp-evm.dts | 72 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 72 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
-> index 2e0c636..30ace1b 100644
-> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
-> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
-> @@ -98,6 +98,58 @@
->  			0x264 (PIN_INPUT_PULLUP | MUX_MODE7)  /* spi2_d0.gpio3_22 */
->  		>;
->  	};
-> +
-> +	cpsw_default: cpsw_default {
-> +		pinctrl-single,pins = <
-> +			/* Slave 1 */
-> +			0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txen.rgmii1_txen */
-> +			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxdv.rgmii1_rxctl */
-> +			0x11c (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_txd3 */
-> +			0x120 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_txd2 */
-> +			0x124 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_txd1 */
-> +			0x128 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_txd0 */
-> +			0x12c (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txclk.rmii1_tclk */
-> +			0x130 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxclk.rmii1_rclk */
-> +			0x134 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rxd3 */
-> +			0x138 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rxd2 */
-> +			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rxd1 */
-> +			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rxd0 */
-> +		>;
-> +	};
-> +
-> +	cpsw_sleep: cpsw_sleep {
-> +		pinctrl-single,pins = <
-> +			/* Slave 1 reset value */
-> +			0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x11c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x120 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x124 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x128 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x12c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x130 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x134 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x138 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +		>;
-> +	};
-
-Just a nitpick comment to make things more readable. Can you please add
-the comments for these pins too so people can cross check them against
-the documentation easier?
-
-> +	davinci_mdio_default: davinci_mdio_default {
-> +		pinctrl-single,pins = <
-> +			/* MDIO */
-> +			0x148 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
-> +			0x14c (PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
-> +		>;
-> +	};
-> +
-> +	davinci_mdio_sleep: davinci_mdio_sleep {
-> +		pinctrl-single,pins = <
-> +			/* MDIO reset value */
-> +			0x148 (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +			0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
-> +		>;
-> +	};
->  };
-
-And here too please.
-
-Thanks,
-
-Tony 
+VHVlLCAxMyBNYXkgMjAxNCAxOTowOTozMCArMDIwMCDQvtGCIFN5bHdlc3RlciBOYXdyb2NraSA8
+cy5uYXdyb2NraUBzYW1zdW5nLmNvbT46Cj4gSGksCj4gCj4gT24gMDIvMDUvMTQgMDk6MTgsIEFs
+ZXhhbmRlciBTaGl5YW4gd3JvdGU6Cj4gPiBUaGlzIHBhdGNoIGFkZHMgZGV2aWNldHJlZSBzdXBw
+b3J0IGZvciB0aGUgRnJlZXNjYWxlIGVuaGFuY2VkIE11bHRpbWVkaWEKPiA+IEFjY2VsZXJhdG9y
+IChlTU1BKSB2aWRlbyBQcmUtcHJvY2Vzc29yIChQclApLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5
+OiBBbGV4YW5kZXIgU2hpeWFuIDxzaGNfd29ya0BtYWlsLnJ1Pgo+ID4gLS0tCj4gPiAgLi4uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvZnNsLWlteC1lbW1hcHJwLnR4dCAgICAgfCAxOSArKysr
+KysrKysrKysrKysrKysrCj4gPiAgZHJpdmVycy9tZWRpYS9wbGF0Zm9ybS9teDJfZW1tYXBycC5j
+ICAgICAgICAgICAgICAgICAgfCAgOCArKysrKysrKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMjcg
+aW5zZXJ0aW9ucygrKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbWVkaWEvZnNsLWlteC1lbW1hcHJwLnR4dAo+ID4gCj4gPiBkaWZmIC0t
+Z2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2ZzbC1pbXgtZW1t
+YXBycC50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvZnNsLWlt
+eC1lbW1hcHJwLnR4dAo+ID4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAu
+LjllODIzOGYKPiA+IC0tLSAvZGV2L251bGwKPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9tZWRpYS9mc2wtaW14LWVtbWFwcnAudHh0Cj4gPiBAQCAtMCwwICsxLDE5
+IEBACj4gPiArKiBGcmVlc2NhbGUgZW5oYW5jZWQgTXVsdGltZWRpYSBBY2NlbGVyYXRvciAoZU1N
+QSkgdmlkZW8gUHJlLXByb2Nlc3NvciAoUHJQKQo+ID4gKyAgZm9yIGkuTVguCj4gPiArCj4gPiAr
+UmVxdWlyZWQgcHJvcGVydGllczoKPiA+ICstIGNvbXBhdGlibGUgOiBTaGFsbCBjb250YWluICJm
+c2wsaW14MjEtZW1tYXBycCIuCj4gPiArLSByZWcgICAgICAgIDogT2Zmc2V0IGFuZCBsZW5ndGgg
+b2YgdGhlIHJlZ2lzdGVyIHNldCBmb3IgdGhlIGRldmljZS4KPiA+ICstIGludGVycnVwdHMgOiBT
+aG91bGQgY29udGFpbiBlTU1BIFByUCBpbnRlcnJ1cHQgbnVtYmVyLgo+ID4gKy0gY2xvY2tzICAg
+ICA6IFNob3VsZCBjb250YWluIHRoZSBhaGIgYW5kIGlwZyBjbG9ja3MsIGluIHRoZSBvcmRlcgo+
+ID4gKyAgICAgICAgICAgICAgIGRldGVybWluZWQgYnkgdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5
+Lgo+ID4gKy0gY2xvY2stbmFtZXM6IFNob3VsZCBiZSAiYWhiIiwgImlwZyIuCj4gPiArCj4gPiAr
+RXhhbXBsZToKPiA+ICsJZW1tYXBycDogZW1tYXBycEAxMDAyNjQwMCB7Cj4gPiArCQljb21wYXRp
+YmxlID0gImZzbCxpbXgyNy1lbW1hcHJwIiwgImZzbCxpbXgyMS1lbW1hcHJwIjsKPiAKPiBJcyAi
+ZnNsLGlteDI3LWVtbWFwcnAiIGNvbXBhdGlibGUgZG9jdW1lbnRlZCBzb21ld2hlcmUgPwoKVGhl
+IG92ZXJhbGwgc3RydWN0dXJlIG9mIHRoZSBlTU1BIG1vZHVsZSBpcyBzbGlnaHRseSBkaWZmZXJl
+bnQuCkFzIGZvciB0aGUgcGFydCBvZiB0aGUgUHJQLCBhY2NvcmRpbmcgdG8gdGhlIGRhdGFzaGVl
+dCB0aGV5IGFyZSBjb21wYXRpYmxlLgoKLi4uCgotLS0KCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
