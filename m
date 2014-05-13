@@ -1,121 +1,28 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] of: Add of_platform_depopulate() helper
-Date: Tue, 13 May 2014 12:50:36 +0100
-Message-ID: <1399981836-24837-1-git-send-email-pawel.moll@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [RFC] [PATCH 0/2] clock helper for determining flags properties
+Date: Tue, 13 May 2014 13:57:31 +0200
+Message-ID: <1399982253-21079-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Drivers can us of_platform_populate() to create
-platform devices for children of the device
-main node (this can particularly happen in case
-of MFD devices). Unfortunately, there was no
-standard way of removing such sub-devices when
-the main one is being removed.
+The first patch provides a helper to get flags properties of a clock node.
+This patch is limited to CLK_SET_RATE_PARENT flag for e.g.
 
-This patch adds of_platform_depopulate() as
-a complementary operation for the _populate()
-one. It removes all platform and amba devices
-that have been created from the Device Tree,
-but leaves all other ones untouched (returning
--EBUSY in such case).
+The second patch provides an example of use of this clock helper.
 
-Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
----
- drivers/of/platform.c       | 52 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_platform.h |  5 +++++
- 2 files changed, 57 insertions(+)
+Gabriel Fernandez (2):
+  clk: of: helper for determining flags properties
+  drivers: clk: st: authorize propagate rate change for clockgenD0
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 2d0c8b7..b5c49c3 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -495,4 +495,56 @@ int of_platform_populate(struct device_node *root,
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(of_platform_populate);
-+
-+static int of_platform_device_destroy(struct device *dev, void *data)
-+{
-+	int *parents_children_left = data;
-+	int my_children_left = 0;
-+
-+	/* Do not touch devices not populated from the device tree */
-+	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED)) {
-+		(*parents_children_left)++;
-+		return 0;
-+	}
-+
-+	device_for_each_child(dev, &my_children_left,
-+			of_platform_device_destroy);
-+	if (my_children_left) {
-+		(*parents_children_left)++;
-+		return 0;
-+	}
-+
-+	if (dev->bus == &platform_bus_type)
-+		platform_device_unregister(to_platform_device(dev));
-+	else if (dev->bus == &amba_bustype)
-+		amba_device_unregister(to_amba_device(dev));
-+	else
-+		(*parents_children_left)++;
-+
-+	return 0;
-+}
-+
-+/**
-+ * of_platform_depopulate() - Remove devices populated from device tree
-+ * @parent: device which childred will be removed
-+ *
-+ * Complementary to of_platform_populate(), this function removes children
-+ * of the given device (and, recurrently, their children) that have been
-+ * created from their respective device tree nodes (and only those,
-+ * leaving others - eg. manually created - unharmed).
-+ *
-+ * Returns 0 when all children devices have been removed or
-+ * -EBUSY when some children remained.
-+ */
-+int of_platform_depopulate(struct device *parent)
-+{
-+	int children_left = 0;
-+
-+	device_for_each_child(parent, &children_left,
-+			of_platform_device_destroy);
-+
-+	return children_left ? -EBUSY : 0;
-+}
-+EXPORT_SYMBOL_GPL(of_platform_depopulate);
-+
- #endif /* CONFIG_OF_ADDRESS */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..b1010ee 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -72,6 +72,7 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
-+extern int of_platform_depopulate(struct device *parent);
- #else
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
-@@ -80,6 +81,10 @@ static inline int of_platform_populate(struct device_node *root,
- {
- 	return -ENODEV;
- }
-+static inline int of_platform_depopulate(struct device *parent)
-+{
-+	return -ENODEV;
-+}
- #endif
- 
- #endif	/* _LINUX_OF_PLATFORM_H */
+ arch/arm/boot/dts/stih407-clock.dtsi |  1 +
+ drivers/clk/clk.c                    | 11 +++++++++++
+ drivers/clk/st/clk-flexgen.c         |  2 ++
+ include/linux/clk-provider.h         |  6 ++++++
+ 4 files changed, 20 insertions(+)
+
 -- 
 1.9.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
