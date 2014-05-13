@@ -1,106 +1,58 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/4] OMAPDSS: Fix DSS clock multiplier issue on 3703 and
- probably 3630
-Date: Tue, 13 May 2014 08:26:26 -0700
-Message-ID: <20140513152626.GB16837@atomide.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com>
- <1398815562-24113-2-git-send-email-tony@atomide.com>
- <536C860E.1000501@ti.com>
- <20140509143703.GA17814@atomide.com>
- <5370B222.7050702@ti.com>
- <20140512143934.GC31772@atomide.com>
- <5370DE42.2060607@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv2 1/4] of: make of_update_property() usable earlier in
+ the boot process
+Date: Tue, 13 May 2014 11:30:06 -0400
+Message-ID: <20140513153006.GC27822@titan.lakedaemon.net>
+References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1399975839-5311-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <CAL_JsqLNnLjeo2tM=z5bcn4DJD_5-uFRGkk6wAWnvGZyo9Y7pg@mail.gmail.com>
+ <20140513163026.18a0fa61@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <5370DE42.2060607@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+In-Reply-To: <20140513163026.18a0fa61-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140512 07:45]:
-> On 12/05/14 17:39, Tony Lindgren wrote:
-> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [140512 04:36]:
-> >> On 09/05/14 17:37, Tony Lindgren wrote:
-> >>>
-> >>> This is just the 3730-evm with the Sharp VGA panel mentioned in
-> >>> this series.
-> >>
-> >> Hmm, well, those both look fine. The fck is well below the maximum,
-> >> which is somewhere around 170MHz-180MHz. The lck/pck ratio is higher
-> >> with this patch, but that should affect the GFX overlay.
-> >>
-> >> So you're just booting, and there are no applications that use the
-> >> framebuffer? And there is no rotation or such configured?
+On Tue, May 13, 2014 at 04:30:26PM +0200, Thomas Petazzoni wrote:
+> On Tue, 13 May 2014 09:00:02 -0500, Rob Herring wrote:
+...
+> > > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > Fixes: 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device nodes kobjects so they show up in sysfs')
 > > 
-> > Right. The rotation is set to 3 though.
+> > Humm, I didn't know about this new tag. This doesn't quite match what
+> > SubmittingPatches says. It should be 12 digits of commit hash and
+> > double quotes around the summary.
 > 
-> Hmm, that's probably the issue then. VRFB rotation is very heavy on the
-> memory bandwidth, and is generally a very easy way to get sync lost errors.
+> Well, I guess it's a per-maintainer choice:
+> 
+> git log | grep "^Fixes:"
+> 
+>     Fixes: 54fe26a900bc528f3df1e4235cb6b9ca5c6d4dc2 ('ARM: mvebu: Add thermal quirk for the Armada 375 DB board')
 
-I found another case without rotation where the error always triggers.
-By forcing 3730-evm LCD panel to QVGA mode it always seems to happen
-even without rotation.
+Well, just because the maintainer is an idiot and didn't catch it isn't
+an excuse to continue the behavior. ;-)
 
-Without this patch with errors and no image:
+>     Fixes: 54397d85349f ("ARM: kirkwood: Relocate PCIe device tree nodes")
+>     Fixes: a7d4f81821f7 ('ARM: mvebu: Add support for NOR flash device on Openblocks AX3 board')
+>     Fixes: b484ff42df47 ('ARM: mvebu: Add support for NOR flash device on Armada XP-DB board')
+>     Fixes: c971ff185f64 ("leds: leds-pwm: Defer led_pwm_set() if PWM can sleep")
+>     Fixes: abccd00f8af2 ('btrfs: Fix 32/64-bit problem with BTRFS_SET_RECEIVED_SUBVOL ioctl')
+>     Fixes: ee1e0994ab1bd (regulator: s5m8767: Use GPIO for controlling Buck9/eMMC)
+>     Fixes: 652ed95d5fa6 (cpufreq: introduce cpufreq_generic_get() routine)
+> 
+> Somewhat inconsistent :-)
 
-# cat /sys/kernel/debug/omapdss/clk 
-[   55.185729] DSS: dss_runtime_get
-[   55.189422] DSS: dss_runtime_put
-[   55.192810] DISPC: dispc_runtime_get
-[   55.196685] DISPC: dispc_runtime_put
-- DSS -
-DSS_FCK (DSS1_ALWON_FCLK) = 27000000
-- DISPC -
-dispc fclk source = DSS_FCK (DSS1_ALWON_FCLK)
-fck             27000000        
-- LCD -
-LCD clk source = DSS_FCK (DSS1_ALWON_FCLK)
-lck             27000000        lck div 1
-pck             5400000         pck div 5
+Yeah, I can go either way on the single quotes/double quotes.  The
+12-character hash definitely increases readability, though.
 
-With this patch without errors and penguin showing:
+thx,
 
-# cat /sys/kernel/debug/omapdss/clk
-[   19.905792] DSS: dss_runtime_get
-[   19.909545] DSS: dss_runtime_put
-[   19.912933] DISPC: dispc_runtime_get
-[   19.916778] DISPC: dispc_runtime_put
-- DSS -
-DSS_FCK (DSS1_ALWON_FCLK) = 108000000
-- DISPC -
-dispc fclk source = DSS_FCK (DSS1_ALWON_FCLK)
-fck             108000000       
-- LCD -
-LCD clk source = DSS_FCK (DSS1_ALWON_FCLK)
-lck             108000000       lck div 1
-pck             5400000         pck div 20
-
-In this case the errors are different too:
-
-DISPC: channel 0 xres 240 yres 320
-DISPC: pck 5400000
-DISPC: hsw 3 hfp 3 hbp 39 vsw 1 vfp 2 vbp 7
-DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1 de_level 0 sync_pclk_edge 0
-DISPC: hsync 18947Hz, vsync 57Hz
-DISPC: lck = 27000000 (1)
-DISPC: pck = 5400000 (5)
-APPLY: DISPC IRQ: 0x60: GFX_FIFO_UNDERFLOW 
-APPLY: DISPC IRQ: 0x4062: GFX_FIFO_UNDERFLOW SYNC_LOST 
-DISPC: dispc_runtime_get
-omapdss APPLY error: FIFO UNDERFLOW on gfx, disabling the overlay
-
-Regarding rotation, it does look like that with VGA mode enabling
-rotation makes the error trigger quite often on 3730.
- 
-> will handle it fine with the clock rates and bandwidth usage you have
-> for your use cases.
-
-I don't think it's all because of rotation. And rotating my head
-makes my neck hurt!
-
-Regards,
-
-Tony
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
