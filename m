@@ -1,66 +1,84 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [RFC PATCH v2 1/9] crypto: qce: Add core driver implementation
-Date: Tue, 13 May 2014 19:06:07 +0800
-Message-ID: <20140513110607.GA21662@gondor.apana.org.au>
-References: <1397479725-20954-1-git-send-email-svarbanov@mm-sol.com>
- <1397479725-20954-2-git-send-email-svarbanov@mm-sol.com>
- <20140428085928.GA16310@gondor.apana.org.au>
- <536BFDD3.9090609@mm-sol.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv2 4/4] ARM: mvebu: implement L2/PCIe deadlock workaround
+Date: Tue, 13 May 2014 13:13:39 +0200
+Message-ID: <11503675.BOHdnE4xD3@wuerfel>
+References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com> <1399975839-5311-5-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <536BFDD3.9090609@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stanimir Vabanov <svarbanov@mm-sol.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, Mona Hossain <mhossain@codeaurora.org>, Hariprasad Dhalinarasimha <hnamgund@codeaurora.org>, Zhen Kong <zkong@codeaurora.org>, Niranjana Vishwanathapura <nvishwan@codeaurora.org>, Rohit Vaswani <rvaswani@codeaurora.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399975839-5311-5-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 09, 2014 at 12:57:39AM +0300, Stanimir Vabanov wrote:
-> Hi Herbert,
-> 
-> On 04/28/2014 11:59 AM, Herbert Xu wrote:
-> > On Mon, Apr 14, 2014 at 03:48:37PM +0300, Stanimir Varbanov wrote:
-> >>
-> >> +#define QCE_MAJOR_VERSION5	0x05
-> >> +#define QCE_QUEUE_LENGTH	50
-> > 
-> > What is the purpose of this software queue? Why can't you directly
-> > feed the requests to the hardware?
-> > 
-> > If the hardware can't handle more than 50 requests in-flight,
-> > then your software queue has failed to handle this since you're
-> > taking requests off the queue before you touch the hardware so
-> > you're not really limiting it to 50.  That is, for users that
-> > can wait you're potentially dropping their requests instead
-> > of letting them wait through the backlog mechanism.
-> 
-> My assumption was that crypto_ablkcipher_encrypt/decrypt couldn't sleep
-> and I should take the request almost immediately and return the
-> appropriate error value - EINPROGRESS if the hardware is idle and EBUSY
-> if the hardware working on some previous request. Thus if the returned
-> error is EBUSY and the request could be backlogged I should call
-> backlog->complete() when this request is taken actually for processing.
-> 
-> What I've done in practice is another story.
-> 
-> Is that assumption correct? If so, is crypto_enqueue|dequeue_request()
-> are the proper tools to implement this behaviour?
+On Tuesday 13 May 2014 12:10:39 Thomas Petazzoni wrote:
+> +/*
+> + * This ioremap hook is used on Armada 375/38x to ensure that PCIe
+> + * memory areas are mapped as MT_MEMORY_RW_SO instead of
+> + * MT_DEVICE. This is needed as a workaround for a deadlock issue
+> + * between the PCIe interface and the cache controller.
+> + */
+> +static void __iomem *
+> +armada_pcie_wa_ioremap_caller(phys_addr_t phys_addr, size_t size,
+> +                             unsigned int mtype, void *caller)
+> +{
+> +       struct resource pcie_mem;
+> +
+> +       mvebu_mbus_get_pcie_mem_aperture(&pcie_mem);
+> +
+> +       if (pcie_mem.start <= phys_addr && (phys_addr + size) <= pcie_mem.end)
+> +               mtype = MT_MEMORY_RW_SO;
+> +
+> +       return __arm_ioremap_caller(phys_addr, size, mtype, caller);
+> +}
 
-Technically you are allowed to sleep if the MAY_SLEEP bit is set
-but it's safe to just not sleep if that makes things easier for
-you.
+Hmm, I think this needs some more explanation about which flags
+you are actually interested in. 
 
-The enqueue/dequeue functions implement a software queue.  Typically
-you would have a software queue in addition to whatever requests
-you have in flight on the actual hardware.
+These are the three common mem types for ioremap:
 
-For example, if your hardware is only able to handle one outstanding
-request, then your software queue should only be dequeued once the
-outstanding request has completed.
+#define PROT_PTE_DEVICE         L_PTE_PRESENT|L_PTE_YOUNG|L_PTE_DIRTY|L_PTE_XN
+#define PROT_SECT_DEVICE        PMD_TYPE_SECT|PMD_SECT_AP_WRITE
 
-Cheers,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+        [MT_DEVICE] = {           /* Strongly ordered / ARMv6 shared device */
+                .prot_pte       = PROT_PTE_DEVICE | L_PTE_MT_DEV_SHARED |
+                                  L_PTE_SHARED,
+                .prot_pte_s2    = s2_policy(PROT_PTE_S2_DEVICE) |
+                                  s2_policy(L_PTE_S2_MT_DEV_SHARED) |
+                                  L_PTE_SHARED,
+                .prot_sect      = PROT_SECT_DEVICE | PMD_SECT_S,
+                .domain         = DOMAIN_IO, 
+        },                      
+        [MT_DEVICE_CACHED] = {    /* ioremap_cached */
+                .prot_pte       = PROT_PTE_DEVICE | L_PTE_MT_DEV_CACHED,
+                .prot_sect      = PROT_SECT_DEVICE | PMD_SECT_WB,
+                .domain         = DOMAIN_IO,
+        },
+        [MT_DEVICE_WC] = {      /* ioremap_wc */
+                .prot_pte       = PROT_PTE_DEVICE | L_PTE_MT_DEV_WC,
+                .prot_sect      = PROT_SECT_DEVICE,
+                .domain         = DOMAIN_IO,
+        },
+
+and this is the one you enforce here:
+
+        [MT_MEMORY_RW_SO] = {
+                .prot_pte  = L_PTE_PRESENT | L_PTE_YOUNG | L_PTE_DIRTY |
+                                L_PTE_MT_UNCACHED | L_PTE_XN,
+                .prot_l1   = PMD_TYPE_TABLE,
+                .prot_sect = PMD_TYPE_SECT | PMD_SECT_AP_WRITE | PMD_SECT_S |
+                                PMD_SECT_UNCACHED | PMD_SECT_XN,
+                .domain    = DOMAIN_KERNEL,
+        },
+
+So you set a different domain, and turn write-combined and cached mappings
+into uncached mappings, and for uncached mappings you remove the "shared"
+flag. Which of these changes is the one you actually need?
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
