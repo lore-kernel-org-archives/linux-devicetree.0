@@ -1,84 +1,118 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv2 4/4] ARM: mvebu: implement L2/PCIe deadlock workaround
-Date: Tue, 13 May 2014 13:13:39 +0200
-Message-ID: <11503675.BOHdnE4xD3@wuerfel>
-References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com> <1399975839-5311-5-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
+Date: Tue, 13 May 2014 16:50:31 +0530
+Message-ID: <CAPdUM4MZS4jMNcEtjHkw1==zG3Z_rNYfsw9Q4Qt3kRpV5PuLJw@mail.gmail.com>
+References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
+ <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
+ <534506B1.4040908@samsung.com>
+ <CAPdUM4M109_kzY6cUMJQPSwgazvWmNDWL1JeXgiqnzvH8dhK2Q@mail.gmail.com>
+ <53451A60.4050803@samsung.com> <53675D72.70103@ti.com>
+ <CAPdUM4N+2VXpiFSiWW9gKfbte1zkpDbCOSF+KvEo4T1KLqqwjw@mail.gmail.com>
+ <536A36F5.5080303@samsung.com>
+ <CAPdUM4M6uk2KN_L487_cRkOqbgJrhhMRx9zpczA6-3LzSM3FSg@mail.gmail.com>
+ <536A5258.3080104@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399975839-5311-5-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <536A5258.3080104@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, Mark Rutland <Mark.Rutland@arm.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, sunil joshi <joshi@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 May 2014 12:10:39 Thomas Petazzoni wrote:
-> +/*
-> + * This ioremap hook is used on Armada 375/38x to ensure that PCIe
-> + * memory areas are mapped as MT_MEMORY_RW_SO instead of
-> + * MT_DEVICE. This is needed as a workaround for a deadlock issue
-> + * between the PCIe interface and the cache controller.
-> + */
-> +static void __iomem *
-> +armada_pcie_wa_ioremap_caller(phys_addr_t phys_addr, size_t size,
-> +                             unsigned int mtype, void *caller)
-> +{
-> +       struct resource pcie_mem;
-> +
-> +       mvebu_mbus_get_pcie_mem_aperture(&pcie_mem);
-> +
-> +       if (pcie_mem.start <= phys_addr && (phys_addr + size) <= pcie_mem.end)
-> +               mtype = MT_MEMORY_RW_SO;
-> +
-> +       return __arm_ioremap_caller(phys_addr, size, mtype, caller);
-> +}
+<Gentle PING>
 
-Hmm, I think this needs some more explanation about which flags
-you are actually interested in. 
-
-These are the three common mem types for ioremap:
-
-#define PROT_PTE_DEVICE         L_PTE_PRESENT|L_PTE_YOUNG|L_PTE_DIRTY|L_PTE_XN
-#define PROT_SECT_DEVICE        PMD_TYPE_SECT|PMD_SECT_AP_WRITE
-
-        [MT_DEVICE] = {           /* Strongly ordered / ARMv6 shared device */
-                .prot_pte       = PROT_PTE_DEVICE | L_PTE_MT_DEV_SHARED |
-                                  L_PTE_SHARED,
-                .prot_pte_s2    = s2_policy(PROT_PTE_S2_DEVICE) |
-                                  s2_policy(L_PTE_S2_MT_DEV_SHARED) |
-                                  L_PTE_SHARED,
-                .prot_sect      = PROT_SECT_DEVICE | PMD_SECT_S,
-                .domain         = DOMAIN_IO, 
-        },                      
-        [MT_DEVICE_CACHED] = {    /* ioremap_cached */
-                .prot_pte       = PROT_PTE_DEVICE | L_PTE_MT_DEV_CACHED,
-                .prot_sect      = PROT_SECT_DEVICE | PMD_SECT_WB,
-                .domain         = DOMAIN_IO,
-        },
-        [MT_DEVICE_WC] = {      /* ioremap_wc */
-                .prot_pte       = PROT_PTE_DEVICE | L_PTE_MT_DEV_WC,
-                .prot_sect      = PROT_SECT_DEVICE,
-                .domain         = DOMAIN_IO,
-        },
-
-and this is the one you enforce here:
-
-        [MT_MEMORY_RW_SO] = {
-                .prot_pte  = L_PTE_PRESENT | L_PTE_YOUNG | L_PTE_DIRTY |
-                                L_PTE_MT_UNCACHED | L_PTE_XN,
-                .prot_l1   = PMD_TYPE_TABLE,
-                .prot_sect = PMD_TYPE_SECT | PMD_SECT_AP_WRITE | PMD_SECT_S |
-                                PMD_SECT_UNCACHED | PMD_SECT_XN,
-                .domain    = DOMAIN_KERNEL,
-        },
-
-So you set a different domain, and turn write-combined and cached mappings
-into uncached mappings, and for uncached mappings you remove the "shared"
-flag. Which of these changes is the one you actually need?
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 7 May 2014 21:03, Tomasz Figa <t.figa@samsung.com> wrote:
+> [CCing more DT-folks :)]
+>
+> On 07.05.2014 16:19, Rahul Sharma wrote:
+>> On 7 May 2014 19:06, Tomasz Stanislawski <t.stanislaws@samsung.com> wrote:
+>>> On 05/07/2014 12:38 PM, Rahul Sharma wrote:
+>>>> On 5 May 2014 15:14, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>>> Hi,
+>>>>>
+>>>>> On Wednesday 09 April 2014 03:31 PM, Sylwester Nawrocki wrote:
+>>>>>> Hi,
+>>>>>>
+>>>>>> On 09/04/14 11:12, Rahul Sharma wrote:
+>>>>>>> Idea looks good. How about keeping compatible which is independent
+>>>>>>> of SoC, something like "samsung,exynos-simple-phy" and provide Reg
+>>>>>>> and Bit through phy provider node. This way we can avoid SoC specific
+>>>>>>> hardcoding in phy driver and don't need to look into dt bindings for
+>>>>>>> each new SoC.
+>>>>>>
+>>>>>> I believe it is a not recommended approach.
+>>>>>
+>>>>> Why not? We should try to avoid hard coding in the driver code. Moreover by
+>>>>> avoiding hardcoding we can make it a generic driver for single bit PHYs.
+>>>>>
+>>>>
+>>>> +1.
+>>>>
+>>>> @Tomasz, any plans to consider this approach for simple phy driver?
+>>>>
+>>>> Regards,
+>>>> Rahul Sharma.
+>>>>
+>>>
+>>> Hi Rahul,
+>>> Initially, I wanted to make a very generic driver and to add bit and
+>>> register (or its offset) attribute to the PHY node.
+>>> However, there was a very strong opposition from DT maintainers
+>>> to adding any bit related configuration to DT.
+>>> The current solution was designed to be a trade-off between
+>>> being generic and being accepted :).
+>>>
+>>
+>> Thanks Tomasz,
+>> Ok got it. lets discuss it again and conclude it.
+>>
+>> @Kishon, DT-folks,
+>>
+>> The original RFC patch from Tomasz (at https://lkml.org/lkml/2013/10/21/313)
+>> added simple phy driver as "Generic-simple-phy" with these properties:
+>>
+>> + of_property_read_u32(dev->of_node, "mask", &sphy->mask);
+>> + of_property_read_u32(dev->of_node, "on-value", &sphy->on_value);
+>> + of_property_read_u32(dev->of_node, "off-value", &sphy->off_value);
+>>
+>> Shall we consider the same solution again for generic simple phy
+>> driver which just expose on/off control through register bit.
+>>
+>> Regards,
+>> Rahul Sharma
+>>
+>>> Regards,
+>>> Tomasz Stanislawski
+>>>
+>>>
+>>>
+>>>>> Cheers
+>>>>> Kishon
+>>>>
+>>>
+>>> _______________________________________________
+>>> dri-devel mailing list
+>>> dri-devel@lists.freedesktop.org
+>>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>
+> Best regards,
+> Tomasz
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
