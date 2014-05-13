@@ -1,304 +1,112 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 1/6] clocksource: Add support for the Mediatek SoCs
-Date: Tue, 13 May 2014 11:10:01 +0200
-Message-ID: <CABuKBeKboKT7WdJYGj73uNT-Nc+0UEn5kQE1-9G5uxQJvB+FGg@mail.gmail.com>
-References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
- <1399938570-11356-2-git-send-email-matthias.bgg@gmail.com>
- <20140513055405.GA3348@lukather>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH 0/2] drm/panel: add simple-panel description using DT
+Date: Tue, 13 May 2014 11:20:04 +0200
+Message-ID: <20140513092002.GN6754@ulmo>
+References: <1399645002-18000-1-git-send-email-boris.brezillon@free-electrons.com>
+ <20140513075148.GF6754@ulmo> <5371E12C.8000409@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140513055405.GA3348@lukather>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@inf>
+Content-Type: multipart/mixed; boundary="===============0935287043=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5371E12C.8000409@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-2014-05-13 7:54 GMT+02:00 Maxime Ripard <maxime.ripard@free-electrons.com>:
-> On Tue, May 13, 2014 at 01:49:25AM +0200, Matthias Brugger wrote:
->> This patch adds a clock source and clock event for the timer found
->> on the Mediatek SoCs.
->>
->> The Mediatek General Porpose Timer block provides five 32 bit timers and
->> one 64 bit timer.
->>
->> Two 32 bit timers are used:
->> TIMER1: clock events supporting periodic and oneshot events
->> TIMER2: clock source configured as a free running counter
->>
->> The General Porpose Timer block can be run with two clocks. A 13 MHz system
->> clock and the RTC clock running at 32 KHz. This implementation uses the system
->> clock.
->>
->> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->> ---
->>  drivers/clocksource/Kconfig     |   4 +
->>  drivers/clocksource/Makefile    |   1 +
->>  drivers/clocksource/mtk_timer.c | 263 ++++++++++++++++++++++++++++++++++++++++
->>  3 files changed, 268 insertions(+)
->>  create mode 100644 drivers/clocksource/mtk_timer.c
->>
->> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
->> index 96918e1..1f73740 100644
->> --- a/drivers/clocksource/Kconfig
->> +++ b/drivers/clocksource/Kconfig
->> @@ -144,6 +144,10 @@ config VF_PIT_TIMER
->>  config SYS_SUPPORTS_SH_CMT
->>          bool
->>
->> +config MTK_TIMER
->> +     select CLKSRC_MMIO
->> +     bool
->> +
->>  config SYS_SUPPORTS_SH_MTU2
->>          bool
->>
->> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
->> index 98cb6c5..619d302 100644
->> --- a/drivers/clocksource/Makefile
->> +++ b/drivers/clocksource/Makefile
->> @@ -33,6 +33,7 @@ obj-$(CONFIG_CLKSRC_EXYNOS_MCT)     += exynos_mct.o
->>  obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)     += samsung_pwm_timer.o
->>  obj-$(CONFIG_VF_PIT_TIMER)   += vf_pit_timer.o
->>  obj-$(CONFIG_CLKSRC_QCOM)    += qcom-timer.o
->> +obj-$(CONFIG_MTK_TIMER)              += mtk_timer.o
->>
->>  obj-$(CONFIG_ARM_ARCH_TIMER)         += arm_arch_timer.o
->>  obj-$(CONFIG_ARM_GLOBAL_TIMER)               += arm_global_timer.o
->> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
->> new file mode 100644
->> index 0000000..4b88065
->> --- /dev/null
->> +++ b/drivers/clocksource/mtk_timer.c
->> @@ -0,0 +1,263 @@
->> +/*
->> + * Mediatek SoCs General-Purpose Timer handling.
->> + *
->> + * Copyright (C) 2014 Matthias Brugger
->> + *
->> + * Matthias Brugger <matthias.bgg@gmail.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/clockchips.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/irq.h>
->> +#include <linux/irqreturn.h>
->> +#include <linux/of.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/slab.h>
->> +
->> +#define GPT_IRQ_EN_REG               0x00
->> +#define GPT_IRQ_ENABLE(val)  BIT(val-1)
->> +#define GPT_IRQ_ST_REG               0x04
->> +#define GPT_IRQ_ACK_REG              0x08
->> +#define GPT_IRQ_ACK(val)     BIT(val-1)
->> +
->> +#define TIMER_CTRL_REG(val)  (0x10 * val)
->> +#define TIMER_CTRL_OP(val)   (((val) & 0x3) << 4)
->> +#define TIMER_CTRL_OP_ONESHOT        (0)
->> +#define TIMER_CTRL_OP_REPEAT (1)
->> +#define TIMER_CTRL_OP_KEEPGO (2)
->> +#define TIMER_CTRL_OP_FREERUN        (3)
->> +#define TIMER_CTRL_CLEAR     (2)
->> +#define TIMER_CTRL_ENABLE    (1)
->> +#define TIMER_CTRL_DISABLE   (0)
->> +
->> +#define TIMER_CLK_REG(val)   (0x04 + (0x10 * val))
->> +#define TIMER_CLK_SRC(val)   (((val) & 0x1) << 4)
->> +#define TIMER_CLK_SRC_SYS13M (0)
->> +#define TIMER_CLK_SRC_RTC32K (1)
->> +#define TIMER_CLK_DIV1               (0x0)
->> +#define TIMER_CLK_DIV2               (0x1)
->> +#define TIMER_CLK_DIV3               (0x2)
->> +#define TIMER_CLK_DIV4               (0x3)
->> +#define TIMER_CLK_DIV5               (0x4)
->> +#define TIMER_CLK_DIV6               (0x5)
->> +#define TIMER_CLK_DIV7               (0x6)
->> +#define TIMER_CLK_DIV8               (0x7)
->> +#define TIMER_CLK_DIV9               (0x8)
->> +#define TIMER_CLK_DIV10              (0x9)
->> +#define TIMER_CLK_DIV11              (0xA)
->> +#define TIMER_CLK_DIV12              (0xB)
->> +#define TIMER_CLK_DIV13              (0xC)
->> +#define TIMER_CLK_DIV16              (0xD)
->> +#define TIMER_CLK_DIV32              (0xE)
->> +#define TIMER_CLK_DIV64              (0xF)
->> +
->> +#define TIMER_CNT_REG(val)   (0x08 + (0x10 * val))
->> +#define TIMER_CMP_REG(val)   (0x0C + (0x10 * val))
->> +
->> +#define GPT_CLK_EVT  1
->> +#define GPT_CLK_SRC  2
->> +
->> +
->> +
->> +struct mtk_clock_event_device {
->> +     void __iomem *gpt_base;
->> +     u32 ticks_per_jiffy;
->> +     struct clock_event_device dev;
->> +};
->> +
->> +static inline struct mtk_clock_event_device *to_mtk_clk(
->> +                             struct clock_event_device *c)
->> +{
->> +     return container_of(c, struct mtk_clock_event_device, dev);
->> +}
->> +
->> +static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
->> +{
->> +     u32 val = readl(evt->gpt_base + TIMER_CTRL_REG(timer));
->> +     writel(val & ~TIMER_CTRL_ENABLE, evt->gpt_base +
->> +                     TIMER_CTRL_REG(timer));
->> +}
->> +
->> +static void mtk_clkevt_time_setup(struct mtk_clock_event_device *evt,
->> +                             unsigned long delay, u8 timer)
->> +{
->> +     writel(delay, evt->gpt_base + TIMER_CMP_REG(timer));
->> +}
->> +
->> +static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
->> +             bool periodic, u8 timer)
->> +{
->> +     u32 val;
->> +
->> +     /* Acknowledge interrupt */
->> +     writel(GPT_IRQ_ACK(timer), evt->gpt_base + GPT_IRQ_ACK_REG);
->> +
->> +     val = readl(evt->gpt_base + TIMER_CTRL_REG(timer));
->> +
->> +     /* Clear 2 bit timer operation mode field */
->> +     val &= ~TIMER_CTRL_OP(0x3);
->> +
->> +     if (periodic)
->> +             val |= TIMER_CTRL_OP(TIMER_CTRL_OP_REPEAT);
->> +     else
->> +             val |= TIMER_CTRL_OP(TIMER_CTRL_OP_ONESHOT);
->> +
->> +     writel(val | TIMER_CTRL_ENABLE | TIMER_CTRL_CLEAR,
->> +            evt->gpt_base + TIMER_CTRL_REG(timer));
->> +}
->> +
->> +static void mtk_clkevt_mode(enum clock_event_mode mode,
->> +                             struct clock_event_device *clk)
->> +{
->> +     struct mtk_clock_event_device *evt = to_mtk_clk(clk);
->> +
->> +     mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
->> +
->> +     switch (mode) {
->> +     case CLOCK_EVT_MODE_PERIODIC:
->> +             mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
->> +             mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
->> +             break;
->> +     case CLOCK_EVT_MODE_ONESHOT:
->> +             mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
->> +             break;
->> +     case CLOCK_EVT_MODE_UNUSED:
->> +     case CLOCK_EVT_MODE_SHUTDOWN:
->> +     default:
->> +             /* No more interrupts will occur as source is disabled */
->> +             break;
->> +     }
->> +}
->> +
->> +static int mtk_clkevt_next_event(unsigned long event,
->> +                                struct clock_event_device *clk)
->> +{
->> +     struct mtk_clock_event_device *evt = to_mtk_clk(clk);
->> +
->> +     mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
->> +     mtk_clkevt_time_setup(evt, event, GPT_CLK_EVT);
->> +     mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
->> +
->> +     return 0;
->> +}
->> +
->> +static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
->> +{
->> +     struct mtk_clock_event_device *evt = dev_id;
->> +
->> +     /* Acknowledge timer0 irq */
->> +     writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_ACK_REG);
->> +     evt->dev.event_handler(&evt->dev);
->> +
->> +     return IRQ_HANDLED;
->> +}
->> +
->> +static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
->> +{
->> +     /* Disable all interrupts */
->> +     writel(0x0, evt->gpt_base + GPT_IRQ_EN_REG);
->> +     /* Acknowledge all interrupts */
->> +     writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
->> +}
->> +
->> +static void mtk_timer_reset(struct mtk_clock_event_device *evt, u8 timer)
->> +{
->> +     writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
->> +             evt->gpt_base + TIMER_CTRL_REG(timer));
->> +     writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
->> +}
->> +
->> +static void __init mtk_timer_init(struct device_node *node)
->> +{
->> +     struct mtk_clock_event_device *evt;
->> +     struct resource res;
->> +     unsigned long rate = 0;
->> +     struct clk *clk;
->> +     int ret;
->> +     u32 val;
->> +
->> +     evt = kzalloc(sizeof(*evt), GFP_KERNEL);
->> +     if (!evt)
->> +             panic("Can't allocate mtk clock event driver struct");
->> +
->> +     evt->dev.name = "mtk_tick";
->> +     evt->dev.rating = 300;
->> +     evt->dev.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
->> +     evt->dev.set_mode = mtk_clkevt_mode;
->> +     evt->dev.set_next_event = mtk_clkevt_next_event;
->> +     evt->dev.cpumask = cpu_all_mask;
->
-> cpu_possible_mask would probably be a better fit. And you still forgot
-> to set the irq field of this struct.
 
-I set the irq field when parsing the irq from the dts. Or do you refer
-to a different field I'm not aware of?
-
-Cheers,
-Matthias
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
+--===============0935287043==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="FX+Db2fp7WJhXKrW"
+Content-Disposition: inline
 
 
+--FX+Db2fp7WJhXKrW
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-motzblog.wordpress.com
+On Tue, May 13, 2014 at 11:09:00AM +0200, Andrzej Hajda wrote:
+> On 05/13/2014 09:51 AM, Thierry Reding wrote:
+> > On Fri, May 09, 2014 at 04:16:40PM +0200, Boris BREZILLON wrote:
+> >> Hello Thierry,
+> >>
+> >> I noticed you're describing each new panel with a new entry in the
+> >> of_platform_match table and a new compatible string.
+> >> I guess you have a good reason to do it this way, because retrieving
+> >> panel description from DT would be pretty easy (see this series ;-)).
+> >>
+> >> Could tell me why you chose this approach ?
+> >=20
+> > The reason is that devicetree mandates that a device be identified using
+> > a compatible value and that compatible value should be as specific as
+> > possible. That compatible value should give the device driver enough
+> > information to know everything it needs (resolution, timings, physical
+> > dimension).
+> >=20
+> > Having all of that data in the device tree is redundant.
+> >=20
+>=20
+> Many panels I have encountered have no single timings, they accepts
+> ranges of timings. With 'compatible' approach there is no place to
+> configure timings specific for particular hw configuration, unless you
+> abuse somehow compatible string.
+>=20
+> However it seems there are not so many cases the same panel must be used
+> with different timings on different boards, anyway it is a potential issu=
+e.
+
+Right. I think it makes sense, and I've said so in the past, to add
+support for overriding the default timings specified by the driver using
+a display-timings node in DT. But that should be reserved as a means to
+override the timings if that's required on some specific configuration,
+not abused as a means to add support for new panels altogether.
+
+Note that there's also the possibility to use the drm_crtc_helper_funcs'
+=2Emode_fixup() to adjust a mode's timings if the display hardware doesn't
+support the mode as-is.
+
+Thierry
+
+--FX+Db2fp7WJhXKrW
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTcePCAAoJEN0jrNd/PrOhQuMQALQEUYTBHANgi/D/RaReySGd
+JOGKjlFyqYj20Hg9ph/3DKKnzDrrHkGFmiAeS5ZS8OQxh6jOc5zePI2C4Ci+471y
+cQ8pR+8f9666bAjZZ+gAzNjb5gaDg955CdyzNB5dp4yf0H8iot4pphTVuBg9zhsG
+bhN1cjRherNKl5PPA2X8ltyAJTvAxLzpKQv/ZSa0HNaKqg7folIhqrLHizsuM4C9
+4j7OMNaIrNySW2aD7LS47/Os+5pBxamL/3s48bBpSH5fqVEUw0N5NtVXgpAXfRIU
+bfzpOMiHacG771HQF5jqdWMAFgn79vQgrRO3jxX1ter+255iC1n8uhdhCALOM0cG
+AQPczwbHdvv1sBmuskNQbFJr9UqMrjzLQTn5aUWg2qK1dMkDwjZK4yX1vYKKVhDb
+YGSjTojUE8IUvPj3irHn6TbHdygYjUr8y5htzsoQ2LZdHmlmwA83fi2Z7nJ67fzX
+FySQZcyyEswHmK5Nz7zgSDSYafdnCtANhN2w29KoApG0A1XhOznmKx4N1REzAzf5
+hNZ6Yxi8WKsaKmTts5J+/7PFWoPwSZeu7KMOIfgWjOk3kLwvHhwyHaI0H/hldjVd
+hLVtb8mwYpx/mVo8+EuQDv1otsO2ZehwINQV09NGTm22q71JhGHZpXiy/ynIofGV
+LtaDjq/CwMfxH1mHTBj+
+=G4ma
+-----END PGP SIGNATURE-----
+
+--FX+Db2fp7WJhXKrW--
+
+--===============0935287043==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0935287043==--
