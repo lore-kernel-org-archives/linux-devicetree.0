@@ -1,71 +1,82 @@
-From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
-Subject: Re: [PATCH v5 2/5] ARM: EXYNOS: use generic exynos cpu power control functions
-Date: Tue, 13 May 2014 15:43:04 +0530
-Message-ID: <CAM4voanOEpe-b98GKant9w+=YMQpE3az7a4=eMGW0aX9NpnO9g@mail.gmail.com>
-References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
-	<1399307221-8659-3-git-send-email-a.kesavan@samsung.com>
-	<019c01cf6e53$14eab220$3ec01660$@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <019c01cf6e53$14eab220$3ec01660$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <Dave.Martin@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <t.figa@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Thomas P Abraham <thomas.ab@samsung.com>, "inderpal.s@samsung.com" <inderpal.s@samsung.com>, "mark.rutland" <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, robh+dt <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, Arnd Bergmann <arnd@arndb.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Jonghwan Choi <jhbird.choi@samsung.com>, skon.hwang@samsung.com
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv2 0/4] ARM: implement workaround for Cortex-A9/PL310/PCIe deadlock
+Date: Tue, 13 May 2014 12:10:35 +0200
+Message-ID: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+Russell, Will, Catalin,
 
-On Tue, May 13, 2014 at 7:58 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Abhilash Kesavan wrote:
->>
->> From: Leela Krishna Amudala <leela.krishna@linaro.org>
->>
->> Use generic exynos cpu power control functions to power up/down
->> and to know the status of the cpu.
->>
->> Signed-off-by: Leela Krishna Amudala <leela.krishna@linaro.org>
->
-> Same as previous comment.
->
->> ---
->>  arch/arm/mach-exynos/platsmp.c |    9 +++------
->>  1 file changed, 3 insertions(+), 6 deletions(-)
->>
->> diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-
->> exynos/platsmp.c
->> index 0aac032..d442a66 100644
->> --- a/arch/arm/mach-exynos/platsmp.c
->> +++ b/arch/arm/mach-exynos/platsmp.c
->> @@ -130,15 +130,12 @@ static int exynos_boot_secondary(unsigned int cpu,
->> struct task_struct *idle)
->>        */
->>       write_pen_release(phys_cpu);
->>
->> -     if (!(__raw_readl(S5P_ARM_CORE1_STATUS) & S5P_CORE_LOCAL_PWR_EN)) {
->> -             __raw_writel(S5P_CORE_LOCAL_PWR_EN,
->> -                          S5P_ARM_CORE1_CONFIGURATION);
->> -
->> +     if (!exynos_cpu_power_state(cpu)) {
->> +             exynos_cpu_powerup(cpu);
->>               timeout = 10;
->>
->>               /* wait max 10 ms until cpu1 is on */
->> -             while ((__raw_readl(S5P_ARM_CORE1_STATUS)
->> -                     & S5P_CORE_LOCAL_PWR_EN) != S5P_CORE_LOCAL_PWR_EN) {
->> +             while (exynos_cpu_power_state(cpu) != S5P_CORE_LOCAL_PWR_EN)
->> {
->>                       if (timeout-- == 0)
->>                               break;
->>
->> --
->
-> You may cleanup the definitions of 'S5P_ARM_CORE1_CONFIGURATION/STATUS' in
-> regs-pmu.h once hotplug.c uses the generic power control functions.
-OK, will re-post a new version rebased on your for-next branch soon.
+This patch series adresses a problem that affects the newer Marvell
+Armada 375 and 38x SOCs, based on Cortex-A9+PL310, combined with the
+Marvell PCIe hardware unit. When the hardware I/O coherency is
+enabled, the combination of Cortex-A9/PL310/Marvell PCIe hardware unit
+will quickly cause a deadlock when the PCIe bus is stressed.
 
-Regards,
-Abhilash
->
-> - Kukjin
->
+The workaround for this problem has been suggested by ARM, and
+consists in two things:
+
+ (1) Map the PCIe regions as strongly-ordered
+
+ (2) Disable the outer cache sync of the PL310 when hardware I/O
+     coherency is used, since it is unneeded and causes the deadlock.
+
+The following four patches address the problem in the following way:
+
+ * PATCH 1/4 fixes a minor issue in drivers/of, which prevents from
+   using of_update_property() early enough in the boot.
+
+ * PATCH 2/4 adds the necessary infrastructure to allow PCIe I/O
+   regions to be mapped as strongly-ordered.
+
+ * PATCH 3/4 extends the l2x0 cache driver with a new compatible
+   string "arm,pl310-coherent-cache" which is associated to a
+   different set of L2 cache maintenance operations having ->sync set
+   to NULL.
+
+ * PATCH 4/4 uses both of the added infrastructures, as well as the
+   existing infrastructure to customize the behavior of ioremap() on a
+   per-platform basis, to implement the workaround for the Armada 375
+   and 38x SOCs.
+
+Changes since v1:
+
+ - Instead of introducing separate l2x0 initialization functions, rely
+   on a separate compatible string to identify whether we're coherent
+   or not. The compatible string *has* to be modified at runtime,
+   because Armada 375 and 38x are only I/O coherent when in SMP
+   mode. In non-SMP mode, they are not I/O coherent, so we cannot
+   change the DT to 'arm,pl310-coherent-cache'.
+
+ - Addition of the drivers/of fix to be able to use
+   of_update_property() early and fix up the PL310 compatible string,
+   as explained in the previous item.
+
+Thanks!
+
+Thomas
+
+Thomas Petazzoni (4):
+  of: make of_update_property() usable earlier in the boot process
+  ARM: mm: allow sub-architectures to override PCI I/O memory type
+  ARM: mm: add support for HW coherent systems in PL310
+  ARM: mvebu: implement L2/PCIe deadlock workaround
+
+ Documentation/devicetree/bindings/arm/l2cc.txt |  2 +
+ arch/arm/include/asm/io.h                      |  6 +++
+ arch/arm/mach-mvebu/board-v7.c                 | 55 ++++++++++++++++++++++++++
+ arch/arm/mm/cache-l2x0.c                       | 21 ++++++++++
+ arch/arm/mm/ioremap.c                          |  9 ++++-
+ drivers/of/base.c                              |  5 +++
+ 6 files changed, 97 insertions(+), 1 deletion(-)
+
+-- 
+1.9.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
