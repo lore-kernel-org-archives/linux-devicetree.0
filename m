@@ -1,35 +1,125 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAzLzNdIEFSTTogaS5NWDEgY2xrOiBBZGQgZGV2aWNl?=
- =?UTF-8?B?dHJlZSBzdXBwb3J0?=
-Date: Tue, 13 May 2014 20:24:13 +0400
-Message-ID: <1399998253.839894262@f391.i.mail.ru>
-References: <1399997116-4313-1-git-send-email-shc_work@mail.ru>
- <CAOMZO5Br9wpZu06oP3-Ax5XG=u+A6Ydq9peKet64Kw_moGgRaw@mail.gmail.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2] of/platform: Add of_platform_depopulate() helper
+Date: Tue, 13 May 2014 17:24:54 +0100
+Message-ID: <1399998294-24447-1-git-send-email-pawel.moll@arm.com>
+References: <1399997324.3657.35.camel@hornet>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOMZO5Br9wpZu06oP3-Ax5XG=u+A6Ydq9peKet64Kw_moGgRaw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1399997324.3657.35.camel@hornet>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: =?UTF-8?B?bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn?= <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-VHVlLCAxMyBNYXkgMjAxNCAxMzoxODo0MCAtMDMwMCDQvtGCIEZhYmlvIEVzdGV2YW0gPGZlc3Rl
-dmFtQGdtYWlsLmNvbT46Cj4gT24gVHVlLCBNYXkgMTMsIDIwMTQgYXQgMTowNSBQTSwgQWxleGFu
-ZGVyIFNoaXlhbiA8c2hjX3dvcmtAbWFpbC5ydT4gd3JvdGU6Cj4gCj4gPiArICAgICAgIGNsa1tJ
-TVgxX0NMS19EVU1NWV0gPQo+ID4gKyAgICAgICAgICAgICAgIGlteF9jbGtfZml4ZWQoImR1bW15
-IiwgMCk7Cj4gPiArICAgICAgIGNsa1tJTVgxX0NMS19DTEszMl0gPQo+ID4gKyAgICAgICAgICAg
-ICAgIGlteF9vYnRhaW5fZml4ZWRfY2xvY2soImNsazMyIiwgZnJlZik7Cj4gPiArICAgICAgIGNs
-a1tJTVgxX0NMS19DTEsxNk1fRVhUXSA9Cj4gPiArICAgICAgICAgICAgICAgaW14X2Nsa19maXhl
-ZCgiY2xrMTZtX2V4dCIsIDE2MDAwMDAwKTsKPiA+ICsgICAgICAgY2xrW0lNWDFfQ0xLX0NMSzE2
-TV0gPQo+ID4gKyAgICAgICAgICAgICAgIGlteF9jbGtfZ2F0ZSgiY2xrMTZtIiwgImNsazE2bV9l
-eHQiLCBDQ01fQ1NDUiwgMTcpOwo+IAo+IFdoeSBkb24ndCB5b3UgcHV0IGVhY2ggZW50cnkgaW50
-byBhIHNpbmdsZSBsaW5lIGluc3RlYWQ/Cj4gCj4gRXZlbiBpZiBpdCBnZXRzIGxhcmdlciB0aGFu
-IDgwIGNvbHVtbnMsIGl0IHdvdWxkIGJlIGVhc2llciB0byByZWFkLgoKSSB0aG91Z2h0IGFib3V0
-IGl0LCBidXQgY2FtZSB0byB0aGUgY29uY2x1c2lvbiB0aGF0IGl0IGlzIGJldHRlciB0byBvYnNl
-cnZlCnRoZSBrZXJuZWwgcnVsZXMuCgotLS0KCg==
+Drivers can us of_platform_populate() to create
+platform devices for children of the device
+main node (this can particularly happen in case
+of MFD devices). Unfortunately, there was no
+standard way of removing such sub-devices when
+the main one is being removed.
+
+This patch adds of_platform_depopulate() as
+a complementary operation for the _populate()
+one. It removes all platform and amba devices
+that have been created from the Device Tree,
+but leaves all other ones untouched (returning
+-EBUSY in such case).
+
+Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+---
+Changes since v1:
+
+- using bool rather than int to signal remaining children
+- recursing using of_platform_depopulate() itself
+
+ drivers/of/platform.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/of_platform.h |  5 +++++
+ 2 files changed, 55 insertions(+)
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 236f47e..3b51e04 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -495,4 +495,54 @@ int of_platform_populate(struct device_node *root,
+ 	return rc;
+ }
+ EXPORT_SYMBOL_GPL(of_platform_populate);
++
++static int of_platform_device_destroy(struct device *dev, void *data)
++{
++	bool *children_left = data;
++
++	/* Do not touch devices not populated from the device tree */
++	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED)) {
++		*children_left = true;
++		return 0;
++	}
++
++	/* Recurse, but don't touch this device if it has any children left */
++	if (of_platform_depopulate(dev) != 0) {
++		*children_left = true;
++		return 0;
++	}
++
++	if (dev->bus == &platform_bus_type)
++		platform_device_unregister(to_platform_device(dev));
++	else if (dev->bus == &amba_bustype)
++		amba_device_unregister(to_amba_device(dev));
++	else
++		*children_left = true;
++
++	return 0;
++}
++
++/**
++ * of_platform_depopulate() - Remove devices populated from device tree
++ * @parent: device which childred will be removed
++ *
++ * Complementary to of_platform_populate(), this function removes children
++ * of the given device (and, recurrently, their children) that have been
++ * created from their respective device tree nodes (and only those,
++ * leaving others - eg. manually created - unharmed).
++ *
++ * Returns 0 when all children devices have been removed or
++ * -EBUSY when some children remained.
++ */
++int of_platform_depopulate(struct device *parent)
++{
++	bool children_left = false;
++
++	device_for_each_child(parent, &children_left,
++			of_platform_device_destroy);
++
++	return children_left ? -EBUSY : 0;
++}
++EXPORT_SYMBOL_GPL(of_platform_depopulate);
++
+ #endif /* CONFIG_OF_ADDRESS */
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index 05cb4a9..b1010ee 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -72,6 +72,7 @@ extern int of_platform_populate(struct device_node *root,
+ 				const struct of_device_id *matches,
+ 				const struct of_dev_auxdata *lookup,
+ 				struct device *parent);
++extern int of_platform_depopulate(struct device *parent);
+ #else
+ static inline int of_platform_populate(struct device_node *root,
+ 					const struct of_device_id *matches,
+@@ -80,6 +81,10 @@ static inline int of_platform_populate(struct device_node *root,
+ {
+ 	return -ENODEV;
+ }
++static inline int of_platform_depopulate(struct device *parent)
++{
++	return -ENODEV;
++}
+ #endif
+ 
+ #endif	/* _LINUX_OF_PLATFORM_H */
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
