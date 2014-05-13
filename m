@@ -1,67 +1,52 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: gpio-regulator: Add required
- regulator-type property
-Date: Tue, 13 May 2014 17:59:21 +0100
-Message-ID: <20140513165921.GK12304@sirena.org.uk>
-References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20131205000928.GI29268@sirena.org.uk>
- <2248657.5UVkYxaC6z@avalon>
- <2193707.R9XiqBsnU4@avalon>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv2 1/4] of: make of_update_property() usable earlier in
+ the boot process
+Date: Tue, 13 May 2014 13:00:43 -0400
+Message-ID: <20140513170043.GG27822@titan.lakedaemon.net>
+References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1399975839-5311-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <CAL_JsqLNnLjeo2tM=z5bcn4DJD_5-uFRGkk6wAWnvGZyo9Y7pg@mail.gmail.com>
+ <20140513163026.18a0fa61@free-electrons.com>
+ <20140513153006.GC27822@titan.lakedaemon.net>
+ <20140513175404.319d067d@free-electrons.com>
+ <CAL_JsqJhKy=whJE25me07YFxEMX+gCch42ZF_Z5_5xfsfAvFXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="MBvrg9yBmBnxRi7n"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <2193707.R9XiqBsnU4@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAL_JsqJhKy=whJE25me07YFxEMX+gCch42ZF_Z5_5xfsfAvFXA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 13, 2014 at 11:58:08AM -0500, Rob Herring wrote:
+> On Tue, May 13, 2014 at 10:54 AM, Thomas Petazzoni
+> <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> > Dear Jason Cooper,
+> >
+> > On Tue, 13 May 2014 11:30:06 -0400, Jason Cooper wrote:
+> >
+> >> > Well, I guess it's a per-maintainer choice:
+> >> >
+> >> > git log | grep "^Fixes:"
+> >> >
+> >> >     Fixes: 54fe26a900bc528f3df1e4235cb6b9ca5c6d4dc2 ('ARM: mvebu: Add thermal quirk for the Armada 375 DB board')
+> >>
+> >> Well, just because the maintainer is an idiot and didn't catch it isn't
+> >> an excuse to continue the behavior. ;-)
+> 
+> To be fair, documentation was added last week! I only noticed now
+> because I just found and read the documentation. In the future, I'll
+> probably forget and not notice thus becoming an idiot again. ;)
 
---MBvrg9yBmBnxRi7n
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+um.. I thought that was me.  I usually don't make it a habit of calling
+other people idiot.  I reserve that for myself. ;-)
 
-On Tue, May 13, 2014 at 02:06:23AM +0200, Laurent Pinchart wrote:
+thx,
 
-> What's the status of this ? The gpio regulator driver now defaults to vol=
-tage=20
-> regulator when the regulator-type property is not set. Should the DT bind=
-ings=20
-> document the property as optional (I can submit a patch for that), or do =
-you=20
-> consider that the gpio regulator driver should support voltage regulators=
- only=20
-> when used with DT, and just keep the regulator-type property support in t=
-he=20
-> driver for backward compatibility ?
-
-I don't really care either way, I did write a patch for the bindings but
-there was some language lawyering over it and I never cared enough to
-get round to updating it.
-
---MBvrg9yBmBnxRi7n
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTck9mAAoJELSic+t+oim9flUP+wY5sh1P9PWuuQqcJoBx8rxV
-cUlSprpLHC3fwt7rxqkHOUPz3blJopPgSKz/BhC3if+PjdcTGIw50isJk2rllfVi
-1j4qotTlAO6MhuPjk/wn1gEOyzTxNb+cpKCVeOgfpW1DdPNer6NuRALZQ7RfswEJ
-cpGeFTPiBRJnWain/28oe/FEYwKdvM3hbyuPtVwe1q1hG06OyjVkZlZP26Y2cBoA
-s8vHwom3BAB3JnzTSwGZ83zHDvdMentgdbJR0N5m4HSznRakIOgC8KzTyJA9FBXj
-k2ahrPqhBNEvh7mj3HCZXmm4AT6wgkDVO2dp7kPINjVSCAxiyC5Eyf3b/2MbLSD9
-rsQP6ww+Yk7GfzfI8bHEM7G3UrEVGkN7UudP5twms93QjizNEe5uwgJ4j9+38OBB
-uE2P5YnPZ1sF/yrj+yuHHAEX4syp2yEDiq3Xj0FX9RP4p3B3XFyjzFjP5jSRUEvN
-+LFvYMbBAd9bwLAkca4F76aSb27kCYSPuBb/3/Q5G52hXUjsuX+6NqoSYjaViy2H
-r9BqaIx7EmZ784Um/8/xXJOki69asW8iZzrmww71AjGXRVYRaZkMM59btWgYoMJs
-fAUOMRifK0IscKYVP1c6QcX/6ZwVlDMoUocrJvgdnUsK3eN2/OfvH+78YvgsWm3R
-IA4fx+sbFb/F94T/y0z6
-=0KZY
------END PGP SIGNATURE-----
-
---MBvrg9yBmBnxRi7n--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
