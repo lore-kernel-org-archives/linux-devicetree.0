@@ -1,142 +1,288 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH 3/3] arm/dts: dra7xx: Enable CPSW and MDIO for dra7xx EVM
-Date: Tue, 13 May 2014 13:34:06 +0530
-Message-ID: <1399968246-21166-4-git-send-email-mugunthanvnm@ti.com>
-References: <1399968246-21166-1-git-send-email-mugunthanvnm@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv5 10/20] phy: add support for USB cluster on the Armada
+ 375 SoC
+Date: Tue, 13 May 2014 10:06:58 +0200
+Message-ID: <5371D2A2.5020904@free-electrons.com>
+References: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com> <1399832288-19899-11-git-send-email-thomas.petazzoni@free-electrons.com> <5371B36C.6000703@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399968246-21166-1-git-send-email-mugunthanvnm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bcousson@baylibre.com, tony@atomide.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Mugunthan V N <mugunthanvnm@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5371B36C.6000703-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding CPSW phy-id, CPSW and MDIO pinmux configuration for active and
-sleep states and enable them in board evm dts file.
+On 13/05/2014 07:53, Kishon Vijay Abraham I wrote:
+> Hi,
+> 
+> On Sunday 11 May 2014 11:47 PM, Thomas Petazzoni wrote:
+>> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>
+>> The Armada 375 SoC comes with an USB2 host and device controller and
+>> an USB3 controller. The USB cluster control register allows to manage
+>> common features of both USB controllers.
+>>
+>> This commit adds a driver integrated in the generic PHY framework to
+>> control this USB cluster feature.
+>>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  drivers/phy/Kconfig              |   6 ++
+>>  drivers/phy/Makefile             |   1 +
+>>  drivers/phy/phy-armada375-usb2.c | 157 +++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 164 insertions(+)
+>>  create mode 100644 drivers/phy/phy-armada375-usb2.c
+>>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 3bb05f1..e63cf9d 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -15,6 +15,12 @@ config GENERIC_PHY
+>>  	  phy users can obtain reference to the PHY. All the users of this
+>>  	  framework should select this config.
+>>  
+>> +config ARMADA375_USBCLUSTER_PHY
+>> +	def_bool y
+>> +	depends on MACH_ARMADA_375 || COMPILE_TEST
+>> +	depends on OF
+>> +	select GENERIC_PHY
+>> +
+>>  config PHY_EXYNOS_MIPI_VIDEO
+>>  	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
+>>  	depends on HAS_IOMEM
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index 2faf78e..47d5a86 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -3,6 +3,7 @@
+>>  #
+>>  
+>>  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+>> +obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>>  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>>  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>> diff --git a/drivers/phy/phy-armada375-usb2.c b/drivers/phy/phy-armada375-usb2.c
+>> new file mode 100644
+>> index 0000000..a6f746d
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-armada375-usb2.c
+>> @@ -0,0 +1,157 @@
+>> +/*
+>> + * USB cluster support for Armada 375 platform.
+>> + *
+>> + * Copyright (C) 2014 Marvell
+>> + *
+>> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> + *
+>> + * This file is licensed under the terms of the GNU General Public
+>> + * License version 2 or later. This program is licensed "as is"
+>> + * without any warranty of any kind, whether express or implied.
+>> + *
+>> + * Armada 375 comes with an USB2 host and device controller and an
+>> + * USB3 controller. The USB cluster control register allows to manage
+>> + * common features of both USB controllers.
+>> + */
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/io.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/module.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/phy/phy.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/slab.h>
+>> +
+>> +#define USB2_PHY_CONFIG_DISABLE BIT(0)
+>> +
+>> +/* The USB cluster allows to choose between two PHYs */
+>> +#define NB_PHY 2
+>> +
+>> +enum {
+>> +	PHY_USB2 = 0,
+>> +	PHY_USB3 = 1,
+>> +};
+>> +
+>> +struct armada375_cluster_phy {
+>> +	struct phy *phy;
+>> +	void __iomem *reg;
+>> +	bool enable;
+>> +	bool use_usb3;
+>> +};
+>> +
+>> +struct armada375_cluster_phy usb_cluster_phy[NB_PHY];
+>> +
+>> +static int armada375_usb_phy_init(struct phy *phy)
+>> +{
+>> +	struct armada375_cluster_phy *cluster_phy = phy_get_drvdata(phy);
+>> +	u32 reg;
+> 
+> This function should be protected since both your PHYs use this ops.
 
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
----
- arch/arm/boot/dts/dra7-evm.dts | 103 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 103 insertions(+)
+Right
 
-diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-evm.dts
-index 5f1f6da..91d5dd8 100644
---- a/arch/arm/boot/dts/dra7-evm.dts
-+++ b/arch/arm/boot/dts/dra7-evm.dts
-@@ -108,6 +108,85 @@
- 			0xbc (PIN_INPUT_PULLUP | MUX_MODE1)  /* gpmc_cs3.qspi1_cs1 */
- 		>;
- 	};
-+
-+	cpsw_default: cpsw_default {
-+		pinctrl-single,pins = <
-+			/* Slave 1 */
-+			0x250 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_tclk */
-+			0x254 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_tctl */
-+			0x258 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td3 */
-+			0x25c (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td2 */
-+			0x260 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td1 */
-+			0x264 (PIN_OUTPUT | MUX_MODE0)	/* rgmii1_td0 */
-+			0x268 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rclk */
-+			0x26c (PIN_INPUT | MUX_MODE0)	/* rgmii1_rctl */
-+			0x270 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd3 */
-+			0x274 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd2 */
-+			0x278 (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd1 */
-+			0x27c (PIN_INPUT | MUX_MODE0)	/* rgmii1_rd0 */
-+
-+			/* Slave 2 */
-+			0x198 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_tclk */
-+			0x19c (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_tctl */
-+			0x1a0 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td3 */
-+			0x1a4 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td2 */
-+			0x1a8 (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td1 */
-+			0x1ac (PIN_OUTPUT | MUX_MODE3)	/* rgmii2_td0 */
-+			0x1b0 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rclk */
-+			0x1b4 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rctl */
-+			0x1b8 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd3 */
-+			0x1bc (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd2 */
-+			0x1c0 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd1 */
-+			0x1c4 (PIN_INPUT | MUX_MODE3)	/* rgmii2_rd0 */
-+		>;
-+
-+	};
-+	cpsw_sleep: cpsw_sleep {
-+		pinctrl-single,pins = <
-+			/* Slave 1 */
-+			0x250 (PIN_OFF_NONE)
-+			0x254 (PIN_OFF_NONE)
-+			0x258 (PIN_OFF_NONE)
-+			0x25c (PIN_OFF_NONE)
-+			0x260 (PIN_OFF_NONE)
-+			0x264 (PIN_OFF_NONE)
-+			0x268 (PIN_OFF_NONE)
-+			0x26c (PIN_OFF_NONE)
-+			0x270 (PIN_OFF_NONE)
-+			0x274 (PIN_OFF_NONE)
-+			0x278 (PIN_OFF_NONE)
-+			0x27c (PIN_OFF_NONE)
-+
-+			/* Slave 1 */
-+			0x198 (PIN_OFF_NONE)
-+			0x19c (PIN_OFF_NONE)
-+			0x1a0 (PIN_OFF_NONE)
-+			0x1a4 (PIN_OFF_NONE)
-+			0x1a8 (PIN_OFF_NONE)
-+			0x1ac (PIN_OFF_NONE)
-+			0x1b0 (PIN_OFF_NONE)
-+			0x1b4 (PIN_OFF_NONE)
-+			0x1b8 (PIN_OFF_NONE)
-+			0x1bc (PIN_OFF_NONE)
-+			0x1c0 (PIN_OFF_NONE)
-+			0x1c4 (PIN_OFF_NONE)
-+		>;
-+	};
-+
-+	davinci_mdio_default: davinci_mdio_default {
-+		pinctrl-single,pins = <
-+			/* MDIO */
-+			0x23c (PIN_OUTPUT_PULLUP | MUX_MODE0)	/* mdio_data */
-+			0x240 (PIN_INPUT_PULLUP | MUX_MODE0)	/* mdio_clk */
-+		>;
-+	};
-+
-+	davinci_mdio_sleep: davinci_mdio_sleep {
-+		pinctrl-single,pins = <
-+			0x23c (PIN_OFF_NONE)
-+			0x240 (PIN_OFF_NONE)
-+		>;
-+	};
- };
- 
- &i2c1 {
-@@ -353,3 +432,27 @@
- 		};
- 	};
- };
-+
-+&mac {
-+	status = "okay";
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&cpsw_default>;
-+	pinctrl-1 = <&cpsw_sleep>;
-+	dual_emac;
-+};
-+
-+&cpsw_emac0 {
-+	phy_id = <&davinci_mdio>, <2>;
-+	phy-mode = "rgmii";
-+};
-+
-+&cpsw_emac1 {
-+	phy_id = <&davinci_mdio>, <3>;
-+	phy-mode = "rgmii";
-+};
-+
-+&davinci_mdio {
-+	pinctrl-names = "default", "sleep";
-+	pinctrl-0 = <&davinci_mdio_default>;
-+	pinctrl-1 = <&davinci_mdio_sleep>;
-+};
+>> +
+>> +	if (!cluster_phy->enable)
+>> +		return -ENODEV;
+>> +
+>> +	reg = readl(cluster_phy->reg);
+>> +	if (cluster_phy->use_usb3)
+>> +		reg |= USB2_PHY_CONFIG_DISABLE;
+>> +	else
+>> +		reg &= ~USB2_PHY_CONFIG_DISABLE;
+>> +	writel(reg, cluster_phy->reg);
+> 
+> This is confusing since both your PHYs control the same bit?
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct phy_ops armada375_usb_phy_ops = {
+>> +	.init = armada375_usb_phy_init,
+>> +	.owner		= THIS_MODULE,
+>> +};
+>> +
+>> +static struct phy *armada375_usb_phy_xlate(struct device *dev,
+>> +					struct of_phandle_args *args)
+>> +{
+>> +	if (WARN_ON(args->args[0] >= NB_PHY))
+>> +		return ERR_PTR(-ENODEV);
+>> +
+>> +	return usb_cluster_phy[args->args[0]].phy;
+>> +}
+>> +
+>> +static int armada375_usb_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct device *dev = &pdev->dev;
+>> +	struct phy *phy;
+>> +	struct phy_provider *phy_provider;
+>> +	void __iomem *usb_cluster_base;
+>> +	struct device_node *xhci_node;
+>> +	struct resource *res;
+>> +	int i;
+>> +
+>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +	usb_cluster_base = devm_ioremap_resource(&pdev->dev, res);
+>> +	if (!usb_cluster_base)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i = 0; i < NB_PHY; i++) {
+> 
+> For devices which have multiple PHYs, each PHY should be modelled as the
+> sub-node of the *PHY provider* device node.
+
+Actually it is the opposite the same PHY is shared between the EHCI
+and the xHCI controllers. It is more a PHY muxer than a PHY itself.
+
+I had to create 2 logical PHYs because once the phy_init() is called
+by a USB driver then the .init ops is not called anymore by the next
+call to phy_init(). One of the goal of this is to disable a port for
+the USB controller which can't use it due to the configuration of the
+USB cluster.
+
+But I can see how to make this two "pseudo" PHYs sub-node of the *PHY
+provider* device node. It shouldn't change the internal logic of this
+driver.
+
+
+>> +		phy = devm_phy_create(dev, &armada375_usb_phy_ops, NULL);
+>> +		if (IS_ERR(phy)) {
+>> +			dev_err(dev, "failed to create PHY n%d\n", i);
+>> +			return PTR_ERR(phy);
+>> +		}
+>> +
+>> +		usb_cluster_phy[i].phy = phy;
+>> +		usb_cluster_phy[i].reg = usb_cluster_base;
+>> +		usb_cluster_phy[i].enable = false;
+>> +		phy_set_drvdata(phy, &usb_cluster_phy[i]);
+>> +	}
+>> +
+>> +	usb_cluster_phy[PHY_USB2].use_usb3 = false;
+>> +	usb_cluster_phy[PHY_USB3].use_usb3 = true;
+>> +
+>> +	/*
+>> +	 * We can't use the first usb2 unit and usb3 at the same time
+>> +	 * to manage a USB2 device, so let's disable usb2 if usb3 is
+>> +	 * selected. In this case the USB2 device will be managed by
+>> +	 * the xhci controller.
+>> +	 */
+>> +
+>> +	xhci_node = of_find_compatible_node(NULL, NULL,
+>> +					"marvell,armada-375-xhci");
+> 
+> huh.. that's too much binding between the controller and the PHY.
+> 
+
+That's why initially it was not part of the PHY framework.  The USB
+cluster is really a part managing common feature between the USB
+controllers which are part of the Armada 375 SoC.
+
+However the initial version was not really good, because this piece of
+code was located in the mach- directory whereas we are trying to move
+most of the files out of this directory now. The USB cluster is not a
+real PHY as it is related to the PHY management this framework remains
+the best place for it.
+
+>> +
+>> +	if (xhci_node && of_device_is_available(xhci_node)) {
+>> +		usb_cluster_phy[PHY_USB3].enable = true;
+>> +	} else {
+>> +		struct device_node *ehci_node;
+>> +		ehci_node = of_find_compatible_node(NULL, NULL,
+>> +					"marvell,orion-ehci");
+>> +		if (ehci_node && of_device_is_available(ehci_node))
+>> +			usb_cluster_phy[PHY_USB2].enable = true;
+>> +		of_node_put(ehci_node);
+>> +	}
+>> +
+>> +	of_node_put(xhci_node);
+>> +
+>> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
+>> +						     armada375_usb_phy_xlate);
+>> +	if (IS_ERR(phy_provider))
+>> +		return PTR_ERR(phy_provider);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id of_usb_cluster_table[] = {
+>> +	{ .compatible = "marvell,armada-375-usb-cluster", },
+>> +	{ /* end of list */ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, of_usb_cluster_table);
+>> +
+>> +static struct platform_driver armada375_usb_phy_driver = {
+>> +	.probe	= armada375_usb_phy_probe,
+>> +	.driver = {
+>> +		.of_match_table	= of_usb_cluster_table,
+>> +		.name  = "armada-375-usb-cluster",
+>> +		.owner = THIS_MODULE,
+>> +	}
+>> +};
+>> +module_platform_driver(armada375_usb_phy_driver);
+>> +
+>> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
+>> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+>> +MODULE_LICENSE("GPL");
+> 
+> GPL v2?
+
+No it is really GPL v2 or latter as written at the top of this file
+
+
+Thanks,
+
+Gregory
+
 -- 
-1.9.2.459.g68773ac
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
