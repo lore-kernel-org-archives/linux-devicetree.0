@@ -1,7 +1,7 @@
 From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: [PATCH 2/3] deps: Add option to print initialization order
-Date: Tue, 13 May 2014 10:54:02 +0200
-Message-ID: <1399971243-18153-3-git-send-email-holler@ahsoftware.de>
+Subject: [PATCH 3/3] deps: Add option to print dependency graph as dot (Graphviz)
+Date: Tue, 13 May 2014 10:54:03 +0200
+Message-ID: <1399971243-18153-4-git-send-email-holler@ahsoftware.de>
 References: <537151FF.8070104@ahsoftware.de>
  <1399971243-18153-1-git-send-email-holler@ahsoftware.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
@@ -11,464 +11,231 @@ To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add option -t to print the default initialization order.
-No other output will be generated.
+Add option -T do print a dependency graph in dot format for
+generating a picture with Graphviz.
 
-To print the order, just use something like this:
+E.g.
+
+	dtc -T foo.dts | dot -T svg -o foo.svg
+
+would generate the picture foo.png with the dependency graph.
+
+Convential dependencies (those based on the tree structure) are having
+black arrows, dependencies based on the property 'dependencies' are
+having cyan arrows.
+
+Option -D to not automatically add dependencies does still work, so
+you could build a classic dependency graph with
+
+	dtc -D -T foo.dts | dot -T png -o foo_no_auto_deps.png
+
+This works with binary blobs as input too. E.g.
 
 	CROSS_COMPILE=gcc-foo ARCH=arm make foo.dtb
-	scripts/dtc/dtc -I dtb -t arch/arm/boot/dts/foo.dtb
+	scripts/dtc/dtc -I dtb -T arch/arm/boot/dts/foo.dtb
 
-Since it's now possible to check to for cycles in the dependency graph,
-this is now done too.
+would print the dot file.
 
 Signed-off-by: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
 ---
- dependencies.c | 346 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- dtc.c          |  24 +++-
- dtc.h          |   2 +
- 3 files changed, 371 insertions(+), 1 deletion(-)
+ dependencies.c | 48 ++++++++++++++++++++++++++++++++++++++++++------
+ dtc.c          | 19 ++++++++++++++++---
+ dtc.h          |  2 +-
+ 3 files changed, 59 insertions(+), 10 deletions(-)
 
 diff --git a/dependencies.c b/dependencies.c
-index dd4658c..8fe1a8c 100644
+index 8fe1a8c..4579f6f 100644
 --- a/dependencies.c
 +++ b/dependencies.c
-@@ -106,3 +106,349 @@ void add_dependencies(struct boot_info *bi)
- {
- 	process_nodes_props(bi->dt, bi->dt);
+@@ -298,7 +298,7 @@ static void __init topological_sort(void)
+ 			depth_first_search(i);
  }
-+
-+/*
-+ * The code below is in large parts a copy of drivers/of/of_dependencies.c
-+ * in the Linux kernel. So both files do share the same bugs.
-+ * The next few ugly defines do exist to keep the differences at a minimum.
-+ */
-+static struct node *tree;
-+#define pr_cont(format, ...) printf(format, ##__VA_ARGS__)
-+#define pr_info(format, ...) printf(format, ##__VA_ARGS__)
-+#define pr_warn(format, ...) printf(format, ##__VA_ARGS__)
-+#define pr_err(format, ...) fprintf(stderr, format, ##__VA_ARGS__)
-+typedef cell_t __be32;
-+#define device_node node
-+#define full_name fullpath
-+#define __initdata
-+#define __init
-+#define unlikely(a) (a)
-+#define of_node_put(a)
-+#define of_find_node_by_phandle(v) get_node_by_phandle(tree, v)
-+#define __of_get_property(a, b, c) get_property(a, b)
-+#define for_each_child_of_node(a, b) for_each_child(a, b)
-+
-+
-+#define MAX_DT_NODES 1000 /* maximum number of vertices */
-+#define MAX_EDGES (MAX_DT_NODES*2) /* maximum number of edges (dependencies) */
-+
-+struct edgenode {
-+	uint32_t y; /* phandle */
-+	struct edgenode *next; /* next edge in list */
-+};
-+
-+/*
-+ * Vertex numbers do correspond to phandle numbers. That means the graph
-+ * does contain as much vertices as the maximum of all phandles.
-+ * Or in other words, we assume that for all phandles in the device tree
-+ * 0 < phandle < MAX_DT_NODES+1 is true.
-+ */
-+struct dep_graph {
-+	struct edgenode edge_slots[MAX_EDGES]; /* used to avoid kmalloc */
-+	struct edgenode *edges[MAX_DT_NODES+1]; /* adjacency info */
-+	unsigned nvertices; /* number of vertices in graph */
-+	unsigned nedges; /* number of edges in graph */
-+	bool processed[MAX_DT_NODES+1]; /* which vertices have been processed */
-+	bool include_node[MAX_DT_NODES+1]; /* which nodes to consider */
-+	bool discovered[MAX_DT_NODES+1]; /* which vertices have been found */
-+	bool finished; /* if true, cut off search immediately */
-+};
-+static struct dep_graph graph __initdata;
-+
-+struct init_order {
-+	uint32_t max_phandle; /* the max used phandle */
-+	uint32_t old_max_phandle; /* used to keep track of added phandles */
-+	struct device_node *order[MAX_DT_NODES+1];
-+	unsigned count;
-+	/* Used to keep track of parent devices in regard to the DT */
-+	uint32_t parent_by_phandle[MAX_DT_NODES+1];
-+	struct device *device_by_phandle[MAX_DT_NODES+1];
-+};
-+static struct init_order order __initdata;
-+
-+
-+/* Copied from drivers/of/base.c (because it's lockless). */
-+static int __init __of_device_is_available(struct device_node *device)
-+{
-+	struct property *status;
-+
-+	if (!device)
-+		return 0;
-+
-+	status = get_property(device, "status");
-+	if (status == NULL)
-+		return 1;
-+
-+	if (status->val.len > 0) {
-+		if (!strcmp(status->val.val, "okay") ||
-+				!strcmp(status->val.val, "ok"))
-+			return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+/*
-+ * x is a dependant of y or in other words
-+ * y will be initialized before x.
-+ */
-+static int __init insert_edge(uint32_t x, uint32_t y)
-+{
-+	struct edgenode *p; /* temporary pointer */
-+
-+	if (unlikely(x > MAX_DT_NODES || y > MAX_DT_NODES)) {
-+		pr_err("Node found with phandle 0x%x > MAX_DT_NODES (%d)!\n",
-+			x > MAX_DT_NODES ? x : y, MAX_DT_NODES);
-+		return -EINVAL;
-+	}
-+	if (unlikely(!x || !y))
-+		return 0;
-+	if (unlikely(graph.nedges >= MAX_EDGES)) {
-+		pr_err("Maximum number of edges (%d) reached!\n", MAX_EDGES);
-+		return -EINVAL;
-+	}
-+	p = &graph.edge_slots[graph.nedges++];
-+	graph.include_node[x] = 1;
-+	graph.include_node[y] = 1;
-+	p->y = y;
-+	p->next = graph.edges[x];
-+	graph.edges[x] = p; /* insert at head of list */
-+
-+	graph.nvertices = (x > graph.nvertices) ? x : graph.nvertices;
-+	graph.nvertices = (y > graph.nvertices) ? y : graph.nvertices;
-+	return 0;
-+}
-+
-+static void __init print_node_name(uint32_t v)
-+{
-+	struct device_node *node;
-+
-+	node = of_find_node_by_phandle(v);
-+	if (!node) {
-+		pr_err("Node for phandle 0x%x not found", v);
-+		return;
-+	}
-+	if (node->name)
-+		pr_err("%s", node->name);
-+	if (node->full_name)
-+		pr_err(" (%s)", node->full_name);
-+	of_node_put(node);
-+}
-+
-+/*
-+ * I would prefer to use the BGL (Boost Graph Library), but as I can't use it
-+ * here (for obvious reasons), the next four functions below are based on
-+ * code of Steven Skiena's book 'The Algorithm Design Manual'.
-+ */
-+
-+static void __init process_edge(uint32_t x, uint32_t y)
-+{
-+	if (unlikely(graph.discovered[y] && !graph.processed[y])) {
-+		pr_err("Cycle found 0x%x ", x);
-+		print_node_name(x);
-+		pr_cont(" <-> 0x%x ", y);
-+		print_node_name(y);
-+		pr_cont("!\n");
-+		graph.finished = 1;
-+	}
-+}
-+
-+static void __init process_vertex_late(uint32_t v)
-+{
-+	struct device_node *node;
-+
-+	node = of_find_node_by_phandle(v);
-+	if (!node) {
-+		pr_err("No node for phandle 0x%x not found", v);
-+		return;
-+	}
-+	order.order[order.count++] = node;
-+}
-+
-+static void __init depth_first_search(uint32_t v)
-+{
-+	struct edgenode *p;
-+	uint32_t y; /* successor vertex */
-+
-+	if (graph.finished)
-+		return;
-+	graph.discovered[v] = 1;
-+	p = graph.edges[v];
-+	while (p) {
-+		y = p->y;
-+		if (!graph.discovered[y]) {
-+			process_edge(v, y);
-+			depth_first_search(y);
-+		} else
-+			process_edge(v, y);
-+		if (graph.finished)
-+			return;
-+		p = p->next;
-+	}
-+	process_vertex_late(v);
-+	graph.processed[v] = 1;
-+}
-+
-+static void __init topological_sort(void)
-+{
-+	unsigned i;
-+
-+	for (i = 1; i <= graph.nvertices; ++i)
-+		if (!graph.discovered[i] && graph.include_node[i])
-+			depth_first_search(i);
-+}
-+
-+static int __init add_dep_list(struct device_node *node)
-+{
-+	const __be32 *list, *list_end;
-+	uint32_t ph;
-+	struct property *prop;
-+	int rc = 0;
-+	struct device_node *dep;
-+
-+	prop = get_property(node, "dependencies");
-+	if (!prop || !prop->val.len || prop->val.len%sizeof(*list))
-+		return 0;
-+	list = (const __be32 *)prop->val.val;
-+	list_end = list + prop->val.len / sizeof(*list);
-+	while (list < list_end) {
-+		ph = fdt32_to_cpu(*list++);
-+		if (unlikely(!ph)) {
-+			/* Should never happen */
-+			if (node->name)
-+				pr_warn("phandle == 0 for %s\n", node->name);
-+			continue;
-+		}
-+		dep = of_find_node_by_phandle(ph);
-+		if (unlikely(!dep)) {
-+			pr_err("No DT node for dependency with phandle 0x%x found\n",
-+				ph);
-+			continue;
-+		}
-+		rc = insert_edge(node->phandle, ph);
-+		if (rc)
-+			break;
-+	}
-+
-+	return rc;
-+}
-+
-+/* Copied from drivers/of/base.c */
-+static const char *of_prop_next_string(struct property *prop, const char *cur)
-+{
-+	const char *curv = cur;
-+
-+	if (!prop)
-+		return NULL;
-+
-+	if (!cur)
-+		return prop->val.val;
-+
-+	curv += strlen(cur) + 1;
-+	if (curv >= prop->val.val + prop->val.len)
-+		return NULL;
-+
-+	return curv;
-+}
-+
-+static int __init add_deps_lnx(struct device_node *parent,
-+				struct device_node *node)
-+{
-+	struct device_node *child;
-+	int rc = 0;
-+
-+	if (!__of_device_is_available(node))
-+		return 0;
-+	if (__of_get_property(node, "compatible", NULL)) {
-+		if (!parent->phandle) {
-+			if (__of_get_property(parent, "compatible", NULL))
-+				parent->phandle = 1 + order.max_phandle++;
-+		}
-+		if (!node->phandle)
-+			node->phandle = 1 + order.max_phandle++;
-+		rc = insert_edge(node->phandle, parent->phandle);
-+		if (rc)
-+			return rc;
-+		if (unlikely(order.parent_by_phandle[node->phandle])) {
-+			/* sanity check */
-+			pr_err("0x%x already has a parent!\n", node->phandle);
-+			return -EINVAL;
-+		}
-+		order.parent_by_phandle[node->phandle] = parent->phandle;
-+		rc = add_dep_list(node);
-+		if (unlikely(rc))
-+			return rc;
-+		parent = node; /* change the parent only if node is a driver */
-+	}
-+	for_each_child_of_node(node, child) {
-+		rc = add_deps_lnx(parent, child);
-+		if (unlikely(rc))
-+			break;
-+	}
-+
-+	return rc;
-+}
-+
-+static void calc_max_phandle(struct node *np)
-+{
-+	struct node *child;
-+
-+	if (!np || np->deleted)
-+		return;
-+	if (np->phandle > order.max_phandle)
-+		order.max_phandle = np->phandle;
-+
-+	for_each_child(np, child)
-+		calc_max_phandle(child);
-+
-+	return;
-+}
-+
-+void __init of_init_print_order(const char *name)
-+{
-+	unsigned i;
-+	struct property *prop;
+ 
+-static int __init add_dep_list(struct device_node *node)
++static int __init add_dep_list(struct device_node *node, bool print_dot)
+ {
+ 	const __be32 *list, *list_end;
+ 	uint32_t ph;
+@@ -328,6 +328,9 @@ static int __init add_dep_list(struct device_node *node)
+ 		rc = insert_edge(node->phandle, ph);
+ 		if (rc)
+ 			break;
++		if (print_dot)
++			printf("      node0x%x -> node0x%x [color=cyan]\n",
++				node->phandle, ph);
+ 	}
+ 
+ 	return rc;
+@@ -352,9 +355,10 @@ static const char *of_prop_next_string(struct property *prop, const char *cur)
+ }
+ 
+ static int __init add_deps_lnx(struct device_node *parent,
+-				struct device_node *node)
++				struct device_node *node, bool print_dot)
+ {
+ 	struct device_node *child;
 +	const char *cp;
-+
-+	pr_info("Default initialization order for %s:\n", name);
-+	for (i = 0; i < order.count; ++i) {
-+		pr_info("init %u 0x%x", i, order.order[i]->phandle);
-+		if (order.order[i]->name)
-+			pr_cont(" %s", order.order[i]->name);
-+		if (order.order[i]->full_name)
-+			pr_cont(" (%s)", order.order[i]->full_name);
-+		prop = get_property(order.order[i], "compatible");
-+		for (cp = of_prop_next_string(prop, NULL); cp;
-+		     cp = of_prop_next_string(prop, cp))
-+			pr_cont(" %s", cp);
-+		pr_cont(" (parent 0x%x)\n",
-+			order.parent_by_phandle[order.order[i]->phandle]);
+ 	int rc = 0;
+ 
+ 	if (!__of_device_is_available(node))
+@@ -375,13 +379,33 @@ static int __init add_deps_lnx(struct device_node *parent,
+ 			return -EINVAL;
+ 		}
+ 		order.parent_by_phandle[node->phandle] = parent->phandle;
+-		rc = add_dep_list(node);
++		if (print_dot) {
++			struct property *prop;
++			printf("    node0x%x [label=\"0x%x %s", node->phandle,
++						node->phandle, node->name);
++			if (node->full_name)
++				printf(" (%s)", node->full_name);
++			prop = get_property(node, "compatible");
++			if (prop) {
++				printf("\\n");
++				for (cp = of_prop_next_string(prop, NULL); cp;
++				     cp = of_prop_next_string(prop, cp)) {
++					if (cp != prop->val.val)
++						putchar(' ');
++					printf("%s", cp);
++				}
++			}
++			printf("\"];\n");
++			printf("      node0x%x -> node0x%x\n", node->phandle,
++							parent->phandle);
++		}
++		rc = add_dep_list(node, print_dot);
+ 		if (unlikely(rc))
+ 			return rc;
+ 		parent = node; /* change the parent only if node is a driver */
+ 	}
+ 	for_each_child_of_node(node, child) {
+-		rc = add_deps_lnx(parent, child);
++		rc = add_deps_lnx(parent, child, print_dot);
+ 		if (unlikely(rc))
+ 			break;
+ 	}
+@@ -426,7 +450,7 @@ void __init of_init_print_order(const char *name)
+ 	}
+ }
+ 
+-int __init of_init_build_order(struct device_node *root)
++int __init of_init_build_order(struct device_node *root, const char *print_dot)
+ {
+ 	struct device_node *child;
+ 	int rc = 0;
+@@ -438,12 +462,24 @@ int __init of_init_build_order(struct device_node *root)
+ 	calc_max_phandle(root);
+ 	order.old_max_phandle = order.max_phandle;
+ 
++	if (print_dot) {
++		printf("digraph G {\n");
++		printf("    node0x%x [label=\"0x%x root (/)\"];\n",
++			order.max_phandle+1 , order.max_phandle+1);
 +	}
-+}
 +
-+int __init of_init_build_order(struct device_node *root)
-+{
-+	struct device_node *child;
-+	int rc = 0;
-+
-+	tree = root;
-+	if (unlikely(!root))
-+		return -EINVAL;
-+
-+	calc_max_phandle(root);
-+	order.old_max_phandle = order.max_phandle;
-+
-+	for_each_child_of_node(root, child) {
-+		rc = add_deps_lnx(root, child);
-+		if (unlikely(rc))
-+			break;
+ 	for_each_child_of_node(root, child) {
+-		rc = add_deps_lnx(root, child);
++		rc = add_deps_lnx(root, child, print_dot);
+ 		if (unlikely(rc))
+ 			break;
+ 	}
+ 
++	if (print_dot) {
++		printf("  graph [label=\"Dependency Graph for %s (%u nodes, %u edges)\"];\n",
++			print_dot, graph.nvertices, graph.nedges);
++		printf("}\n");
 +	}
 +
-+	of_node_put(root);
-+	topological_sort();
-+
-+	if (graph.finished)
-+		return -EINVAL; /* cycle found */
-+
-+	return rc;
-+}
+ 	of_node_put(root);
+ 	topological_sort();
+ 
 diff --git a/dtc.c b/dtc.c
-index c0647da..c732bca 100644
+index c732bca..69aebf4 100644
 --- a/dtc.c
 +++ b/dtc.c
 @@ -49,7 +49,7 @@ static void fill_fullpaths(struct node *tree, const char *prefix)
  
  /* Usage related data. */
  static const char usage_synopsis[] = "dtc [options] <input file>";
--static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sDW:E:hv";
-+static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sDtW:E:hv";
+-static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sDtW:E:hv";
++static const char usage_short_opts[] = "qI:O:o:V:d:R:S:p:fb:i:H:sDtTW:E:hv";
  static struct option const usage_long_opts[] = {
  	{"quiet",            no_argument, NULL, 'q'},
  	{"in-format",         a_argument, NULL, 'I'},
-@@ -65,6 +65,7 @@ static struct option const usage_long_opts[] = {
- 	{"include",           a_argument, NULL, 'i'},
+@@ -66,6 +66,7 @@ static struct option const usage_long_opts[] = {
  	{"sort",             no_argument, NULL, 's'},
  	{"no-dependencies",  no_argument, NULL, 'D'},
-+	{"print-init-order", no_argument, NULL, 't'},
+ 	{"print-init-order", no_argument, NULL, 't'},
++	{"print-dot",        no_argument, NULL, 'T'},
  	{"phandle",           a_argument, NULL, 'H'},
  	{"warning",           a_argument, NULL, 'W'},
  	{"error",             a_argument, NULL, 'E'},
-@@ -93,6 +94,7 @@ static const char * const usage_opts_help[] = {
- 	"\n\tAdd a path to search for include files",
+@@ -95,6 +96,7 @@ static const char * const usage_opts_help[] = {
  	"\n\tSort nodes and properties before outputting (useful for comparing trees)",
  	"\n\tDo not automatically add dependencies for phandle references",
-+	"\n\tPrint (default) initialization order",
+ 	"\n\tPrint (default) initialization order",
++	"\n\tPrint dot with dependency graph (for use with Graphviz)",
  	"\n\tValid phandle formats are:\n"
  	 "\t\tlegacy - \"linux,phandle\" properties only\n"
  	 "\t\tepapr  - \"phandle\" properties only\n"
-@@ -113,6 +115,7 @@ int main(int argc, char *argv[])
- 	const char *depname = NULL;
+@@ -116,6 +118,7 @@ int main(int argc, char *argv[])
  	bool force = false, sort = false;
  	bool dependencies = true;
-+	bool init_order = false;
+ 	bool init_order = false;
++	bool print_dot = false;
  	const char *arg;
  	int opt;
  	FILE *outf = NULL;
-@@ -184,6 +187,10 @@ int main(int argc, char *argv[])
- 			dependencies = false;
+@@ -191,6 +194,10 @@ int main(int argc, char *argv[])
+ 			init_order = true;
  			break;
  
-+		case 't':
-+			init_order = true;
++		case 'T':
++			print_dot = true;
 +			break;
 +
  		case 'W':
  			parse_checks_option(true, false, optarg);
  			break;
-@@ -244,6 +251,13 @@ int main(int argc, char *argv[])
- 	if (dependencies)
+@@ -252,12 +259,18 @@ int main(int argc, char *argv[])
  		add_dependencies(bi);
  
-+	if (init_order) {
-+		if (of_init_build_order(bi->dt))
+ 	if (init_order) {
+-		if (of_init_build_order(bi->dt))
++		if (of_init_build_order(bi->dt, 0))
+ 			exit(2);
+ 		of_init_print_order(arg);
+ 		exit(0);
+ 	}
+ 
++	if (print_dot) {
++		if (of_init_build_order(bi->dt, arg))
 +			exit(2);
-+		of_init_print_order(arg);
 +		exit(0);
 +	}
 +
  	if (streq(outname, "-")) {
  		outf = stdout;
  	} else {
-@@ -265,5 +279,13 @@ int main(int argc, char *argv[])
- 		die("Unknown output format \"%s\"\n", outform);
- 	}
+@@ -284,7 +297,7 @@ int main(int argc, char *argv[])
+ 	 * This is done after the output was saved because it
+ 	 * changes the tree slightly.
+ 	 */
+-	if (of_init_build_order(bi->dt))
++	if (of_init_build_order(bi->dt, 0))
+ 		exit(2);
  
-+	/*
-+	 * Check for cycles by building the initialzation order.
-+	 * This is done after the output was saved because it
-+	 * changes the tree slightly.
-+	 */
-+	if (of_init_build_order(bi->dt))
-+		exit(2);
-+
  	exit(0);
- }
 diff --git a/dtc.h b/dtc.h
-index fa84017..e4097d4 100644
+index e4097d4..d8a882a 100644
 --- a/dtc.h
 +++ b/dtc.h
-@@ -268,5 +268,7 @@ struct boot_info *dt_from_fs(const char *dirname);
- 
+@@ -269,6 +269,6 @@ struct boot_info *dt_from_fs(const char *dirname);
  /* Dependencies */
  void add_dependencies(struct boot_info *bi);
-+void of_init_print_order(const char *name);
-+int of_init_build_order(struct node *root);
+ void of_init_print_order(const char *name);
+-int of_init_build_order(struct node *root);
++int of_init_build_order(struct node *root, const char *print_dot);
  
  #endif /* _DTC_H */
 -- 
