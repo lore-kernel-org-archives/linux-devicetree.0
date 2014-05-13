@@ -1,82 +1,81 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: henninger: add QSPI DT support
-Date: Tue, 13 May 2014 09:10:24 +0900
-Message-ID: <20140513001024.GC18157@verge.net.au>
-References: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
- <536FBEB7.9080605@cogentembedded.com>
- <20140511225354.GC6451@verge.net.au>
- <537151DA.8000101@cogentembedded.com>
+Subject: Re: [PATCH V2 2/2] ARM: shmobile: r8a7791: add i2c2 bus to koelsch dt
+Date: Tue, 13 May 2014 09:07:13 +0900
+Message-ID: <20140513000713.GB18157@verge.net.au>
+References: <1392633882-12142-1-git-send-email-wsa@the-dreams.de>
+ <1392633882-12142-2-git-send-email-wsa@the-dreams.de>
+ <536C1945.1000601@cogentembedded.com>
+ <20140509050610.GB2624@katana>
+ <536D5DC3.3070409@cogentembedded.com>
+ <20140511000834.GM31760@verge.net.au>
+ <CAMuHMdX_19vLyO7fqaBO7=WpdoZ8fYm9BU9Zmj6cXSNDNYE+Kw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <537151DA.8000101@cogentembedded.com>
+In-Reply-To: <CAMuHMdX_19vLyO7fqaBO7=WpdoZ8fYm9BU9Zmj6cXSNDNYE+Kw@mail.gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Wolfram Sang <wsa@the-dreams.de>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Wolfram Sang <wsa@sang-engineering.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 13, 2014 at 02:57:30AM +0400, Sergei Shtylyov wrote:
-> Hello.
+On Mon, May 12, 2014 at 09:35:46AM +0200, Geert Uytterhoeven wrote:
+> On Sun, May 11, 2014 at 2:08 AM, Simon Horman <horms@verge.net.au> wrote:
+> > On Sat, May 10, 2014 at 02:59:15AM +0400, Sergei Shtylyov wrote:
+> >> Hello.
+> >>
+> >> On 05/09/2014 09:06 AM, Wolfram Sang wrote:
+> >>
+> >> >>>+  eeprom@50 {
+> >> >>>+          compatible = "renesas,24c02";
+> >>
+> >> >>    This is not quite right: Renesas' part is called differently, and
+> >> >>you're carrying the other vendor's naming onto Renesas parts. I'd
+> >> >>just say "24c02" (which I'll do in the Henninger board patch).
+> >>
+> >> >What about "generic"?
+> >>
+> >>    I don't know, really. However, you're right in that there should
+> >> be some vendor prefix -- I've just seen
+> >> Documentation/devicetree/bindings/eeprom.txt.
+> >
+> > A quick survey of arch/arm/boot/dts/ yields:
+> >
+> > "atmel,24c02" (22 times)
+> > "microchip,24c02" (once)
+> > "mcp,24c02" (once)
+> >
+> > So it seems to me that precedence is in favour of using "renesas,24c02".
 > 
-> On 05/12/2014 02:53 AM, Simon Horman wrote:
+> Except that the Renesas part is called differently (as Sergei already pointed
+> out), unlike the Atmel and Microchip parts.
 > 
-> >>>Define the Henninger board dependent part of the QSPI device node.
-> >>>Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
+> So it should be:
 > 
-> >>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>         compatible = "renesas,r1ex24002", "<something>,24c02";
 > 
-> >>>---
-> >>>This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
-> >>>'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
+> Unfortunately the datasheet doesn't mention compatibility with parts from
+> other manufacturers.
 > 
-> >>>  arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
-> >>>  1 file changed, 38 insertions(+)
-> 
-> >>>Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-> >>>===================================================================
-> >>>--- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-> >>>+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-> >>[...]
-> >>>@@ -158,3 +163,36 @@
-> >>>  	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
-> >>>  	status = "okay";
-> >>>  };
-> >>>+
-> >>>+&qspi {
-> >>>+	pinctrl-0 = <&qspi_pins>;
-> >>>+	pinctrl-names = "default";
-> >>>+
-> >>>+	status = "okay";
-> >>>+
-> >>>+	flash@0 {
-> >>>+		#address-cells = <1>;
-> >>>+		#size-cells = <1>;
-> >>>+		compatible = "spansion,s25fl512s";
-> >>>+		reg = <0>;
-> >>>+		spi-max-frequency = <30000000>;
-> >>>+		spi-tx-bus-width = <4>;
-> >>>+		spi-rx-bus-width = <4>;
-> >>>+		m25p,fast-read;
-> >>>+
-> >>>+		partition@0 {
-> >>>+			label = "loader_prg";
-> >>>+			reg = <0x00000000 0x00040000>;
-> >>>+			read-only;
-> >>>+		};
-> >>>+		partition@40000 {
-> >>>+			label = "user_prg";
-> >>>+			reg = <0x00040000 0x00400000>;
-> >>>+			read-only;
-> 
-> >>    Oops, there shouldn't be "read-only" here, I forgot to refresh
-> >>the patch as I'm now seeing... too bad it's too late to resend now.
-> >>:-(
-> 
-> >Could you send an incremental fix for me to queue up?
-> 
->    Oops, I've rechecked and it should indeed be read-only, so the
-> patch was correct. Sorry. :-)
+> So let's <something> be "atmel"?
 
-Thanks for double checking.
-I think we can safely do nothing for now :-)
+If <something> isn't documented as being compatible then
+I feel that we should not add it to the list.
+
+> BTW, we have a similar issue with Genmai, which has an R1EX24128.
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
