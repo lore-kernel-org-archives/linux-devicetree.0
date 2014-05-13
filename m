@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv2 2/4] ARM: mm: allow sub-architectures to override PCI I/O memory type
-Date: Tue, 13 May 2014 12:10:37 +0200
-Message-ID: <1399975839-5311-3-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 1/4] of: make of_update_property() usable earlier in the boot process
+Date: Tue, 13 May 2014 12:10:36 +0200
+Message-ID: <1399975839-5311-2-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1399975839-5311-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,73 +10,65 @@ To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <w
 Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Due to a design incompatibility between the PCIe Marvell controller
-and the Cortex-A9, stressing PCIe devices with a lot of traffic
-quickly causes a deadlock.
+Commit 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device
+nodes kobjects so they show up in sysfs') has turned Device Tree nodes
+in kobjects and added a sysfs based representation for Device Tree
+nodes. Since the sysfs logic is only available after the execution of
+a core_initcall(), the patch took precautions in of_add_property() and
+of_remove_property() to not do any sysfs related manipulation early in
+the boot process.
 
-One part of the workaround for this is to have all PCIe regions mapped
-as MT_MEMORY_SO instead of MT_DEVICE. While the arch_ioremap_caller()
-mechanism allows sub-architecture code to override ioremap(), used to
-map PCIe memory regions, there isn't such a mechanism to override the
-behavior of pci_ioremap_io().
+However, it forgot to do the same for of_update_property(), which if
+used early in the boot process (before core_initcalls have been
+called), tries to call sysfs_remove_bin_file(), and crashes:
 
-This commit adds the arch_pci_ioremap_mem_type variable, initialized
-to MT_DEVICE by default, and that sub-architecture code can
-override. We have chosen to expose a single variable rather than
-offering the possibility of overriding the entire pci_ioremap_io(),
-because implementing pci_ioremap_io() requires calling functions
-(get_mem_type()) that are private to the arch/arm/mm/ code.
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 0 at /home/thomas/projets/linux-2.6/fs/kernfs/dir.c:1216 kernfs_remove_by_name_ns+0x80/0x88()
+kernfs: can not remove '(null)', no directory
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.15.0-rc1-00127-g1d7e7b2-dirty #423
+[<c0014910>] (unwind_backtrace) from [<c00110ec>] (show_stack+0x10/0x14)
+[<c00110ec>] (show_stack) from [<c04c84b8>] (dump_stack+0x84/0x94)
+[<c04c84b8>] (dump_stack) from [<c001d8c0>] (warn_slowpath_common+0x6c/0x88)
+[<c001d8c0>] (warn_slowpath_common) from [<c001d90c>] (warn_slowpath_fmt+0x30/0x40)
+[<c001d90c>] (warn_slowpath_fmt) from [<c0104468>] (kernfs_remove_by_name_ns+0x80/0x88)
+[<c0104468>] (kernfs_remove_by_name_ns) from [<c0394d98>] (of_update_property+0xc0/0xf0)
+[<c0394d98>] (of_update_property) from [<c0647248>] (mvebu_timer_and_clk_init+0xfc/0x194)
+[<c0647248>] (mvebu_timer_and_clk_init) from [<c0640934>] (start_kernel+0x218/0x350)
+[<c0640934>] (start_kernel) from [<00008070>] (0x8070)
+
+To fix this problem, we simply skip the sysfs related calls in
+of_update_property(), and rely on of_init() to fix up things when it
+will be called, exactly as is done in of_add_property() and
+of_remove_property().
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Fixes: 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device nodes kobjects so they show up in sysfs')
 ---
- arch/arm/include/asm/io.h | 6 ++++++
- arch/arm/mm/ioremap.c     | 9 ++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ drivers/of/base.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index 8aa4cca..3d23418 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -179,6 +179,12 @@ static inline void __iomem *__typesafe_io(unsigned long addr)
- /* PCI fixed i/o mapping */
- #define PCI_IO_VIRT_BASE	0xfee00000
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index f72d19b..e981f09 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1831,11 +1831,16 @@ int of_update_property(struct device_node *np, struct property *newprop)
+ 	if (rc)
+ 		return rc;
  
-+#if defined(CONFIG_PCI)
-+void pci_ioremap_set_mem_type(int mem_type);
-+#else
-+static inline void pci_ioremap_set_mem_type(int mem_type) {}
-+#endif
++	/* At early boot, bail out and defer setup to of_init() */
++	if (!of_kset)
++		goto skip_sysfs;
 +
- extern int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr);
+ 	/* Update the sysfs attribute */
+ 	if (oldprop)
+ 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+ 	__of_add_property_sysfs(np, newprop);
  
- /*
-diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-index f9c32ba..d1e5ad7 100644
---- a/arch/arm/mm/ioremap.c
-+++ b/arch/arm/mm/ioremap.c
-@@ -438,6 +438,13 @@ void __arm_iounmap(volatile void __iomem *io_addr)
- EXPORT_SYMBOL(__arm_iounmap);
++ skip_sysfs:
+ 	if (!found)
+ 		return -ENODEV;
  
- #ifdef CONFIG_PCI
-+static int pci_ioremap_mem_type = MT_DEVICE;
-+
-+void pci_ioremap_set_mem_type(int mem_type)
-+{
-+	pci_ioremap_mem_type = mem_type;
-+}
-+
- int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
- {
- 	BUG_ON(offset + SZ_64K > IO_SPACE_LIMIT);
-@@ -445,7 +452,7 @@ int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
- 	return ioremap_page_range(PCI_IO_VIRT_BASE + offset,
- 				  PCI_IO_VIRT_BASE + offset + SZ_64K,
- 				  phys_addr,
--				  __pgprot(get_mem_type(MT_DEVICE)->prot_pte));
-+				  __pgprot(get_mem_type(pci_ioremap_mem_type)->prot_pte));
- }
- EXPORT_SYMBOL_GPL(pci_ioremap_io);
- #endif
 -- 
 1.9.2
 
