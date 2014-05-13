@@ -1,118 +1,135 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCHv2 1/3] phy: Add exynos-simple-phy driver
-Date: Tue, 13 May 2014 16:50:31 +0530
-Message-ID: <CAPdUM4MZS4jMNcEtjHkw1==zG3Z_rNYfsw9Q4Qt3kRpV5PuLJw@mail.gmail.com>
-References: <1396967856-27470-1-git-send-email-t.stanislaws@samsung.com>
- <1396967856-27470-2-git-send-email-t.stanislaws@samsung.com>
- <534506B1.4040908@samsung.com>
- <CAPdUM4M109_kzY6cUMJQPSwgazvWmNDWL1JeXgiqnzvH8dhK2Q@mail.gmail.com>
- <53451A60.4050803@samsung.com> <53675D72.70103@ti.com>
- <CAPdUM4N+2VXpiFSiWW9gKfbte1zkpDbCOSF+KvEo4T1KLqqwjw@mail.gmail.com>
- <536A36F5.5080303@samsung.com>
- <CAPdUM4M6uk2KN_L487_cRkOqbgJrhhMRx9zpczA6-3LzSM3FSg@mail.gmail.com>
- <536A5258.3080104@samsung.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree support
+Date: Tue, 13 May 2014 13:39:55 +0200
+Message-ID: <CABxcv==_LCw1kPYm17g=h8VfSN2V_qsgXjTnsy-JOetawSv4pA@mail.gmail.com>
+References: <20140507175919.GH9502@atomide.com>
+	<20140508233300.GI2198@atomide.com>
+	<536C8293.4070506@ti.com>
+	<20140509155504.GE17814@atomide.com>
+	<53707A64.2060203@ti.com>
+	<CABxcv=kwhodeFTHoVpn1nHeh9+kV5fwMN9s3Kbk6h7_xJp4UYA@mail.gmail.com>
+	<53709706.10501@ti.com>
+	<CABxcv=mY0a+yJgmCTPN=BhSQD57Pw022zOd5_KxEgvvF_-=O7Q@mail.gmail.com>
+	<20140512142646.GA31772@atomide.com>
+	<5370E0C9.8050201@ti.com>
+	<20140512155132.GH31772@atomide.com>
+	<5371F923.80000@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <536A5258.3080104@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, Mark Rutland <Mark.Rutland@arm.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, sunil joshi <joshi@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5371F923.80000@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-<Gentle PING>
+On Tue, May 13, 2014 at 12:51 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
+> On 12/05/14 18:51, Tony Lindgren wrote:
+>
+>>> It's already in v3.15.
+>>
+>> Oh great.. And you dumped it into arch/arm/mach-omap2 too and I somehow
+>> even acked it :( Looks like there's also the custom mux hacks. And
+>> custom hwmod hacks. And ongoing soc_is_xxx tinkering. Now let's not add
+>
+> The omap2_dss_hwmod_data, create_dss_pdev and create_simple_dss_pdev,
+> omap_display_init stuff can be removed when the DT conversion has been done.
+>
+> For the omap4_dsi_mux_pads (or the omap5 dsi muxing that was recently
+> discussed) I still have no solution, but I haven't spent time on it. I
+> have dropped the omap5 dsi muxing from the latest series for that reason.
+>
+> dispc_disable_outputs and omap_dss_reset are needed because omap_device
+> doesn't handle resetting DSS properly, as special steps need to be done
+> for that. omap_dss_reset is called from the hwmod/omap_device code, so I
+> don't think this code can be anywhere else.
+>
+> For the omap_display_get_version() I have no good solution. Making
+> separate .dts versions for all the needed OMAP ES versions seems like a
+> huge hassle to me, but that is one solution.
+>
+> I think that would mean having separate .dtsi files for omapdss for
+> omap3_es1, omap3_es3plus, omap4_es1, omap4_es2, omap4_es3plus, and then
+> having separate omapxxxx.dtsi files for all of those, and then separate
+> board .dts files for the ES versions used on each board.
+>
+> Or is there some sane way to define such things in dts?
+>
 
-On 7 May 2014 21:03, Tomasz Figa <t.figa@samsung.com> wrote:
-> [CCing more DT-folks :)]
+Unfortunately there isn't.
+
+I have a similar problem with the IGEP boards since there are just too
+many variations of them (e.g: DM3730 SoC vs OMAP3530 SoC, NAND vs
+OneNAND, 256MB vs 512MB flash memory sizes, with and without wifi
+chip, etc).
+
+Since dts are supposed to describe the hardware, each revision with a
+slighter variation forces to have a different dts. My solution was to
+not try to have a dts for every single variation in mainline but only
+one for the most common revision and that could be used as a reference
+to modify and ship on each device. Unfortunately that is not possible
+to you since each DSS IP block is used by many boards.
+
+>> _any_ new crap into arch/arm/mach-omap2/display.c.
+>>
+>> So please consider this a huge eternal NAK to add any more crap to
+>> arch/arm/mach-omap2/display.c from me. No more new soc_is beyond
+>> the soc_is_am43xx() you have in linux next. No more adding
+>> of_find_compatible_node() beyond ti,omap5-dss you have in linux next.
+>>
+>> And no more new panel remapping in this file as soon as you have found
+>> a better solution. Preferrably by v3.17 merge window. This file just
+>> needs to disappear. Yuk.
 >
-> On 07.05.2014 16:19, Rahul Sharma wrote:
->> On 7 May 2014 19:06, Tomasz Stanislawski <t.stanislaws@samsung.com> wrote:
->>> On 05/07/2014 12:38 PM, Rahul Sharma wrote:
->>>> On 5 May 2014 15:14, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>>> Hi,
->>>>>
->>>>> On Wednesday 09 April 2014 03:31 PM, Sylwester Nawrocki wrote:
->>>>>> Hi,
->>>>>>
->>>>>> On 09/04/14 11:12, Rahul Sharma wrote:
->>>>>>> Idea looks good. How about keeping compatible which is independent
->>>>>>> of SoC, something like "samsung,exynos-simple-phy" and provide Reg
->>>>>>> and Bit through phy provider node. This way we can avoid SoC specific
->>>>>>> hardcoding in phy driver and don't need to look into dt bindings for
->>>>>>> each new SoC.
->>>>>>
->>>>>> I believe it is a not recommended approach.
->>>>>
->>>>> Why not? We should try to avoid hard coding in the driver code. Moreover by
->>>>> avoiding hardcoding we can make it a generic driver for single bit PHYs.
->>>>>
->>>>
->>>> +1.
->>>>
->>>> @Tomasz, any plans to consider this approach for simple phy driver?
->>>>
->>>> Regards,
->>>> Rahul Sharma.
->>>>
->>>
->>> Hi Rahul,
->>> Initially, I wanted to make a very generic driver and to add bit and
->>> register (or its offset) attribute to the PHY node.
->>> However, there was a very strong opposition from DT maintainers
->>> to adding any bit related configuration to DT.
->>> The current solution was designed to be a trade-off between
->>> being generic and being accepted :).
->>>
->>
->> Thanks Tomasz,
->> Ok got it. lets discuss it again and conclude it.
->>
->> @Kishon, DT-folks,
->>
->> The original RFC patch from Tomasz (at https://lkml.org/lkml/2013/10/21/313)
->> added simple phy driver as "Generic-simple-phy" with these properties:
->>
->> + of_property_read_u32(dev->of_node, "mask", &sphy->mask);
->> + of_property_read_u32(dev->of_node, "on-value", &sphy->on_value);
->> + of_property_read_u32(dev->of_node, "off-value", &sphy->off_value);
->>
->> Shall we consider the same solution again for generic simple phy
->> driver which just expose on/off control through register bit.
->>
->> Regards,
->> Rahul Sharma
->>
->>> Regards,
->>> Tomasz Stanislawski
->>>
->>>
->>>
->>>>> Cheers
->>>>> Kishon
->>>>
->>>
->>> _______________________________________________
->>> dri-devel mailing list
->>> dri-devel@lists.freedesktop.org
->>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
+> Do you object to the compatible string remapping as such, or just that
+> it's in arch/arm/mach-omap2?
 >
-> Best regards,
-> Tomasz
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> I guess nothing prevents me from moving it to drivers/, and having some
+> early-ish initcall doing the job.
+>
+> If the remapping as such is horrible, I'm all ears for better ideas. I
+> spent quite a lot of time on it, and that's the best I could come up with.
+>
+> It's rather simple prefixing of the compatible strings for selected
+> devices. The purpose of that is to have proper data in the .dts files
+> (which I think is very important) with the cost of having some rather
+> simple internal hacks in the kernel, which can be removed immediately
+> when we have a common display driver framework.
+>
+
+Even though the compatible trick that I said before could be an
+alternative, it has the problem that does not describes the hardware
+as you said. The restriction of the DT being a stable API and get it
+right from the beginning forces us to make these kind of technical
+decisions.
+
+So, since we can change the kernel later but not the DTS, I agree with
+you that the remapping is the least bad of our options.
+
+>>> I'm not sure what it would give us to try to be compatible with
+>>> simple-panel.txt. The simple-panel bindings won't probably be compatible
+>>> with the future common display drivers in any case, as the simple-panel
+>>> binding is just too limited and doesn't describe the hardware fully.
+>>
+>> Hmm what else does a panel need where the existing binding cannot be
+>> extended?
+>
+> The existing simple-panel binding doesn't describe the connections of
+> the panel, i.e. its video input. I guess it can be extended, but I don't
+> see what the benefit is of trying to create new panel bindings
+> compatible with the simple-panel bindings. As I see, the simple-panel
+> bindings work only with very limited use cases, where the drivers make
+> assumptions. Simple panel bindings cannot be used with omapdss, nor can
+> it be used with the future common display framework.
+>
+> But I'm not really familiar with using extending current bindings, and
+> making new bindings compatible with old ones. Can you explain why it'd
+> be good to have the sharp panel bindings compatible with simple-panel?
+> In what kind of scenario would it be used?
+>
+>  Tomi
+>
+>
+
+Best regards,
+Javier
