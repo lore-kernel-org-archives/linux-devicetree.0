@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv2 1/4] of: make of_update_property() usable earlier in the boot process
-Date: Tue, 13 May 2014 12:10:36 +0200
-Message-ID: <1399975839-5311-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv2 4/4] ARM: mvebu: implement L2/PCIe deadlock workaround
+Date: Tue, 13 May 2014 12:10:39 +0200
+Message-ID: <1399975839-5311-5-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1399975839-5311-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,65 +10,96 @@ To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <w
 Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device
-nodes kobjects so they show up in sysfs') has turned Device Tree nodes
-in kobjects and added a sysfs based representation for Device Tree
-nodes. Since the sysfs logic is only available after the execution of
-a core_initcall(), the patch took precautions in of_add_property() and
-of_remove_property() to not do any sysfs related manipulation early in
-the boot process.
+The Marvell Armada 375 and Armada 38x SOCs, which use the Cortex-A9
+CPU core, the PL310 cache and the Marvell PCIe hardware block are
+affected a L2/PCIe deadlock caused by a system erratum when hardware
+I/O coherency is used.
 
-However, it forgot to do the same for of_update_property(), which if
-used early in the boot process (before core_initcalls have been
-called), tries to call sysfs_remove_bin_file(), and crashes:
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 0 at /home/thomas/projets/linux-2.6/fs/kernfs/dir.c:1216 kernfs_remove_by_name_ns+0x80/0x88()
-kernfs: can not remove '(null)', no directory
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.15.0-rc1-00127-g1d7e7b2-dirty #423
-[<c0014910>] (unwind_backtrace) from [<c00110ec>] (show_stack+0x10/0x14)
-[<c00110ec>] (show_stack) from [<c04c84b8>] (dump_stack+0x84/0x94)
-[<c04c84b8>] (dump_stack) from [<c001d8c0>] (warn_slowpath_common+0x6c/0x88)
-[<c001d8c0>] (warn_slowpath_common) from [<c001d90c>] (warn_slowpath_fmt+0x30/0x40)
-[<c001d90c>] (warn_slowpath_fmt) from [<c0104468>] (kernfs_remove_by_name_ns+0x80/0x88)
-[<c0104468>] (kernfs_remove_by_name_ns) from [<c0394d98>] (of_update_property+0xc0/0xf0)
-[<c0394d98>] (of_update_property) from [<c0647248>] (mvebu_timer_and_clk_init+0xfc/0x194)
-[<c0647248>] (mvebu_timer_and_clk_init) from [<c0640934>] (start_kernel+0x218/0x350)
-[<c0640934>] (start_kernel) from [<00008070>] (0x8070)
-
-To fix this problem, we simply skip the sysfs related calls in
-of_update_property(), and rely on of_init() to fix up things when it
-will be called, exactly as is done in of_add_property() and
-of_remove_property().
+This deadlock can be avoided by mapping the PCIe memory areas as
+strongly-ordered, and by removing the outer cache sync done in
+software. This is done in this patch, thanks to the new bits of
+infrastructure added in 'ARM: mm: allow sub-architectures to override
+PCI I/O memory type' and 'ARM: mm: add support for HW coherent systems
+in PL310' respectively.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Fixes: 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device nodes kobjects so they show up in sysfs')
 ---
- drivers/of/base.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/mach-mvebu/board-v7.c | 55 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index f72d19b..e981f09 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1831,11 +1831,16 @@ int of_update_property(struct device_node *np, struct property *newprop)
- 	if (rc)
- 		return rc;
+diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
+index 01cfce6..e7e09ce 100644
+--- a/arch/arm/mach-mvebu/board-v7.c
++++ b/arch/arm/mach-mvebu/board-v7.c
+@@ -71,6 +71,53 @@ static int armada_375_external_abort_wa(unsigned long addr, unsigned int fsr,
+ 	return 1;
+ }
  
-+	/* At early boot, bail out and defer setup to of_init() */
-+	if (!of_kset)
-+		goto skip_sysfs;
++/*
++ * This ioremap hook is used on Armada 375/38x to ensure that PCIe
++ * memory areas are mapped as MT_MEMORY_RW_SO instead of
++ * MT_DEVICE. This is needed as a workaround for a deadlock issue
++ * between the PCIe interface and the cache controller.
++ */
++static void __iomem *
++armada_pcie_wa_ioremap_caller(phys_addr_t phys_addr, size_t size,
++			      unsigned int mtype, void *caller)
++{
++	struct resource pcie_mem;
 +
- 	/* Update the sysfs attribute */
- 	if (oldprop)
- 		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
- 	__of_add_property_sysfs(np, newprop);
++	mvebu_mbus_get_pcie_mem_aperture(&pcie_mem);
++
++	if (pcie_mem.start <= phys_addr && (phys_addr + size) <= pcie_mem.end)
++		mtype = MT_MEMORY_RW_SO;
++
++	return __arm_ioremap_caller(phys_addr, size, mtype, caller);
++}
++
++/*
++ * When we are I/O coherent and we use the PL310 cache controller, we
++ * switch the PL310 compatible string to
++ * "arm,pl310-coherent-cache". This makes sure the outer sync
++ * operation is not used, which allows to workaround the system
++ * erratum that causes deadlocks when doing PCIe in a SMP situation on
++ * Armada 375 and Armada 38x.
++ */
++static void __init mvebu_l2x0_pl310_coherent(void)
++{
++	struct device_node *np;
++
++	if (!coherency_available())
++		return;
++
++	for_each_compatible_node(np, NULL, "arm,pl310-cache") {
++		struct property *new_compat;
++
++		new_compat = kzalloc(sizeof(*new_compat), GFP_KERNEL);
++		new_compat->name = kstrdup("compatible", GFP_KERNEL);
++		new_compat->value = kstrdup("arm,pl310-coherent-cache",
++					    GFP_KERNEL);
++		new_compat->length = strlen(new_compat->value) + 1;
++		of_update_property(np, new_compat);
++	}
++}
++
+ static void __init mvebu_timer_and_clk_init(void)
+ {
+ 	of_clk_init(NULL);
+@@ -78,6 +125,14 @@ static void __init mvebu_timer_and_clk_init(void)
+ 	mvebu_scu_enable();
+ 	coherency_init();
+ 	BUG_ON(mvebu_mbus_dt_init(coherency_available()));
++
++	if (of_machine_is_compatible("marvell,armada375") ||
++	    of_machine_is_compatible("marvell,armada38x")) {
++		arch_ioremap_caller = armada_pcie_wa_ioremap_caller;
++		pci_ioremap_set_mem_type(MT_MEMORY_RW_SO);
++		mvebu_l2x0_pl310_coherent();
++	}
++
+ 	l2x0_of_init(0, ~0UL);
  
-+ skip_sysfs:
- 	if (!found)
- 		return -ENODEV;
- 
+ 	if (of_machine_is_compatible("marvell,armada375"))
 -- 
 1.9.2
 
