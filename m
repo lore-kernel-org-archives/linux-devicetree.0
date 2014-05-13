@@ -1,126 +1,91 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH v2] of/platform: Add of_platform_depopulate() helper
-Date: Tue, 13 May 2014 17:24:54 +0100
-Message-ID: <1399998294-24447-1-git-send-email-pawel.moll@arm.com>
-References: <1399997324.3657.35.camel@hornet>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399997324.3657.35.camel@hornet>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: add mtk-timer bindings
+Date: Tue, 13 May 2014 09:23:34 -0700
+Message-ID: <8f009a99-3857-4d8e-9161-29999c5c7297@BN1BFFO11FD016.protection.gbl>
+References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
+ <1399938570-11356-3-git-send-email-matthias.bgg@gmail.com>
+ <2e93c984-96d9-4504-bb9a-672a247fb710@BL2FFO11FD034.protection.gbl>
+ <CABuKBeL-Zx9S9QuWyhPF_yEa8EvmJYTDLa6KrY2cXKe9e9zBnQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CABuKBeL-Zx9S9QuWyhPF_yEa8EvmJYTDLa6KrY2cXKe9e9zBnQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@inf>
 List-Id: devicetree@vger.kernel.org
 
-Drivers can us of_platform_populate() to create
-platform devices for children of the device
-main node (this can particularly happen in case
-of MFD devices). Unfortunately, there was no
-standard way of removing such sub-devices when
-the main one is being removed.
-
-This patch adds of_platform_depopulate() as
-a complementary operation for the _populate()
-one. It removes all platform and amba devices
-that have been created from the Device Tree,
-but leaves all other ones untouched (returning
--EBUSY in such case).
-
-Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
----
-Changes since v1:
-
-- using bool rather than int to signal remaining children
-- recursing using of_platform_depopulate() itself
-
- drivers/of/platform.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++
- include/linux/of_platform.h |  5 +++++
- 2 files changed, 55 insertions(+)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 236f47e..3b51e04 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -495,4 +495,54 @@ int of_platform_populate(struct device_node *root,
- 	return rc;
- }
- EXPORT_SYMBOL_GPL(of_platform_populate);
-+
-+static int of_platform_device_destroy(struct device *dev, void *data)
-+{
-+	bool *children_left = data;
-+
-+	/* Do not touch devices not populated from the device tree */
-+	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED)) {
-+		*children_left = true;
-+		return 0;
-+	}
-+
-+	/* Recurse, but don't touch this device if it has any children left */
-+	if (of_platform_depopulate(dev) != 0) {
-+		*children_left = true;
-+		return 0;
-+	}
-+
-+	if (dev->bus == &platform_bus_type)
-+		platform_device_unregister(to_platform_device(dev));
-+	else if (dev->bus == &amba_bustype)
-+		amba_device_unregister(to_amba_device(dev));
-+	else
-+		*children_left = true;
-+
-+	return 0;
-+}
-+
-+/**
-+ * of_platform_depopulate() - Remove devices populated from device tree
-+ * @parent: device which childred will be removed
-+ *
-+ * Complementary to of_platform_populate(), this function removes children
-+ * of the given device (and, recurrently, their children) that have been
-+ * created from their respective device tree nodes (and only those,
-+ * leaving others - eg. manually created - unharmed).
-+ *
-+ * Returns 0 when all children devices have been removed or
-+ * -EBUSY when some children remained.
-+ */
-+int of_platform_depopulate(struct device *parent)
-+{
-+	bool children_left = false;
-+
-+	device_for_each_child(parent, &children_left,
-+			of_platform_device_destroy);
-+
-+	return children_left ? -EBUSY : 0;
-+}
-+EXPORT_SYMBOL_GPL(of_platform_depopulate);
-+
- #endif /* CONFIG_OF_ADDRESS */
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index 05cb4a9..b1010ee 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -72,6 +72,7 @@ extern int of_platform_populate(struct device_node *root,
- 				const struct of_device_id *matches,
- 				const struct of_dev_auxdata *lookup,
- 				struct device *parent);
-+extern int of_platform_depopulate(struct device *parent);
- #else
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
-@@ -80,6 +81,10 @@ static inline int of_platform_populate(struct device_node *root,
- {
- 	return -ENODEV;
- }
-+static inline int of_platform_depopulate(struct device *parent)
-+{
-+	return -ENODEV;
-+}
- #endif
- 
- #endif	/* _LINUX_OF_PLATFORM_H */
--- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gVHVlLCAyMDE0LTA1LTEzIGF0IDA0OjA4UE0gKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3Jv
+dGU6Cj4gMjAxNC0wNS0xMyAxNTowOCBHTVQrMDI6MDAgU8O2cmVuIEJyaW5rbWFubiA8c29yZW4u
+YnJpbmttYW5uQHhpbGlueC5jb20+Ogo+ID4gSGkgTWF0dGhpYXMsCj4gPgo+ID4gT24gVHVlLCAy
+MDE0LTA1LTEzIGF0IDAxOjQ5QU0gKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6Cj4gPj4g
+QWRkIGJpbmRpbmcgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIEdlbmVyYWwgUG9ycG9zZSBUaW1lciBk
+cml2ZXIgb2YKPiA+PiB0aGUgTWVkaWF0ZWsgU29Dcy4KPiA+Pgo+ID4+IFNpZ25lZC1vZmYtYnk6
+IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+Cj4gPj4gLS0tCj4gPj4g
+IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQgICB8
+IDE4ICsrKysrKysrKysrKysrKysrKwo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9u
+cygrKQo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQKPiA+Pgo+ID4+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRp
+bWVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRl
+ayxtdGstdGltZXIudHh0Cj4gPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiA+PiBpbmRleCAwMDAw
+MDAwLi5kMGYyZGYzCj4gPj4gLS0tIC9kZXYvbnVsbAo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4gPj4gQEAg
+LTAsMCArMSwxOCBAQAo+ID4+ICtNZWRpYXRlayBNVDY1ODksIE1UNjU3NyBhbmQgTVQ2NTcyIFRp
+bWVycwo+ID4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+PiAr
+Cj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJl
+ICJtZWRpYXRlayxtdGs2NTg5LXRpbWVyIgo+ID4+ICstIHJlZzogU2hvdWxkIGNvbnRhaW4gbG9j
+YXRpb24gYW5kIGxlbmd0aCBmb3IgdGltZXJzIHJlZ2lzdGVyLgo+ID4+ICstIGNsb2NrczogcGhh
+bmRsZSB0byB0aGUgY2xvY2sgc291cmNlOyB0aGUgZmlyc3QgcmVmZXJzIHRvIGEgMTMgTUh6IGZp
+eGVkCj4gPj4gKyAgICAgICAgICAgICBzeXN0ZW0gY2xvY2sgYW5kIHRoZSBzZWNvbmQgaGFuZGxl
+IHRvIGEgMzIgS0h6IGZpeGVkIFJUQwo+ID4+ICsgICAgICAgICAgICAgY2xvY2suCj4gPgo+ID4g
+QXJlIHRoZXNlIGZyZXF1ZW5jaWVzIG1hbmRhdG9yeSB0byB0aGUgdGltZXIgb3IgYW4gaW1wbGVt
+ZW50YXRpb24KPiA+IGRldGFpbCBvZiB0aGUgU09DIHlvdSdyZSB3b3JraW5nIHdpdGg/IEkgc3Vz
+cGVjdCwgaXQgbWlnaHQgYmUgcG9zc2libGUKPiA+IHRvIHNlZSB0aGUgc2FtZSB0aW1lciBpbiBh
+IGRpZmZlcmVudCBTT0MgaW1wbGVtZW50YXRpb24gd2l0aCBkaWZmZXJlbnQKPiA+IGZyZXF1ZW5j
+aWVzPyBJbiB0aGF0IGNhc2UgLSBvciBwcm9iYWJseSBpbiBnZW5lcmFsIC0gdGhlIGZyZXF1ZW5j
+aWVzCj4gPiBzaG91bGQgbm90IGJlIHBhcnQgb2YgdGhlIGJpbmRpbmcsIElNSE8uCj4gCj4gSSBo
+YWQgYSBsb29rIGF0IHRoZSBpbXBsZW1lbnRhdGlvbiBvZiBzZXZlcmFsIE1lZGlhdGVrIFNvQ3Mg
+YW5kIGFsbCBvZgo+IHRoZW0gaGF2ZSB0aGUgdGltZXIgd2l0aCB0aGUgc2FtZSBjbG9jayBjb25u
+ZWN0aW9ucy4KPiBJIGRvbid0IGtub3cgaWYgdGhlIElQIGNhbiBiZSBvciBpcyBhY3R1YWxseSB1
+c2VkIHdpdGggb3RoZXIgY2xvY2tzb3VyY2VzLgo+IEkgY2FuIHRyeSB0byByZWZvcm11bGF0ZSB0
+aGUgZGVzY3JpcHRpb24gdG8gbWFrZSB0aGUgY2xvY2sgY29uc3RyYWludHMKPiBzb3VuZCBsZXNz
+IG1hbmRhdG9yeS4KPiBBbHRob3VnaCBJIHdvdWxkIHByZWZlciB0byBsZWF2ZSBhIG1lbnRpb24g
+YWJvdXQgdGhlIGNsb2NrIGZyZXF1ZW5jaWVzCj4gKGxpa2UgZS5nLiBpbiB0aGUgYWxsd2lubmVy
+LHN1bjRpLXRpbWVyKS4KClNpbmNlIHRoZSBiaW5kaW5ncyBzaG91bGQgYmUgZ2VuZXJpYywgSSB0
+aGluayB0aGUgZnJlcXVlbmNpZXMgc2hvdWxkbid0CmJlIGhlcmUuIEZyb20gRFQvSFcgcGVyc3Bl
+Y3RpdmUgdGhlaXIgZnJlcXVlbmNpZXMgaXMgaXJyZWxldmFudCBhbmQgYQpwdXJlIGltcGxlbWVu
+dGF0aW9uIGRldGFpbCwgSU1ITy4KCj4gCj4gPgo+ID4+ICsKPiA+PiArRXhhbXBsZXM6Cj4gPj4g
+Kwo+ID4+ICsgICAgIHRpbWVyIHsKPiA+PiArICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVk
+aWF0ZWssbXRrNjU4OS10aW1lciI7Cj4gPj4gKyAgICAgICAgICAgICByZWcgPSA8MHgxMDAwODAw
+MCAweDgwPjsKPiA+PiArICAgICAgICAgICAgIGludGVycnVwdHMgPSA8R0lDX1NQSSAxMTMgSVJR
+X1RZUEVfTEVWRUxfTE9XPjsKPiA+PiArICAgICAgICAgICAgIGNsb2NrcyA9IDwmc3lzdGVtX2Ns
+az4sIDwmcnRjX2Nsaz47Cj4gPgo+ID4gTWlnaHQgYmUganVzdCBteSBwZXJzb25hbCBwcmVmZXJl
+bmNlLCBidXQgeW91IGNvdWxkIGFsc28gYWRkIHRoZSBjbG9jay1uYW1lcwo+ID4gcHJvcGVydHkg
+d2hpY2ggd291bGQgcmVsYXggdGhlIG9yZGVyaW5nIHJlcXVpcmVtZW50IGEgYml0IGFuZCB3b3Vs
+ZAo+ID4gY2xlYXJseSAgaWRlbnRpZnkgdGhlIElQJ3MgY2xvY2tzLgo+IAo+IEluIHRoZSB2MSBv
+ZiB0aGUgcGF0Y2ggc2VyaWVzIEkgaGFkIHRoZSBjbG9jayBuYW1lcyBpbmNsdWRlZCBbMV0gYnV0
+Cj4gYmVjYXVzZSBvZiBjb21tZW50cyBvZiBvdGhlcnMgSSByZW1vdmVkIHRoZW0gWzFdLgo+IEFj
+dHVhbGx5IHRoZSBkcml2ZXIganVzdCB1c2UgdGhlIGZpcnN0IGNsb2NrLCBidXQgZnJvbSBteQo+
+IHVuZGVyc3RhbmRpbmcgdGhlIERUIHJlZmxlY3RzIGFzIHdlbGwgdGhlIEhXIGNvbmZpZ3VyYXRp
+b24gYW5kIGZvcgo+IHRoaXMgcmVhc29uIEkgcHV0IHRoZSB0d28gY2xvY2tzIGluIHRoZSBEVC4K
+PiAKPiBbMV0gaHR0cDovL3RocmVhZC5nbWFuZS5vcmcvZ21hbmUubGludXguZHJpdmVycy5kZXZp
+Y2V0cmVlLzY5MTU1LwoKSSBoYWQgY2FzZXMgd2hlcmUgdGhlIHNhbWUgSVAgd2FzIGltcGxlbWVu
+dGVkIGJ5IGRpZmZlcmVudCBTT0MgdmVuZG9ycwpkaWZmZXJlbnRseS4gSW4gdGhhdCBjYXNlcyBo
+YXZpbmcgdGhlIGNsb2NrLW5hbWVzIGluIHRoZSBiaW5kaW5ncyBpcwpleHRyZW1lbHkgaGVscGZ1
+bCB3aGVuIHlvdSB0cnkgdG8gbWF0Y2ggdGhlIGJpbmRpbmcgd2l0aCB0aGUgSVAgZG9jcy4KSGVu
+Y2UsIEknZCByZWNvbW1lbmQgYmVpbmcgZXhwbGljaXQgYW5kIGxpc3QgdGhlIG5hbWVzLgoKCVPD
+tnJlbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGlu
+dXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgt
+YXJtLWtlcm5lbAo=
