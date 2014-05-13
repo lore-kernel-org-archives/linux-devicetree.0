@@ -1,215 +1,50 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v3 4/6] arm: add basic support for Mediatek MT6589 boards
-Date: Tue, 13 May 2014 01:49:28 +0200
-Message-ID: <1399938570-11356-5-git-send-email-matthias.bgg@gmail.com>
-References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] regulator: gpio-regulator: Add required regulator-type property
+Date: Tue, 13 May 2014 02:06:23 +0200
+Message-ID: <2193707.R9XiqBsnU4@avalon>
+References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <20131205000928.GI29268@sirena.org.uk> <2248657.5UVkYxaC6z@avalon>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <2248657.5UVkYxaC6z@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a generic devicetree board file and a dtsi for boards
-based on MT6589 SoCs from Mediatek.
+Hi Mark,
 
-Apart from the generic parts (gic, clocks) the only component
-currently supported are the timers.
+On Thursday 05 December 2013 01:47:04 Laurent Pinchart wrote:
+> On Thursday 05 December 2013 00:09:28 Mark Brown wrote:
+> > On Thu, Nov 28, 2013 at 04:44:52PM +0100, Laurent Pinchart wrote:
+> > > The gpio-regulator driver requires the regulator-type property to be
+> > > present. Document it as required in the DT bindings.
+> > 
+> > It does?  That seems needless.  It should just default to voltage and
+> > provide a way override to current, though frankly I'd be astonished to see
+> > a GPIO controlled current regulator at all so I'm not sure I'd even
+> > bother writing the code for that until someone needs it.  As it is this
+> > will most likely just be noise in the DT files and wasted cycles parsing
+> > the property.
+>
+> I'm fine with that. The property should still be documented in the DT
+> bindings as optional though. Or be removed completely until a
+> GPIO-controlled current regulator is needed.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- arch/arm/Kconfig                  |  2 +
- arch/arm/Makefile                 |  1 +
- arch/arm/boot/dts/mt6589.dtsi     | 93 +++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-mediatek/Kconfig    |  6 +++
- arch/arm/mach-mediatek/Makefile   |  1 +
- arch/arm/mach-mediatek/mediatek.c | 32 ++++++++++++++
- 6 files changed, 135 insertions(+)
- create mode 100644 arch/arm/boot/dts/mt6589.dtsi
- create mode 100644 arch/arm/mach-mediatek/Kconfig
- create mode 100644 arch/arm/mach-mediatek/Makefile
- create mode 100644 arch/arm/mach-mediatek/mediatek.c
+What's the status of this ? The gpio regulator driver now defaults to voltage 
+regulator when the regulator-type property is not set. Should the DT bindings 
+document the property as optional (I can submit a patch for that), or do you 
+consider that the gpio regulator driver should support voltage regulators only 
+when used with DT, and just keep the regulator-type property support in the 
+driver for backward compatibility ?
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index db3c541..0fc8acd 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -997,6 +997,8 @@ source "arch/arm/mach-mv78xx0/Kconfig"
- 
- source "arch/arm/mach-imx/Kconfig"
- 
-+source "arch/arm/mach-mediatek/Kconfig"
-+
- source "arch/arm/mach-mxs/Kconfig"
- 
- source "arch/arm/mach-netx/Kconfig"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 41c1931..8ce9774 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -170,6 +170,7 @@ machine-$(CONFIG_ARCH_MSM)		+= msm
- machine-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0
- machine-$(CONFIG_ARCH_MVEBU)		+= mvebu
- machine-$(CONFIG_ARCH_MXC)		+= imx
-+machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
- machine-$(CONFIG_ARCH_MXS)		+= mxs
- machine-$(CONFIG_ARCH_NETX)		+= netx
- machine-$(CONFIG_ARCH_NOMADIK)		+= nomadik
-diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-new file mode 100644
-index 0000000..ab554e8
---- /dev/null
-+++ b/arch/arm/boot/dts/mt6589.dtsi
-@@ -0,0 +1,93 @@
-+/*
-+ * Copyright (c) 2014 MundoReader S.L.
-+ * Author: Matthias Brugger <matthias.bgg@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <dt-bindings/interrupt-controller/irq.h>
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include "skeleton.dtsi"
-+
-+/ {
-+	compatible = "mediatek,mt6589";
-+	interrupt-parent = <&gic>;
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x0>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x1>;
-+		};
-+		cpu@2 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x2>;
-+		};
-+		cpu@3 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a7";
-+			reg = <0x3>;
-+		};
-+
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		dummy13m: dummy13m {
-+			compatible = "fixed-clock";
-+			clock-frequency = <13000000>;
-+			#clock-cells = <0>;
-+		};
-+
-+		dummy32k: dummy32k {
-+			compatible = "fixed-clock";
-+			clock-frequency = <32000>;
-+			#clock-cells = <0>;
-+		};
-+	};
-+
-+	soc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "simple-bus";
-+		clock-ranges;
-+		ranges;
-+
-+		timer: timer@10008000 {
-+			compatible = "mediatek,mtk6589-timer";
-+			reg = <0x10008000 0x80>;
-+			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&dummy13m>, <&dummy32k>;
-+		};
-+
-+		gic: interrupt-controller@10212000 {
-+			compatible = "arm,cortex-a15-gic";
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			reg = <0x10211000 0x1000>,
-+			      <0x10212000 0x1000>,
-+			      <0x10214000 0x2000>,
-+			      <0x10216000 0x2000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-new file mode 100644
-index 0000000..2c043a2
---- /dev/null
-+++ b/arch/arm/mach-mediatek/Kconfig
-@@ -0,0 +1,6 @@
-+config ARCH_MEDIATEK
-+	bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
-+	select ARM_GIC
-+	select MTK_TIMER
-+	help
-+	  Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
-diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
-new file mode 100644
-index 0000000..43e619f
---- /dev/null
-+++ b/arch/arm/mach-mediatek/Makefile
-@@ -0,0 +1 @@
-+obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
-diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-new file mode 100644
-index 0000000..73dfb05
---- /dev/null
-+++ b/arch/arm/mach-mediatek/mediatek.c
-@@ -0,0 +1,32 @@
-+/*
-+ * Device Tree support for Mediatek SoCs
-+ *
-+ * Copyright (c) 2014 MundoReader S.L.
-+ * Author: Matthias Brugger <matthias.bgg@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/of_platform.h>
-+#include <linux/irqchip.h>
-+#include <asm/mach/arch.h>
-+#include <asm/mach/map.h>
-+
-+static const char * const mediatek_board_dt_compat[] = {
-+	"mediatek,mt6589",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
-+	.dt_compat	= mediatek_board_dt_compat,
-+MACHINE_END
+> > Please CC maintainers...
+> 
+> My bad, sorry.
+
 -- 
-1.8.1.2
+Regards,
+
+Laurent Pinchart
+
