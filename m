@@ -1,93 +1,65 @@
-From: schivers@csc.com (Stephen Chivers)
-Subject: Re: [PATCH] printk/of_serial: fix serial console cessation part way
- through boot.
-Date: Wed, 14 May 2014 08:04:39 +1000
-Message-ID: <20140513220439.5A063E0692@canberra.localdomain>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 4/6] arm: add basic support for Mediatek MT6589 boards
+Date: Tue, 13 May 2014 15:47:32 -0700
+Message-ID: <20140513224732.GJ20486@codeaurora.org>
+References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
+ <1399938570-11356-5-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: geert@linux-m68k.org, jslaby@suse.cz, gregkh@linuxfoundation.org
-Cc: linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org, devicetree@vger.kernel.org, rob+dt@kernel.org, grant.likely@linaro.org, linux-kernel@vger.kernel.org, cproctor@csc.com, linux-serial@vger.kernel.org, schivers@csc.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399938570-11356-5-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Commit 5f5c9ae56c38942623f69c3e6dc6ec78e4da2076
-"serial_core: Unregister console in uart_remove_one_port()"
-fixed a crash where a serial port was removed but
-not deregistered as a console.
+On 05/13, Matthias Brugger wrote:
+> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+> new file mode 100644
+> index 0000000..73dfb05
+> --- /dev/null
+> +++ b/arch/arm/mach-mediatek/mediatek.c
+> @@ -0,0 +1,32 @@
+> +/*
+> + * Device Tree support for Mediatek SoCs
+> + *
+> + * Copyright (c) 2014 MundoReader S.L.
+> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/irqchip.h>
+> +#include <asm/mach/arch.h>
+> +#include <asm/mach/map.h>
+> +
+> +static const char * const mediatek_board_dt_compat[] = {
 
-There is a side effect of that commit for platforms having serial consoles
-and of_serial configured (CONFIG_SERIAL_OF_PLATFORM). The serial console
-is disabled midway through the boot process.
+__initconst?
 
-This cessation of the serial console affects PowerPC computers
-such as the MVME5100 and SAM440EP.
+> +	"mediatek,mt6589",
+> +	NULL,
+> +};
+> +
+> +DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
+> +	.dt_compat	= mediatek_board_dt_compat,
+> +MACHINE_END
 
-The sequence is:
+You shouldn't need this file at all if the platform is part of
+the multi-platform kernel.
 
-	bootconsole [udbg0] enabled
-	....
-	serial8250/16550 driver initialises and registers its UARTS,
-	one of these is the serial console.
-	console [ttyS0] enabled
-	....
-	of_serial probes "platform" devices, registering them as it goes.
-	One of these is the serial console.
-	console [ttyS0] disabled.
-
-The disabling of the serial console is due to:
-
-	a.  unregister_console in printk not clearing the
-	    CONS_ENABLED bit in the console flags,
-	    even though it has announced that the console is disabled; and
-
-	b.  of_platform_serial_probe in of_serial not setting the port type
-	    before it registers with serial8250_register_8250_port.
-
-This patch ensures that the serial console is re-enabled when of_serial
-registers a serial port that corresponds to the designated console.
-
-Signed-off-by: Stephen Chivers <schivers@csc.com>
-Tested-by: Stephen Chivers <schivers@csc.com>
-Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> [unregister_console]
-
-===
-The above failure was identified in Linux-3.15-rc2.
-
-Tested using MVME5100 and SAM440EP PowerPC computers with
-kernels built from Linux-3.15-rc5 and tty-next.
-
-The continued operation of the serial console is vital for computers
-such as the MVME5100 as that Single Board Computer does not
-have any grapical/display hardware.
-
----
- drivers/tty/serial/of_serial.c |    1 +
- kernel/printk/printk.c         |    1 +
- 2 files changed, 2 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
-index 9924660..27981e2 100644
---- a/drivers/tty/serial/of_serial.c
-+++ b/drivers/tty/serial/of_serial.c
-@@ -173,6 +173,7 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
- 	{
- 		struct uart_8250_port port8250;
- 		memset(&port8250, 0, sizeof(port8250));
-+		port.type = port_type;
- 		port8250.port = port;
- 
- 		if (port.fifosize)
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 7228258..221229c 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -2413,6 +2413,7 @@ int unregister_console(struct console *console)
- 	if (console_drivers != NULL && console->flags & CON_CONSDEV)
- 		console_drivers->flags |= CON_CONSDEV;
- 
-+	console->flags &= ~CON_ENABLED;
- 	console_unlock();
- 	console_sysfs_notify();
- 	return res;
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
