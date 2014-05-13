@@ -1,65 +1,27 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH 2/2] ARM: dts: enable fimd for exynos5800 based peach-pi board
-Date: Tue, 13 May 2014 08:53:09 +0530
-Message-ID: <CAPdUM4Mfh-LnUX_fHi7BTJ1LcE+b4oHzjgWAJk+AWvV7UJbGnA@mail.gmail.com>
-References: <1399877120-4634-1-git-send-email-rahul.sharma@samsung.com>
-	<1399877120-4634-3-git-send-email-rahul.sharma@samsung.com>
-	<004701cf6e48$b4578910$1d069b30$%han@samsung.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/3] Add DRA7xx and AM43xx platform support in
+ cpsw-phy-sel driver
+Date: Tue, 13 May 2014 00:11:45 -0400 (EDT)
+Message-ID: <20140513.001145.2034679814844372739.davem@davemloft.net>
+References: <1399642655-6412-1-git-send-email-mugunthanvnm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <004701cf6e48$b4578910$1d069b30$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1399642655-6412-1-git-send-email-mugunthanvnm@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: mugunthanvnm@ti.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks Jingoo Han.
+From: Mugunthan V N <mugunthanvnm@ti.com>
+Date: Fri, 9 May 2014 19:07:32 +0530
 
-Hi Kukjin,
+> Adding DRA7xx and AM43xx platform support to cpsw-phy-sel driver to select
+> phy mode in control driver and fixing the uninitialized dev by initializing
+> to platform device structure pointer.
+> 
+> Changes from Initial version
+> * Added back the missing patch (1/3)
 
-Please consider both of these series for your tree.
-
-1) http://www.spinics.net/lists/arm-kernel/msg329697.html
-2) http://www.spinics.net/lists/arm-kernel/msg330291.html
-
-Regards,
-Rahul Sharma
-
-On 13 May 2014 06:44, Jingoo Han <jg1.han@samsung.com> wrote:
-> On Monday, May 12, 2014 3:45 PM, Rahul Sharma wrote:
->>
->> From: Rahul Sharma <Rahul.Sharma@samsung.com>
->>
->> Enable FIMD for peach-pi board.
->>
->> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
->
-> Reviewed-by: Jingoo Han <jg1.han@samsung.com>
->
-> Best regards,
-> Jingoo Han
->
->> ---
->>  arch/arm/boot/dts/exynos5800-peach-pi.dts |    5 +++++
->>  1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> index 426705a..cccacdd 100644
->> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> @@ -157,6 +157,11 @@
->>       };
->>  };
->>
->> +&fimd {
->> +     status = "okay";
->> +     samsung,invert-vclk;
->> +};
->> +
->>  &hsi2c_9 {
->>       status = "okay";
->>       clock-frequency = <400000>;
->> --
->> 1.7.9.5
->
+Series applied to net-next, thanks.
