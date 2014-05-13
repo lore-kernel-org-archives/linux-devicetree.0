@@ -1,98 +1,100 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7] DMA: sun6i: Add driver for the Allwinner
- A31 DMA controller
-Date: Tue, 13 May 2014 15:42:58 +0200
-Message-ID: <20140513134258.GA29258@lukather>
-References: <20140430070408.GR32284@intel.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv2 1/4] of: make of_update_property() usable earlier in the
+ boot process
+Date: Tue, 13 May 2014 09:00:02 -0500
+Message-ID: <CAL_JsqLNnLjeo2tM=z5bcn4DJD_5-uFRGkk6wAWnvGZyo9Y7pg@mail.gmail.com>
+References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1399975839-5311-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sm4nu43k4a2Rpi4c"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB2ODZCNQKGQE5SKUBOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140430070408.GR32284-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, kevin.z.m.zh-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sunny-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, zhuzhenhua-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399975839-5311-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 13, 2014 at 5:10 AM, Thomas Petazzoni
+<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Commit 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device
+> nodes kobjects so they show up in sysfs') has turned Device Tree nodes
+> in kobjects and added a sysfs based representation for Device Tree
+> nodes. Since the sysfs logic is only available after the execution of
+> a core_initcall(), the patch took precautions in of_add_property() and
+> of_remove_property() to not do any sysfs related manipulation early in
+> the boot process.
+>
+> However, it forgot to do the same for of_update_property(), which if
+> used early in the boot process (before core_initcalls have been
+> called), tries to call sysfs_remove_bin_file(), and crashes:
 
---sm4nu43k4a2Rpi4c
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It actually crashes or just the warning? It would be good to give the
+crash backtrace.
 
-Hi Vinod,
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 0 at /home/thomas/projets/linux-2.6/fs/kernfs/dir.c:1216 kernfs_remove_by_name_ns+0x80/0x88()
+> kernfs: can not remove '(null)', no directory
+> Modules linked in:
+> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.15.0-rc1-00127-g1d7e7b2-dirty #423
+> [<c0014910>] (unwind_backtrace) from [<c00110ec>] (show_stack+0x10/0x14)
+> [<c00110ec>] (show_stack) from [<c04c84b8>] (dump_stack+0x84/0x94)
+> [<c04c84b8>] (dump_stack) from [<c001d8c0>] (warn_slowpath_common+0x6c/0x88)
+> [<c001d8c0>] (warn_slowpath_common) from [<c001d90c>] (warn_slowpath_fmt+0x30/0x40)
+> [<c001d90c>] (warn_slowpath_fmt) from [<c0104468>] (kernfs_remove_by_name_ns+0x80/0x88)
+> [<c0104468>] (kernfs_remove_by_name_ns) from [<c0394d98>] (of_update_property+0xc0/0xf0)
+> [<c0394d98>] (of_update_property) from [<c0647248>] (mvebu_timer_and_clk_init+0xfc/0x194)
+> [<c0647248>] (mvebu_timer_and_clk_init) from [<c0640934>] (start_kernel+0x218/0x350)
+> [<c0640934>] (start_kernel) from [<00008070>] (0x8070)
+>
+> To fix this problem, we simply skip the sysfs related calls in
+> of_update_property(), and rely on of_init() to fix up things when it
+> will be called, exactly as is done in of_add_property() and
+> of_remove_property().
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Fixes: 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device nodes kobjects so they show up in sysfs')
 
-On Wed, Apr 30, 2014 at 12:34:08PM +0530, Vinod Koul wrote:
-> > +
-> > +static int sun6i_dma_terminate_all(struct sun6i_vchan *vchan)
-> > +{
-> > +	struct sun6i_dma_dev *sdev =3D to_sun6i_dma_dev(vchan->vc.chan.device=
-);
-> > +	struct sun6i_pchan *pchan =3D vchan->phy;
-> > +	unsigned long flags;
-> > +	LIST_HEAD(head);
-> > +
-> > +	spin_lock(&sdev->lock);
-> > +	list_del_init(&vchan->node);
-> > +	spin_unlock(&sdev->lock);
-> > +
-> > +	spin_lock_irqsave(&vchan->vc.lock, flags);
-> > +
-> > +	vchan_get_all_descriptors(&vchan->vc, &head);
-> > +
-> > +	if (pchan) {
-> > +		writel(DMA_CHAN_ENABLE_STOP, pchan->base + DMA_CHAN_ENABLE);
-> > +		writel(DMA_CHAN_PAUSE_RESUME, pchan->base + DMA_CHAN_PAUSE);
-> > +
-> > +		vchan->phy =3D NULL;
-> > +		pchan->vchan =3D NULL;
-> > +		pchan->desc =3D NULL;
-> > +		pchan->done =3D NULL;
-> > +	}
-> > +
-> > +	spin_unlock_irqrestore(&vchan->vc.lock, flags);
-> > +
-> > +	vchan_dma_desc_free_list(&vchan->vc, &head);
->=20
-> shouldn't you kill the tasklet as well here?
+Humm, I didn't know about this new tag. This doesn't quite match what
+SubmittingPatches says. It should be 12 digits of commit hash and
+double quotes around the summary.
 
-Just to be clear, which tasklet? vchan's or the driver's?
+> ---
+>  drivers/of/base.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index f72d19b..e981f09 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1831,11 +1831,16 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>         if (rc)
+>                 return rc;
+>
+> +       /* At early boot, bail out and defer setup to of_init() */
+> +       if (!of_kset)
+> +               goto skip_sysfs;
 
-Thanks,
-Maxime
+I prefer to avoid the goto and do: return found ? 0 : -ENODEV;
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Also, this code has changed some in 3.15 rc's, you need to rebase.
+This change needs to go into 3.15. Other platforms could be broken.
 
---sm4nu43k4a2Rpi4c
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Rob
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTciFiAAoJEBx+YmzsjxAgqzYP/imjB1PIl5O0NsHM7Hz8ZFVg
-IaveYGrL5rwsadTN1K02wtLpdbA0bMSDKqI5QW8gi+Y9qLxypPzf68UlbeSxtkuc
-05QaLgtikOgeGuHFsEVaA63mHcsgKS3KpyehRKir6VnH/fDN4MPJ89T30gKjFgru
-7AHpKpqKPyB11CTOCPvsYW3iCcr2wMMO+qDPPKRWK0rz+dC1JVBLkbNbM5s4RwVw
-IUv++F2EyUofq74Mvoi17Y7zgpfCD4H9Cq4krtOIse/I6ovjqwcmfKsPY9xspqgX
-4VF7JxSV8YwD8U7HexdaszgMacJF25OpgsaKDjP00hlauEdU90OgbfIQsDPnjNUd
-RiqQf4PVuyUzlpTLyRhAx5hTU8atZ9OWAO+MfgzmToMmvY+i8J6xzryyJxpGtY2s
-ciO70QKq5cB98899rg87MZOWmZNCyeCS1pEVv8Ezs18en6IE1njqs6YXBCRWOf+i
-Q4CvwEml6M+n2jbB9BqazmwlGRsc0harVMJ2sw/9gO8y1m7S8tXDxl6fsb8cZxL/
-aEgSyHh6Cvg32BNp+Ua+qLc4kYkLv+RdDExXfJaq3mZZrq4jJBIUrk1OskiOjlkv
-6/wFf/jBfs0ADTX9Coy8SGLZwMszKLJt+7qzlE5KZu9slSHRPcLdSW40H7U5ebK1
-6Ks6wDn9ftS3mI8tyz+j
-=kaUC
------END PGP SIGNATURE-----
-
---sm4nu43k4a2Rpi4c--
+> +
+>         /* Update the sysfs attribute */
+>         if (oldprop)
+>                 sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+>         __of_add_property_sysfs(np, newprop);
+>
+> + skip_sysfs:
+>         if (!found)
+>                 return -ENODEV;
+>
+> --
+> 1.9.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
