@@ -1,53 +1,39 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH 2/2] ARM: dts: enable fimd for exynos5800 based peach-pi
- board
-Date: Tue, 13 May 2014 10:14:35 +0900
-Message-ID: <004701cf6e48$b4578910$1d069b30$%han@samsung.com>
-References: <1399877120-4634-1-git-send-email-rahul.sharma@samsung.com>
- <1399877120-4634-3-git-send-email-rahul.sharma@samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: r8a7791: Correct SYS-DMAC clock defines
+Date: Tue, 13 May 2014 10:17:33 +0900
+Message-ID: <20140513011732.GE30252@verge.net.au>
+References: <1399920573-30947-1-git-send-email-geert+renesas@glider.be>
+ <1879564.Q0Zk545mJH@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399877120-4634-3-git-send-email-rahul.sharma@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rahul Sharma' <rahul.sharma@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, 'Jingoo Han' <jg1.han@samsung.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1879564.Q0Zk545mJH@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <damm@opensource.se>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday, May 12, 2014 3:45 PM, Rahul Sharma wrote:
+On Mon, May 12, 2014 at 09:48:59PM +0200, Laurent Pinchart wrote:
+> Hi Geert,
 > 
-> From: Rahul Sharma <Rahul.Sharma@samsung.com>
+> Thank you for the patch.
 > 
-> Enable FIMD for peach-pi board.
+> On Monday 12 May 2014 20:49:33 Geert Uytterhoeven wrote:
+> > R-Car M2 has two MSTP bits for SYS-DMAC, not one.
+> > Also bring the naming in sync with the documentation.
+> > 
+> > This issue was introduced in v3.14, in commit
+> > 4d8864c9e94ec727f1c675b9f6921525c360334b ("ARM: shmobile: r8a7791: Add
+> > clock index macros for DT sources").
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
-> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> 
+> > ---
+> > I believe there are no users of the incorrect definition.
 
-Reviewed-by: Jingoo Han <jg1.han@samsung.com>
-
-Best regards,
-Jingoo Han
-
-> ---
->  arch/arm/boot/dts/exynos5800-peach-pi.dts |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> index 426705a..cccacdd 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -157,6 +157,11 @@
->  	};
->  };
-> 
-> +&fimd {
-> +	status = "okay";
-> +	samsung,invert-vclk;
-> +};
-> +
->  &hsi2c_9 {
->  	status = "okay";
->  	clock-frequency = <400000>;
-> --
-> 1.7.9.5
+Thanks, I will queue this up.
+As there are it does not seem to be very urgent so I will target
+it at v3.16.
