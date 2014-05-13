@@ -1,84 +1,82 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv4 3/3] edac: altera: Add EDAC support for Altera SoC
- SDRAM Controller
-Date: Tue, 13 May 2014 02:12:46 +0200
-Message-ID: <20140513001246.GC5935@pd.tnic>
-References: <1399937817-2202-1-git-send-email-tthayer@altera.com>
- <1399937817-2202-4-git-send-email-tthayer@altera.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: shmobile: henninger: add QSPI DT support
+Date: Tue, 13 May 2014 09:10:24 +0900
+Message-ID: <20140513001024.GC18157@verge.net.au>
+References: <201405060245.32952.sergei.shtylyov@cogentembedded.com>
+ <536FBEB7.9080605@cogentembedded.com>
+ <20140511225354.GC6451@verge.net.au>
+ <537151DA.8000101@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1399937817-2202-4-git-send-email-tthayer@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@altera.com
-Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+In-Reply-To: <537151DA.8000101@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 12, 2014 at 06:36:57PM -0500, tthayer@altera.com wrote:
-> +	ptemp[0] = 0x5A5A5A5A;
-> +	ptemp[1] = 0xA5A5A5A5;
-> +	/* Clear the error injection bits */
-> +	regmap_write(drvdata->mc_vbase,	CTLCFG, read_reg);
-> +	/* Ensure it has been written out */
-> +	wmb();
-> +
-> +	/*
-> +	 * To trigger the error, we need to read the data back
-> +	 * (the data was written with errors above)
-> +	 * The ACCESS_ONCE macros are used to prevent the
-> +	 * compiler optimizing these reads out.
-> +	 */
-> +	reg = ACCESS_ONCE(ptemp[0]);
-> +	read_reg = ACCESS_ONCE(ptemp[1]);
-> +	/* Force Read */
-> +	rmb();
+On Tue, May 13, 2014 at 02:57:30AM +0400, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 05/12/2014 02:53 AM, Simon Horman wrote:
+> 
+> >>>Define the Henninger board dependent part of the QSPI device node.
+> >>>Add device nodes for Spansion S25FL512S SPI flash and MTD partitions on it.
+> 
+> >>>Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+> >>>---
+> >>>This patch is against 'renesas-devel-v3.15-rc3-20140502' tag of Simon Horman's
+> >>>'renesas.git' repo and SDHI0/2 DT support patch posted last weekend.
+> 
+> >>>  arch/arm/boot/dts/r8a7791-henninger.dts |   38 ++++++++++++++++++++++++++++++++
+> >>>  1 file changed, 38 insertions(+)
+> 
+> >>>Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+> >>>===================================================================
+> >>>--- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
+> >>>+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+> >>[...]
+> >>>@@ -158,3 +163,36 @@
+> >>>  	cd-gpios = <&gpio6 22 GPIO_ACTIVE_LOW>;
+> >>>  	status = "okay";
+> >>>  };
+> >>>+
+> >>>+&qspi {
+> >>>+	pinctrl-0 = <&qspi_pins>;
+> >>>+	pinctrl-names = "default";
+> >>>+
+> >>>+	status = "okay";
+> >>>+
+> >>>+	flash@0 {
+> >>>+		#address-cells = <1>;
+> >>>+		#size-cells = <1>;
+> >>>+		compatible = "spansion,s25fl512s";
+> >>>+		reg = <0>;
+> >>>+		spi-max-frequency = <30000000>;
+> >>>+		spi-tx-bus-width = <4>;
+> >>>+		spi-rx-bus-width = <4>;
+> >>>+		m25p,fast-read;
+> >>>+
+> >>>+		partition@0 {
+> >>>+			label = "loader_prg";
+> >>>+			reg = <0x00000000 0x00040000>;
+> >>>+			read-only;
+> >>>+		};
+> >>>+		partition@40000 {
+> >>>+			label = "user_prg";
+> >>>+			reg = <0x00040000 0x00400000>;
+> >>>+			read-only;
+> 
+> >>    Oops, there shouldn't be "read-only" here, I forgot to refresh
+> >>the patch as I'm now seeing... too bad it's too late to resend now.
+> >>:-(
+> 
+> >Could you send an incremental fix for me to queue up?
+> 
+>    Oops, I've rechecked and it should indeed be read-only, so the
+> patch was correct. Sorry. :-)
 
-Right, I still am a bit unsure about this thing. So sure, we funnel
-ptemp through an asm() block which stops the optimizer but we assign the
-results to reg and read_reg, i.e. two local variables which aren't used
-in this function anymore.
-
-Thus, I don't see what stops the compiler from discarding them along
-with the ACCESS_ONCE() reads at some point, when it becomes really
-smart. Basically killing
-
-> +     reg = ACCESS_ONCE(ptemp[0]);
-> +     read_reg = ACCESS_ONCE(ptemp[1]);
-
-as they have to effect.
-
-Maybe we can do the reads in asm - this should be pretty safe.
-
-I.e., something like this:
-
-      asm volatile("" : "=r" (reg), "=r" (read_reg),
-		      : "0" (ptemp[0]), "1" (ptemp[1]));
-
-and it does it on x86 (did a small test program) by shuffling the values
-through registers so we definitely have the reads.
-
-	.loc 1 28 0
-	movl	-48(%rbp), %edx	# ptemp, D.2240
-	movl	-44(%rbp), %eax	# ptemp, D.2240
-	.loc 1 27 0
-	movl	%edx, -28(%rbp)	# reg, reg
-	movl	%eax, -32(%rbp)	# read_reg, read_reg
-
-Btw, if you only want to do the reads, you can simply tell gcc to put them in
-registers
-
-      asm volatile("" :: "r" (ptemp[0]), "r" (ptemp[1]));
-
-and be done with it but I don't know how smart it is with register
-allocation so as to recognize that they're already in registers (when
-they already are in some registers) and discard the reads.
-
-Fun stuff! :-)
-
--- 
-Regards/Gruss,
-    Boris.
-
-Sent from a fat crate under my desk. Formatting is fine.
---
+Thanks for double checking.
+I think we can safely do nothing for now :-)
