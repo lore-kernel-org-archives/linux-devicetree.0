@@ -1,69 +1,48 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH 1/2] clk: of: helper for determining flags properties
-Date: Tue, 13 May 2014 13:57:32 +0200
-Message-ID: <1399982253-21079-2-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH 2/2] drivers: clk: st: authorize propagate rate change for clockgenD0
+Date: Tue, 13 May 2014 13:57:33 +0200
+Message-ID: <1399982253-21079-3-git-send-email-gabriel.fernandez@linaro.org>
 References: <1399982253-21079-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1399982253-21079-1-git-send-email-gabriel.fernandez@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Gabriel Fernandez <gabriel.fernandez@st.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch provides a helper to get flags properties of
-a clock node.
+This patch allows the spread of change rate only for clockgenD0
+clocks.
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@st.com>
 ---
- drivers/clk/clk.c            | 11 +++++++++++
- include/linux/clk-provider.h |  6 ++++++
- 2 files changed, 17 insertions(+)
+ arch/arm/boot/dts/stih407-clock.dtsi | 1 +
+ drivers/clk/st/clk-flexgen.c         | 2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
-index 4d56220..cae8985 100644
---- a/drivers/clk/clk.c
-+++ b/drivers/clk/clk.c
-@@ -2528,6 +2528,17 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
- }
- EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
+diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
+index 5f1c83c..7fad261 100644
+--- a/arch/arm/boot/dts/stih407-clock.dtsi
++++ b/arch/arm/boot/dts/stih407-clock.dtsi
+@@ -204,6 +204,7 @@
+ 					"CLK_PCM_1",
+ 					"CLK_PCM_2",
+ 					"CLK_SPDIFF";
++				set-rate-parent;
+ 			};
+ 		};
  
-+unsigned long of_clk_get_flags(struct device_node *np)
-+{
-+	unsigned long flags = 0;
-+
-+	if (of_property_read_bool(np, "set-rate-parent"))
-+		flags |= CLK_SET_RATE_PARENT;
-+
-+	return flags;
-+}
-+EXPORT_SYMBOL_GPL(of_clk_get_flags);
-+
- struct clock_provider {
- 	of_clk_init_cb_t clk_init_cb;
- 	struct device_node *np;
-diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
-index 59e2eb5..650bc10 100644
---- a/include/linux/clk-provider.h
-+++ b/include/linux/clk-provider.h
-@@ -519,6 +519,7 @@ int of_clk_get_parent_count(struct device_node *np);
- const char *of_clk_get_parent_name(struct device_node *np, int index);
+diff --git a/drivers/clk/st/clk-flexgen.c b/drivers/clk/st/clk-flexgen.c
+index f3ed700..5629988 100644
+--- a/drivers/clk/st/clk-flexgen.c
++++ b/drivers/clk/st/clk-flexgen.c
+@@ -306,6 +306,8 @@ void __init st_of_flexgen_setup(struct device_node *np)
+ 		if (*clk_name == '\0')
+ 			continue;
  
- void of_clk_init(const struct of_device_id *matches);
-+unsigned long of_clk_get_flags(struct device_node *np);
- 
- #else /* !CONFIG_OF */
- 
-@@ -546,6 +547,11 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
- {
- 	return NULL;
- }
-+static inline unsigned long of_clk_get_flags(struct device_node *np)
-+{
-+	return NULL;
-+}
++		flex_flags = of_clk_get_flags(np);
 +
- #define of_clk_init(matches) \
- 	{ while (0); }
- #endif /* CONFIG_OF */
+ 		clk = clk_register_flexgen(clk_name, parents, num_parents,
+ 					   reg, rlock, i, flex_flags);
+ 
 -- 
 1.9.1
