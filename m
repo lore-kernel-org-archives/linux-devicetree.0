@@ -1,29 +1,29 @@
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 2/9] ARM: shmobile: r8a7790: add dma defines for sys
- and audio dmacs
-Date: Tue, 13 May 2014 10:51:07 +0200
-Message-ID: <CAMuHMdXoHMDr+NxWM51RAUCSEcgM9iZ5fMARuWkaVtFFe7AM=w@mail.gmail.com>
+Subject: Re: [PATCH v2 6/9] ARM: shmobile: r8a7790: add audio dmac node
+Date: Tue, 13 May 2014 10:53:22 +0200
+Message-ID: <CAMuHMdV7ks=ATdGnUFxH98hB=8zdkwLex39pCHHbcdOvO5c=DQ@mail.gmail.com>
 References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
-	<1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk>
+	<1397511312-4845-7-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk>
+In-Reply-To: <1397511312-4845-7-git-send-email-ben.dooks@codethink.co.uk>
 Sender: linux-sh-owner@vger.kernel.org
 To: Ben Dooks <ben.dooks@codethink.co.uk>
 Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linux-sh list <linux-sh@vger.kernel.org>, magnus.damm@opensource.se, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 On Mon, Apr 14, 2014 at 11:35 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
-> --- /dev/null
-> +++ b/include/dt-bindings/dma/r8a7790-dma.h
-> @@ -0,0 +1,228 @@
-> +/*
-> + * R8A7790 System and Audio DMA channel resource identifiers
-> + *
-> + * Copyirght (c) 2014 Codethink Ltd.
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index de3ca15..582e687 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
 
-Copyright.
+> +               audiodma0: dma-contorller@ec700000 {
+
+dma-controller
+
+(we really need better dts validation tools)
 
 Gr{oetje,eeting}s,
 
