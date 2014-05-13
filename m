@@ -1,101 +1,58 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv2 3/4] ARM: mm: add support for HW coherent systems in PL310
-Date: Tue, 13 May 2014 12:10:38 +0200
-Message-ID: <1399975839-5311-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399975839-5311-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 0/4] ARM/DT: edma: Get IP configuration from hardware
+Date: Tue, 13 May 2014 13:26:35 +0300
+Message-ID: <5371F35B.6090909@ti.com>
+References: <1399967028-24757-1-git-send-email-peter.ujfalusi@ti.com> <5371D8D8.8000003@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5371D8D8.8000003@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, joelf@ti.com
+Cc: linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-When a PL310 cache is used on a system that provides hardware
-coherency, the outer cache sync operation is useless, and can be
-skipped. Moreover, on some systems, it is harmful as it causes
-deadlocks between the Marvell coherency mechanism, the Marvell PCIe
-controller and the Cortex-A9.
+On 05/13/2014 11:33 AM, Sekhar Nori wrote:
+> On Tuesday 13 May 2014 01:13 PM, Peter Ujfalusi wrote:
+>> Hi,
+>>
+>> We are requesting redundant information via DT for the driver since =
+the very same
+>> data is available in the HW: by reading and decoding the content of =
+CCCFG
+>> register we can get:
+>> Number of channels: NUM_DMACH
+>> Number of regions: NUM_REGN
+>> Number of slots (PaRAM sets): NUM_PAENTRY
+>> Number of TC/EQ: NUM_EVQUE
+>>
+>> So these does not need to be provided by the DT binding.
+>>
+>> The driver will no longer look for these properties from DT and they=
+ can be
+>> removed from the binding documentation and from the dtsi files as we=
+ll.
+>> The change will not introduce regression when new kernel is booted u=
+sing older
+>> DTB (since we just ignore the mentioned properties).
+>=20
+> Peter, to which baseline do these patches apply? I tried applying the=
+m
+> to v3.15-rc5 but 1/4 doesn't apply cleanly.
 
-To avoid this, this commit introduces a separate
-'arm,pl310-coherent-cache' compatible string, which identifies a PL310
-cache in an I/O coherent configuration. This compatible string is
-associated with a different set of l2x0_of_data, in which the ->sync
-operation is NULL.
+It is on top of next-20140509.
+Now that I looked at my branch, I missed one small patch from the serie=
+s which
+could cause the issue (removing the memset from edma_of_parse_dt).
 
-Note that technically speaking, a fully coherent system wouldn't
-require any of the other .outer_cache operations. However, in
-practice, when booting secondary CPUs, these are not yet coherent, and
-therefore a set of cache maintenance operations are necessary at this
-point. This explains why we keep the other .outer_cache operations and
-only ->sync is disabled.
+I'll resend ASAP with that patch included.
 
-While in theory any write to a PL310 register could cause the
-deadlock, in practice, disabling ->sync is sufficient to workaround
-the deadlock, since the other cache maintenance operations are only
-used in very specific situations.
+>=20
+> Thanks,
+> Sekhar
+>=20
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/l2cc.txt |  2 ++
- arch/arm/mm/cache-l2x0.c                       | 21 +++++++++++++++++++++
- 2 files changed, 23 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-index b513cb8..41953b3 100644
---- a/Documentation/devicetree/bindings/arm/l2cc.txt
-+++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-@@ -8,6 +8,8 @@ Required properties:
- 
- - compatible : should be one of:
-   "arm,pl310-cache"
-+  "arm,pl310-coherent-cache", used for I/O coherent platforms using
-+     the PL310 cache
-   "arm,l220-cache"
-   "arm,l210-cache"
-   "bcm,bcm11351-a2-pl310-cache": DEPRECATED by "brcm,bcm11351-a2-pl310-cache"
-diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-index 7abde2ce..ae19540 100644
---- a/arch/arm/mm/cache-l2x0.c
-+++ b/arch/arm/mm/cache-l2x0.c
-@@ -889,6 +889,26 @@ static const struct l2x0_of_data pl310_data = {
- 	},
- };
- 
-+/*
-+ * PL310 operations used on I/O coherent systems. Theoretically, no
-+ * outer cache operations would be needed, except that for secondary
-+ * processors bring up, a few cache maintenance operations are needed
-+ * because secondary processors are not directly coherent with the L2
-+ * cache when they start up.
-+ */
-+static const struct l2x0_of_data pl310_coherent_data = {
-+	.setup = pl310_of_setup,
-+	.save  = pl310_save,
-+	.outer_cache = {
-+		.resume      = pl310_resume,
-+		.inv_range   = l2x0_inv_range,
-+		.clean_range = l2x0_clean_range,
-+		.flush_range = l2x0_flush_range,
-+		.flush_all   = l2x0_flush_all,
-+		.inv_all     = l2x0_inv_all,
-+	},
-+};
-+
- static const struct l2x0_of_data l2x0_data = {
- 	.setup = l2x0_of_setup,
- 	.save  = NULL,
-@@ -955,6 +975,7 @@ static const struct of_device_id l2x0_ids[] __initconst = {
- 	{ .compatible = "arm,l210-cache", .data = (void *)&l2x0_data },
- 	{ .compatible = "arm,l220-cache", .data = (void *)&l2x0_data },
- 	{ .compatible = "arm,pl310-cache", .data = (void *)&pl310_data },
-+	{ .compatible = "arm,pl310-coherent-cache", .data = (void *)&pl310_coherent_data },
- 	{ .compatible = "bcm,bcm11351-a2-pl310-cache", /* deprecated name */
- 	  .data = (void *)&bcm_l2x0_data},
- 	{ .compatible = "brcm,bcm11351-a2-pl310-cache",
--- 
-1.9.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+P=E9ter
