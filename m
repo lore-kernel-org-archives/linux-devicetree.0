@@ -1,78 +1,30 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v3 2/6] dt-bindings: add mtk-timer bindings
-Date: Tue, 13 May 2014 16:08:42 +0200
-Message-ID: <CABuKBeL-Zx9S9QuWyhPF_yEa8EvmJYTDLa6KrY2cXKe9e9zBnQ@mail.gmail.com>
-References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
- <1399938570-11356-3-git-send-email-matthias.bgg@gmail.com>
- <2e93c984-96d9-4504-bb9a-672a247fb710@BL2FFO11FD034.protection.gbl>
+From: Tom Rini <trini@ti.com>
+Subject: Re: [PATCH v2] ARM: dts: am335x-bone-common: Add i2c2 definition
+Date: Tue, 13 May 2014 10:13:30 -0400
+Message-ID: <5372288A.5010403@ti.com>
+References: <1399686184-1594-1-git-send-email-mranostay@gmail.com>	<20140512195050.GB5668@atomide.com>	<CAOCHtYiYwx_bEsyqkbUTTAbhBYESzvfBOOYeVuFXPS1dDy0ZKA@mail.gmail.com>	<20140512201517.GC5668@atomide.com>	<CAOCHtYg6XpF0Gbo4iFqsFvP=QSivQQvCzov8UfxeLXMzrRYEWw@mail.gmail.com>	<20140512204213.GD5668@atomide.com>	<CAOCHtYgg7jwxswH+mqF3RA7-0RP-nGuft+Ze-GRwu1fbA6+0Bw@mail.gmail.com>	<537215D3.70306@ti.com> <CABxcv=nq9XvyN0aPOBFDm0UyoaW-Htyy0tyP3YhYaDnDUo3a5w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <2e93c984-96d9-4504-bb9a-672a247fb710@BL2FFO11FD034.protection.gbl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@inf>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=nq9XvyN0aPOBFDm0UyoaW-Htyy0tyP3YhYaDnDUo3a5w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Robert Nelson <robertcnelson@gmail.com>, Tony Lindgren <tony@atomide.com>, Matt Ranostay <mranostay@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux kernel <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Matt Porter <matt.porter@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNC0wNS0xMyAxNTowOCBHTVQrMDI6MDAgU8O2cmVuIEJyaW5rbWFubiA8c29yZW4uYnJpbmtt
-YW5uQHhpbGlueC5jb20+Ogo+IEhpIE1hdHRoaWFzLAo+Cj4gT24gVHVlLCAyMDE0LTA1LTEzIGF0
-IDAxOjQ5QU0gKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3JvdGU6Cj4+IEFkZCBiaW5kaW5nIGRv
-Y3VtZW50YXRpb24gZm9yIHRoZSBHZW5lcmFsIFBvcnBvc2UgVGltZXIgZHJpdmVyIG9mCj4+IHRo
-ZSBNZWRpYXRlayBTb0NzLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxt
-YXR0aGlhcy5iZ2dAZ21haWwuY29tPgo+PiAtLS0KPj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQgICB8IDE4ICsrKysrKysrKysrKysrKysrKwo+
-PiAgMSBmaWxlIGNoYW5nZWQsIDE4IGluc2VydGlvbnMoKykKPj4gIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRp
-bWVyLnR4dAo+Pgo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dAo+PiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+PiBpbmRleCAwMDAwMDAwLi5kMGYyZGYzCj4+IC0tLSAvZGV2L251bGwKPj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10
-aW1lci50eHQKPj4gQEAgLTAsMCArMSwxOCBAQAo+PiArTWVkaWF0ZWsgTVQ2NTg5LCBNVDY1Nzcg
-YW5kIE1UNjU3MiBUaW1lcnMKPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLQo+PiArCj4+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+PiArLSBjb21wYXRpYmxlOiBTaG91
-bGQgYmUgIm1lZGlhdGVrLG10azY1ODktdGltZXIiCj4+ICstIHJlZzogU2hvdWxkIGNvbnRhaW4g
-bG9jYXRpb24gYW5kIGxlbmd0aCBmb3IgdGltZXJzIHJlZ2lzdGVyLgo+PiArLSBjbG9ja3M6IHBo
-YW5kbGUgdG8gdGhlIGNsb2NrIHNvdXJjZTsgdGhlIGZpcnN0IHJlZmVycyB0byBhIDEzIE1IeiBm
-aXhlZAo+PiArICAgICAgICAgICAgIHN5c3RlbSBjbG9jayBhbmQgdGhlIHNlY29uZCBoYW5kbGUg
-dG8gYSAzMiBLSHogZml4ZWQgUlRDCj4+ICsgICAgICAgICAgICAgY2xvY2suCj4KPiBBcmUgdGhl
-c2UgZnJlcXVlbmNpZXMgbWFuZGF0b3J5IHRvIHRoZSB0aW1lciBvciBhbiBpbXBsZW1lbnRhdGlv
-bgo+IGRldGFpbCBvZiB0aGUgU09DIHlvdSdyZSB3b3JraW5nIHdpdGg/IEkgc3VzcGVjdCwgaXQg
-bWlnaHQgYmUgcG9zc2libGUKPiB0byBzZWUgdGhlIHNhbWUgdGltZXIgaW4gYSBkaWZmZXJlbnQg
-U09DIGltcGxlbWVudGF0aW9uIHdpdGggZGlmZmVyZW50Cj4gZnJlcXVlbmNpZXM/IEluIHRoYXQg
-Y2FzZSAtIG9yIHByb2JhYmx5IGluIGdlbmVyYWwgLSB0aGUgZnJlcXVlbmNpZXMKPiBzaG91bGQg
-bm90IGJlIHBhcnQgb2YgdGhlIGJpbmRpbmcsIElNSE8uCgpJIGhhZCBhIGxvb2sgYXQgdGhlIGlt
-cGxlbWVudGF0aW9uIG9mIHNldmVyYWwgTWVkaWF0ZWsgU29DcyBhbmQgYWxsIG9mCnRoZW0gaGF2
-ZSB0aGUgdGltZXIgd2l0aCB0aGUgc2FtZSBjbG9jayBjb25uZWN0aW9ucy4KSSBkb24ndCBrbm93
-IGlmIHRoZSBJUCBjYW4gYmUgb3IgaXMgYWN0dWFsbHkgdXNlZCB3aXRoIG90aGVyIGNsb2Nrc291
-cmNlcy4KSSBjYW4gdHJ5IHRvIHJlZm9ybXVsYXRlIHRoZSBkZXNjcmlwdGlvbiB0byBtYWtlIHRo
-ZSBjbG9jayBjb25zdHJhaW50cwpzb3VuZCBsZXNzIG1hbmRhdG9yeS4KQWx0aG91Z2ggSSB3b3Vs
-ZCBwcmVmZXIgdG8gbGVhdmUgYSBtZW50aW9uIGFib3V0IHRoZSBjbG9jayBmcmVxdWVuY2llcwoo
-bGlrZSBlLmcuIGluIHRoZSBhbGx3aW5uZXIsc3VuNGktdGltZXIpLgoKPgo+PiArCj4+ICtFeGFt
-cGxlczoKPj4gKwo+PiArICAgICB0aW1lciB7Cj4+ICsgICAgICAgICAgICAgY29tcGF0aWJsZSA9
-ICJtZWRpYXRlayxtdGs2NTg5LXRpbWVyIjsKPj4gKyAgICAgICAgICAgICByZWcgPSA8MHgxMDAw
-ODAwMCAweDgwPjsKPj4gKyAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTEzIElS
-UV9UWVBFX0xFVkVMX0xPVz47Cj4+ICsgICAgICAgICAgICAgY2xvY2tzID0gPCZzeXN0ZW1fY2xr
-PiwgPCZydGNfY2xrPjsKPgo+IE1pZ2h0IGJlIGp1c3QgbXkgcGVyc29uYWwgcHJlZmVyZW5jZSwg
-YnV0IHlvdSBjb3VsZCBhbHNvIGFkZCB0aGUgY2xvY2stbmFtZXMKPiBwcm9wZXJ0eSB3aGljaCB3
-b3VsZCByZWxheCB0aGUgb3JkZXJpbmcgcmVxdWlyZW1lbnQgYSBiaXQgYW5kIHdvdWxkCj4gY2xl
-YXJseSAgaWRlbnRpZnkgdGhlIElQJ3MgY2xvY2tzLgoKSW4gdGhlIHYxIG9mIHRoZSBwYXRjaCBz
-ZXJpZXMgSSBoYWQgdGhlIGNsb2NrIG5hbWVzIGluY2x1ZGVkIFsxXSBidXQKYmVjYXVzZSBvZiBj
-b21tZW50cyBvZiBvdGhlcnMgSSByZW1vdmVkIHRoZW0gWzFdLgpBY3R1YWxseSB0aGUgZHJpdmVy
-IGp1c3QgdXNlIHRoZSBmaXJzdCBjbG9jaywgYnV0IGZyb20gbXkKdW5kZXJzdGFuZGluZyB0aGUg
-RFQgcmVmbGVjdHMgYXMgd2VsbCB0aGUgSFcgY29uZmlndXJhdGlvbiBhbmQgZm9yCnRoaXMgcmVh
-c29uIEkgcHV0IHRoZSB0d28gY2xvY2tzIGluIHRoZSBEVC4KClsxXSBodHRwOi8vdGhyZWFkLmdt
-YW5lLm9yZy9nbWFuZS5saW51eC5kcml2ZXJzLmRldmljZXRyZWUvNjkxNTUvCgo+Cj4gICAgICAg
-ICBTw7ZyZW4KCgoKLS0gCm1vdHpibG9nLndvcmRwcmVzcy5jb20KCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBs
-aXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
-cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+On 05/13/2014 10:06 AM, Javier Martinez Canillas wrote:
+
+> Agreed. I think that until the device tree overlay and the cape
+> manager find their way into mainline we should treat capes as if they
+> were expansion boards attached to a Computer-on-Module. That is, a
+> static based board which its own DTS including the BB{B,W} as an dtsi
+> and not something that can be added on runtime.
+
+Sometimes nothing exposes just how big a problem something is (and how
+much we need the solution to it) like actually showing the output.
+Someone could also start posting the profileN device trees for the
+am335x GP EVMs too.
+
+-- 
+Tom
