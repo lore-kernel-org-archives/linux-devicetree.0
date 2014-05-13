@@ -1,95 +1,61 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 3/3] media: mx2-emmaprp: Add devicetree support
-Date: Tue, 13 May 2014 19:09:30 +0200
-Message-ID: <537251CA.3070005@samsung.com>
-References: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v3 7/7] dts: dra7-evm: add USB support
+Date: Tue, 13 May 2014 10:18:02 -0700
+Message-ID: <20140513171802.GG16837@atomide.com>
+References: <1399283686-6127-1-git-send-email-rogerq@ti.com>
+ <1399283686-6127-8-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
-Sender: linux-media-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399283686-6127-8-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: kishon@ti.com, balbi@ti.com, bcousson@baylibre.com, george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 02/05/14 09:18, Alexander Shiyan wrote:
-> This patch adds devicetree support for the Freescale enhanced Multimedia
-> Accelerator (eMMA) video Pre-processor (PrP).
-> 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+* Roger Quadros <rogerq@ti.com> [140505 02:55]:
+> Add USB pinmux information and USB modes
+> for the USB controllers.
+>=20
+> CC: Beno=C3=AEt Cousson <bcousson@baylibre.com>
+> Reviewed-by: Felipe Balbi <balbi@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  .../devicetree/bindings/media/fsl-imx-emmaprp.txt     | 19 +++++++++++++++++++
->  drivers/media/platform/mx2_emmaprp.c                  |  8 ++++++++
->  2 files changed, 27 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
-> new file mode 100644
-> index 0000000..9e8238f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
-> @@ -0,0 +1,19 @@
-> +* Freescale enhanced Multimedia Accelerator (eMMA) video Pre-processor (PrP)
-> +  for i.MX.
+>  arch/arm/boot/dts/dra7-evm.dts | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7-=
+evm.dts
+> index 5babba0..1d77815 100644
+> --- a/arch/arm/boot/dts/dra7-evm.dts
+> +++ b/arch/arm/boot/dts/dra7-evm.dts
+> @@ -93,6 +93,18 @@
+>  			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
+>  		>;
+>  	};
 > +
-> +Required properties:
-> +- compatible : Shall contain "fsl,imx21-emmaprp".
-> +- reg        : Offset and length of the register set for the device.
-> +- interrupts : Should contain eMMA PrP interrupt number.
-> +- clocks     : Should contain the ahb and ipg clocks, in the order
-> +               determined by the clock-names property.
-> +- clock-names: Should be "ahb", "ipg".
+> +	usb1_pins: pinmux_usb1_pins {
+> +                pinctrl-single,pins =3D <
+> +			0x280	0xc0000	/* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
+> +                >;
+> +        };
 > +
-> +Example:
-> +	emmaprp: emmaprp@10026400 {
-> +		compatible = "fsl,imx27-emmaprp", "fsl,imx21-emmaprp";
-
-Is "fsl,imx27-emmaprp" compatible documented somewhere ?
-
-> +		reg = <0x10026400 0x100>;
-> +		interrupts = <51>;
-> +		clocks = <&clks 49>, <&clks 68>;
-> +		clock-names = "ipg", "ahb";
-> +	};
-> diff --git a/drivers/media/platform/mx2_emmaprp.c b/drivers/media/platform/mx2_emmaprp.c
-> index fa8f7ca..0646bda 100644
-> --- a/drivers/media/platform/mx2_emmaprp.c
-> +++ b/drivers/media/platform/mx2_emmaprp.c
-> @@ -18,6 +18,7 @@
->   */
->  #include <linux/module.h>
->  #include <linux/clk.h>
-> +#include <linux/of.h>
->  #include <linux/slab.h>
->  #include <linux/interrupt.h>
->  #include <linux/io.h>
-> @@ -1005,12 +1006,19 @@ static int emmaprp_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct of_device_id __maybe_unused emmaprp_dt_ids[] = {
-> +	{ .compatible = "fsl,imx21-emmaprp", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, emmaprp_dt_ids);
-> +
->  static struct platform_driver emmaprp_pdrv = {
->  	.probe		= emmaprp_probe,
->  	.remove		= emmaprp_remove,
->  	.driver		= {
->  		.name	= MEM2MEM_NAME,
->  		.owner	= THIS_MODULE,
-> +		.of_match_table = of_match_ptr(emmaprp_dt_ids),
->  	},
+> +	usb2_pins: pinmux_usb2_pins {
+> +                pinctrl-single,pins =3D <
+> +			0x284	0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
+> +                >;
+> +        };
 >  };
->  module_platform_driver(emmaprp_pdrv);
 
-I believe documentation and driver changes should be in separate patches.
-Otherwise looks good.
+Looks like these should use the existing defins PIN_INPUT_SLEW etc?
 
--- 
-Thanks,
-Sylwester
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
