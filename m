@@ -1,116 +1,57 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 1/2] clk: of: helper for determining flags properties
-Date: Tue, 13 May 2014 17:11:55 +0200
-Message-ID: <5372363B.4080608@gmail.com>
-References: <1399982253-21079-1-git-send-email-gabriel.fernandez@linaro.org> <1399982253-21079-2-git-send-email-gabriel.fernandez@linaro.org> <20140513122054.GA2419@e106331-lin.cambridge.arm.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
+Subject: Re: [PATCH v3 7/7] ARM: sunxi: dt: add PRCM clk and reset controller
+ subdevices
+Date: Tue, 13 May 2014 12:17:42 -0300
+Message-ID: <53723796.10308@elopez.com.ar>
+References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com> <1399633911-7094-8-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140513122054.GA2419@e106331-lin.cambridge.arm.com>
+In-Reply-To: <1399633911-7094-8-git-send-email-boris.brezillon@free-electrons.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: "mturquette@linaro.org" <mturquette@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2014 02:20 PM, Mark Rutland wrote:
-> On Tue, May 13, 2014 at 12:57:32PM +0100, Gabriel FERNANDEZ wrote:
->> The patch provides a helper to get flags properties of
->> a clock node.
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
->> ---
->>   drivers/clk/clk.c            | 11 +++++++++++
->>   include/linux/clk-provider.h |  6 ++++++
->>   2 files changed, 17 insertions(+)
->>
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index 4d56220..cae8985 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -2528,6 +2528,17 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
->>   }
->>   EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
->>
->> +unsigned long of_clk_get_flags(struct device_node *np)
->> +{
->> +	unsigned long flags = 0;
->> +
->> +	if (of_property_read_bool(np, "set-rate-parent"))
->> +		flags |= CLK_SET_RATE_PARENT;
+Hi Boris,
+
+El 09/05/14 08:11, Boris BREZILLON escribi=F3:
+> Add DT definitions for PRCM (Power/Reset/Clock Management) clock and =
+reset
+> controller subdevices.
 >
-> NAK.
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>   arch/arm/boot/dts/sun6i-a31.dtsi | 37 +++++++++++++++++++++++++++++=
+++++++++
+>   1 file changed, 37 insertions(+)
 >
-> This is _not_ a hardware property. This flag describes internals of the
-> Linux clock framework, and is thus not suitable for DT.
+> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun=
+6i-a31.dtsi
+> index 9feb3f4..03d5258 100644
+> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
+> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+> @@ -496,6 +496,43 @@
+>   		prcm@01f01400 {
+>   			compatible =3D "allwinner,sun6i-a31-prcm";
+>   			reg =3D <0x01f01400 0x200>;
+> +
+> +			ar100: ar100_clk {
+> +				compatible =3D "allwinner,sun6i-a31-ar100-clk";
+> +				#clock-cells =3D <0>;
+> +				clocks =3D <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
 
-Mark,
+You could add
+				clock-output-names =3D "ar100";
+here, so you don't depend on the node name. Your code already checks fo=
+r=20
+it and uses it when available.
 
-while I agree above property is not a hardware property, it is at least
-some kind of use-case property. If not by DT, we will have to allow some
-way to describe master-slave relationships between clocks in a driver
-independent way.
+> +			};
 
-> You've also failed to document the property.
->
-> What are you trying to achieve here, and why do you think this is the
-> best way of achieving that?
+Cheers,
 
-I cannot tell from the commit msgs, but consider clk-si5351 which is a
-driver for an external programmable clock with N PLLs and M outputs. Now
-connect a video clock consumer and an audio clock consumer to two
-different outputs and those to one PLL (as you want audio clock derived
-from video clock, typical HDMI scenario).
-
-Now, there should be a way to tell the generic driver which outputs are
-allowed to change the PLLs rate and which don't. Otherwise, the clock
-chip would be pretty useless as e.g. your audio clock consumer will
-overwrite the rate the video clock consumer has chosen.
-
-BTW, clk-si5351 has vendor-specific properties to specify which output
-clocks are pll-masters for some kernel cycles already.
-
-Sebastian
-
->> +
->> +	return flags;
->> +}
->> +EXPORT_SYMBOL_GPL(of_clk_get_flags);
->> +
->>   struct clock_provider {
->>   	of_clk_init_cb_t clk_init_cb;
->>   	struct device_node *np;
->> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
->> index 59e2eb5..650bc10 100644
->> --- a/include/linux/clk-provider.h
->> +++ b/include/linux/clk-provider.h
->> @@ -519,6 +519,7 @@ int of_clk_get_parent_count(struct device_node *np);
->>   const char *of_clk_get_parent_name(struct device_node *np, int index);
->>
->>   void of_clk_init(const struct of_device_id *matches);
->> +unsigned long of_clk_get_flags(struct device_node *np);
->>
->>   #else /* !CONFIG_OF */
->>
->> @@ -546,6 +547,11 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
->>   {
->>   	return NULL;
->>   }
->> +static inline unsigned long of_clk_get_flags(struct device_node *np)
->> +{
->> +	return NULL;
->> +}
->> +
->>   #define of_clk_init(matches) \
->>   	{ while (0); }
->>   #endif /* CONFIG_OF */
->> --
->> 1.9.1
->>
->>
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
->
+Emilio
 
