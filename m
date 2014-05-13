@@ -1,86 +1,32 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] of: Add of_platform_depopulate() helper
-Date: Tue, 13 May 2014 17:08:44 +0100
-Message-ID: <1399997324.3657.35.camel@hornet>
-References: <1399981836-24837-1-git-send-email-pawel.moll@arm.com>
-	 <CAL_JsqLj5Jy1-fvtDYm=CH8J5R-okKyKxP4X-htONuzQWreVRQ@mail.gmail.com>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] ARM: i.MX1 clk: Add devicetree support
+Date: Tue, 13 May 2014 13:18:40 -0300
+Message-ID: <CAOMZO5Br9wpZu06oP3-Ax5XG=u+A6Ydq9peKet64Kw_moGgRaw@mail.gmail.com>
+References: <1399997116-4313-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLj5Jy1-fvtDYm=CH8J5R-okKyKxP4X-htONuzQWreVRQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1399997116-4313-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-05-13 at 14:19 +0100, Rob Herring wrote:
-> On Tue, May 13, 2014 at 6:50 AM, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrot=
-e:
-> > Drivers can us of_platform_populate() to create
-> > platform devices for children of the device
-> > main node (this can particularly happen in case
-> > of MFD devices). Unfortunately, there was no
-> > standard way of removing such sub-devices when
-> > the main one is being removed.
-> >
-> > This patch adds of_platform_depopulate() as
-> > a complementary operation for the _populate()
-> > one. It removes all platform and amba devices
-> > that have been created from the Device Tree,
-> > but leaves all other ones untouched (returning
-> > -EBUSY in such case).
-> >
-> > Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  drivers/of/platform.c       | 52 +++++++++++++++++++++++++++++++++=
-++++++++++++
-> >  include/linux/of_platform.h |  5 +++++
-> >  2 files changed, 57 insertions(+)
-> >
-> > diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> > index 2d0c8b7..b5c49c3 100644
-> > --- a/drivers/of/platform.c
-> > +++ b/drivers/of/platform.c
-> > @@ -495,4 +495,56 @@ int of_platform_populate(struct device_node *r=
-oot,
-> >         return rc;
-> >  }
-> >  EXPORT_SYMBOL_GPL(of_platform_populate);
-> > +
-> > +static int of_platform_device_destroy(struct device *dev, void *da=
-ta)
-> > +{
-> > +       int *parents_children_left =3D data;
->=20
-> You are not really tracking how many children are left, so this can
-> just be a bool.
+On Tue, May 13, 2014 at 1:05 PM, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org> wrote:
 
-That's true.
+> +       clk[IMX1_CLK_DUMMY] =
+> +               imx_clk_fixed("dummy", 0);
+> +       clk[IMX1_CLK_CLK32] =
+> +               imx_obtain_fixed_clock("clk32", fref);
+> +       clk[IMX1_CLK_CLK16M_EXT] =
+> +               imx_clk_fixed("clk16m_ext", 16000000);
+> +       clk[IMX1_CLK_CLK16M] =
+> +               imx_clk_gate("clk16m", "clk16m_ext", CCM_CSCR, 17);
 
-> > +       int my_children_left =3D 0;
-> > +
-> > +       /* Do not touch devices not populated from the device tree =
-*/
-> > +       if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_P=
-OPULATED)) {
-> > +               (*parents_children_left)++;
-> > +               return 0;
-> > +       }
-> > +
-> > +       device_for_each_child(dev, &my_children_left,
-> > +                       of_platform_device_destroy);
->=20
-> Can't you call of_platform_depopulate here?
+Why don't you put each entry into a single line instead?
 
-=2E.. and check its result instead of ? I guess I could. Will have a lo=
-ok
-how it looks like.
-
-Pawe=C5=82
-
+Even if it gets larger than 80 columns, it would be easier to read.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
