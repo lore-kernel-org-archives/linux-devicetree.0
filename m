@@ -1,129 +1,266 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/8] clk: add helper for unique DT clock names
-Date: Tue, 13 May 2014 22:19:58 +0200
-Message-ID: <53727E6E.6050503@gmail.com>
-References: <1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com> <1399839881-29895-2-git-send-email-sebastian.hesselbarth@gmail.com> <20140513194922.5943.40228@quantum>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140513194922.5943.40228@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Antoine Tenart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: John Syn <john3909@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: am335x-bone-common: Add i2c2 definition
+Date: Tue, 13 May 2014 13:24:03 -0700
+Message-ID: <CF97C6D2.246DE%john3909@gmail.com>
+References: <1399686184-1594-1-git-send-email-mranostay@gmail.com>
+ <20140512195050.GB5668@atomide.com>
+ <CAOCHtYiYwx_bEsyqkbUTTAbhBYESzvfBOOYeVuFXPS1dDy0ZKA@mail.gmail.com>
+ <20140512201517.GC5668@atomide.com>
+ <CAOCHtYg6XpF0Gbo4iFqsFvP=QSivQQvCzov8UfxeLXMzrRYEWw@mail.gmail.com>
+ <20140512204213.GD5668@atomide.com>
+ <CAOCHtYgg7jwxswH+mqF3RA7-0RP-nGuft+Ze-GRwu1fbA6+0Bw@mail.gmail.com>
+ <537215D3.70306@ti.com>
+ <CABxcv=nq9XvyN0aPOBFDm0UyoaW-Htyy0tyP3YhYaDnDUo3a5w@mail.gmail.com>
+ <20140513142252.GG32082@beef>
+ <CABxcv=mSs71pS1PAS-WdP0ru_Eb1XhXEm1qCCKW7=aL7EN4FgQ@mail.gmail.com>
+ <4BCFCB24-9732-4B96-B814-5290CA2D0EE4@gmail.com>
+ <CABxcv=mWqENSzODJYAJRgDYNy46X6WkQ+0e4NSDt8qE-ob1KuQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=mWqENSzODJYAJRgDYNy46X6WkQ+0e4NSDt8qE-ob1KuQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>, Pantelis Antoniou <pantelis.antoniou@gmail.com>
+Cc: Matt Porter <matt.porter@linaro.org>, Tom Rini <trini@ti.com>, Robert Nelson <robertcnelson@gmail.com>, Tony Lindgren <tony@atomide.com>, Matt Ranostay <mranostay@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2014 09:49 PM, Mike Turquette wrote:
-> Quoting Sebastian Hesselbarth (2014-05-11 13:24:34)
->> Currently, most DT clock drivers pick a unique node name to allow unique
->> clock names. As ePAPR recommends node names to be generic, we therefore
->> provide a helper to generate a unique clock name from the DT node name
->> plus reg property or a magic number instead. This is basically the same
->> we already do for proper devices and may vanish as soon as there is some
->> (early) device support for clocks available.
+
+On 5/13/14, 10:51 AM, "Javier Martinez Canillas" <javier@dowhile0.org>
+wrote:
+
+>Hello Pantelis,
+>
+>On Tue, May 13, 2014 at 7:07 PM, Pantelis Antoniou
+><pantelis.antoniou@gmail.com> wrote:
+>> Hi Javier,
 >>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-[...]
->> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
->> index dff0373f53c1..b449a635dbfa 100644
->> --- a/drivers/clk/clk.c
->> +++ b/drivers/clk/clk.c
->> @@ -17,6 +17,7 @@
->>  #include <linux/list.h>
->>  #include <linux/slab.h>
->>  #include <linux/of.h>
->> +#include <linux/of_address.h>
->>  #include <linux/device.h>
->>  #include <linux/init.h>
->>  #include <linux/sched.h>
->> @@ -2543,6 +2544,34 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
->>  }
->>  EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
->>  
->> +/**
->> + * of_clk_create_name() - Allocate and create a unique clock name
->> + * @np: Device node pointer of the clock node
->> + *
->> + * This will allocate and create a unique clock name based on the
->> + * reg property value. As a last resort, it will use the node name
->> + * followed by a unique number. The caller has to deallocate the
->> + * buffer.
->> + */
->> +char *of_clk_create_name(struct device_node *np)
->> +{
->> +       static atomic_t clk_no_reg_magic;
->> +       const __be32 *reg;
->> +       u64 addr;
->> +       int magic;
->> +
->> +       reg = of_get_property(np, "reg", NULL);
->> +       if (reg) {
->> +               addr = of_translate_address(np, reg);
->> +               return kasprintf(GFP_KERNEL, "%llx.%s",
->> +                                (unsigned long long)addr, np->name);
->> +       }
->> +
->> +       magic = atomic_add_return(1, &clk_no_reg_magic);
->> +       return kasprintf(GFP_KERNEL, "%s.%d", np->name, magic);
-> 
-> For the case where we the reg property is present we use reg.name, but
-> for the case were the reg property is missing we use name.magic. Is it
-> intentional to switch the string and integer pairs?
-> 
-> Doing so avoids the case where magic might collide with a simple bus
-> clock (e.g. 'clk@1'), but I wanted to double check that it was
-> intentional.
-
-Mike,
-
-yes it is intentional and copies what is done for platform_device names.
-
-Unfortunately, as much as I prefer this patch someday, it doesn't work
-with the rest of the helpers as expected. While this can generate unique
-and generic clock names, especially of_clk_get_parent_name() picks
-either an clock-output-names named clock _or_ the node name ignoring the
-above auto-generated name of course.
-
-If you agree with the general approach here, we should still postpone
-this for the next cycle when I have more time to look at the details.
-I prefer to rename the nodes and use clock-output-names where required
-for the Berlin clock nodes now.
-
-Sebastian
-
->> +}
->> +EXPORT_SYMBOL_GPL(of_clk_create_name);
->> +
->>  struct clock_provider {
->>         of_clk_init_cb_t clk_init_cb;
->>         struct device_node *np;
->> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
->> index 511917416fb0..c6f3ca1cd81c 100644
->> --- a/include/linux/clk-provider.h
->> +++ b/include/linux/clk-provider.h
->> @@ -514,6 +514,7 @@ struct clk *of_clk_src_simple_get(struct of_phandle_args *clkspec,
->>  struct clk *of_clk_src_onecell_get(struct of_phandle_args *clkspec, void *data);
->>  int of_clk_get_parent_count(struct device_node *np);
->>  const char *of_clk_get_parent_name(struct device_node *np, int index);
->> +char *of_clk_create_name(struct device_node *np);
->>  
->>  void of_clk_init(const struct of_device_id *matches);
->>  
->> @@ -543,6 +544,10 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
->>  {
->>         return NULL;
->>  }
->> +static inline char *of_clk_create_name(struct device_node *np)
->> +{
->> +       return NULL;
->> +}
->>  #define of_clk_init(matches) \
->>         { while (0); }
->>  #endif /* CONFIG_OF */
->> -- 
->> 1.9.1
+>> On May 13, 2014, at 7:39 AM, Javier Martinez Canillas wrote:
 >>
+>>> On Tue, May 13, 2014 at 4:22 PM, Matt Porter <matt.porter@linaro.or=
+g>
+>>>wrote:
+>>>> On Tue, May 13, 2014 at 04:06:02PM +0200, Javier Martinez Canillas
+>>>>wrote:
+>>>>> On Tue, May 13, 2014 at 2:53 PM, Tom Rini <trini@ti.com> wrote:
+>>>>>> On 05/12/2014 04:57 PM, Robert Nelson wrote:
+>>>>>>>>> Either case if fine with me.  As who knows when the dtc
+>>>>>>>>>"overlay" will
+>>>>>>>>> every truly make it mainline, as the capemgr was the only rea=
+l
+>>>>>>>>>kernel
+>>>>>>>>> user of the i2c/at24 eeprom information.
+>>>>>>>>
+>>>>>>>> Sounds like we should keep it disabled though so u-boot can be
+>>>>>>>>used
+>>>>>>>> to toggle it while waiting for the capemgr. That's because the
+>>>>>>>>board
+>>>>>>>> has a header for pins, so it's not exactly limited to just the
+>>>>>>>>capes.
+>>>>>>>>
+>>>>>>>> Anybody working on enabling/disabling cape dtb configurations =
+in
+>>>>>>>>u-boot?
+>>>>>>>
+>>>>>>> Well,
+>>>>>>>
+>>>>>>> Would Tom even approve of that in mainline u-boot? He didn't wa=
+nt
+>>>>>>>my
+>>>>>>> "invert" the gpio to enable the usb hub on the older beagle xm
+>>>>>>>A/B..
+>>>>>>>
+>>>>>>> http://lists.denx.de/pipermail/u-boot/2014-January/172154.html
+>>>>>>>
+>>>>>>> http://lists.denx.de/pipermail/u-boot/2014-January/172274.html
+>>>>>
+>>>>> Using fdt set from the bootloader to use the same FDT for similar
+>>>>> boards (like the example with Beagle xM variants) is kind of tryi=
+ng
+>>>>>to
+>>>>> replicate what we used to do from boards files where it was possi=
+ble
+>>>>> to manage a set of boards using the same platform code.
+>>>>>
+>>>>> But Device Trees are meant to describe hardware and thus should b=
+e
+>>>>> static, if two board are almost identical but slightly different,
+>>>>>then
+>>>>> are two different hardware where each need its proper FDT that
+>>>>> describes it.
+>>>>>
+>>>>>>
+>>>>>> I would think that using the 'fdt' command in U-Boot to add all
+>>>>>> properties of every cape found on a running system would drive
+>>>>>>someone
+>>>>>> to madness quite quickly.  Moving all of Pantelis' work for dyna=
+mic
+>>>>>> device trees from the kernel to N bootloaders (U-Boot, barebox,
+>>>>>>UEFI,
+>>>>>> etc) sounds like a step in the wrong direction.
+>>>>>>
+>>>>>
+>>>>> Agreed. I think that until the device tree overlay and the cape
+>>>>> manager find their way into mainline we should treat capes as if =
+they
+>>>>> were expansion boards attached to a Computer-on-Module. That is, =
+a
+>>>>> static based board which its own DTS including the BB{B,W} as an =
+dtsi
+>>>>> and not something that can be added on runtime.
+>>>>
+>>>> It's far more complicated than a SOM plus carrier board. Consider =
+that
+>>>> you can have any 4 of these capes stacked on the BBB/BBW in any
+>>>> combination (assuming no resource conflicts). Capturing all possib=
+le
+>>>> combinations in static dtsis is not practical.
+>>>>
+>>>
+>>
+>> Since this appears to be all coming back to DT overlays, let me try =
+to
+>> address some points.
+>>
+>
+>It seems that you misunderstood my comments. I do think that DT
+>overlays and the cape manager are a great solution for any hardware
+>that could be expanded on runtime and I really hope that they can
+>eventually land into mainline.
+>
+>In fact if you look on my previous mail you will see that I said:
+>"until device tree overlay and the cape manager find their way into
+>mainline..."
+>
+>>> Right, I forgot that the capes were stackable so is indeed not
+>>> practical to model every single combination as DTS in mainline. Eve=
+n
+>>> if stacking was not possible there are just too many capes out ther=
+e
+>>> to have a DTS for every single cape.
+>>>
+>>
+>> Each cape does have a DTS as dynamically loaded fragment; it works
+>>absolutely fine.
+>>
+>> Trying to come up with a base DTS for all the capes you've stacked u=
+p
+>> is an exponential problem.
+>>
+>>> My point was that someone who wants to use a BBB + a set of capes c=
+an
+>>> today write a DTS for its own stacked setup.
+>>>
+>>
+>> No, the guy that designs a cape (or learns how to) can not write a D=
+TS
+>>for
+>> the base board and the cape in question. Doing that he essentially c=
+uts
+>> himself off from the community.
+>>
+>> Let me explain, the point is for people to easily design capes,
+>>open-source their
+>> design as well as their software, and share them to the community.
+>>
+>> This requires that things are easily shareable.
+>>
+>> Requiring a relative newbie in kernel development not only generate =
+his
+>>own
+>> base DT, but also to merge all of the other capes DT into his own is=
+ a
+>> nightmare.
+>>
+>> BTW, on another tangent, it's not just the BB people that care about
+>>dynamic
+>> hardware configuration. There are a number of FPGA people that seem
+>>interested
+>> as well.
+>>
+>> The notion of hardware as something static that never changes is
+>>obsolete IMHO.
+>>
+>>> Unfortunately I don't have a solution but what I'm pretty sure is t=
+hat
+>>> mangling the DTS from the bootloader is not the right one :-)
+>>>
+>>
+>> No, it is not. And this is what we're trying to solve here.
+>>
+>
+>What I said that I'm against is modifying a FDT using U-Boot scripts
+>commands that is something that mentioned in this thread. That is not
+>a robust way to do it and also is not something that a newbie could do
+>it neither.
+>
+>Also, doing these FDT changes in the bootloader has several
+>disadvantages, besides having to implement on each bootloaders like
+>Tom said, you need to upgrade your bootloader which is something that
+>just can't be done on many boards and also is still a static
+>configuration since you need to reboot in order to use a different
+>FDT. So the hardware can't really be expanded on runtime unlike with
+>DT overlays where the overlays are loaded from regular files.
+>
+>But I guess you agree with me on all those points and you just
+>misunderstood my comments. So DT overlays is definitely the way to go
+>(or something similar) but my point is that until we have that
+>solution merged, you can use a static DT in mainline for your stacked
+>cape or use a vendor kernel that already has DT overlays support.
+
+Given that we are not hot plugging capes, why do we need to modify the =
+DT
+at runtime? Even FPGA developers are not modifying their I/O at runtime=
+=2E
+=46or example, using the BBB as a reference, why not add an am335x-cape=
+-dtsi
+to the am335x-boneblack.dts as follows:
+
+/dts-v1/;
+
+/include/ "am33xx.dtsi"
+
+/include/ "am335x-bone-common.dtsi=B2
+
+/include/ =B3am335x-cape.dtsi"
+
+&am33xx_pinmux {
+xxx
+
+and =B3am335x-cape.dtsi=B2 would look like this:
+
+/include/ =B3BB-BONE-AUDI-00A0.dtsi=B2
+/include/ =B3BB-BONE-UART1-00A0.dtsi=B2
+xxx
+
+So, cape developers create their own DTSI and users only update the
+am335x-cape.dtsi to include the cape DT required.
+
+What am I missing?=20
+
+BTW, DTC should be updated to detect I/O conflicts. Waiting for the ker=
+nel
+to boot before detecting DT conflicts isn=B9t OK.
+
+Regards,
+John
+
+
+
+>
+>I hope I explained myself better this time ;-)
+>
+>Best regards,
+>Javier
+>--
+>To unsubscribe from this list: send the line "unsubscribe linux-omap" =
+in
+>the body of a message to majordomo@vger.kernel.org
+>More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
