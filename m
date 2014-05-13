@@ -1,248 +1,318 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv5 10/20] phy: add support for USB cluster on the Armada
- 375 SoC
-Date: Tue, 13 May 2014 11:23:48 +0530
-Message-ID: <5371B36C.6000703@ti.com>
-References: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com> <1399832288-19899-11-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH v3 1/6] clocksource: Add support for the Mediatek SoCs
+Date: Tue, 13 May 2014 07:54:05 +0200
+Message-ID: <20140513055405.GA3348@lukather>
+References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
+ <1399938570-11356-2-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399832288-19899-11-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399938570-11356-2-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Sunday 11 May 2014 11:47 PM, Thomas Petazzoni wrote:
-> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
-> The Armada 375 SoC comes with an USB2 host and device controller and
-> an USB3 controller. The USB cluster control register allows to manage
-> common features of both USB controllers.
-> 
-> This commit adds a driver integrated in the generic PHY framework to
-> control this USB cluster feature.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, May 13, 2014 at 01:49:25AM +0200, Matthias Brugger wrote:
+> This patch adds a clock source and clock event for the timer found
+> on the Mediatek SoCs.
+>=20
+> The Mediatek General Porpose Timer block provides five 32 bit timers and
+> one 64 bit timer.
+>=20
+> Two 32 bit timers are used:
+> TIMER1: clock events supporting periodic and oneshot events
+> TIMER2: clock source configured as a free running counter
+>=20
+> The General Porpose Timer block can be run with two clocks. A 13 MHz syst=
+em
+> clock and the RTC clock running at 32 KHz. This implementation uses the s=
+ystem
+> clock.
+>=20
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 > ---
->  drivers/phy/Kconfig              |   6 ++
->  drivers/phy/Makefile             |   1 +
->  drivers/phy/phy-armada375-usb2.c | 157 +++++++++++++++++++++++++++++++++++++++
->  3 files changed, 164 insertions(+)
->  create mode 100644 drivers/phy/phy-armada375-usb2.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 3bb05f1..e63cf9d 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -15,6 +15,12 @@ config GENERIC_PHY
->  	  phy users can obtain reference to the PHY. All the users of this
->  	  framework should select this config.
->  
-> +config ARMADA375_USBCLUSTER_PHY
-> +	def_bool y
-> +	depends on MACH_ARMADA_375 || COMPILE_TEST
-> +	depends on OF
-> +	select GENERIC_PHY
+>  drivers/clocksource/Kconfig     |   4 +
+>  drivers/clocksource/Makefile    |   1 +
+>  drivers/clocksource/mtk_timer.c | 263 ++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 268 insertions(+)
+>  create mode 100644 drivers/clocksource/mtk_timer.c
+>=20
+> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+> index 96918e1..1f73740 100644
+> --- a/drivers/clocksource/Kconfig
+> +++ b/drivers/clocksource/Kconfig
+> @@ -144,6 +144,10 @@ config VF_PIT_TIMER
+>  config SYS_SUPPORTS_SH_CMT
+>          bool
+> =20
+> +config MTK_TIMER
+> +	select CLKSRC_MMIO
+> +	bool
 > +
->  config PHY_EXYNOS_MIPI_VIDEO
->  	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
->  	depends on HAS_IOMEM
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index 2faf78e..47d5a86 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -3,6 +3,7 @@
->  #
->  
->  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
-> +obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
->  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
->  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
->  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
-> diff --git a/drivers/phy/phy-armada375-usb2.c b/drivers/phy/phy-armada375-usb2.c
+>  config SYS_SUPPORTS_SH_MTU2
+>          bool
+> =20
+> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+> index 98cb6c5..619d302 100644
+> --- a/drivers/clocksource/Makefile
+> +++ b/drivers/clocksource/Makefile
+> @@ -33,6 +33,7 @@ obj-$(CONFIG_CLKSRC_EXYNOS_MCT)	+=3D exynos_mct.o
+>  obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)	+=3D samsung_pwm_timer.o
+>  obj-$(CONFIG_VF_PIT_TIMER)	+=3D vf_pit_timer.o
+>  obj-$(CONFIG_CLKSRC_QCOM)	+=3D qcom-timer.o
+> +obj-$(CONFIG_MTK_TIMER)		+=3D mtk_timer.o
+> =20
+>  obj-$(CONFIG_ARM_ARCH_TIMER)		+=3D arm_arch_timer.o
+>  obj-$(CONFIG_ARM_GLOBAL_TIMER)		+=3D arm_global_timer.o
+> diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_ti=
+mer.c
 > new file mode 100644
-> index 0000000..a6f746d
+> index 0000000..4b88065
 > --- /dev/null
-> +++ b/drivers/phy/phy-armada375-usb2.c
-> @@ -0,0 +1,157 @@
+> +++ b/drivers/clocksource/mtk_timer.c
+> @@ -0,0 +1,263 @@
 > +/*
-> + * USB cluster support for Armada 375 platform.
+> + * Mediatek SoCs General-Purpose Timer handling.
 > + *
-> + * Copyright (C) 2014 Marvell
+> + * Copyright (C) 2014 Matthias Brugger
 > + *
-> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> + * Matthias Brugger <matthias.bgg@gmail.com>
 > + *
-> + * This file is licensed under the terms of the GNU General Public
-> + * License version 2 or later. This program is licensed "as is"
-> + * without any warranty of any kind, whether express or implied.
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
 > + *
-> + * Armada 375 comes with an USB2 host and device controller and an
-> + * USB3 controller. The USB cluster control register allows to manage
-> + * common features of both USB controllers.
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
 > + */
 > +
-> +#include <linux/init.h>
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
+> +#include <linux/clk.h>
+> +#include <linux/clockchips.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/irqreturn.h>
+> +#include <linux/of.h>
 > +#include <linux/of_address.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/platform_device.h>
+> +#include <linux/of_irq.h>
 > +#include <linux/slab.h>
 > +
-> +#define USB2_PHY_CONFIG_DISABLE BIT(0)
+> +#define GPT_IRQ_EN_REG		0x00
+> +#define GPT_IRQ_ENABLE(val)	BIT(val-1)
+> +#define GPT_IRQ_ST_REG		0x04
+> +#define GPT_IRQ_ACK_REG		0x08
+> +#define GPT_IRQ_ACK(val)	BIT(val-1)
 > +
-> +/* The USB cluster allows to choose between two PHYs */
-> +#define NB_PHY 2
+> +#define TIMER_CTRL_REG(val)	(0x10 * val)
+> +#define TIMER_CTRL_OP(val)	(((val) & 0x3) << 4)
+> +#define TIMER_CTRL_OP_ONESHOT	(0)
+> +#define TIMER_CTRL_OP_REPEAT	(1)
+> +#define TIMER_CTRL_OP_KEEPGO	(2)
+> +#define TIMER_CTRL_OP_FREERUN	(3)
+> +#define TIMER_CTRL_CLEAR	(2)
+> +#define TIMER_CTRL_ENABLE	(1)
+> +#define TIMER_CTRL_DISABLE	(0)
 > +
-> +enum {
-> +	PHY_USB2 = 0,
-> +	PHY_USB3 = 1,
+> +#define TIMER_CLK_REG(val)	(0x04 + (0x10 * val))
+> +#define TIMER_CLK_SRC(val)	(((val) & 0x1) << 4)
+> +#define TIMER_CLK_SRC_SYS13M	(0)
+> +#define TIMER_CLK_SRC_RTC32K	(1)
+> +#define TIMER_CLK_DIV1		(0x0)
+> +#define TIMER_CLK_DIV2		(0x1)
+> +#define TIMER_CLK_DIV3		(0x2)
+> +#define TIMER_CLK_DIV4		(0x3)
+> +#define TIMER_CLK_DIV5		(0x4)
+> +#define TIMER_CLK_DIV6		(0x5)
+> +#define TIMER_CLK_DIV7		(0x6)
+> +#define TIMER_CLK_DIV8		(0x7)
+> +#define TIMER_CLK_DIV9		(0x8)
+> +#define TIMER_CLK_DIV10		(0x9)
+> +#define TIMER_CLK_DIV11		(0xA)
+> +#define TIMER_CLK_DIV12		(0xB)
+> +#define TIMER_CLK_DIV13		(0xC)
+> +#define TIMER_CLK_DIV16		(0xD)
+> +#define TIMER_CLK_DIV32		(0xE)
+> +#define TIMER_CLK_DIV64		(0xF)
+> +
+> +#define TIMER_CNT_REG(val)	(0x08 + (0x10 * val))
+> +#define TIMER_CMP_REG(val)	(0x0C + (0x10 * val))
+> +
+> +#define GPT_CLK_EVT	1
+> +#define GPT_CLK_SRC	2
+> +
+> +
+> +
+> +struct mtk_clock_event_device {
+> +	void __iomem *gpt_base;
+> +	u32 ticks_per_jiffy;
+> +	struct clock_event_device dev;
 > +};
 > +
-> +struct armada375_cluster_phy {
-> +	struct phy *phy;
-> +	void __iomem *reg;
-> +	bool enable;
-> +	bool use_usb3;
-> +};
-> +
-> +struct armada375_cluster_phy usb_cluster_phy[NB_PHY];
-> +
-> +static int armada375_usb_phy_init(struct phy *phy)
+> +static inline struct mtk_clock_event_device *to_mtk_clk(
+> +				struct clock_event_device *c)
 > +{
-> +	struct armada375_cluster_phy *cluster_phy = phy_get_drvdata(phy);
-> +	u32 reg;
-
-This function should be protected since both your PHYs use this ops.
+> +	return container_of(c, struct mtk_clock_event_device, dev);
+> +}
 > +
-> +	if (!cluster_phy->enable)
-> +		return -ENODEV;
+> +static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 =
+timer)
+> +{
+> +	u32 val =3D readl(evt->gpt_base + TIMER_CTRL_REG(timer));
+> +	writel(val & ~TIMER_CTRL_ENABLE, evt->gpt_base +
+> +			TIMER_CTRL_REG(timer));
+> +}
 > +
-> +	reg = readl(cluster_phy->reg);
-> +	if (cluster_phy->use_usb3)
-> +		reg |= USB2_PHY_CONFIG_DISABLE;
+> +static void mtk_clkevt_time_setup(struct mtk_clock_event_device *evt,
+> +				unsigned long delay, u8 timer)
+> +{
+> +	writel(delay, evt->gpt_base + TIMER_CMP_REG(timer));
+> +}
+> +
+> +static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
+> +		bool periodic, u8 timer)
+> +{
+> +	u32 val;
+> +
+> +	/* Acknowledge interrupt */
+> +	writel(GPT_IRQ_ACK(timer), evt->gpt_base + GPT_IRQ_ACK_REG);
+> +
+> +	val =3D readl(evt->gpt_base + TIMER_CTRL_REG(timer));
+> +
+> +	/* Clear 2 bit timer operation mode field */
+> +	val &=3D ~TIMER_CTRL_OP(0x3);
+> +
+> +	if (periodic)
+> +		val |=3D TIMER_CTRL_OP(TIMER_CTRL_OP_REPEAT);
 > +	else
-> +		reg &= ~USB2_PHY_CONFIG_DISABLE;
-> +	writel(reg, cluster_phy->reg);
-
-This is confusing since both your PHYs control the same bit?
+> +		val |=3D TIMER_CTRL_OP(TIMER_CTRL_OP_ONESHOT);
+> +
+> +	writel(val | TIMER_CTRL_ENABLE | TIMER_CTRL_CLEAR,
+> +	       evt->gpt_base + TIMER_CTRL_REG(timer));
+> +}
+> +
+> +static void mtk_clkevt_mode(enum clock_event_mode mode,
+> +				struct clock_event_device *clk)
+> +{
+> +	struct mtk_clock_event_device *evt =3D to_mtk_clk(clk);
+> +
+> +	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
+> +
+> +	switch (mode) {
+> +	case CLOCK_EVT_MODE_PERIODIC:
+> +		mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
+> +		mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
+> +		break;
+> +	case CLOCK_EVT_MODE_ONESHOT:
+> +		mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
+> +		break;
+> +	case CLOCK_EVT_MODE_UNUSED:
+> +	case CLOCK_EVT_MODE_SHUTDOWN:
+> +	default:
+> +		/* No more interrupts will occur as source is disabled */
+> +		break;
+> +	}
+> +}
+> +
+> +static int mtk_clkevt_next_event(unsigned long event,
+> +				   struct clock_event_device *clk)
+> +{
+> +	struct mtk_clock_event_device *evt =3D to_mtk_clk(clk);
+> +
+> +	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
+> +	mtk_clkevt_time_setup(evt, event, GPT_CLK_EVT);
+> +	mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
 > +
 > +	return 0;
 > +}
 > +
-> +static struct phy_ops armada375_usb_phy_ops = {
-> +	.init = armada375_usb_phy_init,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static struct phy *armada375_usb_phy_xlate(struct device *dev,
-> +					struct of_phandle_args *args)
+> +static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
 > +{
-> +	if (WARN_ON(args->args[0] >= NB_PHY))
-> +		return ERR_PTR(-ENODEV);
+> +	struct mtk_clock_event_device *evt =3D dev_id;
 > +
-> +	return usb_cluster_phy[args->args[0]].phy;
+> +	/* Acknowledge timer0 irq */
+> +	writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_ACK_REG);
+> +	evt->dev.event_handler(&evt->dev);
+> +
+> +	return IRQ_HANDLED;
 > +}
 > +
-> +static int armada375_usb_phy_probe(struct platform_device *pdev)
+> +static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
 > +{
-> +	struct device *dev = &pdev->dev;
-> +	struct phy *phy;
-> +	struct phy_provider *phy_provider;
-> +	void __iomem *usb_cluster_base;
-> +	struct device_node *xhci_node;
-> +	struct resource *res;
-> +	int i;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	usb_cluster_base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (!usb_cluster_base)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < NB_PHY; i++) {
-
-For devices which have multiple PHYs, each PHY should be modelled as the
-sub-node of the *PHY provider* device node.
-> +		phy = devm_phy_create(dev, &armada375_usb_phy_ops, NULL);
-> +		if (IS_ERR(phy)) {
-> +			dev_err(dev, "failed to create PHY n%d\n", i);
-> +			return PTR_ERR(phy);
-> +		}
-> +
-> +		usb_cluster_phy[i].phy = phy;
-> +		usb_cluster_phy[i].reg = usb_cluster_base;
-> +		usb_cluster_phy[i].enable = false;
-> +		phy_set_drvdata(phy, &usb_cluster_phy[i]);
-> +	}
-> +
-> +	usb_cluster_phy[PHY_USB2].use_usb3 = false;
-> +	usb_cluster_phy[PHY_USB3].use_usb3 = true;
-> +
-> +	/*
-> +	 * We can't use the first usb2 unit and usb3 at the same time
-> +	 * to manage a USB2 device, so let's disable usb2 if usb3 is
-> +	 * selected. In this case the USB2 device will be managed by
-> +	 * the xhci controller.
-> +	 */
-> +
-> +	xhci_node = of_find_compatible_node(NULL, NULL,
-> +					"marvell,armada-375-xhci");
-
-huh.. that's too much binding between the controller and the PHY.
-
-> +
-> +	if (xhci_node && of_device_is_available(xhci_node)) {
-> +		usb_cluster_phy[PHY_USB3].enable = true;
-> +	} else {
-> +		struct device_node *ehci_node;
-> +		ehci_node = of_find_compatible_node(NULL, NULL,
-> +					"marvell,orion-ehci");
-> +		if (ehci_node && of_device_is_available(ehci_node))
-> +			usb_cluster_phy[PHY_USB2].enable = true;
-> +		of_node_put(ehci_node);
-> +	}
-> +
-> +	of_node_put(xhci_node);
-> +
-> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
-> +						     armada375_usb_phy_xlate);
-> +	if (IS_ERR(phy_provider))
-> +		return PTR_ERR(phy_provider);
-> +
-> +	return 0;
+> +	/* Disable all interrupts */
+> +	writel(0x0, evt->gpt_base + GPT_IRQ_EN_REG);
+> +	/* Acknowledge all interrupts */
+> +	writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
 > +}
 > +
-> +static const struct of_device_id of_usb_cluster_table[] = {
-> +	{ .compatible = "marvell,armada-375-usb-cluster", },
-> +	{ /* end of list */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, of_usb_cluster_table);
+> +static void mtk_timer_reset(struct mtk_clock_event_device *evt, u8 timer)
+> +{
+> +	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
+> +		evt->gpt_base + TIMER_CTRL_REG(timer));
+> +	writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
+> +}
 > +
-> +static struct platform_driver armada375_usb_phy_driver = {
-> +	.probe	= armada375_usb_phy_probe,
-> +	.driver = {
-> +		.of_match_table	= of_usb_cluster_table,
-> +		.name  = "armada-375-usb-cluster",
-> +		.owner = THIS_MODULE,
-> +	}
-> +};
-> +module_platform_driver(armada375_usb_phy_driver);
+> +static void __init mtk_timer_init(struct device_node *node)
+> +{
+> +	struct mtk_clock_event_device *evt;
+> +	struct resource res;
+> +	unsigned long rate =3D 0;
+> +	struct clk *clk;
+> +	int ret;
+> +	u32 val;
 > +
-> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
-> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
-> +MODULE_LICENSE("GPL");
+> +	evt =3D kzalloc(sizeof(*evt), GFP_KERNEL);
+> +	if (!evt)
+> +		panic("Can't allocate mtk clock event driver struct");
+> +
+> +	evt->dev.name =3D "mtk_tick";
+> +	evt->dev.rating =3D 300;
+> +	evt->dev.features =3D CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
+> +	evt->dev.set_mode =3D mtk_clkevt_mode;
+> +	evt->dev.set_next_event =3D mtk_clkevt_next_event;
+> +	evt->dev.cpumask =3D cpu_all_mask;
 
-GPL v2?
+cpu_possible_mask would probably be a better fit. And you still forgot
+to set the irq field of this struct.
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTcbN9AAoJEBx+YmzsjxAguF8QAIXKmsZsetM9zWlc3NaoxcRo
+mk62Gye3vVA39IdGOf7gVUtao5X2T2je8Du5DGfWhe2cNtRZrhhZGrFnxn2mxnn5
+vSu0ieb041NZp+3J8av3CQBog6XWgJyT4nKHZ6rmrx67UxkZLvf9YaKOEuoKwAuP
+njb45BVE70TCOyitMi7vk0J/xX4q1jswvONTJZz2LiNJlIasSXil7u4pDDnXT5v7
+y5fVqoLZmdNcK4tDyqtlKZUX8OdLh9/biktIaTuQO28PnjpZjLP/g8qeoFtppoFo
+akvWpssl1JU9UzBWZ3bsFJZHeBnmWCo1ebyrLqkFj/sGsx3wIx79ZQHYuHtc+JAX
+04mLajqdssIziYgtMPrFgPPKMEU1Ivs7dV5LOdJ+33Zh83opluKcPWP1Da6DtOOC
+zrZkmB3TR1f0WJl9AU2Sb7WNNRb6O5Rb8nhxROGdz2P28pALF7T6bMNhwnJlt1ee
+rKtgJviC0psCqqtCuIOEwIgJjO4ZsCPmZWBs8DfywbKlPK9MpGQFUooolIrbvHu6
+s2kY41rH1EQbqIj/PsAw9nS/sSiopRN8VOBCH79sBznxnGesKmg4kS8BBWGlR+CI
+T7KlwsWC94hZdgW3eKioNHbOOFelT62IkQB52hrEbBba//qQ/82IStw+/215J3oh
+KopDAko7k2hh23H238Mz
+=qL8A
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
