@@ -1,126 +1,91 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv2 1/4] of: make of_update_property() usable earlier in
- the boot process
-Date: Tue, 13 May 2014 16:30:26 +0200
-Message-ID: <20140513163026.18a0fa61@free-electrons.com>
-References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1399975839-5311-2-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CAL_JsqLNnLjeo2tM=z5bcn4DJD_5-uFRGkk6wAWnvGZyo9Y7pg@mail.gmail.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-bone-common: Add i2c2 definition
+Date: Tue, 13 May 2014 16:39:02 +0200
+Message-ID: <CABxcv=mSs71pS1PAS-WdP0ru_Eb1XhXEm1qCCKW7=aL7EN4FgQ@mail.gmail.com>
+References: <1399686184-1594-1-git-send-email-mranostay@gmail.com>
+	<20140512195050.GB5668@atomide.com>
+	<CAOCHtYiYwx_bEsyqkbUTTAbhBYESzvfBOOYeVuFXPS1dDy0ZKA@mail.gmail.com>
+	<20140512201517.GC5668@atomide.com>
+	<CAOCHtYg6XpF0Gbo4iFqsFvP=QSivQQvCzov8UfxeLXMzrRYEWw@mail.gmail.com>
+	<20140512204213.GD5668@atomide.com>
+	<CAOCHtYgg7jwxswH+mqF3RA7-0RP-nGuft+Ze-GRwu1fbA6+0Bw@mail.gmail.com>
+	<537215D3.70306@ti.com>
+	<CABxcv=nq9XvyN0aPOBFDm0UyoaW-Htyy0tyP3YhYaDnDUo3a5w@mail.gmail.com>
+	<20140513142252.GG32082@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLNnLjeo2tM=z5bcn4DJD_5-uFRGkk6wAWnvGZyo9Y7pg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140513142252.GG32082@beef>
+Sender: linux-omap-owner@vger.kernel.org
+To: Matt Porter <matt.porter@linaro.org>
+Cc: Tom Rini <trini@ti.com>, Robert Nelson <robertcnelson@gmail.com>, Tony Lindgren <tony@atomide.com>, Matt Ranostay <mranostay@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux kernel <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob Herring,
+On Tue, May 13, 2014 at 4:22 PM, Matt Porter <matt.porter@linaro.org> wrote:
+> On Tue, May 13, 2014 at 04:06:02PM +0200, Javier Martinez Canillas wrote:
+>> On Tue, May 13, 2014 at 2:53 PM, Tom Rini <trini@ti.com> wrote:
+>> > On 05/12/2014 04:57 PM, Robert Nelson wrote:
+>> >>>> Either case if fine with me.  As who knows when the dtc "overlay" will
+>> >>>> every truly make it mainline, as the capemgr was the only real kernel
+>> >>>> user of the i2c/at24 eeprom information.
+>> >>>
+>> >>> Sounds like we should keep it disabled though so u-boot can be used
+>> >>> to toggle it while waiting for the capemgr. That's because the board
+>> >>> has a header for pins, so it's not exactly limited to just the capes.
+>> >>>
+>> >>> Anybody working on enabling/disabling cape dtb configurations in u-boot?
+>> >>
+>> >> Well,
+>> >>
+>> >> Would Tom even approve of that in mainline u-boot? He didn't want my
+>> >> "invert" the gpio to enable the usb hub on the older beagle xm A/B..
+>> >>
+>> >> http://lists.denx.de/pipermail/u-boot/2014-January/172154.html
+>> >>
+>> >> http://lists.denx.de/pipermail/u-boot/2014-January/172274.html
+>>
+>> Using fdt set from the bootloader to use the same FDT for similar
+>> boards (like the example with Beagle xM variants) is kind of trying to
+>> replicate what we used to do from boards files where it was possible
+>> to manage a set of boards using the same platform code.
+>>
+>> But Device Trees are meant to describe hardware and thus should be
+>> static, if two board are almost identical but slightly different, then
+>> are two different hardware where each need its proper FDT that
+>> describes it.
+>>
+>> >
+>> > I would think that using the 'fdt' command in U-Boot to add all
+>> > properties of every cape found on a running system would drive someone
+>> > to madness quite quickly.  Moving all of Pantelis' work for dynamic
+>> > device trees from the kernel to N bootloaders (U-Boot, barebox, UEFI,
+>> > etc) sounds like a step in the wrong direction.
+>> >
+>>
+>> Agreed. I think that until the device tree overlay and the cape
+>> manager find their way into mainline we should treat capes as if they
+>> were expansion boards attached to a Computer-on-Module. That is, a
+>> static based board which its own DTS including the BB{B,W} as an dtsi
+>> and not something that can be added on runtime.
+>
+> It's far more complicated than a SOM plus carrier board. Consider that
+> you can have any 4 of these capes stacked on the BBB/BBW in any
+> combination (assuming no resource conflicts). Capturing all possible
+> combinations in static dtsis is not practical.
+>
 
-On Tue, 13 May 2014 09:00:02 -0500, Rob Herring wrote:
+Right, I forgot that the capes were stackable so is indeed not
+practical to model every single combination as DTS in mainline. Even
+if stacking was not possible there are just too many capes out there
+to have a DTS for every single cape.
 
-> > However, it forgot to do the same for of_update_property(), which if
-> > used early in the boot process (before core_initcalls have been
-> > called), tries to call sysfs_remove_bin_file(), and crashes:
-> 
-> It actually crashes or just the warning? It would be good to give the
-> crash backtrace.
+My point was that someone who wants to use a BBB + a set of capes can
+today write a DTS for its own stacked setup.
 
-It crashes after the warning. The crash trace is:
+Unfortunately I don't have a solution but what I'm pretty sure is that
+mangling the DTS from the bootloader is not the right one :-)
 
-Unable to handle kernel NULL pointer dereference at virtual address 0000003c
-pgd = c0004000
-[0000003c] *pgd=00000000
-Internal error: Oops: 5 [#1] SMP ARM
-Modules linked in:
-CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W     3.15.0-rc1-00127-g1d7e7b2-dirty #423
-task: c10ad4d8 ti: c10a2000 task.ti: c10a2000
-PC is at kernfs_find_ns+0x8/0xf0
-LR is at kernfs_find_and_get_ns+0x30/0x48
-pc : [<c0103834>]    lr : [<c010394c>]    psr: 600001d3
-sp : c10a3f34  ip : 00000073  fp : 00000000
-r10: 00000000  r9 : cfffc240  r8 : cfdf2980
-r7 : cf812c00  r6 : 00000000  r5 : 00000000  r4 : c10b45e0
-r3 : c10ad4d8  r2 : 00000000  r1 : cf812c00  r0 : 00000000
-Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment kernel
-Control: 10c53c7d  Table: 0000404a  DAC: 00000015
-Process swapper/0 (pid: 0, stack limit = 0xc10a2240)
-Stack: (0xc10a3f34 to 0xc10a4000)
-3f20:                                              c10b45e0 00000000 00000000
-3f40: cf812c00 c010394c 00000063 cf812c00 00000001 cf812c00 cfdf29ac c03932cc
-3f60: 00000063 cf812bc0 cfdf29ac cf812c00 ffffffff c03943f8 cfdf2980 c0104468
-3f80: cfdf2a04 cfdf2980 cf812bc0 c06634b0 c10aa3c0 c0394da4 c10f74dc cfdf2980
-3fa0: cf812bc0 c0647248 c10aa3c0 ffffffff c10de940 c10aa3c0 ffffffff c0640934
-3fc0: ffffffff ffffffff c06404ec 00000000 00000000 c06634b0 00000000 10c53c7d
-3fe0: c10aa434 c06634ac c10ae4c8 0000406a 414fc091 00008070 00000000 00000000
-[<c0103834>] (kernfs_find_ns) from [<00000001>] (0x1)
-Code: e5c89001 eaffffcf e92d40f0 e1a06002 (e1d023bc) 
----[ end trace 3406ff24bd97382f ]---
-Kernel panic - not syncing: Attempted to kill the idle task!
----[ end Kernel panic - not syncing: Attempted to kill the idle task!
+> -Matt
 
-> > To fix this problem, we simply skip the sysfs related calls in
-> > of_update_property(), and rely on of_init() to fix up things when it
-> > will be called, exactly as is done in of_add_property() and
-> > of_remove_property().
-> >
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > Fixes: 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device nodes kobjects so they show up in sysfs')
-> 
-> Humm, I didn't know about this new tag. This doesn't quite match what
-> SubmittingPatches says. It should be 12 digits of commit hash and
-> double quotes around the summary.
-
-Well, I guess it's a per-maintainer choice:
-
-git log | grep "^Fixes:"
-
-    Fixes: 54fe26a900bc528f3df1e4235cb6b9ca5c6d4dc2 ('ARM: mvebu: Add thermal quirk for the Armada 375 DB board')
-    Fixes: 54397d85349f ("ARM: kirkwood: Relocate PCIe device tree nodes")
-    Fixes: a7d4f81821f7 ('ARM: mvebu: Add support for NOR flash device on Openblocks AX3 board')
-    Fixes: b484ff42df47 ('ARM: mvebu: Add support for NOR flash device on Armada XP-DB board')
-    Fixes: c971ff185f64 ("leds: leds-pwm: Defer led_pwm_set() if PWM can sleep")
-    Fixes: abccd00f8af2 ('btrfs: Fix 32/64-bit problem with BTRFS_SET_RECEIVED_SUBVOL ioctl')
-    Fixes: ee1e0994ab1bd (regulator: s5m8767: Use GPIO for controlling Buck9/eMMC)
-    Fixes: 652ed95d5fa6 (cpufreq: introduce cpufreq_generic_get() routine)
-
-Somewhat inconsistent :-)
-
-But ok, 12 digits for the commit hash, and double quotes.
-
-> >  drivers/of/base.c | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> >
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index f72d19b..e981f09 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -1831,11 +1831,16 @@ int of_update_property(struct device_node *np, struct property *newprop)
-> >         if (rc)
-> >                 return rc;
-> >
-> > +       /* At early boot, bail out and defer setup to of_init() */
-> > +       if (!of_kset)
-> > +               goto skip_sysfs;
-> 
-> I prefer to avoid the goto and do: return found ? 0 : -ENODEV;
-
-Ok.
-
-> Also, this code has changed some in 3.15 rc's, you need to rebase.
-> This change needs to go into 3.15. Other platforms could be broken.
-
-Ok, will submit a v2 separately.
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Javier
