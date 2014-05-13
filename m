@@ -1,35 +1,26 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: enable MCP251x CAN controller and DS1307
- RTC
-Date: Tue, 13 May 2014 13:57:14 -0600
-Message-ID: <5372791A.4080909@wwwdotorg.org>
-References: <cover.1400001937.git.stefan@agner.ch> <77cfca0a1769d867c8d2919f0040fbd785940fef.1400001937.git.stefan@agner.ch>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <77cfca0a1769d867c8d2919f0040fbd785940fef.1400001937.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stefan-XLVq0VzYD2Y@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org
+From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/04] st21nfca: Adding DTS and ISO15693 support
+Date: Tue, 13 May 2014 22:03:38 +0200
+Message-ID: <1400011422-10999-1-git-send-email-christophe-h.ricard@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2014 11:27 AM, stefan-XLVq0VzYD2Y@public.gmane.org wrote:
-> From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
-> 
-> Toradex Colibri Evaluation Board uses the DS1307 RTC and the
-> MCP251x CAN controller. The NVIDIA Tegra 3 based Colibri T30
-> module can be used on this carrier board, hence enable those
-> drivers in tegra_defonfig.
-> 
-> Furthermore the NVIDIA Tegra 3 based Apalis T30 module too
-> contains two MCP251x CAN controller.
+Hi,
 
-I have squashed this patch into Tegra's for-3.16/defconfig branch.
+This patchset applies on top of:
 
-Can you please also send a patch to enable the same options in
-multi_v7_defconfig. Send that to arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org (it's an alias for the
-armsoc tree maintainers). That will ensure that anyone using that config
-will also get these changes.
+0c942b007b52cdcde285fa1122688f186bf99464
+NFC: st21nfca: Free buffer when a bad frame is detected
 
-Thanks.
+This patchset is a resend of the last four patches from the previous commit.
+
+Best Regards
+Christophe
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
