@@ -1,135 +1,185 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree support
-Date: Tue, 13 May 2014 13:39:55 +0200
-Message-ID: <CABxcv==_LCw1kPYm17g=h8VfSN2V_qsgXjTnsy-JOetawSv4pA@mail.gmail.com>
-References: <20140507175919.GH9502@atomide.com>
-	<20140508233300.GI2198@atomide.com>
-	<536C8293.4070506@ti.com>
-	<20140509155504.GE17814@atomide.com>
-	<53707A64.2060203@ti.com>
-	<CABxcv=kwhodeFTHoVpn1nHeh9+kV5fwMN9s3Kbk6h7_xJp4UYA@mail.gmail.com>
-	<53709706.10501@ti.com>
-	<CABxcv=mY0a+yJgmCTPN=BhSQD57Pw022zOd5_KxEgvvF_-=O7Q@mail.gmail.com>
-	<20140512142646.GA31772@atomide.com>
-	<5370E0C9.8050201@ti.com>
-	<20140512155132.GH31772@atomide.com>
-	<5371F923.80000@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5371F923.80000@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3] of: Keep track of populated platform devices
+Date: Tue, 13 May 2014 12:48:36 +0100
+Message-ID: <1399981716-24618-1-git-send-email-pawel.moll@arm.com>
+References: <Message-ID: <1399473437.3706.25.camel@hornet>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Message-ID: <1399473437.3706.25.camel@hornet>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 13, 2014 at 12:51 PM, Tomi Valkeinen <tomi.valkeinen@ti.com> wrote:
-> On 12/05/14 18:51, Tony Lindgren wrote:
->
->>> It's already in v3.15.
->>
->> Oh great.. And you dumped it into arch/arm/mach-omap2 too and I somehow
->> even acked it :( Looks like there's also the custom mux hacks. And
->> custom hwmod hacks. And ongoing soc_is_xxx tinkering. Now let's not add
->
-> The omap2_dss_hwmod_data, create_dss_pdev and create_simple_dss_pdev,
-> omap_display_init stuff can be removed when the DT conversion has been done.
->
-> For the omap4_dsi_mux_pads (or the omap5 dsi muxing that was recently
-> discussed) I still have no solution, but I haven't spent time on it. I
-> have dropped the omap5 dsi muxing from the latest series for that reason.
->
-> dispc_disable_outputs and omap_dss_reset are needed because omap_device
-> doesn't handle resetting DSS properly, as special steps need to be done
-> for that. omap_dss_reset is called from the hwmod/omap_device code, so I
-> don't think this code can be anywhere else.
->
-> For the omap_display_get_version() I have no good solution. Making
-> separate .dts versions for all the needed OMAP ES versions seems like a
-> huge hassle to me, but that is one solution.
->
-> I think that would mean having separate .dtsi files for omapdss for
-> omap3_es1, omap3_es3plus, omap4_es1, omap4_es2, omap4_es3plus, and then
-> having separate omapxxxx.dtsi files for all of those, and then separate
-> board .dts files for the ES versions used on each board.
->
-> Or is there some sane way to define such things in dts?
->
+In "Device Tree powered" systems, platform devices are usually
+massively populated with of_platform_populate() call, executed
+at some level of initcalls, either by generic architecture
+or by platform-specific code.
 
-Unfortunately there isn't.
+There are situations though where certain devices must be
+created (and bound with drivers) before all the others.
+This presents a challenge, as devices created explicitly
+would be created again by of_platform_populate().
 
-I have a similar problem with the IGEP boards since there are just too
-many variations of them (e.g: DM3730 SoC vs OMAP3530 SoC, NAND vs
-OneNAND, 256MB vs 512MB flash memory sizes, with and without wifi
-chip, etc).
+This patch tries to solve that issue in a generic way,
+adding a "populated" flag for a DT node description.
+Once set, this device will never be created again via
+of_* API, so of_platform_populate() will skip such nodes
+(and its children) in a similar way to the non-available
+ones.
 
-Since dts are supposed to describe the hardware, each revision with a
-slighter variation forces to have a different dts. My solution was to
-not try to have a dts for every single variation in mainline but only
-one for the most common revision and that could be used as a reference
-to modify and ship on each device. Unfortunately that is not possible
-to you since each DSS IP block is used by many boards.
+The flag is cleared when a device is being removed and
+returns the DT node by calling of_device_node_put() (it
+was missing from the amba device release function, added).
 
->> _any_ new crap into arch/arm/mach-omap2/display.c.
->>
->> So please consider this a huge eternal NAK to add any more crap to
->> arch/arm/mach-omap2/display.c from me. No more new soc_is beyond
->> the soc_is_am43xx() you have in linux next. No more adding
->> of_find_compatible_node() beyond ti,omap5-dss you have in linux next.
->>
->> And no more new panel remapping in this file as soon as you have found
->> a better solution. Preferrably by v3.17 merge window. This file just
->> needs to disappear. Yuk.
->
-> Do you object to the compatible string remapping as such, or just that
-> it's in arch/arm/mach-omap2?
->
-> I guess nothing prevents me from moving it to drivers/, and having some
-> early-ish initcall doing the job.
->
-> If the remapping as such is horrible, I'm all ears for better ideas. I
-> spent quite a lot of time on it, and that's the best I could come up with.
->
-> It's rather simple prefixing of the compatible strings for selected
-> devices. The purpose of that is to have proper data in the .dts files
-> (which I think is very important) with the cost of having some rather
-> simple internal hacks in the kernel, which can be removed immediately
-> when we have a common display driver framework.
->
+Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+---
+Changes since v2:
 
-Even though the compatible trick that I said before could be an
-alternative, it has the problem that does not describes the hardware
-as you said. The restriction of the DT being a stable API and get it
-right from the beginning forces us to make these kind of technical
-decisions.
+- the populated flag is now cleared when the device
+  is being removed by platform or amba bus code
+- added missing of_device_node_put() to amba_device_release()
+- renamed of_node_check_and_set_flag() to
+  of_node_check_test_and_set_flag() to follow the
+  bitops naming convention
+- didn't add Rob's ack as the patch changed too much
 
-So, since we can change the kernel later but not the DTS, I agree with
-you that the remapping is the least bad of our options.
+Changes since v1:
 
->>> I'm not sure what it would give us to try to be compatible with
->>> simple-panel.txt. The simple-panel bindings won't probably be compatible
->>> with the future common display drivers in any case, as the simple-panel
->>> binding is just too limited and doesn't describe the hardware fully.
->>
->> Hmm what else does a panel need where the existing binding cannot be
->> extended?
->
-> The existing simple-panel binding doesn't describe the connections of
-> the panel, i.e. its video input. I guess it can be extended, but I don't
-> see what the benefit is of trying to create new panel bindings
-> compatible with the simple-panel bindings. As I see, the simple-panel
-> bindings work only with very limited use cases, where the drivers make
-> assumptions. Simple panel bindings cannot be used with omapdss, nor can
-> it be used with the future common display framework.
->
-> But I'm not really familiar with using extending current bindings, and
-> making new bindings compatible with old ones. Can you explain why it'd
-> be good to have the sharp panel bindings compatible with simple-panel?
-> In what kind of scenario would it be used?
->
->  Tomi
->
->
+- added of_node_check_and_set_flag()... (atomic test and set)
+- ... used it to atomically mark a node...
+- ... clearing the bit on error path.
 
-Best regards,
-Javier
+ drivers/amba/bus.c        |  2 ++
+ drivers/of/platform.c     | 18 +++++++++++++-----
+ include/linux/of.h        |  7 +++++++
+ include/linux/of_device.h |  2 ++
+ 4 files changed, 24 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+index 3cf61a1..0f489fb 100644
+--- a/drivers/amba/bus.c
++++ b/drivers/amba/bus.c
+@@ -17,6 +17,7 @@
+ #include <linux/pm_runtime.h>
+ #include <linux/amba/bus.h>
+ #include <linux/sizes.h>
++#include <linux/of_device.h>
+ 
+ #include <asm/irq.h>
+ 
+@@ -268,6 +269,7 @@ static void amba_device_release(struct device *dev)
+ {
+ 	struct amba_device *d = to_amba_device(dev);
+ 
++	of_device_node_put(dev);
+ 	if (d->res.parent)
+ 		release_resource(&d->res);
+ 	kfree(d);
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index bd47fbc..2d0c8b7 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -206,12 +206,13 @@ static struct platform_device *of_platform_device_create_pdata(
+ {
+ 	struct platform_device *dev;
+ 
+-	if (!of_device_is_available(np))
++	if (!of_device_is_available(np) ||
++			of_node_test_and_set_flag(np, OF_POPULATED))
+ 		return NULL;
+ 
+ 	dev = of_device_alloc(np, bus_id, parent);
+ 	if (!dev)
+-		return NULL;
++		goto err_clear_flag;
+ 
+ #if defined(CONFIG_MICROBLAZE)
+ 	dev->archdata.dma_mask = 0xffffffffUL;
+@@ -229,10 +230,14 @@ static struct platform_device *of_platform_device_create_pdata(
+ 
+ 	if (of_device_add(dev) != 0) {
+ 		platform_device_put(dev);
+-		return NULL;
++		goto err_clear_flag;
+ 	}
+ 
+ 	return dev;
++
++err_clear_flag:
++	of_node_clear_flag(np, OF_POPULATED);
++	return NULL;
+ }
+ 
+ /**
+@@ -264,14 +269,15 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 
+ 	pr_debug("Creating amba device %s\n", node->full_name);
+ 
+-	if (!of_device_is_available(node))
++	if (!of_device_is_available(node) ||
++			of_node_test_and_set_flag(node, OF_POPULATED))
+ 		return NULL;
+ 
+ 	dev = amba_device_alloc(NULL, 0, 0);
+ 	if (!dev) {
+ 		pr_err("%s(): amba_device_alloc() failed for %s\n",
+ 		       __func__, node->full_name);
+-		return NULL;
++		goto err_clear_flag;
+ 	}
+ 
+ 	/* setup generic device info */
+@@ -311,6 +317,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 
+ err_free:
+ 	amba_device_put(dev);
++err_clear_flag:
++	of_node_clear_flag(node, OF_POPULATED);
+ 	return NULL;
+ }
+ #else /* CONFIG_ARM_AMBA */
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 3bad8d1..3fd6079 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -130,6 +130,12 @@ static inline int of_node_check_flag(struct device_node *n, unsigned long flag)
+ 	return test_bit(flag, &n->_flags);
+ }
+ 
++static inline int of_node_test_and_set_flag(struct device_node *n,
++		unsigned long flag)
++{
++	return test_and_set_bit(flag, &n->_flags);
++}
++
+ static inline void of_node_set_flag(struct device_node *n, unsigned long flag)
+ {
+ 	set_bit(flag, &n->_flags);
+@@ -197,6 +203,7 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ /* flag descriptions */
+ #define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+ #define OF_DETACHED	2 /* node has been detached from the device tree */
++#define OF_POPULATED	3 /* device already created for the node */
+ 
+ #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+ #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index ef37021..fd14d46 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -41,6 +41,8 @@ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env
+ 
+ static inline void of_device_node_put(struct device *dev)
+ {
++	if (dev->of_node)
++		of_node_clear_flag(dev->of_node, OF_POPULATED);
+ 	of_node_put(dev->of_node);
+ }
+ 
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
