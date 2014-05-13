@@ -1,70 +1,149 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 2/4] of/platform: return error on of_platform_device_create_pdata
- failure
-Date: Tue, 13 May 2014 13:37:17 -0700
-Message-ID: <CAOesGMjtur-yf1+Sgn-Gb1AufSZyo8cUAkb4x_6TNvtBXdnE=g@mail.gmail.com>
-References: <1399499298-8830-1-git-send-email-robherring2@gmail.com>
-	<1399499298-8830-3-git-send-email-robherring2@gmail.com>
-	<20140513175603.GA27173@quad.lixom.net>
-	<53728173.7050508@gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 1/2] clk: of: helper for determining flags properties
+Date: Tue, 13 May 2014 13:49:24 -0700
+Message-ID: <20140513204924.5943.24086@quantum>
+References: <1399982253-21079-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1399982253-21079-2-git-send-email-gabriel.fernandez@linaro.org>
+ <20140513122054.GA2419@e106331-lin.cambridge.arm.com>
+ <5372363B.4080608@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53728173.7050508@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Ivan T. Ivanov" <iivanov@mm-sol.com>, Josh Cartwright <joshc@codeaurora.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Bjorn Andersson <bjorn@kryo.se>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5372363B.4080608@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 13, 2014 at 1:32 PM, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 5/13/2014 10:56 AM, Olof Johansson wrote:
->> On Wed, May 07, 2014 at 04:48:16PM -0500, Rob Herring wrote:
->>> From: Rob Herring <robh@kernel.org>
->>>
->>> of_platform_populate does not return an error if creating the platform
->>> device fails. This means almost any error from driver core cannot be
->>> detected by the caller. Fix this.
->>>
->>> Signed-off-by: Rob Herring <robh@kernel.org>
->>> ---
->>>  drivers/of/platform.c | 4 +++-
->>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
->>> index 404d1da..622aeb3 100644
->>> --- a/drivers/of/platform.c
->>> +++ b/drivers/of/platform.c
->>> @@ -391,7 +391,9 @@ static int of_platform_bus_create(struct device_node *bus,
->>>      }
->>>
->>>      dev = of_platform_device_create_pdata(bus, bus_id, platform_data, parent);
->>> -    if (!dev || !of_match_node(matches, bus))
->>> +    if (!dev)
->>> +            return -ENODEV;
->>> +    if (!of_match_node(matches, bus))
->>>              return 0;
->>>
->>>      for_each_child_of_node(bus, child) {
->>
->> This patch caused every single MMC driver to break on OF platforms, as far
->> as I can tell.  Reverting it on last night's -next seems to resolve it.
->>
->> The problem seems to be that of_platform_populate() will bail on the
->> first device that fails this.
->>
->> How did you test this code, Frank? On what platform? Practically all my
->> targets here failed to mount rootfs from eMMC or SD card...
->
-> I tested on a dragonboard, but without a working sdhci driver.  Thus I would not
-> have hit the error.
+Quoting Sebastian Hesselbarth (2014-05-13 08:11:55)
+> On 05/13/2014 02:20 PM, Mark Rutland wrote:
+> > On Tue, May 13, 2014 at 12:57:32PM +0100, Gabriel FERNANDEZ wrote:
+> >> The patch provides a helper to get flags properties of
+> >> a clock node.
+> >>
+> >> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> >> ---
+> >>   drivers/clk/clk.c            | 11 +++++++++++
+> >>   include/linux/clk-provider.h |  6 ++++++
+> >>   2 files changed, 17 insertions(+)
+> >>
+> >> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> >> index 4d56220..cae8985 100644
+> >> --- a/drivers/clk/clk.c
+> >> +++ b/drivers/clk/clk.c
+> >> @@ -2528,6 +2528,17 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
+> >>   }
+> >>   EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
+> >>
+> >> +unsigned long of_clk_get_flags(struct device_node *np)
+> >> +{
+> >> +    unsigned long flags = 0;
+> >> +
+> >> +    if (of_property_read_bool(np, "set-rate-parent"))
+> >> +            flags |= CLK_SET_RATE_PARENT;
+> >
+> > NAK.
+> >
+> > This is _not_ a hardware property. This flag describes internals of the
+> > Linux clock framework, and is thus not suitable for DT.
+> 
+> Mark,
+> 
+> while I agree above property is not a hardware property, it is at least
+> some kind of use-case property. If not by DT, we will have to allow some
+> way to describe master-slave relationships between clocks in a driver
+> independent way.
 
-Yeah, or more generically: Without a device that would have been
-probed after the first status = "disabled" device that was found.
-Makes sense, especially since dragonboard support is still not quite
-there.
+I agree with Mark.
 
-Ah well, it means the -next process is working, after all. :)
+Generally this stuff belongs in a clock driver. Of course there are the
+integration issues you pointed out. More on that below.
 
+As an aside, CLK_SET_RATE_PARENT is a headache, since propagation of the
+operation up to the parent clock really should be the default behavior
+for .set_rate (and in fact this is the case for the new-ish
+.determine_rate op). Some history on those decisions can be found at [1]
+and [2].
 
+> 
+> > You've also failed to document the property.
+> >
+> > What are you trying to achieve here, and why do you think this is the
+> > best way of achieving that?
+> 
+> I cannot tell from the commit msgs, but consider clk-si5351 which is a
+> driver for an external programmable clock with N PLLs and M outputs. Now
+> connect a video clock consumer and an audio clock consumer to two
+> different outputs and those to one PLL (as you want audio clock derived
+> from video clock, typical HDMI scenario).
+> 
+> Now, there should be a way to tell the generic driver which outputs are
+> allowed to change the PLLs rate and which don't. Otherwise, the clock
+> chip would be pretty useless as e.g. your audio clock consumer will
+> overwrite the rate the video clock consumer has chosen.
 
--Olof
+This is really a job for the "coordinated clock rate changes" that are
+currently in development. These specify clock sub-tree snapshots of
+parent and rate configurations that are predefined. These combinations
+can be specified in DT. That helps a lot with clock configurations that
+change per board, or for cases where many combinations of parents and
+dividers can yield the same output rate, but only a subset of those were
+validated by the silicon validation team or had proper timing closure so
+we don't want to rely on the "walk up the tree" algorithm.
+
+Regards,
+Mike
+
+[1] http://marc.info/?l=linux-kernel&m=136847508109344&w=2
+[2] http://marc.info/?l=linux-kernel&m=137477559110865&w=2
+
+> 
+> BTW, clk-si5351 has vendor-specific properties to specify which output
+> clocks are pll-masters for some kernel cycles already.
+> 
+> Sebastian
+> 
+> >> +
+> >> +    return flags;
+> >> +}
+> >> +EXPORT_SYMBOL_GPL(of_clk_get_flags);
+> >> +
+> >>   struct clock_provider {
+> >>      of_clk_init_cb_t clk_init_cb;
+> >>      struct device_node *np;
+> >> diff --git a/include/linux/clk-provider.h b/include/linux/clk-provider.h
+> >> index 59e2eb5..650bc10 100644
+> >> --- a/include/linux/clk-provider.h
+> >> +++ b/include/linux/clk-provider.h
+> >> @@ -519,6 +519,7 @@ int of_clk_get_parent_count(struct device_node *np);
+> >>   const char *of_clk_get_parent_name(struct device_node *np, int index);
+> >>
+> >>   void of_clk_init(const struct of_device_id *matches);
+> >> +unsigned long of_clk_get_flags(struct device_node *np);
+> >>
+> >>   #else /* !CONFIG_OF */
+> >>
+> >> @@ -546,6 +547,11 @@ static inline const char *of_clk_get_parent_name(struct device_node *np,
+> >>   {
+> >>      return NULL;
+> >>   }
+> >> +static inline unsigned long of_clk_get_flags(struct device_node *np)
+> >> +{
+> >> +    return NULL;
+> >> +}
+> >> +
+> >>   #define of_clk_init(matches) \
+> >>      { while (0); }
+> >>   #endif /* CONFIG_OF */
+> >> --
+> >> 1.9.1
+> >>
+> >>
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > Please read the FAQ at  http://www.tux.org/lkml/
+> >
+> 
