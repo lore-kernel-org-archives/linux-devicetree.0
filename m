@@ -1,206 +1,89 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 1/4] ARM: edma: Get IP information from HW when booting with DT
-Date: Tue, 13 May 2014 10:43:45 +0300
-Message-ID: <1399967028-24757-2-git-send-email-peter.ujfalusi@ti.com>
-References: <1399967028-24757-1-git-send-email-peter.ujfalusi@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH 0/2] drm/panel: add simple-panel description using DT
+Date: Tue, 13 May 2014 09:51:50 +0200
+Message-ID: <20140513075148.GF6754@ulmo>
+References: <1399645002-18000-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1399967028-24757-1-git-send-email-peter.ujfalusi@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: nsekhar@ti.com, joelf@ti.com
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, vinod.koul@intel.com, linux-kernel@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0182420846=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1399645002-18000-1-git-send-email-boris.brezillon@free-electrons.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
->From CCCFG register of eDMA3 we can get all the needed information for the
-driver about the IP:
-Number of channels: NUM_DMACH
-Number of regions: NUM_REGN
-Number of slots (PaRAM sets): NUM_PAENTRY
-Number of TC/EQ: NUM_EVQUE
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/common/edma.c | 128 ++++++++++++++++++++++++++++++-------------------
- 1 file changed, 79 insertions(+), 49 deletions(-)
+--===============0182420846==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="b8GWCKCLzrXbuNet"
+Content-Disposition: inline
 
-diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
-index fade9ada81f8..1a98f3cd4cd9 100644
---- a/arch/arm/common/edma.c
-+++ b/arch/arm/common/edma.c
-@@ -102,7 +102,16 @@
- #define PARM_OFFSET(param_no)	(EDMA_PARM + ((param_no) << 5))
- 
- #define EDMA_DCHMAP	0x0100  /* 64 registers */
--#define CHMAP_EXIST	BIT(24)
-+
-+/* CCCFG register */
-+#define GET_NUM_DMACH(x)	(x & 0x7) /* bits 0-2 */
-+#define GET_NUM_QDMACH(x)	((x & 0x70) >> 4) /* bits 4-6 */
-+#define GET_NUM_INTCH(x)	((x & 0x700) >> 8) /* bits 8-10 */
-+#define GET_NUM_PAENTRY(x)	((x & 0x7000) >> 12) /* bits 12-14 */
-+#define GET_NUM_EVQUE(x)	((x & 0x70000) >> 16) /* bits 16-18 */
-+#define GET_NUM_REGN(x)		((x & 0x300000) >> 20) /* bits 20-21 */
-+#define CHMAP_EXIST		BIT(24)
-+#define MP_EXIST		BIT(25)
- 
- #define EDMA_MAX_DMACH           64
- #define EDMA_MAX_PARAMENTRY     512
-@@ -1415,6 +1424,68 @@ void edma_clear_event(unsigned channel)
- }
- EXPORT_SYMBOL(edma_clear_event);
- 
-+static int edma_setup_info_from_hw(struct device *dev,
-+				   struct edma_soc_info *pdata)
-+{
-+	int i;
-+	u32 value, cccfg, n_tc;
-+	s8 (*queue_tc_map)[2], (*queue_priority_map)[2];
-+
-+	/* Decode the eDMA3 configuration from CCCFG register */
-+	cccfg = edma_read(0, EDMA_CCCFG);
-+
-+	value = GET_NUM_DMACH(cccfg);
-+	pdata->n_channel = BIT(value + 1);
-+
-+	value = GET_NUM_REGN(cccfg);
-+	pdata->n_region = BIT(value);
-+
-+	value = GET_NUM_PAENTRY(cccfg);
-+	pdata->n_slot = BIT(value + 4);
-+
-+	value = GET_NUM_EVQUE(cccfg);
-+	n_tc = value + 1;
-+
-+	dev_dbg(dev, "eDMA3 HW configuration (cccfg: 0x%08x):\n", cccfg);
-+	dev_dbg(dev, "n_channel: %u\n", pdata->n_channel);
-+	dev_dbg(dev, "n_region: %u\n", pdata->n_region);
-+	dev_dbg(dev, "n_slot: %u\n", pdata->n_slot);
-+	dev_dbg(dev, "n_tc: %u\n", n_tc);
-+
-+	pdata->n_cc = 1;
-+
-+	queue_tc_map = devm_kzalloc(dev, (n_tc + 1) * sizeof(s8), GFP_KERNEL);
-+	if (!queue_tc_map)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < n_tc; i++) {
-+		queue_tc_map[i][0] = i;
-+		queue_tc_map[i][1] = i;
-+	}
-+	queue_tc_map[i][0] = -1;
-+	queue_tc_map[i][1] = -1;
-+
-+	pdata->queue_tc_mapping = queue_tc_map;
-+
-+	queue_priority_map = devm_kzalloc(dev, (n_tc + 1) * sizeof(s8),
-+					  GFP_KERNEL);
-+	if (!queue_priority_map)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < n_tc; i++) {
-+		queue_priority_map[i][0] = i;
-+		queue_priority_map[i][1] = i;
-+	}
-+	queue_priority_map[i][0] = -1;
-+	queue_priority_map[i][1] = -1;
-+
-+	pdata->queue_priority_mapping = queue_priority_map;
-+
-+	pdata->default_queue = 0;
-+
-+	return 0;
-+}
-+
- #if IS_ENABLED(CONFIG_OF) && IS_ENABLED(CONFIG_DMADEVICES)
- 
- static int edma_of_read_u32_to_s16_array(const struct device_node *np,
-@@ -1483,63 +1554,16 @@ static int edma_of_parse_dt(struct device *dev,
- 			    struct device_node *node,
- 			    struct edma_soc_info *pdata)
- {
--	int ret = 0, i;
--	u32 value;
-+	int ret = 0;
- 	struct property *prop;
- 	size_t sz;
- 	struct edma_rsv_info *rsv_info;
--	s8 (*queue_tc_map)[2], (*queue_priority_map)[2];
--
--	ret = of_property_read_u32(node, "dma-channels", &value);
--	if (ret < 0)
--		return ret;
--	pdata->n_channel = value;
--
--	ret = of_property_read_u32(node, "ti,edma-regions", &value);
--	if (ret < 0)
--		return ret;
--	pdata->n_region = value;
--
--	ret = of_property_read_u32(node, "ti,edma-slots", &value);
--	if (ret < 0)
--		return ret;
--	pdata->n_slot = value;
--
--	pdata->n_cc = 1;
- 
- 	rsv_info = devm_kzalloc(dev, sizeof(struct edma_rsv_info), GFP_KERNEL);
- 	if (!rsv_info)
- 		return -ENOMEM;
- 	pdata->rsv = rsv_info;
- 
--	queue_tc_map = devm_kzalloc(dev, 8*sizeof(s8), GFP_KERNEL);
--	if (!queue_tc_map)
--		return -ENOMEM;
--
--	for (i = 0; i < 3; i++) {
--		queue_tc_map[i][0] = i;
--		queue_tc_map[i][1] = i;
--	}
--	queue_tc_map[i][0] = -1;
--	queue_tc_map[i][1] = -1;
--
--	pdata->queue_tc_mapping = queue_tc_map;
--
--	queue_priority_map = devm_kzalloc(dev, 8*sizeof(s8), GFP_KERNEL);
--	if (!queue_priority_map)
--		return -ENOMEM;
--
--	for (i = 0; i < 3; i++) {
--		queue_priority_map[i][0] = i;
--		queue_priority_map[i][1] = i;
--	}
--	queue_priority_map[i][0] = -1;
--	queue_priority_map[i][1] = -1;
--
--	pdata->queue_priority_mapping = queue_priority_map;
--
--	pdata->default_queue = 0;
--
- 	prop = of_find_property(node, "ti,edma-xbar-event-map", &sz);
- 	if (prop)
- 		ret = edma_xbar_event_map(dev, node, pdata, sz);
-@@ -1655,6 +1679,12 @@ static int edma_probe(struct platform_device *pdev)
- 		if (IS_ERR(edmacc_regs_base[j]))
- 			return PTR_ERR(edmacc_regs_base[j]);
- 
-+		if (node) {
-+			/* Get eDMA3 configuration from IP */
-+			ret = edma_setup_info_from_hw(dev, info[j]);
-+			if (ret)
-+				return ret;
-+		}
- 		edma_cc[j] = devm_kzalloc(&pdev->dev, sizeof(struct edma),
- 					  GFP_KERNEL);
- 		if (!edma_cc[j])
--- 
-1.9.3
+
+--b8GWCKCLzrXbuNet
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, May 09, 2014 at 04:16:40PM +0200, Boris BREZILLON wrote:
+> Hello Thierry,
+>=20
+> I noticed you're describing each new panel with a new entry in the
+> of_platform_match table and a new compatible string.
+> I guess you have a good reason to do it this way, because retrieving
+> panel description from DT would be pretty easy (see this series ;-)).
+>=20
+> Could tell me why you chose this approach ?
+
+The reason is that devicetree mandates that a device be identified using
+a compatible value and that compatible value should be as specific as
+possible. That compatible value should give the device driver enough
+information to know everything it needs (resolution, timings, physical
+dimension).
+
+Having all of that data in the device tree is redundant.
+
+Thierry
+
+--b8GWCKCLzrXbuNet
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTcc8UAAoJEN0jrNd/PrOhiZMQAIoGWc2IIgvBGMoZpjoIDsyv
+NOlEVgH6+ytY1HUJAffHcqhMGit44xD2xoxE09i/DQYmemJOXFUNDJhk9KBT8VpM
+9FrB3u0HNi5HeZZ55G/ZunS7dO3A00rzjsNZY0OD5dUPncVkmmE5VKpxncwTZH27
+57RjL7x6XtYf/EiGLdaOZdkdEUGyKLvPUPJBY3+/TREcbr0MmeMx0nkaXUOYGicU
+0uJNso/v0cuZAXRfMXMMusBuZEUmh5Xu83DnHg/qr3sK0GuDwn7qMIzE1ouHee89
+ZTVikewTA+TEpzkguhPjjyXuFhFHs+Vx4hD1idQ/baeIXXsmVs3yYVyiENU9gxyB
+usCkVNXyhBLsxKPhLcZlSU+VE518Jxx4K5ObVz+ZZAQyepVKVMzFHf0e70f6iUas
+0ulWXRJNhCBg1Ud/VAcnjk1zY4HyEmCmVmdNAAlkSmRoVlZrZHP6w7R0KuI8uFuz
+dbj7liOtbjzxvJwOriJHJZ60ZkLEUdpwNOsHuqmLNAdjHb+3QUhCGp2gZwlB8xOS
+rkP2J2MaxVHAY/uvuPEvkM0rgBMbUdxuVsEwKWw9ThtOlMoYIB0npTretwsq0GOX
+7575RB2t+1t50zLjH2pekFKVbqTW5PL5G03cJO0ZrEs+A/HTWaMOvE1/vgynPFOm
+y7qncQqVc3bUokSqA/l/
+=ggt9
+-----END PGP SIGNATURE-----
+
+--b8GWCKCLzrXbuNet--
+
+--===============0182420846==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0182420846==--
