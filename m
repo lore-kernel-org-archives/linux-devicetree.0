@@ -1,112 +1,60 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [RFC PATCH 0/2] drm/panel: add simple-panel description using DT
-Date: Tue, 13 May 2014 11:20:04 +0200
-Message-ID: <20140513092002.GN6754@ulmo>
-References: <1399645002-18000-1-git-send-email-boris.brezillon@free-electrons.com>
- <20140513075148.GF6754@ulmo> <5371E12C.8000409@samsung.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 1/9] ARM: shmobile: r8a7790: add dmac0,dmac1 clocks
+Date: Tue, 13 May 2014 11:23:39 +0200
+Message-ID: <CAMuHMdVn84FcQCpn6k8caPJGV9wDAi3m0_jwUARDem-Y05+NnQ@mail.gmail.com>
+References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
+	<1397511312-4845-2-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0935287043=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5371E12C.8000409@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1397511312-4845-2-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linux-sh list <linux-sh@vger.kernel.org>, magnus.damm@opensource.se, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Ben,
 
---===============0935287043==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FX+Db2fp7WJhXKrW"
-Content-Disposition: inline
+On Mon, Apr 14, 2014 at 11:35 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -671,16 +671,17 @@
+>                         compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-clocks";
+>                         reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
+>                         clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
+> -                                <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>;
+> +                                <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&hp_clk>, <&hp_clk>;
 
+According to the docs, the parent clock of SYS-DMAC[01] is the ZS clock
+(at 260 MHz), not the HP clock (at 130 MHz).
 
---FX+Db2fp7WJhXKrW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>                         #clock-cells = <1>;
+>                         renesas,clock-indices = <
+>                                 R8A7790_CLK_SCIFA2 R8A7790_CLK_SCIFA1 R8A7790_CLK_SCIFA0
+>                                 R8A7790_CLK_MSIOF2 R8A7790_CLK_SCIFB0 R8A7790_CLK_SCIFB1
+>                                 R8A7790_CLK_MSIOF1 R8A7790_CLK_MSIOF3 R8A7790_CLK_SCIFB2
+> +                               R8A7790_CLK_SYS_DMAC0 R8A7790_CLK_SYS_DMAC1
 
-On Tue, May 13, 2014 at 11:09:00AM +0200, Andrzej Hajda wrote:
-> On 05/13/2014 09:51 AM, Thierry Reding wrote:
-> > On Fri, May 09, 2014 at 04:16:40PM +0200, Boris BREZILLON wrote:
-> >> Hello Thierry,
-> >>
-> >> I noticed you're describing each new panel with a new entry in the
-> >> of_platform_match table and a new compatible string.
-> >> I guess you have a good reason to do it this way, because retrieving
-> >> panel description from DT would be pretty easy (see this series ;-)).
-> >>
-> >> Could tell me why you chose this approach ?
-> >=20
-> > The reason is that devicetree mandates that a device be identified using
-> > a compatible value and that compatible value should be as specific as
-> > possible. That compatible value should give the device driver enough
-> > information to know everything it needs (resolution, timings, physical
-> > dimension).
-> >=20
-> > Having all of that data in the device tree is redundant.
-> >=20
->=20
-> Many panels I have encountered have no single timings, they accepts
-> ranges of timings. With 'compatible' approach there is no place to
-> configure timings specific for particular hw configuration, unless you
-> abuse somehow compatible string.
->=20
-> However it seems there are not so many cases the same panel must be used
-> with different timings on different boards, anyway it is a potential issu=
-e.
+I know order doesn't really matter, but all other members are sorted by
+value, so R8A7790_CLK_SYS_DMAC1 should come before
+R8A7790_CLK_SYS_DMAC0.
 
-Right. I think it makes sense, and I've said so in the past, to add
-support for overriding the default timings specified by the driver using
-a display-timings node in DT. But that should be reserved as a means to
-override the timings if that's required on some specific configuration,
-not abused as a means to add support for new panels altogether.
+>                         >;
+>                         clock-output-names =
+>                                 "scifa2", "scifa1", "scifa0", "msiof2", "scifb0",
+> -                               "scifb1", "msiof1", "msiof3", "scifb2";
+> +                               "scifb1", "msiof1", "msiof3", "scifb2", "dmac0", "dmac1";
 
-Note that there's also the possibility to use the drm_crtc_helper_funcs'
-=2Emode_fixup() to adjust a mode's timings if the display hardware doesn't
-support the mode as-is.
+"sys-dmac0", "sys-dmac1" (and order changes, cfr. my comment above),
+to match the documentation?
 
-Thierry
+Gr{oetje,eeting}s,
 
---FX+Db2fp7WJhXKrW
-Content-Type: application/pgp-signature
+                        Geert
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-iQIcBAEBAgAGBQJTcePCAAoJEN0jrNd/PrOhQuMQALQEUYTBHANgi/D/RaReySGd
-JOGKjlFyqYj20Hg9ph/3DKKnzDrrHkGFmiAeS5ZS8OQxh6jOc5zePI2C4Ci+471y
-cQ8pR+8f9666bAjZZ+gAzNjb5gaDg955CdyzNB5dp4yf0H8iot4pphTVuBg9zhsG
-bhN1cjRherNKl5PPA2X8ltyAJTvAxLzpKQv/ZSa0HNaKqg7folIhqrLHizsuM4C9
-4j7OMNaIrNySW2aD7LS47/Os+5pBxamL/3s48bBpSH5fqVEUw0N5NtVXgpAXfRIU
-bfzpOMiHacG771HQF5jqdWMAFgn79vQgrRO3jxX1ter+255iC1n8uhdhCALOM0cG
-AQPczwbHdvv1sBmuskNQbFJr9UqMrjzLQTn5aUWg2qK1dMkDwjZK4yX1vYKKVhDb
-YGSjTojUE8IUvPj3irHn6TbHdygYjUr8y5htzsoQ2LZdHmlmwA83fi2Z7nJ67fzX
-FySQZcyyEswHmK5Nz7zgSDSYafdnCtANhN2w29KoApG0A1XhOznmKx4N1REzAzf5
-hNZ6Yxi8WKsaKmTts5J+/7PFWoPwSZeu7KMOIfgWjOk3kLwvHhwyHaI0H/hldjVd
-hLVtb8mwYpx/mVo8+EuQDv1otsO2ZehwINQV09NGTm22q71JhGHZpXiy/ynIofGV
-LtaDjq/CwMfxH1mHTBj+
-=G4ma
------END PGP SIGNATURE-----
-
---FX+Db2fp7WJhXKrW--
-
---===============0935287043==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0935287043==--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
