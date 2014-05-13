@@ -1,100 +1,71 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2 1/4] of: make of_update_property() usable earlier in the
- boot process
-Date: Tue, 13 May 2014 09:00:02 -0500
-Message-ID: <CAL_JsqLNnLjeo2tM=z5bcn4DJD_5-uFRGkk6wAWnvGZyo9Y7pg@mail.gmail.com>
-References: <1399975839-5311-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1399975839-5311-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-bone-common: Add i2c2 definition
+Date: Tue, 13 May 2014 16:06:02 +0200
+Message-ID: <CABxcv=nq9XvyN0aPOBFDm0UyoaW-Htyy0tyP3YhYaDnDUo3a5w@mail.gmail.com>
+References: <1399686184-1594-1-git-send-email-mranostay@gmail.com>
+	<20140512195050.GB5668@atomide.com>
+	<CAOCHtYiYwx_bEsyqkbUTTAbhBYESzvfBOOYeVuFXPS1dDy0ZKA@mail.gmail.com>
+	<20140512201517.GC5668@atomide.com>
+	<CAOCHtYg6XpF0Gbo4iFqsFvP=QSivQQvCzov8UfxeLXMzrRYEWw@mail.gmail.com>
+	<20140512204213.GD5668@atomide.com>
+	<CAOCHtYgg7jwxswH+mqF3RA7-0RP-nGuft+Ze-GRwu1fbA6+0Bw@mail.gmail.com>
+	<537215D3.70306@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399975839-5311-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <537215D3.70306@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tom Rini <trini@ti.com>
+Cc: Robert Nelson <robertcnelson@gmail.com>, Tony Lindgren <tony@atomide.com>, Matt Ranostay <mranostay@gmail.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux kernel <linux-kernel@vger.kernel.org>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Matt Porter <matt.porter@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 13, 2014 at 5:10 AM, Thomas Petazzoni
-<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Commit 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device
-> nodes kobjects so they show up in sysfs') has turned Device Tree nodes
-> in kobjects and added a sysfs based representation for Device Tree
-> nodes. Since the sysfs logic is only available after the execution of
-> a core_initcall(), the patch took precautions in of_add_property() and
-> of_remove_property() to not do any sysfs related manipulation early in
-> the boot process.
+On Tue, May 13, 2014 at 2:53 PM, Tom Rini <trini@ti.com> wrote:
+> On 05/12/2014 04:57 PM, Robert Nelson wrote:
+>>>> Either case if fine with me.  As who knows when the dtc "overlay" will
+>>>> every truly make it mainline, as the capemgr was the only real kernel
+>>>> user of the i2c/at24 eeprom information.
+>>>
+>>> Sounds like we should keep it disabled though so u-boot can be used
+>>> to toggle it while waiting for the capemgr. That's because the board
+>>> has a header for pins, so it's not exactly limited to just the capes.
+>>>
+>>> Anybody working on enabling/disabling cape dtb configurations in u-boot?
+>>
+>> Well,
+>>
+>> Would Tom even approve of that in mainline u-boot? He didn't want my
+>> "invert" the gpio to enable the usb hub on the older beagle xm A/B..
+>>
+>> http://lists.denx.de/pipermail/u-boot/2014-January/172154.html
+>>
+>> http://lists.denx.de/pipermail/u-boot/2014-January/172274.html
+
+Using fdt set from the bootloader to use the same FDT for similar
+boards (like the example with Beagle xM variants) is kind of trying to
+replicate what we used to do from boards files where it was possible
+to manage a set of boards using the same platform code.
+
+But Device Trees are meant to describe hardware and thus should be
+static, if two board are almost identical but slightly different, then
+are two different hardware where each need its proper FDT that
+describes it.
+
 >
-> However, it forgot to do the same for of_update_property(), which if
-> used early in the boot process (before core_initcalls have been
-> called), tries to call sysfs_remove_bin_file(), and crashes:
-
-It actually crashes or just the warning? It would be good to give the
-crash backtrace.
-
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 0 at /home/thomas/projets/linux-2.6/fs/kernfs/dir.c:1216 kernfs_remove_by_name_ns+0x80/0x88()
-> kernfs: can not remove '(null)', no directory
-> Modules linked in:
-> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.15.0-rc1-00127-g1d7e7b2-dirty #423
-> [<c0014910>] (unwind_backtrace) from [<c00110ec>] (show_stack+0x10/0x14)
-> [<c00110ec>] (show_stack) from [<c04c84b8>] (dump_stack+0x84/0x94)
-> [<c04c84b8>] (dump_stack) from [<c001d8c0>] (warn_slowpath_common+0x6c/0x88)
-> [<c001d8c0>] (warn_slowpath_common) from [<c001d90c>] (warn_slowpath_fmt+0x30/0x40)
-> [<c001d90c>] (warn_slowpath_fmt) from [<c0104468>] (kernfs_remove_by_name_ns+0x80/0x88)
-> [<c0104468>] (kernfs_remove_by_name_ns) from [<c0394d98>] (of_update_property+0xc0/0xf0)
-> [<c0394d98>] (of_update_property) from [<c0647248>] (mvebu_timer_and_clk_init+0xfc/0x194)
-> [<c0647248>] (mvebu_timer_and_clk_init) from [<c0640934>] (start_kernel+0x218/0x350)
-> [<c0640934>] (start_kernel) from [<00008070>] (0x8070)
+> I would think that using the 'fdt' command in U-Boot to add all
+> properties of every cape found on a running system would drive someone
+> to madness quite quickly.  Moving all of Pantelis' work for dynamic
+> device trees from the kernel to N bootloaders (U-Boot, barebox, UEFI,
+> etc) sounds like a step in the wrong direction.
 >
-> To fix this problem, we simply skip the sysfs related calls in
-> of_update_property(), and rely on of_init() to fix up things when it
-> will be called, exactly as is done in of_add_property() and
-> of_remove_property().
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Fixes: 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device nodes kobjects so they show up in sysfs')
 
-Humm, I didn't know about this new tag. This doesn't quite match what
-SubmittingPatches says. It should be 12 digits of commit hash and
-double quotes around the summary.
+Agreed. I think that until the device tree overlay and the cape
+manager find their way into mainline we should treat capes as if they
+were expansion boards attached to a Computer-on-Module. That is, a
+static based board which its own DTS including the BB{B,W} as an dtsi
+and not something that can be added on runtime.
 
-> ---
->  drivers/of/base.c | 5 +++++
->  1 file changed, 5 insertions(+)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index f72d19b..e981f09 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1831,11 +1831,16 @@ int of_update_property(struct device_node *np, struct property *newprop)
->         if (rc)
->                 return rc;
->
-> +       /* At early boot, bail out and defer setup to of_init() */
-> +       if (!of_kset)
-> +               goto skip_sysfs;
-
-I prefer to avoid the goto and do: return found ? 0 : -ENODEV;
-
-Also, this code has changed some in 3.15 rc's, you need to rebase.
-This change needs to go into 3.15. Other platforms could be broken.
-
-Rob
-
-> +
->         /* Update the sysfs attribute */
->         if (oldprop)
->                 sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
->         __of_add_property_sysfs(np, newprop);
->
-> + skip_sysfs:
->         if (!found)
->                 return -ENODEV;
->
 > --
-> 1.9.2
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Tom
+
+Best regards,
+Javier
