@@ -1,39 +1,78 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v3 1/2] cpufreq / OPP: Allow boost frequency to be looked
- up from device tree
-Date: Wed, 14 May 2014 09:31:49 -0500
-Message-ID: <53737E55.9070704@ti.com>
-References: <1400029380-5372-1-git-send-email-thomas.ab@samsung.com>	<1400029380-5372-2-git-send-email-thomas.ab@samsung.com>	<CAKohponnPSRAotJUu+5a9y8j97QF8Jqgc5DA5WQnwGWCnVY-aA@mail.gmail.com>	<CAGo_u6p-uqw82ewDciDEhAt0=Nswfw33-gf8Aa+-6_k3eCcTzw@mail.gmail.com>	<20140514080930.781e0557@amdc2363> <CAKohponG9PNse4cHkvfLfaRouW-jxjToBXUCHyOCgx8-Pc=2Xw@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: tegra: initial add of Colibri T30
+Date: Wed, 14 May 2014 16:32:11 +0200
+Message-ID: <20140514143209.GB8612@ulmo>
+References: <cover.1400001937.git.stefan@agner.ch>
+ <d45ec5351ce8ef03256061bdc4b0ba673bd40c66.1400001937.git.stefan@agner.ch>
+ <53727738.4080901@wwwdotorg.org>
+ <537319CE.7020101@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohponG9PNse4cHkvfLfaRouW-jxjToBXUCHyOCgx8-Pc=2Xw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Lukasz Majewski <l.majewski@samsung.com>
-Cc: Thomas Abraham <ta.omasab@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas P Abraham <thomas.ab@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NMuMz9nt05w80d4+"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537319CE.7020101@ziswiler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, stefan@agner.ch, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2014 01:24 AM, Viresh Kumar wrote:
-> On 14 May 2014 11:39, Lukasz Majewski <l.majewski@samsung.com> wrote:
->> I agree with Nishanth here, that point 1 (as described by Viresh at
->> [*]) is a more scalable approach.
-> 
-> The only reason why I wanted all that to be done at OPP level was to
-> ensure if somebody else also needs it apart from cpufreq, they don't have
-> to duplicate code and find it.. As it is present at a central place..
-> 
-> But if no other code is going to look for that, it may just be fine as is..
-> 
-If we eventually have a need beyond cpufreq (say devfreq) with similar
-instances, then it makes sense to move it out to a generic place.
-Either way, code implementation/duplication is a OS problem - and
-should be looked at independent of the description in dts. If we feel
-the description is valid hardware description (which, personally, I
-do), then lets go to the next discussion point of where to put it -
-generic or cpufreq specific (here, I have no preference), and finally
-decide the implementation as necessary as a result of the description.
 
--- 
-Regards,
-Nishanth Menon
+--NMuMz9nt05w80d4+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, May 14, 2014 at 09:22:54AM +0200, Marcel Ziswiler wrote:
+> On 05/13/2014 09:49 PM, Stephen Warren wrote:
+> >On 05/13/2014 11:27 AM, stefan@agner.ch wrote:
+[...]
+> >>+	panel: panel {
+> >>+		compatible =3D "edt,et057090dhu", "simple-panel";
+> >
+> >The panel-simple driver doesn't seem to know about that EDT panel. How
+> >will it work out the display timings?
+>=20
+> Good question and me and Stefan actually even talked about that yesterday=
+=2E I
+> am actually using KMS right now as follows:
+>=20
+> video=3DHDMI-A-1:1280x720-16@60 video=3DLVDS-1:640x480-16@60'
+>=20
+> So the panel node is purely used to hook up the back light part right now.
+>=20
+> From our point of view for our completely generic module approach where e=
+ach
+> customer potentially hooks up his own display make/model it would be
+> desirable to have some way of defining such timings directly through the
+> device tree.
+
+Every customer design would presumably get its own device tree file, so
+they could easily follow the current conventions and update the
+panel-simple driver with the proper compatible value and display timings
+and then simply make the panel device node compatible with that.
+
+Thierry
+
+--NMuMz9nt05w80d4+
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTc35pAAoJEN0jrNd/PrOhVC4P/0szEjvrRSwwtRVnMyX5ccJe
+zHTS9fTBhAOZlHxafqVIaUPpUGkhmTfm1lf58YIxEvSpTsHEdP7EVbDGZgxxGd0k
+HVY1QMWZtNUCbxvpCMYNVOUivLYYnBv/vkLIhtf+SyyO590YhndC6L4GvskyY0Ov
+K+tUhPyMtICCEnRd9XYNy9hqTHbO1JQJHiNTx1SkER0ykt7ZuEN3xlrQwXaahCda
+2NA+fLBdZlCrHsqyQcq+Gx3ogn6o4C11H0Od6oza+KnKtzuExTEim4OL2c7n0efN
+X2y3GDQ06Xoe4zgJZcSG8CzjkHnQxmiNHqnVIdoCHBQq8CfPGoS+teWM9Xnc866h
+cXcsPgbTRrpbm7EJgv3zWKJAASV2zWmG7eFEQb5X059XCiBbgcD2HIaVLjIW/4Lm
+VUX8wFnUdK61MlB85gYODKCu27tO2ePeIe08r4Os9lf6N0THYX87kTYdJKN0HLoR
+5Bj32sDItpt7vJZHfeHnOnC8y8h9TuhiI9l+uDoJJk+rUA10OtOqa+gDllOzf+X5
+eYl6WsRKoiWxOhqEU8YP7ffoKefsqbhC1TDmLD0Fek+yD2sWmXS4ZBYoU6bndiPg
+L+Q0kXbL5UnarYQOczUEAzNlqBA049d4vLYszUYZAiZjWgqdTCxmSw2t94qwG0v8
+mogdXBfkRflWWVmRcV8Z
+=+bbS
+-----END PGP SIGNATURE-----
+
+--NMuMz9nt05w80d4+--
