@@ -1,63 +1,80 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Wed, 14 May 2014 18:23:13 +0200
-Message-ID: <53739871.9070407@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <20140514141914.446F7C4153D@trevor.secretlab.ca> <53738580.7000902@ahsoftware.de> <CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: Re: [alsa-devel] [PATCH 00/19] Rework OMAP4+ HDMI audio support
+Date: Wed, 14 May 2014 18:25:47 +0200
+Message-ID: <CAGhQ9VzkGDPiQF7TiqiMgZY_oc9dyrW66yGsZR6ei2ejX-EXcw@mail.gmail.com>
+References: <cover.1399884780.git.jsarha@ti.com>
+	<CAGhQ9VzjndCBp+ZHS3XPPvS4ors6u9BfHf4NY_HNYN5ynyQOYQ@mail.gmail.com>
+	<53733F2E.4030803@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53733F2E.4030803@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, broonie@kernel.org, peter.ujfalusi@ti.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Benoit Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 14.05.2014 18:05, schrieb Grant Likely:
-> On Wed, May 14, 2014 at 4:02 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
->> Am 14.05.2014 16:19, schrieb Grant Likely:
+On 14 May 2014 12:02, Jyri Sarha <jsarha@ti.com> wrote:
+> On 05/13/2014 12:13 AM, Joachim Eastwood wrote:
 >>
->>
->>> Rather than a dtb schema change, for the most common properties (irqs,
->>> clocks, gpios), we could extract dependencies at boot time. I don't like
->>> the idea of adding a separate depends-on property because it is very
->>> easy to get it out of sync with the actual binding data (dtc is not the
->>> only tool that manipulates .dtbs. Firmware will fiddle with it too).
->>
->>
->> Then that stuff has to fiddle correct. Sorry, but trying to solve all
->> problems right from the beginning just leads to endless talks with no end
->> and nothing will happen at all because nobody aggrees how to start.
+>> On 12 May 2014 11:12, Jyri Sarha <jsarha@ti.com> wrote:
 >
-> I appreciate the problem that you're trying to solve and why you're
-> using the dtc approach. My job is to poke at the solution and make
-> sure it is going to be reliable. Making sure all users know how to
-> fiddle with the new property correctly is not a trivial problem,
-> especially when it is firmware that will not necessarily be updated.
+> ...
+>
+>>
+>> hey, this worked straight away :)
+>>
+>> But there seems to be something wrong with the channel mapping.
+>>
+>> For stereo (speaker-test -c 2) the mapping is correct.
+>>
+>> But for -c 4 and -c 8 it gets weird:
+>> speaker-test -c 4 -s X # where X is 1-4
+>> 1: Front Left is Rear Left
+>> 2: Front Right is Rear Right
+>> 3: Rear Right is Front Right
+>> 4: Rear Left is Front Left
+>>
+>> speaker-test -c 8 -s X # where X is 1-8
+>> 1: Front Left is Rear Left
+>> 2: Center is Rear Left
+>> 3: Front Right is Rear Right
+>> 4: Side Right is Front Right
+>> 5: Rear Right is silent
+>> 6: Rear Left is Center
+>> 7: Side Left is Front Left
+>> 8: LFE - Rear Right
+>>
+>> I think you need to check what channel order ALSA expects. I believe
+>> speaker-test does the right thing on my HTPC normally connected to my
+>> receiver.
+>>
+>
+> I checked the implementation and there was indeed something weird there, but
+> the implementation can not explain the FL and FR channels jumping around. FL
+> and FL should always be the first two channels in all configurations and the
+> implementation does not touch them.
+>
+> The implementation uses 8ch HDMI setup for anything above 2ch with "Audio
+> InfoFrame Data Byte 4" set to 0x13. According to CEA-861 specs this means
+> following channel order: FL, FR, LFE, FC, RL, RR, RLC, RRC
+>
+> This is a closest match to ALSA 8ch mapping (according to
+> sound/core/pcm_lib.c) which is: FL, FR, FC, LFE, RL, RR, SL, SR
 
-The answer is just that they don't have to use this feature.
+hm, okey. I haven't look at the code but it do seem strange. But with
+speaker-test -c 4 the front and back are surely swapped here.
 
-It is more meant as a long-term solution to fix for the problem of 
-increasing hard-coded workarounds which all are trying to fix the 
-initialization order of drivers. Hardware has become a lot more 
-complicated than it was in the good old days, and I think the time is 
-right trying to adopt the init-system to this new century instead of 
-still adding workarounds here and there.
+I'll do some more testing and also check with my HTPC. btw, I only
+have a 5.1 setup over here so I can't test all the discrete channels.
 
-> I'm not saying flat out 'no' here, but before I merge anything, I have
-> to be reasonably certain that the feature is not going to represent a
-> maintenance nightmare over the long term.
+> Current implementation has FLE and FC channels correctly swapped, but it
+> shifts them to last two channels and RL, RR, SL, SR are shifted down to fill
+> the place. This is all wrong and I'll try to come up with a fix for that.
+> Unfortunately I can not test anything beyond 2 ch myself so I would need
+> someone to volunteer to test my patch.
 
-The maintenance nightmare is already present in form of all the 
-workarounds which are trying to fix the initialzation order necessary 
-for modern hardware.
+I have the dev kit setup up over here so I can test your patches.
 
-Regards,
-
-Alexander
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+regards
+Joachim Eastwood
