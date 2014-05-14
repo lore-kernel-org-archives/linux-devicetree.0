@@ -1,65 +1,63 @@
-From: Stefan Agner <stefan@agner.ch>
-Subject: Re: [PATCH 2/2] ARM: tegra: initial add of Colibri T30
-Date: Wed, 14 May 2014 18:16:16 +0200
-Message-ID: <107aeb48982529858267cb85c792b35e@agner.ch>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Wed, 14 May 2014 18:23:13 +0200
+Message-ID: <53739871.9070407@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <20140514141914.446F7C4153D@trevor.secretlab.ca> <53738580.7000902@ahsoftware.de> <CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: thierry.reding@gmail.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, marcel@ziswiler.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 2014-05-13 21:49, schrieb Stephen Warren:
-> On 05/13/2014 11:27 AM, stefan@agner.ch wrote:
->> +	/* SPI1: Colibri SSP */
->> +	spi@7000d400 {
->> +		status = "okay";
->> +		spi-max-frequency = <25000000>;
->> +		can0: can@0 {
->> +			compatible = "microchip,mcp2515";
->> +			reg = <0>;
->> +			clocks = <&clk16m>;
->> +			interrupt-parent = <&gpio>;
->> +			interrupts = <TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;
->> +			spi-max-frequency = <10000000>;
-> 
-> So this chip doesn't get confused by a faster clock frequency when its
-> chip-select line isn't asserted? I would have expected spi-max-frequency
-> for the bus to be the minimum value that any device on the bus would
-> tolerate.
+Am 14.05.2014 18:05, schrieb Grant Likely:
+> On Wed, May 14, 2014 at 4:02 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+>> Am 14.05.2014 16:19, schrieb Grant Likely:
+>>
+>>
+>>> Rather than a dtb schema change, for the most common properties (irqs,
+>>> clocks, gpios), we could extract dependencies at boot time. I don't like
+>>> the idea of adding a separate depends-on property because it is very
+>>> easy to get it out of sync with the actual binding data (dtc is not the
+>>> only tool that manipulates .dtbs. Firmware will fiddle with it too).
+>>
+>>
+>> Then that stuff has to fiddle correct. Sorry, but trying to solve all
+>> problems right from the beginning just leads to endless talks with no end
+>> and nothing will happen at all because nobody aggrees how to start.
+>
+> I appreciate the problem that you're trying to solve and why you're
+> using the dtc approach. My job is to poke at the solution and make
+> sure it is going to be reliable. Making sure all users know how to
+> fiddle with the new property correctly is not a trivial problem,
+> especially when it is firmware that will not necessarily be updated.
 
-And from the other mail:
-> I'm not convinced about this. The clock signal still reaches all the
-> chips, and hence still reaches some logic inside those chips. If the
-> setup/hold timings aren't met (for internal parts of the chip's SPI
-> state machine), then presumably all bets are off re: performance of the
-> chip, irrespective of whether the CS line happens to gate how much of
-> the chip actually does anything.
+The answer is just that they don't have to use this feature.
 
-SPI is by default not a multi-master Bus, hence the slaves only have to
-listen when the CS is asserted. I talked with our hardware expert, and
-he told me that he would expect that the whole input stage (input
-driver) is in reset/off logic when the CS line is not asserted. IMHO,
-this makes sense, this would also save power. At least he would expect
-that the communication state machine is resetted on CS assertion, so
-that it doesn't matter what happend before. 
+It is more meant as a long-term solution to fix for the problem of 
+increasing hard-coded workarounds which all are trying to fix the 
+initialization order of drivers. Hardware has become a lot more 
+complicated than it was in the good old days, and I think the time is 
+right trying to adopt the init-system to this new century instead of 
+still adding workarounds here and there.
 
-Wikipedia also states something similar. 
+> I'm not saying flat out 'no' here, but before I merge anything, I have
+> to be reasonably certain that the feature is not going to represent a
+> maintenance nightmare over the long term.
 
-But, since SPI is no real standard, devices which work differently and
-claim to communicate through SPI could exist :-)
+The maintenance nightmare is already present in form of all the 
+workarounds which are trying to fix the initialzation order necessary 
+for modern hardware.
 
-I have had not seen issues with this device when using faster clocks for
-other devices on the same bus.
+Regards,
 
->> +	panel: panel {
->> +		compatible = "edt,et057090dhu", "simple-panel";
-> 
-> The panel-simple driver doesn't seem to know about that EDT panel. How
-> will it work out the display timings?
+Alexander
 
-I will send a patch adding our two default panels.
-
-Will send a second revision soon.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
