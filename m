@@ -1,69 +1,37 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for
- configuring the iATU
-Date: Wed, 14 May 2014 11:14:45 +0530
-Message-ID: <537302CD.7000701@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <53721D7F.9070200@ti.com> <202752041.rgamje4etj@wuerfel> <4528185.oZbgyuuFKX@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4528185.oZbgyuuFKX@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH] documentation/iommu: Add note on existing DT binding status
+Date: Wed, 14 May 2014 11:23:33 +0530
+Message-ID: <1400046813-15248-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org
+Cc: joro@8bytes.org, arnd@arndb.de, t.figa@samsung.com, pullip.cho@samsung.com, shaik.samsung@gmail.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-hi Arnd,
+The current dt binding for Exynos System MMU can be changed, if found
+incompatible with the support for "Generic IOMMU Binding".
+This patch adds a note to the binding documentation stating the same.
 
-On Tuesday 13 May 2014 07:04 PM, Arnd Bergmann wrote:
-> On Tuesday 13 May 2014 15:27:46 Arnd Bergmann wrote:
->> On Tuesday 13 May 2014 18:56:23 Kishon Vijay Abraham I wrote:
->>>> If you have a case where the outbound translation is a 256MB (i.e. 28bit)
->>>> section of the CPU address space, that could be represented as
->>>>
->>>>       ranges = <0x82000000 0 0  0xb0000000  0 0x10000000>;
->>>>
->>>> or 
->>>>
->>>>       ranges = <0x82000000 0 0xb0000000  0xb0000000  0 0x10000000>;
->>>>
->>>> depending on whether you want the BARs to be programmed using a low
->>>> address 0x0-0x0fffffff or an address matching the window
->>>> 0xb0000000-0xbfffffff.
->>>
->>> The problem is, for configuring the window starting at 0xb0000000, the ATU
->>> should be programmed 0x0000000 (the cpu address for it will be 0xb0000000 though).
->>>
->>
->> Then use the first of the two?
->>
-> 
-> To clarify: using <0x82000000 0 0  0xb0000000  0 0x10000000> will give you 
-> a mem_offset of 0xb0000000, which should work just fine for this case.
-> 
-> What I don't understand is why the ATU cares about whether the outbound
-> address is 0x0000000 or 0xb0000000 if it just decodes the lower 28 bit
-> anyway. Did you mean that we have to program the BARs using low addresses
-> regardless of what is programmed in the ATU? That would make more sense,
-> and it also matches what I suggested.
+Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+---
+ .../devicetree/bindings/iommu/samsung,sysmmu.txt   |    5 +++++
+ 1 file changed, 5 insertions(+)
 
-No, It's not like it decodes only the lower 28bits. The BARs is programmed with
-32 bit value.
-
-My pcie dt node has
- ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* CONFIG */
-           0x81000000 0 0          0x20003000 0 0x00010000  /* IO */
-           0x82000000 0 0x20013000 0x20013000 0 0xffed000>; /* MEM */
-
-Consider MEM address space..
-
-Here both PCI address and CPU address is 0x20013000. So when there is a write
-to cpu addr 0x20013000 [writel(virt_addr(0x20013000)], we want it to be
-translated to PCI addr 0x20013000. So in 'ATU', we would expect *base* to be
-programmed to *0x20013000* and target to be programmed to *0x20013000*. But
-that's not the case for DRA7xx. For DRA7xx *base* should be programmed to
-*0x0013000* and target should be programmed to *0x20013000*.
-
-Thanks
-Kishon
+diff --git a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+index 15b2a2b..6fa4c73 100644
+--- a/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
++++ b/Documentation/devicetree/bindings/iommu/samsung,sysmmu.txt
+@@ -27,6 +27,11 @@ The drivers must consider how to handle those System MMUs. One of the idea is
+ to implement child devices or sub-devices which are the client devices of the
+ System MMU.
+ 
++Note:
++The current DT binding for the Exynos System MMU is incomplete.
++The following properties can be removed or changed, if found incompatible with
++the "Generic IOMMU Binding" support for attaching devices to the IOMMU.
++
+ Required properties:
+ - compatible: Should be "samsung,exynos-sysmmu"
+ - reg: A tuple of base address and size of System MMU registers.
+-- 
+1.7.9.5
