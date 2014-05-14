@@ -1,88 +1,50 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
-Date: Wed, 14 May 2014 15:02:34 +0200
-Message-ID: <16480004.aaDhzlOZgi@wuerfel>
-References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <1400060942-10588-2-git-send-email-antoine.tenart@free-electrons.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Wed, 14 May 2014 15:03:35 +0200
+Message-ID: <CAMuHMdXfNXB7s71+joCpkZrzPCJQFyNv3+bj+=usORRScZsHZQ@mail.gmail.com>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1400060942-10588-2-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140514100856.5198DC4153D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 May 2014 11:48:57 Antoine T=E9nart wrote:
-> +static int phy_berlin_sata_power_on(struct phy *phy)
-> +{
-> +       struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
-> +       struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc=
-);
-> +       u32 regval;
-> +
-> +       spin_lock(&priv->lock);
-> +
-> +       /* Power up PHY */
-> +       writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
-> +       regval =3D readl(priv->base + HOST_VSA_DATA);
-> +       regval &=3D ~(desc->val);
-> +       writel(regval, priv->base + HOST_VSA_DATA);
-> +
-> +       /* Configure MBus */
-> +       writel(MBUS_SIZE_CONTROL, priv->base + HOST_VSA_ADDR);
-> +       regval =3D readl(priv->base + HOST_VSA_DATA);
-> +       regval |=3D MBUS_WRITE_REQUEST_SIZE_128 | MBUS_READ_REQUEST_S=
-IZE_128;
-> +       writel(regval, priv->base + HOST_VSA_DATA);
-> +
-> +       spin_unlock(&priv->lock);
-> +
-> +       return 0;
-> +}
-> +
-> +static int phy_berlin_sata_power_off(struct phy *phy)
-> +{
-> +       struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
-> +       struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc=
-);
-> +       u32 regval;
-> +
-> +       spin_lock(&priv->lock);
-> +
-> +       /* Power down PHY */
-> +       writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
-> +       regval =3D readl(priv->base + HOST_VSA_DATA);
-> +       regval |=3D desc->val;
-> +       writel(regval, priv->base + HOST_VSA_DATA);
-> +
-> +       spin_unlock(&priv->lock);
-> +
-> +       return 0;
+On Wed, May 14, 2014 at 12:08 PM, Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> +config OF_OVERLAY
+>> +     bool "OF overlay support"
+>> +     depends on OF
+>> +     select OF_DYNAMIC
+>> +     select OF_DEVICE
+>> +     select OF_RESOLVE
+>> +     help
+>> +       OpenFirmware overlay support. Allows you to modify on runtime the
+>> +       live tree using overlays.
+>
+> Should not be a user-visable option. Drivers using it should select it
 
-I don't get this part: you have a reference to the phy here,
-but then you go poking the phy registers from the SATA driver
-rather than calling a PHY API function.
+Why not? It's up to the (final) user to use it, or not.
 
+> or otherwise cause it to be enabled.
 
-> +                * By default the PHY node is used to request and mat=
-ch a PHY.
-> +                * We describe one PHY per sub-node here. Use the rig=
-ht node.
-> +                */
-> +               phy->dev.of_node =3D child;
-> +
-> +               priv->phys[phy_id].phy =3D phy;
-> +               priv->phys[phy_id].val =3D desc[phy_id].val;
-> +               priv->phys[phy_id].index =3D phy_id;
-> +               phy_set_drvdata(phy, &priv->phys[phy_id]);
+Why should this be driver-specific? Shouldn't this just work with all drivers?
 
-And here, you set a driver specific value into a structure used by the
-PHY.
+Gr{oetje,eeting}s,
 
-Both of these are layering violations. You should either use the PHY
-interfaces correctly so the SATA driver doesn't have to know about the
-specific, or not use a PHY device node at all and do everything in
-the SATA front-end.
+                        Geert
 
-	Arnd
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
