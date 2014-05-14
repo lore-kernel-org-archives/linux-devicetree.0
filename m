@@ -1,66 +1,122 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAzLzNdIG1lZGlhOiBteDItZW1tYXBycDogQWRkIGRldmlj?=
- =?UTF-8?B?ZXRyZWUgc3VwcG9ydA==?=
-Date: Wed, 14 May 2014 20:59:54 +0400
-Message-ID: <1400086794.204219517@f388.i.mail.ru>
-References: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
- <1400001829.645600850@f332.i.mail.ru>
- <53734A1F.7080905@samsung.com>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53734A1F.7080905-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U3lsd2VzdGVyIE5hd3JvY2tp?= <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?TWF1cm8gQ2FydmFsaG8gQ2hlaGFi?= <m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v4 0/6] arm: Add basic support for Mediatek Cortex-A7 SoCs
+Date: Wed, 14 May 2014 19:12:53 +0200
+Message-ID: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-V2VkLCAxNCBNYXkgMjAxNCAxMjo0OTowMyArMDIwMCDQvtGCIFN5bHdlc3RlciBOYXdyb2NraSA8
-cy5uYXdyb2NraUBzYW1zdW5nLmNvbT46Cj4gT24gMTMvMDUvMTQgMTk6MjMsIEFsZXhhbmRlciBT
-aGl5YW4gd3JvdGU6Cj4gPiBUdWUsIDEzIE1heSAyMDE0IDE5OjA5OjMwICswMjAwINC+0YIgU3ls
-d2VzdGVyIE5hd3JvY2tpIDxzLm5hd3JvY2tpQHNhbXN1bmcuY29tPjoKPiA+PiA+IEhpLAo+ID4+
-ID4gCj4gPj4gPiBPbiAwMi8wNS8xNCAwOToxOCwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+
-Pj4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBkZXZpY2V0cmVlIHN1cHBvcnQgZm9yIHRoZSBGcmVlc2Nh
-bGUgZW5oYW5jZWQgTXVsdGltZWRpYQo+ID4+PiA+ID4gQWNjZWxlcmF0b3IgKGVNTUEpIHZpZGVv
-IFByZS1wcm9jZXNzb3IgKFByUCkuCj4gPj4+ID4gPiAKPiA+Pj4gPiA+IFNpZ25lZC1vZmYtYnk6
-IEFsZXhhbmRlciBTaGl5YW4gPHNoY193b3JrQG1haWwucnU+Cj4gPj4+ID4gPiAtLS0KPiA+Pj4g
-PiA+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9mc2wtaW14LWVtbWFwcnAudHh0ICAg
-ICB8IDE5ICsrKysrKysrKysrKysrKysrKysKPiA+Pj4gPiA+ICBkcml2ZXJzL21lZGlhL3BsYXRm
-b3JtL214Ml9lbW1hcHJwLmMgICAgICAgICAgICAgICAgICB8ICA4ICsrKysrKysrCj4gPj4+ID4g
-PiAgMiBmaWxlcyBjaGFuZ2VkLCAyNyBpbnNlcnRpb25zKCspCj4gPj4+ID4gPiAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9mc2wtaW14
-LWVtbWFwcnAudHh0Cj4gPj4+ID4gPiAKPiA+Pj4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvZnNsLWlteC1lbW1hcHJwLnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9mc2wtaW14LWVtbWFwcnAudHh0Cj4g
-Pj4+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4+PiA+ID4gaW5kZXggMDAwMDAwMC4uOWU4
-MjM4Zgo+ID4+PiA+ID4gLS0tIC9kZXYvbnVsbAo+ID4+PiA+ID4gKysrIGIvRG9jdW1lbnRhdGlv
-bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2ZzbC1pbXgtZW1tYXBycC50eHQKPiA+Pj4gPiA+
-IEBAIC0wLDAgKzEsMTkgQEAKPiA+Pj4gPiA+ICsqIEZyZWVzY2FsZSBlbmhhbmNlZCBNdWx0aW1l
-ZGlhIEFjY2VsZXJhdG9yIChlTU1BKSB2aWRlbyBQcmUtcHJvY2Vzc29yIChQclApCj4gPj4+ID4g
-PiArICBmb3IgaS5NWC4KPiA+Pj4gPiA+ICsKPiA+Pj4gPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVz
-Ogo+ID4+PiA+ID4gKy0gY29tcGF0aWJsZSA6IFNoYWxsIGNvbnRhaW4gImZzbCxpbXgyMS1lbW1h
-cHJwIi4KPiA+Pj4gPiA+ICstIHJlZyAgICAgICAgOiBPZmZzZXQgYW5kIGxlbmd0aCBvZiB0aGUg
-cmVnaXN0ZXIgc2V0IGZvciB0aGUgZGV2aWNlLgo+ID4+PiA+ID4gKy0gaW50ZXJydXB0cyA6IFNo
-b3VsZCBjb250YWluIGVNTUEgUHJQIGludGVycnVwdCBudW1iZXIuCj4gPj4+ID4gPiArLSBjbG9j
-a3MgICAgIDogU2hvdWxkIGNvbnRhaW4gdGhlIGFoYiBhbmQgaXBnIGNsb2NrcywgaW4gdGhlIG9y
-ZGVyCj4gPj4+ID4gPiArICAgICAgICAgICAgICAgZGV0ZXJtaW5lZCBieSB0aGUgY2xvY2stbmFt
-ZXMgcHJvcGVydHkuCj4gPj4+ID4gPiArLSBjbG9jay1uYW1lczogU2hvdWxkIGJlICJhaGIiLCAi
-aXBnIi4KPiA+Pj4gPiA+ICsKPiA+Pj4gPiA+ICtFeGFtcGxlOgo+ID4+PiA+ID4gKwllbW1hcHJw
-OiBlbW1hcHJwQDEwMDI2NDAwIHsKPiA+Pj4gPiA+ICsJCWNvbXBhdGlibGUgPSAiZnNsLGlteDI3
-LWVtbWFwcnAiLCAiZnNsLGlteDIxLWVtbWFwcnAiOwo+ID4+ID4gCj4gPj4gPiBJcyAiZnNsLGlt
-eDI3LWVtbWFwcnAiIGNvbXBhdGlibGUgZG9jdW1lbnRlZCBzb21ld2hlcmUgPwo+ID4KPiA+IFRo
-ZSBvdmVyYWxsIHN0cnVjdHVyZSBvZiB0aGUgZU1NQSBtb2R1bGUgaXMgc2xpZ2h0bHkgZGlmZmVy
-ZW50Lgo+ID4gQXMgZm9yIHRoZSBwYXJ0IG9mIHRoZSBQclAsIGFjY29yZGluZyB0byB0aGUgZGF0
-YXNoZWV0IHRoZXkgYXJlIGNvbXBhdGlibGUuCj4gCj4gVGhlbiBjYW4gd2UgcGxlYXNlIGhhdmUg
-YWxsIHRoZSB2YWxpZCBjb21wYXRpYmxlIHN0cmluZ3MgbGlzdGVkIGF0IHRoZQo+ICdjb21wYXRp
-YmxlJyBwcm9wZXJ0eSdzIGRlc2NyaXB0aW9uIGFib3ZlID8gSSB0aGluayBpdCBpcyB1c2VmdWwg
-dG8gaGF2ZQo+IGFuIGluZGljYXRpb24gdG8gd2hpY2ggU29DIGVhY2ggb2YgdGhlbSBhcHBseSBp
-biBkb2N1bWVudGF0aW9uIG9mIHRoZQo+IGJpbmRpbmcuCgpUcmFkaXRpb25hbGx5LCBpLk1YIGRy
-aXZlcnMgdXNlcyB5b3VuZ2VzdCBjaGlwIGZvciBjb21wYXRpYmlsaXR5IHN0cmluZy4KVGhlIGJl
-c3QgZXhhbXBsZSBvZiB0aGlzOiBkcml2ZXJzL2J1cy9pbXgtd2VpbS5jCgotLS0KCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Fourth round for the Mediatek basic support patches.
+
+I added the clock-names for the timer input clocks, although I don't use the
+name to retrive the clock from the DT. I found this behaviour in other drivers
+like the arm,sp804.
+
+In the DTSI I changed the label of the clocks to reflect the name in the SoC
+but left the node name as dummy13m and dummy32k to reflect that up to now, 
+the clocks are not integrated in the common clock framework.
+
+I kept the minimal machine file, for the reasons Maxime mentioned [1].
+
+[1] http://article.gmane.org/gmane.linux.documentation/23650
+
+---
+This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
+Support is quite basic, as the only component working up to now are the
+timers.
+
+The patch series is build against torvalds/master tree.
+
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+Changes for v4:
+1. Clocksource timer
+- use cpu_possible_mask
+
+2. Timer DT bindings
+- Delete comments about the frequency of the clocks
+- Add clock-names for the input clocks
+
+3. Basic SoC support
+- add clock-names for the timer
+- rename the label of the clocks nodes
+
+Changes for v3:
+1. Clocksource timer
+- Set cpu_mask_all and irq in clock_event_device
+- Use device private structure for driver specific values
+
+2. Timer DT bindings
+- Define order of the clock phandles
+- Fix typos
+
+3. Basic SoC support
+- DTS: set gic to a15-gic
+- DTS: order by physical address
+- Remove call to dt_init function
+
+
+Changes for v2:
+1. Clocksource timer
+- Delete unused parts for sched_clock_source
+- Use irq_request instead of setup_irq
+- Remove unused SMP parts
+- Fix some style issues
+- use of_address_to resource and request_mem_region
+- delete use of named clock
+- select CLKSRC_MMIO in driver Kconfig
+
+2. DT bindings
+- delete named clock bindings
+
+3. Basic SoC support
+- Clean-up Kconfig
+- Add documentation of the SoC compatible property 
+- DTS: rename SoC file to mt6589.dts
+- DTS: Delete not present cache controller
+- DTS: Add missing GICv2 properties
+- DTS: Change clock names
+- DTS: Add Aquaris5 board
+
+4. Add earlyprintk
+- patch droped until serial driver is available
+
+5. Add support for Aquaris5 mobile phone
+
+---
+
+Matthias Brugger (6):
+  clocksource: Add support for the Mediatek SoCs
+  dt-bindings: add mtk-timer bindings
+  vendor-prefixes: add prefix for Mediaktek Inc.
+  arm: add basic support for Mediatek MT6589 boards
+  dt-bindings: add documentation for Mediatek SoC
+  arm: mediatek: add dts for Aquaris5 mobile phone
+
+ .../devicetree/bindings/arm/mediatek-mt65xx.txt    |   8 +
+ .../bindings/timer/mediatek,mtk-timer.txt          |  18 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |  25 ++
+ arch/arm/boot/dts/mt6589.dtsi                      |  94 ++++++++
+ arch/arm/mach-mediatek/Kconfig                     |   6 +
+ arch/arm/mach-mediatek/Makefile                    |   1 +
+ arch/arm/mach-mediatek/mediatek.c                  |  32 +++
+ drivers/clocksource/Kconfig                        |   4 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/mtk_timer.c                    | 263 +++++++++++++++++++++
+ 13 files changed, 456 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+ create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
+ create mode 100644 arch/arm/boot/dts/mt6589.dtsi
+ create mode 100644 arch/arm/mach-mediatek/Kconfig
+ create mode 100644 arch/arm/mach-mediatek/Makefile
+ create mode 100644 arch/arm/mach-mediatek/mediatek.c
+ create mode 100644 drivers/clocksource/mtk_timer.c
+
+-- 
+1.8.1.2
