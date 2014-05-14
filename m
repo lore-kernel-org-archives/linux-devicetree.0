@@ -1,46 +1,52 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [patch] usb: phy: msm: devm_ioremap() doesn't return ERR_PTRs
-Date: Wed, 14 May 2014 17:24:52 +0400
-Message-ID: <53736EA4.8040203@cogentembedded.com>
-References: <20140514125524.GB14571@mwanda>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <kernel-janitors-owner@vger.kernel.org>
-In-Reply-To: <20140514125524.GB14571@mwanda>
-Sender: kernel-janitors-owner@vger.kernel.org
-To: Dan Carpenter <dan.carpenter@oracle.com>, Felipe Balbi <balbi@ti.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
+From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v2 00/10] ARM: STi: Add Clock driver support STiH415 & STiH416
+Date: Wed, 14 May 2014 15:24:08 +0200
+Message-ID: <1400073858-28912-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Changes in v2:
+ - move stih415-clks.h & stih416-clks.h to include/dt-bindings/clock/
+ - add clk_ignore_unused to bootargs. Interconnect clocks are not yet
+   managed at the init, then we have to start the kernel with 
+   clk_ignore_unused.
 
-On 14-05-2014 16:55, Dan Carpenter wrote:
+The goal of this series is to add DT definition for STiH415 
+and STiH416 SoCs on B2000 and B2020 boards.
 
-> devm_ioremap() returns a NULL on error so the IS_ERR() check needs to be
-> updated.
+Gabriel Fernandez (10):
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
+  ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+    fixed clocks
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
+  ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+    fixed clocks
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
+  ARM: STi: DT: STiH41x Add clk_ignore_unused to bootargs
 
-> Fixes: 6b99c68ec1f9 ('usb: phy: msm: Migrate to Managed Device Resource allocation')
-> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+ arch/arm/boot/dts/stih415-clock.dtsi     | 517 +++++++++++++++++++++-
+ arch/arm/boot/dts/stih415.dtsi           |  10 +-
+ arch/arm/boot/dts/stih416-clock.dtsi     | 732 ++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/stih416.dtsi           |  10 +-
+ arch/arm/boot/dts/stih41x-b2000.dtsi     |   2 +-
+ arch/arm/boot/dts/stih41x-b2020.dtsi     |   2 +-
+ include/dt-bindings/clock/stih415-clks.h |  15 +
+ include/dt-bindings/clock/stih416-clks.h |  15 +
+ 8 files changed, 1258 insertions(+), 45 deletions(-)
+ create mode 100644 include/dt-bindings/clock/stih415-clks.h
+ create mode 100644 include/dt-bindings/clock/stih416-clks.h
 
-> diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
-> index c522c4f..bd32257 100644
-> --- a/drivers/usb/phy/phy-msm-usb.c
-> +++ b/drivers/usb/phy/phy-msm-usb.c
-> @@ -1587,8 +1587,8 @@ static int msm_otg_probe(struct platform_device *pdev)
->
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-- 
+1.9.1
 
-    Hm, 'res' can be NULL too, why this isn't checked?
-
->   	motg->regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
-> -	if (IS_ERR(motg->regs))
-> -		return PTR_ERR(motg->regs);
-> +	if (!motg->regs)
-> +		return -ENOMEM;
->
->   	/*
->   	 * NOTE: The PHYs can be multiplexed between the chipidea controller
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
