@@ -1,66 +1,46 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 11/17] ARM: dts: dra7xx-clocks: Add missing 32khz clocks
- used for PHY
-Date: Wed, 14 May 2014 16:23:19 +0300
-Message-ID: <53736E47.4070402@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-12-git-send-email-kishon@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [patch] usb: phy: msm: devm_ioremap() doesn't return ERR_PTRs
+Date: Wed, 14 May 2014 17:24:52 +0400
+Message-ID: <53736EA4.8040203@cogentembedded.com>
+References: <20140514125524.GB14571@mwanda>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399383244-14556-12-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: balajitk-l0cyMroinI0@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <kernel-janitors-owner@vger.kernel.org>
+In-Reply-To: <20140514125524.GB14571@mwanda>
+Sender: kernel-janitors-owner@vger.kernel.org
+To: Dan Carpenter <dan.carpenter@oracle.com>, Felipe Balbi <balbi@ti.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hello.
 
+On 14-05-2014 16:55, Dan Carpenter wrote:
 
-On 05/06/2014 04:33 PM, Kishon Vijay Abraham I wrote:
-> Added missing 32khz clock used by PCIe PHY.
-> The documention for this node can be found @ ../bindings/clock/ti/gate.txt.
+> devm_ioremap() returns a NULL on error so the IS_ERR() check needs to be
+> updated.
 
-Typo in $subject
-s/clocks/clock
+> Fixes: 6b99c68ec1f9 ('usb: phy: msm: Migrate to Managed Device Resource allocation')
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
---
-cheers,
--roger
+> diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+> index c522c4f..bd32257 100644
+> --- a/drivers/usb/phy/phy-msm-usb.c
+> +++ b/drivers/usb/phy/phy-msm-usb.c
+> @@ -1587,8 +1587,8 @@ static int msm_otg_probe(struct platform_device *pdev)
+>
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 
-> 
-> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> Cc: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
-> Cc: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-> Cc: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/boot/dts/dra7xx-clocks.dtsi |    8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> index 44993ec..e1bd052 100644
-> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-> @@ -1165,6 +1165,14 @@
->  		reg = <0x021c>, <0x0220>;
->  	};
->  
-> +	optfclk_pciephy_32khz: optfclk_pciephy_32khz@4a0093b0 {
-> +		compatible = "ti,gate-clock";
-> +		clocks = <&sys_32k_ck>;
-> +		#clock-cells = <0>;
-> +		reg = <0x13b0>;
-> +		ti,bit-shift = <8>;
-> +	};
-> +
->  	optfclk_pciephy_div: optfclk_pciephy_div@4a00821c {
->  		compatible = "ti,divider-clock";
->  		clocks = <&apll_pcie_ck>;
-> 
+    Hm, 'res' can be NULL too, why this isn't checked?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   	motg->regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+> -	if (IS_ERR(motg->regs))
+> -		return PTR_ERR(motg->regs);
+> +	if (!motg->regs)
+> +		return -ENOMEM;
+>
+>   	/*
+>   	 * NOTE: The PHYs can be multiplexed between the chipidea controller
+
+WBR, Sergei
+
