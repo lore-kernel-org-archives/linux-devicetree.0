@@ -1,93 +1,59 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v4 3/5] ARM: dts: enable hdmi for exynos5420 based peach-pit
- board
-Date: Wed, 14 May 2014 08:16:00 +0530
-Message-ID: <1400035562-16832-4-git-send-email-rahul.sharma@samsung.com>
-References: <1400035562-16832-1-git-send-email-rahul.sharma@samsung.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: Re: [PATCH v3 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
+Date: Wed, 14 May 2014 08:44:35 +0530
+Message-ID: <5372DF9B.4000700@linaro.org>
+References: <1399522592-23618-1-git-send-email-sachin.kamat@linaro.org>	 <536BAE39.70504@samsung.com> <034b01cf6b2c$5b5d06b0$12171410$@samsung.com>	 <536C5E40.90405@gmail.com> <029b01cf6e59$35a452e0$a0ecf8a0$@samsung.com> <1399975674.24871.19.camel@x220>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1400035562-16832-1-git-send-email-rahul.sharma@samsung.com>
+In-Reply-To: <1399975674.24871.19.camel@x220>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+To: Paul Bolle <pebolle@tiscali.nl>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, arnd@arndb.de, heiko@sntech.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rahul Sharma <Rahul.Sharma@samsung.com>
+On 05/13/2014 03:37 PM, Paul Bolle wrote:
+> Kukjin,
+> 
+> On Tue, 2014-05-13 at 12:12 +0900, Kukjin Kim wrote:
+>> Tomasz Figa wrote:
+>>> You mean s/sram/sysram/ in compatible strings of Exynos-specific
+>>> reserved areas? If yes, I'm fine, it might be even better. Just remember
+>>> to update documentation in patch 2/2 as well.
+>>>
+>> Done. If any problems in my tree, please let me know.
+> 
+> It seems this one just hit linux-next (in next-20140513) as "ARM:
+> EXYNOS: Map SYSRAM through generic DT bindings". Its commit now contains
+> this hunk:
+>     --- a/arch/arm/Kconfig
+>     +++ b/arch/arm/Kconfig
+>     @@ -843,6 +843,7 @@ config ARCH_EXYNOS
+>             select HAVE_S3C_RTC if RTC_CLASS
+>             select NEED_MACH_MEMORY_H
+>             select SPARSE_IRQ
+>     +       select SYSRAM
+>             select USE_OF
+>             help
+>               Support for SAMSUNG's EXYNOS SoCs (EXYNOS4/5)
+> 
+> But there's no Kconfig symbol SYSRAM. However, there is a Kconfig symbol
+> SRAM. Did you perhaps do one s/sram/sysram/ too many on the original
+> patch?
+> 
 
-Enable hdmi for exynos5420 based peach-pit board.
+Also the compatible string name should be 'mmio-sram' on the DTS files.
 
-Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
----
- arch/arm/boot/dts/exynos5420-peach-pit.dts |   19 +++++++++++++++++++
- arch/arm/boot/dts/exynos5420-pinctrl.dtsi  |    7 +++++++
- arch/arm/boot/dts/exynos5420.dtsi          |    5 +++++
- 3 files changed, 31 insertions(+)
+> 
+> Paul Bolle
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index fae33dd..8248255 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -137,6 +137,25 @@
- 	};
- };
- 
-+&i2c_2	{
-+	status = "okay";
-+	samsung,i2c-sda-delay = <100>;
-+	samsung,i2c-max-bus-freq = <66000>;
-+	samsung,i2c-slave-addr = <0x50>;
-+
-+	hdmiddc@50 {
-+		reg = <0x50>;
-+	};
-+};
-+
-+&hdmi {
-+	status = "okay";
-+	hpd-gpio = <&gpx3 7 2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&hdmi_hpd_irq>;
-+	ddc = <&i2c_2>;
-+};
-+
- /*
-  * Use longest HW watchdog in SoC (32 seconds) since the hardware
-  * watchdog provides no debugging information (compared to soft/hard
-diff --git a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-index ba686e4..fc17797 100644
---- a/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-+++ b/arch/arm/boot/dts/exynos5420-pinctrl.dtsi
-@@ -66,6 +66,13 @@
- 			samsung,pin-pud = <0>;
- 			samsung,pin-drv = <0>;
- 		};
-+
-+		hdmi_hpd_irq: hdmi-hpd-irq {
-+			samsung,pins = "gpx3-7";
-+			samsung,pin-function = <0>;
-+			samsung,pin-pud = <1>;
-+			samsung,pin-drv = <0>;
-+		};
- 	};
- 
- 	pinctrl@13410000 {
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 016992c..df4422c 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -648,9 +648,14 @@
- 			 <&clock CLK_MOUT_HDMI>;
- 		clock-names = "hdmi", "sclk_hdmi", "sclk_pixel",
- 			"sclk_hdmiphy", "mout_hdmi";
-+		phy = <&hdmiphy>;
- 		status = "disabled";
- 	};
- 
-+	hdmiphy: hdmiphy@145D0000 {
-+		reg = <0x145D0000 0x20>;
-+	};
-+
- 	mixer: mixer@14450000 {
- 		compatible = "samsung,exynos5420-mixer";
- 		reg = <0x14450000 0x10000>;
+
 -- 
-1.7.9.5
+Tushar Behera
