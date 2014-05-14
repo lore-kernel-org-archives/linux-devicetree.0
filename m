@@ -1,63 +1,38 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] mtd: nand: pxa3xx: Use ECC strength and step size
- devicetree binding
-Date: Tue, 13 May 2014 16:37:52 -0700
-Message-ID: <20140513233752.GE28907@ld-irv-0074>
-References: <1395401690-25221-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1395401690-25221-4-git-send-email-ezequiel.garcia@free-electrons.com>
- <20140512180104.GJ28907@ld-irv-0074>
- <20140512191841.GA3064@arch.cereza>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] clk: sunxi: add PRCM
+ (Power/Reset/Clock Management) clks support
+Date: Tue, 13 May 2014 17:51:19 -0700
+Message-ID: <20140514005119.16152.19787@quantum>
+References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399633911-7094-6-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140512191841.GA3064-nAQHv47ARr+vIlHkl8J1cg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Simon Guinot <sguinot-D+JDLXUtGQkAvxtiuMwx3w@public.gmane.org>, Willy Tarreau <w@1wt.eu>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Seif Mazareeb <seif-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDO333VC4INBBFX4ZKNQKGQEHECVJQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1399633911-7094-6-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: =?utf-8?q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 12, 2014 at 04:18:41PM -0300, Ezequiel Garcia wrote:
-> On 12 May 11:01 AM, Brian Norris wrote:
-> > On Fri, Mar 21, 2014 at 08:34:49AM -0300, Ezequiel Garcia wrote:
-> > > Also, if there is an ONFI-specified minimum ECC strength requirement,
-> > > and the DT-specified ECC strength is weaker, print a warning and try to
-> > > select a strength compatible with the ONFI requirement.
-> > 
-> > Are you sure you want to override? That seems contrary to the idea of a
-> > DT property for specifying ECC. But maybe you have a good reason?
-> > 
-> 
-> Actually, on IRC discussions you enforced the idea that the kernel shouldn't
-> allow a weaker ECC strength than the datasheet (ONFI or ID table) specified.
-> Hence, following your request, the implementation considers such devicetree
-> setting as illegal and tries to find another one.
+Quoting Boris BREZILLON (2014-05-09 04:11:49)
+> +struct clk_ops ar100_ops = {
+> +       .recalc_rate = ar100_recalc_rate,
+> +       .determine_rate = ar100_determine_rate,
+> +       .set_parent = ar100_set_parent,
+> +       .get_parent = ar100_get_parent,
+> +       .set_rate = ar100_set_rate,
+> +};
 
-Hmm, I don't recall saying that exactly, although I might have said
-something similar that could have been misconstrued as such.
+I might be having a brain fart, but is there a valid case for having
+both a .recalc_rate and a .determine_rate? I believe that the former
+will never be used and the latter will always be used by the clock
+framework core.
 
-I mostly recall discussing setting the ECC strength *without* device
-tree (as pxa3xx_nand currently does), which is a different case, since
-we don't have any outside input.
-
-But anyway...
-
-> > If you'd rather just warn the user, it's possible we could move that to
-> > common code in nand_base.c.
-> > 
-> 
-> Now that you mention this, I think you're right: it's very stupid to try to
-> match an ECC scheme, different from the requested.
-> 
-> So, we either just warn the user (nosily) or we fail to probe the driver.
-> If you ask me, I'd say let's just WARN() and let the user take the blame.
-
-...yes, I (regardless of what "IRC Brian" said!) think that is the
-correct approach when given an ECC scheme via device-tree. We should
-honor it, and blame the user loudly.
-
-Brian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Mike
