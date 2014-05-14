@@ -1,80 +1,81 @@
-From: Thomas Abraham <ta.omasab@gmail.com>
-Subject: Re: [PATCH v3 2/2] Documentation: devicetree: Add boost-frequency
- binding to list boost mode frequency
-Date: Wed, 14 May 2014 18:47:44 +0530
-Message-ID: <CAJuA9ai7ycUOfFZfcshBk=XWCiWV82RAruaz_KTF4Cg2xtgaow@mail.gmail.com>
-References: <1400029380-5372-1-git-send-email-thomas.ab@samsung.com>
-	<1400029380-5372-3-git-send-email-thomas.ab@samsung.com>
-	<CAGo_u6ozaKjzVQsJjzi5g13ysBT6UDwsgW3O1=K3RD4Y-ODtDA@mail.gmail.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] ARM: sunxi: Add IR controller
+ support in DT on A20
+Date: Wed, 14 May 2014 15:18:03 +0200
+Message-ID: <53736D0B.5070600@redhat.com>
+References: <1400006342-2968-1-git-send-email-bay@hackerdom.ru> <1400006342-2968-4-git-send-email-bay@hackerdom.ru>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAGo_u6ozaKjzVQsJjzi5g13ysBT6UDwsgW3O1=K3RD4Y-ODtDA@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBIO2ZWNQKGQEL74FILI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1400006342-2968-4-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 14, 2014 at 7:32 AM, Nishanth Menon <nm@ti.com> wrote:
-> On Tue, May 13, 2014 at 8:03 PM, Thomas Abraham <ta.omasab@gmail.com> wrote:
->> From: Thomas Abraham <thomas.ab@samsung.com>
->>
->> Add a new optional boost-frequency binding for specifying the frequencies
->> usable in boost mode.
->>
->> Cc: Nishanth Menon <nm@ti.com>
->> Cc: Lukasz Majewski <l.majewski@samsung.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Pawel Moll <pawel.moll@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
->> Cc: Kumar Gala <galak@codeaurora.org>
->> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
->> ---
->>  .../devicetree/bindings/cpufreq/cpufreq-boost.txt  |   11 +++++++++++
->>  1 files changed, 11 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
->>
->> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
->> new file mode 100644
->> index 0000000..d925e38
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
->> @@ -0,0 +1,11 @@
->> +* Device tree binding for CPU boost frequency (aka over-clocking)
->> +
->> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
->> +overclocking) in which the CPU can operate in frequencies beyond the normal
->
-> "operate at"?
->
->> +operating conditions.
->
-> "normal operating conditions" probably need a little bit of an
-> expansion here perhaps?
->
->> +
->> +Optional Properties:
->> +- boost-frequency: list of frequencies in KHz to be used only in boost mode.
->
-> probably boost-frequencies?
->
->> +  This list should be a subset of frequencies listed in "operating-points"
->> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
->> +  details about "operating-points" property.
->
->
-> an example is expected here.
->
-> personally, I think I understand the intent here, but as a hardware
-> description, will let folks comment if it is acceptable.
+Hi,
 
-Thanks for your review Nishanth. I will do the changes you have suggested.
+<snip>
+
+On 05/13/2014 08:39 PM, Alexander Bersenev wrote:
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+> index 0ae2b77..40ded74 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -724,6 +724,19 @@
+>  				allwinner,drive = <2>;
+>  				allwinner,pull = <0>;
+>  			};
+> +
+> +			ir0_pins_a: ir0@0 {
+> +				    allwinner,pins = "PB3","PB4";
+> +				    allwinner,function = "ir0";
+> +				    allwinner,drive = <0>;
+> +				    allwinner,pull = <0>;
+> +			};
+> +			ir1_pins_a: ir1@0 {
+> +				    allwinner,pins = "PB22","PB23";
+> +				    allwinner,function = "ir1";
+> +				    allwinner,drive = <0>;
+> +				    allwinner,pull = <0>;
+> +			};
+>  		};
+>  
+>  		timer@01c20c00 {
+> @@ -937,5 +950,23 @@
+>  			#interrupt-cells = <3>;
+>  			interrupts = <1 9 0xf04>;
+>  		};
+> +
+> +		ir0: ir@01c21800 {
+> +			compatible = "allwinner,sun7i-a20-ir";
+> +			clocks = <&apb0_gates 6>, <&ir0_clk>;
+> +			clock-names = "apb", "ir";
+> +			interrupts = <0 5 4>;
+> +			reg = <0x01c21800 0x40>;
+> +			status = "disabled";
+> +		};
+> +
+> +		ir1: ir@01c21c00 {
+> +			compatible = "allwinner,sun7i-a20-ir";
+> +			clocks = <&apb0_gates 7>, <&ir1_clk>;
+> +			clock-names = "apb", "ir";
+> +			interrupts = <0 6 4>;
+> +			reg = <0x01C21c00 0x40>;
+> +			status = "disabled";
+> +		};
+>  	};
+>  };
+> 
+
+The entries in the soc block are sorted by register address, so please
+don't add these at the end, instead keep things sorted.
 
 Regards,
-Thomas.
 
->
-> --
-> Regards,
-> Nishanth Menon
+Hans
