@@ -1,34 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 0/8] cpufreq: use cpufreq-cpu0 driver for exynos based platforms
-Date: Wed, 14 May 2014 14:51:22 +0200
-Message-ID: <7170433.Ah6fefFrHR@wuerfel>
-References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [patch] usb: phy: msm: devm_ioremap() doesn't return ERR_PTRs
+Date: Wed, 14 May 2014 15:55:24 +0300
+Message-ID: <20140514125524.GB14571@mwanda>
+References: <1400050877.8431.9.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Thomas Abraham <ta.omasab@gmail.com>, cpufreq@vger.kernel.org, devicetree@vger.kernel.org, l.majewski@samsung.com, kgene.kim@samsung.com, mturquette@linaro.org, heiko@sntech.de, viresh.kumar@linaro.org, t.figa@samsung.com, rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, thomas.ab@samsung.com, shawn.guo@linaro.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400050877.8431.9.camel@iivanov-dev>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel-janitors@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 May 2014 06:41:08 Thomas Abraham wrote:
-> 
-> The patch series removes the use of Exynos specific cpufreq driver and enables
-> the use of cpufreq-cpu0 driver for Exynos4210, Exynos4x12 and Exynos5250 based
-> platforms. This is being done for few reasons.
-> 
-> (a) The Exynos cpufreq driver reads/writes clock controller registers
->     bypassing the Exynos CCF driver which is sort of problematic.
-> (b) Removes the need for having clock controller register definitions
->     in the cpufreq driver and also removes the need for statically
->     io-remapping clock controller address space (helps in moving towards
->     multiplatform kernel).
-> 
+devm_ioremap() returns a NULL on error so the IS_ERR() check needs to be
+updated.
 
-Thanks a lot for your continued effort. Looks great overall, but I have one
-comment about the general way the cpu0 cpufreq driver works, not specific
-to the exynos implementation. See my reply to patch 4.
+Fixes: 6b99c68ec1f9 ('usb: phy: msm: Migrate to Managed Device Resource allocation')
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-	Arnd
+diff --git a/drivers/usb/phy/phy-msm-usb.c b/drivers/usb/phy/phy-msm-usb.c
+index c522c4f..bd32257 100644
+--- a/drivers/usb/phy/phy-msm-usb.c
++++ b/drivers/usb/phy/phy-msm-usb.c
+@@ -1587,8 +1587,8 @@ static int msm_otg_probe(struct platform_device *pdev)
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	motg->regs = devm_ioremap(&pdev->dev, res->start, resource_size(res));
+-	if (IS_ERR(motg->regs))
+-		return PTR_ERR(motg->regs);
++	if (!motg->regs)
++		return -ENOMEM;
+ 
+ 	/*
+ 	 * NOTE: The PHYs can be multiplexed between the chipidea controller
