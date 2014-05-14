@@ -1,80 +1,82 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 5/9] dt: deps: register drivers based on the
- initialization order based on DT
-Date: Wed, 14 May 2014 20:32:50 +0100
-Message-ID: <CACxGe6tThM_0+Kvo62_AEN5D_5E0GDpwowMZC4Nq=oqAZ57RxA@mail.gmail.com>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
- <1399913280-6915-6-git-send-email-holler@ahsoftware.de> <20140514141300.67206C4153D@trevor.secretlab.ca>
- <53738496.2070800@ahsoftware.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/3] bus: add Broadcom GISB arbiter bus timeout/error handler
+Date: Wed, 14 May 2014 21:33:51 +0200
+Message-ID: <8057197.5nM8JDA8pQ@wuerfel>
+References: <1400094649-11193-1-git-send-email-f.fainelli@gmail.com> <1400094649-11193-2-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53738496.2070800-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Cc: Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1400094649-11193-2-git-send-email-f.fainelli@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: linux-kernel@vger.kernel.org, marc.ceeeee@gmail.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Huang Shijie <b32955@freescale.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 14, 2014 at 3:58 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
-> Am 14.05.2014 16:13, schrieb Grant Likely:
->
->> On Mon, 12 May 2014 18:47:56 +0200, Alexander Holler
->> <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
->>>
->>> The init system currently calls unknown functions with almost unknown
->>> functionality in an almost random order.
->>
->>
->> Correct, we've got a module system. Some would say that is a strength!
->> :-) That said, I don't object to optimizing to the optimal order when
->> possible.
->
->
-> Modules do work after init happened, that isn't what this feature is about.
+On Wednesday 14 May 2014 12:10:46 Florian Fainelli wrote:
+> This patch adds support for the Broadcom GISB arbiter bus timeout/error
+> handler. GISB is a proprietary bus used by Broadcom Set Top Box
+> System-on-a-chip devices (BCM7xxx) which allows multiple masters and
+> clients to be interfaced with each other.
+> 
+> The bus arbiter offers support for generating two interrupts towards the
+> host CPU, thus allowing us to "catch" clock gated masters, or masters
+> being volontarily blocked for powersaving purposes, or do general system
+> troubleshooting.
+> 
+> We also register a hook with the ARM fault exception handling to allow
+> printing a more informative message than "imprecise external abort at
+> 0x00000000" for instance.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Oops, I meant modular. I wasn't talking about modules either. The
-driver model is designed to match devices with drivers regardless of
-the order that either of them get registered to the system. I think
-that is a strong aspect of the drivercore. What it doesn't have is any
-way of optimizing the probe order, which is at the heart of your
-proposal.
+Looks pretty good to me.
 
->
->
->>
->>> Fixing this is on a short-term basis is a bit tricky.
->>>
->>> In order to register drivers with a deterministic order, a list of all
->>> available in-kernel drivers is needed. Unfortunately such a list doesn't
->>> exist, just a list of initcalls does exist.
->>>
->>> The trick now is to first call special annotated initcalls (I call those
->>> "well done") for platform drivers, but not actualy starting those drivers
->>> by calling their probe function, but just collectiong their meta datas
->>> (struct platform_driver). After all those informations were collected,
->>> available the drivers will be started according to the previously
->>> determined order.
->>
->>
->> Why does the initcall level matter? Why not just let the initcalls
->> happen, capture the calls that register a driver, and then use that list
->> later?
->
->
-> Some initcalls assume that stuff is present when they called probe or
-> register and do further action based on the rc code.
+> +static int brcmstb_gisb_arb_decode_addr(struct brcmstb_gisb_arb_device *gdev,
+> +					const char *reason)
+> +{
+> +	u32 cap_status;
+> +	unsigned long arb_addr;
+> +	u32 master;
+> +	const char *m_name;
+> +	char m_fmt[11];
+> +
+> +	cap_status = ioread32(gdev->base + ARB_ERR_CAP_STATUS);
+> +
+> +	/* Invalid captured address, bail out */
+> +	if (!(cap_status & ARB_ERR_CAP_STATUS_VALID))
+> +		return 1;
+> +
+> +	/* Read the address and master */
+> +	arb_addr = ioread32(gdev->base + ARB_ERR_CAP_ADDR) & 0xffffffff;
+> +#ifdef CONFIG_PHYS_ADDR_T_64BIT
+> +	arb_addr |= (u64)ioread32(gdev->base + ARB_ERR_CAP_HI_ADDR) << 32;
+> +#endif
 
-What I mean is that manipulating the initcall level isn't the best way
-to handle it. We've got enough initcalls and there isn't a need to add
-more. Other ways to handle the problem would be to either have a
-variant of the platform_driver_register() that triggers your desired
-behavour, or add a flag to the struct device_driver that tells the
-driver core that it should try to resolve ordering. In both cases the
-module_platform_driver() macro can do the magic bit. Other drivers
-will have to do it manually.
+Can you use 'if (IS_ENABLED(CONFIG_PHYS_ADDR_T_64BIT))' here, or does that
+cause a warning?
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +static int brcmstb_bus_error_handler(unsigned long addr, unsigned int fsr,
+> +				     struct pt_regs *regs)
+> +{
+> +	int ret = 0;
+> +	struct brcmstb_gisb_arb_device *gdev;
+> +
+> +	/* iterate over each GISB arb registered handlers */
+> +	list_for_each_entry(gdev, &brcmstb_gisb_arb_device_list, next)
+> +		ret |= brcmstb_gisb_arb_decode_addr(gdev, "bus error");
+> +	/*
+> +	 * If it was an imprecise abort, then we need to correct the
+> +	 * return address to be _after_ the instruction.
+> +	*/
+> +	if (fsr & (1 << 10))
+> +		regs->ARM_pc += 4;
+> +
+> +	return ret;
+> +}
+
+This will cause the normal abort handler to trigger if the GISB
+arbiter doesn't know what happened, right?
+
+	Arnd
+
