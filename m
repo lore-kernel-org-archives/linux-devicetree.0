@@ -1,120 +1,101 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCHv2] of: make of_update_property() usable earlier in the
- boot process
-Date: Wed, 14 May 2014 15:28:16 +0100
-Message-ID: <20140514142816.7B310C4153D@trevor.secretlab.ca>
-References: <1400067396-21228-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400067396-21228-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 3/3] clk: tegra: Implement Tegra124 shared/cbus clks
+Date: Wed, 14 May 2014 16:27:40 +0200
+Message-ID: <20140514142739.GA8612@ulmo>
+References: <1399990023-30318-1-git-send-email-pdeschrijver@nvidia.com>
+ <1399990023-30318-4-git-send-email-pdeschrijver@nvidia.com>
+ <53725FED.7050303@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53725FED.7050303-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 May 2014 13:36:36 +0200, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Commit 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device
-> nodes kobjects so they show up in sysfs') has turned Device Tree nodes
-> in kobjects and added a sysfs based representation for Device Tree
-> nodes. Since the sysfs logic is only available after the execution of
-> a core_initcall(), the patch took precautions in of_add_property() and
-> of_remove_property() to not do any sysfs related manipulation early in
-> the boot process.
-> 
-> However, it forgot to do the same for of_update_property(), which if
-> used early in the boot process (before core_initcalls have been
-> called), tries to call sysfs_remove_bin_file(), and crashes:
 
-Applied, thanks.
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-g.
+On Tue, May 13, 2014 at 12:09:49PM -0600, Stephen Warren wrote:
+> On 05/13/2014 08:06 AM, Peter De Schrijver wrote:
+> > Add shared and cbus clocks to the Tegra124 clock implementation.
+>=20
+> > diff --git a/include/dt-bindings/clock/tegra124-car.h b/include/dt-bind=
+ings/clock/tegra124-car.h
+>=20
+> > +#define TEGRA124_CLK_C2BUS 401
+> > +#define TEGRA124_CLK_C3BUS 402
+> > +#define TEGRA124_CLK_GR3D_CBUS 403
+> > +#define TEGRA124_CLK_GR2D_CBUS 404
+> ...
+>=20
+> I worry about this a bit. IIUC, these clocks don't actually exist in HW,
+> but are more a way of SW applying policy to the clock that do exist in
+> HW. As such, I'm not convinced it's a good idea to expose these clock
+> IDS to DT, since DT is supposed to represent the HW, and not be
+> influenced by internal SW implementation details.
+>=20
+> Do any DTs actually need to used these new clock IDs? I don't think we
+> could actually use these value in e.g. tegra124.dtsi's clocks
+> properties, since these clocks don't exist in HW. Was it your intent to
+> do that? If not, can't we just define these SW-internal clock IDs in the
+> header inside the Tegra clock driver, so the values are invisible to DT?
 
-> 
-> ------------[ cut here ]------------
-> WARNING: CPU: 0 PID: 0 at /home/thomas/projets/linux-2.6/fs/kernfs/dir.c:1216 kernfs_remove_by_name_ns+0x80/0x88()
-> kernfs: can not remove '(null)', no directory
-> Modules linked in:
-> CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.15.0-rc1-00127-g1d7e7b2-dirty #423
-> [<c0014910>] (unwind_backtrace) from [<c00110ec>] (show_stack+0x10/0x14)
-> [<c00110ec>] (show_stack) from [<c04c84b8>] (dump_stack+0x84/0x94)
-> [<c04c84b8>] (dump_stack) from [<c001d8c0>] (warn_slowpath_common+0x6c/0x88)
-> [<c001d8c0>] (warn_slowpath_common) from [<c001d90c>] (warn_slowpath_fmt+0x30/0x40)
-> [<c001d90c>] (warn_slowpath_fmt) from [<c0104468>] (kernfs_remove_by_name_ns+0x80/0x88)
-> [<c0104468>] (kernfs_remove_by_name_ns) from [<c0394d98>] (of_update_property+0xc0/0xf0)
-> [<c0394d98>] (of_update_property) from [<c0647248>] (mvebu_timer_and_clk_init+0xfc/0x194)
-> [<c0647248>] (mvebu_timer_and_clk_init) from [<c0640934>] (start_kernel+0x218/0x350)
-> [<c0640934>] (start_kernel) from [<00008070>] (0x8070)
-> ---[ end trace 3406ff24bd97382e ]---
-> Unable to handle kernel NULL pointer dereference at virtual address 0000003c
-> pgd = c0004000
-> [0000003c] *pgd=00000000
-> Internal error: Oops: 5 [#1] SMP ARM
-> Modules linked in:
-> CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W     3.15.0-rc1-00127-g1d7e7b2-dirty #423
-> task: c10ad4d8 ti: c10a2000 task.ti: c10a2000
-> PC is at kernfs_find_ns+0x8/0xf0
-> LR is at kernfs_find_and_get_ns+0x30/0x48
-> pc : [<c0103834>]    lr : [<c010394c>]    psr: 600001d3
-> sp : c10a3f34  ip : 00000073  fp : 00000000
-> r10: 00000000  r9 : cfffc240  r8 : cfdf2980
-> r7 : cf812c00  r6 : 00000000  r5 : 00000000  r4 : c10b45e0
-> r3 : c10ad4d8  r2 : 00000000  r1 : cf812c00  r0 : 00000000
-> Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment kernel
-> Control: 10c53c7d  Table: 0000404a  DAC: 00000015
-> Process swapper/0 (pid: 0, stack limit = 0xc10a2240)
-> Stack: (0xc10a3f34 to 0xc10a4000)
-> 3f20:                                              c10b45e0 00000000 00000000
-> 3f40: cf812c00 c010394c 00000063 cf812c00 00000001 cf812c00 cfdf29ac c03932cc
-> 3f60: 00000063 cf812bc0 cfdf29ac cf812c00 ffffffff c03943f8 cfdf2980 c0104468
-> 3f80: cfdf2a04 cfdf2980 cf812bc0 c06634b0 c10aa3c0 c0394da4 c10f74dc cfdf2980
-> 3fa0: cf812bc0 c0647248 c10aa3c0 ffffffff c10de940 c10aa3c0 ffffffff c0640934
-> 3fc0: ffffffff ffffffff c06404ec 00000000 00000000 c06634b0 00000000 10c53c7d
-> 3fe0: c10aa434 c06634ac c10ae4c8 0000406a 414fc091 00008070 00000000 00000000
-> [<c0103834>] (kernfs_find_ns) from [<00000001>] (0x1)
-> Code: e5c89001 eaffffcf e92d40f0 e1a06002 (e1d023bc)
-> ---[ end trace 3406ff24bd97382f ]---
-> Kernel panic - not syncing: Attempted to kill the idle task!
-> ---[ end Kernel panic - not syncing: Attempted to kill the idle task!
-> 
-> To fix this problem, we simply skip the sysfs related calls in
-> of_update_property(), and rely on of_init() to fix up things when it
-> will be called, exactly as is done in of_add_property() and
-> of_remove_property().
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Fixes: 75b57ecf9d1d ("of: Make device nodes kobjects so they show up in sysfs")
-> ---
-> Changes since previous version:
->  - Use a ternary operator to bail out with the proper return value
->    instead of a goto. Requested by Rob Herring.
->  - Use a 12 digits hash and double quotes in the "Fixes:"
->    tag. Requested by Rob Herring.
->  - Rebased on top of 3.15-rc5
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/of/base.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 6d4ee22..32e969d 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1831,6 +1831,10 @@ int of_update_property(struct device_node *np, struct property *newprop)
->  	if (!found)
->  		return -ENODEV;
->  
-> +	/* At early boot, bail out and defer setup to of_init() */
-> +	if (!of_kset)
-> +		return found ? 0 : -ENODEV;
-> +
->  	/* Update the sysfs attribute */
->  	sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
->  	__of_add_property_sysfs(np, newprop);
-> -- 
-> 1.9.3
-> 
+I'm beginning to wonder if abusing clocks in this way is really the best
+solution. From what I understand there are two problems here that are
+mostly orthogonal though they're implemented using similar techniques.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The reason for introducing cbus clocks are still unclear to me. From the
+cover letter of this patch series it seems like these should be
+completely hidden from drivers and as such they don't belong in device
+tree. Also if they are an implementation detail, why are they even
+implemented as clocks? Perhaps an example use-case would help illustrate
+the need for this.
+
+As for shared clocks I'm only aware of one use-case, namely EMC scaling.
+Using clocks for that doesn't seem like the best option to me. While it
+can probably fix the immediate issue of choosing an appropriate
+frequency for the EMC clock it isn't a complete solution for the problem
+that we're trying to solve. From what I understand EMC scaling is one
+part of ensuring quality of service. The current implementations of that
+seems to abuse clocks (essentially one X.emc clock per X clock) to
+signal the amount of memory bandwidth required by any given device. But
+there are other parts to the puzzle. Latency allowance is one. The value
+programmed to the latency allowance registers for example depends on the
+EMC frequency.
+
+Has anyone ever looked into using a different framework to model all of
+these requirements? PM QoS looks like it might fit, but if none of the
+existing frameworks have what we need, perhaps something new can be
+created.
+
+Thierry
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTc31bAAoJEN0jrNd/PrOha6kP/RJ4vFFsAKj1HstgOGDr+9kR
+X7NtK+rBdBxQ1LW52MRA8n/H+UmXrGvfrLhgDERgSQ+AcVisKiQ2FVnLVyVDsM/y
+S8q0n7o/ySYGjz8vPZaJ+uqr7yl5Qi6mHtSiRD2lkB/EuqqK7YT519/pQ/2/Ozc5
+G3U4HvSLBeQ3FztVZMiZlndQSMMPcKhDyy8AVAn7igX1kvrd4MW978uDEO5qg6mo
+lyc2pYuCbG6nKpilNV7wFckflPTK3M8YMftdX8Ycws0NDWLCLbVLn+nou3ENDRoc
++NT2S3wFZbXs7LXHhaP1ZJMdwPpSaEvWS4i7l07lE3uz9DxzUW/Wv/UhLgUMRnw3
+Qdwr0TVMRTRbFEGzwnR9fauXKdFsxnYJQVCBZq3oNDNmBNMRuPwSjeOMlXP6pt8C
+vfcTmxGf1Djajaq6XpAuuabUSvLuZGruhlqp2iI8ym9J1XLR17kaNbcA5bXmEUup
+nR8c6RbZVFaZDc/4Ud3EhihHtLnpb3lnlhuc8jcotAdh0llwzDQMVsnjD3p0V0+K
+QpuFllxNEFsFGKguNMBV27iooXZ/M6jYp9J/jceXEZOHKMjuW8qv4LXA3s5x2Lsk
+ILtVIidfGdj/VvKByeMUvU6e3hkceFV7xMjqutrsM2aLi/KhwVJmLM97w9k2Qzdx
+P8XUo+l1OFQjVAr5iqh9
+=KFi/
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
