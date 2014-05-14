@@ -1,137 +1,59 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Wed, 14 May 2014 21:24:36 +0200
-Message-ID: <5373C2F4.50803@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<20140514141914.446F7C4153D@trevor.secretlab.ca>	<53738580.7000902@ahsoftware.de>	<CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>	<53739871.9070407@ahsoftware.de>	<CAL_JsqJB4CAO60m1HTGQGHQRYVWcARxm_roOhn-PJh+ZR7OONg@mail.gmail.com>	<5373ABD2.9010508@ahsoftware.de> <CAL_JsqJ-=amrmRR9FfnOH1ELDQ1kTaG3e1n878mgpZP1FUw_jA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] bus: add Broadcom GISB bus arbiter timeout/error handler
+Date: Wed, 14 May 2014 12:26:49 -0700
+Message-ID: <CAGVrzcZK0P8b_8B9wgfh180KWE1+1KN-dypoj8v4VGuZ8R-hew@mail.gmail.com>
+References: <1400094649-11193-1-git-send-email-f.fainelli@gmail.com>
+ <1400094649-11193-3-git-send-email-f.fainelli@gmail.com> <5373C2EB.8020806@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ-=amrmRR9FfnOH1ELDQ1kTaG3e1n878mgpZP1FUw_jA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5373C2EB.8020806-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Carino <marc.ceeeee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Fong <gregory.0xf0-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:DOCUMENTATION <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list:OPEN
+	FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 14.05.2014 21:06, schrieb Rob Herring:
-> On Wed, May 14, 2014 at 12:45 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
->> Am 14.05.2014 19:30, schrieb Rob Herring:
+2014-05-14 12:24 GMT-07:00 Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>:
+> On 05/14/2014 12:10 PM, Florian Fainelli wrote:
+>> This patch adds support for the Broadcom GISB arbiter bus timeout/error
+>> handler. GISB is a proprietary bus used by Broadcom Set Top Box
+>> System-on-a-chip devices (BCM7xxx) which allows multiple masters and
+>> clients to be interfaced with each other.
 >>
->>> On Wed, May 14, 2014 at 11:23 AM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
->>> wrote:
->>>>
->>>> Am 14.05.2014 18:05, schrieb Grant Likely:
->>>>
->>>>> On Wed, May 14, 2014 at 4:02 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
->>>>> wrote:
->>>>>>
->>>>>>
->>>>>> Am 14.05.2014 16:19, schrieb Grant Likely:
->>>>>>
->>>>>>
->>>>>>> Rather than a dtb schema change, for the most common properties (irqs,
->>>>>>> clocks, gpios), we could extract dependencies at boot time. I don't
->>>>>>> like
->>>>>>> the idea of adding a separate depends-on property because it is very
->>>>>>> easy to get it out of sync with the actual binding data (dtc is not
->>>>>>> the
->>>>>>> only tool that manipulates .dtbs. Firmware will fiddle with it too).
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> Then that stuff has to fiddle correct. Sorry, but trying to solve all
->>>>>> problems right from the beginning just leads to endless talks with no
->>>>>> end
->>>>>> and nothing will happen at all because nobody aggrees how to start.
->>>>>
->>>>>
->>>>>
->>>>> I appreciate the problem that you're trying to solve and why you're
->>>>> using the dtc approach. My job is to poke at the solution and make
->>>>> sure it is going to be reliable. Making sure all users know how to
->>>>> fiddle with the new property correctly is not a trivial problem,
->>>>> especially when it is firmware that will not necessarily be updated.
->>>>
->>>>
->>>>
->>>> The answer is just that they don't have to use this feature.
->>>
->>>
->>> It's not just about users, but maintainers have to carry the code and
->>> anything tied to DT is difficult to change or remove.
->>>
->>> Lots of inter-dependencies are already described in DT. We should
->>> leverage those first and then look at how to add dependencies that are
->>> not described.
+>> The bus arbiter offers support for generating two interrupts towards the
+>> host CPU, thus allowing us to "catch" clock gated masters, or masters
+>> being volontarily blocked for powersaving purposes, or do general system
+>> troubleshooting.
 >>
+>> We also register a hook with the ARM fault exception handling to allow
+>> printing a more informative message than "imprecise external abort at
+>> 0x00000000" for instance.
 >>
->> Again, that's what this feature is about. One of the problems it solves is
->> that those dependencies which are described in the DT source in form of
->> phandle reference, do disappear in the blobs because the init-system would
->> have to know all bindings in order to identify phandle references (the
->> dependencies) again.
->
-> They don't disappear, but they become binding specific to recover.
-> What you are loosing is type information which is something we would
-> like to solve as well.
->
-> You can regenerate or figure out the dependencies with knowledge of
-> the binding. The of_irq_init code does this. Maintaining this
-> information in the dtb that can be parsed in a generic way and having
-> the kernel handle non-bus oriented dependencies are really 2 separate
-> problems. Let's not try to solve it all at once.
->
->>>>> I'm not saying flat out 'no' here, but before I merge anything, I have
->>>>> to be reasonably certain that the feature is not going to represent a
->>>>> maintenance nightmare over the long term.
->>>>
->>>>
->>>>
->>>> The maintenance nightmare is already present in form of all the
->>>> workarounds
->>>> which are trying to fix the initialzation order necessary for modern
->>>> hardware.
->>>
->>>
->>> Do you have concrete examples or cases where deferred probe does not work?
+>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> ---
+>>  drivers/bus/Kconfig        |  11 +-
+>>  drivers/bus/Makefile       |   1 +
+>>  drivers/bus/brcmstb_gisb.c | 289 +++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 300 insertions(+), 1 deletion(-)
+>>  create mode 100644 drivers/bus/brcmstb_gisb.c
 >>
->>
->> Why do people come back to the deferred probe stuff?
+>> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+>> index 552373c4e362..985db51c0b11 100644
+>> --- a/drivers/bus/Kconfig
+>> +++ b/drivers/bus/Kconfig
+>> @@ -40,5 +40,14 @@ config ARM_CCI
+>>       depends on ARM
+>>       help
+>>         Driver supporting the CCI cache coherent interconnect for ARM
+>> -       platforms.
+>> +       kplatforms.
 >
-> Because it is there today and generally works.
->
->> One of the biggest problem of the deferred probe stuff is the problem how to
->> identify real problems if everything ends up with a deferred probe when an
->> error occurs? That means if you display an error whenever something is
->> deferred, the log becomes almost unreadable. If you don't display an error,
->> you never will see an error. And how do you display the real error when
->> deferred probes finally do fail? The deferred probe stuff doesn't has any
->> information about the underlying error, so it can't display it.
->
-> This all sounds like "I don't like deferred probe because it is hard
-> to debug" to me. This all sounds solvable with better instrumentation
-> and debug capability. Why probe is deferred should be available at the
-> source when deciding to return -EPROBE_DEFER.
->
-> I still have not seen an example of A depends on B, deferred probe
-> fails because of ? and here is the code for A that works around the
-> problem.
->
->> Anyway, this feature is totally independ of the deferred probe stuff and
->> both can friendly live together.
->
-> Yes, except then we get to maintain both.
+> Is that a typo?  if not, what are kplatforms?
 
-Goodbye and thanks for all the fish.
-
-Sorry, but my patience in dealing with Linux kernel maintainers was 
-already almost zero before I've posted these patches and I have to 
-realize that only fools still try to do so.
-
-Alexander Holler
-
+This is indeed a typo.
+-- 
+Florian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
