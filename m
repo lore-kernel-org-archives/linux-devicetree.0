@@ -1,111 +1,104 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 2/6] clk: Add clock driver for AXM55xx SoC
-Date: Wed, 14 May 2014 13:08:45 -0700
-Message-ID: <20140514200845.19795.80794@quantum>
-References: <cover.1400072260.git.anders.berg@avagotech.com>
- <a83c5e1272d7a3242701504f238789592c2ec80f.1400072260.git.anders.berg@avagotech.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a83c5e1272d7a3242701504f238789592c2ec80f.1400072260.git.anders.berg@avagotech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anders Berg <anders.berg@avagotech.com>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Anders Berg <anders.berg@lsi.com>, Mark Rutland <mark.rutland@arm.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2 00/10] Marvell Berlin full clock support
+Date: Wed, 14 May 2014 22:15:11 +0200
+Message-ID: <1400098522-14770-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mike Turquette <mturquette@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anders Berg (2014-05-14 11:37:57)
-> +Example:
-> +
-> +       clk_ref0: clk_ref0 {
-> +               compatible = "fixed-clock";
-> +               #clock-cells = <0>;
-> +               clock-frequency = <125000000>;
-> +       };
+This is version 2 of a patch set to bring proper DT based clocks to
+Marvell Berlin SoCs.
 
-Hi Anders,
+The overall changes are:
 
-The driver looks good. As for the DT binding, I am starting to request
-that bindings for new hardware move away from the one-clock-per-node
-method. I am not forcing anyone with stable bindings to migrate that
-way, but it tends to make maintenance easier in the long run (e.g.
-setting per-clock flags, etc).
+* Dropped of_clk_create_name() helper
+Booting into an initramfs rootfs revealed that the unique clock names
+created with that helper clash with the way of_clk_get_parent_name()
+resolves the clock specifier to get the correct clock name. Anyway,
+I still consider the helper a good idea and postpone it to the next
+cycle when I have more time to look at the details.
 
-Your clk_ref0 example looks good, assuming that it is an off-chip clock
-that feeds into the rest of the clock generator.
+* Added BG2Q core clock driver and dtsi changes
+Alexandre just provided them, so I added them to this patch set.
 
-> +
-> +       clk_cpu_pll: clk_cpu_pll@2010022000 {
-> +               compatible = "lsi,axxia-pll-clock";
-> +               #clock-cells = <0>;
-> +               clocks = <&clk_ref0>;
-> +               clock-output-names = "clk_cpu_pll";
-> +               reg = <0x20 0x10022000 0 0x2c>;
-> +       };
+The single patch overview now is:
 
-I assume the rest of your clocks are part of a clock generator IP block
-inside of your chip. Have you looked at the QCOM binding? It is my
-favorite binding these days. Here are some highlights:
+Patch 1 adds the whole binding documentation for all clock related IP
+found on BG2, BG2CD, and BG2Q.
 
-See Documentation/devicetree/bindings/clock/qcom,gcc.txt.
+Patch 2 adds corresponding dt-binding includes for the core clock
+indices to be used in both DT and the driver.
 
+Patches 3, 4, and 5 add clock drivers for the Audio/Video PLL, simple
+PLLs, and complex clock divider cells found on Berlin SoCs. Where
+required, currently known differences between BG2/BG2CD and BG2Q are
+taken care of.
 
+Patches 6 and 7 add core clock drivers for the remaining clocks of
+BG2/BG2CD and BG2Q. The register set dealing with it, is shared among
+input and bypass muxes, clock dividers and clock gates.
 
->From arch/arm/boot/dts/qcom-msm8974.dtsi:
+Patches 8, 9, and 10 finally convert the DT SoC includes for BG2,
+BG2CD, and BG2Q to make use of the new clock related DT nodes.
 
-gcc: clock-controller@fc400000 {
-        compatible = "qcom,gcc-msm8974";
-        #clock-cells = <1>;
-        #reset-cells = <1>;
-        reg = <0xfc400000 0x4000>;
-};
+Alexandre Belloni (4):
+  clk: berlin: add driver for BG2x simple PLLs
+  clk: berlin: add driver for BG2x complex divider cells
+  clk: berlin: add core clock driver for BG2Q
+  ARM: dts: berlin: convert BG2Q to DT clock nodes
 
-...
+Sebastian Hesselbarth (6):
+  dt-binding: clk: add clock binding docs for Marvell Berlin2 SoCs
+  clk: berlin: add binding include for BG2/BG2CD clock ids
+  clk: berlin: add driver for BG2x audio/video PLL
+  clk: berlin: add core clock driver for BG2/BG2CD
+  ARM: dts: berlin: convert BG2CD to DT clock nodes
+  ARM: dts: berlin: convert BG2 to DT clock nodes
 
-serial@f991e000 {
-        compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-        reg = <0xf991e000 0x1000>;
-        interrupts = <0 108 0x0>;
-        clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
-        clock-names = "core", "iface";
-};
+ .../devicetree/bindings/clock/berlin2-clock.txt    | 195 ++++++++
+ arch/arm/boot/dts/berlin2.dtsi                     | 207 +++++++--
+ arch/arm/boot/dts/berlin2cd.dtsi                   | 205 +++++++--
+ arch/arm/boot/dts/berlin2q.dtsi                    |  80 +++-
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/berlin/Makefile                        |   4 +
+ drivers/clk/berlin/berlin2-avpll.c                 | 368 +++++++++++++++
+ drivers/clk/berlin/berlin2-div.c                   | 324 +++++++++++++
+ drivers/clk/berlin/berlin2-div.h                   |  80 ++++
+ drivers/clk/berlin/berlin2-pll.c                   | 168 +++++++
+ drivers/clk/berlin/bg2.c                           | 502 +++++++++++++++++++++
+ drivers/clk/berlin/bg2q.c                          | 269 +++++++++++
+ include/dt-bindings/clock/berlin2.h                |  35 ++
+ include/dt-bindings/clock/berlin2q.h               |  28 ++
+ 14 files changed, 2385 insertions(+), 81 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/berlin2-clock.txt
+ create mode 100644 drivers/clk/berlin/Makefile
+ create mode 100644 drivers/clk/berlin/berlin2-avpll.c
+ create mode 100644 drivers/clk/berlin/berlin2-div.c
+ create mode 100644 drivers/clk/berlin/berlin2-div.h
+ create mode 100644 drivers/clk/berlin/berlin2-pll.c
+ create mode 100644 drivers/clk/berlin/bg2.c
+ create mode 100644 drivers/clk/berlin/bg2q.c
+ create mode 100644 include/dt-bindings/clock/berlin2.h
+ create mode 100644 include/dt-bindings/clock/berlin2q.h
 
+---
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Mike Turquette <mturquette@linaro.org>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+-- 
+1.9.1
 
-
->From drivers/clk/qcom/gcc-msm8974.c:
-
-static struct clk_branch gcc_blsp1_uart2_apps_clk = {
-        .halt_reg = 0x0704,
-        .clkr = {
-                .enable_reg = 0x0704,
-                .enable_mask = BIT(0),
-                .hw.init = &(struct clk_init_data){
-                        .name = "gcc_blsp1_uart2_apps_clk",
-                        .parent_names = (const char *[]){
-                                "blsp1_uart2_apps_clk_src",
-                        },
-                        .num_parents = 1,
-                        .flags = CLK_SET_RATE_PARENT,
-                        .ops = &clk_branch2_ops,
-                },
-        },
-};
-
-
-
->From include/dt-bindings/clock/qcom,gcc-msm8974.h:
-
-#define GCC_BLSP1_UART2_APPS_CLK                                103
-
-
-
-Using this type of binding you only need to declare your clock generator
-IP node in dts, and then define a mapping in the DT include chroot. Then
-you can define your per-clock data inside of your clock driver instead
-of putting all of the details inside of DT.
-
-If you have a strong reason to do it the way that you originally posted
-then let me know.
-
-Regards,
-Mike
