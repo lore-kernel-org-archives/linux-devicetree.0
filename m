@@ -1,133 +1,63 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] of/platform: Add of_platform_depopulate() helper
-Date: Wed, 14 May 2014 12:08:14 +0100
-Message-ID: <20140514110814.120BEC4153D@trevor.secretlab.ca>
-References: <1399997324.3657.35.camel@hornet>
-	<1399998294-24447-1-git-send-email-pawel.moll@arm.com>
+Subject: Re: [PATCH] of/selftest: clean-up of_selftest_platform_populate
+ pass/fail handling
+Date: Wed, 14 May 2014 12:10:01 +0100
+Message-ID: <20140514111001.4233CC4153D@trevor.secretlab.ca>
+References: <1399997908-30916-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399998294-24447-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+In-Reply-To: <1399997908-30916-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 May 2014 17:24:54 +0100, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> wrote:
-> Drivers can us of_platform_populate() to create
-> platform devices for children of the device
-> main node (this can particularly happen in case
-> of MFD devices). Unfortunately, there was no
-> standard way of removing such sub-devices when
-> the main one is being removed.
+On Tue, 13 May 2014 11:18:28 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 > 
-> This patch adds of_platform_depopulate() as
-> a complementary operation for the _populate()
-> one. It removes all platform and amba devices
-> that have been created from the Device Tree,
-> but leaves all other ones untouched (returning
-> -EBUSY in such case).
-
-Nit: What's with the 50-column word wrap? 72 is the norm for commit
-text.
+> Move the pass/fail checks into selftest() calls instead of a separate if
+> condition. Unconditionally calling pass was wrong.
+> 
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-If you like you can merge this with your other series since it is
-dependent.
-
-> 
-> Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 > ---
-> Changes since v1:
+>  drivers/of/selftest.c | 14 +++++---------
+>  1 file changed, 5 insertions(+), 9 deletions(-)
 > 
-> - using bool rather than int to signal remaining children
-> - recursing using of_platform_depopulate() itself
-> 
->  drivers/of/platform.c       | 50 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_platform.h |  5 +++++
->  2 files changed, 55 insertions(+)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 236f47e..3b51e04 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -495,4 +495,54 @@ int of_platform_populate(struct device_node *root,
->  	return rc;
->  }
->  EXPORT_SYMBOL_GPL(of_platform_populate);
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+> index fe70b86..c1d7d38 100644
+> --- a/drivers/of/selftest.c
+> +++ b/drivers/of/selftest.c
+> @@ -440,22 +440,18 @@ static void __init of_selftest_platform_populate(void)
+>  	/* Test that a missing irq domain returns -EPROBE_DEFER */
+>  	np = of_find_node_by_path("/testcase-data/testcase-device1");
+>  	pdev = of_find_device_by_node(np);
+> -	if (!pdev)
+> -		selftest(0, "device 1 creation failed\n");
+> +	selftest(pdev, "device 1 creation failed\n");
 > +
-> +static int of_platform_device_destroy(struct device *dev, void *data)
-> +{
-> +	bool *children_left = data;
-> +
-> +	/* Do not touch devices not populated from the device tree */
-> +	if (!dev->of_node || !of_node_check_flag(dev->of_node, OF_POPULATED)) {
-> +		*children_left = true;
-> +		return 0;
-> +	}
-> +
-> +	/* Recurse, but don't touch this device if it has any children left */
-> +	if (of_platform_depopulate(dev) != 0) {
-> +		*children_left = true;
-> +		return 0;
-> +	}
-> +
-> +	if (dev->bus == &platform_bus_type)
-> +		platform_device_unregister(to_platform_device(dev));
-> +	else if (dev->bus == &amba_bustype)
-> +		amba_device_unregister(to_amba_device(dev));
-> +	else
-> +		*children_left = true;
-> +
-> +	return 0;
-> +}
-> +
-> +/**
-> + * of_platform_depopulate() - Remove devices populated from device tree
-> + * @parent: device which childred will be removed
-> + *
-> + * Complementary to of_platform_populate(), this function removes children
-> + * of the given device (and, recurrently, their children) that have been
-> + * created from their respective device tree nodes (and only those,
-> + * leaving others - eg. manually created - unharmed).
-> + *
-> + * Returns 0 when all children devices have been removed or
-> + * -EBUSY when some children remained.
-> + */
-> +int of_platform_depopulate(struct device *parent)
-> +{
-> +	bool children_left = false;
-> +
-> +	device_for_each_child(parent, &children_left,
-> +			of_platform_device_destroy);
-> +
-> +	return children_left ? -EBUSY : 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_platform_depopulate);
-> +
->  #endif /* CONFIG_OF_ADDRESS */
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 05cb4a9..b1010ee 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -72,6 +72,7 @@ extern int of_platform_populate(struct device_node *root,
->  				const struct of_device_id *matches,
->  				const struct of_dev_auxdata *lookup,
->  				struct device *parent);
-> +extern int of_platform_depopulate(struct device *parent);
->  #else
->  static inline int of_platform_populate(struct device_node *root,
->  					const struct of_device_id *matches,
-> @@ -80,6 +81,10 @@ static inline int of_platform_populate(struct device_node *root,
->  {
->  	return -ENODEV;
->  }
-> +static inline int of_platform_depopulate(struct device *parent)
-> +{
-> +	return -ENODEV;
-> +}
->  #endif
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq != -EPROBE_DEFER)
+> -		selftest(0, "device deferred probe failed - %d\n", irq);
+> +	selftest(irq == -EPROBE_DEFER, "device deferred probe failed - %d\n", irq);
 >  
->  #endif	/* _LINUX_OF_PLATFORM_H */
+>  	/* Test that a parsing failure does not return -EPROBE_DEFER */
+>  	np = of_find_node_by_path("/testcase-data/testcase-device2");
+>  	pdev = of_find_device_by_node(np);
+> -	if (!pdev)
+> -		selftest(0, "device 2 creation failed\n");
+> +	selftest(pdev, "device 2 creation failed\n");
+>  	irq = platform_get_irq(pdev, 0);
+> -	if (irq >= 0 || irq == -EPROBE_DEFER)
+> -		selftest(0, "device parsing error failed - %d\n", irq);
+> +	selftest(irq < 0 && irq != -EPROBE_DEFER, "device parsing error failed - %d\n", irq);
+>  
+> -	selftest(1, "passed");
+>  }
+>  
+>  static int __init of_selftest(void)
 > -- 
 > 1.9.1
 > 
