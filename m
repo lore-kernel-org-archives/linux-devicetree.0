@@ -1,55 +1,49 @@
-From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM: STi: Add Clock driver support STiH415 & STiH416
-Date: Wed, 14 May 2014 13:46:14 +0200
-Message-ID: <53735786.5010202@st.com>
-References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH 1/9] ARM: STi: DT: STiH416: 416 DT Entry for clockgen
+ A0/1/10/11/12
+Date: Wed, 14 May 2014 13:50:02 +0200
+Message-ID: <5373586A.5000302@st.com>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org> <1399305223-18703-2-git-send-email-gabriel.fernandez@linaro.org> <20140506071843.GD5206@lee--X1> <CAG374jD+msPPbPtFS+ji=8jS9+D-YHu31k7zzzC7Ty7jw9n7jQ@mail.gmail.com> <20140508080344.GE5307@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140508080344.GE5307@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabriel,
+Hi Lee,
 
-for the series:
+On 05/08/2014 10:03 AM, Lee Jones wrote:
+>>>> Patch adds DT entries for clockgen A0/1/10/11/12
+>>>>
+>>>> Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
+>>>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>>>> ---
+>>>>   arch/arm/boot/dts/stih416-clks.h     |  15 ++
+>>>
+>>> This should live in include/dt-bindings/clk
+>>>
+>> include/dt-bindings/clk or  include/dt-bindings/clock ?
+>
+> I have no idea what the difference between the two are.  I guess you
+> are in a better position to answer that.  My point was just that the
+> includes should be in the include directory, rather than being held
+> locally in the 'dts' directory.
 
-Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Even if these .h files are only used by the DTS files??
 
-Thanks,
+There are some .h files for pincfg related stuff, shouldn't we do the 
+same in this case?
+
+Regards,
 Maxime
 
-On 05/05/2014 05:53 PM, Gabriel FERNANDEZ wrote:
-> The goal of this series is to add DT definition for STiH415
-> and STiH416 SoCs on B2000 and B2020 boards.
 >
-> Gabriel Fernandez (9):
->    ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
->    ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
->    ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
->      fixed clocks
->    ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
->    ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
->    ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
->    ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
->    ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
->      fixed clocks
->    ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
+>>>>   arch/arm/boot/dts/stih416-clock.dtsi | 477 ++++++++++++++++++++++++++++++++++
+>>>>   arch/arm/boot/dts/stih416.dtsi       |  10 +-
+>>>>   3 files changed, 497 insertions(+), 5 deletions(-)
+>>>>   create mode 100644 arch/arm/boot/dts/stih416-clks.h
 >
->   arch/arm/boot/dts/stih415-clks.h     |  15 +
->   arch/arm/boot/dts/stih415-clock.dtsi | 517 ++++++++++++++++++++++++-
->   arch/arm/boot/dts/stih415.dtsi       |  10 +-
->   arch/arm/boot/dts/stih416-clks.h     |  15 +
->   arch/arm/boot/dts/stih416-clock.dtsi | 732 ++++++++++++++++++++++++++++++++++-
->   arch/arm/boot/dts/stih416.dtsi       |  10 +-
->   6 files changed, 1256 insertions(+), 43 deletions(-)
->   create mode 100644 arch/arm/boot/dts/stih415-clks.h
->   create mode 100644 arch/arm/boot/dts/stih416-clks.h
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
