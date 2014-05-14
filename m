@@ -1,82 +1,46 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
-Date: Wed, 14 May 2014 12:21:22 +0200
-Message-ID: <20140514102122.GA11140@kwain>
-References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com>
- <1400060942-10588-2-git-send-email-antoine.tenart@free-electrons.com>
- <537341AF.5030105@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <537341AF.5030105@ti.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH] of: Add of_device_destroy_children() function
+Date: Wed, 14 May 2014 11:25:49 +0100
+Message-ID: <20140514102549.EEEF9C4153D@trevor.secretlab.ca>
+References: <1399567069-3174-1-git-send-email-s.nawrocki@samsung.com>
+	<20140508203339.GA542@obsidianresearch.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140508203339.GA542@obsidianresearch.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, 8 May 2014 14:33:39 -0600, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> On Thu, May 08, 2014 at 06:37:49PM +0200, Sylwester Nawrocki wrote:
+> > This patch adds a helper function to unregister devices which
+> > were created by an of_platform_populate() call. The pattern
+> > used here can already be found in multiple drivers. This helper
+> > can now be used instead of repeating similar code in drivers.
+> 
+> I have a driver that does this as well, and what I found is that the
+> remove must be in reverse order from the create or things explode, and
+> that assumes the DT is topologically sorted according to dependency
+> (so no deferred probe).
 
-On Wed, May 14, 2014 at 03:43:03PM +0530, Kishon Vijay Abraham I wrote:
-> Hi,
->=20
-> On Wednesday 14 May 2014 03:18 PM, Antoine T=C3=A9nart wrote:
+That is the tip of a much larger problem that we don't have any good way
+to solve. There is no dependency tracking beyond the nature Linux driver
+model tree. For example, the removal of a GPIO driver has no way to
+tell users that it is going away, and so there is no way to force a
+driver remove when it happens.
 
-[=E2=80=A6]
+If we created a managed api for requesting resource (ie.
+devm_request_gpio()), then it would be possible for the gpio core to
+force a remove event on any driver that doesn't have the ability to
+gracefully handle a remove.
 
-> > +#define to_berlin_sata_phy_priv(desc)	\
-> > +	container_of((desc), struct phy_berlin_priv, phys[(desc)->index])
-> > +
-> > +struct phy_berlin_desc {
-> > +	struct phy	*phy;
-> > +	u32		val;
-> > +	unsigned	index;
-> > +};
-> > +
-> > +struct phy_berlin_priv {
-> > +	void __iomem	*base;
-> > +	spinlock_t	lock;
-> > +	struct phy_berlin_desc	phys[BERLIN_SATA_PHY_NB];
->=20
-> Can't we do away with hardcoding BERLIN_SATA_PHY_NB?
+The exact same problem exists for IRQs, clocks, regulators, or pretty
+much any cross-tree dependency.  :-(
 
-We can't if we want to be able to use the container_of macro in
-to_berlin_sata_phy_priv(). And we want a common structure to store the
-common spinlock and base address.
+> AFAIK, there is no analog to deferred probe for removal, and
+> attempting to remove, say, a GPIO driver while an I2C bit bang is using
+> it just fails.
 
-[=E2=80=A6]
+Indeed, it is a completely different operation.
 
-> > +		/*
-> > +		 * By default the PHY node is used to request and match a PHY.
-> > +		 * We describe one PHY per sub-node here. Use the right node.
-> > +		 */
-> > +		phy->dev.of_node =3D child;
-> > +
-> > +		priv->phys[phy_id].phy =3D phy;
-> > +		priv->phys[phy_id].val =3D desc[phy_id].val;
-> > +		priv->phys[phy_id].index =3D phy_id;
-> > +		phy_set_drvdata(phy, &priv->phys[phy_id]);
-> > +
-> > +		/* Make sure the PHY is off */
-> > +		phy_berlin_sata_power_off(phy);
-> > +
-> > +		phy_provider =3D devm_of_phy_provider_register(&phy->dev,
-> > +							     of_phy_simple_xlate);
-> > +		if (IS_ERR(phy_provider))
-> > +			return PTR_ERR(phy_provider);
->=20
-> was this intentional? registering multiple PHY providers?
-
-Yes. Each sub-node describe a PHY and register as a PHY provider. This
-allow to reference the PHY as <&sata_phy0> and not <&sata_phy 0>. It
-would be confusing to have a sub-node sata_phy0 and to use its parent
-to access it.
-
-Antoine
-
---=20
-Antoine T=C3=A9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+g.
