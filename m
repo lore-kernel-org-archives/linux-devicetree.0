@@ -1,85 +1,61 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3 2/6] clk: Add clock driver for AXM55xx SoC
-Date: Wed, 14 May 2014 15:36:57 -0700
-Message-ID: <20140514223657.19795.79741@quantum>
-References: <cover.1400072260.git.anders.berg@avagotech.com>
- <a83c5e1272d7a3242701504f238789592c2ec80f.1400072260.git.anders.berg@avagotech.com>
- <20140514200845.19795.80794@quantum>
- <CAE0=X_3WA5ZzEE1NespeScmnMkr9oxNMc1=+X86i5NpSffiUnA@mail.gmail.com>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] clk: sunxi: add PRCM
+ (Power/Reset/Clock Management) clks support
+Date: Wed, 14 May 2014 15:39:35 -0700
+Message-ID: <20140514223935.19795.36960@quantum>
+References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399633911-7094-6-git-send-email-boris.brezillon@free-electrons.com>
+ <20140514005119.16152.19787@quantum> <53731BB3.4060504@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAE0=X_3WA5ZzEE1NespeScmnMkr9oxNMc1=+X86i5NpSffiUnA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anders Berg <anders.berg@avagotech.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Anders Berg <anders.berg@lsi.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDO333VC4INBBNHBZ6NQKGQECYG6SXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <53731BB3.4060504-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Anders Berg (2014-05-14 15:22:16)
-> On Wed, May 14, 2014 at 10:08 PM, Mike Turquette <mturquette@linaro.org> wrote:
-> > Quoting Anders Berg (2014-05-14 11:37:57)
-> >> +Example:
-> >> +
-> >> +       clk_ref0: clk_ref0 {
-> >> +               compatible = "fixed-clock";
-> >> +               #clock-cells = <0>;
-> >> +               clock-frequency = <125000000>;
-> >> +       };
-> >
-> > Hi Anders,
-> >
-> > The driver looks good. As for the DT binding, I am starting to request
-> > that bindings for new hardware move away from the one-clock-per-node
-> > method. I am not forcing anyone with stable bindings to migrate that
-> > way, but it tends to make maintenance easier in the long run (e.g.
-> > setting per-clock flags, etc).
-> >
-> > Your clk_ref0 example looks good, assuming that it is an off-chip clock
-> > that feeds into the rest of the clock generator.
-> >
-> >> +
-> >> +       clk_cpu_pll: clk_cpu_pll@2010022000 {
-> >> +               compatible = "lsi,axxia-pll-clock";
-> >> +               #clock-cells = <0>;
-> >> +               clocks = <&clk_ref0>;
-> >> +               clock-output-names = "clk_cpu_pll";
-> >> +               reg = <0x20 0x10022000 0 0x2c>;
-> >> +       };
-> >
-> > I assume the rest of your clocks are part of a clock generator IP block
-> > inside of your chip. Have you looked at the QCOM binding? It is my
-> > favorite binding these days. Here are some highlights:
-> >
-> [...]
-> >
-> > Using this type of binding you only need to declare your clock generator
-> > IP node in dts, and then define a mapping in the DT include chroot. Then
-> > you can define your per-clock data inside of your clock driver instead
-> > of putting all of the details inside of DT.
-> >
-> > If you have a strong reason to do it the way that you originally posted
-> > then let me know.
-> >
+Quoting Boris BREZILLON (2014-05-14 00:30:59)
+> Hello Mike,
 > 
-> No strong reason... I just happened to pick the keystone-clocks.dtsi
-> as an example when I wrote this. But I can rework this according to
-> your suggestions. I'll post it as a separate patch (thus dropping the
-> clk patch from this series). Ok?
+> On 14/05/2014 02:51, Mike Turquette wrote:
+> > Quoting Boris BREZILLON (2014-05-09 04:11:49)
+> >> +struct clk_ops ar100_ops = {
+> >> +       .recalc_rate = ar100_recalc_rate,
+> >> +       .determine_rate = ar100_determine_rate,
+> >> +       .set_parent = ar100_set_parent,
+> >> +       .get_parent = ar100_get_parent,
+> >> +       .set_rate = ar100_set_rate,
+> >> +};
+> > I might be having a brain fart, but is there a valid case for having
+> > both a .recalc_rate and a .determine_rate? I believe that the former
+> > will never be used and the latter will always be used by the clock
+> > framework core.
+> 
+> I think you're mistaking recalc_rate for round_rate.
+> AFAIK, recalc_rate is mandatory for a clk that implement either
+> round_rate or determine_rate.
 
-Sounds great. Thanks for reworking it.
+I *was* having a brain fart. You're right of course. Too many .r*_rate()
+callbacks...
 
-Regards,
+Thanks,
 Mike
 
 > 
-> Thanks,
-> Anders
+> 
+> Best Regards,
+> 
+> Boris
+> 
+> -- 
+> Boris Brezillon, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+> 
