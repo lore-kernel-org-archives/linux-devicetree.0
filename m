@@ -1,58 +1,28 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 2/9] dt: deps: dependency based device creation
-Date: Wed, 14 May 2014 23:10:39 +0200
-Message-ID: <5373DBCF.1080503@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-3-git-send-email-holler@ahsoftware.de>	<20140514140534.897F8C4153D@trevor.secretlab.ca>	<53738261.4000000@ahsoftware.de> <20140514200645.15984C4095B@trevor.secretlab.ca>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] ARM: dts: omap5: add sata node
+Date: Wed, 14 May 2014 14:16:37 -0700
+Message-ID: <20140514211637.GD27426@atomide.com>
+References: <1398274237-24510-1-git-send-email-rogerq@ti.com>
+ <1398274533-24735-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140514200645.15984C4095B@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398274533-24735-1-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 14.05.2014 22:06, schrieb Grant Likely:
-> On Wed, 14 May 2014 16:49:05 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
->> Am 14.05.2014 16:05, schrieb Grant Likely:
->>> On Mon, 12 May 2014 18:47:53 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
-
->> Hmm, I don't really care if that will be merged. I have no motivation to 
->> fight with Linux kernel maintainers and I don't know if I will spend the 
->> necessary time to do so.
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140423 10:36]:
+> From: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
 > 
-> The people you need to convince are Rob, Greg, and me, and you've got my
-> attention. If I'm convinced, then I can probably convince Greg also.
-> You've got an interesting approach, and I hope you won't give up on it.
+> Add support for sata.
 
-Sorry, but that point of the view is already a problem. Why do I have to
-convince you people?
+Adding this into omap-for-v3.16/dt thanks.
 
-To summarize:
-
-Linux kernel maintainers
-
-- don't like code they haven't written theirself,
-- don't like code which doesn't look like they have written it theirself,
-- don't like ideas they haven't had themself,
-- do feel good in their closed group they have formed,
-...
-
-You see, I long have given up. The reason I still posted these patches
-is just because I don't care anymore about Linux kernel maintainers at
-all. I was prepared that I do that just for the fun of annoying some
-Linux kernel maintainers. I've already decided some time ago that I just
-will post my patches once to the LKML (so that other poor Linux kernel
-users may find them) and will ignore Linux kernel maintainers.
-
-Sorry, but I have a long and very unpleasant history in dealing with
-Linux kernel maintainers, and they already have called me almost
-anything like "ugly code writer", "frustrated" and such things more.
-
-Fortunately I'm too old to care about such, that's why I still post
-patches (besides that I like to solve problems and help other people). ;)
-
-Regards,
-
-Alexander Holler
+Tony 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
