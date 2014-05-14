@@ -1,51 +1,152 @@
-From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] input: sun4i-ts: Add support for
- temperature sensor
-Date: Wed, 14 May 2014 11:41:42 -0700
-Message-ID: <20140514184142.GG30089@core.coreip.homeip.net>
-References: <1399795586-18919-1-git-send-email-hdegoede@redhat.com>
- <1399795586-18919-3-git-send-email-hdegoede@redhat.com>
- <CAGb2v66EiYy3XbLqBXmOhOfHF=2DC_tOyQpdM8Q05iR6+X66zg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
+Date: Wed, 14 May 2014 20:42:16 +0200
+Message-ID: <5373B908.5090904@gmail.com>
+References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <20140514165722.GA18495@kwain> <5373AE9A.3050008@gmail.com> <5764751.ffUj9rhnMd@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDP6N55ZUYDRB2PRZ2NQKGQEEUYBAXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v66EiYy3XbLqBXmOhOfHF=2DC_tOyQpdM8Q05iR6+X66zg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LM Sensors <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <5764751.ffUj9rhnMd@wuerfel>
+Sender: linux-ide-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 12, 2014 at 04:44:51PM +0800, Chen-Yu Tsai wrote:
-> Hi,
-> 
-> On Sun, May 11, 2014 at 4:06 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> > @@ -232,14 +284,39 @@ static int sun4i_ts_probe(struct platform_device *pdev)
-> >         writel(STYLUS_UP_DEBOUN(5) | STYLUS_UP_DEBOUN_EN(1) | TP_MODE_EN(1),
-> >                ts->base + TP_CTRL1);
-> >
-> > -       ret = input_register_device(ts->input);
-> > -       if (ret)
-> > -               return ret;
-> > +       hwmon = devm_hwmon_device_register_with_groups(ts->dev, "sun4i_ts",
-> > +                                                      ts, sun4i_ts_groups);
-> 
-> This fails to compile when HWMON is not selected:
-> 
-> drivers/built-in.o: In function `sun4i_ts_probe':
-> /home/wens/cubieboard/linux/drivers/input/touchscreen/sun4i-ts.c:287:
-> undefined reference to `devm_hwmon_device_register_with_groups'
-> 
-> Best do a wrapper around the hwmon related code.
-> drivers/input/touchscreen/ads7846.c has something similar, albeit for voltage.
+On 05/14/2014 08:12 PM, Arnd Bergmann wrote:
+> On Wednesday 14 May 2014 19:57:46 Sebastian Hesselbarth wrote:
+>> On 05/14/2014 06:57 PM, Antoine T=E9nart wrote:
+>>> On Wed, May 14, 2014 at 06:11:24PM +0200, Arnd Bergmann wrote:
+>>>> On Wednesday 14 May 2014 17:49:29 Antoine T=E9nart wrote:
+>>>>> On Wed, May 14, 2014 at 05:31:24PM +0200, Arnd Bergmann wrote:
+>>
+>> From what I understand from the conversation, we have a single PHY
+>> register set dealing with both SATA ports available on the SoC.
+>> Also, from the name of the PHY bits we assume the PHY may be able
+>> to work in different modes than just SATA. And we currently have
+>> an AHCI-compatible SATA IP that supports up to two ports, with one
+>> actually connected to a SATA plug on the DMP board.
+>>
+>> Now, thinking about the PHY binding and the (possible) multi-protoco=
+l
+>> support, it can be possible that on BG2Q there is a generic 2-lane
+>> LVDS PHY that can be configured to support SATA or PCIe. Both are
+>> electrically and bit-level compatible, so they could be internally
+>> wired-up with AHCI and PCIe controller.
+>=20
+> Sounds like a reasonable guess. We have other PHY drivers doing the
+> same thing already.
 
-I added dependency on HWMON and applied, thank you.
+Well, I based that on what I know about FPGA LVDS transceivers, so
+I wasn't guessing out of the blue ;)
 
--- 
-Dmitry
+>> From a DT point-of-view, we need a way to (a) link each SATA or PCIe
+>> port to the PHY, (b) specify the PHY lane to be used, and (c) specif=
+y
+>> the protocol to be used on that lane. If I got it right, Arnd alread=
+y
+>> mentioned to use the phy-specifier to deal with it:
+>>
+>> e.g. phy =3D <&genphy 0 MODE_SATA> or phy =3D <&genphy 1 MODE_PCIE>
+>=20
+> Right.
+>=20
+>> Let's assume we have one dual-port SATA controller and one PCIe
+>> controller with either x1 or x2 support. The only sane DT binding,
+>> I can think of then would be:
+>>
+>> berlin2q.dtsi:
+>>
+>> genphy: lvds@ea00ff {
+>> 	compatible =3D "marvell,berlin-lvds-phy";
+>> 	reg =3D <0xea00ff 0x100>;
+>> 	#phy-cells =3D <2>;
+>> };
+>>
+>> sata: sata@ab00ff {
+>> 	compatible =3D "ahci-platform";
+>> 	reg =3D <0xab00ff 0x100>;
+>> =09
+>> 	sata0: sata-port@0 {
+>> 		reg =3D <0>;
+>> 		phy =3D <&genphy 0 MODE_SATA>;
+>> 		status =3D "disabled";
+>> 	};
+>>
+>> 	sata1: sata-port@1 {
+>> 		reg =3D <1>;
+>> 		phy =3D <&genphy 1 MODE_SATA>;
+>> 		status =3D "disabled";
+>> 	};
+>> };
+>>
+>> pcie: pcie@ab01ff {
+>> 	compatible =3D "marvell,berlin-pcie";
+>> 	reg =3D <0xab01ff 0x100>;
+>>
+>> 	pcie0: pcie-port@0 {
+>> 		reg =3D <0>;
+>> 		/* set phy on a per-board basis */
+>> 		/* PCIe x1 on Lane 0 : phy =3D <&genphy 0 MODE_PCIE>; */
+>> 		/* PCIe x2 on Lane 0 and 1 : phy =3D <&genphy 0 MODE_PCIE>, <&genp=
+hy 1
+>> MODE_PCIE>; */
+>> 		status =3D "disabled";
+>> 	};
+>> };
+>>
+>> berlin2q-dmp.dts:
+>>
+>> &sata1 {
+>> 	status =3D "okay";
+>> };
+>>
+>> &pcie0 {
+>> 	phy =3D <&genphy 1 MODE_PCIE>;
+>> };
+>>
+>> berlin2q-foo.dts:
+>>
+>> &pcie0 {
+>> 	phy =3D <&genphy 0 MODE_PCIE>, <&genphy 1 MODE_PCIE>;
+>> };
+>=20
+> Exactly. I would also be fine with keeping the sub-nodes of the
+> phy device as in v3 and using #phy-cells=3D<1> instead of #phy-cells.
+> The result would be pretty much the same, it just depends on how
+> closely connected the two logical phys are.
+>=20
+> IIRC for the ST microelectronics PHY we recently reviewed, the
+> same PHY could be driving multiple SATA ports, or a single
+> multi-lane PCIe. In that case, it makes more sense to have
+> #phy-cells=3D<2>, like your example.
+
+I guess the final call is up to Kishon, but I personally prefer
+#phy-cells =3D <2>. It makes no functional difference though.
+
+>> For the driver, Antoine then would have to squeeze all PHY register
+>> mangling in phy-berlin2.c and see how to make ahci-platform aware of
+>> individual port nodes (I haven't looked up if it already exists, sor=
+ry)
+>> and announce only enabled port child nodes, right?
+>=20
+> I've been thinking some more about this aspect. I don't actually have
+> a strong opinion on whether it's better to use the generic ahci-platf=
+orm
+> driver, or to keep the multi-phy support as a special variant for
+> berlin. If we do the latter, it would however be good to define the
+> binding in a way that lets us later merge things into the generic phy
+> driver in case we get more of the same.
+
+Hmm, IMHO multi-phy support is orthogonal to ahci-platform, isn't it?
+ahci-platform needs to know about the phy property and calls some
+helper that deals with the phy-specifier?
+
+About a generic _phy_ driver, I am not so sure if berlin is the best
+template right now ;)
+
+So, my call would be:
+- make ahci-platform aware of port sub-nodes and phy properties
+- have a berlin specific PHY driver
+
+Sebastian
