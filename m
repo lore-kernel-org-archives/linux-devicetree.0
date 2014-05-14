@@ -1,76 +1,58 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v13 2/2] ARM: sunxi: Add driver for SD/MMC
- hosts found on Allwinner sunxi SoCs
-Date: Wed, 14 May 2014 14:06:34 +0200
-Message-ID: <53735C4A.70502@redhat.com>
-References: <1399896288-5826-1-git-send-email-hdegoede@redhat.com>	<1399896288-5826-3-git-send-email-hdegoede@redhat.com>	<5370C5D1.2070901@broadcom.com> <CAPDyKFrq=v1SU0+rC5_tCJ1D5jUOd3vwLXpxgpzB9X5NQd-deg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Wed, 14 May 2014 14:11:52 +0200
+Message-ID: <53735D88.5090108@mycable.de>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com> <1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com> <20140514100856.5198DC4153D@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBVFYZWNQKGQEETVHAYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAPDyKFrq=v1SU0+rC5_tCJ1D5jUOd3vwLXpxgpzB9X5NQd-deg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, =?UTF-8?B?RGF2aWQgTGFuemVuZMO2cmZlcg==?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140514100856.5198DC4153D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto@antoniou-consu>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Grant,
 
-On 05/14/2014 02:03 PM, Ulf Hansson wrote:
-> On 12 May 2014 15:00, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
->> On 05/12/2014 02:04 PM, Hans de Goede wrote:
->>>
->>> From: David Lanzend=C3=B6rfer<david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
->>>
->>> The Allwinner sunxi mmc host uses dma in bus-master mode using a built-=
-in
->>> designware idmac controller, which is identical to the one found in the
->>> mmc-dw
->>> hosts. However the rest of the host is not identical to mmc-dw, it deal=
-s
->>> with
->>> sending stop commands in hardware which makes it significantly differen=
-t
->>> from the mmc-dw devices.
->>>
->>> HdG: Various cleanups and fixes.
->>
->>
->> Just nitpicking, but usually the above line should be added below the
->> original signoff, so:
->>
->>> Signed-off-by: David Lanzend=C3=B6rfer<david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>
->>
->> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: various cleanups and fixes]
->>
->>> Signed-off-by: Hans de Goede<hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>
->>
->> As is documented in SubmittingPatches.
->>
->> Gr. AvS
->=20
->=20
-> This looks good to me, thanks Hans!
->=20
-> I will include this in the next PR I send to Chris, I will also take
-> the liberty to fixup the commit msg as pointed out by Arend.
+Am 14.05.2014 12:08, schrieb Grant Likely:
+> More generally I am concerned about whether or not overlays
+> will introduce corner cases that can never be handled correctly,
+> particularly in how multiple overlays will get handled. I want to see
+> very clear rules on what happens when multiple overlays are applied, and
+> then removed again. Is it possible to remove overlays out of order? If
+> so, what are the conditions that would not be allowed?
 
-Great, thanks!
+Yes, it is possible that an overlay depends on another.
 
-Regards,
+The problem is not, that an overlay is removed other overlays depend on,
+but that nodes of an overlay may depend on the to-be-removed overlay and
+the resulting devicetree can become inconsistent.
 
-Hans
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I have an SPI Bus with two slaves. The second slave is used only on one
+of our boards. That is why we split the overlays the following way:
+
+xxxx_spi1.dts:
+  Pinmux for SPI-Bus and activation of spi-controller.
+  Pinmux for CS0 and definition of first slave.
+
+xxxx_spi1_cs1:
+  Pinmux for CS1 and definition of second slave.
+
+When the overlay for the bus is removed, the overlays for the second
+slave does not make any sense anymore.
+
+It is even worse in a scenario we have with a test board.
+One of the slaves is an spi-io-controller with a few bitbanging i2c
+masters. In an extreme case, each component is defined in a separate
+overlay and only the overlay with the master is removed. I know, that
+this is completely sick. The devices are removed cleanly because of the
+device dependency.
+
+Michael
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
