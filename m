@@ -1,58 +1,92 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v2 03/10] ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY
- & CLK_S_ETH1_PHY fixed clocks
-Date: Wed, 14 May 2014 15:24:11 +0200
-Message-ID: <1400073858-28912-4-git-send-email-gabriel.fernandez@linaro.org>
-References: <1400073858-28912-1-git-send-email-gabriel.fernandez@linaro.org>
+From: Thor Thayer <tthayer.linux@gmail.com>
+Subject: Re: [PATCHv4 3/3] edac: altera: Add EDAC support for Altera SoC SDRAM Controller
+Date: Wed, 14 May 2014 08:38:21 -0500
+Message-ID: <CAF03EBc05N3f5p0TPieLZx=mwQkU5Fr4Vq7DwMpUjdiSvs3pwA@mail.gmail.com>
+References: <1399937817-2202-1-git-send-email-tthayer@altera.com>
+	<1399937817-2202-4-git-send-email-tthayer@altera.com>
+	<20140513001246.GC5935@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400073858-28912-1-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140513001246.GC5935@pd.tnic>
+Sender: linux-doc-owner@vger.kernel.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-CLK_S_GMAC0_PHY &  CLK_S_ETH1_PH clocks are no longer used.
+On Mon, May 12, 2014 at 7:12 PM, Borislav Petkov <bp@alien8.de> wrote:
+> On Mon, May 12, 2014 at 06:36:57PM -0500, tthayer@altera.com wrote:
+>> +     ptemp[0] = 0x5A5A5A5A;
+>> +     ptemp[1] = 0xA5A5A5A5;
+>> +     /* Clear the error injection bits */
+>> +     regmap_write(drvdata->mc_vbase, CTLCFG, read_reg);
+>> +     /* Ensure it has been written out */
+>> +     wmb();
+>> +
+>> +     /*
+>> +      * To trigger the error, we need to read the data back
+>> +      * (the data was written with errors above)
+>> +      * The ACCESS_ONCE macros are used to prevent the
+>> +      * compiler optimizing these reads out.
+>> +      */
+>> +     reg = ACCESS_ONCE(ptemp[0]);
+>> +     read_reg = ACCESS_ONCE(ptemp[1]);
+>> +     /* Force Read */
+>> +     rmb();
+>
+> Right, I still am a bit unsure about this thing. So sure, we funnel
+> ptemp through an asm() block which stops the optimizer but we assign the
+> results to reg and read_reg, i.e. two local variables which aren't used
+> in this function anymore.
+>
+> Thus, I don't see what stops the compiler from discarding them along
+> with the ACCESS_ONCE() reads at some point, when it becomes really
+> smart. Basically killing
+>
+>> +     reg = ACCESS_ONCE(ptemp[0]);
+>> +     read_reg = ACCESS_ONCE(ptemp[1]);
+>
+> as they have to effect.
+>
+> Maybe we can do the reads in asm - this should be pretty safe.
+>
+> I.e., something like this:
+>
+>       asm volatile("" : "=r" (reg), "=r" (read_reg),
+>                       : "0" (ptemp[0]), "1" (ptemp[1]));
+>
+> and it does it on x86 (did a small test program) by shuffling the values
+> through registers so we definitely have the reads.
+>
+>         .loc 1 28 0
+>         movl    -48(%rbp), %edx # ptemp, D.2240
+>         movl    -44(%rbp), %eax # ptemp, D.2240
+>         .loc 1 27 0
+>         movl    %edx, -28(%rbp) # reg, reg
+>         movl    %eax, -32(%rbp) # read_reg, read_reg
+>
+> Btw, if you only want to do the reads, you can simply tell gcc to put them in
+> registers
+>
+>       asm volatile("" :: "r" (ptemp[0]), "r" (ptemp[1]));
+>
+> and be done with it but I don't know how smart it is with register
+> allocation so as to recognize that they're already in registers (when
+> they already are in some registers) and discard the reads.
+>
+> Fun stuff! :-)
+>
+> --
+> Regards/Gruss,
+>     Boris.
+>
+> Sent from a fat crate under my desk. Formatting is fine.
+> --
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- arch/arm/boot/dts/stih416-clock.dtsi | 14 --------------
- 1 file changed, 14 deletions(-)
+Hi Boris.
 
-diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index 4bb6633..d7a3b88 100644
---- a/arch/arm/boot/dts/stih416-clock.dtsi
-+++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -34,20 +34,6 @@
- 			clock-frequency = <600000000>;
- 		};
- 
--		CLK_S_GMAC0_PHY: clockgenA1@7 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <25000000>;
--			clock-output-names = "CLK_S_GMAC0_PHY";
--		};
--
--		CLK_S_ETH1_PHY: clockgenA0@7 {
--			#clock-cells = <0>;
--			compatible = "fixed-clock";
--			clock-frequency = <25000000>;
--			clock-output-names = "CLK_S_ETH1_PHY";
--		};
--
- 		/*
- 		 * ClockGenAs on SASG2
- 		 */
--- 
-1.9.1
+I'll look into that. I think I will use the registers in a
+edac_printk(). Since this is a debugging trigger function, the
+printout may be useful anyway.
+
+Thanks!
