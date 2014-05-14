@@ -1,109 +1,68 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for
- configuring the iATU
-Date: Wed, 14 May 2014 20:34:10 +0530
-Message-ID: <537385EA.2070302@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <4528185.oZbgyuuFKX@wuerfel> <537302CD.7000701@ti.com> <5281007.CFRjW0Yeu2@wuerfel>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v3 2/2] Documentation: devicetree: Add boost-frequency
+ binding to list boost mode frequency
+Date: Wed, 14 May 2014 16:06:03 +0100
+Message-ID: <5373865B.2040205@arm.com>
+References: <1400029380-5372-1-git-send-email-thomas.ab@samsung.com> <1400029380-5372-3-git-send-email-thomas.ab@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5281007.CFRjW0Yeu2@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1400029380-5372-3-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "t.figa@samsung.com" <t.figa@samsung.com>, "l.majewski@samsung.com" <l.majewski@samsung.com>, "viresh.kumar@linaro.org" <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
 
-On Wednesday 14 May 2014 06:15 PM, Arnd Bergmann wrote:
-> On Wednesday 14 May 2014 11:14:45 Kishon Vijay Abraham I wrote:
->> hi Arnd,
->>
->> On Tuesday 13 May 2014 07:04 PM, Arnd Bergmann wrote:
->>> On Tuesday 13 May 2014 15:27:46 Arnd Bergmann wrote:
->>>> On Tuesday 13 May 2014 18:56:23 Kishon Vijay Abraham I wrote:
->>>>>> If you have a case where the outbound translation is a 256MB (i.e. 28bit)
->>>>>> section of the CPU address space, that could be represented as
->>>>>>
->>>>>>       ranges = <0x82000000 0 0  0xb0000000  0 0x10000000>;
->>>>>>
->>>>>> or 
->>>>>>
->>>>>>       ranges = <0x82000000 0 0xb0000000  0xb0000000  0 0x10000000>;
->>>>>>
->>>>>> depending on whether you want the BARs to be programmed using a low
->>>>>> address 0x0-0x0fffffff or an address matching the window
->>>>>> 0xb0000000-0xbfffffff.
->>>>>
->>>>> The problem is, for configuring the window starting at 0xb0000000, the ATU
->>>>> should be programmed 0x0000000 (the cpu address for it will be 0xb0000000 though).
->>>>>
->>>>
->>>> Then use the first of the two?
->>>>
->>>
->>> To clarify: using <0x82000000 0 0  0xb0000000  0 0x10000000> will give you 
->>> a mem_offset of 0xb0000000, which should work just fine for this case.
->>>
->>> What I don't understand is why the ATU cares about whether the outbound
->>> address is 0x0000000 or 0xb0000000 if it just decodes the lower 28 bit
->>> anyway. Did you mean that we have to program the BARs using low addresses
->>> regardless of what is programmed in the ATU? That would make more sense,
->>> and it also matches what I suggested.
->>
->> No, It's not like it decodes only the lower 28bits. The BARs is programmed with
->> 32 bit value.
->>
->> My pcie dt node has
->>  ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* CONFIG */
->>            0x81000000 0 0          0x20003000 0 0x00010000  /* IO */
->>            0x82000000 0 0x20013000 0x20013000 0 0xffed000>; /* MEM */
->>
->> Consider MEM address space..
->>
->> Here both PCI address and CPU address is 0x20013000. So when there is a write
->> to cpu addr 0x20013000 [writel(virt_addr(0x20013000)], we want it to be
->> translated to PCI addr 0x20013000. So in 'ATU', we would expect *base* to be
->> programmed to *0x20013000* and target to be programmed to *0x20013000*. But
->> that's not the case for DRA7xx. For DRA7xx *base* should be programmed to
->> *0x0013000* and target should be programmed to *0x20013000*.
-> 
-> Ok, got it, thanks for your patience.
-> 
-> I think this would best be modeled as a separate bus node that contains the
-> restriction, like this:
-> 
-> / {
-> 	#address-cells = <1>; // or <2> if you support > 4GB address space
-> 	#size-cells = <1>;
-> 
-> 	soc {
-> 		#address-cells <1>;
-> 		#size-cells = <1>;
-> 		ranges;
-> 		dma-ranges;
-> 
-> 		... // all normal devices
-> 
-> 		axi@20000000 {
-> 			#size-cells = <1>;
-> 			#address-cells = <1>;
-> 			dma-ranges; // can access all 4GB outbound
-> 			ranges = <0 0x20000000 0x10000000>; // 28-bit bus
-> 
-> 			pci@0 {
-> 				reg = <0x0    0x1000>, // internal regs
-> 				      <0x1000 0x2000>; // config space
-> 				dma-ranges; // 32-bit outbound
-> 				ranges = <0x81000000 0 0           0x3000 0 0x00010000  /* IO */
-> 					  0x82000000 0 0x20013000 0x13000 0 0xffed000>; /* MEM */
-> 			};
-> 		};
-> 	};
-> };
 
-Nice :-)
+On 14/05/14 02:03, Thomas Abraham wrote:
+> From: Thomas Abraham <thomas.ab@samsung.com>
+>
+> Add a new optional boost-frequency binding for specifying the frequencies
+> usable in boost mode.
+>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Lukasz Majewski <l.majewski@samsung.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> ---
+>   .../devicetree/bindings/cpufreq/cpufreq-boost.txt  |   11 +++++++++++
+>   1 files changed, 11 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+> new file mode 100644
+> index 0000000..d925e38
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+> @@ -0,0 +1,11 @@
+> +* Device tree binding for CPU boost frequency (aka over-clocking)
+> +
+> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
+> +overclocking) in which the CPU can operate in frequencies beyond the normal
+> +operating conditions.
+> +
+> +Optional Properties:
+> +- boost-frequency: list of frequencies in KHz to be used only in boost mode.
+> +  This list should be a subset of frequencies listed in "operating-points"
+> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
+> +  details about "operating-points" property.
+>
 
-Thanks
-Kishon
+Though I understand the need of it, I think the binding is designed to suffice
+the need of the boost frequency support in cpufreq.
+
+Typically SoC would provide characteristics like under-drive(hits performance
+but most energy efficient), nominal(highest sustained performance w/o any
+external constraint like power, thermal) and over-drive(maximum performance but
+not sustainable for long periods)
+
+IMO the binding could represent these unique points on the curve instead.
+
+Regards,
+Sudeep
