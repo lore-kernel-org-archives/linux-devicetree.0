@@ -1,165 +1,80 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 03/17] phy: ti-pipe3: add external clock support for PCIe
- PHY
-Date: Wed, 14 May 2014 16:16:44 +0300
-Message-ID: <53736CBC.2060702@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-4-git-send-email-kishon@ti.com>
+From: Thomas Abraham <ta.omasab@gmail.com>
+Subject: Re: [PATCH v3 2/2] Documentation: devicetree: Add boost-frequency
+ binding to list boost mode frequency
+Date: Wed, 14 May 2014 18:47:44 +0530
+Message-ID: <CAJuA9ai7ycUOfFZfcshBk=XWCiWV82RAruaz_KTF4Cg2xtgaow@mail.gmail.com>
+References: <1400029380-5372-1-git-send-email-thomas.ab@samsung.com>
+	<1400029380-5372-3-git-send-email-thomas.ab@samsung.com>
+	<CAGo_u6ozaKjzVQsJjzi5g13ysBT6UDwsgW3O1=K3RD4Y-ODtDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1399383244-14556-4-git-send-email-kishon@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org
-Cc: balajitk@ti.com, Rajendra Nayak <rnayak@ti.com>, Tero Kristo <t-kristo@ti.com>, Paul Walmsley <paul@pwsan.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAGo_u6ozaKjzVQsJjzi5g13ysBT6UDwsgW3O1=K3RD4Y-ODtDA@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nishanth Menon <nm@ti.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+On Wed, May 14, 2014 at 7:32 AM, Nishanth Menon <nm@ti.com> wrote:
+> On Tue, May 13, 2014 at 8:03 PM, Thomas Abraham <ta.omasab@gmail.com> wrote:
+>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>
+>> Add a new optional boost-frequency binding for specifying the frequencies
+>> usable in boost mode.
+>>
+>> Cc: Nishanth Menon <nm@ti.com>
+>> Cc: Lukasz Majewski <l.majewski@samsung.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Pawel Moll <pawel.moll@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> Cc: Kumar Gala <galak@codeaurora.org>
+>> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+>> ---
+>>  .../devicetree/bindings/cpufreq/cpufreq-boost.txt  |   11 +++++++++++
+>>  1 files changed, 11 insertions(+), 0 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>> new file mode 100644
+>> index 0000000..d925e38
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>> @@ -0,0 +1,11 @@
+>> +* Device tree binding for CPU boost frequency (aka over-clocking)
+>> +
+>> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
+>> +overclocking) in which the CPU can operate in frequencies beyond the normal
+>
+> "operate at"?
+>
+>> +operating conditions.
+>
+> "normal operating conditions" probably need a little bit of an
+> expansion here perhaps?
+>
+>> +
+>> +Optional Properties:
+>> +- boost-frequency: list of frequencies in KHz to be used only in boost mode.
+>
+> probably boost-frequencies?
+>
+>> +  This list should be a subset of frequencies listed in "operating-points"
+>> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
+>> +  details about "operating-points" property.
+>
+>
+> an example is expected here.
+>
+> personally, I think I understand the intent here, but as a hardware
+> description, will let folks comment if it is acceptable.
 
-On 05/06/2014 04:33 PM, Kishon Vijay Abraham I wrote:
-> APLL used by PCIE phy can either use external clock as input or the clock
-> from DPLL. Added support for the APLL to use external clock as input here.
-> 
-> Cc: Rajendra Nayak <rnayak@ti.com>
-> Cc: Tero Kristo <t-kristo@ti.com>
-> Cc: Paul Walmsley <paul@pwsan.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  Documentation/devicetree/bindings/phy/ti-phy.txt |    4 ++
->  drivers/phy/phy-ti-pipe3.c                       |   75 ++++++++++++++--------
->  2 files changed, 52 insertions(+), 27 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> index bc9afb5..d50f8ee 100644
-> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
-> @@ -76,6 +76,10 @@ Required properties:
->     * "dpll_ref_m2" - external dpll ref clk
->     * "phy-div" - divider for apll
->     * "div-clk" - apll clock
-> +   * "apll_mux" - mux for pcie apll
-> +   * "refclk_ext" - external reference clock for pcie apll
-> + - ti,ext-clk: To specifiy if PCIE apll should use external clock. Applicable
-> +   only to PCIE PHY.
+Thanks for your review Nishanth. I will do the changes you have suggested.
 
-Instead of specifying both clock sources "dpll_ref_clock", "refclk_ext" and then specifying a 3rd control option "ti,ext-clk" to select one of the 2 sources, why can't the DT just supply one clock source, i.e. the one that is being used in the board instance? The driver should then just configure the clock rate that is needed at that node. Shouldn't the clock framework automatically take care of muxing and parent rates?
+Regards,
+Thomas.
 
->  
->  Optional properties:
->   - ctrl-module : phandle of the control module used by PHY driver to power on
-> diff --git a/drivers/phy/phy-ti-pipe3.c b/drivers/phy/phy-ti-pipe3.c
-> index d43019d..5513aa0 100644
-> --- a/drivers/phy/phy-ti-pipe3.c
-> +++ b/drivers/phy/phy-ti-pipe3.c
-> @@ -293,7 +293,7 @@ static int ti_pipe3_probe(struct platform_device *pdev)
->  	struct device_node *control_node;
->  	struct platform_device *control_pdev;
->  	const struct of_device_id *match;
-> -	struct clk *clk;
-> +	struct clk *clk, *pclk;
->  
->  	phy = devm_kzalloc(&pdev->dev, sizeof(*phy), GFP_KERNEL);
->  	if (!phy) {
-> @@ -302,6 +302,20 @@ static int ti_pipe3_probe(struct platform_device *pdev)
->  	}
->  	phy->dev		= &pdev->dev;
->  
-> +	control_node = of_parse_phandle(node, "ctrl-module", 0);
-> +	if (!control_node) {
-> +		dev_err(&pdev->dev, "Failed to get control device phandle\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	control_pdev = of_find_device_by_node(control_node);
-> +	if (!control_pdev) {
-> +		dev_err(&pdev->dev, "Failed to get control device\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	phy->control_dev = &control_pdev->dev;
-> +
-
-Why this code was moved move is not part of patch description/subject.
-
->  	if (!of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
->  		match = of_match_device(of_match_ptr(ti_pipe3_id_table),
->  					&pdev->dev);
-> @@ -345,19 +359,40 @@ static int ti_pipe3_probe(struct platform_device *pdev)
->  	}
->  
->  	if (of_device_is_compatible(node, "ti,phy-pipe3-pcie")) {
-> -		clk = devm_clk_get(phy->dev, "dpll_ref");
-> -		if (IS_ERR(clk)) {
-> -			dev_err(&pdev->dev, "unable to get dpll ref clk\n");
-> -			return PTR_ERR(clk);
-> +		if (!of_property_read_bool(node, "ti,ext-clk")) {
-> +			clk = devm_clk_get(phy->dev, "dpll_ref");
-> +			if (IS_ERR(clk)) {
-> +				dev_err(&pdev->dev,
-> +					"unable to get dpll ref clk\n");
-> +				return PTR_ERR(clk);
-> +			}
-> +			clk_set_rate(clk, 1500000000);
-> +
-> +			clk = devm_clk_get(phy->dev, "dpll_ref_m2");
-> +			if (IS_ERR(clk)) {
-> +				dev_err(&pdev->dev,
-> +					"unable to get dpll ref m2 clk\n");
-> +				return PTR_ERR(clk);
-> +			}
-> +			clk_set_rate(clk, 100000000);
-> +		} else {
-> +			omap_control_pcie_tx_rx_control(phy->control_dev,
-> +						OMAP_CTRL_PCIE_PHY_RX_ACSPCIE);
-> +
-> +			clk = clk_get(phy->dev, "apll_mux");
-> +			if (IS_ERR(clk)) {
-> +				dev_err(&pdev->dev, "unable to get apll mux clk\n");
-> +				return PTR_ERR(clk);
-> +			}
-> +
-> +			pclk = clk_get(phy->dev, "refclk_ext");
-> +			if (IS_ERR(pclk)) {
-> +				dev_err(&pdev->dev, "unable to get ext ref clk for apll\n");
-> +				return PTR_ERR(pclk);
-> +			}
-> +
-> +			clk_set_parent(clk, pclk);
->  		}
-> -		clk_set_rate(clk, 1500000000);
-> -
-> -		clk = devm_clk_get(phy->dev, "dpll_ref_m2");
-> -		if (IS_ERR(clk)) {
-> -			dev_err(&pdev->dev, "unable to get dpll ref m2 clk\n");
-> -			return PTR_ERR(clk);
-> -		}
-> -		clk_set_rate(clk, 100000000);
->  
->  		clk = devm_clk_get(phy->dev, "phy-div");
->  		if (IS_ERR(clk)) {
-> @@ -375,20 +410,6 @@ static int ti_pipe3_probe(struct platform_device *pdev)
->  		phy->div_clk = ERR_PTR(-ENODEV);
->  	}
->  
-> -	control_node = of_parse_phandle(node, "ctrl-module", 0);
-> -	if (!control_node) {
-> -		dev_err(&pdev->dev, "Failed to get control device phandle\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	control_pdev = of_find_device_by_node(control_node);
-> -	if (!control_pdev) {
-> -		dev_err(&pdev->dev, "Failed to get control device\n");
-> -		return -EINVAL;
-> -	}
-> -
-> -	phy->control_dev = &control_pdev->dev;
-> -
->  	omap_control_phy_power(phy->control_dev, 0);
->  
->  	platform_set_drvdata(pdev, phy);
-> 
-
---
-cheers,
--roger
+>
+> --
+> Regards,
+> Nishanth Menon
