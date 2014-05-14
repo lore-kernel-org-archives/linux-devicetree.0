@@ -1,103 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for configuring the iATU
-Date: Wed, 14 May 2014 14:45:36 +0200
-Message-ID: <5281007.CFRjW0Yeu2@wuerfel>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <4528185.oZbgyuuFKX@wuerfel> <537302CD.7000701@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] documentation/iommu: Add note on existing DT binding
+	status
+Date: Wed, 14 May 2014 14:46:07 +0200
+Message-ID: <4285609.T2z8nUPpCQ@wuerfel>
+References: <1400046813-15248-1-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <537302CD.7000701@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1400046813-15248-1-git-send-email-shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 May 2014 11:14:45 Kishon Vijay Abraham I wrote:
-> hi Arnd,
+On Wednesday 14 May 2014 11:23:33 Shaik Ameer Basha wrote:
+> The current dt binding for Exynos System MMU can be changed, if found
+> incompatible with the support for "Generic IOMMU Binding".
+> This patch adds a note to the binding documentation stating the same.
 > 
-> On Tuesday 13 May 2014 07:04 PM, Arnd Bergmann wrote:
-> > On Tuesday 13 May 2014 15:27:46 Arnd Bergmann wrote:
-> >> On Tuesday 13 May 2014 18:56:23 Kishon Vijay Abraham I wrote:
-> >>>> If you have a case where the outbound translation is a 256MB (i.e. 28bit)
-> >>>> section of the CPU address space, that could be represented as
-> >>>>
-> >>>>       ranges = <0x82000000 0 0  0xb0000000  0 0x10000000>;
-> >>>>
-> >>>> or 
-> >>>>
-> >>>>       ranges = <0x82000000 0 0xb0000000  0xb0000000  0 0x10000000>;
-> >>>>
-> >>>> depending on whether you want the BARs to be programmed using a low
-> >>>> address 0x0-0x0fffffff or an address matching the window
-> >>>> 0xb0000000-0xbfffffff.
-> >>>
-> >>> The problem is, for configuring the window starting at 0xb0000000, the ATU
-> >>> should be programmed 0x0000000 (the cpu address for it will be 0xb0000000 though).
-> >>>
-> >>
-> >> Then use the first of the two?
-> >>
-> > 
-> > To clarify: using <0x82000000 0 0  0xb0000000  0 0x10000000> will give you 
-> > a mem_offset of 0xb0000000, which should work just fine for this case.
-> > 
-> > What I don't understand is why the ATU cares about whether the outbound
-> > address is 0x0000000 or 0xb0000000 if it just decodes the lower 28 bit
-> > anyway. Did you mean that we have to program the BARs using low addresses
-> > regardless of what is programmed in the ATU? That would make more sense,
-> > and it also matches what I suggested.
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 > 
-> No, It's not like it decodes only the lower 28bits. The BARs is programmed with
-> 32 bit value.
-> 
-> My pcie dt node has
->  ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* CONFIG */
->            0x81000000 0 0          0x20003000 0 0x00010000  /* IO */
->            0x82000000 0 0x20013000 0x20013000 0 0xffed000>; /* MEM */
-> 
-> Consider MEM address space..
-> 
-> Here both PCI address and CPU address is 0x20013000. So when there is a write
-> to cpu addr 0x20013000 [writel(virt_addr(0x20013000)], we want it to be
-> translated to PCI addr 0x20013000. So in 'ATU', we would expect *base* to be
-> programmed to *0x20013000* and target to be programmed to *0x20013000*. But
-> that's not the case for DRA7xx. For DRA7xx *base* should be programmed to
-> *0x0013000* and target should be programmed to *0x20013000*.
 
-Ok, got it, thanks for your patience.
-
-I think this would best be modeled as a separate bus node that contains the
-restriction, like this:
-
-/ {
-	#address-cells = <1>; // or <2> if you support > 4GB address space
-	#size-cells = <1>;
-
-	soc {
-		#address-cells <1>;
-		#size-cells = <1>;
-		ranges;
-		dma-ranges;
-
-		... // all normal devices
-
-		axi@20000000 {
-			#size-cells = <1>;
-			#address-cells = <1>;
-			dma-ranges; // can access all 4GB outbound
-			ranges = <0 0x20000000 0x10000000>; // 28-bit bus
-
-			pci@0 {
-				reg = <0x0    0x1000>, // internal regs
-				      <0x1000 0x2000>; // config space
-				dma-ranges; // 32-bit outbound
-				ranges = <0x81000000 0 0           0x3000 0 0x00010000  /* IO */
-					  0x82000000 0 0x20013000 0x13000 0 0xffed000>; /* MEM */
-			};
-		};
-	};
-};
-
-
-	Arnd
+Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
