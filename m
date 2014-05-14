@@ -1,54 +1,44 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v4 4/5] ARM: dts: remove chip specific hdmi hpd pin from
- board
-Date: Thu, 15 May 2014 03:45:40 +0900
-Message-ID: <5373B9D4.2060601@samsung.com>
-References: <1400035562-16832-1-git-send-email-rahul.sharma@samsung.com> <1400035562-16832-5-git-send-email-rahul.sharma@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
+Date: Wed, 14 May 2014 20:51:44 +0200
+Message-ID: <17808571.N5ZGjXFEVP@wuerfel>
+References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <5764751.ffUj9rhnMd@wuerfel> <5373B908.5090904@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400035562-16832-5-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <5373B908.5090904@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, kishon@ti.com, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/14 11:46, Rahul Sharma wrote:
-> From: Rahul Sharma<Rahul.Sharma@samsung.com>
->
-> "gpx3-7" is chip specific pin in Exynos5420 for hdmi
-> hotplug. This pin is moved to exynos5420-pinctrl.dts
-> and removed from the board file.
+On Wednesday 14 May 2014 20:42:16 Sebastian Hesselbarth wrote:
+> >> For the driver, Antoine then would have to squeeze all PHY register
+> >> mangling in phy-berlin2.c and see how to make ahci-platform aware of
+> >> individual port nodes (I haven't looked up if it already exists, sorry)
+> >> and announce only enabled port child nodes, right?
+> > 
+> > I've been thinking some more about this aspect. I don't actually have
+> > a strong opinion on whether it's better to use the generic ahci-platform
+> > driver, or to keep the multi-phy support as a special variant for
+> > berlin. If we do the latter, it would however be good to define the
+> > binding in a way that lets us later merge things into the generic phy
+> > driver in case we get more of the same.
+> 
+> Hmm, IMHO multi-phy support is orthogonal to ahci-platform, isn't it?
+> ahci-platform needs to know about the phy property and calls some
+> helper that deals with the phy-specifier?
+> 
+> About a generic _phy_ driver, I am not so sure if berlin is the best
+> template right now 
+> 
+> So, my call would be:
+> - make ahci-platform aware of port sub-nodes and phy properties
+> - have a berlin specific PHY driver
 
-Rahul, you may need to put the change (moving the pin from smdk5420 
-board to exynos5420-pinctrl.dts) before the patch 3/5.
+I'm not sure if we need sub-nodes per port, it should be enough
+to have an array of phys, plus a way to match them up with the
+ports.
 
-- Kukjin
-
->
-> Signed-off-by: Rahul Sharma<Rahul.Sharma@samsung.com>
-> ---
->   arch/arm/boot/dts/exynos5420-smdk5420.dts |    9 ---------
->   1 file changed, 9 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> index 6910485..11cd9bf 100644
-> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> @@ -131,15 +131,6 @@
->   		};
->   	};
->
-> -	pinctrl@13400000 {
-> -		hdmi_hpd_irq: hdmi-hpd-irq {
-> -			samsung,pins = "gpx3-7";
-> -			samsung,pin-function =<0>;
-> -			samsung,pin-pud =<1>;
-> -			samsung,pin-drv =<0>;
-> -		};
-> -	};
-> -
->   	hdmi@14530000 {
->   		status = "okay";
->   		hpd-gpio =<&gpx3 7 0>;
+	Arnd
