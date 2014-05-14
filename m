@@ -1,67 +1,71 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v13 1/2] clk: sunxi: Fixup
- clk_sunxi_mmc_phase_control to take a clk rather then a hw_clk
-Date: Wed, 14 May 2014 14:23:37 +0200
-Message-ID: <CAPDyKFquQ9bQB0w=wZySw54SMqi4OB+b3CrwQ0TrgSqw_mQLKg@mail.gmail.com>
-References: <1399896288-5826-1-git-send-email-hdegoede@redhat.com>
-	<1399896288-5826-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDF57NG2XIHRBSOAZWNQKGQEHUZCQOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1399896288-5826-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 0/7] mfd: add basic sun6i A31 PRCM support
+Date: Wed, 14 May 2014 14:38:14 +0200
+Message-ID: <1400071101-30553-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dev@linux-sunxi.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12 May 2014 14:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> __clk_get_hw is supposed to be used by clk providers, not clk consumers.
->
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Hello,
 
-Reviewed-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patch series adds support for some functions provided by the PRCM
+(Power/Reset/Clock Management) unit:
+- AR100, AHB0 and APB0 clocks
+- APB0 reset controller
 
-> ---
->  drivers/clk/sunxi/clk-sunxi.c | 3 ++-
->  include/linux/clk/sunxi.h     | 2 +-
->  2 files changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-> index 59f9040..4cc2b2a 100644
-> --- a/drivers/clk/sunxi/clk-sunxi.c
-> +++ b/drivers/clk/sunxi/clk-sunxi.c
-> @@ -510,11 +510,12 @@ CLK_OF_DECLARE(sun7i_a20_gmac, "allwinner,sun7i-a20-gmac-clk",
->   * clk_sunxi_mmc_phase_control() - configures MMC clock phase control
->   */
->
-> -void clk_sunxi_mmc_phase_control(struct clk_hw *hw, u8 sample, u8 output)
-> +void clk_sunxi_mmc_phase_control(struct clk *clk, u8 sample, u8 output)
->  {
->         #define to_clk_composite(_hw) container_of(_hw, struct clk_composite, hw)
->         #define to_clk_factors(_hw) container_of(_hw, struct clk_factors, hw)
->
-> +       struct clk_hw *hw = __clk_get_hw(clk);
->         struct clk_composite *composite = to_clk_composite(hw);
->         struct clk_hw *rate_hw = composite->rate_hw;
->         struct clk_factors *factors = to_clk_factors(rate_hw);
-> diff --git a/include/linux/clk/sunxi.h b/include/linux/clk/sunxi.h
-> index 1ef5c89..aed28c4 100644
-> --- a/include/linux/clk/sunxi.h
-> +++ b/include/linux/clk/sunxi.h
-> @@ -17,6 +17,6 @@
->
->  #include <linux/clk.h>
->
-> -void clk_sunxi_mmc_phase_control(struct clk_hw *hw, u8 sample, u8 output);
-> +void clk_sunxi_mmc_phase_control(struct clk *clk, u8 sample, u8 output);
->
->  #endif
-> --
-> 1.9.0
->
+Best Regards,
+
+Boris
+
+Changes since v3:
+- split clk drivers into 3 different drivers: ar100, apb0 and apb0_gates
+- fix indentation
+- add comments to the clk drivers
+- select the MFD_SUN6I_PRCM when compiling for SUN6I arch
+
+Changes since v2:
+- use devm_ioremap_resource instead of devm_request_and_ioremap
+- remove unnecessary header inclusions
+- remove info trace when the probe succeed
+- rename apb0_timer01 clk into apb0_timer
+
+Changes since v1:
+- fix prcm and prcm-clks DT documentation
+- remove unneeded iounmap and kfree calls from sunxi_reset_remove function
+- rework the AR100 clk implementation
+
+Boris BREZILLON (7):
+  reset: sunxi: document sunxi's reset controllers bindings
+  reset: sunxi: allow MFD subdevices probe
+  mfd: add support for sun6i PRCM (Power/Reset/Clock Management) unit
+  mfd: sun6i-prcm: document DT bindings
+  clk: sunxi: add PRCM (Power/Reset/Clock Management) clks support
+  clk: sunxi: document PRCM clock compatible strings
+  ARM: sunxi: dt: add PRCM clk and reset controller subdevices
+
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   3 +
+ .../devicetree/bindings/mfd/sun6i-prcm.txt         |  59 ++++++
+ .../bindings/reset/allwinner,sunxi-clock-reset.txt |  21 ++
+ arch/arm/boot/dts/sun6i-a31.dtsi                   |  38 ++++
+ arch/arm/mach-sunxi/Kconfig                        |   1 +
+ drivers/clk/sunxi/Makefile                         |   2 +
+ drivers/clk/sunxi/clk-sun6i-apb0-gates.c           |  99 +++++++++
+ drivers/clk/sunxi/clk-sun6i-apb0.c                 |  77 +++++++
+ drivers/clk/sunxi/clk-sun6i-ar100.c                | 233 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sun6i-prcm.c                           | 134 ++++++++++++
+ drivers/reset/reset-sunxi.c                        |  21 +-
+ 13 files changed, 694 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/allwinner,sunxi-clock-reset.txt
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-apb0-gates.c
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-apb0.c
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-ar100.c
+ create mode 100644 drivers/mfd/sun6i-prcm.c
+
+-- 
+1.8.3.2
+
