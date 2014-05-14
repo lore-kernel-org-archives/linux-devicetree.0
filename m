@@ -1,9 +1,11 @@
 From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v4 0/5] ARM: dts: enable hdmi for exynos5 based peach and snow
- boards
-Date: Wed, 14 May 2014 08:15:57 +0530
-Message-ID: <1400035562-16832-1-git-send-email-rahul.sharma@samsung.com>
+Subject: [PATCH v4 2/5] ARM: dts: change to correct compatible string for
+ exynos5420 hdmi
+Date: Wed, 14 May 2014 08:15:59 +0530
+Message-ID: <1400035562-16832-3-git-send-email-rahul.sharma@samsung.com>
+References: <1400035562-16832-1-git-send-email-rahul.sharma@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1400035562-16832-1-git-send-email-rahul.sharma@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
@@ -11,49 +13,28 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-Enable hdmi for exynos5250 based snow board, exynos5420
-based peach pit board and 5800 based peach-pi board.
-V4:
-1) Removed hdmi_hpd_irq pin from peach-pi board as it already
-present in exynos5420-pinctrl.dtsi.
+Replace compatible string for HDMI node in Exynos5420. Since
+latest restructring in Drm hdmi driver, it is agreed to use
+a seperate compatible string for Exynos5420 HDMI IP siince it
+uses APB mapped Phy.
 
-V3:
-1) Re-spin on dependent patches.
-2) Added patch to enable hdmi for Peach-pi board.
+Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+---
+ arch/arm/boot/dts/exynos5420.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-V2:
-1) Re-spin on dependent patches.
-2) Added patch to remove chip specific hdmi hpd gpio from
-board file top SoC file.
-
-This series is based on Kukjin Kims, for-next branch.
-
-It is dependent on
-
-1) Sachin's patch: "ARM: dts: exynos5250-snow: add tps65090 power regulator"
-at https://patches.linaro.org/28325/ : [Reviewed-by: Doug Anderson]
-
-All other dependent patches are already landed in maintainers
-tree.
-
-
-
-Rahul Sharma (5):
-  ARM: dts: enable hdmi for exynos5250 based snow board
-  ARM: dts: change to correct compatible string for exynos5420 hdmi
-  ARM: dts: enable hdmi for exynos5420 based peach-pit board
-  ARM: dts: remove chip specific hdmi hpd pin from board
-  ARM: dts: enable hdmi for exynos5800 based peach-pi board
-
- arch/arm/boot/dts/exynos5250-cros-common.dtsi |    6 +++++-
- arch/arm/boot/dts/exynos5250-pinctrl.dtsi     |    7 +++++++
- arch/arm/boot/dts/exynos5250-snow.dts         |    7 +++++++
- arch/arm/boot/dts/exynos5420-peach-pit.dts    |   19 +++++++++++++++++++
- arch/arm/boot/dts/exynos5420-pinctrl.dtsi     |    7 +++++++
- arch/arm/boot/dts/exynos5420-smdk5420.dts     |    9 ---------
- arch/arm/boot/dts/exynos5420.dtsi             |    7 ++++++-
- arch/arm/boot/dts/exynos5800-peach-pi.dts     |   19 +++++++++++++++++++
- 8 files changed, 70 insertions(+), 11 deletions(-)
-
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index a802f74..016992c 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -640,7 +640,7 @@
+ 	};
+ 
+ 	hdmi: hdmi@14530000 {
+-		compatible = "samsung,exynos4212-hdmi";
++		compatible = "samsung,exynos5420-hdmi";
+ 		reg = <0x14530000 0x70000>;
+ 		interrupts = <0 95 0>;
+ 		clocks = <&clock CLK_HDMI>, <&clock CLK_SCLK_HDMI>,
 -- 
 1.7.9.5
