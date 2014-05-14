@@ -1,57 +1,65 @@
-Return-Path: <thomas.petazzoni@free-electrons.com>
-Date: Sat, 17 May 2014 10:25:07 +0200
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCHv4 2/3] ARM: mm: add support for HW coherent systems in
- PL310
-Message-ID: <20140517102507.52c5d8ae@free-electrons.com>
-In-Reply-To: <CAL_Jsq+VRZdJD6sMR=whC=bmjgODb01h8dci_KsjHx7pMLDhuA@mail.gmail.com>
-References: <1400165974-9059-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1400165974-9059-3-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CAL_Jsq+VRZdJD6sMR=whC=bmjgODb01h8dci_KsjHx7pMLDhuA@mail.gmail.com>
+Return-Path: <rdunlap@infradead.org>
+Message-ID: <5373C2EB.8020806@infradead.org>
+Date: Wed, 14 May 2014 12:24:27 -0700
+From: Randy Dunlap <rdunlap@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH 1/3] bus: add Broadcom GISB bus arbiter timeout/error
+ handler
+References: <1400094649-11193-1-git-send-email-f.fainelli@gmail.com> <1400094649-11193-3-git-send-email-f.fainelli@gmail.com>
+In-Reply-To: <1400094649-11193-3-git-send-email-f.fainelli@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-To: Rob Herring <robherring2@gmail.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Albin Tonnerre <albin.tonnerre@arm.com>, "linux-arm-kernel@lists.infradead.org\"   <linux-arm-kernel@lists.infradead.org>, Jason Cooper  <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth  <sebastian.hesselbarth@gmail.com>, Gregory Clement  <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>,  Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>,  Ezequiel Garcia <ezequiel.garcia@free-electrons.com>"@mail.free-electrons.com
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: marc.ceeeee@gmail.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Huang Shijie <b32955@freescale.com>, DOCUMENTATION <linux-doc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Dear Rob Herring,
-
-On Thu, 15 May 2014 14:08:39 -0500, Rob Herring wrote:
-
-> >         of_init = true;
-> >         memcpy(&outer_cache, &data->outer_cache, sizeof(outer_cache));
-> > +
-> > +       /*
-> > +        * outer sync operations are not needed when the system is I/O
-> > +        * coherent, and potentially harmful in certain situations
-> > +        * (PCIe/PL310 deadlock on Armada 375/38x due to hardware I/O
-> > +        * coherency). The other operations are kept because they are
-> > +        * infrequent (therefore do not cause the deadlock) and needed
-> > +        * for secondary CPU boot and other power management
-> > +        * activities.
-> > +        */
-> > +       if (of_device_is_compatible(np, "arm,pl310-cache") &&
+On 05/14/2014 12:10 PM, Florian Fainelli wrote:
+> This patch adds support for the Broadcom GISB arbiter bus timeout/error
+> handler. GISB is a proprietary bus used by Broadcom Set Top Box
+> System-on-a-chip devices (BCM7xxx) which allows multiple masters and
+> clients to be interfaced with each other.
 > 
-> Don't we have a pl310 specific init function this can be placed in
-> removing this check? We could probably remove this check here anyway
-> because we're never going to see this on an L210 or L220.
+> The bus arbiter offers support for generating two interrupts towards the
+> host CPU, thus allowing us to "catch" clock gated masters, or masters
+> being volontarily blocked for powersaving purposes, or do general system
+> troubleshooting.
+> 
+> We also register a hook with the ARM fault exception handling to allow
+> printing a more informative message than "imprecise external abort at
+> 0x00000000" for instance.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/bus/Kconfig        |  11 +-
+>  drivers/bus/Makefile       |   1 +
+>  drivers/bus/brcmstb_gisb.c | 289 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 300 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/bus/brcmstb_gisb.c
+> 
+> diff --git a/drivers/bus/Kconfig b/drivers/bus/Kconfig
+> index 552373c4e362..985db51c0b11 100644
+> --- a/drivers/bus/Kconfig
+> +++ b/drivers/bus/Kconfig
+> @@ -40,5 +40,14 @@ config ARM_CCI
+>  	depends on ARM
+>  	help
+>  	  Driver supporting the CCI cache coherent interconnect for ARM
+> -	  platforms.
+> +	  kplatforms.
 
-We have a pl310 specific init function called pl310_of_init(). However
-it gets called *before* the global outer_cache structure gets memcpy()
-from the specific L2 cache type chosen by the compatible string.
-Therefore, it cannot null-ify the .sync operation. It is also unable to
-do it directly in the pl310_data structure, because 1/ this structure
-is const and 2/ I believe it would be ugly.
+Is that a typo?  if not, what are kplatforms?
 
-Therefore, we don't have much other choice than to do that where I'm
-doing at the moment. I'll respin the patch series to remove the
-"arm,pl310-cache" check, as you suggested.
+> +
+> +config BRCMSTB_GISB_ARB
+> +	bool "Broadcom STB GISB bus arbiter"
+> +	depends on ARM
+> +	help
+> +	  Driver for the Broadcom Set Top Box System-on-a-chip internal bus
+> +	  arbiter. This driver provides timeout and target abort error handling
+> +	  and internal bus master decoding.
+> +
+>  endmenu
 
-Thanks for the review,
 
-Thomas
 -- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+~Randy
