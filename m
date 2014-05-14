@@ -1,61 +1,55 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: [PATCH] ARM: dts: AM4372: clk: efuse based crystal frequency detect
-Date: Wed, 14 May 2014 17:06:37 +0530
-Message-ID: <062e8a534b1e372db7ed3daa3df7e3c5b885ffab.1400062517.git.nsekhar@ti.com>
+From: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [PATCH 0/9] ARM: STi: Add Clock driver support STiH415 & STiH416
+Date: Wed, 14 May 2014 13:46:14 +0200
+Message-ID: <53735786.5010202@st.com>
+References: <1399305223-18703-1-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>
-Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399305223-18703-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Afzal Mohammed <afzal@ti.com>
+Hi Gabriel,
 
-Currently oscillator frequency is determined based on sysboot settings,
-it may not be the case always. To determine it properly, efuse settings
-also has to be read. CONTROL_STATUS register holds this information.
-Bit 31:	if 0, frequency to be determined based on sysboot
-	if 1, frequency to be determined based on efuse
-Bit 29,30 - for efuse detection of frequency
-Bit 22,23 - for sysboot detection of frequency
+for the series:
 
-Add clock nodes (mux) to determine oscillator frequency as above.
+Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
 
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
-Acked-by: Tero Kristo <t-kristo@ti.com>
-Signed-off-by: Sekhar Nori <nsekhar@ti.com>
----
- arch/arm/boot/dts/am43xx-clocks.dtsi |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+Thanks,
+Maxime
 
-diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-index 142009c..71b029c 100644
---- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-@@ -11,6 +11,22 @@
- 	sys_clkin_ck: sys_clkin_ck {
- 		#clock-cells = <0>;
- 		compatible = "ti,mux-clock";
-+		clocks = <&sysboot_freq_sel_ck>, <&crystal_freq_sel_ck>;
-+		ti,bit-shift = <31>;
-+		reg = <0x0040>;
-+	};
-+
-+	crystal_freq_sel_ck: crystal_freq_sel_ck {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
-+		clocks = <&virt_19200000_ck>, <&virt_24000000_ck>, <&virt_25000000_ck>, <&virt_26000000_ck>;
-+		ti,bit-shift = <29>;
-+		reg = <0x0040>;
-+	};
-+
-+	sysboot_freq_sel_ck: sysboot_freq_sel_ck@44e10040 {
-+		#clock-cells = <0>;
-+		compatible = "ti,mux-clock";
- 		clocks = <&virt_19200000_ck>, <&virt_24000000_ck>, <&virt_25000000_ck>, <&virt_26000000_ck>;
- 		ti,bit-shift = <22>;
- 		reg = <0x0040>;
--- 
-1.7.10.1
-
+On 05/05/2014 05:53 PM, Gabriel FERNANDEZ wrote:
+> The goal of this series is to add DT definition for STiH415
+> and STiH416 SoCs on B2000 and B2020 boards.
+>
+> Gabriel Fernandez (9):
+>    ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
+>    ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
+>    ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+>      fixed clocks
+>    ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+>    ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
+>    ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
+>    ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
+>    ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+>      fixed clocks
+>    ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
+>
+>   arch/arm/boot/dts/stih415-clks.h     |  15 +
+>   arch/arm/boot/dts/stih415-clock.dtsi | 517 ++++++++++++++++++++++++-
+>   arch/arm/boot/dts/stih415.dtsi       |  10 +-
+>   arch/arm/boot/dts/stih416-clks.h     |  15 +
+>   arch/arm/boot/dts/stih416-clock.dtsi | 732 ++++++++++++++++++++++++++++++++++-
+>   arch/arm/boot/dts/stih416.dtsi       |  10 +-
+>   6 files changed, 1256 insertions(+), 43 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/stih415-clks.h
+>   create mode 100644 arch/arm/boot/dts/stih416-clks.h
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
