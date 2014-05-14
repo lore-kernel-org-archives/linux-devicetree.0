@@ -1,133 +1,140 @@
-Return-Path: <george.cherian@ti.com>
-Message-ID: <536745F6.9080402@ti.com>
-Date: Mon, 5 May 2014 13:34:06 +0530
-From: George Cherian <george.cherian@ti.com>
+Return-Path: <matthias.bgg@gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v5 0/5] Add USB nodes for am43xx epos and gp evm
-References: <1395223803-4714-1-git-send-email-george.cherian@ti.com> <20140425161912.GY29632@saruman.home>
-In-Reply-To: <20140425161912.GY29632@saruman.home>
-Content-Type: multipart/alternative;
-	boundary="------------010402040508090606000206"
-To: balbi@ti.com, Benoit Cousson <bcousson@baylibre.org>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, rogerq@ti.com, kishon@ti.com, rob@landley.net, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, tony@atomide.com, anatol.pomozov@gmail.com, bcousson@baylibre.com
+In-Reply-To: <2fe960fd-b145-42a8-ace2-e2cd3aaf0cdc@BN1AFFO11FD010.protection.gbl>
+References: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
+	<1400087579-4250-2-git-send-email-matthias.bgg@gmail.com>
+	<2fe960fd-b145-42a8-ace2-e2cd3aaf0cdc@BN1AFFO11FD010.protection.gbl>
+Date: Wed, 14 May 2014 20:03:13 +0200
+Message-ID: <CABuKBeLarykODc1RbDY0RB_idJXRUCfgU6BfWqrxQnmChW1Czg@mail.gmail.com>
+Subject: Re: [PATCH v4 1/6] clocksource: Add support for the Mediatek SoCs
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11355070802f9804f95ffee3
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Florian Vaussard <florian.vaussard@epfl.ch>, Kumar Gala <galak@codeaurora.org>, mark.rutland@arm.com, thierry.reding@gmail.com, linux-doc@vger.kernel.org, andrew@lunn.ch, tglx@linutronix.de, linux@arm.linux.org.uk, sboyd@codeaurora.org, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, maxime.ripard@free-electrons.com, rdunlap@infradead.org, olof@lixom.net, robherring2@gmail.com, pawel.moll@arm.com, devicetree@vger.kernel.org, jason@lakedaemon.net, robh+dt@kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, sebastian.hesselbarth@gmail.com, silvio.fricke@gmail.com, linux-arm-kernel@lists.infradead.org, heiko.stuebner@bq.com, jic23@kernel.org, gregory.clement@free-electrons.com, marc.zyngier@arm.com
 List-ID: <devicetree@vger.kernel.org>
 
---------------010402040508090606000206
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+--001a11355070802f9804f95ffee3
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Hi Benoit,
-
-On 4/25/2014 9:49 PM, Felipe Balbi wrote:
-> On Wed, Mar 19, 2014 at 03:39:58PM +0530, George Cherian wrote:
->> The patch series adds USB dt nodes for am43xx epos and gp evm
->> Boot tested with linux-next + Tony's omap-for-v3.15/dt
->>
->> Changes from v1 -> v2
->> 	* Reorder "doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue"
->> 	* Address v1 coments on "ARM: dts: AM4372: Add USB nodes"
->>
->> Changes from v2 -> v3
->> 	* Removed unwanted dwc3_1 and dwc3_2 nodes from am437x-gp-evm.dts
->> 	  and am43x-epos-evm.dts
->>
->> Changes from v3 -> v4
->> 	* Refreshed on top of Tony's omap-for-v3.15/dt tree
->> 	* Added usb_phy0_always_on_clk32k and usb_phy1_always_on_clk32k Patch 2
->> 	* Used the above clocks in Patch 3
->> 	* Patch 4 and 5 edited the unwanted portions of commit log
->>
->> Changes from v4 -> v5
->> 	* Address Roger's comment for the clock data
->>
->> George Cherian (5):
->>    doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue
->>    ARM: dts: am43xx clock data
->>    ARM: dts: AM4372: Add USB nodes
->>    ARM: dts: am437x-gp-evm: Enable USB
->>    ARM: dts: am43x-epos-evm: Enable USB
->>
->>   Documentation/devicetree/bindings/usb/omap-usb.txt |  4 +-
->>   arch/arm/boot/dts/am4372.dtsi                      | 94 ++++++++++++++++++++++
->>   arch/arm/boot/dts/am437x-gp-evm.dts                | 18 +++++
->>   arch/arm/boot/dts/am43x-epos-evm.dts               | 18 +++++
->>   arch/arm/boot/dts/am43xx-clocks.dtsi               | 32 ++++++++
->>   5 files changed, 165 insertions(+), 1 deletion(-)
-> Is this applied anywhere yet ? Benoit, are you taking this for v3.16
-> merge window ?
+El dia 14/05/2014 19:31, "S=C3=B6ren Brinkmann" <soren.brinkmann@xilinx.com=
+> va
+escriure:
 >
-Ping on this series.
+> Hi Matthias,
+>
+> just a few suggestions below. Nothing serious.
+>
+> On Wed, 2014-05-14 at 07:12PM +0200, Matthias Brugger wrote:
+> > This patch adds a clock source and clock event for the timer found
+> > on the Mediatek SoCs.
+> >
+> > The Mediatek General Porpose Timer block provides five 32 bit timers an=
+d
+> > one 64 bit timer.
+> >
+> > Two 32 bit timers are used:
+> > TIMER1: clock events supporting periodic and oneshot events
+> > TIMER2: clock source configured as a free running counter
+>
+> It is pretty common, I think, to use the free running counter also as
+> sched_clock. You probably want to look into this, but that's just a
+> possible enhancement.
 
--- 
--George
+The timer block has also a 64 bit timer. I plan to have a look on this one
+to use it as sched_clock.
 
+But for now my priority is to get the serial console driver done.
 
---------------010402040508090606000206
-Content-Type: text/html; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+>
+> [...]
+> > +static void __init mtk_timer_init(struct device_node *node)
+> > +{
+> > +     struct mtk_clock_event_device *evt;
+> > +     struct resource res;
+> > +     unsigned long rate =3D 0;
+> > +     struct clk *clk;
+> > +     int ret;
+> > +     u32 val;
+> > +
+> > +     evt =3D kzalloc(sizeof(*evt), GFP_KERNEL);
+> > +     if (!evt)
+> > +             panic("Can't allocate mtk clock event driver struct");
+>
+> I'm not that sure about the A7s, but on Cortex-A9 there is also a global
+> timer which can be used for timing. And there might be other timing
+> options for this SOC too. Do you really want to panic?
 
-<html>
-  <head>
-    <meta content="text/html; charset=ISO-8859-1"
-      http-equiv="Content-Type">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    <div class="moz-cite-prefix">Hi Benoit,<br>
-      <br>
-      On 4/25/2014 9:49 PM, Felipe Balbi wrote:<br>
-    </div>
-    <blockquote cite="mid:20140425161912.GY29632@saruman.home"
-      type="cite">
-      <pre wrap="">On Wed, Mar 19, 2014 at 03:39:58PM +0530, George Cherian wrote:
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">The patch series adds USB dt nodes for am43xx epos and gp evm
-Boot tested with linux-next + Tony's omap-for-v3.15/dt
+Yes A7 has a arm local timer, but the problem is, that it is not working
+with the SoC. It seems like a chip design error as I tried for quite a time
+to get it working.
 
-Changes from v1 -&gt; v2
-	* Reorder "doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue"
-	* Address v1 coments on "ARM: dts: AM4372: Add USB nodes"  
+Thanks for your comments anyway.
+>
+>         S=C3=B6ren
 
-Changes from v2 -&gt; v3
-	* Removed unwanted dwc3_1 and dwc3_2 nodes from am437x-gp-evm.dts 
-	  and am43x-epos-evm.dts 
+--001a11355070802f9804f95ffee3
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Changes from v3 -&gt; v4
-	* Refreshed on top of Tony's omap-for-v3.15/dt tree
-	* Added usb_phy0_always_on_clk32k and usb_phy1_always_on_clk32k Patch 2
-	* Used the above clocks in Patch 3 
-	* Patch 4 and 5 edited the unwanted portions of commit log
+<p dir=3D"ltr"><br>
+El dia 14/05/2014 19:31, &quot;S=C3=B6ren Brinkmann&quot; &lt;<a href=3D"ma=
+ilto:soren.brinkmann@xilinx.com">soren.brinkmann@xilinx.com</a>&gt; va escr=
+iure:<br>
+&gt;<br>
+&gt; Hi Matthias,<br>
+&gt;<br>
+&gt; just a few suggestions below. Nothing serious.<br>
+&gt;<br>
+&gt; On Wed, 2014-05-14 at 07:12PM +0200, Matthias Brugger wrote:<br>
+&gt; &gt; This patch adds a clock source and clock event for the timer foun=
+d<br>
+&gt; &gt; on the Mediatek SoCs.<br>
+&gt; &gt;<br>
+&gt; &gt; The Mediatek General Porpose Timer block provides five 32 bit tim=
+ers and<br>
+&gt; &gt; one 64 bit timer.<br>
+&gt; &gt;<br>
+&gt; &gt; Two 32 bit timers are used:<br>
+&gt; &gt; TIMER1: clock events supporting periodic and oneshot events<br>
+&gt; &gt; TIMER2: clock source configured as a free running counter<br>
+&gt;<br>
+&gt; It is pretty common, I think, to use the free running counter also as<=
+br>
+&gt; sched_clock. You probably want to look into this, but that&#39;s just =
+a<br>
+&gt; possible enhancement.</p>
+<p dir=3D"ltr">The timer block has also a 64 bit timer. I plan to have a lo=
+ok on this one to use it as sched_clock.</p>
+<p dir=3D"ltr">But for now my priority is to get the serial console driver =
+done.</p>
+<p dir=3D"ltr">&gt;<br>
+&gt; [...]<br>
+&gt; &gt; +static void __init mtk_timer_init(struct device_node *node)<br>
+&gt; &gt; +{<br>
+&gt; &gt; + =C2=A0 =C2=A0 struct mtk_clock_event_device *evt;<br>
+&gt; &gt; + =C2=A0 =C2=A0 struct resource res;<br>
+&gt; &gt; + =C2=A0 =C2=A0 unsigned long rate =3D 0;<br>
+&gt; &gt; + =C2=A0 =C2=A0 struct clk *clk;<br>
+&gt; &gt; + =C2=A0 =C2=A0 int ret;<br>
+&gt; &gt; + =C2=A0 =C2=A0 u32 val;<br>
+&gt; &gt; +<br>
+&gt; &gt; + =C2=A0 =C2=A0 evt =3D kzalloc(sizeof(*evt), GFP_KERNEL);<br>
+&gt; &gt; + =C2=A0 =C2=A0 if (!evt)<br>
+&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 panic(&quot;Can&#39;t=
+ allocate mtk clock event driver struct&quot;);<br>
+&gt;<br>
+&gt; I&#39;m not that sure about the A7s, but on Cortex-A9 there is also a =
+global<br>
+&gt; timer which can be used for timing. And there might be other timing<br=
+>
+&gt; options for this SOC too. Do you really want to panic?</p>
+<p dir=3D"ltr">Yes A7 has a arm local timer, but the problem is, that it is=
+ not working with the SoC. It seems like a chip design error as I tried for=
+ quite a time to get it working. </p>
+<p dir=3D"ltr">Thanks for your comments anyway.<br>
+&gt;<br>
+&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 S=C3=B6ren<br>
+</p>
 
-Changes from v4 -&gt; v5
-	* Address Roger's comment for the clock data
-
-George Cherian (5):
-  doc: Add "ti,am437x-dwc3" comaptible for dwc3 glue
-  ARM: dts: am43xx clock data
-  ARM: dts: AM4372: Add USB nodes
-  ARM: dts: am437x-gp-evm: Enable USB
-  ARM: dts: am43x-epos-evm: Enable USB
-
- Documentation/devicetree/bindings/usb/omap-usb.txt |  4 +-
- arch/arm/boot/dts/am4372.dtsi                      | 94 ++++++++++++++++++++++
- arch/arm/boot/dts/am437x-gp-evm.dts                | 18 +++++
- arch/arm/boot/dts/am43x-epos-evm.dts               | 18 +++++
- arch/arm/boot/dts/am43xx-clocks.dtsi               | 32 ++++++++
- 5 files changed, 165 insertions(+), 1 deletion(-)
-</pre>
-      </blockquote>
-      <pre wrap="">
-Is this applied anywhere yet ? Benoit, are you taking this for v3.16
-merge window ?
-
-</pre>
-    </blockquote>
-    <font size="-1"><font face="Courier New">Ping on this series. </font></font><br>
-    <br>
-    <pre class="moz-signature" cols="72">-- 
--George
-</pre>
-  </body>
-</html>
-
---------------010402040508090606000206--
+--001a11355070802f9804f95ffee3--
