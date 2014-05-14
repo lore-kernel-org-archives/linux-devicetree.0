@@ -1,33 +1,88 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 02/17] phy: omap-control: add external clock support for
- PCIe PHY
-Date: Wed, 14 May 2014 16:02:21 +0300
-Message-ID: <5373695D.2090702@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <1399383244-14556-3-git-send-email-kishon@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
+Date: Wed, 14 May 2014 15:02:34 +0200
+Message-ID: <16480004.aaDhzlOZgi@wuerfel>
+References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <1400060942-10588-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399383244-14556-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: balajitk-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1400060942-10588-2-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/06/2014 04:33 PM, Kishon Vijay Abraham I wrote:
-> Export an API to be called by PIPE3 PHY to enable external clock for
-> PCIE PHY. Added a new compatible for PCIE in omap-control in order to
-> enable it.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+On Wednesday 14 May 2014 11:48:57 Antoine T=E9nart wrote:
+> +static int phy_berlin_sata_power_on(struct phy *phy)
+> +{
+> +       struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
+> +       struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc=
+);
+> +       u32 regval;
+> +
+> +       spin_lock(&priv->lock);
+> +
+> +       /* Power up PHY */
+> +       writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
+> +       regval =3D readl(priv->base + HOST_VSA_DATA);
+> +       regval &=3D ~(desc->val);
+> +       writel(regval, priv->base + HOST_VSA_DATA);
+> +
+> +       /* Configure MBus */
+> +       writel(MBUS_SIZE_CONTROL, priv->base + HOST_VSA_ADDR);
+> +       regval =3D readl(priv->base + HOST_VSA_DATA);
+> +       regval |=3D MBUS_WRITE_REQUEST_SIZE_128 | MBUS_READ_REQUEST_S=
+IZE_128;
+> +       writel(regval, priv->base + HOST_VSA_DATA);
+> +
+> +       spin_unlock(&priv->lock);
+> +
+> +       return 0;
+> +}
+> +
+> +static int phy_berlin_sata_power_off(struct phy *phy)
+> +{
+> +       struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
+> +       struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc=
+);
+> +       u32 regval;
+> +
+> +       spin_lock(&priv->lock);
+> +
+> +       /* Power down PHY */
+> +       writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
+> +       regval =3D readl(priv->base + HOST_VSA_DATA);
+> +       regval |=3D desc->val;
+> +       writel(regval, priv->base + HOST_VSA_DATA);
+> +
+> +       spin_unlock(&priv->lock);
+> +
+> +       return 0;
 
-Reviewed-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+I don't get this part: you have a reference to the phy here,
+but then you go poking the phy registers from the SATA driver
+rather than calling a PHY API function.
 
---
-cheers,
--roger
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +                * By default the PHY node is used to request and mat=
+ch a PHY.
+> +                * We describe one PHY per sub-node here. Use the rig=
+ht node.
+> +                */
+> +               phy->dev.of_node =3D child;
+> +
+> +               priv->phys[phy_id].phy =3D phy;
+> +               priv->phys[phy_id].val =3D desc[phy_id].val;
+> +               priv->phys[phy_id].index =3D phy_id;
+> +               phy_set_drvdata(phy, &priv->phys[phy_id]);
+
+And here, you set a driver specific value into a structure used by the
+PHY.
+
+Both of these are layering violations. You should either use the PHY
+interfaces correctly so the SATA driver doesn't have to know about the
+specific, or not use a PHY device node at all and do everything in
+the SATA front-end.
+
+	Arnd
