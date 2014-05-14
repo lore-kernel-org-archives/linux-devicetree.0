@@ -1,104 +1,365 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v2 00/10] Marvell Berlin full clock support
-Date: Wed, 14 May 2014 22:15:11 +0200
-Message-ID: <1400098522-14770-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2 09/10] ARM: dts: berlin: convert BG2 to DT clock nodes
+Date: Wed, 14 May 2014 22:15:20 +0200
+Message-ID: <1400098522-14770-10-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
+ <1400098522-14770-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400098522-14770-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mike Turquette <mturquette@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mike Turquette <mturquette@linaro.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is version 2 of a patch set to bring proper DT based clocks to
-Marvell Berlin SoCs.
+This converts Berlin BG2 SoC dtsi to make use of the new DT clock
+nodes for Berlin SoCs. While at it, also fix up twdclk which is
+running at cpuclk/3 instead of sysclk.
 
-The overall changes are:
-
-* Dropped of_clk_create_name() helper
-Booting into an initramfs rootfs revealed that the unique clock names
-created with that helper clash with the way of_clk_get_parent_name()
-resolves the clock specifier to get the correct clock name. Anyway,
-I still consider the helper a good idea and postpone it to the next
-cycle when I have more time to look at the details.
-
-* Added BG2Q core clock driver and dtsi changes
-Alexandre just provided them, so I added them to this patch set.
-
-The single patch overview now is:
-
-Patch 1 adds the whole binding documentation for all clock related IP
-found on BG2, BG2CD, and BG2Q.
-
-Patch 2 adds corresponding dt-binding includes for the core clock
-indices to be used in both DT and the driver.
-
-Patches 3, 4, and 5 add clock drivers for the Audio/Video PLL, simple
-PLLs, and complex clock divider cells found on Berlin SoCs. Where
-required, currently known differences between BG2/BG2CD and BG2Q are
-taken care of.
-
-Patches 6 and 7 add core clock drivers for the remaining clocks of
-BG2/BG2CD and BG2Q. The register set dealing with it, is shared among
-input and bypass muxes, clock dividers and clock gates.
-
-Patches 8, 9, and 10 finally convert the DT SoC includes for BG2,
-BG2CD, and BG2Q to make use of the new clock related DT nodes.
-
-Alexandre Belloni (4):
-  clk: berlin: add driver for BG2x simple PLLs
-  clk: berlin: add driver for BG2x complex divider cells
-  clk: berlin: add core clock driver for BG2Q
-  ARM: dts: berlin: convert BG2Q to DT clock nodes
-
-Sebastian Hesselbarth (6):
-  dt-binding: clk: add clock binding docs for Marvell Berlin2 SoCs
-  clk: berlin: add binding include for BG2/BG2CD clock ids
-  clk: berlin: add driver for BG2x audio/video PLL
-  clk: berlin: add core clock driver for BG2/BG2CD
-  ARM: dts: berlin: convert BG2CD to DT clock nodes
-  ARM: dts: berlin: convert BG2 to DT clock nodes
-
- .../devicetree/bindings/clock/berlin2-clock.txt    | 195 ++++++++
- arch/arm/boot/dts/berlin2.dtsi                     | 207 +++++++--
- arch/arm/boot/dts/berlin2cd.dtsi                   | 205 +++++++--
- arch/arm/boot/dts/berlin2q.dtsi                    |  80 +++-
- drivers/clk/Makefile                               |   1 +
- drivers/clk/berlin/Makefile                        |   4 +
- drivers/clk/berlin/berlin2-avpll.c                 | 368 +++++++++++++++
- drivers/clk/berlin/berlin2-div.c                   | 324 +++++++++++++
- drivers/clk/berlin/berlin2-div.h                   |  80 ++++
- drivers/clk/berlin/berlin2-pll.c                   | 168 +++++++
- drivers/clk/berlin/bg2.c                           | 502 +++++++++++++++++++++
- drivers/clk/berlin/bg2q.c                          | 269 +++++++++++
- include/dt-bindings/clock/berlin2.h                |  35 ++
- include/dt-bindings/clock/berlin2q.h               |  28 ++
- 14 files changed, 2385 insertions(+), 81 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/clock/berlin2-clock.txt
- create mode 100644 drivers/clk/berlin/Makefile
- create mode 100644 drivers/clk/berlin/berlin2-avpll.c
- create mode 100644 drivers/clk/berlin/berlin2-div.c
- create mode 100644 drivers/clk/berlin/berlin2-div.h
- create mode 100644 drivers/clk/berlin/berlin2-pll.c
- create mode 100644 drivers/clk/berlin/bg2.c
- create mode 100644 drivers/clk/berlin/bg2q.c
- create mode 100644 include/dt-bindings/clock/berlin2.h
- create mode 100644 include/dt-bindings/clock/berlin2q.h
-
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 ---
+Changelog:
+v1->v2:
+- dropped of_clk_create_name() usage required unique node names for
+  clocks and plls 
+- added clock-output-names to allow fixed-factor-clock to find its 
+  parent name 
+
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Pawel Moll <pawel.moll@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
 Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
 Cc: Mike Turquette <mturquette@linaro.org>
 Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
 Cc: Jisheng Zhang <jszhang@marvell.com>
 Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
+---
+ arch/arm/boot/dts/berlin2.dtsi | 207 +++++++++++++++++++++++++++++++++++------
+ 1 file changed, 178 insertions(+), 29 deletions(-)
+
+diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berlin2.dtsi
+index 57cadd31f4e1..edeecb711e97 100644
+--- a/arch/arm/boot/dts/berlin2.dtsi
++++ b/arch/arm/boot/dts/berlin2.dtsi
+@@ -12,6 +12,7 @@
+  */
+ 
+ #include "skeleton.dtsi"
++#include <dt-bindings/clock/berlin2.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ 
+ / {
+@@ -37,24 +38,18 @@
+ 		};
+ 	};
+ 
+-	clocks {
+-		smclk: sysmgr-clock {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <25000000>;
+-		};
+-
+-		cfgclk: cfg-clock {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <100000000>;
+-		};
++	refclk: oscillator {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <25000000>;
++	};
+ 
+-		sysclk: system-clock {
+-			compatible = "fixed-clock";
+-			#clock-cells = <0>;
+-			clock-frequency = <400000000>;
+-		};
++	twdclk: twdclk {
++		compatible = "fixed-factor-clock";
++		#clock-cells = <0>;
++		clocks = <&coreclk CLKID_CPU>;
++		clock-mult = <1>;
++		clock-div = <3>;
+ 	};
+ 
+ 	soc {
+@@ -88,7 +83,7 @@
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0xad0600 0x20>;
+ 			interrupts = <GIC_PPI 13 IRQ_TYPE_LEVEL_HIGH>;
+-			clocks = <&sysclk>;
++			clocks = <&twdclk>;
+ 		};
+ 
+ 		apb@e80000 {
+@@ -175,7 +170,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c00 0x14>;
+ 				interrupts = <8>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "okay";
+ 			};
+@@ -184,7 +179,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c14 0x14>;
+ 				interrupts = <9>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "okay";
+ 			};
+@@ -193,7 +188,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c28 0x14>;
+ 				interrupts = <10>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "disabled";
+ 			};
+@@ -202,7 +197,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c3c 0x14>;
+ 				interrupts = <11>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "disabled";
+ 			};
+@@ -211,7 +206,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c50 0x14>;
+ 				interrupts = <12>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "disabled";
+ 			};
+@@ -220,7 +215,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c64 0x14>;
+ 				interrupts = <13>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "disabled";
+ 			};
+@@ -229,7 +224,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c78 0x14>;
+ 				interrupts = <14>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "disabled";
+ 			};
+@@ -238,7 +233,7 @@
+ 				compatible = "snps,dw-apb-timer";
+ 				reg = <0x2c8c 0x14>;
+ 				interrupts = <15>;
+-				clocks = <&cfgclk>;
++				clocks = <&coreclk CLKID_CFG>;
+ 				clock-names = "timer";
+ 				status = "disabled";
+ 			};
+@@ -253,11 +248,165 @@
+ 			};
+ 		};
+ 
++		syspll: syspll@ea0014 {
++			compatible = "marvell,berlin2-pll";
++			#clock-cells = <0>;
++			reg = <0xea0014 0x14>;
++			clocks = <&refclk>;
++		};
++
++		mempll: mempll@ea0028 {
++			compatible = "marvell,berlin2-pll";
++			#clock-cells = <0>;
++			reg = <0xea0028 0x14>;
++			clocks = <&refclk>;
++		};
++
++		cpupll: cpupll@ea003c {
++			compatible = "marvell,berlin2-pll";
++			#clock-cells = <0>;
++			reg = <0xea003c 0x14>;
++			clocks = <&refclk>;
++		};
++
++		avpll: avpll@ea0040 {
++			compatible = "marvell,berlin2-avpll";
++			#clock-cells = <2>;
++			reg = <0xea0050 0x100>;
++			clocks = <&refclk>;
++		};
++
++		coreclk: core-clock@ea0150 {
++			compatible = "marvell,berlin2-core-clocks";
++			#clock-cells = <1>;
++			reg = <0xea0150 0x1c>;
++			clocks = <&refclk>, <&syspll>, <&mempll>, <&cpupll>,
++				<&avpll 0 1>, <&avpll 0 2>,
++				<&avpll 0 3>, <&avpll 0 4>,
++				<&avpll 0 5>, <&avpll 0 6>,
++				<&avpll 0 7>, <&avpll 0 8>,
++				<&avpll 1 1>, <&avpll 1 2>,
++				<&avpll 1 3>, <&avpll 1 4>,
++				<&avpll 1 5>, <&avpll 1 6>,
++				<&avpll 1 7>, <&avpll 1 8>;
++			clock-names = "refclk", "syspll", "mempll", "cpupll",
++				"avpll_a1", "avpll_a2", "avpll_a3", "avpll_a4",
++				"avpll_a5", "avpll_a6", "avpll_a7", "avpll_a8",
++				"avpll_b1", "avpll_b2", "avpll_b3", "avpll_b4",
++				"avpll_b5", "avpll_b6", "avpll_b7", "avpll_b8";
++			clock-output-names = "sys", "cpu", "drmfigo", "cfg",
++				"gfx", "zsp", "perif", "pcube", "vscope",
++				"nfc_ecc", "vpp", "app", "audio0", "audio2",
++				"audio3", "audio1", "geth0", "geth1", "sata",
++				"ahbapb", "usb0", "usb1", "pbridge", "sdio0",
++				"sdio1", "nfc", "smemc", "audiohd", "video0",
++				"video1", "video2";
++		};
++
+ 		generic-regs@ea0184 {
+ 			compatible = "marvell,berlin-generic-regs", "syscon";
+ 			reg = <0xea0184 0x10>;
+ 		};
+ 
++		gfx3dcore_clk: gfx3dcore@ea022c {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea022c 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		gfx3dsys_clk: gfx3dsys@ea0230 {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea0230 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		arc_clk: arc@ea0234 {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea0234 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		vip_clk: vip@ea0238 {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea0238 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		sdio0xin_clk: sdio0xin@ea023c {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea023c 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		sdio1xin_clk: sdio1xin@ea0240 {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea0240 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		gfx3dextra_clk: gfx3dextra@ea0244 {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea0244 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		gc360_clk: gc360@ea024c {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea024c 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
++		sdio_dllmst_clk: sdio_dllmst@ea0250 {
++			compatible = "marvell,berlin2-clk-div";
++			#clock-cells = <0>;
++			reg = <0xea0250 0x4>;
++			clocks = <&syspll>,
++				<&avpll 1 4>, <&avpll 1 5>,
++				<&avpll 1 6>, <&avpll 1 7>;
++			clock-names = "mux_bypass",
++				"mux0", "mux1", "mux2", "mux3";
++		};
++
+ 		apb@fc0000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+@@ -305,7 +454,7 @@
+ 				reg-shift = <2>;
+ 				reg-io-width = <1>;
+ 				interrupts = <8>;
+-				clocks = <&smclk>;
++				clocks = <&refclk>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -315,7 +464,7 @@
+ 				reg-shift = <2>;
+ 				reg-io-width = <1>;
+ 				interrupts = <9>;
+-				clocks = <&smclk>;
++				clocks = <&refclk>;
+ 				status = "disabled";
+ 			};
+ 
+@@ -325,7 +474,7 @@
+ 				reg-shift = <2>;
+ 				reg-io-width = <1>;
+ 				interrupts = <10>;
+-				clocks = <&smclk>;
++				clocks = <&refclk>;
+ 				status = "disabled";
+ 			};
+ 
 -- 
 1.9.1
-
