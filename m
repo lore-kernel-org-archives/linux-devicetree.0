@@ -1,56 +1,71 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v3 1/4] ARM: shmobile: armadillo800eva reference dts: Add matching LED labels
-Date: Wed, 14 May 2014 16:51:19 +0200
-Message-ID: <1400079082-6340-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 5/9] dt: deps: register drivers based on the initialization
+ order based on DT
+Date: Wed, 14 May 2014 16:58:30 +0200
+Message-ID: <53738496.2070800@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-6-git-send-email-holler@ahsoftware.de> <20140514141300.67206C4153D@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140514141300.67206C4153D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-And make the node name numbering match the label numbering.
+Am 14.05.2014 16:13, schrieb Grant Likely:
+> On Mon, 12 May 2014 18:47:56 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+>> The init system currently calls unknown functions with almost unknown
+>> functionality in an almost random order.
+>
+> Correct, we've got a module system. Some would say that is a strength!
+> :-) That said, I don't object to optimizing to the optimal order when
+> possible.
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org
----
-v3:
-  - Make node name numbering match label numbering
-v2:
-  - New
----
- .../boot/dts/r8a7740-armadillo800eva-reference.dts |   12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Modules do work after init happened, that isn't what this feature is about.
 
-diff --git a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-index 486007d7ffe4..f6ef73ff49e8 100644
---- a/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-+++ b/arch/arm/boot/dts/r8a7740-armadillo800eva-reference.dts
-@@ -104,17 +104,21 @@
- 
- 	leds {
- 		compatible = "gpio-leds";
--		led1 {
-+		led3 {
- 			gpios = <&pfc 102 GPIO_ACTIVE_HIGH>;
-+			label = "LED3";
- 		};
--		led2 {
-+		led4 {
- 			gpios = <&pfc 111 GPIO_ACTIVE_HIGH>;
-+			label = "LED4";
- 		};
--		led3 {
-+		led5 {
- 			gpios = <&pfc 110 GPIO_ACTIVE_HIGH>;
-+			label = "LED5";
- 		};
--		led4 {
-+		led6 {
- 			gpios = <&pfc 177 GPIO_ACTIVE_HIGH>;
-+			label = "LED6";
- 		};
- 	};
- 
--- 
-1.7.9.5
+>
+>> Fixing this is on a short-term basis is a bit tricky.
+>>
+>> In order to register drivers with a deterministic order, a list of all
+>> available in-kernel drivers is needed. Unfortunately such a list doesn't
+>> exist, just a list of initcalls does exist.
+>>
+>> The trick now is to first call special annotated initcalls (I call those
+>> "well done") for platform drivers, but not actualy starting those drivers
+>> by calling their probe function, but just collectiong their meta datas
+>> (struct platform_driver). After all those informations were collected,
+>> available the drivers will be started according to the previously
+>> determined order.
+>
+> Why does the initcall level matter? Why not just let the initcalls
+> happen, capture the calls that register a driver, and then use that list
+> later?
 
+Some initcalls assume that stuff is present when they called probe or 
+register and do further action based on the rc code.
+
+>> The long range target to fix the problem should be to include a list (array)
+>> of struct platform_driver in the kernel for all in-kernel platform drivers,
+>> instead of just initcalls. This will be easy if all platform drivers have
+>> become "well done".
+>
+> How will that list be constructed? How will it account for multiple
+> platforms, each requiring a different init order?
+
+The list could be build just like the list of initcalls, but containing 
+structs platform instead of function pointers.
+
+The order is in now way part of this list, after all that's what this 
+feature is about. The order is determined by metadatas in the DT, to get 
+rid of a lot of otherwise necessary hardcoded stuff to fix the order in 
+drivers.
+
+Regards,
+
+Alexander Holler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
