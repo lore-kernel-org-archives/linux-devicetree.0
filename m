@@ -1,139 +1,50 @@
-From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: tegra: initial add of Colibri T30
-Date: Wed, 14 May 2014 09:22:54 +0200
-Message-ID: <537319CE.7020101@ziswiler.com>
-References: <cover.1400001937.git.stefan@agner.ch> <d45ec5351ce8ef03256061bdc4b0ba673bd40c66.1400001937.git.stefan@agner.ch> <53727738.4080901@wwwdotorg.org>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] clk: sunxi: add PRCM
+ (Power/Reset/Clock Management) clks support
+Date: Wed, 14 May 2014 09:30:59 +0200
+Message-ID: <53731BB3.4060504@free-electrons.com>
+References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com> <1399633911-7094-6-git-send-email-boris.brezillon@free-electrons.com> <20140514005119.16152.19787@quantum>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53727738.4080901-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBRFXZSNQKGQE3K57GJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140514005119.16152.19787@quantum>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?RW1pbGlvIEzDs3Bleg==?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2014 09:49 PM, Stephen Warren wrote:
-> On 05/13/2014 11:27 AM, stefan-XLVq0VzYD2Y@public.gmane.org wrote:
->> This patch adds the device tree to support Toradex Colibri T30, a
->> computer on module which can be used on different carrier boards.
->>
->> The module consists of a Tegra 30 SoC, two PMIC, DDR3L RAM, eMMC,
->> a LM95245 temperature sensor and an AX88772B USB Ethernet
->> Controller. Furthermore, there is a STMPE811 and SGTL5000 audio
->> codec which are not yet supported. Anything that is not self
->> contained on the module is disabled by default.
->>
->> The device tree for the Evaluation Board includes the modules
->> device tree and enables the supported pheripherials of the carrier
->> board (the Evaluation Board supports almost all of them).
->
->> diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
->
->> +#include "tegra30-colibri.dtsi"
->> +
->> +/ {
->> +	model = "Toradex Colibri T30 on Colibri Evaluation Board";
->> +	compatible = "toradex,colibri_t30-eval-v3", "nvidia,tegra30";
->
-> That should include all the compatible values "inherited" from the
-> Colibri T30 module .dtsi file too.
->
->> +	aliases {
->> +		rtc0 = "/i2c@7000c000/rtc@68";
->> +		rtc1 = "/i2c@7000d000/tps65911@2d";
->> +		rtc2 = "/rtc@7000e000";
->> +	};
->
-> Wow, no shortage of RTCs!
+Hello Mike,
 
-Yes (;-p). Please understand however that there are certain limitation 
-if it comes to real-time clocks: The first one is the ultra low-power 
-RTC available on the carrier board. The second one is PMIC integrated 
-usually drawing much more current that the first dedicated one. The 
-third one is Tegra SoC internal and won't keep the time across 
-power-cycles in our design.
+On 14/05/2014 02:51, Mike Turquette wrote:
+> Quoting Boris BREZILLON (2014-05-09 04:11:49)
+>> +struct clk_ops ar100_ops = {
+>> +       .recalc_rate = ar100_recalc_rate,
+>> +       .determine_rate = ar100_determine_rate,
+>> +       .set_parent = ar100_set_parent,
+>> +       .get_parent = ar100_get_parent,
+>> +       .set_rate = ar100_set_rate,
+>> +};
+> I might be having a brain fart, but is there a valid case for having
+> both a .recalc_rate and a .determine_rate? I believe that the former
+> will never be used and the latter will always be used by the clock
+> framework core.
 
->> +	/* SPI1: Colibri SSP */
->> +	spi@7000d400 {
->> +		status = "okay";
->> +		spi-max-frequency = <25000000>;
->> +		can0: can@0 {
->> +			compatible = "microchip,mcp2515";
->> +			reg = <0>;
->> +			clocks = <&clk16m>;
->> +			interrupt-parent = <&gpio>;
->> +			interrupts = <TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;
->> +			spi-max-frequency = <10000000>;
->
-> So this chip doesn't get confused by a faster clock frequency when its
-> chip-select line isn't asserted? I would have expected spi-max-frequency
-> for the bus to be the minimum value that any device on the bus would
-> tolerate.
+I think you're mistaking recalc_rate for round_rate.
+AFAIK, recalc_rate is mandatory for a clk that implement either
+round_rate or determine_rate.
 
-No SPI chip should ever get confused like that as long as they are chip 
-select gated. At least by the traditional chip select meaning as opposed 
-to NVIDIA's designers taking the term chip select a little too personal: 
-they indeed only select a chip otherwise all the chip select pins are 
-just left floating!
 
->> +	/* EHCI instance 0: USB1_DP/N -> USBC_P/N */
->> +	usb@7d000000 {
->> +		status = "okay";
->> +		dr_mode = "otg";
->
-> The dr_mode property is only for the PHY node.
->
->> +	panel: panel {
->> +		compatible = "edt,et057090dhu", "simple-panel";
->
-> The panel-simple driver doesn't seem to know about that EDT panel. How
-> will it work out the display timings?
+Best Regards,
 
-Good question and me and Stefan actually even talked about that 
-yesterday. I am actually using KMS right now as follows:
+Boris
 
-video=HDMI-A-1:1280x720-16@60 video=LVDS-1:640x480-16@60'
-
-So the panel node is purely used to hook up the back light part right now.
-
- From our point of view for our completely generic module approach where 
-each customer potentially hooks up his own display make/model it would 
-be desirable to have some way of defining such timings directly through 
-the device tree.
-
->> diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
->
->> +/ {
->> +	model = "Toradex Colibri T30";
->> +	compatible = "toradex,colibri_t30-v11b",
->> +		     "toradex,colibri_t30-v11c",
->> +		     "toradex,colibri_t30-v11d",
->> +		     "toradex,colibri_t30", "nvidia,tegra30";
->
-> Do we really need all those compatible values? If those board revisions
-> are all SW-compatible, then you may as well write just:
-
-You are right. It indeed does not make much sense as only V1.0a which 
-never actually went on sale would be software incompatible.
-
-> 	compatible = "toradex,colibri_t30", "nvidia,tegra30";
->
->> +	aliases {
->> +		serial0 = &uarta;
->> +		serial1 = &uartd;
->> +		serial2 = &uartb;
->> +	};
->
-> tegra20.dtsi already sets the alias names for the serial ports. Previous
-> discussions settled on giving each on-chip UART a static name, rather
-> than renaming them per board.
-
-Understood, however our Colibri standard defines a completely different 
-order of the UARTs which is what we attempted to indicate by this aliases.
-
->> +	pmc@7000e400 {
->> +		status = "okay";
->
-> The PMC node isn't disabled in tegra20.dtsi, so you don't need the
-> status property here.
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
