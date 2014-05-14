@@ -1,43 +1,47 @@
-From: Andrew Bresticker <abrestic@google.com>
-Subject: Re: [RFC PATCH 3/3] clk: tegra: Implement Tegra124 shared/cbus clks
-Date: Wed, 14 May 2014 10:58:26 -0700
-Message-ID: <CAL1qeaGS-78QaiMN-3zXYYXu+K1s7u2rFXQkt7-MRJQS1-sW5A@mail.gmail.com>
-References: <1399990023-30318-1-git-send-email-pdeschrijver@nvidia.com>
-	<1399990023-30318-4-git-send-email-pdeschrijver@nvidia.com>
-	<53725FED.7050303@wwwdotorg.org>
-	<20140514142739.GA8612@ulmo>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH RESEND] input: dts: Add commonly used event types
+Date: Wed, 14 May 2014 11:08:16 -0700
+Message-ID: <20140514180816.GD30089@core.coreip.homeip.net>
+References: <1398490639-18411-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140514142739.GA8612@ulmo>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398490639-18411-1-git-send-email-shc_work@mail.ru>
+Sender: linux-input-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 14, 2014 at 7:27 AM, Thierry Reding
-<thierry.reding@gmail.com> wrote:
-> As for shared clocks I'm only aware of one use-case, namely EMC scaling.
-> Using clocks for that doesn't seem like the best option to me. While it
-> can probably fix the immediate issue of choosing an appropriate
-> frequency for the EMC clock it isn't a complete solution for the problem
-> that we're trying to solve. From what I understand EMC scaling is one
-> part of ensuring quality of service. The current implementations of that
-> seems to abuse clocks (essentially one X.emc clock per X clock) to
-> signal the amount of memory bandwidth required by any given device. But
-> there are other parts to the puzzle. Latency allowance is one. The value
-> programmed to the latency allowance registers for example depends on the
-> EMC frequency.
->
-> Has anyone ever looked into using a different framework to model all of
-> these requirements? PM QoS looks like it might fit, but if none of the
-> existing frameworks have what we need, perhaps something new can be
-> created.
+On Sat, Apr 26, 2014 at 09:37:19AM +0400, Alexander Shiyan wrote:
+> Patch adds commonly used event types (EV_KEY and EV_SW) to
+> devicetree bindings header for input subsystem.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
 
-On Exynos we use devfreq, though in that case we monitor performance
-counters to determine how internal buses should be scaled - not sure
-if Tegra SoCs have similar counters that could be used for this
-purpose.  It seems like EMC scaling would fit nicely within the PM QoS
-framework, perhaps with a new PM_QOS_MEMORY_THROUGHPUT class.
+Will DT folks pick it up please?
 
--Andrew
+> ---
+>  include/dt-bindings/input/input.h | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
+> index 042e7b3..3a141d92 100644
+> --- a/include/dt-bindings/input/input.h
+> +++ b/include/dt-bindings/input/input.h
+> @@ -9,6 +9,9 @@
+>  #ifndef _DT_BINDINGS_INPUT_INPUT_H
+>  #define _DT_BINDINGS_INPUT_INPUT_H
+>  
+> +#define EV_KEY			0x01
+> +#define EV_SW			0x05
+> +
+>  #define KEY_RESERVED		0
+>  #define KEY_ESC			1
+>  #define KEY_1			2
+> -- 
+> 1.8.3.2
+> 
+
+-- 
+Dmitry
