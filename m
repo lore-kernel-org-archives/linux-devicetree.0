@@ -1,60 +1,114 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 7/7] dts: dra7-evm: add USB support
-Date: Wed, 14 May 2014 10:53:45 +0300
-Message-ID: <53732109.6070009@ti.com>
-References: <1399283686-6127-1-git-send-email-rogerq@ti.com> <1399283686-6127-8-git-send-email-rogerq@ti.com> <20140513171802.GG16837@atomide.com>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH 1/2] clk: of: helper for determining flags properties
+Date: Wed, 14 May 2014 09:53:58 +0200
+Message-ID: <CAG374jAgMbLvw8Qm2Eg6R9vVXL7gTv4Pqy7oE0hxw2zTPFHOOw@mail.gmail.com>
+References: <1399982253-21079-1-git-send-email-gabriel.fernandez@linaro.org>
+	<1399982253-21079-2-git-send-email-gabriel.fernandez@linaro.org>
+	<20140513122054.GA2419@e106331-lin.cambridge.arm.com>
+	<5372363B.4080608@gmail.com>
+	<20140513204924.5943.24086@quantum>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140513171802.GG16837-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140513204924.5943.24086@quantum>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2014 08:18 PM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140505 02:55]:
->> Add USB pinmux information and USB modes
->> for the USB controllers.
->>
->> CC: Beno=C3=AEt Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
->> Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/dra7-evm.dts | 24 ++++++++++++++++++++++++
->>  1 file changed, 24 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/dra7-evm.dts b/arch/arm/boot/dts/dra7=
--evm.dts
->> index 5babba0..1d77815 100644
->> --- a/arch/arm/boot/dts/dra7-evm.dts
->> +++ b/arch/arm/boot/dts/dra7-evm.dts
->> @@ -93,6 +93,18 @@
->>  			0x24c (PIN_INPUT_SLEW | MUX_MODE0) /* uart3_txd */
->>  		>;
->>  	};
->> +
->> +	usb1_pins: pinmux_usb1_pins {
->> +                pinctrl-single,pins =3D <
->> +			0x280	0xc0000	/* usb1_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
->> +                >;
->> +        };
->> +
->> +	usb2_pins: pinmux_usb2_pins {
->> +                pinctrl-single,pins =3D <
->> +			0x284	0xc0000 /* usb2_drvvbus, SLOW_SLEW | PULLUPEN | MODE0 */
->> +                >;
->> +        };
->>  };
->=20
-> Looks like these should use the existing defins PIN_INPUT_SLEW etc?
+Hi,
 
-Yes, I'll fix them up.
+On 13 May 2014 22:49, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Sebastian Hesselbarth (2014-05-13 08:11:55)
+>> On 05/13/2014 02:20 PM, Mark Rutland wrote:
+>> > On Tue, May 13, 2014 at 12:57:32PM +0100, Gabriel FERNANDEZ wrote:
+>> >> The patch provides a helper to get flags properties of
+>> >> a clock node.
+>> >>
+>> >> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>> >> ---
+>> >>   drivers/clk/clk.c            | 11 +++++++++++
+>> >>   include/linux/clk-provider.h |  6 ++++++
+>> >>   2 files changed, 17 insertions(+)
+>> >>
+>> >> diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+>> >> index 4d56220..cae8985 100644
+>> >> --- a/drivers/clk/clk.c
+>> >> +++ b/drivers/clk/clk.c
+>> >> @@ -2528,6 +2528,17 @@ const char *of_clk_get_parent_name(struct device_node *np, int index)
+>> >>   }
+>> >>   EXPORT_SYMBOL_GPL(of_clk_get_parent_name);
+>> >>
+>> >> +unsigned long of_clk_get_flags(struct device_node *np)
+>> >> +{
+>> >> +    unsigned long flags = 0;
+>> >> +
+>> >> +    if (of_property_read_bool(np, "set-rate-parent"))
+>> >> +            flags |= CLK_SET_RATE_PARENT;
+>> >
+>> > NAK.
+>> >
+>> > This is _not_ a hardware property. This flag describes internals of the
+>> > Linux clock framework, and is thus not suitable for DT.
+>>
+>> Mark,
+>>
+>> while I agree above property is not a hardware property, it is at least
+>> some kind of use-case property. If not by DT, we will have to allow some
+>> way to describe master-slave relationships between clocks in a driver
+>> independent way.
+>
+> I agree with Mark.
+>
+> Generally this stuff belongs in a clock driver. Of course there are the
+> integration issues you pointed out. More on that below.
+>
+> As an aside, CLK_SET_RATE_PARENT is a headache, since propagation of the
+> operation up to the parent clock really should be the default behavior
+> for .set_rate (and in fact this is the case for the new-ish
+> .determine_rate op). Some history on those decisions can be found at [1]
+> and [2].
+>
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+My issue is exactly the same as Marc, it's for solve some case with
+PCM and HDMI clocks.
+
+>>
+>> > You've also failed to document the property.
+>> >
+>> > What are you trying to achieve here, and why do you think this is the
+>> > best way of achieving that?
+>>
+>> I cannot tell from the commit msgs, but consider clk-si5351 which is a
+>> driver for an external programmable clock with N PLLs and M outputs. Now
+>> connect a video clock consumer and an audio clock consumer to two
+>> different outputs and those to one PLL (as you want audio clock derived
+>> from video clock, typical HDMI scenario).
+>>
+>> Now, there should be a way to tell the generic driver which outputs are
+>> allowed to change the PLLs rate and which don't. Otherwise, the clock
+>> chip would be pretty useless as e.g. your audio clock consumer will
+>> overwrite the rate the video clock consumer has chosen.
+>
+> This is really a job for the "coordinated clock rate changes" that are
+> currently in development. These specify clock sub-tree snapshots of
+> parent and rate configurations that are predefined. These combinations
+> can be specified in DT. That helps a lot with clock configurations that
+> change per board, or for cases where many combinations of parents and
+> dividers can yield the same output rate, but only a subset of those were
+> validated by the silicon validation team or had proper timing closure so
+> we don't want to rely on the "walk up the tree" algorithm.
+>
+> Regards,
+> Mike
+
+Ok i think this work will be the best solutions for my issue.
+
+Where i can find some threads about that ?
+
+Thanks a lot.
+
+Best Regards.
+
+Gabriel.
