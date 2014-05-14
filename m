@@ -1,47 +1,131 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH RESEND] input: dts: Add commonly used event types
-Date: Wed, 14 May 2014 11:08:16 -0700
-Message-ID: <20140514180816.GD30089@core.coreip.homeip.net>
-References: <1398490639-18411-1-git-send-email-shc_work@mail.ru>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
+Date: Wed, 14 May 2014 20:12:17 +0200
+Message-ID: <5764751.ffUj9rhnMd@wuerfel>
+References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <20140514165722.GA18495@kwain> <5373AE9A.3050008@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398490639-18411-1-git-send-email-shc_work@mail.ru>
-Sender: linux-input-owner@vger.kernel.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: linux-input@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <5373AE9A.3050008@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Apr 26, 2014 at 09:37:19AM +0400, Alexander Shiyan wrote:
-> Patch adds commonly used event types (EV_KEY and EV_SW) to
-> devicetree bindings header for input subsystem.
-> 
-> Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+On Wednesday 14 May 2014 19:57:46 Sebastian Hesselbarth wrote:
+> On 05/14/2014 06:57 PM, Antoine T=E9nart wrote:
+> > On Wed, May 14, 2014 at 06:11:24PM +0200, Arnd Bergmann wrote:
+> >> On Wednesday 14 May 2014 17:49:29 Antoine T=E9nart wrote:
+> >>> On Wed, May 14, 2014 at 05:31:24PM +0200, Arnd Bergmann wrote:
+>=20
+> From what I understand from the conversation, we have a single PHY
+> register set dealing with both SATA ports available on the SoC.
+> Also, from the name of the PHY bits we assume the PHY may be able
+> to work in different modes than just SATA. And we currently have
+> an AHCI-compatible SATA IP that supports up to two ports, with one
+> actually connected to a SATA plug on the DMP board.
+>=20
+> Now, thinking about the PHY binding and the (possible) multi-protocol
+> support, it can be possible that on BG2Q there is a generic 2-lane
+> LVDS PHY that can be configured to support SATA or PCIe. Both are
+> electrically and bit-level compatible, so they could be internally
+> wired-up with AHCI and PCIe controller.
 
-Will DT folks pick it up please?
+Sounds like a reasonable guess. We have other PHY drivers doing the
+same thing already.
 
-> ---
->  include/dt-bindings/input/input.h | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/include/dt-bindings/input/input.h b/include/dt-bindings/input/input.h
-> index 042e7b3..3a141d92 100644
-> --- a/include/dt-bindings/input/input.h
-> +++ b/include/dt-bindings/input/input.h
-> @@ -9,6 +9,9 @@
->  #ifndef _DT_BINDINGS_INPUT_INPUT_H
->  #define _DT_BINDINGS_INPUT_INPUT_H
->  
-> +#define EV_KEY			0x01
-> +#define EV_SW			0x05
-> +
->  #define KEY_RESERVED		0
->  #define KEY_ESC			1
->  #define KEY_1			2
-> -- 
-> 1.8.3.2
-> 
+> From a DT point-of-view, we need a way to (a) link each SATA or PCIe
+> port to the PHY, (b) specify the PHY lane to be used, and (c) specify
+> the protocol to be used on that lane. If I got it right, Arnd already
+> mentioned to use the phy-specifier to deal with it:
+>=20
+> e.g. phy =3D <&genphy 0 MODE_SATA> or phy =3D <&genphy 1 MODE_PCIE>
 
--- 
-Dmitry
+Right.
+
+> Let's assume we have one dual-port SATA controller and one PCIe
+> controller with either x1 or x2 support. The only sane DT binding,
+> I can think of then would be:
+>=20
+> berlin2q.dtsi:
+>=20
+> genphy: lvds@ea00ff {
+> 	compatible =3D "marvell,berlin-lvds-phy";
+> 	reg =3D <0xea00ff 0x100>;
+> 	#phy-cells =3D <2>;
+> };
+>=20
+> sata: sata@ab00ff {
+> 	compatible =3D "ahci-platform";
+> 	reg =3D <0xab00ff 0x100>;
+> =09
+> 	sata0: sata-port@0 {
+> 		reg =3D <0>;
+> 		phy =3D <&genphy 0 MODE_SATA>;
+> 		status =3D "disabled";
+> 	};
+>=20
+> 	sata1: sata-port@1 {
+> 		reg =3D <1>;
+> 		phy =3D <&genphy 1 MODE_SATA>;
+> 		status =3D "disabled";
+> 	};
+> };
+>=20
+> pcie: pcie@ab01ff {
+> 	compatible =3D "marvell,berlin-pcie";
+> 	reg =3D <0xab01ff 0x100>;
+>=20
+> 	pcie0: pcie-port@0 {
+> 		reg =3D <0>;
+> 		/* set phy on a per-board basis */
+> 		/* PCIe x1 on Lane 0 : phy =3D <&genphy 0 MODE_PCIE>; */
+> 		/* PCIe x2 on Lane 0 and 1 : phy =3D <&genphy 0 MODE_PCIE>, <&genph=
+y 1
+> MODE_PCIE>; */
+> 		status =3D "disabled";
+> 	};
+> };
+>=20
+> berlin2q-dmp.dts:
+>=20
+> &sata1 {
+> 	status =3D "okay";
+> };
+>=20
+> &pcie0 {
+> 	phy =3D <&genphy 1 MODE_PCIE>;
+> };
+>=20
+> berlin2q-foo.dts:
+>=20
+> &pcie0 {
+> 	phy =3D <&genphy 0 MODE_PCIE>, <&genphy 1 MODE_PCIE>;
+> };
+
+Exactly. I would also be fine with keeping the sub-nodes of the
+phy device as in v3 and using #phy-cells=3D<1> instead of #phy-cells.
+The result would be pretty much the same, it just depends on how
+closely connected the two logical phys are.
+
+IIRC for the ST microelectronics PHY we recently reviewed, the
+same PHY could be driving multiple SATA ports, or a single
+multi-lane PCIe. In that case, it makes more sense to have
+#phy-cells=3D<2>, like your example.
+=20
+> For the driver, Antoine then would have to squeeze all PHY register
+> mangling in phy-berlin2.c and see how to make ahci-platform aware of
+> individual port nodes (I haven't looked up if it already exists, sorr=
+y)
+> and announce only enabled port child nodes, right?
+
+I've been thinking some more about this aspect. I don't actually have
+a strong opinion on whether it's better to use the generic ahci-platfor=
+m
+driver, or to keep the multi-phy support as a special variant for
+berlin. If we do the latter, it would however be good to define the
+binding in a way that lets us later merge things into the generic phy
+driver in case we get more of the same.
+
+	Arnd
