@@ -1,131 +1,48 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
-Date: Wed, 14 May 2014 20:12:17 +0200
-Message-ID: <5764751.ffUj9rhnMd@wuerfel>
-References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <20140514165722.GA18495@kwain> <5373AE9A.3050008@gmail.com>
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Wed, 14 May 2014 20:16:53 +0200
+Message-ID: <5373B315.3020909@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<20140514141914.446F7C4153D@trevor.secretlab.ca>	<53738580.7000902@ahsoftware.de>	<CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>	<53739871.9070407@ahsoftware.de> <CAL_JsqJB4CAO60m1HTGQGHQRYVWcARxm_roOhn-PJh+ZR7OONg@mail.gmail.com> <5373ABD2.9010508@ahsoftware.de> <5373ADB6.1070702@ahsoftware.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <5373AE9A.3050008@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5373ADB6.1070702-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 May 2014 19:57:46 Sebastian Hesselbarth wrote:
-> On 05/14/2014 06:57 PM, Antoine T=E9nart wrote:
-> > On Wed, May 14, 2014 at 06:11:24PM +0200, Arnd Bergmann wrote:
-> >> On Wednesday 14 May 2014 17:49:29 Antoine T=E9nart wrote:
-> >>> On Wed, May 14, 2014 at 05:31:24PM +0200, Arnd Bergmann wrote:
->=20
-> From what I understand from the conversation, we have a single PHY
-> register set dealing with both SATA ports available on the SoC.
-> Also, from the name of the PHY bits we assume the PHY may be able
-> to work in different modes than just SATA. And we currently have
-> an AHCI-compatible SATA IP that supports up to two ports, with one
-> actually connected to a SATA plug on the DMP board.
->=20
-> Now, thinking about the PHY binding and the (possible) multi-protocol
-> support, it can be possible that on BG2Q there is a generic 2-lane
-> LVDS PHY that can be configured to support SATA or PCIe. Both are
-> electrically and bit-level compatible, so they could be internally
-> wired-up with AHCI and PCIe controller.
+Am 14.05.2014 19:53, schrieb Alexander Holler:
+> Am 14.05.2014 19:45, schrieb Alexander Holler:
+>
+>> One of the biggest problem of the deferred probe stuff is the problem
+>> how to identify real problems if everything ends up with a deferred
+>> probe when an error occurs? That means if you display an error whenever
+>> something is deferred, the log becomes almost unreadable. If you don't
+>> display an error, you never will see an error. And how do you display
+>> the real error when deferred probes finally do fail? The deferred probe
+>> stuff doesn't has any information about the underlying error, so it
+>> can't display it.
+>
+> And that is a real problem. I've recently tried to identify why a driver
+> failed and it was a nightmare because nothing offered any message (debug
+> or not) when a probe was deferred. So I had to insert tons of printks to
+> walk upwards to find the finally place where the probe failed.
+> Everything afterwards just has forwarded the -EPROBE_DEFER without
+> printing any message.
 
-Sounds like a reasonable guess. We have other PHY drivers doing the
-same thing already.
+To add some numbers, I had to insert around 20-30 printks in around 10 
+or more files to find the underlying problem. Having to do such whenever 
+an error happens because everything assumes the error will disappear in 
+a later try, which doesn't happen for real errors, is just a nightmare.
 
-> From a DT point-of-view, we need a way to (a) link each SATA or PCIe
-> port to the PHY, (b) specify the PHY lane to be used, and (c) specify
-> the protocol to be used on that lane. If I got it right, Arnd already
-> mentioned to use the phy-specifier to deal with it:
->=20
-> e.g. phy =3D <&genphy 0 MODE_SATA> or phy =3D <&genphy 1 MODE_PCIE>
+Regards,
 
-Right.
+Alexander Holler
 
-> Let's assume we have one dual-port SATA controller and one PCIe
-> controller with either x1 or x2 support. The only sane DT binding,
-> I can think of then would be:
->=20
-> berlin2q.dtsi:
->=20
-> genphy: lvds@ea00ff {
-> 	compatible =3D "marvell,berlin-lvds-phy";
-> 	reg =3D <0xea00ff 0x100>;
-> 	#phy-cells =3D <2>;
-> };
->=20
-> sata: sata@ab00ff {
-> 	compatible =3D "ahci-platform";
-> 	reg =3D <0xab00ff 0x100>;
-> =09
-> 	sata0: sata-port@0 {
-> 		reg =3D <0>;
-> 		phy =3D <&genphy 0 MODE_SATA>;
-> 		status =3D "disabled";
-> 	};
->=20
-> 	sata1: sata-port@1 {
-> 		reg =3D <1>;
-> 		phy =3D <&genphy 1 MODE_SATA>;
-> 		status =3D "disabled";
-> 	};
-> };
->=20
-> pcie: pcie@ab01ff {
-> 	compatible =3D "marvell,berlin-pcie";
-> 	reg =3D <0xab01ff 0x100>;
->=20
-> 	pcie0: pcie-port@0 {
-> 		reg =3D <0>;
-> 		/* set phy on a per-board basis */
-> 		/* PCIe x1 on Lane 0 : phy =3D <&genphy 0 MODE_PCIE>; */
-> 		/* PCIe x2 on Lane 0 and 1 : phy =3D <&genphy 0 MODE_PCIE>, <&genph=
-y 1
-> MODE_PCIE>; */
-> 		status =3D "disabled";
-> 	};
-> };
->=20
-> berlin2q-dmp.dts:
->=20
-> &sata1 {
-> 	status =3D "okay";
-> };
->=20
-> &pcie0 {
-> 	phy =3D <&genphy 1 MODE_PCIE>;
-> };
->=20
-> berlin2q-foo.dts:
->=20
-> &pcie0 {
-> 	phy =3D <&genphy 0 MODE_PCIE>, <&genphy 1 MODE_PCIE>;
-> };
-
-Exactly. I would also be fine with keeping the sub-nodes of the
-phy device as in v3 and using #phy-cells=3D<1> instead of #phy-cells.
-The result would be pretty much the same, it just depends on how
-closely connected the two logical phys are.
-
-IIRC for the ST microelectronics PHY we recently reviewed, the
-same PHY could be driving multiple SATA ports, or a single
-multi-lane PCIe. In that case, it makes more sense to have
-#phy-cells=3D<2>, like your example.
-=20
-> For the driver, Antoine then would have to squeeze all PHY register
-> mangling in phy-berlin2.c and see how to make ahci-platform aware of
-> individual port nodes (I haven't looked up if it already exists, sorr=
-y)
-> and announce only enabled port child nodes, right?
-
-I've been thinking some more about this aspect. I don't actually have
-a strong opinion on whether it's better to use the generic ahci-platfor=
-m
-driver, or to keep the multi-phy support as a special variant for
-berlin. If we do the latter, it would however be good to define the
-binding in a way that lets us later merge things into the generic phy
-driver in case we get more of the same.
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
