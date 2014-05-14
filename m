@@ -1,61 +1,103 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/7] clk: sunxi: add PRCM
- (Power/Reset/Clock Management) clks support
-Date: Wed, 14 May 2014 15:39:35 -0700
-Message-ID: <20140514223935.19795.36960@quantum>
-References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
- <1399633911-7094-6-git-send-email-boris.brezillon@free-electrons.com>
- <20140514005119.16152.19787@quantum> <53731BB3.4060504@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
+ order based on the DT)
+Date: Thu, 15 May 2014 01:00:33 +0200
+Message-ID: <5373F591.7040308@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<20140514141914.446F7C4153D@trevor.secretlab.ca>	<53738580.7000902@ahsoftware.de>	<CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>	<53739871.9070407@ahsoftware.de>	<CAL_JsqJB4CAO60m1HTGQGHQRYVWcARxm_roOhn-PJh+ZR7OONg@mail.gmail.com>	<5373ABD2.9010508@ahsoftware.de> <CAL_JsqJ-=amrmRR9FfnOH1ELDQ1kTaG3e1n878mgpZP1FUw_jA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDO333VC4INBBNHBZ6NQKGQECYG6SXY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <53731BB3.4060504-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?utf-8?q?Emilio_L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJ-=amrmRR9FfnOH1ELDQ1kTaG3e1n878mgpZP1FUw_jA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Boris BREZILLON (2014-05-14 00:30:59)
-> Hello Mike,
+Am 14.05.2014 21:06, schrieb Rob Herring:
+> On Wed, May 14, 2014 at 12:45 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+>> Am 14.05.2014 19:30, schrieb Rob Herring:
+>>
+>>> On Wed, May 14, 2014 at 11:23 AM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+>>> wrote:
+>>>>
+>>>> Am 14.05.2014 18:05, schrieb Grant Likely:
+>>>>
+>>>>> On Wed, May 14, 2014 at 4:02 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+>>>>> wrote:
+>>>>>>
+>>>>>>
+>>>>>> Am 14.05.2014 16:19, schrieb Grant Likely:
+>>>>>>
+>>>>>>
+>>>>>>> Rather than a dtb schema change, for the most common properties (irqs,
+>>>>>>> clocks, gpios), we could extract dependencies at boot time. I don't
+>>>>>>> like
+>>>>>>> the idea of adding a separate depends-on property because it is very
+>>>>>>> easy to get it out of sync with the actual binding data (dtc is not
+>>>>>>> the
+>>>>>>> only tool that manipulates .dtbs. Firmware will fiddle with it too).
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>>
+>>>>>> Then that stuff has to fiddle correct. Sorry, but trying to solve all
+>>>>>> problems right from the beginning just leads to endless talks with no
+>>>>>> end
+>>>>>> and nothing will happen at all because nobody aggrees how to start.
+>>>>>
+>>>>>
+>>>>>
+>>>>> I appreciate the problem that you're trying to solve and why you're
+>>>>> using the dtc approach. My job is to poke at the solution and make
+>>>>> sure it is going to be reliable. Making sure all users know how to
+>>>>> fiddle with the new property correctly is not a trivial problem,
+>>>>> especially when it is firmware that will not necessarily be updated.
+>>>>
+>>>>
+>>>>
+>>>> The answer is just that they don't have to use this feature.
+>>>
+>>>
+>>> It's not just about users, but maintainers have to carry the code and
+>>> anything tied to DT is difficult to change or remove.
+>>>
+>>> Lots of inter-dependencies are already described in DT. We should
+>>> leverage those first and then look at how to add dependencies that are
+>>> not described.
+>>
+>>
+>> Again, that's what this feature is about. One of the problems it solves is
+>> that those dependencies which are described in the DT source in form of
+>> phandle reference, do disappear in the blobs because the init-system would
+>> have to know all bindings in order to identify phandle references (the
+>> dependencies) again.
 > 
-> On 14/05/2014 02:51, Mike Turquette wrote:
-> > Quoting Boris BREZILLON (2014-05-09 04:11:49)
-> >> +struct clk_ops ar100_ops = {
-> >> +       .recalc_rate = ar100_recalc_rate,
-> >> +       .determine_rate = ar100_determine_rate,
-> >> +       .set_parent = ar100_set_parent,
-> >> +       .get_parent = ar100_get_parent,
-> >> +       .set_rate = ar100_set_rate,
-> >> +};
-> > I might be having a brain fart, but is there a valid case for having
-> > both a .recalc_rate and a .determine_rate? I believe that the former
-> > will never be used and the latter will always be used by the clock
-> > framework core.
+> They don't disappear, but they become binding specific to recover.
+> What you are loosing is type information which is something we would
+> like to solve as well.
 > 
-> I think you're mistaking recalc_rate for round_rate.
-> AFAIK, recalc_rate is mandatory for a clk that implement either
-> round_rate or determine_rate.
+> You can regenerate or figure out the dependencies with knowledge of
+> the binding. The of_irq_init code does this. Maintaining this
+> information in the dtb that can be parsed in a generic way and having
+> the kernel handle non-bus oriented dependencies are really 2 separate
+> problems. Let's not try to solve it all at once.
+> 
 
-I *was* having a brain fart. You're right of course. Too many .r*_rate()
-callbacks...
+Btw. I wonder if you have really read what I did and what I have
+written. At first the need for knowledge of the binding is broken by
+design and will never work for any general solution. Second, I've
+already written almost the same as you've written in your first
+paragraph in my pragraph you've just quoted directly above. And third,
+if you like to solve that problem, I just posted a possible solution. ;)
 
-Thanks,
-Mike
+You only have to take it, feel free to so, all the patches do contain a
+Signed-off-by which means that I don't care much what you do with them.
 
-> 
-> 
-> Best Regards,
-> 
-> Boris
-> 
-> -- 
-> Boris Brezillon, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
-> 
+Regards,
+
+Alexander Holler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
