@@ -1,53 +1,35 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
-Date: Wed, 14 May 2014 20:56:29 +0200
-Message-ID: <5373BC5D.7010300@gmail.com>
-References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <5764751.ffUj9rhnMd@wuerfel> <5373B908.5090904@gmail.com> <17808571.N5ZGjXFEVP@wuerfel>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <17808571.N5ZGjXFEVP@wuerfel>
-Sender: linux-ide-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, kishon@ti.com, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 0/6] Add platform support for LSI AXM55xx
+Date: Wed, 14 May 2014 20:56:24 +0200
+Message-ID: <6334605.NlytHCzYVP@wuerfel>
+References: <cover.1400072260.git.anders.berg@avagotech.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <cover.1400072260.git.anders.berg@avagotech.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anders Berg <anders.berg@avagotech.com>
+Cc: Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2014 08:51 PM, Arnd Bergmann wrote:
-> On Wednesday 14 May 2014 20:42:16 Sebastian Hesselbarth wrote:
->>>> For the driver, Antoine then would have to squeeze all PHY register
->>>> mangling in phy-berlin2.c and see how to make ahci-platform aware of
->>>> individual port nodes (I haven't looked up if it already exists, sorry)
->>>> and announce only enabled port child nodes, right?
->>>
->>> I've been thinking some more about this aspect. I don't actually have
->>> a strong opinion on whether it's better to use the generic ahci-platform
->>> driver, or to keep the multi-phy support as a special variant for
->>> berlin. If we do the latter, it would however be good to define the
->>> binding in a way that lets us later merge things into the generic phy
->>> driver in case we get more of the same.
->>
->> Hmm, IMHO multi-phy support is orthogonal to ahci-platform, isn't it?
->> ahci-platform needs to know about the phy property and calls some
->> helper that deals with the phy-specifier?
->>
->> About a generic _phy_ driver, I am not so sure if berlin is the best
->> template right now 
->>
->> So, my call would be:
->> - make ahci-platform aware of port sub-nodes and phy properties
->> - have a berlin specific PHY driver
+On Wednesday 14 May 2014 20:37:55 Anders Berg wrote:
 > 
-> I'm not sure if we need sub-nodes per port, it should be enough
-> to have an array of phys, plus a way to match them up with the
-> ports.
+> This is version 3 of this series to introduces basic platform support for the LSI
+> AXM5516 SoC.
+> 
+> No major changes since v2. Ready to be applied to the arm-soc tree?
 
-Actually, I'd love to see sub-nodes per port as it will allow to
-disabled unused ports on a per-board basis.
+I think it's good, but I'm not sure if we should put them all into arm-soc.
+There are no dependencies between the drivers that I can see, so why not
+merge the clock and reset drivers through the individual subsystem maintainers?
 
-I have this in mind for a long time for Kirkwood's SATA node already:
-Consider a board where you have the one available SATA plug connected
-to port 1. How would that work out with status = "disabled"/"okay" that
-doesn't allow array of strings obviously?
+We can take patches 1/3/4/6, and the others if there is a good reason
+not to have the regular maintainers pick them up.
 
-Sebastian
+The hip04 platform series is also adding a multi_v7_lpae_defconfig file.
+it would be good to add axxia to that config and also to the regular
+multi_v7_defconfig, but that can be an add-on patch once we have merged
+hip04.
 
+	Arnd
