@@ -1,103 +1,45 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Thu, 15 May 2014 01:00:33 +0200
-Message-ID: <5373F591.7040308@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<20140514141914.446F7C4153D@trevor.secretlab.ca>	<53738580.7000902@ahsoftware.de>	<CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>	<53739871.9070407@ahsoftware.de>	<CAL_JsqJB4CAO60m1HTGQGHQRYVWcARxm_roOhn-PJh+ZR7OONg@mail.gmail.com>	<5373ABD2.9010508@ahsoftware.de> <CAL_JsqJ-=amrmRR9FfnOH1ELDQ1kTaG3e1n878mgpZP1FUw_jA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 0/3] Add DRA7xx CPSW Ethernet support in Device Tree
+Date: Wed, 14 May 2014 16:12:54 -0700
+Message-ID: <20140514231254.GA13427@atomide.com>
+References: <1399968246-21166-1-git-send-email-mugunthanvnm@ti.com>
+ <5371DD94.1050400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJ-=amrmRR9FfnOH1ELDQ1kTaG3e1n878mgpZP1FUw_jA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5371DD94.1050400@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: bcousson@baylibre.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 14.05.2014 21:06, schrieb Rob Herring:
-> On Wed, May 14, 2014 at 12:45 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
->> Am 14.05.2014 19:30, schrieb Rob Herring:
->>
->>> On Wed, May 14, 2014 at 11:23 AM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
->>> wrote:
->>>>
->>>> Am 14.05.2014 18:05, schrieb Grant Likely:
->>>>
->>>>> On Wed, May 14, 2014 at 4:02 PM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
->>>>> wrote:
->>>>>>
->>>>>>
->>>>>> Am 14.05.2014 16:19, schrieb Grant Likely:
->>>>>>
->>>>>>
->>>>>>> Rather than a dtb schema change, for the most common properties (irqs,
->>>>>>> clocks, gpios), we could extract dependencies at boot time. I don't
->>>>>>> like
->>>>>>> the idea of adding a separate depends-on property because it is very
->>>>>>> easy to get it out of sync with the actual binding data (dtc is not
->>>>>>> the
->>>>>>> only tool that manipulates .dtbs. Firmware will fiddle with it too).
->>>>>>
->>>>>>
->>>>>>
->>>>>>
->>>>>> Then that stuff has to fiddle correct. Sorry, but trying to solve all
->>>>>> problems right from the beginning just leads to endless talks with no
->>>>>> end
->>>>>> and nothing will happen at all because nobody aggrees how to start.
->>>>>
->>>>>
->>>>>
->>>>> I appreciate the problem that you're trying to solve and why you're
->>>>> using the dtc approach. My job is to poke at the solution and make
->>>>> sure it is going to be reliable. Making sure all users know how to
->>>>> fiddle with the new property correctly is not a trivial problem,
->>>>> especially when it is firmware that will not necessarily be updated.
->>>>
->>>>
->>>>
->>>> The answer is just that they don't have to use this feature.
->>>
->>>
->>> It's not just about users, but maintainers have to carry the code and
->>> anything tied to DT is difficult to change or remove.
->>>
->>> Lots of inter-dependencies are already described in DT. We should
->>> leverage those first and then look at how to add dependencies that are
->>> not described.
->>
->>
->> Again, that's what this feature is about. One of the problems it solves is
->> that those dependencies which are described in the DT source in form of
->> phandle reference, do disappear in the blobs because the init-system would
->> have to know all bindings in order to identify phandle references (the
->> dependencies) again.
+* Mugunthan V N <mugunthanvnm@ti.com> [140513 01:54]:
+> Tony/Benoit
 > 
-> They don't disappear, but they become binding specific to recover.
-> What you are loosing is type information which is something we would
-> like to solve as well.
+> On Tuesday 13 May 2014 01:34 PM, Mugunthan V N wrote:
+> > Adding device tree entry for CPSW to make it work in Dual EMAC mode.
+> >
+> > DRA7 cpsw phy sel driver patch has been pulled in net-next git with the
+> > following commit id *d415fa1b88748d664b7b6a310dd8e699d2686cf7*
+> >
+> > Mugunthan V N (3):
+> >   pinctrl: dra7: dt-bindings: add pin off modes for dra7 SoC
+> >   arm/dts: dra7xx: Add CPSW and MDIO module nodes for dra7xx
+> >   arm/dts: dra7xx: Enable CPSW and MDIO for dra7xx EVM
+> >
+> >  arch/arm/boot/dts/dra7-evm.dts    | 103 ++++++++++++++++++++++++++++++++++++++
+> >  arch/arm/boot/dts/dra7.dtsi       |  59 ++++++++++++++++++++++
+> >  include/dt-bindings/pinctrl/dra.h |   8 +++
+> >  3 files changed, 170 insertions(+)
+> >
 > 
-> You can regenerate or figure out the dependencies with knowledge of
-> the binding. The of_irq_init code does this. Maintaining this
-> information in the dtb that can be parsed in a generic way and having
-> the kernel handle non-bus oriented dependencies are really 2 separate
-> problems. Let's not try to solve it all at once.
-> 
+> This patch series depends on Cross bar dt patch set
+> http://comments.gmane.org/gmane.linux.drivers.devicetree/73025
 
-Btw. I wonder if you have really read what I did and what I have
-written. At first the need for knowledge of the binding is broken by
-design and will never work for any general solution. Second, I've
-already written almost the same as you've written in your first
-paragraph in my pragraph you've just quoted directly above. And third,
-if you like to solve that problem, I just posted a possible solution. ;)
-
-You only have to take it, feel free to so, all the patches do contain a
-Signed-off-by which means that I don't care much what you do with them.
+That's not enabled yet and sounds like it needs some more work.
+I suggest you repost this tested without the crossbar.
 
 Regards,
 
-Alexander Holler
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
