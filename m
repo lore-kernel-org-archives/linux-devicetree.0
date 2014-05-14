@@ -1,273 +1,110 @@
-From: Bart Tanghe <bart.tanghe@thomasmore.be>
-Subject: [rfc]pwm: add xilinx pwm driver
-Date: Wed, 14 May 2014 13:26:13 +0200
-Message-ID: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be>
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: thierry.reding@gmail.com, michal.simek@xilinx.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Bart Tanghe <bart.tanghe@thomasmore.be>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv2] of: make of_update_property() usable earlier in the boot process
+Date: Wed, 14 May 2014 13:36:36 +0200
+Message-ID: <1400067396-21228-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-	add Xilinx PWM support - axi timer hardware block 
+Commit 75b57ecf9d1d1e17d099ab13b8f48e6e038676be ('of: Make device
+nodes kobjects so they show up in sysfs') has turned Device Tree nodes
+in kobjects and added a sysfs based representation for Device Tree
+nodes. Since the sysfs logic is only available after the execution of
+a core_initcall(), the patch took precautions in of_add_property() and
+of_remove_property() to not do any sysfs related manipulation early in
+the boot process.
 
-Signed-off-by: Bart Tanghe <bart.tanghe@thomasmore.be>
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-xlnx.txt b/Documentation/devicetree/bindings/pwm/pwm-xlnx.txt
-new file mode 100644
-index 0000000..cb48926
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-xlnx.txt
-@@ -0,0 +1,20 @@
-+Xilinx PWM controller
-+
-+Required properties:
-+- compatible: should be "xlnx,pwm-xlnx"
-+- add a clock source to the description
-+
-+Examples:
-+
-+		axi_timer_0: timer@42800000 {
-+			clock-frequency = <100000000>;
-+			clocks = <&clkc 15>;
-+			compatible = "xlnx,xlnx-pwm";
-+			reg = <0x42800000 0x10000>;
-+			xlnx,count-width = <0x20>;
-+			xlnx,gen0-assert = <0x1>;
-+			xlnx,gen1-assert = <0x1>;
-+			xlnx,one-timer-only = <0x0>;
-+			xlnx,trig0-assert = <0x1>;
-+			xlnx,trig1-assert = <0x1>;
-+		} ;
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index eece329..1d59b02 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -233,4 +233,17 @@ config PWM_VT8500
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-vt8500.
+However, it forgot to do the same for of_update_property(), which if
+used early in the boot process (before core_initcalls have been
+called), tries to call sysfs_remove_bin_file(), and crashes:
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 0 at /home/thomas/projets/linux-2.6/fs/kernfs/dir.c:1216 kernfs_remove_by_name_ns+0x80/0x88()
+kernfs: can not remove '(null)', no directory
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper/0 Not tainted 3.15.0-rc1-00127-g1d7e7b2-dirty #423
+[<c0014910>] (unwind_backtrace) from [<c00110ec>] (show_stack+0x10/0x14)
+[<c00110ec>] (show_stack) from [<c04c84b8>] (dump_stack+0x84/0x94)
+[<c04c84b8>] (dump_stack) from [<c001d8c0>] (warn_slowpath_common+0x6c/0x88)
+[<c001d8c0>] (warn_slowpath_common) from [<c001d90c>] (warn_slowpath_fmt+0x30/0x40)
+[<c001d90c>] (warn_slowpath_fmt) from [<c0104468>] (kernfs_remove_by_name_ns+0x80/0x88)
+[<c0104468>] (kernfs_remove_by_name_ns) from [<c0394d98>] (of_update_property+0xc0/0xf0)
+[<c0394d98>] (of_update_property) from [<c0647248>] (mvebu_timer_and_clk_init+0xfc/0x194)
+[<c0647248>] (mvebu_timer_and_clk_init) from [<c0640934>] (start_kernel+0x218/0x350)
+[<c0640934>] (start_kernel) from [<00008070>] (0x8070)
+---[ end trace 3406ff24bd97382e ]---
+Unable to handle kernel NULL pointer dereference at virtual address 0000003c
+pgd = c0004000
+[0000003c] *pgd=00000000
+Internal error: Oops: 5 [#1] SMP ARM
+Modules linked in:
+CPU: 0 PID: 0 Comm: swapper/0 Tainted: G        W     3.15.0-rc1-00127-g1d7e7b2-dirty #423
+task: c10ad4d8 ti: c10a2000 task.ti: c10a2000
+PC is at kernfs_find_ns+0x8/0xf0
+LR is at kernfs_find_and_get_ns+0x30/0x48
+pc : [<c0103834>]    lr : [<c010394c>]    psr: 600001d3
+sp : c10a3f34  ip : 00000073  fp : 00000000
+r10: 00000000  r9 : cfffc240  r8 : cfdf2980
+r7 : cf812c00  r6 : 00000000  r5 : 00000000  r4 : c10b45e0
+r3 : c10ad4d8  r2 : 00000000  r1 : cf812c00  r0 : 00000000
+Flags: nZCv  IRQs off  FIQs off  Mode SVC_32  ISA ARM  Segment kernel
+Control: 10c53c7d  Table: 0000404a  DAC: 00000015
+Process swapper/0 (pid: 0, stack limit = 0xc10a2240)
+Stack: (0xc10a3f34 to 0xc10a4000)
+3f20:                                              c10b45e0 00000000 00000000
+3f40: cf812c00 c010394c 00000063 cf812c00 00000001 cf812c00 cfdf29ac c03932cc
+3f60: 00000063 cf812bc0 cfdf29ac cf812c00 ffffffff c03943f8 cfdf2980 c0104468
+3f80: cfdf2a04 cfdf2980 cf812bc0 c06634b0 c10aa3c0 c0394da4 c10f74dc cfdf2980
+3fa0: cf812bc0 c0647248 c10aa3c0 ffffffff c10de940 c10aa3c0 ffffffff c0640934
+3fc0: ffffffff ffffffff c06404ec 00000000 00000000 c06634b0 00000000 10c53c7d
+3fe0: c10aa434 c06634ac c10ae4c8 0000406a 414fc091 00008070 00000000 00000000
+[<c0103834>] (kernfs_find_ns) from [<00000001>] (0x1)
+Code: e5c89001 eaffffcf e92d40f0 e1a06002 (e1d023bc)
+---[ end trace 3406ff24bd97382f ]---
+Kernel panic - not syncing: Attempted to kill the idle task!
+---[ end Kernel panic - not syncing: Attempted to kill the idle task!
+
+To fix this problem, we simply skip the sysfs related calls in
+of_update_property(), and rely on of_init() to fix up things when it
+will be called, exactly as is done in of_add_property() and
+of_remove_property().
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Fixes: 75b57ecf9d1d ("of: Make device nodes kobjects so they show up in sysfs")
+---
+Changes since previous version:
+ - Use a ternary operator to bail out with the proper return value
+   instead of a goto. Requested by Rob Herring.
+ - Use a 12 digits hash and double quotes in the "Fixes:"
+   tag. Requested by Rob Herring.
+ - Rebased on top of 3.15-rc5
+
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/of/base.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 6d4ee22..32e969d 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1831,6 +1831,10 @@ int of_update_property(struct device_node *np, struct property *newprop)
+ 	if (!found)
+ 		return -ENODEV;
  
-+config PWM_XLNX
-+	tristate "Xilinx PWM support"
-+	help
-+	  Generic PWM framework driver for xilinx axi timer.
++	/* At early boot, bail out and defer setup to of_init() */
++	if (!of_kset)
++		return found ? 0 : -ENODEV;
 +
-+	  This driver implements the pwm channel of a xilinx axi timer hardware
-+	  block.
-+	  The hardware block has to be configured with generate output signal
-+	  of timer 1 and timer 2 active high.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-xlnx.
-+
- endif
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 8b754e4..e0c5f59 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -21,3 +21,4 @@ obj-$(CONFIG_PWM_TIPWMSS)	+= pwm-tipwmss.o
- obj-$(CONFIG_PWM_TWL)		+= pwm-twl.o
- obj-$(CONFIG_PWM_TWL_LED)	+= pwm-twl-led.o
- obj-$(CONFIG_PWM_VT8500)	+= pwm-vt8500.o
-+obj-$(CONFIG_PWM_XLNX)		+= pwm-xlnx.o
-diff --git a/drivers/pwm/pwm-xlnx.c b/drivers/pwm/pwm-xlnx.c
-new file mode 100644
-index 0000000..9c1be71
---- /dev/null
-+++ b/drivers/pwm/pwm-xlnx.c
-@@ -0,0 +1,197 @@
-+/*
-+ * pwm-xlnx driver
-+ * Tested on zedboard - axi timer v2.00a
-+ *
-+ * Copyright (C) 2014 Thomas more
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+
-+/*mmio regiser mapping*/
-+
-+#define OFFSET		0x10
-+#define DUTY		0x14
-+#define PERIOD		0x04
-+
-+/* configure the counters as 32 bit counters */
-+
-+#define PWM_CONF	0x00000206
-+#define PWM_ENABLE	0x00000080
-+
-+#define DRIVER_AUTHOR "Bart Tanghe <bart.tanghe@thomasmore.be>"
-+#define DRIVER_DESC "A Xilinx pwm driver"
-+
-+struct xlnx_pwm_chip {
-+	struct pwm_chip chip;
-+	struct device *dev;
-+	int scaler;
-+	void __iomem *mmio_base;
-+};
-+
-+static inline struct xlnx_pwm_chip *to_xlnx_pwm_chip(
-+					struct pwm_chip *chip){
-+
-+	return container_of(chip, struct xlnx_pwm_chip, chip);
-+}
-+
-+static int xlnx_pwm_config(struct pwm_chip *chip,
-+			      struct pwm_device *pwm,
-+			      int duty_ns, int period_ns){
-+
-+	struct xlnx_pwm_chip *pc;
-+
-+	pc = container_of(chip, struct xlnx_pwm_chip, chip);
-+
-+	iowrite32(duty_ns/pc->scaler - 2, pc->mmio_base + DUTY);
-+	iowrite32(period_ns/pc->scaler - 2, pc->mmio_base + PERIOD);
-+
-+	return 0;
-+}
-+
-+static int xlnx_pwm_enable(struct pwm_chip *chip,
-+			      struct pwm_device *pwm){
-+
-+	struct xlnx_pwm_chip *pc;
-+
-+	pc = container_of(chip, struct xlnx_pwm_chip, chip);
-+
-+	iowrite32(ioread32(pc->mmio_base) | PWM_ENABLE, pc->mmio_base);
-+	iowrite32(ioread32(pc->mmio_base + OFFSET) | PWM_ENABLE,
-+						pc->mmio_base + OFFSET);
-+	return 0;
-+}
-+
-+static void xlnx_pwm_disable(struct pwm_chip *chip,
-+				struct pwm_device *pwm)
-+{
-+	struct xlnx_pwm_chip *pc;
-+
-+	pc = to_xlnx_pwm_chip(chip);
-+
-+	iowrite32(ioread32(pc->mmio_base) & ~PWM_ENABLE, pc->mmio_base);
-+	iowrite32(ioread32(pc->mmio_base + OFFSET) & ~PWM_ENABLE,
-+						pc->mmio_base + OFFSET);
-+}
-+
-+static int xlnx_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
-+				enum pwm_polarity polarity)
-+{
-+	struct xlnx_pwm_chip *pc;
-+
-+	pc = to_xlnx_pwm_chip(chip);
-+
-+	/* no implementation of polarity function
-+	   the axi timer hw block doesn't support this
-+	*/
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops xlnx_pwm_ops = {
-+	.config = xlnx_pwm_config,
-+	.enable = xlnx_pwm_enable,
-+	.disable = xlnx_pwm_disable,
-+	.set_polarity = xlnx_set_polarity,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int xlnx_pwm_probe(struct platform_device *pdev)
-+{
-+	struct xlnx_pwm_chip *pwm;
-+
-+	int ret;
-+	struct resource *r;
-+	u32 start, end;
-+	struct clk *clk;
-+
-+	pwm = devm_kzalloc(&pdev->dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm) {
-+		dev_err(&pdev->dev, "failed to allocate memory\n");
-+		return -ENOMEM;
-+	}
-+
-+	pwm->dev = &pdev->dev;
-+
-+	clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(clk)) {
-+		dev_err(&pdev->dev, "could not find clk: %ld\n", PTR_ERR(clk));
-+		devm_kfree(&pdev->dev, pwm);
-+		return PTR_ERR(clk);
-+	}
-+
-+	pwm->scaler = (int)1000000000/clk_get_rate(clk);
-+
-+	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwm->mmio_base = devm_ioremap_resource(&pdev->dev, r);
-+	if (IS_ERR(pwm->mmio_base)) {
-+		devm_kfree(&pdev->dev, pwm);
-+		return PTR_ERR(pwm->mmio_base);
-+	}
-+
-+	start = r->start;
-+	end = r->end;
-+
-+	pwm->chip.dev = &pdev->dev;
-+	pwm->chip.ops = &xlnx_pwm_ops;
-+	pwm->chip.base = (int)&pdev->id;
-+	pwm->chip.npwm = 1;
-+
-+	ret = pwmchip_add(&pwm->chip);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "pwmchip_add() failed: %d\n", ret);
-+		devm_kfree(&pdev->dev, pwm);
-+		return -1;
-+	}
-+
-+	/*set the pwm0 configuration*/
-+	iowrite32(PWM_CONF, pwm->mmio_base);
-+	iowrite32(PWM_CONF, pwm->mmio_base + OFFSET);
-+
-+	platform_set_drvdata(pdev, pwm);
-+
-+	return 0;
-+}
-+
-+static int xlnx_pwm_remove(struct platform_device *pdev)
-+{
-+
-+	struct xlnx_pwm_chip *pc;
-+	pc  = platform_get_drvdata(pdev);
-+
-+	if (WARN_ON(!pc))
-+		return -ENODEV;
-+
-+	return pwmchip_remove(&pc->chip);
-+}
-+
-+static const struct of_device_id xlnx_pwm_of_match[] = {
-+	{ .compatible = "xlnx,pwm-xlnx", },
-+	{ /* sentinel */ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, xlnx_pwm_of_match);
-+
-+static struct platform_driver xlnx_pwm_driver = {
-+	.driver = {
-+		.name = "pwm-xlnx",
-+		.owner = THIS_MODULE,
-+		.of_match_table = xlnx_pwm_of_match,
-+	},
-+	.probe = xlnx_pwm_probe,
-+	.remove = xlnx_pwm_remove,
-+};
-+module_platform_driver(xlnx_pwm_driver);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_AUTHOR(DRIVER_AUTHOR);
-+MODULE_DESCRIPTION(DRIVER_DESC);
+ 	/* Update the sysfs attribute */
+ 	sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
+ 	__of_add_property_sysfs(np, newprop);
+-- 
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
