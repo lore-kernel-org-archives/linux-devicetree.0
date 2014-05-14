@@ -1,795 +1,320 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH 2/9] dt: deps: dependency based device creation
-Date: Wed, 14 May 2014 15:05:34 +0100
-Message-ID: <20140514140534.897F8C4153D@trevor.secretlab.ca>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
-	<1399913280-6915-3-git-send-email-holler@ahsoftware.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399913280-6915-3-git-send-email-holler@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Rob Herring <robh+dt@kernel.org>, Alexander Holler <holler@ahsoftware.de>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv5 10/20] phy: add support for USB cluster on the Armada
+ 375 SoC
+Date: Wed, 14 May 2014 16:08:48 +0200
+Message-ID: <537378F0.8020905@free-electrons.com>
+References: <1399832288-19899-1-git-send-email-thomas.petazzoni@free-electrons.com> <1399832288-19899-11-git-send-email-thomas.petazzoni@free-electrons.com> <5371B36C.6000703@ti.com> <5371D2A2.5020904@free-electrons.com> <5371E8BF.50303@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5371E8BF.50303-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 12 May 2014 18:47:53 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
-> Use the properties named 'dependencies' in binary device tree blobs to build
-> a dependency based initialization order for platform devices and drivers.
+Hi Kishon,
+
+Given the answers I provided to your concerns. I don't see any modification
+to do to this driver. Do you agree?
+
+If not which change is mandatory from your point of view?
+
+
+Thanks,
+
+Gregory
+
+
+On 13/05/2014 11:41, Gregory CLEMENT wrote:
+> On 13/05/2014 10:06, Gregory CLEMENT wrote:
+>> On 13/05/2014 07:53, Kishon Vijay Abraham I wrote:
+>>> Hi,
+>>>
+>>> On Sunday 11 May 2014 11:47 PM, Thomas Petazzoni wrote:
+>>>> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>>
+>>>> The Armada 375 SoC comes with an USB2 host and device controller and
+>>>> an USB3 controller. The USB cluster control register allows to manage
+>>>> common features of both USB controllers.
+>>>>
+>>>> This commit adds a driver integrated in the generic PHY framework to
+>>>> control this USB cluster feature.
+>>>>
+>>>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> ---
+>>>>  drivers/phy/Kconfig              |   6 ++
+>>>>  drivers/phy/Makefile             |   1 +
+>>>>  drivers/phy/phy-armada375-usb2.c | 157 +++++++++++++++++++++++++++++++++++++++
+>>>>  3 files changed, 164 insertions(+)
+>>>>  create mode 100644 drivers/phy/phy-armada375-usb2.c
+>>>>
+>>>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>>>> index 3bb05f1..e63cf9d 100644
+>>>> --- a/drivers/phy/Kconfig
+>>>> +++ b/drivers/phy/Kconfig
+>>>> @@ -15,6 +15,12 @@ config GENERIC_PHY
+>>>>  	  phy users can obtain reference to the PHY. All the users of this
+>>>>  	  framework should select this config.
+>>>>  
+>>>> +config ARMADA375_USBCLUSTER_PHY
+>>>> +	def_bool y
+>>>> +	depends on MACH_ARMADA_375 || COMPILE_TEST
+>>>> +	depends on OF
+>>>> +	select GENERIC_PHY
+>>>> +
+>>>>  config PHY_EXYNOS_MIPI_VIDEO
+>>>>  	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
+>>>>  	depends on HAS_IOMEM
+>>>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>>>> index 2faf78e..47d5a86 100644
+>>>> --- a/drivers/phy/Makefile
+>>>> +++ b/drivers/phy/Makefile
+>>>> @@ -3,6 +3,7 @@
+>>>>  #
+>>>>  
+>>>>  obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+>>>> +obj-$(CONFIG_ARMADA375_USBCLUSTER_PHY)	+= phy-armada375-usb2.o
+>>>>  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+= phy-bcm-kona-usb2.o
+>>>>  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+= phy-exynos-dp-video.o
+>>>>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+= phy-exynos-mipi-video.o
+>>>> diff --git a/drivers/phy/phy-armada375-usb2.c b/drivers/phy/phy-armada375-usb2.c
+>>>> new file mode 100644
+>>>> index 0000000..a6f746d
+>>>> --- /dev/null
+>>>> +++ b/drivers/phy/phy-armada375-usb2.c
+>>>> @@ -0,0 +1,157 @@
+>>>> +/*
+>>>> + * USB cluster support for Armada 375 platform.
+>>>> + *
+>>>> + * Copyright (C) 2014 Marvell
+>>>> + *
+>>>> + * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>>> + *
+>>>> + * This file is licensed under the terms of the GNU General Public
+>>>> + * License version 2 or later. This program is licensed "as is"
+>>>> + * without any warranty of any kind, whether express or implied.
+>>>> + *
+>>>> + * Armada 375 comes with an USB2 host and device controller and an
+>>>> + * USB3 controller. The USB cluster control register allows to manage
+>>>> + * common features of both USB controllers.
+>>>> + */
+>>>> +
+>>>> +#include <linux/init.h>
+>>>> +#include <linux/io.h>
+>>>> +#include <linux/kernel.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/of_address.h>
+>>>> +#include <linux/phy/phy.h>
+>>>> +#include <linux/platform_device.h>
+>>>> +#include <linux/slab.h>
+>>>> +
+>>>> +#define USB2_PHY_CONFIG_DISABLE BIT(0)
+>>>> +
+>>>> +/* The USB cluster allows to choose between two PHYs */
+>>>> +#define NB_PHY 2
+>>>> +
+>>>> +enum {
+>>>> +	PHY_USB2 = 0,
+>>>> +	PHY_USB3 = 1,
+>>>> +};
+>>>> +
+>>>> +struct armada375_cluster_phy {
+>>>> +	struct phy *phy;
+>>>> +	void __iomem *reg;
+>>>> +	bool enable;
+>>>> +	bool use_usb3;
+>>>> +};
+>>>> +
+>>>> +struct armada375_cluster_phy usb_cluster_phy[NB_PHY];
+>>>> +
+>>>> +static int armada375_usb_phy_init(struct phy *phy)
+>>>> +{
+>>>> +	struct armada375_cluster_phy *cluster_phy = phy_get_drvdata(phy);
+>>>> +	u32 reg;
+>>>
+>>> This function should be protected since both your PHYs use this ops.
+>>
+>> Right
 > 
-> This is done by building a directed acyclic graph using an adjacency list
-> and doing a topological sort to retrieve the order in which devices/drivers
-> should be created/initialized.
+> Actually only one PHY can access this register. See the probe function,
+> cluster_phy->enable is only set to true for one PHY.
 > 
-> Signed-off-by: Alexander Holler <holler@ahsoftware.de>
-
-Hi Alexander,
-
-Thanks for looking at this. It is a difficult problem. I've made
-comments below, but first I've got some general comments...
-
-First, I'm going to be very cautious about this. It is a complicated
-piece of code making the device initialization process a lot more
-complicated than it already is. I'm the first one to admit that deferred
-probe handles the problem in quite a naive manner, but it is simple,
-correct (when drivers support deferred probe) and easy to audit. This
-series digs deep into the registration order of *both* devices and
-drivers which gives me the heebee jeebees.
-
-Personally, I think the parts of this patch that manipulate the device registration
-order is entirely the wrong way to handle it. If anything, I would say
-continue to register the devices, even if the dependencies are unmet.
-Instead, I would focus on the driver core (drivers/base) to catch
-device probe attempts when a known dependency is not met, remember it,
-and perform the probe after the other driver shows up. That is also
-going to be a complicated bit of code, but it works for every kind of
-device, not just platform_devices, and has far less impact on the
-platform setup code.
-
-BTW, this has to be able to work at the level of struct device instead
-of struct platform_device. There are far more kinds of devices than just
-platform_device, and they all have the same problem.
-
-Also, may I suggest that the more pieces that you can break this series
-up into, the greater chance you'll have of getting a smaller subset
-merged earlier if it can be proven to be useful on its own.
-
-> ---
->  arch/arm/kernel/setup.c         |  20 +-
->  drivers/of/Kconfig              |  10 +
->  drivers/of/Makefile             |   1 +
->  drivers/of/of_dependencies.c    | 403 ++++++++++++++++++++++++++++++++++++++++
->  drivers/of/platform.c           |  32 +++-
->  include/linux/of.h              |  15 ++
->  include/linux/of_dependencies.h |  61 ++++++
->  include/linux/of_platform.h     |   5 +
->  8 files changed, 543 insertions(+), 4 deletions(-)
->  create mode 100644 drivers/of/of_dependencies.c
->  create mode 100644 include/linux/of_dependencies.h
+>>
+>>>> +
+>>>> +	if (!cluster_phy->enable)
+>>>> +		return -ENODEV;
+>>>> +
+>>>> +	reg = readl(cluster_phy->reg);
+>>>> +	if (cluster_phy->use_usb3)
+>>>> +		reg |= USB2_PHY_CONFIG_DISABLE;
+>>>> +	else
+>>>> +		reg &= ~USB2_PHY_CONFIG_DISABLE;
+>>>> +	writel(reg, cluster_phy->reg);
+>>>
+>>> This is confusing since both your PHYs control the same bit?
 > 
-> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-> index 1e8b030..f67387d 100644
-> --- a/arch/arm/kernel/setup.c
-> +++ b/arch/arm/kernel/setup.c
-> @@ -19,6 +19,7 @@
->  #include <linux/seq_file.h>
->  #include <linux/screen_info.h>
->  #include <linux/of_platform.h>
-> +#include <linux/of_dependencies.h>
->  #include <linux/init.h>
->  #include <linux/kexec.h>
->  #include <linux/of_fdt.h>
-> @@ -787,10 +788,19 @@ static int __init customize_machine(void)
->  	if (machine_desc->init_machine)
->  		machine_desc->init_machine();
->  #ifdef CONFIG_OF
-> -	else
-> +	else {
-> +#ifdef CONFIG_OF_DEPENDENCIES
-> +		if (!of_init_build_order(NULL, NULL))
-> +			of_init_create_devices(NULL, NULL);
-> +		else
-> +			of_init_free_order();
-
-What happens when of_init_build_order() fails? Does the whole system
-fall over?
-
-> +#else
->  		of_platform_populate(NULL, of_default_bus_match_table,
->  					NULL, NULL);
->  #endif
-> +	}
-> +#endif
-> +
->  	return 0;
->  }
->  arch_initcall(customize_machine);
-> @@ -914,7 +924,13 @@ void __init setup_arch(char **cmdline_p)
->  		arm_pm_restart = mdesc->restart;
->  
->  	unflatten_device_tree();
-> -
-> +#ifdef CONFIG_OF_DEPENDENCIES
-> +	/*
-> +	 * No alloc used in of_init_build_order(), therefor it would work
-> +	 * already here too.
-> +	 */
-> +	/* of_init_build_order(NULL, NULL); */
-> +#endif
-
-Stale hunk left in patch?
-
->  	arm_dt_init_cpu_maps();
->  	psci_init();
->  #ifdef CONFIG_SMP
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index c6973f1..a7e1614 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -75,4 +75,14 @@ config OF_MTD
->  	depends on MTD
->  	def_bool y
->  
-> +config OF_DEPENDENCIES
-> +	bool "Device Tree dependency based initialization order (EXPERIMENTAL)"
-> +	help
-> +	  Enables dependency based initialization order of platform drivers.
-> +
-> +	  For correct operation the binary DT blob should have been
-> +	  populated with properties of type "dependencies".
-> +
-> +	  If unsure, say N here.
-> +
->  endmenu # OF
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index efd0510..3888d9c 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -9,3 +9,4 @@ obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
->  obj-$(CONFIG_OF_PCI)	+= of_pci.o
->  obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
->  obj-$(CONFIG_OF_MTD)	+= of_mtd.o
-> +obj-$(CONFIG_OF_DEPENDENCIES)	+= of_dependencies.o
-> diff --git a/drivers/of/of_dependencies.c b/drivers/of/of_dependencies.c
-> new file mode 100644
-> index 0000000..7905172
-> --- /dev/null
-> +++ b/drivers/of/of_dependencies.c
-> @@ -0,0 +1,403 @@
-> +/*
-> + * Code for building a deterministic initialization order based on dependencies
-> + * defined in the device tree.
-> + *
-> + * Copyright (C) 2014 Alexander Holler <holler@ahsoftware.de>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +#include <linux/of_dependencies.h>
-> +
-> +#define MAX_DT_NODES 1000 /* maximum number of vertices */
-> +#define MAX_EDGES (MAX_DT_NODES*2) /* maximum number of edges (dependencies) */
-
-Is it possible for this to be dynamic? DT platforms range from small to
-very very large.
-
-> +
-> +struct edgenode {
-> +	uint32_t y; /* phandle */
-> +	struct edgenode *next; /* next edge in list */
-> +};
-> +
-> +/*
-> + * Vertex numbers do correspond to phandle numbers. That means the graph
-> + * does contain as much vertices as the maximum of all phandles.
-> + * Or in other words, we assume that for all phandles in the device tree
-> + * 0 < phandle < MAX_DT_NODES+1 is true.
-> + */
-> +struct dep_graph {
-> +	struct edgenode edge_slots[MAX_EDGES]; /* used to avoid kmalloc */
-> +	struct edgenode *edges[MAX_DT_NODES+1]; /* adjacency info */
-> +	unsigned nvertices; /* number of vertices in graph */
-> +	unsigned nedges; /* number of edges in graph */
-> +	bool processed[MAX_DT_NODES+1]; /* which vertices have been processed */
-> +	bool include_node[MAX_DT_NODES+1]; /* which nodes to consider */
-> +	bool discovered[MAX_DT_NODES+1]; /* which vertices have been found */
-> +	bool finished; /* if true, cut off search immediately */
-> +};
-> +static struct dep_graph graph __initdata;
-> +
-> +struct init_order {
-> +	uint32_t max_phandle; /* the max used phandle */
-> +	uint32_t old_max_phandle; /* used to keep track of added phandles */
-> +	struct device_node *order[MAX_DT_NODES+1];
-> +	unsigned count;
-> +	/* Used to keep track of parent devices in regard to the DT */
-> +	uint32_t parent_by_phandle[MAX_DT_NODES+1];
-> +	struct device *device_by_phandle[MAX_DT_NODES+1];
-> +};
-> +static struct init_order order __initdata;
-
-I would suggest splitting the core graph support into a separate patch
-to keep things smaller and to keep the behaviour changes separate from
-the support function additions.
-
-> +
-> +
-> +/* Copied from drivers/of/base.c (because it's lockless). */
-
-Copying isn't a good idea. The function will need to be made accessible
-to other files in the drivers/of directory.
-
-> +static struct property * __init __of_find_property(const struct device_node *np,
-> +					   const char *name, int *lenp)
-> +{
-> +	struct property *pp;
-> +
-> +	if (!np)
-> +		return NULL;
-> +
-> +	for (pp = np->properties; pp; pp = pp->next) {
-> +		if (of_prop_cmp(pp->name, name) == 0) {
-> +			if (lenp)
-> +				*lenp = pp->length;
-> +			break;
-> +		}
-> +	}
-> +
-> +	return pp;
-> +}
-> +
-> +/* Copied from drivers/of/base.c (because it's lockless). */
-> +static const void * __init __of_get_property(const struct device_node *np,
-> +				     const char *name, int *lenp)
-> +{
-> +	struct property *pp = __of_find_property(np, name, lenp);
-> +
-> +	return pp ? pp->value : NULL;
-> +}
-> +
-> +/* Copied from drivers/of/base.c (because it's lockless). */
-> +static int __init __of_device_is_available(const struct device_node *device)
-> +{
-> +	const char *status;
-> +	int statlen;
-> +
-> +	if (!device)
-> +		return 0;
-> +
-> +	status = __of_get_property(device, "status", &statlen);
-> +	if (status == NULL)
-> +		return 1;
-> +
-> +	if (statlen > 0) {
-> +		if (!strcmp(status, "okay") || !strcmp(status, "ok"))
-> +			return 1;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +/*
-> + * x is a dependant of y or in other words
-> + * y will be initialized before x.
-> + */
-> +static int __init insert_edge(uint32_t x, uint32_t y)
-> +{
-> +	struct edgenode *p; /* temporary pointer */
-> +
-> +	if (unlikely(x > MAX_DT_NODES || y > MAX_DT_NODES)) {
-> +		pr_err("Node found with phandle 0x%x > MAX_DT_NODES (%d)!\n",
-> +			x > MAX_DT_NODES ? x : y, MAX_DT_NODES);
-> +		return -EINVAL;
-> +	}
-> +	if (unlikely(!x || !y))
-> +		return 0;
-> +	if (unlikely(graph.nedges >= MAX_EDGES)) {
-> +		pr_err("Maximum number of edges (%d) reached!\n", MAX_EDGES);
-> +		return -EINVAL;
-> +	}
-> +	p = &graph.edge_slots[graph.nedges++];
-> +	graph.include_node[x] = 1;
-> +	graph.include_node[y] = 1;
-> +	p->y = y;
-> +	p->next = graph.edges[x];
-> +	graph.edges[x] = p; /* insert at head of list */
-> +
-> +	graph.nvertices = (x > graph.nvertices) ? x : graph.nvertices;
-> +	graph.nvertices = (y > graph.nvertices) ? y : graph.nvertices;
-> +	return 0;
-> +}
-> +
-> +static void __init print_node_name(uint32_t v)
-> +{
-> +	struct device_node *node;
-> +
-> +	node = of_find_node_by_phandle(v);
-> +	if (!node) {
-> +		pr_cont("Node for phandle 0x%x not found", v);
-> +		return;
-> +	}
-> +	if (node->name)
-> +		pr_cont("%s", node->name);
-> +	if (node->full_name)
-> +		pr_cont(" (%s)", node->full_name);
-> +	of_node_put(node);
-> +}
-> +
-> +/*
-> + * I would prefer to use the BGL (Boost Graph Library), but as I can't use it
-> + * here (for obvious reasons), the next four functions below are based on
-> + * code of Steven Skiena's book 'The Algorithm Design Manual'.
-> + */
-> +
-> +static void __init process_edge(uint32_t x, uint32_t y)
-> +{
-> +	if (unlikely(graph.discovered[y] && !graph.processed[y])) {
-> +		pr_err("Cycle found 0x%x ", x);
-> +		print_node_name(x);
-> +		pr_cont(" <-> 0x%x ", y);
-> +		print_node_name(y);
-> +		pr_cont("!\n");
-> +		graph.finished = 1;
-> +	}
-> +}
-> +
-> +static void __init process_vertex_late(uint32_t v)
-> +{
-> +	struct device_node *node;
-> +
-> +	node = of_find_node_by_phandle(v);
-> +	if (!node) {
-> +		pr_err("No node for phandle 0x%x not found", v);
-> +		return;
-> +	}
-> +	order.order[order.count++] = node;
-> +}
-> +
-> +static void __init depth_first_search(uint32_t v)
-> +{
-> +	struct edgenode *p;
-> +	uint32_t y; /* successor vertex */
-> +
-> +	if (graph.finished)
-> +		return;
-> +	graph.discovered[v] = 1;
-> +	p = graph.edges[v];
-> +	while (p) {
-> +		y = p->y;
-> +		if (!graph.discovered[y]) {
-> +			process_edge(v, y);
-> +			depth_first_search(y);
-> +		} else
-> +			process_edge(v, y);
-> +		if (graph.finished)
-> +			return;
-> +		p = p->next;
-> +	}
-> +	process_vertex_late(v);
-> +	graph.processed[v] = 1;
-> +}
-> +
-> +static void __init topological_sort(void)
-> +{
-> +	unsigned i;
-> +
-> +	for (i = 1; i <= graph.nvertices; ++i)
-> +		if (!graph.discovered[i] && graph.include_node[i])
-> +			depth_first_search(i);
-> +}
-> +
-> +static int __init add_dep_list(struct device_node *node,
-> +				const struct of_device_id *matches)
-> +{
-> +	const __be32 *list, *list_end;
-> +	uint32_t ph;
-> +	int size;
-> +	int rc = 0;
-> +	struct device_node *dep;
-> +
-> +	list = __of_get_property(node, "dependencies", &size);
-> +	if (!list || !size || size%sizeof(*list))
-> +		return 0;
-> +	list_end = list + size / sizeof(*list);
-> +	while (list < list_end) {
-> +		ph = be32_to_cpup(list++);
-> +		if (unlikely(!ph)) {
-> +			/* Should never happen */
-> +			if (node->name)
-> +				pr_warn("phandle == 0 for %s\n", node->name);
-> +			continue;
-> +		}
-> +		dep = of_find_node_by_phandle(ph);
-> +		if (unlikely(!dep)) {
-> +			pr_err("No DT node for dependency with phandle 0x%x found\n",
-> +				ph);
-> +			continue;
-> +		}
-> +		if (unlikely(matches && !of_match_node(matches, dep)))
-> +			continue;
-> +		rc = insert_edge(node->phandle, ph);
-> +		if (rc)
-> +			break;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static int __init add_deps(struct device_node *parent, struct device_node *node,
-> +				const struct of_device_id *matches)
-> +{
-> +	struct device_node *child;
-> +	int rc = 0;
-> +
-> +	if (!__of_device_is_available(node))
-> +		return 0;
-> +	if (__of_get_property(node, "compatible", NULL)) {
-> +		if (!parent->phandle) {
-> +			if (__of_get_property(parent, "compatible", NULL))
-> +				parent->phandle = 1 + order.max_phandle++;
-> +		}
-> +		if (!node->phandle)
-> +			node->phandle = 1 + order.max_phandle++;
-> +		rc = insert_edge(node->phandle, parent->phandle);
-> +		if (rc)
-> +			return rc;
-> +		if (unlikely(order.parent_by_phandle[node->phandle])) {
-> +			/* sanity check */
-> +			pr_err("0x%x already has a parent!\n", node->phandle);
-> +			return -EINVAL;
-> +		}
-> +		order.parent_by_phandle[node->phandle] = parent->phandle;
-> +		rc = add_dep_list(node, matches);
-> +		if (unlikely(rc))
-> +			return rc;
-> +		parent = node; /* change the parent only if node is a driver */
-> +	}
-> +	if (unlikely(matches && !of_match_node(matches, node)))
-> +		return rc;
-> +	for_each_child_of_node(node, child) {
-> +		rc = add_deps(parent, child, matches);
-> +		if (unlikely(rc))
-> +			break;
-> +	}
-> +
-> +	return rc;
-> +}
-> +
-> +static void __init calc_max_phandle(void)
-> +{
-> +	struct device_node *np;
-> +	uint32_t t = 0;
-> +
-> +	for (np = of_allnodes; np; np = np->allnext)
-> +		if (np->phandle > t)
-> +			t = np->phandle;
-> +	order.max_phandle = t;
-> +	return;
-> +}
-> +
-> +/*
-> +static void __init remove_new_phandles(void)
-> +{
-> +	struct device_node *np;
-> +
-> +	for (np = of_allnodes; np; np = np->allnext)
-> +		if (np->phandle > order.old_max_phandle)
-> +			np->phandle = 0;
-> +}
-> +
-> +static void __init of_init_print_order(void)
-> +{
-> +	unsigned i;
-> +	struct property *prop;
-> +	const char *cp;
-> +
-> +	pr_info("Initialization order:\n");
-> +	for (i = 0; i < order.count; ++i) {
-> +		pr_info("init %u 0x%x", i, order.order[i]->phandle);
-> +		if (order.order[i]->name)
-> +			pr_cont(" %s", order.order[i]->name);
-> +		if (order.order[i]->full_name)
-> +			pr_cont(" (%s)", order.order[i]->full_name);
-> +		prop = __of_find_property(order.order[i], "compatible", NULL);
-> +		for (cp = of_prop_next_string(prop, NULL); cp;
-> +		     cp = of_prop_next_string(prop, cp))
-> +			pr_cont(" %s", cp);
-> +		pr_cont(" (parent 0x%x)\n",
-> +			order.parent_by_phandle[order.order[i]->phandle]);
-> +	}
-> +}
-> +*/
-> +
-> +int __init of_init_build_order(struct device_node *root,
-> +			const struct of_device_id *matches)
-> +{
-> +	struct device_node *child;
-> +	int rc = 0;
-> +
-> +	root = root ? of_node_get(root) : of_find_node_by_path("/");
-> +	if (unlikely(!root))
-> +		return -EINVAL;
-> +
-> +	calc_max_phandle();
-> +	order.old_max_phandle = order.max_phandle;
-> +
-> +	for_each_child_of_node(root, child) {
-> +		rc = add_deps(root, child, matches);
-> +		if (unlikely(rc))
-> +			break;
-> +	}
-> +
-> +	of_node_put(root);
-> +	topological_sort();
-
-Can the sort be performed incrementally? The DT is a dynamic structure
-on some platforms. Search for OF_RECONFIG_. There is work in progress to
-add overlay support to the device tree so that batches of new nodes can
-be added to the tree after userspace has started. The dependency code
-will need to handle that situation gracefully.
-
-> +
-> +	if (graph.finished)
-> +		return -EINVAL; /* cycle found */
-> +
-> +	/* of_init_print_order(); */
-
-If you wrap of_init_print_order with a #ifdef DEBUG/#else/#endif, then
-you don't need to comment out the call to of_init_print_order().
-
-> +
-> +	return rc;
-> +}
-> +
-> +void __init of_init_create_devices(const struct of_device_id *blacklist,
-> +			const struct of_dev_auxdata *lookup)
-> +{
-> +	unsigned i;
-> +	struct platform_device *dev;
-
-I don't like that of_init_create_devices() has a completely different
-calling convention from of_platform_populate(). of_platform_populate()
-is passed a match table for devices that are to act as buses (which
-means register the children also). This function is passed a blacklist
-instead which is a completely different semantic.
-
-That means it cannot be used by device drivers that register their own
-children and it has to make a lot of assumptions about what should and
-should not be registered as platform_devices.
-
-How does the dependency code decide which devices can be
-platform_devices? It's not clear to me from what I've read so far.
-
-> +
-> +	for (i = 0; i < order.count; ++i) {
-> +		struct device_node *node = order.order[i];
-> +		uint32_t parent_ph = order.parent_by_phandle[node->phandle];
-> +
-> +		if (unlikely(blacklist &&
-> +				of_match_node(blacklist, node))) {
-> +			of_node_put(node);
-> +			continue;
-> +		}
-> +		if (unlikely(parent_ph &&
-> +			!order.device_by_phandle[parent_ph])) {
-> +			/* init of parent failed */
-> +			of_node_put(node);
-> +			continue;
-> +		}
-> +		dev = of_dependencies_device_create(node, lookup,
-> +			order.device_by_phandle[parent_ph]);
-> +		if (dev)
-> +			order.device_by_phandle[node->phandle] = &dev->dev;
-> +		of_node_put(node);
-> +	}
-> +	/* remove_new_phandles(); */
-> +}
-
-I could use some help understanding what is being done here. It looks
-like it is going through and only registering devices that have a
-dependency parent already created, or don't have a parent at all. Am I
-correct?
-
-It looks like this patch alone will break the kernel because it depends
-also on the functionality in patch 5. The patches would need to be
-reordered to handle that situation.
-
-> +void __init of_init_free_order(void)
-> +{
-> +	unsigned i;
-> +
-> +	for (i = 0; i < order.count; ++i)
-> +		of_node_put(order.order[i]);
-> +	order.count = 0;
-> +	/* remove_new_phandles(); */
-> +}
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 404d1da..0fe03ad 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -204,9 +204,13 @@ static struct platform_device *of_platform_device_create_pdata(
->  {
->  	struct platform_device *dev;
->  
-> +#ifdef CONFIG_OF_DEPENDENCIES
-> +	/* WARN_ON(np->dev_created); */
-> +	if (np->dev_created)
-> +		return np->dev_created;
-> +#endif
->  	if (!of_device_is_available(np))
->  		return NULL;
-> -
->  	dev = of_device_alloc(np, bus_id, parent);
->  	if (!dev)
->  		return NULL;
-> @@ -229,7 +233,9 @@ static struct platform_device *of_platform_device_create_pdata(
->  		platform_device_put(dev);
->  		return NULL;
->  	}
-> -
-> +#ifdef CONFIG_OF_DEPENDENCIES
-> +	np->dev_created = dev;
-> +#endif
->  	return dev;
->  }
->  
-> @@ -486,3 +492,25 @@ int of_platform_populate(struct device_node *root,
->  }
->  EXPORT_SYMBOL_GPL(of_platform_populate);
->  #endif /* CONFIG_OF_ADDRESS */
-> +
-> +#ifdef CONFIG_OF_DEPENDENCIES
-> +struct platform_device * __init of_dependencies_device_create(
-> +				struct device_node *bus,
-> +				const struct of_dev_auxdata *lookup,
-> +				struct device *parent)
-> +{
-> +	const struct of_dev_auxdata *auxdata;
-> +	const char *bus_id = NULL;
-> +	void *platform_data = NULL;
-> +
-> +	if (lookup) {
-> +		auxdata = of_dev_lookup(lookup, bus);
-> +		if (auxdata) {
-> +			bus_id = auxdata->name;
-> +			platform_data = auxdata->platform_data;
-> +		}
-> +	}
-> +	return of_platform_device_create_pdata(bus, bus_id, platform_data,
-> +						parent);
-> +}
-> +#endif
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 435cb99..0bf0341 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -65,6 +65,21 @@ struct device_node {
->  	unsigned int unique_id;
->  	struct of_irq_controller *irq_trans;
->  #endif
-> +#ifdef CONFIG_OF_DEPENDENCIES
-> +	/*
-> +	 * This is needed to keep track of already created devices.
-> +	 * The reason is that some drivers call of_platform_populate()
-> +	 * themself to populate e.g. their subtree. This would end up
-> +	 * that some devices would be initialzed twice with a dependency
-> +	 * based initialization. So instead of registering a device a second
-> +	 * time, the second call to of_platform_device_create_pdata() just
-> +	 * returns this pointer.
-> +	 * If the feature of dependency based initialization will end up
-> +	 * in mainline (and drivers will have fixed), this helper could
-> +	 * be removed.
-> +	 */
-> +	struct platform_device *dev_created;
-> +#endif
-
-This change has been proposed many times in several forms. I've pushed
-back hard against it because it is absolutely normal for multiple
-struct devices to reference the same device tree node.
-
-There is a patch that Pawel has submitted which sets a flag in the
-of_node if the of_platform_populate() path has been used to create a
-struct device. It's a little crude, but it does handle the problem of
-multiple passes through of_platform_populate(). I expect it will show up
-in mainline in v3.16
-
->  };
->  
->  #define MAX_PHANDLE_ARGS 8
-> diff --git a/include/linux/of_dependencies.h b/include/linux/of_dependencies.h
-> new file mode 100644
-> index 0000000..e046ce2
-> --- /dev/null
-> +++ b/include/linux/of_dependencies.h
-> @@ -0,0 +1,61 @@
-> +#ifndef _LINUX_OF_DEPENDENCIES_H
-> +#define _LINUX_OF_DEPENDENCIES_H
-> +/*
-> + * Definitions for building a deterministic initialization order based on
-> + * dependencies defined in the device tree.
-> + *
-> + * Copyright (C) 2014 Alexander Holler <holler@ahsoftware.de>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * as published by the Free Software Foundation; either version
-> + * 2 of the License, or (at your option) any later version.
-> + */
-> +
-> +#include <linux/of_platform.h>
-> +
-> +/*
-> + * Builds the initialization order.
-> + *
-> + * In favor of speed this function doesn't lock anything, so make sure nothing
-> + * modifies the device tree while this functions runs.
-> + *
-> + * Will raise the refcount of all device tree nodes which ended up in the final
-> + * initialization order by one.
-> + *
-> + * The phandle of some nodes will be modified (from 0 to a number) without
-> + * adding a phandle property. But as this should not disturb anything, this
-> + * change is not reversed after building the init order (for which the new
-> + * phandles are temporarily necessary).
-> + *
-> + * This function is meant to be called only once.
-> + */
-
-Note: Convention in the kernel (maybe not everywhere, but certainly in
-the DT code) is for function documentation to be in the .c file, not the
-header. We use the kerneldoc format.
-
-Documentation/kernel-doc-nano-HOWTO.txt
-
-> +extern int of_init_build_order(struct device_node *root,
-> +			const struct of_device_id *matches);
-> +
-> +/*
-> + * Replacement for of_platform_populate(). Creates all devices.
-> + *
-> + * By default it should be called with matches = NULL in order to create
-> + * all devices. Reasoning is that every device contained in the DT which
-> + * isn't disabled actually does exist (regardless if a driver is available
-> + * or not).
-> + *
-> + * Decreases the node count of all nodes contained in the initialization order
-> + * by one.
-> + *
-> + * This function is meant to be called only once.
-> + */
-> +extern void of_init_create_devices(const struct of_device_id *matches,
-> +			const struct of_dev_auxdata *lookup);
-> +
-> +/*
-> + * Decreases the node count of all nodes contained in the initialization order
-> + * by one.
-> + *
-> + * This function is meant to be called only once instead of
-> + * of_init_create_devices().
-> + */
-> +extern void of_init_free_order(void);
-> +
-> +#endif	/* _LINUX_OF_DEPENDENCIES_H */
-> diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-> index 05cb4a9..04357ac 100644
-> --- a/include/linux/of_platform.h
-> +++ b/include/linux/of_platform.h
-> @@ -82,4 +82,9 @@ static inline int of_platform_populate(struct device_node *root,
->  }
->  #endif
->  
-> +extern struct platform_device *of_dependencies_device_create(
-> +					struct device_node *bus,
-> +					const struct of_dev_auxdata *lookup,
-> +					struct device *parent);
-> +
->  #endif	/* _LINUX_OF_PLATFORM_H */
-> -- 
-> 1.8.3.1
+> Same here at the end the bit is accessed by only one PHY.
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static struct phy_ops armada375_usb_phy_ops = {
+>>>> +	.init = armada375_usb_phy_init,
+>>>> +	.owner		= THIS_MODULE,
+>>>> +};
+>>>> +
+>>>> +static struct phy *armada375_usb_phy_xlate(struct device *dev,
+>>>> +					struct of_phandle_args *args)
+>>>> +{
+>>>> +	if (WARN_ON(args->args[0] >= NB_PHY))
+>>>> +		return ERR_PTR(-ENODEV);
+>>>> +
+>>>> +	return usb_cluster_phy[args->args[0]].phy;
+>>>> +}
+>>>> +
+>>>> +static int armada375_usb_phy_probe(struct platform_device *pdev)
+>>>> +{
+>>>> +	struct device *dev = &pdev->dev;
+>>>> +	struct phy *phy;
+>>>> +	struct phy_provider *phy_provider;
+>>>> +	void __iomem *usb_cluster_base;
+>>>> +	struct device_node *xhci_node;
+>>>> +	struct resource *res;
+>>>> +	int i;
+>>>> +
+>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>>> +	usb_cluster_base = devm_ioremap_resource(&pdev->dev, res);
+>>>> +	if (!usb_cluster_base)
+>>>> +		return -ENOMEM;
+>>>> +
+>>>> +	for (i = 0; i < NB_PHY; i++) {
+>>>
+>>> For devices which have multiple PHYs, each PHY should be modelled as the
+>>> sub-node of the *PHY provider* device node.
+>>
+>> Actually it is the opposite the same PHY is shared between the EHCI
+>> and the xHCI controllers. It is more a PHY muxer than a PHY itself.
+>>
+>> I had to create 2 logical PHYs because once the phy_init() is called
+>> by a USB driver then the .init ops is not called anymore by the next
+>> call to phy_init(). One of the goal of this is to disable a port for
+>> the USB controller which can't use it due to the configuration of the
+>> USB cluster.
+>>
+>> But I can see how to make this two "pseudo" PHYs sub-node of the *PHY
+>> provider* device node. It shouldn't change the internal logic of this
+>> driver.
+> 
+> I need to make a distinction when the PHY access by the xHCI or when
+> it was access by the EHCI. If I create two new sub-node then I will
+> also need to add a property to make this distinction. It seems a little
+> overkill for the need.
+> 
+>>
+>>
+>>>> +		phy = devm_phy_create(dev, &armada375_usb_phy_ops, NULL);
+>>>> +		if (IS_ERR(phy)) {
+>>>> +			dev_err(dev, "failed to create PHY n%d\n", i);
+>>>> +			return PTR_ERR(phy);
+>>>> +		}
+>>>> +
+>>>> +		usb_cluster_phy[i].phy = phy;
+>>>> +		usb_cluster_phy[i].reg = usb_cluster_base;
+>>>> +		usb_cluster_phy[i].enable = false;
+>>>> +		phy_set_drvdata(phy, &usb_cluster_phy[i]);
+>>>> +	}
+>>>> +
+>>>> +	usb_cluster_phy[PHY_USB2].use_usb3 = false;
+>>>> +	usb_cluster_phy[PHY_USB3].use_usb3 = true;
+>>>> +
+>>>> +	/*
+>>>> +	 * We can't use the first usb2 unit and usb3 at the same time
+>>>> +	 * to manage a USB2 device, so let's disable usb2 if usb3 is
+>>>> +	 * selected. In this case the USB2 device will be managed by
+>>>> +	 * the xhci controller.
+>>>> +	 */
+>>>> +
+>>>> +	xhci_node = of_find_compatible_node(NULL, NULL,
+>>>> +					"marvell,armada-375-xhci");
+>>>
+>>> huh.. that's too much binding between the controller and the PHY.
+>>>
+>>
+>> That's why initially it was not part of the PHY framework.  The USB
+>> cluster is really a part managing common feature between the USB
+>> controllers which are part of the Armada 375 SoC.
+>>
+>> However the initial version was not really good, because this piece of
+>> code was located in the mach- directory whereas we are trying to move
+>> most of the files out of this directory now. The USB cluster is not a
+>> real PHY as it is related to the PHY management this framework remains
+>> the best place for it.
+>>
+>>>> +
+>>>> +	if (xhci_node && of_device_is_available(xhci_node)) {
+>>>> +		usb_cluster_phy[PHY_USB3].enable = true;
+>>>> +	} else {
+>>>> +		struct device_node *ehci_node;
+>>>> +		ehci_node = of_find_compatible_node(NULL, NULL,
+>>>> +					"marvell,orion-ehci");
+>>>> +		if (ehci_node && of_device_is_available(ehci_node))
+>>>> +			usb_cluster_phy[PHY_USB2].enable = true;
+>>>> +		of_node_put(ehci_node);
+>>>> +	}
+>>>> +
+>>>> +	of_node_put(xhci_node);
+>>>> +
+>>>> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
+>>>> +						     armada375_usb_phy_xlate);
+>>>> +	if (IS_ERR(phy_provider))
+>>>> +		return PTR_ERR(phy_provider);
+>>>> +
+>>>> +	return 0;
+>>>> +}
+>>>> +
+>>>> +static const struct of_device_id of_usb_cluster_table[] = {
+>>>> +	{ .compatible = "marvell,armada-375-usb-cluster", },
+>>>> +	{ /* end of list */ },
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, of_usb_cluster_table);
+>>>> +
+>>>> +static struct platform_driver armada375_usb_phy_driver = {
+>>>> +	.probe	= armada375_usb_phy_probe,
+>>>> +	.driver = {
+>>>> +		.of_match_table	= of_usb_cluster_table,
+>>>> +		.name  = "armada-375-usb-cluster",
+>>>> +		.owner = THIS_MODULE,
+>>>> +	}
+>>>> +};
+>>>> +module_platform_driver(armada375_usb_phy_driver);
+>>>> +
+>>>> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
+>>>> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
+>>>> +MODULE_LICENSE("GPL");
+>>>
+>>> GPL v2?
+>>
+>> No it is really GPL v2 or latter as written at the top of this file
+>>
+>>
+>> Thanks,
+>>
+>> Gregory
+>>
+> 
+> 
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
