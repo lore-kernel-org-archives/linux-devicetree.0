@@ -1,121 +1,144 @@
-From: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Subject: [PATCH v7 3/3] ARM: sunxi: Add IR controller support in
- DT on A20
-Date: Thu, 15 May 2014 03:56:42 +0600
-Message-ID: <1400104602-16431-4-git-send-email-bay@hackerdom.ru>
-References: <1400104602-16431-1-git-send-email-bay@hackerdom.ru>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
+Date: Thu, 15 May 2014 00:14:25 +0200
+Message-ID: <20140514221423.GC6215@mithrandir>
+References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>
+ <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCLIFP6QZ4HRB2GNZ6NQKGQE6YWJ5JY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1400104602-16431-1-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============0033608712=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: t.stanislaws@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kishon@ti.com, a.hajda@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, sylvester.nawrocki@gmail.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds IR controller in A20 Device-Tree:
-- Two IR devices found in A20 user manual
-- Pins for two devices
-- One IR device physically found on Cubieboard 2
-- One IR device physically found on Cubietruck
 
-Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts |  6 ++++++
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts  |  6 ++++++
- arch/arm/boot/dts/sun7i-a20.dtsi            | 32 +++++++++++++++++++++++++++++
- 3 files changed, 44 insertions(+)
+--===============0033608712==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index feeff64..b44d61b 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -65,6 +65,12 @@
- 			};
- 		};
- 
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
- 		uart0: serial@01c28000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index e288562..5f5c31d 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -121,6 +121,12 @@
- 			};
- 		};
- 
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
- 		uart0: serial@01c28000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 0ae2b77..fe1f8ff 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -724,6 +724,20 @@
- 				allwinner,drive = <2>;
- 				allwinner,pull = <0>;
- 			};
-+
-+			ir0_pins_a: ir0@0 {
-+				    allwinner,pins = "PB3","PB4";
-+				    allwinner,function = "ir0";
-+				    allwinner,drive = <0>;
-+				    allwinner,pull = <0>;
-+			};
-+
-+			ir1_pins_a: ir1@0 {
-+				    allwinner,pins = "PB22","PB23";
-+				    allwinner,function = "ir1";
-+				    allwinner,drive = <0>;
-+				    allwinner,pull = <0>;
-+			};
- 		};
- 
- 		timer@01c20c00 {
-@@ -749,6 +763,24 @@
- 			interrupts = <0 24 4>;
- 		};
- 
-+		ir0: ir@01c21800 {
-+			compatible = "allwinner,sun7i-a20-ir";
-+			clocks = <&apb0_gates 6>, <&ir0_clk>;
-+			clock-names = "apb", "ir";
-+			interrupts = <0 5 4>;
-+			reg = <0x01c21800 0x40>;
-+			status = "disabled";
-+		};
-+
-+		ir1: ir@01c21c00 {
-+			compatible = "allwinner,sun7i-a20-ir";
-+			clocks = <&apb0_gates 7>, <&ir1_clk>;
-+			clock-names = "apb", "ir";
-+			interrupts = <0 6 4>;
-+			reg = <0x01c21c00 0x40>;
-+			status = "disabled";
-+		};
-+
- 		lradc: lradc@01c22800 {
- 			compatible = "allwinner,sun4i-lradc-keys";
- 			reg = <0x01c22800 0x100>;
--- 
-1.9.3
+
+--Fig2xvG2VGoz8o/s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, May 15, 2014 at 12:47:21AM +0530, Rahul Sharma wrote:
+[...]
+> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
+[...]
+> +For "samsung,exynos4210-simple-phy" compatible PHYs the second cell in
+> +the PHY specifier identifies the PHY and the supported phys for exynos4210
+
+I think the specifier is only the part after the phandle, so this should
+probably be "... compatible PHYs the single cell specifier ..." or
+something equivalent.
+
+> +are:
+> +  HDMI_PHY,
+> +  DAC_PHY,
+> +  ADC_PHY,
+> +  PCIE_PHY,
+> +  SATA_PHY.
+
+I think you need to specify the literal values here as well, since the
+binding must be fully self-contained. That is you can't rely on the DT
+binding to be bundled with the exynos-simple-phy.h header.
+
+> @@ -20,3 +20,4 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
+>  phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+> +obj-$(CONFIG_EXYNOS_SIMPLE_PHY)		+= exynos-simple-phy.o
+
+Perhaps this should be named phy-exynos-simple for consistency? Also it
+may be a good idea to sort this alphabetically to reduce the potential
+for conflicts.
+
+> +static int exynos_phy_probe(struct platform_device *pdev)
+> +{
+> +	const struct of_device_id *of_id = of_match_device(
+> +		of_match_ptr(exynos_phy_of_match), &pdev->dev);
+
+Why does this need of_match_ptr()?
+
+> +	dev_info(dev, "probe success\n");
+
+If at all this should be dev_dbg(). But in general the driver core will
+already complain if the driver fails to probe, so there's in general no
+need to mention when it probes successfully.
+
+> diff --git a/include/dt-bindings/phy/exynos-simple-phy.h b/include/dt-bindings/phy/exynos-simple-phy.h
+[...]
+> +/* simeple phys */
+
+s/simeple phys/simple PHYs/
+
+Although on second thought that comment probably shouldn't be there in
+the first place.
+
+> +#define INVALID	(~1)
+
+This doesn't belong in this header. The value should never be used by a
+DT source file, should it?
+
+> +#define HDMI_PHY	0
+> +#define DAC_PHY	1
+> +#define ADC_PHY	2
+> +#define PCIE_PHY	3
+> +#define SATA_PHY	4
+
+Perhaps these should be namespaced somehow to avoid potential conflicts
+with other PHY providers?
+
+> +#define PHY_NR	5
+
+I'm not sure that this belongs here either. It's not a value that will
+ever appear in a DT source file.
+
+Thierry
+
+--Fig2xvG2VGoz8o/s
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTc+q/AAoJEN0jrNd/PrOhk9kQALw31zQf9mXwPqMgetaAf3CY
+VOYCpST0GTBy0AqhX3MjVNF+AJH6L2v72aiZUBDpfaBCPZaOhyIPoBCl0/gmmXu3
+pms9CZDwb8Rgenf6ZIj8RRuAgD9h8mgjrAkMWCAXF2SZoBp/fngh5EoOSZGjeXtq
+zIXXAlMzSk8FbxphuFITKTcDJuDpie1o9J8U0shiNvMWpLBw4NmcFRkHKn8aatwa
+pVAgu5cORyyXmL/lV+HxucBfl96mbArz+93LHhqTInwbKWa8XANG5qplluAFfi67
+4707d3JGiT0wQOPy/IdjuyzhNrF8dcNGn5KnLecBP6y28wSw5UjrkX0Ku+ne8bBR
+MBHxhhfQmIA/Qx1Zb1zhUX9pPm+jvlRXo6pgtPG3cEME8TAfsyblZC1AjIlmGH++
+0B1lqeEqWlKzVU8kEpuSucoNUNqvjbmVtpPvL3OGTd7HfrOCHWHBv9HPJ5D5llxA
+QKhK4Yb6Jbqg7NiZmpN3Y+CkVTth2zi1/OPbV/orktpiYeDbhMvWZfG/d8/kGGpQ
+iQQOJgK97ulfvKOS/18/tvuhuRLibrNtQB4sn/73vz5TZ75UZK0U/Jg3QGK02Rnu
+GS5u0x5p3uA1zMCLoTS8Yeqe3St7KDsXuy4SY2L0Ot7+gJI8SAN3H7RBDGvr8LZA
+94Knaix7gbGQP3LuNeb0
+=a5nT
+-----END PGP SIGNATURE-----
+
+--Fig2xvG2VGoz8o/s--
+
+--===============0033608712==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0033608712==--
