@@ -1,80 +1,57 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: Re: [alsa-devel] [PATCH 00/19] Rework OMAP4+ HDMI audio support
-Date: Wed, 14 May 2014 18:25:47 +0200
-Message-ID: <CAGhQ9VzkGDPiQF7TiqiMgZY_oc9dyrW66yGsZR6ei2ejX-EXcw@mail.gmail.com>
-References: <cover.1399884780.git.jsarha@ti.com>
-	<CAGhQ9VzjndCBp+ZHS3XPPvS4ors6u9BfHf4NY_HNYN5ynyQOYQ@mail.gmail.com>
-	<53733F2E.4030803@ti.com>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAzLzNdIEFSTTogaS5NWDEgY2xrOiBBZGQgZGV2aWNl?=
+ =?UTF-8?B?dHJlZSBzdXBwb3J0?=
+Date: Wed, 14 May 2014 20:53:08 +0400
+Message-ID: <1400086388.344798582@f388.i.mail.ru>
+References: <1399997116-4313-1-git-send-email-shc_work@mail.ru>
+ <1399999493.354004023@f391.i.mail.ru>
+ <20140513173143.GU5858@pengutronix.de>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53733F2E.4030803@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, broonie@kernel.org, peter.ujfalusi@ti.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Benoit Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140513173143.GU5858-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?B?U2FzY2hhIEhhdWVy?= <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: =?UTF-8?B?bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn?= <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14 May 2014 12:02, Jyri Sarha <jsarha@ti.com> wrote:
-> On 05/13/2014 12:13 AM, Joachim Eastwood wrote:
->>
->> On 12 May 2014 11:12, Jyri Sarha <jsarha@ti.com> wrote:
->
-> ...
->
->>
->> hey, this worked straight away :)
->>
->> But there seems to be something wrong with the channel mapping.
->>
->> For stereo (speaker-test -c 2) the mapping is correct.
->>
->> But for -c 4 and -c 8 it gets weird:
->> speaker-test -c 4 -s X # where X is 1-4
->> 1: Front Left is Rear Left
->> 2: Front Right is Rear Right
->> 3: Rear Right is Front Right
->> 4: Rear Left is Front Left
->>
->> speaker-test -c 8 -s X # where X is 1-8
->> 1: Front Left is Rear Left
->> 2: Center is Rear Left
->> 3: Front Right is Rear Right
->> 4: Side Right is Front Right
->> 5: Rear Right is silent
->> 6: Rear Left is Center
->> 7: Side Left is Front Left
->> 8: LFE - Rear Right
->>
->> I think you need to check what channel order ALSA expects. I believe
->> speaker-test does the right thing on my HTPC normally connected to my
->> receiver.
->>
->
-> I checked the implementation and there was indeed something weird there, but
-> the implementation can not explain the FL and FR channels jumping around. FL
-> and FL should always be the first two channels in all configurations and the
-> implementation does not touch them.
->
-> The implementation uses 8ch HDMI setup for anything above 2ch with "Audio
-> InfoFrame Data Byte 4" set to 0x13. According to CEA-861 specs this means
-> following channel order: FL, FR, LFE, FC, RL, RR, RLC, RRC
->
-> This is a closest match to ALSA 8ch mapping (according to
-> sound/core/pcm_lib.c) which is: FL, FR, FC, LFE, RL, RR, SL, SR
-
-hm, okey. I haven't look at the code but it do seem strange. But with
-speaker-test -c 4 the front and back are surely swapped here.
-
-I'll do some more testing and also check with my HTPC. btw, I only
-have a 5.1 setup over here so I can't test all the discrete channels.
-
-> Current implementation has FLE and FC channels correctly swapped, but it
-> shifts them to last two channels and RL, RR, SL, SR are shifted down to fill
-> the place. This is all wrong and I'll try to come up with a fix for that.
-> Unfortunately I can not test anything beyond 2 ch myself so I would need
-> someone to volunteer to test my patch.
-
-I have the dev kit setup up over here so I can test your patches.
-
-regards
-Joachim Eastwood
+VHVlLCAxMyBNYXkgMjAxNCAxOTozMTo0MyArMDIwMCDQvtGCIFNhc2NoYSBIYXVlciA8cy5oYXVl
+ckBwZW5ndXRyb25peC5kZT46Cj4gT24gVHVlLCBNYXkgMTMsIDIwMTQgYXQgMDg6NDQ6NTNQTSAr
+MDQwMCwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+IFR1ZSwgMTMgTWF5IDIwMTQgMTM6Mjg6
+MjggLTAzMDAg0L7RgiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+Ogo+ID4gPiBP
+biBUdWUsIE1heSAxMywgMjAxNCBhdCAxOjI0IFBNLCBBbGV4YW5kZXIgU2hpeWFuIDxzaGNfd29y
+a0BtYWlsLnJ1PiB3cm90ZToKPiA+ID4gPiBUdWUsIDEzIE1heSAyMDE0IDEzOjE4OjQwIC0wMzAw
+INC+0YIgRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPjoKPiA+ID4gPj4gT24gVHVl
+LCBNYXkgMTMsIDIwMTQgYXQgMTowNSBQTSwgQWxleGFuZGVyIFNoaXlhbiA8c2hjX3dvcmtAbWFp
+bC5ydT4gd3JvdGU6Cj4gPiA+ID4+Cj4gPiA+ID4+ID4gKyAgICAgICBjbGtbSU1YMV9DTEtfRFVN
+TVldID0KPiA+ID4gPj4gPiArICAgICAgICAgICAgICAgaW14X2Nsa19maXhlZCgiZHVtbXkiLCAw
+KTsKPiA+ID4gPj4gPiArICAgICAgIGNsa1tJTVgxX0NMS19DTEszMl0gPQo+ID4gPiA+PiA+ICsg
+ICAgICAgICAgICAgICBpbXhfb2J0YWluX2ZpeGVkX2Nsb2NrKCJjbGszMiIsIGZyZWYpOwo+ID4g
+PiA+PiA+ICsgICAgICAgY2xrW0lNWDFfQ0xLX0NMSzE2TV9FWFRdID0KPiA+ID4gPj4gPiArICAg
+ICAgICAgICAgICAgaW14X2Nsa19maXhlZCgiY2xrMTZtX2V4dCIsIDE2MDAwMDAwKTsKPiA+ID4g
+Pj4gPiArICAgICAgIGNsa1tJTVgxX0NMS19DTEsxNk1dID0KPiA+ID4gPj4gPiArICAgICAgICAg
+ICAgICAgaW14X2Nsa19nYXRlKCJjbGsxNm0iLCAiY2xrMTZtX2V4dCIsIENDTV9DU0NSLCAxNyk7
+Cj4gPiA+ID4+Cj4gPiA+ID4+IFdoeSBkb24ndCB5b3UgcHV0IGVhY2ggZW50cnkgaW50byBhIHNp
+bmdsZSBsaW5lIGluc3RlYWQ/Cj4gPiA+ID4+Cj4gPiA+ID4+IEV2ZW4gaWYgaXQgZ2V0cyBsYXJn
+ZXIgdGhhbiA4MCBjb2x1bW5zLCBpdCB3b3VsZCBiZSBlYXNpZXIgdG8gcmVhZC4KPiA+ID4gPgo+
+ID4gPiA+IEkgdGhvdWdodCBhYm91dCBpdCwgYnV0IGNhbWUgdG8gdGhlIGNvbmNsdXNpb24gdGhh
+dCBpdCBpcyBiZXR0ZXIgdG8gb2JzZXJ2ZQo+ID4gPiA+IHRoZSBrZXJuZWwgcnVsZXMuCj4gPiA+
+IAo+ID4gPiBEbyB5b3UgbWVhbiBjaGVja3BhdGNoIGNvbXBsYWludD8KPiA+ID4gCj4gPiA+IFRo
+ZW4gdHJ5IHRvIG1ha2UgY2hlY2twYXRjaCBoYXBweSB3aXRoIG90aGVyIGNsb2NrIGZpbGUgc3Vj
+aCBhcwo+ID4gPiBhcmNoL2FybS9tYWNoLWlteC9jbGstaW14NnEuCj4gPiA+IAo+ID4gPiBUaGUg
+cmVzdWx0IHdpbGwgYmUgdW5yZWFkYWJsZSA6LSkKPiA+IAo+ID4gQXMgYW5vdGhlciBzb2x1dGlv
+biB3ZSBjYW4gdXNlIG1hY3Jvcywgc29tZXRoaW5nIGxpa2UgdGhpczoKPiA+IAo+ID4gI2RlZmlu
+ZSBJTVhDTEtfTVVYKGlkLCBuYW1lLCByZWcsIG9mZiwgc3osIGFycikJXAo+ID4gCWNsa1tpZF0g
+PSBpbXhfY2xrX211eChuYW1lLCByZWcsIG9mZiwgc3osIGFyciwgQVJSQVlfU0laRShhcnIpKQo+
+IAo+IFBsZWFzZSBkb24ndCBkbyB0aGF0LiBXZSBoYXZlIGkuTVggc3BlY2lmaWMgd3JhcHBlciBm
+dW5jdGlvbnMuIFdyYXBwaW5nCj4gdGhlc2UgYWdhaW4gd2l0aCBtYWNyb3MgZG9lc24ndCBpbXBy
+b3ZlIHRoZSBzaXR1YXRpb24uIEknbSB3aXRoIEZhYmlvCj4gaGVyZSwgSSB3b3VsZCBwcmVmZXIg
+dGhlIGZ1bmN0aW9ucyBpbiBhIHNpbmdsZSBsaW5lLgoKT0suIFNoYXduLCBpZiBubyBvYmplY3Rp
+b25zIHRvIHBhcnRzIDEgYW5kIDIsIEkgd291bGQgbGlrZSB0aGVtIHRvIGJlIGFwcGxpZWQuCgot
+LS0KCg==
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
