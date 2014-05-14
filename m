@@ -1,48 +1,78 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver initialization
- order based on the DT)
-Date: Wed, 14 May 2014 20:16:53 +0200
-Message-ID: <5373B315.3020909@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<20140514141914.446F7C4153D@trevor.secretlab.ca>	<53738580.7000902@ahsoftware.de>	<CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>	<53739871.9070407@ahsoftware.de> <CAL_JsqJB4CAO60m1HTGQGHQRYVWcARxm_roOhn-PJh+ZR7OONg@mail.gmail.com> <5373ABD2.9010508@ahsoftware.de> <5373ADB6.1070702@ahsoftware.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5373ADB6.1070702-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Anders Berg <anders.berg@avagotech.com>
+Subject: [PATCH v3 0/6] Add platform support for LSI AXM55xx
+Date: Wed, 14 May 2014 20:37:55 +0200
+Message-ID: <cover.1400072260.git.anders.berg@avagotech.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Anders Berg <anders.berg@avagotech.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 14.05.2014 19:53, schrieb Alexander Holler:
-> Am 14.05.2014 19:45, schrieb Alexander Holler:
->
->> One of the biggest problem of the deferred probe stuff is the problem
->> how to identify real problems if everything ends up with a deferred
->> probe when an error occurs? That means if you display an error whenever
->> something is deferred, the log becomes almost unreadable. If you don't
->> display an error, you never will see an error. And how do you display
->> the real error when deferred probes finally do fail? The deferred probe
->> stuff doesn't has any information about the underlying error, so it
->> can't display it.
->
-> And that is a real problem. I've recently tried to identify why a driver
-> failed and it was a nightmare because nothing offered any message (debug
-> or not) when a probe was deferred. So I had to insert tons of printks to
-> walk upwards to find the finally place where the probe failed.
-> Everything afterwards just has forwarded the -EPROBE_DEFER without
-> printing any message.
+Hi,
 
-To add some numbers, I had to insert around 20-30 printks in around 10 
-or more files to find the underlying problem. Having to do such whenever 
-an error happens because everything assumes the error will disappear in 
-a later try, which doesn't happen for real errors, is just a nightmare.
+This is version 3 of this series to introduces basic platform support for the LSI
+AXM5516 SoC.
 
-Regards,
+No major changes since v2. Ready to be applied to the arm-soc tree?
 
-Alexander Holler
+Changes:
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+v3:
+    * Sorted Kconfig entries alphabetically
+
+v2:
+    * Rebased to arm-soc/for-next
+    * Removed redundant HAVE_SMP and ARCH_WANT_OPTIONAL_GPIOLIB from Kconfig
+    * Use CPU_METHOD_OF_DECLARE to register smp_operations
+    * Rework smp operations to avoid holding pen and custom headsmp.S
+    * Clean up board file
+    * Corrected clock properties for arm,sp804 dts node.
+    * Changed machine compatible strings to include full model number.
+    * Break out clk-axxia driver as separate patch
+    * Removed Makefile.boot
+
+
+Anders Berg (6):
+  ARM: Add platform support for LSI AXM55xx SoC
+  clk: Add clock driver for AXM55xx SoC
+  ARM: dts: Device tree for AXM55xx.
+  ARM: axxia: Adding defconfig for AXM55xx
+  power: reset: Add Axxia system reset driver
+  ARM: dts: axxia: Add reset controller
+
+ Documentation/devicetree/bindings/arm/axxia.txt    |  12 +
+ .../devicetree/bindings/clock/clk-axxia.txt        |  88 ++++++
+ .../bindings/power_supply/axxia-reset.txt          |  20 ++
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   2 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/axm5516-amarillo.dts             |  51 ++++
+ arch/arm/boot/dts/axm5516-cpus.dtsi                | 204 ++++++++++++++
+ arch/arm/boot/dts/axm55xx.dtsi                     | 311 +++++++++++++++++++++
+ arch/arm/configs/axm55xx_defconfig                 | 248 ++++++++++++++++
+ arch/arm/mach-axxia/Kconfig                        |  16 ++
+ arch/arm/mach-axxia/Makefile                       |   2 +
+ arch/arm/mach-axxia/axxia.c                        |  28 ++
+ arch/arm/mach-axxia/platsmp.c                      |  89 ++++++
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/clk-axxia.c                            | 281 +++++++++++++++++++
+ drivers/power/reset/Kconfig                        |   8 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/axxia-reset.c                  |  97 +++++++
+ 19 files changed, 1462 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/axxia.txt
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-axxia.txt
+ create mode 100644 Documentation/devicetree/bindings/power_supply/axxia-reset.txt
+ create mode 100644 arch/arm/boot/dts/axm5516-amarillo.dts
+ create mode 100644 arch/arm/boot/dts/axm5516-cpus.dtsi
+ create mode 100644 arch/arm/boot/dts/axm55xx.dtsi
+ create mode 100644 arch/arm/configs/axm55xx_defconfig
+ create mode 100644 arch/arm/mach-axxia/Kconfig
+ create mode 100644 arch/arm/mach-axxia/Makefile
+ create mode 100644 arch/arm/mach-axxia/axxia.c
+ create mode 100644 arch/arm/mach-axxia/platsmp.c
+ create mode 100644 drivers/clk/clk-axxia.c
+ create mode 100644 drivers/power/reset/axxia-reset.c
+
+-- 
+1.8.3.2
