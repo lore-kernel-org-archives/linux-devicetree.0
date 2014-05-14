@@ -1,58 +1,67 @@
-From: Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Wed, 14 May 2014 14:11:52 +0200
-Message-ID: <53735D88.5090108@mycable.de>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com> <1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com> <20140514100856.5198DC4153D@trevor.secretlab.ca>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v13 1/2] clk: sunxi: Fixup
+ clk_sunxi_mmc_phase_control to take a clk rather then a hw_clk
+Date: Wed, 14 May 2014 14:23:37 +0200
+Message-ID: <CAPDyKFquQ9bQB0w=wZySw54SMqi4OB+b3CrwQ0TrgSqw_mQLKg@mail.gmail.com>
+References: <1399896288-5826-1-git-send-email-hdegoede@redhat.com>
+	<1399896288-5826-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140514100856.5198DC4153D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <panto@antoniou-consu>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDF57NG2XIHRBSOAZWNQKGQEHUZCQOA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1399896288-5826-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, =?UTF-8?Q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On 12 May 2014 14:04, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> __clk_get_hw is supposed to be used by clk providers, not clk consumers.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-Am 14.05.2014 12:08, schrieb Grant Likely:
-> More generally I am concerned about whether or not overlays
-> will introduce corner cases that can never be handled correctly,
-> particularly in how multiple overlays will get handled. I want to see
-> very clear rules on what happens when multiple overlays are applied, and
-> then removed again. Is it possible to remove overlays out of order? If
-> so, what are the conditions that would not be allowed?
+Reviewed-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-Yes, it is possible that an overlay depends on another.
-
-The problem is not, that an overlay is removed other overlays depend on,
-but that nodes of an overlay may depend on the to-be-removed overlay and
-the resulting devicetree can become inconsistent.
-
-
-I have an SPI Bus with two slaves. The second slave is used only on one
-of our boards. That is why we split the overlays the following way:
-
-xxxx_spi1.dts:
-  Pinmux for SPI-Bus and activation of spi-controller.
-  Pinmux for CS0 and definition of first slave.
-
-xxxx_spi1_cs1:
-  Pinmux for CS1 and definition of second slave.
-
-When the overlay for the bus is removed, the overlays for the second
-slave does not make any sense anymore.
-
-It is even worse in a scenario we have with a test board.
-One of the slaves is an spi-io-controller with a few bitbanging i2c
-masters. In an extreme case, each component is defined in a separate
-overlay and only the overlay with the master is removed. I know, that
-this is completely sick. The devices are removed cleanly because of the
-device dependency.
-
-Michael
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/clk/sunxi/clk-sunxi.c | 3 ++-
+>  include/linux/clk/sunxi.h     | 2 +-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+> index 59f9040..4cc2b2a 100644
+> --- a/drivers/clk/sunxi/clk-sunxi.c
+> +++ b/drivers/clk/sunxi/clk-sunxi.c
+> @@ -510,11 +510,12 @@ CLK_OF_DECLARE(sun7i_a20_gmac, "allwinner,sun7i-a20-gmac-clk",
+>   * clk_sunxi_mmc_phase_control() - configures MMC clock phase control
+>   */
+>
+> -void clk_sunxi_mmc_phase_control(struct clk_hw *hw, u8 sample, u8 output)
+> +void clk_sunxi_mmc_phase_control(struct clk *clk, u8 sample, u8 output)
+>  {
+>         #define to_clk_composite(_hw) container_of(_hw, struct clk_composite, hw)
+>         #define to_clk_factors(_hw) container_of(_hw, struct clk_factors, hw)
+>
+> +       struct clk_hw *hw = __clk_get_hw(clk);
+>         struct clk_composite *composite = to_clk_composite(hw);
+>         struct clk_hw *rate_hw = composite->rate_hw;
+>         struct clk_factors *factors = to_clk_factors(rate_hw);
+> diff --git a/include/linux/clk/sunxi.h b/include/linux/clk/sunxi.h
+> index 1ef5c89..aed28c4 100644
+> --- a/include/linux/clk/sunxi.h
+> +++ b/include/linux/clk/sunxi.h
+> @@ -17,6 +17,6 @@
+>
+>  #include <linux/clk.h>
+>
+> -void clk_sunxi_mmc_phase_control(struct clk_hw *hw, u8 sample, u8 output);
+> +void clk_sunxi_mmc_phase_control(struct clk *clk, u8 sample, u8 output);
+>
+>  #endif
+> --
+> 1.9.0
+>
