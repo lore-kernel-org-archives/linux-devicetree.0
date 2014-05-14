@@ -1,79 +1,57 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH 0/9] dt: dependencies (for deterministic driver
- initialization order based on the DT)
-Date: Wed, 14 May 2014 12:30:07 -0500
-Message-ID: <CAL_JsqJB4CAO60m1HTGQGHQRYVWcARxm_roOhn-PJh+ZR7OONg@mail.gmail.com>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
-	<20140514141914.446F7C4153D@trevor.secretlab.ca>
-	<53738580.7000902@ahsoftware.de>
-	<CACxGe6s4px_9CNk3bkc1OF1KGZGYdyh4gE_VufCKU5dLFBG48g@mail.gmail.com>
-	<53739871.9070407@ahsoftware.de>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v4 1/6] clocksource: Add support for the Mediatek SoCs
+Date: Wed, 14 May 2014 10:29:38 -0700
+Message-ID: <2fe960fd-b145-42a8-ace2-e2cd3aaf0cdc@BN1AFFO11FD010.protection.gbl>
+References: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
+ <1400087579-4250-2-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53739871.9070407@ahsoftware.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexander Holler <holler@ahsoftware.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400087579-4250-2-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 14, 2014 at 11:23 AM, Alexander Holler <holler@ahsoftware.de> wrote:
-> Am 14.05.2014 18:05, schrieb Grant Likely:
->
->> On Wed, May 14, 2014 at 4:02 PM, Alexander Holler <holler@ahsoftware.de>
->> wrote:
->>>
->>> Am 14.05.2014 16:19, schrieb Grant Likely:
->>>
->>>
->>>> Rather than a dtb schema change, for the most common properties (irqs,
->>>> clocks, gpios), we could extract dependencies at boot time. I don't like
->>>> the idea of adding a separate depends-on property because it is very
->>>> easy to get it out of sync with the actual binding data (dtc is not the
->>>> only tool that manipulates .dtbs. Firmware will fiddle with it too).
->>>
->>>
->>>
->>> Then that stuff has to fiddle correct. Sorry, but trying to solve all
->>> problems right from the beginning just leads to endless talks with no end
->>> and nothing will happen at all because nobody aggrees how to start.
->>
->>
->> I appreciate the problem that you're trying to solve and why you're
->> using the dtc approach. My job is to poke at the solution and make
->> sure it is going to be reliable. Making sure all users know how to
->> fiddle with the new property correctly is not a trivial problem,
->> especially when it is firmware that will not necessarily be updated.
->
->
-> The answer is just that they don't have to use this feature.
+Hi Matthias,
 
-It's not just about users, but maintainers have to carry the code and
-anything tied to DT is difficult to change or remove.
+just a few suggestions below. Nothing serious.
 
-Lots of inter-dependencies are already described in DT. We should
-leverage those first and then look at how to add dependencies that are
-not described.
+On Wed, 2014-05-14 at 07:12PM +0200, Matthias Brugger wrote:
+> This patch adds a clock source and clock event for the timer found
+> on the Mediatek SoCs.
+>=20
+> The Mediatek General Porpose Timer block provides five 32 bit timers =
+and
+> one 64 bit timer.
+>=20
+> Two 32 bit timers are used:
+> TIMER1: clock events supporting periodic and oneshot events
+> TIMER2: clock source configured as a free running counter
 
-> It is more meant as a long-term solution to fix for the problem of
-> increasing hard-coded workarounds which all are trying to fix the
-> initialization order of drivers. Hardware has become a lot more complicated
-> than it was in the good old days, and I think the time is right trying to
-> adopt the init-system to this new century instead of still adding
-> workarounds here and there.
+It is pretty common, I think, to use the free running counter also as
+sched_clock. You probably want to look into this, but that's just a
+possible enhancement.
 
-I don't know when the good old days were, but this has been a problem
-in embedded systems for as long as I have worked on Linux.
+[...]
+> +static void __init mtk_timer_init(struct device_node *node)
+> +{
+> +	struct mtk_clock_event_device *evt;
+> +	struct resource res;
+> +	unsigned long rate =3D 0;
+> +	struct clk *clk;
+> +	int ret;
+> +	u32 val;
+> +
+> +	evt =3D kzalloc(sizeof(*evt), GFP_KERNEL);
+> +	if (!evt)
+> +		panic("Can't allocate mtk clock event driver struct");
 
->> I'm not saying flat out 'no' here, but before I merge anything, I have
->> to be reasonably certain that the feature is not going to represent a
->> maintenance nightmare over the long term.
->
->
-> The maintenance nightmare is already present in form of all the workarounds
-> which are trying to fix the initialzation order necessary for modern
-> hardware.
+I'm not that sure about the A7s, but on Cortex-A9 there is also a globa=
+l
+timer which can be used for timing. And there might be other timing
+options for this SOC too. Do you really want to panic?
 
-Do you have concrete examples or cases where deferred probe does not work?
-
-Rob
+	S=C3=B6ren
