@@ -1,49 +1,139 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v4 8/8] cpufreq: exynos: remove all exynos specific cpufreq
- driver support
-Date: Wed, 14 May 2014 09:20:10 +0200
-Message-ID: <20140514092010.02e16520@amdc2363>
-References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com>
- <1400029876-5830-9-git-send-email-thomas.ab@samsung.com>
+From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: tegra: initial add of Colibri T30
+Date: Wed, 14 May 2014 09:22:54 +0200
+Message-ID: <537319CE.7020101@ziswiler.com>
+References: <cover.1400001937.git.stefan@agner.ch> <d45ec5351ce8ef03256061bdc4b0ba673bd40c66.1400001937.git.stefan@agner.ch> <53727738.4080901@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1400029876-5830-9-git-send-email-thomas.ab@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <ta.omasab@gmail.com>
-Cc: cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, kgene.kim@samsung.com, mturquette@linaro.org, heiko@sntech.de, viresh.kumar@linaro.org, t.figa@samsung.com, rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, thomas.ab@samsung.com, shawn.guo@linaro.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53727738.4080901-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+On 05/13/2014 09:49 PM, Stephen Warren wrote:
+> On 05/13/2014 11:27 AM, stefan-XLVq0VzYD2Y@public.gmane.org wrote:
+>> This patch adds the device tree to support Toradex Colibri T30, a
+>> computer on module which can be used on different carrier boards.
+>>
+>> The module consists of a Tegra 30 SoC, two PMIC, DDR3L RAM, eMMC,
+>> a LM95245 temperature sensor and an AX88772B USB Ethernet
+>> Controller. Furthermore, there is a STMPE811 and SGTL5000 audio
+>> codec which are not yet supported. Anything that is not self
+>> contained on the module is disabled by default.
+>>
+>> The device tree for the Evaluation Board includes the modules
+>> device tree and enables the supported pheripherials of the carrier
+>> board (the Evaluation Board supports almost all of them).
+>
+>> diff --git a/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts b/arch/arm/boot/dts/tegra30-colibri-eval-v3.dts
+>
+>> +#include "tegra30-colibri.dtsi"
+>> +
+>> +/ {
+>> +	model = "Toradex Colibri T30 on Colibri Evaluation Board";
+>> +	compatible = "toradex,colibri_t30-eval-v3", "nvidia,tegra30";
+>
+> That should include all the compatible values "inherited" from the
+> Colibri T30 module .dtsi file too.
+>
+>> +	aliases {
+>> +		rtc0 = "/i2c@7000c000/rtc@68";
+>> +		rtc1 = "/i2c@7000d000/tps65911@2d";
+>> +		rtc2 = "/rtc@7000e000";
+>> +	};
+>
+> Wow, no shortage of RTCs!
 
-> -config ARM_EXYNOS_CPU_FREQ_BOOST_SW
-> -	bool "EXYNOS Frequency Overclocking - Software"
-> -	depends on ARM_EXYNOS_CPUFREQ
-> -	select CPU_FREQ_BOOST_SW
-> -	select EXYNOS_THERMAL
-> -	help
-> -	  This driver supports software managed overclocking (BOOST).
-> -	  It allows usage of special frequencies for Samsung Exynos
-> -	  processors if thermal conditions are appropriate.
-> -
-> -	  It reguires, for safe operation, thermal framework with
-> properly
-> -	  defined trip points.
-> -
-> -	  If in doubt, say N.
-> -
+Yes (;-p). Please understand however that there are certain limitation 
+if it comes to real-time clocks: The first one is the ultra low-power 
+RTC available on the carrier board. The second one is PMIC integrated 
+usually drawing much more current that the first dedicated one. The 
+third one is Tegra SoC internal and won't keep the time across 
+power-cycles in our design.
 
-If I might ask, where this switch,to enable BOOST, will be moved? All
-in all, I would like to be able to enable boost :-).
+>> +	/* SPI1: Colibri SSP */
+>> +	spi@7000d400 {
+>> +		status = "okay";
+>> +		spi-max-frequency = <25000000>;
+>> +		can0: can@0 {
+>> +			compatible = "microchip,mcp2515";
+>> +			reg = <0>;
+>> +			clocks = <&clk16m>;
+>> +			interrupt-parent = <&gpio>;
+>> +			interrupts = <TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;
+>> +			spi-max-frequency = <10000000>;
+>
+> So this chip doesn't get confused by a faster clock frequency when its
+> chip-select line isn't asserted? I would have expected spi-max-frequency
+> for the bus to be the minimum value that any device on the bus would
+> tolerate.
 
-In my opinion we should have the Kconfig option to enable/disable the
-CPU_FREQ_BOOST_SW and this may be used with cpufreq-cpu0 driver as I've
-pointed out in the other patch.
+No SPI chip should ever get confused like that as long as they are chip 
+select gated. At least by the traditional chip select meaning as opposed 
+to NVIDIA's designers taking the term chip select a little too personal: 
+they indeed only select a chip otherwise all the chip select pins are 
+just left floating!
 
--- 
-Best regards,
+>> +	/* EHCI instance 0: USB1_DP/N -> USBC_P/N */
+>> +	usb@7d000000 {
+>> +		status = "okay";
+>> +		dr_mode = "otg";
+>
+> The dr_mode property is only for the PHY node.
+>
+>> +	panel: panel {
+>> +		compatible = "edt,et057090dhu", "simple-panel";
+>
+> The panel-simple driver doesn't seem to know about that EDT panel. How
+> will it work out the display timings?
 
-Lukasz Majewski
+Good question and me and Stefan actually even talked about that 
+yesterday. I am actually using KMS right now as follows:
 
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+video=HDMI-A-1:1280x720-16@60 video=LVDS-1:640x480-16@60'
+
+So the panel node is purely used to hook up the back light part right now.
+
+ From our point of view for our completely generic module approach where 
+each customer potentially hooks up his own display make/model it would 
+be desirable to have some way of defining such timings directly through 
+the device tree.
+
+>> diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
+>
+>> +/ {
+>> +	model = "Toradex Colibri T30";
+>> +	compatible = "toradex,colibri_t30-v11b",
+>> +		     "toradex,colibri_t30-v11c",
+>> +		     "toradex,colibri_t30-v11d",
+>> +		     "toradex,colibri_t30", "nvidia,tegra30";
+>
+> Do we really need all those compatible values? If those board revisions
+> are all SW-compatible, then you may as well write just:
+
+You are right. It indeed does not make much sense as only V1.0a which 
+never actually went on sale would be software incompatible.
+
+> 	compatible = "toradex,colibri_t30", "nvidia,tegra30";
+>
+>> +	aliases {
+>> +		serial0 = &uarta;
+>> +		serial1 = &uartd;
+>> +		serial2 = &uartb;
+>> +	};
+>
+> tegra20.dtsi already sets the alias names for the serial ports. Previous
+> discussions settled on giving each on-chip UART a static name, rather
+> than renaming them per board.
+
+Understood, however our Colibri standard defines a completely different 
+order of the UARTs which is what we attempted to indicate by this aliases.
+
+>> +	pmc@7000e400 {
+>> +		status = "okay";
+>
+> The PMC node isn't disabled in tegra20.dtsi, so you don't need the
+> status property here.
