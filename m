@@ -1,59 +1,177 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH v3 1/2] ARM: EXYNOS: Map SYSRAM through generic SRAM bindings
-Date: Wed, 14 May 2014 08:44:35 +0530
-Message-ID: <5372DF9B.4000700@linaro.org>
-References: <1399522592-23618-1-git-send-email-sachin.kamat@linaro.org>	 <536BAE39.70504@samsung.com> <034b01cf6b2c$5b5d06b0$12171410$@samsung.com>	 <536C5E40.90405@gmail.com> <029b01cf6e59$35a452e0$a0ecf8a0$@samsung.com> <1399975674.24871.19.camel@x220>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399975674.24871.19.camel@x220>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Paul Bolle <pebolle@tiscali.nl>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, arnd@arndb.de, heiko@sntech.de, linux-arm-kernel@lists.infradead.org
+From: Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: dts: am335x-bone-common: Add i2c2 definition
+Date: Tue, 13 May 2014 20:24:14 -0700
+Message-ID: <47F0EEF7-3716-418B-9049-00BB2BD5BFC6@gmail.com>
+References: <1399686184-1594-1-git-send-email-mranostay@gmail.com> <20140512195050.GB5668@atomide.com> <CAOCHtYiYwx_bEsyqkbUTTAbhBYESzvfBOOYeVuFXPS1dDy0ZKA@mail.gmail.com> <20140512201517.GC5668@atomide.com> <CAOCHtYg6XpF0Gbo4iFqsFvP=QSivQQvCzov8UfxeLXMzrRYEWw@mail.gmail.com> <20140512204213.GD5668@atomide.com> <CAOCHtYgg7jwxswH+mqF3RA7-0RP-nGuft+Ze-GRwu1fbA6+0Bw@mail.gmail.com> <537215D3.70306@ti.com> <CABxcv=nq9XvyN0aPOBFDm0UyoaW-Htyy0tyP3YhYaDnDUo3a5w@mail.gmail.com> <20140513142252.GG32082@beef> <CABxcv=mSs71pS1PAS-WdP0ru_Eb1XhXEm1qCCKW7=aL7EN4FgQ@mail.gmail.com> <4BCFCB24-9732-4B96-B814-5290CA2D0EE4@gmail.com> <CABxcv=mWqENSzODJYAJRgDYNy46X6WkQ+0e4NSDt8qE-ob1KuQ@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CABxcv=mWqENSzODJYAJRgDYNy46X6WkQ+0e4NSDt8qE-ob1KuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Cc: Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tom Rini <trini-l0cyMroinI0@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/13/2014 03:37 PM, Paul Bolle wrote:
-> Kukjin,
+Hi Javier,
+
+On May 13, 2014, at 10:51 AM, Javier Martinez Canillas wrote:
+
+> Hello Pantelis,
 > 
-> On Tue, 2014-05-13 at 12:12 +0900, Kukjin Kim wrote:
->> Tomasz Figa wrote:
->>> You mean s/sram/sysram/ in compatible strings of Exynos-specific
->>> reserved areas? If yes, I'm fine, it might be even better. Just remember
->>> to update documentation in patch 2/2 as well.
->>>
->> Done. If any problems in my tree, please let me know.
+> On Tue, May 13, 2014 at 7:07 PM, Pantelis Antoniou
+> <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Javier,
+>> 
+>> On May 13, 2014, at 7:39 AM, Javier Martinez Canillas wrote:
+>> 
+>>> On Tue, May 13, 2014 at 4:22 PM, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>>> On Tue, May 13, 2014 at 04:06:02PM +0200, Javier Martinez Canillas wrote:
+>>>>> On Tue, May 13, 2014 at 2:53 PM, Tom Rini <trini-l0cyMroinI0@public.gmane.org> wrote:
+>>>>>> On 05/12/2014 04:57 PM, Robert Nelson wrote:
+>>>>>>>>> Either case if fine with me.  As who knows when the dtc "overlay" will
+>>>>>>>>> every truly make it mainline, as the capemgr was the only real kernel
+>>>>>>>>> user of the i2c/at24 eeprom information.
+>>>>>>>> 
+>>>>>>>> Sounds like we should keep it disabled though so u-boot can be used
+>>>>>>>> to toggle it while waiting for the capemgr. That's because the board
+>>>>>>>> has a header for pins, so it's not exactly limited to just the capes.
+>>>>>>>> 
+>>>>>>>> Anybody working on enabling/disabling cape dtb configurations in u-boot?
+>>>>>>> 
+>>>>>>> Well,
+>>>>>>> 
+>>>>>>> Would Tom even approve of that in mainline u-boot? He didn't want my
+>>>>>>> "invert" the gpio to enable the usb hub on the older beagle xm A/B..
+>>>>>>> 
+>>>>>>> http://lists.denx.de/pipermail/u-boot/2014-January/172154.html
+>>>>>>> 
+>>>>>>> http://lists.denx.de/pipermail/u-boot/2014-January/172274.html
+>>>>> 
+>>>>> Using fdt set from the bootloader to use the same FDT for similar
+>>>>> boards (like the example with Beagle xM variants) is kind of trying to
+>>>>> replicate what we used to do from boards files where it was possible
+>>>>> to manage a set of boards using the same platform code.
+>>>>> 
+>>>>> But Device Trees are meant to describe hardware and thus should be
+>>>>> static, if two board are almost identical but slightly different, then
+>>>>> are two different hardware where each need its proper FDT that
+>>>>> describes it.
+>>>>> 
+>>>>>> 
+>>>>>> I would think that using the 'fdt' command in U-Boot to add all
+>>>>>> properties of every cape found on a running system would drive someone
+>>>>>> to madness quite quickly.  Moving all of Pantelis' work for dynamic
+>>>>>> device trees from the kernel to N bootloaders (U-Boot, barebox, UEFI,
+>>>>>> etc) sounds like a step in the wrong direction.
+>>>>>> 
+>>>>> 
+>>>>> Agreed. I think that until the device tree overlay and the cape
+>>>>> manager find their way into mainline we should treat capes as if they
+>>>>> were expansion boards attached to a Computer-on-Module. That is, a
+>>>>> static based board which its own DTS including the BB{B,W} as an dtsi
+>>>>> and not something that can be added on runtime.
+>>>> 
+>>>> It's far more complicated than a SOM plus carrier board. Consider that
+>>>> you can have any 4 of these capes stacked on the BBB/BBW in any
+>>>> combination (assuming no resource conflicts). Capturing all possible
+>>>> combinations in static dtsis is not practical.
+>>>> 
+>>> 
+>> 
+>> Since this appears to be all coming back to DT overlays, let me try to
+>> address some points.
+>> 
 > 
-> It seems this one just hit linux-next (in next-20140513) as "ARM:
-> EXYNOS: Map SYSRAM through generic DT bindings". Its commit now contains
-> this hunk:
->     --- a/arch/arm/Kconfig
->     +++ b/arch/arm/Kconfig
->     @@ -843,6 +843,7 @@ config ARCH_EXYNOS
->             select HAVE_S3C_RTC if RTC_CLASS
->             select NEED_MACH_MEMORY_H
->             select SPARSE_IRQ
->     +       select SYSRAM
->             select USE_OF
->             help
->               Support for SAMSUNG's EXYNOS SoCs (EXYNOS4/5)
+> It seems that you misunderstood my comments. I do think that DT
+> overlays and the cape manager are a great solution for any hardware
+> that could be expanded on runtime and I really hope that they can
+> eventually land into mainline.
 > 
-> But there's no Kconfig symbol SYSRAM. However, there is a Kconfig symbol
-> SRAM. Did you perhaps do one s/sram/sysram/ too many on the original
-> patch?
+> In fact if you look on my previous mail you will see that I said:
+> "until device tree overlay and the cape manager find their way into
+> mainline..."
+> 
+>>> Right, I forgot that the capes were stackable so is indeed not
+>>> practical to model every single combination as DTS in mainline. Even
+>>> if stacking was not possible there are just too many capes out there
+>>> to have a DTS for every single cape.
+>>> 
+>> 
+>> Each cape does have a DTS as dynamically loaded fragment; it works absolutely fine.
+>> 
+>> Trying to come up with a base DTS for all the capes you've stacked up
+>> is an exponential problem.
+>> 
+>>> My point was that someone who wants to use a BBB + a set of capes can
+>>> today write a DTS for its own stacked setup.
+>>> 
+>> 
+>> No, the guy that designs a cape (or learns how to) can not write a DTS for
+>> the base board and the cape in question. Doing that he essentially cuts
+>> himself off from the community.
+>> 
+>> Let me explain, the point is for people to easily design capes, open-source their
+>> design as well as their software, and share them to the community.
+>> 
+>> This requires that things are easily shareable.
+>> 
+>> Requiring a relative newbie in kernel development not only generate his own
+>> base DT, but also to merge all of the other capes DT into his own is a
+>> nightmare.
+>> 
+>> BTW, on another tangent, it's not just the BB people that care about dynamic
+>> hardware configuration. There are a number of FPGA people that seem interested
+>> as well.
+>> 
+>> The notion of hardware as something static that never changes is obsolete IMHO.
+>> 
+>>> Unfortunately I don't have a solution but what I'm pretty sure is that
+>>> mangling the DTS from the bootloader is not the right one :-)
+>>> 
+>> 
+>> No, it is not. And this is what we're trying to solve here.
+>> 
+> 
+> What I said that I'm against is modifying a FDT using U-Boot scripts
+> commands that is something that mentioned in this thread. That is not
+> a robust way to do it and also is not something that a newbie could do
+> it neither.
+> 
+> Also, doing these FDT changes in the bootloader has several
+> disadvantages, besides having to implement on each bootloaders like
+> Tom said, you need to upgrade your bootloader which is something that
+> just can't be done on many boards and also is still a static
+> configuration since you need to reboot in order to use a different
+> FDT. So the hardware can't really be expanded on runtime unlike with
+> DT overlays where the overlays are loaded from regular files.
+> 
+> But I guess you agree with me on all those points and you just
+> misunderstood my comments. So DT overlays is definitely the way to go
+> (or something similar) but my point is that until we have that
+> solution merged, you can use a static DT in mainline for your stacked
+> cape or use a vendor kernel that already has DT overlays support.
+> 
+> I hope I explained myself better this time ;-)
 > 
 
-Also the compatible string name should be 'mmio-sram' on the DTS files.
+Heh, no worries :)
 
-> 
-> Paul Bolle
-> 
+I guess I'm a little jumpy since this discussion feels like a glitch in the matrix for me :)
+
+> Best regards,
+> Javier
+
+Regards
+
+-- Pantelis
+
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
 
-
--- 
-Tushar Behera
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
