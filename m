@@ -1,145 +1,60 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
-Date: Wed, 14 May 2014 17:31:24 +0200
-Message-ID: <31922167.uMVzxsQNIT@wuerfel>
-References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <16480004.aaDhzlOZgi@wuerfel> <20140514145002.GA18392@kwain>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 03/17] phy: ti-pipe3: add external clock support for PCIe PHY
+Date: Wed, 14 May 2014 10:34:09 -0500
+Message-ID: <CAGo_u6qw1OomEw_ueb3x+xT+qZLAfGv7Se1K=o725aOoD3ankQ@mail.gmail.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com>
+	<1399383244-14556-4-git-send-email-kishon@ti.com>
+	<53736CBC.2060702@ti.com>
+	<5373897C.6080504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140514145002.GA18392@kwain>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5373897C.6080504@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Roger Quadros <rogerq@ti.com>, dt list <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, linux-pci@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Paul Walmsley <paul@pwsan.com>, Rajendra Nayak <rnayak@ti.com>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 May 2014 16:50:02 Antoine T=E9nart wrote:
-> On Wed, May 14, 2014 at 03:02:34PM +0200, Arnd Bergmann wrote:
-> > On Wednesday 14 May 2014 11:48:57 Antoine T=E9nart wrote:
-> > > +static int phy_berlin_sata_power_on(struct phy *phy)
-> > > +{
-> > > +       struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
-> > > +       struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(=
-desc);
-> > > +       u32 regval;
-> > > +
-> > > +       spin_lock(&priv->lock);
-> > > +
-> > > +       /* Power up PHY */
-> > > +       writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
-> > > +       regval =3D readl(priv->base + HOST_VSA_DATA);
-> > > +       regval &=3D ~(desc->val);
-> > > +       writel(regval, priv->base + HOST_VSA_DATA);
-> > > +
-> > > +       /* Configure MBus */
-> > > +       writel(MBUS_SIZE_CONTROL, priv->base + HOST_VSA_ADDR);
-> > > +       regval =3D readl(priv->base + HOST_VSA_DATA);
-> > > +       regval |=3D MBUS_WRITE_REQUEST_SIZE_128 | MBUS_READ_REQUE=
-ST_SIZE_128;
-> > > +       writel(regval, priv->base + HOST_VSA_DATA);
-> > > +
-> > > +       spin_unlock(&priv->lock);
-> > > +
-> > > +       return 0;
-> > > +}
-> > > +
-> > > +static int phy_berlin_sata_power_off(struct phy *phy)
-> > > +{
-> > > +       struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
-> > > +       struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(=
-desc);
-> > > +       u32 regval;
-> > > +
-> > > +       spin_lock(&priv->lock);
-> > > +
-> > > +       /* Power down PHY */
-> > > +       writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
-> > > +       regval =3D readl(priv->base + HOST_VSA_DATA);
-> > > +       regval |=3D desc->val;
-> > > +       writel(regval, priv->base + HOST_VSA_DATA);
-> > > +
-> > > +       spin_unlock(&priv->lock);
-> > > +
-> > > +       return 0;
-> >=20
-> > I don't get this part: you have a reference to the phy here,
-> > but then you go poking the phy registers from the SATA driver
-> > rather than calling a PHY API function.
->=20
-> The v1 only introduced an AHCI driver. I somewhat agree the PHY
-> operations done in the AHCI driver could be in there.
->=20
-> I can move the initialization done in the AHCI driver here, but I'll
-> still need the driver: the Berlin AHCI needs to call the framework
-> generic functions with a custom mask and has custom pm_ops. So I'll
-> end up with a nearly empty AHCI driver, not able to control the port
-> parameters.
->=20
-> Or I can put all this in the AHCI driver, but then we'll need to
-> describe the PHYs there (to be able to enable each PHY independently)
-> and add bindings to the SATA ones.
->=20
-> What do you think? I prefer the first solution, but we'll have SATA
-> port related configuration in the PHY and a very tiny AHCI driver
-> because I can't really use the default behaviour of the ahci_platform=
-=2E
+On Wed, May 14, 2014 at 10:19 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+> Hi Roger,
+>
+> On Wednesday 14 May 2014 06:46 PM, Roger Quadros wrote:
+>> Hi Kishon,
+>>
+>> On 05/06/2014 04:33 PM, Kishon Vijay Abraham I wrote:
+>>> APLL used by PCIE phy can either use external clock as input or the clock
+>>> from DPLL. Added support for the APLL to use external clock as input here.
+>>>
+>>> Cc: Rajendra Nayak <rnayak@ti.com>
+>>> Cc: Tero Kristo <t-kristo@ti.com>
+>>> Cc: Paul Walmsley <paul@pwsan.com>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>  Documentation/devicetree/bindings/phy/ti-phy.txt |    4 ++
+>>>  drivers/phy/phy-ti-pipe3.c                       |   75 ++++++++++++++--------
+>>>  2 files changed, 52 insertions(+), 27 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>> index bc9afb5..d50f8ee 100644
+>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>> @@ -76,6 +76,10 @@ Required properties:
+>>>     * "dpll_ref_m2" - external dpll ref clk
+>>>     * "phy-div" - divider for apll
+>>>     * "div-clk" - apll clock
+>>> +   * "apll_mux" - mux for pcie apll
+>>> +   * "refclk_ext" - external reference clock for pcie apll
+>>> + - ti,ext-clk: To specifiy if PCIE apll should use external clock. Applicable
+>>> +   only to PCIE PHY.
+>>
+>> Instead of specifying both clock sources "dpll_ref_clock", "refclk_ext" and then specifying a 3rd control option "ti,ext-clk" to select one of the 2 sources, why can't the DT just supply one clock source, i.e. the one that is being used in the board instance? The driver should then just configure the clock rate that is needed at that node. Shouldn't the clock framework automatically take care of muxing and parent rates?
+>
+> Want the dt to have all the clocks used by the controller. "ti,ext-clk" should
+> go in the board dt file (suggested by Nishanth).
+> The point is at some point later if some one wants to change the clock source,
+> it should be a simple enabling "ti,ext-clk" flag instead of finding the clock
+> phandle etc..
 
-I just noticed I quoted the wrong driver with my comment, but I think
-you got what I meant.
-
-Why do you need a custom mask? Is that something you could pass
-as the argument in the phy descriptor using #phy-cells=3D<1>?
-
-> > > +                * By default the PHY node is used to request and=
- match a PHY.
-> > > +                * We describe one PHY per sub-node here. Use the=
- right node.
-> > > +                */
-> > > +               phy->dev.of_node =3D child;
-> > > +
-> > > +               priv->phys[phy_id].phy =3D phy;
-> > > +               priv->phys[phy_id].val =3D desc[phy_id].val;
-> > > +               priv->phys[phy_id].index =3D phy_id;
-> > > +               phy_set_drvdata(phy, &priv->phys[phy_id]);
-> >=20
-> > And here, you set a driver specific value into a structure used by =
-the
-> > PHY.
->=20
-> Values in priv->phys[] are related to the PHYs. phy_set_drvdata() all=
-ows
-> to store PHY related data, which is what I'm doing there. Nearly all =
-PHY
-> drivers are doing this.
->=20
-> Or am I missing something?
-
-This part is really ok, I got confused when I replied to the wrong emai=
-l.
-Sorry about this.
-
-> > Both of these are layering violations. You should either use the PH=
-Y
-> > interfaces correctly so the SATA driver doesn't have to know about =
-the
-> > specific, or not use a PHY device node at all and do everything in
-> > the SATA front-end.
->=20
-> To be sure: you mean using the PHY init() interface in the AHCI drive=
-r?
-
-If this PHY is specific to the ahci-berlin hardware and not shared with
-anything else, you don't really need to split out a phy driver. That
-would somewhat simplify what you ahve here.
-
-The alternative is to make it as generic as you can. If you can manage
-to move all the phy code into phy-berlin-sata driver, it should be
-possible to just extend the ahci-platform driver resume function to
-reinitialize the phy if there is one.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Wonder if that is implicit by the presence of  "refclk_ext" in the
+clocks provided?
