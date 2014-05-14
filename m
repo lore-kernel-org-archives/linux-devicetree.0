@@ -1,53 +1,58 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v4 6/6] arm: mediatek: add dts for Aquaris5 mobile phone
-Date: Wed, 14 May 2014 19:12:59 +0200
-Message-ID: <1400087579-4250-7-git-send-email-matthias.bgg@gmail.com>
+Subject: [PATCH v4 2/6] dt-bindings: add mtk-timer bindings
+Date: Wed, 14 May 2014 19:12:55 +0200
+Message-ID: <1400087579-4250-3-git-send-email-matthias.bgg@gmail.com>
 References: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, andrew@lunn.ch, linux-doc@vger.kernel.org, gregory.clement@free-electrons.com, thierry.reding@gmail.com, heiko.stuebner@bq.com, linux@arm.linux.org.uk, arnd@arndb.de, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, florian.vaussard@epfl.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, robh+dt@kernel.org, matthias.bgg@gmail.com, tglx@linutronix.de, soren.brinkmann@xilinx.com, rdunlap@infradead.org, sboyd@codeaurora.org, silvio.fricke@gmail.com, galak@codeaurora.org, olof@lixom.net, maxime.ripard@free-electrons.com, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Aquaris5 is a mobile phone based on the MT6589 SoC.
+Add binding documentation for the General Porpose Timer driver of
+the Mediatek SoCs.
 
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
- arch/arm/boot/dts/mt6589-aquaris5.dts | 25 +++++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
+ .../devicetree/bindings/timer/mediatek,mtk-timer.txt   | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
 
-diff --git a/arch/arm/boot/dts/mt6589-aquaris5.dts b/arch/arm/boot/dts/mt6589-aquaris5.dts
+diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
 new file mode 100644
-index 0000000..443b446
+index 0000000..938adf6
 --- /dev/null
-+++ b/arch/arm/boot/dts/mt6589-aquaris5.dts
-@@ -0,0 +1,25 @@
-+/*
-+ * Copyright (c) 2014 MundoReader S.L.
-+ * Author: Matthias Brugger <matthias.bgg@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+@@ -0,0 +1,18 @@
++Mediatek MT6589, MT6577 and MT6572 Timers
++---------------------------------------
 +
-+/dts-v1/;
-+#include "mt6589.dtsi"
++Required properties:
++- compatible: Should be "mediatek,mtk6589-timer"
++- reg: Should contain location and length for timers register.
++- clocks: Clocks driving the timer hardware. This list shoud include two
++	clocks. The order is system clock and as second clock the RTC clock.
 +
-+/ {
-+	model = "bq Aquaris5";
++Examples:
 +
-+	memory {
-+		reg = <0x80000000 0x40000000>;
++	timer {
++		compatible = "mediatek,mtk6589-timer";
++		reg = <0x10008000 0x80>;
++		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&system_clk>, <&rtc_clk>;
++		clock-names = "system-clk", "rtc-clk";
 +	};
-+};
 -- 
 1.8.1.2
