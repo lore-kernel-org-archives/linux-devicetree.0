@@ -1,95 +1,77 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: Add of_device_destroy_children() function
-Date: Wed, 14 May 2014 11:27:54 +0100
-Message-ID: <20140514102754.BC60BC4153D@trevor.secretlab.ca>
-References: <1399567069-3174-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399567069-3174-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 3/3] media: mx2-emmaprp: Add devicetree support
+Date: Wed, 14 May 2014 12:49:03 +0200
+Message-ID: <53734A1F.7080905@samsung.com>
+References: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
+ <537251CA.3070005@samsung.com> <1400001829.645600850@f332.i.mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1400001829.645600850@f332.i.mail.ru>
+Sender: linux-media-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: linux-media@vger.kernel.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 08 May 2014 18:37:49 +0200, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> This patch adds a helper function to unregister devices which
-> were created by an of_platform_populate() call. The pattern
-> used here can already be found in multiple drivers. This helper
-> can now be used instead of repeating similar code in drivers.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
+On 13/05/14 19:23, Alexander Shiyan wrote:
+> Tue, 13 May 2014 19:09:30 +0200 =D0=BE=D1=82 Sylwester Nawrocki <s.na=
+wrocki@samsung.com>:
+>> > Hi,
+>> >=20
+>> > On 02/05/14 09:18, Alexander Shiyan wrote:
+>>> > > This patch adds devicetree support for the Freescale enhanced M=
+ultimedia
+>>> > > Accelerator (eMMA) video Pre-processor (PrP).
+>>> > >=20
+>>> > > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+>>> > > ---
+>>> > >  .../devicetree/bindings/media/fsl-imx-emmaprp.txt     | 19 +++=
+++++++++++++++++
+>>> > >  drivers/media/platform/mx2_emmaprp.c                  |  8 +++=
++++++
+>>> > >  2 files changed, 27 insertions(+)
+>>> > >  create mode 100644 Documentation/devicetree/bindings/media/fsl=
+-imx-emmaprp.txt
+>>> > >=20
+>>> > > diff --git a/Documentation/devicetree/bindings/media/fsl-imx-em=
+maprp.txt b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.txt
+>>> > > new file mode 100644
+>>> > > index 0000000..9e8238f
+>>> > > --- /dev/null
+>>> > > +++ b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp.t=
+xt
+>>> > > @@ -0,0 +1,19 @@
+>>> > > +* Freescale enhanced Multimedia Accelerator (eMMA) video Pre-p=
+rocessor (PrP)
+>>> > > +  for i.MX.
+>>> > > +
+>>> > > +Required properties:
+>>> > > +- compatible : Shall contain "fsl,imx21-emmaprp".
+>>> > > +- reg        : Offset and length of the register set for the d=
+evice.
+>>> > > +- interrupts : Should contain eMMA PrP interrupt number.
+>>> > > +- clocks     : Should contain the ahb and ipg clocks, in the o=
+rder
+>>> > > +               determined by the clock-names property.
+>>> > > +- clock-names: Should be "ahb", "ipg".
+>>> > > +
+>>> > > +Example:
+>>> > > +	emmaprp: emmaprp@10026400 {
+>>> > > +		compatible =3D "fsl,imx27-emmaprp", "fsl,imx21-emmaprp";
+>> >=20
+>> > Is "fsl,imx27-emmaprp" compatible documented somewhere ?
+>
+> The overall structure of the eMMA module is slightly different.
+> As for the part of the PrP, according to the datasheet they are compa=
+tible.
 
-Pawel has also submitted a patch for this. That patch is a little more
-careful about how it removes nodes, so I'll be going with that one.
-
-g.
-
-> 
-> This patch has been tested on ARM only (on Exynos4412 Trats2 board).
-> 
->  drivers/of/device.c       |   24 ++++++++++++++++++++++++
->  include/linux/of_device.h |    3 +++
->  2 files changed, 27 insertions(+)
-> 
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index dafb973..9303197 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -190,3 +190,27 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
-> 
->  	return 0;
->  }
-> +
-> +static int __remove_child_device(struct device *dev, void *unused)
-> +{
-> +	if (of_match_node(of_default_bus_match_table, dev->of_node))
-> +		of_device_destroy_children(dev);
-> +
-> +	device_unregister(dev);
-> +	return 0;
-> +}
-> +
-> +/**
-> + * of_device_destroy_children - unregister @parent's child devices
-> + * @parent: the parent device to start with
-> + *
-> + * Destroy all child devices of the @parent device, any grandchildren
-> + * compatible with values listed in the of_default_bus_match_table will
-> + * also be unregistered recursively.  This function can be used to
-> + * destroy devices created by an of_platform_populate() call.
-> + */
-> +void of_device_destroy_children(struct device *parent)
-> +{
-> +	device_for_each_child(parent, NULL, __remove_child_device);
-> +}
-> +EXPORT_SYMBOL(of_device_destroy_children);
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index ef37021..0c41e0b 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -32,6 +32,7 @@ extern void of_dev_put(struct platform_device *dev);
->  extern int of_device_add(struct platform_device *pdev);
->  extern int of_device_register(struct platform_device *ofdev);
->  extern void of_device_unregister(struct platform_device *ofdev);
-> +extern void of_device_destroy_children(struct device *parent);
-> 
->  extern ssize_t of_device_get_modalias(struct device *dev,
->  					char *str, ssize_t len);
-> @@ -64,6 +65,8 @@ static inline int of_driver_match_device(struct device *dev,
->  static inline void of_device_uevent(struct device *dev,
->  			struct kobj_uevent_env *env) { }
-> 
-> +static inline void of_device_destroy_children(struct device *parent) { }
-> +
->  static inline int of_device_get_modalias(struct device *dev,
->  				   char *str, ssize_t len)
->  {
-> --
-> 1.7.9.5
-> 
+Then can we please have all the valid compatible strings listed at the
+'compatible' property's description above ? I think it is useful to hav=
+e
+an indication to which SoC each of them apply in documentation of the
+binding.
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Sylwester
