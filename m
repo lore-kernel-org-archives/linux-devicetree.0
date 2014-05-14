@@ -1,118 +1,183 @@
-From: Lukasz Majewski <l.majewski@samsung.com>
-Subject: Re: [PATCH v4 1/8] cpufreq: cpufreq-cpu0: allow use of optional boost
- mode frequencies
-Date: Wed, 14 May 2014 08:17:39 +0200
-Message-ID: <20140514081739.0b66587e@amdc2363>
-References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com>
- <1400029876-5830-2-git-send-email-thomas.ab@samsung.com>
- <CAKohpo=-duhJ-4iaqBG+eUCkoV_qwAu93FgUxmYS5erNTpLoMA@mail.gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Wed, 14 May 2014 09:19:39 +0300
+Message-ID: <53730AFB.2090800@ti.com>
+References: <20140509155504.GE17814@atomide.com> <53707A64.2060203@ti.com> <CABxcv=kwhodeFTHoVpn1nHeh9+kV5fwMN9s3Kbk6h7_xJp4UYA@mail.gmail.com> <53709706.10501@ti.com> <CABxcv=mY0a+yJgmCTPN=BhSQD57Pw022zOd5_KxEgvvF_-=O7Q@mail.gmail.com> <20140512142646.GA31772@atomide.com> <5370E0C9.8050201@ti.com> <20140512155132.GH31772@atomide.com> <5371F923.80000@ti.com> <CABxcv==_LCw1kPYm17g=h8VfSN2V_qsgXjTnsy-JOetawSv4pA@mail.gmail.com> <20140513152518.GA16837@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAKohpo=-duhJ-4iaqBG+eUCkoV_qwAu93FgUxmYS5erNTpLoMA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Thomas P Abraham <thomas.ab@samsung.com>
-Cc: Thomas Abraham <ta.omasab@gmail.com>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Heiko =?UTF-8?B?U3TDvGJuZXI=?= <heiko@sntech.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="fTpCvbkCp2BpGTTftNiSc1MiuOFFiBhJ1"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140513152518.GA16837@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh, Tomas,
+--fTpCvbkCp2BpGTTftNiSc1MiuOFFiBhJ1
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-> On 14 May 2014 06:41, Thomas Abraham <ta.omasab@gmail.com> wrote:
-> > From: Thomas Abraham <thomas.ab@samsung.com>
-> >
-> > Lookup for the optional boost-frequency property in cpu0 node and if
-> > available, enable support for boost mode frequencies. The
-> > frequencies usable in boost mode are determined while preparing the
-> > cpufreq table from the list of operating points available.
-> >
-> > Cc: Shawn Guo <shawn.guo@linaro.org>
-> > Cc: Lukasz Majewski <l.majewski@samsung.com>
-> > Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> > ---
-> >  .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   |    2 ++
-> >  drivers/cpufreq/Kconfig                            |   11
-> > +++++++++++ drivers/cpufreq/cpufreq-cpu0.c                     |
-> > 5 +++++ 3 files changed, 18 insertions(+), 0 deletions(-)
-> >
-> > diff --git
-> > a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-> > b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt index
-> > f055515..60f321a 100644 ---
-> > a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt +++
-> > b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt @@
-> > -19,6 +19,8 @@ Optional properties:
-> >  - cooling-min-level:
-> >  - cooling-max-level:
-> >       Please refer to
-> > Documentation/devicetree/bindings/thermal/thermal.txt. +-
-> > boost-frequency:
-> > +     Please refer to
-> > Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
-> >
-> >  Examples:
-> >
-> > diff --git a/drivers/cpufreq/Kconfig b/drivers/cpufreq/Kconfig
-> > index 1fbe11f..0ca4485 100644
-> > --- a/drivers/cpufreq/Kconfig
-> > +++ b/drivers/cpufreq/Kconfig
-> > @@ -194,6 +194,17 @@ config GENERIC_CPUFREQ_CPU0
-> >
-> >           If in doubt, say N.
-> >
-> > +config GENERIC_CPUFREQ_CPU0_BOOST
-> 
-> Get rid of this.. just not required.
+On 13/05/14 18:25, Tony Lindgren wrote:
 
-I think that you can rely solely on the CPU_FREQ_BOOST_SW flag if the
-original author of cpufreq-cpu0.c don't mind.
+> Well ideally the revision info for a device would come from device
+> revision registers rather using the SoC revision. In the DSS case when
+> the SoC revision is needed by a device it maybe it can be deciphered
+> from a combination of compatible flag and the clock rate for example?
 
-> 
-> > +       bool "Boost frequency support for generic CPU0 cpufreq
-> > driver"
-> > +       depends on GENERIC_CPUFREQ_CPU0
-> > +       select CPU_FREQ_BOOST_SW
-> > +       help
-> > +         This enables support for software managed overclocking
-> > (BOOST). It
-> > +         allows usage of special frequencies (those beyond the
-> > normal operating
-> > +         frequencies).
-> > +
-> > +         If in doubt, say N.
-> > +
-> >  menu "x86 CPU frequency scaling drivers"
-> >  depends on X86
-> >  source "drivers/cpufreq/Kconfig.x86"
-> > diff --git a/drivers/cpufreq/cpufreq-cpu0.c
-> > b/drivers/cpufreq/cpufreq-cpu0.c index 1bf6bba..e6c21a8 100644
-> > --- a/drivers/cpufreq/cpufreq-cpu0.c
-> > +++ b/drivers/cpufreq/cpufreq-cpu0.c
-> > @@ -194,6 +194,11 @@ static int cpu0_cpufreq_probe(struct
-> > platform_device *pdev) transition_latency += ret * 1000;
-> >         }
-> >
-> > +#ifdef CONFIG_GENERIC_CPUFREQ_CPU0_BOOST
-> > +       if (of_find_property(cpu_dev->of_node, "boost-frequency",
-> > NULL))
-> 
-> Lets see what happens to the other thread for this.
-> 
-> > +               cpu0_cpufreq_driver.boost_supported = true;
-> > +#endif
-> > +
-> >         ret = cpufreq_register_driver(&cpu0_cpufreq_driver);
-> >         if (ret) {
-> >                 pr_err("failed register driver: %d\n", ret);
-> > --
-> > 1.7.4.4
-> >
+I've been trying that. The HW guys didn't bother to update the DSS
+revision registers, so they are useless. And, for example, the OMAP3 ES
+difference is only about bitfield widths in two registers.
+
+I tried writing "too long" value to the register on the earlier ES
+version, hoping that the extra bits would be kept at zero, but that
+wasn't the case. So I just don't see a way to detect this from the DSS's
+point of view.
+
+>>> Do you object to the compatible string remapping as such, or just tha=
+t
+>>> it's in arch/arm/mach-omap2?
+>=20
+> It's something I'd rather not have under mach-omap2 as that means that
+> I may need to deal with it too to some extent. And I don't think we
+> need to do such remapping, we should be able to use the panel compatibl=
+e
+> strings as they are just fine. It should be possible to figure out from=
+
+> the device tree properties what controller the panel belongs to. Or
+> for now, use the panel registration to figure out what display controll=
+er
+> it belongs to.
+>=20
+>>> I guess nothing prevents me from moving it to drivers/, and having so=
+me
+>>> early-ish initcall doing the job.
+>=20
+> /me likes this idea if you need it at all. Stuff like this tends to sta=
+y
+> and spread, so I'd rather not do the remapping of compatible strings at=
+
+> all.
+
+Yep. I'll look to this. Thinking about it now, it kind of makes more
+sense to have it in the omapdss's directory.
+
+>> So, since we can change the kernel later but not the DTS, I agree with=
+
+>> you that the remapping is the least bad of our options.
+>=20
+> Yes the binding for the panel should just describe the panel so it can =
+be
+> used with whatever display controller. But we do have quite a few buses=
+
+> probing devices. How about set up the panel probing the same way?
+
+> For the panels on display controller, just do the usual
+> for_each_child_of_node(pdev->dev.of_node, child) and probe them?
+>
+> It seems the remapping of compatible strings is not needed in this
+> as we're only picking up panels that are children of the display
+> controller.
+
+The panels (or display encoders) are not (usually) children of the
+display controller. They are children of their respective control bus.
+Say, an i2c panel is a child of i2c bus. If there's no control bus, like
+is the case with the sharp panel, it's a platform device.
+
+The video paths of the panels and encoders are connected using the v4l2
+style ports/endpoints. We can use those to see what display controller a
+panel is connected to, but only after the panel driver has already
+probed. We don't have control for the actual probing, as that happens
+with whatever the control bus is for the display component.
+
+>>>>> I'm not sure what it would give us to try to be compatible with
+>>>>> simple-panel.txt. The simple-panel bindings won't probably be compa=
+tible
+>>>>> with the future common display drivers in any case, as the simple-p=
+anel
+>>>>> binding is just too limited and doesn't describe the hardware fully=
+=2E
+>>>>
+>>>> Hmm what else does a panel need where the existing binding cannot be=
+
+>>>> extended?
+>>>
+>>> The existing simple-panel binding doesn't describe the connections of=
+
+>>> the panel, i.e. its video input. I guess it can be extended, but I do=
+n't
+>>> see what the benefit is of trying to create new panel bindings
+>>> compatible with the simple-panel bindings. As I see, the simple-panel=
+
+>>> bindings work only with very limited use cases, where the drivers mak=
+e
+>>> assumptions. Simple panel bindings cannot be used with omapdss, nor c=
+an
+>>> it be used with the future common display framework.
+>=20
+> Well it seems at least the reset and enable pin standard from that
+> binding can be kept.
+
+Only enable gpio there. But even that's vague. Do you turn on the power
+before or after setting the enable gpio? How long delay should be
+between the power and the gpio? Different panels have different rules
+for the power-up.
+
+>>> But I'm not really familiar with using extending current bindings, an=
+d
+>>> making new bindings compatible with old ones. Can you explain why it'=
+d
+>>> be good to have the sharp panel bindings compatible with simple-panel=
+?
+>>> In what kind of scenario would it be used?
+>=20
+> Ideally the panel binding just describes the panel and it should not
+> matter which display controller it is a child of.
+
+Yes, but that means the panel bindings need to have enough information
+so that all display controllers can use it. Simple-panel bindings do not
+have enough information. The simple-panel bindings do not have
+information about the video bus input, and it doesn't even have
+information about the resolution or bitdepth of the panel.
+
+So I'm still asking, if we create sharp bindings that use the same
+properties as the simple-panel bindings, and define that sharp panel is
+compatible with simple-panel, what kind of scenario in practice would it
+be used in?
+
+Would the scenario be some other OS, that doesn't have a driver for the
+sharp panel, but has a driver for the simple-panel? That would only work
+if the sharp panel hardware is setup so that only the enable gpio is
+needed, so that quite a narrow definition of "compatible".
+
+Or is there some other scenario in which it could be used?
+
+ Tomi
 
 
 
--- 
-Best regards,
+--fTpCvbkCp2BpGTTftNiSc1MiuOFFiBhJ1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-Lukasz Majewski
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Samsung R&D Institute Poland (SRPOL) | Linux Platform Group
+iQIcBAEBAgAGBQJTcwr/AAoJEPo9qoy8lh71EeoQAIVD2f5osde4NF5ymty47ZUE
+0PsnJ4KPAnOrTX+6SS4Uv3Z/tV9Fh7AiOmGmbYxfv/Rp9Yeu5Fg5tT20raKw2aTU
+nSfV6XtyCivh2IDOWmg+W6OapvefGuD4hrZ/LszB5p1WVh5fk5Q9NnsDxNLbdn2T
+QydXf52+unCXiYIghRNtNNOUb7mw5UxRaPIoZ+Wr6SSOwB2WRveQ5VK1aTtslAY+
+r6GnQcdG4FtLOtqCRUwbvgvEM7PCCazQnpha2vtg1JptBp5lj7SAX9yDldoNf3zt
+zKhl3p5tRSBmxyMX/Nfw8pXcM5Leuby5HJk3GuTa4RHnAgMvDWGP98tCXzKevPs0
+G4aSwhfFpQJFNL3QKIRiBjTfjmikRJagJUgn0VHAC7GRSY/tUcupegmUhO2lFeyq
+axMzAZTxuP41TPB4ucqdZI85S6u2sxHvTCHWFR3mUviUoFpCWx65cvcCMvoc1zLK
+O4jgFpDZxUf8T6Uru2Jd8pzYkqoRY1aBYDq8R44jvy4850hH6KkKnkg/MD1RouQP
+jW4O869xKS9HA4Ljc7dT6PRNnC1hrZfUPchust7rb7ydvwJbZGa7L8ZlkexawA9/
+vggEy+hLm1PuuRvCNpvw7FpoLrY4x7SVIpsXUNo7rVYXafDuXs7GMuR1ZVx2w9aK
+602TPjCK9Vic6k93lwOx
+=iMYm
+-----END PGP SIGNATURE-----
+
+--fTpCvbkCp2BpGTTftNiSc1MiuOFFiBhJ1--
