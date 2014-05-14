@@ -1,144 +1,72 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
-Date: Thu, 15 May 2014 00:14:25 +0200
-Message-ID: <20140514221423.GC6215@mithrandir>
-References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>
- <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
+From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
+Subject: Re: [PATCH v3 2/6] clk: Add clock driver for AXM55xx SoC
+Date: Thu, 15 May 2014 00:22:16 +0200
+Message-ID: <CAE0=X_3WA5ZzEE1NespeScmnMkr9oxNMc1=+X86i5NpSffiUnA@mail.gmail.com>
+References: <cover.1400072260.git.anders.berg@avagotech.com>
+	<a83c5e1272d7a3242701504f238789592c2ec80f.1400072260.git.anders.berg@avagotech.com>
+	<20140514200845.19795.80794@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0033608712=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: t.stanislaws@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kishon@ti.com, a.hajda@samsung.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, grant.likely@linaro.org, sylvester.nawrocki@gmail.com, joshi@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140514200845.19795.80794@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anders Berg <anders.berg-M7mHMAq9Yzo@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---===============0033608712==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
-Content-Disposition: inline
-
-
---Fig2xvG2VGoz8o/s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Thu, May 15, 2014 at 12:47:21AM +0530, Rahul Sharma wrote:
+On Wed, May 14, 2014 at 10:08 PM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> Quoting Anders Berg (2014-05-14 11:37:57)
+>> +Example:
+>> +
+>> +       clk_ref0: clk_ref0 {
+>> +               compatible = "fixed-clock";
+>> +               #clock-cells = <0>;
+>> +               clock-frequency = <125000000>;
+>> +       };
+>
+> Hi Anders,
+>
+> The driver looks good. As for the DT binding, I am starting to request
+> that bindings for new hardware move away from the one-clock-per-node
+> method. I am not forcing anyone with stable bindings to migrate that
+> way, but it tends to make maintenance easier in the long run (e.g.
+> setting per-clock flags, etc).
+>
+> Your clk_ref0 example looks good, assuming that it is an off-chip clock
+> that feeds into the rest of the clock generator.
+>
+>> +
+>> +       clk_cpu_pll: clk_cpu_pll@2010022000 {
+>> +               compatible = "lsi,axxia-pll-clock";
+>> +               #clock-cells = <0>;
+>> +               clocks = <&clk_ref0>;
+>> +               clock-output-names = "clk_cpu_pll";
+>> +               reg = <0x20 0x10022000 0 0x2c>;
+>> +       };
+>
+> I assume the rest of your clocks are part of a clock generator IP block
+> inside of your chip. Have you looked at the QCOM binding? It is my
+> favorite binding these days. Here are some highlights:
+>
 [...]
-> diff --git a/Documentation/devicetree/bindings/phy/samsung-phy.txt b/Documentation/devicetree/bindings/phy/samsung-phy.txt
-[...]
-> +For "samsung,exynos4210-simple-phy" compatible PHYs the second cell in
-> +the PHY specifier identifies the PHY and the supported phys for exynos4210
+>
+> Using this type of binding you only need to declare your clock generator
+> IP node in dts, and then define a mapping in the DT include chroot. Then
+> you can define your per-clock data inside of your clock driver instead
+> of putting all of the details inside of DT.
+>
+> If you have a strong reason to do it the way that you originally posted
+> then let me know.
+>
 
-I think the specifier is only the part after the phandle, so this should
-probably be "... compatible PHYs the single cell specifier ..." or
-something equivalent.
+No strong reason... I just happened to pick the keystone-clocks.dtsi
+as an example when I wrote this. But I can rework this according to
+your suggestions. I'll post it as a separate patch (thus dropping the
+clk patch from this series). Ok?
 
-> +are:
-> +  HDMI_PHY,
-> +  DAC_PHY,
-> +  ADC_PHY,
-> +  PCIE_PHY,
-> +  SATA_PHY.
-
-I think you need to specify the literal values here as well, since the
-binding must be fully self-contained. That is you can't rely on the DT
-binding to be bundled with the exynos-simple-phy.h header.
-
-> @@ -20,3 +20,4 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
->  phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
->  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
->  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
-> +obj-$(CONFIG_EXYNOS_SIMPLE_PHY)		+= exynos-simple-phy.o
-
-Perhaps this should be named phy-exynos-simple for consistency? Also it
-may be a good idea to sort this alphabetically to reduce the potential
-for conflicts.
-
-> +static int exynos_phy_probe(struct platform_device *pdev)
-> +{
-> +	const struct of_device_id *of_id = of_match_device(
-> +		of_match_ptr(exynos_phy_of_match), &pdev->dev);
-
-Why does this need of_match_ptr()?
-
-> +	dev_info(dev, "probe success\n");
-
-If at all this should be dev_dbg(). But in general the driver core will
-already complain if the driver fails to probe, so there's in general no
-need to mention when it probes successfully.
-
-> diff --git a/include/dt-bindings/phy/exynos-simple-phy.h b/include/dt-bindings/phy/exynos-simple-phy.h
-[...]
-> +/* simeple phys */
-
-s/simeple phys/simple PHYs/
-
-Although on second thought that comment probably shouldn't be there in
-the first place.
-
-> +#define INVALID	(~1)
-
-This doesn't belong in this header. The value should never be used by a
-DT source file, should it?
-
-> +#define HDMI_PHY	0
-> +#define DAC_PHY	1
-> +#define ADC_PHY	2
-> +#define PCIE_PHY	3
-> +#define SATA_PHY	4
-
-Perhaps these should be namespaced somehow to avoid potential conflicts
-with other PHY providers?
-
-> +#define PHY_NR	5
-
-I'm not sure that this belongs here either. It's not a value that will
-ever appear in a DT source file.
-
-Thierry
-
---Fig2xvG2VGoz8o/s
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTc+q/AAoJEN0jrNd/PrOhk9kQALw31zQf9mXwPqMgetaAf3CY
-VOYCpST0GTBy0AqhX3MjVNF+AJH6L2v72aiZUBDpfaBCPZaOhyIPoBCl0/gmmXu3
-pms9CZDwb8Rgenf6ZIj8RRuAgD9h8mgjrAkMWCAXF2SZoBp/fngh5EoOSZGjeXtq
-zIXXAlMzSk8FbxphuFITKTcDJuDpie1o9J8U0shiNvMWpLBw4NmcFRkHKn8aatwa
-pVAgu5cORyyXmL/lV+HxucBfl96mbArz+93LHhqTInwbKWa8XANG5qplluAFfi67
-4707d3JGiT0wQOPy/IdjuyzhNrF8dcNGn5KnLecBP6y28wSw5UjrkX0Ku+ne8bBR
-MBHxhhfQmIA/Qx1Zb1zhUX9pPm+jvlRXo6pgtPG3cEME8TAfsyblZC1AjIlmGH++
-0B1lqeEqWlKzVU8kEpuSucoNUNqvjbmVtpPvL3OGTd7HfrOCHWHBv9HPJ5D5llxA
-QKhK4Yb6Jbqg7NiZmpN3Y+CkVTth2zi1/OPbV/orktpiYeDbhMvWZfG/d8/kGGpQ
-iQQOJgK97ulfvKOS/18/tvuhuRLibrNtQB4sn/73vz5TZ75UZK0U/Jg3QGK02Rnu
-GS5u0x5p3uA1zMCLoTS8Yeqe3St7KDsXuy4SY2L0Ot7+gJI8SAN3H7RBDGvr8LZA
-94Knaix7gbGQP3LuNeb0
-=a5nT
------END PGP SIGNATURE-----
-
---Fig2xvG2VGoz8o/s--
-
---===============0033608712==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0033608712==--
+Thanks,
+Anders
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
