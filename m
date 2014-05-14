@@ -1,51 +1,103 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 6/7] clk: sunxi: document PRCM clock
- compatible strings
-Date: Wed, 14 May 2014 14:38:20 +0200
-Message-ID: <1400071101-30553-7-git-send-email-boris.brezillon@free-electrons.com>
-References: <1400071101-30553-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for configuring the iATU
+Date: Wed, 14 May 2014 14:45:36 +0200
+Message-ID: <5281007.CFRjW0Yeu2@wuerfel>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com> <4528185.oZbgyuuFKX@wuerfel> <537302CD.7000701@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBT6HZWNQKGQE2TNYRFQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1400071101-30553-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <537302CD.7000701@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Document new compatible strings for clock provided by the PRCM
-(Power/Reset/Clock Management) unit.
+On Wednesday 14 May 2014 11:14:45 Kishon Vijay Abraham I wrote:
+> hi Arnd,
+> 
+> On Tuesday 13 May 2014 07:04 PM, Arnd Bergmann wrote:
+> > On Tuesday 13 May 2014 15:27:46 Arnd Bergmann wrote:
+> >> On Tuesday 13 May 2014 18:56:23 Kishon Vijay Abraham I wrote:
+> >>>> If you have a case where the outbound translation is a 256MB (i.e. 28bit)
+> >>>> section of the CPU address space, that could be represented as
+> >>>>
+> >>>>       ranges = <0x82000000 0 0  0xb0000000  0 0x10000000>;
+> >>>>
+> >>>> or 
+> >>>>
+> >>>>       ranges = <0x82000000 0 0xb0000000  0xb0000000  0 0x10000000>;
+> >>>>
+> >>>> depending on whether you want the BARs to be programmed using a low
+> >>>> address 0x0-0x0fffffff or an address matching the window
+> >>>> 0xb0000000-0xbfffffff.
+> >>>
+> >>> The problem is, for configuring the window starting at 0xb0000000, the ATU
+> >>> should be programmed 0x0000000 (the cpu address for it will be 0xb0000000 though).
+> >>>
+> >>
+> >> Then use the first of the two?
+> >>
+> > 
+> > To clarify: using <0x82000000 0 0  0xb0000000  0 0x10000000> will give you 
+> > a mem_offset of 0xb0000000, which should work just fine for this case.
+> > 
+> > What I don't understand is why the ATU cares about whether the outbound
+> > address is 0x0000000 or 0xb0000000 if it just decodes the lower 28 bit
+> > anyway. Did you mean that we have to program the BARs using low addresses
+> > regardless of what is programmed in the ATU? That would make more sense,
+> > and it also matches what I suggested.
+> 
+> No, It's not like it decodes only the lower 28bits. The BARs is programmed with
+> 32 bit value.
+> 
+> My pcie dt node has
+>  ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* CONFIG */
+>            0x81000000 0 0          0x20003000 0 0x00010000  /* IO */
+>            0x82000000 0 0x20013000 0x20013000 0 0xffed000>; /* MEM */
+> 
+> Consider MEM address space..
+> 
+> Here both PCI address and CPU address is 0x20013000. So when there is a write
+> to cpu addr 0x20013000 [writel(virt_addr(0x20013000)], we want it to be
+> translated to PCI addr 0x20013000. So in 'ATU', we would expect *base* to be
+> programmed to *0x20013000* and target to be programmed to *0x20013000*. But
+> that's not the case for DRA7xx. For DRA7xx *base* should be programmed to
+> *0x0013000* and target should be programmed to *0x20013000*.
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/sunxi.txt | 3 +++
- 1 file changed, 3 insertions(+)
+Ok, got it, thanks for your patience.
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index a5160d8..ffa1ab1 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -20,12 +20,15 @@ Required properties:
- 	"allwinner,sun5i-a13-ahb-gates-clk" - for the AHB gates on A13
- 	"allwinner,sun5i-a10s-ahb-gates-clk" - for the AHB gates on A10s
- 	"allwinner,sun7i-a20-ahb-gates-clk" - for the AHB gates on A20
-+	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
- 	"allwinner,sun6i-a31-ahb1-mux-clk" - for the AHB1 multiplexer on A31
- 	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
- 	"allwinner,sun4i-a10-apb0-clk" - for the APB0 clock
-+	"allwinner,sun6i-a31-apb0-clk" - for the APB0 clock on A31
- 	"allwinner,sun4i-a10-apb0-gates-clk" - for the APB0 gates on A10
- 	"allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on A13
- 	"allwinner,sun5i-a10s-apb0-gates-clk" - for the APB0 gates on A10s
-+	"allwinner,sun6i-a31-apb0-gates-clk" - for the APB0 gates on A31
- 	"allwinner,sun7i-a20-apb0-gates-clk" - for the APB0 gates on A20
- 	"allwinner,sun4i-a10-apb1-clk" - for the APB1 clock
- 	"allwinner,sun4i-a10-apb1-mux-clk" - for the APB1 clock muxing
--- 
-1.8.3.2
+I think this would best be modeled as a separate bus node that contains the
+restriction, like this:
+
+/ {
+	#address-cells = <1>; // or <2> if you support > 4GB address space
+	#size-cells = <1>;
+
+	soc {
+		#address-cells <1>;
+		#size-cells = <1>;
+		ranges;
+		dma-ranges;
+
+		... // all normal devices
+
+		axi@20000000 {
+			#size-cells = <1>;
+			#address-cells = <1>;
+			dma-ranges; // can access all 4GB outbound
+			ranges = <0 0x20000000 0x10000000>; // 28-bit bus
+
+			pci@0 {
+				reg = <0x0    0x1000>, // internal regs
+				      <0x1000 0x2000>; // config space
+				dma-ranges; // 32-bit outbound
+				ranges = <0x81000000 0 0           0x3000 0 0x00010000  /* IO */
+					  0x82000000 0 0x20013000 0x13000 0 0xffed000>; /* MEM */
+			};
+		};
+	};
+};
+
+
+	Arnd
