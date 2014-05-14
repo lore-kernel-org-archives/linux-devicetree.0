@@ -1,94 +1,72 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 7/7] ARM: dts: Enable twl4030 off-idle configuration for selected omaps
-Date: Tue, 13 May 2014 18:34:10 -0700
-Message-ID: <1400031250-29542-8-git-send-email-tony@atomide.com>
-References: <1400031250-29542-1-git-send-email-tony@atomide.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1400031250-29542-1-git-send-email-tony@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v3 2/2] Documentation: devicetree: Add boost-frequency
+ binding to list boost mode frequency
+Date: Tue, 13 May 2014 21:02:23 -0500
+Message-ID: <CAGo_u6ozaKjzVQsJjzi5g13ysBT6UDwsgW3O1=K3RD4Y-ODtDA@mail.gmail.com>
+References: <1400029380-5372-1-git-send-email-thomas.ab@samsung.com>
+	<1400029380-5372-3-git-send-email-thomas.ab@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1400029380-5372-3-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dt list <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, "thomas.ab@samsung.com" <thomas.ab@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-N900 now seems to shut down the external oscillator when hitting
-off-idle.
+On Tue, May 13, 2014 at 8:03 PM, Thomas Abraham <ta.omasab@gmail.com> wrote:
+> From: Thomas Abraham <thomas.ab@samsung.com>
+>
+> Add a new optional boost-frequency binding for specifying the frequencies
+> usable in boost mode.
+>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Lukasz Majewski <l.majewski@samsung.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> ---
+>  .../devicetree/bindings/cpufreq/cpufreq-boost.txt  |   11 +++++++++++
+>  1 files changed, 11 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+>
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+> new file mode 100644
+> index 0000000..d925e38
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+> @@ -0,0 +1,11 @@
+> +* Device tree binding for CPU boost frequency (aka over-clocking)
+> +
+> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
+> +overclocking) in which the CPU can operate in frequencies beyond the normal
 
-And Beagle XM seems to have OSC_EN pin connected to allow shutting
-down the oscillator looking at the schematics. The oscillator
-output is cut off in off-idle and you can monitor it from R56 on
-the bottom side of the board near the power jack. Note that for
-beagle we need to also enable the UART wake-up event, the others
-have that enabled in earlier patches.
+"operate at"?
 
-OMAP37XX EVM (TMDSEVM3730) does not seem to have twl4030 clken
-pin connected, so there is no point trying to enable shutting
-down of the oscillator on it for the extra latency it adds.
+> +operating conditions.
 
-Signed-off-by: Tony Lindgren <tony@atomide.com>
----
- arch/arm/boot/dts/omap3-beagle-xm.dts   | 6 ++++++
- arch/arm/boot/dts/omap3-evm-common.dtsi | 7 +++++++
- arch/arm/boot/dts/omap3-n900.dts        | 5 +++++
- 3 files changed, 18 insertions(+)
+"normal operating conditions" probably need a little bit of an
+expansion here perhaps?
 
-diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-index 447e714..b05814b 100644
---- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-+++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-@@ -152,6 +152,11 @@
- 			codec {
- 			};
- 		};
-+
-+		twl_power: power {
-+			compatible = "ti,twl4030-power-beagleboard-xm", "ti,twl4030-power-idle-osc-off";
-+			ti,use_poweroff;
-+		};
- 	};
- };
- 
-@@ -211,6 +216,7 @@
- };
- 
- &uart3 {
-+	interrupts-extended = <&intc 74 &omap3_pmx_core OMAP3_UART3_RX>;
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart3_pins>;
- };
-diff --git a/arch/arm/boot/dts/omap3-evm-common.dtsi b/arch/arm/boot/dts/omap3-evm-common.dtsi
-index 3007e79..7e44e29 100644
---- a/arch/arm/boot/dts/omap3-evm-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-evm-common.dtsi
-@@ -45,6 +45,13 @@
- #include "twl4030.dtsi"
- #include "twl4030_omap3.dtsi"
- 
-+&twl {
-+	twl_power: power {
-+		compatible = "ti,twl4030-power-omap3-evm", "ti,twl4030-power-idle";
-+		ti,use_poweroff;
-+	};
-+};
-+
- &i2c2 {
- 	clock-frequency = <400000>;
- };
-diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-index 869bdd9..09ae615 100644
---- a/arch/arm/boot/dts/omap3-n900.dts
-+++ b/arch/arm/boot/dts/omap3-n900.dts
-@@ -277,6 +277,11 @@
- 		compatible = "ti,twl4030-audio";
- 		ti,enable-vibra = <1>;
- 	};
-+
-+	twl_power: power {
-+		compatible = "ti,twl4030-power-n900", "ti,twl4030-power-idle-osc-off";
-+		ti,use_poweroff;
-+	};
- };
- 
- &twl_gpio {
--- 
-1.8.1.1
+> +
+> +Optional Properties:
+> +- boost-frequency: list of frequencies in KHz to be used only in boost mode.
 
+probably boost-frequencies?
+
+> +  This list should be a subset of frequencies listed in "operating-points"
+> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
+> +  details about "operating-points" property.
+
+
+an example is expected here.
+
+personally, I think I understand the intent here, but as a hardware
+description, will let folks comment if it is acceptable.
+
+--
+Regards,
+Nishanth Menon
