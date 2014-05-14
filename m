@@ -1,57 +1,201 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCB2MiAzLzNdIEFSTTogaS5NWDEgY2xrOiBBZGQgZGV2aWNl?=
- =?UTF-8?B?dHJlZSBzdXBwb3J0?=
-Date: Wed, 14 May 2014 20:53:08 +0400
-Message-ID: <1400086388.344798582@f388.i.mail.ru>
-References: <1399997116-4313-1-git-send-email-shc_work@mail.ru>
- <1399999493.354004023@f391.i.mail.ru>
- <20140513173143.GU5858@pengutronix.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
+Date: Wed, 14 May 2014 18:57:22 +0200
+Message-ID: <20140514165722.GA18495@kwain>
+References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com>
+ <31922167.uMVzxsQNIT@wuerfel>
+ <20140514154929.GA8016@kwain>
+ <4414637.rKolGB14Rm@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140513173143.GU5858-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?U2FzY2hhIEhhdWVy?= <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: =?UTF-8?B?bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn?= <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <4414637.rKolGB14Rm@wuerfel>
+Sender: linux-ide-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org, sebastian.hesselbarth@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-VHVlLCAxMyBNYXkgMjAxNCAxOTozMTo0MyArMDIwMCDQvtGCIFNhc2NoYSBIYXVlciA8cy5oYXVl
-ckBwZW5ndXRyb25peC5kZT46Cj4gT24gVHVlLCBNYXkgMTMsIDIwMTQgYXQgMDg6NDQ6NTNQTSAr
-MDQwMCwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+IFR1ZSwgMTMgTWF5IDIwMTQgMTM6Mjg6
-MjggLTAzMDAg0L7RgiBGYWJpbyBFc3RldmFtIDxmZXN0ZXZhbUBnbWFpbC5jb20+Ogo+ID4gPiBP
-biBUdWUsIE1heSAxMywgMjAxNCBhdCAxOjI0IFBNLCBBbGV4YW5kZXIgU2hpeWFuIDxzaGNfd29y
-a0BtYWlsLnJ1PiB3cm90ZToKPiA+ID4gPiBUdWUsIDEzIE1heSAyMDE0IDEzOjE4OjQwIC0wMzAw
-INC+0YIgRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPjoKPiA+ID4gPj4gT24gVHVl
-LCBNYXkgMTMsIDIwMTQgYXQgMTowNSBQTSwgQWxleGFuZGVyIFNoaXlhbiA8c2hjX3dvcmtAbWFp
-bC5ydT4gd3JvdGU6Cj4gPiA+ID4+Cj4gPiA+ID4+ID4gKyAgICAgICBjbGtbSU1YMV9DTEtfRFVN
-TVldID0KPiA+ID4gPj4gPiArICAgICAgICAgICAgICAgaW14X2Nsa19maXhlZCgiZHVtbXkiLCAw
-KTsKPiA+ID4gPj4gPiArICAgICAgIGNsa1tJTVgxX0NMS19DTEszMl0gPQo+ID4gPiA+PiA+ICsg
-ICAgICAgICAgICAgICBpbXhfb2J0YWluX2ZpeGVkX2Nsb2NrKCJjbGszMiIsIGZyZWYpOwo+ID4g
-PiA+PiA+ICsgICAgICAgY2xrW0lNWDFfQ0xLX0NMSzE2TV9FWFRdID0KPiA+ID4gPj4gPiArICAg
-ICAgICAgICAgICAgaW14X2Nsa19maXhlZCgiY2xrMTZtX2V4dCIsIDE2MDAwMDAwKTsKPiA+ID4g
-Pj4gPiArICAgICAgIGNsa1tJTVgxX0NMS19DTEsxNk1dID0KPiA+ID4gPj4gPiArICAgICAgICAg
-ICAgICAgaW14X2Nsa19nYXRlKCJjbGsxNm0iLCAiY2xrMTZtX2V4dCIsIENDTV9DU0NSLCAxNyk7
-Cj4gPiA+ID4+Cj4gPiA+ID4+IFdoeSBkb24ndCB5b3UgcHV0IGVhY2ggZW50cnkgaW50byBhIHNp
-bmdsZSBsaW5lIGluc3RlYWQ/Cj4gPiA+ID4+Cj4gPiA+ID4+IEV2ZW4gaWYgaXQgZ2V0cyBsYXJn
-ZXIgdGhhbiA4MCBjb2x1bW5zLCBpdCB3b3VsZCBiZSBlYXNpZXIgdG8gcmVhZC4KPiA+ID4gPgo+
-ID4gPiA+IEkgdGhvdWdodCBhYm91dCBpdCwgYnV0IGNhbWUgdG8gdGhlIGNvbmNsdXNpb24gdGhh
-dCBpdCBpcyBiZXR0ZXIgdG8gb2JzZXJ2ZQo+ID4gPiA+IHRoZSBrZXJuZWwgcnVsZXMuCj4gPiA+
-IAo+ID4gPiBEbyB5b3UgbWVhbiBjaGVja3BhdGNoIGNvbXBsYWludD8KPiA+ID4gCj4gPiA+IFRo
-ZW4gdHJ5IHRvIG1ha2UgY2hlY2twYXRjaCBoYXBweSB3aXRoIG90aGVyIGNsb2NrIGZpbGUgc3Vj
-aCBhcwo+ID4gPiBhcmNoL2FybS9tYWNoLWlteC9jbGstaW14NnEuCj4gPiA+IAo+ID4gPiBUaGUg
-cmVzdWx0IHdpbGwgYmUgdW5yZWFkYWJsZSA6LSkKPiA+IAo+ID4gQXMgYW5vdGhlciBzb2x1dGlv
-biB3ZSBjYW4gdXNlIG1hY3Jvcywgc29tZXRoaW5nIGxpa2UgdGhpczoKPiA+IAo+ID4gI2RlZmlu
-ZSBJTVhDTEtfTVVYKGlkLCBuYW1lLCByZWcsIG9mZiwgc3osIGFycikJXAo+ID4gCWNsa1tpZF0g
-PSBpbXhfY2xrX211eChuYW1lLCByZWcsIG9mZiwgc3osIGFyciwgQVJSQVlfU0laRShhcnIpKQo+
-IAo+IFBsZWFzZSBkb24ndCBkbyB0aGF0LiBXZSBoYXZlIGkuTVggc3BlY2lmaWMgd3JhcHBlciBm
-dW5jdGlvbnMuIFdyYXBwaW5nCj4gdGhlc2UgYWdhaW4gd2l0aCBtYWNyb3MgZG9lc24ndCBpbXBy
-b3ZlIHRoZSBzaXR1YXRpb24uIEknbSB3aXRoIEZhYmlvCj4gaGVyZSwgSSB3b3VsZCBwcmVmZXIg
-dGhlIGZ1bmN0aW9ucyBpbiBhIHNpbmdsZSBsaW5lLgoKT0suIFNoYXduLCBpZiBubyBvYmplY3Rp
-b25zIHRvIHBhcnRzIDEgYW5kIDIsIEkgd291bGQgbGlrZSB0aGVtIHRvIGJlIGFwcGxpZWQuCgot
-LS0KCg==
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, May 14, 2014 at 06:11:24PM +0200, Arnd Bergmann wrote:
+> On Wednesday 14 May 2014 17:49:29 Antoine T=E9nart wrote:
+> > On Wed, May 14, 2014 at 05:31:24PM +0200, Arnd Bergmann wrote:
+> > > On Wednesday 14 May 2014 16:50:02 Antoine T=E9nart wrote:
+> > > > On Wed, May 14, 2014 at 03:02:34PM +0200, Arnd Bergmann wrote:
+> > > > > On Wednesday 14 May 2014 11:48:57 Antoine T=E9nart wrote:
+> > > > > I don't get this part: you have a reference to the phy here,
+> > > > > but then you go poking the phy registers from the SATA driver
+> > > > > rather than calling a PHY API function.
+> > > >=20
+> > > > The v1 only introduced an AHCI driver. I somewhat agree the PHY
+> > > > operations done in the AHCI driver could be in there.
+> > > >=20
+> > > > I can move the initialization done in the AHCI driver here, but=
+ I'll
+> > > > still need the driver: the Berlin AHCI needs to call the framew=
+ork
+> > > > generic functions with a custom mask and has custom pm_ops. So =
+I'll
+> > > > end up with a nearly empty AHCI driver, not able to control the=
+ port
+> > > > parameters.
+> > > >=20
+> > > > Or I can put all this in the AHCI driver, but then we'll need t=
+o
+> > > > describe the PHYs there (to be able to enable each PHY independ=
+ently)
+> > > > and add bindings to the SATA ones.
+> > > >=20
+> > > > What do you think? I prefer the first solution, but we'll have =
+SATA
+> > > > port related configuration in the PHY and a very tiny AHCI driv=
+er
+> > > > because I can't really use the default behaviour of the ahci_pl=
+atform.
+> > >=20
+> > > I just noticed I quoted the wrong driver with my comment, but I t=
+hink
+> > > you got what I meant.
+> > >=20
+> > > Why do you need a custom mask? Is that something you could pass
+> > > as the argument in the phy descriptor using #phy-cells=3D<1>?
+> >=20
+> > I meant a custom mask in the AHCI driver, when calling the
+> > ahci_platform_init_host() function. Otherwise we'll have problems o=
+n the
+> > BG2Q DMP (it only has one PHY available, and not initializing it is=
+ not
+> > enough).
+>=20
+> Ah, I see what you mean now. Of course, this could also be an optiona=
+l
+> property in the generic AHCI binding, which would require that you
+> specify the available ports in DT for nonstandard masks.
+>=20
+> Just to confirm: The HOST_PORTS_IMPL register on BG2Q DMP has an
+> value that we can't use here to determine the available ports, right?
+
+Right. The register is here but saying there are 2 available ports,
+which is true for the BG2Q SoC but not true for the BG2Q DMP board. So
+the AHCI framework reads the register and performs a misconfiguration o=
+f
+the SATA.
+
+>=20
+> > > > > > +                * By default the PHY node is used to reque=
+st and match a PHY.
+> > > > > > +                * We describe one PHY per sub-node here. U=
+se the right node.
+> > > > > > +                */
+> > > > > > +               phy->dev.of_node =3D child;
+> > > > > > +
+> > > > > > +               priv->phys[phy_id].phy =3D phy;
+> > > > > > +               priv->phys[phy_id].val =3D desc[phy_id].val=
+;
+> > > > > > +               priv->phys[phy_id].index =3D phy_id;
+> > > > > > +               phy_set_drvdata(phy, &priv->phys[phy_id]);
+> > > > >=20
+> > > > > And here, you set a driver specific value into a structure us=
+ed by the
+> > > > > PHY.
+> > > >=20
+> > > > Values in priv->phys[] are related to the PHYs. phy_set_drvdata=
+() allows
+> > > > to store PHY related data, which is what I'm doing there. Nearl=
+y all PHY
+> > > > drivers are doing this.
+> > > >=20
+> > > > Or am I missing something?
+> > >=20
+> > > This part is really ok, I got confused when I replied to the wron=
+g email.
+> > > Sorry about this.
+> > >=20
+> > > > > Both of these are layering violations. You should either use =
+the PHY
+> > > > > interfaces correctly so the SATA driver doesn't have to know =
+about the
+> > > > > specific, or not use a PHY device node at all and do everythi=
+ng in
+> > > > > the SATA front-end.
+> > > >=20
+> > > > To be sure: you mean using the PHY init() interface in the AHCI=
+ driver?
+> > >=20
+> > > If this PHY is specific to the ahci-berlin hardware and not share=
+d with
+> > > anything else, you don't really need to split out a phy driver. T=
+hat
+> > > would somewhat simplify what you ahve here.
+> >=20
+> > I don't have lots of info about that, but we set the PHY to
+> > PHY_MODE_SATA in the AHCI driver. So I guess there are other modes.
+>=20
+> Ok, good point. This does sound a lot like there are multiple modes.
+>=20
+> This would also imply that the "compatible" string should not have
+> "sata" in it either, but describe a generic PHY. You can pass the mod=
+e
+> as part of the phy descriptor from DT then.
+
+Yes sure, with something like:
+
+	phys =3D <&foo_phy0 FOO_SATA>;
+
+>=20
+> > > The alternative is to make it as generic as you can. If you can m=
+anage
+> > > to move all the phy code into phy-berlin-sata driver, it should b=
+e
+> > > possible to just extend the ahci-platform driver resume function =
+to
+> > > reinitialize the phy if there is one.
+> >=20
+> > It is possible to move all the PHY code the phy-berlin-sata. Then I=
+'ll
+> > need to hack a bit the AHCI framework so it can handle more than on=
+e
+> > PHY. But as I said, I'll still need to set a custom mask, and addin=
+g a
+> > quirk to the AHCI platform or framework does not seem to be a very =
+good
+> > idea, imho.
+> >=20
+> > Or I can add a computed mask to the ahci-platform driver, like I di=
+d in
+> > the Berlin one, but I don't know what would be the consequences. Fo=
+r
+> > each PHY I have:
+> >=20
+> > +	mask |=3D 1 << i;
+>=20
+> It does sound generic enough that the same would be done on other
+> ahci-platform variants with a generic phy attached, even though
+> currently each one has only one phy.
+>=20
+> We can probably define this as an extension in some form.
+> Do you think we need to handle the case where the first port is
+> unavailable but some of the other ports should be used?
+
+The Berlin AHCI driver handles the case. I don't know if we'll come
+across a use case for this but supporting it should'nt be difficult. So
+why not ... :)
+
+I think we can either add a binding enabling an automatic mask computat=
+ion
+in the framework or match the compatible and do this in the ahci-platfo=
+rm
+driver. Or we can make this the default behaviour when multiple PHYs ar=
+e
+used in an AHCI node, but I'll have to check if that's possible.
+
+Maybe the SATA subsystem maintainer has an opinion on the matter?
+
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
