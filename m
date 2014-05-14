@@ -1,37 +1,60 @@
-From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH 2/4] Documentation: Add documentation for the APM X-Gene
- SoC EDAC DTS binding
-Date: Wed, 14 May 2014 14:01:46 +0200
-Message-ID: <20140514120146.GE5231@pd.tnic>
-References: <1399590199-12256-1-git-send-email-lho@apm.com>
- <1399590199-12256-2-git-send-email-lho@apm.com>
- <1399590199-12256-3-git-send-email-lho@apm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v13 2/2] ARM: sunxi: Add driver for SD/MMC hosts found on
+ Allwinner sunxi SoCs
+Date: Wed, 14 May 2014 14:03:14 +0200
+Message-ID: <CAPDyKFrq=v1SU0+rC5_tCJ1D5jUOd3vwLXpxgpzB9X5NQd-deg@mail.gmail.com>
+References: <1399896288-5826-1-git-send-email-hdegoede@redhat.com>
+	<1399896288-5826-3-git-send-email-hdegoede@redhat.com>
+	<5370C5D1.2070901@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399590199-12256-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5370C5D1.2070901@broadcom.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Chris Ball <chris@printf.net>, Arend van Spriel <arend@broadcom.com>, Mike Turquette <mturquette@linaro.org>, devicetree <devicetree@vger.kernel.org>, Emilio Lopez <emilio@elopez.com.ar>, linux-mmc <linux-mmc@vger.kernel.org>, linux-sunxi@googlegroups.com, =?UTF-8?Q?David_Lanzend=C3=B6rfer?= <david.lanzendoerfer@o2s.ch>, Maxime Ripard <maxime.ripard@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 08, 2014 at 05:03:17PM -0600, Loc Ho wrote:
-> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
-> 
-> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+On 12 May 2014 15:00, Arend van Spriel <arend@broadcom.com> wrote:
+> On 05/12/2014 02:04 PM, Hans de Goede wrote:
+>>
+>> From: David Lanzend=C3=B6rfer<david.lanzendoerfer@o2s.ch>
+>>
+>> The Allwinner sunxi mmc host uses dma in bus-master mode using a bui=
+lt-in
+>> designware idmac controller, which is identical to the one found in =
+the
+>> mmc-dw
+>> hosts. However the rest of the host is not identical to mmc-dw, it d=
+eals
+>> with
+>> sending stop commands in hardware which makes it significantly diffe=
+rent
+>> from the mmc-dw devices.
+>>
+>> HdG: Various cleanups and fixes.
+>
+>
+> Just nitpicking, but usually the above line should be added below the
+> original signoff, so:
+>
+>> Signed-off-by: David Lanzend=C3=B6rfer<david.lanzendoerfer@o2s.ch>
+>
+> [hdegoede@redhat.com: various cleanups and fixes]
+>
+>> Signed-off-by: Hans de Goede<hdegoede@redhat.com>
+>
+>
+> As is documented in SubmittingPatches.
+>
+> Gr. AvS
 
-I guess I'm going to need an ack from a device tree maintainer if I'm
-going to pick up the whole series through the edac tree.
 
--- 
-Regards/Gruss,
-    Boris.
+This looks good to me, thanks Hans!
 
-Sent from a fat crate under my desk. Formatting is fine.
---
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I will include this in the next PR I send to Chris, I will also take
+the liberty to fixup the commit msg as pointed out by Arend.
+
+Kind regards
+Ulf Hansson
