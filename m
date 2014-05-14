@@ -1,35 +1,37 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] of: Add of_device_destroy_children() function
-Date: Wed, 14 May 2014 13:55:29 +0200
-Message-ID: <537359B1.1060908@samsung.com>
-References: <1399567069-3174-1-git-send-email-s.nawrocki@samsung.com>
- <20140514102754.BC60BC4153D@trevor.secretlab.ca>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 2/4] Documentation: Add documentation for the APM X-Gene
+ SoC EDAC DTS binding
+Date: Wed, 14 May 2014 14:01:46 +0200
+Message-ID: <20140514120146.GE5231@pd.tnic>
+References: <1399590199-12256-1-git-send-email-lho@apm.com>
+ <1399590199-12256-2-git-send-email-lho@apm.com>
+ <1399590199-12256-3-git-send-email-lho@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20140514102754.BC60BC4153D@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1399590199-12256-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 14/05/14 12:27, Grant Likely wrote:
-> On Thu, 08 May 2014 18:37:49 +0200, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
->> > This patch adds a helper function to unregister devices which
->> > were created by an of_platform_populate() call. The pattern
->> > used here can already be found in multiple drivers. This helper
->> > can now be used instead of repeating similar code in drivers.
->> > 
->> > Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> > Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> > ---
->
-> Pawel has also submitted a patch for this. That patch is a little more
-> careful about how it removes nodes, so I'll be going with that one.
+On Thu, May 08, 2014 at 05:03:17PM -0600, Loc Ho wrote:
+> This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
+> 
+> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+> Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 
-OK, it's good to know we have already a good solution. I'll give a try
-Pawel's patch then.
+I guess I'm going to need an ack from a device tree maintainer if I'm
+going to pick up the whole series through the edac tree.
 
-Thanks,
-Sylwester
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
