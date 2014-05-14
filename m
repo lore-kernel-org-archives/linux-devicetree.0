@@ -1,42 +1,67 @@
-From: Anders Berg <anders.berg@avagotech.com>
-Subject: Re: [PATCH v3 0/6] Add platform support for LSI AXM55xx
-Date: Wed, 14 May 2014 21:21:53 +0200
-Message-ID: <CAE0=X_2Fcf=mcx2zKtCqKzFH+Fgwz5C6SEm-DQi_mVAWzh=Zdg@mail.gmail.com>
-References: <cover.1400072260.git.anders.berg@avagotech.com>
-	<6334605.NlytHCzYVP@wuerfel>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCH v4 4/5] ARM: dts: remove chip specific hdmi hpd pin from board
+Date: Thu, 15 May 2014 00:53:04 +0530
+Message-ID: <CAPdUM4P_huO9BNAyUhr+S1di9h+Gxw9T0zJaEUisa+ss4h63gg@mail.gmail.com>
+References: <1400035562-16832-1-git-send-email-rahul.sharma@samsung.com>
+	<1400035562-16832-5-git-send-email-rahul.sharma@samsung.com>
+	<5373B9D4.2060601@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6334605.NlytHCzYVP@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Olof Johansson <olof@lixom.net>, Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5373B9D4.2060601@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 14, 2014 at 8:56 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Wednesday 14 May 2014 20:37:55 Anders Berg wrote:
+On 15 May 2014 00:15, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> On 05/14/14 11:46, Rahul Sharma wrote:
 >>
->> This is version 3 of this series to introduces basic platform support for the LSI
->> AXM5516 SoC.
+>> From: Rahul Sharma<Rahul.Sharma@samsung.com>
 >>
->> No major changes since v2. Ready to be applied to the arm-soc tree?
+>> "gpx3-7" is chip specific pin in Exynos5420 for hdmi
+>> hotplug. This pin is moved to exynos5420-pinctrl.dts
+>> and removed from the board file.
 >
-> I think it's good, but I'm not sure if we should put them all into arm-soc.
-> There are no dependencies between the drivers that I can see, so why not
-> merge the clock and reset drivers through the individual subsystem maintainers?
 >
-> We can take patches 1/3/4/6, and the others if there is a good reason
-> not to have the regular maintainers pick them up.
-
-Sure, that'll work to take 1,3,4,6.
-
+> Rahul, you may need to put the change (moving the pin from smdk5420 board to
+> exynos5420-pinctrl.dts) before the patch 3/5.
 >
-> The hip04 platform series is also adding a multi_v7_lpae_defconfig file.
-> it would be good to add axxia to that config and also to the regular
-> multi_v7_defconfig, but that can be an add-on patch once we have merged
-> hip04.
 
-Ok.
+Hi Kukjin,
 
-Thanks,
-Anders
+Ok. I will post with that change tomorrow.
+
+Regards,
+Rahul Sharma.
+
+> - Kukjin
+>
+>
+>>
+>> Signed-off-by: Rahul Sharma<Rahul.Sharma@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5420-smdk5420.dts |    9 ---------
+>>   1 file changed, 9 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> index 6910485..11cd9bf 100644
+>> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+>> @@ -131,15 +131,6 @@
+>>                 };
+>>         };
+>>
+>> -       pinctrl@13400000 {
+>> -               hdmi_hpd_irq: hdmi-hpd-irq {
+>> -                       samsung,pins = "gpx3-7";
+>> -                       samsung,pin-function =<0>;
+>> -                       samsung,pin-pud =<1>;
+>> -                       samsung,pin-drv =<0>;
+>> -               };
+>> -       };
+>> -
+>>         hdmi@14530000 {
+>>                 status = "okay";
+>>                 hpd-gpio =<&gpx3 7 0>;
