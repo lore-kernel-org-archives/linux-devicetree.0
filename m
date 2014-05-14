@@ -1,28 +1,46 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3 1/2] cpufreq / OPP: Allow boost frequency to be looked
- up from device tree
-Date: Wed, 14 May 2014 11:54:40 +0530
-Message-ID: <CAKohponG9PNse4cHkvfLfaRouW-jxjToBXUCHyOCgx8-Pc=2Xw@mail.gmail.com>
-References: <1400029380-5372-1-git-send-email-thomas.ab@samsung.com>
-	<1400029380-5372-2-git-send-email-thomas.ab@samsung.com>
-	<CAKohponnPSRAotJUu+5a9y8j97QF8Jqgc5DA5WQnwGWCnVY-aA@mail.gmail.com>
-	<CAGo_u6p-uqw82ewDciDEhAt0=Nswfw33-gf8Aa+-6_k3eCcTzw@mail.gmail.com>
-	<20140514080930.781e0557@amdc2363>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: [PATCH 01/18] drm/exynos: dsi: move the EoT packets configuration point
+Date: Wed, 14 May 2014 15:26:48 +0900
+Message-ID: <1400048825-6052-2-git-send-email-yj44.cho@samsung.com>
+References: <1400048825-6052-1-git-send-email-yj44.cho@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140514080930.781e0557@amdc2363>
+In-reply-to: <1400048825-6052-1-git-send-email-yj44.cho@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lukasz Majewski <l.majewski@samsung.com>
-Cc: Nishanth Menon <nm@ti.com>, Thomas Abraham <ta.omasab@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <rob.herring@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Thomas P Abraham <thomas.ab@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: airlied@linux.ie, dri-devel@lists.freedesktop.org
+Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, thierry.reding@gmail.com, laurent.pinchart@ideasonboard.com, s.trumtrar@pengutronix.de, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 14 May 2014 11:39, Lukasz Majewski <l.majewski@samsung.com> wrote:
-> I agree with Nishanth here, that point 1 (as described by Viresh at
-> [*]) is a more scalable approach.
+This configuration could be used in MIPI DSI command mode also.
 
-The only reason why I wanted all that to be done at OPP level was to
-ensure if somebody else also needs it apart from cpufreq, they don't have
-to duplicate code and find it.. As it is present at a central place..
+Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+Acked-by: Inki Dae <inki.dae@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ drivers/gpu/drm/exynos/exynos_drm_dsi.c |    5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-But if no other code is going to look for that, it may just be fine as is..
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_dsi.c b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+index 84661fe..0a4e3ce 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_dsi.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_dsi.c
+@@ -473,8 +473,6 @@ static int exynos_dsi_init_link(struct exynos_dsi *dsi)
+ 
+ 		if (!(dsi->mode_flags & MIPI_DSI_MODE_VSYNC_FLUSH))
+ 			reg |= DSIM_MFLUSH_VS;
+-		if (!(dsi->mode_flags & MIPI_DSI_MODE_EOT_PACKET))
+-			reg |= DSIM_EOT_DISABLE;
+ 		if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
+ 			reg |= DSIM_SYNC_INFORM;
+ 		if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
+@@ -491,6 +489,9 @@ static int exynos_dsi_init_link(struct exynos_dsi *dsi)
+ 			reg |= DSIM_HSA_MODE;
+ 	}
+ 
++	if (!(dsi->mode_flags & MIPI_DSI_MODE_EOT_PACKET))
++		reg |= DSIM_EOT_DISABLE;
++
+ 	switch (dsi->format) {
+ 	case MIPI_DSI_FMT_RGB888:
+ 		reg |= DSIM_MAIN_PIX_FORMAT_RGB888;
+-- 
+1.7.9.5
