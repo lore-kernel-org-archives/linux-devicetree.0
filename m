@@ -1,68 +1,53 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/selftest: clean-up of_selftest_platform_populate
- pass/fail handling
-Date: Wed, 14 May 2014 12:10:01 +0100
-Message-ID: <20140514111001.4233CC4153D@trevor.secretlab.ca>
-References: <1399997908-30916-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399997908-30916-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH v6 05/11] drivers: of: add automated assignment of
+ reserved regions to client devices
+Date: Wed, 14 May 2014 12:16:47 +0100
+Message-ID: <20140514111647.BA6F6C4153D@trevor.secretlab.ca>
+References: <1393594976-16728-1-git-send-email-m.szyprowski@samsung.com>
+	<1393594976-16728-6-git-send-email-m.szyprowski@samsung.com>
+	<20140302054043.4F48AC414EF@trevor.secretlab.ca>
+	<1400058938.3395.13.camel@linaro1.home>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1400058938.3395.13.camel@linaro1.home>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Jon Medhurst (Tixy)" <tixy@linaro.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Laura Abbott <lauraa@codeaurora.org>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Michal Nazarewicz <mina86@mina86.com>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>, Catalin Marinas <catalin.marinas@arm.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Ian Campbell <ian.campbell@citrix.com>, Josh Cartwright <joshc@codeaurora.org>, Sascha
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 13 May 2014 11:18:28 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Wed, 14 May 2014 10:15:38 +0100, "Jon Medhurst (Tixy)" <tixy@linaro.org> wrote:
+> On Sun, 2014-03-02 at 13:40 +0800, Grant Likely wrote:
+> > On Fri, 28 Feb 2014 14:42:50 +0100, Marek Szyprowski <m.szyprowski@samsung.com> wrote:
+> > > This patch adds code for automated assignment of reserved memory regions
+> > > to struct device. reserved_mem->ops->device_init()/device_cleanup()
+> > > callbacks are called to perform reserved memory driver specific
+> > > initialization and cleanup
+> > > 
+> > > Based on previous code provided by Josh Cartwright <joshc@codeaurora.org>
+> > > 
+> > > Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+> > 
+> > Hi Marek,
+> > 
+> > I've not applied this one yet, only because there is still the open
+> > issue of whether or not these functions should be called from drivers or
+> > from core code. I don't actually have any problems with the content of
+> > this patch. Once the user is sorted out I'll merge it.
 > 
-> Move the pass/fail checks into selftest() calls instead of a separate if
-> condition. Unconditionally calling pass was wrong.
+> Has anything more come of these patches? I see some of the series is now
+> in Linux 3.15, but the actual patches to let people use the feature
+> aren't there yet, namely patches 5 though 8.
 > 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> My personal immediate interest in these is as a mechanism on arm64 to
+> limit CMA to a region of memory that is actually DMA-able devices (e.g.
+> below 4GB for 32-bit devices without an iommu).
+> 
+> For reference, the mail archives for this series is at
+> http://lkml.org/lkml/2014/2/28/237
 
-Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+IIRC, the issue I have with patch 5-8 is that I don't like the driver core
+going off and doing automagical things to attach regions to devices.
+I've not seen any more discussion on this topic since I merged the
+patches I was okay with, but I may have missed something.
 
-> ---
->  drivers/of/selftest.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-> index fe70b86..c1d7d38 100644
-> --- a/drivers/of/selftest.c
-> +++ b/drivers/of/selftest.c
-> @@ -440,22 +440,18 @@ static void __init of_selftest_platform_populate(void)
->  	/* Test that a missing irq domain returns -EPROBE_DEFER */
->  	np = of_find_node_by_path("/testcase-data/testcase-device1");
->  	pdev = of_find_device_by_node(np);
-> -	if (!pdev)
-> -		selftest(0, "device 1 creation failed\n");
-> +	selftest(pdev, "device 1 creation failed\n");
-> +
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq != -EPROBE_DEFER)
-> -		selftest(0, "device deferred probe failed - %d\n", irq);
-> +	selftest(irq == -EPROBE_DEFER, "device deferred probe failed - %d\n", irq);
->  
->  	/* Test that a parsing failure does not return -EPROBE_DEFER */
->  	np = of_find_node_by_path("/testcase-data/testcase-device2");
->  	pdev = of_find_device_by_node(np);
-> -	if (!pdev)
-> -		selftest(0, "device 2 creation failed\n");
-> +	selftest(pdev, "device 2 creation failed\n");
->  	irq = platform_get_irq(pdev, 0);
-> -	if (irq >= 0 || irq == -EPROBE_DEFER)
-> -		selftest(0, "device parsing error failed - %d\n", irq);
-> +	selftest(irq < 0 && irq != -EPROBE_DEFER, "device parsing error failed - %d\n", irq);
->  
-> -	selftest(1, "passed");
->  }
->  
->  static int __init of_selftest(void)
-> -- 
-> 1.9.1
-> 
+g.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
