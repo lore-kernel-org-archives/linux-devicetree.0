@@ -1,130 +1,42 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v2 05/10] ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
-Date: Wed, 14 May 2014 15:24:13 +0200
-Message-ID: <1400073858-28912-6-git-send-email-gabriel.fernandez@linaro.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v2 07/10] ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
+Date: Wed, 14 May 2014 15:24:15 +0200
+Message-ID: <1400073858-28912-8-git-send-email-gabriel.fernandez@linaro.org>
 References: <1400073858-28912-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400073858-28912-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400073858-28912-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds DT entries for clockgen A9/DDR/GPU
+CLK_S_ICN_REG_0 clock is no longer used.
 
-Signed-off-by: Pankaj Dev <pankaj.dev-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- arch/arm/boot/dts/stih416-clock.dtsi | 79 ++++++++++++++++++++++++++++++++----
- 1 file changed, 70 insertions(+), 9 deletions(-)
+ arch/arm/boot/dts/stih415-clock.dtsi | 10 ----------
+ 1 file changed, 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index cb45fea..9f93559 100644
---- a/arch/arm/boot/dts/stih416-clock.dtsi
-+++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -26,15 +26,6 @@
+diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
+index 9b8f4c0..8b7a795 100644
+--- a/arch/arm/boot/dts/stih415-clock.dtsi
++++ b/arch/arm/boot/dts/stih415-clock.dtsi
+@@ -32,16 +32,6 @@
+ 			clock-frequency = <500000000>;
  		};
  
- 		/*
--		 * ARM Peripheral clock for timers
+-		/*
+-		 * Bootloader initialized system infrastructure clock for
+-		 * serial devices.
 -		 */
--		arm_periph_clk: arm_periph_clk {
+-		CLKS_ICN_REG_0: CLKS_ICN_REG_0 {
 -			#clock-cells = <0>;
 -			compatible = "fixed-clock";
--			clock-frequency = <600000000>;
+-			clock-frequency = <100000000>;
 -		};
 -
--		/*
- 		 * ClockGenAs on SASG2
- 		 */
- 		clockgenA@fee62000 {
-@@ -505,6 +496,45 @@
- 		};
- 
- 		/*
-+		 * A9 PLL
-+		 */
-+		clockgenA9 {
-+			reg = <0xfdde08b0 0x70>;
-+
-+			CLOCKGEN_A9_PLL: CLOCKGEN_A9_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih416-plls-c32-a9", "st,clkgen-plls-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_A9_PLL_ODF";
-+			};
-+		};
-+
-+		/*
-+		 * ARM CPU related clocks
-+		 */
-+		CLK_M_A9: CLK_M_A9 {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgen-a9-mux", "st,clkgen-mux";
-+			reg = <0xfdde08ac 0x4>;
-+			clocks = <&CLOCKGEN_A9_PLL 0>,
-+				     <&CLOCKGEN_A9_PLL 0>,
-+					 <&CLK_M_A0_DIV1 2>,
-+					 <&CLK_M_A9_EXT2F_DIV2>;
-+		};
-+
-+		/*
-+		 * ARM Peripheral clock for timers
-+		 */
-+		arm_periph_clk: CLK_M_A9_PERIPHS {
-+			#clock-cells = <0>;
-+			compatible = "fixed-factor-clock";
-+			clocks = <&CLK_M_A9>;
-+			clock-div = <2>;
-+			clock-mult = <1>;
-+		};
-+
-+		/*
- 		 * Frequency synthesizers on the SASG2
- 		 */
- 		CLOCKGEN_B0: CLOCKGEN_B0 {
-@@ -692,5 +722,36 @@
- 					      "CLK_M_PIX_HDMIRX_0",
- 					      "CLK_M_PIX_HDMIRX_1";
- 		};
-+
-+		/*
-+		 * DDR PLL
-+		 */
-+		clockgenDDR {
-+			reg = <0xfdde07d8 0x110>;
-+
-+			CLOCKGEN_DDR_PLL: CLOCKGEN_DDR_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih416-plls-c32-ddr", "st,clkgen-plls-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_DDR0",
-+									 "CLOCKGEN_DDR1";
-+			};
-+		};
-+
-+		/*
-+		 * GPU PLL
-+		 */
-+		clockgenGPU {
-+			reg = <0xfd68ff00 0x910>;
-+
-+			CLOCKGEN_GPU_PLL: CLOCKGEN_GPU_PLL {
-+				#clock-cells = <1>;
-+				compatible = "st,stih416-gpu-pll-c32", "st,clkgengpu-pll-c32";
-+
-+				clocks = <&CLK_SYSIN>;
-+				clock-output-names = "CLOCKGEN_GPU_PLL";
-+			};
-+		};
- 	};
- };
+ 		CLKS_GMAC0_PHY: clockgenA1@7 {
+ 			#clock-cells = <0>;
+ 			compatible = "fixed-clock";
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
