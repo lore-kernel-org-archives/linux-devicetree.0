@@ -1,56 +1,116 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] drm/panel: add support for EDT panels
-Date: Thu, 15 May 2014 10:27:29 +0200
-Message-ID: <1400142449.4102.16.camel@paszta.hi.pengutronix.de>
-References: <cover.1400103181.git.stefan@agner.ch>
-	 <35c081171a3d9a9401767601c02a12e266b37dd0.1400103181.git.stefan@agner.ch>
-	 <20140515075102.GE5952@ulmo>
+From: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Subject: Re: [PATCH 2/8] clk: berlin: add clock binding docs for Marvell
+ Berlin2 SoCs
+Date: Thu, 15 May 2014 10:34:28 +0200
+Message-ID: <20140515083428.GR29318@piout.net>
+References: <1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1399839881-29895-3-git-send-email-sebastian.hesselbarth@gmail.com>
+ <20140514223230.19795.63328@quantum>
+ <5373F9A0.6000702@gmail.com>
+ <20140515044106.19795.57249@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140515075102.GE5952@ulmo>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: stefan-XLVq0VzYD2Y@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140515044106.19795.57249@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Antoine Tenart <antoine.tenart@free-electrons.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 15.05.2014, 09:51 +0200 schrieb Thierry Reding:
-> On Wed, May 14, 2014 at 11:45:57PM +0200, stefan-XLVq0VzYD2Y@public.gmane.org wrote:
-> > From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+On 14/05/2014 at 21:41:06 -0700, Mike Turquette wrote :
+> > > The following is a copy/paste from an email I sent earlier today[1]. Of
+> > > course per-clock data makes great sense if you have an off-SoC clock
+> > > such as a fixed-rate oscillator (e.g. the fixed-clock binding). Let me
+> > > know what you think:
+> > [...]
+> > > Using this type of binding you only need to declare your clock generator
+> > > IP node in dts, and then define a mapping in the DT include chroot. Then
+> > > you can define your per-clock data inside of your clock driver instead
+> > > of putting all of the details inside of DT.
+> > > 
+> > > If you have a strong reason to do it the way that you originally posted
+> > > then let me know.
 > > 
-> > This panels are sold by Toradex for Colibri T20/T30 and Apalis T30
-> > evaluation kits.
+> > Actually, the intermediate patch set sent before this one had a single
+> > DT clock node. The most important draw-back of a single clock node
+> > is that Berlin's global registers are more like a register dumpster.
+> > Vital other registers, e.g. reset, are intermixed with clock registers.
+> 
+> Yeah, this is pretty common. The compatible string should reflect the IP
+> block as a whole, not just the clocks part of it. Lots of vendors have
+> PRCMs or PRCMUs or CARs or whatever.
+> 
+> Check out the recent series to have the reset bits and regulator support
+> added to the qcom binding[1]. (I'm using qcom quite a bit in my examples
+> but they are not the first to add reset control to their clock driver. I
+> think Tegra did it first...)
+> 
 > > 
-> > Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+> > Given the lack of public datasheets (I look everything up in some
+> > auto-generated BSP includes), I like the current approach because it
+> > helps to get in at least some structure to the register mess ;)
+> > 
+> > Considering the postponed of_clk_create_name() helper, that would allow
+> > us to remove at least the names from DT again. Another option would be
+> > a syscon node for the registers, that clk, reset, pinctrl drivers can
+> > access. But IIRC early syscon support isn't settled, yet?
 > 
-> Panel patches should go to the dri-devel mailing list as well.
+> Yeah, I'm not sure of the state of syscon. And modeling this stuff in
+> the clock driver isn't the end of the world. There might be better
+> places than drivers/clk/* for sure... I sometimes joke that the name of
+> the IP block determines where the code lands. If it is Power, Reset &
+> Clock Manager (several platforms use this acronym) then it can end up in
+> drivers/clk or drivers/reset really easily. Same for Clock and Reset IP
+> blocks (Tegra).
 > 
-> Also a patch was posted only yesterday for a panel that seems to be the
-> exact same one as this, even though the name differs minimally, see:
+
+So, this is called "global". On BG2/BG2CD, you have pinmuxing, a
+register enabling nand power and switching the pll bypasses, all the pll
+configuration, complex clocks, reset, product ID, nand write protect,
+simple clocks, more resets, more clocks for which we don't have a driver
+yet and finally pad control.
+
+Now, on BG2Q, it is almost the same but between the cpupll registers and
+the global registers, there is the whole APB bus, so timers, gpio
+controllers, ...
+
+I would believe that is the strong reason you are asking for.
+
+It would also break the DT ABI (not that I care) almost each time we add
+a new clock that we didn't know about.
+
+Let me suggest something completely wild (to rephrase Thomas Petazzoni
+and Kevin Hilman at ELC):
+
+How about we have only a "marvell,berlin2", "marvell,berlin2cd" or
+"marvell,berlin2q" compatible string and handle that in either
+arch/arm/mach-berlin or driver/soc/mach-berlin and then use a bunch of
+structures to add all the peripherals like clocks, reset, timer, gpio
+controllers, pinmux, padconf...
+Maybe we could call those structures "platform_data" :)
+
+
+> > 
+> > So, my current idea is:
+> > - take this as is, stabilize berlin branches for v3.16
+> > - review of_clk_create_name() and of_clk_get_parent_name() to allow
+> >   to remove clock-output-names properties from Berlin (and other) dtsis
+> > - maybe switch to early syscon if it is available in v3.16
+> > 
+> > I know this would likely break DT ABI policy, but hey who else boots
+> > mainline Linux on his Chromecast currently except me :P
 > 
-> 	https://patchwork.kernel.org/patch/4175251/
+> I'm not a big fan of DT stable ABI, but if you plan on changing it for
+> 3.17 why not just do it the right way the first time? And switching to
+> syscon is not a hard requirement. I'm OK with you putting the reset and
+> regulator stuff in the clock driver if that makes the most sense for
+> your platform (especially if registers are shared and the same locks
+> need to be used, etc).
 > 
-> Adding Philipp on Cc so you guys can work together whether this is
-> indeed the same panel. The only differences seem to be in the vertical
-> front and back porches, but I suspect that either settings will work on
-> both Tegra and i.MX.
 
-The ETM0700G0DH6 Datasheet lists 2 lines as the typical vsync pulse
-width, 525 lines as the vertical period, and 35 lines as the vsync -de
-time, which is vsync len + back porch.
-So vertical timings 480 + 10 + 2 + 33 = 525 should be valid for the
-ET0700G0DH6 panel:
 
-https://www.glynshop.com/erp/owweb/Daten/DSS/EDT/Products/Specifications/Active%20Displays/ET0700G0DH6.pdf
-et070080dh6
-
-I have not seen the data sheet for ET070080DH6.
-
-regards
-Philipp
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Alexandre Belloni, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
