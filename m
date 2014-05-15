@@ -1,136 +1,84 @@
-From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM: dts: kirkwood: resynch 98dx4122 dtsi
-Date: Thu, 15 May 2014 13:11:40 +0200
-Message-ID: <5374A0EC.8050706@keymile.com>
-References: <1400147335-20947-1-git-send-email-valentin.longchamp@keymile.com> <1400147335-20947-2-git-send-email-valentin.longchamp@keymile.com> <53749865.809@gmail.com>
+From: Bart Tanghe <bart.tanghe@thomasmore.be>
+Subject: Re: [rfc]pwm: add xilinx pwm driver
+Date: Thu, 15 May 2014 13:30:34 +0200
+Message-ID: <5374A55A.4080906@thomasmore.be>
+References: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be> <4262573.aEBTd7FzV5@wuerfel> <53747FB8.2090706@thomasmore.be> <33a1dbfc-bacb-4804-a83a-9915eca3183b@BY2FFO11FD032.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53749865.809-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <33a1dbfc-bacb-4804-a83a-9915eca3183b@BY2FFO11FD032.protection.gbl>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/15/2014 12:35 PM, Sebastian Hesselbarth wrote:
-> On 05/15/2014 11:48 AM, Valentin Longchamp wrote:
->> The 98DX4122 dtsi file lacks the defintion of the PCIe controller which
->> is present on this SoC.
-> 
-> Valentin,
-> 
-> good to have you back on 98dx4122. I was already thinking about
-> reworking the current kirkwood.dtsi and kirkwood-<soc>.dtsi as I
-> feel there may be more issues with "common" IP that was removed
-> in 98dx4122.
-> 
->> The SATA phys must also be explicitely disabled since they are not
->> present on this SoC. If they remain enabled, a hardlock occures when
->> their clock gates are enabled.
-> 
-> While I am ok with disabling now, we should really rethink the
-> current SoC-specific includes as we are already facing some issues
-> that cause headaches.
-> 
-> Actually, the initial idea was to remove all nodes from kirkwood.dtsi
-> that are not available in one of the SoCs and rather put them into
-> the SoC-specific include.
-> 
-> But over time we end up with a mix of both, SoC-specific nodes like
-> pcie below _and_ SoC-specific fixes like sata-phy below.
-> 
-> To be consitent, we should either duplicate the sata-phy nodes in
-> kirkwood-6foo.dtsi - or what I prefer - move most of it back to
-> kirkwood.dtsi and use "disabled" in the SoC-specific ones.
 
-For the sake of the disscussion, we also have some powerPC boards here at
-Keymile and there the approach is exactly the one you prefer above. First I was
-a bit confused but now I think this approach is "cleaner" (or makes more sense
-to me ;-)).
 
-> 
-> Although, it would be nice to have a common include and SoC-specific
-> include on top, I have the strong feeling we may never be able to
-> cleanly separate them.
-> 
-> For the patch itself, you get a tentative
-> 
-> Acked-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> to make KM boot again.
-
-Thanks.
-
-> 
-> Sebastian
-> 
->> Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
->> ---
+On 05/15/2014 12:33 PM, Michal Simek wrote:
+> On 05/15/2014 10:50 AM, Bart Tanghe wrote:
+>> On 05/15/2014 09:23 AM, Arnd Bergmann wrote:
+>>> On Wednesday 14 May 2014 13:26:13 Bart Tanghe wrote:
+>>>> @@ -0,0 +1,20 @@
+>>>> +Xilinx PWM controller
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible: should be "xlnx,pwm-xlnx"
+>>>> +- add a clock source to the description
+>>>> +
+>>>> +Examples:
+>>>> +
+>>>> +               axi_timer_0: timer@42800000 {
+>>>> +                       clock-frequency = <100000000>;
+>>>> +                       clocks = <&clkc 15>;
+>>>> +                       compatible = "xlnx,xlnx-pwm";
+>>>> +                       reg = <0x42800000 0x10000>;
+>>>> +                       xlnx,count-width = <0x20>;
+>>>> +                       xlnx,gen0-assert = <0x1>;
+>>>> +                       xlnx,gen1-assert = <0x1>;
+>>>> +                       xlnx,one-timer-only = <0x0>;
+>>>> +                       xlnx,trig0-assert = <0x1>;
+>>>> +                       xlnx,trig1-assert = <0x1>;
+>>>> +               } ;
+>>>>
+>>>
+>>> It seems you are missing a mandatory "#pwm-cells" property.
+>>> How is anybody supposed to use this?
+>>>
+>>>      Arnd
+>>>
 >>
->>   arch/arm/boot/dts/kirkwood-98dx4122.dtsi | 43 ++++++++++++++++++++++++++++++++
->>   1 file changed, 43 insertions(+)
+>> I've added some additional information in the documentation
 >>
->> diff --git a/arch/arm/boot/dts/kirkwood-98dx4122.dtsi b/arch/arm/boot/dts/kirkwood-98dx4122.dtsi
->> index 2e8e412..9e1f741 100644
->> --- a/arch/arm/boot/dts/kirkwood-98dx4122.dtsi
->> +++ b/arch/arm/boot/dts/kirkwood-98dx4122.dtsi
->> @@ -1,4 +1,39 @@
->>   / {
->> +	mbus {
->> +		pciec: pcie-controller {
->> +			compatible = "marvell,kirkwood-pcie";
->> +			status = "disabled";
->> +			device_type = "pci";
->> +
->> +			#address-cells = <3>;
->> +			#size-cells = <2>;
->> +
->> +			bus-range = <0x00 0xff>;
->> +
->> +			ranges =
->> +			       <0x82000000 0 0x40000 MBUS_ID(0xf0, 0x01) 0x40000 0 0x00002000
->> +				0x82000000 0x1 0     MBUS_ID(0x04, 0xe8) 0       1 0 /* Port 0.0 MEM */
->> +				0x81000000 0x1 0     MBUS_ID(0x04, 0xe0) 0       1 0 /* Port 0.0 IO  */>;
->> +
->> +			pcie0: pcie@1,0 {
->> +				device_type = "pci";
->> +				assigned-addresses = <0x82000800 0 0x00040000 0 0x2000>;
->> +				reg = <0x0800 0 0 0 0>;
->> +				#address-cells = <3>;
->> +				#size-cells = <2>;
->> +				#interrupt-cells = <1>;
->> +				ranges = <0x82000000 0 0 0x82000000 0x1 0 1 0
->> +					  0x81000000 0 0 0x81000000 0x1 0 1 0>;
->> +				interrupt-map-mask = <0 0 0 0>;
->> +				interrupt-map = <0 0 0 0 &intc 9>;
->> +				marvell,pcie-port = <0>;
->> +				marvell,pcie-lane = <0>;
->> +				clocks = <&gate_clk 2>;
->> +				status = "disabled";
->> +			};
->> +		};
->> +	};
->> +
->>   	ocp@f1000000 {
->>   		pinctrl: pin-controller@10000 {
->>   			compatible = "marvell,98dx4122-pinctrl";
->> @@ -6,3 +41,11 @@
->>   		};
->>   	};
->>   };
->> +
->> +&sata_phy0 {
->> +	status = "disabled";
->> +};
->> +
->> +&sata_phy1 {
->> +	status = "disabled";
->> +};
 >>
-> 
+>>
+>> Xilinx PWM controller
+>>
+>> This driver works together with the Xilinx Axi timer hardware core.
+>> The core is available for the microblaze, powerpc and arm based Xilinx
+>> platforms.
+>>
+>> The axi timer core is implemented in the pl (programmable logic) of the
+>> fpga. The amount is user defined. Each core has two timers and one pwm output.
+>
+> For PWM you have to have 2 timers but core itself can be configured
+> to any configuration and I expect that any output has to be used.
+>
+> Can you describe me your testing enviroment with zedboard?
+> Do you use any additional hw or are using just leds or any device
+> on zedboard?
+>
+> Thanks,
+> Michal
+>
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm using the 2 internal timers of the axi_timer core. I've attached the 
+pwm output of the timer core to one of the leds. The generate out0 and 
+generate out1 signals aren't attached.
+I've added 4 axi timers to the design, so I can use the 4 leds of 
+zedboard to visualize and measure the pwm signal.
+
+Regards,
+
+Bart
