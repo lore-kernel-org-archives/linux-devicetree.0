@@ -1,36 +1,73 @@
-From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
-Subject: Re: [PATCH v5 0/5] mfd: add basic sun6i A31 PRCM support
-Date: Thu, 15 May 2014 12:33:11 -0300
-Message-ID: <5374DE37.3030700@elopez.com.ar>
-References: <1400144113-27659-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI
+ I/O memory type
+Date: Thu, 15 May 2014 16:34:30 +0100
+Message-ID: <20140515153430.GM27594@arm.com>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20140515155130.193c3181@free-electrons.com>
+ <20140515142924.GI27594@arm.com>
+ <4972763.mtuLYh6sDH@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400144113-27659-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dev@linux-sunxi.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4972763.mtuLYh6sDH@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+Hi Arnd,
 
-El 15/05/14 05:55, Boris BREZILLON escribi=F3:
-> Hello,
->
-> This patch series adds support for some functions provided by the PRC=
-M
-> (Power/Reset/Clock Management) unit:
-> - AR100, AHB0 and APB0 clocks
-> - APB0 reset controller
-(snip)
->    clk: sunxi: add PRCM (Power/Reset/Clock Management) clks support
->    clk: sunxi: document PRCM clock compatible strings
+On Thu, May 15, 2014 at 03:32:43PM +0100, Arnd Bergmann wrote:
+> On Thursday 15 May 2014 15:29:24 Will Deacon wrote:
+> >  Thu, May 15, 2014 at 02:51:30PM +0100, Thomas Petazzoni wrote:
+> > > On Thu, 15 May 2014 15:21:25 +0200, Arnd Bergmann wrote:
+> > > > As discussed on IRC, I think we'd be better off making this a strong-ordered
+> > > > mapping for all platforms unconditionally. The PCI I/O space semantics
+> > > > require non-posted writes, which is the main difference between device
+> > > > and SO mappings, so the same fix is required both for mvebu as a workaround
+> > > > for the deadlock as well as for everyone else as a fix for an incorrect
+> > > > PCI behavior.
+> > > 
+> > > Ok, I'll take that into account when posting a v4.
+> > 
+> > Actually, I don't think this reasoning is correct. The memory type here
+> > applies to accesses mastered by the CPU onto AXI -- it is the job of the
+> > AXI/PCI bridge (i.e. the host controller) to ensure that writes are not
+> > posted, so this is irrelevant.
+> > 
+> > Of course, the erratum in question requires SO memory, but that's an
+> > entirely different problem. The default should remain as device memory.
+> 
+> How can a write be non-posted on the PCI bus if it's posted on AXI?
 
-I have taken these two on sunxi-clk-for-mike, and I'll be sending the=20
-pull to Mike soon.
+>From the point-of-view of the CPU it would be posted, but the PCI bus would
+see an unposted write (so I imagine there would be write buffering at the
+host controller). However, I worry that I'm missing your point :)
 
-Cheers,
+> The way I understand it, the CPU would continue with the next instruction
+> as soon as the write has made it out to the AXI fabric, i.e. before
+> the PIO instruction is complete.
 
-Emilio
+The CPU can continue regardless -- you'd need a DSB if you want to hold up
+the instruction stream based on completion of a memory access. With the
+posted write (device type), the write may complete as soon as it reaches an
+ordered bus.
+
+Note that nGnRnE accesses in AArch64 (the equivalent to strongly-ordered)
+*can* still get an early write response -- that is simply a hint to the
+memory subsystem.
+
+> If this is used to synchronize with a DMA, there is no guarantee that the
+> transaction from PCI will be visible in memory by then.
+
+Can you elaborate on this scenario please? When would we use an I/O space
+write to synchronise with a DMA transfer from a PCI endpoint? You're
+definitely referring to I/O space as opposed to Configuration Space, right?
+
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
