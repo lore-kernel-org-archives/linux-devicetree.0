@@ -1,35 +1,70 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v3 RESEND 3/5] ARM: configs: enable SMP in bcm_defconfig
-Date: Thu, 15 May 2014 12:58:09 -0500
-Message-ID: <1400176691-26058-4-git-send-email-elder@linaro.org>
+Subject: [PATCH v3 RESEND 1/5] devicetree: bindings: document Broadcom CPU
+ enable method
+Date: Thu, 15 May 2014 12:58:07 -0500
+Message-ID: <1400176691-26058-2-git-send-email-elder@linaro.org>
 References: <1400176691-26058-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1400176691-26058-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mporter@linaro.org, bcm@fixthebug.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Also explicitly set CONFIG_NR_CPUS to 2, limiting it to the most we
-currently need.
+Broadcom mobile SoCs use a ROM-implemented holding pen for
+controlled boot of secondary cores.  A special register is
+used to communicate to the ROM that a secondary core should
+start executing kernel code.  This enable method is currently
+used for members of the bcm281xx and bcm21664 SoC families.
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
+The use of an enable method also allows the SMP operation vector to
+be assigned as a result of device tree content for these SoCs.
+
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- arch/arm/configs/bcm_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/configs/bcm_defconfig b/arch/arm/configs/bcm_defconfig
-index 3df3f3a..626f077 100644
---- a/arch/arm/configs/bcm_defconfig
-+++ b/arch/arm/configs/bcm_defconfig
-@@ -24,6 +24,7 @@ CONFIG_MODULES=y
- CONFIG_MODULE_UNLOAD=y
- # CONFIG_BLK_DEV_BSG is not set
- CONFIG_PARTITION_ADVANCED=y
-+CONFIG_SMP=y
- CONFIG_ARCH_BCM=y
- CONFIG_ARCH_BCM_MOBILE=y
- CONFIG_ARM_THUMBEE=y
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 333f4ae..c6a2411 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -185,6 +185,7 @@ nodes to be present and contain the properties described below.
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
++			    "brcm,bcm11351-cpu-method"
+ 
+ 	- cpu-release-addr
+ 		Usage: required for systems that have an "enable-method"
+@@ -209,6 +210,17 @@ nodes to be present and contain the properties described below.
+ 		Value type: <phandle>
+ 		Definition: Specifies the ACC[2] node associated with this CPU.
+ 
++	- secondary-boot-reg
++		Usage:
++			Required for systems that have an "enable-method"
++			property value of "brcm,bcm11351-cpu-method".
++		Value type: <u32>
++		Definition:
++			Specifies the physical address of the register used to
++			request the ROM holding pen code release a secondary
++			CPU.  The value written to the register is formed by
++			encoding the target CPU id into the low bits of the
++			physical start address it should jump to.
+ 
+ Example 1 (dual-cluster big.LITTLE system 32-bit):
+ 
 -- 
 1.9.1
