@@ -1,85 +1,125 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 03/17] phy: ti-pipe3: add external clock support for PCIe PHY
-Date: Thu, 15 May 2014 06:46:19 -0500
-Message-ID: <CAGo_u6qbbdAbdvrB3AFXSH1qD5MaBkJbi6oJJvvTWW4xfbmd_Q@mail.gmail.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com>
-	<1399383244-14556-4-git-send-email-kishon@ti.com>
-	<53736CBC.2060702@ti.com>
-	<5373897C.6080504@ti.com>
-	<CAGo_u6qw1OomEw_ueb3x+xT+qZLAfGv7Se1K=o725aOoD3ankQ@mail.gmail.com>
-	<5374859F.5080902@ti.com>
-	<53748819.8060705@ti.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [rfc]pwm: add xilinx pwm driver
+Date: Thu, 15 May 2014 13:54:52 +0200
+Message-ID: <5374AB0C.7020105@monstr.eu>
+References: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be> <4262573.aEBTd7FzV5@wuerfel> <53747FB8.2090706@thomasmore.be> <33a1dbfc-bacb-4804-a83a-9915eca3183b@BY2FFO11FD032.protection.gbl> <5374A55A.4080906@thomasmore.be>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="28E88AGEvL81Xrxa9uxRQ5ugIqRhvlnq4"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53748819.8060705@ti.com>
+In-Reply-To: <5374A55A.4080906@thomasmore.be>
 Sender: linux-doc-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, dt list <devicetree@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-pci@vger.kernel.org, Rajendra Nayak <rnayak@ti.com>, lkml <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Bart Tanghe <bart.tanghe@thomasmore.be>, Michal Simek <michal.simek@xilinx.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: thierry.reding@gmail.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 4:25 AM, Roger Quadros <rogerq@ti.com> wrote:
-> On 05/15/2014 12:15 PM, Kishon Vijay Abraham I wrote:
->> Hi Nishanth,
->>
->> On Wednesday 14 May 2014 09:04 PM, Nishanth Menon wrote:
->>> On Wed, May 14, 2014 at 10:19 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
->>>> Hi Roger,
->>>>
->>>> On Wednesday 14 May 2014 06:46 PM, Roger Quadros wrote:
->>>>> Hi Kishon,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--28E88AGEvL81Xrxa9uxRQ5ugIqRhvlnq4
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 05/15/2014 01:30 PM, Bart Tanghe wrote:
+>=20
+>=20
+> On 05/15/2014 12:33 PM, Michal Simek wrote:
+>> On 05/15/2014 10:50 AM, Bart Tanghe wrote:
+>>> On 05/15/2014 09:23 AM, Arnd Bergmann wrote:
+>>>> On Wednesday 14 May 2014 13:26:13 Bart Tanghe wrote:
+>>>>> @@ -0,0 +1,20 @@
+>>>>> +Xilinx PWM controller
+>>>>> +
+>>>>> +Required properties:
+>>>>> +- compatible: should be "xlnx,pwm-xlnx"
+>>>>> +- add a clock source to the description
+>>>>> +
+>>>>> +Examples:
+>>>>> +
+>>>>> +               axi_timer_0: timer@42800000 {
+>>>>> +                       clock-frequency =3D <100000000>;
+>>>>> +                       clocks =3D <&clkc 15>;
+>>>>> +                       compatible =3D "xlnx,xlnx-pwm";
+>>>>> +                       reg =3D <0x42800000 0x10000>;
+>>>>> +                       xlnx,count-width =3D <0x20>;
+>>>>> +                       xlnx,gen0-assert =3D <0x1>;
+>>>>> +                       xlnx,gen1-assert =3D <0x1>;
+>>>>> +                       xlnx,one-timer-only =3D <0x0>;
+>>>>> +                       xlnx,trig0-assert =3D <0x1>;
+>>>>> +                       xlnx,trig1-assert =3D <0x1>;
+>>>>> +               } ;
 >>>>>
->>>>> On 05/06/2014 04:33 PM, Kishon Vijay Abraham I wrote:
->>>>>> APLL used by PCIE phy can either use external clock as input or the clock
->>>>>> from DPLL. Added support for the APLL to use external clock as input here.
->>>>>>
->>>>>> Cc: Rajendra Nayak <rnayak@ti.com>
->>>>>> Cc: Tero Kristo <t-kristo@ti.com>
->>>>>> Cc: Paul Walmsley <paul@pwsan.com>
->>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>>>> ---
->>>>>>  Documentation/devicetree/bindings/phy/ti-phy.txt |    4 ++
->>>>>>  drivers/phy/phy-ti-pipe3.c                       |   75 ++++++++++++++--------
->>>>>>  2 files changed, 52 insertions(+), 27 deletions(-)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>>>> index bc9afb5..d50f8ee 100644
->>>>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>>>> @@ -76,6 +76,10 @@ Required properties:
->>>>>>     * "dpll_ref_m2" - external dpll ref clk
->>>>>>     * "phy-div" - divider for apll
->>>>>>     * "div-clk" - apll clock
->>>>>> +   * "apll_mux" - mux for pcie apll
->>>>>> +   * "refclk_ext" - external reference clock for pcie apll
->>>>>> + - ti,ext-clk: To specifiy if PCIE apll should use external clock. Applicable
->>>>>> +   only to PCIE PHY.
->>>>>
->>>>> Instead of specifying both clock sources "dpll_ref_clock", "refclk_ext" and then specifying a 3rd control option "ti,ext-clk" to select one of the 2 sources, why can't the DT just supply one clock source, i.e. the one that is being used in the board instance? The driver should then just configure the clock rate that is needed at that node. Shouldn't the clock framework automatically take care of muxing and parent rates?
 >>>>
->>>> Want the dt to have all the clocks used by the controller. "ti,ext-clk" should
->>>> go in the board dt file (suggested by Nishanth).
->>>> The point is at some point later if some one wants to change the clock source,
->>>> it should be a simple enabling "ti,ext-clk" flag instead of finding the clock
->>>> phandle etc..
+>>>> It seems you are missing a mandatory "#pwm-cells" property.
+>>>> How is anybody supposed to use this?
+>>>>
+>>>>      Arnd
+>>>>
 >>>
->>> Wonder if that is implicit by the presence of  "refclk_ext" in the
->>> clocks provided?
+>>> I've added some additional information in the documentation
+>>>
+>>>
+>>>
+>>> Xilinx PWM controller
+>>>
+>>> This driver works together with the Xilinx Axi timer hardware core.
+>>> The core is available for the microblaze, powerpc and arm based Xilin=
+x
+>>> platforms.
+>>>
+>>> The axi timer core is implemented in the pl (programmable logic) of t=
+he
+>>> fpga. The amount is user defined. Each core has two timers and one pw=
+m output.
 >>
->> IMO the presence of "refclk_ext" is useless unless the board indicates it
->> provides the clock source.
+>> For PWM you have to have 2 timers but core itself can be configured
+>> to any configuration and I expect that any output has to be used.
 >>
->> refclk_ext holds phandle for *fixed-clock*, so irrespective of whether the
->> board provides a clock or not, it can have that handle for configuring in PRCM.
->> However if the board does not provide the clock source, configuring refclk_ext
->> in PRCM is useless.
->
-> I think what Nishant meant is that if "refclk_ext" is provided it means that the driver
-> should use that over "dpll_ref_clock" so no need of a separate "ti,ext-clk" flag.
+>> Can you describe me your testing enviroment with zedboard?
+>> Do you use any additional hw or are using just leds or any device
+>> on zedboard?
+>>
+>> Thanks,
+>> Michal
+>>
+>>
+>=20
+> I'm using the 2 internal timers of the axi_timer core. I've attached th=
+e pwm output of the timer core to one of the leds. The generate out0 and =
+generate out1 signals aren't attached.
+> I've added 4 axi timers to the design, so I can use the 4 leds of zedbo=
+ard to visualize and measure the pwm signal.
 
-yes, thank you for clarifying - it does indeed redundant to have
-"ti,ext-clk". and apologies on being a little obscure in the comment.
+ok, that's configuration what I expected.
+Can you add or just send me this hw design? I can create it myself but
+no reason to spend time on it when you have it.
 
-Regards,
-Nishanth Menon
+Thanks,
+Michal
+
+
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--28E88AGEvL81Xrxa9uxRQ5ugIqRhvlnq4
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlN0qwwACgkQykllyylKDCHt9wCfY1nNgmkcVc7uCzNaLFkrDcQL
+MHoAn0XBVl6mzHc0395P4iOwdLAeQOgy
+=Uxry
+-----END PGP SIGNATURE-----
+
+--28E88AGEvL81Xrxa9uxRQ5ugIqRhvlnq4--
