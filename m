@@ -1,34 +1,56 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 7/7] ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
-Date: Thu, 15 May 2014 11:55:55 -0700
-Message-ID: <CAD=FV=Vj5M_yiYZOkjzB-QjYJa9WE2fcGcwwzAF1h8gcjc9jeA@mail.gmail.com>
-References: <1397757570-19750-1-git-send-email-dianders@chromium.org>
-	<1397757570-19750-8-git-send-email-dianders@chromium.org>
-	<53750A9A.8000808@wwwdotorg.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] amba: Put the device's of_node on its release
+Date: Thu, 15 May 2014 13:57:04 -0500
+Message-ID: <CAL_JsqJotigd1vtj+iOecVMkF79xUxT2i8YxcUgta35RRqDMrw@mail.gmail.com>
+References: <1400173652-30583-1-git-send-email-pawel.moll@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53750A9A.8000808-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400173652-30583-1-git-send-email-pawel.moll@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Moll <pawel.moll@arm.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Stephen,
-
-On Thu, May 15, 2014 at 11:42 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 04/17/2014 11:59 AM, Doug Anderson wrote:
->> This adds the EC i2c tunnel (and devices under it) to the
->> tegra124-venice2 device tree.
+On Thu, May 15, 2014 at 12:07 PM, Pawel Moll <pawel.moll@arm.com> wrote:
+> An amba device created from Device Tree, when released, does not
+> decrease of_node's reference counter.
 >
-> Did the MFD patches at the start of this series get applied yet? I was
-> hoping to apply this one patch to the Tegra tree for 3.16, and that
-> needs to happen by tomorrow morning at the latest since -rc6 is looming
-> fast. However, I'm holding off until the rest of the series is applied
-> to the MFD tree so I can be sure the DT binding is accepted first...
+> Fixed by adding a call to of_device_node_put() on the release
+> path, in a similar way to what platform_device_release() is doing.
+>
+> Signed-off-by: Pawel Moll <pawel.moll@arm.com>
 
-As far as I know, they didn't.  Lee was waiting on Wolfram's ack to
-the i2c tunnel before landing them.  ...and I'm still eagerly awaiting
-Wolfram's next i2c tunnel review.
+Acked-by: Rob Herring <robh@kernel.org>
 
--Doug
+Does this go with the rest of your series? Who needs to pick this up?
+
+Rob
+
+> ---
+>  drivers/amba/bus.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/amba/bus.c b/drivers/amba/bus.c
+> index 3cf61a1..0f489fb 100644
+> --- a/drivers/amba/bus.c
+> +++ b/drivers/amba/bus.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/amba/bus.h>
+>  #include <linux/sizes.h>
+> +#include <linux/of_device.h>
+>
+>  #include <asm/irq.h>
+>
+> @@ -268,6 +269,7 @@ static void amba_device_release(struct device *dev)
+>  {
+>         struct amba_device *d = to_amba_device(dev);
+>
+> +       of_device_node_put(dev);
+>         if (d->res.parent)
+>                 release_resource(&d->res);
+>         kfree(d);
+> --
+> 1.9.1
+>
