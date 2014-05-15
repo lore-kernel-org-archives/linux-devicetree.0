@@ -1,82 +1,90 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Thu, 15 May 2014 11:41:57 +0300
-Message-ID: <53747DD5.2030406@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-4-git-send-email-tony@atomide.com> <5369EAE7.3030705@ti.com> <20140507150343.GA9502@atomide.com> <536A5920.1020908@ti.com> <20140507175919.GH9502@atomide.com> <20140508233300.GI2198@atomide.com> <536C924E.5000307@ti.com> <20140509153008.GC17814@atomide.com> <20140513212639.GA18001@atomide.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 2/6] dt-bindings: add mtk-timer bindings
+Date: Thu, 15 May 2014 09:44:55 +0100
+Message-ID: <CABuKBeL7yeXbxmBE=+ar3dsHRNs1oscYDSPPs+RnGsM8eJs5PQ@mail.gmail.com>
+References: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
+ <1400087579-4250-3-git-send-email-matthias.bgg@gmail.com>
+ <cebe44ba-c543-4f4a-9aeb-810156fe8250@BN1AFFO11FD036.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="SsUm9rS4DJ36L9sMqlrDuekCF3WUNRM6P"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140513212639.GA18001@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cebe44ba-c543-4f4a-9aeb-810156fe8250@BN1AFFO11FD036.protection.gbl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@inf>
 List-Id: devicetree@vger.kernel.org
 
---SsUm9rS4DJ36L9sMqlrDuekCF3WUNRM6P
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-On 14/05/14 00:26, Tony Lindgren wrote:
-
-> +	/* lcd MO */
-> +	ddata->mo_gpio =3D sharp_ls_get_gpio_of(&pdev->dev, 0, 1, "mode");
-> +	if (PTR_ERR(ddata->mo_gpio) =3D=3D -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
-> +
-> +	if (!IS_ERR(ddata->mo_gpio))
-> +		if (gpiod_get_raw_value_cansleep(ddata->mo_gpio))
-> +			ddata->flags |=3D SHARP_LS_QVGA;
-
-Shouldn't there be an explicit flag in the DT data for this? If the
-panel's MO pin is hardwired to, say, pull up, then the mode-gpios won't
-have MO gpio, right? So something like:
-
-
-mode-gpios =3D <0					/* high, lcd MO */
-	      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
-	      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
-
-vga-mode;	/* MO hardwired high */
-
-
-
-Btw, the gpio.txt has each gpio inside <>:
-
-chipsel-gpios =3D <&gpio1 12 0>,
-		 <&gpio1 13 0>,
-		 <0>, /* holes are permitted, means no GPIO 2 */
-		 <&gpio2 2>;
-
-Is that equivalent to having all gpios inside <>?
-
- Tomi
-
-
-
---SsUm9rS4DJ36L9sMqlrDuekCF3WUNRM6P
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTdH3cAAoJEPo9qoy8lh711CoP/1tEqKBs9xgEFxLAR6pcLyQ/
-0flFxJYLzxsnbncbxkjNEWdrXveVRDdENbx/cOOY615uwewE1z0ulH50ba8/PyMp
-hZuKB5LkymnMwWFy+yJW8vib73ohDHMki2eE5qbvbGJGqkaSLr6m4fuclhriQG6O
-23/3+fgghwmyohhZiWG2Pk3ZGBD2qmYrgjBmEY/UkfJcSphargCSio926L9oESdU
-X4fXTGNj/cmhTdU3yyfV4lkv3zs6+4yaq4uzfOcIYN+fgH+J7awSP9yDG1I/MlRC
-InFxQvAs9Qv3VytB69mTg6mcrQlAOe4EpQJrpFz32J2Ik/kdCAXrywdWZGsImbZi
-EfLt3C5QNQ4GEK6gXXyAu/OgJBGHEdHBsqEocznoufLEB80zOSeydTfkbK7gAa1i
-vyU6Res4iej9Jbm6E80bli4PMU+jIBs7OCIRrtD5AzYFAgEy9lxZre0b/MY045jT
-uBL+T1I8LCGcjlwIKUDwuFjLASjiKSga4s/DxtaScQKqmdOTdtQIyCxW8AWDclq+
-VvJpZt1WPltr88FrEHJ+/HrbFzJBmyG2V0D6IA/xkaDUniWwpcEAoT9jDHK0LmkC
-TFI870Go75yexUjaZZYGLhEwvug8M//88Z2fsP6EfOb+Up25b28zn9Bhymvy3s1A
-MiG/o0w5k8iOkuTRSAXw
-=BWjN
------END PGP SIGNATURE-----
-
---SsUm9rS4DJ36L9sMqlrDuekCF3WUNRM6P--
+SGkgYWxsLAoKSSBkaWQgbm90IHJlYWxpemUgdGhhdCBBbmRyb2lkIGdtYWlsIGFwcCBzZW5kcyBI
+VE1MIG1haWxzLgpTbyBJIHNlbmQgdGhlIGNvbW1lbnRzIGJlbG93IGFjY2lkZW50YWxseSBhcyBI
+VE1MIG1haWwgeWVzdGVyZGF5LgpTb3JyeSBmb3IgdGhhdC4KCjIwMTQtMDUtMTQgMTg6NDQgR01U
+KzAxOjAwIFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tPjoKPiBI
+aSBNYXR0aGlhcywKPgo+IE9uIFdlZCwgMjAxNC0wNS0xNCBhdCAwNzoxMlBNICswMjAwLCBNYXR0
+aGlhcyBCcnVnZ2VyIHdyb3RlOgo+PiBBZGQgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUg
+R2VuZXJhbCBQb3Jwb3NlIFRpbWVyIGRyaXZlciBvZgo+PiB0aGUgTWVkaWF0ZWsgU29Dcy4KPj4K
+Pj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNv
+bT4KPj4gLS0tCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGst
+dGltZXIudHh0ICAgfCAxOCArKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAx
+OCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQKPj4KPj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxt
+dGstdGltZXIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL21l
+ZGlhdGVrLG10ay10aW1lci50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAw
+MDAwMC4uOTM4YWRmNgo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4+IEBAIC0wLDAg
+KzEsMTggQEAKPj4gK01lZGlhdGVrIE1UNjU4OSwgTVQ2NTc3IGFuZCBNVDY1NzIgVGltZXJzCj4+
+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gKwo+PiArUmVxdWly
+ZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJtZWRpYXRlayxtdGs2
+NTg5LXRpbWVyIgo+Cj4gRG9uJ3QgeW91IHdhbnQgY29tcGF0aWJsZSBzdHJpbmdzIGZvciB0aGUg
+b3RoZXIgc3VwcG9ydGVkIFNPQ3MgdG9vPwoKSSdtIG5vdCBzdXJlIGlmIGl0IG1ha2VzIHNlbnNl
+IHRvIGRlZmluZSB0aGUgY29tcGF0aWJsZSBzdHJpbmdzIGZvcgphbGwgdGhlIFNvQ3MgdGhhdCBo
+YXZlIHRoaXMgdGltZXIgYXMgaXQncyBhY3R1YWxseSB0b3RhbGx5IHRoZSBzYW1lCklQLgoKSW4g
+b3RoZXIgY2FzZXMgZS5nLiB0aGUgYXJtIGdpYywgbm90IGFsbCBjb21wYXRpYmxlIHN0cmluZ3Mg
+YXJlCmRlZmluZWQsIHRoYXQncyB3aHkgSSB1c2UgY29ydGV4LWExNS1naWMgaW4gdGhlIGR0c2kg
+YWx0aG91Z2ggSSdtCnVzaW5nIGEgY29ydGV4IEE3IFNvQy4KCkkgd291bGQgaW5zdGVhZCBzYXks
+IHRoYXQgdGhlIFNvQyB2ZXJzaW9uIG9mIHRoZSBjb21wYXRpYmxlIHN0cmluZywKbXQ2NTg5LCBp
+cyBzb21ldGhpbmcgYXJiaXRyYXJ5LiBTbyBJIHByb3Bvc2UgdG8gdXNlIHRoZSBmaXJzdCBrbm93
+bgpTb0Mgd2hpY2ggdXNlcyB0aGUgdGltZXIuIFRoYXQgd291bGQgYmUgQUZBSUsgbXQ2NTc3LgoK
+Pgo+PiArLSByZWc6IFNob3VsZCBjb250YWluIGxvY2F0aW9uIGFuZCBsZW5ndGggZm9yIHRpbWVy
+cyByZWdpc3Rlci4KPj4gKy0gY2xvY2tzOiBDbG9ja3MgZHJpdmluZyB0aGUgdGltZXIgaGFyZHdh
+cmUuIFRoaXMgbGlzdCBzaG91ZCBpbmNsdWRlIHR3bwo+PiArICAgICBjbG9ja3MuIFRoZSBvcmRl
+ciBpcyBzeXN0ZW0gY2xvY2sgYW5kIGFzIHNlY29uZCBjbG9jayB0aGUgUlRDIGNsb2NrLgo+Cj4g
+U29ycnkgZm9yIGJlaW5nIHBlZGFudGljLCBidXQgd2UgaGFkIHNvIG1hbnkgdWdseSBiaW5kaW5n
+cyBpbiBvdXIgdmVuZG9yCj4gdHJlZS4gSSdtIHN0aWxsIGdldHRpbmcgY2F1Z2h0IHVwIG9uIHRo
+ZSBjbG9ja3MuIEkgaGF2ZSB0aGUgZmVlbGluZyB0aGUgU09DCj4gaGFzIHR3byBjbG9ja3MgKHN5
+c3RlbSBhbmQgcnRjKSB3aGljaCBhcmUgdXNlZCB0byBkcml2ZSB0aGlzIHRpbWVyLAo+IHdoaWxl
+IHRoZSB0aW1lciBwcm9iYWJseSByZWZlcnMgZGlmZmVyZW50bHkgdG8gaXRzIGNsb2NrIGlucHV0
+cy4KPiBJZiB0aGlzIHdhcyB0aGUgY2FzZSwgdGhlIG5hbWVzICdydGMnIGFuZCAnc3lzdGVtJyBj
+bG9jayBhcmUgU09DIHNwZWNpZmljCj4gbmFtZXMvaW1wbGVtZW50YXRpb24gZGV0YWlscy4gRnJv
+bSB0aGUgdGltZXIgcGVyc3BlY3RpdmUgaXQgaXMgcHJvYmFibHkKPiBqdXN0IGltcG9ydGFudCB0
+aGF0IGl0IHJlY2VpdmVzIHR3byBjbG9jayBpbnB1dHMuIFNpbmNlIHRoZSB0aW1lciBpcwo+IGRl
+c2NyaWJlZCBoZXJlIGFuZCBub3QgdGhlIFNPQywgdGhlc2UgU09DIHNwZWNpZmljIG5hbWVzIHNo
+b3VsZAo+IGRpc2FwcGVhciBhbmQgYmUgcmVwbGFjZWQgd2l0aCB0aGUgbmFtZXMgdGhlIHRpbWVy
+IElQIHVzZXMgZm9yIGl0cyBpbnB1dAo+IGNsb2Nrcy4KClRoZSB0aW1lciBpcyBleGFjdGx5IGlk
+ZW50aWNhbGx5IGRlc2NyaWJlZCBpbiB0aGUgdGhyZWUgU29DCmRhdGFzaGVldHMuIEluIHRoZSBk
+ZXNjcmlwdGlvbiB0aGUgY2xvY2tzIGFyZSBjYWxsZWQgc3lzdGVtIGFuZCBSVEMsCnNvIEkgdGhp
+bmsgd2UgYXJlIG9uIHRoZSBzYWZlIHNpZGUgaGVyZS4gOikKCj4KPiBUaGUgY2xvY2stbmFtZXMg
+c2hvdWxkIGJlIGxpc3RlZCB0b28sIHByb2JhYmx5IGFzIG9wdGlvbmFsIHByb3BlcnRpZXMuCgpU
+aGlzIHdpbGwgbGVhZCB0byBhIHByb2JsZW0sIGFzIHRoZSBjbG9jay1uYW1lcyBkZXNjcmlwdGlv
+biBpbmNsdWRlcwp0aGUgb3JkZXIgb2YgdGhlIGNsb2Nrcy4gSWYgd2UgbWFrZSB0aGlzIHByb3Bl
+cnR5IG9wdGlvbmFsLCBpdCBjYW4gYmUKZWFzaWx5IG1pc3N1bmRlcnN0b29kLiBTbyBJIHByb3Bv
+c2UgdG8gZG8gaXQgdGhlIHdheSBvdGhlciBkcml2ZXJzIGluCnRoZSBrZXJuZWwgKGUuZy4gYXJt
+LHNwODA0KSBkbyBpdCBhbmQgbGVhdmUgdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5CmFzIGl0IGlz
+LgoKPgo+PiArCj4+ICtFeGFtcGxlczoKPj4gKwo+PiArICAgICB0aW1lciB7Cj4+ICsgICAgICAg
+ICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdGs2NTg5LXRpbWVyIjsKPj4gKyAgICAgICAg
+ICAgICByZWcgPSA8MHgxMDAwODAwMCAweDgwPjsKPj4gKyAgICAgICAgICAgICBpbnRlcnJ1cHRz
+ID0gPEdJQ19TUEkgMTEzIElSUV9UWVBFX0xFVkVMX0xPVz47Cj4+ICsgICAgICAgICAgICAgY2xv
+Y2tzID0gPCZzeXN0ZW1fY2xrPiwgPCZydGNfY2xrPjsKPj4gKyAgICAgICAgICAgICBjbG9jay1u
+YW1lcyA9ICJzeXN0ZW0tY2xrIiwgInJ0Yy1jbGsiOwo+Cj4KPiAgICAgICAgIFPDtnJlbgoKCgot
+LSAKbW90emJsb2cud29yZHByZXNzLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
