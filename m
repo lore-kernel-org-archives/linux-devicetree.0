@@ -1,43 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [rfc]pwm: add xilinx pwm driver
-Date: Thu, 15 May 2014 09:23:59 +0200
-Message-ID: <4262573.aEBTd7FzV5@wuerfel>
-References: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v3 1/4] ARM: shmobile: armadillo800eva reference dts: Add
+ matching LED labels
+Date: Thu, 15 May 2014 16:25:59 +0900
+Message-ID: <20140515072559.GA11410@verge.net.au>
+References: <1400079082-6340-1-git-send-email-geert+renesas@glider.be>
+ <20140515070800.GB28033@verge.net.au>
+ <CAMuHMdUKtem2NPW6_P+gyd1zDp8Pci524MfHGwMPVAcvr6c-Lw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bart Tanghe <bart.tanghe@thomasmore.be>
-Cc: thierry.reding@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdUKtem2NPW6_P+gyd1zDp8Pci524MfHGwMPVAcvr6c-Lw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 14 May 2014 13:26:13 Bart Tanghe wrote:
-> @@ -0,0 +1,20 @@
-> +Xilinx PWM controller
-> +
-> +Required properties:
-> +- compatible: should be "xlnx,pwm-xlnx"
-> +- add a clock source to the description
-> +
-> +Examples:
-> +
-> +               axi_timer_0: timer@42800000 {
-> +                       clock-frequency = <100000000>;
-> +                       clocks = <&clkc 15>;
-> +                       compatible = "xlnx,xlnx-pwm";
-> +                       reg = <0x42800000 0x10000>;
-> +                       xlnx,count-width = <0x20>;
-> +                       xlnx,gen0-assert = <0x1>;
-> +                       xlnx,gen1-assert = <0x1>;
-> +                       xlnx,one-timer-only = <0x0>;
-> +                       xlnx,trig0-assert = <0x1>;
-> +                       xlnx,trig1-assert = <0x1>;
-> +               } ;
+On Thu, May 15, 2014 at 09:13:52AM +0200, Geert Uytterhoeven wrote:
+> Hi Simon,
 > 
+> On Thu, May 15, 2014 at 9:08 AM, Simon Horman <horms@verge.net.au> wrote:
+> > I have queued this series up for v3.17.
+> 
+> Thanks!
+> 
+> > If possible could you send future series with a cover letter.
+> > It would make my life just slightly easier.
+> 
+> OK, will do. I didn't because it was just "misc Armadillo LED updates".
 
-It seems you are missing a mandatory "#pwm-cells" property.
-How is anybody supposed to use this?
-
-	Arnd
+The main advantage for me is to have somewhere to reply with
+"I've queued these up". As such its not a big deal :)
