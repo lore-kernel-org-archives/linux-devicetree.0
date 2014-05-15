@@ -1,77 +1,96 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
-Date: Thu, 15 May 2014 11:17:35 +0200
-Message-ID: <5374862F.2020205@gmail.com>
-References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <20140514165722.GA18495@kwain> <5373AE9A.3050008@gmail.com> <5764751.ffUj9rhnMd@wuerfel> <5373B908.5090904@gmail.com> <537462A2.5020607@ti.com> <5374668F.4060109@gmail.com> <53747F03.5030206@ti.com>
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv3 0/3] ARM: implement workaround for Cortex-A9/PL310/PCIe deadlock
+Date: Thu, 15 May 2014 11:18:36 +0200
+Message-ID: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53747F03.5030206-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/15/2014 10:46 AM, Kishon Vijay Abraham I wrote:
-> On Thursday 15 May 2014 12:32 PM, Sebastian Hesselbarth wrote:
->> On 05/15/2014 08:45 AM, Kishon Vijay Abraham I wrote:
->>> On Thursday 15 May 2014 12:12 AM, Sebastian Hesselbarth wrote:
->>>> On 05/14/2014 08:12 PM, Arnd Bergmann wrote:
->>>>> On Wednesday 14 May 2014 19:57:46 Sebastian Hesselbarth wrote:
->>>>>> Let's assume we have one dual-port SATA controller and one PCIe
->>>>>> controller with either x1 or x2 support. The only sane DT binding,
->>>>>> I can think of then would be:
->>>>>>
->>>>>> berlin2q.dtsi:
->>>>>>
->>>>>> genphy: lvds@ea00ff {
->>>>>> 	compatible = "marvell,berlin-lvds-phy";
->>>>>> 	reg = <0xea00ff 0x100>;
->>>>>> 	#phy-cells = <2>;
->>>>>> };
-[...]
->>
->> Depends on what you call PHY. In the example above the PHY is what
->> allows you to control both lanes.
->>
->> So you want sub-nodes for each individual lane given the nomenclature
->> of the example?
->>
->> Or like it is used in the example above, a single PHY node with an index
->> in the phy-specifier to pick an individual lane.
->>
->> IMHO, having both phy-specifier index _and_ PHY sub-node per lane
->> has no benefit at all. You cannot even use the PHY sub-nodes for any
->> setup properties, as they depend on the consumer claiming the lane.
->
-> IMO the dt data should completely describe the HW. So just by looking at the
-> PHY node, we won't be able to tell the no of PHYs implemented in the IP if we
-> have a single PHY node (In this case the lanes in the IP).
->
-> However if you think it's an overkill for having sub-nodes for each lane then
-> single PHY node is fine too.
+Russell, Will, Catalin,
 
-Yeah, I see your point. I just wonder how many Marvell PHYs we may hit
-that require the _same_ magic setup inside but have _different_ number
-of lanes. And even if, we can deal with it using a different compatible
-string.
+This patch series adresses a problem that affects the newer Marvell
+Armada 375 and 38x SOCs, based on Cortex-A9+PL310, combined with the
+Marvell PCIe hardware unit. When the hardware I/O coherency is
+enabled, the combination of Cortex-A9/PL310/Marvell PCIe hardware unit
+will quickly cause a deadlock when the PCIe bus is stressed.
 
-Currently, I feel a single PHY provider node and a set of compatibles
-will be most likely, i.e. no per-lane sub-nodes. OTOH, the per-lane
-sub-nodes is more generic as it allows us to deal PHYs that may
-suddenly skip one lane in the numbering scheme. The difference for the
-driver is marginal, i.e. some SoC-specific struct with a field for the
-number of lanes vs. of_count_child_nodes() and a reg = <n> property for
-the per-lane sub-nodes.
+The workaround for this problem has been suggested by ARM, and
+consists in two things:
 
-I used to agree to "DT should descibe HW", but with no datasheet
-available, it quickly becomes fuzzy what it really looks like.
+ (1) Map the PCIe regions as strongly-ordered
 
-Anyway, I'll have some discussion with Antoine and Alexandre to sort out
-the differences and the things in common for the PHY and SoCs in
-question.
+ (2) Disable the outer cache sync of the PL310 when hardware I/O
+     coherency is used, since it is unneeded and causes the deadlock.
 
-Sebastian
+The following three patches address the problem in the following way:
+
+ * PATCH 1/3 adds the necessary infrastructure to allow
+   sub-architecture to override the memory type used to map PCIe I/O
+   regions. It has been Acked by Catalin, and should be routed through
+   Russell's tree.
+
+ * PATCH 2/3 extends the l2x0 cache driver with a new property
+   "dma-coherent", valid for the PL310, which makes the driver use a
+   different set of L2 cache maintenance operations having ->sync set
+   to NULL. This patch should be routed through Russell's tree.
+
+ * PATCH 3/3 uses both of the added infrastructures, as well as the
+   existing infrastructure to customize the behavior of ioremap() on a
+   per-platform basis, to implement the workaround for the Armada 375
+   and 38x SOCs. This patch should go through the mvebu maintainers
+   tree. However, it has a build dependency on PATCH 1/3 that needs to
+   be taken into account.
+
+Changes since v2:
+
+ - Added Acked-by from Catalin on "ARM: mm: allow sub-architectures to
+   override PCI I/O memory type".
+
+ - Dropped the patch fixing the of_update_property() function, since
+   we're no longer using it.
+
+ - Instead of using a different compatible string to identify PL310
+   used in an I/O coherent configuration, use a separate boolean
+   property. Suggested by Catalin.
+
+ - Rework the mach-mvebu/coherency.c to add the boolean property
+   "dma-coherent" when needed instead of updating the compatible
+   string of the cache controller.
+
+Changes since v1:
+
+ - Instead of introducing separate l2x0 initialization functions, rely
+   on a separate compatible string to identify whether we're coherent
+   or not. The compatible string *has* to be modified at runtime,
+   because Armada 375 and 38x are only I/O coherent when in SMP
+   mode. In non-SMP mode, they are not I/O coherent, so we cannot
+   change the DT to 'arm,pl310-coherent-cache'.
+
+ - Addition of the drivers/of fix to be able to use
+   of_update_property() early and fix up the PL310 compatible string,
+   as explained in the previous item.
+
+Thanks!
+
+Thomas
+
+Thomas Petazzoni (3):
+  ARM: mm: allow sub-architectures to override PCI I/O memory type
+  ARM: mm: add support for HW coherent systems in PL310
+  ARM: mvebu: implement L2/PCIe deadlock workaround
+
+ Documentation/devicetree/bindings/arm/l2cc.txt |  3 ++
+ arch/arm/include/asm/io.h                      |  6 +++
+ arch/arm/mach-mvebu/board-v7.c                 | 51 ++++++++++++++++++++++++++
+ arch/arm/mm/cache-l2x0.c                       | 24 ++++++++++++
+ arch/arm/mm/ioremap.c                          |  9 ++++-
+ 5 files changed, 92 insertions(+), 1 deletion(-)
+
+-- 
+1.9.3
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
