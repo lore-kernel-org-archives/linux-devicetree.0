@@ -1,66 +1,82 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH RFC v13 0/5] MPC512x DMA slave s/g support, OF DMA lookup
-Date: Thu, 15 May 2014 18:15:30 +0400
-Message-ID: <1400163335-29853-1-git-send-email-a13xp0p0v88@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Thu, 15 May 2014 15:18:01 +0100
+Message-ID: <20140515141801.1E28BC4095B@trevor.secretlab.ca>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-2013/7/14 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
-> this series
-> - introduces slave s/g support (that's support for DMA transfers which
->    involve peripherals in contrast to mem-to-mem transfers)
-> - adds device tree based lookup support for DMA channels
-> - combines floating patches and related feedback which already covered
->    several aspects of what the suggested LPB driver needs, to demonstrate
->    how integration might be done
+Hi Pantelis,
 
-...
+Thanks for writing this up. A few responses below...
 
-Changes in v12:
- A new patch (part 2/7) is added to this series.
- Part 6/7:
- - change the description of 'compatible' property according part 2/7;
- - improve the document according Gerhard's feedback;
+On Thu, 15 May 2014 00:12:17 -0700, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> On May 14, 2014, at 3:08 AM, Grant Likely wrote:
+> > On Fri,  4 Apr 2014 15:43:55 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> > The notification infrastructure bothers me. It duplicates the
+> > notification that the core DT code already performs. I do understand
+> > that the current notifications don't do what you need them to because
+> > you need it all deferred until the complete set of batch changes are
+> > applied. However, instead of creating a new infrastructure, the existing
+> > notifier should be reworked to be batch-change aware.
+> > 
+> 
+> If I understood correctly, you're asking of rolling in this per-bus notifier
+> mechanism in the standard DT notifier infrastructure already in place.
+> I can't be absolutely sure about the details right now, but seems possible.
+> 
+> I don't know if the kernel notifier framework will be unmodified, but I hope so.
 
-Parts 1/7, 2/7 and 4/7 have been applied by Vinod Koul and
-are excluded from v13.
+It should be. It will need to be the dt code that buffers up the
+notification events to be played out after the batch of changes has been
+applied. That shouldn't have any impact on core notifier framework.
 
-Changes in v13:
- A new patch (part 1/5) is added to this series.
- Part 2/5:
- - fix style issue;
- - improve comments;
+[...]
+> > Is it the base DT that needs the __symbols__ node, or the overlay tree?
+> > I had thought it was the overlay tree that contained the __symbols__
+> > node. Regardless, this is the first mention in this file of __symbols__.
+> > It would be good to discuss briefly how it works.
+> > 
+> 
+> The __symbols__ usage is explained in the resolve patch.
+> Since target-path has been added the base DT no longer needs a __symbols__ node.
 
-> known issues:
-> - it's yet to get confirmed whether MPC8308 can use slave support or
->    whether the DMA controller's driver shall actively reject it, the
->    information that's available so far suggests that peripheral transfers
->    to IP bus attached I/O is useful and shall not get blocked right away
+Can the target-phandle method be removed entirely then?
 
+> >> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> >> index 4d39c88..cfb7ff8 100644
+> >> --- a/drivers/of/Kconfig
+> >> +++ b/drivers/of/Kconfig
+> >> @@ -86,4 +86,14 @@ config OF_RESOLVE
+> >> 	  Enable OF dynamic resolution support. This allows you to
+> >> 	  load Device Tree object fragments are run time.
+> >> 
+> >> +config OF_OVERLAY
+> >> +	bool "OF overlay support"
+> >> +	depends on OF
+> >> +	select OF_DYNAMIC
+> >> +	select OF_DEVICE
+> >> +	select OF_RESOLVE
+> >> +	help
+> >> +	  OpenFirmware overlay support. Allows you to modify on runtime the
+> >> +	  live tree using overlays.
+> > 
+> > Should not be a user-visable option. Drivers using it should select it
+> > or otherwise cause it to be enabled.
+> 
+> Hmm. I don't know; if I let it up to drivers, platform devices will select it, in turn
+> making it always selected for 99.9% of the platforms out there.
+> 
+> Some people might not want to incur the code size penalty.
 
-Alexander Popov (5):
-  dmaengine: fix comment typo
-  dma: mpc512x: add support for peripheral transfers
-  dma: of: add common xlate function for matching by channel id
-  dma: mpc512x: add device tree binding document
-  dma: mpc512x: register for device tree channel lookup
+The only code ever selecting this function would be code that actually
+calls the overlay functions.
 
- .../devicetree/bindings/dma/mpc512x-dma.txt        |  40 ++++
- arch/powerpc/boot/dts/mpc5121.dtsi                 |   1 +
- drivers/dma/mpc512x_dma.c                          | 257 ++++++++++++++++++++-
- drivers/dma/of-dma.c                               |  35 +++
- include/linux/dmaengine.h                          |   2 +-
- include/linux/of_dma.h                             |   4 +
- 6 files changed, 332 insertions(+), 7 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-
--- 
-1.8.4.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
