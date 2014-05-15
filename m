@@ -1,56 +1,106 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 0/4] Fixes for DT CPU topology specification on Exynos
-Date: Thu, 15 May 2014 22:15:48 +0200
-Message-ID: <53752074.3020205@gmail.com>
-References: <1397832181-5153-1-git-send-email-t.figa@samsung.com>
+From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [RFC PATCH 06/10] usb: xhci: Add Tegra XHCI host-controller driver
+Date: Thu, 15 May 2014 13:18:22 -0700
+Message-ID: <CAL1qeaHm7U2NVDeVZS-Tiz5ntkk4c13RR_1ws9MTYGGoGCOB5A@mail.gmail.com>
+References: <1400113986-339-1-git-send-email-abrestic@chromium.org>
+	<1400113986-339-7-git-send-email-abrestic@chromium.org>
+	<15599140.PsD4j7x3tZ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1397832181-5153-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, Arnd Bergmann <arnd@arndb.de>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <15599140.PsD4j7x3tZ@wuerfel>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+Arnd,
 
-On 18.04.2014 16:42, Tomasz Figa wrote:
-> Due to some parts of Exynos SoC support designed originally in a non-scalable
-> way, relying on 1:1 mapping between value returned by cpu_logical_map() and
-> CPU IDs as seen by PMU and GIC, trying to specify CPU topology in device tree
-> caused various boot-up issues on Exynos SoCs, ranging from CPUs other than 0
-> failing to boot to crashes due to GIC driver accessing registers out of range.
-> 
-> This series attempts to fix aforementioned issues by removing incorrect
-> assumptions from Exynos SoC core code and GIC driver and then adding CPU
-> topology data to device tree sources of Exynos4.
-> 
-> [On Exynos4210-based TRATS and Exynos4412-based TRATS2 board]
-> Tested-by: Tomasz Figa <t.figa@samsung.com>
-> 
-> Tomasz Figa (4):
->   ARM: EXYNOS: Fix definitions of S5P_ARM_CORE_* registers
->   ARM: EXYNOS: Fix core ID used by platsmp and hotplug code
->   irqchip: gic: Add support for per CPU bank offset specification in DT
->   ARM: dts: exynos4: Add CPU topology data
-> 
->  Documentation/devicetree/bindings/arm/cpus.txt |  7 ++
->  Documentation/devicetree/bindings/arm/gic.txt  | 34 +++++++++-
->  arch/arm/boot/dts/exynos4210.dtsi              | 19 ++++++
->  arch/arm/boot/dts/exynos4212.dtsi              | 19 ++++++
->  arch/arm/boot/dts/exynos4412.dtsi              | 37 ++++++++--
->  arch/arm/mach-exynos/hotplug.c                 | 10 +--
->  arch/arm/mach-exynos/platsmp.c                 | 31 +++++----
->  arch/arm/mach-exynos/regs-pmu.h                |  4 +-
->  drivers/irqchip/irq-gic.c                      | 94 ++++++++++++++++++--------
->  9 files changed, 202 insertions(+), 53 deletions(-)
-> 
+On Thu, May 15, 2014 at 1:17 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 14 May 2014 17:33:02 Andrew Bresticker wrote:
+>> +
+>> +int tegra_xhci_register_mbox_notifier(struct notifier_block *nb)
+>> +{
+>> +     int ret;
+>> +
+>> +     mutex_lock(&tegra_xhci_mbox_lock);
+>> +     ret = raw_notifier_chain_register(&tegra_xhci_mbox_notifiers, nb);
+>> +     mutex_unlock(&tegra_xhci_mbox_lock);
+>> +
+>> +     return ret;
+>> +}
+>> +EXPORT_SYMBOL(tegra_xhci_register_mbox_notifier);
+>> +
+>> +void tegra_xhci_unregister_mbox_notifier(struct notifier_block *nb)
+>> +{
+>> +     mutex_lock(&tegra_xhci_mbox_lock);
+>> +     raw_notifier_chain_unregister(&tegra_xhci_mbox_notifiers, nb);
+>> +     mutex_unlock(&tegra_xhci_mbox_lock);
+>> +}
+>> +EXPORT_SYMBOL(tegra_xhci_unregister_mbox_notifier);
+>
+> What driver would use these?
 
-Please drop patches 3 and 4 from this series, as patch 3 needs a bit
-more work and 4 depends on 3.
+It's used by just this driver (the host) and the PHY driver (next
+patch in series).
 
-Having patches 1 and 2 applied regardless would be nice, though.
+> My feeling is that if you have a mailbox that is used by multiple
+> drivers, you should use a proper mailbox driver to operate them,
+> and have the drivers register with that API instead of a custom one.
 
-Best regards,
-Tomasz
+Ok, will do.
+
+>> +     /* Create child xhci-plat device */
+>> +     memset(xhci_resources, 0, sizeof(xhci_resources));
+>> +     res = platform_get_resource(to_platform_device(dev), IORESOURCE_IRQ, 0);
+>> +     if (!res) {
+>> +             dev_err(dev, "Missing XHCI IRQ\n");
+>> +             ret = -ENODEV;
+>> +             goto out;
+>> +     }
+>> +     xhci_resources[0].start = res->start;
+>> +     xhci_resources[0].end = res->end;
+>> +     xhci_resources[0].flags = res->flags;
+>> +     xhci_resources[0].name = res->name;
+>> +     res = platform_get_resource(to_platform_device(dev), IORESOURCE_MEM, 0);
+>> +     if (!res) {
+>> +             dev_err(dev, "Missing XHCI registers\n");
+>> +             ret = -ENODEV;
+>> +             goto out;
+>> +     }
+>> +     xhci_resources[1].start = res->start;
+>> +     xhci_resources[1].end = res->end;
+>> +     xhci_resources[1].flags = res->flags;
+>> +     xhci_resources[1].name = res->name;
+>> +
+>> +     xhci = platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
+>> +     if (!xhci) {
+>> +             dev_err(dev, "Failed to allocate XHCI host\n");
+>> +             ret = -ENOMEM;
+>> +             goto out;
+>> +     }
+>
+> This does not feel appropriate at all: Rather than creating a child device,
+> you should have a specific driver that hooks into functions exported
+> by the xhci core. See Documentation/driver-model/design-patterns.txt
+
+This is how DWC3, currently the only in-tree non-PCI XHCI host driver,
+is structured - see drivers/usb/dwc3/host.c.  The recently proposed
+Armada XHCI driver [1] just adds clock support and a hook in
+xhci-plat's probe() to do the platform-specific initialization.
+Tegra's XHCI driver initialization is quite a bit more complicated,
+mainly due to the need for external firmware and specific ordering
+(e.g. firmware messages should only be enabled after the HCD is
+created).  I could do away with the xhci-plat sub-device and just
+create a Tegra hc_driver, but it seems silly to have three XHCI
+platform drivers structured in three different ways.  USB folks, do
+you have an opinion on how this should be done?
+
+[1] https://lkml.org/lkml/2014/5/15/208
+
+Thanks,
+Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
