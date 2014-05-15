@@ -1,85 +1,38 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH v4 3/3] s5p-tv: hdmi: use hdmiphy as PHY
-Date: Thu, 15 May 2014 18:40:54 +0530
-Message-ID: <1400159454-31107-4-git-send-email-rahul.sharma@samsung.com>
-References: <1400159454-31107-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1400159454-31107-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, dri-devel@lists.freedesktop.org
-Cc: a.hajda@samsung.com, t.stanislaws@samsung.com, thierry.reding@gmail.com, devicetree@vger.kernel.org, kgene.kim@samsung.com, kishon@ti.com, kyungmin.park@samsung.com, robh+dt@kernel.org, grant.likely@linaro.org, sylvester.nawrocki@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI I/O memory type
+Date: Thu, 15 May 2014 15:21:25 +0200
+Message-ID: <8288032.jL4bOz6qPT@wuerfel>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com> <1400145519-28530-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400145519-28530-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+On Thursday 15 May 2014 11:18:37 Thomas Petazzoni wrote:
+> @@ -445,7 +452,7 @@ int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
+>         return ioremap_page_range(PCI_IO_VIRT_BASE + offset,
+>                                   PCI_IO_VIRT_BASE + offset + SZ_64K,
+>                                   phys_addr,
+> -                                 __pgprot(get_mem_type(MT_DEVICE)->prot_pte));
+> +                                 __pgprot(get_mem_type(pci_ioremap_mem_type)->prot_pte));
+>  }
+>  EXPORT_SYMBOL_GPL(pci_ioremap_io);
+> 
 
-The HDMIPHY (physical interface) is controlled by a single
-bit in a power controller's regiter. It was implemented
-as clock. It was a simple but effective hack.
+As discussed on IRC, I think we'd be better off making this a strong-ordered
+mapping for all platforms unconditionally. The PCI I/O space semantics
+require non-posted writes, which is the main difference between device
+and SO mappings, so the same fix is required both for mvebu as a workaround
+for the deadlock as well as for everyone else as a fix for an incorrect
+PCI behavior.
 
-This patch makes S5P-HDMI driver to control HDMIPHY via PHY interface.
-
-Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
-Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
----
- drivers/media/platform/s5p-tv/hdmi_drv.c |   11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/media/platform/s5p-tv/hdmi_drv.c b/drivers/media/platform/s5p-tv/hdmi_drv.c
-index 534722c..8013e52 100644
---- a/drivers/media/platform/s5p-tv/hdmi_drv.c
-+++ b/drivers/media/platform/s5p-tv/hdmi_drv.c
-@@ -32,6 +32,7 @@
- #include <linux/clk.h>
- #include <linux/regulator/consumer.h>
- #include <linux/v4l2-dv-timings.h>
-+#include <linux/phy/phy.h>
- 
- #include <media/s5p_hdmi.h>
- #include <media/v4l2-common.h>
-@@ -66,7 +67,7 @@ struct hdmi_resources {
- 	struct clk *sclk_hdmi;
- 	struct clk *sclk_pixel;
- 	struct clk *sclk_hdmiphy;
--	struct clk *hdmiphy;
-+	struct phy *hdmiphy;
- 	struct regulator_bulk_data *regul_bulk;
- 	int regul_count;
- };
-@@ -586,7 +587,7 @@ static int hdmi_resource_poweron(struct hdmi_resources *res)
- 	if (ret < 0)
- 		return ret;
- 	/* power-on hdmi physical interface */
--	clk_enable(res->hdmiphy);
-+	phy_power_on(res->hdmiphy);
- 	/* use VPP as parent clock; HDMIPHY is not working yet */
- 	clk_set_parent(res->sclk_hdmi, res->sclk_pixel);
- 	/* turn clocks on */
-@@ -600,7 +601,7 @@ static void hdmi_resource_poweroff(struct hdmi_resources *res)
- 	/* turn clocks off */
- 	clk_disable(res->sclk_hdmi);
- 	/* power-off hdmiphy */
--	clk_disable(res->hdmiphy);
-+	phy_power_off(res->hdmiphy);
- 	/* turn HDMI power off */
- 	regulator_bulk_disable(res->regul_count, res->regul_bulk);
- }
-@@ -784,7 +785,7 @@ static void hdmi_resources_cleanup(struct hdmi_device *hdev)
- 	/* kfree is NULL-safe */
- 	kfree(res->regul_bulk);
- 	if (!IS_ERR(res->hdmiphy))
--		clk_put(res->hdmiphy);
-+		phy_put(res->hdmiphy);
- 	if (!IS_ERR(res->sclk_hdmiphy))
- 		clk_put(res->sclk_hdmiphy);
- 	if (!IS_ERR(res->sclk_pixel))
-@@ -835,7 +836,7 @@ static int hdmi_resources_init(struct hdmi_device *hdev)
- 		dev_err(dev, "failed to get clock 'sclk_hdmiphy'\n");
- 		goto fail;
- 	}
--	res->hdmiphy = clk_get(dev, "hdmiphy");
-+	res->hdmiphy = phy_get(dev, "hdmiphy");
- 	if (IS_ERR(res->hdmiphy)) {
- 		dev_err(dev, "failed to get clock 'hdmiphy'\n");
- 		goto fail;
--- 
-1.7.9.5
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
