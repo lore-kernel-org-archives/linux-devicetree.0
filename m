@@ -1,43 +1,90 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v5 5/5] ARM: sunxi: select MFD_SUN6I_PRCM when
- sun6i arch support is enabled
-Date: Thu, 15 May 2014 10:55:13 +0200
-Message-ID: <1400144113-27659-6-git-send-email-boris.brezillon@free-electrons.com>
-References: <1400144113-27659-1-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
+ for omap3-evm and ldp
+Date: Thu, 15 May 2014 11:57:38 +0300
+Message-ID: <53748182.1080705@ti.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-5-git-send-email-tony@atomide.com> <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com> <20140430174751.GA12362@atomide.com> <20140505183919.GA15463@atomide.com> <20140508233628.GJ2198@atomide.com> <536C7EA7.5000306@ti.com> <20140509153723.GD17814@atomide.com> <20140513213205.GB18001@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBAEC2KNQKGQEM7JQK5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1400144113-27659-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="1jeKGunVfgW41ftxLHlplOnak6Pjishup"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140513213205.GB18001@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Joachim Eastwood <manabian@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Select the MFD_SUN6I_PRCM option when sun6i arch is enabled in order to get
-the PRCM (Power/Reset/Clock Management) related drivers compiled.
+--1jeKGunVfgW41ftxLHlplOnak6Pjishup
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/mach-sunxi/Kconfig | 1 +
- 1 file changed, 1 insertion(+)
+On 14/05/14 00:32, Tony Lindgren wrote:
 
-diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-index 3aff966..0fbd4f1 100644
---- a/arch/arm/mach-sunxi/Kconfig
-+++ b/arch/arm/mach-sunxi/Kconfig
-@@ -23,6 +23,7 @@ config MACH_SUN6I
- 	default ARCH_SUNXI
- 	select ARCH_HAS_RESET_CONTROLLER
- 	select ARM_GIC
-+	select MFD_SUN6I_PRCM
- 	select RESET_CONTROLLER
- 	select SUN5I_HSTIMER
- 
--- 
-1.8.3.2
+> +&lcd0 {
+> +	enable-gpios =3D <&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */=
+
+> +	reset-gpios =3D <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB */=
+
+> +	/*
+> +	 * The LCD is sideways, so we want the VGA mode instead of
+> +	 * QVGA mode. Probably also want to have omapfb.rotate=3D3
+> +	 * in the kernel cmdline until there's a binding for that.
+> +	 */
+> +	mode-gpios =3D <&gpio5 26 GPIO_ACTIVE_LOW		/* gpio154, lcd MO */
+> +		      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
+> +		      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
+
+I don't think that is correct. The panel bindings should define what the
+first mode-gpio means. Looking at the panel spec, I think the definition
+should be "enable QVGA mode". And in the board's dts above, the
+GPIO_ACTIVE_x should tell which is one is correct polarity for QVGA
+mode. Which is GPIO_ACTIVE_HIGH here.
+
+If we want to tell the panel driver to use QVGA mode, we should do that
+explicitly with a flag, not by hacking the GPIO polarities. It's the
+panel driver's job to set the GPIO.
+
+So in the previous mail I suggested the 'vga-mode' flag, but I think we
+need actually two flags for each GPIO: one that's used to tell the
+driver which mode we want, which is used if the panel driver has control
+for the GPIO, and the other that tells which is the hardwired setting.
+
+Then again, the two cases are exclusive, so maybe a single flag per mode
+pin is ok. So, for the MO pin, we could have 'qvga-mode' flag in the
+=2Edts, which means:
+
+"If there is MO gpio, set MO high. If there's no MO gpio, presume MO pin
+is pulled up"
+
+Of course, one could argue that, in case MO is controlled with GPIO, the
+'qvga-mode' flag is about SW level configuration, not hardware...
+
+ Tomi
+
+
+
+--1jeKGunVfgW41ftxLHlplOnak6Pjishup
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTdIGCAAoJEPo9qoy8lh71DYMP/1xJtYbWVC6Ek4cZco768MmR
+FNcQSNgo46vAG5YFf65xr2fzvEWY7+Ucm0zRZRoThPOoNvi6apTMnsl3B+53x++F
+xyM/QXU6L64f5zRqlDxZRPd2Tv+7ob0CVWTm1LDbF3oVJH9S/E6g6cDyTuXGbVAW
+LJAJJb9eI5ebIXDe/z4YMuxUXldDJmvtC2a8FKqEe+d8AXop3+ZWTs0vm/vhgtgn
+t/g+XqJS1/dppTExDout++4w3hLnUuA6XKtNF237qiEp4X6BpCJ7HR8Yql4mkipm
+aVt9e1LzSPIezpITb88i7SVXlthDrjuLgwSnVpdWiNpInjuxNbbVfHU5qgC8N53P
+HKXGOpt5RP4bLO+R9wEqgdNsE7vyIc9W2AeKSUQiwzRWt7Y0gJRJFBaCthVk92NC
+8xx+jjDu8YV2iZiMEs4uQvHKQsulgro/EUsEQuOcVn7p/mR5YIrFTubjnK9jV2Rn
+SF9LZ6WGRGc+49Fkhata+XPuGrjGn6bBxa/v0i918bQgPSn9t2eQWaatq8KdhybS
+LqBR4VVHcpSwN40dnqPC4sOEOBSWL5SGhk6o5yAr+IVke1o78IF4aPv2ZDejE9BA
+gxTK588Y5gVKeIO6y5ZEQnsxVWOsuqlgLqdZK5v0pVUXbDWtJyLQKj9w0poWVVF+
+yoUkYnIxDXcKwvyEymfi
+=m0NP
+-----END PGP SIGNATURE-----
+
+--1jeKGunVfgW41ftxLHlplOnak6Pjishup--
