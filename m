@@ -1,12 +1,13 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2] drm/panel: add support for EDT ET057090DHU panel
-Date: Thu, 15 May 2014 12:52:35 +0200
-Message-ID: <20140515105234.GJ6434@ulmo>
-References: <1400146725-5788-1-git-send-email-stefan@agner.ch>
+Subject: Re: [PATCH v3] drm/panel: Add support for EDT ETM0700G0DH6 and
+ ET070080DH6 panels
+Date: Thu, 15 May 2014 12:54:28 +0200
+Message-ID: <20140515105427.GK6434@ulmo>
+References: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1107559421=="
+Content-Type: multipart/mixed; boundary="===============0868306856=="
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1400146725-5788-1-git-send-email-stefan@agner.ch>
+In-Reply-To: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -16,65 +17,75 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: stefan@agner.ch
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, swarren@wwwdotorg.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, marcel@ziswiler.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <treding@nvidia.com>, kernel@pengutronix.de, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
 
---===============1107559421==
+--===============0868306856==
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="J2uG6jHjFLimDtBY"
+	protocol="application/pgp-signature"; boundary="YQEH9CATo+4lan7A"
 Content-Disposition: inline
 
 
---J2uG6jHjFLimDtBY
+--YQEH9CATo+4lan7A
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2014 at 11:38:45AM +0200, stefan@agner.ch wrote:
-> From: Stefan Agner <stefan@agner.ch>
+On Thu, May 15, 2014 at 12:25:47PM +0200, Philipp Zabel wrote:
+> The EDT ETM0700G0DH6 and ET070080DH6 are 7" 800x480 panels,
+> which can be supported by the simple panel driver.
 >=20
-> This panel is sold by Toradex for Colibri T20/T30 and Apalis T30
-> evaluation kits.
->=20
-> Signed-off-by: Stefan Agner <stefan@agner.ch>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
->  .../devicetree/bindings/panel/edt,et057090dhu.txt  |  7 ++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++=
+> Changes since v2:
+>  - Added device tree binding documentation. Do we really want to add one =
+little
+>    file for each panel?
+
+I guess we could move all of the compatible values into simple-panel.txt
+but I don't see a need for that yet.
+
+> ---
+>  .../devicetree/bindings/panel/edt,et070080dh6.txt  | 10 ++++++++
+>  .../devicetree/bindings/panel/edt,etm0700g0dh6.txt | 10 ++++++++
+>  drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++=
 ++++++
->  2 files changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/edt,et057090d=
-hu.txt
+>  3 files changed, 49 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/edt,et070080d=
+h6.txt
+>  create mode 100644 Documentation/devicetree/bindings/panel/edt,etm0700g0=
+dh6.txt
 
 Applied, thanks.
 
 Thierry
 
---J2uG6jHjFLimDtBY
+--YQEH9CATo+4lan7A
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTdJxyAAoJEN0jrNd/PrOhaX4QAL0axTjxBEU4TgE9odqQXdZD
-DrS/uBBpjdMGi58KYJV7EBbEUN6BjgbAGrVyX+TU22RaaKsUdyYNHoHxFHDNPOJz
-793+fQPaHLGjR8i9M+x/E00tbgtVnyj5OGZTYfhh5BcOzuEFnFbuOryWNYPdzakz
-mNawbUxFvh6bGxuSPMXtbKzJ7lscUr1A5crVQIo4k//cyr1MW3rBDKcdzsYWs6kl
-aMHKLuMYsjSoLwMNy28zWPsdGL9RXI/QEt7F06gbyzLATLulDUufCXbk2rk7Iswl
-7nF7p9CdAIOLs2G0e7Emvvzn4KtAVPCN9KJXc+W79+9IsOCTm/L+AuONsLSw7c68
-W7s4MFz8ehRkVkeTgW4/1J0wR6zjE7zTt6gQSGwtMbof8i5QZ1+6GLKh+1dYfKvw
-Yg2dZeBz9h+U4xb2lO5hLe1fRZINawNyijv9psncb7ReKY2pm6eoQiHwKIBuO/F1
-hwleFU0OmoqCDXKBQjMNAHz1drM68r5KBYaBs3pLTdH/j933YCAdYv2VaFyEcwx7
-Rqldc7ijLeGAAh3jR17wdzb38GaV3TAyWSNXYQH06jTY686oZArwLuwk9EO4+Y5S
-5oye9+ogbsaIJaJdggvM2N95wQs048safVUcJoMmFcP/0YKHT67Xf/LrGmB4qtEm
-4JzWMXbdXQS62S7ryvG6
-=adqH
+iQIcBAEBAgAGBQJTdJzjAAoJEN0jrNd/PrOhWX4P/Rlr05lHD93bmNuMMMJLLuDJ
+LastHxcdgvxEn+AXz4LJcwwgt4c9avpl23iBO5B86oh0sgIU2H7go8InJJ19VGVI
+fAp6s8Hmjd82TH3KcylSswGXOyylz6DKwtswgk/BzOQcKSnA8AgADAf1WTM69TZs
+UI3aJTzJrTi7ViYJSw0kxBczp7FBX5waR4BrZ5qMs2hOyW/FYZll56rUeLgbK14x
+mN9dnuMZgpv4V6fhEujppu0rvHJidF1dF12pJNN3Oh4nDIpbPdGGCN6+TAd1Dk88
+6rfGAAlL/7XejBZJKoP0uP/MdCw8oI50uJNRKBgjiYwBeTvlVXQV3yPVTbuDA5J8
+oPwp6MQWrS93wIV2Yhbd6kNUi9apsAgEBJK77UXyLd8FnZYXvqXI/RWe6OjE7GEp
+1yWCuTMFZCcL/1+pjb2xZBnijbKeFoqu5bYYzYvXqrHx2TX8sbUvDC6PClcexA/O
+0t6pKScAzQGrL55ic4n3B87yhTVRI7gOdBZvCKf4kekGiw1nnGCjonaU8mw7xge7
+SCPKiMltIcniLofxYEw959hsSpXziOK+A9L7GdcfwaEIUM+ci53cE6SWERC81t2A
+Gg2jf0V2/mQY3me06PZzkqIZUhfg8OGrsuQTvLSy/qKf7XAoL8jLw2KH4Xu+1m+m
+QL58BsuKId132OcAZiBf
+=t8Eu
 -----END PGP SIGNATURE-----
 
---J2uG6jHjFLimDtBY--
+--YQEH9CATo+4lan7A--
 
---===============1107559421==
+--===============0868306856==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -85,4 +96,4 @@ dri-devel mailing list
 dri-devel@lists.freedesktop.org
 http://lists.freedesktop.org/mailman/listinfo/dri-devel
 
---===============1107559421==--
+--===============0868306856==--
