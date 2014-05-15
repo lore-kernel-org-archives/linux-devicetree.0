@@ -1,47 +1,63 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv3 2/3] ARM: mm: add support for HW coherent systems in PL310
-Date: Thu, 15 May 2014 15:23:32 +0200
-Message-ID: <6040564.qIx1dK4Lix@wuerfel>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com> <1400145519-28530-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM: dts: kirkwood: resynch 98dx4122 dtsi
+Date: Thu, 15 May 2014 09:24:36 -0400
+Message-ID: <20140515132436.GL27822@titan.lakedaemon.net>
+References: <1400147335-20947-1-git-send-email-valentin.longchamp@keymile.com>
+ <1400147335-20947-2-git-send-email-valentin.longchamp@keymile.com>
+ <53749865.809@gmail.com>
+ <5374A0EC.8050706@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400145519-28530-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5374A0EC.8050706-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 May 2014 11:18:38 Thomas Petazzoni wrote:
-> When a PL310 cache is used on a system that provides hardware
-> coherency, the outer cache sync operation is useless, and can be
-> skipped. Moreover, on some systems, it is harmful as it causes
-> deadlocks between the Marvell coherency mechanism, the Marvell PCIe
-> controller and the Cortex-A9.
+On Thu, May 15, 2014 at 01:11:40PM +0200, Valentin Longchamp wrote:
+> On 05/15/2014 12:35 PM, Sebastian Hesselbarth wrote:
+> > On 05/15/2014 11:48 AM, Valentin Longchamp wrote:
+> >> The 98DX4122 dtsi file lacks the defintion of the PCIe controller which
+> >> is present on this SoC.
+> > 
+> > Valentin,
+> > 
+> > good to have you back on 98dx4122. I was already thinking about
+> > reworking the current kirkwood.dtsi and kirkwood-<soc>.dtsi as I
+> > feel there may be more issues with "common" IP that was removed
+> > in 98dx4122.
+> > 
+> >> The SATA phys must also be explicitely disabled since they are not
+> >> present on this SoC. If they remain enabled, a hardlock occures when
+> >> their clock gates are enabled.
+> > 
+> > While I am ok with disabling now, we should really rethink the
+> > current SoC-specific includes as we are already facing some issues
+> > that cause headaches.
+> > 
+> > Actually, the initial idea was to remove all nodes from kirkwood.dtsi
+> > that are not available in one of the SoCs and rather put them into
+> > the SoC-specific include.
+> > 
+> > But over time we end up with a mix of both, SoC-specific nodes like
+> > pcie below _and_ SoC-specific fixes like sata-phy below.
+> > 
+> > To be consitent, we should either duplicate the sata-phy nodes in
+> > kirkwood-6foo.dtsi - or what I prefer - move most of it back to
+> > kirkwood.dtsi and use "disabled" in the SoC-specific ones.
 > 
-> To avoid this, this commit introduces a new Device Tree property
-> 'dma-coherent' for the L2 cache controller node, valid only for the
-> PL310 cache. It identifies the usage of the PL310 cache in an I/O
-> coherent configuration. Internally, it makes the driver use a
-> different set of l2x0_of_data, in which the ->sync operation is NULL.
-> 
-> Note that technically speaking, a fully coherent system wouldn't
-> require any of the other .outer_cache operations. However, in
-> practice, when booting secondary CPUs, these are not yet coherent, and
-> therefore a set of cache maintenance operations are necessary at this
-> point. This explains why we keep the other .outer_cache operations and
-> only ->sync is disabled.
-> 
-> While in theory any write to a PL310 register could cause the
-> deadlock, in practice, disabling ->sync is sufficient to workaround
-> the deadlock, since the other cache maintenance operations are only
-> used in very specific situations.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> 
+> For the sake of the disscussion, we also have some powerPC boards here at
+> Keymile and there the approach is exactly the one you prefer above. First I was
+> a bit confused but now I think this approach is "cleaner" (or makes more sense
+> to me ;-)).
 
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+No complaints here either. :)
+
+thx,
+
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
