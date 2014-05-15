@@ -1,72 +1,73 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH 1/4] clk: samsung: out: Add infrastructure to register CLKOUT
-Date: Thu, 15 May 2014 19:44:12 +0530
-Message-ID: <CAPdUM4NcFGGNZA9fjRP9VkpN3A0Gu+5DSgZ0RPhDD=wicr4GzA@mail.gmail.com>
-References: <1399640410-30957-1-git-send-email-tushar.behera@linaro.org>
-	<1399640410-30957-2-git-send-email-tushar.behera@linaro.org>
-	<536DA243.6000600@samsung.com>
-	<53705243.1030704@linaro.org>
-	<CAPdUM4N=k-pPxdhPQgVHh0fb+nqkgs7StwM2Pb6C8gcjx6dw-w@mail.gmail.com>
-	<5374CA1C.8000207@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5374CA1C.8000207@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Tushar Behera <tushar.behera@linaro.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, sunil joshi <joshi@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RFC v13 4/5] dma: mpc512x: add device tree binding document
+Date: Thu, 15 May 2014 18:15:34 +0400
+Message-ID: <1400163335-29853-5-git-send-email-a13xp0p0v88@gmail.com>
+References: <1400163335-29853-1-git-send-email-a13xp0p0v88@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400163335-29853-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 May 2014 19:37, Tomasz Figa <t.figa@samsung.com> wrote:
-> Hi Rahul, Tushar,
->
-> On 15.05.2014 15:44, Rahul Sharma wrote:
->> Hi Tushar,
->>
->> Basically you are adding a new clock-type for Clkout. IMO clkout
->> is not a special hardware. Existing clock types can be reused to
->> support clkout. I see 3 major problem here:
->>
->> 1) Clkout -> (Mux + Gate). You clubbed mux and gate together, and
->> exposing as a single clock which is something like a composite clock.
->> IMO this is not a recommended way in CCF.
->>
->> 2) New Clock Type: Since clkout is just a combination of a simple
->> mux and gate which are already supported, it is a unnecessary
->> duplication.
->>
->> 3) Clkout registered along with CMU: which is not correct. Clkout is in PMU
->> (Separate physical IP) and should be registered as a independent Clock
->> provider which provides 1 mux and 1 gate clock (As if now). It should also be
->> well connected with main CMU.
->>
->> I understand the challenge in using regmap interface for a clock provider. But
->> we need to identify a clean solution. IMHO a independent clock provider with
->> iomap, is relatively cleaner approach till CCF is not ready with regmap based
->> reg access for clock registers.
->>
->> Experts!! please comment.
->
-> It's quite unfortunate that Tushar has duplicated the effort to create a
-> clkout driver, considering the fact that we did have such driver
-> internally at SRPOL and it was quite nice and simple.
->
-> I will post a cleaned-up version today, that is about 2 times smaller in
-> terms of lines of added code and provides the same functionality,
-> without introducing custom clock types. In addition, it models the
-> clkout properly as a feature of PMU, not CMU (CMU only provides outputs
-> of particular sub-blocks that are fed into the PMU).
+Introduce a device tree binding document for the MPC512x DMA controller
 
-oh.. thats nice. Please share the implementation.
+Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ .../devicetree/bindings/dma/mpc512x-dma.txt        | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
 
-Regards,
-Rahul Sharma.
+diff --git a/Documentation/devicetree/bindings/dma/mpc512x-dma.txt b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+new file mode 100644
+index 0000000..b1cbc3f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+@@ -0,0 +1,40 @@
++* Freescale MPC512x and MPC8308 DMA Controller
++
++The DMA controller in Freescale MPC512x and MPC8308 SoCs can move
++blocks of memory contents between memory and peripherals or
++from memory to memory.
++
++Refer to "Generic DMA Controller and DMA request bindings" in
++the dma/dma.txt file for a more detailed description of binding.
++
++Required properties:
++- compatible: Should be "fsl,mpc5121-dma" or "fsl,mpc8308-dma"
++- reg: Address and size of the DMA controller's register set
++- Interrupt for the DMA controller. Syntax of interrupt client node
++	is described in interrupt-controller/interrupts.txt
++
++Optional properties:
++- #dma-cells: The length of the DMA specifier, must be <1>.
++	Each channel of this DMA controller has a peripheral request line,
++	this assignment is fixed in hardware. The cell in dmas property
++	of a client device represents the channel number
++
++Example:
++
++	dma0: dma@14000 {
++		compatible = "fsl,mpc5121-dma";
++		reg = <0x14000 0x1800>;
++		interrupts = <65 0x8>;
++		#dma-cells = <1>;
++	};
++
++DMA clients must use the format described in dma/dma.txt
++
++Example:
++
++	sdhc@1500 {
++		compatible = "fsl,mpc5121-sdhc";
++		/* ... */
++		dmas = <&dma0 30>;
++		dma-names = "rx-tx";
++	};
+-- 
+1.8.4.2
 
->
-> Best regards,
-> Tomasz
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
