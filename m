@@ -1,60 +1,54 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv3 0/5] tsc2005 DT binding
-Date: Thu, 15 May 2014 16:23:16 +0200
-Message-ID: <20140515142315.GA15716@earth.universe>
-References: <1398470179-20880-1-git-send-email-sre@kernel.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI
+ I/O memory type
+Date: Thu, 15 May 2014 15:29:24 +0100
+Message-ID: <20140515142924.GI27594@arm.com>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1400145519-28530-2-git-send-email-thomas.petazzoni@free-electrons.com>
+ <8288032.jL4bOz6qPT@wuerfel>
+ <20140515155130.193c3181@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1398470179-20880-1-git-send-email-sre@kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20140515155130.193c3181-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 15, 2014 at 02:51:30PM +0100, Thomas Petazzoni wrote:
+> On Thu, 15 May 2014 15:21:25 +0200, Arnd Bergmann wrote:
+> > On Thursday 15 May 2014 11:18:37 Thomas Petazzoni wrote:
+> > > @@ -445,7 +452,7 @@ int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
+> > >         return ioremap_page_range(PCI_IO_VIRT_BASE + offset,
+> > >                                   PCI_IO_VIRT_BASE + offset + SZ_64K,
+> > >                                   phys_addr,
+> > > -                                 __pgprot(get_mem_type(MT_DEVICE)->prot_pte));
+> > > +                                 __pgprot(get_mem_type(pci_ioremap_mem_type)->prot_pte));
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(pci_ioremap_io);
+> > > 
+> > 
+> > As discussed on IRC, I think we'd be better off making this a strong-ordered
+> > mapping for all platforms unconditionally. The PCI I/O space semantics
+> > require non-posted writes, which is the main difference between device
+> > and SO mappings, so the same fix is required both for mvebu as a workaround
+> > for the deadlock as well as for everyone else as a fix for an incorrect
+> > PCI behavior.
+> 
+> Ok, I'll take that into account when posting a v4.
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Actually, I don't think this reasoning is correct. The memory type here
+applies to accesses mastered by the CPU onto AXI -- it is the job of the
+AXI/PCI bridge (i.e. the host controller) to ensure that writes are not
+posted, so this is irrelevant.
 
-On Sat, Apr 26, 2014 at 01:56:14AM +0200, Sebastian Reichel wrote:
-> This adds device tree support for the tsc2005 touchscreen
-> controller, which is currently only used by the Nokia N900
-> board.
->=20
-> The patch does not update the reset pin handling for platform
-> data based probe to avoid merge conflicts. The n900 platform
-> code will be removed in the near future (3.16?) and the driver
-> can be simplified once that has happened.
+Of course, the erratum in question requires SO memory, but that's an
+entirely different problem. The default should remain as device memory.
 
-Ping. It would be nice to see this patchset in 3.16, since its
-the last important hardware component missing for N900 DT boot.
-
--- Sebastian
-
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTdM3TAAoJENju1/PIO/qahKkQAInrLPv8Si/nxIsWEynE8RYm
-YjHrOzkU0EiN/RPB3DT1wZNSnAHgJ9dEiAtuhjGYBssE5pyJIdTFG7LHrd3x2jvD
-pS2pNlt8ifzzaLoB+a3j9d+QGhDejJqJ4sJKUmxSDga4fKnyKpsruV3nOM6WBruy
-vSisJKT7pK9Rqq80vtKfISN1TTs0qAnN8RXb0oNoyesrVNOHzwqn5h3impuBJ0k5
-/hd/bL3MR1F5t7MbhONYuK0UIGyTDFAkZXndCmOu90f0TOeVc/oGx0HQMEUjZSv4
-3Vb/RRQTJEzoQ1vXVpiOcZ7baa/FnzF/eONt0+bRDKsrk8/THtXdAtODeZWsVzYG
-Ey/lIco41Z1A2vRhe4umzOsG/rFszk8xYKSPAXNUaEqvAB44Dq7jQlp+nqcG0JYM
-3Spn/pLyba1HFr/c0ftTovyEWDvqpUrtoUhZZS1cOu+PqHGPa4jV2LIR29rqIDdq
-GuHE0ZQrvZuz3IzUC0m1TfTLeGBKMerjEAjZW+WxyrI0VJ6i9aGKx8X9rO7FiHNx
-BusBvlSj0+NvNPwq6bleOdaGbwB35ZZGmAPo7GLUm+asbCoQii6bAHHo4wStR1xS
-MNRRFsysWdbqfrKGHR3INGD8EzFXWrk+/AL/B6YiUqp7JPj8g3L7Uf+ow45EuN0H
-lMWsoixXgkxqzhtj1aOy
-=cPDq
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
