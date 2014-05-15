@@ -1,53 +1,45 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v5 1/5] ARM: EXYNOS: Add generic cpu power control functions
- for all exynos based SoCs
-Date: Thu, 15 May 2014 23:11:40 +0200
-Message-ID: <53752D8C.3030708@gmail.com>
-References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com> <1399307221-8659-2-git-send-email-a.kesavan@samsung.com> <019b01cf6e52$75e1a710$61a4f530$@samsung.com> <CAM4voamSNYZ_hsjF3eZhqZ=FF__39tFgi5FeXRcUhRbYYzu0LQ@mail.gmail.com>
+From: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Subject: Re: [RFC PATCH 06/10] usb: xhci: Add Tegra XHCI host-controller
+ driver
+Date: Thu, 15 May 2014 17:16:01 -0400 (EDT)
+Message-ID: <Pine.LNX.4.44L0.1405151709100.887-100000@iolanthe.rowland.org>
+References: <CAL1qeaHm7U2NVDeVZS-Tiz5ntkk4c13RR_1ws9MTYGGoGCOB5A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAM4voamSNYZ_hsjF3eZhqZ=FF__39tFgi5FeXRcUhRbYYzu0LQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Abhilash Kesavan <kesavan.abhilash@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, "mark.rutland" <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, Andrew Bresticker <abrestic@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, skon.hwang@samsung.com, robh+dt <robh+dt@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thomas P Abraham <thomas.ab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Jonghwan Choi <jhbird.choi@samsung.com>, Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "inderpal.s@samsung.com" <inderpal.s@samsung.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL1qeaHm7U2NVDeVZS-Tiz5ntkk4c13RR_1ws9MTYGGoGCOB5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant>
 List-Id: devicetree@vger.kernel.org
 
-Hi Abhilash,
+On Thu, 15 May 2014, Andrew Bresticker wrote:
 
-On 13.05.2014 12:12, Abhilash Kesavan wrote:
-> On Tue, May 13, 2014 at 7:54 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> > This does not feel appropriate at all: Rather than creating a child device,
+> > you should have a specific driver that hooks into functions exported
+> > by the xhci core. See Documentation/driver-model/design-patterns.txt
+> 
+> This is how DWC3, currently the only in-tree non-PCI XHCI host driver,
+> is structured - see drivers/usb/dwc3/host.c.  The recently proposed
+> Armada XHCI driver [1] just adds clock support and a hook in
+> xhci-plat's probe() to do the platform-specific initialization.
+> Tegra's XHCI driver initialization is quite a bit more complicated,
+> mainly due to the need for external firmware and specific ordering
+> (e.g. firmware messages should only be enabled after the HCD is
+> created).  I could do away with the xhci-plat sub-device and just
+> create a Tegra hc_driver, but it seems silly to have three XHCI
+> platform drivers structured in three different ways.  USB folks, do
+> you have an opinion on how this should be done?
 
-[snip]
+Felipe and I have differing opinions.  I prefer not to create an extra 
+device level, and he does (that's why the non-PCI EHCI drivers don't do 
+it and the dwc3 driver does).  I consider Felipe's approach to be an 
+example of the "Midlayer Mistake" anti-pattern from the LWN 
+article mentioned earlier in this thread -- I don't know what he thinks 
+about my approach.
 
->>> diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-
->>> pmu.h
->>> index 4f6a256..0bdfcbc 100644
->>> --- a/arch/arm/mach-exynos/regs-pmu.h
->>> +++ b/arch/arm/mach-exynos/regs-pmu.h
->>> @@ -121,6 +121,12 @@
->>>
->>>  #define S5P_CHECK_SLEEP                              0x00000BAD
->>>
->>> +#define EXYNOS_ARM_CORE0_CONFIGURATION               S5P_PMUREG(0x2000)
->>
->> This can be put in order of address.
-> OK, will fix.
->>
->>> +#define EXYNOS_ARM_CORE_CONFIGURATION(_nr)   \
->>> +                     (EXYNOS_ARM_CORE0_CONFIGURATION + (0x80 * (_nr)))
->>> +#define EXYNOS_ARM_CORE_STATUS(_nr)          \
->>> +                     (EXYNOS_ARM_CORE_CONFIGURATION(_nr) + 0x4)
+Anyway, unless I'm totally mistaken, you wouldn't end up with three
+platform drivers structured in three different ways.  Either way, your
+new driver would be structured like one of the existing two.
 
-My patches posted quite a while ago [1] to fix DT CPU topology already
-add these, remove S5P_ARM_CORE1* and fix corresponding usage in
-hotplug.c and platsmp.c.
-
-[1] http://thread.gmane.org/gmane.linux.kernel.samsung-soc/29573
-
-So I think you should rebase on top of them or at least on top of
-patches 1 and 2 from that series, as 3 and 4 should be dropped.
-
-Best regards,
-Tomasz
+Alan Stern
