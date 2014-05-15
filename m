@@ -1,68 +1,62 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v3 RESEND 2/5] ARM: add SMP support for Broadcom mobile
- SoCs
-Date: Thu, 15 May 2014 13:17:00 -0500
-Message-ID: <5375049C.40104@linaro.org>
-References: <1400176691-26058-1-git-send-email-elder@linaro.org> <1400176691-26058-3-git-send-email-elder@linaro.org> <CAGVrzca20+3kmJjyGv8Pr-qNNV4n0hhADL6GWvcYVDUL4q28Hg@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 3/8] clk: samsung: add infrastructure to register cpu clocks
+Date: Thu, 15 May 2014 11:18:44 -0700
+Message-ID: <CAD=FV=XmVNwwZY_LM6Za-p7gg6CPh1mGj=BoWvG0Q-Cx9L_A9Q@mail.gmail.com>
+References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com>
+	<1400029876-5830-4-git-send-email-thomas.ab@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzca20+3kmJjyGv8Pr-qNNV4n0hhADL6GWvcYVDUL4q28Hg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Matt Porter <mporter@linaro.org>, Christian Daudt <bcm@fixthebug.org>, Russell King <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, sboyd@codeaurora.org, bcm-kernel-feedback-list@broadcom.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1400029876-5830-4-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>
+Cc: cpufreq@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, l.majewski@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, Thomas P Abraham <thomas.ab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/15/2014 01:03 PM, Florian Fainelli wrote:
-> Hi Alex,
-> 
-> 2014-05-15 10:58 GMT-07:00 Alex Elder <elder@linaro.org>:
->> This patch adds SMP support for BCM281XX and BCM21664 family SoCs.
->>
->> This feature is controlled with a distinct config option such that a
->> SMP-enabled multi-v7 binary can be configured to run these SoCs in
->> uniprocessor mode.  Since this SMP functionality is used for
->> multiple Broadcom mobile chip families the config option is called
->> ARCH_BCM_MOBILE_SMP (for lack of a better name).
->>
->> On SoCs of this type, the secondary core is not held in reset on
->> power-on.  Instead it loops in a ROM-based holding pen.  To release
->> it, one must write into a special register a jump address whose
->> low-order bits have been replaced with a secondary core's id, then
->> trigger an event with SEV.  On receipt of an event, the ROM code
->> will examine the register's contents, and if the low-order bits
->> match its cpu id, it will clear them and write the value back to the
->> register just prior to jumping to the address specified.
->>
->> The location of the special register is defined in the device tree
->> using a "secondary-boot-reg" property in a node whose "enable-method"
->> matches.
->>
->> Derived from code originally provided by Ray Jui <rjui@broadcom.com>
->>
->> Signed-off-by: Alex Elder <elder@linaro.org>
->> ---
->>  arch/arm/mach-bcm/Kconfig   |  18 +++-
->>  arch/arm/mach-bcm/Makefile  |   3 +
->>  arch/arm/mach-bcm/platsmp.c | 201 ++++++++++++++++++++++++++++++++++++++++++++
-> 
-> Could we make that name a little bit more specific to the mobile SoCs?
+Thomas,
 
-Sure.  I thought about that but naming stuff here has been a sort
-of ongoing struggle...  "Kona" made some sense, in some cases,
-but it's not perfect.  Simlar with "mobile."
+On Tue, May 13, 2014 at 6:11 PM, Thomas Abraham <ta.omasab@gmail.com> wrote:
+> From: Thomas Abraham <thomas.ab@samsung.com>
+> +static int exynos4210_armclk_pre_rate_change(struct clk_notifier_data *ndata,
+> +                       struct exynos_cpuclk *armclk, void __iomem *base)
+> +{
+> +       struct exynos4210_armclk_data *armclk_data = armclk->data;
+> +       unsigned long alt_prate = clk_get_rate(armclk->alt_parent);
+> +       unsigned long alt_div, div0, div1, tdiv0, mux_reg;
+> +       unsigned long cur_armclk_rate, timeout;
+> +       unsigned long flags;
+> +
+> +       /* find out the divider values to use for clock data */
+> +       while (armclk_data->prate != ndata->new_rate) {
+> +               if (armclk_data->prate == 0)
+> +                       return -EINVAL;
+> +               armclk_data++;
+> +       }
+> +
+> +       div0 = armclk_data->div0;
+> +       div1 = armclk_data->div1;
+> +       if (readl(base + SRC_CPU) & EXYNOS4210_MUX_HPM_MASK) {
+> +               div1 = readl(base + DIV_CPU1) & EXYNOS4210_DIV1_HPM_MASK;
+> +               div1 |= ((armclk_data->div1) & ~EXYNOS4210_DIV1_HPM_MASK);
+> +       }
+> +
+> +       /*
+> +        * if the new and old parent clock speed is less than the clock speed
+> +        * of the alternate parent, then it should be ensured that at no point
+> +        * the armclk speed is more than the old_prate until the dividers are
+> +        * set.
+> +        */
+> +       tdiv0 = readl(base + DIV_CPU0);
+> +       cur_armclk_rate = ndata->old_rate / EXYNOS4210_ARM_DIV1(tdiv0) /
+> +                               EXYNOS4210_ARM_DIV2(tdiv0);
+> +       if (alt_prate > cur_armclk_rate) {
+> +               alt_div = _calc_div(alt_prate, cur_armclk_rate);
+> +               _exynos4210_set_armclk_div(base, alt_div);
+> +               div0 |= alt_div;
 
-I'll propose "kona_smp.c".  OK with you?  Unless I get a better
-suggestion I'll plan to go with that next time around.
+Don't you need to up the voltage here, too?  ...I haven't reviewed
+this whole patch (so perhaps it's elsewhere in the patch or in the
+series), but I stumbled upon this while trying to solve a different
+problem and figured I'd check...
 
-Thanks.
-
-					-Alex
-
-> There are other BCM SoCs either currently supported in this directory
-> (BCM5310X), or making their way to be supported (brcmstb, bcm63xx),
-> and those share nothing with the Mobile SoC SMP code.
-> 
-> Maybe we should create another level directory within mach-bcm...
-> 
+-Doug
