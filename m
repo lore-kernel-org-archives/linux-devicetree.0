@@ -1,81 +1,91 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [RFC PATCH 10/10] ARM: tegra124: Enable XHCI on Venice2
-Date: Wed, 14 May 2014 17:33:06 -0700
-Message-ID: <1400113986-339-11-git-send-email-abrestic@chromium.org>
-References: <1400113986-339-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400113986-339-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 3/3] media: mx2-emmaprp: Add devicetree support
+Date: Thu, 15 May 2014 09:19:35 +0800
+Message-ID: <20140515011933.GA10685@dragon>
+References: <1399015119-24000-1-git-send-email-shc_work@mail.ru>
+ <1400001829.645600850@f332.i.mail.ru> <53734A1F.7080905@samsung.com>
+ <1400086794.204219517@f388.i.mail.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400086794.204219517@f388.i.mail.ru>
+Sender: linux-media-owner@vger.kernel.org
+To: Alexander Shiyan <shc_work@mail.ru>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, devicetree@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Enable the XHCI host controller and XUSB PHY on Venice2.  All three
-USB2.0 ports are owned by the XHCI controller and the two SuperSpeed
-ports are mapped to the external USB2.0 ports.
+On Wed, May 14, 2014 at 08:59:54PM +0400, Alexander Shiyan wrote:
+> Wed, 14 May 2014 12:49:03 +0200 =D0=BE=D1=82 Sylwester Nawrocki <s.na=
+wrocki@samsung.com>:
+> > On 13/05/14 19:23, Alexander Shiyan wrote:
+> > > Tue, 13 May 2014 19:09:30 +0200 =D0=BE=D1=82 Sylwester Nawrocki <=
+s.nawrocki@samsung.com>:
+> > >> > Hi,
+> > >> >=20
+> > >> > On 02/05/14 09:18, Alexander Shiyan wrote:
+> > >>> > > This patch adds devicetree support for the Freescale enhanc=
+ed Multimedia
+> > >>> > > Accelerator (eMMA) video Pre-processor (PrP).
+> > >>> > >=20
+> > >>> > > Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+> > >>> > > ---
+> > >>> > >  .../devicetree/bindings/media/fsl-imx-emmaprp.txt     | 19=
+ +++++++++++++++++++
+> > >>> > >  drivers/media/platform/mx2_emmaprp.c                  |  8=
+ ++++++++
+> > >>> > >  2 files changed, 27 insertions(+)
+> > >>> > >  create mode 100644 Documentation/devicetree/bindings/media=
+/fsl-imx-emmaprp.txt
+> > >>> > >=20
+> > >>> > > diff --git a/Documentation/devicetree/bindings/media/fsl-im=
+x-emmaprp.txt b/Documentation/devicetree/bindings/media/fsl-imx-emmaprp=
+=2Etxt
+> > >>> > > new file mode 100644
+> > >>> > > index 0000000..9e8238f
+> > >>> > > --- /dev/null
+> > >>> > > +++ b/Documentation/devicetree/bindings/media/fsl-imx-emmap=
+rp.txt
+> > >>> > > @@ -0,0 +1,19 @@
+> > >>> > > +* Freescale enhanced Multimedia Accelerator (eMMA) video P=
+re-processor (PrP)
+> > >>> > > +  for i.MX.
+> > >>> > > +
+> > >>> > > +Required properties:
+> > >>> > > +- compatible : Shall contain "fsl,imx21-emmaprp".
+> > >>> > > +- reg        : Offset and length of the register set for t=
+he device.
+> > >>> > > +- interrupts : Should contain eMMA PrP interrupt number.
+> > >>> > > +- clocks     : Should contain the ahb and ipg clocks, in t=
+he order
+> > >>> > > +               determined by the clock-names property.
+> > >>> > > +- clock-names: Should be "ahb", "ipg".
+> > >>> > > +
+> > >>> > > +Example:
+> > >>> > > +	emmaprp: emmaprp@10026400 {
+> > >>> > > +		compatible =3D "fsl,imx27-emmaprp", "fsl,imx21-emmaprp";
+> > >> >=20
+> > >> > Is "fsl,imx27-emmaprp" compatible documented somewhere ?
+> > >
+> > > The overall structure of the eMMA module is slightly different.
+> > > As for the part of the PrP, according to the datasheet they are c=
+ompatible.
+> >=20
+> > Then can we please have all the valid compatible strings listed at =
+the
+> > 'compatible' property's description above ? I think it is useful to=
+ have
+> > an indication to which SoC each of them apply in documentation of t=
+he
+> > binding.
+>=20
+> Traditionally, i.MX drivers uses youngest chip for compatibility stri=
+ng.
+> The best example of this: drivers/bus/imx-weim.c
 
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- arch/arm/boot/dts/tegra124-venice2.dts | 46 ++++++++++++++--------------------
- 1 file changed, 19 insertions(+), 27 deletions(-)
+I guess Sylwester's point is either "fsl,imx27-emmaprp" is documented i=
+n
+the bindings or it shouldn't be used anywhere.
 
-diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
-index f0bb842..dcfc0c7 100644
---- a/arch/arm/boot/dts/tegra124-venice2.dts
-+++ b/arch/arm/boot/dts/tegra124-venice2.dts
-@@ -940,6 +940,25 @@
- 		nvidia,sys-clock-req-active-high;
- 	};
- 
-+	usb@0,70090000 {
-+		status = "okay";
-+		s1p05v-supply = <&vdd_1v05_run>;
-+		s3p3v-supply = <&vdd_3v3_lp0>;
-+		s1p8v-supply = <&vddio_1v8>;
-+	};
-+
-+	phy@0,7009f000 {
-+		status = "okay";
-+		nvidia,ss-pads = <0x3>;
-+		nvidia,hsic-pads = <0x0>;
-+		nvidia,utmi-pads = <0x7>;
-+		nvidia,ss-port0-map = <0>;
-+		nvidia,ss-port1-map = <2>;
-+		vbus1-supply = <&vdd_usb1_vbus>;
-+		vbus2-supply = <&vdd_run_cam>;
-+		vbus3-supply = <&vdd_usb3_vbus>;
-+	};
-+
- 	sdhci@0,700b0400 {
- 		cd-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
- 		power-gpios = <&gpio TEGRA_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
-@@ -960,33 +979,6 @@
- 		};
- 	};
- 
--	usb@0,7d000000 {
--		status = "okay";
--	};
--
--	usb-phy@0,7d000000 {
--		status = "okay";
--		vbus-supply = <&vdd_usb1_vbus>;
--	};
--
--	usb@0,7d004000 {
--		status = "okay";
--	};
--
--	usb-phy@0,7d004000 {
--		status = "okay";
--		vbus-supply = <&vdd_run_cam>;
--	};
--
--	usb@0,7d008000 {
--		status = "okay";
--	};
--
--	usb-phy@0,7d008000 {
--		status = "okay";
--		vbus-supply = <&vdd_usb3_vbus>;
--	};
+Shawn
