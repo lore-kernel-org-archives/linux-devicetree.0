@@ -1,102 +1,59 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv4 3/3] ARM: mvebu: implement L2/PCIe deadlock workaround
-Date: Thu, 15 May 2014 16:59:34 +0200
-Message-ID: <1400165974-9059-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1400165974-9059-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400165974-9059-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH v5 0/5] ARM: dts: enable hdmi for exynos5 based peach and snow
+ boards
+Date: Thu, 15 May 2014 20:34:20 +0530
+Message-ID: <1400166264-3428-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 375 and Armada 38x SOCs, which use the Cortex-A9
-CPU core, the PL310 cache and the Marvell PCIe hardware block are
-affected a L2/PCIe deadlock caused by a system erratum when hardware
-I/O coherency is used.
+From: Rahul Sharma <Rahul.Sharma@samsung.com>
 
-This deadlock can be avoided by mapping the PCIe memory areas as
-strongly-ordered (note: MT_UNCACHED is strongly-ordered), and by
-removing the outer cache sync done in software. This is implemented in
-this patch by:
+Enable hdmi for exynos5250 based snow board, exynos5420
+based peach pit board and 5800 based peach-pi board.
 
- * Registering a custom arch_ioremap_caller function that allows to
-   make sure PCI memory regions are mapped MT_UNCACHED.
+V5:
+1) Moved hdmi_hpd_irq pin back to board files.
+2) Replaced 0 with GPIO_ACTIVE_HIGH while adding gpio property
+to HDMI node.
 
- * Adding at runtime the 'arm,io-coherent' property to the PL310 cache
-   controller. This cannot be done permanently in the DT, because the
-   hardware I/O coherency can only be enabled when CONFIG_SMP is
-   enabled, in the current kernel situation.
+V4:
+1) Removed hdmi_hpd_irq pin from peach-pi board as it already
+present in exynos5420-pinctrl.dtsi.
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/mach-mvebu/coherency.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+V3:
+1) Re-spin on dependent patches.
+2) Added patch to enable hdmi for Peach-pi board.
 
-diff --git a/arch/arm/mach-mvebu/coherency.c b/arch/arm/mach-mvebu/coherency.c
-index d5a975b..f6be9c6 100644
---- a/arch/arm/mach-mvebu/coherency.c
-+++ b/arch/arm/mach-mvebu/coherency.c
-@@ -31,6 +31,7 @@
- #include <linux/clk.h>
- #include <asm/smp_plat.h>
- #include <asm/cacheflush.h>
-+#include <asm/mach/map.h>
- #include "armada-370-xp.h"
- #include "coherency.h"
- #include "mvebu-soc-id.h"
-@@ -308,9 +309,47 @@ static void __init armada_370_coherency_init(struct device_node *np)
- 	set_cpu_coherent();
- }
- 
-+/*
-+ * This ioremap hook is used on Armada 375/38x to ensure that PCIe
-+ * memory areas are mapped as MT_UNCACHED instead of MT_DEVICE. This
-+ * is needed as a workaround for a deadlock issue between the PCIe
-+ * interface and the cache controller.
-+ */
-+static void __iomem *
-+armada_pcie_wa_ioremap_caller(phys_addr_t phys_addr, size_t size,
-+			      unsigned int mtype, void *caller)
-+{
-+	struct resource pcie_mem;
-+
-+	mvebu_mbus_get_pcie_mem_aperture(&pcie_mem);
-+
-+	if (pcie_mem.start <= phys_addr && (phys_addr + size) <= pcie_mem.end)
-+		mtype = MT_UNCACHED;
-+
-+	return __arm_ioremap_caller(phys_addr, size, mtype, caller);
-+}
-+
- static void __init armada_375_380_coherency_init(struct device_node *np)
- {
-+	struct device_node *cache_dn;
-+
- 	coherency_cpu_base = of_iomap(np, 0);
-+	arch_ioremap_caller = armada_pcie_wa_ioremap_caller;
-+
-+	/*
-+	 * Add the PL310 property "arm,io-coherent". This makes sure the
-+	 * outer sync operation is not used, which allows to
-+	 * workaround the system erratum that causes deadlocks when
-+	 * doing PCIe in an SMP situation on Armada 375 and Armada
-+	 * 38x.
-+	 */
-+	for_each_compatible_node(cache_dn, NULL, "arm,pl310-cache") {
-+		struct property *p;
-+
-+		p = kzalloc(sizeof(*p), GFP_KERNEL);
-+		p->name = kstrdup("arm,io-coherent", GFP_KERNEL);
-+		of_add_property(cache_dn, p);
-+	}
- }
- 
- static int coherency_type(void)
+V2:
+1) Re-spin on dependent patches.
+2) Added patch to remove chip specific hdmi hpd gpio from
+board file top SoC file.
+
+This series is based on Kukjin Kims, for-next branch.
+
+It is dependent on
+
+1) Sachin's patch: "ARM: dts: exynos5250-snow: add tps65090 power regulator"
+at https://patches.linaro.org/28325/ : [Reviewed-by: Doug Anderson]
+
+All other dependent patches are already landed in maintainers
+tree.
+
+Rahul Sharma (4):
+  ARM: dts: enable hdmi for exynos5250 based snow board
+  ARM: dts: change to correct compatible string for exynos5420 hdmi
+  ARM: dts: enable hdmi for exynos5420 based peach-pit board
+  ARM: dts: enable hdmi for exynos5800 based peach-pi board
+
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi |    6 +++++-
+ arch/arm/boot/dts/exynos5250-snow.dts         |   14 ++++++++++++++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts    |   22 ++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420.dtsi             |    7 ++++++-
+ arch/arm/boot/dts/exynos5800-peach-pi.dts     |   22 ++++++++++++++++++++++
+ 5 files changed, 69 insertions(+), 2 deletions(-)
+
 -- 
-1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
