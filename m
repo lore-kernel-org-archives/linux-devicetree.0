@@ -1,53 +1,50 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH] of: fix CONFIG_OF=n prototype of of_node_full_name()
-Date: Thu, 15 May 2014 15:19:29 +0100
-Message-ID: <20140515141929.8CA29C4095B@trevor.secretlab.ca>
-References: <20140515144430.11ab033b@canb.auug.org.au>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140515144430.11ab033b@canb.auug.org.au>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Rothwell <sfr@canb.auug.org.au>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv3 3/3] ARM: mvebu: implement L2/PCIe deadlock workaround
+Date: Thu, 15 May 2014 16:22:08 +0200
+Message-ID: <20140515162208.30d5687c@free-electrons.com>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1400145519-28530-4-git-send-email-thomas.petazzoni@free-electrons.com>
+	<6600397.74rV2Hm7nM@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6600397.74rV2Hm7nM@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 May 2014 14:44:30 +1000, Stephen Rothwell <sfr@canb.auug.org.au> wrote:
-> Make the CONFIG_OF=n prototpe of of_node_full_name() mateh the CONFIG_OF=y
-> version.
-> 
-> Fixes compile warnings like this:
-> 
-> sound/soc/soc-core.c: In function 'soc_check_aux_dev':
-> sound/soc/soc-core.c:1667:3: warning: passing argument 1 of 'of_node_full_name' discards 'const' qualifier from pointer target type [enabled by default]
->    codecname = of_node_full_name(aux_dev->codec_of_node);
-> 
-> when CONFIG_OF is not defined.
+Dear Arnd Bergmann,
 
-Good catch, thanks. Applied and will be sent to Linus shortly.
+On Thu, 15 May 2014 15:26:29 +0200, Arnd Bergmann wrote:
 
-g.
+> > +
+> > +       if (of_machine_is_compatible("marvell,armada375") ||
+> > +           of_machine_is_compatible("marvell,armada38x")) {
+> > +               arch_ioremap_caller = armada_pcie_wa_ioremap_caller;
+> > +               pci_ioremap_set_mem_type(MT_UNCACHED);
+> > +               mvebu_l2x0_pl310_coherent();
+> > +       }
+> > +
+> >         l2x0_of_init(0, ~0UL);
+> 
+> 
+> I wonder whether this should just be move to the existing
+> armada_375_380_coherency_init() function to avoid the
+> of_machine_is_compatible() check. Other than that,
 
-> 
-> Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> ---
->  include/linux/of.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index 3bad8d106e0e..e6f0988c1c68 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -349,7 +349,7 @@ int of_device_is_stdout_path(struct device_node *dn);
->  
->  #else /* CONFIG_OF */
->  
-> -static inline const char* of_node_full_name(struct device_node *np)
-> +static inline const char* of_node_full_name(const struct device_node *np)
->  {
->  	return "<no-node>";
->  }
-> -- 
-> 2.0.0.rc2
-> 
-> -- 
-> Cheers,
-> Stephen Rothwell                    sfr@canb.auug.org.au
+Indeed, makes a lot of sense to have this in coherency.c instead. Will
+be part of v4.
+
+Thanks,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
