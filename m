@@ -1,71 +1,68 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] drm/panel: add support for EDT panels
-Date: Thu, 15 May 2014 09:51:03 +0200
-Message-ID: <20140515075102.GE5952@ulmo>
-References: <cover.1400103181.git.stefan@agner.ch>
- <35c081171a3d9a9401767601c02a12e266b37dd0.1400103181.git.stefan@agner.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 4/6] arm: add basic support for Mediatek MT6589 boards
+Date: Thu, 15 May 2014 09:58:30 +0200
+Message-ID: <4623149.HtC2qgQ8vE@wuerfel>
+References: <1399938570-11356-1-git-send-email-matthias.bgg@gmail.com>
+ <20140514070038.GG29258@lukather> <20140514212612.GK20486@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cYtjc4pxslFTELvY"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <35c081171a3d9a9401767601c02a12e266b37dd0.1400103181.git.stefan-XLVq0VzYD2Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: stefan-XLVq0VzYD2Y@public.gmane.org
-Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140514212612.GK20486@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: mark.rutland@arm.com, andrew@lunn.ch, linux-doc@vger.kernel.org, gregory.clement@free-electrons.com, thierry.reding@gmail.com, heiko.stuebner@bq.com, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, florian.vaussard@epfl.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, robh+dt@kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, rdunlap@infradead.org, linux-kernel@vger.kernel.org, silvio.fricke@gmail.com, galak@codeaurora.org, olof@lixom.net, Maxime Ripard <maxime.ripard@free-electrons.com>, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Wednesday 14 May 2014 14:26:12 Stephen Boyd wrote:
+> On 05/14, Maxime Ripard wrote:
+> > On Tue, May 13, 2014 at 03:47:32PM -0700, Stephen Boyd wrote:
+> > > On 05/13, Matthias Brugger wrote:
+> > > > +	"mediatek,mt6589",
+> > > > +	NULL,
+> > > > +};
+> > > > +
+> > > > +DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
+> > > > +	.dt_compat	= mediatek_board_dt_compat,
+> > > > +MACHINE_END
+> > > 
+> > > You shouldn't need this file at all if the platform is part of
+> > > the multi-platform kernel.
+> > 
+> > From a technical point of view, you don't. But it's interesting to
+> > keep it mostly for two things:
+> >   - You get to see the platform name in /proc/cpuinfo
+> >   - If you ever need to add platform quirks, it's already there
+> > 
+> > We had a similar discussion two weeks ago for mach-sunxi with Olof and
+> > Arnd, and ended up keeping this minimal machine.
+> > 
+> 
+> It looks like it's only useful to make /proc/cpuinfo have the
+> platform name because it really isn't that hard to add this file
+> if we need to add platform quirks. The downside is we have to
+> keep adding compatibles when we support new SoCs.
 
---cYtjc4pxslFTELvY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We also still add Kconfig entries for each new platform, and I'd like
+to leave it at that for the time being. In a lot of cases we end
+up adding stuff to the machine descriptor later, e.g. for SMP support
+(hopefully no more thanks to your work though).
 
-On Wed, May 14, 2014 at 11:45:57PM +0200, stefan-XLVq0VzYD2Y@public.gmane.org wrote:
-> From: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
->=20
-> This panels are sold by Toradex for Colibri T20/T30 and Apalis T30
-> evaluation kits.
->=20
-> Signed-off-by: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Once we have a significant number of machines that are actually
+usable rather than stubs and that we are confident about never
+needing any additional pointers, we can revisit this discussion.
 
-Panel patches should go to the dri-devel mailing list as well.
+At that point, we should also discuss how to avoid adding a Kconfig
+entry for each new platform, which e.g. involves making the
+clocksource drivers user selectable. That part has been surprisingly
+controversial in the past.
 
-Also a patch was posted only yesterday for a panel that seems to be the
-exact same one as this, even though the name differs minimally, see:
-
-	https://patchwork.kernel.org/patch/4175251/
-
-Adding Philipp on Cc so you guys can work together whether this is
-indeed the same panel. The only differences seem to be in the vertical
-front and back porches, but I suspect that either settings will work on
-both Tegra and i.MX.
-
-Thierry
-
---cYtjc4pxslFTELvY
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTdHHmAAoJEN0jrNd/PrOhGCAP/R2vqQQBK9P95sdbUrYUKbV/
-7zG0BK4uqAZQNbVbtjPdlSOsDfHFoD0aEMZ0QzdiN2D2N4Pcgs+p0RwJgylu9Iqd
-5HzwmVpvyBl4bj/XVnZQqRGUqB2x7TKhQSGdLfSC9OpD3htl+Cqp+fsw13nXq8Uz
-YP/9ZzoJx1kCRTviShgVT0UvjPIsxwcr7CPaCaSzwB1iCgMtAEY/BmMp65J1yxZ7
-BJC8i70zksUS+lQzs8fHeDuVcUkzDK3aeh9zImyepeARG7YaNGiDA8OLg6ZorS8i
-SOsG3OmLH9j8WJTsfUML1vI1GtdS8gnJhvkO+kNhslCSwnTUdgOJB494JfsOz1In
-k/PsZCSx3Lt2XRTpzOY8F80yK3VwHisw6FnTJuyZzSSymGODOax6Dg5t9+x/TN3i
-Gp7MsLv9DQyBDLljxZAlvzQlrAIkZkD2maTRN0MRFdSOuOZ7GpeRY6cDpFqeRSwi
-f3PuSjNXk4UK0wTXnK1UzYgNvRdMhmvn47SFsQdXAFX1C+XcjEPxmsqR4FGzeD7o
-d5zDT8RcIuS7DX4kFp0+vDbtUFBygXmTgRlyvqtdrUJ0iyDu+sHS/2tQo3StcnwM
-rK7q1eAXyiZnId8NQtX8JHeBHEHpwSei3O2trZ2L722i/gO7nsTDa9MFTMSrs7+U
-xtxQr5Pp0Ja/81PFA3EI
-=6lzO
------END PGP SIGNATURE-----
-
---cYtjc4pxslFTELvY--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
