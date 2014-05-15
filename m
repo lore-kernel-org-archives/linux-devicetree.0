@@ -1,100 +1,44 @@
-From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dts: am437x-gp-evm: Add ethernet support for
- GP EVM
-Date: Thu, 15 May 2014 17:04:50 +0530
-Message-ID: <5374A65A.5050408@ti.com>
-References: <1399455053-10324-1-git-send-email-mugunthanvnm@ti.com> <20140513172038.GH16837@atomide.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCHv3 2/3] ARM: mm: add support for HW coherent systems in
+ PL310
+Date: Thu, 15 May 2014 13:39:21 +0200
+Message-ID: <20140515133921.5b153362@free-electrons.com>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+	<1400145519-28530-3-git-send-email-thomas.petazzoni@free-electrons.com>
+	<20140515093639.GF11117@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140513172038.GH16837-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <20140515093639.GF11117@localhost>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 13 May 2014 10:50 PM, Tony Lindgren wrote:
-> * Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> [140507 02:31]:
->> Add CPSW ethernet support for AM437x GP EVM which has one slave pinned out
->>
->> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/am437x-gp-evm.dts | 72 +++++++++++++++++++++++++++++++++++++
->>  1 file changed, 72 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/am437x-gp-evm.dts b/arch/arm/boot/dts/am437x-gp-evm.dts
->> index 2e0c636..30ace1b 100644
->> --- a/arch/arm/boot/dts/am437x-gp-evm.dts
->> +++ b/arch/arm/boot/dts/am437x-gp-evm.dts
->> @@ -98,6 +98,58 @@
->>  			0x264 (PIN_INPUT_PULLUP | MUX_MODE7)  /* spi2_d0.gpio3_22 */
->>  		>;
->>  	};
->> +
->> +	cpsw_default: cpsw_default {
->> +		pinctrl-single,pins = <
->> +			/* Slave 1 */
->> +			0x114 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txen.rgmii1_txen */
->> +			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxdv.rgmii1_rxctl */
->> +			0x11c (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_txd3 */
->> +			0x120 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_txd2 */
->> +			0x124 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd1.rgmii1_txd1 */
->> +			0x128 (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txd0.rgmii1_txd0 */
->> +			0x12c (PIN_OUTPUT_PULLDOWN | MUX_MODE2)	/* mii1_txclk.rmii1_tclk */
->> +			0x130 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxclk.rmii1_rclk */
->> +			0x134 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rxd3 */
->> +			0x138 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rxd2 */
->> +			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd1.rgmii1_rxd1 */
->> +			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE2)	/* mii1_rxd0.rgmii1_rxd0 */
->> +		>;
->> +	};
->> +
->> +	cpsw_sleep: cpsw_sleep {
->> +		pinctrl-single,pins = <
->> +			/* Slave 1 reset value */
->> +			0x114 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x118 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x11c (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x120 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x124 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x128 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x12c (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x130 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x134 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x138 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x13c (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x140 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +		>;
->> +	};
-> Just a nitpick comment to make things more readable. Can you please add
-> the comments for these pins too so people can cross check them against
-> the documentation easier?
->
->> +	davinci_mdio_default: davinci_mdio_default {
->> +		pinctrl-single,pins = <
->> +			/* MDIO */
->> +			0x148 (PIN_INPUT_PULLUP | SLEWCTRL_FAST | MUX_MODE0)	/* mdio_data.mdio_data */
->> +			0x14c (PIN_OUTPUT_PULLUP | MUX_MODE0)			/* mdio_clk.mdio_clk */
->> +		>;
->> +	};
->> +
->> +	davinci_mdio_sleep: davinci_mdio_sleep {
->> +		pinctrl-single,pins = <
->> +			/* MDIO reset value */
->> +			0x148 (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +			0x14c (PIN_INPUT_PULLDOWN | MUX_MODE7)
->> +		>;
->> +	};
->>  };
-> And here too please.
->
->
+Dear Catalin Marinas,
 
-Will add the comments and post the patch again
+On Thu, 15 May 2014 10:36:39 +0100, Catalin Marinas wrote:
 
-Regards
-Mugunthan V N
+> > While in theory any write to a PL310 register could cause the
+> > deadlock, in practice, disabling ->sync is sufficient to workaround
+> > the deadlock, since the other cache maintenance operations are only
+> > used in very specific situations.
+> > 
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> 
+> Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+
+Thanks a lot for having reviewed these patches! I will submit PATCH 1/3
+and PATCH 2/3 in Russell's patch system now.
+
+Thanks,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
