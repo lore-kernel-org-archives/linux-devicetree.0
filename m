@@ -1,50 +1,99 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v6 01/17] usb: ehci-orion: use platform_get_irq() for DT probing
-Date: Thu, 15 May 2014 12:17:26 +0200
-Message-ID: <1400149062-32661-2-git-send-email-gregory.clement@free-electrons.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v6 02/17] usb: ehci-orion: rename error goto labels in ehci_orion_drv_probe()
+Date: Thu, 15 May 2014 12:17:27 +0200
+Message-ID: <1400149062-32661-3-git-send-email-gregory.clement@free-electrons.com>
 References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400149062-32661-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Commit 77dae54ab385033e488d8b07045bc7f8d931740f ('ARM: Kirkwood:
-ehci-orion: Add device tree binding') added the Device Tree binding
-for the ehci-orion driver. To achieve that with the irq, it used the
-irq_of_parse_and_map() function when probed in DT-mode, and
-platform_get_irq() when probed in non-DT mode.
+In preparation to the introduction of additional initialization steps
+in ehci_orion_drv_probe(), we rename the error goto labels from err1,
+err2 and err3 names to some more meaningful names.
 
-This is not necessary: platform_get_irq() works just as fine in
-DT-mode, since the conversion from DT information to 'struct resource'
-is done by the generic layers of the kernel.
-
-Therefore, this commit switches back to use just platform_get_irq().
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 ---
- drivers/usb/host/ehci-orion.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ drivers/usb/host/ehci-orion.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index 30d35e5e503a..7728e83007a7 100644
+index 7728e83007a7..9298be7c0f9b 100644
 --- a/drivers/usb/host/ehci-orion.c
 +++ b/drivers/usb/host/ehci-orion.c
-@@ -154,10 +154,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 
- 	pr_debug("Initializing Orion-SoC USB Host Controller\n");
- 
--	if (pdev->dev.of_node)
--		irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
--	else
--		irq = platform_get_irq(pdev, 0);
-+	irq = platform_get_irq(pdev, 0);
- 	if (irq <= 0) {
- 		dev_err(&pdev->dev,
+@@ -160,7 +160,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
  			"Found HC with no IRQ. Check %s setup!\n",
+ 			dev_name(&pdev->dev));
+ 		err = -ENODEV;
+-		goto err1;
++		goto err;
+ 	}
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -169,7 +169,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 			"Found HC with no register addr. Check %s setup!\n",
+ 			dev_name(&pdev->dev));
+ 		err = -ENODEV;
+-		goto err1;
++		goto err;
+ 	}
+ 
+ 	/*
+@@ -179,12 +179,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 	 */
+ 	err = dma_coerce_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(32));
+ 	if (err)
+-		goto err1;
++		goto err;
+ 
+ 	regs = devm_ioremap_resource(&pdev->dev, res);
+ 	if (IS_ERR(regs)) {
+ 		err = PTR_ERR(regs);
+-		goto err1;
++		goto err;
+ 	}
+ 
+ 	/* Not all platforms can gate the clock, so it is not
+@@ -197,7 +197,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 			&pdev->dev, dev_name(&pdev->dev));
+ 	if (!hcd) {
+ 		err = -ENOMEM;
+-		goto err2;
++		goto err_create_hcd;
+ 	}
+ 
+ 	hcd->rsrc_start = res->start;
+@@ -237,17 +237,17 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 
+ 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+ 	if (err)
+-		goto err3;
++		goto err_add_hcd;
+ 
+ 	device_wakeup_enable(hcd->self.controller);
+ 	return 0;
+ 
+-err3:
++err_add_hcd:
+ 	usb_put_hcd(hcd);
+-err2:
++err_create_hcd:
+ 	if (!IS_ERR(clk))
+ 		clk_disable_unprepare(clk);
+-err1:
++err:
+ 	dev_err(&pdev->dev, "init %s fail, %d\n",
+ 		dev_name(&pdev->dev), err);
+ 
 -- 
 1.8.1.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
