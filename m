@@ -1,45 +1,42 @@
 From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/3] ARM: dts: kirkwood: enable the PCIe for km_kirkwood
-Date: Thu, 15 May 2014 11:48:54 +0200
-Message-ID: <1400147335-20947-3-git-send-email-valentin.longchamp@keymile.com>
-References: <1400147335-20947-1-git-send-email-valentin.longchamp@keymile.com>
+Subject: [PATCH 0/3] Update the Keymile kirkwood DTS files
+Date: Thu, 15 May 2014 11:48:52 +0200
+Message-ID: <1400147335-20947-1-git-send-email-valentin.longchamp@keymile.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400147335-20947-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Cc: Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The PCIe controller is used on the KM kirkwood reference design.
-This enables it.
 
-Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
----
+This series resynchs the Keymile Kirkwood DTS files with mainline since
+the boards do not boot anymore with the 3.15 rc kernels (to be honest, I
+have not tested the last 2-3 releases).
 
- arch/arm/boot/dts/kirkwood-km_kirkwood.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+The changes are the addition of the PCIe controller for the 98dx4122
+SoC, the explicit disabling of the SATA phys for this same SoC and
+finally the enabling of the PCIe controller on the Keymile Reference
+design.
 
-diff --git a/arch/arm/boot/dts/kirkwood-km_kirkwood.dts b/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
-index 61139bf..9f57796 100644
---- a/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
-+++ b/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
-@@ -17,6 +17,16 @@
- 		stdout-path = &uart0;
- 	};
- 
-+	mbus {
-+		pcie-controller {
-+			status = "okay";
-+
-+			pcie@1,0 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+
- 	ocp@f1000000 {
- 		pinctrl: pin-controller@10000 {
- 			pinctrl-0 = < &pmx_i2c_gpio_sda &pmx_i2c_gpio_scl >;
+The series also adds a new DTS for another Keymile generic design where
+the mv64xxx eth interace is configured with fixed parameters to no phy
+but a switch (for board internal communication).
+
+The series applies and was tested on top of Jason's mvebu/dt branch
+(mvebu-dt-3.16 tag).
+
+
+Valentin Longchamp (3):
+  ARM: dts: kirkwood: resynch 98dx4122 dtsi
+  ARM: dts: kirkwood: enable the PCIe for km_kirkwood
+  ARM: dts: kirkwood: add kirkwood-km_fixedeth DTS file
+
+ arch/arm/boot/dts/kirkwood-98dx4122.dtsi   | 43 ++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-km_fixedeth.dts | 70 ++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/kirkwood-km_kirkwood.dts | 10 +++++
+ 3 files changed, 123 insertions(+)
+ create mode 100644 arch/arm/boot/dts/kirkwood-km_fixedeth.dts
+
 -- 
 1.8.0.1
 
