@@ -1,41 +1,81 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCHv3 3/3] ARM: mvebu: implement L2/PCIe deadlock workaround
-Date: Thu, 15 May 2014 10:36:57 +0100
-Message-ID: <20140515093657.GG11117@localhost>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1400145519-28530-4-git-send-email-thomas.petazzoni@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1400145519-28530-4-git-send-email-thomas.petazzoni@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Gregory Clement <gregory.clement@free-electrons.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Albin Tonnerre <Albin.Tonnerre@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: stefan@agner.ch
+Subject: [PATCH v2] drm/panel: add support for EDT ET057090DHU panel
+Date: Thu, 15 May 2014 11:38:45 +0200
+Message-ID: <1400146725-5788-1-git-send-email-stefan@agner.ch>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: swarren@wwwdotorg.org, thierry.reding@gmail.com
+Cc: linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, marcel@ziswiler.com, dri-devel@lists.freedesktop.org, stefan@agner.ch
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 10:18:39AM +0100, Thomas Petazzoni wrote:
-> The Marvell Armada 375 and Armada 38x SOCs, which use the Cortex-A9
-> CPU core, the PL310 cache and the Marvell PCIe hardware block are
-> affected a L2/PCIe deadlock caused by a system erratum when hardware
-> I/O coherency is used.
-> 
-> This deadlock can be avoided by mapping the PCIe memory areas as
-> strongly-ordered (note: MT_UNCACHED is strongly-ordered), and by
-> removing the outer cache sync done in software. This is done in this
-> patch, thanks to the new bits of infrastructure added in 'ARM: mm:
-> allow sub-architectures to override PCI I/O memory type' and 'ARM: mm:
-> add support for HW coherent systems in PL310' respectively.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Stefan Agner <stefan@agner.ch>
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+This panel is sold by Toradex for Colibri T20/T30 and Apalis T30
+evaluation kits.
+
+Signed-off-by: Stefan Agner <stefan@agner.ch>
+---
+ .../devicetree/bindings/panel/edt,et057090dhu.txt  |  7 ++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 26 ++++++++++++++++++++++
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/edt,et057090dhu.txt
+
+diff --git a/Documentation/devicetree/bindings/panel/edt,et057090dhu.txt b/Documentation/devicetree/bindings/panel/edt,et057090dhu.txt
+new file mode 100644
+index 0000000..4903d7b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/edt,et057090dhu.txt
+@@ -0,0 +1,7 @@
++Emerging Display Technology Corp. 5.7" VGA TFT LCD panel
++
++Required properties:
++- compatible: should be "edt,et057090dhu"
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 309f29e..91b4f73 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -306,6 +306,29 @@ static const struct panel_desc chunghwa_claa101wa01a = {
+ 	},
+ };
+ 
++static const struct drm_display_mode edt_et057090dhu_mode = {
++	.clock = 25175,
++	.hdisplay = 640,
++	.hsync_start = 640 + 16,
++	.hsync_end = 640 + 16 + 30,
++	.htotal = 640 + 16 + 30 + 114,
++	.vdisplay = 480,
++	.vsync_start = 480 + 10,
++	.vsync_end = 480 + 10 + 3,
++	.vtotal = 480 + 10 + 3 + 32,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NVSYNC | DRM_MODE_FLAG_NHSYNC,
++};
++
++static const struct panel_desc edt_et057090dhu = {
++	.modes = &edt_et057090dhu_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 115,
++		.height = 86,
++	},
++};
++
+ static const struct drm_display_mode chunghwa_claa101wb01_mode = {
+ 	.clock = 69300,
+ 	.hdisplay = 1366,
+@@ -383,6 +406,9 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "chunghwa,claa101wb01",
+ 		.data = &chunghwa_claa101wb01
+ 	}, {
++		.compatible = "edt,et057090dhu",
++		.data = &edt_et057090dhu,
++	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
+ 	}, {
+-- 
+1.9.2
