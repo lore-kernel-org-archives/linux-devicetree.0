@@ -1,14 +1,14 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3] drm/panel: Add support for EDT ETM0700G0DH6 and
- ET070080DH6 panels
-Date: Thu, 15 May 2014 23:41:49 +0200
-Message-ID: <20140515214147.GD7136@mithrandir>
-References: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
- <20140515105427.GK6434@ulmo> <5374E31F.80504@wwwdotorg.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
+Date: Thu, 15 May 2014 23:44:07 +0200
+Message-ID: <53753527.3000905@gmail.com>
+References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>	<1400095043-685-2-git-send-email-rahul.sharma@samsung.com>	<5373CBAD.2010505@gmail.com>
+ <CAPdUM4MT0nZcLRtNcKRAeW4Q3n5z9n4BnzR-7uYMb1gqwEhWXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1877517662=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5374E31F.80504@wwwdotorg.org>
+In-Reply-To: <CAPdUM4MT0nZcLRtNcKRAeW4Q3n5z9n4BnzR-7uYMb1gqwEhWXA@mail.gmail.com>
 List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
@@ -18,78 +18,71 @@ List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
 Errors-To: dri-devel-bounces@lists.freedesktop.org
 Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Stefan Agner <stefan@agner.ch>, kernel@pengutronix.de, Thierry Reding <treding@nvidia.com>
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, sunil joshi <joshi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 15.05.2014 06:01, Rahul Sharma wrote:
+> Thanks Tomasz,
+> 
+> On 15 May 2014 01:31, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>> Hi Rahul, Tomasz,
+> [snip]
+>>> +     simplephys: simple-phys@10040000 {
+>>> +             compatible = "samsung,exynos5250-simple-phy";
+>>
+>> Missing reg property or unnecessary @unit-address suffix in node name.
+> 
+> I should have removed "@unit-address". I will change this.
+> 
+>>
+>>> +             samsung,pmu-syscon = <&pmu_system_controller>;
+>>> +             #phy-cells = <1>;
+>>> +     };
+>>
+>> In general, the idea is quite good, but I think this should rather bind
+>> to the main PMU node, since this is just a part of the PMU, not another
+>> device in the system. This also means that the PMU node itself should be
+>> the PHY provider.
+>>
+> 
+> Please correct me if I got you wrong. You want somthing like this:
+> 
+> pmu_system_controller: system-controller@10040000 {
+>          ...
+>           simple_phys: simple-phys {
+>                         compatible = "samsung,exynos5420-simple-phy";
+>                         ...
+>           };
+> };
 
---===============1877517662==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pZs/OQEoSSbxGlYw"
-Content-Disposition: inline
+Not exactly.
 
+What I meant is that the PMU node itself should be the PHY provider, e.g.
 
---pZs/OQEoSSbxGlYw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+pmu_system_controller: system-controller@10040000 {
+	/* ... */
+	#phy-cells = <1>;
+};
 
-On Thu, May 15, 2014 at 09:54:07AM -0600, Stephen Warren wrote:
-> On 05/15/2014 04:54 AM, Thierry Reding wrote:
-> > On Thu, May 15, 2014 at 12:25:47PM +0200, Philipp Zabel wrote:
-> >> The EDT ETM0700G0DH6 and ET070080DH6 are 7" 800x480 panels,
-> >> which can be supported by the simple panel driver.
-> >>
-> >> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> >> ---
-> >> Changes since v2:
-> >>  - Added device tree binding documentation. Do we really want to add o=
-ne little
-> >>    file for each panel?
-> >=20
-> > I guess we could move all of the compatible values into simple-panel.txt
-> > but I don't see a need for that yet.
->=20
-> If they aren't added there, then I believe checkpatch will complain
-> about patches that start to use the new compatible values, since they
-> won't be documented.
+and then the PMU node should instantiate the Exynos simple PHY driver,
+as this is a driver for a facility existing entirely inside of the PMU.
+Moreover, the driver should be rather called Exynos PMU PHY.
 
-Added where? simple-panel.txt or in separate files per compatible?
+I know this isn't really possible at the moment, but with device tree we
+must design things carefully, so it's better to take a bit more time and
+do things properly.
 
-Thierry
+So my opinion on this is that there should be a central Exynos PMU
+driver that claims the IO region and instantiates necessary subdrivers,
+such as Exynos PMU PHY driver, Exynos CLKOUT driver, Exynos cpuidle
+driver and more, similar to what is being done in drivers/mfd.
 
---pZs/OQEoSSbxGlYw
-Content-Type: application/pgp-signature
+Now, there is already ongoing effort to convert current freestanding PMU
+configuration code in mach-exynos into a full-fledged PMU driver, but
+not exactly in the same direction as I stated above. I'll try to
+cooperate with Pankaj, who is responsible for this work to make this go
+into the right track.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTdTSbAAoJEN0jrNd/PrOhZR8P/R3Jos+IhWTUpUVEoCiNi3/U
-vQluv2perj8yXA7iq6BNwjnun1jc75/GFRJeVHseQCIRPfX0D2Qtwdc5IxvRbQ+N
-h+fWbGzrLDaRDxRInqmjKM8c9dQHc5NWUgO9te4uWWFzZ6vHQMKk1CtpSAcKPRTt
-hYqgxcBkWSFPV5C6NCiXGwQ//e6mDgWwwLOc150GZosG/o0u04rxLjETqO+kClPf
-+caE/N3U1ZbW7iFtyGKTheaKP1xoasqG8G9LeLoTEM0hzi9WrAV6wek/fCfVDoDP
-qJoABdSa5sQyOUjgxM7DUzvaCUpxYv90iyZs9jjXZ4QoQp0emk72yGHeCVD8ao8g
-QbUUrrYjm4Vfk717gOOxsGx8fXBBnaawmf2gIyTUzsCyZdh6p7ZtRQt5SdCB8omP
-SCOYuxU1VtqFBG/i7TsAOiSgcGP+KzTODxfWJA4g6PiQCsZkr/7WROfT6ylYXDlK
-eWl+aCPd13ssvlHe/W/kSvGQDfvm/MHtQkXOlu2dqnKjJDaJwuqyRYnYp2WnZWOE
-zvsTN6+5Cjy3vM3I68m2fwFPRDG1ry+AGlJzt6CHzDswx+QoY+g2WgoxBT+PbbZe
-2C+1p2dS7nYvTOUEGx5MQGkJhb7g+lppkSHHQ/81mnHyQ8vvIi99duysDXZX+UqN
-aZhzZc8mT6qUB8WU+lfi
-=OYa6
------END PGP SIGNATURE-----
-
---pZs/OQEoSSbxGlYw--
-
---===============1877517662==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1877517662==--
+Best regards,
+Tomasz
