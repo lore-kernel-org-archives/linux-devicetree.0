@@ -1,165 +1,69 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] ARM: edma: Get IP information from HW when booting
- with DT
-Date: Thu, 15 May 2014 14:23:04 +0530
-Message-ID: <53748070.4080706@ti.com>
-References: <1399977032-26469-1-git-send-email-peter.ujfalusi@ti.com> <1399977032-26469-3-git-send-email-peter.ujfalusi@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399977032-26469-3-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, joelf-l0cyMroinI0@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: [PATCH v5 0/5] mfd: add basic sun6i A31 PRCM support
+Date: Thu, 15 May 2014 10:55:08 +0200
+Message-ID: <1400144113-27659-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?UTF-8?q?Emilio=20L=C3=B3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dev@linux-sunxi.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Hello,
 
-On Tuesday 13 May 2014 04:00 PM, Peter Ujfalusi wrote:
-> From CCCFG register of eDMA3 we can get all the needed information for the
-> driver about the IP:
-> Number of channels: NUM_DMACH
-> Number of regions: NUM_REGN
-> Number of slots (PaRAM sets): NUM_PAENTRY
-> Number of TC/EQ: NUM_EVQUE
-> 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> ---
->  arch/arm/common/edma.c | 128 ++++++++++++++++++++++++++++++-------------------
->  1 file changed, 79 insertions(+), 49 deletions(-)
-> 
-> diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
-> index fade9ada81f8..1a98f3cd4cd9 100644
-> --- a/arch/arm/common/edma.c
-> +++ b/arch/arm/common/edma.c
-> @@ -102,7 +102,16 @@
->  #define PARM_OFFSET(param_no)	(EDMA_PARM + ((param_no) << 5))
->  
->  #define EDMA_DCHMAP	0x0100  /* 64 registers */
-> -#define CHMAP_EXIST	BIT(24)
-> +
-> +/* CCCFG register */
-> +#define GET_NUM_DMACH(x)	(x & 0x7) /* bits 0-2 */
-> +#define GET_NUM_QDMACH(x)	((x & 0x70) >> 4) /* bits 4-6 */
-> +#define GET_NUM_INTCH(x)	((x & 0x700) >> 8) /* bits 8-10 */
-> +#define GET_NUM_PAENTRY(x)	((x & 0x7000) >> 12) /* bits 12-14 */
-> +#define GET_NUM_EVQUE(x)	((x & 0x70000) >> 16) /* bits 16-18 */
-> +#define GET_NUM_REGN(x)		((x & 0x300000) >> 20) /* bits 20-21 */
-> +#define CHMAP_EXIST		BIT(24)
-> +#define MP_EXIST		BIT(25)
+This patch series adds support for some functions provided by the PRCM
+(Power/Reset/Clock Management) unit:
+- AR100, AHB0 and APB0 clocks
+- APB0 reset controller
 
-Of these new defines, you do not use GET_NUM_QDMACH(), GET_NUM_INTCH()
-and MP_EXIST (at least in this patch). Can you please get rid of them if
-not needed? May be its just me but its pretty annoying to search for a
-define only to find its never used :)
+Best Regards,
 
->  
->  #define EDMA_MAX_DMACH           64
->  #define EDMA_MAX_PARAMENTRY     512
-> @@ -1415,6 +1424,68 @@ void edma_clear_event(unsigned channel)
->  }
->  EXPORT_SYMBOL(edma_clear_event);
->  
-> +static int edma_setup_info_from_hw(struct device *dev,
-> +				   struct edma_soc_info *pdata)
-> +{
-> +	int i;
-> +	u32 value, cccfg, n_tc;
-> +	s8 (*queue_tc_map)[2], (*queue_priority_map)[2];
-> +
-> +	/* Decode the eDMA3 configuration from CCCFG register */
-> +	cccfg = edma_read(0, EDMA_CCCFG);
+Boris
 
-You do not handle the second controller here, but its pretty straight
-forward to add that by passing the controller number to this function.
+Changes since v4:
+- remove merged patch from the series
+- move the MFD_SUN6I_PRCM option selection out of the clk support commit
 
-I was wondering why we never read the hardware for this information
-before, and strangely enough cannot find any SoC where the CCCFG
-register does not publish this information correctly. I have tested on
-DA850, DA830, DM365, DM355 and DM6467.
+Changes since v3:
+- split clk drivers into 3 different drivers: ar100, apb0 and apb0_gates
+- fix indentation
+- add comments to the clk drivers
+- select the MFD_SUN6I_PRCM when compiling for SUN6I arch
 
-Instead of keeping this specific to OF case, the code can be simplified
-much better if we read from hardware all the time. We can directly
-populate the equivalent variables in the internal structure 'struct
-edma' instead of populating them in 'struct edma_soc_info' and then
-copying then over.
+Changes since v2:
+- use devm_ioremap_resource instead of devm_request_and_ioremap
+- remove unnecessary header inclusions
+- remove info trace when the probe succeed
+- rename apb0_timer01 clk into apb0_timer
 
-> +
-> +	value = GET_NUM_DMACH(cccfg);
-> +	pdata->n_channel = BIT(value + 1);
-> +
-> +	value = GET_NUM_REGN(cccfg);
-> +	pdata->n_region = BIT(value);
-> +
-> +	value = GET_NUM_PAENTRY(cccfg);
-> +	pdata->n_slot = BIT(value + 4);
-> +
-> +	value = GET_NUM_EVQUE(cccfg);
-> +	n_tc = value + 1;
-> +
-> +	dev_dbg(dev, "eDMA3 HW configuration (cccfg: 0x%08x):\n", cccfg);
-> +	dev_dbg(dev, "n_channel: %u\n", pdata->n_channel);
-> +	dev_dbg(dev, "n_region: %u\n", pdata->n_region);
-> +	dev_dbg(dev, "n_slot: %u\n", pdata->n_slot);
-> +	dev_dbg(dev, "n_tc: %u\n", n_tc);
-> +
+Changes since v1:
+- fix prcm and prcm-clks DT documentation
+- remove unneeded iounmap and kfree calls from sunxi_reset_remove function
+- rework the AR100 clk implementation
 
-[snip]
+Boris BREZILLON (5):
+  mfd: add support for sun6i PRCM (Power/Reset/Clock Management) unit
+  mfd: sun6i-prcm: document DT bindings
+  clk: sunxi: add PRCM (Power/Reset/Clock Management) clks support
+  clk: sunxi: document PRCM clock compatible strings
+  ARM: sunxi: select MFD_SUN6I_PRCM when sun6i arch support is enabled
 
-> +	pdata->n_cc = 1;
-> +
-> +	queue_tc_map = devm_kzalloc(dev, (n_tc + 1) * sizeof(s8), GFP_KERNEL);
-> +	if (!queue_tc_map)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < n_tc; i++) {
-> +		queue_tc_map[i][0] = i;
-> +		queue_tc_map[i][1] = i;
-> +	}
-> +	queue_tc_map[i][0] = -1;
-> +	queue_tc_map[i][1] = -1;
-> +
-> +	pdata->queue_tc_mapping = queue_tc_map;
-> +
-> +	queue_priority_map = devm_kzalloc(dev, (n_tc + 1) * sizeof(s8),
-> +					  GFP_KERNEL);
-> +	if (!queue_priority_map)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0; i < n_tc; i++) {
-> +		queue_priority_map[i][0] = i;
-> +		queue_priority_map[i][1] = i;
-> +	}
-> +	queue_priority_map[i][0] = -1;
-> +	queue_priority_map[i][1] = -1;
-> +
-> +	pdata->queue_priority_mapping = queue_priority_map;
-> +
-> +	pdata->default_queue = 0;
+ Documentation/devicetree/bindings/clock/sunxi.txt  |   3 +
+ .../devicetree/bindings/mfd/sun6i-prcm.txt         |  59 ++++++
+ arch/arm/mach-sunxi/Kconfig                        |   1 +
+ drivers/clk/sunxi/Makefile                         |   2 +
+ drivers/clk/sunxi/clk-sun6i-apb0-gates.c           |  99 +++++++++
+ drivers/clk/sunxi/clk-sun6i-apb0.c                 |  77 +++++++
+ drivers/clk/sunxi/clk-sun6i-ar100.c                | 233 +++++++++++++++++++++
+ drivers/mfd/Kconfig                                |   8 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/sun6i-prcm.c                           | 134 ++++++++++++
+ 10 files changed, 617 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-apb0-gates.c
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-apb0.c
+ create mode 100644 drivers/clk/sunxi/clk-sun6i-ar100.c
+ create mode 100644 drivers/mfd/sun6i-prcm.c
 
-This is part is not really setting up from hardware (rather falling back
-to some sane defaults for the DT case). Could you leave them in
-edma_of_parse_dt()?
+-- 
+1.8.3.2
 
-> @@ -1655,6 +1679,12 @@ static int edma_probe(struct platform_device *pdev)
->  		if (IS_ERR(edmacc_regs_base[j]))
->  			return PTR_ERR(edmacc_regs_base[j]);
->  
-> +		if (node) {
-> +			/* Get eDMA3 configuration from IP */
-> +			ret = edma_setup_info_from_hw(dev, info[j]);
-> +			if (ret)
-> +				return ret;
-
-No need to do this only for the DT case, I think. Also, once we get rid
-of the edma_soc_info dependency, just pass edma_cc[] directly
-
-		edma_setup_info_from_hw(dev, j, edma_cc[j]);
-
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
