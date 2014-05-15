@@ -1,153 +1,95 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 06/10] usb: xhci: Add Tegra XHCI host-controller
- driver
-Date: Thu, 15 May 2014 23:18:13 +0200
-Message-ID: <20140515211812.GC7136@mithrandir>
-References: <1400113986-339-1-git-send-email-abrestic@chromium.org>
- <1400113986-339-7-git-send-email-abrestic@chromium.org>
- <15599140.PsD4j7x3tZ@wuerfel>
- <CAL1qeaHm7U2NVDeVZS-Tiz5ntkk4c13RR_1ws9MTYGGoGCOB5A@mail.gmail.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v3] drm/panel: Add support for EDT ETM0700G0DH6 and
+ ET070080DH6 panels
+Date: Thu, 15 May 2014 23:41:49 +0200
+Message-ID: <20140515214147.GD7136@mithrandir>
+References: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
+ <20140515105427.GK6434@ulmo> <5374E31F.80504@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="JWEK1jqKZ6MHAcjA"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL1qeaHm7U2NVDeVZS-Tiz5ntkk4c13RR_1ws9MTYGGoGCOB5A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap@infr>
+Content-Type: multipart/mixed; boundary="===============1877517662=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <5374E31F.80504@wwwdotorg.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Stefan Agner <stefan@agner.ch>, kernel@pengutronix.de, Thierry Reding <treding@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
 
---JWEK1jqKZ6MHAcjA
+--===============1877517662==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pZs/OQEoSSbxGlYw"
+Content-Disposition: inline
+
+
+--pZs/OQEoSSbxGlYw
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, May 15, 2014 at 01:18:22PM -0700, Andrew Bresticker wrote:
-> Arnd,
+On Thu, May 15, 2014 at 09:54:07AM -0600, Stephen Warren wrote:
+> On 05/15/2014 04:54 AM, Thierry Reding wrote:
+> > On Thu, May 15, 2014 at 12:25:47PM +0200, Philipp Zabel wrote:
+> >> The EDT ETM0700G0DH6 and ET070080DH6 are 7" 800x480 panels,
+> >> which can be supported by the simple panel driver.
+> >>
+> >> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> >> ---
+> >> Changes since v2:
+> >>  - Added device tree binding documentation. Do we really want to add o=
+ne little
+> >>    file for each panel?
+> >=20
+> > I guess we could move all of the compatible values into simple-panel.txt
+> > but I don't see a need for that yet.
 >=20
-> On Thu, May 15, 2014 at 1:17 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 14 May 2014 17:33:02 Andrew Bresticker wrote:
-> >> +
-> >> +int tegra_xhci_register_mbox_notifier(struct notifier_block *nb)
-> >> +{
-> >> +     int ret;
-> >> +
-> >> +     mutex_lock(&tegra_xhci_mbox_lock);
-> >> +     ret =3D raw_notifier_chain_register(&tegra_xhci_mbox_notifiers, =
-nb);
-> >> +     mutex_unlock(&tegra_xhci_mbox_lock);
-> >> +
-> >> +     return ret;
-> >> +}
-> >> +EXPORT_SYMBOL(tegra_xhci_register_mbox_notifier);
-> >> +
-> >> +void tegra_xhci_unregister_mbox_notifier(struct notifier_block *nb)
-> >> +{
-> >> +     mutex_lock(&tegra_xhci_mbox_lock);
-> >> +     raw_notifier_chain_unregister(&tegra_xhci_mbox_notifiers, nb);
-> >> +     mutex_unlock(&tegra_xhci_mbox_lock);
-> >> +}
-> >> +EXPORT_SYMBOL(tegra_xhci_unregister_mbox_notifier);
-> >
-> > What driver would use these?
->=20
-> It's used by just this driver (the host) and the PHY driver (next
-> patch in series).
->=20
-> > My feeling is that if you have a mailbox that is used by multiple
-> > drivers, you should use a proper mailbox driver to operate them,
-> > and have the drivers register with that API instead of a custom one.
->=20
-> Ok, will do.
->=20
-> >> +     /* Create child xhci-plat device */
-> >> +     memset(xhci_resources, 0, sizeof(xhci_resources));
-> >> +     res =3D platform_get_resource(to_platform_device(dev), IORESOURC=
-E_IRQ, 0);
-> >> +     if (!res) {
-> >> +             dev_err(dev, "Missing XHCI IRQ\n");
-> >> +             ret =3D -ENODEV;
-> >> +             goto out;
-> >> +     }
-> >> +     xhci_resources[0].start =3D res->start;
-> >> +     xhci_resources[0].end =3D res->end;
-> >> +     xhci_resources[0].flags =3D res->flags;
-> >> +     xhci_resources[0].name =3D res->name;
-> >> +     res =3D platform_get_resource(to_platform_device(dev), IORESOURC=
-E_MEM, 0);
-> >> +     if (!res) {
-> >> +             dev_err(dev, "Missing XHCI registers\n");
-> >> +             ret =3D -ENODEV;
-> >> +             goto out;
-> >> +     }
-> >> +     xhci_resources[1].start =3D res->start;
-> >> +     xhci_resources[1].end =3D res->end;
-> >> +     xhci_resources[1].flags =3D res->flags;
-> >> +     xhci_resources[1].name =3D res->name;
-> >> +
-> >> +     xhci =3D platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
-> >> +     if (!xhci) {
-> >> +             dev_err(dev, "Failed to allocate XHCI host\n");
-> >> +             ret =3D -ENOMEM;
-> >> +             goto out;
-> >> +     }
-> >
-> > This does not feel appropriate at all: Rather than creating a child dev=
-ice,
-> > you should have a specific driver that hooks into functions exported
-> > by the xhci core. See Documentation/driver-model/design-patterns.txt
->=20
-> This is how DWC3, currently the only in-tree non-PCI XHCI host driver,
-> is structured - see drivers/usb/dwc3/host.c.  The recently proposed
-> Armada XHCI driver [1] just adds clock support and a hook in
-> xhci-plat's probe() to do the platform-specific initialization.
+> If they aren't added there, then I believe checkpatch will complain
+> about patches that start to use the new compatible values, since they
+> won't be documented.
 
-Ugh... that very much sounds like the midlayer mistake. Doing that is
-not going to scale in the long run. Everybody will just keep adding
-quirks to the initialization until it's become a huge mess.
-
-> Tegra's XHCI driver initialization is quite a bit more complicated,
-> mainly due to the need for external firmware and specific ordering
-> (e.g. firmware messages should only be enabled after the HCD is
-> created).  I could do away with the xhci-plat sub-device and just
-> create a Tegra hc_driver, but it seems silly to have three XHCI
-> platform drivers structured in three different ways.  USB folks, do
-> you have an opinion on how this should be done?
-
-The tendency in other subsystems (and I think this is also true to some
-degree for USB, though I'm less familiar with it) is to make common
-functions available as a library of helpers so that other drivers can
-use them (either directly or by wrapping them in platform-specific
-implementations). That allows you to keep the platform-specific code
-where it belongs: in the platform-specific driver.
+Added where? simple-panel.txt or in separate files per compatible?
 
 Thierry
 
---JWEK1jqKZ6MHAcjA
+--pZs/OQEoSSbxGlYw
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTdS8UAAoJEN0jrNd/PrOhJ6kQAKlp/XRhFFDIJL5tcNiP5LsQ
-a9Rqd3C2cKDJxJMOw2WDxsimb3TJLin2mZvQHPB4R4rNDsadYDanF34LIyJ3wrga
-p0nmfYvCwndGTnokWVCBwQV3rAZfkshZ9PMrnv49KhIi5EvJ743D8McfO/0uSV3n
-rl9n6vT/HzKWhXwuSfkyPi99Nl0eQBkI8x1WrZpSGuguZlTQUUEPt4DWvLI5dyOJ
-CrAtjI4r6OQBqZZE4+DTO+DGdPmvPMAIMGIslNiljygNFfCdddhw4fZ+tXzDnc0/
-9clcw5Xu2ofIDE2cvWOCgpgO9G6gpvFEYVYIalKhv5iiCnvjfdYbARPMqcg1ad/D
-ioQQQFl/sz8GBog6lrTZrbUmROuF1K4xUsihUB/XFTS99q1OY7NnCDGbBuJw4vgn
-tmt4K+U9+gmLCY66px+Mqp/C3i3aupGEI5tEbRitaI+BmJ223YlhfOsixlEf3j3r
-6uJ7sg5/Dsd7SdnqOAjg4n089LqqLF4R5jHDaprsy55dZlFl/IbyT5iFFwrbMpRQ
-OfuPXw5hySXRx07mObpo3SJqBOkjzchB6P+U2JB0t+k+p99AqKLdm38uvkfFu7Bp
-ih00eK1H1Fod/DqyEu/VoBfoUHjjK1NK5KoX9ClmngYClXN39no/lCsEbo9XOw19
-ApNDSSv+/SpT6BYQUNLo
-=uX8L
+iQIcBAEBAgAGBQJTdTSbAAoJEN0jrNd/PrOhZR8P/R3Jos+IhWTUpUVEoCiNi3/U
+vQluv2perj8yXA7iq6BNwjnun1jc75/GFRJeVHseQCIRPfX0D2Qtwdc5IxvRbQ+N
+h+fWbGzrLDaRDxRInqmjKM8c9dQHc5NWUgO9te4uWWFzZ6vHQMKk1CtpSAcKPRTt
+hYqgxcBkWSFPV5C6NCiXGwQ//e6mDgWwwLOc150GZosG/o0u04rxLjETqO+kClPf
++caE/N3U1ZbW7iFtyGKTheaKP1xoasqG8G9LeLoTEM0hzi9WrAV6wek/fCfVDoDP
+qJoABdSa5sQyOUjgxM7DUzvaCUpxYv90iyZs9jjXZ4QoQp0emk72yGHeCVD8ao8g
+QbUUrrYjm4Vfk717gOOxsGx8fXBBnaawmf2gIyTUzsCyZdh6p7ZtRQt5SdCB8omP
+SCOYuxU1VtqFBG/i7TsAOiSgcGP+KzTODxfWJA4g6PiQCsZkr/7WROfT6ylYXDlK
+eWl+aCPd13ssvlHe/W/kSvGQDfvm/MHtQkXOlu2dqnKjJDaJwuqyRYnYp2WnZWOE
+zvsTN6+5Cjy3vM3I68m2fwFPRDG1ry+AGlJzt6CHzDswx+QoY+g2WgoxBT+PbbZe
+2C+1p2dS7nYvTOUEGx5MQGkJhb7g+lppkSHHQ/81mnHyQ8vvIi99duysDXZX+UqN
+aZhzZc8mT6qUB8WU+lfi
+=OYa6
 -----END PGP SIGNATURE-----
 
---JWEK1jqKZ6MHAcjA--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--pZs/OQEoSSbxGlYw--
+
+--===============1877517662==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1877517662==--
