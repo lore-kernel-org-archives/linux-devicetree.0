@@ -1,98 +1,70 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4 2/3] ARM: mm: add support for HW coherent systems in PL310
-Date: Thu, 15 May 2014 14:08:39 -0500
-Message-ID: <CAL_Jsq+VRZdJD6sMR=whC=bmjgODb01h8dci_KsjHx7pMLDhuA@mail.gmail.com>
-References: <1400165974-9059-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1400165974-9059-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v4 3/8] clk: samsung: add infrastructure to register cpu clocks
+Date: Thu, 15 May 2014 21:17:20 +0200
+Message-ID: <12969374.fAYJcpG05n@phil>
+References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com> <1400029876-5830-4-git-send-email-thomas.ab@samsung.com> <CAD=FV=XmVNwwZY_LM6Za-p7gg6CPh1mGj=BoWvG0Q-Cx9L_A9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400165974-9059-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=XmVNwwZY_LM6Za-p7gg6CPh1mGj=BoWvG0Q-Cx9L_A9Q@mail.gmail.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Thomas Abraham <ta.omasab@gmail.com>, cpufreq@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, l.majewski@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, Thomas P Abraham <thomas.ab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 9:59 AM, Thomas Petazzoni
-<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> When a PL310 cache is used on a system that provides hardware
-> coherency, the outer cache sync operation is useless, and can be
-> skipped. Moreover, on some systems, it is harmful as it causes
-> deadlocks between the Marvell coherency mechanism, the Marvell PCIe
-> controller and the Cortex-A9.
->
-> To avoid this, this commit introduces a new Device Tree property
-> 'arm,io-coherent' for the L2 cache controller node, valid only for the
-> PL310 cache. It identifies the usage of the PL310 cache in an I/O
-> coherent configuration. Internally, it makes the driver disable the
-> outer cache sync operation.
->
-> Note that technically speaking, a fully coherent system wouldn't
-> require any of the other .outer_cache operations. However, in
-> practice, when booting secondary CPUs, these are not yet coherent, and
-> therefore a set of cache maintenance operations are necessary at this
-> point. This explains why we keep the other .outer_cache operations and
-> only ->sync is disabled.
->
-> While in theory any write to a PL310 register could cause the
-> deadlock, in practice, disabling ->sync is sufficient to workaround
-> the deadlock, since the other cache maintenance operations are only
-> used in very specific situations.
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/l2cc.txt |  3 +++
->  arch/arm/mm/cache-l2x0.c                       | 14 ++++++++++++++
->  2 files changed, 17 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index b513cb8..af527ee 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -40,6 +40,9 @@ Optional properties:
->  - arm,filter-ranges : <start length> Starting address and length of window to
->    filter. Addresses in the filter window are directed to the M1 port. Other
->    addresses will go to the M0 port.
-> +- arm,io-coherent : indicates that the system is operating in an hardware
-> +  I/O coherent mode. Valid only when the arm,pl310-cache compatible
-> +  string is used.
->  - interrupts : 1 combined interrupt.
->  - cache-id-part: cache id part number to be used if it is not present
->    on hardware
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index 7abde2ce..199a745 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -1005,6 +1005,20 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
->
->         of_init = true;
->         memcpy(&outer_cache, &data->outer_cache, sizeof(outer_cache));
-> +
-> +       /*
-> +        * outer sync operations are not needed when the system is I/O
-> +        * coherent, and potentially harmful in certain situations
-> +        * (PCIe/PL310 deadlock on Armada 375/38x due to hardware I/O
-> +        * coherency). The other operations are kept because they are
-> +        * infrequent (therefore do not cause the deadlock) and needed
-> +        * for secondary CPU boot and other power management
-> +        * activities.
-> +        */
-> +       if (of_device_is_compatible(np, "arm,pl310-cache") &&
+Am Donnerstag, 15. Mai 2014, 11:18:44 schrieb Doug Anderson:
+> Thomas,
+> 
+> On Tue, May 13, 2014 at 6:11 PM, Thomas Abraham <ta.omasab@gmail.com> wrote:
+> > From: Thomas Abraham <thomas.ab@samsung.com>
+> > +static int exynos4210_armclk_pre_rate_change(struct clk_notifier_data
+> > *ndata, +                       struct exynos_cpuclk *armclk, void
+> > __iomem *base) +{
+> > +       struct exynos4210_armclk_data *armclk_data = armclk->data;
+> > +       unsigned long alt_prate = clk_get_rate(armclk->alt_parent);
+> > +       unsigned long alt_div, div0, div1, tdiv0, mux_reg;
+> > +       unsigned long cur_armclk_rate, timeout;
+> > +       unsigned long flags;
+> > +
+> > +       /* find out the divider values to use for clock data */
+> > +       while (armclk_data->prate != ndata->new_rate) {
+> > +               if (armclk_data->prate == 0)
+> > +                       return -EINVAL;
+> > +               armclk_data++;
+> > +       }
+> > +
+> > +       div0 = armclk_data->div0;
+> > +       div1 = armclk_data->div1;
+> > +       if (readl(base + SRC_CPU) & EXYNOS4210_MUX_HPM_MASK) {
+> > +               div1 = readl(base + DIV_CPU1) & EXYNOS4210_DIV1_HPM_MASK;
+> > +               div1 |= ((armclk_data->div1) & ~EXYNOS4210_DIV1_HPM_MASK);
+> > +       }
+> > +
+> > +       /*
+> > +        * if the new and old parent clock speed is less than the clock
+> > speed +        * of the alternate parent, then it should be ensured that
+> > at no point +        * the armclk speed is more than the old_prate until
+> > the dividers are +        * set.
+> > +        */
+> > +       tdiv0 = readl(base + DIV_CPU0);
+> > +       cur_armclk_rate = ndata->old_rate / EXYNOS4210_ARM_DIV1(tdiv0) /
+> > +                               EXYNOS4210_ARM_DIV2(tdiv0);
+> > +       if (alt_prate > cur_armclk_rate) {
+> > +               alt_div = _calc_div(alt_prate, cur_armclk_rate);
+> > +               _exynos4210_set_armclk_div(base, alt_div);
+> > +               div0 |= alt_div;
+> 
+> Don't you need to up the voltage here, too?  ...I haven't reviewed
+> this whole patch (so perhaps it's elsewhere in the patch or in the
+> series), but I stumbled upon this while trying to solve a different
+> problem and figured I'd check...
 
-Don't we have a pl310 specific init function this can be placed in
-removing this check? We could probably remove this check here anyway
-because we're never going to see this on an L210 or L220.
+setting the voltage should be done by the cpufreq driver like cpufreq-cpu0 - 
+whose usage this series intents to allow.
 
-> +           of_property_read_bool(np, "arm,io-coherent"))
-> +               outer_cache.sync = NULL;
-> +
->         l2x0_init(l2x0_base, aux_val, aux_mask);
->
->         return 0;
-> --
-> 1.9.3
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+As I've hijacked Thomas' concept for my current rockchip clock work, I've 
+already seen this working nicely :-) .
+
+
+Heiko
