@@ -1,62 +1,119 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v6 09/17] Documentation: dt-bindings: update xhci-platform DT
- binding
-Date: Thu, 15 May 2014 12:17:34 +0200
-Message-ID: <1400149062-32661-10-git-send-email-gregory.clement@free-electrons.com>
-References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH v3] drm/panel: Add support for EDT ETM0700G0DH6 and
+ ET070080DH6 panels
+Date: Thu, 15 May 2014 12:25:47 +0200
+Message-ID: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <treding@nvidia.com>
+Cc: devicetree@vger.kernel.org, Stefan Agner <stefan@agner.ch>, kernel@pengutronix.de, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-This commit extends the compatible string list of the xhci-platform
-binding with the new "armada-375-xhci" and "armada-380-xhci"
-compatible strings. It is used to describe the XHCI controller which
-is available in the Armada 375 and 38x SoCs.
+The EDT ETM0700G0DH6 and ET070080DH6 are 7" 800x480 panels,
+which can be supported by the simple panel driver.
 
-It also indicates that an optional 'clocks' property is now supported.
-
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- Documentation/devicetree/bindings/usb/usb-xhci.txt | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+Changes since v2:
+ - Added device tree binding documentation. Do we really want to add one little
+   file for each panel?
+---
+ .../devicetree/bindings/panel/edt,et070080dh6.txt  | 10 ++++++++
+ .../devicetree/bindings/panel/edt,etm0700g0dh6.txt | 10 ++++++++
+ drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++++++++
+ 3 files changed, 49 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/panel/edt,et070080dh6.txt
+ create mode 100644 Documentation/devicetree/bindings/panel/edt,etm0700g0dh6.txt
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 90f8f607d125..999be5ca901c 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -1,11 +1,16 @@
- USB xHCI controllers
- 
- Required properties:
--  - compatible: should be "generic-xhci" (deprecated: "xhci-platform").
-+  - compatible: should be one of "generic-xhci",
-+    "marvell,armada-375-xhci", "marvell,armada-380-xhci" (deprecated:
-+    "xhci-platform").
-   - reg: should contain address and length of the standard XHCI
-     register set for the device.
-   - interrupts: one XHCI interrupt should be described here.
- 
-+Optional property:
-+  - clocks: reference to a clock
+diff --git a/Documentation/devicetree/bindings/panel/edt,et070080dh6.txt b/Documentation/devicetree/bindings/panel/edt,et070080dh6.txt
+new file mode 100644
+index 0000000..20cb38e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/edt,et070080dh6.txt
+@@ -0,0 +1,10 @@
++Emerging Display Technology Corp. ET070080DH6 7.0" WVGA TFT LCD panel
 +
- Example:
- 	usb@f0931000 {
- 		compatible = "generic-xhci";
++Required properties:
++- compatible: should be "edt,et070080dh6"
++
++This panel is the same as ETM0700G0DH6 except for the touchscreen.
++ET070080DH6 is the model with resistive touch.
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/Documentation/devicetree/bindings/panel/edt,etm0700g0dh6.txt b/Documentation/devicetree/bindings/panel/edt,etm0700g0dh6.txt
+new file mode 100644
+index 0000000..ee4b180
+--- /dev/null
++++ b/Documentation/devicetree/bindings/panel/edt,etm0700g0dh6.txt
+@@ -0,0 +1,10 @@
++Emerging Display Technology Corp. ETM0700G0DH6 7.0" WVGA TFT LCD panel
++
++Required properties:
++- compatible: should be "edt,etm0700g0dh6"
++
++This panel is the same as ET070080DH6 except for the touchscreen.
++ETM0700G0DH6 is the model with capacitive multitouch.
++
++This binding is compatible with the simple-panel binding, which is specified
++in simple-panel.txt in this directory.
+diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+index 309f29e..72da48c 100644
+--- a/drivers/gpu/drm/panel/panel-simple.c
++++ b/drivers/gpu/drm/panel/panel-simple.c
+@@ -328,6 +328,29 @@ static const struct panel_desc chunghwa_claa101wb01 = {
+ 	},
+ };
+ 
++static const struct drm_display_mode edt_etm0700g0dh6_mode = {
++	.clock = 33260,
++	.hdisplay = 800,
++	.hsync_start = 800 + 40,
++	.hsync_end = 800 + 40 + 128,
++	.htotal = 800 + 40 + 128 + 88,
++	.vdisplay = 480,
++	.vsync_start = 480 + 10,
++	.vsync_end = 480 + 10 + 2,
++	.vtotal = 480 + 10 + 2 + 33,
++	.vrefresh = 60,
++	.flags = DRM_MODE_FLAG_NHSYNC | DRM_MODE_FLAG_NVSYNC,
++};
++
++static const struct panel_desc edt_etm0700g0dh6 = {
++	.modes = &edt_etm0700g0dh6_mode,
++	.num_modes = 1,
++	.size = {
++		.width = 152,
++		.height = 91,
++	},
++};
++
+ static const struct drm_display_mode lg_lp129qe_mode = {
+ 	.clock = 285250,
+ 	.hdisplay = 2560,
+@@ -383,6 +406,12 @@ static const struct of_device_id platform_of_match[] = {
+ 		.compatible = "chunghwa,claa101wb01",
+ 		.data = &chunghwa_claa101wb01
+ 	}, {
++		.compatible = "edt,et070080dh6",
++		.data = &edt_etm0700g0dh6,
++	}, {
++		.compatible = "edt,etm0700g0dh6",
++		.data = &edt_etm0700g0dh6,
++	}, {
+ 		.compatible = "lg,lp129qe",
+ 		.data = &lg_lp129qe,
+ 	}, {
 -- 
-1.8.1.2
+2.0.0.rc0
