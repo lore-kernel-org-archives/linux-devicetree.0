@@ -1,216 +1,31 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 2/5] ARM: edma: Get IP information from HW when booting
- with DT
-Date: Thu, 15 May 2014 15:30:05 +0300
-Message-ID: <5374B34D.2060904@ti.com>
-References: <1399977032-26469-1-git-send-email-peter.ujfalusi@ti.com> <1399977032-26469-3-git-send-email-peter.ujfalusi@ti.com> <53748070.4080706@ti.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: How to fix SDIO Operating Frequency in iMX6 device tree
+Date: Thu, 15 May 2014 14:32:28 +0200
+Message-ID: <20140515123228.GI5858@pengutronix.de>
+References: <CA+dawz2qxiVBzKkJVvMMU9wtfLajzN-z=ApmnZ3g8h42AncERQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53748070.4080706@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, joelf@ti.com
-Cc: linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CA+dawz2qxiVBzKkJVvMMU9wtfLajzN-z=ApmnZ3g8h42AncERQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ashutosh Singh <embedded.ashu@gmail.com>
+Cc: chris@printf.net, linux-mmc@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, shawn.guo@linaro.org, linux-arm-kernel@lists.infradead.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+Hi Ashutosh,
 
-On 05/15/2014 11:53 AM, Sekhar Nori wrote:
-> Hi Peter,
->=20
-> On Tuesday 13 May 2014 04:00 PM, Peter Ujfalusi wrote:
->> From CCCFG register of eDMA3 we can get all the needed information f=
-or the
->> driver about the IP:
->> Number of channels: NUM_DMACH
->> Number of regions: NUM_REGN
->> Number of slots (PaRAM sets): NUM_PAENTRY
->> Number of TC/EQ: NUM_EVQUE
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  arch/arm/common/edma.c | 128 ++++++++++++++++++++++++++++++--------=
------------
->>  1 file changed, 79 insertions(+), 49 deletions(-)
->>
->> diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
->> index fade9ada81f8..1a98f3cd4cd9 100644
->> --- a/arch/arm/common/edma.c
->> +++ b/arch/arm/common/edma.c
->> @@ -102,7 +102,16 @@
->>  #define PARM_OFFSET(param_no)	(EDMA_PARM + ((param_no) << 5))
->> =20
->>  #define EDMA_DCHMAP	0x0100  /* 64 registers */
->> -#define CHMAP_EXIST	BIT(24)
->> +
->> +/* CCCFG register */
->> +#define GET_NUM_DMACH(x)	(x & 0x7) /* bits 0-2 */
->> +#define GET_NUM_QDMACH(x)	((x & 0x70) >> 4) /* bits 4-6 */
->> +#define GET_NUM_INTCH(x)	((x & 0x700) >> 8) /* bits 8-10 */
->> +#define GET_NUM_PAENTRY(x)	((x & 0x7000) >> 12) /* bits 12-14 */
->> +#define GET_NUM_EVQUE(x)	((x & 0x70000) >> 16) /* bits 16-18 */
->> +#define GET_NUM_REGN(x)		((x & 0x300000) >> 20) /* bits 20-21 */
->> +#define CHMAP_EXIST		BIT(24)
->> +#define MP_EXIST		BIT(25)
->=20
-> Of these new defines, you do not use GET_NUM_QDMACH(), GET_NUM_INTCH(=
-)
-> and MP_EXIST (at least in this patch). Can you please get rid of them=
- if
-> not needed? May be its just me but its pretty annoying to search for =
-a
-> define only to find its never used :)
+On Thu, May 15, 2014 at 11:19:01AM +0530, Ashutosh Singh wrote:
+> I want to fixed the SDIO Operating Frequency to 25MHz for one of the
+> SDIO based Wifi module connected to Card slot.
+> How can i fixed it in my dtsi file. I am using iMX6 quard based custom board.
 
-Sure, I can remove the ones we are not using in the code. I usually pre=
-fer to
-have full description if the register even if we only use one bit from =
-the
-register.
+Set the max-frequency property in the usdhc device node.
 
->=20
->> =20
->>  #define EDMA_MAX_DMACH           64
->>  #define EDMA_MAX_PARAMENTRY     512
->> @@ -1415,6 +1424,68 @@ void edma_clear_event(unsigned channel)
->>  }
->>  EXPORT_SYMBOL(edma_clear_event);
->> =20
->> +static int edma_setup_info_from_hw(struct device *dev,
->> +				   struct edma_soc_info *pdata)
->> +{
->> +	int i;
->> +	u32 value, cccfg, n_tc;
->> +	s8 (*queue_tc_map)[2], (*queue_priority_map)[2];
->> +
->> +	/* Decode the eDMA3 configuration from CCCFG register */
->> +	cccfg =3D edma_read(0, EDMA_CCCFG);
->=20
-> You do not handle the second controller here, but its pretty straight
-> forward to add that by passing the controller number to this function=
-=2E
+Sascha
 
-The second controller is not handled because in DT boot we only handle =
-1 cc as
-far as I know. I don't know why, but this is how the DT support has bee=
-n
-written and used.
-
-> I was wondering why we never read the hardware for this information
-> before, and strangely enough cannot find any SoC where the CCCFG
-> register does not publish this information correctly. I have tested o=
-n
-> DA850, DA830, DM365, DM355 and DM6467.
-
-Good question. I was also puzzled about this.
-
-> Instead of keeping this specific to OF case, the code can be simplifi=
-ed
-> much better if we read from hardware all the time. We can directly
-> populate the equivalent variables in the internal structure 'struct
-> edma' instead of populating them in 'struct edma_soc_info' and then
-> copying then over.
-
-Yes, we can switch the non DT boot to this mode as well, true. At first=
- I
-wanted to change code which I can test easily. For non DT boot I would =
-need to
-set up my old daVinci board ;)
-
->> +
->> +	value =3D GET_NUM_DMACH(cccfg);
->> +	pdata->n_channel =3D BIT(value + 1);
->> +
->> +	value =3D GET_NUM_REGN(cccfg);
->> +	pdata->n_region =3D BIT(value);
->> +
->> +	value =3D GET_NUM_PAENTRY(cccfg);
->> +	pdata->n_slot =3D BIT(value + 4);
->> +
->> +	value =3D GET_NUM_EVQUE(cccfg);
->> +	n_tc =3D value + 1;
->> +
->> +	dev_dbg(dev, "eDMA3 HW configuration (cccfg: 0x%08x):\n", cccfg);
->> +	dev_dbg(dev, "n_channel: %u\n", pdata->n_channel);
->> +	dev_dbg(dev, "n_region: %u\n", pdata->n_region);
->> +	dev_dbg(dev, "n_slot: %u\n", pdata->n_slot);
->> +	dev_dbg(dev, "n_tc: %u\n", n_tc);
->> +
->=20
-> [snip]
->=20
->> +	pdata->n_cc =3D 1;
->> +
->> +	queue_tc_map =3D devm_kzalloc(dev, (n_tc + 1) * sizeof(s8), GFP_KE=
-RNEL);
->> +	if (!queue_tc_map)
->> +		return -ENOMEM;
->> +
->> +	for (i =3D 0; i < n_tc; i++) {
->> +		queue_tc_map[i][0] =3D i;
->> +		queue_tc_map[i][1] =3D i;
->> +	}
->> +	queue_tc_map[i][0] =3D -1;
->> +	queue_tc_map[i][1] =3D -1;
->> +
->> +	pdata->queue_tc_mapping =3D queue_tc_map;
->> +
->> +	queue_priority_map =3D devm_kzalloc(dev, (n_tc + 1) * sizeof(s8),
->> +					  GFP_KERNEL);
->> +	if (!queue_priority_map)
->> +		return -ENOMEM;
->> +
->> +	for (i =3D 0; i < n_tc; i++) {
->> +		queue_priority_map[i][0] =3D i;
->> +		queue_priority_map[i][1] =3D i;
->> +	}
->> +	queue_priority_map[i][0] =3D -1;
->> +	queue_priority_map[i][1] =3D -1;
->> +
->> +	pdata->queue_priority_mapping =3D queue_priority_map;
->> +
->> +	pdata->default_queue =3D 0;
->=20
-> This is part is not really setting up from hardware (rather falling b=
-ack
-> to some sane defaults for the DT case). Could you leave them in
-> edma_of_parse_dt()?
-
-Not really since the number of tc is not know as early as edma_of_parse=
-_dt(),
-we used to a magic number of 3 in place for n_tc previously.
-We are doing similar things as previously done in edma_of_parse_dt() bu=
-t with
-'correct' number of tc.
-
->> @@ -1655,6 +1679,12 @@ static int edma_probe(struct platform_device =
-*pdev)
->>  		if (IS_ERR(edmacc_regs_base[j]))
->>  			return PTR_ERR(edmacc_regs_base[j]);
->> =20
->> +		if (node) {
->> +			/* Get eDMA3 configuration from IP */
->> +			ret =3D edma_setup_info_from_hw(dev, info[j]);
->> +			if (ret)
->> +				return ret;
->=20
-> No need to do this only for the DT case, I think. Also, once we get r=
-id
-> of the edma_soc_info dependency, just pass edma_cc[] directly
->=20
-> 		edma_setup_info_from_hw(dev, j, edma_cc[j]);
-
-Yes, let's do this for DT and not DT boot as well.
-I will keep the queue_tc_map and queue_priority_map setup in there I th=
-ink to
-be done in case of DT boot.
-
-I'll try to craft v3 as soon as I can.
-
-Thanks,
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
