@@ -1,106 +1,97 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv3 2/3] ARM: mm: add support for HW coherent systems in PL310
-Date: Thu, 15 May 2014 08:35:18 -0500
-Message-ID: <CAL_JsqJZDhi8qtzSbDAdkN3BQqdZQZtRcC-yha+QsreLFpaNRQ@mail.gmail.com>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1400145519-28530-3-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
+Date: Thu, 15 May 2014 19:05:46 +0530
+Message-ID: <CAPdUM4O2Qpf+XmtRoXNVfSBODKJqtG9uUfAJpt-zvDwBwh05oQ@mail.gmail.com>
+References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>
+ <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
+ <1584926.JkD1mqdaNu@amdc1032>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400145519-28530-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1584926.JkD1mqdaNu@amdc1032>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 4:18 AM, Thomas Petazzoni
-<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> When a PL310 cache is used on a system that provides hardware
-> coherency, the outer cache sync operation is useless, and can be
-> skipped. Moreover, on some systems, it is harmful as it causes
-> deadlocks between the Marvell coherency mechanism, the Marvell PCIe
-> controller and the Cortex-A9.
->
-> To avoid this, this commit introduces a new Device Tree property
-> 'dma-coherent' for the L2 cache controller node, valid only for the
-> PL310 cache. It identifies the usage of the PL310 cache in an I/O
-> coherent configuration. Internally, it makes the driver use a
-> different set of l2x0_of_data, in which the ->sync operation is NULL.
->
-> Note that technically speaking, a fully coherent system wouldn't
-> require any of the other .outer_cache operations. However, in
-> practice, when booting secondary CPUs, these are not yet coherent, and
-> therefore a set of cache maintenance operations are necessary at this
-> point. This explains why we keep the other .outer_cache operations and
-> only ->sync is disabled.
->
-> While in theory any write to a PL310 register could cause the
-> deadlock, in practice, disabling ->sync is sufficient to workaround
-> the deadlock, since the other cache maintenance operations are only
-> used in very specific situations.
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/arm/l2cc.txt |  3 +++
->  arch/arm/mm/cache-l2x0.c                       | 24 ++++++++++++++++++++++++
->  2 files changed, 27 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
-> index b513cb8..077d837 100644
-> --- a/Documentation/devicetree/bindings/arm/l2cc.txt
-> +++ b/Documentation/devicetree/bindings/arm/l2cc.txt
-> @@ -40,6 +40,9 @@ Optional properties:
->  - arm,filter-ranges : <start length> Starting address and length of window to
->    filter. Addresses in the filter window are directed to the M1 port. Other
->    addresses will go to the M0 port.
-> +- dma-coherent : indicates that the system is operating in an hardware
-> +  I/O coherent mode. Valid only when the arm,pl310-cache compatible
-> +  string is used.
+Hi,
 
-I don't like this because it creates 2 different meanings for
-dma-coherent. dma-coherent is meant to be a property of DMA masters
-and that is not really what the L2 is. Perhaps "arm,io-coherent" or
-"pl310-io-coherent" instead.
-
-Arguably, the cache nodes would be the more correct location to
-describe coherency if we described the DMA buses properly, but we
-don't.
-
->  - interrupts : 1 combined interrupt.
->  - cache-id-part: cache id part number to be used if it is not present
->    on hardware
-> diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
-> index 7abde2ce..cf0c037 100644
-> --- a/arch/arm/mm/cache-l2x0.c
-> +++ b/arch/arm/mm/cache-l2x0.c
-> @@ -889,6 +889,26 @@ static const struct l2x0_of_data pl310_data = {
->         },
->  };
+On 15 May 2014 19:01, Bartlomiej Zolnierkiewicz
+<b.zolnierkie@samsung.com> wrote:
 >
-> +/*
-> + * PL310 operations used on I/O coherent systems. Theoretically, no
-> + * outer cache operations would be needed, except that for secondary
-> + * processors bring up, a few cache maintenance operations are needed
-> + * because secondary processors are not directly coherent with the L2
-> + * cache when they start up.
-> + */
-> +static const struct l2x0_of_data pl310_coherent_data = {
-> +       .setup = pl310_of_setup,
-> +       .save  = pl310_save,
-> +       .outer_cache = {
-> +               .resume      = pl310_resume,
-> +               .inv_range   = l2x0_inv_range,
-> +               .clean_range = l2x0_clean_range,
-> +               .flush_range = l2x0_flush_range,
-> +               .flush_all   = l2x0_flush_all,
-> +               .inv_all     = l2x0_inv_all,
-> +       },
-> +};
+> Hi,
+>
+> On Thursday, May 15, 2014 12:47:21 AM Rahul Sharma wrote:
+>> From: Tomasz Stanislawski <t.stanislaws@samsung.com>
+>>
+>> Add exynos-simple-phy driver to support a single register
+>> PHY interfaces present on Exynos4 SoC.
+>>
+>> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
+>> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+>>
+>> ---
+>>  .../devicetree/bindings/phy/samsung-phy.txt        |   56 ++++++
+>>  drivers/phy/Kconfig                                |    5 +
+>>  drivers/phy/Makefile                               |    1 +
+>>  drivers/phy/exynos-simple-phy.c                    |  189 ++++++++++++++++++++
+>>  include/dt-bindings/phy/exynos-simple-phy.h        |   27 +++
+>>  5 files changed, 278 insertions(+)
+>>  create mode 100644 drivers/phy/exynos-simple-phy.c
+>>  create mode 100644 include/dt-bindings/phy/exynos-simple-phy.h
+>
+> [...]
+>
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 16a2f06..2a13e0d 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -178,4 +178,9 @@ config PHY_XGENE
+>>       help
+>>         This option enables support for APM X-Gene SoC multi-purpose PHY.
+>>
+>> +config EXYNOS_SIMPLE_PHY
+>> +     tristate "Exynos Simple PHY driver"
+>
+> Please limit this driver to EXYNOS platforms with:
+>
+>         depends on ARCH_EXYNOS
+>
+> or (optionally)
+>
+>         depends on ARCH_EXYNOS || COMPILE_TEST
+>
+> Moreover the generic PHY dependency is missing.  It can be fixed with:
+>
+>         select GENERIC_PHY
+>
 
-Why do you need a whole new struct. Can't you just null out the sync ptr?
+Yea, I will fix this part.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Rahul Sharma.
+
+>> +     help
+>> +       Support for 1-bit PHY controllers on SoCs from Exynos family.
+>> +
+>>  endmenu
+>
+> Best regards,
+> --
+> Bartlomiej Zolnierkiewicz
+> Samsung R&D Institute Poland
+> Samsung Electronics
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
