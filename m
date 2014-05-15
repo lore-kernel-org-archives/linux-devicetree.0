@@ -1,82 +1,145 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: Re: [RFC PATCH] ARM: dts: am33xx: Re-arrange the USB dt to reflect
- the h/w configuration
-Date: Thu, 15 May 2014 11:38:36 +0530
-Message-ID: <537459E4.5060203@ti.com>
-References: <1399617068-19826-1-git-send-email-george.cherian@ti.com> <20140514215034.GL27426@atomide.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
+Date: Thu, 15 May 2014 11:45:16 +0530
+Message-ID: <53745B74.2040808@ti.com>
+References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <1400060942-10588-2-git-send-email-antoine.tenart@free-electrons.com> <537341AF.5030105@ti.com> <20140514102122.GA11140@kwain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140514215034.GL27426@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, bcousson@baylibre.com, ezequiel@vanguardiasur.com.ar, bigeasy@linutronix.de, yegorslists@googlemail.com, balbi@ti.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140514102122.GA11140@kwain>
+Sender: linux-ide-owner@vger.kernel.org
+To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, tj@kernel.org, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-On 5/15/2014 3:20 AM, Tony Lindgren wrote:
-> * George Cherian <george.cherian@ti.com> [140508 23:34]:
->> Re arrange the USB dt for AM33xx to take it a bit closer
->> to the hardware configuration.
->>
->> The USBSS is designed as follows
->>
->> USB control Module	0x44e10_0620
->>
->> USBSS			0x4740_0000
->>
->> USB0			0x4740_1000
->> USB0_PHY		0x4740_1300
->> USB0_CORE		0x4740_1400
->>
->> USB1			0x4740_1800
->> USB1_PHY		0x4740_1b00
->> USB1_CORE		0x4740_1c00
->>
->> CPPI DMA Controller	0x4740_2000
->> CPPI DMA Scheduler	0x4740_3000
->> Queue Manager		0x4740_4000
->>
->> So model the DT as follows
->> USBSS {
->>      usb_ctrl_mod: {
->>          0x44e10_0620
->>      }
->>      usb0: {
->>      0x4740_1000
->>      0x4740_1400
->>      }
->>      usb0_phy:{
->>      0x4740_1300
->>      }
->>      usb1:{
->>      0x4740_1800
->>      0x4740_1c00
->>      }
->>      usb1_phy: {
->>      0x4740_1b00
->>      }
->>      cppi41dma: {
->>      0x4740_2000
->>      0x4740_3000
->>      0x4740_4000
->>      }
->> }
-> Is this just a cosmetic change or is this trying to workaround
-> some edma related init order issue?
-Please ignore this patch. Was trying to workaround some dma and phy 
-related issues.
-The same got fixed with following
+Hi,
 
-http://www.spinics.net/lists/linux-usb/msg107244.html
+On Wednesday 14 May 2014 03:51 PM, Antoine T=C3=A9nart wrote:
+> Hi,
+>=20
+> On Wed, May 14, 2014 at 03:43:03PM +0530, Kishon Vijay Abraham I wrot=
+e:
+>> Hi,
+>>
+>> On Wednesday 14 May 2014 03:18 PM, Antoine T=C3=A9nart wrote:
+>=20
+> [=E2=80=A6]
+>=20
+>>> +#define to_berlin_sata_phy_priv(desc)	\
+>>> +	container_of((desc), struct phy_berlin_priv, phys[(desc)->index])
+>>> +
+>>> +struct phy_berlin_desc {
+>>> +	struct phy	*phy;
+>>> +	u32		val;
+>>> +	unsigned	index;
+>>> +};
+>>> +
+>>> +struct phy_berlin_priv {
+>>> +	void __iomem	*base;
+>>> +	spinlock_t	lock;
+>>> +	struct phy_berlin_desc	phys[BERLIN_SATA_PHY_NB];
+>>
+>> Can't we do away with hardcoding BERLIN_SATA_PHY_NB?
+>=20
+> We can't if we want to be able to use the container_of macro in
+> to_berlin_sata_phy_priv(). And we want a common structure to store th=
+e
+> common spinlock and base address.
 
+to get phy_berlin_priv, you can use dev_get_drvdata(phy->dev->parent).
 
->
-> Regards,
->
-> Tony
+>=20
+> [=E2=80=A6]
+>=20
+>>> +		/*
+>>> +		 * By default the PHY node is used to request and match a PHY.
+>>> +		 * We describe one PHY per sub-node here. Use the right node.
+>>> +		 */
+>>> +		phy->dev.of_node =3D child;
+>>> +
+>>> +		priv->phys[phy_id].phy =3D phy;
+>>> +		priv->phys[phy_id].val =3D desc[phy_id].val;
+>>> +		priv->phys[phy_id].index =3D phy_id;
+>>> +		phy_set_drvdata(phy, &priv->phys[phy_id]);
+>>> +
+>>> +		/* Make sure the PHY is off */
+>>> +		phy_berlin_sata_power_off(phy);
+>>> +
+>>> +		phy_provider =3D devm_of_phy_provider_register(&phy->dev,
+>>> +							     of_phy_simple_xlate);
+>>> +		if (IS_ERR(phy_provider))
+>>> +			return PTR_ERR(phy_provider);
+>>
+>> was this intentional? registering multiple PHY providers?
+>=20
+> Yes. Each sub-node describe a PHY and register as a PHY provider. Thi=
+s
+> allow to reference the PHY as <&sata_phy0> and not <&sata_phy 0>. It
+> would be confusing to have a sub-node sata_phy0 and to use its parent
+> to access it.
 
+It is still a single PHY provider, so you can't register multiple PHY
+providers. So in this case <&sata_phy 0> is not that bad.
 
--- 
--George
+However phy-core.c should be patched with the following (only compile t=
+ested)
+
+=46rom 2517d4c0ad7f13abc2613516ef2b222a1fbcb550 Mon Sep 17 00:00:00 200=
+1
+=46rom: Kishon Vijay Abraham I <kishon@ti.com>
+Date: Thu, 15 May 2014 11:32:57 +0530
+Subject: [PATCH] phy: phy-core: Support modelling multi-PHY PHY nodes a=
+s
+ subnodes of PHY PROVIDER
+
+When a single PHY provider implementing multiple PHYs is represented in=
+ dt,
+the PHYs should be modelled as sub nodes of the PHY PROVIDER node.
+
+So the consumers using the PHY will have the phandle of the sub node ra=
+ther
+than the phandle of the PHY PROVIDER. Amended *of_phy_provider_lookup* =
+in
+PHY core to return the PHY PROVIDER even when the phandle of the PHY PR=
+OVIDERs
+sub node is provided.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/phy/phy-core.c |   10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index 03cf8fb..124c6ec 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -83,10 +83,18 @@ static struct phy *phy_lookup(struct device *device=
+, const
+char *port)
+ static struct phy_provider *of_phy_provider_lookup(struct device_node =
+*node)
+ {
+        struct phy_provider *phy_provider;
++       struct device_node *child;
+
+        list_for_each_entry(phy_provider, &phy_provider_list, list) {
+-               if (phy_provider->dev->of_node =3D=3D node)
++               if (phy_provider->dev->of_node !=3D node) {
++                       for_each_child_of_node(phy_provider->dev->of_no=
+de,
++                               child) {
++                               if (child =3D=3D node)
++                                       return phy_provider;
++                       }
++               } else {
+                        return phy_provider;
++               }
+        }
+
+        return ERR_PTR(-EPROBE_DEFER);
+--=20
+1.7.9.5
+
+Thanks
+Kishon
