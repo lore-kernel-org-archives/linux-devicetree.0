@@ -1,79 +1,40 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Thu, 15 May 2014 16:07:13 +0300
-Message-ID: <5374BC01.7030802@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-4-git-send-email-tony@atomide.com> <5369EAE7.3030705@ti.com> <20140507150343.GA9502@atomide.com> <536A5920.1020908@ti.com> <20140507175919.GH9502@atomide.com> <20140508233300.GI2198@atomide.com> <536C924E.5000307@ti.com> <20140509153008.GC17814@atomide.com> <20140513212639.GA18001@atomide.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 3/9] ARM: shmobile: r8a7790: add dmac0 dmac1 nodes
+Date: Thu, 15 May 2014 15:11:17 +0200
+Message-ID: <CAMuHMdX4+XPcUGfF0mrzeXuL3T5Tn7RTBW-T-mvLOM0VV_BURg@mail.gmail.com>
+References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
+	<1397511312-4845-4-git-send-email-ben.dooks@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="WC660HF6H0CT5Gw5VNuL9cijJ1K7k4MGM"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140513212639.GA18001@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1397511312-4845-4-git-send-email-ben.dooks@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linux-sh list <linux-sh@vger.kernel.org>, magnus.damm@opensource.se, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---WC660HF6H0CT5Gw5VNuL9cijJ1K7k4MGM
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, Apr 14, 2014 at 11:35 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -8,6 +8,8 @@
+> +               sysdma0: dma-controller@e6700000 {
 
-On 14/05/14 00:26, Tony Lindgren wrote:
+> +                       reg = <0 0xe6700020 0 0xffc0>;
 
-> +static int sharp_ls_probe_of(struct platform_device *pdev)
-> +{
-> +	struct panel_drv_data *ddata =3D platform_get_drvdata(pdev);
-> +	struct device_node *node =3D pdev->dev.of_node;
-> +	struct omap_dss_device *in;
-> +
-> +	ddata->vcc =3D devm_regulator_get(&pdev->dev, "envdd");
-> +	if (IS_ERR(ddata->vcc)) {
-> +		dev_err(&pdev->dev, "failed to get regulator\n");
-> +		return PTR_ERR(ddata->vcc);
-> +	}
-> +
-> +	/* lcd INI */
-> +	ddata->ini_gpio =3D sharp_ls_get_gpio_of(&pdev->dev, 0, 0, "enable");=
+> +               sysdma1: dma-controller@e6720000 {
 
-> +	if (PTR_ERR(ddata->ini_gpio) =3D=3D -EPROBE_DEFER)
-> +		return -EPROBE_DEFER;
+> +                       reg = <0 0xe6720020 0 0xffc0>;
 
-Hmm, the GPIOs are optional, but shouldn't we react somehow to real
-errors? I guess we should do something like:
+ePAPR: "The unit-address must match the first address specified in the reg
+property of the node."
 
-ddata->ini_gpio =3D sharp_ls_get_gpio_of(&pdev->dev, 0, 0, "enable");
-if (IS_ERR(ddata->ini_gpio) {
-	int err =3D PTR_ERR(ddata->ini_gpio);
-	if (err =3D=3D -EPROBE_DEFER || err !=3D -ENOENT)
-		return err;
-}
+Gr{oetje,eeting}s,
 
- Tomi
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
---WC660HF6H0CT5Gw5VNuL9cijJ1K7k4MGM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTdLwBAAoJEPo9qoy8lh71Ub4QAJsKC1xdeQ5Nw8ioygGiqiTY
-Q7s8hHkPtY4t7QNyA7+xv/O0VDz7dOuIkeaBi3xA5EGwm3QP98cEf76R/fu801XK
-IYBNzr13Xz1zHObwdyBd0zXoxCIS+BWU6cZuy658/tpB5NpE3kNbruI8B0TmceyQ
-PlZ4wE5s03MtMKuTrg04Dr62Vi61qMauOiN0ff7Mi2aSrCRsCKmBgpR1UZ+0+RsT
-+ZJ6xPZHLKBmy+7fTcb28x4YODznp+cStRXVr9XGY3zwU/GDprFykx2+zCpXuBqB
-9cQhKvVwSU8UU5CD8uQ7ko1iNx9LmbIOf7NhRKaCpKxqj7EvXebmLZeiyalwdhD7
-UZM3DEzNdy2YroFxtDWfIz6d2srXG2a9I2DnSZYxd4azcHxxyEfpQvEvTzA45XiA
-jDELxGA27PzFptJdlGIDFAZUS7QRhcX6F64S+EHuQ7As1Al53iL6BM/0+UWVeBRT
-qMA/fHDRQs/DkUreEWFHtWJtPs2+V+dA3wKhaDNYEED+jw3uh7WAl6YRCX1iwia7
-uIqUnxw+EbHH+MjbNDL+wA3sKf0+IdQ1g8la+qzzFV+hoBLV7iqYnDrlHAeJrdNH
-GUE3JQslWl3HcG7rACtT36mWHqqwI+XFP1GerIGpOgYyq1AWjk+8VYJGzTQdNs56
-zWPgU4qTnzUcU/HMjfIH
-=2Tt9
------END PGP SIGNATURE-----
-
---WC660HF6H0CT5Gw5VNuL9cijJ1K7k4MGM--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
