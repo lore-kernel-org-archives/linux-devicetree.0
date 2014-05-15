@@ -1,93 +1,76 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
-Date: Thu, 15 May 2014 11:23:50 +0200
-Message-ID: <20140515092349.GE6434@ulmo>
-References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>
- <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
- <20140514221423.GC6215@mithrandir>
- <CAPdUM4NaLpN99JCJH3qMakSO3OG6ASjEuvvr_CnKv=gOiqfzMQ@mail.gmail.com>
- <20140515074203.GD5952@ulmo>
- <CAPdUM4OXXMzMDNVym1ysMx7wifbO2QsSP5jk6cn3+F8Or3ng3w@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 03/17] phy: ti-pipe3: add external clock support for PCIe
+ PHY
+Date: Thu, 15 May 2014 12:25:45 +0300
+Message-ID: <53748819.8060705@ti.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com>	<1399383244-14556-4-git-send-email-kishon@ti.com>	<53736CBC.2060702@ti.com>	<5373897C.6080504@ti.com> <CAGo_u6qw1OomEw_ueb3x+xT+qZLAfGv7Se1K=o725aOoD3ankQ@mail.gmail.com> <5374859F.5080902@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ep0oHQY+/Gbo/zt0"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPdUM4OXXMzMDNVym1ysMx7wifbO2QsSP5jk6cn3+F8Or3ng3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Andrzej Hajda <a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5374859F.5080902@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Nishanth Menon <nm@ti.com>
+Cc: dt list <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, linux-pci@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Paul Walmsley <paul@pwsan.com>, Rajendra Nayak <rnayak@ti.com>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On 05/15/2014 12:15 PM, Kishon Vijay Abraham I wrote:
+> Hi Nishanth,
+> 
+> On Wednesday 14 May 2014 09:04 PM, Nishanth Menon wrote:
+>> On Wed, May 14, 2014 at 10:19 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>> Hi Roger,
+>>>
+>>> On Wednesday 14 May 2014 06:46 PM, Roger Quadros wrote:
+>>>> Hi Kishon,
+>>>>
+>>>> On 05/06/2014 04:33 PM, Kishon Vijay Abraham I wrote:
+>>>>> APLL used by PCIE phy can either use external clock as input or the clock
+>>>>> from DPLL. Added support for the APLL to use external clock as input here.
+>>>>>
+>>>>> Cc: Rajendra Nayak <rnayak@ti.com>
+>>>>> Cc: Tero Kristo <t-kristo@ti.com>
+>>>>> Cc: Paul Walmsley <paul@pwsan.com>
+>>>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/phy/ti-phy.txt |    4 ++
+>>>>>  drivers/phy/phy-ti-pipe3.c                       |   75 ++++++++++++++--------
+>>>>>  2 files changed, 52 insertions(+), 27 deletions(-)
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>>> index bc9afb5..d50f8ee 100644
+>>>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>>>>> @@ -76,6 +76,10 @@ Required properties:
+>>>>>     * "dpll_ref_m2" - external dpll ref clk
+>>>>>     * "phy-div" - divider for apll
+>>>>>     * "div-clk" - apll clock
+>>>>> +   * "apll_mux" - mux for pcie apll
+>>>>> +   * "refclk_ext" - external reference clock for pcie apll
+>>>>> + - ti,ext-clk: To specifiy if PCIE apll should use external clock. Applicable
+>>>>> +   only to PCIE PHY.
+>>>>
+>>>> Instead of specifying both clock sources "dpll_ref_clock", "refclk_ext" and then specifying a 3rd control option "ti,ext-clk" to select one of the 2 sources, why can't the DT just supply one clock source, i.e. the one that is being used in the board instance? The driver should then just configure the clock rate that is needed at that node. Shouldn't the clock framework automatically take care of muxing and parent rates?
+>>>
+>>> Want the dt to have all the clocks used by the controller. "ti,ext-clk" should
+>>> go in the board dt file (suggested by Nishanth).
+>>> The point is at some point later if some one wants to change the clock source,
+>>> it should be a simple enabling "ti,ext-clk" flag instead of finding the clock
+>>> phandle etc..
+>>
+>> Wonder if that is implicit by the presence of  "refclk_ext" in the
+>> clocks provided?
+> 
+> IMO the presence of "refclk_ext" is useless unless the board indicates it
+> provides the clock source.
+> 
+> refclk_ext holds phandle for *fixed-clock*, so irrespective of whether the
+> board provides a clock or not, it can have that handle for configuring in PRCM.
+> However if the board does not provide the clock source, configuring refclk_ext
+> in PRCM is useless.
 
---ep0oHQY+/Gbo/zt0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I think what Nishant meant is that if "refclk_ext" is provided it means that the driver
+should use that over "dpll_ref_clock" so no need of a separate "ti,ext-clk" flag.
 
-On Thu, May 15, 2014 at 01:47:33PM +0530, Rahul Sharma wrote:
-> On 15 May 2014 13:12, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Thu, May 15, 2014 at 10:49:37AM +0530, Rahul Sharma wrote:
-> >> On 15 May 2014 03:44, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> > On Thu, May 15, 2014 at 12:47:21AM +0530, Rahul Sharma wrote:
-[...]
-> >> >> +#define PHY_NR       5
-> >> >
-> >> > I'm not sure that this belongs here either. It's not a value that wi=
-ll
-> >> > ever appear in a DT source file.
-> >>
-> >> I want it to grow along with new additions in the phy list else
-> >> catastrophic. This will look unrelated in driver.
-> >
-> > But this is in no way growing automatically as it is. Whoever adds a new
-> > type of PHY will need to manually increment this define. Furthermore the
-> > driver will need to be updated to cope with this anyway.
->=20
-> Not automatically. What I meant was If keeping it at end of the list, it =
-is not
-> possible that somebody skip the updation of PHY_NR when adding a new phy
-> type.
-
-It's perhaps not as likely, but still possible.
-
-> If I leave a comment at the end of the list to update PHY_NR (after movin=
-g it
-> to driver), that also serves the purpose.
-
-I don't think this is needed either. Like I said earlier, since the
-driver has an internal maximum number of PHYs that it supports the
-maximum that can be specified in the DTS is irrelevant. If it doesn't
-support a new one, then it will simply return an error. And I would
-assume that if somebody added support for a new PHY type then they
-probably wouldn't forget to update the driver since they're modifying
-it anyway and testing will fail if they don't.
-
-Thierry
-
---ep0oHQY+/Gbo/zt0
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTdIelAAoJEN0jrNd/PrOhflAP/1Gzw5mXfrnFNP7lQrnxHxSC
-aT9K0BoLcPdz37oJu5euWFZAT8Oe2cojaVfWCeeBPi2kaKEdCHIV82Dr9wJjE9Rs
-0hJu8Kp9pprXVSkYUje+6ik1Ts+oKjzrdiaz0IDkUzqFhQHAJY9AQn/yilSCnGct
-vswKnpht5t2r0SfzIeNahCksgbZnqkDfUOb2RI/IwPFo23pJSv44ljvE2FDJ4qZ8
-l+2Nyurd+86+G/swomAwNQd4oaby0vrSkXt0Y6vreKYtWoSyrB7JtBWuuip8L3S7
-8giMMldQyMG1bXiOwKkz7+IUVBtKI4Q2lALsjmiL0FstkEXE3HiVVP8zp9H3JT2M
-5qqDOM5Wx0AI6oRhnzMyVxpU3JSxMFix9+Jyt1Hc7HGZ5GHHfAo9x3SqQGyvYur/
-kn6fa5j1h0h+MH38AlvCXDNGaK90BUG09pj+aafnIXTdKqkV8W+x04gDjS7fNlHJ
-c+nRCcOiYuF4aE3g4twhB0pLB3YmBidhP8piKVaSG/70Zt4QvOeRnYlA0UyCGaPr
-cRUk96raZn/+ncLToghVSxf6Cv4CHSb+jOgcRq28xzn31Yllp0la7qOTmPHr24f0
-6/7rh6MP649kMVPOTXBTzlVYZXVnT7TlN8OQ7ChTk1e4JhS6iYw8XUbXBHWhZQBc
-LDhbFXosdQNy9GtqdjcR
-=12g9
------END PGP SIGNATURE-----
-
---ep0oHQY+/Gbo/zt0--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+cheers,
+-roger
