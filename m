@@ -1,62 +1,42 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH v5 5/5] ARM: sunxi: select MFD_SUN6I_PRCM when sun6i arch
- support is enabled
-Date: Thu, 15 May 2014 17:30:20 +0200
-Message-ID: <20140515153020.GY29258@lukather>
-References: <1400144113-27659-1-git-send-email-boris.brezillon@free-electrons.com>
- <1400144113-27659-6-git-send-email-boris.brezillon@free-electrons.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v3] drm/panel: Add support for EDT ETM0700G0DH6 and
+ ET070080DH6 panels
+Date: Thu, 15 May 2014 09:54:07 -0600
+Message-ID: <5374E31F.80504@wwwdotorg.org>
+References: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
+ <20140515105427.GK6434@ulmo>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="I2k41U2G4dq8LTBU"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400144113-27659-6-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dev@linux-sunxi.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140515105427.GK6434@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <treding@nvidia.com>, kernel@pengutronix.de, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
+On 05/15/2014 04:54 AM, Thierry Reding wrote:
+> On Thu, May 15, 2014 at 12:25:47PM +0200, Philipp Zabel wrote:
+>> The EDT ETM0700G0DH6 and ET070080DH6 are 7" 800x480 panels,
+>> which can be supported by the simple panel driver.
+>>
+>> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+>> ---
+>> Changes since v2:
+>>  - Added device tree binding documentation. Do we really want to add one little
+>>    file for each panel?
+> 
+> I guess we could move all of the compatible values into simple-panel.txt
+> but I don't see a need for that yet.
 
---I2k41U2G4dq8LTBU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, May 15, 2014 at 10:55:13AM +0200, Boris BREZILLON wrote:
-> Select the MFD_SUN6I_PRCM option when sun6i arch is enabled in order to g=
-et
-> the PRCM (Power/Reset/Clock Management) related drivers compiled.
->=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-
-Applied, thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---I2k41U2G4dq8LTBU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTdN2MAAoJEBx+YmzsjxAgFkMQALjVc7ONqOryt0EbvVbk9WXn
-AmT/Y7rT+wyKey3E/GHfEbJDkennYRLytgiuB55XdA4uWIqLJ94SZyzUZr7abWcA
-/A21/Xf58/btxl0EzyzkPbhalovLjhY6o7H4GAllUsk1mGXycCfdUfn81cPNtylm
-d7ExvWozg3qs0/ynIeb8ipsOWzAbS0ShjQuXpGruWx86WdOY/KWk0aQF8ASnIZIg
-KT3votjxFUlN5Hkk2X9uwp8jRVHnSzQO3zU9xACsMTQq+0ovh+N19uO9B29bCUFQ
-dWkc2NJoS0kH4wd3pEAeH3HkMM1y2usf7sObdlCLD2CsyJGcvxF8uY92q+8JC9eO
-wWCxnhwS7AsqOPB8USHZIuCYwYYov49gaqc8soOJtk2uCFUZ7KZ16a4peQK5qcoA
-wzX81HwEsfEstBAUmJkyiknD2FV3oGzMMCXMLqbzLCxq+Lmh8PgX6NULwYczxtZr
-tKNGiNKLUbgItHJBu7zFN2KeV5Q+diCkiMqcNaJD93WOHcL12tHbDNMIEicBB43i
-I7F7hLxvp5D6kAa1MgJk+L90dJu843PljNHmEFgG5qjpe11NGu+Q16hWhT/HjsoC
-Axt+j2uYIlKOos0JFaWc6Wppq8n/X64Wus//7dU8X6V2PJc2L3ools5UT9LXTAWR
-G/sHyp65CQYAHgOzeFR/
-=NR1i
------END PGP SIGNATURE-----
-
---I2k41U2G4dq8LTBU--
+If they aren't added there, then I believe checkpatch will complain
+about patches that start to use the new compatible values, since they
+won't be documented.
