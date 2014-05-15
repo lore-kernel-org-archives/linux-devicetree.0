@@ -1,72 +1,45 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v5 0/5] ARM: dts: enable hdmi for exynos5 based peach
- and snow boards
-Date: Thu, 15 May 2014 21:25:07 +0200
-Message-ID: <53751493.8050601@gmail.com>
-References: <1400166264-3428-1-git-send-email-rahul.sharma@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 00/10] Tegra XHCI support
+Date: Thu, 15 May 2014 13:33:51 -0600
+Message-ID: <5375169F.3060809@wwwdotorg.org>
+References: <1400113986-339-1-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400166264-3428-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400113986-339-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+On 05/14/2014 06:32 PM, Andrew Bresticker wrote:
+> This is a first pass at the host and PHY drivers necessary for USB3.0
+> support on Tegra114 and Tegra124.  The Tegra XHCI host controller requires
+> external firmware [1] which must be loaded before using any USB ports owned
+> by the controller.  The XUSB PHY driver handles mapping and enabling of
+> the UTMI, HSIC, and SuperSpeed pads to the XHCI controller.
+> 
+> Tested on a Venice2 with a variety of USB2.0 and USB3.0 memory sticks
+> and ethernet dongles.  
+> 
+> Notes:
+>  - I've included support for Tegra114, but since I don't have Tegra114-based
+>    hardware, it is completely untested.
+>  - The PCIe and SATA PHYs also are programmed using the XUSB_PADCTL space
+>    as well.  At least some of the code can be re-used, specifically with
+>    respect to lane programming.  I believe Thierry is working on the PCIe
+>    parts of this.
 
-On 15.05.2014 17:04, Rahul Sharma wrote:
-> From: Rahul Sharma <Rahul.Sharma@samsung.com>
-> 
-> Enable hdmi for exynos5250 based snow board, exynos5420
-> based peach pit board and 5800 based peach-pi board.
-> 
-> V5:
-> 1) Moved hdmi_hpd_irq pin back to board files.
-> 2) Replaced 0 with GPIO_ACTIVE_HIGH while adding gpio property
-> to HDMI node.
-> 
-> V4:
-> 1) Removed hdmi_hpd_irq pin from peach-pi board as it already
-> present in exynos5420-pinctrl.dtsi.
-> 
-> V3:
-> 1) Re-spin on dependent patches.
-> 2) Added patch to enable hdmi for Peach-pi board.
-> 
-> V2:
-> 1) Re-spin on dependent patches.
-> 2) Added patch to remove chip specific hdmi hpd gpio from
-> board file top SoC file.
-> 
-> This series is based on Kukjin Kims, for-next branch.
-> 
-> It is dependent on
-> 
-> 1) Sachin's patch: "ARM: dts: exynos5250-snow: add tps65090 power regulator"
-> at https://patches.linaro.org/28325/ : [Reviewed-by: Doug Anderson]
-> 
-> All other dependent patches are already landed in maintainers
-> tree.
-> 
-> Rahul Sharma (4):
->   ARM: dts: enable hdmi for exynos5250 based snow board
->   ARM: dts: change to correct compatible string for exynos5420 hdmi
->   ARM: dts: enable hdmi for exynos5420 based peach-pit board
->   ARM: dts: enable hdmi for exynos5800 based peach-pi board
-> 
->  arch/arm/boot/dts/exynos5250-cros-common.dtsi |    6 +++++-
->  arch/arm/boot/dts/exynos5250-snow.dts         |   14 ++++++++++++++
->  arch/arm/boot/dts/exynos5420-peach-pit.dts    |   22 ++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5420.dtsi             |    7 ++++++-
->  arch/arm/boot/dts/exynos5800-peach-pi.dts     |   22 ++++++++++++++++++++++
->  5 files changed, 69 insertions(+), 2 deletions(-)
-> 
+If I understand the HW correctly, there's a separate "pad control" HW
+block that provides routing/sharing of signals from USB2(?), USB3, SATA,
+and PCIe to the pads.
 
-For the whole series:
-
-Acked-by: Tomasz Figa <t.figa@samsung.com>
-
-Best regards,
-Tomasz
+I believe Thierry is working on exposing this block as a pinctrl driver,
+or at least something that the other drivers can call into in order to
+configure that block. It'd be good if you can co-ordinate with him to
+rebase this driver on top of that, rather than (I assume; haven't read
+the code yet...) directly manipulating the padctrl registers inside each
+of the different drivers. Co-ordinating that could turn out to be
+problematic, and presumably if each driver does its own thing, we end up
+duplicating defines, code, and DT bindings for configuring the padctrl HW.
