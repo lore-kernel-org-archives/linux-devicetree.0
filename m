@@ -1,85 +1,145 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] clk: tegra: Implement Tegra124 shared/cbus clks
-Date: Thu, 15 May 2014 13:59:29 +0300
-Message-ID: <20140515105929.GJ15168@tbergstrom-lnx.Nvidia.com>
-References: <1399990023-30318-1-git-send-email-pdeschrijver@nvidia.com>
- <1399990023-30318-4-git-send-email-pdeschrijver@nvidia.com>
- <53725FED.7050303@wwwdotorg.org> <20140514142739.GA8612@ulmo>
- <20140514193518.19795.64334@quantum>
+From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: kirkwood: add kirkwood-km_fixedeth DTS
+ file
+Date: Thu, 15 May 2014 13:04:01 +0200
+Message-ID: <53749F21.8090705@keymile.com>
+References: <1400147335-20947-1-git-send-email-valentin.longchamp@keymile.com> <1400147335-20947-4-git-send-email-valentin.longchamp@keymile.com> <53749A44.800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140514193518.19795.64334@quantum>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53749A44.800-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 14, 2014 at 09:35:18PM +0200, Mike Turquette wrote:
-> Quoting Thierry Reding (2014-05-14 07:27:40)
-> > On Tue, May 13, 2014 at 12:09:49PM -0600, Stephen Warren wrote:
-> > > On 05/13/2014 08:06 AM, Peter De Schrijver wrote:
-> > > > Add shared and cbus clocks to the Tegra124 clock implementation.
-> > > 
-> > > > diff --git a/include/dt-bindings/clock/tegra124-car.h b/include/dt-bindings/clock/tegra124-car.h
-> > > 
-> > > > +#define TEGRA124_CLK_C2BUS 401
-> > > > +#define TEGRA124_CLK_C3BUS 402
-> > > > +#define TEGRA124_CLK_GR3D_CBUS 403
-> > > > +#define TEGRA124_CLK_GR2D_CBUS 404
-> > > ...
-> > > 
-> > > I worry about this a bit. IIUC, these clocks don't actually exist in HW,
-> > > but are more a way of SW applying policy to the clock that do exist in
-> > > HW. As such, I'm not convinced it's a good idea to expose these clock
-> > > IDS to DT, since DT is supposed to represent the HW, and not be
-> > > influenced by internal SW implementation details.
-> > > 
-> > > Do any DTs actually need to used these new clock IDs? I don't think we
-> > > could actually use these value in e.g. tegra124.dtsi's clocks
-> > > properties, since these clocks don't exist in HW. Was it your intent to
-> > > do that? If not, can't we just define these SW-internal clock IDs in the
-> > > header inside the Tegra clock driver, so the values are invisible to DT?
-> > 
-> > I'm beginning to wonder if abusing clocks in this way is really the best
-> > solution. From what I understand there are two problems here that are
-> > mostly orthogonal though they're implemented using similar techniques.
+On 05/15/2014 12:43 PM, Sebastian Hesselbarth wrote:
+> On 05/15/2014 11:48 AM, Valentin Longchamp wrote:
+>> Besides our Kirkwood Reference design, there is another group of board
+>> on which the eth interface is not connected to a phy but to a swtich for
 > 
-> Ack. "Virtual clocks" have been implemented by vendors before as a way
-> to manage complicated clock rate changes. I do not think we should
-> support such a method upstream.
+> s/swtich/switch/
 > 
-> I'm working with another engineer in Linaro on a "coordinated clock rate
-> change" series that might help solve some of the problems that this
-> patch series is trying to achieve.
+>> some board internal communication.
+>>
+>> The configuration of the switch is handled by an EEPROM or by the
+>> bootloader, but on the kirkwood side, the port is always configured as
+>> 1000 Mbits, full duplex.
+> 
+> Hmm, if it is another variant of the Keymile board we already have,
+> it should probably go like this:
+> 
+> + kirkwood.dtsi
+> + kirkwood-98dx4122.dtsi
+> +--> kirkwood_km_common.dtsi
+>       +--> kirkwood_km_kirkwood.dts
+>       +--> kirkwood_km_fixedeth.dts
+> 
+> Andrew did some great series for the various NAS vendor boards, where
+> you can look at.
+
+Yes that is a variant and I agree, your proposal of having a common.dtsi makes
+sense. I had seen Andrew's synology.dtsi and I hesitated to do something similar
+in the first place.
+
+> 
+>> Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+>>
+>> ---
+>>
+>>   arch/arm/boot/dts/kirkwood-km_fixedeth.dts | 70 ++++++++++++++++++++++++++++++
+>>   1 file changed, 70 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/kirkwood-km_fixedeth.dts
+>>
+>> diff --git a/arch/arm/boot/dts/kirkwood-km_fixedeth.dts b/arch/arm/boot/dts/kirkwood-km_fixedeth.dts
+>> new file mode 100644
+>> index 0000000..3d54d9b
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/kirkwood-km_fixedeth.dts
+>> @@ -0,0 +1,70 @@
+>> +/dts-v1/;
+>> +
+>> +#include "kirkwood.dtsi"
+>> +#include "kirkwood-98dx4122.dtsi"
+>> +
+>> +/ {
+>> +	model = "Keymile Kirkwood Fixed Eth";
+>> +	compatible = "keymile,km_fixedeth", "marvell,kirkwood-98DX4122", "marvell,kirkwood";
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x00000000 0x08000000>;
+>> +	};
+>> +
+>> +	chosen {
+>> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+>> +		stdout-path = &uart0;
+>> +	};
+>> +
+>> +	mbus {
+>> +		pcie-controller {
+>> +			status = "okay";
+>> +
+>> +			pcie@1,0 {
+>> +				status = "okay";
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	ocp@f1000000 {
+>> +		pinctrl: pin-controller@10000 {
+>> +			pinctrl-0 = < &pmx_i2c_gpio_sda &pmx_i2c_gpio_scl >;
+>> +			pinctrl-names = "default";
+>> +
+>> +			pmx_i2c_gpio_sda: pmx-gpio-sda {
+>> +				marvell,pins = "mpp8";
+>> +				marvell,function = "gpio";
+>> +			};
+>> +			pmx_i2c_gpio_scl: pmx-gpio-scl {
+>> +				marvell,pins = "mpp9";
+>> +				marvell,function = "gpio";
+>> +			};
+>> +		};
+>> +
+>> +		serial@12000 {
+>> +			status = "ok";
+>> +		};
+>> +	};
+>> +
+>> +	i2c@0 {
+>> +		compatible = "i2c-gpio";
+>> +		gpios = < &gpio0 8 GPIO_ACTIVE_HIGH		/* sda */
+>> +			  &gpio0 9 GPIO_ACTIVE_HIGH>;		/* scl */
+>> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+>> +	};
+>> +};
+>> +
+>> +&nand {
+>> +	status = "okay";
+>> +	chip-delay = <25>;
+>> +};
+>> +
+>> +&eth0 {
+>> +	status = "okay";
+>> +	ethernet0-port@0 {
+>> +		phy-handle = <>;
+> 
+> Is that empty phy-handle required? If so, we should probably fix
+> it in mv643xx_eth instead.
+
+Good question. I will try without it and drop it if possible.
+
+> 
+>> +		speed = <1000>;  /* <SPEED_1000> */
+>> +		duplex = <0x01>; /* <DUPLEX_FULL> */
+> 
+> s/0x01/1/
 > 
 
-Any preview? :)
+OK.
 
-For us to be useful it needs to be possible to:
-
-1) change to a different parent during a rate change
-2) adjust a clocks divider when changing parents
-3) ignore disabled child clocks
-4) have notifiers to hook voltage scaling into
-
-> > 
-> > The reason for introducing cbus clocks are still unclear to me. From the
-> > cover letter of this patch series it seems like these should be
-> > completely hidden from drivers and as such they don't belong in device
-> > tree. Also if they are an implementation detail, why are they even
-> > implemented as clocks? Perhaps an example use-case would help illustrate
-> > the need for this.
-> 
-> I also have this question. Does "cbus" come from your TRM or data sheet?
-> Or is it purely a software solution to coordinating rate changes within
-> known limits and for validated combinations?
-> 
-
-cbus is a software solution. It's not menioned in any TRM or hardware
-document.
-
-Cheers,
-
-Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
