@@ -1,54 +1,67 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v6 06/17] usb: host: xhci-plat: sort the headers in alphabetic
- order
-Date: Thu, 15 May 2014 12:17:31 +0200
-Message-ID: <1400149062-32661-7-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v6 17/17] ARM: mvebu: add Device Tree description of the EHCI controller on Armada 375
+Date: Thu, 15 May 2014 12:17:42 +0200
+Message-ID: <1400149062-32661-18-git-send-email-gregory.clement@free-electrons.com>
 References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorting the headers in alphabetic order will help to reduce the conflict
-when adding new headers later.
+The Marvell Armada 375 SoCs contains one EHCI controller. This commit
+adds the Device Tree description of this interfaces at the SoC level,
+and also enables the USB2 port on the Armada 375 DB platform.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Acked-by: Felipe Balbi <balbi@ti.com>
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 ---
- drivers/usb/host/xhci-plat.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/armada-375-db.dts |  4 ++++
+ arch/arm/boot/dts/armada-375.dtsi   | 16 ++++++++++++++++
+ 2 files changed, 20 insertions(+)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 151901ce1ba9..f5351af4b2c5 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -11,11 +11,11 @@
-  * version 2 as published by the Free Software Foundation.
-  */
+diff --git a/arch/arm/boot/dts/armada-375-db.dts b/arch/arm/boot/dts/armada-375-db.dts
+index 0453d69e6433..01bc5e87898b 100644
+--- a/arch/arm/boot/dts/armada-375-db.dts
++++ b/arch/arm/boot/dts/armada-375-db.dts
+@@ -102,6 +102,10 @@
+ 				};
+ 			};
  
--#include <linux/platform_device.h>
-+#include <linux/dma-mapping.h>
- #include <linux/module.h>
--#include <linux/slab.h>
- #include <linux/of.h>
--#include <linux/dma-mapping.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
++			usb@54000 {
++				status = "okay";
++			};
++
+ 			usb3@58000 {
+ 				status = "okay";
+ 			};
+diff --git a/arch/arm/boot/dts/armada-375.dtsi b/arch/arm/boot/dts/armada-375.dtsi
+index 7b303ecc2490..53baeb2f1fe8 100644
+--- a/arch/arm/boot/dts/armada-375.dtsi
++++ b/arch/arm/boot/dts/armada-375.dtsi
+@@ -320,6 +320,22 @@
+ 				clocks = <&coreclk 0>;
+ 			};
  
- #include "xhci.h"
- 
++			usb@50000 {
++				compatible = "marvell,orion-ehci";
++				reg = <0x50000 0x500>;
++				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 18>;
++				status = "disabled";
++			};
++
++			usb@54000 {
++				compatible = "marvell,orion-ehci";
++				reg = <0x54000 0x500>;
++				interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
++				clocks = <&gateclk 26>;
++				status = "disabled";
++			};
++
+ 			usb3@58000 {
+ 				compatible = "marvell,armada-375-xhci";
+ 				reg = <0x58000 0x20000>,<0x5b880 0x80>;
 -- 
 1.8.1.2
