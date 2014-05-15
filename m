@@ -1,97 +1,88 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
-Date: Thu, 15 May 2014 19:05:46 +0530
-Message-ID: <CAPdUM4O2Qpf+XmtRoXNVfSBODKJqtG9uUfAJpt-zvDwBwh05oQ@mail.gmail.com>
-References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>
- <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
- <1584926.JkD1mqdaNu@amdc1032>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCHv3 3/4] of: provide a binding for fixed link PHYs
+Date: Thu, 15 May 2014 15:39:57 +0200
+Message-ID: <20140515153957.75a8aa2a@free-electrons.com>
+References: <1393930704-24374-1-git-send-email-thomas.petazzoni@ free-electrons.com>
+	<1393930704-24374-4-git-send-email-thomas.petazzoni@ free-electrons.com>
+	<20140308055033.BE0F2C405B0@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1584926.JkD1mqdaNu@amdc1032>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kishon Vijay Abraham I <kishon@ti.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@linaro.org>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, sunil joshi <joshi@samsung.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140308055033.BE0F2C405B0@trevor.secretlab.ca>
+Sender: netdev-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org, Lior Amsalem <alior@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Dear Grant Likely,
 
-On 15 May 2014 19:01, Bartlomiej Zolnierkiewicz
-<b.zolnierkie@samsung.com> wrote:
->
-> Hi,
->
-> On Thursday, May 15, 2014 12:47:21 AM Rahul Sharma wrote:
->> From: Tomasz Stanislawski <t.stanislaws@samsung.com>
->>
->> Add exynos-simple-phy driver to support a single register
->> PHY interfaces present on Exynos4 SoC.
->>
->> Signed-off-by: Tomasz Stanislawski <t.stanislaws@samsung.com>
->> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
->>
->> ---
->>  .../devicetree/bindings/phy/samsung-phy.txt        |   56 ++++++
->>  drivers/phy/Kconfig                                |    5 +
->>  drivers/phy/Makefile                               |    1 +
->>  drivers/phy/exynos-simple-phy.c                    |  189 ++++++++++++++++++++
->>  include/dt-bindings/phy/exynos-simple-phy.h        |   27 +++
->>  5 files changed, 278 insertions(+)
->>  create mode 100644 drivers/phy/exynos-simple-phy.c
->>  create mode 100644 include/dt-bindings/phy/exynos-simple-phy.h
->
-> [...]
->
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index 16a2f06..2a13e0d 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -178,4 +178,9 @@ config PHY_XGENE
->>       help
->>         This option enables support for APM X-Gene SoC multi-purpose PHY.
->>
->> +config EXYNOS_SIMPLE_PHY
->> +     tristate "Exynos Simple PHY driver"
->
-> Please limit this driver to EXYNOS platforms with:
->
->         depends on ARCH_EXYNOS
->
-> or (optionally)
->
->         depends on ARCH_EXYNOS || COMPILE_TEST
->
-> Moreover the generic PHY dependency is missing.  It can be fixed with:
->
->         select GENERIC_PHY
->
+Sorry for bringing back this old topic, but I'm working on this again,
+hopefully reaching an acceptable solution this time. One question for
+you below.
 
-Yea, I will fix this part.
+On Sat, 08 Mar 2014 05:50:33 +0000, Grant Likely wrote:
 
-Regards,
-Rahul Sharma.
+> > +Example:
+> > +
+> > +ethernet@0 {
+> > +	...
+> > +	phy = <&phy0>;
+> > +	phy0: phy@0 {
+> > +	      fixed-link;
+> > +	      speed = <1000>;
+> > +	      full-duplex;
+> > +	};
+> 
+> The phy phandle to a child node is superfluous. A phandle to a fixed
+> child node doesn't make a whole lot of sense.
 
->> +     help
->> +       Support for 1-bit PHY controllers on SoCs from Exynos family.
->> +
->>  endmenu
->
-> Best regards,
-> --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[...]
+
+> There should be no address portion in the node name. It isn't a child
+> device, the node is merely more configuration data for the parent.
+> 
+> Example:
+> 
+> ethernet@0 {
+> 	...
+> 	fixed-link {
+> 	      speed = <1000>;
+> 	      full-duplex;
+> 	};
+
+For my current use case, I'm personally fine with that. But that
+doesn't work well with Florian Fainelli's which to potentially have the
+"fixed-link" node as part of another node in the DT, in the case the
+PHY is configurable through some separate SPI/I2C bus. See his comment
+in http://article.gmane.org/gmane.linux.network/306789:
+
+"""
+Another problem with that "old" 'fixed-link' property is that we are
+not properly capturing and representing Ethernet switches/PHYs whose
+data-path are isolated from the control path. For instance such
+devices will traditionally expose their control path as a
+MMIO/GPIO/I2C/SPI interface. Using the 5-digit 'fixed-link' property
+we are not representing this, on one side the Ethernet MAC is just
+told to hardcode the link parameters with some parameters, and on
+other side, any MMIO/GPIO/I2C/SPI device is not equipped with the
+correct properties to express the fact that is also has a data-path
+connected to an Ethernet MAC.
+
+What I like about this new binding is that we could place the
+'fixed-link' related properties in e.g: a SPI slave node, and have the
+Ethernet MAC be pointed at it by a phandle to tell it: look this is
+your PHY, it might not be one you could address on a MDIO bus, so I
+have been providing additional properties to help you with the link
+configuration.
+"""
+
+What is your opinion about this?
+
+Thanks,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
