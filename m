@@ -1,105 +1,94 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv3 3/3] ARM: mvebu: implement L2/PCIe deadlock workaround
-Date: Thu, 15 May 2014 11:18:39 +0200
-Message-ID: <1400145519-28530-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400145519-28530-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 06/10] usb: xhci: Add Tegra XHCI host-controller
+ driver
+Date: Thu, 15 May 2014 11:19:40 +0200
+Message-ID: <20140515091938.GD6434@ulmo>
+References: <1400113986-339-1-git-send-email-abrestic@chromium.org>
+ <1400113986-339-7-git-send-email-abrestic@chromium.org>
+ <15599140.PsD4j7x3tZ@wuerfel>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="P+33d92oIH25kiaB"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <15599140.PsD4j7x3tZ@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 375 and Armada 38x SOCs, which use the Cortex-A9
-CPU core, the PL310 cache and the Marvell PCIe hardware block are
-affected a L2/PCIe deadlock caused by a system erratum when hardware
-I/O coherency is used.
 
-This deadlock can be avoided by mapping the PCIe memory areas as
-strongly-ordered (note: MT_UNCACHED is strongly-ordered), and by
-removing the outer cache sync done in software. This is done in this
-patch, thanks to the new bits of infrastructure added in 'ARM: mm:
-allow sub-architectures to override PCI I/O memory type' and 'ARM: mm:
-add support for HW coherent systems in PL310' respectively.
+--P+33d92oIH25kiaB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/mach-mvebu/board-v7.c | 51 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+On Thu, May 15, 2014 at 10:17:10AM +0200, Arnd Bergmann wrote:
+> On Wednesday 14 May 2014 17:33:02 Andrew Bresticker wrote:
+[...]
+> > +	/* Create child xhci-plat device */
+> > +	memset(xhci_resources, 0, sizeof(xhci_resources));
+> > +	res =3D platform_get_resource(to_platform_device(dev), IORESOURCE_IRQ=
+, 0);
+> > +	if (!res) {
+> > +		dev_err(dev, "Missing XHCI IRQ\n");
+> > +		ret =3D -ENODEV;
+> > +		goto out;
+> > +	}
+> > +	xhci_resources[0].start =3D res->start;
+> > +	xhci_resources[0].end =3D res->end;
+> > +	xhci_resources[0].flags =3D res->flags;
+> > +	xhci_resources[0].name =3D res->name;
+> > +	res =3D platform_get_resource(to_platform_device(dev), IORESOURCE_MEM=
+, 0);
+> > +	if (!res) {
+> > +		dev_err(dev, "Missing XHCI registers\n");
+> > +		ret =3D -ENODEV;
+> > +		goto out;
+> > +	}
+> > +	xhci_resources[1].start =3D res->start;
+> > +	xhci_resources[1].end =3D res->end;
+> > +	xhci_resources[1].flags =3D res->flags;
+> > +	xhci_resources[1].name =3D res->name;
+> > +
+> > +	xhci =3D platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
+> > +	if (!xhci) {
+> > +		dev_err(dev, "Failed to allocate XHCI host\n");
+> > +		ret =3D -ENOMEM;
+> > +		goto out;
+> > +	}
+>=20
+> This does not feel appropriate at all: Rather than creating a child devic=
+e,
+> you should have a specific driver that hooks into functions exported
+> by the xhci core. See Documentation/driver-model/design-patterns.txt
 
-diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-index 01cfce6..5016c58 100644
---- a/arch/arm/mach-mvebu/board-v7.c
-+++ b/arch/arm/mach-mvebu/board-v7.c
-@@ -71,6 +71,49 @@ static int armada_375_external_abort_wa(unsigned long addr, unsigned int fsr,
- 	return 1;
- }
- 
-+/*
-+ * This ioremap hook is used on Armada 375/38x to ensure that PCIe
-+ * memory areas are mapped as MT_MEMORY_RW_SO instead of
-+ * MT_DEVICE. This is needed as a workaround for a deadlock issue
-+ * between the PCIe interface and the cache controller.
-+ */
-+static void __iomem *
-+armada_pcie_wa_ioremap_caller(phys_addr_t phys_addr, size_t size,
-+			      unsigned int mtype, void *caller)
-+{
-+	struct resource pcie_mem;
-+
-+	mvebu_mbus_get_pcie_mem_aperture(&pcie_mem);
-+
-+	if (pcie_mem.start <= phys_addr && (phys_addr + size) <= pcie_mem.end)
-+		mtype = MT_UNCACHED;
-+
-+	return __arm_ioremap_caller(phys_addr, size, mtype, caller);
-+}
-+
-+/*
-+ * When we are I/O coherent and we use the PL310 cache controller, we
-+ * add the PL310 property "dma-coherent". This makes sure the outer
-+ * sync operation is not used, which allows to workaround the system
-+ * erratum that causes deadlocks when doing PCIe in an SMP situation
-+ * on Armada 375 and Armada 38x.
-+ */
-+static void __init mvebu_l2x0_pl310_coherent(void)
-+{
-+	struct device_node *np;
-+
-+	if (!coherency_available())
-+		return;
-+
-+	for_each_compatible_node(np, NULL, "arm,pl310-cache") {
-+		struct property *p;
-+
-+		p = kzalloc(sizeof(*p), GFP_KERNEL);
-+		p->name = kstrdup("dma-coherent", GFP_KERNEL);
-+		of_add_property(np, p);
-+	}
-+}
-+
- static void __init mvebu_timer_and_clk_init(void)
- {
- 	of_clk_init(NULL);
-@@ -78,6 +121,14 @@ static void __init mvebu_timer_and_clk_init(void)
- 	mvebu_scu_enable();
- 	coherency_init();
- 	BUG_ON(mvebu_mbus_dt_init(coherency_available()));
-+
-+	if (of_machine_is_compatible("marvell,armada375") ||
-+	    of_machine_is_compatible("marvell,armada38x")) {
-+		arch_ioremap_caller = armada_pcie_wa_ioremap_caller;
-+		pci_ioremap_set_mem_type(MT_UNCACHED);
-+		mvebu_l2x0_pl310_coherent();
-+	}
-+
- 	l2x0_of_init(0, ~0UL);
- 
- 	if (of_machine_is_compatible("marvell,armada375"))
--- 
-1.9.3
+I don't think Documentation/driver-model/design-patterns.txt documents
+this. Perhaps this is what you had in mind?
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	http://lwn.net/Articles/336262/
+
+Thierry
+
+--P+33d92oIH25kiaB
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTdIaqAAoJEN0jrNd/PrOhBUIQAKd1nXshSupjAjeGsNlkQyez
+GH8FCmraBgDc4Kf5v7+l03kYBgpI8rB1itwjnslS59CxSz6E6BVzAI6sFQvZ8kpQ
+K7v/OAju6QNevxHHwrqWeyeiQtXE81Il0Q0w/14ca1uoD+64PoN+ztVVkwsegcZy
+LtXV5+8WfwUCiaB9IS8ASerm2o17LzUzPTs0qKETwsq7Hy6l17y45uqPYVcFfPR8
+tsp6FU+lNEtF9oylXDpjD2I6p4r7MlCClSrSwWURgIeD/Gzq3OjjPf47g/nTMuop
+J5UAWrF8XiSgOO03PM5tiK40oHUWmSsDQtvOnaXE1KKyBoKGzhHrYz69lD/4ahps
+jzseFt2wimbjXXlVQdydhJthD/nWv62V5yooST1ON6VBUBtmLx37JXhZwU9fTDXF
+jxS9aEzCcpDVpWqbe4nT7azZIAywCfle/noJ3qILW+S9a5yF6jqYTv8WBroW2sTt
+k3p1ItSxEbIDKfM10FRTlRYGVI49w6W4aTjUvnAzj1rwe0nfr4pxFQD/TM9qpLE1
+23f1ebQRRwDJp3Hh8/5VduH7+5JmAc4PMG3do/Lu3bGKH3ahm6OBZPafUd3LYsKR
+ThnPd3Cywg2C9eRgez8anuZGsnRREOMmsbRwe+zFLqDB18u/cm2E4b+KlNQNVFZu
+1MtdbHv1Ur8/6oBue1vj
+=1JJ4
+-----END PGP SIGNATURE-----
+
+--P+33d92oIH25kiaB--
