@@ -1,39 +1,25 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [PATCHv3 0/5] tsc2005 DT binding
-Date: Thu, 15 May 2014 22:16:31 +0300
-Message-ID: <20140515191631.GA4752@drone.musicnaut.iki.fi>
-References: <1398470179-20880-1-git-send-email-sre@kernel.org>
- <20140515142315.GA15716@earth.universe>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 04/10] clk: tegra: Initialize xusb clocks
+Date: Thu, 15 May 2014 13:22:00 -0600
+Message-ID: <537513D8.7060203@wwwdotorg.org>
+References: <1400113986-339-1-git-send-email-abrestic@chromium.org> <1400113986-339-5-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140515142315.GA15716@earth.universe>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400113986-339-5-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jim Lin <jilin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 05/14/2014 06:33 PM, Andrew Bresticker wrote:
+> Initialize the XUSB-related clocks with appropriate parents and rates
+> for both Tegra114 and Tegra124.
 
-On Thu, May 15, 2014 at 04:23:16PM +0200, Sebastian Reichel wrote:
-> On Sat, Apr 26, 2014 at 01:56:14AM +0200, Sebastian Reichel wrote:
-> > This adds device tree support for the tsc2005 touchscreen
-> > controller, which is currently only used by the Nokia N900
-> > board.
-> > 
-> > The patch does not update the reset pin handling for platform
-> > data based probe to avoid merge conflicts. The n900 platform
-> > code will be removed in the near future (3.16?) and the driver
-> > can be simplified once that has happened.
-> 
-> Ping. It would be nice to see this patchset in 3.16, since its
-> the last important hardware component missing for N900 DT boot.
+These first 4 clock driver patches look plausible to me, although I
+didn't look that hard!
 
-FWIW, for all these patches feel free to add:
-
-	Acked-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-
-Thanks for great work,
-
-A.
+Peter or Mike, if they look OK to you, can you please pick them up for
+3.16 so that by the time we apply the rest of the patches in this series
+for 3.17, the clock dependencies are already there? Thanks.
