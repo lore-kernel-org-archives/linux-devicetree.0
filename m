@@ -1,58 +1,77 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 RESEND 2/5] ARM: add SMP support for Broadcom mobile SoCs
-Date: Thu, 15 May 2014 11:03:49 -0700
-Message-ID: <CAGVrzca20+3kmJjyGv8Pr-qNNV4n0hhADL6GWvcYVDUL4q28Hg@mail.gmail.com>
-References: <1400176691-26058-1-git-send-email-elder@linaro.org> <1400176691-26058-3-git-send-email-elder@linaro.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: tegra: initial add of Colibri T30
+Date: Thu, 15 May 2014 12:13:55 -0600
+Message-ID: <537503E3.6050108@wwwdotorg.org>
+References: <107aeb48982529858267cb85c792b35e@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400176691-26058-3-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <107aeb48982529858267cb85c792b35e-XLVq0VzYD2Y@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stefan Agner <stefan-XLVq0VzYD2Y@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+On 05/14/2014 10:16 AM, Stefan Agner wrote:
+> Am 2014-05-13 21:49, schrieb Stephen Warren:
+>> On 05/13/2014 11:27 AM, stefan-XLVq0VzYD2Y@public.gmane.org wrote:
+>>> +	/* SPI1: Colibri SSP */
+>>> +	spi@7000d400 {
+>>> +		status = "okay";
+>>> +		spi-max-frequency = <25000000>;
+>>> +		can0: can@0 {
+>>> +			compatible = "microchip,mcp2515";
+>>> +			reg = <0>;
+>>> +			clocks = <&clk16m>;
+>>> +			interrupt-parent = <&gpio>;
+>>> +			interrupts = <TEGRA_GPIO(S, 0) GPIO_ACTIVE_LOW>;
+>>> +			spi-max-frequency = <10000000>;
+>>
+>> So this chip doesn't get confused by a faster clock frequency when its
+>> chip-select line isn't asserted? I would have expected spi-max-frequency
+>> for the bus to be the minimum value that any device on the bus would
+>> tolerate.
+> 
+> And from the other mail:
+>> I'm not convinced about this. The clock signal still reaches all the
+>> chips, and hence still reaches some logic inside those chips. If the
+>> setup/hold timings aren't met (for internal parts of the chip's SPI
+>> state machine), then presumably all bets are off re: performance of the
+>> chip, irrespective of whether the CS line happens to gate how much of
+>> the chip actually does anything.
+> 
+> SPI is by default not a multi-master Bus, hence the slaves only have to
+> listen when the CS is asserted. 
 
-2014-05-15 10:58 GMT-07:00 Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> This patch adds SMP support for BCM281XX and BCM21664 family SoCs.
->
-> This feature is controlled with a distinct config option such that a
-> SMP-enabled multi-v7 binary can be configured to run these SoCs in
-> uniprocessor mode.  Since this SMP functionality is used for
-> multiple Broadcom mobile chip families the config option is called
-> ARCH_BCM_MOBILE_SMP (for lack of a better name).
->
-> On SoCs of this type, the secondary core is not held in reset on
-> power-on.  Instead it loops in a ROM-based holding pen.  To release
-> it, one must write into a special register a jump address whose
-> low-order bits have been replaced with a secondary core's id, then
-> trigger an event with SEV.  On receipt of an event, the ROM code
-> will examine the register's contents, and if the low-order bits
-> match its cpu id, it will clear them and write the value back to the
-> register just prior to jumping to the address specified.
->
-> The location of the special register is defined in the device tree
-> using a "secondary-boot-reg" property in a node whose "enable-method"
-> matches.
->
-> Derived from code originally provided by Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/mach-bcm/Kconfig   |  18 +++-
->  arch/arm/mach-bcm/Makefile  |   3 +
->  arch/arm/mach-bcm/platsmp.c | 201 ++++++++++++++++++++++++++++++++++++++++++++
+That's got nothing to do with multi-master; it's got to do with the fact
+that an out-of-band /CS signal is what selects devices rather than
+in-band data on the bus.
 
-Could we make that name a little bit more specific to the mobile SoCs?
-There are other BCM SoCs either currently supported in this directory
-(BCM5310X), or making their way to be supported (brcmstb, bcm63xx),
-and those share nothing with the Mobile SoC SMP code.
+> I talked with our hardware expert, and
+> he told me that he would expect that the whole input stage (input
+> driver) is in reset/off logic when the CS line is not asserted. IMHO,
+> this makes sense, this would also save power. At least he would expect
+> that the communication state machine is resetted on CS assertion, so
+> that it doesn't matter what happend before. 
+> 
+> Wikipedia also states something similar. 
 
-Maybe we should create another level directory within mach-bcm...
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I find it much more likely that /CS would be a synchronous input to the
+SPI state machine in the HW. That way, the chip designers don't have to
+worry about issues with asynchronous resets.
+
+Anyway, both our arguments are pure conjecture. The only way to tell for
+sure is for you to go read the datasheets for the individual devices and
+find out if they document any requirements for the clock signal when /CS
+isn't active. It'd be good if you could check that.
+
+> But, since SPI is no real standard, devices which work differently and
+> claim to communicate through SPI could exist :-)
+> 
+> I have had not seen issues with this device when using faster clocks for
+> other devices on the same bus.
+
+... but I suppose that since in practice you're not seeing any issues,
+the DT is fine for now. It's not like this can't be changed later if we
+find out there is an issue.
