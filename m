@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI I/O memory type
-Date: Thu, 15 May 2014 11:18:37 +0200
-Message-ID: <1400145519-28530-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv3 2/3] ARM: mm: add support for HW coherent systems in PL310
+Date: Thu, 15 May 2014 11:18:38 +0200
+Message-ID: <1400145519-28530-3-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1400145519-28530-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,75 +10,92 @@ To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <w
 Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Due to a design incompatibility between the PCIe Marvell controller
-and the Cortex-A9, stressing PCIe devices with a lot of traffic
-quickly causes a deadlock.
+When a PL310 cache is used on a system that provides hardware
+coherency, the outer cache sync operation is useless, and can be
+skipped. Moreover, on some systems, it is harmful as it causes
+deadlocks between the Marvell coherency mechanism, the Marvell PCIe
+controller and the Cortex-A9.
 
-One part of the workaround for this is to have all PCIe regions mapped
-as strongly-ordered (MT_UNCACHED) instead of the default
-MT_DEVICE. While the arch_ioremap_caller() mechanism allows
-sub-architecture code to override ioremap(), used to map PCIe memory
-regions, there isn't such a mechanism to override the behavior of
-pci_ioremap_io().
+To avoid this, this commit introduces a new Device Tree property
+'dma-coherent' for the L2 cache controller node, valid only for the
+PL310 cache. It identifies the usage of the PL310 cache in an I/O
+coherent configuration. Internally, it makes the driver use a
+different set of l2x0_of_data, in which the ->sync operation is NULL.
 
-This commit adds the arch_pci_ioremap_mem_type variable, initialized
-to MT_DEVICE by default, and that sub-architecture code can
-override. We have chosen to expose a single variable rather than
-offering the possibility of overriding the entire pci_ioremap_io(),
-because implementing pci_ioremap_io() requires calling functions
-(get_mem_type()) that are private to the arch/arm/mm/ code.
+Note that technically speaking, a fully coherent system wouldn't
+require any of the other .outer_cache operations. However, in
+practice, when booting secondary CPUs, these are not yet coherent, and
+therefore a set of cache maintenance operations are necessary at this
+point. This explains why we keep the other .outer_cache operations and
+only ->sync is disabled.
+
+While in theory any write to a PL310 register could cause the
+deadlock, in practice, disabling ->sync is sufficient to workaround
+the deadlock, since the other cache maintenance operations are only
+used in very specific situations.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/include/asm/io.h | 6 ++++++
- arch/arm/mm/ioremap.c     | 9 ++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+ Documentation/devicetree/bindings/arm/l2cc.txt |  3 +++
+ arch/arm/mm/cache-l2x0.c                       | 24 ++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index 8aa4cca..3d23418 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -179,6 +179,12 @@ static inline void __iomem *__typesafe_io(unsigned long addr)
- /* PCI fixed i/o mapping */
- #define PCI_IO_VIRT_BASE	0xfee00000
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index b513cb8..077d837 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -40,6 +40,9 @@ Optional properties:
+ - arm,filter-ranges : <start length> Starting address and length of window to
+   filter. Addresses in the filter window are directed to the M1 port. Other
+   addresses will go to the M0 port.
++- dma-coherent : indicates that the system is operating in an hardware
++  I/O coherent mode. Valid only when the arm,pl310-cache compatible
++  string is used.
+ - interrupts : 1 combined interrupt.
+ - cache-id-part: cache id part number to be used if it is not present
+   on hardware
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index 7abde2ce..cf0c037 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -889,6 +889,26 @@ static const struct l2x0_of_data pl310_data = {
+ 	},
+ };
  
-+#if defined(CONFIG_PCI)
-+void pci_ioremap_set_mem_type(int mem_type);
-+#else
-+static inline void pci_ioremap_set_mem_type(int mem_type) {}
-+#endif
++/*
++ * PL310 operations used on I/O coherent systems. Theoretically, no
++ * outer cache operations would be needed, except that for secondary
++ * processors bring up, a few cache maintenance operations are needed
++ * because secondary processors are not directly coherent with the L2
++ * cache when they start up.
++ */
++static const struct l2x0_of_data pl310_coherent_data = {
++	.setup = pl310_of_setup,
++	.save  = pl310_save,
++	.outer_cache = {
++		.resume      = pl310_resume,
++		.inv_range   = l2x0_inv_range,
++		.clean_range = l2x0_clean_range,
++		.flush_range = l2x0_flush_range,
++		.flush_all   = l2x0_flush_all,
++		.inv_all     = l2x0_inv_all,
++	},
++};
 +
- extern int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr);
+ static const struct l2x0_of_data l2x0_data = {
+ 	.setup = l2x0_of_setup,
+ 	.save  = NULL,
+@@ -989,6 +1009,10 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
  
- /*
-diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-index f9c32ba..d1e5ad7 100644
---- a/arch/arm/mm/ioremap.c
-+++ b/arch/arm/mm/ioremap.c
-@@ -438,6 +438,13 @@ void __arm_iounmap(volatile void __iomem *io_addr)
- EXPORT_SYMBOL(__arm_iounmap);
+ 	data = of_match_node(l2x0_ids, np)->data;
  
- #ifdef CONFIG_PCI
-+static int pci_ioremap_mem_type = MT_DEVICE;
++	if (of_device_is_compatible(np, "arm,pl310-cache") &&
++	    of_property_read_bool(np, "dma-coherent"))
++		data = &pl310_coherent_data;
 +
-+void pci_ioremap_set_mem_type(int mem_type)
-+{
-+	pci_ioremap_mem_type = mem_type;
-+}
-+
- int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
- {
- 	BUG_ON(offset + SZ_64K > IO_SPACE_LIMIT);
-@@ -445,7 +452,7 @@ int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
- 	return ioremap_page_range(PCI_IO_VIRT_BASE + offset,
- 				  PCI_IO_VIRT_BASE + offset + SZ_64K,
- 				  phys_addr,
--				  __pgprot(get_mem_type(MT_DEVICE)->prot_pte));
-+				  __pgprot(get_mem_type(pci_ioremap_mem_type)->prot_pte));
- }
- EXPORT_SYMBOL_GPL(pci_ioremap_io);
- #endif
+ 	/* L2 configuration can only be changed if the cache is disabled */
+ 	if (!(readl_relaxed(l2x0_base + L2X0_CTRL) & L2X0_CTRL_EN)) {
+ 		if (data->setup)
 -- 
 1.9.3
 
