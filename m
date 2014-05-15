@@ -1,60 +1,77 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Thu, 15 May 2014 11:27:31 -0700
-Message-ID: <20140515182730.GE23659@atomide.com>
-References: <1398815562-24113-4-git-send-email-tony@atomide.com>
- <5369EAE7.3030705@ti.com>
- <20140507150343.GA9502@atomide.com>
- <536A5920.1020908@ti.com>
- <20140507175919.GH9502@atomide.com>
- <20140508233300.GI2198@atomide.com>
- <536C924E.5000307@ti.com>
- <20140509153008.GC17814@atomide.com>
- <20140513212639.GA18001@atomide.com>
- <5374BC01.7030802@ti.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 RESEND 2/5] ARM: add SMP support for Broadcom mobile SoCs
+Date: Thu, 15 May 2014 11:31:54 -0700
+Message-ID: <CAGVrzcafQkOxOBLX_5AJDeX1yERndu60ogZJgeA407e20N9oMg@mail.gmail.com>
+References: <1400176691-26058-1-git-send-email-elder@linaro.org>
+ <1400176691-26058-3-git-send-email-elder@linaro.org> <CAGVrzca20+3kmJjyGv8Pr-qNNV4n0hhADL6GWvcYVDUL4q28Hg@mail.gmail.com>
+ <20140515182620.GN32082@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5374BC01.7030802@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140515182620.GN32082@beef>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Christian Daudt <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, sboyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140515 06:08]:
-> On 14/05/14 00:26, Tony Lindgren wrote:
-> 
-> > +static int sharp_ls_probe_of(struct platform_device *pdev)
-> > +{
-> > +	struct panel_drv_data *ddata = platform_get_drvdata(pdev);
-> > +	struct device_node *node = pdev->dev.of_node;
-> > +	struct omap_dss_device *in;
-> > +
-> > +	ddata->vcc = devm_regulator_get(&pdev->dev, "envdd");
-> > +	if (IS_ERR(ddata->vcc)) {
-> > +		dev_err(&pdev->dev, "failed to get regulator\n");
-> > +		return PTR_ERR(ddata->vcc);
-> > +	}
-> > +
-> > +	/* lcd INI */
-> > +	ddata->ini_gpio = sharp_ls_get_gpio_of(&pdev->dev, 0, 0, "enable");
-> > +	if (PTR_ERR(ddata->ini_gpio) == -EPROBE_DEFER)
-> > +		return -EPROBE_DEFER;
-> 
-> Hmm, the GPIOs are optional, but shouldn't we react somehow to real
-> errors? I guess we should do something like:
-> 
-> ddata->ini_gpio = sharp_ls_get_gpio_of(&pdev->dev, 0, 0, "enable");
-> if (IS_ERR(ddata->ini_gpio) {
-> 	int err = PTR_ERR(ddata->ini_gpio);
-> 	if (err == -EPROBE_DEFER || err != -ENOENT)
-> 		return err;
-> }
+2014-05-15 11:26 GMT-07:00 Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> On Thu, May 15, 2014 at 11:03:49AM -0700, Florian Fainelli wrote:
+>> Hi Alex,
+>>
+>> 2014-05-15 10:58 GMT-07:00 Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+>> > This patch adds SMP support for BCM281XX and BCM21664 family SoCs.
+>> >
+>> > This feature is controlled with a distinct config option such that a
+>> > SMP-enabled multi-v7 binary can be configured to run these SoCs in
+>> > uniprocessor mode.  Since this SMP functionality is used for
+>> > multiple Broadcom mobile chip families the config option is called
+>> > ARCH_BCM_MOBILE_SMP (for lack of a better name).
+>> >
+>> > On SoCs of this type, the secondary core is not held in reset on
+>> > power-on.  Instead it loops in a ROM-based holding pen.  To release
+>> > it, one must write into a special register a jump address whose
+>> > low-order bits have been replaced with a secondary core's id, then
+>> > trigger an event with SEV.  On receipt of an event, the ROM code
+>> > will examine the register's contents, and if the low-order bits
+>> > match its cpu id, it will clear them and write the value back to the
+>> > register just prior to jumping to the address specified.
+>> >
+>> > The location of the special register is defined in the device tree
+>> > using a "secondary-boot-reg" property in a node whose "enable-method"
+>> > matches.
+>> >
+>> > Derived from code originally provided by Ray Jui <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>> >
+>> > Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  arch/arm/mach-bcm/Kconfig   |  18 +++-
+>> >  arch/arm/mach-bcm/Makefile  |   3 +
+>> >  arch/arm/mach-bcm/platsmp.c | 201 ++++++++++++++++++++++++++++++++++++++++++++
+>>
+>> Could we make that name a little bit more specific to the mobile SoCs?
+>> There are other BCM SoCs either currently supported in this directory
+>> (BCM5310X), or making their way to be supported (brcmstb, bcm63xx),
+>> and those share nothing with the Mobile SoC SMP code.
+>
+> Right.
+>
+>> Maybe we should create another level directory within mach-bcm...
+>
+> Let's not go that far. The general direction we need to go is to work
+> toward removing this code from mach-bcm/ completely. I don't really want
+> to see us adding directories and encouraging burying a lot of new files
+> in them.
 
-Yeah that makes sense to me.
+Ok, makes sense.
 
-Regards,
+>
+> A unique name will be enough and then we can work toward moving things
+> out to drivers/ over time.
 
-Tony
+Sounds good, thanks!
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
