@@ -1,79 +1,61 @@
-From: <tthayer@altera.com>
-Subject: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
- controller
-Date: Thu, 15 May 2014 11:04:49 -0500
-Message-ID: <1400169891-29546-2-git-send-email-tthayer@altera.com>
-References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [rfc]pwm: add xilinx pwm driver
+Date: Thu, 15 May 2014 18:30:13 +0200
+Message-ID: <16896948.U7hTsgDub4@wuerfel>
+References: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be> <5049141.XmehsUeakV@wuerfel> <5374C773.6070402@monstr.eu>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400169891-29546-1-git-send-email-tthayer@altera.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de
-Cc: devicetree@vger.kernel.org, tthayer@altera.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5374C773.6070402@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: monstr@monstr.eu
+Cc: Bart Tanghe <bart.tanghe@thomasmore.be>, thierry.reding@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thor Thayer <tthayer@altera.com>
+On Thursday 15 May 2014 15:56:03 Michal Simek wrote:
+> IP is configurable as is normal for us.
+> You can select IP with just one timer.
+> It means register locations for specific timer are fixed.
+> http://www.xilinx.com/support/documentation/ip_documentation/xps_timer.pdf
+> 
+> timer0 - offset 0x0
+> timer1 - offset 0x10 (doesn't need to be synthesized)
+> 
+> There is one interrupt for both timers.
+> 
+> Timers can be as timers (up/down count/ reload with or without IRQs)
+> But then one options is to use both timers and generate PWM signal.
+> From full ip description in DT you can see xlnx,gen0-assert = <1>;
+> which can suggest that this IP can output PMW signal.
+> (We can also detect if PWM0 signal is connected just to be sure
+> that PWM can be enabled).
+> 
+> There is also capture trigger mode where external signal start/stop
+> timer counting.
+> 
+> It means there are 3 modes - timer, capture and PWM.
+> Timer (clocksource, clockevent) requires specific handling,
+> PWM has own subsystem and not sure if there is any subsystem for
+> capture mode. Is there any?
 
-Addition of the Altera SDRAM controller bindings and device
-tree changes to the Altera SoC project.
+I don't think so. Possibly somewhere in IIO.
 
-v2: Changes to SoC SDRAM EDAC code.
+> Not every timer configuration is suitable for all things
+> but fully configured timer can be used in all 3 modes.
+> 
+> 
+> I think that make sense to register and map all timers in the system
+> and classify them with flags (like can't be used for capture or PMW
+> if there are not outputs connected) and then use the best
+> timer for clocksource and clockevent. The best candidate is IP
+> with the lowest IRQ number in dual timer mode but in general
+> whatever timer can be used that's why we can't probably avoid
+> timer specification in DT.
+> In spite of this smells because you are saying via DT
+> to Linux which timer should be used for what purpose.
 
-v3: Implement code suggestions for SDRAM EDAC code.
+We had discussions about this in the past, but I don't remember the
+outcome of that.
 
-v4: Remove syscon from SDRAM controller bindings.
-
-v5: No Change, bump version for consistency.
-
-Signed-off-by: Thor Thayer <tthayer@altera.com>
----
- .../bindings/arm/altera/socfpga-sdram.txt          |   11 +++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
- 2 files changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-new file mode 100644
-index 0000000..8f8746b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-@@ -0,0 +1,11 @@
-+Altera SOCFPGA SDRAM Controller
-+
-+Required properties:
-+- compatible : "altr,sdr-ctl";
-+- reg : Should contain 1 register ranges(address and length)
-+
-+Example:
-+	sdrctl@ffc25000 {
-+		compatible = "altr,sdr-ctl";
-+		reg = <0xffc25000 0x1000>;
-+	};
-diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index df43702..6ce912e 100644
---- a/arch/arm/boot/dts/socfpga.dtsi
-+++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -676,6 +676,11 @@
- 			clocks = <&l4_sp_clk>;
- 		};
- 
-+		sdrctl@ffc25000 {
-+			compatible = "altr,sdr-ctl", "syscon";
-+			reg = <0xffc25000 0x1000>;
-+		};
-+
- 		rstmgr@ffd05000 {
- 			compatible = "altr,rst-mgr";
- 			reg = <0xffd05000 0x1000>;
--- 
-1.7.9.5
+	Arnd
