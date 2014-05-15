@@ -1,90 +1,156 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v4 2/6] dt-bindings: add mtk-timer bindings
-Date: Thu, 15 May 2014 09:44:55 +0100
-Message-ID: <CABuKBeL7yeXbxmBE=+ar3dsHRNs1oscYDSPPs+RnGsM8eJs5PQ@mail.gmail.com>
-References: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
- <1400087579-4250-3-git-send-email-matthias.bgg@gmail.com>
- <cebe44ba-c543-4f4a-9aeb-810156fe8250@BN1AFFO11FD036.protection.gbl>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
+Date: Thu, 15 May 2014 14:16:59 +0530
+Message-ID: <53747F03.5030206@ti.com>
+References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <20140514165722.GA18495@kwain> <5373AE9A.3050008@gmail.com> <5764751.ffUj9rhnMd@wuerfel> <5373B908.5090904@gmail.com> <537462A2.5020607@ti.com> <5374668F.4060109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cebe44ba-c543-4f4a-9aeb-810156fe8250@BN1AFFO11FD036.protection.gbl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@inf>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <5374668F.4060109@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgYWxsLAoKSSBkaWQgbm90IHJlYWxpemUgdGhhdCBBbmRyb2lkIGdtYWlsIGFwcCBzZW5kcyBI
-VE1MIG1haWxzLgpTbyBJIHNlbmQgdGhlIGNvbW1lbnRzIGJlbG93IGFjY2lkZW50YWxseSBhcyBI
-VE1MIG1haWwgeWVzdGVyZGF5LgpTb3JyeSBmb3IgdGhhdC4KCjIwMTQtMDUtMTQgMTg6NDQgR01U
-KzAxOjAwIFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tPjoKPiBI
-aSBNYXR0aGlhcywKPgo+IE9uIFdlZCwgMjAxNC0wNS0xNCBhdCAwNzoxMlBNICswMjAwLCBNYXR0
-aGlhcyBCcnVnZ2VyIHdyb3RlOgo+PiBBZGQgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUg
-R2VuZXJhbCBQb3Jwb3NlIFRpbWVyIGRyaXZlciBvZgo+PiB0aGUgTWVkaWF0ZWsgU29Dcy4KPj4K
-Pj4gU2lnbmVkLW9mZi1ieTogTWF0dGhpYXMgQnJ1Z2dlciA8bWF0dGhpYXMuYmdnQGdtYWlsLmNv
-bT4KPj4gLS0tCj4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGst
-dGltZXIudHh0ICAgfCAxOCArKysrKysrKysrKysrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2VkLCAx
-OCBpbnNlcnRpb25zKCspCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQKPj4KPj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxt
-dGstdGltZXIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL21l
-ZGlhdGVrLG10ay10aW1lci50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPj4gaW5kZXggMDAw
-MDAwMC4uOTM4YWRmNgo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4+IEBAIC0wLDAg
-KzEsMTggQEAKPj4gK01lZGlhdGVrIE1UNjU4OSwgTVQ2NTc3IGFuZCBNVDY1NzIgVGltZXJzCj4+
-ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPj4gKwo+PiArUmVxdWly
-ZWQgcHJvcGVydGllczoKPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJtZWRpYXRlayxtdGs2
-NTg5LXRpbWVyIgo+Cj4gRG9uJ3QgeW91IHdhbnQgY29tcGF0aWJsZSBzdHJpbmdzIGZvciB0aGUg
-b3RoZXIgc3VwcG9ydGVkIFNPQ3MgdG9vPwoKSSdtIG5vdCBzdXJlIGlmIGl0IG1ha2VzIHNlbnNl
-IHRvIGRlZmluZSB0aGUgY29tcGF0aWJsZSBzdHJpbmdzIGZvcgphbGwgdGhlIFNvQ3MgdGhhdCBo
-YXZlIHRoaXMgdGltZXIgYXMgaXQncyBhY3R1YWxseSB0b3RhbGx5IHRoZSBzYW1lCklQLgoKSW4g
-b3RoZXIgY2FzZXMgZS5nLiB0aGUgYXJtIGdpYywgbm90IGFsbCBjb21wYXRpYmxlIHN0cmluZ3Mg
-YXJlCmRlZmluZWQsIHRoYXQncyB3aHkgSSB1c2UgY29ydGV4LWExNS1naWMgaW4gdGhlIGR0c2kg
-YWx0aG91Z2ggSSdtCnVzaW5nIGEgY29ydGV4IEE3IFNvQy4KCkkgd291bGQgaW5zdGVhZCBzYXks
-IHRoYXQgdGhlIFNvQyB2ZXJzaW9uIG9mIHRoZSBjb21wYXRpYmxlIHN0cmluZywKbXQ2NTg5LCBp
-cyBzb21ldGhpbmcgYXJiaXRyYXJ5LiBTbyBJIHByb3Bvc2UgdG8gdXNlIHRoZSBmaXJzdCBrbm93
-bgpTb0Mgd2hpY2ggdXNlcyB0aGUgdGltZXIuIFRoYXQgd291bGQgYmUgQUZBSUsgbXQ2NTc3LgoK
-Pgo+PiArLSByZWc6IFNob3VsZCBjb250YWluIGxvY2F0aW9uIGFuZCBsZW5ndGggZm9yIHRpbWVy
-cyByZWdpc3Rlci4KPj4gKy0gY2xvY2tzOiBDbG9ja3MgZHJpdmluZyB0aGUgdGltZXIgaGFyZHdh
-cmUuIFRoaXMgbGlzdCBzaG91ZCBpbmNsdWRlIHR3bwo+PiArICAgICBjbG9ja3MuIFRoZSBvcmRl
-ciBpcyBzeXN0ZW0gY2xvY2sgYW5kIGFzIHNlY29uZCBjbG9jayB0aGUgUlRDIGNsb2NrLgo+Cj4g
-U29ycnkgZm9yIGJlaW5nIHBlZGFudGljLCBidXQgd2UgaGFkIHNvIG1hbnkgdWdseSBiaW5kaW5n
-cyBpbiBvdXIgdmVuZG9yCj4gdHJlZS4gSSdtIHN0aWxsIGdldHRpbmcgY2F1Z2h0IHVwIG9uIHRo
-ZSBjbG9ja3MuIEkgaGF2ZSB0aGUgZmVlbGluZyB0aGUgU09DCj4gaGFzIHR3byBjbG9ja3MgKHN5
-c3RlbSBhbmQgcnRjKSB3aGljaCBhcmUgdXNlZCB0byBkcml2ZSB0aGlzIHRpbWVyLAo+IHdoaWxl
-IHRoZSB0aW1lciBwcm9iYWJseSByZWZlcnMgZGlmZmVyZW50bHkgdG8gaXRzIGNsb2NrIGlucHV0
-cy4KPiBJZiB0aGlzIHdhcyB0aGUgY2FzZSwgdGhlIG5hbWVzICdydGMnIGFuZCAnc3lzdGVtJyBj
-bG9jayBhcmUgU09DIHNwZWNpZmljCj4gbmFtZXMvaW1wbGVtZW50YXRpb24gZGV0YWlscy4gRnJv
-bSB0aGUgdGltZXIgcGVyc3BlY3RpdmUgaXQgaXMgcHJvYmFibHkKPiBqdXN0IGltcG9ydGFudCB0
-aGF0IGl0IHJlY2VpdmVzIHR3byBjbG9jayBpbnB1dHMuIFNpbmNlIHRoZSB0aW1lciBpcwo+IGRl
-c2NyaWJlZCBoZXJlIGFuZCBub3QgdGhlIFNPQywgdGhlc2UgU09DIHNwZWNpZmljIG5hbWVzIHNo
-b3VsZAo+IGRpc2FwcGVhciBhbmQgYmUgcmVwbGFjZWQgd2l0aCB0aGUgbmFtZXMgdGhlIHRpbWVy
-IElQIHVzZXMgZm9yIGl0cyBpbnB1dAo+IGNsb2Nrcy4KClRoZSB0aW1lciBpcyBleGFjdGx5IGlk
-ZW50aWNhbGx5IGRlc2NyaWJlZCBpbiB0aGUgdGhyZWUgU29DCmRhdGFzaGVldHMuIEluIHRoZSBk
-ZXNjcmlwdGlvbiB0aGUgY2xvY2tzIGFyZSBjYWxsZWQgc3lzdGVtIGFuZCBSVEMsCnNvIEkgdGhp
-bmsgd2UgYXJlIG9uIHRoZSBzYWZlIHNpZGUgaGVyZS4gOikKCj4KPiBUaGUgY2xvY2stbmFtZXMg
-c2hvdWxkIGJlIGxpc3RlZCB0b28sIHByb2JhYmx5IGFzIG9wdGlvbmFsIHByb3BlcnRpZXMuCgpU
-aGlzIHdpbGwgbGVhZCB0byBhIHByb2JsZW0sIGFzIHRoZSBjbG9jay1uYW1lcyBkZXNjcmlwdGlv
-biBpbmNsdWRlcwp0aGUgb3JkZXIgb2YgdGhlIGNsb2Nrcy4gSWYgd2UgbWFrZSB0aGlzIHByb3Bl
-cnR5IG9wdGlvbmFsLCBpdCBjYW4gYmUKZWFzaWx5IG1pc3N1bmRlcnN0b29kLiBTbyBJIHByb3Bv
-c2UgdG8gZG8gaXQgdGhlIHdheSBvdGhlciBkcml2ZXJzIGluCnRoZSBrZXJuZWwgKGUuZy4gYXJt
-LHNwODA0KSBkbyBpdCBhbmQgbGVhdmUgdGhlIGNsb2NrLW5hbWVzIHByb3BlcnR5CmFzIGl0IGlz
-LgoKPgo+PiArCj4+ICtFeGFtcGxlczoKPj4gKwo+PiArICAgICB0aW1lciB7Cj4+ICsgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdGs2NTg5LXRpbWVyIjsKPj4gKyAgICAgICAg
-ICAgICByZWcgPSA8MHgxMDAwODAwMCAweDgwPjsKPj4gKyAgICAgICAgICAgICBpbnRlcnJ1cHRz
-ID0gPEdJQ19TUEkgMTEzIElSUV9UWVBFX0xFVkVMX0xPVz47Cj4+ICsgICAgICAgICAgICAgY2xv
-Y2tzID0gPCZzeXN0ZW1fY2xrPiwgPCZydGNfY2xrPjsKPj4gKyAgICAgICAgICAgICBjbG9jay1u
-YW1lcyA9ICJzeXN0ZW0tY2xrIiwgInJ0Yy1jbGsiOwo+Cj4KPiAgICAgICAgIFPDtnJlbgoKCgot
-LSAKbW90emJsb2cud29yZHByZXNzLmNvbQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
-LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi,
+
+On Thursday 15 May 2014 12:32 PM, Sebastian Hesselbarth wrote:
+> On 05/15/2014 08:45 AM, Kishon Vijay Abraham I wrote:
+>> On Thursday 15 May 2014 12:12 AM, Sebastian Hesselbarth wrote:
+>>> On 05/14/2014 08:12 PM, Arnd Bergmann wrote:
+>>>> On Wednesday 14 May 2014 19:57:46 Sebastian Hesselbarth wrote:
+>>>>> On 05/14/2014 06:57 PM, Antoine T=E9nart wrote:
+>>>>>> On Wed, May 14, 2014 at 06:11:24PM +0200, Arnd Bergmann wrote:
+>>>>>>> On Wednesday 14 May 2014 17:49:29 Antoine T=E9nart wrote:
+>>>>>>>> On Wed, May 14, 2014 at 05:31:24PM +0200, Arnd Bergmann wrote:
+> [...]
+>>>>> Now, thinking about the PHY binding and the (possible) multi-prot=
+ocol
+>>>>> support, it can be possible that on BG2Q there is a generic 2-lan=
+e
+>>>>> LVDS PHY that can be configured to support SATA or PCIe. Both are
+>>>>> electrically and bit-level compatible, so they could be internall=
+y
+>>>>> wired-up with AHCI and PCIe controller.
+>>>>
+>>>> Sounds like a reasonable guess. We have other PHY drivers doing th=
+e
+>>>> same thing already.
+> [...]
+>>>>> From a DT point-of-view, we need a way to (a) link each SATA or P=
+CIe
+>>>>> port to the PHY, (b) specify the PHY lane to be used, and (c) spe=
+cify
+>>>>> the protocol to be used on that lane. If I got it right, Arnd alr=
+eady
+>>>>> mentioned to use the phy-specifier to deal with it:
+>>>>>
+>>>>> e.g. phy =3D <&genphy 0 MODE_SATA> or phy =3D <&genphy 1 MODE_PCI=
+E>
+>>>>
+>>>> Right.
+>>>>
+>>>>> Let's assume we have one dual-port SATA controller and one PCIe
+>>>>> controller with either x1 or x2 support. The only sane DT binding=
+,
+>>>>> I can think of then would be:
+>>>>>
+>>>>> berlin2q.dtsi:
+>>>>>
+>>>>> genphy: lvds@ea00ff {
+>>>>> 	compatible =3D "marvell,berlin-lvds-phy";
+>>>>> 	reg =3D <0xea00ff 0x100>;
+>>>>> 	#phy-cells =3D <2>;
+>>>>> };
+>>>>>
+>>>>> sata: sata@ab00ff {
+>>>>> 	compatible =3D "ahci-platform";
+>>>>> 	reg =3D <0xab00ff 0x100>;
+>>>>> =09
+>>>>> 	sata0: sata-port@0 {
+>>>>> 		reg =3D <0>;
+>>>>> 		phy =3D <&genphy 0 MODE_SATA>;
+>>>>> 		status =3D "disabled";
+>>>>> 	};
+>>>>>
+>>>>> 	sata1: sata-port@1 {
+>>>>> 		reg =3D <1>;
+>>>>> 		phy =3D <&genphy 1 MODE_SATA>;
+>>>>> 		status =3D "disabled";
+>>>>> 	};
+>>>>> };
+>>>>>
+>>>>> pcie: pcie@ab01ff {
+>>>>> 	compatible =3D "marvell,berlin-pcie";
+>>>>> 	reg =3D <0xab01ff 0x100>;
+>>>>>
+>>>>> 	pcie0: pcie-port@0 {
+>>>>> 		reg =3D <0>;
+>>>>> 		/* set phy on a per-board basis */
+>>>>> 		/* PCIe x1 on Lane 0 : phy =3D <&genphy 0 MODE_PCIE>; */
+>>>>> 		/* PCIe x2 on Lane 0 and 1 : phy =3D <&genphy 0 MODE_PCIE>, <&g=
+enphy 1
+>>>>> MODE_PCIE>; */
+>>>>> 		status =3D "disabled";
+>>>>> 	};
+>>>>> };
+>>>>>
+>>>>> berlin2q-dmp.dts:
+>>>>>
+>>>>> &sata1 {
+>>>>> 	status =3D "okay";
+>>>>> };
+>>>>>
+>>>>> &pcie0 {
+>>>>> 	phy =3D <&genphy 1 MODE_PCIE>;
+>>>>> };
+>>>>>
+>>>>> berlin2q-foo.dts:
+>>>>>
+>>>>> &pcie0 {
+>>>>> 	phy =3D <&genphy 0 MODE_PCIE>, <&genphy 1 MODE_PCIE>;
+>>>>> };
+>>>>
+>>>> Exactly. I would also be fine with keeping the sub-nodes of the
+>>>> phy device as in v3 and using #phy-cells=3D<1> instead of #phy-cel=
+ls.
+>>>> The result would be pretty much the same, it just depends on how
+>>>> closely connected the two logical phys are.
+>>
+>> huh.. even with sub-nodes you'll need #phy-cells=3D<2> if we use a s=
+ingle *PHY
+>> PROVIDER*. Because with just PHYs node pointer we won't be able to g=
+et the PHY.
+>> We'll need PHY providers node pointer.
+>>
+>> However I'd prefer to have sub-nodes for each individual PHYs and re=
+gister a
+>> single PHY PROVIDER.
+>=20
+> Depends on what you call PHY. In the example above the PHY is what
+> allows you to control both lanes.
+>=20
+> So you want sub-nodes for each individual lane given the nomenclature
+> of the example?
+>=20
+> Or like it is used in the example above, a single PHY node with an in=
+dex
+> in the phy-specifier to pick an individual lane.
+>=20
+> IMHO, having both phy-specifier index _and_ PHY sub-node per lane
+> has no benefit at all. You cannot even use the PHY sub-nodes for any
+> setup properties, as they depend on the consumer claiming the lane.
+
+IMO the dt data should completely describe the HW. So just by looking a=
+t the
+PHY node, we won't be able to tell the no of PHYs implemented in the IP=
+ if we
+have a single PHY node (In this case the lanes in the IP).
+
+However if you think it's an overkill for having sub-nodes for each lan=
+e then
+single PHY node is fine too.
+
+Thanks
+Kishon
