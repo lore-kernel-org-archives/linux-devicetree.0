@@ -1,61 +1,124 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [rfc]pwm: add xilinx pwm driver
-Date: Thu, 15 May 2014 18:30:13 +0200
-Message-ID: <16896948.U7hTsgDub4@wuerfel>
-References: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be> <5049141.XmehsUeakV@wuerfel> <5374C773.6070402@monstr.eu>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: Re: [PATCHv3 3/4] of: provide a binding for fixed link PHYs
+Date: Thu, 15 May 2014 09:54:32 -0700
+Message-ID: <CAGVrzcZ1h_Cm=b2aKEAcXYJyVOhoRZLcpXFh0oBB-wodMJnB8Q@mail.gmail.com>
+References: <20140308055033.BE0F2C405B0@trevor.secretlab.ca> <20140515153957.75a8aa2a@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5374C773.6070402@monstr.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: Bart Tanghe <bart.tanghe@thomasmore.be>, thierry.reding@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140515153957.75a8aa2a@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Lior Amsalem <alior@marvell.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, netdev <netdev@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 May 2014 15:56:03 Michal Simek wrote:
-> IP is configurable as is normal for us.
-> You can select IP with just one timer.
-> It means register locations for specific timer are fixed.
-> http://www.xilinx.com/support/documentation/ip_documentation/xps_timer.pdf
-> 
-> timer0 - offset 0x0
-> timer1 - offset 0x10 (doesn't need to be synthesized)
-> 
-> There is one interrupt for both timers.
-> 
-> Timers can be as timers (up/down count/ reload with or without IRQs)
-> But then one options is to use both timers and generate PWM signal.
-> From full ip description in DT you can see xlnx,gen0-assert = <1>;
-> which can suggest that this IP can output PMW signal.
-> (We can also detect if PWM0 signal is connected just to be sure
-> that PWM can be enabled).
-> 
-> There is also capture trigger mode where external signal start/stop
-> timer counting.
-> 
-> It means there are 3 modes - timer, capture and PWM.
-> Timer (clocksource, clockevent) requires specific handling,
-> PWM has own subsystem and not sure if there is any subsystem for
-> capture mode. Is there any?
+Hi Thomas,
 
-I don't think so. Possibly somewhere in IIO.
+2014-05-15 6:39 GMT-07:00 Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com>:
+> Dear Grant Likely,
+>
+> Sorry for bringing back this old topic, but I'm working on this again,
+> hopefully reaching an acceptable solution this time. One question for
+> you below.
+>
+> On Sat, 08 Mar 2014 05:50:33 +0000, Grant Likely wrote:
+>
+>> > +Example:
+>> > +
+>> > +ethernet@0 {
+>> > +   ...
+>> > +   phy = <&phy0>;
+>> > +   phy0: phy@0 {
+>> > +         fixed-link;
+>> > +         speed = <1000>;
+>> > +         full-duplex;
+>> > +   };
+>>
+>> The phy phandle to a child node is superfluous. A phandle to a fixed
+>> child node doesn't make a whole lot of sense.
+>
+> [...]
+>
+>> There should be no address portion in the node name. It isn't a child
+>> device, the node is merely more configuration data for the parent.
+>>
+>> Example:
+>>
+>> ethernet@0 {
+>>       ...
+>>       fixed-link {
+>>             speed = <1000>;
+>>             full-duplex;
+>>       };
+>
+> For my current use case, I'm personally fine with that. But that
+> doesn't work well with Florian Fainelli's which to potentially have the
+> "fixed-link" node as part of another node in the DT, in the case the
+> PHY is configurable through some separate SPI/I2C bus. See his comment
+> in http://article.gmane.org/gmane.linux.network/306789:
 
-> Not every timer configuration is suitable for all things
-> but fully configured timer can be used in all 3 modes.
-> 
-> 
-> I think that make sense to register and map all timers in the system
-> and classify them with flags (like can't be used for capture or PMW
-> if there are not outputs connected) and then use the best
-> timer for clocksource and clockevent. The best candidate is IP
-> with the lowest IRQ number in dual timer mode but in general
-> whatever timer can be used that's why we can't probably avoid
-> timer specification in DT.
-> In spite of this smells because you are saying via DT
-> to Linux which timer should be used for what purpose.
+I just re-read Grant's comments, and I don't think we contradict with
+each other here. Since the data-path is symetrical by nature, whether
+you place the 'fixed-link' property on one end (Ethernet MAC) or the
+other (SPI/I2C/GPIO node) does make a huge difference, except you want
+it to be placed where it makes the most sense: in the Ethernet MAC
+node. Properties like the speed, duplex, pause are definitively
+Ethernet MAC only properties.
 
-We had discussions about this in the past, but I don't remember the
-outcome of that.
+In case we need to specifically associate these two nodes with each
+other, a phandle property to the Ethernet MAC node, or e.g: the SPI
+node can be used.
 
-	Arnd
+That said, I think we should go with Grant's proposal of having the
+following representation:
+
+ethernet@0 {
+      ...
+       fixed-link {
+             speed = <1000>;
+             full-duplex;
+       };
+
+we might want to use 'max-speed' instead of speed, but that's debatable.
+
+>
+> """
+> Another problem with that "old" 'fixed-link' property is that we are
+> not properly capturing and representing Ethernet switches/PHYs whose
+> data-path are isolated from the control path. For instance such
+> devices will traditionally expose their control path as a
+> MMIO/GPIO/I2C/SPI interface. Using the 5-digit 'fixed-link' property
+> we are not representing this, on one side the Ethernet MAC is just
+> told to hardcode the link parameters with some parameters, and on
+> other side, any MMIO/GPIO/I2C/SPI device is not equipped with the
+> correct properties to express the fact that is also has a data-path
+> connected to an Ethernet MAC.
+>
+> What I like about this new binding is that we could place the
+> 'fixed-link' related properties in e.g: a SPI slave node, and have the
+> Ethernet MAC be pointed at it by a phandle to tell it: look this is
+> your PHY, it might not be one you could address on a MDIO bus, so I
+> have been providing additional properties to help you with the link
+> configuration.
+> """
+>
+> What is your opinion about this?
+>
+> Thanks,
+>
+> Thomas
+> --
+> Thomas Petazzoni, CTO, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- 
+Florian
