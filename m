@@ -1,156 +1,131 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3 1/6] phy: add a driver for the Berlin SATA PHY
-Date: Thu, 15 May 2014 14:16:59 +0530
-Message-ID: <53747F03.5030206@ti.com>
-References: <1400060942-10588-1-git-send-email-antoine.tenart@free-electrons.com> <20140514165722.GA18495@kwain> <5373AE9A.3050008@gmail.com> <5764751.ffUj9rhnMd@wuerfel> <5373B908.5090904@gmail.com> <537462A2.5020607@ti.com> <5374668F.4060109@gmail.com>
+From: Bart Tanghe <bart.tanghe@thomasmore.be>
+Subject: Re: [rfc]pwm: add xilinx pwm driver
+Date: Thu, 15 May 2014 10:50:00 +0200
+Message-ID: <53747FB8.2090706@thomasmore.be>
+References: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be> <4262573.aEBTd7FzV5@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <5374668F.4060109@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, linux-arm-kernel@lists.infradead.org, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, tj@kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pwm-owner@vger.kernel.org>
+In-Reply-To: <4262573.aEBTd7FzV5@wuerfel>
+Sender: linux-pwm-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: thierry.reding@gmail.com, michal.simek@xilinx.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, grant.likely@linaro.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thursday 15 May 2014 12:32 PM, Sebastian Hesselbarth wrote:
-> On 05/15/2014 08:45 AM, Kishon Vijay Abraham I wrote:
->> On Thursday 15 May 2014 12:12 AM, Sebastian Hesselbarth wrote:
->>> On 05/14/2014 08:12 PM, Arnd Bergmann wrote:
->>>> On Wednesday 14 May 2014 19:57:46 Sebastian Hesselbarth wrote:
->>>>> On 05/14/2014 06:57 PM, Antoine T=E9nart wrote:
->>>>>> On Wed, May 14, 2014 at 06:11:24PM +0200, Arnd Bergmann wrote:
->>>>>>> On Wednesday 14 May 2014 17:49:29 Antoine T=E9nart wrote:
->>>>>>>> On Wed, May 14, 2014 at 05:31:24PM +0200, Arnd Bergmann wrote:
-> [...]
->>>>> Now, thinking about the PHY binding and the (possible) multi-prot=
-ocol
->>>>> support, it can be possible that on BG2Q there is a generic 2-lan=
-e
->>>>> LVDS PHY that can be configured to support SATA or PCIe. Both are
->>>>> electrically and bit-level compatible, so they could be internall=
-y
->>>>> wired-up with AHCI and PCIe controller.
->>>>
->>>> Sounds like a reasonable guess. We have other PHY drivers doing th=
-e
->>>> same thing already.
-> [...]
->>>>> From a DT point-of-view, we need a way to (a) link each SATA or P=
-CIe
->>>>> port to the PHY, (b) specify the PHY lane to be used, and (c) spe=
-cify
->>>>> the protocol to be used on that lane. If I got it right, Arnd alr=
-eady
->>>>> mentioned to use the phy-specifier to deal with it:
->>>>>
->>>>> e.g. phy =3D <&genphy 0 MODE_SATA> or phy =3D <&genphy 1 MODE_PCI=
-E>
->>>>
->>>> Right.
->>>>
->>>>> Let's assume we have one dual-port SATA controller and one PCIe
->>>>> controller with either x1 or x2 support. The only sane DT binding=
-,
->>>>> I can think of then would be:
->>>>>
->>>>> berlin2q.dtsi:
->>>>>
->>>>> genphy: lvds@ea00ff {
->>>>> 	compatible =3D "marvell,berlin-lvds-phy";
->>>>> 	reg =3D <0xea00ff 0x100>;
->>>>> 	#phy-cells =3D <2>;
->>>>> };
->>>>>
->>>>> sata: sata@ab00ff {
->>>>> 	compatible =3D "ahci-platform";
->>>>> 	reg =3D <0xab00ff 0x100>;
->>>>> =09
->>>>> 	sata0: sata-port@0 {
->>>>> 		reg =3D <0>;
->>>>> 		phy =3D <&genphy 0 MODE_SATA>;
->>>>> 		status =3D "disabled";
->>>>> 	};
->>>>>
->>>>> 	sata1: sata-port@1 {
->>>>> 		reg =3D <1>;
->>>>> 		phy =3D <&genphy 1 MODE_SATA>;
->>>>> 		status =3D "disabled";
->>>>> 	};
->>>>> };
->>>>>
->>>>> pcie: pcie@ab01ff {
->>>>> 	compatible =3D "marvell,berlin-pcie";
->>>>> 	reg =3D <0xab01ff 0x100>;
->>>>>
->>>>> 	pcie0: pcie-port@0 {
->>>>> 		reg =3D <0>;
->>>>> 		/* set phy on a per-board basis */
->>>>> 		/* PCIe x1 on Lane 0 : phy =3D <&genphy 0 MODE_PCIE>; */
->>>>> 		/* PCIe x2 on Lane 0 and 1 : phy =3D <&genphy 0 MODE_PCIE>, <&g=
-enphy 1
->>>>> MODE_PCIE>; */
->>>>> 		status =3D "disabled";
->>>>> 	};
->>>>> };
->>>>>
->>>>> berlin2q-dmp.dts:
->>>>>
->>>>> &sata1 {
->>>>> 	status =3D "okay";
->>>>> };
->>>>>
->>>>> &pcie0 {
->>>>> 	phy =3D <&genphy 1 MODE_PCIE>;
->>>>> };
->>>>>
->>>>> berlin2q-foo.dts:
->>>>>
->>>>> &pcie0 {
->>>>> 	phy =3D <&genphy 0 MODE_PCIE>, <&genphy 1 MODE_PCIE>;
->>>>> };
->>>>
->>>> Exactly. I would also be fine with keeping the sub-nodes of the
->>>> phy device as in v3 and using #phy-cells=3D<1> instead of #phy-cel=
-ls.
->>>> The result would be pretty much the same, it just depends on how
->>>> closely connected the two logical phys are.
+On 05/15/2014 09:23 AM, Arnd Bergmann wrote:
+> On Wednesday 14 May 2014 13:26:13 Bart Tanghe wrote:
+>> @@ -0,0 +1,20 @@
+>> +Xilinx PWM controller
+>> +
+>> +Required properties:
+>> +- compatible: should be "xlnx,pwm-xlnx"
+>> +- add a clock source to the description
+>> +
+>> +Examples:
+>> +
+>> +               axi_timer_0: timer@42800000 {
+>> +                       clock-frequency = <100000000>;
+>> +                       clocks = <&clkc 15>;
+>> +                       compatible = "xlnx,xlnx-pwm";
+>> +                       reg = <0x42800000 0x10000>;
+>> +                       xlnx,count-width = <0x20>;
+>> +                       xlnx,gen0-assert = <0x1>;
+>> +                       xlnx,gen1-assert = <0x1>;
+>> +                       xlnx,one-timer-only = <0x0>;
+>> +                       xlnx,trig0-assert = <0x1>;
+>> +                       xlnx,trig1-assert = <0x1>;
+>> +               } ;
 >>
->> huh.. even with sub-nodes you'll need #phy-cells=3D<2> if we use a s=
-ingle *PHY
->> PROVIDER*. Because with just PHYs node pointer we won't be able to g=
-et the PHY.
->> We'll need PHY providers node pointer.
->>
->> However I'd prefer to have sub-nodes for each individual PHYs and re=
-gister a
->> single PHY PROVIDER.
->=20
-> Depends on what you call PHY. In the example above the PHY is what
-> allows you to control both lanes.
->=20
-> So you want sub-nodes for each individual lane given the nomenclature
-> of the example?
->=20
-> Or like it is used in the example above, a single PHY node with an in=
-dex
-> in the phy-specifier to pick an individual lane.
->=20
-> IMHO, having both phy-specifier index _and_ PHY sub-node per lane
-> has no benefit at all. You cannot even use the PHY sub-nodes for any
-> setup properties, as they depend on the consumer claiming the lane.
+>
+> It seems you are missing a mandatory "#pwm-cells" property.
+> How is anybody supposed to use this?
+>
+> 	Arnd
+>
 
-IMO the dt data should completely describe the HW. So just by looking a=
-t the
-PHY node, we won't be able to tell the no of PHYs implemented in the IP=
- if we
-have a single PHY node (In this case the lanes in the IP).
+I've added some additional information in the documentation
 
-However if you think it's an overkill for having sub-nodes for each lan=
-e then
-single PHY node is fine too.
 
-Thanks
-Kishon
+
+Xilinx PWM controller
+
+This driver works together with the Xilinx Axi timer hardware core.
+The core is available for the microblaze, powerpc and arm based Xilinx
+platforms.
+
+The axi timer core is implemented in the pl (programmable logic) of the
+fpga. The amount is user defined. Each core has two timers and one pwm 
+output.
+
+After genereating the design and bitstream, you have to use the Xilinx 
+device tree generator (git://git.xilinx.com/device-tree.git) to generate 
+the dts file or the petalinux tools 
+(http://www.xilinx.com/tools/petalinux-sdk.htm).
+
+Within this dts file, you find the axi-timer and clock definitions.
+
+		axi_timer_0: timer@42800000 {
+			clock-frequency = <100000000>;
+			compatible = "xlnx,axi-timer-2.0", "xlnx,xps-timer-1.00.a";
+			reg = <0x42800000 0x10000>;
+			xlnx,count-width = <0x20>;
+			xlnx,gen0-assert = <0x1>;
+			xlnx,gen1-assert = <0x1>;
+			xlnx,one-timer-only = <0x0>;
+			xlnx,trig0-assert = <0x1>;
+			xlnx,trig1-assert = <0x1>;
+		} ;
+
+		...
+
+ps7_slcr_0: ps7-slcr@f8000000 {
+compatible = "xlnx,ps7-slcr-1.00.a", "xlnx,zynqslcr";
+reg = <0xf8000000 0x1000>;
+clocks {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	clkc: clkc {
+		#clock-cells = <1>;
+		clock-output-names = "armpll", "ddrpll", "iopll", "cpu_6or4x", 
+"cpu_3or2x",
+		"cpu_2x", "cpu_1x", "ddr2x", "ddr3x", "dci",
+		"lqspi", "smc", "pcap", "gem0", "gem1",
+		"fclk0", "fclk1", "fclk2", "fclk3", "can0",
+		"can1", "sdio0", "sdio1", "uart0", "uart1",
+		"spi0", "spi1", "dma", "usb0_aper", "usb1_aper",
+		"gem0_aper", "gem1_aper", "sdio0_aper", "sdio1_aper", "spi0_aper",
+		"spi1_aper", "can0_aper", "can1_aper", "i2c0_aper", "i2c1_aper",
+		"uart0_aper", "uart1_aper", "gpio_aper", "lqspi_aper", "smc_aper",
+		"swdt", "dbg_trc", "dbg_apb";
+	compatible = "xlnx,ps7-clkc";
+	fclk-enable = <0xf>;
+	ps-clk-frequency = <33333333>;
+	} ;
+} ;
+} ;
+
+Some required properties should be changed
+- compatible: should be "xlnx,pwm-xlnx"
+- add the right clock source to the description - clocks = <&clkc 15>; 
+fclk0 in this design
+- add #pwm-cells = <1>;
+
+Examples:
+
+		axi_timer_0: timer@42800000 {
+			clock-frequency = <100000000>;
+			#pwm-cells = <1>;
+			clocks = <&clkc 15>;
+			compatible = "xlnx,xlnx-pwm";
+			reg = <0x42800000 0x10000>;
+			xlnx,count-width = <0x20>;
+			xlnx,gen0-assert = <0x1>;
+			xlnx,gen1-assert = <0x1>;
+			xlnx,one-timer-only = <0x0>;
+			xlnx,trig0-assert = <0x1>;
+			xlnx,trig1-assert = <0x1>;
+		} ;
+
+Generate the dtb file and load it on the target platform.
+
