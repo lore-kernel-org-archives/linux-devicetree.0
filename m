@@ -1,134 +1,216 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [rfc]pwm: add xilinx pwm driver
-Date: Thu, 15 May 2014 14:20:11 +0200
-Message-ID: <5049141.XmehsUeakV@wuerfel>
-References: <1400066773-14393-1-git-send-email-bart.tanghe@thomasmore.be> <53748D84.5040005@monstr.eu>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 2/5] ARM: edma: Get IP information from HW when booting
+ with DT
+Date: Thu, 15 May 2014 15:30:05 +0300
+Message-ID: <5374B34D.2060904@ti.com>
+References: <1399977032-26469-1-git-send-email-peter.ujfalusi@ti.com> <1399977032-26469-3-git-send-email-peter.ujfalusi@ti.com> <53748070.4080706@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53748D84.5040005-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
-Cc: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53748070.4080706@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, joelf@ti.com
+Cc: linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 15 May 2014 11:48:52 Michal Simek wrote:
-> On 05/14/2014 01:26 PM, Bart Tanghe wrote:
-> > 	add Xilinx PWM support - axi timer hardware block 
-> > 
-> > Signed-off-by: Bart Tanghe <bart.tanghe-2dq7lIxLGp5qkBXjtECzWg@public.gmane.org>
-> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-xlnx.txt b/Documentation/devicetree/bindings/pwm/pwm-xlnx.txt
-> > new file mode 100644
-> > index 0000000..cb48926
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pwm/pwm-xlnx.txt
-> > @@ -0,0 +1,20 @@
-> > +Xilinx PWM controller
-> > +
-> > +Required properties:
-> > +- compatible: should be "xlnx,pwm-xlnx"
-> > +- add a clock source to the description
-> > +
-> > +Examples:
-> > +
-> > +		axi_timer_0: timer@42800000 {
-> > +			clock-frequency = <100000000>;
-> 
-> just remove this from example it is not needed and unused.
-> 
-> 
-> > +			clocks = <&clkc 15>;
-> > +			compatible = "xlnx,xlnx-pwm";
-> > +			reg = <0x42800000 0x10000>;
-> > +			xlnx,count-width = <0x20>;
-> > +			xlnx,gen0-assert = <0x1>;
-> > +			xlnx,gen1-assert = <0x1>;
-> > +			xlnx,one-timer-only = <0x0>;
-> > +			xlnx,trig0-assert = <0x1>;
-> > +			xlnx,trig1-assert = <0x1>;
-> > +		} ;
-> 
-> ok. This has to be done completely differently.
-> I have looked around and found one a little bit older
-> example but it is in the Linux kernel.
-> It is pwm-atmel-tcb.c driver and atmel_tclib.c and tcb_clksrc.c.
-> 
-> Arnd: Isn't there any newer better example how to manage it?
+Hi Sekhar,
 
-Note that we have two atmel pwm drivers: drivers/misc/atmel_pwm.c 
-and drivers/pwm/pwm-atmel.c. If you want to take that as an example,
-make sure you use base on the latter.
+On 05/15/2014 11:53 AM, Sekhar Nori wrote:
+> Hi Peter,
+>=20
+> On Tuesday 13 May 2014 04:00 PM, Peter Ujfalusi wrote:
+>> From CCCFG register of eDMA3 we can get all the needed information f=
+or the
+>> driver about the IP:
+>> Number of channels: NUM_DMACH
+>> Number of regions: NUM_REGN
+>> Number of slots (PaRAM sets): NUM_PAENTRY
+>> Number of TC/EQ: NUM_EVQUE
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>  arch/arm/common/edma.c | 128 ++++++++++++++++++++++++++++++--------=
+-----------
+>>  1 file changed, 79 insertions(+), 49 deletions(-)
+>>
+>> diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
+>> index fade9ada81f8..1a98f3cd4cd9 100644
+>> --- a/arch/arm/common/edma.c
+>> +++ b/arch/arm/common/edma.c
+>> @@ -102,7 +102,16 @@
+>>  #define PARM_OFFSET(param_no)	(EDMA_PARM + ((param_no) << 5))
+>> =20
+>>  #define EDMA_DCHMAP	0x0100  /* 64 registers */
+>> -#define CHMAP_EXIST	BIT(24)
+>> +
+>> +/* CCCFG register */
+>> +#define GET_NUM_DMACH(x)	(x & 0x7) /* bits 0-2 */
+>> +#define GET_NUM_QDMACH(x)	((x & 0x70) >> 4) /* bits 4-6 */
+>> +#define GET_NUM_INTCH(x)	((x & 0x700) >> 8) /* bits 8-10 */
+>> +#define GET_NUM_PAENTRY(x)	((x & 0x7000) >> 12) /* bits 12-14 */
+>> +#define GET_NUM_EVQUE(x)	((x & 0x70000) >> 16) /* bits 16-18 */
+>> +#define GET_NUM_REGN(x)		((x & 0x300000) >> 20) /* bits 20-21 */
+>> +#define CHMAP_EXIST		BIT(24)
+>> +#define MP_EXIST		BIT(25)
+>=20
+> Of these new defines, you do not use GET_NUM_QDMACH(), GET_NUM_INTCH(=
+)
+> and MP_EXIST (at least in this patch). Can you please get rid of them=
+ if
+> not needed? May be its just me but its pretty annoying to search for =
+a
+> define only to find its never used :)
 
-> Back to atmel example - they are maintaining
-> internal list of timers (atmel_tclib.c)
-> and then clocksource driver (tcb_clksrc.c) is asking with atmel_tc_alloc() for it.
-> The same is for pwm driver (pwm-atmel-tcb.c).
-> 
-> They probably have all timers the same which is not
-> our case because they can be different but this can be solved
-> with flags.
-> 
-> From DT point of view I think this is the reasonable description
-> 
-> axi_timer_0: timer@42800000 {
-> 	clocks = <&clkc 15>;
-> 	compatible = "xlnx,xps-timer-1.00.a";
-> 	interrupt-parent = <&xps_intc_0>;
-> 	interrupts = < 3 2 >;
-> 	reg = <0x42800000 0x10000>;
-> 	xlnx,count-width = <0x20>;
-> 	xlnx,gen0-assert = <0x1>;
-> 	xlnx,gen1-assert = <0x1>;
-> 	xlnx,one-timer-only = <0x0>;
-> 	xlnx,trig0-assert = <0x1>;
-> 	xlnx,trig1-assert = <0x1>;
-> } ;
-> 
-> 
-> pwm {
->         compatible = "xlnx,timer-pwm";
->         #pwm-cells = <2>;
->         timer = <&axi_timer_0>;
-> };
-> 
-> 
-> Allocation function will also require to do a change
-> in clocksource driver because currently the first
-> timer in the DTS/system is taken for clocksource/clockevents
-> (others are just ignored).
-> That's why will be necessary to add clock-handle property
-> to cpu node to exactly describe which timer is system timer.
-> The same as is for interrupt-handle (more intc's can be in design).
+Sure, I can remove the ones we are not using in the code. I usually pre=
+fer to
+have full description if the register even if we only use one bit from =
+the
+register.
 
-If there is just one set of registers, I wouldn't object to
-having just a single node in DT, and just one driver that registers
-to both the clocksource and the PWM interfaces. That might
-simplify the code.
+>=20
+>> =20
+>>  #define EDMA_MAX_DMACH           64
+>>  #define EDMA_MAX_PARAMENTRY     512
+>> @@ -1415,6 +1424,68 @@ void edma_clear_event(unsigned channel)
+>>  }
+>>  EXPORT_SYMBOL(edma_clear_event);
+>> =20
+>> +static int edma_setup_info_from_hw(struct device *dev,
+>> +				   struct edma_soc_info *pdata)
+>> +{
+>> +	int i;
+>> +	u32 value, cccfg, n_tc;
+>> +	s8 (*queue_tc_map)[2], (*queue_priority_map)[2];
+>> +
+>> +	/* Decode the eDMA3 configuration from CCCFG register */
+>> +	cccfg =3D edma_read(0, EDMA_CCCFG);
+>=20
+> You do not handle the second controller here, but its pretty straight
+> forward to add that by passing the controller number to this function=
+=2E
 
-> 	cpus {
-> 		#address-cells = <1>;
-> 		#cpus = <1>;
-> 		#size-cells = <0>;
-> 		microblaze_0: cpu@0 {
-> 			compatible = "xlnx,microblaze-8.50.a";
-> 			interrupt-handle = <&microblaze_0_intc>;
-> 			...
-> 			clock-handle = <&axi_timer_X>;
-> 			...
-> 		} ;
-> 	} ;
-> 
-> Then clocksource driver will ask just exact timer which is suitable
-> to provide clocksource/clockevent. It can be also split and
-> use 2 cells format to specify which timer should be used.
-> clocksource-handle = <&axi_timer_X 0>;
-> clockeven-handle = <&axi_timer_X 1>;
+The second controller is not handled because in DT boot we only handle =
+1 cc as
+far as I know. I don't know why, but this is how the DT support has bee=
+n
+written and used.
 
-This seems fine, too.
+> I was wondering why we never read the hardware for this information
+> before, and strangely enough cannot find any SoC where the CCCFG
+> register does not publish this information correctly. I have tested o=
+n
+> DA850, DA830, DM365, DM355 and DM6467.
 
-	Arnd
+Good question. I was also puzzled about this.
+
+> Instead of keeping this specific to OF case, the code can be simplifi=
+ed
+> much better if we read from hardware all the time. We can directly
+> populate the equivalent variables in the internal structure 'struct
+> edma' instead of populating them in 'struct edma_soc_info' and then
+> copying then over.
+
+Yes, we can switch the non DT boot to this mode as well, true. At first=
+ I
+wanted to change code which I can test easily. For non DT boot I would =
+need to
+set up my old daVinci board ;)
+
+>> +
+>> +	value =3D GET_NUM_DMACH(cccfg);
+>> +	pdata->n_channel =3D BIT(value + 1);
+>> +
+>> +	value =3D GET_NUM_REGN(cccfg);
+>> +	pdata->n_region =3D BIT(value);
+>> +
+>> +	value =3D GET_NUM_PAENTRY(cccfg);
+>> +	pdata->n_slot =3D BIT(value + 4);
+>> +
+>> +	value =3D GET_NUM_EVQUE(cccfg);
+>> +	n_tc =3D value + 1;
+>> +
+>> +	dev_dbg(dev, "eDMA3 HW configuration (cccfg: 0x%08x):\n", cccfg);
+>> +	dev_dbg(dev, "n_channel: %u\n", pdata->n_channel);
+>> +	dev_dbg(dev, "n_region: %u\n", pdata->n_region);
+>> +	dev_dbg(dev, "n_slot: %u\n", pdata->n_slot);
+>> +	dev_dbg(dev, "n_tc: %u\n", n_tc);
+>> +
+>=20
+> [snip]
+>=20
+>> +	pdata->n_cc =3D 1;
+>> +
+>> +	queue_tc_map =3D devm_kzalloc(dev, (n_tc + 1) * sizeof(s8), GFP_KE=
+RNEL);
+>> +	if (!queue_tc_map)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i =3D 0; i < n_tc; i++) {
+>> +		queue_tc_map[i][0] =3D i;
+>> +		queue_tc_map[i][1] =3D i;
+>> +	}
+>> +	queue_tc_map[i][0] =3D -1;
+>> +	queue_tc_map[i][1] =3D -1;
+>> +
+>> +	pdata->queue_tc_mapping =3D queue_tc_map;
+>> +
+>> +	queue_priority_map =3D devm_kzalloc(dev, (n_tc + 1) * sizeof(s8),
+>> +					  GFP_KERNEL);
+>> +	if (!queue_priority_map)
+>> +		return -ENOMEM;
+>> +
+>> +	for (i =3D 0; i < n_tc; i++) {
+>> +		queue_priority_map[i][0] =3D i;
+>> +		queue_priority_map[i][1] =3D i;
+>> +	}
+>> +	queue_priority_map[i][0] =3D -1;
+>> +	queue_priority_map[i][1] =3D -1;
+>> +
+>> +	pdata->queue_priority_mapping =3D queue_priority_map;
+>> +
+>> +	pdata->default_queue =3D 0;
+>=20
+> This is part is not really setting up from hardware (rather falling b=
+ack
+> to some sane defaults for the DT case). Could you leave them in
+> edma_of_parse_dt()?
+
+Not really since the number of tc is not know as early as edma_of_parse=
+_dt(),
+we used to a magic number of 3 in place for n_tc previously.
+We are doing similar things as previously done in edma_of_parse_dt() bu=
+t with
+'correct' number of tc.
+
+>> @@ -1655,6 +1679,12 @@ static int edma_probe(struct platform_device =
+*pdev)
+>>  		if (IS_ERR(edmacc_regs_base[j]))
+>>  			return PTR_ERR(edmacc_regs_base[j]);
+>> =20
+>> +		if (node) {
+>> +			/* Get eDMA3 configuration from IP */
+>> +			ret =3D edma_setup_info_from_hw(dev, info[j]);
+>> +			if (ret)
+>> +				return ret;
+>=20
+> No need to do this only for the DT case, I think. Also, once we get r=
+id
+> of the edma_soc_info dependency, just pass edma_cc[] directly
+>=20
+> 		edma_setup_info_from_hw(dev, j, edma_cc[j]);
+
+Yes, let's do this for DT and not DT boot as well.
+I will keep the queue_tc_map and queue_priority_map setup in there I th=
+ink to
+be done in case of DT boot.
+
+I'll try to craft v3 as soon as I can.
+
+Thanks,
+P=E9ter
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
