@@ -1,89 +1,62 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v6 14/17] ARM: mvebu: add Device Tree description of xHCI controllers on Armada 38x
-Date: Thu, 15 May 2014 12:17:39 +0200
-Message-ID: <1400149062-32661-15-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v6 09/17] Documentation: dt-bindings: update xhci-platform DT
+ binding
+Date: Thu, 15 May 2014 12:17:34 +0200
+Message-ID: <1400149062-32661-10-git-send-email-gregory.clement@free-electrons.com>
 References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Felipe Balbi <balbi@ti.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Marvell Armada 38x SoCs contains two xHCI controllers. This commit
-adds the Device Tree description of those interfaces at the SoC level,
-and also enables the two USB3 ports on the Armada 385 DB platform and
-one USB3 port on the Armada 385 RD platform.
+This commit extends the compatible string list of the xhci-platform
+binding with the new "armada-375-xhci" and "armada-380-xhci"
+compatible strings. It is used to describe the XHCI controller which
+is available in the Armada 375 and 38x SoCs.
+
+It also indicates that an optional 'clocks' property is now supported.
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Acked-by: Mathias Nyman <mathias.nyman@linux.intel.com>
 ---
- arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
- arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
- arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
- 3 files changed, 29 insertions(+)
+ Documentation/devicetree/bindings/usb/usb-xhci.txt | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-index 6828d77696a6..d5db1466da82 100644
---- a/arch/arm/boot/dts/armada-385-db.dts
-+++ b/arch/arm/boot/dts/armada-385-db.dts
-@@ -101,6 +101,14 @@
- 					reg = <0x1000000 0x3f000000>;
- 				};
- 			};
-+
-+			usb3@f0000 {
-+				status = "okay";
-+			};
-+
-+			usb3@f8000 {
-+				status = "okay";
-+			};
- 		};
+diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+index 90f8f607d125..999be5ca901c 100644
+--- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
++++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
+@@ -1,11 +1,16 @@
+ USB xHCI controllers
  
- 		pcie-controller {
-diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
-index 45250c88814b..a505fe94ff37 100644
---- a/arch/arm/boot/dts/armada-385-rd.dts
-+++ b/arch/arm/boot/dts/armada-385-rd.dts
-@@ -77,6 +77,10 @@
- 					reg = <1>;
- 				};
- 			};
-+
-+			usb3@f0000 {
-+				status = "okay";
-+			};
- 		};
+ Required properties:
+-  - compatible: should be "generic-xhci" (deprecated: "xhci-platform").
++  - compatible: should be one of "generic-xhci",
++    "marvell,armada-375-xhci", "marvell,armada-380-xhci" (deprecated:
++    "xhci-platform").
+   - reg: should contain address and length of the standard XHCI
+     register set for the device.
+   - interrupts: one XHCI interrupt should be described here.
  
- 		pcie-controller {
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index a064f59da02d..6f97f3d7fb15 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -355,6 +355,23 @@
- 				clocks = <&coredivclk 0>;
- 				status = "disabled";
- 			};
++Optional property:
++  - clocks: reference to a clock
 +
-+			usb3@f0000 {
-+				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf0000 0x4000>,<0xf4000 0x4000>;
-+				interrupts = <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 9>;
-+				status = "disabled";
-+			};
-+
-+			usb3@f8000 {
-+				compatible = "marvell,armada-380-xhci";
-+				reg = <0xf8000 0x4000>,<0xfc000 0x4000>;
-+				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks = <&gateclk 10>;
-+				status = "disabled";
-+			};
-+
- 		};
- 	};
- 
+ Example:
+ 	usb@f0931000 {
+ 		compatible = "generic-xhci";
 -- 
 1.8.1.2
