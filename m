@@ -1,25 +1,72 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH 08/10] ARM: tegra124: Bind CAR to syscon device
-Date: Thu, 15 May 2014 13:25:02 -0600
-Message-ID: <5375148E.6040905@wwwdotorg.org>
-References: <1400113986-339-1-git-send-email-abrestic@chromium.org> <1400113986-339-9-git-send-email-abrestic@chromium.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v5 0/5] ARM: dts: enable hdmi for exynos5 based peach
+ and snow boards
+Date: Thu, 15 May 2014 21:25:07 +0200
+Message-ID: <53751493.8050601@gmail.com>
+References: <1400166264-3428-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400113986-339-9-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1400166264-3428-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2014 06:33 PM, Andrew Bresticker wrote:
-> The XUSB PHY driver will be accessing the CAR registers through the
-> syscon interface.
+Hi Rahul,
 
-I very strongly don't want to use the syscon concept on Tegra. Instead,
-I want only the CAR driver touching the CAR registers. If other drivers
-need some CAR registers manipulated, that should happen by that other
-driver calling some explicit semantic API in the CAR driver to do so.
-Take a look at how the Tegra SMMU and Tegra AHB driver communicate for
-an example.
+On 15.05.2014 17:04, Rahul Sharma wrote:
+> From: Rahul Sharma <Rahul.Sharma@samsung.com>
+> 
+> Enable hdmi for exynos5250 based snow board, exynos5420
+> based peach pit board and 5800 based peach-pi board.
+> 
+> V5:
+> 1) Moved hdmi_hpd_irq pin back to board files.
+> 2) Replaced 0 with GPIO_ACTIVE_HIGH while adding gpio property
+> to HDMI node.
+> 
+> V4:
+> 1) Removed hdmi_hpd_irq pin from peach-pi board as it already
+> present in exynos5420-pinctrl.dtsi.
+> 
+> V3:
+> 1) Re-spin on dependent patches.
+> 2) Added patch to enable hdmi for Peach-pi board.
+> 
+> V2:
+> 1) Re-spin on dependent patches.
+> 2) Added patch to remove chip specific hdmi hpd gpio from
+> board file top SoC file.
+> 
+> This series is based on Kukjin Kims, for-next branch.
+> 
+> It is dependent on
+> 
+> 1) Sachin's patch: "ARM: dts: exynos5250-snow: add tps65090 power regulator"
+> at https://patches.linaro.org/28325/ : [Reviewed-by: Doug Anderson]
+> 
+> All other dependent patches are already landed in maintainers
+> tree.
+> 
+> Rahul Sharma (4):
+>   ARM: dts: enable hdmi for exynos5250 based snow board
+>   ARM: dts: change to correct compatible string for exynos5420 hdmi
+>   ARM: dts: enable hdmi for exynos5420 based peach-pit board
+>   ARM: dts: enable hdmi for exynos5800 based peach-pi board
+> 
+>  arch/arm/boot/dts/exynos5250-cros-common.dtsi |    6 +++++-
+>  arch/arm/boot/dts/exynos5250-snow.dts         |   14 ++++++++++++++
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts    |   22 ++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420.dtsi             |    7 ++++++-
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts     |   22 ++++++++++++++++++++++
+>  5 files changed, 69 insertions(+), 2 deletions(-)
+> 
+
+For the whole series:
+
+Acked-by: Tomasz Figa <t.figa@samsung.com>
+
+Best regards,
+Tomasz
