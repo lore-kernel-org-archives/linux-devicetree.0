@@ -1,99 +1,85 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v3] drm/panel: Add support for EDT ETM0700G0DH6 and
- ET070080DH6 panels
-Date: Thu, 15 May 2014 12:54:28 +0200
-Message-ID: <20140515105427.GK6434@ulmo>
-References: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 3/3] clk: tegra: Implement Tegra124 shared/cbus clks
+Date: Thu, 15 May 2014 13:59:29 +0300
+Message-ID: <20140515105929.GJ15168@tbergstrom-lnx.Nvidia.com>
+References: <1399990023-30318-1-git-send-email-pdeschrijver@nvidia.com>
+ <1399990023-30318-4-git-send-email-pdeschrijver@nvidia.com>
+ <53725FED.7050303@wwwdotorg.org> <20140514142739.GA8612@ulmo>
+ <20140514193518.19795.64334@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0868306856=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1400149547-1541-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, Thierry Reding <treding@nvidia.com>, kernel@pengutronix.de, Stefan Agner <stefan@agner.ch>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140514193518.19795.64334@quantum>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 14, 2014 at 09:35:18PM +0200, Mike Turquette wrote:
+> Quoting Thierry Reding (2014-05-14 07:27:40)
+> > On Tue, May 13, 2014 at 12:09:49PM -0600, Stephen Warren wrote:
+> > > On 05/13/2014 08:06 AM, Peter De Schrijver wrote:
+> > > > Add shared and cbus clocks to the Tegra124 clock implementation.
+> > > 
+> > > > diff --git a/include/dt-bindings/clock/tegra124-car.h b/include/dt-bindings/clock/tegra124-car.h
+> > > 
+> > > > +#define TEGRA124_CLK_C2BUS 401
+> > > > +#define TEGRA124_CLK_C3BUS 402
+> > > > +#define TEGRA124_CLK_GR3D_CBUS 403
+> > > > +#define TEGRA124_CLK_GR2D_CBUS 404
+> > > ...
+> > > 
+> > > I worry about this a bit. IIUC, these clocks don't actually exist in HW,
+> > > but are more a way of SW applying policy to the clock that do exist in
+> > > HW. As such, I'm not convinced it's a good idea to expose these clock
+> > > IDS to DT, since DT is supposed to represent the HW, and not be
+> > > influenced by internal SW implementation details.
+> > > 
+> > > Do any DTs actually need to used these new clock IDs? I don't think we
+> > > could actually use these value in e.g. tegra124.dtsi's clocks
+> > > properties, since these clocks don't exist in HW. Was it your intent to
+> > > do that? If not, can't we just define these SW-internal clock IDs in the
+> > > header inside the Tegra clock driver, so the values are invisible to DT?
+> > 
+> > I'm beginning to wonder if abusing clocks in this way is really the best
+> > solution. From what I understand there are two problems here that are
+> > mostly orthogonal though they're implemented using similar techniques.
+> 
+> Ack. "Virtual clocks" have been implemented by vendors before as a way
+> to manage complicated clock rate changes. I do not think we should
+> support such a method upstream.
+> 
+> I'm working with another engineer in Linaro on a "coordinated clock rate
+> change" series that might help solve some of the problems that this
+> patch series is trying to achieve.
+> 
 
---===============0868306856==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YQEH9CATo+4lan7A"
-Content-Disposition: inline
+Any preview? :)
 
+For us to be useful it needs to be possible to:
 
---YQEH9CATo+4lan7A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+1) change to a different parent during a rate change
+2) adjust a clocks divider when changing parents
+3) ignore disabled child clocks
+4) have notifiers to hook voltage scaling into
 
-On Thu, May 15, 2014 at 12:25:47PM +0200, Philipp Zabel wrote:
-> The EDT ETM0700G0DH6 and ET070080DH6 are 7" 800x480 panels,
-> which can be supported by the simple panel driver.
->=20
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
-> Changes since v2:
->  - Added device tree binding documentation. Do we really want to add one =
-little
->    file for each panel?
+> > 
+> > The reason for introducing cbus clocks are still unclear to me. From the
+> > cover letter of this patch series it seems like these should be
+> > completely hidden from drivers and as such they don't belong in device
+> > tree. Also if they are an implementation detail, why are they even
+> > implemented as clocks? Perhaps an example use-case would help illustrate
+> > the need for this.
+> 
+> I also have this question. Does "cbus" come from your TRM or data sheet?
+> Or is it purely a software solution to coordinating rate changes within
+> known limits and for validated combinations?
+> 
 
-I guess we could move all of the compatible values into simple-panel.txt
-but I don't see a need for that yet.
+cbus is a software solution. It's not menioned in any TRM or hardware
+document.
 
-> ---
->  .../devicetree/bindings/panel/edt,et070080dh6.txt  | 10 ++++++++
->  .../devicetree/bindings/panel/edt,etm0700g0dh6.txt | 10 ++++++++
->  drivers/gpu/drm/panel/panel-simple.c               | 29 ++++++++++++++++=
-++++++
->  3 files changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/edt,et070080d=
-h6.txt
->  create mode 100644 Documentation/devicetree/bindings/panel/edt,etm0700g0=
-dh6.txt
+Cheers,
 
-Applied, thanks.
-
-Thierry
-
---YQEH9CATo+4lan7A
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTdJzjAAoJEN0jrNd/PrOhWX4P/Rlr05lHD93bmNuMMMJLLuDJ
-LastHxcdgvxEn+AXz4LJcwwgt4c9avpl23iBO5B86oh0sgIU2H7go8InJJ19VGVI
-fAp6s8Hmjd82TH3KcylSswGXOyylz6DKwtswgk/BzOQcKSnA8AgADAf1WTM69TZs
-UI3aJTzJrTi7ViYJSw0kxBczp7FBX5waR4BrZ5qMs2hOyW/FYZll56rUeLgbK14x
-mN9dnuMZgpv4V6fhEujppu0rvHJidF1dF12pJNN3Oh4nDIpbPdGGCN6+TAd1Dk88
-6rfGAAlL/7XejBZJKoP0uP/MdCw8oI50uJNRKBgjiYwBeTvlVXQV3yPVTbuDA5J8
-oPwp6MQWrS93wIV2Yhbd6kNUi9apsAgEBJK77UXyLd8FnZYXvqXI/RWe6OjE7GEp
-1yWCuTMFZCcL/1+pjb2xZBnijbKeFoqu5bYYzYvXqrHx2TX8sbUvDC6PClcexA/O
-0t6pKScAzQGrL55ic4n3B87yhTVRI7gOdBZvCKf4kekGiw1nnGCjonaU8mw7xge7
-SCPKiMltIcniLofxYEw959hsSpXziOK+A9L7GdcfwaEIUM+ci53cE6SWERC81t2A
-Gg2jf0V2/mQY3me06PZzkqIZUhfg8OGrsuQTvLSy/qKf7XAoL8jLw2KH4Xu+1m+m
-QL58BsuKId132OcAZiBf
-=t8Eu
------END PGP SIGNATURE-----
-
---YQEH9CATo+4lan7A--
-
---===============0868306856==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0868306856==--
+Peter.
