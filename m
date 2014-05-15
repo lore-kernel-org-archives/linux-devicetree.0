@@ -1,38 +1,62 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 0/3 v2] bus: add Broadcom GISB bus arbiter timeout/error handler
-Date: Thu, 15 May 2014 11:32:46 -0700
-Message-ID: <1400178769-10448-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Subject: [PATCH v2 2/3] Documentation: devicetree: add Broadcom GISB arbiter bindings
+Date: Thu, 15 May 2014 11:32:48 -0700
+Message-ID: <1400178769-10448-3-git-send-email-f.fainelli@gmail.com>
+References: <1400178769-10448-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400178769-10448-1-git-send-email-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: marc.ceeeee@gmail.com, computersforpeace@gmail.com, gregory.0xf0@gmail.com, arnd@arndb.de, Florian Fainelli <f.fainelli@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <s.hauer@pengutronix.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Huang Shijie <b32955@freescale.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+This patch adds the Broadcom GISB arbiter Device Tree binding that is
+used on all Broadcom Set-top-box System-on-a-chip.
 
-This patch adds support for the Broadcom GISB bus arbiter timeout/error handler.
-GISB is a custom and proprietary bus used in the Broadcom Set Top Box devices
-exclusively. The bus arbiter offers the possibly to decode faulting masters as
-well as masters that are timing out on the bus.
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+Changes in v2:
+- respin
 
-V2 addresses some comments made by Arnd, and widens the audience by posting
-on linux-arm-kernel as well.
-
-Florian Fainelli (3):
-  bus: add Broadcom GISB arbiter bus timeout/error handler
-  Documentation: devicetree: add Broadcom GISB arbiter bindings
-  Documentation: sysfs: add Broadcom GISB arbiter sysfs properties
-
- .../ABI/testing/sysfs-platform-brcmstb-gisb-arb    |   8 +
- .../devicetree/bindings/bus/brcm,gisb-arb.txt      |  30 +++
- drivers/bus/Kconfig                                |  11 +-
- drivers/bus/Makefile                               |   1 +
- drivers/bus/brcmstb_gisb.c                         | 289 +++++++++++++++++++++
- 5 files changed, 338 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/ABI/testing/sysfs-platform-brcmstb-gisb-arb
+ .../devicetree/bindings/bus/brcm,gisb-arb.txt      | 30 ++++++++++++++++++++++
+ 1 file changed, 30 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
- create mode 100644 drivers/bus/brcmstb_gisb.c
 
+diff --git a/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+new file mode 100644
+index 000000000000..e2d501d20c9a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/bus/brcm,gisb-arb.txt
+@@ -0,0 +1,30 @@
++Broadcom GISB bus Arbiter controller
++
++Required properties:
++
++- compatible: should be "brcm,gisb-arb"
++- reg: specifies the base physical address and size of the registers
++- interrupt-parent: specifies the phandle to the parent interrupt controller
++  this arbiter gets interrupt line from
++- interrupts: specifies the two interrupts (timeout and TEA) to be used from
++  the parent interrupt controller
++
++Optional properties:
++
++- brcm,gisb-arb-master-mask: 32-bits wide bitmask used to specify which GISB
++  masters are valid at the system level
++- brcm,gisb-arb-master-names: string list of the litteral name of the GISB
++  masters. Should match the number of bits set in brcm,gisb-master-mask and
++  the order in which they appear
++
++Example:
++
++gisb-arb@f0400000 {
++	compatible = "brcm,gisb-arb";
++	reg = <0xf0400000 0x800>;
++	interrupts = <0>, <2>;
++	interrupt-parent = <&sun_l2_intc>;
++
++	brcm,gisb-arb-master-mask = <0x7>;
++	brcm,gisb-arb-master-names = "bsp_0", "scpu_0", "cpu_0";
++};
 -- 
 1.9.1
-
