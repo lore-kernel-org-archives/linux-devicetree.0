@@ -1,136 +1,83 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 2/8] clk: berlin: add clock binding docs for Marvell
- Berlin2 SoCs
-Date: Wed, 14 May 2014 21:41:06 -0700
-Message-ID: <20140515044106.19795.57249@quantum>
-References: <1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1399839881-29895-3-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140514223230.19795.63328@quantum> <5373F9A0.6000702@gmail.com>
+From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+Subject: [PATCH] of: fix CONFIG_OF=n prototype of of_node_full_name()
+Date: Thu, 15 May 2014 14:44:30 +1000
+Message-ID: <20140515144430.11ab033b@canb.auug.org.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5373F9A0.6000702@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Antoine Tenart <antoine.tenart@free-electrons.com>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/UxigP4DD7CwC=XUAkFNnrC_"; protocol="application/pgp-signature"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sebastian Hesselbarth (2014-05-14 16:17:52)
-> On 05/15/2014 12:32 AM, Mike Turquette wrote:
-> > Quoting Sebastian Hesselbarth (2014-05-11 13:24:35)
-> >> +avpll: pll@ea0040 {
-> >> +       compatible = "marvell,berlin2-avpll";
-> >> +       #clock-cells = <2>;
-> >> +       reg = <0xea0050 0x100>;
-> >> +       clocks = <&refclk>;
-> >> +};
-> > 
-> > Thanks for submitting the series. It looks good. I do have some comments
-> > about the DT bindings though. I'm encouraging new bindings (and
-> > especially new platforms or existing platforms that are only now
-> > converting over to CCF) to not put their per-clock data into DTS. This
-> > has scalability problems, is unpopular with the DT crowd and sometimes
-> > makes it hard to do things like set CLK_SET_RATE_PARENT flags for
-> > individual clocks.
-> 
-> Ok, so you are proposing the have a single node for all the SoCs
-> internal plls and clocks. The individual SoCs will have to deal
-> with the differences in a single driver, right?
+--Sig_/UxigP4DD7CwC=XUAkFNnrC_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-To be precise, I'm talking about modeling an IP block as a single node.
-So if you have one clock generator IP block then you have one node. If
-you have more than one clock generator block then you have more than one
-node. Re-using the qcom example there are compatible strings for two
-different clock generator blocks named gcc and mmcc, respectively. So
-two DT nodes in the case for msm platforms that have one gcc instance
-and one rcg instance.
+Make the CONFIG_OF=3Dn prototpe of of_node_full_name() mateh the CONFIG_OF=
+=3Dy
+version.
 
-Additionally other IP blocks may have internal clocks that can be
-modeled as part of that node. OMAP's Display SubSystem (DSS) and Image
-Signal Processor (ISP) blocks all have internal clocks that are modeled
-through the clock framework. (There are no DT bindings for that stuff,
-but the concept still applies)
+Fixes compile warnings like this:
 
-> 
-> > The following is a copy/paste from an email I sent earlier today[1]. Of
-> > course per-clock data makes great sense if you have an off-SoC clock
-> > such as a fixed-rate oscillator (e.g. the fixed-clock binding). Let me
-> > know what you think:
-> [...]
-> > Using this type of binding you only need to declare your clock generator
-> > IP node in dts, and then define a mapping in the DT include chroot. Then
-> > you can define your per-clock data inside of your clock driver instead
-> > of putting all of the details inside of DT.
-> > 
-> > If you have a strong reason to do it the way that you originally posted
-> > then let me know.
-> 
-> Actually, the intermediate patch set sent before this one had a single
-> DT clock node. The most important draw-back of a single clock node
-> is that Berlin's global registers are more like a register dumpster.
-> Vital other registers, e.g. reset, are intermixed with clock registers.
+sound/soc/soc-core.c: In function 'soc_check_aux_dev':
+sound/soc/soc-core.c:1667:3: warning: passing argument 1 of 'of_node_full_n=
+ame' discards 'const' qualifier from pointer target type [enabled by defaul=
+t]
+   codecname =3D of_node_full_name(aux_dev->codec_of_node);
 
-Yeah, this is pretty common. The compatible string should reflect the IP
-block as a whole, not just the clocks part of it. Lots of vendors have
-PRCMs or PRCMUs or CARs or whatever.
+when CONFIG_OF is not defined.
 
-Check out the recent series to have the reset bits and regulator support
-added to the qcom binding[1]. (I'm using qcom quite a bit in my examples
-but they are not the first to add reset control to their clock driver. I
-think Tegra did it first...)
+Signed-off-by: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
+---
+ include/linux/of.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> 
-> Given the lack of public datasheets (I look everything up in some
-> auto-generated BSP includes), I like the current approach because it
-> helps to get in at least some structure to the register mess ;)
-> 
-> Considering the postponed of_clk_create_name() helper, that would allow
-> us to remove at least the names from DT again. Another option would be
-> a syscon node for the registers, that clk, reset, pinctrl drivers can
-> access. But IIRC early syscon support isn't settled, yet?
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 3bad8d106e0e..e6f0988c1c68 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -349,7 +349,7 @@ int of_device_is_stdout_path(struct device_node *dn);
+=20
+ #else /* CONFIG_OF */
+=20
+-static inline const char* of_node_full_name(struct device_node *np)
++static inline const char* of_node_full_name(const struct device_node *np)
+ {
+ 	return "<no-node>";
+ }
+--=20
+2.0.0.rc2
 
-Yeah, I'm not sure of the state of syscon. And modeling this stuff in
-the clock driver isn't the end of the world. There might be better
-places than drivers/clk/* for sure... I sometimes joke that the name of
-the IP block determines where the code lands. If it is Power, Reset &
-Clock Manager (several platforms use this acronym) then it can end up in
-drivers/clk or drivers/reset really easily. Same for Clock and Reset IP
-blocks (Tegra).
+--=20
+Cheers,
+Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
 
-> 
-> So, my current idea is:
-> - take this as is, stabilize berlin branches for v3.16
-> - review of_clk_create_name() and of_clk_get_parent_name() to allow
->   to remove clock-output-names properties from Berlin (and other) dtsis
-> - maybe switch to early syscon if it is available in v3.16
-> 
-> I know this would likely break DT ABI policy, but hey who else boots
-> mainline Linux on his Chromecast currently except me :P
+--Sig_/UxigP4DD7CwC=XUAkFNnrC_
+Content-Type: application/pgp-signature; name=signature.asc
+Content-Disposition: attachment; filename=signature.asc
 
-I'm not a big fan of DT stable ABI, but if you plan on changing it for
-3.17 why not just do it the right way the first time? And switching to
-syscon is not a hard requirement. I'm OK with you putting the reset and
-regulator stuff in the clock driver if that makes the most sense for
-your platform (especially if registers are shared and the same locks
-need to be used, etc).
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-What do you think?
+iQIcBAEBCAAGBQJTdEY0AAoJEMDTa8Ir7ZwV7CgQAJC+DHrbp8juWA80O8To80qS
+jkbBBOcL/xH4c3uTcsviSv1KaRsh51nbBiuYAYtYdjrXnuhLYzjG+14TlhIb+b3d
+Dy9eK+VKw+EAViEfQMI9jGxiT8AMTh+ZnnPQjmCE5gn1GXTfJEd5dSWoQb7H/tFV
+yfVj5CeX/HGQryFciTzRV6VD4Blh3lBE0lgrJJSgcn6As7GG25rQgb+Rq0Sfc9li
+6sfcH9wsuoVygpeupMJpROAcj3Jk4/EC8y8jbwBDlh9icYSelUfRjnjWyCd2lkgk
+jJubUhchEAMrZN2n5uiuFn5QPc528B6Whv8ztCzrjy2qVEHKKHSD0MB3s0gAsGSY
+Gt2FGkKmKI0IgAJIjWd1bU0CZoygFCs+LiJA8IsHH6CnbSXtFZkBZCi4fq/CBCF6
+6ZK0ixse49wwcRRsihsIPVk4vs+lTUgXOV4a4fepow4w8PAslHwEzuLijbVlPc4E
+c0M1y1vhyyRXazh0POkzGDgE3HIx486RPJVi9hGmD28HaClxTRj+nxxYJ+78TW9w
+mJNPW+LJ0GgUG5v+pLdZm9ggkZtzWnyYnV5FliVkDemCocY24PqHv2PTfFeh/ft3
+H8MAWxN1aRnDXN7rYUNdWnDkV4k/bcCF7JtTrEorJqcX0n/DHrAvqGAZihdW81Bk
+BUvVDICq6qQUdunf6zGC
+=SydC
+-----END PGP SIGNATURE-----
 
-Regards,
-Mike
-
-[1] https://lkml.org/lkml/2014/4/4/568
-
-> 
-> Is that okay with you (and DT folks)?
-> 
-> Sebastian
+--Sig_/UxigP4DD7CwC=XUAkFNnrC_--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
