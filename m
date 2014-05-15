@@ -1,64 +1,61 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI
- I/O memory type
-Date: Thu, 15 May 2014 11:53:07 -0600
-Message-ID: <20140515175307.GA12259@obsidianresearch.com>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20140515155130.193c3181@free-electrons.com>
- <20140515142924.GI27594@arm.com>
- <4972763.mtuLYh6sDH@wuerfel>
- <20140515153430.GM27594@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v3 RESEND 0/5] ARM: SMP: support Broadcom mobile SoCs
+Date: Thu, 15 May 2014 12:58:06 -0500
+Message-ID: <1400176691-26058-1-git-send-email-elder@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140515153430.GM27594-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 04:34:30PM +0100, Will Deacon wrote:
+This series adds SMP support for two Broadcom mobile SoC families.
+It uses CPU_METHOD_OF_DECLARE() so that SMP operations are assigned
+using device tree rather than adding it to a machine definition in a
+board file.
 
-> > How can a write be non-posted on the PCI bus if it's posted on AXI?
-> 
-> From the point-of-view of the CPU it would be posted, but the PCI bus would
-> see an unposted write (so I imagine there would be write buffering at the
-> host controller). However, I worry that I'm missing your point :)
+The enable method starts a secondary core by writing to a register
+monitored by CPUs spinning in a ROM-based holding pen loop.  The
+address of this register is recorded as a property in the "cpus"
+node of the device tree.
 
-It is worth being a bit careful with language here, from an AXI
-perspective there is not really such thing as a posted write. 
+					-Alex
 
-All writes are explicitly ack'd upon 'completion', however the memory
-type influences when that is allowed to happen.
+Note:
+This series is based on v3.15-rc4, plus one more recently-posted patch:
+    http://permalink.gmane.org/gmane.linux.kernel/1683693
 
-For PCI IO writes the AXI memory type from the CPU must be 'Device
-Non-bufferable' (AWCACHE = 0), which will require the AXI ACK to be
-generated only once the PCI target returns an IOWr completion TLP.
+History
+v3: - Dropped definition and use of CPU_METHOD_OF_DECLARE_SETUP()
+    - Added documentation for "enable-method"
+    - Rebased onto v3.15-rc4
+v2: - Fixed a Makefile error (:= should have been +=)
+    - No longer set CONFIG_NR_CPUS in bcm_defconfig
+    - Rebased onto v3.15-rc1
 
-For PCI Memory writes the AXI memory type from the CPU could be
-'Device Non-bufferable' but it would be best if it is 'Device
-Bufferable' (AWCACHE = 1).
+This series is available here:
+    http://git.linaro.org/landing-teams/working/broadcom/kernel.git
+    Branch review/bcm-smp-v3
 
-The latter allows more performance by permitting any AXI bridge in the
-path to ack the write early. This is as close as AXI gets to 'posted
-writes'
+Alex Elder (5):
+  devicetree: bindings: document Broadcom CPU enable method
+  ARM: add SMP support for Broadcom mobile SoCs
+  ARM: configs: enable SMP in bcm_defconfig
+  ARM: dts: enable SMP support for bcm28155
+  ARM: dts: enable SMP support for bcm21664
 
-It is very important that the page tables in the CPU properly select
-the right AXI Memory Type for each space.
+ Documentation/devicetree/bindings/arm/cpus.txt |  12 ++
+ arch/arm/boot/dts/bcm11351.dtsi                |  19 +++
+ arch/arm/boot/dts/bcm21664.dtsi                |  19 +++
+ arch/arm/configs/bcm_defconfig                 |   1 +
+ arch/arm/mach-bcm/Kconfig                      |  18 ++-
+ arch/arm/mach-bcm/Makefile                     |   3 +
+ arch/arm/mach-bcm/platsmp.c                    | 201 +++++++++++++++++++++++++
+ 7 files changed, 270 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/mach-bcm/platsmp.c
 
-Somewhere there should be a table describing how the CPU page table
-attributes map into AXI *CACHE/Memory Type signaling selectors.
+-- 
+1.9.1
 
-Beyond that, as Will points out, a DSB as part of the outl might be
-required to spin the cpu and prevent pipelining.
-
-AFAIK, to duplicate x86 semantics an outl/inl must spin the CPU until
-it completes at the target, and the CPU must not pipeline outl/inl
-operations: outl();  outl(); produces 1 IOWr TLP, waits for
-completion, then produces another.
-
-Jason
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
