@@ -1,89 +1,36 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCHv3 3/3] ARM: mvebu: implement L2/PCIe deadlock workaround
-Date: Thu, 15 May 2014 11:31:50 -0400
-Message-ID: <20140515153150.GP27822@titan.lakedaemon.net>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1400145519-28530-4-git-send-email-thomas.petazzoni@free-electrons.com>
- <20140515132118.GK27822@titan.lakedaemon.net>
- <20140515155008.1dcca042@free-electrons.com>
+From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
+Subject: Re: [PATCH v5 0/5] mfd: add basic sun6i A31 PRCM support
+Date: Thu, 15 May 2014 12:33:11 -0300
+Message-ID: <5374DE37.3030700@elopez.com.ar>
+References: <1400144113-27659-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140515155008.1dcca042-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1400144113-27659-1-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>, Mike Turquette <mturquette@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 03:50:08PM +0200, Thomas Petazzoni wrote:
-> Dear Jason Cooper,
-> 
-> On Thu, 15 May 2014 09:21:18 -0400, Jason Cooper wrote:
-> 
-> > > +
-> > > +	if (of_machine_is_compatible("marvell,armada375") ||
-> > > +	    of_machine_is_compatible("marvell,armada38x")) {
-> > > +		arch_ioremap_caller = armada_pcie_wa_ioremap_caller;
-> > > +		pci_ioremap_set_mem_type(MT_UNCACHED);
-> > 
-> > iiuc, this patch depends on 1/3.  So how would you like to handle it?
-> 
-> Seems like my long cover letters are not always read in their
-> entirety :-)
+Hi Boris,
 
-It was, the 'u' comes from 'u'nderstanding the coverletter _and_ the
-code. ;-)
+El 15/05/14 05:55, Boris BREZILLON escribi=F3:
+> Hello,
+>
+> This patch series adds support for some functions provided by the PRC=
+M
+> (Power/Reset/Clock Management) unit:
+> - AR100, AHB0 and APB0 clocks
+> - APB0 reset controller
+(snip)
+>    clk: sunxi: add PRCM (Power/Reset/Clock Management) clks support
+>    clk: sunxi: document PRCM clock compatible strings
 
-One a side note, I should mention I find your detailed coverletters
-extremely helpful for getting up to speed quickly on what the intention
-of a series is.  Even better, the Link tag that's added to the commit
-message allows future devs to be three clicks away from that
-information.  Thanks for setting that standard.
+I have taken these two on sunxi-clk-for-mike, and I'll be sending the=20
+pull to Mike soon.
 
-Which makes me think, in a lot of cases, it's better to start at the top
-of the thread when researching a patch.  The Message-Id of the
-coverletter is always the first address in the References header.
-Perhaps I should link to that instead, or add both.
+Cheers,
 
-> From my cover letter:
-> 
->  * PATCH 3/3 uses both of the added infrastructures, as well as the
->    existing infrastructure to customize the behavior of ioremap() on a
->    per-platform basis, to implement the workaround for the Armada 375
->    and 38x SOCs. This patch should go through the mvebu maintainers
->    tree. However, it has a build dependency on PATCH 1/3 that needs to
->    be taken into account.
-> 
-> The last two sentences are the most important ones here :-)
-> 
-> Joke aside, I'm really open to your suggestions as to what the
-> appropriate merging patch is. I know Russell prefers to have the ARM
-> core code flow through his tree, which obviously make sense.
-> 
-> However, routing PATCH 3/3 through Russell tree is going to be a mess
-> of conflicts when things will get merged by Linus, due to the numerous
-> other changes we've been doing in mach-mvebu/board-v7.c.
-
-Yep.
-
-> So the only course of action I see right now is to work with Russell to
-> have him pull patches 1 and 2, and then provide a stable branch/tag
-> that you can merge as a dependency in whatever branch you decide to
-> merge patch 3/3. Would that work?
-
-Dunno.  I have a 100% failure rate getting Russell to create a stable
-topic branch to resolve dependencies like these.  Unfortunately, I think
-the answer is going to be resubmit 3/3 once 3.16-rc1 lands with 1/3 and
-2/3.
-
-Not the answer I want to give, but unfortunately, it's the most
-realistic.
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Emilio
