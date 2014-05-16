@@ -1,40 +1,73 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH V2 0/2] Add sound card node Snow/Peach-pit board
-Date: Fri, 16 May 2014 21:51:37 +0900
-Message-ID: <04f301cf7105$934fa800$b9eef800$@samsung.com>
-References: <1399438348-10819-1-git-send-email-tushar.behera@linaro.org>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH] ARM: zynq: dt: Add a fixed regulator for CPU voltage
+Date: Fri, 16 May 2014 14:54:58 +0200
+Message-ID: <53760AA2.4040703@monstr.eu>
+References: <1399064852-19569-1-git-send-email-soren.brinkmann@xilinx.com> <e9675d40-2fd9-4fed-a020-5b465ea1842d@BN1BFFO11FD047.protection.gbl>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1399438348-10819-1-git-send-email-tushar.behera@linaro.org>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tushar Behera' <tushar.behera@linaro.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: robh+dt@kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e9675d40-2fd9-4fed-a020-5b465ea1842d@BN1BFFO11FD047.protection.gbl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, git@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Tushar Behera wrote:
-> 
-> 
-> Patch 2 is dependent on Arun's following patch.
-> 1. [PATCH v4 0/2] Add peach-pit board support
-> http://www.mail-archive.com/linux-samsung-
-> soc@vger.kernel.org/msg29948.html
-> 
-> Tushar Behera (2):
->   ARM: dts: Add sound node for Snow board
->   ARM: dts: Add sound node for Peach-pit board
-> 
->  arch/arm/boot/dts/exynos5250-snow.dts      |   27
-++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5420-peach-pit.dts |   31
-> ++++++++++++++++++++++++++++
->  2 files changed, 58 insertions(+)
-> 
-> --
-Looks good to me and I can see its bindings in -next.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-Applied this series, thanks.
+On 05/15/2014 04:57 PM, S=C3=B6ren Brinkmann wrote:
+> ping? Any comments?
+>=20
+> 	Thanks,
+> 	S=C3=B6ren
+>=20
+> On Fri, 2014-05-02 at 02:07PM -0700, Soren Brinkmann wrote:
+>> To silence the warning
+>> 	cpufreq_cpu0: failed to get cpu0 regulator: -19
+>> from the cpufreq driver regarding a missing regulator,
+>> add a fixed regulator to the DT.
+>> Zynq does not support voltage scaling and the CPU rail should always b=
+e
+>> supplied with 1 V, hence it is added in the SOC-level dtsi.
+>>
+>> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
+>> ---
+>>
+>>  arch/arm/boot/dts/zynq-7000.dtsi | 10 ++++++++++
+>>  1 file changed, 10 insertions(+)
 
-- Kukjin
+Probably no objection from others.
+Applied to zynq/dt branch.
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlN2CqIACgkQykllyylKDCFK+gCfcVL6alupw81rOELTHHHUJ8Nk
+YhoAnREGt2JVsPm2w/I4HuIlVqiosnCK
+=KlEt
+-----END PGP SIGNATURE-----
+
+--n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD--
