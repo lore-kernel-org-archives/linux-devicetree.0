@@ -1,129 +1,75 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
-Date: Thu, 15 May 2014 19:51:17 -0700
-Message-ID: <53757D25.1060005@gmail.com>
-References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org> <1399993115-21552-3-git-send-email-grant.likely@linaro.org>
-Reply-To: frowand.list@gmail.com
+From: Satish Patel <satish.patel@ti.com>
+Subject: Re: [PATCH v2 0/5] Smart Card(SC) interface, TI USIM & NxP SC phy
+ driver
+Date: Fri, 16 May 2014 09:14:34 +0530
+Message-ID: <537589A2.8060802@ti.com>
+References: <1390192434-19386-1-git-send-email-satish.patel@ti.com> <52E9E8B0.2020000@ti.com> <20140130130515.GC23970@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399993115-21552-3-git-send-email-grant.likely@linaro.org>
+In-Reply-To: <20140130130515.GC23970@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, tony@atomide.com, grant.likely@linaro.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 5/13/2014 7:58 AM, Grant Likely wrote:
-> Make of_find_node_by_path() handle aliases as prefixes. To make this
-> work the name search is refactored to search by path component instead
-> of by full string. This should be a more efficient search, and it makes
-> it possible to start a search at a subnode of a tree.
-> 
-> Signed-off-by: David Daney <david.daney@cavium.com>
-> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> [grant.likely: Rework to not require allocating at runtime]
-> Acked-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> ---
->  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
->  1 file changed, 56 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 6e240698353b..60089b9a3014 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
->  }
->  EXPORT_SYMBOL(of_get_child_by_name);
->  
-> +static struct device_node *__of_find_node_by_path(struct device_node *parent,
-> +						const char *path)
-> +{
-> +	struct device_node *child;
-> +	int len = strchrnul(path, '/') - path;
-> +
-> +	if (!len)
-> +		return parent;
 
-(!len) is true if the the final character of the path passed into of_find_node_by_path()
-was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
-should be NULL, indicating that the match fails.
-
-> +
-> +	for_each_child_of_node(parent, child) {
-> +		const char *name = strrchr(child->full_name, '/');
-> +		if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> +			continue;
-> +		name++;
-
-Why go to the effort of finding the final component of child->full_name instead
-of just using child->name?
-
-> +		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
-> +			return child;
-> +	}
-> +	return NULL;
-> +}
-> +
->  /**
->   *	of_find_node_by_path - Find a node matching a full OF path
->   *	@path:	The full path to match
-> + *	@path: Either the full path to match, or if the path does not
-
-Delete the old @path description.
-
-
-> + *	       start with '/', the name of a property of the /aliases
-> + *	       node (an alias).  In the case of an alias, the node
-> + *	       matching the alias' value will be returned.
-> + *
-> + *	Valid paths:
-> + *		/foo/bar	Full path
-> + *		foo		Valid alias
-> + *		foo/bar		Valid alias + relative path
->   *
->   *	Returns a node pointer with refcount incremented, use
->   *	of_node_put() on it when done.
-> @@ -781,13 +810,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
->  struct device_node *of_find_node_by_path(const char *path)
->  {
->  	struct device_node *np = of_allnodes;
-> +	struct property *pp;
->  	unsigned long flags;
->  
-> +	/* The path could begin with an alias */
-> +	if (*path != '/') {
-> +		char *p = strchrnul(path, '/');
-> +		int len = p - path;
-> +
-> +		/* of_aliases must not be NULL */
-> +		if (!of_aliases)
-> +			return NULL;
-> +
-> +		np = NULL;
-> +		for_each_property_of_node(of_aliases, pp) {
-> +			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
-> +				np = of_find_node_by_path(pp->value);
-> +				break;
-> +			}
-> +		}
-> +		if (!np)
-> +			return NULL;
-> +		path = p;
-> +	}
-> +
-> +	/* Step down the tree matching path components */
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> -	for (; np; np = np->allnext) {
-> -		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
-> -		    && of_node_get(np))
-> -			break;
-> +	while (np && *path == '/') {
-> +		path++; /* Increment past '/' delimiter */
-> +		np = __of_find_node_by_path(np, path);
-> +		path = strchrnul(path, '/');
->  	}
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  	return np;
-> 
+On 1/30/2014 6:35 PM, Greg KH wrote:
+> On Thu, Jan 30, 2014 at 11:22:48AM +0530, Satish Patel wrote:
+>> On 1/20/2014 10:03 AM, Satish Patel wrote:
+>>> Changes from v1:
+>>> * RFC(v1) comments are fixed
+>>>
+>>> ** removed "gpio_to_irq" as GPIO controller process  cell from DT and
+>>> give it to DT node
+>>> ** comments on documentation
+>>> ** few other comments on null checks are resolved
+>>>
+>>> * BWT timing configuration is added to ti-usim driver
+>>>
+>>> v1 cover letter link#
+>>> https://lkml.org/lkml/2014/1/6/250
+>>>
+>>> Satish Patel (5):
+>>>    sc_phy:SmartCard(SC) PHY interface to SC controller
+>>>    misc: tda8026: Add NXP TDA8026 PHY driver
+>>>    char: ti-usim: Add driver for USIM module on AM43xx
+>>>    ARM: dts: AM43xx: DT entries added for ti-usim
+>>>    ARM: dts: AM43xx-epos-evm: DT entries  for ti-usim and phy
+>>>
+>>>   Documentation/devicetree/bindings/misc/tda8026.txt |   19 +
+>>>   .../devicetree/bindings/ti-usim/ti-usim.txt        |   31 +
+>>>   Documentation/sc_phy.txt                           |  171 ++
+>>>   arch/arm/boot/dts/am4372.dtsi                      |   10 +
+>>>   arch/arm/boot/dts/am43x-epos-evm.dts               |   43 +
+>>>   drivers/char/Kconfig                               |    7 +
+>>>   drivers/char/Makefile                              |    1 +
+>>>   drivers/char/ti-usim-hw.h                          |  863 +++++++++
+>>>   drivers/char/ti-usim.c                             | 1859 ++++++++++++++++++++
+>>>   drivers/misc/Kconfig                               |    7 +
+>>>   drivers/misc/Makefile                              |    1 +
+>>>   drivers/misc/tda8026.c                             | 1255 +++++++++++++
+>>>   include/linux/sc_phy.h                             |  132 ++
+>>>   include/linux/ti-usim.h                            |   98 +
+>>>   14 files changed, 4497 insertions(+), 0 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/misc/tda8026.txt
+>>>   create mode 100644 Documentation/devicetree/bindings/ti-usim/ti-usim.txt
+>>>   create mode 100644 Documentation/sc_phy.txt
+>>>   create mode 100644 drivers/char/ti-usim-hw.h
+>>>   create mode 100644 drivers/char/ti-usim.c
+>>>   create mode 100644 drivers/misc/tda8026.c
+>>>   create mode 100644 include/linux/sc_phy.h
+>>>   create mode 100644 include/linux/ti-usim.h
+>> Any comments on this patch series ?
+>>
+>> If not,
+>> Can you accept these patches for next merge window
+> It's the middle of this merge window, and I can't accept any patches
+> until after 3.14-rc1 is out, at which point I'll start to work on my
+> patch backlog.
+Are these to be consider for next submission ? Or you want me to start 
+review cycle one more time.
+> thanks,
+>
+> greg k-h
