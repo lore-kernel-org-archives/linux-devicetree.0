@@ -1,36 +1,44 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v6 14/17] ARM: mvebu: add Device Tree description of
- xHCI controllers on Armada 38x
-Date: Fri, 16 May 2014 01:57:09 -0400
-Message-ID: <20140516055709.GE27822@titan.lakedaemon.net>
-References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
- <1400149062-32661-15-git-send-email-gregory.clement@free-electrons.com>
+Subject: Re: [PATCHv4 3/3] ARM: mvebu: implement L2/PCIe deadlock workaround
+Date: Fri, 16 May 2014 02:08:51 -0400
+Message-ID: <20140516060851.GF27822@titan.lakedaemon.net>
+References: <1400165974-9059-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1400165974-9059-4-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1400149062-32661-15-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1400165974-9059-4-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 12:17:39PM +0200, Gregory CLEMENT wrote:
-> The Marvell Armada 38x SoCs contains two xHCI controllers. This commit
-> adds the Device Tree description of those interfaces at the SoC level,
-> and also enables the two USB3 ports on the Armada 385 DB platform and
-> one USB3 port on the Armada 385 RD platform.
+On Thu, May 15, 2014 at 04:59:34PM +0200, Thomas Petazzoni wrote:
+> The Marvell Armada 375 and Armada 38x SOCs, which use the Cortex-A9
+> CPU core, the PL310 cache and the Marvell PCIe hardware block are
+> affected a L2/PCIe deadlock caused by a system erratum when hardware
+> I/O coherency is used.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> This deadlock can be avoided by mapping the PCIe memory areas as
+> strongly-ordered (note: MT_UNCACHED is strongly-ordered), and by
+> removing the outer cache sync done in software. This is implemented in
+> this patch by:
+> 
+>  * Registering a custom arch_ioremap_caller function that allows to
+>    make sure PCI memory regions are mapped MT_UNCACHED.
+> 
+>  * Adding at runtime the 'arm,io-coherent' property to the PL310 cache
+>    controller. This cannot be done permanently in the DT, because the
+>    hardware I/O coherency can only be enabled when CONFIG_SMP is
+>    enabled, in the current kernel situation.
+> 
 > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
->  arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
->  arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
->  3 files changed, 29 insertions(+)
+>  arch/arm/mach-mvebu/coherency.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
 
-Patches 14 through 17 applied to mvebu/dt.  Patch 17 amended as Sergei
-suggested.
+Applied to mvebu/soc.
 
 thx,
 
