@@ -1,151 +1,79 @@
-From: Jonghwan Choi <jhbird.choi@samsung.com>
-Subject: [PATCH v3] cpufreq: exynos:  Fix the compile error
-Date: Fri, 16 May 2014 19:18:28 +0900
-Message-ID: <000001cf70f0$2e48f930$8adaeb90$@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 07/19] OMAPDSS: hdmi5_core: Fix compilation with OMAP5_DSS_HDMI_AUDIO
+Date: Fri, 16 May 2014 13:31:01 +0300
+Message-ID: <5375E8E5.5020007@ti.com>
+References: <cover.1399884780.git.jsarha@ti.com> <6e02441be6a699e4376e547ae99515d14079850d.1399884780.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-Content-language: ko
-Sender: cpufreq-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, cpufreq@vger.kernel.org
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, Jonghwan Choi <jhbird.choi@gmail.com>, 'Viresh Kumar' <viresh.kumar@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="W2A8t0RkUIJJd9L4o9hKCMVLNFd5Rn1BO"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <6e02441be6a699e4376e547ae99515d14079850d.1399884780.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Commit 7da83a80 ("ARM: EXYNOS: Migrate Exynos specific macros from plat to mach") which lands in samsung tree causes build breakage
-for cpufreq-exynos like following:
+--W2A8t0RkUIJJd9L4o9hKCMVLNFd5Rn1BO
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-drivers/cpufreq/exynos-cpufreq.c: In function 'exynos_cpufreq_probe':
-drivers/cpufreq/exynos-cpufreq.c:166:2: error: implicit declaration of function 'soc_is_exynos4210'
-[-Werror=implicit-function-declaration]
-drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4212'
-[-Werror=implicit-function-declaration]
-drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4412'
-[-Werror=implicit-function-declaration]
-drivers/cpufreq/exynos-cpufreq.c:170:2: error: implicit declaration of function 'soc_is_exynos5250'
-[-Werror=implicit-function-declaration]
-cc1: some warnings being treated as errors
-make[2]: *** [drivers/cpufreq/exynos-cpufreq.o] Error 1
-make[2]: *** Waiting for unfinished jobs....
-drivers/cpufreq/exynos4x12-cpufreq.c: In function 'exynos4x12_set_clkdiv':
-drivers/cpufreq/exynos4x12-cpufreq.c:118:2: error: implicit declaration of function 'soc_is_exynos4212'
-[-Werror=implicit-function-declaration]
-cc1: some warnings being treated as errors
-make[2]: *** [drivers/cpufreq/exynos4x12-cpufreq.o] Error 1
-make[1]: *** [drivers/cpufreq] Error 2
-This fixes above error with getting SoC information via of_machine_is_compatible() instead of soc_is_exynosXXXX().
+Hi,
 
-Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
----
- drivers/cpufreq/exynos-cpufreq.c     |   20 +++++++++++++++++---
- drivers/cpufreq/exynos-cpufreq.h     |    8 ++++++++
- drivers/cpufreq/exynos4x12-cpufreq.c |   11 ++++-------
- 3 files changed, 29 insertions(+), 10 deletions(-)
+On 12/05/14 12:12, Jyri Sarha wrote:
+> Use correct variable name for base address.
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  drivers/video/fbdev/omap2/dss/hdmi5_core.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/video/fbdev/omap2/dss/hdmi5_core.c b/drivers/video=
+/fbdev/omap2/dss/hdmi5_core.c
+> index 270ebdd..af88e3c 100644
+> --- a/drivers/video/fbdev/omap2/dss/hdmi5_core.c
+> +++ b/drivers/video/fbdev/omap2/dss/hdmi5_core.c
+> @@ -786,7 +786,7 @@ static void hdmi5_core_audio_config(struct hdmi_cor=
+e_data *core,
+>  	REG_FLD_MOD(base, HDMI_CORE_AUD_GP_POL, 1, 0, 0);
+> =20
+>  	/* unmute audio */
+> -	REG_FLD_MOD(core_sys_base, HDMI_CORE_FC_AUDSCONF, 0, 7, 4);
+> +	REG_FLD_MOD(base, HDMI_CORE_FC_AUDSCONF, 0, 7, 4);
+>  }
+> =20
+>  static void hdmi5_core_audio_infoframe_cfg(struct hdmi_core_data *core=
+,
 
-diff --git a/drivers/cpufreq/exynos-cpufreq.c b/drivers/cpufreq/exynos-cpufreq.c
-index f99cfe2..9aecffef 100644
---- a/drivers/cpufreq/exynos-cpufreq.c
-+++ b/drivers/cpufreq/exynos-cpufreq.c
-@@ -17,6 +17,7 @@
- #include <linux/regulator/consumer.h>
- #include <linux/cpufreq.h>
- #include <linux/platform_device.h>
-+#include <linux/of.h>
- 
- #include <plat/cpu.h>
- 
-@@ -163,11 +164,24 @@ static int exynos_cpufreq_probe(struct platform_device *pdev)
- 	if (!exynos_info)
- 		return -ENOMEM;
- 
--	if (soc_is_exynos4210())
-+	if (of_machine_is_compatible("samsung,exynos4210")) {
-+		exynos_info->type = EXYNOS_SOC_4210;
-+	} else if (of_machine_is_compatible("samsung,exynos4212")) {
-+		exynos_info->type = EXYNOS_SOC_4212;
-+	} else if (of_machine_is_compatible("samsung,exynos4412")) {
-+		exynos_info->type = EXYNOS_SOC_4212;
-+	} else if (of_machine_is_compatible("samsung,exynos5250")) {
-+		exynos_info->type = EXYNOS_SOC_5250;
-+	} else {
-+		pr_err("%s: Unknown SoC type\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	if (exynos_info->type == EXYNOS_SOC_4210)
- 		ret = exynos4210_cpufreq_init(exynos_info);
--	else if (soc_is_exynos4212() || soc_is_exynos4412())
-+	else if (exynos_info->type == EXYNOS_SOC_4212 || exynos_info->type == EXYNOS_SOC_4412)
- 		ret = exynos4x12_cpufreq_init(exynos_info);
--	else if (soc_is_exynos5250())
-+	else if (exynos_info->type == EXYNOS_SOC_5250)
- 		ret = exynos5250_cpufreq_init(exynos_info);
- 	else
- 		return 0;
-diff --git a/drivers/cpufreq/exynos-cpufreq.h b/drivers/cpufreq/exynos-cpufreq.h
-index 3ddade8..f189547 100644
---- a/drivers/cpufreq/exynos-cpufreq.h
-+++ b/drivers/cpufreq/exynos-cpufreq.h
-@@ -17,6 +17,13 @@ enum cpufreq_level_index {
- 	L20,
- };
- 
-+enum exynos_soc_type {
-+	EXYNOS_SOC_4210,
-+	EXYNOS_SOC_4212,
-+	EXYNOS_SOC_4412,
-+	EXYNOS_SOC_5250,
-+};
-+
- #define APLL_FREQ(f, a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, m, p, s) \
- 	{ \
- 		.freq = (f) * 1000, \
-@@ -34,6 +41,7 @@ struct apll_freq {
- };
- 
- struct exynos_dvfs_info {
-+	enum exynos_soc_type type;
- 	unsigned long	mpll_freq_khz;
- 	unsigned int	pll_safe_idx;
- 	struct clk	*cpu_clk;
-diff --git a/drivers/cpufreq/exynos4x12-cpufreq.c b/drivers/cpufreq/exynos4x12-cpufreq.c
-index 466c76a..63a3907 100644
---- a/drivers/cpufreq/exynos4x12-cpufreq.c
-+++ b/drivers/cpufreq/exynos4x12-cpufreq.c
-@@ -100,7 +100,6 @@ static struct apll_freq apll_freq_4412[] = {
- static void exynos4x12_set_clkdiv(unsigned int div_index)
- {
- 	unsigned int tmp;
--	unsigned int stat_cpu1;
- 
- 	/* Change Divider - CPU0 */
- 
-@@ -115,13 +114,11 @@ static void exynos4x12_set_clkdiv(unsigned int div_index)
- 	tmp = apll_freq_4x12[div_index].clk_div_cpu1;
- 
- 	__raw_writel(tmp, EXYNOS4_CLKDIV_CPU1);
--	if (soc_is_exynos4212())
--		stat_cpu1 = 0x11;
--	else
--		stat_cpu1 = 0x111;
- 
--	while (__raw_readl(EXYNOS4_CLKDIV_STATCPU1) & stat_cpu1)
-+	do {
- 		cpu_relax();
-+		tmp = __raw_readl(EXYNOS4_CLKDIV_STATCPU1);
-+	} while (tmp != 0x0);
- }
- 
- static void exynos4x12_set_apll(unsigned int index)
-@@ -184,7 +181,7 @@ int exynos4x12_cpufreq_init(struct exynos_dvfs_info *info)
- 	if (IS_ERR(mout_apll))
- 		goto err_mout_apll;
- 
--	if (soc_is_exynos4212())
-+	if (info->type == EXYNOS_SOC_4212)
- 		apll_freq_4x12 = apll_freq_4212;
- 	else
- 		apll_freq_4x12 = apll_freq_4412;
--- 
-1.7.10.4
+This fix is independent of the rest of the series, so I'll already pick
+this one to my 3.16 omapdss branch.
 
+ Tomi
+
+
+
+
+--W2A8t0RkUIJJd9L4o9hKCMVLNFd5Rn1BO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTdejlAAoJEPo9qoy8lh71QSoP/jSYhAEh5ad2o5B8+Y74bcc8
+cOLG5naHlZG3V9TPXg2wxJOgVYOWR5RK9LZb4xMufjo1OKItJpke6lI0lqtuZBG7
+JgcRkQSqT1OkrB5NY4amcYzO/yCJuATHer1as5srxB03VmC0fuSqJoDIIUCemzTL
+35csLVxi5yWBeDEe2VeEoqfpprU9VgNUDGiJKmEpiLuGv6ypwRNhMNrARxX+cf4q
+suePVcs288Cwfs7jvP8qgNYO3Y3PKECxviDDEhZYxsnpxAgd2If+EA2VdT2BT/vn
+uy+tcxyz3YFYtkmnn+r54WL2SuDTwRd2TYOpL2C5ct585n6YoGAAaciuTSzwoItn
+X4aeNvVN+YVs9YhfBxv+dLE1EwgFUoIKDlxJoie190nWhDXaHzQfNcDcXJweTZJM
+Nft/fAowx5K+7fpmawgJEzhKv2t0gImQXCqkrXeW6o/9G797pk81/foeZNFGpJIM
+7fzKQJ6MLigtOhdiAwoD7ih8it+0a2l+u9ykYz1aeLnc55O4LMiV4tBeou7DGvO1
+ekD6a3krgC7BCgmubmwALwnfyxGnhb2UvDw6EU71ZpfJ21drUjmSOrR69B5gFcOt
+edD70NMXSGBYSrOJFcxZYPVPhCrgA4op2LvK2nsi+VUtObuYKDZdZ+NqtHkgehcD
+ANswUsgdVsG/5pZ0NtGM
+=Lc2L
+-----END PGP SIGNATURE-----
+
+--W2A8t0RkUIJJd9L4o9hKCMVLNFd5Rn1BO--
