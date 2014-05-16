@@ -1,55 +1,78 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI
- I/O memory type
-Date: Fri, 16 May 2014 09:33:35 -0600
-Message-ID: <20140516153335.GA29660@obsidianresearch.com>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <20140515155130.193c3181@free-electrons.com>
- <20140515142924.GI27594@arm.com>
- <4972763.mtuLYh6sDH@wuerfel>
- <20140515153430.GM27594@arm.com>
- <20140515175307.GA12259@obsidianresearch.com>
- <20140516095736.GF12341@arm.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Fri, 16 May 2014 08:59:57 -0700
+Message-ID: <20140516155957.GC22031@atomide.com>
+References: <20140507150343.GA9502@atomide.com>
+ <536A5920.1020908@ti.com>
+ <20140507175919.GH9502@atomide.com>
+ <20140508233300.GI2198@atomide.com>
+ <536C924E.5000307@ti.com>
+ <20140509153008.GC17814@atomide.com>
+ <20140513212639.GA18001@atomide.com>
+ <53747DD5.2030406@ti.com>
+ <20140515182548.GD23659@atomide.com>
+ <5375A713.7030409@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140516095736.GF12341-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <5375A713.7030409@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 16, 2014 at 10:57:36AM +0100, Will Deacon wrote:
-> > AFAIK, to duplicate x86 semantics an outl/inl must spin the CPU until
-> > it completes at the target, and the CPU must not pipeline outl/inl
-> > operations: outl();  outl(); produces 1 IOWr TLP, waits for
-> > completion, then produces another.
+* Tomi Valkeinen <tomi.valkeinen@ti.com> [140515 22:51]:
+> On 15/05/14 21:25, Tony Lindgren wrote:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [140515 01:42]:
+> >> On 14/05/14 00:26, Tony Lindgren wrote:
+> >>
+> >>> +	/* lcd MO */
+> >>> +	ddata->mo_gpio = sharp_ls_get_gpio_of(&pdev->dev, 0, 1, "mode");
+> >>> +	if (PTR_ERR(ddata->mo_gpio) == -EPROBE_DEFER)
+> >>> +		return -EPROBE_DEFER;
+> >>> +
+> >>> +	if (!IS_ERR(ddata->mo_gpio))
+> >>> +		if (gpiod_get_raw_value_cansleep(ddata->mo_gpio))
+> >>> +			ddata->flags |= SHARP_LS_QVGA;
+> >>
+> >> Shouldn't there be an explicit flag in the DT data for this? If the
+> >> panel's MO pin is hardwired to, say, pull up, then the mode-gpios won't
+> >> have MO gpio, right? So something like:
+> >>
+> >>
+> >> mode-gpios = <0					/* high, lcd MO */
+> >> 	      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
+> >> 	      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
+> >>
+> >> vga-mode;	/* MO hardwired high */
+> >  
+> > Yeah holes there are just fine. I figured let's keep the custom
+> > vga-mode property out of the way until we actually run into a panel
+> > that's not using a GPIO for mode.
 > 
-> So that's the real question: Do we really need to duplicate x86 semantics
-> for IO space accesses? If we do, then we need both strongly-ordered memory
-> *and* a dsb in our accessors. That's not going to be much fun.
+> Ok, I'm fine with that, but in that case I think we have to use all the
+> panels in the same mode, i.e. the driver either sets the MO gpio always
+> low and uses VGA mode, or sets the MO always high and uses QVGA mode.
 
-Yep, that is the real question.
+OK let's default to VGA mode for now.
+ 
+> In your omap3-evm.dts patch, you set the MO gpio ACTIVE_LOW in order to
+> change the mode, even if it really should be ACTIVE_HIGH. But if you do
+> that, and we later add the support to the panel driver to manage the MO
+> gpio dynamically (i.e. the user can select VGA/QVGA at runtime), then
+> the panel won't work as the driver uses wrong polarity for the pin.
 
-It has been over 10 years since I last converted a driver from IO to
-MMIO - but IIRC the completion timing became a software visible
-difference.
+Getting the configured value seemed to work just fine with
+gpiod_get_raw_value_cansleep(ddata->mo_gpio). But yeah I agree the
+lack and confusion between polarity and desired default value for
+a GPIO is is sucky. The ACTIVE_HIGH probably should mean polarity. 
 
-The entire reasons that this funny non-posted outl exists in PCI is to
-support software compatability. You could take an ISA device and stick
-it on PCI and the driver timing would be completely unaltered.
+I don't know if there's an easy solution to that short of adding a
+new GPIO binding that contains both the polarity and the desired
+default value.
 
-Linux obviously works on systems where outl is posted, ARM currently,
-for instance. I've also run on MIPS systems that completely lack the
-ability to synchronize outl (and I recall having to convert all the
-drivers to mmio on that system..)
+Regards,
 
-Arnd is right though, I doubt anyone cares, using IO space has been
-discouraged for a decade at least at this point.
-
-Jason
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tony
