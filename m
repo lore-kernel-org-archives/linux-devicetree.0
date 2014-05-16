@@ -1,149 +1,44 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: [PATCHv4 2/5] net: phy: extend fixed driver with fixed_phy_register()
-Date: Fri, 16 May 2014 16:14:04 +0200
-Message-ID: <1400249647-4643-3-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Florian Fainelli <florian@openwrt.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Update the Keymile kirkwood DTS files
+Date: Fri, 16 May 2014 16:11:46 +0200
+Message-ID: <20140516141146.GH10407@lunn.ch>
+References: <1400230143-15620-1-git-send-email-valentin.longchamp@keymile.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400230143-15620-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The existing fixed_phy_add() function has several drawbacks that
-prevents it from being used as is for OF-based declaration of fixed
-PHYs:
+On Fri, May 16, 2014 at 10:49:00AM +0200, Valentin Longchamp wrote:
+> This series resynchs the Keymile Kirkwood DTS files with mainline since
+> the boards do not boot anymore with the 3.15 rc kernels (to be honest, I
+> have not tested the last 2-3 releases).
+> 
+> The changes are the addition of the PCIe controller for the 98dx4122
+> SoC, the explicit disabling of the SATA phys for this same SoC and
+> finally the enabling of the PCIe controller on the Keymile Reference
+> design.
+> 
+> The series introduces kirkwood-km_common.dtsi that factors the common
+> nodes between kirkwood-km_kirkwood.dts and the new board/design below.
+> 
+> The series also adds a new DTS for another Keymile generic design where
+> the mv64xxx eth interace is configured with fixed parameters to no phy
+> but a switch (for board internal communication).
 
- * The address of the PHY on the fake bus needs to be passed, while a
-   dynamic allocation is desired.
+Hi Valentin
 
- * Since the phy_device instantiation is post-poned until the next
-   mdiobus scan, there is no way to associate the fixed PHY with its
-   OF node, which later prevents of_phy_connect() from finding this
-   fixed PHY from a given OF node.
+Looks good to me.
 
-To solve this, this commit introduces fixed_phy_register(), which will
-allocate an available PHY address, add the PHY using fixed_phy_add()
-and instantiate the phy_device structure associated with the provided
-OF node.
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
-Acked-by: Grant Likely <grant.likely@linaro.org>
----
- drivers/net/phy/fixed.c   | 61 +++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/phy_fixed.h | 11 +++++++++
- 2 files changed, 72 insertions(+)
-
-diff --git a/drivers/net/phy/fixed.c b/drivers/net/phy/fixed.c
-index e41546d..d60d875 100644
---- a/drivers/net/phy/fixed.c
-+++ b/drivers/net/phy/fixed.c
-@@ -21,6 +21,7 @@
- #include <linux/phy_fixed.h>
- #include <linux/err.h>
- #include <linux/slab.h>
-+#include <linux/of.h>
- 
- #define MII_REGS_NUM 29
- 
-@@ -203,6 +204,66 @@ err_regs:
- }
- EXPORT_SYMBOL_GPL(fixed_phy_add);
- 
-+void fixed_phy_del(int phy_addr)
-+{
-+	struct fixed_mdio_bus *fmb = &platform_fmb;
-+	struct fixed_phy *fp, *tmp;
-+
-+	list_for_each_entry_safe(fp, tmp, &fmb->phys, node) {
-+		if (fp->addr == phy_addr) {
-+			list_del(&fp->node);
-+			kfree(fp);
-+			return;
-+		}
-+	}
-+}
-+EXPORT_SYMBOL_GPL(fixed_phy_del);
-+
-+static int phy_fixed_addr;
-+static DEFINE_SPINLOCK(phy_fixed_addr_lock);
-+
-+int fixed_phy_register(unsigned int irq,
-+		       struct fixed_phy_status *status,
-+		       struct device_node *np)
-+{
-+	struct fixed_mdio_bus *fmb = &platform_fmb;
-+	struct phy_device *phy;
-+	int phy_addr;
-+	int ret;
-+
-+	/* Get the next available PHY address, up to PHY_MAX_ADDR */
-+	spin_lock(&phy_fixed_addr_lock);
-+	if (phy_fixed_addr == PHY_MAX_ADDR) {
-+		spin_unlock(&phy_fixed_addr_lock);
-+		return -ENOSPC;
-+	}
-+	phy_addr = phy_fixed_addr++;
-+	spin_unlock(&phy_fixed_addr_lock);
-+
-+	ret = fixed_phy_add(PHY_POLL, phy_addr, status);
-+	if (ret < 0)
-+		return ret;
-+
-+	phy = get_phy_device(fmb->mii_bus, phy_addr, false);
-+	if (!phy || IS_ERR(phy)) {
-+		fixed_phy_del(phy_addr);
-+		return -EINVAL;
-+	}
-+
-+	of_node_get(np);
-+	phy->dev.of_node = np;
-+
-+	ret = phy_device_register(phy);
-+	if (ret) {
-+		phy_device_free(phy);
-+		of_node_put(np);
-+		fixed_phy_del(phy_addr);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int __init fixed_mdio_bus_init(void)
- {
- 	struct fixed_mdio_bus *fmb = &platform_fmb;
-diff --git a/include/linux/phy_fixed.h b/include/linux/phy_fixed.h
-index 509d8f5..4f2478b 100644
---- a/include/linux/phy_fixed.h
-+++ b/include/linux/phy_fixed.h
-@@ -9,15 +9,26 @@ struct fixed_phy_status {
- 	int asym_pause;
- };
- 
-+struct device_node;
-+
- #ifdef CONFIG_FIXED_PHY
- extern int fixed_phy_add(unsigned int irq, int phy_id,
- 			 struct fixed_phy_status *status);
-+extern int fixed_phy_register(unsigned int irq,
-+			      struct fixed_phy_status *status,
-+			      struct device_node *np);
- #else
- static inline int fixed_phy_add(unsigned int irq, int phy_id,
- 				struct fixed_phy_status *status)
- {
- 	return -ENODEV;
- }
-+static inline int fixed_phy_register(unsigned int irq,
-+				     struct fixed_phy_status *status,
-+				     struct device_node *np)
-+{
-+	return -ENODEV;
-+}
- #endif /* CONFIG_FIXED_PHY */
- 
- /*
--- 
-1.9.3
+Thanks
+	Andrew
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
