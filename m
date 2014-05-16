@@ -1,111 +1,149 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC] Linux common clock framework: device with many clocks
-Date: Fri, 16 May 2014 12:23:37 -0700
-Message-ID: <CAPtuhTissRRQ6bPG0pp_e-NZ+ReaMtxWefAGq2kjFEcdmh_LEg@mail.gmail.com>
-References: <CANCKTBuOK41=ZxHcDRthc0uc81-nDr_66veeQvUDNjsKq85OSw@mail.gmail.com>
- <20140430231307.GA10250@e106331-lin.cambridge.arm.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] ARM: dts: kirkwood: add kirkwood-km_common DTSI
+ files
+Date: Fri, 16 May 2014 09:35:40 -0400
+Message-ID: <20140516133540.GJ27822@titan.lakedaemon.net>
+References: <1400230143-15620-1-git-send-email-valentin.longchamp@keymile.com>
+ <1400230143-15620-3-git-send-email-valentin.longchamp@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140430231307.GA10250-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400230143-15620-3-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Jim Quinlan <jim2101024-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 30, 2014 at 4:13 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> Hi,
+On Fri, May 16, 2014 at 10:49:02AM +0200, Valentin Longchamp wrote:
+> This file allows to factor the common parts between the various Keymile
+> Kirkwood Designs.
+> 
+> kirkwood-km_common configures the peripherals that are currently
+> common to all our Kirkwood designs: PCIe, pinctrl, bitbang I2C, NAND
+> Flash controller.
+> 
+> The kirkwood-km_kirkwood file is then changed to include this common
+> file.
+> 
+> Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+> 
+> ---
+> 
+> Changes in v2:
+> - introduce kirkwood-km_common.dtsi to allow factoring some nodes
+>   between boards
+> 
+>  arch/arm/boot/dts/kirkwood-km_common.dtsi  | 48 ++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-km_kirkwood.dts | 38 +----------------------
+>  2 files changed, 49 insertions(+), 37 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/kirkwood-km_common.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/kirkwood-km_common.dtsi b/arch/arm/boot/dts/kirkwood-km_common.dtsi
+> new file mode 100644
+> index 0000000..b241135
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/kirkwood-km_common.dtsi
+> @@ -0,0 +1,48 @@
+> +/ {
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+> +		stdout-path = &uart0;
+> +	};
+> +
+> +	mbus {
+> +		pcie-controller {
+> +			status = "okay";
+> +
+> +			pcie@1,0 {
+> +				status = "okay";
+> +			};
+> +		};
+> +	};
+> +
+> +	ocp@f1000000 {
+> +		pinctrl: pin-controller@10000 {
+> +			pinctrl-0 = < &pmx_i2c_gpio_sda &pmx_i2c_gpio_scl >;
+> +			pinctrl-names = "default";
+> +
+> +			pmx_i2c_gpio_sda: pmx-gpio-sda {
+> +				marvell,pins = "mpp8";
+> +				marvell,function = "gpio";
+> +			};
+> +			pmx_i2c_gpio_scl: pmx-gpio-scl {
+> +				marvell,pins = "mpp9";
+> +				marvell,function = "gpio";
+> +			};
+> +		};
+> +
+> +		serial@12000 {
+> +			status = "ok";
 
-Thanks for Cc'ing me Mark.
+nit: This should match the other status properties and use "okay".
 
->
-> On Wed, Apr 30, 2014 at 09:39:11PM +0100, Jim Quinlan wrote:
->> In most examples of .dtsi files I have perused, a device is associated with
->> typically one clock, maybe two.  In the SoC I'm working on, some devices
->> need to turn off multiple clocks for PM, as many as 13.   The driver gets
->> the clocks from the device tree, and when the driver wants to turn off
->> clocks to the device, it loops through all 13 clocks.
->>
->> I'm wondering if is possible to abstract a group of many clocks into one
->> "software clock". Invoking clk_disable() on said software clock would
->> effect the iteration of clk_disable() on all 13 of the clocks it governs.
->>  Enabling would effect clk_enable() on all 13.  This would make the driver
->> writer's life a little simpler.
->>
->> I've looked at the Linux Common Clock Framework, and it doesn't really
->> accommodate multiple active parents as it's somewhat contrary to its
->> design.  Also, playing with the innards of clk.c is ill-advised.  Should I
->> just stick to putting iteration over the clocks in all my drivers, or is
->> there a better way?
->
-> This doesn't strike me as a DT issue. The DT should describe all the
-> clocks that a given block takes, and the representation of said clocks
-> in the DT is completely separate matter from the management of said
-> clocks in any given driver.
->
-> If you want a helpful abstraction for combining clocks for management
-> purposes you'd be better off talking to Mike Turquette (CC'd), as he's
-> in charge of the common clock framework.
+> +		};
+> +	};
+> +
+> +	i2c@0 {
+> +		compatible = "i2c-gpio";
+> +		gpios = < &gpio0 8 GPIO_ACTIVE_HIGH		/* sda */
+> +			  &gpio0 9 GPIO_ACTIVE_HIGH>;		/* scl */
+> +		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
+> +	};
+> +};
+> +
+> +&nand {
+> +	status = "okay";
+> +	chip-delay = <25>;
+> +};
+> diff --git a/arch/arm/boot/dts/kirkwood-km_kirkwood.dts b/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
+> index 61139bf..235bf38 100644
+> --- a/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
+> +++ b/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
+> @@ -2,6 +2,7 @@
+>  
+>  #include "kirkwood.dtsi"
+>  #include "kirkwood-98dx4122.dtsi"
+> +#include "kirkwood-km_common.dtsi"
+>  
+>  / {
+>  	model = "Keymile Kirkwood Reference Design";
+> @@ -11,43 +12,6 @@
+>  		device_type = "memory";
+>  		reg = <0x00000000 0x08000000>;
+>  	};
+> -
+> -	chosen {
+> -		bootargs = "console=ttyS0,115200n8 earlyprintk";
+> -		stdout-path = &uart0;
+> -	};
+> -
+> -	ocp@f1000000 {
+> -		pinctrl: pin-controller@10000 {
+> -			pinctrl-0 = < &pmx_i2c_gpio_sda &pmx_i2c_gpio_scl >;
+> -			pinctrl-names = "default";
+> -
+> -			pmx_i2c_gpio_sda: pmx-gpio-sda {
+> -				marvell,pins = "mpp8";
+> -				marvell,function = "gpio";
+> -			};
+> -			pmx_i2c_gpio_scl: pmx-gpio-scl {
+> -				marvell,pins = "mpp9";
+> -				marvell,function = "gpio";
+> -			};
+> -		};
+> -
+> -		serial@12000 {
+> -			status = "ok";
 
-Jim emailed me privately. Here is my response for posterity:
+Yeah, I probably let it in in the first place :)
 
+If that is all there is with this series, I'll fix it up when I pull it
+in.
 
+thx,
 
-On Wed, May 7, 2014 at 8:59 AM, Jim Quinlan <jquinlan-dY08KVG/lbpWk0Htik3J/w@public.gmane.org> wrote:
-> Hi Mike,
-
-Hi Jim,
-
-<snip>
-
-> In most examples of .dtsi files I have perused, a device is associated with
-> typically one clock, maybe two.  In the SoC I'm working on, some devices
-> need to turn off multiple clocks for PM, as many as 13.   The driver gets
-> the clocks from the device tree, and when the driver wants to turn on/off
-> clocks to the device, it loops through all 13 clocks.
-
-Is it possible for you to share a data sheet or TRM for this part? I'd
-like to better understand your 13 clock requirement.
-
-Is your device driver upstream? If not, can you share a link to bcom's
-public vendor git tree with the driver in question?
-
-> I'm wondering if is possible to abstract a group of many clocks into one
-> "software clock". Invoking clk_disable() on said software clock would
-> effect the iteration of clk_disable() on all 13 of the clocks it governs.
-
-I oppose "software clocks", "virtual clocks" or any kind of struct clk
-that doesn't map onto real clock hardware directly.
-
-> Enabling would effect clk_enable() on all 13.  This would make the driver
-> writer's life a little simpler.
-
-What you are asking for is an abstraction. We already have this in the
-form of Runtime PM where a driver calls pm_runtime_get() and
-pm_runtime_put() without having to worry about the details of enabling
-and disabling those 13 clocks. Runtime PM is *the* abstraction you are
-looking for.
-
-You should check out the RPM stuff as well as the power_domain and
-gen_pd stuff. OMAP, SH-Mobile and Ux500 have interesting
-implementations of all of this stuff for rather complex SoCs.
-
-> I've looked at the Linux Common Clock Framework, and it doesn't really
-> accommodate multiple active parents as it's somewhat contrary to its
-> design.  Also, playing with the innards of clk.c is ill-advised.  Should I
-> just stick to putting iteration over the clocks in all my drivers, or is
-> there a better way?
-
-Can you elaborate on "multiple active parents"? What does that mean?
-
-Regards,
-Mike
-
-
-
->
-> Cheers,
-> Mark.
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
