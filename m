@@ -1,75 +1,41 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Fri, 16 May 2014 08:56:56 +0300
-Message-ID: <5375A8A8.7080306@ti.com>
-References: <CABxcv=mY0a+yJgmCTPN=BhSQD57Pw022zOd5_KxEgvvF_-=O7Q@mail.gmail.com> <20140512142646.GA31772@atomide.com> <5370E0C9.8050201@ti.com> <20140512155132.GH31772@atomide.com> <5371F923.80000@ti.com> <CABxcv==_LCw1kPYm17g=h8VfSN2V_qsgXjTnsy-JOetawSv4pA@mail.gmail.com> <20140513152518.GA16837@atomide.com> <53730AFB.2090800@ti.com> <20140514160216.GD18463@atomide.com> <537487AE.3060906@ti.com> <20140515182133.GC23659@atomide.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v6 14/17] ARM: mvebu: add Device Tree description of
+ xHCI controllers on Armada 38x
+Date: Fri, 16 May 2014 01:57:09 -0400
+Message-ID: <20140516055709.GE27822@titan.lakedaemon.net>
+References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
+ <1400149062-32661-15-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="MMj86lUMqo3tX5of2bpS3FILk5gpEg1Pi"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140515182133.GC23659@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400149062-32661-15-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---MMj86lUMqo3tX5of2bpS3FILk5gpEg1Pi
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 15, 2014 at 12:17:39PM +0200, Gregory CLEMENT wrote:
+> The Marvell Armada 38x SoCs contains two xHCI controllers. This commit
+> adds the Device Tree description of those interfaces at the SoC level,
+> and also enables the two USB3 ports on the Armada 385 DB platform and
+> one USB3 port on the Armada 385 RD platform.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-385-db.dts |  8 ++++++++
+>  arch/arm/boot/dts/armada-385-rd.dts |  4 ++++
+>  arch/arm/boot/dts/armada-38x.dtsi   | 17 +++++++++++++++++
+>  3 files changed, 29 insertions(+)
 
-On 15/05/14 21:21, Tony Lindgren wrote:
+Patches 14 through 17 applied to mvebu/dt.  Patch 17 amended as Sergei
+suggested.
 
->> But you're right, having "sharp,ls037v7dw01-omap-dss" in the .dts is a=
-n
->> alternative for the compatible-string conversion we do now. I guess it=
-'s
->> a matter of taste, but I rather hide it inside the kernel, in an
->> internal omapdss file, than pollute the .dts files with those compatib=
-le
->> strings.
->=20
-> Well it avoid you parsing through all the nodes during booting
-> and leaves out the function to do remapping. And removes the need
-> for maintaining a custom display mapping table. I'd say that's a
-> pretty good list of advantages right there :)
+thx,
 
-Yep... I don't know. Maybe I'm being too careful about doing wrong
-things with .dts. I just like it more if any hacks are in kernel code,
-which I can remove without anyone noticing.
-
-Anyway, we already have board.dts files using the non-omapified
-compatible strings in the mainline, so if I would now add the omapified
-compatible strings to .dts files, those old board.dts files would break.
-
-So I guess the choice has already been made.
-
- Tomi
-
-
-
---MMj86lUMqo3tX5of2bpS3FILk5gpEg1Pi
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTdaioAAoJEPo9qoy8lh711TgP/R5iokLg9Po70K6hdxxyYeyI
-urrzDsnvRfm6rQ8MAvKp/rHPRT2YzQ5zaulPXGA17XRV4Z5qRSlPYhYfxV7I6nTZ
-UjvLLQCX+WvAuAK8SR9SLidoIMCTZFN+2UyZODlPr/mwFxdrtUZ1ncMBNPyraiCq
-0M5VK+Wd/wMsBuCtN6lwl/MQoHuxNlmxyBaLJPPOi+/Zh4cwwGmcyHHdHevpI2e8
-7KKhvd1+i0SiXunDdfWGOm7erdLX1L93vpiQKRh83Kb+mTO2cdd/zwmQCvUvJQZO
-A3v5q5/fgA931gHYsBspZ24eEnM9zBqB9G0bJt0KpueZzvZTZS7lJlsoOWHKc6un
-nwZrdn4GCDIFYlJYO2jt8dgpF54Qkmut6s2oQu0Sx5PC+nQhhNwc3UtEMb+4xFeU
-FPO/yorBTxEvanLXhE213VF7ECPSz5T/d/JxiBMHLWKUYtN0ViQpkXZXaL4ekk08
-jlNbAtiLdf0TMARXktu+zFIv1YJDV+uArJl0OZGZw48rFJYKff2+82HQ+YPT1k5H
-m4FRL/fOyuMz7xVCd9pKXvmLiSKHJQwDzwf7DSYW39QKMWCGsg3SDFoXFI+z9Kev
-OUKl9AApywEWBiYRUpM96yHyPQlWDL7MqjqxF4yC2VzMnBbGQmo2oRTiraX0ofOv
-jcyLKLG5UzxETYl6EZOS
-=6cp9
------END PGP SIGNATURE-----
-
---MMj86lUMqo3tX5of2bpS3FILk5gpEg1Pi--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
