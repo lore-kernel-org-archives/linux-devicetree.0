@@ -1,43 +1,65 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v2 0/3] Update the Keymile kirkwood DTS files
-Date: Fri, 16 May 2014 16:11:46 +0200
-Message-ID: <20140516141146.GH10407@lunn.ch>
-References: <1400230143-15620-1-git-send-email-valentin.longchamp@keymile.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [GIT PULL] Devicetree fixes for v3.15
+Date: Fri, 16 May 2014 15:27:39 +0100
+Message-ID: <CACxGe6v5vAXypkOcX7ZLqpsDaVNxCGanYCuytWrLzu_6pRXFuA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400230143-15620-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 16, 2014 at 10:49:00AM +0200, Valentin Longchamp wrote:
-> This series resynchs the Keymile Kirkwood DTS files with mainline since
-> the boards do not boot anymore with the 3.15 rc kernels (to be honest, I
-> have not tested the last 2-3 releases).
-> 
-> The changes are the addition of the PCIe controller for the 98dx4122
-> SoC, the explicit disabling of the SATA phys for this same SoC and
-> finally the enabling of the PCIe controller on the Keymile Reference
-> design.
-> 
-> The series introduces kirkwood-km_common.dtsi that factors the common
-> nodes between kirkwood-km_kirkwood.dts and the new board/design below.
-> 
-> The series also adds a new DTS for another Keymile generic design where
-> the mv64xxx eth interace is configured with fixed parameters to no phy
-> but a switch (for board internal communication).
+Hi Linus,
 
-Hi Valentin
+Please pull the following bug fix branch.
 
-Looks good to me.
+Thanks,
+g.
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+The following changes since commit 14186fea0cb06bc43181ce239efe0df6f1af260a:
 
-Thanks
-	Andrew
+  Merge tag 'locks-v3.15-4' of git://git.samba.org/jlayton/linux
+(2014-05-13 11:33:09 +0900)
+
+are available in the git repository at:
+
+
+  git://git.secretlab.ca/git/linux tags/dt-for-linus
+
+for you to fetch changes up to dfc44f8030653b345fc6fb337558c3a07536823f:
+
+  mips: dts: Fix missing device_type="memory" property in memory nodes
+(2014-05-16 15:22:53 +0100)
+
+----------------------------------------------------------------
+Drivercore bugfixes for v3.15
+
+This branch contains bug fixes important to get into v3.15. There is a
+fix for modifying properties seen during early boot, a fix for an
+incorrect prototype when CONFIG_OF=n, and a couple of corrections to
+device tree memory nodes on  a few platforms.
+
+----------------------------------------------------------------
+Leif Lindholm (2):
+      arm: dts: Fix missing device_type="memory" for ste-ccu8540
+      mips: dts: Fix missing device_type="memory" property in memory nodes
+
+Stephen Rothwell (1):
+      of: fix CONFIG_OF=n prototype of of_node_full_name()
+
+Thomas Petazzoni (1):
+      of: make of_update_property() usable earlier in the boot process
+
+ arch/arm/boot/dts/ste-ccu8540.dts     | 1 +
+ arch/mips/lantiq/dts/easy50712.dts    | 1 +
+ arch/mips/ralink/dts/mt7620a_eval.dts | 1 +
+ arch/mips/ralink/dts/rt2880_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3052_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3883_eval.dts  | 1 +
+ drivers/of/base.c                     | 4 ++++
+ include/linux/of.h                    | 2 +-
+ 8 files changed, 11 insertions(+), 1 deletion(-)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
