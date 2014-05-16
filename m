@@ -1,152 +1,101 @@
-From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM: dts: kirkwood: add kirkwood-km_common DTSI files
-Date: Fri, 16 May 2014 10:49:02 +0200
-Message-ID: <1400230143-15620-3-git-send-email-valentin.longchamp@keymile.com>
-References: <1400230143-15620-1-git-send-email-valentin.longchamp@keymile.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400230143-15620-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v2] cpufreq: exynos:  Fix the compile error
+Date: Fri, 16 May 2014 10:50:24 +0200
+Message-ID: <5375D150.1020109@gmail.com>
+References: <000001cf70dc$9ccfe4e0$d66faea0$@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <000001cf70dc$9ccfe4e0$d66faea0$@samsung.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Jonghwan Choi <jhbird.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, cpufreq@vger.kernel.org
+Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, "'Rafael J. Wysocki'" <rjw@sisk.pl>, Jonghwan Choi <jhbird.choi@gmail.com>, 'Viresh Kumar' <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This file allows to factor the common parts between the various Keymile
-Kirkwood Designs.
+Hi Jonghwan,
 
-kirkwood-km_common configures the peripherals that are currently
-common to all our Kirkwood designs: PCIe, pinctrl, bitbang I2C, NAND
-Flash controller.
+On 16.05.2014 09:58, Jonghwan Choi wrote:
+> Commit 7da83a80 ("ARM: EXYNOS: Migrate Exynos specific macros from plat to mach")
+> which lands in samsung tree causes build breakage for cpufreq-exynos like following:
+> drivers/cpufreq/exynos-cpufreq.c: In function 'exynos_cpufreq_probe':
+> drivers/cpufreq/exynos-cpufreq.c:166:2: error: implicit declaration of function 'soc_is_exynos4210'
+> [-Werror=implicit-function-declaration]
+> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4212'
+> [-Werror=implicit-function-declaration]
+> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4412'
+> [-Werror=implicit-function-declaration]
+> drivers/cpufreq/exynos-cpufreq.c:170:2: error: implicit declaration of function 'soc_is_exynos5250'
+> [-Werror=implicit-function-declaration]
+> cc1: some warnings being treated as errors
+> make[2]: *** [drivers/cpufreq/exynos-cpufreq.o] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> drivers/cpufreq/exynos4x12-cpufreq.c: In function 'exynos4x12_set_clkdiv':
+> drivers/cpufreq/exynos4x12-cpufreq.c:118:2: error: implicit declaration of function 'soc_is_exynos4212'
+> [-Werror=implicit-function-declaration]
+> cc1: some warnings being treated as errors
+> make[2]: *** [drivers/cpufreq/exynos4x12-cpufreq.o] Error 1
+> make[1]: *** [drivers/cpufreq] Error 2
+> This fixes above error with getting SoC information via DT instead of soc_is_exynosXXXX().
+> 
+> Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
+> ---
+>  .../devicetree/bindings/cpufreq/cpufreq-exynos.txt |   18 ++++++++
+>  drivers/cpufreq/Kconfig.arm                        |    4 +-
+>  drivers/cpufreq/exynos-cpufreq.c                   |   47 +++++++++++++++++---
+>  drivers/cpufreq/exynos-cpufreq.h                   |    8 ++++
+>  drivers/cpufreq/exynos4x12-cpufreq.c               |   11 ++---
+>  5 files changed, 72 insertions(+), 16 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
+> b/Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
+> new file mode 100644
+> index 0000000..f5e8ac6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
+> @@ -0,0 +1,18 @@
+> +
+> +Exynos cpufreq driver
+> +-------------------
+> +
+> +Exynos4210/4212/4412/5250 SoC cpufreq driver for CPU frequency scaling.
+> +
+> +Required properties:
+> +  - compatible: value should be either of the following.
+> +      (a) "samsung, exynos4210-cpufreq", for Exynos4210.
+> +      (b) "samsung, exynos4212-cpufreq", for Exynos4212.
+> +      (c) "samsung, exynos4412-cpufreq", for Exynos4412.
+> +      (d) "samsung, exynos5250-cpufreq", for Exynos5250.
+> +
+> +Example:
+> +--------
+> +	cpufreq@10030000 {
+> +		compatible = "samsung,exynos4210-cpufreq";
+> +	};
 
-The kirkwood-km_kirkwood file is then changed to include this common
-file.
+Sorry, NAK. Cpufreq is not a real device on the SoC and this is not the
+right way to represent it in DT.
 
-Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+We have been discussing Exynos cpufreq framework rework, including DT
+support since quite a long time. so if you want to know details, please
+look at respective discussion threads. I don't have time to find them
+for you right now, but if you look for threads of cpufreq patches by
+Thomas Abraham and ones about Exynos multiplatform support, then you
+should have quite complete set of information.
 
----
+In general, I can see three ways to "fix" this for 3.15:
 
-Changes in v2:
-- introduce kirkwood-km_common.dtsi to allow factoring some nodes
-  between boards
+1) revert moving soc_is_* macros to mach-exynos/common.h,
 
- arch/arm/boot/dts/kirkwood-km_common.dtsi  | 48 ++++++++++++++++++++++++++++++
- arch/arm/boot/dts/kirkwood-km_kirkwood.dts | 38 +----------------------
- 2 files changed, 49 insertions(+), 37 deletions(-)
- create mode 100644 arch/arm/boot/dts/kirkwood-km_common.dtsi
+2) move soc_is_* macros to a header in mach-exynos/include/mach/,
 
-diff --git a/arch/arm/boot/dts/kirkwood-km_common.dtsi b/arch/arm/boot/dts/kirkwood-km_common.dtsi
-new file mode 100644
-index 0000000..b241135
---- /dev/null
-+++ b/arch/arm/boot/dts/kirkwood-km_common.dtsi
-@@ -0,0 +1,48 @@
-+/ {
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8 earlyprintk";
-+		stdout-path = &uart0;
-+	};
-+
-+	mbus {
-+		pcie-controller {
-+			status = "okay";
-+
-+			pcie@1,0 {
-+				status = "okay";
-+			};
-+		};
-+	};
-+
-+	ocp@f1000000 {
-+		pinctrl: pin-controller@10000 {
-+			pinctrl-0 = < &pmx_i2c_gpio_sda &pmx_i2c_gpio_scl >;
-+			pinctrl-names = "default";
-+
-+			pmx_i2c_gpio_sda: pmx-gpio-sda {
-+				marvell,pins = "mpp8";
-+				marvell,function = "gpio";
-+			};
-+			pmx_i2c_gpio_scl: pmx-gpio-scl {
-+				marvell,pins = "mpp9";
-+				marvell,function = "gpio";
-+			};
-+		};
-+
-+		serial@12000 {
-+			status = "ok";
-+		};
-+	};
-+
-+	i2c@0 {
-+		compatible = "i2c-gpio";
-+		gpios = < &gpio0 8 GPIO_ACTIVE_HIGH		/* sda */
-+			  &gpio0 9 GPIO_ACTIVE_HIGH>;		/* scl */
-+		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
-+	};
-+};
-+
-+&nand {
-+	status = "okay";
-+	chip-delay = <25>;
-+};
-diff --git a/arch/arm/boot/dts/kirkwood-km_kirkwood.dts b/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
-index 61139bf..235bf38 100644
---- a/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
-+++ b/arch/arm/boot/dts/kirkwood-km_kirkwood.dts
-@@ -2,6 +2,7 @@
- 
- #include "kirkwood.dtsi"
- #include "kirkwood-98dx4122.dtsi"
-+#include "kirkwood-km_common.dtsi"
- 
- / {
- 	model = "Keymile Kirkwood Reference Design";
-@@ -11,43 +12,6 @@
- 		device_type = "memory";
- 		reg = <0x00000000 0x08000000>;
- 	};
--
--	chosen {
--		bootargs = "console=ttyS0,115200n8 earlyprintk";
--		stdout-path = &uart0;
--	};
--
--	ocp@f1000000 {
--		pinctrl: pin-controller@10000 {
--			pinctrl-0 = < &pmx_i2c_gpio_sda &pmx_i2c_gpio_scl >;
--			pinctrl-names = "default";
--
--			pmx_i2c_gpio_sda: pmx-gpio-sda {
--				marvell,pins = "mpp8";
--				marvell,function = "gpio";
--			};
--			pmx_i2c_gpio_scl: pmx-gpio-scl {
--				marvell,pins = "mpp9";
--				marvell,function = "gpio";
--			};
--		};
--
--		serial@12000 {
--			status = "ok";
--		};
--	};
--
--	i2c@0 {
--		compatible = "i2c-gpio";
--		gpios = < &gpio0 8 GPIO_ACTIVE_HIGH		/* sda */
--			  &gpio0 9 GPIO_ACTIVE_HIGH>;		/* scl */
--		i2c-gpio,delay-us = <2>;	/* ~100 kHz */
--	};
--};
--
--&nand {
--	status = "okay";
--	chip-delay = <25>;
- };
- 
- &mdio {
--- 
-1.8.0.1
+3) use of_machine_is_compatible() or of_match_node() on root node in
+this driver to match directly with SoC compatible strings.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Probably option 3) would be preferred, as it would remove some of the
+dependencies of this driver on arch code and including plat/cpu.h (or
+mach/cpu.h as would be introduced by 2)) would be no longer necessary.
+
+Best regards,
+Tomasz
