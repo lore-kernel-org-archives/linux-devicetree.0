@@ -1,54 +1,69 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: [PATCH 3/3] ARM: dts: OMAP5/DRA7: use omap5-mpu-dpll-clock capable of dealing with higher frequencies
-Date: Fri, 16 May 2014 05:46:00 -0500
-Message-ID: <1400237160-25125-4-git-send-email-nm@ti.com>
-References: <1400237160-25125-1-git-send-email-nm@ti.com>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: enable fimd for exynos5800 based peach-pi board
+Date: Fri, 16 May 2014 16:19:24 +0530
+Message-ID: <CAPdUM4O4bEHtSnmiFno1Lm-0rH9qFLJ6S=7THeywAUCFen_iNw@mail.gmail.com>
+References: <1399877120-4634-1-git-send-email-rahul.sharma@samsung.com>
+	<1399877120-4634-3-git-send-email-rahul.sharma@samsung.com>
+	<004701cf6e48$b4578910$1d069b30$%han@samsung.com>
+	<CAPdUM4Mfh-LnUX_fHi7BTJ1LcE+b4oHzjgWAJk+AWvV7UJbGnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400237160-25125-1-git-send-email-nm@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>, Tero Kristo <t-kristo@ti.com>, Paul <paul@pwsan.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4Mfh-LnUX_fHi7BTJ1LcE+b4oHzjgWAJk+AWvV7UJbGnA@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-OMAP5432, DRA75x and DRA72x have MPU DPLLs that need Duty Cycle
-Correction(DCC) to operate safely at frequencies >= 1.4GHz.
+<Gentle Ping>
 
-Switch to "ti,omap5-mpu-dpll-clock" compatible property which provides
-this support.
-
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- arch/arm/boot/dts/dra7xx-clocks.dtsi   |    2 +-
- arch/arm/boot/dts/omap54xx-clocks.dtsi |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index cfb8fc7..aac5522 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -277,7 +277,7 @@
- 
- 	dpll_mpu_ck: dpll_mpu_ck {
- 		#clock-cells = <0>;
--		compatible = "ti,omap4-dpll-clock";
-+		compatible = "ti,omap5-mpu-dpll-clock";
- 		clocks = <&sys_clkin1>, <&mpu_dpll_hs_clk_div>;
- 		reg = <0x0160>, <0x0164>, <0x016c>, <0x0168>;
- 	};
-diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi b/arch/arm/boot/dts/omap54xx-clocks.dtsi
-index d487fda..465505c 100644
---- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
-@@ -362,7 +362,7 @@
- 
- 	dpll_mpu_ck: dpll_mpu_ck {
- 		#clock-cells = <0>;
--		compatible = "ti,omap4-dpll-clock";
-+		compatible = "ti,omap5-mpu-dpll-clock";
- 		clocks = <&sys_clkin>, <&mpu_dpll_hs_clk_div>;
- 		reg = <0x0160>, <0x0164>, <0x016c>, <0x0168>;
- 	};
--- 
-1.7.9.5
+On 13 May 2014 08:53, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+> Thanks Jingoo Han.
+>
+> Hi Kukjin,
+>
+> Please consider both of these series for your tree.
+>
+> 1) http://www.spinics.net/lists/arm-kernel/msg329697.html
+> 2) http://www.spinics.net/lists/arm-kernel/msg330291.html
+>
+> Regards,
+> Rahul Sharma
+>
+> On 13 May 2014 06:44, Jingoo Han <jg1.han@samsung.com> wrote:
+>> On Monday, May 12, 2014 3:45 PM, Rahul Sharma wrote:
+>>>
+>>> From: Rahul Sharma <Rahul.Sharma@samsung.com>
+>>>
+>>> Enable FIMD for peach-pi board.
+>>>
+>>> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
+>>
+>> Reviewed-by: Jingoo Han <jg1.han@samsung.com>
+>>
+>> Best regards,
+>> Jingoo Han
+>>
+>>> ---
+>>>  arch/arm/boot/dts/exynos5800-peach-pi.dts |    5 +++++
+>>>  1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> index 426705a..cccacdd 100644
+>>> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+>>> @@ -157,6 +157,11 @@
+>>>       };
+>>>  };
+>>>
+>>> +&fimd {
+>>> +     status = "okay";
+>>> +     samsung,invert-vclk;
+>>> +};
+>>> +
+>>>  &hsi2c_9 {
+>>>       status = "okay";
+>>>       clock-frequency = <400000>;
+>>> --
+>>> 1.7.9.5
+>>
