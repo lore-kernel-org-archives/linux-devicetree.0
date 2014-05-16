@@ -1,120 +1,30 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
-Date: Fri, 16 May 2014 20:00:16 +0530
-Message-ID: <CAPdUM4Mfe4xTnh-qPeazcknbCoqX3HcORKHLqBE9ukqa4ULi9A@mail.gmail.com>
-References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>
- <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
- <5373CBAD.2010505@gmail.com>
- <CAPdUM4MT0nZcLRtNcKRAeW4Q3n5z9n4BnzR-7uYMb1gqwEhWXA@mail.gmail.com>
- <53753527.3000905@gmail.com>
- <CAPdUM4M5k-aouSA=dyUXWOyFLBhob+o8103a=gAxo-O68i-MCw@mail.gmail.com>
- <CAPdUM4Py4r3ZV79ULcJ3KojaPQ0hfZTE2XbsY+=hP4LD70mb8Q@mail.gmail.com>
- <5375ED80.2010008@samsung.com>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv3 3/3] clocksource: Add Freescale FlexTimer Module (FTM)
+ timer support
+Date: Fri, 16 May 2014 07:31:09 -0700
+Message-ID: <5376212D.4080701@codeaurora.org>
+References: <1398737939-5334-1-git-send-email-Li.Xiubo@freescale.com> <1398737939-5334-4-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <5375ED80.2010008@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, sunil joshi <joshi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1398737939-5334-4-git-send-email-Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16 May 2014 16:20, Tomasz Figa <t.figa@samsung.com> wrote:
-> On 16.05.2014 12:35, Rahul Sharma wrote:
->> On 16 May 2014 15:12, Rahul Sharma <rahul.sharma@samsung.com> wrote:
->>> On 16 May 2014 03:14, Tomasz Figa <tomasz.figa@gmail.com> wrote:
->>>> On 15.05.2014 06:01, Rahul Sharma wrote:
->> [snip]
->>>>>> the PHY provider.
->>>>>>
->>>>>
->>>>> Please correct me if I got you wrong. You want somthing like this:
->>>>>
->>>>> pmu_system_controller: system-controller@10040000 {
->>>>>          ...
->>>>>           simple_phys: simple-phys {
->>>>>                         compatible = "samsung,exynos5420-simple-phy";
->>>>>                         ...
->>>>>           };
->>>>> };
->>>>
->>>> Not exactly.
->>>>
->>>> What I meant is that the PMU node itself should be the PHY provider, e.g.
->>>>
->>>> pmu_system_controller: system-controller@10040000 {
->>>>         /* ... */
->>>>         #phy-cells = <1>;
->>>> };
->>>>
->>>> and then the PMU node should instantiate the Exynos simple PHY driver,
->>>> as this is a driver for a facility existing entirely inside of the PMU.
->>>> Moreover, the driver should be rather called Exynos PMU PHY.
->>>>
->>>> I know this isn't really possible at the moment, but with device tree we
->>>> must design things carefully, so it's better to take a bit more time and
->>>> do things properly.
->>>>
->>>> So my opinion on this is that there should be a central Exynos PMU
->>>> driver that claims the IO region and instantiates necessary subdrivers,
->>>> such as Exynos PMU PHY driver, Exynos CLKOUT driver, Exynos cpuidle
->>>> driver and more, similar to what is being done in drivers/mfd.
->>>
->>
->> Hi Tomasz,
->>
->> These PHYs are not part of PMU as such. I am not sure if it is correct to
->> probe them as phy provider for all these phys. Only relation of these phys with
->> the PMU is 'enable/disable control'.
->
-> Well, in reality what is implemented by this driver is not even a PHY,
-> just some kind of power controllers, which are contained entirely in the
-> PMU.
->
+On 04/28/14 19:18, Xiubo Li wrote:
+> +bool big_endian;
+> +
 
-I agree. Actually the role of generic phy framework for these 'simple' phys is
-only that much.
+static?
 
->> Controlling this bit using regmap interface
->> still looks better to me.
->
-> Well, when there is a choice between using regmap and not using regmap,
-> I'd rather choose the latter. Why would you want to introduce additional
-> abstraction layer if there is no need for such?
->
->>
->> IMHO Ideal method would be probing these PHYs independently and resolving
->> the necessary dependencies like syscon handle, clocks etc. This way we will
->> not be having any common phy provider for all these independent PHYs and it
->> would be clean to add each of these phy nodes in DT. Please see my original
->> comment below.
->>
->> http://lkml.iu.edu/hypermail/linux/kernel/1404.1/00701.html
->
-> With the solution I proposed, you don't need any kind of dependencies
-> for those simple power controllers. They are just single bits that don't
-> need anything special to operate, except PMU clock running.
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
 
-In that case we can further trim it down and let the drivers use the regmap
-interface to control this bit. Many drivers including HDMI, DP just need that
-much functionality from the phy provider.
-
-Regards,
-Rahul Sharma
-
->
-> Best regards,
-> Tomasz
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
