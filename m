@@ -1,109 +1,129 @@
-From: Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v12 11/31] documentation: iommu: add binding document of
-	Exynos System MMU
-Date: Fri, 16 May 2014 09:39:24 +0900
-Message-ID: <20140516093924.8ee826b9e7e346cb0144a0f1@samsung.com>
-References: <1398584283-22846-1-git-send-email-shaik.ameer@samsung.com>
-	<6544270.ddFBoY6LMm@wuerfel> <20140428111802.GI19455@ulmo>
-	<4780885.JaktFvJeC7@wuerfel> <20140515203729.GA7136@mithrandir>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
+Date: Thu, 15 May 2014 19:51:17 -0700
+Message-ID: <53757D25.1060005@gmail.com>
+References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org> <1399993115-21552-3-git-send-email-grant.likely@linaro.org>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-reply-to: <20140515203729.GA7136@mithrandir>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, a.motakis-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Shaik Ameer Basha <shaik.ameer-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399993115-21552-3-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 May 2014 22:37:31 +0200, Thierry Reding wrote:
-> On Mon, Apr 28, 2014 at 02:05:30PM +0200, Arnd Bergmann wrote:
-> [...]
-> > let me clarify by example:
-> > 
-> > 	iommu@1 {
-> > 		compatible = "some,simple-iommu";
-> > 		reg = <1>;
-> > 		#iommu-cells = <0>; /* supports only one master */
-> > 	};
-> > 
-> > 	iommu@2 {
-> > 		compatible = "some,other-iommu";
-> > 		reg = <3>;
-> > 		#iommu-cells = <1>; /* contains master ID */
-> > 	};
-> > 
-> > 	iommu@3 {
-> > 		compatible = "some,windowed-iommu";
-> > 		reg = <2>;
-> > 		#iommu-cells = <2>; /* contains dma-window */
-> > 	};
-> > 
-> > 	device@4 {
-> > 		compatible = "some,ethernet";
-> > 		iommus = <&/iommu@1>;
-> > 	};
-> > 
-> > 	device@5 {
-> > 		compatible = "some,dmaengine";
-> > 		iommus = <&/iommu@2 0x40000000 0x1000000>,
-> > 			 <&/iommu@3 0x101>;
-> > 	};
-> > 
-> > The device at address 4 has a one-one relationship with iommu@1, so there
-> > is no need for any data. device@5 has two master ports. One is connected to
-> > an IOMMU that has a per-device aperture, device@5 can only issue transfers
-> > to the 256MB area at 0x40000000, and the IOMMU will have to put entries for
-> > this device into that address. The second master port is connected to
-> > iommu@3, which uses a master ID that gets passed along with each transfer,
-> > so that needs to be put into the IOTLBs.
+On 5/13/2014 7:58 AM, Grant Likely wrote:
+> Make of_find_node_by_path() handle aliases as prefixes. To make this
+> work the name search is refactored to search by path component instead
+> of by full string. This should be a more efficient search, and it makes
+> it possible to start a search at a subnode of a tree.
 > 
-> iommu@3 and the second port of device@5 seem to match what we need for
-> Tegra (and as I understand also Exynos). Can we settle on this for now
-> so that Hiroshi and Cho can go update their drivers for this binding?
+> Signed-off-by: David Daney <david.daney@cavium.com>
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> [grant.likely: Rework to not require allocating at runtime]
+> Acked-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> ---
+>  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 56 insertions(+), 4 deletions(-)
 > 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 6e240698353b..60089b9a3014 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
+>  }
+>  EXPORT_SYMBOL(of_get_child_by_name);
+>  
+> +static struct device_node *__of_find_node_by_path(struct device_node *parent,
+> +						const char *path)
+> +{
+> +	struct device_node *child;
+> +	int len = strchrnul(path, '/') - path;
+> +
+> +	if (!len)
+> +		return parent;
 
-Currently, Exynos IOMMU is the case of iommu@1.
+(!len) is true if the the final character of the path passed into of_find_node_by_path()
+was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
+should be NULL, indicating that the match fails.
 
-But in the near future, it will support multiple masters with a single context
-that means all masters that shares a single System MMU also views the same
-address space.
+> +
+> +	for_each_child_of_node(parent, child) {
+> +		const char *name = strrchr(child->full_name, '/');
+> +		if (WARN(!name, "malformed device_node %s\n", child->full_name))
+> +			continue;
+> +		name++;
 
-For some cases, we may need iommu@3 that supports dma-window.
+Why go to the effort of finding the final component of child->full_name instead
+of just using child->name?
 
-So, I have no other opinion.
+> +		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
+> +			return child;
+> +	}
+> +	return NULL;
+> +}
+> +
+>  /**
+>   *	of_find_node_by_path - Find a node matching a full OF path
+>   *	@path:	The full path to match
+> + *	@path: Either the full path to match, or if the path does not
 
-By the way, iommu framework should allow to process the parameters
-to 'iommus' property in the master nodes by iommu driver implementations
-because it is depended on implementations.
+Delete the old @path description.
 
-> > A variation would be to not use #iommu-cells at all, but provide a
-> > #address-cells / #size-cells pair in the IOMMU, and have a translation
-> > as we do for dma-ranges. This is probably most flexible.
+
+> + *	       start with '/', the name of a property of the /aliases
+> + *	       node (an alias).  In the case of an alias, the node
+> + *	       matching the alias' value will be returned.
+> + *
+> + *	Valid paths:
+> + *		/foo/bar	Full path
+> + *		foo		Valid alias
+> + *		foo/bar		Valid alias + relative path
+>   *
+>   *	Returns a node pointer with refcount incremented, use
+>   *	of_node_put() on it when done.
+> @@ -781,13 +810,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
+>  struct device_node *of_find_node_by_path(const char *path)
+>  {
+>  	struct device_node *np = of_allnodes;
+> +	struct property *pp;
+>  	unsigned long flags;
+>  
+> +	/* The path could begin with an alias */
+> +	if (*path != '/') {
+> +		char *p = strchrnul(path, '/');
+> +		int len = p - path;
+> +
+> +		/* of_aliases must not be NULL */
+> +		if (!of_aliases)
+> +			return NULL;
+> +
+> +		np = NULL;
+> +		for_each_property_of_node(of_aliases, pp) {
+> +			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
+> +				np = of_find_node_by_path(pp->value);
+> +				break;
+> +			}
+> +		}
+> +		if (!np)
+> +			return NULL;
+> +		path = p;
+> +	}
+> +
+> +	/* Step down the tree matching path components */
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -	for (; np; np = np->allnext) {
+> -		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
+> -		    && of_node_get(np))
+> -			break;
+> +	while (np && *path == '/') {
+> +		path++; /* Increment past '/' delimiter */
+> +		np = __of_find_node_by_path(np, path);
+> +		path = strchrnul(path, '/');
+>  	}
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
 > 
-> The remainder of this discussion seems to indicate that #iommu-cells and
-> dma-ranges don't have to be mutually exclusive. For some IOMMUs it might
-> make sense to use both.
-> 
-> In fact perhaps we should require every IOMMU user to also specify a
-> dma-ranges property, even if for some cases the range would be simply
-> the complete physical address space. Perhaps in analogy to the ranges
-> property an empty dma-ranges property could be taken to mean all of the
-> physical address space.
-> 
-> I'm aware that this doesn't cover any of the more exotic cases out
-> there, but the fact is that we have real devices out there that ship
-> with some variations of these simple IOMMUs and I don't think we're
-> doing ourselves a favour by blocking support for these to be added on
-> the hope of merging the perfect solution that covers all use-cases.
-> Patches for Tegra have already been around for close to half a year.
-> 
-> Thierry
