@@ -1,27 +1,103 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCHv4 0/5] Add DT support for fixed PHYs
-Date: Fri, 16 May 2014 17:20:09 -0400 (EDT)
-Message-ID: <20140516.172009.632611701865367987.davem@davemloft.net>
-References: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Fri, 16 May 2014 14:39:07 -0700
+Message-ID: <20140516213907.GL12881@atomide.com>
+References: <CABxcv==_LCw1kPYm17g=h8VfSN2V_qsgXjTnsy-JOetawSv4pA@mail.gmail.com>
+ <20140513152518.GA16837@atomide.com>
+ <53730AFB.2090800@ti.com>
+ <20140514160216.GD18463@atomide.com>
+ <537487AE.3060906@ti.com>
+ <20140515182133.GC23659@atomide.com>
+ <5375A8A8.7080306@ti.com>
+ <20140516160717.GD22031@atomide.com>
+ <20140516174158.GA11733@earth.universe>
+ <20140516180154.GG22031@atomide.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400249647-4643-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140516180154.GG22031@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@ring0.de>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Date: Fri, 16 May 2014 16:14:02 +0200
+* Tony Lindgren <tony@atomide.com> [140516 11:02]:
+> * Sebastian Reichel <sre@ring0.de> [140516 10:42]:
+> > On Fri, May 16, 2014 at 09:07:17AM -0700, Tony Lindgren wrote:
+> > > * Tomi Valkeinen <tomi.valkeinen@ti.com> [140515 22:57]:
+> > > > On 15/05/14 21:21, Tony Lindgren wrote:
+> > > > >> But you're right, having "sharp,ls037v7dw01-omap-dss" in the .dts is an
+> > > > >> alternative for the compatible-string conversion we do now. I guess it's
+> > > > >> a matter of taste, but I rather hide it inside the kernel, in an
+> > > > >> internal omapdss file, than pollute the .dts files with those compatible
+> > > > >> strings.
+> > > > > 
+> > > > > Well it avoid you parsing through all the nodes during booting
+> > > > > and leaves out the function to do remapping. And removes the need
+> > > > > for maintaining a custom display mapping table. I'd say that's a
+> > > > > pretty good list of advantages right there :)
+> > > > 
+> > > > Yep... I don't know. Maybe I'm being too careful about doing wrong
+> > > > things with .dts. I just like it more if any hacks are in kernel code,
+> > > > which I can remove without anyone noticing.
+> > > > 
+> > > > Anyway, we already have board.dts files using the non-omapified
+> > > > compatible strings in the mainline, so if I would now add the omapified
+> > > > compatible strings to .dts files, those old board.dts files would break.
+> > > > 
+> > > > So I guess the choice has already been made.
+> > > 
+> > > I really think you should remove this misuse of device tree code ASAP.
+> > > It's better to fix it up now than carry the hack for next two years
+> > > and keep on adding to it.
+> > 
+> > IMHO appending -omap-dss to a random device is an even bigger hack,
+> > since its adding lots of bloat to the API. Let's assume there is
+> > another OS using DT for ARM, but has no proper API for SPI
+> > controllers and it introduces your hack to SPI devices. That would
+> > mean each SPI device has -omap-spi appended (or -exynos-spi,
+> > -foo-spi, ...). At least I would blame them for creating a huge
+> > unmaintainable mess.
+> 
+> I think you're misunderstanding. I do not want the naming to
+> be Linux specific. The naming should naturally be as hardware
+> specific as possible. In this case something like:
+> 
+> compatible = "sharp,ls037v7dw01-dss", "sharp,ls037v7dw01";
+> 
+> Or we should probably use:
+> 
+> compatible = "sharp,ls037v7dw01-dpi", "sharp,ls037v7dw01";
+> 
+> As dpi here reflects the hardware it's connected to. The dss
+> is probably a Linux name.
+> 
+> Not use what you're after with the SPI example though, but sounds
+> like that's something different.
+> 
+> > I think Tomi's workaround is a much better hack, since it keeps the
+> > API clean. If the code simply prefixes "omapdss," to all
+> > "child"-devices of omapdss it can be left mostly untouched, too.
+> 
+> AFAIK that remapping not needed at all. All that is already
+> available with the compatible flags.
 
-> Here is a fourth version of the patch set that adds a Device Tree
-> binding and the related code to support fixed PHYs. I'm hoping to get
-> this merged in 3.16.
+And alternatively we can also just use the sharp,ls037v7dw01
+in the panel driver(s). We can have the panels bail out in driver
+probe based on of_machine_is_compatible if nothing else is available.
 
-Series applied, thanks Thomas.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Also, currently the remapping code also probably keeps prepending
+more and more omapdss,omapdss,omapdss,... on each kexec reboot? And
+it would be quite silly for each display controller to have to do
+their own remapping for shared panels?
+
+If we still still despite all these reasons decide to go with
+the remapping of the compatible strings, it should really be a
+Linux generic (or drivers/video generic function), not implemented
+for each display controller.
+
+Cheers,
+
+Tony
