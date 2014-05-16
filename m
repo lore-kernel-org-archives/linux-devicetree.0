@@ -1,81 +1,79 @@
-From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH RFC 3/4] clk: samsung: Add driver to control CLKOUT line on
- Exynos SoCs
-Date: Fri, 16 May 2014 16:58:36 +0200
-Message-ID: <5376279C.4070006@samsung.com>
-References: <1400175151-27779-1-git-send-email-t.figa@samsung.com>
- <1400175151-27779-4-git-send-email-t.figa@samsung.com>
- <CAPdUM4P7Z1eLVKuc0N1iPaekM_7kNv7KCve2MgrEziszfnzz7A@mail.gmail.com>
- <5375EDFD.1020708@samsung.com>
- <CAPdUM4O4RKFZFR_tcwG4pd7E6KMkneG9R_VbZPt+m4fGG_UFVg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAPdUM4O4RKFZFR_tcwG4pd7E6KMkneG9R_VbZPt+m4fGG_UFVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 1/3] lib: add glibc style strchrnul() variant
+Date: Fri, 16 May 2014 16:00:42 +0100
+Message-ID: <20140516150042.7F99EC40515@trevor.secretlab.ca>
+References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org>
+	<1399993115-21552-2-git-send-email-grant.likely@linaro.org>
+	<53753D54.7040308@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53753D54.7040308@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 16.05.2014 16:35, Rahul Sharma wrote:
-> On 16 May 2014 16:22, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Hi Rahul,
->>
->> On 16.05.2014 12:39, Rahul Sharma wrote:
->>> [snip]
->>>> +       gate->lock = &clkout_lock;
->>>> +
->>>> +       mux->reg = reg + EXYNOS_PMU_DEBUG_REG;
->>>> +       mux->mask = EXYNOS_CLKOUT_MUX_MASK;
->>>> +       mux->shift = EXYNOS_CLKOUT_MUX_SHIFT;
->>>> +       mux->lock = &clkout_lock;
->>>> +
->>>> +       clk = clk_register_composite(NULL, "clkout", parent_names,
->>>> +                                       parent_count, &mux->hw,
->>>> +                                       &clk_mux_ops, NULL, NULL, &gate->hw,
->>>> +                                       &clk_gate_ops, 0);
->>>> +       if (IS_ERR(clk))
->>>> +               goto err_unmap;
->>>> +
->>>
->>> Hi Tomasz,
->>>
->>> Do we really need a composite clock here? How about registering
->>> a mux and a gate separately?
->>
->> What's wrong with a composite clock? It simplifies the code as just a
->> single clock needs to be registered. I don't see any drawbacks compared
->> to registering two clocks separately.
->>
+On Thu, 15 May 2014 15:19:00 -0700, Frank Rowand <frowand.list@gmail.com> wrote:
+> On 5/13/2014 7:58 AM, Grant Likely wrote:
+> > The strchrnul() variant helpfully returns a the end of the string
+> > instead of a NULL if the requested character is not found. This can
+> > simplify string parsing code since it doesn't need to expicitly check
+> > for a NULL return. If a valid string pointer is passed in, then a valid
+> > null terminated string will always come back out.
+> > 
+> > Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> > ---
+> >  include/linux/string.h |  3 +++
+> >  lib/string.c           | 15 +++++++++++++++
+> >  2 files changed, 18 insertions(+)
+> > 
+> > diff --git a/include/linux/string.h b/include/linux/string.h
+> > index ac889c5ea11b..d36977e029af 100644
+> > --- a/include/linux/string.h
+> > +++ b/include/linux/string.h
+> > @@ -52,6 +52,9 @@ extern int strncasecmp(const char *s1, const char *s2, size_t n);
+> >  #ifndef __HAVE_ARCH_STRCHR
+> >  extern char * strchr(const char *,int);
+> >  #endif
+> > +#ifndef __HAVE_ARCH_STRCHRNUL
+> > +extern char * strchrnul(const char *,int);
+> > +#endif
+> >  #ifndef __HAVE_ARCH_STRNCHR
+> >  extern char * strnchr(const char *, size_t, int);
+> >  #endif
+> > diff --git a/lib/string.c b/lib/string.c
+> > index 9b1f9062a202..059636f92c26 100644
+> > --- a/lib/string.c
+> > +++ b/lib/string.c
+> > @@ -301,6 +301,21 @@ char *strchr(const char *s, int c)
+> >  EXPORT_SYMBOL(strchr);
+> >  #endif
+> >  
+> > +#ifndef __HAVE_ARCH_STRCHRNUL
+> > +/**
+> > + * strchr - Find the first occurrence of a character in a string
 > 
-> I always took it as a thumb rule to not to use composite clocks if you
-> can easily represent the block using basic clocks structures.
+> s/strchr/strchrnul/
 > 
-> There can be a problem when drivers using such clocks assume that such
-> clock continue to offer composite functionality for all futures SoCs and
-> write code around it. This is what we faced when fixing drivers during
-> CCF migration.
+> Add to the end of the description: if c is not found in s then return
+> a pointer to the null byte at the end of s
 
-The drivers using CLKOUT need to be designed this way, because they are
-not Exynos-specific, such as drivers for HSIC hubs or audio codecs. They
-can't have any Exynos-specific knowledge about clock hierarchy.
+Thanks, fixed.
 
-So regardless of whether this is implemented using the composite clock
-or not, consumer device drivers need to be able to use just a single
-clock to do whatever they need, e.g. gating or rate configuration.
-
-However I can see one problem here with my implementation - it is
-missing the CLK_SET_RATE_PARENT flag, so dividers of particular CLK_OUTs
-from CMU blocks could be reconfigured.
-
-Also the driver is missing save and restore of PMU_DEBUG register.
-
-I will fix both in next version.
-
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> > + * @s: The string to be searched
+> > + * @c: The character to search for
+> > + */
+> > +char *strchrnul(const char *s, int c)
+> > +{
+> > +	while (*s && *s != (char)c)
+> > +		s++;
+> > +	return (char *)s;
+> > +}
+> > +EXPORT_SYMBOL(strchrnul);
+> > +#endif
+> > +
+> >  #ifndef __HAVE_ARCH_STRRCHR
+> >  /**
+> >   * strrchr - Find the last occurrence of a character in a string
+> > 
+> 
