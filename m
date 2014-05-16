@@ -1,78 +1,58 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Fri, 16 May 2014 13:52:42 +0200
-Message-ID: <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
-	<20140514100856.5198DC4153D@trevor.secretlab.ca>
-	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
-	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
-	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [PATCH 05/19] OMAPDSS: Kconfig: Add depencies and help section
+ to OMAP4_DSS_HDMI_AUDIO
+Date: Fri, 16 May 2014 14:56:48 +0300
+Message-ID: <5375FD00.20004@ti.com>
+References: <cover.1399884780.git.jsarha@ti.com> <198496d6220a13b0e8910361d969b8f978ee1398.1399884780.git.jsarha@ti.com> <5375EE07.4090802@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140516105814.3EA3FC403C2-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5375EE07.4090802@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>, alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On Fri, May 16, 2014 at 12:58 PM, Grant Likely
-<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Thu, 15 May 2014 09:20:24 +0200, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> On Thu, May 15, 2014 at 9:12 AM, Pantelis Antoniou
->> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> >> We also need to think about kexec. Kexec works by sucking the live tree
->> >> out of the kernel and creating a .dtb from it to pass to the new kernel.
->> >> What will the rules be when kexecing? Do all the overlays need to be
->> >> removed, or does the kernel get the tree with all the overlays applied
->> >> (in which case none of the overlays can be removed on the other side of
->> >> kexec).
->> >
->> > We can add a sysfs attribute that configures whether overlays are reverted before
->> > kexec or not. I can't really tell which is the correct option, so let's allow the
->> > policy up to user-space.
->>
->> Kexec'ing into a new kernel doesn't change the hardware, so IMHO the
->> in-kernel DT should not change.
+On 05/16/2014 01:52 PM, Tomi Valkeinen wrote:
+> Hi,
 >
-> Conceptually though, if overlays are applied then the new kernel has a
-> different tree from the old one. If the overlay is hotpluggable, then
-> after the kexec, the new kernel would no longer be able to unplug the
-> overlay if it uses the current state of the tree instead of pulling the
-> overlays off first.
+> On 12/05/14 12:12, Jyri Sarha wrote:
+>> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+>> ---
+>>   drivers/video/fbdev/omap2/dss/Kconfig |   10 +++++++++-
+>>   1 file changed, 9 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/video/fbdev/omap2/dss/Kconfig b/drivers/video/fbdev/omap2/dss/Kconfig
+>> index 8921a7a..ecc2f50 100644
+>> --- a/drivers/video/fbdev/omap2/dss/Kconfig
+>> +++ b/drivers/video/fbdev/omap2/dss/Kconfig
+>> @@ -70,7 +70,15 @@ config OMAP4_DSS_HDMI
+>>   	  HDMI support for OMAP4 based SoCs.
+>>
+>>   config OMAP4_DSS_HDMI_AUDIO
+>> -	bool
+>> +	bool "HDMI audio support for OMAP4"
+>> +	depends on OMAP4_DSS_HDMI
+>> +	depends on SND_OMAP_SOC=y || OMAP2_DSS = SND_OMAP_SOC
+>> +	default y
+>> +	help
+>> +	  HDMI audio support for OMAP4 based SoCs. Adds integrated
+>> +	  ASoC Digital Audio Interface component driver into OMAPDSS
+>> +	  module. Select SND_SOC_HDMI_CODEC and SND_SIMPLE_CARD with
+>> +	  devicetree description for full HDMI audio support.
+>
+> What does "for full HDMI audio support" mean? What's the partial support? =)
+>
 
-Which brings me to another question...
+The hdmi driver provides a digital audio interface (DAI) which can be 
+used to transmit audio over the HDMI cable. The ASoC DAI component 
+driver provides just that functionality. A machine, platform, and (in 
+this case a dummy) codec component driver is also needed for a complete 
+ALSA device functionality.
 
-Why has the overlay system been designed for plugging and unpluging whole
-overlays?
-That means the kernel has to remember the full stack, causing issues with
-e.g. kexec.
+Anyway, I look into Mark's suggestion of instantiating all the necessary 
+component drivers from the HDMI driver.
 
-Why not allowing the addition of removal of subtrees of the full device
-tree?
-This is similar to other hotpluggable subsystems (which are not necessarily
-DT-based), like PCI Express. That way the kernel can pass a
-DT-representation of the actual current device tree to a kexec'ed kernel.
-
-I missed the initial design discussions, so forgive me if this has been
-beaten to death before.
-
-Thanks for your answers!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jyri
