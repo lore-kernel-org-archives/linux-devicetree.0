@@ -1,128 +1,64 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCHv4 1/5] net: phy: decouple PHY id and PHY address in fixed
- PHY driver
-Date: Fri, 16 May 2014 11:30:36 -0700
-Message-ID: <CAGVrzcYFjROVwHsSTyO-+PAb9G9y55h93AsMk2Viui5Sb4jBpQ@mail.gmail.com>
-References: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1400249647-4643-2-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 0/3] Update the Keymile kirkwood DTS files
+Date: Fri, 16 May 2014 13:58:48 -0400
+Message-ID: <20140516175848.GK27822@titan.lakedaemon.net>
+References: <1400230143-15620-1-git-send-email-valentin.longchamp@keymile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1400249647-4643-2-git-send-email-thomas.petazzoni@free-electrons.com>
-Sender: netdev-owner@vger.kernel.org
-To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400230143-15620-1-git-send-email-valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-16 7:14 GMT-07:00 Thomas Petazzoni
-<thomas.petazzoni@free-electrons.com>:
-> Until now, the fixed_phy_add() function was taking as argument
-> 'phy_id', which was used both as the PHY address on the fake fixed
-> MDIO bus, and as the PHY id, as available in the MII_PHYSID1 and
-> MII_PHYSID2 registers. However, those two informations are completely
-> unrelated.
->
-> This patch decouples them. The PHY id of fixed PHYs is hardcoded to be
-> 0x0. Ideally, a really reserved value would be nicer, but there
-> doesn't seem to be an easy of making sure a dummy value can be
-> assigned to the Linux kernel for such usage.
->
-> The PHY address remains passed by the caller of phy_fixed_add().
->
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+On Fri, May 16, 2014 at 10:49:00AM +0200, Valentin Longchamp wrote:
+> This series resynchs the Keymile Kirkwood DTS files with mainline since
+> the boards do not boot anymore with the 3.15 rc kernels (to be honest, I
+> have not tested the last 2-3 releases).
+> 
+> The changes are the addition of the PCIe controller for the 98dx4122
+> SoC, the explicit disabling of the SATA phys for this same SoC and
+> finally the enabling of the PCIe controller on the Keymile Reference
+> design.
+> 
+> The series introduces kirkwood-km_common.dtsi that factors the common
+> nodes between kirkwood-km_kirkwood.dts and the new board/design below.
+> 
+> The series also adds a new DTS for another Keymile generic design where
+> the mv64xxx eth interace is configured with fixed parameters to no phy
+> but a switch (for board internal communication).
+> 
+> The series applies and was tested on top of Jason's mvebu/dt branch
+> (mvebu-dt-3.16 tag).
+> 
+> Changes in v2:
+> - introduce kirkwood-km_common.dtsi to allow factoring some nodes
+>   between boards
+> - Take advantage of the kirkwood-km_common.dtsi file for
+>   kirkwood-km_fixedeth.dts
+> 
+> Valentin Longchamp (3):
+>   ARM: dts: kirkwood: resynch 98dx4122 dtsi
+>   ARM: dts: kirkwood: add kirkwood-km_common DTSI files
+>   ARM: dts: kirkwood: add kirkwood-km_fixedeth DTS file
+> 
+>  arch/arm/boot/dts/kirkwood-98dx4122.dtsi   | 43 ++++++++++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-km_common.dtsi  | 48 ++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/kirkwood-km_fixedeth.dts | 23 ++++++++++++++
+>  arch/arm/boot/dts/kirkwood-km_kirkwood.dts | 38 +----------------------
+>  4 files changed, 115 insertions(+), 37 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/kirkwood-km_common.dtsi
+>  create mode 100644 arch/arm/boot/dts/kirkwood-km_fixedeth.dts
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-Tested-by: Florian Fainelli <f.fainelli@gmail.com>
+Applied whole series to mvebu/dt with Andrew's Ack.  Also, s/ok/okay/ in
+patch 2/3.
 
-> ---
->  drivers/net/phy/fixed.c | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/net/phy/fixed.c b/drivers/net/phy/fixed.c
-> index ba55adf..e41546d 100644
-> --- a/drivers/net/phy/fixed.c
-> +++ b/drivers/net/phy/fixed.c
-> @@ -31,7 +31,7 @@ struct fixed_mdio_bus {
->  };
->
->  struct fixed_phy {
-> -       int id;
-> +       int addr;
->         u16 regs[MII_REGS_NUM];
->         struct phy_device *phydev;
->         struct fixed_phy_status status;
-> @@ -104,8 +104,8 @@ static int fixed_phy_update_regs(struct fixed_phy *fp)
->         if (fp->status.asym_pause)
->                 lpa |= LPA_PAUSE_ASYM;
->
-> -       fp->regs[MII_PHYSID1] = fp->id >> 16;
-> -       fp->regs[MII_PHYSID2] = fp->id;
-> +       fp->regs[MII_PHYSID1] = 0;
-> +       fp->regs[MII_PHYSID2] = 0;
->
->         fp->regs[MII_BMSR] = bmsr;
->         fp->regs[MII_BMCR] = bmcr;
-> @@ -115,7 +115,7 @@ static int fixed_phy_update_regs(struct fixed_phy *fp)
->         return 0;
->  }
->
-> -static int fixed_mdio_read(struct mii_bus *bus, int phy_id, int reg_num)
-> +static int fixed_mdio_read(struct mii_bus *bus, int phy_addr, int reg_num)
->  {
->         struct fixed_mdio_bus *fmb = bus->priv;
->         struct fixed_phy *fp;
-> @@ -124,7 +124,7 @@ static int fixed_mdio_read(struct mii_bus *bus, int phy_id, int reg_num)
->                 return -1;
->
->         list_for_each_entry(fp, &fmb->phys, node) {
-> -               if (fp->id == phy_id) {
-> +               if (fp->addr == phy_addr) {
->                         /* Issue callback if user registered it. */
->                         if (fp->link_update) {
->                                 fp->link_update(fp->phydev->attached_dev,
-> @@ -138,7 +138,7 @@ static int fixed_mdio_read(struct mii_bus *bus, int phy_id, int reg_num)
->         return 0xFFFF;
->  }
->
-> -static int fixed_mdio_write(struct mii_bus *bus, int phy_id, int reg_num,
-> +static int fixed_mdio_write(struct mii_bus *bus, int phy_addr, int reg_num,
->                             u16 val)
->  {
->         return 0;
-> @@ -160,7 +160,7 @@ int fixed_phy_set_link_update(struct phy_device *phydev,
->                 return -EINVAL;
->
->         list_for_each_entry(fp, &fmb->phys, node) {
-> -               if (fp->id == phydev->phy_id) {
-> +               if (fp->addr == phydev->addr) {
->                         fp->link_update = link_update;
->                         fp->phydev = phydev;
->                         return 0;
-> @@ -171,7 +171,7 @@ int fixed_phy_set_link_update(struct phy_device *phydev,
->  }
->  EXPORT_SYMBOL_GPL(fixed_phy_set_link_update);
->
-> -int fixed_phy_add(unsigned int irq, int phy_id,
-> +int fixed_phy_add(unsigned int irq, int phy_addr,
->                   struct fixed_phy_status *status)
->  {
->         int ret;
-> @@ -184,9 +184,9 @@ int fixed_phy_add(unsigned int irq, int phy_id,
->
->         memset(fp->regs, 0xFF,  sizeof(fp->regs[0]) * MII_REGS_NUM);
->
-> -       fmb->irqs[phy_id] = irq;
-> +       fmb->irqs[phy_addr] = irq;
->
-> -       fp->id = phy_id;
-> +       fp->addr = phy_addr;
->         fp->status = *status;
->
->         ret = fixed_phy_update_regs(fp);
-> --
-> 1.9.3
+thx,
 
-
-
--- 
-Florian
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
