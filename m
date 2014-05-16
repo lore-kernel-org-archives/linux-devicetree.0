@@ -1,42 +1,61 @@
-From: Jonghwan Choi <jhbird.choi@samsung.com>
-Subject: RE: [PATCH v2] cpufreq: exynos:  Fix the compile error
-Date: Fri, 16 May 2014 18:57:38 +0900
-Message-ID: <000001cf70ed$451bbec0$cf533c40$@samsung.com>
-References: <000001cf70dc$9ccfe4e0$d66faea0$@samsung.com>
- <5375D150.1020109@gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2 1/2] of: add mundoreader and radxa vendor prefixes
+Date: Fri, 16 May 2014 12:09:04 +0200
+Message-ID: <2536935.asXUKXC7IY@phil>
+References: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5375D150.1020109@gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, cpufreq@vger.kernel.org
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, "'Rafael J. Wysocki'" <rjw@sisk.pl>, 'Jonghwan Choi' <jhbird.choi@gmail.com>, 'Viresh Kumar' <viresh.kumar@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399396211-25353-1-git-send-email-b.galvani@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Beniamino Galvani <b.galvani@gmail.com>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16.05.2014 5:50 PM, Tomasz Figa wrote:
+Hi Beniamino,
 
-> We have been discussing Exynos cpufreq framework rework, including DT support since quite a long time.
-> so if you want to know details, please look at respective discussion threads. I don't have time to
-> find them for you right now, but if you look for threads of cpufreq patches by Thomas Abraham and ones
-> about Exynos multiplatform support, then you should have quite complete set of information.
+Am Dienstag, 6. Mai 2014, 19:10:10 schrieb Beniamino Galvani:
+> Add new vendor prefixes for:
 > 
-I will check that.
+>     * Mundo Reader S.L., a company that produces tablets and e-readers
+>     * Radxa, manufacturer of ARM boards
+> 
+> Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 
-> In general, I can see three ways to "fix" this for 3.15:
-> 
-> 1) revert moving soc_is_* macros to mach-exynos/common.h,
-> 
-> 2) move soc_is_* macros to a header in mach-exynos/include/mach/,
-> 
-> 3) use of_machine_is_compatible() or of_match_node() on root node in this driver to match directly
-> with SoC compatible strings.
-> 
-> Probably option 3) would be preferred, as it would remove some of the dependencies of this driver on
-> arch code and including plat/cpu.h (or mach/cpu.h as would be introduced by 2)) would be no longer
-> necessary.
+Just FYI, I've sent both patches off, as part of my dt changes pull request on 
+monday.
 
-Thanks~
 
-Best Regards.
+Heiko
+
+> ---
+> 
+> v2:
+>  - use mundoreader prefix instead of bq as suggested by Heiko Stuebner
+> 
+>  Documentation/devicetree/bindings/vendor-prefixes.txt |    2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> b/Documentation/devicetree/bindings/vendor-prefixes.txt index
+> abc3080..53bd92f 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -79,6 +79,7 @@ microchip	Microchip Technology Inc.
+>  mosaixtech	Mosaix Technologies, Inc.
+>  moxa	Moxa
+>  mpl	MPL AG
+> +mundoreader	Mundo Reader S.L.
+>  mxicy	Macronix International Co., Ltd.
+>  national	National Semiconductor
+>  neonode		Neonode Inc.
+> @@ -98,6 +99,7 @@ powervr	PowerVR (deprecated, use img)
+>  qca	Qualcomm Atheros, Inc.
+>  qcom	Qualcomm Technologies, Inc
+>  qnap	QNAP Systems, Inc.
+> +radxa	Radxa
+>  raidsonic	RaidSonic Technology GmbH
+>  ralink	Mediatek/Ralink Technology Corp.
+>  ramtron	Ramtron International
+
