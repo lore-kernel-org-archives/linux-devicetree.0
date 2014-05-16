@@ -1,80 +1,183 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 05/19] OMAPDSS: Kconfig: Add depencies and help section
- to OMAP4_DSS_HDMI_AUDIO
-Date: Fri, 16 May 2014 13:52:55 +0300
-Message-ID: <5375EE07.4090802@ti.com>
-References: <cover.1399884780.git.jsarha@ti.com> <198496d6220a13b0e8910361d969b8f978ee1398.1399884780.git.jsarha@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3] cpufreq: exynos:  Fix the compile error
+Date: Fri, 16 May 2014 19:54:01 +0900
+Message-ID: <037e01cf70f5$25b374d0$711a5e70$@samsung.com>
+References: <000001cf70f0$2e48f930$8adaeb90$@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="v37FiRuuIllofris9W3FC9QsoifXNHGRA"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <198496d6220a13b0e8910361d969b8f978ee1398.1399884780.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
-Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <000001cf70f0$2e48f930$8adaeb90$@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Jonghwan Choi' <jhbird.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, cpufreq@vger.kernel.org
+Cc: "'Rafael J. Wysocki'" <rjw@rjwysocki.net>, 'Jonghwan Choi' <jhbird.choi@gmail.com>, 'Viresh Kumar' <viresh.kumar@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---v37FiRuuIllofris9W3FC9QsoifXNHGRA
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Jonghwan Choi wrote:
+> 
+> Commit 7da83a80 ("ARM: EXYNOS: Migrate Exynos specific macros from plat to
+> mach") which lands in samsung tree causes build breakage
+> for cpufreq-exynos like following:
+> 
+> drivers/cpufreq/exynos-cpufreq.c: In function 'exynos_cpufreq_probe':
+> drivers/cpufreq/exynos-cpufreq.c:166:2: error: implicit declaration of
+> function 'soc_is_exynos4210'
+> [-Werror=implicit-function-declaration]
+> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of
+> function 'soc_is_exynos4212'
+> [-Werror=implicit-function-declaration]
+> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of
+> function 'soc_is_exynos4412'
+> [-Werror=implicit-function-declaration]
+> drivers/cpufreq/exynos-cpufreq.c:170:2: error: implicit declaration of
+> function 'soc_is_exynos5250'
+> [-Werror=implicit-function-declaration]
+> cc1: some warnings being treated as errors
+> make[2]: *** [drivers/cpufreq/exynos-cpufreq.o] Error 1
+> make[2]: *** Waiting for unfinished jobs....
+> drivers/cpufreq/exynos4x12-cpufreq.c: In function 'exynos4x12_set_clkdiv':
+> drivers/cpufreq/exynos4x12-cpufreq.c:118:2: error: implicit declaration of
+> function 'soc_is_exynos4212'
+> [-Werror=implicit-function-declaration]
+> cc1: some warnings being treated as errors
+> make[2]: *** [drivers/cpufreq/exynos4x12-cpufreq.o] Error 1
+> make[1]: *** [drivers/cpufreq] Error 2
+> This fixes above error with getting SoC information via
+> of_machine_is_compatible() instead of soc_is_exynosXXXX().
+> 
 
-Hi,
+Probably,
+Suggested-by: Tomasz Figa ?
 
-On 12/05/14 12:12, Jyri Sarha wrote:
-> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
+
+Looks better.
+
+Rafael, if you have no objection on this, shall I pick this into samsung
+tree for 3.16 because of the current build breakage with enabling exynos
+cpufreq?
+
+Thanks,
+Kukjin
+
 > ---
->  drivers/video/fbdev/omap2/dss/Kconfig |   10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/video/fbdev/omap2/dss/Kconfig b/drivers/video/fbde=
-v/omap2/dss/Kconfig
-> index 8921a7a..ecc2f50 100644
-> --- a/drivers/video/fbdev/omap2/dss/Kconfig
-> +++ b/drivers/video/fbdev/omap2/dss/Kconfig
-> @@ -70,7 +70,15 @@ config OMAP4_DSS_HDMI
->  	  HDMI support for OMAP4 based SoCs.
-> =20
->  config OMAP4_DSS_HDMI_AUDIO
-> -	bool
-> +	bool "HDMI audio support for OMAP4"
-> +	depends on OMAP4_DSS_HDMI
-> +	depends on SND_OMAP_SOC=3Dy || OMAP2_DSS =3D SND_OMAP_SOC
-> +	default y
-> +	help
-> +	  HDMI audio support for OMAP4 based SoCs. Adds integrated
-> +	  ASoC Digital Audio Interface component driver into OMAPDSS
-> +	  module. Select SND_SOC_HDMI_CODEC and SND_SIMPLE_CARD with
-> +	  devicetree description for full HDMI audio support.
-
-What does "for full HDMI audio support" mean? What's the partial support?=
- =3D)
-
- Tomi
-
-
-
---v37FiRuuIllofris9W3FC9QsoifXNHGRA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTde4HAAoJEPo9qoy8lh71M3kP/3RwAPy6cradgWXXBhgSdDmD
-a6t6dDuqPp0ANfQuZkdbP/j1/k0B2g3wfCdepkQkYoU6lOre8bD1uABLrHn9LM8E
-N0S981tIGFssuuJaAUnivWvcvpfqGuAOB6+enUT2xDHVNqyrn1M64WjQXHZPczgG
-8Qj2arEAcIruLjI7AYkAMrJjG+tEmfvVtO2sB9fS4AFMu1ba4XAXr3+Bo5/SvVMj
-4wWo6DI3DVjLQwBozPxEXi8+bi7L2xScHIPBX4byT/6pjWvowUOlEzdMLpAdAD4D
-v+oZwpoPHbHJ2Fo+HLtQIu72shGphn/CMKxxv0q7W1+zNHSgK8zxAaLTAg6gcr3M
-vmT4dntQhNlrYfu/wOAfHW7OsAvBSyFAJ6OywgwXO2kb7bRpffIr4yPNvSrA7nHW
-BxTR3i35iokfZmbpH5qh3nZ5Q0Mgy4fUVH4nDmGbmvV7Bpx1mTpjM1f7i8YwOD28
-W8Gnq9wHivx8F74HSlLbH4bUhDlWn8Hvt5f9HarnO7HGVwCJNoUSDSAcMAaBno8p
-K5sM6IDLqcgRvcFrFAAI4ppL3/XNYD2BQd5h6IkghDuyfLw8retYym0/bTmXdHI5
-24S7CRkpSAPhMdS5mO3iAno7/raw2UQGoO9u+BSSmGmPBFadyGKdlJzaE7BEeYH/
-2iwEMn4VgOqZIKZt6C4f
-=q7Qx
------END PGP SIGNATURE-----
-
---v37FiRuuIllofris9W3FC9QsoifXNHGRA--
+>  drivers/cpufreq/exynos-cpufreq.c     |   20 +++++++++++++++++---
+>  drivers/cpufreq/exynos-cpufreq.h     |    8 ++++++++
+>  drivers/cpufreq/exynos4x12-cpufreq.c |   11 ++++-------
+>  3 files changed, 29 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/exynos-cpufreq.c b/drivers/cpufreq/exynos-
+> cpufreq.c
+> index f99cfe2..9aecffef 100644
+> --- a/drivers/cpufreq/exynos-cpufreq.c
+> +++ b/drivers/cpufreq/exynos-cpufreq.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/cpufreq.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/of.h>
+> 
+>  #include <plat/cpu.h>
+> 
+> @@ -163,11 +164,24 @@ static int exynos_cpufreq_probe(struct
+> platform_device *pdev)
+>  	if (!exynos_info)
+>  		return -ENOMEM;
+> 
+> -	if (soc_is_exynos4210())
+> +	if (of_machine_is_compatible("samsung,exynos4210")) {
+> +		exynos_info->type = EXYNOS_SOC_4210;
+> +	} else if (of_machine_is_compatible("samsung,exynos4212")) {
+> +		exynos_info->type = EXYNOS_SOC_4212;
+> +	} else if (of_machine_is_compatible("samsung,exynos4412")) {
+> +		exynos_info->type = EXYNOS_SOC_4212;
+> +	} else if (of_machine_is_compatible("samsung,exynos5250")) {
+> +		exynos_info->type = EXYNOS_SOC_5250;
+> +	} else {
+> +		pr_err("%s: Unknown SoC type\n", __func__);
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (exynos_info->type == EXYNOS_SOC_4210)
+>  		ret = exynos4210_cpufreq_init(exynos_info);
+> -	else if (soc_is_exynos4212() || soc_is_exynos4412())
+> +	else if (exynos_info->type == EXYNOS_SOC_4212 || exynos_info->type
+> == EXYNOS_SOC_4412)
+>  		ret = exynos4x12_cpufreq_init(exynos_info);
+> -	else if (soc_is_exynos5250())
+> +	else if (exynos_info->type == EXYNOS_SOC_5250)
+>  		ret = exynos5250_cpufreq_init(exynos_info);
+>  	else
+>  		return 0;
+> diff --git a/drivers/cpufreq/exynos-cpufreq.h b/drivers/cpufreq/exynos-
+> cpufreq.h
+> index 3ddade8..f189547 100644
+> --- a/drivers/cpufreq/exynos-cpufreq.h
+> +++ b/drivers/cpufreq/exynos-cpufreq.h
+> @@ -17,6 +17,13 @@ enum cpufreq_level_index {
+>  	L20,
+>  };
+> 
+> +enum exynos_soc_type {
+> +	EXYNOS_SOC_4210,
+> +	EXYNOS_SOC_4212,
+> +	EXYNOS_SOC_4412,
+> +	EXYNOS_SOC_5250,
+> +};
+> +
+>  #define APLL_FREQ(f, a0, a1, a2, a3, a4, a5, a6, a7, b0, b1, b2, m, p, s)
+> \
+>  	{ \
+>  		.freq = (f) * 1000, \
+> @@ -34,6 +41,7 @@ struct apll_freq {
+>  };
+> 
+>  struct exynos_dvfs_info {
+> +	enum exynos_soc_type type;
+>  	unsigned long	mpll_freq_khz;
+>  	unsigned int	pll_safe_idx;
+>  	struct clk	*cpu_clk;
+> diff --git a/drivers/cpufreq/exynos4x12-cpufreq.c
+> b/drivers/cpufreq/exynos4x12-cpufreq.c
+> index 466c76a..63a3907 100644
+> --- a/drivers/cpufreq/exynos4x12-cpufreq.c
+> +++ b/drivers/cpufreq/exynos4x12-cpufreq.c
+> @@ -100,7 +100,6 @@ static struct apll_freq apll_freq_4412[] = {
+>  static void exynos4x12_set_clkdiv(unsigned int div_index)
+>  {
+>  	unsigned int tmp;
+> -	unsigned int stat_cpu1;
+> 
+>  	/* Change Divider - CPU0 */
+> 
+> @@ -115,13 +114,11 @@ static void exynos4x12_set_clkdiv(unsigned int
+> div_index)
+>  	tmp = apll_freq_4x12[div_index].clk_div_cpu1;
+> 
+>  	__raw_writel(tmp, EXYNOS4_CLKDIV_CPU1);
+> -	if (soc_is_exynos4212())
+> -		stat_cpu1 = 0x11;
+> -	else
+> -		stat_cpu1 = 0x111;
+> 
+> -	while (__raw_readl(EXYNOS4_CLKDIV_STATCPU1) & stat_cpu1)
+> +	do {
+>  		cpu_relax();
+> +		tmp = __raw_readl(EXYNOS4_CLKDIV_STATCPU1);
+> +	} while (tmp != 0x0);
+>  }
+> 
+>  static void exynos4x12_set_apll(unsigned int index)
+> @@ -184,7 +181,7 @@ int exynos4x12_cpufreq_init(struct exynos_dvfs_info
+> *info)
+>  	if (IS_ERR(mout_apll))
+>  		goto err_mout_apll;
+> 
+> -	if (soc_is_exynos4212())
+> +	if (info->type == EXYNOS_SOC_4212)
+>  		apll_freq_4x12 = apll_freq_4212;
+>  	else
+>  		apll_freq_4x12 = apll_freq_4412;
+> --
+> 1.7.10.4
