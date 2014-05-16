@@ -1,146 +1,60 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] devicetree: Add generic IOMMU device tree bindings
-Date: Fri, 16 May 2014 14:23:18 +0200
-Message-ID: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v4 2/8] clk: samsung: change scope of samsung clock lock to
+ global
+Date: Fri, 16 May 2014 14:30:55 +0200
+Message-ID: <537604FF.2010106@samsung.com>
+References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com>
+ <1400029876-5830-3-git-send-email-thomas.ab@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1400029876-5830-3-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>, cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, heiko@sntech.de, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Hi Thomas,
 
-This commit introduces a generic device tree binding for IOMMU devices.
-Only a very minimal subset is described here, but it is enough to cover
-the requirements of both the Exynos System MMU and Tegra SMMU as
-discussed here:
+On 14.05.2014 03:11, Thomas Abraham wrote:
+> From: Thomas Abraham <thomas.ab@samsung.com>
+> 
+> Access to samsung clock lock is required to support newer samsung specific
+> clock types. So change the scope of the samsung clock lock to global. And
+> prefix 'samsung_clk_' to the existing name of the lock to prevent name space
+> pollution.
+> 
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> ---
+>  drivers/clk/samsung/clk.c |   13 ++++++++-----
+>  drivers/clk/samsung/clk.h |    2 ++
+>  2 files changed, 10 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/clk/samsung/clk.c b/drivers/clk/samsung/clk.c
+> index 91bec3e..c86c28c 100644
+> --- a/drivers/clk/samsung/clk.c
+> +++ b/drivers/clk/samsung/clk.c
+> @@ -14,7 +14,7 @@
+>  #include <linux/syscore_ops.h>
+>  #include "clk.h"
+>  
+> -static DEFINE_SPINLOCK(lock);
+> +DEFINE_SPINLOCK(samsung_clk_lock);
 
-    https://lkml.org/lkml/2014/4/27/346
+I'm afraid this series needs to be rebased on top of samsung-clk-next
+branch of Samsung clock tree:
 
-More advanced functionality such as the dma-ranges property can easily
-be added in a backwards-compatible way. In the absence of a dma-ranges
-property it should be safe to default to the whole address space.
+git://git.kernel.org/pub/scm/linux/kernel/git/tfiga/samsung-clk.git
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/iommu/iommu.txt | 109 ++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
+You can find there patches adding Samsung clock context struct, which
+should be passed to Samsung clock helper functions and which replaces
+the global variables above.
 
-diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
-new file mode 100644
-index 000000000000..2d67b52b656e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/iommu.txt
-@@ -0,0 +1,109 @@
-+This document describes the generic device tree binding for IOMMUs and their
-+master(s).
-+
-+
-+IOMMU device node:
-+==================
-+
-+An IOMMU can provide the following services:
-+
-+* Remap address space to allow devices to access physical memory ranges that
-+  they otherwise wouldn't be capable of accessing.
-+
-+  Example: 32-bit DMA to 64-bit physical addresses
-+
-+* Implement scatter-gather at page level granularity so that the device does
-+  not have to.
-+
-+* Provide system protection against "rogue" DMA by forcing all accesses to go
-+  through the IOMMU and faulting when encountering accesses to unmapped
-+  address regions.
-+
-+* Provide address space isolation between multiple contexts.
-+
-+  Example: Virtualization
-+
-+Device nodes compatible with this binding represent hardware with some of the
-+above capabilities.
-+
-+IOMMUs can be single-master or multiple-master. Single-master IOMMU devices
-+typically have a fixed association to the master device, whereas multiple-
-+master IOMMU devices can translate accesses from more than one master.
-+
-+Required properties:
-+--------------------
-+- #iommu-cells: The number of cells in an IOMMU specifier. The meaning of the
-+  cells is defined by the binding for the IOMMU device.
-+
-+  Typical values include:
-+  * 0: Single-master IOMMU devices are often not configurable, therefore the
-+    specifying doesn't need to encode any information and can be empty.
-+
-+  * 1: Multiple-master IOMMU devices need to know for which master they should
-+    enable translation. Typically the single cell in the specifier corresponds
-+    to the master device's ID.
-+
-+
-+IOMMU master node:
-+==================
-+
-+Devices that access memory through an IOMMU are called masters. A device can
-+have multiple master interfaces (to one or more IOMMU devices).
-+
-+Required properties:
-+--------------------
-+- iommus: A list of phandle and IOMMU specifier pairs that describe the IOMMU
-+  master interfaces of the device. One entry in the list describes one master
-+  interface of the device.
-+
-+Optional properties:
-+--------------------
-+- iommu-names: A list of names identifying each entry in the iommus property.
-+
-+
-+Examples:
-+=========
-+
-+Single-master IOMMU:
-+--------------------
-+
-+	iommu {
-+		#iommu-cells = <0>;
-+	};
-+
-+	master {
-+		iommu = <&/iommu>;
-+	};
-+
-+Multi-master IOMMU:
-+-------------------
-+
-+	iommu {
-+		/* the specifier represents the ID of the master */
-+		#iommu-cells = <1>;
-+	};
-+
-+	master {
-+		/* device has master ID 42 in the IOMMU */
-+		iommu = <&/iommu 42>;
-+	};
-+
-+Multi-master device:
-+--------------------
-+
-+	/* single-master IOMMU */
-+	iommu@1 {
-+		#iommu-cells = <0>;
-+	};
-+
-+	/* multi-master IOMMU */
-+	iommu@2 {
-+		/* the specifier represents the ID of the master */
-+		#iommu-cells = <1>;
-+	};
-+
-+	/* device with two master interfaces */
-+	master {
-+		iommus = <&/iommu@1>,    /* master of the single-master IOMMU */
-+			 <&/iommu@2 42>; /* ID 42 in multi-master IOMMU */
-+	};
--- 
-1.9.2
+So changes introduced by this patch will be no longer necessary, as you
+will be able to just pass the context struct to registration function of
+your clock type.
+
+Best regards,
+Tomasz
