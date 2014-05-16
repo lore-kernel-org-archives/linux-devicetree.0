@@ -1,108 +1,101 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for
- configuring the iATU
-Date: Fri, 16 May 2014 14:30:56 +0530
-Message-ID: <5375D3C8.1060204@ti.com>
-References: <1399383244-14556-1-git-send-email-kishon@ti.com> <4528185.oZbgyuuFKX@wuerfel> <537302CD.7000701@ti.com> <5281007.CFRjW0Yeu2@wuerfel>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: Re: [PATCH v3 1/3] phy: Add exynos-simple-phy driver
+Date: Fri, 16 May 2014 15:12:01 +0530
+Message-ID: <CAPdUM4M5k-aouSA=dyUXWOyFLBhob+o8103a=gAxo-O68i-MCw@mail.gmail.com>
+References: <1400095043-685-1-git-send-email-rahul.sharma@samsung.com>
+ <1400095043-685-2-git-send-email-rahul.sharma@samsung.com>
+ <5373CBAD.2010505@gmail.com>
+ <CAPdUM4MT0nZcLRtNcKRAeW4Q3n5z9n4BnzR-7uYMb1gqwEhWXA@mail.gmail.com>
+ <53753527.3000905@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5281007.CFRjW0Yeu2@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jingoo Han <jg1.han@samsung.com>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53753527.3000905@gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, PANKAJ KUMAR DUBEY <pankaj.dubey@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, sunil joshi <joshi@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Wednesday 14 May 2014 06:15 PM, Arnd Bergmann wrote:
-> On Wednesday 14 May 2014 11:14:45 Kishon Vijay Abraham I wrote:
->> hi Arnd,
+On 16 May 2014 03:14, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> On 15.05.2014 06:01, Rahul Sharma wrote:
+>> Thanks Tomasz,
 >>
->> On Tuesday 13 May 2014 07:04 PM, Arnd Bergmann wrote:
->>> On Tuesday 13 May 2014 15:27:46 Arnd Bergmann wrote:
->>>> On Tuesday 13 May 2014 18:56:23 Kishon Vijay Abraham I wrote:
->>>>>> If you have a case where the outbound translation is a 256MB (i.e. 28bit)
->>>>>> section of the CPU address space, that could be represented as
->>>>>>
->>>>>>       ranges = <0x82000000 0 0  0xb0000000  0 0x10000000>;
->>>>>>
->>>>>> or 
->>>>>>
->>>>>>       ranges = <0x82000000 0 0xb0000000  0xb0000000  0 0x10000000>;
->>>>>>
->>>>>> depending on whether you want the BARs to be programmed using a low
->>>>>> address 0x0-0x0fffffff or an address matching the window
->>>>>> 0xb0000000-0xbfffffff.
->>>>>
->>>>> The problem is, for configuring the window starting at 0xb0000000, the ATU
->>>>> should be programmed 0x0000000 (the cpu address for it will be 0xb0000000 though).
->>>>>
->>>>
->>>> Then use the first of the two?
->>>>
+>> On 15 May 2014 01:31, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>>> Hi Rahul, Tomasz,
+>> [snip]
+>>>> +     simplephys: simple-phys@10040000 {
+>>>> +             compatible = "samsung,exynos5250-simple-phy";
 >>>
->>> To clarify: using <0x82000000 0 0  0xb0000000  0 0x10000000> will give you 
->>> a mem_offset of 0xb0000000, which should work just fine for this case.
+>>> Missing reg property or unnecessary @unit-address suffix in node name.
+>>
+>> I should have removed "@unit-address". I will change this.
+>>
 >>>
->>> What I don't understand is why the ATU cares about whether the outbound
->>> address is 0x0000000 or 0xb0000000 if it just decodes the lower 28 bit
->>> anyway. Did you mean that we have to program the BARs using low addresses
->>> regardless of what is programmed in the ATU? That would make more sense,
->>> and it also matches what I suggested.
+>>>> +             samsung,pmu-syscon = <&pmu_system_controller>;
+>>>> +             #phy-cells = <1>;
+>>>> +     };
+>>>
+>>> In general, the idea is quite good, but I think this should rather bind
+>>> to the main PMU node, since this is just a part of the PMU, not another
+>>> device in the system. This also means that the PMU node itself should be
+>>> the PHY provider.
+>>>
 >>
->> No, It's not like it decodes only the lower 28bits. The BARs is programmed with
->> 32 bit value.
+>> Please correct me if I got you wrong. You want somthing like this:
 >>
->> My pcie dt node has
->>  ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* CONFIG */
->>            0x81000000 0 0          0x20003000 0 0x00010000  /* IO */
->>            0x82000000 0 0x20013000 0x20013000 0 0xffed000>; /* MEM */
->>
->> Consider MEM address space..
->>
->> Here both PCI address and CPU address is 0x20013000. So when there is a write
->> to cpu addr 0x20013000 [writel(virt_addr(0x20013000)], we want it to be
->> translated to PCI addr 0x20013000. So in 'ATU', we would expect *base* to be
->> programmed to *0x20013000* and target to be programmed to *0x20013000*. But
->> that's not the case for DRA7xx. For DRA7xx *base* should be programmed to
->> *0x0013000* and target should be programmed to *0x20013000*.
-> 
-> Ok, got it, thanks for your patience.
-> 
-> I think this would best be modeled as a separate bus node that contains the
-> restriction, like this:
-> 
-> / {
-> 	#address-cells = <1>; // or <2> if you support > 4GB address space
-> 	#size-cells = <1>;
-> 
-> 	soc {
-> 		#address-cells <1>;
-> 		#size-cells = <1>;
-> 		ranges;
-> 		dma-ranges;
-> 
-> 		... // all normal devices
-> 
-> 		axi@20000000 {
-> 			#size-cells = <1>;
-> 			#address-cells = <1>;
-> 			dma-ranges; // can access all 4GB outbound
-> 			ranges = <0 0x20000000 0x10000000>; // 28-bit bus
-> 
-> 			pci@0 {
-> 				reg = <0x0    0x1000>, // internal regs
-> 				      <0x1000 0x2000>; // config space
+>> pmu_system_controller: system-controller@10040000 {
+>>          ...
+>>           simple_phys: simple-phys {
+>>                         compatible = "samsung,exynos5420-simple-phy";
+>>                         ...
+>>           };
+>> };
+>
+> Not exactly.
+>
+> What I meant is that the PMU node itself should be the PHY provider, e.g.
+>
+> pmu_system_controller: system-controller@10040000 {
+>         /* ... */
+>         #phy-cells = <1>;
+> };
+>
+> and then the PMU node should instantiate the Exynos simple PHY driver,
+> as this is a driver for a facility existing entirely inside of the PMU.
+> Moreover, the driver should be rather called Exynos PMU PHY.
+>
+> I know this isn't really possible at the moment, but with device tree we
+> must design things carefully, so it's better to take a bit more time and
+> do things properly.
+>
+> So my opinion on this is that there should be a central Exynos PMU
+> driver that claims the IO region and instantiates necessary subdrivers,
+> such as Exynos PMU PHY driver, Exynos CLKOUT driver, Exynos cpuidle
+> driver and more, similar to what is being done in drivers/mfd.
 
-The internal reg address space starts at 0x51000000. By Using this <0
-0x20000000 0x10000000>; as ranges, we are not able to get the memory resource
-properly. Can we use multiple ranges? how do we specify which ranges the *reg*
-property to use?
+Hi Tomasz,
 
-Btw I was using *simple-bus* as compatible to *axi*. Or should I create a new
-*axi* driver to create the pcie memory resources myself?
 
-Thanks
-Kishon
+
+>
+> Now, there is already ongoing effort to convert current freestanding PMU
+> configuration code in mach-exynos into a full-fledged PMU driver, but
+> not exactly in the same direction as I stated above. I'll try to
+> cooperate with Pankaj, who is responsible for this work to make this go
+> into the right track.
+>
+> Best regards,
+> Tomasz
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
