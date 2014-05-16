@@ -1,68 +1,85 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 0/5] Add support for USB cluster(PHY muxer) on the Armada 375 SoC
-Date: Fri, 16 May 2014 18:24:25 +0200
-Message-ID: <1400257465-13422-1-git-send-email-gregory.clement@free-electrons.com>
+From: Mark Salter <msalter@redhat.com>
+Subject: Re: [PATCH v4 4/4] drivers: net: Add APM X-Gene SoC ethernet driver
+ support.
+Date: Fri, 16 May 2014 12:45:05 -0400
+Message-ID: <1400258705.21547.217.camel@deneb.redhat.com>
+References: <1399326447-2329-1-git-send-email-isubramanian@apm.com>
+	 <1399326447-2329-5-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399326447-2329-5-git-send-email-isubramanian@apm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: Iyappan Subramanian <isubramanian@apm.com>
+Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, jcm@redhat.com, gregkh@linuxfoundation.org, patches@apm.com, linux-kernel@vger.kernel.org, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org, Ravi Patel <rapatel@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Mon, 2014-05-05 at 14:47 -0700, Iyappan Subramanian wrote:
+> +static int xgene_enet_probe(struct platform_device *pdev)
+> +{
+> +       struct net_device *ndev;
+> +       struct xgene_enet_pdata *pdata;
+> +       struct device *dev = &pdev->dev;
+> +       struct napi_struct *napi;
+> +       int ret = 0;
+> +
+> +       ndev = alloc_etherdev(sizeof(struct xgene_enet_pdata));
+> +       if (!ndev)
+> +               return -ENOMEM;
+> +
+> +       pdata = netdev_priv(ndev);
+> +
+> +       pdata->pdev = pdev;
+> +       pdata->ndev = ndev;
+> +       SET_NETDEV_DEV(ndev, dev);
+> +       platform_set_drvdata(pdev, pdata);
+> +       ndev->netdev_ops = &xgene_ndev_ops;
+> +       ndev->features |= NETIF_F_IP_CSUM;
+> +       ndev->features |= NETIF_F_GSO;
+> +       ndev->features |= NETIF_F_GRO;
+> +
 
-This series adds support for the USB cluster which is on the Armada
-375 SoC. We can mainly see this device as a PHY muxer. After talking
-with Antoine T=C3=A9nart about it I found a better way than the previou=
-s
-series to model it.
+You're missing:
 
-Only one controller can access to the PHY so instead trying to
-enforcing this condition in the init or the power_on ops, I move it
-the xlate function. Having the two USB controllers enable in the same
-time trying to use the PHY in the same time shouldn't happen and would
-only occur with a wrongly written dts. But if this case occurs then we
-provide a phy to the first one and return an error for the next one.
+         spin_lock_init(&pdata->stats_lock);
 
-While in the previous version I tried to enforce the use of the xHCI
-for USB it both controller are used, now it will be the first one
-which will get this usage. However in this case the dts is wrong, so
-the better thing to do for the user is to fix his dts.
+Lockdep (if enabled) complains:
 
-During the debug I also noticed that xhci don't handle the PHY so I
-also add the support for an optional phy. This patch is for Mathias
-Nyman.
+ xgene_enet_probe: 852
+ INFO: trying to register non-static key.
+ the code is fine but needs lockdep annotation.
+ turning off the locking correctness validator.
+ CPU: 4 PID: 1 Comm: swapper/0 Not tainted 3.15.0-rc4+ #13
+ Call trace:
+ [<ffffffc000087ef4>] dump_backtrace+0x0/0x16c
+ [<ffffffc000088070>] show_stack+0x10/0x1c
+ [<ffffffc000766b04>] dump_stack+0x88/0xb8
+ [<ffffffc00010243c>] __lock_acquire+0x1914/0x1ce0
+ [<ffffffc000102fa0>] lock_acquire+0x9c/0x1d0
+ [<ffffffc00076d418>] _raw_spin_lock+0x40/0x58
+ [<ffffffc0004fced0>] xgene_enet_get_stats+0x34/0x140
+ [<ffffffc0005fd7dc>] dev_get_stats+0x90/0xbc
+ [<ffffffc00061736c>] rtnl_fill_ifinfo+0x388/0x8e4
+ [<ffffffc000617938>] rtmsg_ifinfo+0x70/0x10c
+ [<ffffffc000609e98>] register_netdevice+0x370/0x400
+ [<ffffffc000609f3c>] register_netdev+0x14/0x2c
+ [<ffffffc0004fd7ec>] xgene_enet_probe+0x1cc/0x618
+ [<ffffffc0004a1928>] platform_drv_probe+0x28/0x80
+ [<ffffffc00049fc38>] driver_probe_device+0x98/0x3ac
+ [<ffffffc0004a0040>] __driver_attach+0xa0/0xa8
+ [<ffffffc00049dd78>] bus_for_each_dev+0x54/0x98
+ [<ffffffc00049f65c>] driver_attach+0x1c/0x28
+ [<ffffffc00049f234>] bus_add_driver+0x164/0x240
+ [<ffffffc0004a06b8>] driver_register+0x64/0x130
+ [<ffffffc0004a187c>] __platform_driver_register+0x5c/0x68
+ [<ffffffc000c08e14>] xgene_enet_driver_init+0x14/0x20
+ [<ffffffc000081418>] do_one_initcall+0xc4/0x154
+ [<ffffffc000bd2a74>] kernel_init_freeable+0x204/0x2a8
+ [<ffffffc00075e8a0>] kernel_init+0xc/0xd4
 
-Thanks,
-
-Gregory
-
-Gregory CLEMENT (5):
-  phy: add support for USB cluster on the Armada 375 SoC
-  Documentation: dt-bindings: document the Armada 375 USB cluster
-    binding
-  ARM: mvebu: add Device Tree description of USB cluster controller on
-    Armada 375
-  usb: host: xhci-plat: add optional PHY support
-  ARM: mvebu: add PHY support to the dts for the USB controllers on
-    Armada 375
-
- .../bindings/phy/armada-375-usb-phy-cluster.txt    |  20 +++
- arch/arm/boot/dts/armada-375.dtsi                  |  11 ++
- drivers/phy/Kconfig                                |   6 +
- drivers/phy/Makefile                               |   1 +
- drivers/phy/phy-armada375-usb2.c                   | 140 +++++++++++++=
-++++++++
- drivers/usb/host/xhci-plat.c                       |  29 ++++-
- drivers/usb/host/xhci.h                            |   2 +
- include/dt-bindings/phy/armada-375-usb-cluster.h   |  18 +++
- 8 files changed, 226 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/phy/armada-375-us=
-b-phy-cluster.txt
- create mode 100644 drivers/phy/phy-armada375-usb2.c
- create mode 100644 include/dt-bindings/phy/armada-375-usb-cluster.h
-
---=20
-1.8.1.2
+> +       ret = xgene_enet_get_resources(pdata);
+> +       if (ret)
+> +               goto err;
+> +
+> +       ret = register_netdev(ndev);
