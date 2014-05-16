@@ -1,101 +1,108 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v2] cpufreq: exynos:  Fix the compile error
-Date: Fri, 16 May 2014 10:50:24 +0200
-Message-ID: <5375D150.1020109@gmail.com>
-References: <000001cf70dc$9ccfe4e0$d66faea0$@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 06/17] pci: host: pcie-designware: Use *base-mask* for
+ configuring the iATU
+Date: Fri, 16 May 2014 14:30:56 +0530
+Message-ID: <5375D3C8.1060204@ti.com>
+References: <1399383244-14556-1-git-send-email-kishon@ti.com> <4528185.oZbgyuuFKX@wuerfel> <537302CD.7000701@ti.com> <5281007.CFRjW0Yeu2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <000001cf70dc$9ccfe4e0$d66faea0$@samsung.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Jonghwan Choi <jhbird.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, cpufreq@vger.kernel.org
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, "'Rafael J. Wysocki'" <rjw@sisk.pl>, Jonghwan Choi <jhbird.choi@gmail.com>, 'Viresh Kumar' <viresh.kumar@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5281007.CFRjW0Yeu2@wuerfel>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jingoo Han <jg1.han@samsung.com>, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, rogerq@ti.com, balajitk@ti.com, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Marek Vasut' <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonghwan,
+Hi Arnd,
 
-On 16.05.2014 09:58, Jonghwan Choi wrote:
-> Commit 7da83a80 ("ARM: EXYNOS: Migrate Exynos specific macros from plat to mach")
-> which lands in samsung tree causes build breakage for cpufreq-exynos like following:
-> drivers/cpufreq/exynos-cpufreq.c: In function 'exynos_cpufreq_probe':
-> drivers/cpufreq/exynos-cpufreq.c:166:2: error: implicit declaration of function 'soc_is_exynos4210'
-> [-Werror=implicit-function-declaration]
-> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4212'
-> [-Werror=implicit-function-declaration]
-> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4412'
-> [-Werror=implicit-function-declaration]
-> drivers/cpufreq/exynos-cpufreq.c:170:2: error: implicit declaration of function 'soc_is_exynos5250'
-> [-Werror=implicit-function-declaration]
-> cc1: some warnings being treated as errors
-> make[2]: *** [drivers/cpufreq/exynos-cpufreq.o] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> drivers/cpufreq/exynos4x12-cpufreq.c: In function 'exynos4x12_set_clkdiv':
-> drivers/cpufreq/exynos4x12-cpufreq.c:118:2: error: implicit declaration of function 'soc_is_exynos4212'
-> [-Werror=implicit-function-declaration]
-> cc1: some warnings being treated as errors
-> make[2]: *** [drivers/cpufreq/exynos4x12-cpufreq.o] Error 1
-> make[1]: *** [drivers/cpufreq] Error 2
-> This fixes above error with getting SoC information via DT instead of soc_is_exynosXXXX().
+On Wednesday 14 May 2014 06:15 PM, Arnd Bergmann wrote:
+> On Wednesday 14 May 2014 11:14:45 Kishon Vijay Abraham I wrote:
+>> hi Arnd,
+>>
+>> On Tuesday 13 May 2014 07:04 PM, Arnd Bergmann wrote:
+>>> On Tuesday 13 May 2014 15:27:46 Arnd Bergmann wrote:
+>>>> On Tuesday 13 May 2014 18:56:23 Kishon Vijay Abraham I wrote:
+>>>>>> If you have a case where the outbound translation is a 256MB (i.e. 28bit)
+>>>>>> section of the CPU address space, that could be represented as
+>>>>>>
+>>>>>>       ranges = <0x82000000 0 0  0xb0000000  0 0x10000000>;
+>>>>>>
+>>>>>> or 
+>>>>>>
+>>>>>>       ranges = <0x82000000 0 0xb0000000  0xb0000000  0 0x10000000>;
+>>>>>>
+>>>>>> depending on whether you want the BARs to be programmed using a low
+>>>>>> address 0x0-0x0fffffff or an address matching the window
+>>>>>> 0xb0000000-0xbfffffff.
+>>>>>
+>>>>> The problem is, for configuring the window starting at 0xb0000000, the ATU
+>>>>> should be programmed 0x0000000 (the cpu address for it will be 0xb0000000 though).
+>>>>>
+>>>>
+>>>> Then use the first of the two?
+>>>>
+>>>
+>>> To clarify: using <0x82000000 0 0  0xb0000000  0 0x10000000> will give you 
+>>> a mem_offset of 0xb0000000, which should work just fine for this case.
+>>>
+>>> What I don't understand is why the ATU cares about whether the outbound
+>>> address is 0x0000000 or 0xb0000000 if it just decodes the lower 28 bit
+>>> anyway. Did you mean that we have to program the BARs using low addresses
+>>> regardless of what is programmed in the ATU? That would make more sense,
+>>> and it also matches what I suggested.
+>>
+>> No, It's not like it decodes only the lower 28bits. The BARs is programmed with
+>> 32 bit value.
+>>
+>> My pcie dt node has
+>>  ranges = <0x00000800 0 0x20001000 0x20001000 0 0x00002000  /* CONFIG */
+>>            0x81000000 0 0          0x20003000 0 0x00010000  /* IO */
+>>            0x82000000 0 0x20013000 0x20013000 0 0xffed000>; /* MEM */
+>>
+>> Consider MEM address space..
+>>
+>> Here both PCI address and CPU address is 0x20013000. So when there is a write
+>> to cpu addr 0x20013000 [writel(virt_addr(0x20013000)], we want it to be
+>> translated to PCI addr 0x20013000. So in 'ATU', we would expect *base* to be
+>> programmed to *0x20013000* and target to be programmed to *0x20013000*. But
+>> that's not the case for DRA7xx. For DRA7xx *base* should be programmed to
+>> *0x0013000* and target should be programmed to *0x20013000*.
 > 
-> Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-exynos.txt |   18 ++++++++
->  drivers/cpufreq/Kconfig.arm                        |    4 +-
->  drivers/cpufreq/exynos-cpufreq.c                   |   47 +++++++++++++++++---
->  drivers/cpufreq/exynos-cpufreq.h                   |    8 ++++
->  drivers/cpufreq/exynos4x12-cpufreq.c               |   11 ++---
->  5 files changed, 72 insertions(+), 16 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
+> Ok, got it, thanks for your patience.
 > 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
-> b/Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
-> new file mode 100644
-> index 0000000..f5e8ac6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-exynos.txt
-> @@ -0,0 +1,18 @@
-> +
-> +Exynos cpufreq driver
-> +-------------------
-> +
-> +Exynos4210/4212/4412/5250 SoC cpufreq driver for CPU frequency scaling.
-> +
-> +Required properties:
-> +  - compatible: value should be either of the following.
-> +      (a) "samsung, exynos4210-cpufreq", for Exynos4210.
-> +      (b) "samsung, exynos4212-cpufreq", for Exynos4212.
-> +      (c) "samsung, exynos4412-cpufreq", for Exynos4412.
-> +      (d) "samsung, exynos5250-cpufreq", for Exynos5250.
-> +
-> +Example:
-> +--------
-> +	cpufreq@10030000 {
-> +		compatible = "samsung,exynos4210-cpufreq";
-> +	};
+> I think this would best be modeled as a separate bus node that contains the
+> restriction, like this:
+> 
+> / {
+> 	#address-cells = <1>; // or <2> if you support > 4GB address space
+> 	#size-cells = <1>;
+> 
+> 	soc {
+> 		#address-cells <1>;
+> 		#size-cells = <1>;
+> 		ranges;
+> 		dma-ranges;
+> 
+> 		... // all normal devices
+> 
+> 		axi@20000000 {
+> 			#size-cells = <1>;
+> 			#address-cells = <1>;
+> 			dma-ranges; // can access all 4GB outbound
+> 			ranges = <0 0x20000000 0x10000000>; // 28-bit bus
+> 
+> 			pci@0 {
+> 				reg = <0x0    0x1000>, // internal regs
+> 				      <0x1000 0x2000>; // config space
 
-Sorry, NAK. Cpufreq is not a real device on the SoC and this is not the
-right way to represent it in DT.
+The internal reg address space starts at 0x51000000. By Using this <0
+0x20000000 0x10000000>; as ranges, we are not able to get the memory resource
+properly. Can we use multiple ranges? how do we specify which ranges the *reg*
+property to use?
 
-We have been discussing Exynos cpufreq framework rework, including DT
-support since quite a long time. so if you want to know details, please
-look at respective discussion threads. I don't have time to find them
-for you right now, but if you look for threads of cpufreq patches by
-Thomas Abraham and ones about Exynos multiplatform support, then you
-should have quite complete set of information.
+Btw I was using *simple-bus* as compatible to *axi*. Or should I create a new
+*axi* driver to create the pcie memory resources myself?
 
-In general, I can see three ways to "fix" this for 3.15:
-
-1) revert moving soc_is_* macros to mach-exynos/common.h,
-
-2) move soc_is_* macros to a header in mach-exynos/include/mach/,
-
-3) use of_machine_is_compatible() or of_match_node() on root node in
-this driver to match directly with SoC compatible strings.
-
-Probably option 3) would be preferred, as it would remove some of the
-dependencies of this driver on arch code and including plat/cpu.h (or
-mach/cpu.h as would be introduced by 2)) would be no longer necessary.
-
-Best regards,
-Tomasz
+Thanks
+Kishon
