@@ -1,39 +1,107 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCHv4 15/20] ARM: configs: enable XHCI mvebu support in
- multi_v7_defconfig
-Date: Fri, 16 May 2014 16:08:53 -0700
-Message-ID: <20140516230853.GA6423@quad.lixom.net>
-References: <1399470746-2948-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1399470746-2948-16-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 6/8] ARM: dts: Exynos: add cpu nodes, opp and cpu clock
+ configuration data
+Date: Sat, 17 May 2014 01:16:50 +0200
+Message-ID: <53769C62.4060900@gmail.com>
+References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com> <1400029876-5830-7-git-send-email-thomas.ab@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1399470746-2948-16-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1400029876-5830-7-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>, cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, heiko@sntech.de, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 07, 2014 at 03:52:21PM +0200, Thomas Petazzoni wrote:
-> From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Thomas,
+
+Please see my comments inline.
+
+On 14.05.2014 03:11, Thomas Abraham wrote:
+> From: Thomas Abraham <thomas.ab@samsung.com>
 > 
-> The Marvell Armada 38x platform needs the xhci_mvebu driver enabled
-> for the xHCI USB hosts, so this commit enables the corresponding
-> Kconfig option in multi_v7_defconfig.
+> For all Exynos based platforms, add CPU nodes, operating points and cpu
+> clock data for migrating from Exynos specific cpufreq driver to using
+> generic cpufreq-cpu0 driver.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-> Cc: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4210-origen.dts         |    6 +++
+>  arch/arm/boot/dts/exynos4210-trats.dts          |    6 +++
+>  arch/arm/boot/dts/exynos4210-universal_c210.dts |    6 +++
+>  arch/arm/boot/dts/exynos4210.dtsi               |   35 +++++++++++++++++++
+>  arch/arm/boot/dts/exynos4212.dtsi               |   18 ++++++++++
+>  arch/arm/boot/dts/exynos4412-odroidx.dts        |    6 +++
+>  arch/arm/boot/dts/exynos4412-origen.dts         |    6 +++
+>  arch/arm/boot/dts/exynos4412-trats2.dts         |    6 +++
+>  arch/arm/boot/dts/exynos4412.dtsi               |   31 +++++++++++++++++
+>  arch/arm/boot/dts/exynos4x12.dtsi               |   36 ++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5250-arndale.dts        |    6 +++
+>  arch/arm/boot/dts/exynos5250-cros-common.dtsi   |    6 +++
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts       |    6 +++
+>  arch/arm/boot/dts/exynos5250.dtsi               |   41 +++++++++++++++++++++++
+>  14 files changed, 215 insertions(+), 0 deletions(-)
 
-Applied.
+[snip]
 
+> diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+> index cacf614..22b967d 100644
+> --- a/arch/arm/boot/dts/exynos4210.dtsi
+> +++ b/arch/arm/boot/dts/exynos4210.dtsi
+> @@ -36,6 +36,33 @@
+>  		reg = <0x10023CA0 0x20>;
+>  	};
+>  
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		cpu@0 {
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+style: Please add blank line between last property and first node.
+
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a9";
+> +			reg = <0>;
+
+This is not the right value. The bottom 24-bits of MPIDR register on
+Exynos4210 are 0x900 and 0x901 for CPU0 and CPU1 respectively.
+
+Of course this won't work before fixing the GIC driver to not rely on
+wrong assumptions, but I have already posted patches [1] and need to
+address comments.
+
+[1] http://thread.gmane.org/gmane.linux.kernel.samsung-soc/29573
+
+> +			clocks = <&clock CLK_ARM_CLK>;
+> +			clock-names = "cpu";
+
+[snip]
+
+> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+> index 15d3c0a..85005d1 100644
+> --- a/arch/arm/boot/dts/exynos4412.dtsi
+> +++ b/arch/arm/boot/dts/exynos4412.dtsi
+> @@ -22,6 +22,37 @@
+>  / {
+>  	compatible = "samsung,exynos4412", "samsung,exynos4";
+>  
+> +	cpus {
+> +		cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a9";
+> +			reg = <2>;
+
+Same here. On Exynos4x12, the MPIDR values for CPUs are 0xa00, 0xa01,
+0xa02 and 0xa03 for CPU0, CPU1, CPU2 and CPU3 respectively.
+
+> +		};
+> +		cpu@3 {
+
+style: Please keep a single blank line of spacing between nodes.
+
+Otherwise looks good.
+
+Best regards,
+Tomasz
