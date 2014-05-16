@@ -1,52 +1,115 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 2/9] dt: deps: dependency based device creation
-Date: Fri, 16 May 2014 12:00:08 +0100
-Message-ID: <20140516110008.E2AC9C403C2@trevor.secretlab.ca>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
-	<1399913280-6915-3-git-send-email-holler@ahsoftware.de>
-	<20140514140534.897F8C4153D@trevor.secretlab.ca>
-	<53738261.4000000@ahsoftware.de>
-	<20140514200645.15984C4095B@trevor.secretlab.ca>
-	<5373DBCF.1080503@ahsoftware.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5373DBCF.1080503-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 14/19] ARM: omap4-panda-common.dtsi: Add HDMI audio nodes
+Date: Fri, 16 May 2014 14:04:44 +0300
+Message-ID: <5375F0CC.8090507@ti.com>
+References: <cover.1399884780.git.jsarha@ti.com> <fdeddff24bc38efb7a155b2569a5f2056278cb9d.1399884780.git.jsarha@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="vH7OmrmH9sb6mSlninSFhRFnhvxxcqleP"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <fdeddff24bc38efb7a155b2569a5f2056278cb9d.1399884780.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 14 May 2014 23:10:39 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
-> Am 14.05.2014 22:06, schrieb Grant Likely:
-> > On Wed, 14 May 2014 16:49:05 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
-> >> Am 14.05.2014 16:05, schrieb Grant Likely:
-> >>> On Mon, 12 May 2014 18:47:53 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
-> 
-> >> Hmm, I don't really care if that will be merged. I have no motivation to 
-> >> fight with Linux kernel maintainers and I don't know if I will spend the 
-> >> necessary time to do so.
-> > 
-> > The people you need to convince are Rob, Greg, and me, and you've got my
-> > attention. If I'm convinced, then I can probably convince Greg also.
-> > You've got an interesting approach, and I hope you won't give up on it.
-> 
-> Sorry, but that point of the view is already a problem. Why do I have to
-> convince you people?
-> 
-> To summarize:
-> 
-> Linux kernel maintainers
-> 
-> - don't like code they haven't written theirself,
-> - don't like code which doesn't look like they have written it theirself,
-> - don't like ideas they haven't had themself,
-> - do feel good in their closed group they have formed,
+--vH7OmrmH9sb6mSlninSFhRFnhvxxcqleP
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-I'm sorry that you feel that way and that you don't want to continue
-with this. Best wishes.
+On 12/05/14 12:12, Jyri Sarha wrote:
+> Adds a simple-card sound node for HDMI audio, the associated
+> hdmi-codec node, and sound-dai-cells propeties to the DAI nodes.
+>=20
+> Signed-off-by: Jyri Sarha <jsarha@ti.com>
+> ---
+>  arch/arm/boot/dts/omap4-panda-common.dtsi |   21 ++++++++++++++++++++-=
 
-g.
+>  1 file changed, 20 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/arm/boot/dts/omap4-panda-common.dtsi b/arch/arm/boot/=
+dts/omap4-panda-common.dtsi
+> index d2c45bf..c04f453 100644
+> --- a/arch/arm/boot/dts/omap4-panda-common.dtsi
+> +++ b/arch/arm/boot/dts/omap4-panda-common.dtsi
+> @@ -41,7 +41,7 @@
+>  		};
+>  	};
+> =20
+> -	sound: sound {
+> +	sound: sound@0 {
+>  		compatible =3D "ti,abe-twl6040";
+>  		ti,model =3D "PandaBoard";
+> =20
+> @@ -65,6 +65,24 @@
+>  			"AFMR", "Line In";
+>  	};
+> =20
+> +	sound@1 {
+> +		compatible =3D "simple-audio-card";
+> +
+> +		simple-audio-card,cpu {
+> +			sound-dai =3D <&hdmi>;
+> +		};
+> +
+> +		simple-audio-card,codec {
+> +			sound-dai =3D <&hdmi_audio>;
+> +		};
+> +	};
+> +
+> +	hdmi_audio: hdmi_audio@0 {
+> +		#sound-dai-cells =3D <0>;
+> +		compatible =3D "linux,hdmi-audio";
+> +		status =3D "okay";
+> +	};
+> +
+>  	/* HS USB Port 1 Power */
+>  	hsusb1_power: hsusb1_power_reg {
+>  		compatible =3D "regulator-fixed";
+> @@ -512,6 +530,7 @@
+>  };
+> =20
+>  &hdmi {
+> +	#sound-dai-cells =3D <0>;
+>  	status =3D "ok";
+>  	vdda-supply =3D <&vdac>;
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maybe this is how this has to be done, but I'll still ask:
+
+Considering that the HDMI audio is basically inseparable part of the
+OMAP HDMI video, and if a board has HDMI video connector connected to
+the SoC's HDMI, then it has HDMI audio.
+
+So all of the above .dts changes are already implied when we have HDMI
+video on the board. Is there no way to prevent every board needing to
+add those exact same nodes to get HDMI audio?
+
+ Tomi
+
+
+
+--vH7OmrmH9sb6mSlninSFhRFnhvxxcqleP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTdfDMAAoJEPo9qoy8lh71OaEQAJNPn7bip3/xcJ22p5KeRPFp
+dbvGg5IUkHxMqTSVxushi7A+J64aL3U5xp63GPZdgrJEGi4KWLHotFyL6r+KhAMi
+y7yH+iQrdNIyfRXVAt7UCiZN+F0th5t8tekBcdG3D0S7y4qihUWbfVe9aIfKqAG4
+sEeV3fOHRaQkvKbIdRhruEGzYvlGRRGkwbWp0JE+CSVl706jxuawZ/iUutQbU99z
+BPIZTcA0QREvw+GCsnwQ1q11CpUBsw9HGFVjDSmErcmbyYjn3WPI1p4lldmWkXVB
+yyQ9XAU55XEJIHJ/UfhKkc2SuG6u6IUU1lcJyO4BUd3DwrraHXtxu/z2hdHSRFeV
+F4yVCKhTcLtmJ1WFupHxfR3qHQDp/f2KFXuEmtZ4h5AEMAIx2nCJPf9y/HJUFeBm
+XU+UpOpXeTOgzh9SV+Li0HVBG03htAhMLy+EiIvDkyF5Gu1lZ4tZQeK3WBSimoCq
+1kVuhFI6cJW9kXb43vBXo/hz2w9DUYGhHklL7MGyIHNF7OMzQZQ2o6MiHdHB0yaP
+TZYYGliCAn6zqJVTGTorJpRbTo0o5f4YJA0BrTXxabhQ4DnzZG0l5hPwtcCQv7I+
+YJQvM58RAE2/xzI5yD6AYb9fFalrF+qTCDBTImhJHoH4UAT98ivI1OU8cZcd7GZW
+x81GhrDPHjJs2lGvRLi8
+=TaTc
+-----END PGP SIGNATURE-----
+
+--vH7OmrmH9sb6mSlninSFhRFnhvxxcqleP--
