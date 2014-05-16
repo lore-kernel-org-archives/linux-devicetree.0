@@ -1,37 +1,88 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v6 12/17] ARM: configs: enable XHCI mvebu support in
- mvebu_v7_defconfig
-Date: Fri, 16 May 2014 01:41:09 -0400
-Message-ID: <20140516054109.GD27822@titan.lakedaemon.net>
-References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
- <1400149062-32661-13-git-send-email-gregory.clement@free-electrons.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Fri, 16 May 2014 08:50:11 +0300
+Message-ID: <5375A713.7030409@ti.com>
+References: <1398815562-24113-4-git-send-email-tony@atomide.com> <5369EAE7.3030705@ti.com> <20140507150343.GA9502@atomide.com> <536A5920.1020908@ti.com> <20140507175919.GH9502@atomide.com> <20140508233300.GI2198@atomide.com> <536C924E.5000307@ti.com> <20140509153008.GC17814@atomide.com> <20140513212639.GA18001@atomide.com> <53747DD5.2030406@ti.com> <20140515182548.GD23659@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400149062-32661-13-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="OtEFf5Xf3D9RHhIriCehHQNKnwEOwHMxk"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140515182548.GD23659@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 12:17:37PM +0200, Gregory CLEMENT wrote:
-> The Marvell Armada 38x platform needs the xhci_mvebu driver enabled
-> for the xHCI USB hosts, so this commit enables the corresponding
-> Kconfig option in mvebu_v7_defconfig.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/configs/mvebu_v7_defconfig | 1 +
->  1 file changed, 1 insertion(+)
+--OtEFf5Xf3D9RHhIriCehHQNKnwEOwHMxk
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Applied to mvebu/defconfig
+On 15/05/14 21:25, Tony Lindgren wrote:
+> * Tomi Valkeinen <tomi.valkeinen@ti.com> [140515 01:42]:
+>> On 14/05/14 00:26, Tony Lindgren wrote:
+>>
+>>> +	/* lcd MO */
+>>> +	ddata->mo_gpio =3D sharp_ls_get_gpio_of(&pdev->dev, 0, 1, "mode");
+>>> +	if (PTR_ERR(ddata->mo_gpio) =3D=3D -EPROBE_DEFER)
+>>> +		return -EPROBE_DEFER;
+>>> +
+>>> +	if (!IS_ERR(ddata->mo_gpio))
+>>> +		if (gpiod_get_raw_value_cansleep(ddata->mo_gpio))
+>>> +			ddata->flags |=3D SHARP_LS_QVGA;
+>>
+>> Shouldn't there be an explicit flag in the DT data for this? If the
+>> panel's MO pin is hardwired to, say, pull up, then the mode-gpios won'=
+t
+>> have MO gpio, right? So something like:
+>>
+>>
+>> mode-gpios =3D <0					/* high, lcd MO */
+>> 	      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
+>> 	      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
+>>
+>> vga-mode;	/* MO hardwired high */
+> =20
+> Yeah holes there are just fine. I figured let's keep the custom
+> vga-mode property out of the way until we actually run into a panel
+> that's not using a GPIO for mode.
 
-thx,
+Ok, I'm fine with that, but in that case I think we have to use all the
+panels in the same mode, i.e. the driver either sets the MO gpio always
+low and uses VGA mode, or sets the MO always high and uses QVGA mode.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+In your omap3-evm.dts patch, you set the MO gpio ACTIVE_LOW in order to
+change the mode, even if it really should be ACTIVE_HIGH. But if you do
+that, and we later add the support to the panel driver to manage the MO
+gpio dynamically (i.e. the user can select VGA/QVGA at runtime), then
+the panel won't work as the driver uses wrong polarity for the pin.
+
+ Tomi
+
+
+
+--OtEFf5Xf3D9RHhIriCehHQNKnwEOwHMxk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTdacTAAoJEPo9qoy8lh71AyEQAJHLsOGh2wbSls3E25AVclfi
+GbruEh1sghk6v3Cri/rP5kEUiwyQqx3m50PK7kgwi4T3/46vxdtCaZs3F8rm4xd8
+eyi9pgJnEEz8/vEDA+ur9mD6YBAbYG+zuD95LQv4cQb2fViLP4hgNUd03dQDcZfj
+1dnyad29x30VqnqHfkXZD+tdo9IA+wOZehfAdG1ebquY4bCAgvD8/1jyhsxUEUdv
+KO+JGl8BelpK34BI1vZB5NyXJp3mCMwpgf04wR5VYZLjj94AeA4X4CpqEOpCONtq
+jmMN4wodvo3U0R1lO3wft6oi6FH7bZ1nlHqJdVkpsU+uszjJxsuICuzkhW+oQEeT
+xcRNlZuPfb5Bxn4m4DiIZXtLTTuVUplBntMHvMpho2HG+tLWfBHE0GC2VcIVwXiZ
+Xo/HBCDI1iygcbL03GNCE28M+bdgmbXKMicjEO+wHeD3Fngd4uz7oaBmVi/AlqtQ
+C7QDrMOioSteLfSQbd4CbgiFmSroLD6fnoYldfAohitwbB9wuAomyxuAkOWlg4sZ
+xEZzP2VtbhZgIU1lXFYpQovgTB+22kowDFWZsP9mm3eCAJ06Gf3u3OjWhgQJuF3k
+CEq/3Y5fzJhT4J6KMQf2VMle+WnRWzkY4UrjwHHHZdl5sSg9NuQN0u0XCPQUfU0b
+O9ofRR5bv4UwmbCdBxSi
+=rkM+
+-----END PGP SIGNATURE-----
+
+--OtEFf5Xf3D9RHhIriCehHQNKnwEOwHMxk--
