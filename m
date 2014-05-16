@@ -1,49 +1,78 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [RFC PATCH 0/2] drm/panel: add simple-panel description using
- DT
-Date: Fri, 16 May 2014 09:29:43 +0200
-Message-ID: <5375BE67.8000103@free-electrons.com>
-References: <1399645002-18000-1-git-send-email-boris.brezillon@free-electrons.com> <20140513075148.GF6754@ulmo>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH 3/4] Doc/DT: Add DT binding documentation for SHARP LS037V7DW01
+Date: Fri, 16 May 2014 10:30:01 +0300
+Message-ID: <1400225402-18274-4-git-send-email-tomi.valkeinen@ti.com>
+References: <1400225402-18274-1-git-send-email-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140513075148.GF6754@ulmo>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, David Airlie <airlied@linux.ie>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1400225402-18274-1-git-send-email-tomi.valkeinen@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Archit Taneja <archit@ti.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Tony Lindgren <tony@atomide.com>
 
-On 13/05/2014 09:51, Thierry Reding wrote:
-> On Fri, May 09, 2014 at 04:16:40PM +0200, Boris BREZILLON wrote:
->> Hello Thierry,
->>
->> I noticed you're describing each new panel with a new entry in the
->> of_platform_match table and a new compatible string.
->> I guess you have a good reason to do it this way, because retrieving
->> panel description from DT would be pretty easy (see this series ;-)).
->>
->> Could tell me why you chose this approach ?
-> The reason is that devicetree mandates that a device be identified using
-> a compatible value and that compatible value should be as specific as
-> possible. That compatible value should give the device driver enough
-> information to know everything it needs (resolution, timings, physical
-> dimension).
->
-> Having all of that data in the device tree is redundant.
+Add DT binding documentation for SHARP LS037V7DW01 panel.
 
-Okay, thanks for your answer.
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree@vger.kernel.org
+---
+ .../bindings/video/sharp,ls037v7dw01.txt           | 43 ++++++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/sharp,ls037v7dw01.txt
 
-As a result, you'll see a patch adding support for the FL500WVR00-A0T
-(foxlink) panel soon ;-).
-
-Best Regards,
-
-Boris
-
+diff --git a/Documentation/devicetree/bindings/video/sharp,ls037v7dw01.txt b/Documentation/devicetree/bindings/video/sharp,ls037v7dw01.txt
+new file mode 100644
+index 000000000000..0cc8981e9d49
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/sharp,ls037v7dw01.txt
+@@ -0,0 +1,43 @@
++SHARP LS037V7DW01 TFT-LCD panel
++===================================
++
++Required properties:
++- compatible: "sharp,ls037v7dw01"
++
++Optional properties:
++- label: a symbolic name for the panel
++- enable-gpios: a GPIO spec for the optional enable pin.
++  This pin is the INI pin as specified in the LS037V7DW01.pdf file.
++- reset-gpios: a GPIO spec for the optional reset pin.
++  This pin is the RESB pin as specified in the LS037V7DW01.pdf file.
++- mode-gpios: a GPIO
++  ordered MO, LR, and UD as specified in the LS037V7DW01.pdf file.
++
++Required nodes:
++- Video port for DPI input
++
++This panel can have zero to five GPIOs to configure to change configuration
++between QVGA and VGA mode and the scan direction. As these pins can be also
++configured with external pulls, all the GPIOs are considered optional with holes
++in the array.
++
++Example
++-------
++
++Example when connected to a omap2+ based device:
++
++lcd0: display {
++	compatible = "sharp,ls037v7dw01";
++	power-supply = <&lcd_3v3>;
++	enable-gpios = <&gpio5 24 GPIO_ACTIVE_HIGH>;	/* gpio152, lcd INI */
++	reset-gpios = <&gpio5 27 GPIO_ACTIVE_HIGH>;	/* gpio155, lcd RESB */
++	mode-gpios = <&gpio5 26 GPIO_ACTIVE_HIGH	/* gpio154, lcd MO */
++		      &gpio1 2 GPIO_ACTIVE_HIGH		/* gpio2, lcd LR */
++		      &gpio1 3 GPIO_ACTIVE_HIGH>;	/* gpio3, lcd UD */
++
++	port {
++		lcd_in: endpoint {
++			remote-endpoint = <&dpi_out>;
++		};
++	};
++};
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+1.9.1
 
