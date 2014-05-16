@@ -1,73 +1,70 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH] ARM: zynq: dt: Add a fixed regulator for CPU voltage
-Date: Fri, 16 May 2014 14:54:58 +0200
-Message-ID: <53760AA2.4040703@monstr.eu>
-References: <1399064852-19569-1-git-send-email-soren.brinkmann@xilinx.com> <e9675d40-2fd9-4fed-a020-5b465ea1842d@BN1BFFO11FD047.protection.gbl>
-Reply-To: monstr@monstr.eu
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCHv4 3/3] ARM: mvebu: implement L2/PCIe deadlock workaround
+Date: Fri, 16 May 2014 08:58:47 -0400
+Message-ID: <20140516125847.GG27822@titan.lakedaemon.net>
+References: <1400165974-9059-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1400165974-9059-4-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20140516060851.GF27822@titan.lakedaemon.net>
+ <20140516090727.5264dc75@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e9675d40-2fd9-4fed-a020-5b465ea1842d@BN1BFFO11FD047.protection.gbl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, git@xilinx.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140516090727.5264dc75-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 16, 2014 at 09:07:27AM +0200, Thomas Petazzoni wrote:
+> Dear Jason Cooper,
+> 
+> On Fri, 16 May 2014 02:08:51 -0400, Jason Cooper wrote:
+> > On Thu, May 15, 2014 at 04:59:34PM +0200, Thomas Petazzoni wrote:
+> > > The Marvell Armada 375 and Armada 38x SOCs, which use the Cortex-A9
+> > > CPU core, the PL310 cache and the Marvell PCIe hardware block are
+> > > affected a L2/PCIe deadlock caused by a system erratum when hardware
+> > > I/O coherency is used.
+> > > 
+> > > This deadlock can be avoided by mapping the PCIe memory areas as
+> > > strongly-ordered (note: MT_UNCACHED is strongly-ordered), and by
+> > > removing the outer cache sync done in software. This is implemented in
+> > > this patch by:
+> > > 
+> > >  * Registering a custom arch_ioremap_caller function that allows to
+> > >    make sure PCI memory regions are mapped MT_UNCACHED.
+> > > 
+> > >  * Adding at runtime the 'arm,io-coherent' property to the PL310 cache
+> > >    controller. This cannot be done permanently in the DT, because the
+> > >    hardware I/O coherency can only be enabled when CONFIG_SMP is
+> > >    enabled, in the current kernel situation.
+> > > 
+> > > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > > ---
+> > >  arch/arm/mach-mvebu/coherency.c | 39 +++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 39 insertions(+)
+> > 
+> > Applied to mvebu/soc.
+> 
+> Hum, well, I believe it's OK, but notice that I will very likely have
+> to do a followup patch, because the solution of making all PCI I/O
+> mappings use the MT_UNCACHED memory type, suggested by Arnd, has not
+> been accepted by Will Deacon. So very likely I will have to change
+> again the mach-mvebu/coherency.c code to call a function that makes PCI
+> I/O mappings MT_UNCACHED specifically for the mach-mvebu platform. But
+> that can indeed be a followup patch.
 
-On 05/15/2014 04:57 PM, S=C3=B6ren Brinkmann wrote:
-> ping? Any comments?
->=20
-> 	Thanks,
-> 	S=C3=B6ren
->=20
-> On Fri, 2014-05-02 at 02:07PM -0700, Soren Brinkmann wrote:
->> To silence the warning
->> 	cpufreq_cpu0: failed to get cpu0 regulator: -19
->> from the cpufreq driver regarding a missing regulator,
->> add a fixed regulator to the DT.
->> Zynq does not support voltage scaling and the CPU rail should always b=
-e
->> supplied with 1 V, hence it is added in the SOC-level dtsi.
->>
->> Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
->> ---
->>
->>  arch/arm/boot/dts/zynq-7000.dtsi | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
+Ahh, my mistake.  It was late.  I saw the arm,io-coherent was settled
+and mistakenly thought the other proposed changes wouldn't affect this
+patch.
 
-Probably no objection from others.
-Applied to zynq/dt branch.
+I could easily drop it if you like.  It's currently the tip of mvebu/soc
+and I haven't done a signed tag for it yet.
 
-Thanks,
-Michal
+thx,
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlN2CqIACgkQykllyylKDCFK+gCfcVL6alupw81rOELTHHHUJ8Nk
-YhoAnREGt2JVsPm2w/I4HuIlVqiosnCK
-=KlEt
------END PGP SIGNATURE-----
-
---n5SGEOGa5WHKFnmu2hBEofPxOD2nn5hSD--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
