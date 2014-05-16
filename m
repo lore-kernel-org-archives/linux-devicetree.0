@@ -1,93 +1,55 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v3] cpufreq: exynos: Fix the compile error
-Date: Fri, 16 May 2014 16:37:15 +0530
-Message-ID: <CAKohponFCpNThX1m9n+_96vN=WqN5zqA-+GWMLMLO_z-3p5okA@mail.gmail.com>
-References: <000001cf70f0$2e48f930$8adaeb90$@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 14/19] ARM: omap4-panda-common.dtsi: Add HDMI audio nodes
+Date: Fri, 16 May 2014 12:08:50 +0100
+Message-ID: <20140516110850.GS12304@sirena.org.uk>
+References: <cover.1399884780.git.jsarha@ti.com>
+ <fdeddff24bc38efb7a155b2569a5f2056278cb9d.1399884780.git.jsarha@ti.com>
+ <5375F0CC.8090507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <000001cf70f0$2e48f930$8adaeb90$@samsung.com>
-Sender: cpufreq-owner@vger.kernel.org
-To: Jonghwan Choi <jhbird.choi@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Jonghwan Choi <jhbird.choi@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZVCaZf8y6aNouToH"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5375F0CC.8090507@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 16 May 2014 15:48, Jonghwan Choi <jhbird.choi@samsung.com> wrote:
-> Commit 7da83a80 ("ARM: EXYNOS: Migrate Exynos specific macros from plat to mach") which lands in samsung tree causes build breakage
-> for cpufreq-exynos like following:
->
-> drivers/cpufreq/exynos-cpufreq.c: In function 'exynos_cpufreq_probe':
-> drivers/cpufreq/exynos-cpufreq.c:166:2: error: implicit declaration of function 'soc_is_exynos4210'
-> [-Werror=implicit-function-declaration]
-> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4212'
-> [-Werror=implicit-function-declaration]
-> drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration of function 'soc_is_exynos4412'
-> [-Werror=implicit-function-declaration]
-> drivers/cpufreq/exynos-cpufreq.c:170:2: error: implicit declaration of function 'soc_is_exynos5250'
-> [-Werror=implicit-function-declaration]
-> cc1: some warnings being treated as errors
-> make[2]: *** [drivers/cpufreq/exynos-cpufreq.o] Error 1
-> make[2]: *** Waiting for unfinished jobs....
-> drivers/cpufreq/exynos4x12-cpufreq.c: In function 'exynos4x12_set_clkdiv':
-> drivers/cpufreq/exynos4x12-cpufreq.c:118:2: error: implicit declaration of function 'soc_is_exynos4212'
-> [-Werror=implicit-function-declaration]
-> cc1: some warnings being treated as errors
-> make[2]: *** [drivers/cpufreq/exynos4x12-cpufreq.o] Error 1
-> make[1]: *** [drivers/cpufreq] Error 2
 
-Blank line here..
+--ZVCaZf8y6aNouToH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> This fixes above error with getting SoC information via of_machine_is_compatible() instead of soc_is_exynosXXXX().
->
-> Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
-> ---
->  drivers/cpufreq/exynos-cpufreq.c     |   20 +++++++++++++++++---
->  drivers/cpufreq/exynos-cpufreq.h     |    8 ++++++++
->  drivers/cpufreq/exynos4x12-cpufreq.c |   11 ++++-------
->  3 files changed, 29 insertions(+), 10 deletions(-)
->
-> diff --git a/drivers/cpufreq/exynos-cpufreq.c b/drivers/cpufreq/exynos-cpufreq.c
-> index f99cfe2..9aecffef 100644
-> --- a/drivers/cpufreq/exynos-cpufreq.c
-> +++ b/drivers/cpufreq/exynos-cpufreq.c
-> @@ -17,6 +17,7 @@
->  #include <linux/regulator/consumer.h>
->  #include <linux/cpufreq.h>
->  #include <linux/platform_device.h>
-> +#include <linux/of.h>
->
->  #include <plat/cpu.h>
->
-> @@ -163,11 +164,24 @@ static int exynos_cpufreq_probe(struct platform_device *pdev)
->         if (!exynos_info)
->                 return -ENOMEM;
->
-> -       if (soc_is_exynos4210())
-> +       if (of_machine_is_compatible("samsung,exynos4210")) {
-> +               exynos_info->type = EXYNOS_SOC_4210;
-> +       } else if (of_machine_is_compatible("samsung,exynos4212")) {
-> +               exynos_info->type = EXYNOS_SOC_4212;
-> +       } else if (of_machine_is_compatible("samsung,exynos4412")) {
-> +               exynos_info->type = EXYNOS_SOC_4212;
+On Fri, May 16, 2014 at 02:04:44PM +0300, Tomi Valkeinen wrote:
 
-4412 ?
+> So all of the above .dts changes are already implied when we have HDMI
+> video on the board. Is there no way to prevent every board needing to
+> add those exact same nodes to get HDMI audio?
 
-> +       } else if (of_machine_is_compatible("samsung,exynos5250")) {
-> +               exynos_info->type = EXYNOS_SOC_5250;
-> +       } else {
-> +               pr_err("%s: Unknown SoC type\n", __func__);
-> +               return -ENODEV;
-> +       }
-> +
-> +       if (exynos_info->type == EXYNOS_SOC_4210)
->                 ret = exynos4210_cpufreq_init(exynos_info);
-> -       else if (soc_is_exynos4212() || soc_is_exynos4412())
-> +       else if (exynos_info->type == EXYNOS_SOC_4212 || exynos_info->type == EXYNOS_SOC_4412)
->                 ret = exynos4x12_cpufreq_init(exynos_info);
-> -       else if (soc_is_exynos5250())
-> +       else if (exynos_info->type == EXYNOS_SOC_5250)
->                 ret = exynos5250_cpufreq_init(exynos_info);
->         else
->                 return 0;
+You can always instantiate devices directly from the HDMI controller
+code, there's no need to put things in DT at all.
 
-Do this in the first if/else only..
+--ZVCaZf8y6aNouToH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTdfG/AAoJELSic+t+oim9c2AQAIHIJ8T0B6vCjx/HrREqf9lt
++YCEm3jEfL+GCCDraM6q4l0O+4BgWyF3qJmUET4VKp6rq6bHCGzj2PXugtlL9pkt
+TjwGyolUuP9nB3z/7Le6WKePMVlcryI91oHdTkzOY9B8wnBJgPNIkASxDVDHhFNi
+AZTGJKqF0r2cefKZygd2dCkasrxAFbveEgpPDPN+LEpCzaTMeJtghkghrVlAKxOp
+rNduwvZNa7IIJAaA8wp5KvMraj+C9r4Wtr0dLFiwDdzyyVIOjH3t2Y3PLqYYKT/Z
+7RwV1szt2sd3FvBXTBNmHGanZ9hsgVP/neiKhCWHT4s8ksSH/92hLaH5HgDheNgc
+lbMAAfBoDJdpJWtOHcAj4F7hMVYYm8GHY44mHmWIZF2IYq9LoNUQEVixJTwnvaPY
+mj0D37uyfBLFHSu1QST3b9QUiUjSTaqsDTNcIyDlE6tF4lOz/yd2pYKB1/sU/ixC
+eEMmtsRHwXtrGi8AWInmcL2uI+psVrg5k1qU7r0OjBxti9RvdQ4tPe+C2R5c3py0
+HPOsMvL00RMvCgjlStvOjd9EFX10AIS8uvFmoZ8Jny3yHe5CWfS6qH8tcYC1VPCw
+3QA1BXoUMKkE/H/ow6tU9vIosignbhL47wEU/+Se3JfvK4idAlC5C/Uv6DwD57AU
+/+y16w+Tj3rxTUrBTdv5
+=Odjx
+-----END PGP SIGNATURE-----
+
+--ZVCaZf8y6aNouToH--
