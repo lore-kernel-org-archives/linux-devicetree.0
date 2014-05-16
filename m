@@ -1,147 +1,45 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
-Date: Fri, 16 May 2014 11:54:44 +0100
-Message-ID: <20140516105444.C1DB7C42277@trevor.secretlab.ca>
-References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org>
-	<1399993115-21552-3-git-send-email-grant.likely@linaro.org>
-	<53757D25.1060005@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Fri, 16 May 2014 11:58:14 +0100
+Message-ID: <20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53757D25.1060005-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@konsulko.>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 May 2014 19:51:17 -0700, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 5/13/2014 7:58 AM, Grant Likely wrote:
-> > Make of_find_node_by_path() handle aliases as prefixes. To make this
-> > work the name search is refactored to search by path component instead
-> > of by full string. This should be a more efficient search, and it makes
-> > it possible to start a search at a subnode of a tree.
-> > 
-> > Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
-> > Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-> > [grant.likely: Rework to not require allocating at runtime]
-> > Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
-> >  1 file changed, 56 insertions(+), 4 deletions(-)
-> > 
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 6e240698353b..60089b9a3014 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
-> >  }
-> >  EXPORT_SYMBOL(of_get_child_by_name);
-> >  
-> > +static struct device_node *__of_find_node_by_path(struct device_node *parent,
-> > +						const char *path)
-> > +{
-> > +	struct device_node *child;
-> > +	int len = strchrnul(path, '/') - path;
-> > +
-> > +	if (!len)
-> > +		return parent;
+On Thu, 15 May 2014 09:20:24 +0200, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Pantelis,
 > 
-> (!len) is true if the the final character of the path passed into of_find_node_by_path()
-> was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
-> should be NULL, indicating that the match fails.
+> On Thu, May 15, 2014 at 9:12 AM, Pantelis Antoniou
+> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> >> We also need to think about kexec. Kexec works by sucking the live tree
+> >> out of the kernel and creating a .dtb from it to pass to the new kernel.
+> >> What will the rules be when kexecing? Do all the overlays need to be
+> >> removed, or does the kernel get the tree with all the overlays applied
+> >> (in which case none of the overlays can be removed on the other side of
+> >> kexec).
+> >
+> > We can add a sysfs attribute that configures whether overlays are reverted before
+> > kexec or not. I can't really tell which is the correct option, so let's allow the
+> > policy up to user-space.
+> 
+> Kexec'ing into a new kernel doesn't change the hardware, so IMHO the
+> in-kernel DT should not change.
 
-Ah, good catch. I should add a test case for that.
+Conceptually though, if overlays are applied then the new kernel has a
+different tree from the old one. If the overlay is hotpluggable, then
+after the kexec, the new kernel would no longer be able to unplug the
+overlay if it uses the current state of the tree instead of pulling the
+overlays off first.
 
-> 
-> > +
-> > +	for_each_child_of_node(parent, child) {
-> > +		const char *name = strrchr(child->full_name, '/');
-> > +		if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> > +			continue;
-> > +		name++;
-> 
-> Why go to the effort of finding the final component of child->full_name instead
-> of just using child->name?
-
-Because child->name and the final component of child->full_name is not
-the same thing. child->name has the unit address stripped off. It is
-part of how OpenFirmware expects to be used. New drivers are never
-supposed to be matching by node name, but I don't currently have a good
-way to go through any driver depending on the OpenFirmware behaviour.
-
-Ideally I'd like to get rid of the difference.
-
-> 
-> > +		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
-> > +			return child;
-> > +	}
-> > +	return NULL;
-> > +}
-> > +
-> >  /**
-> >   *	of_find_node_by_path - Find a node matching a full OF path
-> >   *	@path:	The full path to match
-> > + *	@path: Either the full path to match, or if the path does not
-> 
-> Delete the old @path description.
-
-Oops, thanks.
-
-> 
-> 
-> > + *	       start with '/', the name of a property of the /aliases
-> > + *	       node (an alias).  In the case of an alias, the node
-> > + *	       matching the alias' value will be returned.
-> > + *
-> > + *	Valid paths:
-> > + *		/foo/bar	Full path
-> > + *		foo		Valid alias
-> > + *		foo/bar		Valid alias + relative path
-> >   *
-> >   *	Returns a node pointer with refcount incremented, use
-> >   *	of_node_put() on it when done.
-> > @@ -781,13 +810,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
-> >  struct device_node *of_find_node_by_path(const char *path)
-> >  {
-> >  	struct device_node *np = of_allnodes;
-> > +	struct property *pp;
-> >  	unsigned long flags;
-> >  
-> > +	/* The path could begin with an alias */
-> > +	if (*path != '/') {
-> > +		char *p = strchrnul(path, '/');
-> > +		int len = p - path;
-> > +
-> > +		/* of_aliases must not be NULL */
-> > +		if (!of_aliases)
-> > +			return NULL;
-> > +
-> > +		np = NULL;
-> > +		for_each_property_of_node(of_aliases, pp) {
-> > +			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
-> > +				np = of_find_node_by_path(pp->value);
-> > +				break;
-> > +			}
-> > +		}
-> > +		if (!np)
-> > +			return NULL;
-> > +		path = p;
-> > +	}
-> > +
-> > +	/* Step down the tree matching path components */
-> >  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> > -	for (; np; np = np->allnext) {
-> > -		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
-> > -		    && of_node_get(np))
-> > -			break;
-> > +	while (np && *path == '/') {
-> > +		path++; /* Increment past '/' delimiter */
-> > +		np = __of_find_node_by_path(np, path);
-> > +		path = strchrnul(path, '/');
-> >  	}
-> >  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> >  	return np;
-> > 
-> 
+g.
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
