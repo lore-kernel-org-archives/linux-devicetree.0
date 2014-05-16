@@ -1,43 +1,48 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Fri, 16 May 2014 11:58:14 +0100
-Message-ID: <20140516105814.3EA3FC403C2@trevor.secretlab.ca>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
-	<20140514100856.5198DC4153D@trevor.secretlab.ca>
-	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
-	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 2/9] dt: deps: dependency based device creation
+Date: Fri, 16 May 2014 12:00:08 +0100
+Message-ID: <20140516110008.E2AC9C403C2@trevor.secretlab.ca>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
+	<1399913280-6915-3-git-send-email-holler@ahsoftware.de>
+	<20140514140534.897F8C4153D@trevor.secretlab.ca>
+	<53738261.4000000@ahsoftware.de>
+	<20140514200645.15984C4095B@trevor.secretlab.ca>
+	<5373DBCF.1080503@ahsoftware.de>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <5373DBCF.1080503-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Georgi Vlaev <georgi.vlaev@konsulko.>
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 May 2014 09:20:24 +0200, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
-> Hi Pantelis,
+On Wed, 14 May 2014 23:10:39 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+> Am 14.05.2014 22:06, schrieb Grant Likely:
+> > On Wed, 14 May 2014 16:49:05 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+> >> Am 14.05.2014 16:05, schrieb Grant Likely:
+> >>> On Mon, 12 May 2014 18:47:53 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
 > 
-> On Thu, May 15, 2014 at 9:12 AM, Pantelis Antoniou
-> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
-> >> We also need to think about kexec. Kexec works by sucking the live tree
-> >> out of the kernel and creating a .dtb from it to pass to the new kernel.
-> >> What will the rules be when kexecing? Do all the overlays need to be
-> >> removed, or does the kernel get the tree with all the overlays applied
-> >> (in which case none of the overlays can be removed on the other side of
-> >> kexec).
-> >
-> > We can add a sysfs attribute that configures whether overlays are reverted before
-> > kexec or not. I can't really tell which is the correct option, so let's allow the
-> > policy up to user-space.
+> >> Hmm, I don't really care if that will be merged. I have no motivation to 
+> >> fight with Linux kernel maintainers and I don't know if I will spend the 
+> >> necessary time to do so.
+> > 
+> > The people you need to convince are Rob, Greg, and me, and you've got my
+> > attention. If I'm convinced, then I can probably convince Greg also.
+> > You've got an interesting approach, and I hope you won't give up on it.
 > 
-> Kexec'ing into a new kernel doesn't change the hardware, so IMHO the
-> in-kernel DT should not change.
+> Sorry, but that point of the view is already a problem. Why do I have to
+> convince you people?
+> 
+> To summarize:
+> 
+> Linux kernel maintainers
+> 
+> - don't like code they haven't written theirself,
+> - don't like code which doesn't look like they have written it theirself,
+> - don't like ideas they haven't had themself,
+> - do feel good in their closed group they have formed,
 
-Conceptually though, if overlays are applied then the new kernel has a
-different tree from the old one. If the overlay is hotpluggable, then
-after the kexec, the new kernel would no longer be able to unplug the
-overlay if it uses the current state of the tree instead of pulling the
-overlays off first.
+I'm sorry that you feel that way and that you don't want to continue
+with this. Best wishes.
 
 g.
 
