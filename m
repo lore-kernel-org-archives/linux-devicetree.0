@@ -1,85 +1,121 @@
-From: Mark Salter <msalter@redhat.com>
-Subject: Re: [PATCH v4 4/4] drivers: net: Add APM X-Gene SoC ethernet driver
- support.
-Date: Fri, 16 May 2014 12:45:05 -0400
-Message-ID: <1400258705.21547.217.camel@deneb.redhat.com>
-References: <1399326447-2329-1-git-send-email-isubramanian@apm.com>
-	 <1399326447-2329-5-git-send-email-isubramanian@apm.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [RFC PATCH 06/10] usb: xhci: Add Tegra XHCI host-controller driver
+Date: Fri, 16 May 2014 09:52:30 -0700
+Message-ID: <CAL1qeaFko7jOMmLS412JuspZjkAiK2RXA32kbx3HJygyhD=a7w@mail.gmail.com>
+References: <1400113986-339-1-git-send-email-abrestic@chromium.org>
+	<1400113986-339-7-git-send-email-abrestic@chromium.org>
+	<15599140.PsD4j7x3tZ@wuerfel>
+	<CAL1qeaHm7U2NVDeVZS-Tiz5ntkk4c13RR_1ws9MTYGGoGCOB5A@mail.gmail.com>
+	<20140515211812.GC7136@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399326447-2329-5-git-send-email-isubramanian@apm.com>
+In-Reply-To: <20140515211812.GC7136@mithrandir>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Iyappan Subramanian <isubramanian@apm.com>
-Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, jcm@redhat.com, gregkh@linuxfoundation.org, patches@apm.com, linux-kernel@vger.kernel.org, Keyur Chudgar <kchudgar@apm.com>, linux-arm-kernel@lists.infradead.org, Ravi Patel <rapatel@apm.com>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Randy Dunlap <rdunlap@infr>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-05-05 at 14:47 -0700, Iyappan Subramanian wrote:
-> +static int xgene_enet_probe(struct platform_device *pdev)
-> +{
-> +       struct net_device *ndev;
-> +       struct xgene_enet_pdata *pdata;
-> +       struct device *dev = &pdev->dev;
-> +       struct napi_struct *napi;
-> +       int ret = 0;
-> +
-> +       ndev = alloc_etherdev(sizeof(struct xgene_enet_pdata));
-> +       if (!ndev)
-> +               return -ENOMEM;
-> +
-> +       pdata = netdev_priv(ndev);
-> +
-> +       pdata->pdev = pdev;
-> +       pdata->ndev = ndev;
-> +       SET_NETDEV_DEV(ndev, dev);
-> +       platform_set_drvdata(pdev, pdata);
-> +       ndev->netdev_ops = &xgene_ndev_ops;
-> +       ndev->features |= NETIF_F_IP_CSUM;
-> +       ndev->features |= NETIF_F_GSO;
-> +       ndev->features |= NETIF_F_GRO;
-> +
+On Thu, May 15, 2014 at 2:18 PM, Thierry Reding
+<thierry.reding@gmail.com> wrote:
+> On Thu, May 15, 2014 at 01:18:22PM -0700, Andrew Bresticker wrote:
+>> Arnd,
+>>
+>> On Thu, May 15, 2014 at 1:17 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>> > On Wednesday 14 May 2014 17:33:02 Andrew Bresticker wrote:
+>> >> +
+>> >> +int tegra_xhci_register_mbox_notifier(struct notifier_block *nb)
+>> >> +{
+>> >> +     int ret;
+>> >> +
+>> >> +     mutex_lock(&tegra_xhci_mbox_lock);
+>> >> +     ret = raw_notifier_chain_register(&tegra_xhci_mbox_notifiers, nb);
+>> >> +     mutex_unlock(&tegra_xhci_mbox_lock);
+>> >> +
+>> >> +     return ret;
+>> >> +}
+>> >> +EXPORT_SYMBOL(tegra_xhci_register_mbox_notifier);
+>> >> +
+>> >> +void tegra_xhci_unregister_mbox_notifier(struct notifier_block *nb)
+>> >> +{
+>> >> +     mutex_lock(&tegra_xhci_mbox_lock);
+>> >> +     raw_notifier_chain_unregister(&tegra_xhci_mbox_notifiers, nb);
+>> >> +     mutex_unlock(&tegra_xhci_mbox_lock);
+>> >> +}
+>> >> +EXPORT_SYMBOL(tegra_xhci_unregister_mbox_notifier);
+>> >
+>> > What driver would use these?
+>>
+>> It's used by just this driver (the host) and the PHY driver (next
+>> patch in series).
+>>
+>> > My feeling is that if you have a mailbox that is used by multiple
+>> > drivers, you should use a proper mailbox driver to operate them,
+>> > and have the drivers register with that API instead of a custom one.
+>>
+>> Ok, will do.
+>>
+>> >> +     /* Create child xhci-plat device */
+>> >> +     memset(xhci_resources, 0, sizeof(xhci_resources));
+>> >> +     res = platform_get_resource(to_platform_device(dev), IORESOURCE_IRQ, 0);
+>> >> +     if (!res) {
+>> >> +             dev_err(dev, "Missing XHCI IRQ\n");
+>> >> +             ret = -ENODEV;
+>> >> +             goto out;
+>> >> +     }
+>> >> +     xhci_resources[0].start = res->start;
+>> >> +     xhci_resources[0].end = res->end;
+>> >> +     xhci_resources[0].flags = res->flags;
+>> >> +     xhci_resources[0].name = res->name;
+>> >> +     res = platform_get_resource(to_platform_device(dev), IORESOURCE_MEM, 0);
+>> >> +     if (!res) {
+>> >> +             dev_err(dev, "Missing XHCI registers\n");
+>> >> +             ret = -ENODEV;
+>> >> +             goto out;
+>> >> +     }
+>> >> +     xhci_resources[1].start = res->start;
+>> >> +     xhci_resources[1].end = res->end;
+>> >> +     xhci_resources[1].flags = res->flags;
+>> >> +     xhci_resources[1].name = res->name;
+>> >> +
+>> >> +     xhci = platform_device_alloc("xhci-hcd", PLATFORM_DEVID_AUTO);
+>> >> +     if (!xhci) {
+>> >> +             dev_err(dev, "Failed to allocate XHCI host\n");
+>> >> +             ret = -ENOMEM;
+>> >> +             goto out;
+>> >> +     }
+>> >
+>> > This does not feel appropriate at all: Rather than creating a child device,
+>> > you should have a specific driver that hooks into functions exported
+>> > by the xhci core. See Documentation/driver-model/design-patterns.txt
+>>
+>> This is how DWC3, currently the only in-tree non-PCI XHCI host driver,
+>> is structured - see drivers/usb/dwc3/host.c.  The recently proposed
+>> Armada XHCI driver [1] just adds clock support and a hook in
+>> xhci-plat's probe() to do the platform-specific initialization.
+>
+> Ugh... that very much sounds like the midlayer mistake. Doing that is
+> not going to scale in the long run. Everybody will just keep adding
+> quirks to the initialization until it's become a huge mess.
 
-You're missing:
+Agreed - I didn't even bother trying to write the Tegra driver like that.
 
-         spin_lock_init(&pdata->stats_lock);
+>> Tegra's XHCI driver initialization is quite a bit more complicated,
+>> mainly due to the need for external firmware and specific ordering
+>> (e.g. firmware messages should only be enabled after the HCD is
+>> created).  I could do away with the xhci-plat sub-device and just
+>> create a Tegra hc_driver, but it seems silly to have three XHCI
+>> platform drivers structured in three different ways.  USB folks, do
+>> you have an opinion on how this should be done?
+>
+> The tendency in other subsystems (and I think this is also true to some
+> degree for USB, though I'm less familiar with it) is to make common
+> functions available as a library of helpers so that other drivers can
+> use them (either directly or by wrapping them in platform-specific
+> implementations). That allows you to keep the platform-specific code
+> where it belongs: in the platform-specific driver.
 
-Lockdep (if enabled) complains:
+Yes, this is how the non-PCI EHCI host drivers are written.  I'll
+structure it more like that for the next spin.
 
- xgene_enet_probe: 852
- INFO: trying to register non-static key.
- the code is fine but needs lockdep annotation.
- turning off the locking correctness validator.
- CPU: 4 PID: 1 Comm: swapper/0 Not tainted 3.15.0-rc4+ #13
- Call trace:
- [<ffffffc000087ef4>] dump_backtrace+0x0/0x16c
- [<ffffffc000088070>] show_stack+0x10/0x1c
- [<ffffffc000766b04>] dump_stack+0x88/0xb8
- [<ffffffc00010243c>] __lock_acquire+0x1914/0x1ce0
- [<ffffffc000102fa0>] lock_acquire+0x9c/0x1d0
- [<ffffffc00076d418>] _raw_spin_lock+0x40/0x58
- [<ffffffc0004fced0>] xgene_enet_get_stats+0x34/0x140
- [<ffffffc0005fd7dc>] dev_get_stats+0x90/0xbc
- [<ffffffc00061736c>] rtnl_fill_ifinfo+0x388/0x8e4
- [<ffffffc000617938>] rtmsg_ifinfo+0x70/0x10c
- [<ffffffc000609e98>] register_netdevice+0x370/0x400
- [<ffffffc000609f3c>] register_netdev+0x14/0x2c
- [<ffffffc0004fd7ec>] xgene_enet_probe+0x1cc/0x618
- [<ffffffc0004a1928>] platform_drv_probe+0x28/0x80
- [<ffffffc00049fc38>] driver_probe_device+0x98/0x3ac
- [<ffffffc0004a0040>] __driver_attach+0xa0/0xa8
- [<ffffffc00049dd78>] bus_for_each_dev+0x54/0x98
- [<ffffffc00049f65c>] driver_attach+0x1c/0x28
- [<ffffffc00049f234>] bus_add_driver+0x164/0x240
- [<ffffffc0004a06b8>] driver_register+0x64/0x130
- [<ffffffc0004a187c>] __platform_driver_register+0x5c/0x68
- [<ffffffc000c08e14>] xgene_enet_driver_init+0x14/0x20
- [<ffffffc000081418>] do_one_initcall+0xc4/0x154
- [<ffffffc000bd2a74>] kernel_init_freeable+0x204/0x2a8
- [<ffffffc00075e8a0>] kernel_init+0xc/0xd4
-
-> +       ret = xgene_enet_get_resources(pdata);
-> +       if (ret)
-> +               goto err;
-> +
-> +       ret = register_netdev(ndev);
+-Andrew
