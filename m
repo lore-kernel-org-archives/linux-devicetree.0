@@ -1,55 +1,78 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 14/19] ARM: omap4-panda-common.dtsi: Add HDMI audio nodes
-Date: Fri, 16 May 2014 12:08:50 +0100
-Message-ID: <20140516110850.GS12304@sirena.org.uk>
-References: <cover.1399884780.git.jsarha@ti.com>
- <fdeddff24bc38efb7a155b2569a5f2056278cb9d.1399884780.git.jsarha@ti.com>
- <5375F0CC.8090507@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Fri, 16 May 2014 13:52:42 +0200
+Message-ID: <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ZVCaZf8y6aNouToH"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5375F0CC.8090507@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140516105814.3EA3FC403C2-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek>
 List-Id: devicetree@vger.kernel.org
 
+Hi Grant,
 
---ZVCaZf8y6aNouToH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Fri, May 16, 2014 at 12:58 PM, Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Thu, 15 May 2014 09:20:24 +0200, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+>> On Thu, May 15, 2014 at 9:12 AM, Pantelis Antoniou
+>> <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> >> We also need to think about kexec. Kexec works by sucking the live tree
+>> >> out of the kernel and creating a .dtb from it to pass to the new kernel.
+>> >> What will the rules be when kexecing? Do all the overlays need to be
+>> >> removed, or does the kernel get the tree with all the overlays applied
+>> >> (in which case none of the overlays can be removed on the other side of
+>> >> kexec).
+>> >
+>> > We can add a sysfs attribute that configures whether overlays are reverted before
+>> > kexec or not. I can't really tell which is the correct option, so let's allow the
+>> > policy up to user-space.
+>>
+>> Kexec'ing into a new kernel doesn't change the hardware, so IMHO the
+>> in-kernel DT should not change.
+>
+> Conceptually though, if overlays are applied then the new kernel has a
+> different tree from the old one. If the overlay is hotpluggable, then
+> after the kexec, the new kernel would no longer be able to unplug the
+> overlay if it uses the current state of the tree instead of pulling the
+> overlays off first.
 
-On Fri, May 16, 2014 at 02:04:44PM +0300, Tomi Valkeinen wrote:
+Which brings me to another question...
 
-> So all of the above .dts changes are already implied when we have HDMI
-> video on the board. Is there no way to prevent every board needing to
-> add those exact same nodes to get HDMI audio?
+Why has the overlay system been designed for plugging and unpluging whole
+overlays?
+That means the kernel has to remember the full stack, causing issues with
+e.g. kexec.
 
-You can always instantiate devices directly from the HDMI controller
-code, there's no need to put things in DT at all.
+Why not allowing the addition of removal of subtrees of the full device
+tree?
+This is similar to other hotpluggable subsystems (which are not necessarily
+DT-based), like PCI Express. That way the kernel can pass a
+DT-representation of the actual current device tree to a kexec'ed kernel.
 
---ZVCaZf8y6aNouToH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I missed the initial design discussions, so forgive me if this has been
+beaten to death before.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Thanks for your answers!
 
-iQIcBAEBAgAGBQJTdfG/AAoJELSic+t+oim9c2AQAIHIJ8T0B6vCjx/HrREqf9lt
-+YCEm3jEfL+GCCDraM6q4l0O+4BgWyF3qJmUET4VKp6rq6bHCGzj2PXugtlL9pkt
-TjwGyolUuP9nB3z/7Le6WKePMVlcryI91oHdTkzOY9B8wnBJgPNIkASxDVDHhFNi
-AZTGJKqF0r2cefKZygd2dCkasrxAFbveEgpPDPN+LEpCzaTMeJtghkghrVlAKxOp
-rNduwvZNa7IIJAaA8wp5KvMraj+C9r4Wtr0dLFiwDdzyyVIOjH3t2Y3PLqYYKT/Z
-7RwV1szt2sd3FvBXTBNmHGanZ9hsgVP/neiKhCWHT4s8ksSH/92hLaH5HgDheNgc
-lbMAAfBoDJdpJWtOHcAj4F7hMVYYm8GHY44mHmWIZF2IYq9LoNUQEVixJTwnvaPY
-mj0D37uyfBLFHSu1QST3b9QUiUjSTaqsDTNcIyDlE6tF4lOz/yd2pYKB1/sU/ixC
-eEMmtsRHwXtrGi8AWInmcL2uI+psVrg5k1qU7r0OjBxti9RvdQ4tPe+C2R5c3py0
-HPOsMvL00RMvCgjlStvOjd9EFX10AIS8uvFmoZ8Jny3yHe5CWfS6qH8tcYC1VPCw
-3QA1BXoUMKkE/H/ow6tU9vIosignbhL47wEU/+Se3JfvK4idAlC5C/Uv6DwD57AU
-/+y16w+Tj3rxTUrBTdv5
-=Odjx
------END PGP SIGNATURE-----
+Gr{oetje,eeting}s,
 
---ZVCaZf8y6aNouToH--
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
