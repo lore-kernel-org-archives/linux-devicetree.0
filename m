@@ -1,69 +1,77 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH RFC 3/4] clk: samsung: Add driver to control CLKOUT line
- on Exynos SoCs
-Date: Fri, 16 May 2014 16:09:26 +0530
-Message-ID: <CAPdUM4P7Z1eLVKuc0N1iPaekM_7kNv7KCve2MgrEziszfnzz7A@mail.gmail.com>
-References: <1400175151-27779-1-git-send-email-t.figa@samsung.com>
-	<1400175151-27779-4-git-send-email-t.figa@samsung.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH 0/3] ARM: OMAP5+: Support Duty Cycle Correction(DCC)
+Date: Fri, 16 May 2014 05:45:57 -0500
+Message-ID: <1400237160-25125-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400175151-27779-4-git-send-email-t.figa@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Tushar Behera <tushar.behera@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>, Tero Kristo <t-kristo@ti.com>, Paul <paul@pwsan.com>
+Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[snip]
-> +       gate->lock = &clkout_lock;
-> +
-> +       mux->reg = reg + EXYNOS_PMU_DEBUG_REG;
-> +       mux->mask = EXYNOS_CLKOUT_MUX_MASK;
-> +       mux->shift = EXYNOS_CLKOUT_MUX_SHIFT;
-> +       mux->lock = &clkout_lock;
-> +
-> +       clk = clk_register_composite(NULL, "clkout", parent_names,
-> +                                       parent_count, &mux->hw,
-> +                                       &clk_mux_ops, NULL, NULL, &gate->hw,
-> +                                       &clk_gate_ops, 0);
-> +       if (IS_ERR(clk))
-> +               goto err_unmap;
-> +
+Hi,
 
-Hi Tomasz,
+This patch series has been carried over in vendor kernel for quiet
+few years now.
 
-Do we really need a composite clock here? How about registering
-a mux and a gate separately?
+Unfortunately, it was very recently re-discovered and upstream kernel
+is noticed to be broken for OMAP5 1.5GHz - at least we are operating
+DPLL at frequency higher than what it was intended to be when CPUFreq
+is enabled. Thankfully, with nominal voltage(we dont use AVS yet in
+upstream for the mentioned platforms) and margins in trimming, we
+have so far not crashed - but I strongly suspect this might be some
+boundary case survival.
+
+Verified on the following impacted platforms using 3.15-rc4 based
+vendor kernel.
+
+Before:
+OMAP5432: http://slexy.org/view/s20cs0qQFg
+DRA72x: http://slexy.org/view/s2TXtSa6mH (refused to lock)
+DRA75x: http://slexy.org/view/s20AW8MU5c
+After:
+OMAP5432: http://slexy.org/view/s21iAfWxpu
+DRA72x: http://slexy.org/view/s2hwsvGLmC (locks properly)
+DRA75x: http://slexy.org/view/s21ehw8WQn
+
+Hopefully, we can get these into some kernel revision in some form.
+
+NOTE: Support for 4470(which is the only other platform requiring
+DCC) is not present in upstream kernel and there are no plans to
+support that SoC, even if it is added at a later point, support can be
+extended as needed.
+
+Series based on v3.15-rc5 tag.
+Also available on my tree:
+	https://github.com/nmenon/linux-2.6-playground/
+	branch:  push/clock/dcc 
+	
+	weblink: https://github.com/nmenon/linux-2.6-playground/commits/push/clock/dcc
+
+Verification:
+3.15-rc4 based kernel - DRA75x-evm, 72x-evm, OMAP5uevm
+3.15-rc5 - OMAP5uEVM(only one supporting 1.5GHz atm)
+
+Andrii Tseglytskyi (1):
+  ARM: OMAP5+: dpll: support Duty Cycle Correction(DCC)
+
+Nishanth Menon (2):
+  clk: dpll: support OMAP5 MPU DPLL that need special handling for
+    higher frequencies
+  ARM: dts: OMAP5/DRA7: use omap5-mpu-dpll-clock capable of dealing
+    with higher frequencies
+
+ .../devicetree/bindings/clock/ti/dpll.txt          |    1 +
+ arch/arm/boot/dts/dra7xx-clocks.dtsi               |    2 +-
+ arch/arm/boot/dts/omap54xx-clocks.dtsi             |    2 +-
+ arch/arm/mach-omap2/dpll3xxx.c                     |    9 +++++++++
+ drivers/clk/ti/dpll.c                              |   21 ++++++++++++++++++++
+ include/linux/clk/ti.h                             |    4 ++++
+ 6 files changed, 37 insertions(+), 2 deletions(-)
 
 Regards,
-Rahul Sharma.
+Nishanth Menon
+-- 
+1.7.9.5
 
-> +       of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> +
-> +       return;
-> +
-> +err_unmap:
-> +       iounmap(reg);
-> +clks_put:
-> +       for (i = 0; i < EXYNOS_CLKOUT_PARENTS; ++i)
-> +               if (!IS_ERR(parents[i]))
-> +                       clk_put(parents[i]);
-> +free_gate:
-> +       kfree(gate);
-> +free_mux:
-> +       kfree(mux);
-> +
-> +       pr_err("%s: failed to register clkout clock\n", __func__);
-> +}
-> +CLK_OF_DECLARE(exynos4210_clkout, "samsung,exynos4210-pmu", exynos_clkout_init);
-> +CLK_OF_DECLARE(exynos4412_clkout, "samsung,exynos4x12-pmu", exynos_clkout_init);
-> +CLK_OF_DECLARE(exynos5250_clkout, "samsung,exynos5250-pmu", exynos_clkout_init);
-> +CLK_OF_DECLARE(exynos5420_clkout, "samsung,exynos5420-pmu", exynos_clkout_init);
-> --
-> 1.9.2
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
