@@ -1,52 +1,27 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 Subject: Re: [PATCHv4 0/5] Add DT support for fixed PHYs
-Date: Fri, 16 May 2014 22:46:47 +0200
-Message-ID: <20140516224647.1a76edac@free-electrons.com>
+Date: Fri, 16 May 2014 17:20:09 -0400 (EDT)
+Message-ID: <20140516.172009.632611701865367987.davem@davemloft.net>
 References: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<CAGVrzca7xi4_sGgF0FyFcM0Zo3-mMENP0-aoU=qoV9qshxNzsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzca7xi4_sGgF0FyFcM0Zo3-mMENP0-aoU=qoV9qshxNzsw@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400249647-4643-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org, tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, christian.gmeiner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Date: Fri, 16 May 2014 16:14:02 +0200
 
-On Fri, 16 May 2014 11:27:36 -0700, Florian Fainelli wrote:
+> Here is a fourth version of the patch set that adds a Device Tree
+> binding and the related code to support fixed PHYs. I'm hoping to get
+> this merged in 3.16.
 
-> > Here is a fourth version of the patch set that adds a Device Tree
-> > binding and the related code to support fixed PHYs. I'm hoping to get
-> > this merged in 3.16.
-> 
-> Thanks for being persistent on this and coming back with these
-> patches, that is really appreciated.
-> 
-> I gave this patch set a try on a brcmstb system with SYSTEMPORT and my
-> latest changes to net/dsa/ to allow for different PHY setups to be
-> used with the SoC integrated switch. This switch has a mix of fixed
-> and real PHYs. This works like a charm, so long as you consistently
-> use the "new" functions, and not the old ones, which is totally
-> expected. This is excellent work!
-
-Thanks a lot for your review and testing.
-
-> As we discussed offline, I think we need to progressively get rid of
-> of_phy_connect_fixed() to avoid having to debug situations where the
-> old 'fixed-link' property used some sparse addressing scheme, which is
-> now incompatible with the dynamic address allocation scheme.
-
-Yes, agreed. As we discussed, my plan is to send a followup patch
-series to fix the users of the old API to finally remove it. But I'd
-like to do this once this series gets accepted and applied.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Series applied, thanks Thomas.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
