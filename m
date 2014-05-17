@@ -1,260 +1,103 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH 1/2] irqchip: add Broadcom Set Top Box Level-2 interrupt controller
-Date: Sat, 17 May 2014 10:52:52 -0700
-Message-ID: <1400349173-11045-2-git-send-email-f.fainelli@gmail.com>
-References: <1400349173-11045-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400349173-11045-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
+Date: Sat, 17 May 2014 22:48:06 +0200
+Message-ID: <20140517204805.GA1046@mithrandir>
+References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
+ <20140517170455.08e181f16d3abf36d1ec6274@samsung.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140517170455.08e181f16d3abf36d1ec6274@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Cho KyongHo <pullip.cho@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Grundler <grundler@chromium.org>, Dave Martin <Dave.Martin@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the Level-2 interrupt controller hardware
-found in Broadcom Set Top Box System-on-a-Chip devices. This interrupt
-controller is implemented using the generic IRQ chip driver with
-separate enable and disable registers.
 
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/irqchip/Kconfig          |   6 ++
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-brcmstb-l2.c | 200 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 207 insertions(+)
- create mode 100644 drivers/irqchip/irq-brcmstb-l2.c
+--6TrnltStXW4iwmi0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index d770f7406631..bbb746e35500 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -30,6 +30,12 @@ config ARM_VIC_NR
- 	  The maximum number of VICs available in the system, for
- 	  power management.
- 
-+config BRCMSTB_L2_IRQ
-+	bool
-+	depends on ARM
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+
- config DW_APB_ICTL
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index f180f8d5fb7b..62a13e5ef98f 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -29,3 +29,4 @@ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
- obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
- obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
-+obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
-new file mode 100644
-index 000000000000..336f0ae5591a
---- /dev/null
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -0,0 +1,200 @@
-+/*
-+ * Generic Broadcom Set Top Box Level 2 Interrupt controller driver
-+ *
-+ * Copyright (C) 2014 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#define pr_fmt(fmt)	KBUILD_MODNAME	": " fmt
-+
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/io.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
-+
-+#include <asm/mach/irq.h>
-+
-+#include "irqchip.h"
-+
-+/* Register offsets in the L2 interrupt controller */
-+#define CPU_STATUS	0x00
-+#define CPU_SET		0x04
-+#define CPU_CLEAR	0x08
-+#define CPU_MASK_STATUS	0x0c
-+#define CPU_MASK_SET	0x10
-+#define CPU_MASK_CLEAR	0x14
-+
-+/* L2 intc private data structure */
-+struct brcmstb_l2_intc_data {
-+	int parent_irq;
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	bool can_wake;
-+	u32 saved_mask; /* for suspend/resume */
-+};
-+
-+static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct brcmstb_l2_intc_data *b = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_get_chip(irq);
-+	u32 status;
-+
-+	chained_irq_enter(chip, desc);
-+
-+	status = __raw_readl(b->base + CPU_STATUS) &
-+		~(__raw_readl(b->base + CPU_MASK_STATUS));
-+
-+	if (status == 0) {
-+		do_bad_IRQ(irq, desc);
-+		goto out;
-+	}
-+
-+	do {
-+		irq = ffs(status) - 1;
-+		/* ack at our level */
-+		__raw_writel(1 << irq, b->base + CPU_CLEAR);
-+		status &= ~(1 << irq);
-+		generic_handle_irq(irq_find_mapping(b->domain, irq));
-+	} while (status);
-+out:
-+	chained_irq_exit(chip, desc);
-+}
-+
-+static void brcmstb_l2_intc_suspend(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct brcmstb_l2_intc_data *b = gc->private;
-+
-+	irq_gc_lock(gc);
-+	/* Save the current mask */
-+	b->saved_mask = __raw_readl(b->base + CPU_MASK_STATUS);
-+
-+	if (b->can_wake) {
-+		/* Program the wakeup mask */
-+		__raw_writel(~gc->wake_active, b->base + CPU_MASK_SET);
-+		__raw_writel(gc->wake_active, b->base + CPU_MASK_CLEAR);
-+	}
-+	irq_gc_unlock(gc);
-+}
-+
-+static void brcmstb_l2_intc_resume(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct brcmstb_l2_intc_data *b = gc->private;
-+
-+	irq_gc_lock(gc);
-+	/* Clear unmasked non-wakeup interrupts */
-+	__raw_writel(~b->saved_mask & ~gc->wake_active, b->base + CPU_CLEAR);
-+
-+	/* Restore the saved mask */
-+	__raw_writel(b->saved_mask, b->base + CPU_MASK_SET);
-+	__raw_writel(~b->saved_mask, b->base + CPU_MASK_CLEAR);
-+	irq_gc_unlock(gc);
-+}
-+
-+int __init brcmstb_l2_intc_of_init(struct device_node *np,
-+					struct device_node *parent)
-+{
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct brcmstb_l2_intc_data *data;
-+	struct irq_chip_generic *gc;
-+	struct irq_chip_type *ct;
-+	int ret;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->base = of_iomap(np, 0);
-+	if (!data->base) {
-+		pr_err("failed to remap intc L2 registers\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Disable all interrupts by default */
-+	__raw_writel(0xffffffff, data->base + CPU_MASK_SET);
-+	__raw_writel(0xffffffff, data->base + CPU_CLEAR);
-+
-+	data->parent_irq = irq_of_parse_and_map(np, 0);
-+	if (data->parent_irq < 0) {
-+		pr_err("failed to find parent interrupt\n");
-+		ret = data->parent_irq;
-+		goto out_unmap;
-+	}
-+
-+	data->domain = irq_domain_add_linear(np, 32,
-+				&irq_generic_chip_ops, NULL);
-+	if (!data->domain) {
-+		ret = -ENOMEM;
-+		goto out_unmap;
-+	}
-+
-+	/* Allocate a single Generic IRQ chip for this node */
-+	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
-+				np->full_name, handle_level_irq, clr, 0, 0);
-+	if (ret) {
-+		pr_err("failed to allocate generic irq chip\n");
-+		goto out_free_domain;
-+	}
-+
-+	/* Set the IRQ chaining logic */
-+	irq_set_handler_data(data->parent_irq, data);
-+	irq_set_chained_handler(data->parent_irq, brcmstb_l2_intc_irq_handle);
-+
-+	gc = irq_get_domain_generic_chip(data->domain, 0);
-+	gc->reg_base = data->base;
-+	gc->private = data;
-+	ct = gc->chip_types;
-+
-+	ct->chip.irq_ack = irq_gc_ack_set_bit;
-+	ct->regs.ack = CPU_CLEAR;
-+
-+	ct->chip.irq_mask = irq_gc_mask_disable_reg;
-+	ct->regs.disable = CPU_MASK_SET;
-+
-+	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
-+	ct->regs.enable = CPU_MASK_CLEAR;
-+
-+	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
-+	ct->chip.irq_resume = brcmstb_l2_intc_resume;
-+
-+	if (of_property_read_bool(np, "brcm,irq-can-wake")) {
-+		data->can_wake = true;
-+		/* This IRQ chip can wake the system, set all child interrupts
-+		 * in wake_enabled mask
-+		 */
-+		gc->wake_enabled = 0xffffffff;
-+		ct->chip.irq_set_wake = irq_gc_set_wake;
-+	}
-+
-+	pr_info("registered L2 intc (mem: 0x%p, parent irq: %d)\n",
-+			data->base, data->parent_irq);
-+
-+	return 0;
-+
-+out_free_domain:
-+	irq_domain_remove(data->domain);
-+out_unmap:
-+	iounmap(data->base);
-+	kfree(data);
-+	return ret;
-+}
-+IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_intc_of_init);
--- 
-1.9.1
+On Sat, May 17, 2014 at 05:04:55PM +0900, Cho KyongHo wrote:
+> On Fri, 16 May 2014 14:23:18 +0200, Thierry Reding wrote:
+[...]
+> > +Examples:
+> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +Single-master IOMMU:
+> > +--------------------
+> > +
+> > +	iommu {
+> > +		#iommu-cells =3D <0>;
+> > +	};
+> > +
+> > +	master {
+> > +		iommu =3D <&/iommu>;
+> > +	};
+> > +
+>=20
+> Great work, Thierry.
+>=20
+> One simple comment.
+>=20
+> This should be also applicable to multi-master IOMMUs that the masters
+> of an IOMMU is not configurable with ID or something.
+> I think the title needs to be changed to cover such IOMMUs which always
+> translate master's transactions and unable to change the configuration
+> of the relationship between the masters and IOMMUs by S/W.
+
+Agreed, how about we add a separate example for that case:
+
+Multiple-master IOMMU with fixed associations:
+----------------------------------------------
+
+	/* multiple-master IOMMU */
+	iommu {
+		/*
+		 * Masters are statically associated with this IOMMU and
+		 * address translation is always enabled.
+		 */
+		#iommu-cells =3D <0>;
+	};
+
+	/* static association with IOMMU */
+	master@1 {
+		reg =3D <1>;
+		iommus =3D <&/iommu>;
+	};
+
+	/* static association with IOMMU */
+	master@2 {
+		reg =3D <2>;
+		iommus =3D <&/iommu>;
+	};
+
+?
+
+Thierry
+
+--6TrnltStXW4iwmi0
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTd8sFAAoJEN0jrNd/PrOhGXIQAJOqRSklMjl4lFQfRhWaoB3m
+pYpRwqjrA0rLzEb+u6bk5Kv4kLRK5wOYr6Fd/y8DYONY+vZ0SXBOgEo7uv/mXURM
+R2m8tTiKLtmQm6xZ///FmcU98lOZM+l6Vv3/F+QVH/41RRNTzTXXir0q2XTYG5wU
+Fefylq654a8Ha1rDN2Y6kPt4P/1Q0tuA/7Z0jidDYXK04Pp+5QTBUHSFAYJ4V1Q3
+HuH2XmCioGRTem4cl4SMM6uA+IrnuZcXePrNT35HwtN6bmSe2IKNxaK+VKvnVzza
+Qc0hvQEDdsjijs1Fy4rY3zPhkvAGz/rbs6nYUJpRl96R3Zb5sKaO2Vqj9glLX5/e
+B5/wv5yVSs/ygRLW8/E76LXB2PNqkVg68smSRGrA/7q7iU2/ZUatnqoVCTWT2Jid
+0zUkBur8KM0wdBrowgrs/sVzFvS5Ii/yUyyfXJQWZELkhEo681LGGNt7PXYugjtr
+P//6zQwn1ogR7xq+7hCcy5yZAtc8UrXyIRF9/XrNvdGhg0zXdaQa1viM5AapeLGs
+WAPwb+KlFvXxG/8EY96Y59LvULcP5oGhwMXkUrkvH9OiDzZXIVbEZfrtCvKhUzn6
+G7CzsIQr4Q3+5u42Ndt94WglpdiDfVeUmh6ofv34rTZHqy7MGpybJBp67qf0sff9
+wO7Z6vqP8a7m/yZuQ7tr
+=Y4ib
+-----END PGP SIGNATURE-----
+
+--6TrnltStXW4iwmi0--
