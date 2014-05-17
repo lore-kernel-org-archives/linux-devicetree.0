@@ -1,67 +1,76 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
- 'dependencies' which contains a list of referenced phandles
-Date: Sat, 17 May 2014 14:16:52 +0200
-Message-ID: <53775334.3030704@gmail.com>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <1399913280-6915-2-git-send-email-holler@ahsoftware.de>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH] ARM: sunxi: dt: build DTs according to new
+ MACH_SUNxI Kconfig symbols
+Date: Sat, 17 May 2014 21:11:20 +0800
+Message-ID: <1400332280-5398-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399913280-6915-2-git-send-email-holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBE6A3WNQKGQE6R5TBIY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+Allwinner sunxi support has been split into the various SoCs in Kconfig.
+Adapt the new symbols for the device trees.
 
-On 12.05.2014 18:47, Alexander Holler wrote:
-> During the step from .dts to .dtb the information about dependcies contained
-> in the .dts through phandle references is lost. This makes it impossible to
-> use the binary blob to create a dependency graph without knowing the semantic
-> of all cell arrays.
-> 
-> Therefor automatically add a new property called 'dependencies' to all nodes
-> which have phandle references in one of their properties.
-> 
-> This new property will contain an array of phandles with one value for every
-> phandle referenced by other properties in the node.
-> 
-> If such a property already exists (e.g. to manually add dependencies through
-> the .dts), the existing list will be expanded.
-> 
-> Added phandles will be the phandle of either the referenced node itself (if
-> it has a property named 'compatible', or of the next parent of the referenced
-> node which as property named 'compatible'. This ensures only dependencies to
-> drivers will be added.
-> 
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
 
-Sounds good.
+Hi,
 
-> References to phandles of parent or child nodes will not be added to this
-> property, because this information is already contained in the blob (in the
-> form of the tree itself).
+This patch lets us build the DTBs according to the SoCs we selected in
+kernel config. This matches the build behavior of the kernel itself
+after splitting up sunxi support to various SoCs in Kconfig.
 
-I wonder if we shouldn't be including them too for consistency related
-reasons, so we have all the necessary information in one place.
-References to child nodes are great recipes for cycles, though...
+Maxime, could you take this?
 
-No strong opinion, though, just an idea.
 
-> 
-> No dependencies to disabled nodes will be added.
-> 
+Cheers
+ChenYu
 
-Same here. IMHO it might be wise to let the parsing entity (e.g. kernel)
-decide whether to ignore a dependency to disabled node or not.
+---
+ arch/arm/boot/dts/Makefile | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-Otherwise, I like the simplicity of compile-time dependency list
-creation. Quite a nice work.
-
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 1d9c50d..9db0b9d 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -332,21 +332,24 @@ dtb-$(CONFIG_ARCH_STI)+= stih415-b2000.dtb \
+ 	stih416-b2000.dtb \
+ 	stih415-b2020.dtb \
+ 	stih416-b2020.dtb
+-dtb-$(CONFIG_ARCH_SUNXI) += \
++dtb-$(CONFIG_MACH_SUN4I) += \
+ 	sun4i-a10-a1000.dtb \
+ 	sun4i-a10-cubieboard.dtb \
+ 	sun4i-a10-mini-xplus.dtb \
+ 	sun4i-a10-hackberry.dtb \
+ 	sun4i-a10-inet97fv2.dtb \
+ 	sun4i-a10-olinuxino-lime.dtb \
+-	sun4i-a10-pcduino.dtb \
++	sun4i-a10-pcduino.dtb
++dtb-$(CONFIG_MACH_SUN5I) += \
+ 	sun5i-a10s-olinuxino-micro.dtb \
+ 	sun5i-a10s-r7-tv-dongle.dtb \
+ 	sun5i-a13-olinuxino.dtb \
+-	sun5i-a13-olinuxino-micro.dtb \
++	sun5i-a13-olinuxino-micro.dtb
++dtb-$(CONFIG_MACH_SUN6I) += \
+ 	sun6i-a31-app4-evb1.dtb \
+ 	sun6i-a31-colombus.dtb \
+-	sun6i-a31-m9.dtb \
++	sun6i-a31-m9.dtb
++dtb-$(CONFIG_MACH_SUN7I) += \
+ 	sun7i-a20-cubieboard2.dtb \
+ 	sun7i-a20-cubietruck.dtb \
+ 	sun7i-a20-olinuxino-micro.dtb
+-- 
+2.0.0.rc2
