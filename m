@@ -1,53 +1,50 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v4 7/8] ARM: Exynos: switch to using generic cpufreq-cpu0
- driver
-Date: Sat, 17 May 2014 02:04:27 +0200
-Message-ID: <5376A78B.1080903@gmail.com>
-References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com> <1400029876-5830-8-git-send-email-thomas.ab@samsung.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: rockchip: convert smp bringup to CPU_METHOD_OF_DECLARE
+Date: Sat, 17 May 2014 02:16:10 +0200
+Message-ID: <21547723.QIMYqQcA8Y@phil>
+References: <1632873.urGeGsUMPH@diego> <155552153.z5UXrbJMBi@phil> <20140516225422.GA6028@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400029876-5830-8-git-send-email-thomas.ab@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <ta.omasab@gmail.com>, cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, shawn.guo@linaro.org, devicetree@vger.kernel.org, rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, heiko@sntech.de, thomas.ab@samsung.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140516225422.GA6028-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Olof,
+
+Am Freitag, 16. Mai 2014, 15:54:22 schrieb Olof Johansson:
+> On Mon, May 12, 2014 at 07:17:46PM +0200, Heiko St=FCbner wrote:
+> > Am Donnerstag, 27. M=E4rz 2014, 01:06:32 schrieb Heiko St=FCbner:
+> > > With the newly introduced CPU_METHOD_OF_DECLARE is not necessary =
+anymore
+> > > to reference the relevant smp_ops in the board file, but instead =
+it can
+> > > simply be set by the enable-method property of the cpu nodes.
+> > >=20
+> > > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+> >=20
+> > more responses to this? [or maybe even an ack :-) ? ]
+>=20
+> Looks reasonable to me:
+>=20
+> Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+
+or you could simply apply it to arm-soc directly :-)
+
+Because apart from the pull request I sent two days ago, this patch loo=
+ks like=20
+the last one for 3.16 ... everything else needs to marture a bit longer=
+=2E
+
+Otherwise I'll send a pull-request for this one patch in the next days.
 
 
-On 14.05.2014 03:11, Thomas Abraham wrote:
-> From: Thomas Abraham <thomas.ab@samsung.com>
-> 
-> Remove the platform device instantiation for Exynos specific cpufreq
-> driver and add the platform device for cpufreq-cpu0 driver.
-> 
-> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> ---
->  arch/arm/mach-exynos/exynos.c |    4 +++-
->  1 files changed, 3 insertions(+), 1 deletions(-)
-> 
-> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-> index b32a907..489a495 100644
-> --- a/arch/arm/mach-exynos/exynos.c
-> +++ b/arch/arm/mach-exynos/exynos.c
-> @@ -232,7 +232,9 @@ void __init exynos_cpuidle_init(void)
->  
->  void __init exynos_cpufreq_init(void)
->  {
-> -	platform_device_register_simple("exynos-cpufreq", -1, NULL, 0);
-> +	if (!(of_machine_is_compatible("samsung,exynos5420")) &&
-> +		!(of_machine_is_compatible("samsung,exynos5440")))
-> +		platform_device_register_simple("cpufreq-cpu0", -1, NULL, 0);
->  }
->  
->  void __init exynos_init_late(void)
-> 
-
-As a good intermediate step that can be completely replaced in future,
-if necessary (as opposed to stable DT bindings...):
-
-Acked-by: Tomasz Figa <t.figa@samsung.com>
-
-Best regards,
-Tomasz
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
