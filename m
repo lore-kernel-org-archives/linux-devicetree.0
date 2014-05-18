@@ -1,52 +1,58 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH] rtc: hym8563: add optional clock-output-names property
-Date: Mon, 19 May 2014 00:40:07 +0200
-Message-ID: <5506235.fsodQ5dNGb@phil>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCHv4 0/5] Add DT support for fixed PHYs
+Date: Sun, 18 May 2014 19:07:25 -0400
+Message-ID: <20140518230725.GY27822@titan.lakedaemon.net>
+References: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20140516.172009.632611701865367987.davem@davemloft.net>
+ <20140518121854.3b4a17fa@free-electrons.com>
+ <CAGVrzcYN1-0zM0pVSFZkD5HVAwq6rXEQOBN29x+vBn9hpbmOcA@mail.gmail.com>
+ <20140518194628.0d0c308d@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, rtc-linux@googlegroups.com, Mike Turquette <mturquette@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140518194628.0d0c308d@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>, David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This enables the setting of a custom clock name for the clock provided by
-the hym8563 rtc.
+On Sun, May 18, 2014 at 07:46:28PM +0200, Thomas Petazzoni wrote:
+> Dear Florian Fainelli,
+> 
+> On Sun, 18 May 2014 10:21:10 -0700, Florian Fainelli wrote:
+> 
+> > > On Fri, 16 May 2014 17:20:09 -0400 (EDT), David Miller wrote:
+> > >> From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> > >> Date: Fri, 16 May 2014 16:14:02 +0200
+> > >>
+> > >> > Here is a fourth version of the patch set that adds a Device Tree
+> > >> > binding and the related code to support fixed PHYs. I'm hoping to get
+> > >> > this merged in 3.16.
+> > >>
+> > >> Series applied, thanks Thomas.
+> > >
+> > > Thanks! Did you also pull PATCH 5/5, which changes the Armada XP Matrix
+> > > Device Tree file?
+> > 
+> > It has been applied:
+> > http://git.kernel.org/cgit/linux/kernel/git/davem/net-next.git/commit/?id=84f6e11f21d40025ae9b0ebbf1c9b3be91ea8e1a
+> 
+> I think it should have been routed through the mvebu tree, or at least
+> get the hack of the mvebu maintainers. That being said, I don't think
+> we have other patches for armada-xp-matrix.dts in this cycle, so maybe
+> having this patch go through David's tree will be OK. I'll let Jason
+> Cooper (Cc'ed) answer on this.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt | 3 +++
- drivers/rtc/rtc-hym8563.c                               | 3 +++
- 2 files changed, 6 insertions(+)
+There's just one patch:
 
-diff --git a/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-index 31406fd..5c199ee 100644
---- a/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-+++ b/Documentation/devicetree/bindings/rtc/haoyu,hym8563.txt
-@@ -9,6 +9,9 @@ Required properties:
- - interrupts: rtc alarm/event interrupt
- - #clock-cells: the value should be 0
- 
-+Optional properties:
-+- clock-output-names: From common clock binding
-+
- Example:
- 
- hym8563: hym8563@51 {
-diff --git a/drivers/rtc/rtc-hym8563.c b/drivers/rtc/rtc-hym8563.c
-index e5f13c4..6442b5b 100644
---- a/drivers/rtc/rtc-hym8563.c
-+++ b/drivers/rtc/rtc-hym8563.c
-@@ -418,6 +418,9 @@ static struct clk *hym8563_clkout_register_clk(struct hym8563 *hym8563)
- 	init.num_parents = 0;
- 	hym8563->clkout_hw.init = &init;
- 
-+	/* optional override of the clockname */
-+	of_property_read_string(node, "clock-output-names", &init.name);
-+
- 	/* register the clock */
- 	clk = clk_register(&client->dev, &hym8563->clkout_hw);
- 
--- 
-1.9.0
+  0d9179fb3369 ARM: mvebu: remove clock-frequency of serial port Device Tree nodes
+
+Which removes a single line.  So it should be trivial to resolve any conflict.
+
+In the future: Yes, we prefer to take the dts file changes.  But I don't
+see a problem here.  Thanks for the heads up, though.
+
+thx,
+
+Jason.
