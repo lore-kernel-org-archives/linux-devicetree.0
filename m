@@ -1,64 +1,61 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC/PATCH] of: platform: Remove unique device name enforcement
-Date: Sun, 18 May 2014 18:11:07 -0500
-Message-ID: <CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg@mail.gmail.com>
-References: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] irqchip: armada-370-xp: Move the devicetree binding
+ documentation
+Date: Sun, 18 May 2014 20:37:58 -0300
+Message-ID: <20140518233757.GA630@arch.cereza>
+References: <1399904860-937-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20140512163642.0cac3359@free-electrons.com>
+ <20140512144838.GA2689@arch.cereza>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400432516-6802-1-git-send-email-ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140512144838.GA2689-nAQHv47ARr+vIlHkl8J1cg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Guido_Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 18, 2014 at 12:01 PM, Ezequiel Garcia
-<ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> When creating a device object for a devicetree node, the device name
-> is created by using the node name and the 'reg' property, to make a name
-> such as "a000.foo_device".
->
-> For certain devices without an associated address, and hence no 'reg' property,
-> the current code attempts to make a unique name, by using a global integer.
-> Names look like "foo_device.1", "bar_device.2", and so on.
-> Examples of such devices are: gpio-keys', backlights and rotary-encoders.
->
-> The system cannot know such devices name before hand, given they are determined
-> by the kernel probe order and by the nodes present in the devicetree. This can
-> be problematic, on systems that are tied to the device's name, e.g. when
-> catching hotplug events.
->
-> In order to fix the name, this commit removes the global integer uniqueness
-> enforcement and instead uses the node name for the device name. The rationale
-> behind such change, is that there's no way two nodes with the same node name
-> are associated to two different devices, by the nature of the devicetree.
-> In other words, it's impossible to produce a name collision for these kind
-> of devices.
+On 12 May 11:48 AM, Ezequiel Garcia wrote:
+> On 12 May 04:36 PM, Thomas Petazzoni wrote:
+> > On Mon, 12 May 2014 11:27:40 -0300, Ezequiel Garcia wrote:
+> > > Move the devicetree binding documentation to the interrupt-contro=
+ller
+> > > directory, where it belongs.
+> > >=20
+> > > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTGGXanvQGlWp@public.gmane.org=
+m>
+> > > ---
+> > >  .../devicetree/bindings/arm/armada-370-xp-mpic.txt | 38 --------=
+--------------
+> > >  .../marvell,armada-370-xp-mpic.txt                 | 38 ++++++++=
+++++++++++++++
+> > >  2 files changed, 38 insertions(+), 38 deletions(-)
+> > >  delete mode 100644 Documentation/devicetree/bindings/arm/armada-=
+370-xp-mpic.txt
+> > >  create mode 100644 Documentation/devicetree/bindings/interrupt-c=
+ontroller/marvell,armada-370-xp-mpic.txt
+> >=20
+> > Reviewed-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>=20
+> Thanks for reviewing!
+>=20
+> Ouch, before anyone complains, I've just realised I forgot to create =
+the patch
+> with the rename detection flag :-(
 
-This is perfectly legal:
+Jason,
 
-/bus1/device
-/bus2/device
+Would you take this?
 
-Only the full name has to be unique.
-
->
-> Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> ---
-> Hello Grant, Rob:
->
-> I'm pretty sure there's a good reason for the existence of the atomic magic
-> integer, so this is not a *real* patch, but rather a bold attempt at asking you
-> some explanations for this.
->
-> Under what circumstances does the magic integer avoids a name collision?
-> Will this propposal introduce a regression?
-
-See the recent changes to this function in linux-next and the
-associated discussion of those commits.
-
-Rob
+Thanks,
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
