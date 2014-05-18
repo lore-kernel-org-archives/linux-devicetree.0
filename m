@@ -1,93 +1,36 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: [RFC/PATCH] of: platform: Remove unique device name enforcement
-Date: Sun, 18 May 2014 14:01:56 -0300
-Message-ID: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Guido=20Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCHv4 0/5] Add DT support for fixed PHYs
+Date: Sun, 18 May 2014 10:21:10 -0700
+Message-ID: <CAGVrzcYN1-0zM0pVSFZkD5HVAwq6rXEQOBN29x+vBn9hpbmOcA@mail.gmail.com>
+References: <1400249647-4643-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <20140516.172009.632611701865367987.davem@davemloft.net> <20140518121854.3b4a17fa@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140518121854.3b4a17fa@free-electrons.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: David Miller <davem@davemloft.net>, netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Lior Amsalem <alior@marvell.com>, Gregory Clement <gregory.clement@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, Christian Gmeiner <christian.gmeiner@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-When creating a device object for a devicetree node, the device name
-is created by using the node name and the 'reg' property, to make a name
-such as "a000.foo_device".
+2014-05-18 3:18 GMT-07:00 Thomas Petazzoni
+<thomas.petazzoni@free-electrons.com>:
+> Dear David Miller,
+>
+> On Fri, 16 May 2014 17:20:09 -0400 (EDT), David Miller wrote:
+>> From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+>> Date: Fri, 16 May 2014 16:14:02 +0200
+>>
+>> > Here is a fourth version of the patch set that adds a Device Tree
+>> > binding and the related code to support fixed PHYs. I'm hoping to get
+>> > this merged in 3.16.
+>>
+>> Series applied, thanks Thomas.
+>
+> Thanks! Did you also pull PATCH 5/5, which changes the Armada XP Matrix
+> Device Tree file?
 
-For certain devices without an associated address, and hence no 'reg' property,
-the current code attempts to make a unique name, by using a global integer.
-Names look like "foo_device.1", "bar_device.2", and so on.
-Examples of such devices are: gpio-keys', backlights and rotary-encoders.
-
-The system cannot know such devices name before hand, given they are determined
-by the kernel probe order and by the nodes present in the devicetree. This can
-be problematic, on systems that are tied to the device's name, e.g. when
-catching hotplug events.
-
-In order to fix the name, this commit removes the global integer uniqueness
-enforcement and instead uses the node name for the device name. The rationale
-behind such change, is that there's no way two nodes with the same node name
-are associated to two different devices, by the nature of the devicetree.
-In other words, it's impossible to produce a name collision for these kind
-of devices.
-
-Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
----
-Hello Grant, Rob:
-
-I'm pretty sure there's a good reason for the existence of the atomic magic
-integer, so this is not a *real* patch, but rather a bold attempt at asking you
-some explanations for this.
-
-Under what circumstances does the magic integer avoids a name collision?
-Will this propposal introduce a regression?
-
- drivers/of/platform.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
-
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 60292e1..0f091a3 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -65,20 +65,17 @@ EXPORT_SYMBOL(of_find_device_by_node);
-  */
- 
- /**
-- * of_device_make_bus_id - Use the device node data to assign a unique name
-+ * of_device_make_bus_id - Use the device node data to assign name
-  * @dev: pointer to device structure that is linked to a device tree node
-  *
-  * This routine will first try using either the dcr-reg or the reg property
-- * value to derive a unique name.  As a last resort it will use the node
-- * name followed by a unique number.
-+ * value to derive the device name.
-  */
- void of_device_make_bus_id(struct device *dev)
- {
--	static atomic_t bus_no_reg_magic;
- 	struct device_node *node = dev->of_node;
- 	const __be32 *reg;
- 	u64 addr;
--	int magic;
- 
- #ifdef CONFIG_PPC_DCR
- 	/*
-@@ -113,12 +110,7 @@ void of_device_make_bus_id(struct device *dev)
- 		}
- 	}
- 
--	/*
--	 * No BusID, use the node name and add a globally incremented
--	 * counter (and pray...)
--	 */
--	magic = atomic_add_return(1, &bus_no_reg_magic);
--	dev_set_name(dev, "%s.%d", node->name, magic - 1);
-+	dev_set_name(dev, "%s", node->name);
- }
- 
- /**
+It has been applied:
+http://git.kernel.org/cgit/linux/kernel/git/davem/net-next.git/commit/?id=84f6e11f21d40025ae9b0ebbf1c9b3be91ea8e1a
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Florian
