@@ -1,46 +1,197 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH 3/3] arm64: Add APM X-Gene SoC SDHC controller DTS entry
-Date: Sun, 18 May 2014 01:41:58 -0600
-Message-ID: <1400398918-1502-4-git-send-email-lho@apm.com>
-References: <1400398918-1502-1-git-send-email-lho@apm.com>
- <1400398918-1502-2-git-send-email-lho@apm.com>
- <1400398918-1502-3-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400398918-1502-3-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
+Date: Sun, 18 May 2014 10:27:30 +0100
+Message-ID: <20140518092730.109AAC40B8A@trevor.secretlab.ca>
+References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org>
+	<1399993115-21552-3-git-send-email-grant.likely@linaro.org>
+	<53757D25.1060005@gmail.com>
+	<20140516105444.C1DB7C42277@trevor.secretlab.ca>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140516105444.C1DB7C42277@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: frowand.list@gmail.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC SDHC controller DTS entry.
+On Fri, 16 May 2014 11:54:44 +0100, Grant Likely <grant.likely@linaro.org> wrote:
+> On Thu, 15 May 2014 19:51:17 -0700, Frank Rowand <frowand.list@gmail.com> wrote:
+> > On 5/13/2014 7:58 AM, Grant Likely wrote:
+> > > Make of_find_node_by_path() handle aliases as prefixes. To make this
+> > > work the name search is refactored to search by path component instead
+> > > of by full string. This should be a more efficient search, and it makes
+> > > it possible to start a search at a subnode of a tree.
+> > > 
+> > > Signed-off-by: David Daney <david.daney@cavium.com>
+> > > Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+> > > [grant.likely: Rework to not require allocating at runtime]
+> > > Acked-by: Rob Herring <robh@kernel.org>
+> > > Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> > > ---
+> > >  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
+> > >  1 file changed, 56 insertions(+), 4 deletions(-)
+> > > 
+> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
+> > > index 6e240698353b..60089b9a3014 100644
+> > > --- a/drivers/of/base.c
+> > > +++ b/drivers/of/base.c
+> > > @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
+> > >  }
+> > >  EXPORT_SYMBOL(of_get_child_by_name);
+> > >  
+> > > +static struct device_node *__of_find_node_by_path(struct device_node *parent,
+> > > +						const char *path)
+> > > +{
+> > > +	struct device_node *child;
+> > > +	int len = strchrnul(path, '/') - path;
+> > > +
+> > > +	if (!len)
+> > > +		return parent;
+> > 
+> > (!len) is true if the the final character of the path passed into of_find_node_by_path()
+> > was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
+> > should be NULL, indicating that the match fails.
+> 
+> Ah, good catch. I should add a test case for that.
 
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm-storm.dtsi |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+In my testing this looks okay. The while loop that calls into
+__of_find_node_by_path() looks like this:
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index aff6821..4422a35 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -428,5 +428,13 @@
- 			phys = <&phy3 0>;
- 			phy-names = "sata-phy";
- 		};
+	while (np && *path == '/') {
+		path++; /* Increment past '/' delimiter */
+		np = __of_find_node_by_path(np, path);
+		path = strchrnul(path, '/');
+	}
+
+If the path ends with a '/', then the loop will go around one more time.
+The pointer will be incremented to point at the null character and len
+will be null because strchrnul() will point at the last item.
+
+I've added a couple of test cases to make sure it works correctly:
+
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index a9d00e8c17ea..10900b18fc06 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -40,6 +40,12 @@ static void __init of_selftest_find_node_by_name(void)
+ 	 	"find /testcase-data failed\n");
+ 	of_node_put(np);
+ 
++	/* Test if trailing '/' works */
++	np = of_find_node_by_path("/testcase-data/");
++	selftest(np && !strcmp("/testcase-data", np->full_name),
++	 	"find /testcase-data/ failed\n");
++	of_node_put(np);
 +
-+		sdhc0: sdhc@1c000000 {
-+			compatible = "xgene,arasan,sdhci-8.9a";
-+			reg = <0x0 0x1c000000 0x0 0x100>,
-+			      <0x0 0x1f2a0094 0x0 0x10>;
-+			interrupts = <0x0 0x49 0x4>;
-+			no-1-8-v;
-+		};
- 	};
- };
--- 
-1.5.5
+ 	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
+ 	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
+ 	 	"find /testcase-data/phandle-tests/consumer-a failed\n");
+@@ -50,6 +56,12 @@ static void __init of_selftest_find_node_by_name(void)
+ 	 	"find testcase-alias failed\n");
+ 	of_node_put(np);
+ 
++	/* Test if trailing '/' works on aliases */
++	np = of_find_node_by_path("testcase-alias/");
++	selftest(np && !strcmp("/testcase-data", np->full_name),
++	 	"find testcase-alias/ failed\n");
++	of_node_put(np);
++
+ 	np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
+ 	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
+ 	 	"find testcase-alias/phandle-tests/consumer-a failed\n");
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
+
+
+> 
+> > 
+> > > +
+> > > +	for_each_child_of_node(parent, child) {
+> > > +		const char *name = strrchr(child->full_name, '/');
+> > > +		if (WARN(!name, "malformed device_node %s\n", child->full_name))
+> > > +			continue;
+> > > +		name++;
+> > 
+> > Why go to the effort of finding the final component of child->full_name instead
+> > of just using child->name?
+> 
+> Because child->name and the final component of child->full_name is not
+> the same thing. child->name has the unit address stripped off. It is
+> part of how OpenFirmware expects to be used. New drivers are never
+> supposed to be matching by node name, but I don't currently have a good
+> way to go through any driver depending on the OpenFirmware behaviour.
+> 
+> Ideally I'd like to get rid of the difference.
+> 
+> > 
+> > > +		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
+> > > +			return child;
+> > > +	}
+> > > +	return NULL;
+> > > +}
+> > > +
+> > >  /**
+> > >   *	of_find_node_by_path - Find a node matching a full OF path
+> > >   *	@path:	The full path to match
+> > > + *	@path: Either the full path to match, or if the path does not
+> > 
+> > Delete the old @path description.
+> 
+> Oops, thanks.
+> 
+> > 
+> > 
+> > > + *	       start with '/', the name of a property of the /aliases
+> > > + *	       node (an alias).  In the case of an alias, the node
+> > > + *	       matching the alias' value will be returned.
+> > > + *
+> > > + *	Valid paths:
+> > > + *		/foo/bar	Full path
+> > > + *		foo		Valid alias
+> > > + *		foo/bar		Valid alias + relative path
+> > >   *
+> > >   *	Returns a node pointer with refcount incremented, use
+> > >   *	of_node_put() on it when done.
+> > > @@ -781,13 +810,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
+> > >  struct device_node *of_find_node_by_path(const char *path)
+> > >  {
+> > >  	struct device_node *np = of_allnodes;
+> > > +	struct property *pp;
+> > >  	unsigned long flags;
+> > >  
+> > > +	/* The path could begin with an alias */
+> > > +	if (*path != '/') {
+> > > +		char *p = strchrnul(path, '/');
+> > > +		int len = p - path;
+> > > +
+> > > +		/* of_aliases must not be NULL */
+> > > +		if (!of_aliases)
+> > > +			return NULL;
+> > > +
+> > > +		np = NULL;
+> > > +		for_each_property_of_node(of_aliases, pp) {
+> > > +			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
+> > > +				np = of_find_node_by_path(pp->value);
+> > > +				break;
+> > > +			}
+> > > +		}
+> > > +		if (!np)
+> > > +			return NULL;
+> > > +		path = p;
+> > > +	}
+> > > +
+> > > +	/* Step down the tree matching path components */
+> > >  	raw_spin_lock_irqsave(&devtree_lock, flags);
+> > > -	for (; np; np = np->allnext) {
+> > > -		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
+> > > -		    && of_node_get(np))
+> > > -			break;
+> > > +	while (np && *path == '/') {
+> > > +		path++; /* Increment past '/' delimiter */
+> > > +		np = __of_find_node_by_path(np, path);
+> > > +		path = strchrnul(path, '/');
+> > >  	}
+> > >  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> > >  	return np;
+> > > 
+> > 
+> 
