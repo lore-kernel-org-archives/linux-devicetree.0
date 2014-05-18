@@ -1,103 +1,43 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
-Date: Sat, 17 May 2014 22:48:06 +0200
-Message-ID: <20140517204805.GA1046@mithrandir>
-References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
- <20140517170455.08e181f16d3abf36d1ec6274@samsung.com>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [RFC PATCH] ARM: dts: am33xx: Re-arrange the USB dt to reflect
+ the h/w configuration
+Date: Sat, 17 May 2014 21:09:08 -0300
+Message-ID: <20140518000908.GA2092@arch.cereza>
+References: <1399617068-19826-1-git-send-email-george.cherian@ti.com>
+ <20140514215034.GL27426@atomide.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6TrnltStXW4iwmi0"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140517170455.08e181f16d3abf36d1ec6274@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Cho KyongHo <pullip.cho@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, Grant Grundler <grundler@chromium.org>, Dave Martin <Dave.Martin@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Joerg Roedel <joro@8bytes.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree@vger.kernel.org, iommu@lists.linux-foundation.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20140514215034.GL27426@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: George Cherian <george.cherian@ti.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, bcousson@baylibre.com, bigeasy@linutronix.de, yegorslists@googlemail.com, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
+Hello Tony,
 
---6TrnltStXW4iwmi0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 14 May 02:50 PM, Tony Lindgren wrote:
+> * George Cherian <george.cherian@ti.com> [140508 23:34]:
+> > Re arrange the USB dt for AM33xx to take it a bit closer
+> > to the hardware configuration.
+> > 
+[..]
+> 
+> Is this just a cosmetic change or is this trying to workaround
+> some edma related init order issue?
+> 
 
-On Sat, May 17, 2014 at 05:04:55PM +0900, Cho KyongHo wrote:
-> On Fri, 16 May 2014 14:23:18 +0200, Thierry Reding wrote:
-[...]
-> > +Examples:
-> > +=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > +
-> > +Single-master IOMMU:
-> > +--------------------
-> > +
-> > +	iommu {
-> > +		#iommu-cells =3D <0>;
-> > +	};
-> > +
-> > +	master {
-> > +		iommu =3D <&/iommu>;
-> > +	};
-> > +
->=20
-> Great work, Thierry.
->=20
-> One simple comment.
->=20
-> This should be also applicable to multi-master IOMMUs that the masters
-> of an IOMMU is not configurable with ID or something.
-> I think the title needs to be changed to cover such IOMMUs which always
-> translate master's transactions and unable to change the configuration
-> of the relationship between the masters and IOMMUs by S/W.
+This was an attempt from George to workaround an that happens when
+the musb_am335x module is removed. However, we've agreed to prevent
+the removal instead. I've just (re)sent a patch for it:
 
-Agreed, how about we add a separate example for that case:
+See: [PATCH for v3.15] usb: musb: Fix panic upon musb_am335x module removal
 
-Multiple-master IOMMU with fixed associations:
-----------------------------------------------
+AFAIK, this fixes a serious problem so I've marked it for stable.
 
-	/* multiple-master IOMMU */
-	iommu {
-		/*
-		 * Masters are statically associated with this IOMMU and
-		 * address translation is always enabled.
-		 */
-		#iommu-cells =3D <0>;
-	};
-
-	/* static association with IOMMU */
-	master@1 {
-		reg =3D <1>;
-		iommus =3D <&/iommu>;
-	};
-
-	/* static association with IOMMU */
-	master@2 {
-		reg =3D <2>;
-		iommus =3D <&/iommu>;
-	};
-
-?
-
-Thierry
-
---6TrnltStXW4iwmi0
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTd8sFAAoJEN0jrNd/PrOhGXIQAJOqRSklMjl4lFQfRhWaoB3m
-pYpRwqjrA0rLzEb+u6bk5Kv4kLRK5wOYr6Fd/y8DYONY+vZ0SXBOgEo7uv/mXURM
-R2m8tTiKLtmQm6xZ///FmcU98lOZM+l6Vv3/F+QVH/41RRNTzTXXir0q2XTYG5wU
-Fefylq654a8Ha1rDN2Y6kPt4P/1Q0tuA/7Z0jidDYXK04Pp+5QTBUHSFAYJ4V1Q3
-HuH2XmCioGRTem4cl4SMM6uA+IrnuZcXePrNT35HwtN6bmSe2IKNxaK+VKvnVzza
-Qc0hvQEDdsjijs1Fy4rY3zPhkvAGz/rbs6nYUJpRl96R3Zb5sKaO2Vqj9glLX5/e
-B5/wv5yVSs/ygRLW8/E76LXB2PNqkVg68smSRGrA/7q7iU2/ZUatnqoVCTWT2Jid
-0zUkBur8KM0wdBrowgrs/sVzFvS5Ii/yUyyfXJQWZELkhEo681LGGNt7PXYugjtr
-P//6zQwn1ogR7xq+7hCcy5yZAtc8UrXyIRF9/XrNvdGhg0zXdaQa1viM5AapeLGs
-WAPwb+KlFvXxG/8EY96Y59LvULcP5oGhwMXkUrkvH9OiDzZXIVbEZfrtCvKhUzn6
-G7CzsIQr4Q3+5u42Ndt94WglpdiDfVeUmh6ofv34rTZHqy7MGpybJBp67qf0sff9
-wO7Z6vqP8a7m/yZuQ7tr
-=Y4ib
------END PGP SIGNATURE-----
-
---6TrnltStXW4iwmi0--
+For the DMA init order issue, I've done a new patch that forces the
+probe order in the driver. I'll post that soon.
+-- 
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
