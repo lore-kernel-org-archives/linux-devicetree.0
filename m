@@ -1,42 +1,83 @@
-From: =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster-Mmb7MZpHnFY@public.gmane.org>
-Subject: [PATCH 2/2] fix format string mismatch in drivers/i2c/i2c-core.c
-Date: Sun, 18 May 2014 22:43:52 +0200
-Message-ID: <1400445832-30635-1-git-send-email-toralf.foerster@gmx.de>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v2 3/3] [media] atmel-isi: add primary DT support
+Date: Sun, 18 May 2014 23:51:59 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1405182308110.23804@axis700.grange>
+References: <1395744087-5753-1-git-send-email-josh.wu@atmel.com>
+ <1395744320-15025-1-git-send-email-josh.wu@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1395744320-15025-1-git-send-email-josh.wu@atmel.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Josh Wu <josh.wu@atmel.com>
+Cc: linux-media@vger.kernel.org, m.chehab@samsung.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, grant.likely@linaro.org, galak@codeaurora.org, rob@landley.net, mark.rutland@arm.com, robh+dt@kernel.org, ijc+devicetree@hellion.org.uk, pawel.moll@arm.com, devicetree@vger.kernel.org, laurent.pinchart@ideasonboard.com
 List-Id: devicetree@vger.kernel.org
 
-found by cppcheck
+On Tue, 25 Mar 2014, Josh Wu wrote:
 
-Signed-off-by: Toralf F=C3=B6rster <toralf.foerster-Mmb7MZpHnFY@public.gmane.org>
+> This patch add the DT support for Atmel ISI driver.
+> It use the same v4l2 DT interface that defined in video-interfaces.txt.
+> 
+> Signed-off-by: Josh Wu <josh.wu@atmel.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+> v1 --> v2:
+>  refine the binding document.
+>  add port node description.
+>  removed the optional property.
+> 
+>  .../devicetree/bindings/media/atmel-isi.txt        |   50 ++++++++++++++++++++
+>  drivers/media/platform/soc_camera/atmel-isi.c      |   31 +++++++++++-
+>  2 files changed, 79 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/atmel-isi.txt
+
+[snip]
+
+> diff --git a/drivers/media/platform/soc_camera/atmel-isi.c b/drivers/media/platform/soc_camera/atmel-isi.c
+> index f4add0a..d6a1f7b 100644
+> --- a/drivers/media/platform/soc_camera/atmel-isi.c
+> +++ b/drivers/media/platform/soc_camera/atmel-isi.c
+
+[snip]
+
+> @@ -885,6 +887,20 @@ static int atmel_isi_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int atmel_isi_probe_dt(struct atmel_isi *isi,
+> +			struct platform_device *pdev)
+> +{
+> +	struct device_node *node = pdev->dev.of_node;
+> +
+> +	/* Default settings for ISI */
+> +	isi->pdata.full_mode = 1;
+> +	isi->pdata.mck_hz = ISI_DEFAULT_MCLK_FREQ;
+> +	isi->pdata.frate = ISI_CFG1_FRATE_CAPTURE_ALL;
+
+The above flags eventually should probably partially be added as new 
+driver-specific DT properties, partially derived from DT clock bindings. 
+But I'm ok to have them fixed like this in the initial version.
+
+> +	isi->pdata.data_width_flags = ISI_DATAWIDTH_8 | ISI_DATAWIDTH_10;
+
+Whereas these flags, I think, should already now be derived from the 
+bus-width standard property? v4l2_of_parse_parallel_bus() will extract 
+them for you and I just asked Ben to add a call to 
+v4l2_of_parse_endpoint() to his patch. Consequently you'll have to 
+rearrange bus-width interpretation in isi_camera_try_bus_param() a bit and 
+use OF parsing results there directly if available? Or maybe you find a 
+better way. It would certainly be better to extend your probing code and 
+just use OF results to initialise isi->width_flags, but that might be 
+impossible, because OF parsing would be performed inside 
+soc_camera_host_register() and your isi_camera_try_bus_param() can also be 
+called immediately from it if all required I2C devices are already 
+available? If your I2C subdevice drivers defer probing until the host has 
+probed, then you could initialise .width_flags after 
+soc_camera_host_register(), but you cannot rely on that.
+
+Thanks
+Guennadi
 ---
- drivers/i2c/i2c-core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 7c7f4b8..ad900bc 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -897,7 +897,7 @@ i2c_sysfs_delete_device(struct device *dev, struct =
-device_attribute *attr,
- 	int res;
-=20
- 	/* Parse parameters, reject extra parameters */
--	res =3D sscanf(buf, "%hi%c", &addr, &end);
-+	res =3D sscanf(buf, "%hu%c", &addr, &end);
- 	if (res < 1) {
- 		dev_err(dev, "%s: Can't parse I2C address\n", "delete_device");
- 		return -EINVAL;
---=20
-1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
