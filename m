@@ -1,31 +1,42 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] input: gpio-keys: Move the gpio-keys bindings
- documentation
-Date: Sun, 18 May 2014 13:42:41 -0700
-Message-ID: <20140518204240.GA17059@core.coreip.homeip.net>
-References: <1399905224-1273-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <CACRpkdZgbnFSUiBeQOn5L4AafaTUPS9jcEESyB9Hg7u7n+51cA@mail.gmail.com>
+From: =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster-Mmb7MZpHnFY@public.gmane.org>
+Subject: [PATCH 2/2] fix format string mismatch in drivers/i2c/i2c-core.c
+Date: Sun, 18 May 2014 22:43:52 +0200
+Message-ID: <1400445832-30635-1-git-send-email-toralf.foerster@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-gpio-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdZgbnFSUiBeQOn5L4AafaTUPS9jcEESyB9Hg7u7n+51cA@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: =?UTF-8?q?Toralf=20F=C3=B6rster?= <toralf.foerster-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 18, 2014 at 10:30:26PM +0200, Linus Walleij wrote:
-> On Mon, May 12, 2014 at 4:33 PM, Ezequiel Garcia
-> <ezequiel.garcia@free-electrons.com> wrote:
-> 
-> > This is an input driver and belongs to input not gpio.
-> >
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> 
-> Acked-by: Linus Walleij <linus.walleij@linaro.org>
+found by cppcheck
 
-Applied, thank you.
+Signed-off-by: Toralf F=C3=B6rster <toralf.foerster-Mmb7MZpHnFY@public.gmane.org>
+---
+ drivers/i2c/i2c-core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- 
-Dmitry
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index 7c7f4b8..ad900bc 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -897,7 +897,7 @@ i2c_sysfs_delete_device(struct device *dev, struct =
+device_attribute *attr,
+ 	int res;
+=20
+ 	/* Parse parameters, reject extra parameters */
+-	res =3D sscanf(buf, "%hi%c", &addr, &end);
++	res =3D sscanf(buf, "%hu%c", &addr, &end);
+ 	if (res < 1) {
+ 		dev_err(dev, "%s: Can't parse I2C address\n", "delete_device");
+ 		return -EINVAL;
+--=20
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
