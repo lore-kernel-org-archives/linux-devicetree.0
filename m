@@ -1,197 +1,55 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
-Date: Sun, 18 May 2014 10:27:30 +0100
-Message-ID: <20140518092730.109AAC40B8A@trevor.secretlab.ca>
-References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org>
-	<1399993115-21552-3-git-send-email-grant.likely@linaro.org>
-	<53757D25.1060005@gmail.com>
-	<20140516105444.C1DB7C42277@trevor.secretlab.ca>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [RFC PATCH 2/9] dt: deps: dependency based device creation
+Date: Sun, 18 May 2014 11:53:45 +0200
+Message-ID: <53788329.5080008@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-3-git-send-email-holler@ahsoftware.de>	<20140514140534.897F8C4153D@trevor.secretlab.ca>	<53738261.4000000@ahsoftware.de>	<20140514200645.15984C4095B@trevor.secretlab.ca>	<5373DBCF.1080503@ahsoftware.de> <20140516110008.E2AC9C403C2@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140516105444.C1DB7C42277@trevor.secretlab.ca>
+In-Reply-To: <20140516110008.E2AC9C403C2@trevor.secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+To: Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 May 2014 11:54:44 +0100, Grant Likely <grant.likely@linaro.org> wrote:
-> On Thu, 15 May 2014 19:51:17 -0700, Frank Rowand <frowand.list@gmail.com> wrote:
-> > On 5/13/2014 7:58 AM, Grant Likely wrote:
-> > > Make of_find_node_by_path() handle aliases as prefixes. To make this
-> > > work the name search is refactored to search by path component instead
-> > > of by full string. This should be a more efficient search, and it makes
-> > > it possible to start a search at a subnode of a tree.
-> > > 
-> > > Signed-off-by: David Daney <david.daney@cavium.com>
-> > > Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> > > [grant.likely: Rework to not require allocating at runtime]
-> > > Acked-by: Rob Herring <robh@kernel.org>
-> > > Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> > > ---
-> > >  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
-> > >  1 file changed, 56 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > > index 6e240698353b..60089b9a3014 100644
-> > > --- a/drivers/of/base.c
-> > > +++ b/drivers/of/base.c
-> > > @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
-> > >  }
-> > >  EXPORT_SYMBOL(of_get_child_by_name);
-> > >  
-> > > +static struct device_node *__of_find_node_by_path(struct device_node *parent,
-> > > +						const char *path)
-> > > +{
-> > > +	struct device_node *child;
-> > > +	int len = strchrnul(path, '/') - path;
-> > > +
-> > > +	if (!len)
-> > > +		return parent;
-> > 
-> > (!len) is true if the the final character of the path passed into of_find_node_by_path()
-> > was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
-> > should be NULL, indicating that the match fails.
-> 
-> Ah, good catch. I should add a test case for that.
+Am 16.05.2014 13:00, schrieb Grant Likely:
+> On Wed, 14 May 2014 23:10:39 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
+>> Am 14.05.2014 22:06, schrieb Grant Likely:
+>>> On Wed, 14 May 2014 16:49:05 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
+>>>> Am 14.05.2014 16:05, schrieb Grant Likely:
+>>>>> On Mon, 12 May 2014 18:47:53 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
+>>
+>>>> Hmm, I don't really care if that will be merged. I have no motivation to
+>>>> fight with Linux kernel maintainers and I don't know if I will spend the
+>>>> necessary time to do so.
+>>>
+>>> The people you need to convince are Rob, Greg, and me, and you've got my
+>>> attention. If I'm convinced, then I can probably convince Greg also.
+>>> You've got an interesting approach, and I hope you won't give up on it.
+>>
+>> Sorry, but that point of the view is already a problem. Why do I have to
+>> convince you people?
+>>
+>> To summarize:
+>>
+>> Linux kernel maintainers
+>>
+>> - don't like code they haven't written theirself,
+>> - don't like code which doesn't look like they have written it theirself,
+>> - don't like ideas they haven't had themself,
+>> - do feel good in their closed group they have formed,
+>
+> I'm sorry that you feel that way and that you don't want to continue
+> with this. Best wishes.
 
-In my testing this looks okay. The while loop that calls into
-__of_find_node_by_path() looks like this:
+Sorry to hit you with reality, but it just will not happen that I will 
+try to convience any Linux kernel maintainer (anymore). It is their job 
+to decide what they want and not mine to convince them. I offer code and 
+arguments, but I will not offer my pride, ego or how you want to name 
+it. If Linux kernel maintainers are unable to deal with the power 
+they've got, that isn't my problem.
 
-	while (np && *path == '/') {
-		path++; /* Increment past '/' delimiter */
-		np = __of_find_node_by_path(np, path);
-		path = strchrnul(path, '/');
-	}
+Regards,
 
-If the path ends with a '/', then the loop will go around one more time.
-The pointer will be incremented to point at the null character and len
-will be null because strchrnul() will point at the last item.
-
-I've added a couple of test cases to make sure it works correctly:
-
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index a9d00e8c17ea..10900b18fc06 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -40,6 +40,12 @@ static void __init of_selftest_find_node_by_name(void)
- 	 	"find /testcase-data failed\n");
- 	of_node_put(np);
- 
-+	/* Test if trailing '/' works */
-+	np = of_find_node_by_path("/testcase-data/");
-+	selftest(np && !strcmp("/testcase-data", np->full_name),
-+	 	"find /testcase-data/ failed\n");
-+	of_node_put(np);
-+
- 	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
- 	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
- 	 	"find /testcase-data/phandle-tests/consumer-a failed\n");
-@@ -50,6 +56,12 @@ static void __init of_selftest_find_node_by_name(void)
- 	 	"find testcase-alias failed\n");
- 	of_node_put(np);
- 
-+	/* Test if trailing '/' works on aliases */
-+	np = of_find_node_by_path("testcase-alias/");
-+	selftest(np && !strcmp("/testcase-data", np->full_name),
-+	 	"find testcase-alias/ failed\n");
-+	of_node_put(np);
-+
- 	np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
- 	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
- 	 	"find testcase-alias/phandle-tests/consumer-a failed\n");
-
-g.
-
-
-> 
-> > 
-> > > +
-> > > +	for_each_child_of_node(parent, child) {
-> > > +		const char *name = strrchr(child->full_name, '/');
-> > > +		if (WARN(!name, "malformed device_node %s\n", child->full_name))
-> > > +			continue;
-> > > +		name++;
-> > 
-> > Why go to the effort of finding the final component of child->full_name instead
-> > of just using child->name?
-> 
-> Because child->name and the final component of child->full_name is not
-> the same thing. child->name has the unit address stripped off. It is
-> part of how OpenFirmware expects to be used. New drivers are never
-> supposed to be matching by node name, but I don't currently have a good
-> way to go through any driver depending on the OpenFirmware behaviour.
-> 
-> Ideally I'd like to get rid of the difference.
-> 
-> > 
-> > > +		if (strncmp(path, name, len) == 0 && (strlen(name) == len))
-> > > +			return child;
-> > > +	}
-> > > +	return NULL;
-> > > +}
-> > > +
-> > >  /**
-> > >   *	of_find_node_by_path - Find a node matching a full OF path
-> > >   *	@path:	The full path to match
-> > > + *	@path: Either the full path to match, or if the path does not
-> > 
-> > Delete the old @path description.
-> 
-> Oops, thanks.
-> 
-> > 
-> > 
-> > > + *	       start with '/', the name of a property of the /aliases
-> > > + *	       node (an alias).  In the case of an alias, the node
-> > > + *	       matching the alias' value will be returned.
-> > > + *
-> > > + *	Valid paths:
-> > > + *		/foo/bar	Full path
-> > > + *		foo		Valid alias
-> > > + *		foo/bar		Valid alias + relative path
-> > >   *
-> > >   *	Returns a node pointer with refcount incremented, use
-> > >   *	of_node_put() on it when done.
-> > > @@ -781,13 +810,36 @@ EXPORT_SYMBOL(of_get_child_by_name);
-> > >  struct device_node *of_find_node_by_path(const char *path)
-> > >  {
-> > >  	struct device_node *np = of_allnodes;
-> > > +	struct property *pp;
-> > >  	unsigned long flags;
-> > >  
-> > > +	/* The path could begin with an alias */
-> > > +	if (*path != '/') {
-> > > +		char *p = strchrnul(path, '/');
-> > > +		int len = p - path;
-> > > +
-> > > +		/* of_aliases must not be NULL */
-> > > +		if (!of_aliases)
-> > > +			return NULL;
-> > > +
-> > > +		np = NULL;
-> > > +		for_each_property_of_node(of_aliases, pp) {
-> > > +			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
-> > > +				np = of_find_node_by_path(pp->value);
-> > > +				break;
-> > > +			}
-> > > +		}
-> > > +		if (!np)
-> > > +			return NULL;
-> > > +		path = p;
-> > > +	}
-> > > +
-> > > +	/* Step down the tree matching path components */
-> > >  	raw_spin_lock_irqsave(&devtree_lock, flags);
-> > > -	for (; np; np = np->allnext) {
-> > > -		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
-> > > -		    && of_node_get(np))
-> > > -			break;
-> > > +	while (np && *path == '/') {
-> > > +		path++; /* Increment past '/' delimiter */
-> > > +		np = __of_find_node_by_path(np, path);
-> > > +		path = strchrnul(path, '/');
-> > >  	}
-> > >  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> > >  	return np;
-> > > 
-> > 
-> 
+Alexander Holler
