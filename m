@@ -1,140 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/3] usb: host: xhci-plat: add support for the R-Car H2
- and M2 xHCI controllers
-Date: Mon, 19 May 2014 16:14:52 +0400
-Message-ID: <5379F5BC.6010204@cogentembedded.com>
-References: <5379D805.3070002@renesas.com>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH] ARM: dts: am43xx-clocks: use ti,fixed-factor-clock for
+ dpll_per_clkdcoldo
+Date: Mon, 19 May 2014 15:25:16 +0300
+Message-ID: <5379F82C.3020702@ti.com>
+References: <1396040071-17900-1-git-send-email-d-gerlach@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5379D805.3070002@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, mathias.nyman@intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1396040071-17900-1-git-send-email-d-gerlach@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Dave Gerlach <d-gerlach@ti.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 19-05-2014 14:08, Yoshihiro Shimoda wrote:
-
-> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
-> some specific initilization related to the firmware downloading and
-> some specific registers. This patch adds the support for this special
-> configuration as an xHCI quirk executed during probe and start.
-
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-[...]
-
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 561d07e..3a2da1f 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -20,6 +20,7 @@
+On 03/28/2014 10:54 PM, Dave Gerlach wrote:
+> Use the ti,fixed-factor-clock version so that autoidle for
+> dpll_per_clkdcoldo is properly controlled after power management code
+> is introduced. Without this the clock may be held active even when
+> it is gated.
 >
->   #include "xhci.h"
->   #include "xhci-mvebu.h"
-> +#include "xhci-rcar.h"
+> Signed-off-by: Dave Gerlach <d-gerlach@ti.com>
+
+Thanks, queued for 3.16/clk-dt.
+
+> ---
+>   arch/arm/boot/dts/am43xx-clocks.dtsi | 9 ++++++---
+>   1 file changed, 6 insertions(+), 3 deletions(-)
 >
->   static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
->   {
-> @@ -39,6 +40,12 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
+> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> index 142009c..1d9b6bb 100644
+> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+> @@ -609,10 +609,13 @@
 >
->   static int xhci_plat_start(struct usb_hcd *hcd)
->   {
-> +	struct device_node *of_node = hcd->self.controller->of_node;
-> +
-> +	if (of_device_is_compatible(of_node, "renesas,r8a7790-xhci") ||
-> +	    of_device_is_compatible(of_node, "renesas,r8a7790-xhci"))
-
-    Perhaps "renesas,r8a7791-xhci"?
-
-> +		xhci_rcar_start(hcd);
-> +
->   	return xhci_run(hcd);
->   }
+>   	dpll_per_clkdcoldo: dpll_per_clkdcoldo {
+>   		#clock-cells = <0>;
+> -		compatible = "fixed-factor-clock";
+> +		compatible = "ti,fixed-factor-clock";
+>   		clocks = <&dpll_per_ck>;
+> -		clock-mult = <1>;
+> -		clock-div = <1>;
+> +		ti,clock-mult = <1>;
+> +		ti,clock-div = <1>;
+> +		ti,autoidle-shift = <8>;
+> +		reg = <0x2e14>;
+> +		ti,invert-autoidle-bit;
+>   	};
 >
-[...]
-> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
-> new file mode 100644
-> index 0000000..3c0bfae
-> --- /dev/null
-> +++ b/drivers/usb/host/xhci-rcar.c
-> @@ -0,0 +1,182 @@
-> +/*
-> + * xHCI host controller driver for R-Car SoCs
-> + *
-> + * Copyright (C) 2014 Renesas Electronics Corporation
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License
-> + * version 2 as published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/firmware.h>
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/usb/phy.h>
-> +
-> +#include "xhci.h"
-> +#include "xhci-rcar.h"
-> +
-> +#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem"
-> +
-> +/*** Register Offset ***/
-> +#define RCAR_USB3_INT_ENA	0x224	/* Interrupt Enable */
-> +#define RCAR_USB3_DL_CTRL	0x250	/* FW Download Control & Status */
-> +#define RCAR_USB3_FW_DATA0	0x258	/* FW Data0 */
-> +
-> +#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
-> +#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */
-> +#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */
-> +#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */
-> +#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
-> +#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */
-> +
-> +/*** Register Settings ***/
-> +/* Interrupt Enable */
-> +#define RCAR_USB3_INT_XHC_ENA	0x00000001
-> +#define RCAR_USB3_INT_PME_ENA	0x00000002
-> +#define RCAR_USB3_INT_HSE_ENA	0x00000004
-> +#define RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \
-> +				RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA)
-> +
-> +/* FW Download Control & Status */
-> +#define RCAR_USB3_DL_CTRL		0x250
-
-    Already #define'd.
-
-> +/* USB3.0 Configuraion */
-
-    Configuration.
-
-> +int xhci_rcar_start(struct usb_hcd *hcd)
-> +{
-> +	if (hcd->regs != NULL) {
-> +		u32 temp;
-
-    Need empty line here... and should perhaps return error if hcd->regs NULL?
-
-> +		/* Interrupt Enable */
-> +		temp = readl(hcd->regs + RCAR_USB3_INT_ENA);
-> +		temp |= RCAR_USB3_INT_ENA_VAL;
-> +		writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
-> +		/* LCLK Select */
-> +		writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK);
-> +		/* USB3.0 Configuration */
-> +		writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
-> +		writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
-> +		writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
-> +		/* USB3.0 Polariy */
-> +		writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL);
-> +		writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL);
-> +	}
-> +
-> +	return 0;
-> +}
-[...]
-
-WBR, Sergei
+>   	dll_aging_clk_div: dll_aging_clk_div {
+>
 
