@@ -1,72 +1,125 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Mon, 19 May 2014 22:05:15 +0300
-Message-ID: <537A55EB.1080507@ti.com>
-References: <20140513152518.GA16837@atomide.com> <53730AFB.2090800@ti.com> <20140514160216.GD18463@atomide.com> <537487AE.3060906@ti.com> <20140515182133.GC23659@atomide.com> <5375A8A8.7080306@ti.com> <20140516160717.GD22031@atomide.com> <20140516174158.GA11733@earth.universe> <20140516180154.GG22031@atomide.com> <5379CD24.6040508@ti.com> <20140519160447.GB4849@atomide.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
+ controller
+Date: Mon, 19 May 2014 21:12:06 +0200
+Message-ID: <20140519191206.GH949@pengutronix.de>
+References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
+ <1400169891-29546-2-git-send-email-tthayer@altera.com>
+ <20140516075344.GF949@pengutronix.de>
+ <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="9oluejSWgmpHFmU7a3XUjO06vtPL92lct"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140519160447.GB4849@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thor Thayer <tthayer.linux@gmail.com>
+Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---9oluejSWgmpHFmU7a3XUjO06vtPL92lct
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Thor!
 
-On 19/05/14 19:04, Tony Lindgren wrote:
+On Mon, May 19, 2014 at 01:36:30PM -0500, Thor Thayer wrote:
+> On Fri, May 16, 2014 at 2:53 AM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+> > Hi!
+> >
+> > On Thu, May 15, 2014 at 11:04:49AM -0500, tthayer@altera.com wrote:
+> >> From: Thor Thayer <tthayer@altera.com>
+> >>
+> >> Addition of the Altera SDRAM controller bindings and device
+> >> tree changes to the Altera SoC project.
+> >>
+> >> v2: Changes to SoC SDRAM EDAC code.
+> >>
+> >> v3: Implement code suggestions for SDRAM EDAC code.
+> >>
+> >> v4: Remove syscon from SDRAM controller bindings.
+> >>
+> >> v5: No Change, bump version for consistency.
+> >>
+> >> Signed-off-by: Thor Thayer <tthayer@altera.com>
+> >> ---
+> >>  .../bindings/arm/altera/socfpga-sdram.txt          |   11 +++++++++++
+> >>  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+> >>  2 files changed, 16 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >> new file mode 100644
+> >> index 0000000..8f8746b
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >> @@ -0,0 +1,11 @@
+> >> +Altera SOCFPGA SDRAM Controller
+> >> +
+> >> +Required properties:
+> >> +- compatible : "altr,sdr-ctl";
+> >> +- reg : Should contain 1 register ranges(address and length)
+> >> +
+> >> +Example:
+> >> +     sdrctl@ffc25000 {
+> >> +             compatible = "altr,sdr-ctl";
+> >> +             reg = <0xffc25000 0x1000>;
+> >> +     };
+> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> >> index df43702..6ce912e 100644
+> >> --- a/arch/arm/boot/dts/socfpga.dtsi
+> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> >> @@ -676,6 +676,11 @@
+> >>                       clocks = <&l4_sp_clk>;
+> >>               };
+> >>
+> >> +             sdrctl@ffc25000 {
+> >> +                     compatible = "altr,sdr-ctl", "syscon";
+> >                                                    ^^^^^^^^^^
+> >
+> > Get rid of that, too, please.
+> 
+> Hi Steffan,
+> 
+> I believe I need to keep the "syscon". The same register (ctrlcfg)
+> that has the ECC enable bitfield also includes the DRAM configuration
+> bitfields that other drivers will want to access (specifically the
+> FPGA bridge needs this information). Since this register will be
+> shared between drivers,  syscon seems like the best solution.
+> 
 
-> In many cases however we do have multiple compatible strings that
-> describe how the device is wired. See drivers/tty/serial/of_serial.c
-> for example. It has "ns16550" but then it also has additional
-> "nvidia,tegra20-uart", "nxp,lpc3220-uart" and "ibm,qpace-nwp-serial".
+Hm, from looking at the documentation of the ctrlcfg I can't really
+understand which bits you would need for the FPGA brigde and why.
+That all sounds like stuff you would want to set for the specific
+RAM you are dealing with on a specific board.
+What bridge are you talking about? The SDRAM bridge?
 
-All those sound like SoC components. In that case it sounds fine to have
-the device compatible contain the SoC name. We're talking here about
-external, detachable devices.
+I can see the problem with the ECC enable, though.
 
->>> Not use what you're after with the SPI example though, but sounds
->>> like that's something different.
->>
->> I think Sebastien's example is just like the issue here.
->=20
-> Hmm is there some existing example in the kernel like that?
+Regards,
+Steffen
 
-No, Sebastien's example was just a hypothetical case. Here, using your
-way of having SoC specific data in the .dts, we would have
-"sharp,ls037v7dw01-omap-dss", and in Sebastien's example with a touch
-sensor we'd have, say, "synaptics,xyz123-omap-spi".
+> >                 sdrctl@ffc25000 {
+> >                         compatible = "altr,sdr-ctl";
+> >                         reg = <0xffc25000 0x1000>;
+> >                         ranges;
+> >
+> >                         edac@ffc2502c {
+> >                                 compatible = "altr,sdram-edac";
+> >                                 reg = <0xffc2502c 0x50>;
+> >                                 interrupts = <0 39 4>;
+> >                         };
+> >                 };
+> >
+> > Then we can later add:
+> >
+> >                         sdr-ports: ports@ffc2507c {
+> >                                 #reset-cells = <1>;
+> >                                 compatible = "altr,sdr-ports";
+> >                                 reg = <0xffc2507c 0x10>;
+> >                                 clocks = <&ddr_dqs_clk>;
+> >                                 ...
+> >                         };
 
- Tomi
-
-
-
---9oluejSWgmpHFmU7a3XUjO06vtPL92lct
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTelXxAAoJEPo9qoy8lh71km8P+wbIBvTWJrht6h0TkaLoAaJ6
-0SWm2fxDE75ANgQueJL0ocJM/ZERY75bohw6wP4B0LL5uTBABpcTZ2v4ukOu07Rf
-ikWDWiCsmplpXWYbSmv6a7qyxknwtafIab8I2cMrM2ugvH9jSVdYclZaCwqGL/zp
-tssX15WAHXvjVk7nXEHeNecfgicwLd1uCt/201YT8KPS+Z77Z2TWIkpojnjzzJ0+
-NoGr9NEq26/vdDxur5cpfyRnxzsTrzpGpvxXLorEToorUJDf6Y0V++YWuxt9Q4hy
-1fsH6nI1Pp6d1RaMrj30eUkQ6IzMySeoKE+01akYkrys3ncPi6XBpKx5DAdNdnoP
-5doVeWDUnhYDTxykwSD3pS/wEWbmNPVQDIg1VMuoRsCuqyIkpt2P6TwD/vKBvtiD
-9Ypns9fG9PeflUjT19UVDRPBcMBdhotsKf0OOhQ+ioPWEngiPXR5fXCC/ls3eACE
-NVMBgU5iQ5cEDNS/4XHK9tg2WijI39+mHoDxl0Xtqd842Ac42OVTyGDMlq04zfIq
-+PFZcjuACVZDqFSD5GL6i8Zgpwr3Tz6esUkp/6B0aFnh00xYdiZUnzG2IwjnJRiV
-ihpcIvykFQQtCkWuiAJJ9N1eWtJuASMxp8+eqWr85eq16mhqTIr6Jzcm/u5pymU8
-FgSJjvod0XV6dXhOLzfF
-=1J0I
------END PGP SIGNATURE-----
-
---9oluejSWgmpHFmU7a3XUjO06vtPL92lct--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
