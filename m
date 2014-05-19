@@ -1,56 +1,70 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] mfd: add support for sun6i PRCM
- (Power/Reset/Clock Management) unit
-Date: Mon, 19 May 2014 15:29:23 +0100
-Message-ID: <20140519142923.GQ4978@lee--X1>
-References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
- <1399633911-7094-4-git-send-email-boris.brezillon@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jyri Sarha <jsarha@ti.com>
+Subject: Re: [alsa-devel] [PATCH 00/19] Rework OMAP4+ HDMI audio support
+Date: Mon, 19 May 2014 17:44:09 +0300
+Message-ID: <537A18B9.3040504@ti.com>
+References: <cover.1399884780.git.jsarha@ti.com>	<CAGhQ9VzjndCBp+ZHS3XPPvS4ors6u9BfHf4NY_HNYN5ynyQOYQ@mail.gmail.com>	<53733F2E.4030803@ti.com>	<CAGhQ9VzkGDPiQF7TiqiMgZY_oc9dyrW66yGsZR6ei2ejX-EXcw@mail.gmail.com>	<CAGhQ9VwY_qeOLsa_oAUuL3XT2tmn-mLg0WBtOdL8JL6u+0PQcw@mail.gmail.com> <CAGhQ9VyxKWZ9KSWoYkhf8KeUJnMKJO=b0kG=upC7uojNLHVObw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBVFK5CNQKGQEU2GRWCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1399633911-7094-4-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Emilio =?iso-8859-1?Q?L=F3pez?= <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAGhQ9VyxKWZ9KSWoYkhf8KeUJnMKJO=b0kG=upC7uojNLHVObw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Joachim Eastwood <manabian@gmail.com>
+Cc: alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, broonie@kernel.org, peter.ujfalusi@ti.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Benoit Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-> The PRCM (Power/Reset/Clock Management) block exposes several subdevices
-> in different subsystems (clk, reset ...)
->=20
-> Add basic support for the PRCM unit with clk (AR100, AHB0, and APB0 clks)
-> and reset controller subdevices.
->=20
-> Other subdevices might be added later (if needed).
->=20
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/mfd/Kconfig      |   8 +++
->  drivers/mfd/Makefile     |   1 +
->  drivers/mfd/sun6i-prcm.c | 134 +++++++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 143 insertions(+)
->  create mode 100644 drivers/mfd/sun6i-prcm.c
+On 05/17/2014 12:16 PM, Joachim Eastwood wrote:
+> On 17 May 2014 10:51, Joachim  Eastwood <manabian@gmail.com> wrote:
+>> On 14 May 2014 18:25, Joachim  Eastwood <manabian@gmail.com> wrote:
+...
+>>
+>> I did some more testing over here.
+>>
+>> My HTPC (nVidia ION2 based) works good with speaker-test and all
+>> channels are where they are suppose to be.
+>>
+>> On the OMAP4 board I tried doing: "while true; do speaker-test -c 4 -s
+>> 1; done" and this had an interesting effect.
+>> Most of the time FL (Front Left) is swapped with BL (Back Left) but
+>> about every 10th time the sound comes out in the FL speaker... So
+>> there something weird going on here. Same story for the right channel.
+>>
+>> I also noticed that HDMI doesn't always work on boot up, it sometimes fail with:
+>> [ 193.985565] omapdss_hdmi 58006000.encoder: audio not supported
+>> [ 193.985565] omapdss_hdmi 58006000.encoder: ASoC: can't open
+>> interface 58006000.encoder: -19
+>>
+>> But after replugging the HDMI connector a couple of times it starts to work.
+>>
 
-Applied, thanks.
+That is weird I can not reproduce this problem. I rebooted my panda 
+several times and the audio device was always there. Could it be that 
+the connector is in DVI mode or something?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+>> I'll see if I can try with an old TI OMAP4 kernel (3.4) and see how that works.
+>
+> On the 3.4 Variscite kernel:
+> Linux version 3.4.0-1489-omap4 (uri@pluto) (gcc version 4.6.3
+> (Ubuntu/Linaro 4.6.3-1ubuntu5) ) #27 SMP PREEMPT Sun Apr 7 13:27:10
+> IDT 2013
+> git://dev.omapzoom.org/pub/scm/integration/kernel-ubuntu.git +
+> Variscite vendor patches
+>
+> Both speaker-test -c 4 and -c 8 works. All channels are where they are
+> suppose to be.
+>
+> Hot plugging is broken, though. So the HDMI must be connected on boot,
+> but that might be the Variscite board setup.
+>
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+I checked the ubuntu branch implementation and found that it is quite 
+different in many places, but the one place that affects the i2s channel 
+mapping to HDMI looks exactly the same. So there must be a bug some 
+where else and there is no point trying to fix it by changing the 
+mapping (it would be impossible anyway). I'll compare the 
+implementations further when I have time.
+
+Thanks for your testing. Now I at least now where the bug is not.
+
+Best regards,
+Jyri
