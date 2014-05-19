@@ -1,58 +1,70 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 7/7] ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
-Date: Mon, 19 May 2014 10:18:36 +0100
-Message-ID: <20140519091836.GD4978@lee--X1>
-References: <1397757570-19750-1-git-send-email-dianders@chromium.org>
- <1397757570-19750-8-git-send-email-dianders@chromium.org>
- <53750A9A.8000808@wwwdotorg.org>
- <CAD=FV=Vj5M_yiYZOkjzB-QjYJa9WE2fcGcwwzAF1h8gcjc9jeA@mail.gmail.com>
- <CAOesGMhe-STC3GUwAyC6qeEPWWmxdsWbXqdevy8b4MHDgM2v=A@mail.gmail.com>
+Subject: Re: [PATCH v3 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Mon, 19 May 2014 10:21:59 +0100
+Message-ID: <20140519092159.GE4978@lee--X1>
+References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399633911-7094-4-git-send-email-boris.brezillon@free-electrons.com>
+ <20140509135251.GY5767@lee--X1>
+ <20140515151756.GX29258@lukather>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMhe-STC3GUwAyC6qeEPWWmxdsWbXqdevy8b4MHDgM2v=A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Doug Anderson <dianders@chromium.org>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@nvidia.com>, Andrew Bresticker <abrestic@chromium.org>, Dylan Reid <dgreid@chromium.org>, Simon Glass <sjg@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <20140515151756.GX29258@lukather>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 15 May 2014, Olof Johansson wrote:
-
-> On Thu, May 15, 2014 at 11:55 AM, Doug Anderson <dianders@chromium.or=
-g> wrote:
-> > Stephen,
-> >
-> > On Thu, May 15, 2014 at 11:42 AM, Stephen Warren <swarren@wwwdotorg=
-=2Eorg> wrote:
-> >> On 04/17/2014 11:59 AM, Doug Anderson wrote:
-> >>> This adds the EC i2c tunnel (and devices under it) to the
-> >>> tegra124-venice2 device tree.
-> >>
-> >> Did the MFD patches at the start of this series get applied yet? I=
- was
-> >> hoping to apply this one patch to the Tegra tree for 3.16, and tha=
-t
-> >> needs to happen by tomorrow morning at the latest since -rc6 is lo=
-oming
-> >> fast. However, I'm holding off until the rest of the series is app=
-lied
-> >> to the MFD tree so I can be sure the DT binding is accepted first.=
-=2E.
-> >
-> > As far as I know, they didn't.  Lee was waiting on Wolfram's ack to
-> > the i2c tunnel before landing them.  ...and I'm still eagerly await=
-ing
-> > Wolfram's next i2c tunnel review.
+> > > The PRCM (Power/Reset/Clock Management) block exposes several sub=
+devices
+> > > in different subsystems (clk, reset ...)
+> > >=20
+> > > Add basic support for the PRCM unit with clk (AR100, AHB0, and AP=
+B0 clks)
+> > > and reset controller subdevices.
+> > >=20
+> > > Other subdevices might be added later (if needed).
+> > >=20
+> > > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.co=
+m>
+> > > Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > > ---
+> > >  drivers/mfd/Kconfig      |   8 +++
+> > >  drivers/mfd/Makefile     |   1 +
+> > >  drivers/mfd/sun6i-prcm.c | 134 +++++++++++++++++++++++++++++++++=
+++++++++++++++
+> > >  3 files changed, 143 insertions(+)
+> > >  create mode 100644 drivers/mfd/sun6i-prcm.c
+> >=20
+> > [...]
+> >=20
+> > > +/*
+> > > + * Copyright (C) 2014 Free Electrons
+> > > + *
+> > > + * License Terms: GNU General Public License v2
+> > > + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> > > + *
+> > > + * Allwinner PRCM (Power/Reset/Clock Management) driver
+> > > + *
+> > > + */
+> > > +
+> > > +#include <linux/mfd/core.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> >=20
+> > Ah, now isn't that better?
+> >=20
+> > Acked-by: Lee Jones <lee.jones@linaro.org>
 >=20
-> The i2c portion can be revisited if needed, the MFD piece should be
-> possible to land sooner than that... Lee?
+> How do you want to merge this? Do you want me to take it through
+> mach-sunxi tree, or do you want to take it in your tree?
 
-The set 'will' make it in during this cycle.  The trouble is, once
-it's applied, the I2C portion will have to wait until the next cycle.
-By applying late, I'm giving this set every chance to go in as a
-whole.
+If Boris can tell me what needs to go in with this patch (or if it
+can go in on its own), I will create a(n immutable) branch from which
+you can pull into your tree.
 
 --=20
 Lee Jones
