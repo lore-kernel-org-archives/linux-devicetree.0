@@ -1,52 +1,88 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v2 1/3] ARM: dts: fix incorrect compatible for exynos4412
-Date: Tue, 20 May 2014 01:10:38 +0900
-Message-ID: <537A2CFE.9010202@samsung.com>
-References: <53633D38.9000108@samsung.com> <5363DEBA.6080804@gmail.com>
+Subject: Re: [PATCHv4 1/4] ARM: dts: exynos4: add PMU syscon node
+Date: Tue, 20 May 2014 01:23:06 +0900
+Message-ID: <537A2FEA.6070208@samsung.com>
+References: <1399004769-31033-1-git-send-email-chanho61.park@samsung.com> <1399004769-31033-2-git-send-email-chanho61.park@samsung.com> <5374F447.9030102@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5363DEBA.6080804@gmail.com>
+In-Reply-To: <5374F447.9030102@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Beomho Seo <beomho.seo@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Chanho Park <chanho61.park@samsung.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, k.debski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/03/14 03:06, Tomasz Figa wrote:
-> On 02.05.2014 08:37, Beomho Seo wrote:
->> This patch fixed incorrect compatible for ak8975 magnetic sensor.
->> ak8975 magnetic sensor use compatible "ak8975" or "asahi-kasei,ak8975"
->> In this patch, use "asahi-kasei,ak8975" according to dt bindings
->> document.
->>
->> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->> Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
->> ---
->> Changes in v2:
->> - Compatible is changed according to device tree binding document.
->> ---
->> arch/arm/boot/dts/exynos4412-trats2.dts | 2 +-
->> 1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts
->> b/arch/arm/boot/dts/exynos4412-trats2.dts
->> index 3228506..1279a8a 100644
->> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
->> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
->> @@ -494,7 +494,7 @@
->> status = "okay";
->>
->> ak8975@0c {
->> - compatible = "ak,ak8975";
->> + compatible = "asahi-kasei,ak8975";
->> reg = <0x0c>;
->> gpios = <&gpj0 7 0>;
->> };
->>
+On 05/16/14 02:07, Tomasz Figa wrote:
+> Hi Chanho,
 >
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+Hi,
+
+> When testing some other patches with this series applied I found one
+> more issue. Please see below.
 >
-Applied, thanks.
+> On 02.05.2014 06:26, Chanho Park wrote:
+>> This patch adds a PMU(Power Management Unit) syscon node. This
+>> should be required for USB Phy syscon regmap I/F.
+>>
+>> Cc: Kamil Debski<k.debski@samsung.com>
+>> Signed-off-by: Chanho Park<chanho61.park@samsung.com>
+>> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
+>> ---
+>>   Documentation/devicetree/bindings/arm/samsung/pmu.txt | 3 +++
+>>   arch/arm/boot/dts/exynos4.dtsi                        | 5 +++++
+>>   arch/arm/boot/dts/exynos4x12.dtsi                     | 4 ++++
+>>   3 files changed, 12 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+>> index f1f1552..b562634 100644
+>> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+>> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+>> @@ -2,6 +2,9 @@ SAMSUNG Exynos SoC series PMU Registers
+>>
+>>   Properties:
+>>    - compatible : should contain two values. First value must be one from following list:
+>> +		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
+>> +		   - "samsung,exynos4212-pmu" - for Exynos4212 SoC,
+>> +		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+>
+> Here two compatible strings are specified, one for each SoC in 4x12
+> family, but...
+>
+>>   		- "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+>>   		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+>>   		second value must be always "syscon".
+>> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+>> index 2f8bcd0..264066f 100644
+>> --- a/arch/arm/boot/dts/exynos4.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>> @@ -110,6 +110,11 @@
+>>   		reg =<0x10010000 0x400>;
+>>   	};
+>>
+>> +	pmu_system_controller: system-controller@10020000 {
+>> +		compatible = "samsung,exynos4210-pmu", "syscon";
+>> +		reg =<0x10020000 0x4000>;
+>> +	};
+>> +
+>>   	dsi_0: dsi@11C80000 {
+>>   		compatible = "samsung,exynos4210-mipi-dsi";
+>>   		reg =<0x11C80000 0x10000>;
+>> diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+>> index c4a9306..7f767f7 100644
+>> --- a/arch/arm/boot/dts/exynos4x12.dtsi
+>> +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+>> @@ -119,6 +119,10 @@
+>>   		interrupts =<0 72 0>;
+>>   	};
+>>
+>> +	pmu_system_controller: system-controller@10020000 {
+>> +		compatible = "samsung,exynos4x12-pmu", "syscon";
+>
+> Here one node is added for both using an undocumented compatible string.
+> Please fix this according to documentation.
+>
+
+Chanho, updated patch?
 
 - Kukjin
