@@ -1,109 +1,39 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v2 00/10] Marvell Berlin full clock support
-Date: Mon, 19 May 2014 18:43:21 +0200
-Message-ID: <1400517811-24668-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI
+ I/O memory type
+Date: Mon, 19 May 2014 17:50:10 +0100
+Message-ID: <20140519165010.GQ15130@arm.com>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <66413148.lBD9c9XUns@wuerfel>
+ <20140519142355.GD15130@arm.com>
+ <4669695.sl9JY8Fb9h@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jisheng Zhang <jszhang@marvell.com>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <4669695.sl9JY8Fb9h@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mike,
+On Mon, May 19, 2014 at 05:40:51PM +0100, Arnd Bergmann wrote:
+> On Monday 19 May 2014 15:23:55 Will Deacon wrote:
+> > Fair enough -- I just don't think we should dress up an erratum workaround as
+> > a bug fix, especially when it's adding a new user of strongly-ordered memory
+> > to the kernel which we can't honour for arm64.
+> 
+> Makes sense. How about a patch then that just changes the memory type for
+> the I/O space and adds a comment explaining all we found out? From what
+> I can tell, strict ordering is required for Armada 3xx, may or may not
+> be required elsewhere but should never hurt noticeably. We may want to restrict
+> it to ARMv6/v7 so we don't have to pick the right domain.
 
-this is v2 of the Berlin SoC clock driver [1] but with a reworked DT
-binding as requested [2]. We decided to not even try to split up the chip
-control registers that deal with pinmux, padmux, clock, reset, and evil
-stuff we haven't even looked at. Instead we keep a single node that clock
-driver will remap early, while proper platform_drivers use a regmap
-instead. Although clock and other drivers share the same register range,
-they use individual registers exclusively.
+Ok, and we don't bother with the extra dsb in outb? I'm alright with that if
+the comment goes into enough detail.
 
-There are some functional fixes in the single clock drivers, I noticed
-while retesting each individial driver. There will be more to fixup but
-without any drivers actually using the clocks, it is hard to tell what
-isn't working now.
-
-Anyway, the current binding should match what you requested and having
-a clock driver for v3.16 will really be a huge benefit for us to work
-on more driver support.
-
-If you are fine with it, please take patches 2-7 and I'll pick up
-1,8-10 in berlin branch.
-
-Sebastian
-
-[1] https://lkml.kernel.org/r/1399839881-29895-1-git-send-email-sebastian.hesselbarth@gmail.com
-[2] https://lkml.kernel.org/r/20140515044106.19795.57249@quantum
-
-Alexandre Belloni (4):
-  clk: berlin: add driver for BG2x simple PLLs
-  clk: berlin: add driver for BG2x complex divider cells
-  clk: berlin: add core clock driver for BG2Q
-  ARM: dts: berlin: convert BG2Q to DT clock nodes
-
-Sebastian Hesselbarth (6):
-  dt-binding: ARM: add clock binding docs for Marvell Berlin2 SoCs
-  clk: berlin: add binding include for Berlin SoC clock ids
-  clk: berlin: add driver for BG2x audio/video PLL
-  clk: berlin: add core clock driver for BG2/BG2CD
-  ARM: dts: berlin: convert BG2CD to DT clock nodes
-  ARM: dts: berlin: convert BG2 to DT clock nodes
-
- .../devicetree/bindings/arm/marvell,berlin.txt     |  47 ++
- arch/arm/boot/dts/berlin2.dtsi                     |  56 +-
- arch/arm/boot/dts/berlin2cd.dtsi                   |  53 +-
- arch/arm/boot/dts/berlin2q.dtsi                    |  54 +-
- drivers/clk/Makefile                               |   1 +
- drivers/clk/berlin/Makefile                        |   4 +
- drivers/clk/berlin/berlin2-avpll.c                 | 393 ++++++++++++
- drivers/clk/berlin/berlin2-avpll.h                 |  36 ++
- drivers/clk/berlin/berlin2-div.c                   | 265 ++++++++
- drivers/clk/berlin/berlin2-div.h                   |  89 +++
- drivers/clk/berlin/berlin2-pll.c                   | 117 ++++
- drivers/clk/berlin/berlin2-pll.h                   |  37 ++
- drivers/clk/berlin/bg2.c                           | 691 +++++++++++++++++++++
- drivers/clk/berlin/bg2q.c                          | 389 ++++++++++++
- drivers/clk/berlin/common.h                        |  29 +
- include/dt-bindings/clock/berlin2.h                |  45 ++
- include/dt-bindings/clock/berlin2q.h               |  31 +
- 17 files changed, 2240 insertions(+), 97 deletions(-)
- create mode 100644 drivers/clk/berlin/Makefile
- create mode 100644 drivers/clk/berlin/berlin2-avpll.c
- create mode 100644 drivers/clk/berlin/berlin2-avpll.h
- create mode 100644 drivers/clk/berlin/berlin2-div.c
- create mode 100644 drivers/clk/berlin/berlin2-div.h
- create mode 100644 drivers/clk/berlin/berlin2-pll.c
- create mode 100644 drivers/clk/berlin/berlin2-pll.h
- create mode 100644 drivers/clk/berlin/bg2.c
- create mode 100644 drivers/clk/berlin/bg2q.c
- create mode 100644 drivers/clk/berlin/common.h
- create mode 100644 include/dt-bindings/clock/berlin2.h
- create mode 100644 include/dt-bindings/clock/berlin2q.h
-
----
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Mike Turquette <mturquette@linaro.org>
-Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
-Cc: Jisheng Zhang <jszhang@marvell.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
--- 
-1.9.1
+Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
