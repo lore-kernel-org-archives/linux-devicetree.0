@@ -1,36 +1,51 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] irqchip: armada-370-xp: Move the devicetree binding
- documentation
-Date: Sun, 18 May 2014 22:10:41 -0400
-Message-ID: <20140519021041.GE27822@titan.lakedaemon.net>
-References: <1400457737-1617-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv3 3/3] clocksource: Add Freescale FlexTimer Module (FTM)
+ timer support
+Date: Mon, 19 May 2014 02:26:41 +0000
+Message-ID: <0a6cb1e6380f42279a583ebf7e27dd54@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1398737939-5334-1-git-send-email-Li.Xiubo@freescale.com>
+ <1398737939-5334-4-git-send-email-Li.Xiubo@freescale.com>
+ <537629C3.30507@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400457737-1617-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <537629C3.30507@linaro.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingchang Lu <jingchang.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, May 18, 2014 at 09:02:17PM -0300, Ezequiel Garcia wrote:
-> Move the devicetree binding documentation to the interrupt-controller
-> directory, where it belongs.
-> 
-> Reviewed-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  .../marvell,armada-370-xp-mpic.txt}                                       | 0
->  1 file changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/{arm/armada-370-xp-mpic.txt => interrupt-controller/marvell,armada-370-xp-mpic.txt} (100%)
-
-Applied to irqchip/core
-
-thx,
-
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+PiA+ICsjZGVmaW5lIEZUTV9DTlRJTgkweDRDDQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBfX2lv
+bWVtICpjbGtzcmNfYmFzZTsNCj4gPiArc3RhdGljIHZvaWQgX19pb21lbSAqY2xrZXZ0X2Jhc2U7
+DQo+ID4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIHBlcm9pZGljX2N5YzsNCj4gPiArc3RhdGljIHVu
+c2lnbmVkIGxvbmcgcHM7DQo+ID4gK2Jvb2wgYmlnX2VuZGlhbjsNCj4gPiArDQo+IA0KPiBVc3Vh
+bGx5IHRoaXMgaXMgZW5jYXNwdWxhdGVkIGluIGEgc3RydWN0dXJlLg0KPiANCj4gc3RydWN0IGZ0
+bV9jbG9ja19kZXZpY2Ugew0KPiAJdm9pZCBfX2lvbWVtICpjbGtzcmNfYmFzZTsNCj4gCS4uLg0K
+PiB9Ow0KPg0KPiANCj4gPiArc3RhdGljIGlubGluZSB1MzIgZnRtX3JlYWRsKHZvaWQgX19pb21l
+bSAqYWRkcikNCj4gPiArew0KPiA+ICsJaWYgKGJpZ19lbmRpYW4pDQo+IA0KPiBJIGFtIG5vdCBh
+IGJpZyBmYW4gb2YgYWRkcmVzc2luZyBnbG9iYWwgdmFyaWFibGVzIGluIHRoZSBmdW5jdGlvbnMs
+IHNvDQo+IGlmIHlvdSBjYW4gcGFzcyB0aGUgc3RydWN0dXJlIHBvaW50ZXIgYXJvdW5kIGhlcmUg
+YW5kIHRoZSBvdGhlcg0KPiBmdW5jdGlvbnMgaW5zdGVhZCB0aGF0IHdvdWxkIGJlIG5pY2UuDQo+
+IA0KPiBPdGhlcndpc2UgdGhlIHBhdGNoIHNvdW5kcyBvay4gVGhhbmtzIGZvciB0YWtpbmcgY2Fy
+ZSBvZiBlbmNhcHN1bGF0aW5nDQo+IHdlbGwgdGhlIGZ1bmN0aW9ucyBhbmQgY29tbWVudGluZyB0
+aGUgY29kZS4NCj4gDQoNClllcywgSSBkaWQgdGhpbmsgc28uDQoNCkJ1dCBzb21lIGNhbGxiYWNr
+cyBsaWtlIO+8mg0KKyBzdGF0aWMgdTY0IGZ0bV9yZWFkX3NjaGVkX2Nsb2NrKHZvaWQpDQorIHsN
+CisgICAgICAgICByZXR1cm4gZnRtX3JlYWRsKGNsa3NyY19iYXNlICsgRlRNX0NOVCk7DQorIH0N
+Cg0KVXNlZCBieSA6DQorIHNjaGVkX2Nsb2NrX3JlZ2lzdGVyKGZ0bV9yZWFkX3NjaGVkX2Nsb2Nr
+LC4uLi4pOw0KDQpJZiB0aGV5IGFyZSBlbmNhcHN1bGF0ZWQgaW4gYSBzdHJ1Y3R1cmUsIGFuZCBz
+aG91bGQgdGhlIHN0cnVjdCBpbnN0YW5jZQ0KYmUgb25lIGdsb2JhbCBpbnN0YW5jZSB0b28gPyBJ
+J20gZG91YnRpbmcgd2hldGhlciB3aWxsIHRoaXMgbWFrZSBzZW5zZSA/DQoNCg0KPiA+ICtzdGF0
+aWMgaW50IF9faW5pdCBmdG1fY2FsY19jbG9zZXN0X3JvdW5kX2N5Yyh1bnNpZ25lZCBsb25nIGZy
+ZXEpDQo+ID4gK3sNCj4gPiArCXBzID0gMDsNCj4gPiArDQo+ID4gKwlkbyB7DQo+ID4gKwkJcGVy
+b2lkaWNfY3ljID0gRElWX1JPVU5EX0NMT1NFU1QoZnJlcSwgSFogKiAoMSA8PCBwcysrKSk7DQo+
+ID4gKwl9IHdoaWxlIChwZXJvaWRpY19jeWMgPiAweEZGRkYpOw0KPiA+ICsNCj4gPiArCWlmIChw
+cyA+IDcpIHsNCj4gPiArCQlwcl9lcnIoImZ0bTogdGhlIG1heCBwcmVzY2FsZXIgaXMgJWx1ID4g
+N1xuIiwgcHMpOw0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gDQo+
+IENhbiB5b3UgZXhwbGFpbiBob3cgdGhpcyBlcnJvciBjYW4gaGFwcGVuID8NCj4gDQoNClllcywg
+dGhlIGhhcmR3YXJlIGxpbWl0YXRpb24gb2YgdGhlICdwcycgaXMgMH43LCBhbmQgdGhlIGNvdW50
+ZXIgcmVnaXN0ZXINCklzIG9ubHkgdXNpbmcgdGhlIGxvd2VyIDE2IGJpdHMuDQpJZiB0aGUgJ2Zy
+ZXEnIHZhbHVlIGlzIHRvbyBiaWcgaGVyZSwgdGhlbiB0aGUgcGVyaW9kaWNfY3ljIG1heSBleGNl
+ZWQgMHhGRkZGLg0KDQpPciBzaG91bGQgSSBhZGQgc29tZSBjb21tZW50IGhlcmUgPw0KDQoNClRo
+YW5rcyB2ZXJ5IG11Y2gsDQpCUnMNClhpdWJvDQoNCg0K
