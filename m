@@ -1,48 +1,207 @@
+Return-Path: <loeliger@gmail.com>
 MIME-Version: 1.0
-Sender: robherring2@gmail.com
-In-Reply-To: <5376959.IId6jNFDDg@wuerfel>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
-	<CAL_JsqLN_f1uvrY6w7J7ZcR9pfM0_XKYMQ5YU8F4yAcMW+oDGw@mail.gmail.com>
-	<CACRpkdaqsVUDA+6NC=EQmxcnDAnJEfPNYoptrEv=nq=eZEbA_g@mail.gmail.com>
-	<5376959.IId6jNFDDg@wuerfel>
-Date: Wed, 28 May 2014 17:47:03 -0500
-Message-ID: <CAL_Jsq+R4w0FJzyHJu_cO7wOxWyHSXg-Oqz_yLnZwWd1sQ0GvA@mail.gmail.com>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linus Walleij <linus.walleij@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Marc Zyngier <marc.zyngier@arm.com>, Will Deacon <will.deacon@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+In-Reply-To: <5379FAA5.10404@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
+	<1399913280-6915-2-git-send-email-holler@ahsoftware.de>
+	<53775334.3030704@gmail.com>
+	<5379FAA5.10404@ahsoftware.de>
+Date: Mon, 19 May 2014 10:49:28 -0500
+Message-ID: <CAJgR-BhRtc1XGqk-TVOrf2y_pYS+nratkPrf+OenP4SFcyK3ng@mail.gmail.com>
+Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
+ 'dependencies' which contains a list of referenced phandles
+From: Jon Loeliger <loeliger@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c1ed8a56678304f9c2b5ec
+To: Alexander Holler <holler@ahsoftware.de>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, May 22, 2014 at 8:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 22 May 2014 15:30:39 Linus Walleij wrote:
->> >> +       parent =3D soc_device_to_device(soc_dev);
->> >
->> > We really need to standardize this soc device stuff so that platforms
->> > always have a parent soc device or not.
->>
->> Arnds position is that the entire platform/board should not be
->> a "soc device" and that seems correct since the board is no SoC.
->>
->> So I will spin this off into a SoC driver and push under
->> drivers/soc and bind to the SoC node in the device tree.
+--001a11c1ed8a56678304f9c2b5ec
+Content-Type: text/plain; charset=UTF-8
+
+[ Crap.  Sorry about the duplicate post.  Stupid HTML; didn't hit the
+lists. -- jdl ]
+
+
+> What's still questionable about the patches for dtc is if dependencies to
+> devices and not just drivers should be included in the new property
+> dependencies too.
+
+I don't think the DTC should have any semantic knowledge of why these
+dependency arcs are being added to the graph.  Sure, it could be that
+different types of arcs are added, and that the total dependency graph
+travels multiple such arc types to obtains some valid topological sort,
+but the DTC itself should just not care.
+
+After saying that, there are likely semantic checks that could be added to
+ensure some policy about those arcs was followed.  Separate the
+implementation from the policy.  There is already plenty of discussion
+down that line within the DTC ongoing.
+
+HTH,
+jdl
+
+
+On Mon, May 19, 2014 at 7:35 AM, Alexander Holler <holler@ahsoftware.de>wrote:
+
+> Am 17.05.2014 14:16, schrieb Tomasz Figa:
 >
-> To be clear, this has nothing to do with whether this is strictly a SoC
-> or not. I would still want to see all the internal components of the
-> main chip under the soc node, and probably anything that is attached
-> to one of its interfaces under those nodes. The parts that should not
-> be under /soc are the ones that are not in the device hierarchy, such
-> as external clock generators.
+>
+>  References to phandles of parent or child nodes will not be added to this
+>>> property, because this information is already contained in the blob (in
+>>> the
+>>> form of the tree itself).
+>>>
+>>
+>> I wonder if we shouldn't be including them too for consistency related
+>> reasons, so we have all the necessary information in one place.
+>> References to child nodes are great recipes for cycles, though...
+>>
+>> No strong opinion, though, just an idea.
+>>
+>
+> As said, they are already in the tree itself. And they are already
+> included in the graph (these are the black edges), so they just don't
+> appear in the property dependencies.
+>
+>
+>
+>>
+>>> No dependencies to disabled nodes will be added.
+>>>
+>>>
+>> Same here. IMHO it might be wise to let the parsing entity (e.g. kernel)
+>> decide whether to ignore a dependency to disabled node or not.
+>>
+>> Otherwise, I like the simplicity of compile-time dependency list
+>> creation. Quite a nice work.
+>>
+>
+> Thanks.
+>
+> What's still questionable about the patches for dtc is if dependencies to
+> devices and not just drivers should be included in the new property
+> dependencies too. My current assumption is that all devices belonging to
+> one and the same driver don't have dependencies between each other. In
+> other words the order in which devices will be attached to one and the same
+> driver isn't important. If that assumption is correct it would be possible
+> to just attach all devices belonging to a driver after the driver was
+> loaded (also I haven't that done in my patches).
+>
+> And thinking about that again, I think I was wrong and doing so have been
+> some kind of evil premature optimization I did in order to spare a few
+> dependencies/edges. But changing this can done by removing a few lines in
+> the code for dtc (patch 1).
+>
+> Regards,
+>
+> Alexander Holler
+>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>
 
-Pretty much everything is an SOC these days. And there is really no way to =
-tell what is the SOC boundary in DT. Perhaps it is just all devices handled=
- by the top-level of_platform_populate call.
+--001a11c1ed8a56678304f9c2b5ec
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-If this is the route we want to go, I don't think it should be left to the =
-whim of the platforms. We should have some sort of default/generic SOC devi=
-ce until a more specific device is added or SOCs just add data to the gener=
-ic device instead of making their own. With Pawel's vexpress clean-up that =
-just got pulled into arm-soc for 3.16, we can now call of_platform_populate=
- multiple times on the DT root. This means we can get rid of most of_platfo=
-rm_populate calls in platforms.
+<div dir=3D"ltr"><div><br></div>[ Crap.=C2=A0 Sorry about the duplicate pos=
+t.=C2=A0 Stupid HTML; didn&#39;t hit the lists. -- jdl ]<br><br><br><div>&g=
+t; What&#39;s still questionable about the patches for dtc is if dependenci=
+es to<br>
+&gt; devices and not just drivers should be included in the new property<br=
+>&gt; dependencies too.<br><br>I don&#39;t think the DTC should have any se=
+mantic knowledge of why these<br>dependency arcs are being added to the gra=
+ph. =C2=A0Sure, it could be that<br>
+different types of arcs are added, and that the total dependency graph<br>t=
+ravels multiple such arc types to obtains some valid topological sort,<br>b=
+ut the DTC itself should just not care.<br><br>After saying that, there are=
+ likely semantic checks that could be added to<br>
+ensure some policy about those arcs was followed. =C2=A0Separate the<br>imp=
+lementation from the policy.=C2=A0 There is already plenty of discussion<br=
+>down that line within the DTC ongoing.<br><br>HTH,<br>jdl<span class=3D"se=
+wxfovnlv8wrrh"></span><span class=3D"sewxfovnlv8wrrh"></span></div>
+</div><div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Mon,=
+ May 19, 2014 at 7:35 AM, Alexander Holler <span dir=3D"ltr">&lt;<a href=3D=
+"mailto:holler@ahsoftware.de" target=3D"_blank">holler@ahsoftware.de</a>&gt=
+;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">Am 17.05.2014 14:16, schrieb Tomasz Figa:<di=
+v class=3D""><br>
+<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><blockquote class=3D"gmail_quote" style=3D"m=
+argin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+References to phandles of parent or child nodes will not be added to this<b=
+r>
+property, because this information is already contained in the blob (in the=
+<br>
+form of the tree itself).<br>
+</blockquote>
+<br>
+I wonder if we shouldn&#39;t be including them too for consistency related<=
+br>
+reasons, so we have all the necessary information in one place.<br>
+References to child nodes are great recipes for cycles, though...<br>
+<br>
+No strong opinion, though, just an idea.<br>
+</blockquote>
+<br></div>
+As said, they are already in the tree itself. And they are already included=
+ in the graph (these are the black edges), so they just don&#39;t appear in=
+ the property dependencies.<div class=3D""><br>
+<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex">
+<br>
+No dependencies to disabled nodes will be added.<br>
+<br>
+</blockquote>
+<br>
+Same here. IMHO it might be wise to let the parsing entity (e.g. kernel)<br=
+>
+decide whether to ignore a dependency to disabled node or not.<br>
+<br>
+Otherwise, I like the simplicity of compile-time dependency list<br>
+creation. Quite a nice work.<br>
+</blockquote>
+<br></div>
+Thanks.<br>
+<br>
+What&#39;s still questionable about the patches for dtc is if dependencies =
+to devices and not just drivers should be included in the new property depe=
+ndencies too. My current assumption is that all devices belonging to one an=
+d the same driver don&#39;t have dependencies between each other. In other =
+words the order in which devices will be attached to one and the same drive=
+r isn&#39;t important. If that assumption is correct it would be possible t=
+o just attach all devices belonging to a driver after the driver was loaded=
+ (also I haven&#39;t that done in my patches).<br>
+
+<br>
+And thinking about that again, I think I was wrong and doing so have been s=
+ome kind of evil premature optimization I did in order to spare a few depen=
+dencies/edges. But changing this can done by removing a few lines in the co=
+de for dtc (patch 1).<br>
+
+<br>
+Regards,<br>
+<br>
+Alexander Holler<div class=3D"HOEnZb"><div class=3D"h5"><br>
+<br>
+<br>
+______________________________<u></u>_________________<br>
+linux-arm-kernel mailing list<br>
+<a href=3D"mailto:linux-arm-kernel@lists.infradead.org" target=3D"_blank">l=
+inux-arm-kernel@lists.<u></u>infradead.org</a><br>
+<a href=3D"http://lists.infradead.org/mailman/listinfo/linux-arm-kernel" ta=
+rget=3D"_blank">http://lists.infradead.org/<u></u>mailman/listinfo/linux-ar=
+m-<u></u>kernel</a><br>
+</div></div></blockquote></div><br></div>
+
+--001a11c1ed8a56678304f9c2b5ec--
