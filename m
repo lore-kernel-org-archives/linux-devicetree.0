@@ -1,70 +1,58 @@
-From: Jyri Sarha <jsarha@ti.com>
-Subject: Re: [alsa-devel] [PATCH 00/19] Rework OMAP4+ HDMI audio support
-Date: Mon, 19 May 2014 17:44:09 +0300
-Message-ID: <537A18B9.3040504@ti.com>
-References: <cover.1399884780.git.jsarha@ti.com>	<CAGhQ9VzjndCBp+ZHS3XPPvS4ors6u9BfHf4NY_HNYN5ynyQOYQ@mail.gmail.com>	<53733F2E.4030803@ti.com>	<CAGhQ9VzkGDPiQF7TiqiMgZY_oc9dyrW66yGsZR6ei2ejX-EXcw@mail.gmail.com>	<CAGhQ9VwY_qeOLsa_oAUuL3XT2tmn-mLg0WBtOdL8JL6u+0PQcw@mail.gmail.com> <CAGhQ9VyxKWZ9KSWoYkhf8KeUJnMKJO=b0kG=upC7uojNLHVObw@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v2] checkpatch: fix wildcard DT compatible string checking
+Date: Mon, 19 May 2014 17:01:03 +0200
+Message-ID: <CAMuHMdURE+rJ4jPhPRwsKqn1egzoWpidzYc0aPP=aSGbjMj11g@mail.gmail.com>
+References: <1397137314-13523-1-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAGhQ9VyxKWZ9KSWoYkhf8KeUJnMKJO=b0kG=upC7uojNLHVObw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Joachim Eastwood <manabian@gmail.com>
-Cc: alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, liam.r.girdwood@linux.intel.com, detheridge@ti.com, broonie@kernel.org, peter.ujfalusi@ti.com, Tomi Valkeinen <tomi.valkeinen@ti.com>, Benoit Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1397137314-13523-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/17/2014 12:16 PM, Joachim Eastwood wrote:
-> On 17 May 2014 10:51, Joachim  Eastwood <manabian@gmail.com> wrote:
->> On 14 May 2014 18:25, Joachim  Eastwood <manabian@gmail.com> wrote:
-...
->>
->> I did some more testing over here.
->>
->> My HTPC (nVidia ION2 based) works good with speaker-test and all
->> channels are where they are suppose to be.
->>
->> On the OMAP4 board I tried doing: "while true; do speaker-test -c 4 -s
->> 1; done" and this had an interesting effect.
->> Most of the time FL (Front Left) is swapped with BL (Back Left) but
->> about every 10th time the sound comes out in the FL speaker... So
->> there something weird going on here. Same story for the right channel.
->>
->> I also noticed that HDMI doesn't always work on boot up, it sometimes fail with:
->> [ 193.985565] omapdss_hdmi 58006000.encoder: audio not supported
->> [ 193.985565] omapdss_hdmi 58006000.encoder: ASoC: can't open
->> interface 58006000.encoder: -19
->>
->> But after replugging the HDMI connector a couple of times it starts to work.
->>
-
-That is weird I can not reproduce this problem. I rebooted my panda 
-several times and the audio device was always there. Could it be that 
-the connector is in DVI mode or something?
-
->> I'll see if I can try with an old TI OMAP4 kernel (3.4) and see how that works.
+On Thu, Apr 10, 2014 at 3:41 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
-> On the 3.4 Variscite kernel:
-> Linux version 3.4.0-1489-omap4 (uri@pluto) (gcc version 4.6.3
-> (Ubuntu/Linaro 4.6.3-1ubuntu5) ) #27 SMP PREEMPT Sun Apr 7 13:27:10
-> IDT 2013
-> git://dev.omapzoom.org/pub/scm/integration/kernel-ubuntu.git +
-> Variscite vendor patches
+> We attempt to search for compatible strings which use a variable
+> token in the documented name such as <chip> or <soc>. While this
+> was attempted to be handled, it's utterly broken.
 >
-> Both speaker-test -c 4 and -c 8 works. All channels are where they are
-> suppose to be.
+> The desired forms of matching are:
 >
-> Hot plugging is broken, though. So the HDMI must be connected on boot,
-> but that might be the Variscite board setup.
+> vendor,<chip>-*
+> vendor,name<part#>-*
 >
+> For <chip>, lower case characters and numbers are permitted. For
+> <part#>, only numeric values are allowed.
+>
+> With this change, the number of missing compatible strings reported in
+> arch/arm/boot/dts is reduced from 1071 to 960.
+>
+> Reported-by: Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
+> Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+> Cc: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+> Cc: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 
-I checked the ubuntu branch implementation and found that it is quite 
-different in many places, but the one place that affects the i2s channel 
-mapping to HDMI looks exactly the same. So there must be a bug some 
-where else and there is no point trying to fix it by changing the 
-mapping (it would be impossible anyway). I'll compare the 
-implementations further when I have time.
+As I came up with about the same patch while investigating why it didn't
+work for me:
 
-Thanks for your testing. Now I at least now where the bug is not.
+Tested-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
 
-Best regards,
-Jyri
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
