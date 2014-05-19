@@ -1,64 +1,85 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI I/O memory type
-Date: Mon, 19 May 2014 15:19:58 +0200
-Message-ID: <66413148.lBD9c9XUns@wuerfel>
-References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com> <11787153.NWVGbVfAPV@wuerfel> <20140516095333.GE12341@arm.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 3/7] mfd: add support for sun6i PRCM
+ (Power/Reset/Clock Management) unit
+Date: Mon, 19 May 2014 14:32:53 +0100
+Message-ID: <20140519133253.GJ4978@lee--X1>
+References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1399633911-7094-4-git-send-email-boris.brezillon@free-electrons.com>
+ <20140509135251.GY5767@lee--X1>
+ <20140515151756.GX29258@lukather>
+ <20140519092159.GE4978@lee--X1>
+ <20140519092725.GE29466@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140516095333.GE12341-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140519092725.GE29466@lukather>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 16 May 2014 10:53:33 Will Deacon wrote:
-> On Thu, May 15, 2014 at 04:55:52PM +0100, Arnd Bergmann wrote:
-> > On Thursday 15 May 2014 16:34:30 Will Deacon wrote:
-> > > > If this is used to synchronize with a DMA, there is no guarantee that the
-> > > > transaction from PCI will be visible in memory by then.
-> > > 
-> > > Can you elaborate on this scenario please? When would we use an I/O space
-> > > write to synchronise with a DMA transfer from a PCI endpoint? You're
-> > > definitely referring to I/O space as opposed to Configuration Space, right?
-> > 
-> > Correct. Assume a PCI device uses PIO and DMA. It sends a DMA to main memory
-> > and lets the CPU know about the data using a level (IntA as opposed to MSI)
-> > interrupt. The CPU performs an outl() operation to an I/O port to let the
-> > hardware know it has received the IRQ and the response of the outl() is
-> > guaranteed to flush the DMA transaction: by the time the outl() completes
-> > we know that the data in memory is valid because it is strongly ordered
-> > relative to the DMA.
-> 
-> Hmm, when you say `guaranteed to flush the DMA transaction', is that a PCI
-> requirement? If so, whether or not that DMA data is then visible to the CPU
-> is really specific to the host-controller implementation. It could easily be
-> buffered somewhere between the host controller and memory, for example.
 
-It's something that drivers are supposed to rely on, and the PCI host
-already has to make the same guarantee about ordering of MSI, MMIO-read
-and DMA transactions, all of which we definitely rely on in the kernel.
+> > > > > The PRCM (Power/Reset/Clock Management) block exposes several=
+ subdevices
+> > > > > in different subsystems (clk, reset ...)
+> > > > >=20
+> > > > > Add basic support for the PRCM unit with clk (AR100, AHB0, an=
+d APB0 clks)
+> > > > > and reset controller subdevices.
+> > > > >=20
+> > > > > Other subdevices might be added later (if needed).
+> > > > >=20
+> > > > > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electron=
+s.com>
+> > > > > Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> > > > > ---
+> > > > >  drivers/mfd/Kconfig      |   8 +++
+> > > > >  drivers/mfd/Makefile     |   1 +
+> > > > >  drivers/mfd/sun6i-prcm.c | 134 +++++++++++++++++++++++++++++=
+++++++++++++++++++
+> > > > >  3 files changed, 143 insertions(+)
+> > > > >  create mode 100644 drivers/mfd/sun6i-prcm.c
+> > > >=20
+> > > > [...]
+> > > >=20
+> > > > > +/*
+> > > > > + * Copyright (C) 2014 Free Electrons
+> > > > > + *
+> > > > > + * License Terms: GNU General Public License v2
+> > > > > + * Author: Boris BREZILLON <boris.brezillon@free-electrons.c=
+om>
+> > > > > + *
+> > > > > + * Allwinner PRCM (Power/Reset/Clock Management) driver
+> > > > > + *
+> > > > > + */
+> > > > > +
+> > > > > +#include <linux/mfd/core.h>
+> > > > > +#include <linux/module.h>
+> > > > > +#include <linux/of.h>
+> > > >=20
+> > > > Ah, now isn't that better?
+> > > >=20
+> > > > Acked-by: Lee Jones <lee.jones@linaro.org>
+> > >=20
+> > > How do you want to merge this? Do you want me to take it through
+> > > mach-sunxi tree, or do you want to take it in your tree?
+> >=20
+> > If Boris can tell me what needs to go in with this patch (or if it
+> > can go in on its own), I will create a(n immutable) branch from whi=
+ch
+> > you can pull into your tree.
+>=20
+> We don't have any runtime or compile time dependency on this, so you
+> can merge it through your tree. Unless something change, I don't have
+> to pull anything in my tree.
 
-> > outl() actually does a dsb() internally, but unfortunately that is
-> > before the store, not after, so I assume that a driver relying on the
-> > behavior above would still be racy.
-> 
-> Yup, we'd need an additional dsb. I think we're confusing what the PCI
-> specification says about ordering and what the inb/outb instructions provide
-> on x86. It may well be that we want to emulate the x86 behaviour on ARM, but
-> that's not going to come cheap and I don't think it's a decision we should
-> take lightly.
+When you say 'this', do you mean this patch, or this set?  If I can
+just apply this patch, that will be ideal?
 
-outb() is expected to be an extremely heavyweight operation, that's why nobody
-uses it. Why would you care about whether it's one or two microsecond latency
-on a MIDI port or an ISDN adapter?
-
-We can decide that we don't care about correctness here, but the performance
-argument doesn't seem overly important.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
