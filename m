@@ -1,99 +1,72 @@
-From: Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH] input: rotary encoder: implement quarter period mode
-Date: Mon, 19 May 2014 00:26:59 -0300
-Message-ID: <20140519032659.GA1062@arch.cereza>
-References: <1387377798-22344-1-git-send-email-s.hauer@pengutronix.de>
- <20140507144543.GE27177@e106331-lin.cambridge.arm.com>
- <20140507185932.GA22973@core.coreip.homeip.net>
- <20140508170133.GA1199@arch.cereza>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: Re: [PATCH 1/4] clk: samsung: out: Add infrastructure to register CLKOUT
+Date: Mon, 19 May 2014 09:00:46 +0530
+Message-ID: <CAHbNUh03TVxbXZcT3e6618zPdu_53_y6nVjwJE7cWa6zxLMpqA@mail.gmail.com>
+References: <1399640410-30957-1-git-send-email-tushar.behera@linaro.org>
+	<1399640410-30957-2-git-send-email-tushar.behera@linaro.org>
+	<536DA243.6000600@samsung.com>
+	<53705243.1030704@linaro.org>
+	<CAPdUM4N=k-pPxdhPQgVHh0fb+nqkgs7StwM2Pb6C8gcjx6dw-w@mail.gmail.com>
+	<5374CA1C.8000207@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140508170133.GA1199@arch.cereza>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Daniel Mack <daniel@zonque.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5374CA1C.8000207@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08 May 02:01 PM, Ezequiel Garc=EDa wrote:
-> On 07 May 11:59 AM, Dmitry Torokhov wrote:
-> > On Wed, May 07, 2014 at 03:45:43PM +0100, Mark Rutland wrote:
-> > > On Wed, Dec 18, 2013 at 02:43:18PM +0000, Sascha Hauer wrote:
-> > > > Some rotary encoders have a stable state in all output state
-> > > > combinations. Add support for this type of encoder.
-> > > >=20
-> > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > Cc: Daniel Mack <daniel@zonque.org>
-> > > > Cc: linux-input@vger.kernel.org
-> > > > Cc: devicetree@vger.kernel.org
-> > > > ---
-> > > >  .../devicetree/bindings/input/rotary-encoder.txt   |  1 +
-> > > >  Documentation/input/rotary-encoder.txt             |  9 +++++-=
--
-> > > >  drivers/input/misc/rotary_encoder.c                | 30 ++++++=
-++++++++++++++--
-> > > >  include/linux/rotary_encoder.h                     |  1 +
-> > > >  4 files changed, 37 insertions(+), 4 deletions(-)
-> > > >=20
-> > > > diff --git a/Documentation/devicetree/bindings/input/rotary-enc=
-oder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > > > index 3315495..cbdb29b 100644
-> > > > --- a/Documentation/devicetree/bindings/input/rotary-encoder.tx=
-t
-> > > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder.tx=
-t
-> > > > @@ -15,6 +15,7 @@ Optional properties:
-> > > >  - rotary-encoder,rollover: Automatic rollove when the rotary v=
-alue becomes
-> > > >    greater than the specified steps or smaller than 0. For abso=
-lute axis only.
-> > > >  - rotary-encoder,half-period: Makes the driver work on half-pe=
-riod mode.
-> > > > +- rotary-encoder,quarter-period: Makes the driver work on quar=
-ter-period mode.
-> > >=20
-> > > The new property looks as sane to me as the half-period property,=
- so for
-> > > the binding addition:
-> >=20
-> > Actually, maybe we should deprecate rotary-encoder,half-period and
-> > instead add rotary-encoder,type property?
-> >=20
->=20
-> Mark: what do you say?
->=20
-> I can fix a few patches if everyone agrees...
+On 15 May 2014 19:37, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Rahul, Tushar,
+>
+> On 15.05.2014 15:44, Rahul Sharma wrote:
+>> Hi Tushar,
+>>
+>> Basically you are adding a new clock-type for Clkout. IMO clkout
+>> is not a special hardware. Existing clock types can be reused to
+>> support clkout. I see 3 major problem here:
+>>
+>> 1) Clkout -> (Mux + Gate). You clubbed mux and gate together, and
+>> exposing as a single clock which is something like a composite clock.
+>> IMO this is not a recommended way in CCF.
+>>
+>> 2) New Clock Type: Since clkout is just a combination of a simple
+>> mux and gate which are already supported, it is a unnecessary
+>> duplication.
+>>
+>> 3) Clkout registered along with CMU: which is not correct. Clkout is in PMU
+>> (Separate physical IP) and should be registered as a independent Clock
+>> provider which provides 1 mux and 1 gate clock (As if now). It should also be
+>> well connected with main CMU.
+>>
+>> I understand the challenge in using regmap interface for a clock provider. But
+>> we need to identify a clean solution. IMHO a independent clock provider with
+>> iomap, is relatively cleaner approach till CCF is not ready with regmap based
+>> reg access for clock registers.
+>>
+>> Experts!! please comment.
+>
+> It's quite unfortunate that Tushar has duplicated the effort to create a
+> clkout driver, considering the fact that we did have such driver
+> internally at SRPOL and it was quite nice and simple.
+>
 
-After some thought, it seemed to me we can define a more specific prope=
-rty
-to describe this, instead of a generic "type".
+I had no idea that you had some solutions to this available to be posted :(
 
-The difference among these three "modes" is the number of turns needed =
-to make
-a step.
+Now that the new series is posted, I will test that at my end and
+update you later.
 
-In the current driver, the default is 4 turns per step, where for the h=
-alf-period
-mode it's 2 turns per step. Now, we need to support 1 turn per step and=
- hence
-Sascha proposes a new quarter-period mode.
+> I will post a cleaned-up version today, that is about 2 times smaller in
+> terms of lines of added code and provides the same functionality,
+> without introducing custom clock types. In addition, it models the
+> clkout properly as a feature of PMU, not CMU (CMU only provides outputs
+> of particular sub-blocks that are fed into the PMU).
+>
+> Best regards,
+> Tomasz
 
-Given we only need to describe the number of turns per step, I'd say it=
-'s
-more accurate and less confusing to deprecate the bool half-period prop=
-erty
-and instead introduce a "rotary-encoder,turns-per-step" integer propert=
-y.
 
-How does this sound?
---=20
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Tushar Behera
