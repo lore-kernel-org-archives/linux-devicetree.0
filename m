@@ -1,129 +1,185 @@
-From: Thor Thayer <tthayer.linux@gmail.com>
-Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
-Date: Mon, 19 May 2014 13:36:30 -0500
-Message-ID: <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
-References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
-	<1400169891-29546-2-git-send-email-tthayer@altera.com>
-	<20140516075344.GF949@pengutronix.de>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Mon, 19 May 2014 21:57:18 +0300
+Message-ID: <537A540E.8070302@ti.com>
+References: <53730AFB.2090800@ti.com> <20140514160216.GD18463@atomide.com> <537487AE.3060906@ti.com> <20140515182133.GC23659@atomide.com> <5375A8A8.7080306@ti.com> <20140516160717.GD22031@atomide.com> <20140516174158.GA11733@earth.universe> <20140516180154.GG22031@atomide.com> <20140516213907.GL12881@atomide.com> <5379D35F.8040207@ti.com> <20140519155732.GA4849@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140516075344.GF949@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="MKOwBvRapmahBGhumJNFmNVtjtjRgPTgR"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140519155732.GA4849@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 16, 2014 at 2:53 AM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
-> Hi!
->
-> On Thu, May 15, 2014 at 11:04:49AM -0500, tthayer@altera.com wrote:
->> From: Thor Thayer <tthayer@altera.com>
->>
->> Addition of the Altera SDRAM controller bindings and device
->> tree changes to the Altera SoC project.
->>
->> v2: Changes to SoC SDRAM EDAC code.
->>
->> v3: Implement code suggestions for SDRAM EDAC code.
->>
->> v4: Remove syscon from SDRAM controller bindings.
->>
->> v5: No Change, bump version for consistency.
->>
->> Signed-off-by: Thor Thayer <tthayer@altera.com>
->> ---
->>  .../bindings/arm/altera/socfpga-sdram.txt          |   11 +++++++++++
->>  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
->>  2 files changed, 16 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> new file mode 100644
->> index 0000000..8f8746b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> @@ -0,0 +1,11 @@
->> +Altera SOCFPGA SDRAM Controller
->> +
->> +Required properties:
->> +- compatible : "altr,sdr-ctl";
->> +- reg : Should contain 1 register ranges(address and length)
->> +
->> +Example:
->> +     sdrctl@ffc25000 {
->> +             compatible = "altr,sdr-ctl";
->> +             reg = <0xffc25000 0x1000>;
->> +     };
->> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->> index df43702..6ce912e 100644
->> --- a/arch/arm/boot/dts/socfpga.dtsi
->> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> @@ -676,6 +676,11 @@
->>                       clocks = <&l4_sp_clk>;
->>               };
->>
->> +             sdrctl@ffc25000 {
->> +                     compatible = "altr,sdr-ctl", "syscon";
->                                                    ^^^^^^^^^^
->
-> Get rid of that, too, please.
+--MKOwBvRapmahBGhumJNFmNVtjtjRgPTgR
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Hi Steffan,
+On 19/05/14 18:57, Tony Lindgren wrote:
 
-I believe I need to keep the "syscon". The same register (ctrlcfg)
-that has the ECC enable bitfield also includes the DRAM configuration
-bitfields that other drivers will want to access (specifically the
-FPGA bridge needs this information). Since this register will be
-shared between drivers,  syscon seems like the best solution.
+>> I'm not sure if it's even possible to load both of those drivers at th=
+e
+>> same time, but if it was, and the first one would get probe() called f=
+or
+>> a device, and the driver would return an error, I'm quite sure the
+>> driver framework won't continue trying with the other driver, as the
+>> first driver already matched for the device.
+>=20
+> No need to load multiple drivers at this point. That's why I'm saying
+> you can bail out on the undesired display controller probes using
+> of_machine_is_compatible test. It's not that uncommon for drivers to do=
+:
 
-I may be misunderstanding something so feel free to elaborate. Thanks
-for reviewing.
+Hmm, I don't follow. If both, say, omap and exynos have a panel driver
+for the same sharp panel, both need a driver for it (presuming exynos
+has a proper display component driver system, which may not be true).
 
-Thor
+Both drivers would be loaded at boot time for the probe to be even to be
+possible. Even if the other one bails out from a device probe using
+of_machine_is_compatible, afaik the driver framework will stop probing
+at that point, as that driver reports being compatible with the device
+in question.
+
+=2E..
+
+Ah, ok, now I see. I think you mean module init, not probe? For some
+reason I was just thinking about the probe stage.
+
+Maybe that would work. I need to test tomorrow.
+
+>>> it would be quite silly for each display controller to have to do
+>>> their own remapping for shared panels?
+>>
+>> It would, but wouldn't it be just as silly (well, even more silly in m=
+y
+>> opinion) to have each display controller require driver specific
+>> compatible strings for the panels used?
+>=20
+> Not driver specific, but hardware package specific. That's being done
+> all the time. For example, compatible strings like "nvidia,tegra124",
+> "ti,omap5" describe a package of an ARM core and various devices.
+
+It feels to me rather wrong if I'd specify the compatible string for an
+external piece of hardware based on the SoC it's connected to.
+
+> But by using of_machine_is_compatible in the display drivers, you
+> can use the right compatible flags from the start if you want to go
+> that way.
+
+Yes, with that we could have right compatible flags in the .dts.
+
+>> Well, I sure hope nobody else has to implement similar thing.
+>=20
+> Suuuure.. I've heard that about 20 times before and guess what
+> happenened? Things never got fixed until some poor maintainer
+> had to start fixing it all over the place about three years later.
+
+The poor maintainer here being me =3D). And it's still a case of
+pick-your-poison. We need to hack around the issue, in some form or
+another. So in any case the poor maintainer has to fix it at some point
+in the future.
+
+But all this is fixed when we have a common display framework. And
+that's something that is really badly needed in some form or another,
+the sooner the better.
+
+So the "fix" here is not just some internal thing that could be left at
+that and forgotten.
+
+>> To open that up a bit, traditionally other display driver architecture=
+s
+>> have not had drivers for each display "entity", like the panels. So yo=
+u
+>> would really just have the display subsystem in the .dts, and some raw=
+
+>> data there (panel timings) to get the panel running.
+>=20
+> Right, I believe that is the way to go, no doubt about it.
+
+No, that's exactly _not_ the way to go =3D). We need proper drivers for
+display components, instead of trying to avoid that and embed panel data
+into the display controller's data.
+
+> Here's a list of things that bothers me:
+>=20
+> 1. Searching through the dtb from a driver instead of relying on the
+>    driver probe mechanism for the components in question. If the parsin=
+g
+>    of the dtb needs to be done it should be done in a Linux generic way=
+
+>    from some framework instead.
+
+The reason I haven't made the conversion code available for others to
+use is that there are no other users at the moment. And I hope there
+will be no other user until we get the common display framework. If
+there is, we'll need to move the code to a generic place.
+
+> 2. Having to do this all early before we even have any debug console
+>    available. We are trying to move everything to happen later on to av=
+oid
+>    all the issues related to initializing things early.
+
+It worked fine for me when doing it as subsys_init level. Why do you say
+it'd be early, before debug console?
+
+All the drivers with converted compatible strings are normal drivers, so
+afaik things work fine if we just convert the strings before the module
+init level.
+
+> 3. Having to maintain a database in kernel of display mappings separate=
+ly
+>    in addition to the .dts files.
+
+Yes, that's slightly annoying. Not really a big burden, though, as it's
+quite rare to get a new encoder or panel driver.
+
+> 4. Having this hack limited to device tree based booting while we are
+>    trying to unify the functions for drivers to use to get their
+>    resources.
+
+I don't understand this one. With non-DT boot we don't have the issue at
+all, there's no need for hacks.
+
+> 5. Seeing the possibility of this spreading to other drivers.
+
+Well, until we have a common display framework, one of the hacky options
+we've discussed will spread to other drivers if they need to have their
+own drivers for the same hardware devices.
+
+Which is not nice, but not something we can escape. And using the
+of_machine_is_compatible or having the compatible strings in .dts
+appended with "dss" or such doesn't change that, it just changes which
+hack may spread.
+
+ Tomi
 
 
->> +                     reg = <0xffc25000 0x1000>;
->> +             };
->> +
->
-> How about
->
->                 sdrctl@ffc25000 {
->                         compatible = "altr,sdr-ctl";
->                         reg = <0xffc25000 0x1000>;
->                         ranges;
->
->                         edac@ffc2502c {
->                                 compatible = "altr,sdram-edac";
->                                 reg = <0xffc2502c 0x50>;
->                                 interrupts = <0 39 4>;
->                         };
->                 };
->
-> Then we can later add:
->
->                         sdr-ports: ports@ffc2507c {
->                                 #reset-cells = <1>;
->                                 compatible = "altr,sdr-ports";
->                                 reg = <0xffc2507c 0x10>;
->                                 clocks = <&ddr_dqs_clk>;
->                                 ...
->                         };
->
-> to use the reset-controller framework for the port resets.
->
->>               rstmgr@ffd05000 {
->>                       compatible = "altr,rst-mgr";
->>                       reg = <0xffd05000 0x1000>;
->> --
->
-> Regards,
-> Steffen
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--MKOwBvRapmahBGhumJNFmNVtjtjRgPTgR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTelQSAAoJEPo9qoy8lh71x7MP/25IuJuxOUbKi5qgKQsOruSr
+5djgDFy1bfKcIHQhAY7qHF3XKl8cu0nV0TCJce2X+05WfPK9JcRKfYmaa5l60mn5
+U+WIRkyRRGQp9Dg9hlur+Fr8svNGFc/+hhRlUpKmx7wp52SYKUbJOI+bhzCASBbZ
+oik0ZCUOvgiMgJjilbUWS8yAUd+xpPIAB18uLGyrQ3vFfDXXawHdFNEcqH09o4cp
++4QE6sC6cXt44pMCgIOcZ+AIw8kmfC1Ozho4h3BSOo3JcmWM4cH6rE+GcArdALLp
+O/V9FJo2Y9MU6doBXnYD9QpHH6WsgrAe0W20muy5xH69PYykcTsqCYU70ZPzV0HD
+DUDmSK/CavSBuI2pM9mD/qPl3jhTZWAehlDgr9AqAuYUdwX2hwjCjw1Nk5sqeCP5
+JDCtkz3/wWDRHWhCsEp01jHQLV6zre45/VL0CKunmU4FWVFo8DhESa/4JF51few0
+Qiv82qNTGqeEaZAMWcS4m1T+8FfPi1M1ilW8UW3q2awJ5HUSAdfwjgcdpaai56C2
+qDD5QNZPPXRWE9tWbvC09pEYCvwKYPgvcwOz3LEb4LADoPy7qzOlHj7yQU5wunhd
+N5CB6R9x6j/u53H2ws8UP4tb8fMLtOfVvAlYa2A47NOafxVfTF5DiQ6tkwiGDFzb
+32zAnKIIryXUd/OBaywC
+=Rn7w
+-----END PGP SIGNATURE-----
+
+--MKOwBvRapmahBGhumJNFmNVtjtjRgPTgR--
