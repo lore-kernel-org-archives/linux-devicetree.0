@@ -5,40 +5,40 @@ References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
 	<1399913280-6915-2-git-send-email-holler@ahsoftware.de>
 	<53775334.3030704@gmail.com>
 	<5379FAA5.10404@ahsoftware.de>
-Date: Mon, 19 May 2014 10:49:28 -0500
-Message-ID: <CAJgR-BhRtc1XGqk-TVOrf2y_pYS+nratkPrf+OenP4SFcyK3ng@mail.gmail.com>
+Date: Mon, 19 May 2014 10:38:46 -0500
+Message-ID: <CAJgR-BhgXytwfijNGdRytuVuE9adwTa23C78ANLMzDE2ESTQTA@mail.gmail.com>
 Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
  'dependencies' which contains a list of referenced phandles
 From: Jon Loeliger <loeliger@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11c1ed8a56678304f9c2b5ec
+Content-Type: multipart/alternative; boundary=001a11c1ed8a1cb3ce04f9c28ffb
 To: Alexander Holler <holler@ahsoftware.de>
 Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jon Loeliger <jdl@jdl.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-ID: <devicetree@vger.kernel.org>
 
---001a11c1ed8a56678304f9c2b5ec
+--001a11c1ed8a1cb3ce04f9c28ffb
 Content-Type: text/plain; charset=UTF-8
 
-[ Crap.  Sorry about the duplicate post.  Stupid HTML; didn't hit the
-lists. -- jdl ]
-
-
 > What's still questionable about the patches for dtc is if dependencies to
-> devices and not just drivers should be included in the new property
-> dependencies too.
+devices and not just
+> drivers should be included in the new property dependencies too.
 
 I don't think the DTC should have any semantic knowledge of why these
-dependency arcs are being added to the graph.  Sure, it could be that
-different types of arcs are added, and that the total dependency graph
-travels multiple such arc types to obtains some valid topological sort,
-but the DTC itself should just not care.
+dependency
+arcs are being added to the graph.  Sure, it could be that different types
+of arcs are added,
+and that the total dependency graph travels multiple such arc types to
+obtains some valid
+topological sort, but the DTC itself should just not care.
 
 After saying that, there are likely semantic checks that could be added to
-ensure some policy about those arcs was followed.  Separate the
-implementation from the policy.  There is already plenty of discussion
-down that line within the DTC ongoing.
+ensure some
+policy about those arcs was followed.  Separate the implementation from the
+policy.
+There is already plenty of discussion down that line within the DTC ongoing.
 
 HTH,
 jdl
+
 
 
 On Mon, May 19, 2014 at 7:35 AM, Alexander Holler <holler@ahsoftware.de>wrote:
@@ -104,30 +104,28 @@ On Mon, May 19, 2014 at 7:35 AM, Alexander Holler <holler@ahsoftware.de>wrote:
 > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 >
 
---001a11c1ed8a56678304f9c2b5ec
+--001a11c1ed8a1cb3ce04f9c28ffb
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<div dir=3D"ltr"><div><br></div>[ Crap.=C2=A0 Sorry about the duplicate pos=
-t.=C2=A0 Stupid HTML; didn&#39;t hit the lists. -- jdl ]<br><br><br><div>&g=
-t; What&#39;s still questionable about the patches for dtc is if dependenci=
-es to<br>
-&gt; devices and not just drivers should be included in the new property<br=
->&gt; dependencies too.<br><br>I don&#39;t think the DTC should have any se=
-mantic knowledge of why these<br>dependency arcs are being added to the gra=
-ph. =C2=A0Sure, it could be that<br>
-different types of arcs are added, and that the total dependency graph<br>t=
-ravels multiple such arc types to obtains some valid topological sort,<br>b=
-ut the DTC itself should just not care.<br><br>After saying that, there are=
- likely semantic checks that could be added to<br>
-ensure some policy about those arcs was followed. =C2=A0Separate the<br>imp=
-lementation from the policy.=C2=A0 There is already plenty of discussion<br=
->down that line within the DTC ongoing.<br><br>HTH,<br>jdl<span class=3D"se=
-wxfovnlv8wrrh"></span><span class=3D"sewxfovnlv8wrrh"></span></div>
-</div><div class=3D"gmail_extra"><br><br><div class=3D"gmail_quote">On Mon,=
- May 19, 2014 at 7:35 AM, Alexander Holler <span dir=3D"ltr">&lt;<a href=3D=
-"mailto:holler@ahsoftware.de" target=3D"_blank">holler@ahsoftware.de</a>&gt=
-;</span> wrote:<br>
+<div dir=3D"ltr"><div><div><div>&gt; What&#39;s still questionable about th=
+e patches for dtc is if dependencies=20
+to devices and not just <br>&gt; drivers should be included in the new prop=
+erty=20
+dependencies too.<br><br></div>I don&#39;t think the DTC should have any se=
+mantic knowledge of why these dependency<br>arcs are being added to the gra=
+ph.=C2=A0 Sure, it could be that different types of arcs are added,<br>and =
+that the total dependency graph travels multiple such arc types to obtains =
+some valid<br>
+topological sort, but the DTC itself should just not care.<br><br></div>Aft=
+er saying that, there are likely semantic checks that could be added to ens=
+ure some<br>policy about those arcs was followed.=C2=A0 Separate the implem=
+entation from the policy.<br>
+There is already plenty of discussion down that line within the DTC ongoing=
+.<br><br></div>HTH,<br>jdl<br><br></div><div class=3D"gmail_extra"><br><br>=
+<div class=3D"gmail_quote">On Mon, May 19, 2014 at 7:35 AM, Alexander Holle=
+r <span dir=3D"ltr">&lt;<a href=3D"mailto:holler@ahsoftware.de" target=3D"_=
+blank">holler@ahsoftware.de</a>&gt;</span> wrote:<br>
 <blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
 x #ccc solid;padding-left:1ex">Am 17.05.2014 14:16, schrieb Tomasz Figa:<di=
 v class=3D""><br>
@@ -204,4 +202,4 @@ rget=3D"_blank">http://lists.infradead.org/<u></u>mailman/listinfo/linux-ar=
 m-<u></u>kernel</a><br>
 </div></div></blockquote></div><br></div>
 
---001a11c1ed8a56678304f9c2b5ec--
+--001a11c1ed8a1cb3ce04f9c28ffb--
