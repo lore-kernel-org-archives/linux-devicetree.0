@@ -1,26 +1,73 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 0/3] Add R8A7791/Koelsch/Henninger board PCI DT support
-Date: Tue, 20 May 2014 01:48:27 +0400
-Message-ID: <201405200148.28683.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
+Date: Tue, 20 May 2014 01:52:05 +0400
+Message-ID: <201405200152.06575.sergei.shtylyov@cogentembedded.com>
+References: <201405200148.28683.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201405200148.28683.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Add device nodes for the R8A7791 internal PCI bridge devices.
 
-   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-'renesas-devel-v3.15-rc5-20140517' tag. Here we add internal PCI support for
-the R8A7791-based Koelsch and Henninger boards for the sake of getting USB
-EHCI/OHCI working...
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-[1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
-[2/3] ARM: shmobile: koelsch: enable internal PCI
-[3/3] ARM: shmobile: henninger: enable internal PCI
+---
+Changes in version 2:
+- added interrupt-related properties to the PCI device nodes;
+- refreshed the patch.
 
-WBR, Sergei
+ arch/arm/boot/dts/r8a7791.dtsi |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
++++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+@@ -880,4 +880,40 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	pci0: pci@ee090000 {
++		compatible = "renesas,pci-r8a7791";
++		clocks = <&mstp7_clks R8A7791_CLK_EHCI>;
++		reg = <0x0 0xee090000 0x0 0xc00>,
++		      <0x0 0xee080000 0x0 0x1100>;
++		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++
++		bus-range = <0 0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0xff00 0 0 0x7>;
++		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
++			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
++			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	pci1: pci@ee0d0000 {
++		compatible = "renesas,pci-r8a7791";
++		clocks = <&mstp7_clks R8A7791_CLK_EHCI>;
++		reg = <0x0 0xee0d0000 0x0 0xc00>,
++		      <0x0 0xee0c0000 0x0 0x1100>;
++		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++
++		bus-range = <1 1>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0xff00 0 0 0x7>;
++		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
++			      	 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
++			      	 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
++	};
+ };
