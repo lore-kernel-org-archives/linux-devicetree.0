@@ -1,62 +1,119 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
- 'dependencies' which contains a list of referenced phandles
-Date: Mon, 19 May 2014 14:35:49 +0200
-Message-ID: <5379FAA5.10404@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de> <1399913280-6915-2-git-send-email-holler@ahsoftware.de> <53775334.3030704@gmail.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [RFC PATCH] of/irq: do irq resolution in platform_get_irq_byname()
+Date: Mon, 19 May 2014 16:30:59 +0300
+Message-ID: <1400506259-18397-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53775334.3030704@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 17.05.2014 14:16, schrieb Tomasz Figa:
+The commit 9ec36cafe43bf835f8f29273597a5b0cbc8267ef
+"of/irq: do irq resolution in platform_get_irq" from Rob Herring -
+moves resolving of the interrupt resources in platform_get_irq().
+But this solution isn't complete because platform_get_irq_byname()
+need to be modified the same way.
 
->> References to phandles of parent or child nodes will not be added to this
->> property, because this information is already contained in the blob (in the
->> form of the tree itself).
->
-> I wonder if we shouldn't be including them too for consistency related
-> reasons, so we have all the necessary information in one place.
-> References to child nodes are great recipes for cycles, though...
->
-> No strong opinion, though, just an idea.
+Hence, fix it by adding interrupt resolution code at the
+platform_get_irq_byname() function too.
 
-As said, they are already in the tree itself. And they are already 
-included in the graph (these are the black edges), so they just don't 
-appear in the property dependencies.
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
->
->>
->> No dependencies to disabled nodes will be added.
->>
->
-> Same here. IMHO it might be wise to let the parsing entity (e.g. kernel)
-> decide whether to ignore a dependency to disabled node or not.
->
-> Otherwise, I like the simplicity of compile-time dependency list
-> creation. Quite a nice work.
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+ drivers/base/platform.c |    7 +++++--
+ drivers/of/irq.c        |   25 +++++++++++++++++++++++++
+ include/linux/of_irq.h  |    5 +++++
+ 3 files changed, 35 insertions(+), 2 deletions(-)
 
-Thanks.
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 5b47210..9e9227e 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -131,9 +131,12 @@ EXPORT_SYMBOL_GPL(platform_get_resource_byname);
+  */
+ int platform_get_irq_byname(struct platform_device *dev, const char *name)
+ {
+-	struct resource *r = platform_get_resource_byname(dev, IORESOURCE_IRQ,
+-							  name);
++	struct resource *r;
++
++	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node)
++		return of_irq_get_byname(dev->dev.of_node, name);
+ 
++	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
+ 	return r ? r->start : -ENXIO;
+ }
+ EXPORT_SYMBOL_GPL(platform_get_irq_byname);
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 5aeb894..6419de9 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -406,6 +406,31 @@ int of_irq_get(struct device_node *dev, int index)
+ }
+ 
+ /**
++ * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
++ * @dev: pointer to device tree node
++ * @name: zero-based index of the irq
++ *
++ * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
++ * is not yet created, or errorno in case of failure.
++ *
++ */
++int of_irq_get_byname(struct device_node *dev, const char *name)
++{
++	const char *name_irq = NULL;
++	int index = 0;
++
++	if (unlikely(!name))
++		return -EINVAL;
++
++	while (!of_property_read_string_index(dev, "interrupt-names",
++					      index, &name_irq))
++		if (!strcmp(name, name_irq))
++			return of_irq_get(dev, index);
++
++	return -ENXIO;
++}
++
++/**
+  * of_irq_count - Count the number of IRQs a node uses
+  * @dev: pointer to device tree node
+  */
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 6404253..bfec136 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -45,6 +45,7 @@ extern void of_irq_init(const struct of_device_id *matches);
+ #ifdef CONFIG_OF_IRQ
+ extern int of_irq_count(struct device_node *dev);
+ extern int of_irq_get(struct device_node *dev, int index);
++extern int of_irq_get_byname(struct device_node *dev, const char *name);
+ #else
+ static inline int of_irq_count(struct device_node *dev)
+ {
+@@ -54,6 +55,10 @@ static inline int of_irq_get(struct device_node *dev, int index)
+ {
+ 	return 0;
+ }
++static inline int of_irq_get_byname(struct device_node *dev, const char *name)
++{
++	return 0;
++}
+ #endif
+ 
+ #if defined(CONFIG_OF)
+-- 
+1.7.9.5
 
-What's still questionable about the patches for dtc is if dependencies 
-to devices and not just drivers should be included in the new property 
-dependencies too. My current assumption is that all devices belonging to 
-one and the same driver don't have dependencies between each other. In 
-other words the order in which devices will be attached to one and the 
-same driver isn't important. If that assumption is correct it would be 
-possible to just attach all devices belonging to a driver after the 
-driver was loaded (also I haven't that done in my patches).
-
-And thinking about that again, I think I was wrong and doing so have 
-been some kind of evil premature optimization I did in order to spare a 
-few dependencies/edges. But changing this can done by removing a few 
-lines in the code for dtc (patch 1).
-
-Regards,
-
-Alexander Holler
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
