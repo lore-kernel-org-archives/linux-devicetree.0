@@ -1,106 +1,114 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH] input: rotary encoder: implement quarter period mode
-Date: Sun, 18 May 2014 20:45:23 -0700
-Message-ID: <20140519034523.GA28435@core.coreip.homeip.net>
-References: <1387377798-22344-1-git-send-email-s.hauer@pengutronix.de>
- <20140507144543.GE27177@e106331-lin.cambridge.arm.com>
- <20140507185932.GA22973@core.coreip.homeip.net>
- <20140508170133.GA1199@arch.cereza>
- <20140519032659.GA1062@arch.cereza>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv4 2/2] regmap: add DT endianness binding support.
+Date: Mon, 19 May 2014 04:11:35 +0000
+Message-ID: <00adcdedcfdf4c828d5fd5a8dd7e28bd@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1399601073-19278-1-git-send-email-Li.Xiubo@freescale.com>
+ <1399601073-19278-3-git-send-email-Li.Xiubo@freescale.com>
+ <20140509164719.GE16418@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140519032659.GA1062@arch.cereza>
-Sender: linux-input-owner@vger.kernel.org
-To: Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
-Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Daniel Mack <daniel@zonque.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140509164719.GE16418@e106331-lin.cambridge.arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 19, 2014 at 12:26:59AM -0300, Ezequiel Garc=EDa wrote:
-> On 08 May 02:01 PM, Ezequiel Garc=EDa wrote:
-> > On 07 May 11:59 AM, Dmitry Torokhov wrote:
-> > > On Wed, May 07, 2014 at 03:45:43PM +0100, Mark Rutland wrote:
-> > > > On Wed, Dec 18, 2013 at 02:43:18PM +0000, Sascha Hauer wrote:
-> > > > > Some rotary encoders have a stable state in all output state
-> > > > > combinations. Add support for this type of encoder.
-> > > > >=20
-> > > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
-> > > > > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> > > > > Cc: Daniel Mack <daniel@zonque.org>
-> > > > > Cc: linux-input@vger.kernel.org
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > > ---
-> > > > >  .../devicetree/bindings/input/rotary-encoder.txt   |  1 +
-> > > > >  Documentation/input/rotary-encoder.txt             |  9 ++++=
-+--
-> > > > >  drivers/input/misc/rotary_encoder.c                | 30 ++++=
-++++++++++++++++--
-> > > > >  include/linux/rotary_encoder.h                     |  1 +
-> > > > >  4 files changed, 37 insertions(+), 4 deletions(-)
-> > > > >=20
-> > > > > diff --git a/Documentation/devicetree/bindings/input/rotary-e=
-ncoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-> > > > > index 3315495..cbdb29b 100644
-> > > > > --- a/Documentation/devicetree/bindings/input/rotary-encoder.=
-txt
-> > > > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder.=
-txt
-> > > > > @@ -15,6 +15,7 @@ Optional properties:
-> > > > >  - rotary-encoder,rollover: Automatic rollove when the rotary=
- value becomes
-> > > > >    greater than the specified steps or smaller than 0. For ab=
-solute axis only.
-> > > > >  - rotary-encoder,half-period: Makes the driver work on half-=
-period mode.
-> > > > > +- rotary-encoder,quarter-period: Makes the driver work on qu=
-arter-period mode.
-> > > >=20
-> > > > The new property looks as sane to me as the half-period propert=
-y, so for
-> > > > the binding addition:
-> > >=20
-> > > Actually, maybe we should deprecate rotary-encoder,half-period an=
-d
-> > > instead add rotary-encoder,type property?
-> > >=20
-> >=20
-> > Mark: what do you say?
-> >=20
-> > I can fix a few patches if everyone agrees...
->=20
-> After some thought, it seemed to me we can define a more specific pro=
-perty
-> to describe this, instead of a generic "type".
->=20
-> The difference among these three "modes" is the number of turns neede=
-d to make
-> a step.
->=20
-> In the current driver, the default is 4 turns per step, where for the=
- half-period
-> mode it's 2 turns per step. Now, we need to support 1 turn per step a=
-nd hence
-> Sascha proposes a new quarter-period mode.
->=20
-> Given we only need to describe the number of turns per step, I'd say =
-it's
-> more accurate and less confusing to deprecate the bool half-period pr=
-operty
-> and instead introduce a "rotary-encoder,turns-per-step" integer prope=
-rty.
->=20
-> How does this sound?
+> Subject: Re: [PATCHv4 2/2] regmap: add DT endianness binding support.
+> 
+> On Fri, May 09, 2014 at 03:04:33AM +0100, Xiubo Li wrote:
+> > For many drivers which will support rich endianness of CPU<-->Dev
+> > need define DT properties by itself without the binding support.
+> >
+> > The endianness using regmap:
+> > Index    CPU       Device     Endianess flag for DT bool property
+> > ------------------------------------------------------------
+> > 1        LE        LE         -
+> > 2        LE        BE         'big-endian-{val,reg}'
+> > 3        BE        BE         -
+> > 4        BE        LE         'little-endian-{val,reg}'
+> 
+> Get rid of the CPU column. It has precisely _nothing_ to do with the
+> device.
+> 
+> If you happen to have a device that can be integrated with varying
+> endianness, the endianness should be described regardless of whether
+> this happens to be the same as the CPU endianness. The kernel can then
+> choose to do the right thing regardless.
+> 
+> Assuming LE or BE by default is sane if most implementations are one
+> rather than the other. Probing and figuring it out dynamically is also
+> fine. Assuming that it's the same as the kernel is broken in general,
+> and should be avoided -- those cases _require_ a *-endian property to
+> work if the CPU can function in either endianness.
+> 
 
-We'd have to "filter out" invalid step settings, but that sounds fine b=
-y
-me.
+Yes, If my understanding is correct, if we need inverting the bytes order, 
+should be add one property here, regardless of the CPU's endianesses.
 
---=20
-Dmitry
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> > Please see the following documetation for detail:
+> >     Documentation/devicetree/bindings/endianness/endianness.txt
+> 
+> I don't think this is sufficient. That document describes the preferred
+> idiom, not the meaning w.r.t. a specific binding.
+> 
+> [...]
+> 
+> > +	case REGMAP_ENDIAN_REG:
+> > +		if (of_property_read_bool(np, "big-endian-reg"))
+> > +			*endian = REGMAP_ENDIAN_BIG;
+> > +		else if (of_property_read_bool(np, "little-endian-reg"))
+> > +			*endian = REGMAP_ENDIAN_LITTLE;
+> 
+> While this follows the guidelines you've added, context is still
+> required to understand precisely what this means. We need a binding
+> document describing what *-endian-reg means for this binding (i.e. what
+> does -reg cover? All registers? some? buffers?).
+> 
+
+Yes, for now the 'reg' is for all registers of the device.
+And the 'val' is for all the values and buffers of the device.
+
+@Mark Brown,
+Do you have any correction here ?
+
+
+> Imagine I added a little-endian-foo property. You'd be able to reason
+> that something is little endian, but you'd have no idea of precisely
+> what without reading documentation or code. As not everyone wants to
+> read several thousand lines of Linux kernel code to write a dts we
+> require documentation.
+> 
+
+@Mark Rutland, @Mark Brown,
+Yes, where should I locate the documentation ?
+Is Documentation/devicetree/bindings/regmap/ okay ?
+
+
+Thanks,
+
+BRs
+Xiubo
+
+
+> > +	case REGMAP_ENDIAN_VAL:
+> > +		if (of_property_read_bool(np, "big-endian-val"))
+> > +			*endian = REGMAP_ENDIAN_BIG;
+> > +		else if (of_property_read_bool(np, "little-endian-val"))
+> > +			*endian = REGMAP_ENDIAN_LITTLE;
+> 
+> Likewise.
+> 
+> Cheers,
+> Mark.
