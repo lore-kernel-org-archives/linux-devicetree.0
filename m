@@ -1,28 +1,143 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree support
-Date: Mon, 19 May 2014 18:43:56 +0200
-Message-ID: <4508837.NI0TQZBQLi@wuerfel>
-References: <53730AFB.2090800@ti.com> <5379D35F.8040207@ti.com> <20140519155732.GA4849@atomide.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v2 02/10] clk: berlin: add binding include for Berlin SoC
+ clock ids
+Date: Mon, 19 May 2014 18:43:23 +0200
+Message-ID: <1400517811-24668-3-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1400517811-24668-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140519155732.GA4849@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1400517811-24668-1-git-send-email-sebastian.hesselbarth@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jisheng Zhang <jszhang@marvell.com>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 May 2014 08:57:33 Tony Lindgren wrote:
-> No need to load multiple drivers at this point. That's why I'm saying
-> you can bail out on the undesired display controller probes using
-> of_machine_is_compatible test. It's not that uncommon for drivers to do:
-> 
-> $ git grep of_machine_is_compatible drivers/ | wc -l
-> 116
+This adds a dt-binding include for Marvell Berlin BG2/BG2CD and BG2Q
+core clock IDs.
 
-I think this is widely seen as bad style, and most of the examples are
-testing for Power Mac specific workarounds for stuff that Apple didn't
-put in DT elsewhere.
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Signed-off-by: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+---
+Changelog:
+v1->v2:
+- separate patch to allow to use it in the driver (Suggested by Alexandre
+  Belloni)
 
-	Arnd
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Mike Turquette <mturquette@linaro.org>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>
+Cc: Jisheng Zhang <jszhang@marvell.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ include/dt-bindings/clock/berlin2.h  | 45 ++++++++++++++++++++++++++++++++++++
+ include/dt-bindings/clock/berlin2q.h | 31 +++++++++++++++++++++++++
+ 2 files changed, 76 insertions(+)
+ create mode 100644 include/dt-bindings/clock/berlin2.h
+ create mode 100644 include/dt-bindings/clock/berlin2q.h
+
+diff --git a/include/dt-bindings/clock/berlin2.h b/include/dt-bindings/clock/berlin2.h
+new file mode 100644
+index 000000000000..0c30800175df
+--- /dev/null
++++ b/include/dt-bindings/clock/berlin2.h
+@@ -0,0 +1,45 @@
++/*
++ * Berlin2 BG2/BG2CD clock tree IDs
++ */
++
++#define CLKID_SYS		0
++#define CLKID_CPU		1
++#define CLKID_DRMFIGO		2
++#define CLKID_CFG		3
++#define CLKID_GFX		4
++#define CLKID_ZSP		5
++#define CLKID_PERIF		6
++#define CLKID_PCUBE		7
++#define CLKID_VSCOPE		8
++#define CLKID_NFC_ECC		9
++#define CLKID_VPP		10
++#define CLKID_APP		11
++#define CLKID_AUDIO0		12
++#define CLKID_AUDIO2		13
++#define CLKID_AUDIO3		14
++#define CLKID_AUDIO1		15
++#define CLKID_GFX3D_CORE	16
++#define CLKID_GFX3D_SYS		17
++#define CLKID_ARC		18
++#define CLKID_VIP		19
++#define CLKID_SDIO0XIN		20
++#define CLKID_SDIO1XIN		21
++#define CLKID_GFX3D_EXTRA	22
++#define CLKID_GC360		23
++#define CLKID_SDIO_DLLMST	24
++#define CLKID_GETH0		25
++#define CLKID_GETH1		26
++#define CLKID_SATA		27
++#define CLKID_AHBAPB		28
++#define CLKID_USB0		29
++#define CLKID_USB1		30
++#define CLKID_PBRIDGE		31
++#define CLKID_SDIO0		32
++#define CLKID_SDIO1		33
++#define CLKID_NFC		34
++#define CLKID_SMEMC		35
++#define CLKID_AUDIOHD		36
++#define CLKID_VIDEO0		37
++#define CLKID_VIDEO1		38
++#define CLKID_VIDEO2		39
++#define CLKID_TWD		40
+diff --git a/include/dt-bindings/clock/berlin2q.h b/include/dt-bindings/clock/berlin2q.h
+new file mode 100644
+index 000000000000..287fc3b4afb2
+--- /dev/null
++++ b/include/dt-bindings/clock/berlin2q.h
+@@ -0,0 +1,31 @@
++/*
++ * Berlin2 BG2Q clock tree IDs
++ */
++
++#define CLKID_SYS		0
++#define CLKID_DRMFIGO		1
++#define CLKID_CFG		2
++#define CLKID_GFX2D		3
++#define CLKID_ZSP		4
++#define CLKID_PERIF		5
++#define CLKID_PCUBE		6
++#define CLKID_VSCOPE		7
++#define CLKID_NFC_ECC		8
++#define CLKID_VPP		9
++#define CLKID_APP		10
++#define CLKID_SDIO0XIN		11
++#define CLKID_SDIO1XIN		12
++#define CLKID_GFX2DAXI		13
++#define CLKID_GETH0		14
++#define CLKID_SATA		15
++#define CLKID_AHBAPB		16
++#define CLKID_USB0		17
++#define CLKID_USB1		18
++#define CLKID_USB2		19
++#define CLKID_USB3		20
++#define CLKID_PBRIDGE		21
++#define CLKID_SDIO		22
++#define CLKID_NFC		23
++#define CLKID_SMEMC		24
++#define CLKID_PCIE		25
++#define CLKID_TWD		26
+-- 
+1.9.1
