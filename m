@@ -1,51 +1,78 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCHv3 3/3] clocksource: Add Freescale FlexTimer Module (FTM)
- timer support
-Date: Mon, 19 May 2014 02:26:41 +0000
-Message-ID: <0a6cb1e6380f42279a583ebf7e27dd54@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1398737939-5334-1-git-send-email-Li.Xiubo@freescale.com>
- <1398737939-5334-4-git-send-email-Li.Xiubo@freescale.com>
- <537629C3.30507@linaro.org>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Subject: Re: [PATCH v5 1/5] ARM: EXYNOS: Add generic cpu power control
+ functions for all exynos based SoCs
+Date: Mon, 19 May 2014 08:12:28 +0530
+Message-ID: <CAM4voan1SjvaSsWemxSFkkuSZH5v8X4KY6giLnvDznnw2aryWg@mail.gmail.com>
+References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
+	<1399307221-8659-2-git-send-email-a.kesavan@samsung.com>
+	<019b01cf6e52$75e1a710$61a4f530$@samsung.com>
+	<CAM4voamSNYZ_hsjF3eZhqZ=FF__39tFgi5FeXRcUhRbYYzu0LQ@mail.gmail.com>
+	<53752D8C.3030708@gmail.com>
+	<CAM4voam1UiX+WaxScTdhb4bW+_1nCcsztFEkx4MyWFOBBjV6XQ@mail.gmail.com>
+	<5376AE39.1030301@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <537629C3.30507@linaro.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingchang Lu <jingchang.lu@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5376AE39.1030301@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, "mark.rutland" <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, Andrew Bresticker <abrestic@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Will Deacon <will.deacon@arm.com>, skon.hwang@samsung.com, robh+dt <robh+dt@kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thomas P Abraham <thomas.ab@samsung.com>, Grant Likely <grant.likely@linaro.org>, Jonghwan Choi <jhbird.choi@samsung.com>, Dave Martin <Dave.Martin@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "inderpal.s@samsung.com" <inderpal.s@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-PiA+ICsjZGVmaW5lIEZUTV9DTlRJTgkweDRDDQo+ID4gKw0KPiA+ICtzdGF0aWMgdm9pZCBfX2lv
-bWVtICpjbGtzcmNfYmFzZTsNCj4gPiArc3RhdGljIHZvaWQgX19pb21lbSAqY2xrZXZ0X2Jhc2U7
-DQo+ID4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIHBlcm9pZGljX2N5YzsNCj4gPiArc3RhdGljIHVu
-c2lnbmVkIGxvbmcgcHM7DQo+ID4gK2Jvb2wgYmlnX2VuZGlhbjsNCj4gPiArDQo+IA0KPiBVc3Vh
-bGx5IHRoaXMgaXMgZW5jYXNwdWxhdGVkIGluIGEgc3RydWN0dXJlLg0KPiANCj4gc3RydWN0IGZ0
-bV9jbG9ja19kZXZpY2Ugew0KPiAJdm9pZCBfX2lvbWVtICpjbGtzcmNfYmFzZTsNCj4gCS4uLg0K
-PiB9Ow0KPg0KPiANCj4gPiArc3RhdGljIGlubGluZSB1MzIgZnRtX3JlYWRsKHZvaWQgX19pb21l
-bSAqYWRkcikNCj4gPiArew0KPiA+ICsJaWYgKGJpZ19lbmRpYW4pDQo+IA0KPiBJIGFtIG5vdCBh
-IGJpZyBmYW4gb2YgYWRkcmVzc2luZyBnbG9iYWwgdmFyaWFibGVzIGluIHRoZSBmdW5jdGlvbnMs
-IHNvDQo+IGlmIHlvdSBjYW4gcGFzcyB0aGUgc3RydWN0dXJlIHBvaW50ZXIgYXJvdW5kIGhlcmUg
-YW5kIHRoZSBvdGhlcg0KPiBmdW5jdGlvbnMgaW5zdGVhZCB0aGF0IHdvdWxkIGJlIG5pY2UuDQo+
-IA0KPiBPdGhlcndpc2UgdGhlIHBhdGNoIHNvdW5kcyBvay4gVGhhbmtzIGZvciB0YWtpbmcgY2Fy
-ZSBvZiBlbmNhcHN1bGF0aW5nDQo+IHdlbGwgdGhlIGZ1bmN0aW9ucyBhbmQgY29tbWVudGluZyB0
-aGUgY29kZS4NCj4gDQoNClllcywgSSBkaWQgdGhpbmsgc28uDQoNCkJ1dCBzb21lIGNhbGxiYWNr
-cyBsaWtlIO+8mg0KKyBzdGF0aWMgdTY0IGZ0bV9yZWFkX3NjaGVkX2Nsb2NrKHZvaWQpDQorIHsN
-CisgICAgICAgICByZXR1cm4gZnRtX3JlYWRsKGNsa3NyY19iYXNlICsgRlRNX0NOVCk7DQorIH0N
-Cg0KVXNlZCBieSA6DQorIHNjaGVkX2Nsb2NrX3JlZ2lzdGVyKGZ0bV9yZWFkX3NjaGVkX2Nsb2Nr
-LC4uLi4pOw0KDQpJZiB0aGV5IGFyZSBlbmNhcHN1bGF0ZWQgaW4gYSBzdHJ1Y3R1cmUsIGFuZCBz
-aG91bGQgdGhlIHN0cnVjdCBpbnN0YW5jZQ0KYmUgb25lIGdsb2JhbCBpbnN0YW5jZSB0b28gPyBJ
-J20gZG91YnRpbmcgd2hldGhlciB3aWxsIHRoaXMgbWFrZSBzZW5zZSA/DQoNCg0KPiA+ICtzdGF0
-aWMgaW50IF9faW5pdCBmdG1fY2FsY19jbG9zZXN0X3JvdW5kX2N5Yyh1bnNpZ25lZCBsb25nIGZy
-ZXEpDQo+ID4gK3sNCj4gPiArCXBzID0gMDsNCj4gPiArDQo+ID4gKwlkbyB7DQo+ID4gKwkJcGVy
-b2lkaWNfY3ljID0gRElWX1JPVU5EX0NMT1NFU1QoZnJlcSwgSFogKiAoMSA8PCBwcysrKSk7DQo+
-ID4gKwl9IHdoaWxlIChwZXJvaWRpY19jeWMgPiAweEZGRkYpOw0KPiA+ICsNCj4gPiArCWlmIChw
-cyA+IDcpIHsNCj4gPiArCQlwcl9lcnIoImZ0bTogdGhlIG1heCBwcmVzY2FsZXIgaXMgJWx1ID4g
-N1xuIiwgcHMpOw0KPiA+ICsJCXJldHVybiAtRUlOVkFMOw0KPiA+ICsJfQ0KPiA+ICsNCj4gDQo+
-IENhbiB5b3UgZXhwbGFpbiBob3cgdGhpcyBlcnJvciBjYW4gaGFwcGVuID8NCj4gDQoNClllcywg
-dGhlIGhhcmR3YXJlIGxpbWl0YXRpb24gb2YgdGhlICdwcycgaXMgMH43LCBhbmQgdGhlIGNvdW50
-ZXIgcmVnaXN0ZXINCklzIG9ubHkgdXNpbmcgdGhlIGxvd2VyIDE2IGJpdHMuDQpJZiB0aGUgJ2Zy
-ZXEnIHZhbHVlIGlzIHRvbyBiaWcgaGVyZSwgdGhlbiB0aGUgcGVyaW9kaWNfY3ljIG1heSBleGNl
-ZWQgMHhGRkZGLg0KDQpPciBzaG91bGQgSSBhZGQgc29tZSBjb21tZW50IGhlcmUgPw0KDQoNClRo
-YW5rcyB2ZXJ5IG11Y2gsDQpCUnMNClhpdWJvDQoNCg0K
+Hi Tomasz,
+
+On Sat, May 17, 2014 at 6:02 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>
+>
+> On 16.05.2014 07:07, Abhilash Kesavan wrote:
+>> Hi Tomasz,
+>>
+>> On Fri, May 16, 2014 at 2:41 AM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>>> Hi Abhilash,
+>>>
+>>> On 13.05.2014 12:12, Abhilash Kesavan wrote:
+>>>> On Tue, May 13, 2014 at 7:54 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
+>>>
+>>> [snip]
+>>>
+>>>>>> diff --git a/arch/arm/mach-exynos/regs-pmu.h b/arch/arm/mach-exynos/regs-
+>>>>>> pmu.h
+>>>>>> index 4f6a256..0bdfcbc 100644
+>>>>>> --- a/arch/arm/mach-exynos/regs-pmu.h
+>>>>>> +++ b/arch/arm/mach-exynos/regs-pmu.h
+>>>>>> @@ -121,6 +121,12 @@
+>>>>>>
+>>>>>>  #define S5P_CHECK_SLEEP                              0x00000BAD
+>>>>>>
+>>>>>> +#define EXYNOS_ARM_CORE0_CONFIGURATION               S5P_PMUREG(0x2000)
+>>>>>
+>>>>> This can be put in order of address.
+>>>> OK, will fix.
+>>>>>
+>>>>>> +#define EXYNOS_ARM_CORE_CONFIGURATION(_nr)   \
+>>>>>> +                     (EXYNOS_ARM_CORE0_CONFIGURATION + (0x80 * (_nr)))
+>>>>>> +#define EXYNOS_ARM_CORE_STATUS(_nr)          \
+>>>>>> +                     (EXYNOS_ARM_CORE_CONFIGURATION(_nr) + 0x4)
+>>>
+>>> My patches posted quite a while ago [1] to fix DT CPU topology already
+>>> add these, remove S5P_ARM_CORE1* and fix corresponding usage in
+>>> hotplug.c and platsmp.c.
+>>>
+>>> [1] http://thread.gmane.org/gmane.linux.kernel.samsung-soc/29573
+>>>
+>>> So I think you should rebase on top of them or at least on top of
+>>> patches 1 and 2 from that series, as 3 and 4 should be dropped.
+>>
+>> Patch 2 of your series does not apply on kgene's for-next or
+>> linux-next. Are you planning on re-sending this ?
+>
+> OK, it seems like Kukjin has already applied your v6 series, so let's
+> drop my series for now. I'll remove patch 1 from my series and rebase it
+> on top of your v6.
+Ok, thanks.
+
+Regards,
+Abhilash
+>
+> Best regards,
+> Tomasz
