@@ -1,140 +1,64 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Mon, 19 May 2014 16:20:54 +0300
-Message-ID: <537A0536.1030506@ti.com>
-References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com> <535FBC62.9050902@ti.com> <20140501190015.5739.86963@quantum> <53674292.5050008@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI I/O memory type
+Date: Mon, 19 May 2014 15:19:58 +0200
+Message-ID: <66413148.lBD9c9XUns@wuerfel>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com> <11787153.NWVGbVfAPV@wuerfel> <20140516095333.GE12341@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53674292.5050008@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Sourav Poddar <sourav.poddar@ti.com>, tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, balbi@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140516095333.GE12341-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/05/2014 10:49 AM, Tero Kristo wrote:
-> On 05/01/2014 10:00 PM, Mike Turquette wrote:
->> Quoting Tero Kristo (2014-04-29 07:51:14)
->>> On 04/29/2014 05:15 PM, Sourav Poddar wrote:
->>>> We need "tbclk" clock data for the functioning of ehrpwm
->>>> module. Hence, populating the required clock information
->>>> in clock dts file.
->>>>
->>>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->>>
->>> Acked-by: Tero Kristo <t-kristo@ti.com>
->>
->> Looks good to me.
->>
->> Tero, just to be clear, are you planning on batching up OMAPish clock
->> patches and sending a pull request (once they have been reviewed on the
->> list)?
->
-> No, I haven't been planning on sending a pull-req, as I believe you
-> still want to ack the TI related clock driver patches yourself also. If
-> you want to change the setup I am of course willing to negotiate the
-> terms. :)
->
-> -Tero
+On Friday 16 May 2014 10:53:33 Will Deacon wrote:
+> On Thu, May 15, 2014 at 04:55:52PM +0100, Arnd Bergmann wrote:
+> > On Thursday 15 May 2014 16:34:30 Will Deacon wrote:
+> > > > If this is used to synchronize with a DMA, there is no guarantee that the
+> > > > transaction from PCI will be visible in memory by then.
+> > > 
+> > > Can you elaborate on this scenario please? When would we use an I/O space
+> > > write to synchronise with a DMA transfer from a PCI endpoint? You're
+> > > definitely referring to I/O space as opposed to Configuration Space, right?
+> > 
+> > Correct. Assume a PCI device uses PIO and DMA. It sends a DMA to main memory
+> > and lets the CPU know about the data using a level (IntA as opposed to MSI)
+> > interrupt. The CPU performs an outl() operation to an I/O port to let the
+> > hardware know it has received the IRQ and the response of the outl() is
+> > guaranteed to flush the DMA transaction: by the time the outl() completes
+> > we know that the data in memory is valid because it is strongly ordered
+> > relative to the DMA.
+> 
+> Hmm, when you say `guaranteed to flush the DMA transaction', is that a PCI
+> requirement? If so, whether or not that DMA data is then visible to the CPU
+> is really specific to the host-controller implementation. It could easily be
+> buffered somewhere between the host controller and memory, for example.
 
-So, based on our discussions, this is now queued for 3.15-rc/clk-dt.
+It's something that drivers are supposed to rely on, and the PCI host
+already has to make the same guarantee about ordering of MSI, MMIO-read
+and DMA transactions, all of which we definitely rely on in the kernel.
 
--Tero
+> > outl() actually does a dsb() internally, but unfortunately that is
+> > before the store, not after, so I assume that a driver relying on the
+> > behavior above would still be racy.
+> 
+> Yup, we'd need an additional dsb. I think we're confusing what the PCI
+> specification says about ordering and what the inb/outb instructions provide
+> on x86. It may well be that we want to emulate the x86 behaviour on ARM, but
+> that's not going to come cheap and I don't think it's a decision we should
+> take lightly.
 
->
->>
->> Thanks,
->> Mike
->>
->>>
->>>
->>>> ---
->>>> v2->v3
->>>> - correct bitshifting
->>>>
->>>>    arch/arm/boot/dts/am43xx-clocks.dtsi |   48
->>>> ++++++++++++++++++++++++++++++++++
->>>>    drivers/clk/ti/clk-43xx.c            |    6 +++++
->>>>    2 files changed, 54 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> index 142009c..42d7b1f 100644
->>>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>> @@ -87,6 +87,54 @@
->>>>                clock-mult = <1>;
->>>>                clock-div = <1>;
->>>>        };
->>>> +
->>>> +     ehrpwm0_tbclk: ehrpwm0_tbclk {
->>>> +             #clock-cells = <0>;
->>>> +             compatible = "ti,gate-clock";
->>>> +             clocks = <&dpll_per_m2_ck>;
->>>> +             ti,bit-shift = <0>;
->>>> +             reg = <0x0664>;
->>>> +     };
->>>> +
->>>> +     ehrpwm1_tbclk: ehrpwm1_tbclk {
->>>> +             #clock-cells = <0>;
->>>> +             compatible = "ti,gate-clock";
->>>> +             clocks = <&dpll_per_m2_ck>;
->>>> +             ti,bit-shift = <1>;
->>>> +             reg = <0x0664>;
->>>> +     };
->>>> +
->>>> +     ehrpwm2_tbclk: ehrpwm2_tbclk {
->>>> +             #clock-cells = <0>;
->>>> +             compatible = "ti,gate-clock";
->>>> +             clocks = <&dpll_per_m2_ck>;
->>>> +             ti,bit-shift = <2>;
->>>> +             reg = <0x0664>;
->>>> +     };
->>>> +
->>>> +     ehrpwm3_tbclk: ehrpwm3_tbclk {
->>>> +             #clock-cells = <0>;
->>>> +             compatible = "ti,gate-clock";
->>>> +             clocks = <&dpll_per_m2_ck>;
->>>> +             ti,bit-shift = <4>;
->>>> +             reg = <0x0664>;
->>>> +     };
->>>> +
->>>> +     ehrpwm4_tbclk: ehrpwm4_tbclk {
->>>> +             #clock-cells = <0>;
->>>> +             compatible = "ti,gate-clock";
->>>> +             clocks = <&dpll_per_m2_ck>;
->>>> +             ti,bit-shift = <5>;
->>>> +             reg = <0x0664>;
->>>> +     };
->>>> +
->>>> +     ehrpwm5_tbclk: ehrpwm5_tbclk {
->>>> +             #clock-cells = <0>;
->>>> +             compatible = "ti,gate-clock";
->>>> +             clocks = <&dpll_per_m2_ck>;
->>>> +             ti,bit-shift = <6>;
->>>> +             reg = <0x0664>;
->>>> +     };
->>>>    };
->>>>    &prcm_clocks {
->>>>        clk_32768_ck: clk_32768_ck {
->>>> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
->>>> index 67c8de5..527a43d 100644
->>>> --- a/drivers/clk/ti/clk-43xx.c
->>>> +++ b/drivers/clk/ti/clk-43xx.c
->>>> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
->>>>        DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
->>>>        DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
->>>>        DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
->>>> +     DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
->>>> +     DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
->>>> +     DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
->>>> +     DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
->>>> +     DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
->>>> +     DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
->>>>        { .node_name = NULL },
->>>>    };
->>>>
->>>>
->>>
->
+outb() is expected to be an extremely heavyweight operation, that's why nobody
+uses it. Why would you care about whether it's one or two microsecond latency
+on a MIDI port or an ISDN adapter?
 
+We can decide that we don't care about correctness here, but the performance
+argument doesn't seem overly important.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
