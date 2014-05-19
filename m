@@ -1,41 +1,61 @@
-From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
-Subject: RE: [PATCHv3 0/3] clocksource: Add Freescale FlexTimer Module (FTM)
- timer support
-Date: Mon, 19 May 2014 09:17:28 +0000
-Message-ID: <29474d5a171e4ac8940f332706dd816a@BY2PR03MB505.namprd03.prod.outlook.com>
-References: <1398737939-5334-1-git-send-email-Li.Xiubo@freescale.com>
- <5379CB5C.1070202@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 7/7] ARM: tegra: Add the EC i2c tunnel to tegra124-venice2
+Date: Mon, 19 May 2014 10:18:36 +0100
+Message-ID: <20140519091836.GD4978@lee--X1>
+References: <1397757570-19750-1-git-send-email-dianders@chromium.org>
+ <1397757570-19750-8-git-send-email-dianders@chromium.org>
+ <53750A9A.8000808@wwwdotorg.org>
+ <CAD=FV=Vj5M_yiYZOkjzB-QjYJa9WE2fcGcwwzAF1h8gcjc9jeA@mail.gmail.com>
+ <CAOesGMhe-STC3GUwAyC6qeEPWWmxdsWbXqdevy8b4MHDgM2v=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5379CB5C.1070202@linaro.org>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMhe-STC3GUwAyC6qeEPWWmxdsWbXqdevy8b4MHDgM2v=A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Doug Anderson <dianders@chromium.org>, Stephen Warren <swarren@wwwdotorg.org>, Wolfram Sang <wsa@the-dreams.de>, Stephen Warren <swarren@nvidia.com>, Andrew Bresticker <abrestic@chromium.org>, Dylan Reid <dgreid@chromium.org>, Simon Glass <sjg@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Thierry Reding <thierry.reding@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-PiA+IFhpdWJvIExpICgzKToNCj4gPiAgICBjbG9ja3NvdXJjZTogZnRtOiBBZGQgRmxleFRpbWVy
-IE1vZHVsZSAoRlRNKSBUaW1lciBkZXZpY2V0cmVlDQo+ID4gICAgICBEb2N1bWVudGF0aW9uDQo+
-ID4gICAgQVJNOiBkdHM6IHZmNjEwOiBBZGQgRnJlZXNjYWxlIEZsZXhUaW1lciBNb2R1bGUgdGlt
-ZXIgbm9kZS4NCj4gPiAgICBjbG9ja3NvdXJjZTogQWRkIEZyZWVzY2FsZSBGbGV4VGltZXIgTW9k
-dWxlIChGVE0pIHRpbWVyIHN1cHBvcnQNCj4gPg0KPiA+ICAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvdGltZXIvZnNsLGZ0bS10aW1lci50eHQgICAgfCAgMzEgKysNCj4gPiAgIGFyY2gvYXJtL2Jv
-b3QvZHRzL3ZmNjEwLmR0c2kgICAgICAgICAgICAgICAgICAgICAgIHwgIDEyICsNCj4gPiAgIGRy
-aXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgIHwgICA1ICsN
-Cj4gPiAgIGRyaXZlcnMvY2xvY2tzb3VyY2UvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAg
-IHwgICAxICsNCj4gPiAgIGRyaXZlcnMvY2xvY2tzb3VyY2UvZnNsX2Z0bV90aW1lci5jICAgICAg
-ICAgICAgICAgIHwgMzQ0DQo+ICsrKysrKysrKysrKysrKysrKysrKw0KPiA+ICAgNSBmaWxlcyBj
-aGFuZ2VkLCAzOTMgaW5zZXJ0aW9ucygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9mc2wsZnRtLQ0KPiB0aW1lci50eHQN
-Cj4gPiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsb2Nrc291cmNlL2ZzbF9mdG1fdGlt
-ZXIuYw0KPiANCj4gQnkgdGhlIHdheSwgd2hlbiByZXBvc3RpbmcgdGhlIHNlcmllLCBjb3VsZCB5
-b3UgcGxlYXNlIGFkZCBSb2IgSGVycmluZw0KPiBhbmQgR3JhbnQgbGlrZWx5IGFzIENjIHRvIHJl
-dmlldyB0aGUgZHRzIHBhcnQgPw0KPiANCg0KTm8gcHJvYmxlbS4NCg0KVGhhbmtzLA0KDQpCUnMN
-ClhpdWJvDQoNCg0KPiBUaGFua3MNCj4gICAgLS0gRGFuaWVsDQo+IA0KPiAtLQ0KPiAgIDxodHRw
-Oi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBm
-b3IgQVJNIFNvQ3MNCj4gDQo+IEZvbGxvdyBMaW5hcm86ICA8aHR0cDovL3d3dy5mYWNlYm9vay5j
-b20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8DQo+IDxodHRwOi8vdHdpdHRlci5jb20vIyEvbGlu
-YXJvb3JnPiBUd2l0dGVyIHwNCj4gPGh0dHA6Ly93d3cubGluYXJvLm9yZy9saW5hcm8tYmxvZy8+
-IEJsb2cNCg0K
+On Thu, 15 May 2014, Olof Johansson wrote:
+
+> On Thu, May 15, 2014 at 11:55 AM, Doug Anderson <dianders@chromium.or=
+g> wrote:
+> > Stephen,
+> >
+> > On Thu, May 15, 2014 at 11:42 AM, Stephen Warren <swarren@wwwdotorg=
+=2Eorg> wrote:
+> >> On 04/17/2014 11:59 AM, Doug Anderson wrote:
+> >>> This adds the EC i2c tunnel (and devices under it) to the
+> >>> tegra124-venice2 device tree.
+> >>
+> >> Did the MFD patches at the start of this series get applied yet? I=
+ was
+> >> hoping to apply this one patch to the Tegra tree for 3.16, and tha=
+t
+> >> needs to happen by tomorrow morning at the latest since -rc6 is lo=
+oming
+> >> fast. However, I'm holding off until the rest of the series is app=
+lied
+> >> to the MFD tree so I can be sure the DT binding is accepted first.=
+=2E.
+> >
+> > As far as I know, they didn't.  Lee was waiting on Wolfram's ack to
+> > the i2c tunnel before landing them.  ...and I'm still eagerly await=
+ing
+> > Wolfram's next i2c tunnel review.
+>=20
+> The i2c portion can be revisited if needed, the MFD piece should be
+> possible to land sooner than that... Lee?
+
+The set 'will' make it in during this cycle.  The trouble is, once
+it's applied, the I2C portion will have to wait until the next cycle.
+By applying late, I'm giving this set every chance to go in as a
+whole.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
