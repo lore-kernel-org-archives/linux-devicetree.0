@@ -1,48 +1,41 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3 02/13] ARM: edma: Take the number of tc from edma_soc_info
- (pdata)
-Date: Mon, 19 May 2014 16:37:18 +0530
-Message-ID: <5379E5E6.9080500@ti.com>
-References: <1400242640-9902-1-git-send-email-peter.ujfalusi@ti.com> <1400242640-9902-3-git-send-email-peter.ujfalusi@ti.com>
+From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
+Subject: Re: [PATCH v6 10/17] ARM: mvebu: add USB3 support for Armada 38x
+Date: Mon, 19 May 2014 13:09:28 +0200
+Message-ID: <1400497768.2007.10.camel@x220>
+References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
+	 <1400149062-32661-11-git-send-email-gregory.clement@free-electrons.com>
+	 <20140516190729.GN27822@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400242640-9902-3-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, joelf@ti.com, arnd@arndb.de
-Cc: linux@arm.linux.org.uk, vinod.koul@intel.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140516190729.GN27822-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Peter,
-
-On Friday 16 May 2014 05:47 PM, Peter Ujfalusi wrote:
-> Instead of saving the for loop length, take the num_tc value from the pdata.
-> In case of DT boot set the n_tc to 3 as it is hardwired in edma_of_parse_dt()
-> This is a temporary state since upcoming patch(es) will change how we are
-> dealing with these parameters.
+On Fri, 2014-05-16 at 15:07 -0400, Jason Cooper wrote:
+> On Thu, May 15, 2014 at 12:17:35PM +0200, Gregory CLEMENT wrote:
+> > This patch adds the selection of the config symbol needed to build the
+> > USB3 support for Armada 38x into mvebu_v7_defconfig.
+> > 
+> > Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  arch/arm/mach-mvebu/Kconfig | 1 +
+> >  1 file changed, 1 insertion(+)
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> ---
->  arch/arm/common/edma.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
-> index 01707aae0a2b..d42c84a3432a 100644
-> --- a/arch/arm/common/edma.c
-> +++ b/arch/arm/common/edma.c
+> Patches 10 and 11 applied to mvebu/soc
 
-> @@ -1741,9 +1743,6 @@ static int edma_probe(struct platform_device *pdev)
->  			map_queue_tc(j, queue_tc_mapping[i][0],
->  					queue_tc_mapping[i][1]);
->  
-> -		/* Save the number of TCs */
-> -		edma_cc[j]->num_tc = i;
-> -
+These two just hit linux-next (in next-20140519). They're pointless, as
+config USB_ARCH_HAS_XHCI was dropped in commit b797b76fb464 ("usb: host:
+remove USB_ARCH_HAS_?HCI").
 
-To which baseline do the patches apply? These lines are not present at
-least in v3.15-rc5. I am applying the patch without this hunk.
 
-Thanks,
-Sekhar
+Paul Bolle
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
