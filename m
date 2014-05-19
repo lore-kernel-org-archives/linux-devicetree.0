@@ -1,103 +1,48 @@
-From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] usb: host: xhci-plat: add support for the R-Car H2
- and M2 xHCI controllers
-Date: Mon, 19 May 2014 19:21:04 +0900
-Message-ID: <CANqRtoQ7k8auQzrE-YA=W+9_eOZ1iT20=RKoqQxOqyofD+Jk=g@mail.gmail.com>
-References: <5379D805.3070002@renesas.com>
+From: Xiubo Li <Li.Xiubo@freescale.com>
+Subject: [PATCHv4 0/3] clocksource: Add Freescale FlexTimer Module (FTM) timer support
+Date: Mon, 19 May 2014 17:36:05 +0800
+Message-ID: <1400492168-12813-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5379D805.3070002-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: daniel.lezcano@linaro.org, tglx@linutronix.de, shawn.guo@linaro.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Xiubo Li <Li.Xiubo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Changes in V4:
+- Add struct ftm_clock_device {} support.
+- peroidic_cyc --> periodic_cyc.
 
-Thanks for your patches, I did however find one typo below:
+Changes in V3:
+- Fix the ftm_irq_disable.
 
-On Mon, May 19, 2014 at 7:08 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
-> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
-> some specific initilization related to the firmware downloading and
-> some specific registers. This patch adds the support for this special
-> configuration as an xHCI quirk executed during probe and start.
->
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> ---
->  drivers/usb/host/Kconfig     |    8 ++
->  drivers/usb/host/Makefile    |    3 +
->  drivers/usb/host/xhci-plat.c |   18 +++++
->  drivers/usb/host/xhci-rcar.c |  182 ++++++++++++++++++++++++++++++++++++++++++
->  drivers/usb/host/xhci-rcar.h |   28 +++++++
->  5 files changed, 239 insertions(+)
->  create mode 100644 drivers/usb/host/xhci-rcar.c
->  create mode 100644 drivers/usb/host/xhci-rcar.h
->
-> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-> index 9247ad2..229e968 100644
-> --- a/drivers/usb/host/Kconfig
-> +++ b/drivers/usb/host/Kconfig
-> @@ -37,6 +37,14 @@ config USB_XHCI_MVEBU
->           Say 'Y' to enable the support for the xHCI host controller
->           found in Marvell Armada 375/38x ARM SOCs.
->
-> +config USB_XHCI_RCAR
-> +       tristate "xHCI support for Renesas R-Car SoCs"
-> +       select USB_XHCI_PLATFORM
-> +       depends on ARCH_SHMOBILE || COMPILE_TEST
-> +       ---help---
-> +         Say 'Y' to enable the support for the xHCI host controller
-> +         found in Renesas R-Car ARM SoCs.
-> +
->  endif # USB_XHCI_HCD
->
->  config USB_EHCI_HCD
-> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-> index 7c0886a..b59ca3c 100644
-> --- a/drivers/usb/host/Makefile
-> +++ b/drivers/usb/host/Makefile
-> @@ -22,6 +22,9 @@ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
->  ifneq ($(CONFIG_USB_XHCI_MVEBU), )
->         xhci-hcd-y              += xhci-mvebu.o
->  endif
-> +ifneq ($(CONFIG_USB_XHCI_RCAR), )
-> +       xhci-hcd-y              += xhci-rcar.o
-> +endif
->  endif
->
->  obj-$(CONFIG_USB_WHCI_HCD)     += whci/
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 561d07e..3a2da1f 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -20,6 +20,7 @@
->
->  #include "xhci.h"
->  #include "xhci-mvebu.h"
-> +#include "xhci-rcar.h"
->
->  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
->  {
-> @@ -39,6 +40,12 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
->
->  static int xhci_plat_start(struct usb_hcd *hcd)
->  {
-> +       struct device_node *of_node = hcd->self.controller->of_node;
-> +
-> +       if (of_device_is_compatible(of_node, "renesas,r8a7790-xhci") ||
-> +           of_device_is_compatible(of_node, "renesas,r8a7790-xhci"))
-> +               xhci_rcar_start(hcd);
-> +
+Changes in V2:
+- Add big-endian support.
+- Add using pr_err instead of BUG_ON.
+- Add more detail comment message of FTM.
+- Add DT binding documentation.
+- Remove some header files and macros not useful.
 
-This is most likely a typo - I believe this is supposed to be r8a7790
-and r8a7791?
 
-Cheers,
 
-/ magnus
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+Xiubo Li (3):
+  clocksource: ftm: Add FlexTimer Module (FTM) Timer devicetree
+    Documentation
+  ARM: dts: vf610: Add Freescale FlexTimer Module timer node.
+  clocksource: Add Freescale FlexTimer Module (FTM) timer support
+
+ .../devicetree/bindings/timer/fsl,ftm-timer.txt    |  31 ++
+ arch/arm/boot/dts/vf610.dtsi                       |  13 +
+ drivers/clocksource/Kconfig                        |   5 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/fsl_ftm_timer.c                | 367 +++++++++++++++++++++
+ 5 files changed, 417 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+ create mode 100644 drivers/clocksource/fsl_ftm_timer.c
+
+-- 
+1.8.4
+
