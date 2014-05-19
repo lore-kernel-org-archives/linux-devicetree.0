@@ -1,7 +1,7 @@
 From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv5 1/4] ARM: mm: allow sub-architectures to override PCI I/O memory type
-Date: Mon, 19 May 2014 10:13:51 +0200
-Message-ID: <1400487234-4501-2-git-send-email-thomas.petazzoni@free-electrons.com>
+Subject: [PATCHv5 4/4] ARM: mvebu: use pci_ioremap_set_mem_type() to map PCI I/O as strongly ordered
+Date: Mon, 19 May 2014 10:13:54 +0200
+Message-ID: <1400487234-4501-5-git-send-email-thomas.petazzoni@free-electrons.com>
 References: <1400487234-4501-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1400487234-4501-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,75 +10,38 @@ To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <w
 Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Due to a design incompatibility between the PCIe Marvell controller
-and the Cortex-A9, stressing PCIe devices with a lot of traffic
-quickly causes a deadlock.
-
-One part of the workaround for this is to have all PCIe regions mapped
-as strongly-ordered (MT_UNCACHED) instead of the default
-MT_DEVICE. While the arch_ioremap_caller() mechanism allows
-sub-architecture code to override ioremap(), used to map PCIe memory
-regions, there isn't such a mechanism to override the behavior of
-pci_ioremap_io().
-
-This commit adds the arch_pci_ioremap_mem_type variable, initialized
-to MT_DEVICE by default, and that sub-architecture code can
-override. We have chosen to expose a single variable rather than
-offering the possibility of overriding the entire pci_ioremap_io(),
-because implementing pci_ioremap_io() requires calling functions
-(get_mem_type()) that are private to the arch/arm/mm/ code.
+Part of the workaround for the PCIe/SMP/PL310 deadlock on Armada
+375/38x is to map PCI mappings strongly ordered. Mapping PCI memory
+regions as strongly ordered was already done thanks to the
+arch_ioremap_caller mechanism. This patch does the same for the PCI
+I/O regions by using the new pci_ioremap_set_mem_type() function.
 
 Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 ---
- arch/arm/include/asm/io.h | 6 ++++++
- arch/arm/mm/ioremap.c     | 9 ++++++++-
- 2 files changed, 14 insertions(+), 1 deletion(-)
+This patch is kept separate from the rest of the
+mach-mvebu/coherency.c code for the workaround, as this patch has a
+build dependency on the new API. Since the new API patch will go
+through Russell's tree, and this patch through the mvebu tree, there
+might be some merging issue, or even the need to delay the merging of
+this patch.
 
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index 8aa4cca..3d23418 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -179,6 +179,12 @@ static inline void __iomem *__typesafe_io(unsigned long addr)
- /* PCI fixed i/o mapping */
- #define PCI_IO_VIRT_BASE	0xfee00000
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/mach-mvebu/coherency.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/mach-mvebu/coherency.c b/arch/arm/mach-mvebu/coherency.c
+index f6be9c6..0215614 100644
+--- a/arch/arm/mach-mvebu/coherency.c
++++ b/arch/arm/mach-mvebu/coherency.c
+@@ -335,6 +335,7 @@ static void __init armada_375_380_coherency_init(struct device_node *np)
  
-+#if defined(CONFIG_PCI)
-+void pci_ioremap_set_mem_type(int mem_type);
-+#else
-+static inline void pci_ioremap_set_mem_type(int mem_type) {}
-+#endif
-+
- extern int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr);
+ 	coherency_cpu_base = of_iomap(np, 0);
+ 	arch_ioremap_caller = armada_pcie_wa_ioremap_caller;
++	pci_ioremap_set_mem_type(MT_UNCACHED);
  
- /*
-diff --git a/arch/arm/mm/ioremap.c b/arch/arm/mm/ioremap.c
-index f9c32ba..d1e5ad7 100644
---- a/arch/arm/mm/ioremap.c
-+++ b/arch/arm/mm/ioremap.c
-@@ -438,6 +438,13 @@ void __arm_iounmap(volatile void __iomem *io_addr)
- EXPORT_SYMBOL(__arm_iounmap);
- 
- #ifdef CONFIG_PCI
-+static int pci_ioremap_mem_type = MT_DEVICE;
-+
-+void pci_ioremap_set_mem_type(int mem_type)
-+{
-+	pci_ioremap_mem_type = mem_type;
-+}
-+
- int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
- {
- 	BUG_ON(offset + SZ_64K > IO_SPACE_LIMIT);
-@@ -445,7 +452,7 @@ int pci_ioremap_io(unsigned int offset, phys_addr_t phys_addr)
- 	return ioremap_page_range(PCI_IO_VIRT_BASE + offset,
- 				  PCI_IO_VIRT_BASE + offset + SZ_64K,
- 				  phys_addr,
--				  __pgprot(get_mem_type(MT_DEVICE)->prot_pte));
-+				  __pgprot(get_mem_type(pci_ioremap_mem_type)->prot_pte));
- }
- EXPORT_SYMBOL_GPL(pci_ioremap_io);
- #endif
+ 	/*
+ 	 * Add the PL310 property "arm,io-coherent". This makes sure the
 -- 
 1.9.3
 
