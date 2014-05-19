@@ -1,134 +1,106 @@
-From: Tarek Dakhran <t.dakhran@samsung.com>
-Subject: [PATCH v9 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
-Date: Mon, 19 May 2014 07:37:18 +0400
-Message-ID: <1400470640-30611-2-git-send-email-t.dakhran@samsung.com>
-References: <1400470640-30611-1-git-send-email-t.dakhran@samsung.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH] input: rotary encoder: implement quarter period mode
+Date: Sun, 18 May 2014 20:45:23 -0700
+Message-ID: <20140519034523.GA28435@core.coreip.homeip.net>
+References: <1387377798-22344-1-git-send-email-s.hauer@pengutronix.de>
+ <20140507144543.GE27177@e106331-lin.cambridge.arm.com>
+ <20140507185932.GA22973@core.coreip.homeip.net>
+ <20140508170133.GA1199@arch.cereza>
+ <20140519032659.GA1062@arch.cereza>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <1400470640-30611-1-git-send-email-t.dakhran@samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Romain Naour <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Tarek Dakhran <t.dakhran@samsung.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140519032659.GA1062@arch.cereza>
+Sender: linux-input-owner@vger.kernel.org
+To: Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel@vanguardiasur.com.ar>
+Cc: Mark Rutland <mark.rutland@arm.com>, Sascha Hauer <s.hauer@pengutronix.de>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Daniel Mack <daniel@zonque.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
-Add initial support for this SoC.
+On Mon, May 19, 2014 at 12:26:59AM -0300, Ezequiel Garc=EDa wrote:
+> On 08 May 02:01 PM, Ezequiel Garc=EDa wrote:
+> > On 07 May 11:59 AM, Dmitry Torokhov wrote:
+> > > On Wed, May 07, 2014 at 03:45:43PM +0100, Mark Rutland wrote:
+> > > > On Wed, Dec 18, 2013 at 02:43:18PM +0000, Sascha Hauer wrote:
+> > > > > Some rotary encoders have a stable state in all output state
+> > > > > combinations. Add support for this type of encoder.
+> > > > >=20
+> > > > > Signed-off-by: Sascha Hauer <s.hauer@pengutronix.de>
+> > > > > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > > > > Cc: Daniel Mack <daniel@zonque.org>
+> > > > > Cc: linux-input@vger.kernel.org
+> > > > > Cc: devicetree@vger.kernel.org
+> > > > > ---
+> > > > >  .../devicetree/bindings/input/rotary-encoder.txt   |  1 +
+> > > > >  Documentation/input/rotary-encoder.txt             |  9 ++++=
++--
+> > > > >  drivers/input/misc/rotary_encoder.c                | 30 ++++=
+++++++++++++++++--
+> > > > >  include/linux/rotary_encoder.h                     |  1 +
+> > > > >  4 files changed, 37 insertions(+), 4 deletions(-)
+> > > > >=20
+> > > > > diff --git a/Documentation/devicetree/bindings/input/rotary-e=
+ncoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> > > > > index 3315495..cbdb29b 100644
+> > > > > --- a/Documentation/devicetree/bindings/input/rotary-encoder.=
+txt
+> > > > > +++ b/Documentation/devicetree/bindings/input/rotary-encoder.=
+txt
+> > > > > @@ -15,6 +15,7 @@ Optional properties:
+> > > > >  - rotary-encoder,rollover: Automatic rollove when the rotary=
+ value becomes
+> > > > >    greater than the specified steps or smaller than 0. For ab=
+solute axis only.
+> > > > >  - rotary-encoder,half-period: Makes the driver work on half-=
+period mode.
+> > > > > +- rotary-encoder,quarter-period: Makes the driver work on qu=
+arter-period mode.
+> > > >=20
+> > > > The new property looks as sane to me as the half-period propert=
+y, so for
+> > > > the binding addition:
+> > >=20
+> > > Actually, maybe we should deprecate rotary-encoder,half-period an=
+d
+> > > instead add rotary-encoder,type property?
+> > >=20
+> >=20
+> > Mark: what do you say?
+> >=20
+> > I can fix a few patches if everyone agrees...
+>=20
+> After some thought, it seemed to me we can define a more specific pro=
+perty
+> to describe this, instead of a generic "type".
+>=20
+> The difference among these three "modes" is the number of turns neede=
+d to make
+> a step.
+>=20
+> In the current driver, the default is 4 turns per step, where for the=
+ half-period
+> mode it's 2 turns per step. Now, we need to support 1 turn per step a=
+nd hence
+> Sascha proposes a new quarter-period mode.
+>=20
+> Given we only need to describe the number of turns per step, I'd say =
+it's
+> more accurate and less confusing to deprecate the bool half-period pr=
+operty
+> and instead introduce a "rotary-encoder,turns-per-step" integer prope=
+rty.
+>=20
+> How does this sound?
 
-Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- arch/arm/mach-exynos/Kconfig             |    8 ++++++++
- arch/arm/mach-exynos/exynos.c            |    1 +
- arch/arm/mach-exynos/platsmp.c           |    4 ++++
- arch/arm/plat-samsung/include/plat/cpu.h |   11 ++++++++++-
- 4 files changed, 23 insertions(+), 1 deletion(-)
+We'd have to "filter out" invalid step settings, but that sounds fine b=
+y
+me.
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 1602abc..79a3e85 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -84,6 +84,14 @@ config SOC_EXYNOS5250
- 	help
- 	  Enable EXYNOS5250 SoC support
- 
-+config SOC_EXYNOS5410
-+	bool "SAMSUNG EXYNOS5410"
-+	default y
-+	depends on ARCH_EXYNOS5
-+	select PM_GENERIC_DOMAINS if PM_RUNTIME
-+	help
-+	  Enable EXYNOS5410 SoC support
-+
- config SOC_EXYNOS5420
- 	bool "SAMSUNG EXYNOS5420"
- 	default y
-diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
-index e973ff5..12db6cf 100644
---- a/arch/arm/mach-exynos/exynos.c
-+++ b/arch/arm/mach-exynos/exynos.c
-@@ -312,6 +312,7 @@ static char const *exynos_dt_compat[] __initconst = {
- 	"samsung,exynos4412",
- 	"samsung,exynos5",
- 	"samsung,exynos5250",
-+	"samsung,exynos5410",
- 	"samsung,exynos5420",
- 	"samsung,exynos5440",
- 	NULL
-diff --git a/arch/arm/mach-exynos/platsmp.c b/arch/arm/mach-exynos/platsmp.c
-index 78002c7..a95213d 100644
---- a/arch/arm/mach-exynos/platsmp.c
-+++ b/arch/arm/mach-exynos/platsmp.c
-@@ -60,6 +60,8 @@ static inline void __iomem *cpu_boot_reg_base(void)
- {
- 	if (soc_is_exynos4210() && samsung_rev() == EXYNOS4210_REV_1_1)
- 		return S5P_INFORM5;
-+	if (soc_is_exynos5410())
-+		return sysram_ns_base_addr;
- 	return sysram_base_addr;
- }
- 
-@@ -72,6 +74,8 @@ static inline void __iomem *cpu_boot_reg(int cpu)
- 		return ERR_PTR(-ENODEV);
- 	if (soc_is_exynos4412())
- 		boot_reg += 4*cpu;
-+	else if (soc_is_exynos5410())
-+		boot_reg += (0x1c);
- 	else if (soc_is_exynos5420())
- 		boot_reg += 4;
- 	return boot_reg;
-diff --git a/arch/arm/plat-samsung/include/plat/cpu.h b/arch/arm/plat-samsung/include/plat/cpu.h
-index 5992b8d..21db380 100644
---- a/arch/arm/plat-samsung/include/plat/cpu.h
-+++ b/arch/arm/plat-samsung/include/plat/cpu.h
-@@ -49,6 +49,7 @@ extern unsigned long samsung_cpu_id;
- #define EXYNOS4_CPU_MASK	0xFFFE0000
- 
- #define EXYNOS5250_SOC_ID	0x43520000
-+#define EXYNOS5410_SOC_ID	0xE5410000
- #define EXYNOS5420_SOC_ID	0xE5420000
- #define EXYNOS5440_SOC_ID	0xE5440000
- #define EXYNOS5_SOC_MASK	0xFFFFF000
-@@ -72,6 +73,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
-+IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
- IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
- IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
- 
-@@ -154,6 +156,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
- # define soc_is_exynos5250()	0
- #endif
- 
-+#if defined(CONFIG_SOC_EXYNOS5410)
-+# define soc_is_exynos5410()	is_samsung_exynos5410()
-+#else
-+# define soc_is_exynos5410()	0
-+#endif
-+
- #if defined(CONFIG_SOC_EXYNOS5420)
- # define soc_is_exynos5420()	is_samsung_exynos5420()
- #else
-@@ -168,7 +176,8 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
- 
- #define soc_is_exynos4() (soc_is_exynos4210() || soc_is_exynos4212() || \
- 			  soc_is_exynos4412())
--#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5420())
-+#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5410() || \
-+			  soc_is_exynos5420())
- 
- #define IODESC_ENT(x) { (unsigned long)S3C24XX_VA_##x, __phys_to_pfn(S3C24XX_PA_##x), S3C24XX_SZ_##x, MT_DEVICE }
- 
--- 
-1.7.9.5
+--=20
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
