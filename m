@@ -1,61 +1,64 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCHv3 0/3] clocksource: Add Freescale FlexTimer Module (FTM)
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv3 3/3] clocksource: Add Freescale FlexTimer Module (FTM)
  timer support
-Date: Mon, 19 May 2014 11:14:04 +0200
-Message-ID: <5379CB5C.1070202@linaro.org>
+Date: Mon, 19 May 2014 09:16:20 +0000
+Message-ID: <2e154db4908645e6b36d185eef828422@BY2PR03MB505.namprd03.prod.outlook.com>
 References: <1398737939-5334-1-git-send-email-Li.Xiubo@freescale.com>
+ <1398737939-5334-4-git-send-email-Li.Xiubo@freescale.com>
+ <537629C3.30507@linaro.org>
+ <0a6cb1e6380f42279a583ebf7e27dd54@BY2PR03MB505.namprd03.prod.outlook.com>
+ <5379CA04.2040801@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1398737939-5334-1-git-send-email-Li.Xiubo@freescale.com>
+In-Reply-To: <5379CA04.2040801@linaro.org>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: Xiubo Li <Li.Xiubo@freescale.com>, tglx@linutronix.de, shawn.guo@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingchang Lu <jingchang.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On 04/29/2014 04:18 AM, Xiubo Li wrote:
->
-> Changes in V3:
-> - Fix the ftm_irq_disable.
->
-> Changes in V2:
-> - Add big-endian support.
-> - Add using pr_err instead of BUG_ON.
-> - Add more detail comment message of FTM.
-> - Add DT binding documentation.
-> - Remove some header files and macros not useful.
->
->
-> Xiubo Li (3):
->    clocksource: ftm: Add FlexTimer Module (FTM) Timer devicetree
->      Documentation
->    ARM: dts: vf610: Add Freescale FlexTimer Module timer node.
->    clocksource: Add Freescale FlexTimer Module (FTM) timer support
->
->   .../devicetree/bindings/timer/fsl,ftm-timer.txt    |  31 ++
->   arch/arm/boot/dts/vf610.dtsi                       |  12 +
->   drivers/clocksource/Kconfig                        |   5 +
->   drivers/clocksource/Makefile                       |   1 +
->   drivers/clocksource/fsl_ftm_timer.c                | 344 ++++++++++=
-+++++++++++
->   5 files changed, 393 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/timer/fsl,ftm-=
-timer.txt
->   create mode 100644 drivers/clocksource/fsl_ftm_timer.c
-
-By the way, when reposting the serie, could you please add Rob Herring=20
-and Grant likely as Cc to review the dts part ?
-
-Thanks
-   -- Daniel
-
---=20
-  <http://www.linaro.org/> Linaro.org =E2=94=82 Open source software fo=
-r ARM SoCs
-
-=46ollow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+PiA+Pj4gK3N0YXRpYyBpbmxpbmUgdTMyIGZ0bV9yZWFkbCh2b2lkIF9faW9tZW0gKmFkZHIpDQo+
+ID4+PiArew0KPiA+Pj4gKwlpZiAoYmlnX2VuZGlhbikNCj4gPj4NCj4gPj4gSSBhbSBub3QgYSBi
+aWcgZmFuIG9mIGFkZHJlc3NpbmcgZ2xvYmFsIHZhcmlhYmxlcyBpbiB0aGUgZnVuY3Rpb25zLCBz
+bw0KPiA+PiBpZiB5b3UgY2FuIHBhc3MgdGhlIHN0cnVjdHVyZSBwb2ludGVyIGFyb3VuZCBoZXJl
+IGFuZCB0aGUgb3RoZXINCj4gPj4gZnVuY3Rpb25zIGluc3RlYWQgdGhhdCB3b3VsZCBiZSBuaWNl
+Lg0KPiA+Pg0KPiA+PiBPdGhlcndpc2UgdGhlIHBhdGNoIHNvdW5kcyBvay4gVGhhbmtzIGZvciB0
+YWtpbmcgY2FyZSBvZiBlbmNhcHN1bGF0aW5nDQo+ID4+IHdlbGwgdGhlIGZ1bmN0aW9ucyBhbmQg
+Y29tbWVudGluZyB0aGUgY29kZS4NCj4gPj4NCj4gPg0KPiA+IFllcywgSSBkaWQgdGhpbmsgc28u
+DQo+ID4NCj4gPiBCdXQgc29tZSBjYWxsYmFja3MgbGlrZSDvvJoNCj4gPiArIHN0YXRpYyB1NjQg
+ZnRtX3JlYWRfc2NoZWRfY2xvY2sodm9pZCkNCj4gPiArIHsNCj4gPiArICAgICAgICAgcmV0dXJu
+IGZ0bV9yZWFkbChjbGtzcmNfYmFzZSArIEZUTV9DTlQpOw0KPiA+ICsgfQ0KPiA+DQo+ID4gVXNl
+ZCBieSA6DQo+ID4gKyBzY2hlZF9jbG9ja19yZWdpc3RlcihmdG1fcmVhZF9zY2hlZF9jbG9jaywu
+Li4uKTsNCj4gPg0KPiA+IElmIHRoZXkgYXJlIGVuY2Fwc3VsYXRlZCBpbiBhIHN0cnVjdHVyZSwg
+YW5kIHNob3VsZCB0aGUgc3RydWN0IGluc3RhbmNlDQo+ID4gYmUgb25lIGdsb2JhbCBpbnN0YW5j
+ZSB0b28gPyBJJ20gZG91YnRpbmcgd2hldGhlciB3aWxsIHRoaXMgbWFrZSBzZW5zZSA/DQo+IA0K
+PiBBY3R1YWxseSwgSSBwbGFuIGluIGEgbmVhciBmdXR1cmUgdG8gY29uc29saWRhdGUgdGhlIGNv
+ZGUgYW5kIGZhY3RvciBvdXQNCj4gc29tZSBwYXJ0cyB3aXRoIGEgY29tbW9uIHN0cnVjdHVyZSBh
+Y3Jvc3MgdGhlIGRpZmZlcmVudCBkcml2ZXJzLiBTbyBldmVuDQo+IGlmIHlvdSBhZGRyZXNzIHRo
+ZSBiYXNlQCB3aXRoIHRoZSBnbG9iYWwgaW5zdGFuY2UgYnV0IHBhc3MgYXJvdW5kIHRoZQ0KPiBz
+dHJ1Y3R1cmUgYXMgcGFyYW1ldGVyLCB0aGF0IHdpbGwgYmUgb2sgYmVjYXVzZSB0aGF0IHdpbGwg
+YmUgbGVzcw0KPiBtb2RpZmljYXRpb25zIGluIHRoZSBmdXR1cmUuIEl0IGlzIG5vdCBhIHN0cm9u
+ZyByZXF1aXJlbWVudCwganVzdCBwdXQgaW4NCj4gcGxhY2Ugc29tZSBlbmNhcHN1bGF0aW9uIHRv
+IG1ha2UgdGhlIGxpZmUgZWFzaWVyIGZvciBhZnRlci4NCj4gDQoNClllcywgc291bmRzIGdvb2Qu
+DQoNCkknbGwgZm9sbG93IHlvdXIgYWR2aWNlLi4uDQoNCg0KPiA+Pj4gK3N0YXRpYyBpbnQgX19p
+bml0IGZ0bV9jYWxjX2Nsb3Nlc3Rfcm91bmRfY3ljKHVuc2lnbmVkIGxvbmcgZnJlcSkNCj4gPj4+
+ICt7DQo+ID4+PiArCXBzID0gMDsNCj4gPj4+ICsNCj4gPj4+ICsJZG8gew0KPiA+Pj4gKwkJcGVy
+b2lkaWNfY3ljID0gRElWX1JPVU5EX0NMT1NFU1QoZnJlcSwgSFogKiAoMSA8PCBwcysrKSk7DQo+
+ID4+PiArCX0gd2hpbGUgKHBlcm9pZGljX2N5YyA+IDB4RkZGRik7DQo+ID4+PiArDQo+ID4+PiAr
+CWlmIChwcyA+IDcpIHsNCj4gPj4+ICsJCXByX2VycigiZnRtOiB0aGUgbWF4IHByZXNjYWxlciBp
+cyAlbHUgPiA3XG4iLCBwcyk7DQo+ID4+PiArCQlyZXR1cm4gLUVJTlZBTDsNCj4gPj4+ICsJfQ0K
+PiA+Pj4gKw0KPiA+Pg0KPiA+PiBDYW4geW91IGV4cGxhaW4gaG93IHRoaXMgZXJyb3IgY2FuIGhh
+cHBlbiA/DQo+ID4+DQo+ID4NCj4gPiBZZXMsIHRoZSBoYXJkd2FyZSBsaW1pdGF0aW9uIG9mIHRo
+ZSAncHMnIGlzIDB+NywgYW5kIHRoZSBjb3VudGVyIHJlZ2lzdGVyDQo+ID4gSXMgb25seSB1c2lu
+ZyB0aGUgbG93ZXIgMTYgYml0cy4NCj4gPiBJZiB0aGUgJ2ZyZXEnIHZhbHVlIGlzIHRvbyBiaWcg
+aGVyZSwgdGhlbiB0aGUgcGVyaW9kaWNfY3ljIG1heSBleGNlZWQgMHhGRkZGLg0KPiA+DQo+ID4g
+T3Igc2hvdWxkIEkgYWRkIHNvbWUgY29tbWVudCBoZXJlID8NCj4gDQo+IFllcywgYSBjb21tZW50
+IHdpbGwgYmUgd2VsY29tZS4NCj4gDQoNCk9rYXksIFBsZWFzZSBzZWUgdGhlIG5leHQgdmVyc2lv
+bi4NCg0KVGhhbmtzIHZlcnkgbXVjaCwNCg0KQlJzDQpYaXVibw0KDQoNCj4gVGhhbmtzDQo+ICAg
+IC0tIERhbmllbA0KPiANCj4gLS0NCj4gICA8aHR0cDovL3d3dy5saW5hcm8ub3JnLz4gTGluYXJv
+Lm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzDQo+IA0KPiBGb2xsb3cg
+TGluYXJvOiAgPGh0dHA6Ly93d3cuZmFjZWJvb2suY29tL3BhZ2VzL0xpbmFybz4gRmFjZWJvb2sg
+fA0KPiA8aHR0cDovL3R3aXR0ZXIuY29tLyMhL2xpbmFyb29yZz4gVHdpdHRlciB8DQo+IDxodHRw
+Oi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLWJsb2cvPiBCbG9nDQoNCg==
