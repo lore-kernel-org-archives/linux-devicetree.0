@@ -1,80 +1,52 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Mon, 19 May 2014 09:04:48 -0700
-Message-ID: <20140519160447.GB4849@atomide.com>
-References: <20140513152518.GA16837@atomide.com>
- <53730AFB.2090800@ti.com>
- <20140514160216.GD18463@atomide.com>
- <537487AE.3060906@ti.com>
- <20140515182133.GC23659@atomide.com>
- <5375A8A8.7080306@ti.com>
- <20140516160717.GD22031@atomide.com>
- <20140516174158.GA11733@earth.universe>
- <20140516180154.GG22031@atomide.com>
- <5379CD24.6040508@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v2 1/3] ARM: dts: fix incorrect compatible for exynos4412
+Date: Tue, 20 May 2014 01:10:38 +0900
+Message-ID: <537A2CFE.9010202@samsung.com>
+References: <53633D38.9000108@samsung.com> <5363DEBA.6080804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5379CD24.6040508@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Sebastian Reichel <sre@ring0.de>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5363DEBA.6080804@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Beomho Seo <beomho.seo@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140519 02:22]:
-> On 16/05/14 21:01, Tony Lindgren wrote:
-> 
-> >> IMHO appending -omap-dss to a random device is an even bigger hack,
-> >> since its adding lots of bloat to the API. Let's assume there is
-> >> another OS using DT for ARM, but has no proper API for SPI
-> >> controllers and it introduces your hack to SPI devices. That would
-> >> mean each SPI device has -omap-spi appended (or -exynos-spi,
-> >> -foo-spi, ...). At least I would blame them for creating a huge
-> >> unmaintainable mess.
-> > 
-> > I think you're misunderstanding. I do not want the naming to
-> > be Linux specific. The naming should naturally be as hardware
-> > specific as possible. In this case something like:
-> > 
-> > compatible = "sharp,ls037v7dw01-dss", "sharp,ls037v7dw01";
-> > 
-> > Or we should probably use:
-> > 
-> > compatible = "sharp,ls037v7dw01-dpi", "sharp,ls037v7dw01";
-> > 
-> > As dpi here reflects the hardware it's connected to. The dss
-> > is probably a Linux name.
-> 
-> Well, "dss" or "omapdss" is as much a hardware term as "dpi". And "dpi"
-> wouldn't really be a good extension, as what we want is an omapdss
-> driver specific compatible string. So I think "-omapdss" is the best
-> extension if that method is used.
-> 
-> But I don't think that's really the point. The point is that the panel's
-> compatible string should be "sharp,ls037v7dw01", nothing else.
-> 
-> All the variations of "sharp,ls037v7dw01-dss" are not correct, and are
-> only made for Linux SW reasons. So I would say they are Linux specific
-> SW names, even if the words themselves are also HW terms.
+On 05/03/14 03:06, Tomasz Figa wrote:
+> On 02.05.2014 08:37, Beomho Seo wrote:
+>> This patch fixed incorrect compatible for ak8975 magnetic sensor.
+>> ak8975 magnetic sensor use compatible "ak8975" or "asahi-kasei,ak8975"
+>> In this patch, use "asahi-kasei,ak8975" according to dt bindings
+>> document.
+>>
+>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>> Signed-off-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+>> ---
+>> Changes in v2:
+>> - Compatible is changed according to device tree binding document.
+>> ---
+>> arch/arm/boot/dts/exynos4412-trats2.dts | 2 +-
+>> 1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts
+>> b/arch/arm/boot/dts/exynos4412-trats2.dts
+>> index 3228506..1279a8a 100644
+>> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+>> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+>> @@ -494,7 +494,7 @@
+>> status = "okay";
+>>
+>> ak8975@0c {
+>> - compatible = "ak,ak8975";
+>> + compatible = "asahi-kasei,ak8975";
+>> reg = <0x0c>;
+>> gpios = <&gpj0 7 0>;
+>> };
+>>
+>
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+>
+Applied, thanks.
 
-If you really want to use only "sharp,ls037v7dw01" as the compatible
-string, then you can still do that and bail out from the undesired
-drivers by using of_machine_is_compatible check.
-
-In many cases however we do have multiple compatible strings that
-describe how the device is wired. See drivers/tty/serial/of_serial.c
-for example. It has "ns16550" but then it also has additional
-"nvidia,tegra20-uart", "nxp,lpc3220-uart" and "ibm,qpace-nwp-serial".
- 
-> > Not use what you're after with the SPI example though, but sounds
-> > like that's something different.
-> 
-> I think Sebastien's example is just like the issue here.
-
-Hmm is there some existing example in the kernel like that?
-
-Regards,
-
-Tony
+- Kukjin
