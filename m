@@ -1,62 +1,51 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v2 3/3] ARM: shmobile: henninger: enable internal PCI
-Date: Tue, 20 May 2014 01:55:17 +0400
-Message-ID: <201405200155.18217.sergei.shtylyov@cogentembedded.com>
-References: <201405200148.28683.sergei.shtylyov@cogentembedded.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH net-next 2/4] net: systemport: use the new fixed PHY
+ helpers
+Date: Tue, 20 May 2014 00:04:20 +0200
+Message-ID: <20140520000420.7039e1bc@free-electrons.com>
+References: <1400528625-32744-1-git-send-email-f.fainelli@gmail.com>
+	<1400528625-32744-3-git-send-email-f.fainelli@gmail.com>
+	<20140519221946.27dbad55@free-electrons.com>
+	<CAGVrzcYwp6W7YgDmAbe3d+LEX105d+s1j2jV4zvAm52rWTt5rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201405200148.28683.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAGVrzcYwp6W7YgDmAbe3d+LEX105d+s1j2jV4zvAm52rWTt5rg@mail.gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable internal AHB-PCI bridges for the USB EHCI/OHCI controllers attached to
-them.
+Dear Florian Fainelli,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+On Mon, 19 May 2014 14:52:57 -0700, Florian Fainelli wrote:
 
----
- arch/arm/boot/dts/r8a7791-henninger.dts |   22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
+> >> +     /* SYSTEMPORT uses the old 'fixed-link' 5-digit property which is
+> >> +      * deprecated, we need to register the fixed PHY using the Ethernet
+> >> +      * MAC node since we do not have a 'fixed-link' subnode.
+> >> +      */
+> >
+> > Actually even if you use the new fixed PHY DT binding, the DT node
+> > linked to the PHY is the Ethernet MAC node. This is because I didn't
+> > want to have a difference between how things are handled between the
+> > old and the new binding.
+> 
+> Sure, I agree, and the comment still stands, I am just expressing it
+> that we are not looking for the 'fixed-link' subnode, but the
+> 'fixed-link' 5-digit property here. Would you want me to rephrase
+> that?
 
-Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
-+++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
-@@ -120,6 +120,16 @@
- 				 "msiof0_tx";
- 		renesas,function = "msiof0";
- 	};
-+
-+	usb0_pins: usb0 {
-+		renesas,groups = "usb0";
-+		renesas,function = "usb0";
-+	};
-+
-+	usb1_pins: usb1 {
-+		renesas,groups = "usb1";
-+		renesas,function = "usb1";
-+	};
- };
- 
- &scif0 {
-@@ -217,3 +227,15 @@
- 		spi-cpha;
- 	};
- };
-+
-+&pci0 {
-+	status = "okay";
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&pci1 {
-+	status = "okay";
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
-+};
+What I found misleading in the comment is that you simply to imply that
+because you're not using the new DT binding for fixed-link, the DT node
+that is associated to the PHY is the Ethernet MAC.
+
+The truth is that the DT node associated to the fixed PHY is always the
+Ethernet MAC, regardless of whether you're using the old or the new DT
+binding.
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
