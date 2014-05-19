@@ -1,50 +1,28 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v8 0/3] Exynos 5410 support
-Date: Mon, 19 May 2014 09:58:04 +0900
-Message-ID: <019101cf72fd$644883c0$2cd98b40$@samsung.com>
-References: <1397459860-21869-1-git-send-email-t.dakhran@samsung.com>
- <7hppk5f26g.fsf@paris.lan>
+From: "Li.Xiubo@freescale.com" <Li.Xiubo@freescale.com>
+Subject: RE: [PATCHv3 3/3] clocksource: Add Freescale FlexTimer Module (FTM)
+ timer support
+Date: Mon, 19 May 2014 01:55:05 +0000
+Message-ID: <ab6d3e36d7a249c9af56ab8e14e76d7d@BY2PR03MB505.namprd03.prod.outlook.com>
+References: <1398737939-5334-1-git-send-email-Li.Xiubo@freescale.com>
+ <1398737939-5334-4-git-send-email-Li.Xiubo@freescale.com>
+ <53760C0C.4070002@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <7hppk5f26g.fsf@paris.lan>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Kevin Hilman' <khilman@linaro.org>, 'Tarek Dakhran' <t.dakhran@samsung.com>
-Cc: linux-kernel@vger.kernel.org, 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Rob Landley' <rob@landley.net>, 'Russell King' <linux@arm.linux.org.uk>, 'Ben Dooks' <ben-linux@fluff.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Mike Turquette' <mturquette@linaro.org>, 'Vyacheslav Tyrtov' <v.tyrtov@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Heiko Stuebner' <heiko@sntech.de>, 'Romain Naour' <romain.naour@openwide.fr>, 'Chander Kashyap' <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Tarek Dakhran' <t.dakhran@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53760C0C.4070002@linaro.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jingchang Lu <jingchang.lu@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Kevin Hilman wrote:
-> 
-> Tarek Dakhran <t.dakhran@samsung.com> writes:
-> 
-> > The series of patches represent support of Exynos 5410 SoC
-> >
-> > The Exynos 5410 is the first Samsung SoC based on bigLITTLE architecture
-> >
-> > Patches add new platform description, support of clock controller and
-> device
-> > tree for Exynos 5410.
-> >
-> > Has been build on Linux Kernel v3.15-rc1
-> > Has been tested on: 1) Exynos 5410 reference board (exynos_defconfig)
-> > 		    2) Odroid-XU board (exynos_defconfig)
-> 
-Hi all,
-
-Sorry for late response...
-
-> Tested-by: Kevin Hilman <khilman@linaro.org>
-> 
-Kevin,
-
-Thanks for your test :-)
-
-[...]
-
-Tarek, can you please re-spin this series based on my current for-next
-because some common stuff has been changed?
-
-Thanks,
-Kukjin
+PiA+ICtzdGF0aWMgdm9pZCBfX2lvbWVtICpjbGtzcmNfYmFzZTsNCj4gPiArc3RhdGljIHZvaWQg
+X19pb21lbSAqY2xrZXZ0X2Jhc2U7DQo+ID4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIHBlcm9pZGlj
+X2N5YzsNCj4gDQo+IHBlcm9pZGljX2N5YyA/IERpZCB5b3UgbWVhbiBwZXJpb2RpY19jeWMgPyA6
+KQ0KPiANCg0KWWVzLCBJJ2xsIGZpeCBpdC4NCg0KVGhhbmtzLA0KDQpCUnMNClhpdWJvDQoNCg0K
+PiANCj4gDQo+IC0tDQo+ICAgPGh0dHA6Ly93d3cubGluYXJvLm9yZy8+IExpbmFyby5vcmcg4pSC
+IE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29Dcw0KPiANCj4gRm9sbG93IExpbmFybzog
+IDxodHRwOi8vd3d3LmZhY2Vib29rLmNvbS9wYWdlcy9MaW5hcm8+IEZhY2Vib29rIHwNCj4gPGh0
+dHA6Ly90d2l0dGVyLmNvbS8jIS9saW5hcm9vcmc+IFR3aXR0ZXIgfA0KPiA8aHR0cDovL3d3dy5s
+aW5hcm8ub3JnL2xpbmFyby1ibG9nLz4gQmxvZw0KDQo=
