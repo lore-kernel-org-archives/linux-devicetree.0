@@ -1,70 +1,60 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [Patch v3 0/5] Introduce keystone reset driver
-Date: Mon, 19 May 2014 11:07:24 -0400
-Message-ID: <537A1E2C.8040102@ti.com>
-References: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v3 0/4] ARM: dts: enable display for peach-pit and snow
+ boards
+Date: Tue, 20 May 2014 00:40:40 +0900
+Message-ID: <537A25F8.4040604@samsung.com>
+References: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: dbaryshkov@gmail.com, dwmw2@infradead.org, ijc+devicetree@hellion.org.uk, arnd@arndb.de
-Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, inki.dae@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+On 05/09/14 19:09, Rahul Sharma wrote:
+> From: Rahul Sharma<Rahul.Sharma@samsung.com>
 
+Probably, should be "Rahul Sharma <rahul.sharma@...>"
 
-On Monday 19 May 2014 06:25 AM, Ivan Khoronzhuk wrote:
-> These patches introduce keystone reset driver.
-> 
-> The keystone SoC can be rebooted in several ways. By external reset
-> pin, by soft and by watchdogs. This driver allows software reset and reset
-> by one of the watchdogs. Also added opportunity to set soft/hard reset type.
-> 
-> Based on v3.15-rc5
-> 
-Arnd,
-Can I have have your ack/reviewed-by please since you did gave few comments
-on previous version.
+Please make sure your gitconfig has no problem.
 
-Dmitry, David W,
-Are you ok to get the drivers/power/reset/ related changes merged via arm-soc
-tree ? If not, we can split the series accordingly.
+Just note, I found same thing and fixed your email address in my tree...
 
-Am hoping to get the series merged for v3.16 so do let me know your preference
-as early as you can.
+>
+> Add nodes for fimd and dp controller for exynos5250 based snow
+> and exynos5420 based peach-pit board.
+>
+> This series is based on Kukjin Kims, for-next branch.
+>
+> V3:
+> 1) Dropped 1 patch "ARM: dts: move dp hpd line to the board file for
+>   exynos5420".
+> 2) Extra blank lines for readability.
+> 3) dp hpd gpio name change (dp_hpd ->  dp_hpd_gpio)
+>
+> V2:
+> 1) Rebase on Peach-pit dependent patches.
+>
+> It is dependent on
+> 1) Andrew Bresticker's patch for hpd gpio addition, avilable at
+> http://www.spinics.net/lists/linux-samsung-soc/msg28827.html [Patch is 'ACK'ed.]
+> 2) Arun's patch for adding peach-pit board dts file at
+> http://www.spinics.net/lists/linux-samsung-soc/msg30103.html. [Patch is 'ACK'ed.]
+>
+> Rahul Sharma (4):
+>    ARM: dts: enable fimd for exynos5250 based snow board
+>    ARM: dts: enable dp-controller for exynos5250 based snow board
+>    ARM: dts: enable fimd for exynos5420 based peach-pit board
+>    ARM: dts: enable dp-controller for exynos5420 based peach-pit board
+>
+>   arch/arm/boot/dts/exynos5250-snow.dts      |   35 ++++++++++++++++++++++++
+>   arch/arm/boot/dts/exynos5420-peach-pit.dts |   41 ++++++++++++++++++++++++++++
+>   2 files changed, 76 insertions(+)
+>
+OK, applied whole series with Jingoo's 'reviewed-by'.
 
-
-
-> v2..v3
->   Power: reset: keystone-reset: introduce keystone reset driver
-> 	- no functional changes, only sanity
->   Power: reset: add bindings for keystone reset driver
->   	- corrected WDT numeration in examples
-> 	- extended description of wdt_list property
-> 
-> v1..v2
-> 	- re basedon on v3.15-rc1 without changes
-> 
-> Ivan Khoronzhuk (5):
->   Power: reset: keystone-reset: introduce keystone reset driver
->   Power: reset: add bindings for keystone reset driver
->   ARM: keystone: remove redundant reset stuff
->   ARM: dts: keystone: update reset node to work with reset driver
->   ARM: keystone: enable reset driver support
-> 
->  .../bindings/power/reset/keystone-reset.txt        |  61 ++++++++
->  arch/arm/boot/dts/keystone.dtsi                    |   4 +-
->  arch/arm/configs/keystone_defconfig                |   3 +
->  arch/arm/mach-keystone/keystone.c                  |  35 -----
->  drivers/power/reset/Kconfig                        |   7 +
->  drivers/power/reset/Makefile                       |   1 +
->  drivers/power/reset/keystone-reset.c               | 171 +++++++++++++++++++++
->  7 files changed, 246 insertions(+), 36 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
->  create mode 100644 drivers/power/reset/keystone-reset.c
-> 
-
-Regards,
-Santosh
+Thanks,
+Kukjin
