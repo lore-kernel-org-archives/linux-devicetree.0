@@ -1,100 +1,37 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 2/9] dt: deps: dependency based device creation
-Date: Mon, 19 May 2014 10:41:11 +0200
-Message-ID: <5379C3A7.1090404@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-3-git-send-email-holler@ahsoftware.de>	<20140514140534.897F8C4153D@trevor.secretlab.ca>	<53777113.3070909@gmail.com> <20140518145922.9D59FC40D85@trevor.secretlab.ca>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 0/2] ARM: dts: AM43xx: Touchscreen support
+Date: Mon, 19 May 2014 11:46:20 +0300
+Message-ID: <5379C4DC.8050004@ti.com>
+References: <1398861805-9229-1-git-send-email-rogerq@ti.com> <20140506163943.GL18474@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140518145922.9D59FC40D85@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140506163943.GL18474@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: bcousson@baylibre.com, mugunthanvnm@ti.com, nsekhar@ti.com, balbi@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am 18.05.2014 16:59, schrieb Grant Likely:
-> Hi Tomasz,
->
-> Thanks for weighing in on this. Thoughts and comments below.
->
-> On Sat, 17 May 2014 16:24:19 +0200, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+Hi Tony,
 
-> registration order. Alexander had to hook into the driver registration
-> patch to get the optimal probe order. For device order to be effective,
+On 05/06/2014 07:39 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [140430 05:43]:
+>> Hi Benoit & Tony,
+>>
+>> These patches add I2C touch screen support for am43x-epos-evm
+>> and am437x-gp-evm.
+>>
+>> Relevant driver side changes are here.
+>> http://thread.gmane.org/gmane.linux.kernel.input/35803
+>>
+>> Please queue this for -next (3.16). Thanks.
+> 
+> Applying both into omap-for-v3.16/dt thanks.
 
-I had to hook into the driver registration to get information about the 
-(available) drivers. Without the hook it is currently impossible to 
-identify drivers before they start doing things.
+There has been a change in the DT bindings [1]. i.e. x-size, y-size now become touchscreen-size-x and touchscreen-size-y. I will send a v2 for this series. Please drop these patches and take the v2 instead. Thanks.
 
-To reccover, I had to solve several problems:
+cheers,
+-roger
 
-- Getting dependencies (happens almost automatically by using phandle 
-references)
-- Get them to the kernel (done by using a new property)
-- Build order (already a solved problem, think at make)
-- Identify available drivers (invented hook, "well done" is meant in 
-regard to this feature, I needed a name and found "well done" apropriate 
-because it too might stimulate driver authors to use it)
-- Check out how to handle/start/register devices and drivers (in order).
-
-I think the last one is the most unfinished and questionable part.
-
-The part to identify drivers could be done much better by linking an 
-array of struct platform_driver, but in order to use such an array, 
-drivers have to be done "well done" too (which means no action before 
-probe). So that well-done hook can be seen as an intermediate step.
-
-> Having said that, there are some things that I worry about. I worry
-> about the cost of doing dependency sorting, both in calculating the
-> dependency tree and in pushing back probe calls to the end of initcalls.
-
-Building and calculating the dependency tree just needs a few ms and I 
-think it's much faster than what is necessary afterwards, all those 
-string compares to match drivers/devices.
-
-But this string compares already do happen, and I think this part could 
-optimized a lot, when a list of drivers and their compatibility strings 
-is available. Then it's possible to build a hash or e.g. radix tree 
-which leads from the compatibility string to the available driver(s).
-
-> I worry that incorrect dependency information will cause some devices to
-> not get bound (say because the kernel things the dependency isn't met
-> when it actually is).
-
-All (not started) drivers and (unbounded) devices can still be 
-registered/bound after those which appear in the order. That would be 
-just like before.
-
-But as said, the whole handling which happens after the order was build 
-is done quick & dirty, done with missing knownledge about the device 
-model, and might contain a lot of bugs and even might need that some 
-drivers will be changed.
-
-Therefor all changes disappear when CONFIG_OF_DEPENDENCIES is disabled. 
-So tested platforms might use it (taking advantage of a deterministic 
-order in order to get rid of hardcoded stuff to fix the order) and 
-others don't have to care.
-
-So, as already said, I've posted these patches to make evaluation easy, 
-without the need to discuss just ideas but something real to play with 
-(in order to get something happen on this front, not just hardcoded 
-hacks done in individual drivers because such passes maintainers easier).
-
-I didn't cared much about form or how to split those patches into more 
-convenient parts. That is stuff where I just do it like a maintainer 
-does want it. I did them as I like them, and I don't want to end up in a 
-time wasting discussions about form, style or similiar questions.
-
-So if anyone would be comfortable to merge these patches (for evaluation 
-by others) in other form or splitted in more parts, I will just hear and do.
-
-I also don't have any objections in changes in the stuff which happens 
-after the order was build. In fact I would even like it if someone with 
-more experience with the driver model would do it. I just had to do 
-something there too, otherwise it would still have been just an idea 
-which wouldn't offer much motivation to actually look at it.
-
-Regards,
-
-Alexander Holler
+[1] - http://article.gmane.org/gmane.linux.kernel/1706454
