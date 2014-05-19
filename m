@@ -1,85 +1,309 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 3/7] mfd: add support for sun6i PRCM
- (Power/Reset/Clock Management) unit
-Date: Mon, 19 May 2014 14:32:53 +0100
-Message-ID: <20140519133253.GJ4978@lee--X1>
-References: <1399633911-7094-1-git-send-email-boris.brezillon@free-electrons.com>
- <1399633911-7094-4-git-send-email-boris.brezillon@free-electrons.com>
- <20140509135251.GY5767@lee--X1>
- <20140515151756.GX29258@lukather>
- <20140519092159.GE4978@lee--X1>
- <20140519092725.GE29466@lukather>
+From: Tero Kristo <t-kristo@ti.com>
+Subject: Re: [PATCH 1/2] ARM: DTS: omap54xx-clocks: remove the autoidle properties
+ for clock nodes
+Date: Mon, 19 May 2014 16:44:04 +0300
+Message-ID: <537A0AA4.50904@ti.com>
+References: <1398858096-32144-1-git-send-email-peter.ujfalusi@ti.com> <5360ECF5.6080801@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140519092725.GE29466@lukather>
-Sender: linux-doc-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Chen-Yu Tsai <wens@csie.org>, Philipp Zabel <p.zabel@pengutronix.de>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, Hans de Goede <hdegoede@redhat.com>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dev@linux-sunxi.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5360ECF5.6080801@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, bcousson@baylibre.com, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 04/30/2014 03:30 PM, Tero Kristo wrote:
+> On 04/30/2014 02:41 PM, Peter Ujfalusi wrote:
+>> In OMAP5 bit 8 in PRCM registers are not defined (Reserved) unlike their
+>> counterpart in OMAP4.
+>> It is better to not write to these bits.
+>
+> Yeah, looks like this bug was copied over from the legacy clock data.
+>
+> Acked-by: Tero Kristo <t-kristo@ti.com>
 
-> > > > > The PRCM (Power/Reset/Clock Management) block exposes several=
- subdevices
-> > > > > in different subsystems (clk, reset ...)
-> > > > >=20
-> > > > > Add basic support for the PRCM unit with clk (AR100, AHB0, an=
-d APB0 clks)
-> > > > > and reset controller subdevices.
-> > > > >=20
-> > > > > Other subdevices might be added later (if needed).
-> > > > >=20
-> > > > > Signed-off-by: Boris BREZILLON <boris.brezillon@free-electron=
-s.com>
-> > > > > Acked-by: Maxime Ripard <maxime.ripard@free-electrons.com>
-> > > > > ---
-> > > > >  drivers/mfd/Kconfig      |   8 +++
-> > > > >  drivers/mfd/Makefile     |   1 +
-> > > > >  drivers/mfd/sun6i-prcm.c | 134 +++++++++++++++++++++++++++++=
-++++++++++++++++++
-> > > > >  3 files changed, 143 insertions(+)
-> > > > >  create mode 100644 drivers/mfd/sun6i-prcm.c
-> > > >=20
-> > > > [...]
-> > > >=20
-> > > > > +/*
-> > > > > + * Copyright (C) 2014 Free Electrons
-> > > > > + *
-> > > > > + * License Terms: GNU General Public License v2
-> > > > > + * Author: Boris BREZILLON <boris.brezillon@free-electrons.c=
-om>
-> > > > > + *
-> > > > > + * Allwinner PRCM (Power/Reset/Clock Management) driver
-> > > > > + *
-> > > > > + */
-> > > > > +
-> > > > > +#include <linux/mfd/core.h>
-> > > > > +#include <linux/module.h>
-> > > > > +#include <linux/of.h>
-> > > >=20
-> > > > Ah, now isn't that better?
-> > > >=20
-> > > > Acked-by: Lee Jones <lee.jones@linaro.org>
-> > >=20
-> > > How do you want to merge this? Do you want me to take it through
-> > > mach-sunxi tree, or do you want to take it in your tree?
-> >=20
-> > If Boris can tell me what needs to go in with this patch (or if it
-> > can go in on its own), I will create a(n immutable) branch from whi=
-ch
-> > you can pull into your tree.
->=20
-> We don't have any runtime or compile time dependency on this, so you
-> can merge it through your tree. Unless something change, I don't have
-> to pull anything in my tree.
+Also, queued for 3.15-rc/clk-dt.
 
-When you say 'this', do you mean this patch, or this set?  If I can
-just apply this patch, that will be ideal?
+-Tero
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> ---
+>>   arch/arm/boot/dts/omap54xx-clocks.dtsi | 48
+>> ----------------------------------
+>>   1 file changed, 48 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap54xx-clocks.dtsi
+>> b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+>> index d487fdab3921..d784ff5d3904 100644
+>> --- a/arch/arm/boot/dts/omap54xx-clocks.dtsi
+>> +++ b/arch/arm/boot/dts/omap54xx-clocks.dtsi
+>> @@ -120,10 +120,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_abe_x2_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x01f0>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       abe_24m_fclk: abe_24m_fclk {
+>> @@ -164,10 +162,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_abe_x2_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x01f4>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_ck: dpll_core_ck {
+>> @@ -188,10 +184,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0150>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       c2c_fclk: c2c_fclk {
+>> @@ -215,10 +209,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0138>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_h12x2_ck: dpll_core_h12x2_ck {
+>> @@ -226,10 +218,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x013c>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_h13x2_ck: dpll_core_h13x2_ck {
+>> @@ -237,10 +227,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0140>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_h14x2_ck: dpll_core_h14x2_ck {
+>> @@ -248,10 +236,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0144>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_h22x2_ck: dpll_core_h22x2_ck {
+>> @@ -259,10 +245,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0154>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_h23x2_ck: dpll_core_h23x2_ck {
+>> @@ -270,10 +254,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0158>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_h24x2_ck: dpll_core_h24x2_ck {
+>> @@ -281,10 +263,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x015c>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_m2_ck: dpll_core_m2_ck {
+>> @@ -292,10 +272,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0130>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_core_m3x2_ck: dpll_core_m3x2_ck {
+>> @@ -303,10 +281,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_core_x2_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0134>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       iva_dpll_hs_clk_div: iva_dpll_hs_clk_div {
+>> @@ -335,10 +311,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_iva_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x01b8>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_iva_h12x2_ck: dpll_iva_h12x2_ck {
+>> @@ -346,10 +320,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_iva_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x01bc>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       mpu_dpll_hs_clk_div: mpu_dpll_hs_clk_div {
+>> @@ -372,10 +344,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_mpu_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0170>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       per_dpll_hs_clk_div: per_dpll_hs_clk_div {
+>> @@ -642,10 +612,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_per_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0158>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_per_h12x2_ck: dpll_per_h12x2_ck {
+>> @@ -653,10 +621,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_per_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x015c>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_per_h14x2_ck: dpll_per_h14x2_ck {
+>> @@ -664,10 +630,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_per_x2_ck>;
+>>           ti,max-div = <63>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0164>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_per_m2_ck: dpll_per_m2_ck {
+>> @@ -675,10 +639,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_per_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0150>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_per_m2x2_ck: dpll_per_m2x2_ck {
+>> @@ -686,10 +648,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_per_x2_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0150>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_per_m3x2_ck: dpll_per_m3x2_ck {
+>> @@ -697,10 +657,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_per_x2_ck>;
+>>           ti,max-div = <31>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0154>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_unipro1_ck: dpll_unipro1_ck {
+>> @@ -723,10 +681,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_unipro1_ck>;
+>>           ti,max-div = <127>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0210>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_unipro2_ck: dpll_unipro2_ck {
+>> @@ -749,10 +705,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_unipro2_ck>;
+>>           ti,max-div = <127>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x01d0>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       dpll_usb_ck: dpll_usb_ck {
+>> @@ -775,10 +729,8 @@
+>>           compatible = "ti,divider-clock";
+>>           clocks = <&dpll_usb_ck>;
+>>           ti,max-div = <127>;
+>> -        ti,autoidle-shift = <8>;
+>>           reg = <0x0190>;
+>>           ti,index-starts-at-one;
+>> -        ti,invert-autoidle-bit;
+>>       };
+>>
+>>       func_128m_clk: func_128m_clk {
+>>
+>
