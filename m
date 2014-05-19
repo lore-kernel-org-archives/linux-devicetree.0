@@ -1,198 +1,207 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] [media] rc: add sunxi-ir driver
-Date: Mon, 19 May 2014 10:17:42 +0200
-Message-ID: <20140519081742.GC29466@lukather>
-References: <1400104602-16431-1-git-send-email-bay@hackerdom.ru>
- <1400104602-16431-3-git-send-email-bay@hackerdom.ru>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v6 4/7] Input: pixcir_i2c_ts: Use Type-B Multi-Touch protocol
+Date: Mon, 19 May 2014 11:24:46 +0300
+Message-ID: <5379BFCE.9050107@ti.com>
+References: <1399374372-29123-1-git-send-email-rogerq@ti.com> <1399374372-29123-5-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FkmkrVfFsRoUs1wW"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCH642NQKGQEXAQCH6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400104602-16431-3-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399374372-29123-5-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, dmurphy-l0cyMroinI0@public.gmane.org, mugunthanvnm-l0cyMroinI0@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
 
---FkmkrVfFsRoUs1wW
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Switch to using the Type-B Multi-Touch protocol.
 
-Hi,
+Reviewed-by: Henrik Rydberg <rydberg-Hk7bIW8heu4wFerOooGFRg@public.gmane.org>
+Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+---
+ drivers/input/touchscreen/pixcir_i2c_ts.c | 125 ++++++++++++++++++++++--------
+ 1 file changed, 94 insertions(+), 31 deletions(-)
 
-I missed a few things in my first review.
+diff --git a/drivers/input/touchscreen/pixcir_i2c_ts.c b/drivers/input/touchscreen/pixcir_i2c_ts.c
+index 8a7da61..627d2f5 100644
+--- a/drivers/input/touchscreen/pixcir_i2c_ts.c
++++ b/drivers/input/touchscreen/pixcir_i2c_ts.c
+@@ -23,9 +23,12 @@
+ #include <linux/slab.h>
+ #include <linux/i2c.h>
+ #include <linux/input.h>
++#include <linux/input/mt.h>
+ #include <linux/input/pixcir_ts.h>
+ #include <linux/gpio.h>
+ 
++#define PIXCIR_MAX_SLOTS       2
++
+ struct pixcir_i2c_ts_data {
+ 	struct i2c_client *client;
+ 	struct input_dev *input;
+@@ -33,12 +36,25 @@ struct pixcir_i2c_ts_data {
+ 	bool running;
+ };
+ 
+-static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
++struct pixcir_touch {
++	int x;
++	int y;
++};
++
++struct pixcir_report_data {
++	int num_touches;
++	struct pixcir_touch touches[PIXCIR_MAX_SLOTS];
++};
++
++static void pixcir_ts_parse(struct pixcir_i2c_ts_data *tsdata,
++			    struct pixcir_report_data *report)
+ {
+-	struct pixcir_i2c_ts_data *tsdata = data;
+ 	u8 rdbuf[10], wrbuf[1] = { 0 };
++	u8 *bufptr;
+ 	u8 touch;
+-	int ret;
++	int ret, i;
++
++	memset(report, 0, sizeof(struct pixcir_report_data));
+ 
+ 	ret = i2c_master_send(tsdata->client, wrbuf, sizeof(wrbuf));
+ 	if (ret != sizeof(wrbuf)) {
+@@ -56,45 +72,85 @@ static void pixcir_ts_poscheck(struct pixcir_i2c_ts_data *data)
+ 		return;
+ 	}
+ 
+-	touch = rdbuf[0];
+-	if (touch) {
+-		u16 posx1 = (rdbuf[3] << 8) | rdbuf[2];
+-		u16 posy1 = (rdbuf[5] << 8) | rdbuf[4];
+-		u16 posx2 = (rdbuf[7] << 8) | rdbuf[6];
+-		u16 posy2 = (rdbuf[9] << 8) | rdbuf[8];
+-
+-		input_report_key(tsdata->input, BTN_TOUCH, 1);
+-		input_report_abs(tsdata->input, ABS_X, posx1);
+-		input_report_abs(tsdata->input, ABS_Y, posy1);
+-
+-		input_report_abs(tsdata->input, ABS_MT_POSITION_X, posx1);
+-		input_report_abs(tsdata->input, ABS_MT_POSITION_Y, posy1);
+-		input_mt_sync(tsdata->input);
+-
+-		if (touch == 2) {
+-			input_report_abs(tsdata->input,
+-					 ABS_MT_POSITION_X, posx2);
+-			input_report_abs(tsdata->input,
+-					 ABS_MT_POSITION_Y, posy2);
+-			input_mt_sync(tsdata->input);
+-		}
+-	} else {
+-		input_report_key(tsdata->input, BTN_TOUCH, 0);
++	touch = rdbuf[0] & 0x7;
++	if (touch > PIXCIR_MAX_SLOTS)
++		touch = PIXCIR_MAX_SLOTS;
++
++	report->num_touches = touch;
++	bufptr = &rdbuf[2];
++
++	for (i = 0; i < touch; i++) {
++		report->touches[i].x = (bufptr[1] << 8) | bufptr[0];
++		report->touches[i].y = (bufptr[3] << 8) | bufptr[2];
++
++		bufptr = bufptr + 4;
+ 	}
++}
++
++static void pixcir_ts_report(struct pixcir_i2c_ts_data *ts,
++			     struct pixcir_report_data *report)
++{
++	struct input_mt_pos pos[PIXCIR_MAX_SLOTS];
++	int slots[PIXCIR_MAX_SLOTS];
++	struct pixcir_touch *touch;
++	int n, i, slot;
++	struct device *dev = &ts->client->dev;
+ 
+-	input_sync(tsdata->input);
++	n = report->num_touches;
++	if (n > PIXCIR_MAX_SLOTS)
++		n = PIXCIR_MAX_SLOTS;
++
++	for (i = 0; i < n; i++) {
++		touch = &report->touches[i];
++		pos[i].x = touch->x;
++		pos[i].y = touch->y;
++	}
++
++	input_mt_assign_slots(ts->input, slots, pos, n);
++
++	for (i = 0; i < n; i++) {
++		touch = &report->touches[i];
++		slot = slots[i];
++
++		input_mt_slot(ts->input, slot);
++		input_mt_report_slot_state(ts->input,
++					   MT_TOOL_FINGER, true);
++
++		input_event(ts->input, EV_ABS, ABS_MT_POSITION_X, touch->x);
++		input_event(ts->input, EV_ABS, ABS_MT_POSITION_Y, touch->y);
++
++		dev_dbg(dev, "%d: slot %d, x %d, y %d\n",
++			i, slot, touch->x, touch->y);
++	}
++
++	input_mt_sync_frame(ts->input);
++	input_sync(ts->input);
+ }
+ 
+ static irqreturn_t pixcir_ts_isr(int irq, void *dev_id)
+ {
+ 	struct pixcir_i2c_ts_data *tsdata = dev_id;
+ 	const struct pixcir_ts_platform_data *pdata = tsdata->chip;
++	struct pixcir_report_data report;
+ 
+ 	while (tsdata->running) {
+-		pixcir_ts_poscheck(tsdata);
+-
+-		if (gpio_get_value(pdata->gpio_attb))
++		/* parse packet */
++		pixcir_ts_parse(tsdata, &report);
++
++		/* report it */
++		pixcir_ts_report(tsdata, &report);
++
++		if (gpio_get_value(pdata->gpio_attb)) {
++			if (report.num_touches) {
++				/*
++				 * Last report with no finger up?
++				 * Do it now then.
++				 */
++				input_mt_sync_frame(tsdata->input);
++				input_sync(tsdata->input);
++			}
+ 			break;
++		}
+ 
+ 		msleep(20);
+ 	}
+@@ -333,6 +389,13 @@ static int pixcir_i2c_ts_probe(struct i2c_client *client,
+ 	input_set_abs_params(input, ABS_MT_POSITION_X, 0, pdata->x_max, 0, 0);
+ 	input_set_abs_params(input, ABS_MT_POSITION_Y, 0, pdata->y_max, 0, 0);
+ 
++	error = input_mt_init_slots(input, PIXCIR_MAX_SLOTS,
++				    INPUT_MT_DIRECT | INPUT_MT_DROP_UNUSED);
++	if (error) {
++		dev_err(dev, "Error initializing Multi-Touch slots\n");
++		return error;
++	}
++
+ 	input_set_drvdata(input, tsdata);
+ 
+ 	error = devm_gpio_request_one(dev, pdata->gpio_attb,
+-- 
+1.8.3.2
 
-On Thu, May 15, 2014 at 03:56:41AM +0600, Alexander Bersenev wrote:
-> This patch adds driver for sunxi IR controller.
-> It is based on Alexsey Shestacov's work based on the original driver
-> supplied by Allwinner.
->=20
-> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
-> ---
->  drivers/media/rc/Kconfig     |  10 ++
->  drivers/media/rc/Makefile    |   1 +
->  drivers/media/rc/sunxi-cir.c | 334 +++++++++++++++++++++++++++++++++++++=
-++++++
->  3 files changed, 345 insertions(+)
->  create mode 100644 drivers/media/rc/sunxi-cir.c
->=20
-> diff --git a/drivers/media/rc/Kconfig b/drivers/media/rc/Kconfig
-> index 8fbd377..9427fad 100644
-> --- a/drivers/media/rc/Kconfig
-> +++ b/drivers/media/rc/Kconfig
-> @@ -343,4 +343,14 @@ config RC_ST
-> =20
->  	 If you're not sure, select N here.
-> =20
-> +config IR_SUNXI
-> +    tristate "SUNXI IR remote control"
-> +    depends on RC_CORE
-> +    depends on ARCH_SUNXI
-> +    ---help---
-> +      Say Y if you want to use sunXi internal IR Controller
-> +
-> +      To compile this driver as a module, choose M here: the module will
-> +      be called sunxi-ir.
-> +
->  endif #RC_DEVICES
-> diff --git a/drivers/media/rc/Makefile b/drivers/media/rc/Makefile
-> index f8b54ff..9ee9ee7 100644
-> --- a/drivers/media/rc/Makefile
-> +++ b/drivers/media/rc/Makefile
-> @@ -32,4 +32,5 @@ obj-$(CONFIG_IR_GPIO_CIR) +=3D gpio-ir-recv.o
->  obj-$(CONFIG_IR_IGUANA) +=3D iguanair.o
->  obj-$(CONFIG_IR_TTUSBIR) +=3D ttusbir.o
->  obj-$(CONFIG_RC_ST) +=3D st_rc.o
-> +obj-$(CONFIG_IR_SUNXI) +=3D sunxi-cir.o
->  obj-$(CONFIG_IR_IMG) +=3D img-ir/
-> diff --git a/drivers/media/rc/sunxi-cir.c b/drivers/media/rc/sunxi-cir.c
-> new file mode 100644
-> index 0000000..25eb175
-> --- /dev/null
-> +++ b/drivers/media/rc/sunxi-cir.c
-> @@ -0,0 +1,334 @@
-> +/*
-> + * Driver for Allwinner sunXi IR controller
-> + *
-> + * Copyright (C) 2014 Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
-> + * Copyright (C) 2014 Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-> + *
-> + * Based on sun5i-ir.c:
-> + * Copyright (C) 2007-2012 Daniel Wang
-> + * Allwinner Technology Co., Ltd. <www.allwinnertech.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/module.h>
-> +#include <linux/of_platform.h>
-> +#include <media/rc-core.h>
-> +
-> +#define SUNXI_IR_DEV "sunxi-ir"
-> +
-> +/* Registers */
-> +/* IR Control */
-> +#define SUNXI_IR_CTL_REG      0x00
-> +/* Rx Config */
-> +#define SUNXI_IR_RXCTL_REG    0x10
-> +/* Rx Data */
-> +#define SUNXI_IR_RXFIFO_REG   0x20
-> +/* Rx Interrupt Enable */
-> +#define SUNXI_IR_RXINT_REG    0x2C
-> +/* Rx Interrupt Status */
-> +#define SUNXI_IR_RXSTA_REG    0x30
-> +/* IR Sample Config */
-> +#define SUNXI_IR_CIR_REG      0x34
-> +
-> +/* Global Enable for IR_CTL Register */
-> +#define REG_CTL_GEN           BIT(0)
-> +/* RX block enable for IR_CTL Register */
-> +#define REG_CTL_RXEN          BIT(1)
-> +/* CIR mode for IR_CTL Register */
-> +#define REG_CTL_MD            (BIT(4)|BIT(5))
 
-I usually prefer to have the bits definition declared just below the
-defininition of the register itself, something like:
-
-#define SUNXI_CTRL_REG		0x00
-#define SUNXI_CTRL_EN			BIT(0)
-#define SUNXI_CTRL_RXEN			BIT(1)
-
-etc...
-
-It's easier to read and avoids the comments to say in which register
-each bit belongs.
-
-> +/* IR_RXCTL_REG Register Receiver Pulse Polarity Invert flag */
-> +#define REG_RXCTL_RPPI        BIT(2)
-> +
-> +/* IR_RXINT_REG Register fields */
-> +#define REG_RXINT_ROI_EN      BIT(0) /* Rx FIFO Overflow */
-> +#define REG_RXINT_RPEI_EN     BIT(1) /* Rx Packet End */
-> +#define REG_RXINT_RAI_EN      BIT(4) /* Rx FIFO Data Available */
-> +/* Rx FIFO available byte level */
-> +#define REG_RXINT_RAL__MASK   (BIT(8)|BIT(9)|BIT(10)|BIT(11))
-> +#define REG_RXINT_RAL__SHIFT  8
-> +static inline uint32_t REG_RXINT_RAL(uint16_t val)
-> +{
-> +	return (val << REG_RXINT_RAL__SHIFT) & REG_RXINT_RAL__MASK;
-> +}
-
-This should be turned either in a macro if you want to keep the upper
-case name, or have a lower case name if you want to keep it as a
-function.
-
-In both cases, you don't want your function to be declared in the
-middle of your defines.
-
-Thanks,
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---FkmkrVfFsRoUs1wW
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTeb4mAAoJEBx+YmzsjxAgVq8P/3T4CdZJsE0akcQeUP/5Wh1P
-M9nL2mNyBAZHC8VDFVJHFyGBATwspRzR0MRvp1t1hZz61D+0ErcUoQfgfrysjcVK
-XqQKFMG99tl24jA1WjioiHC7QesudKuJ6l1WGxHQcfJTfSSiAJSw4lHWImorDbo6
-UpnTUF4LA1DiWctrUSaOH2O6jG2VHEJT59KpG84ToBaB3XE52IBShPEEsqUdLGyz
-Z+B0mFYe8m+pB/1UH23+4LEHMoVsysGABfy3/J6EPyvhRYITJqcxbPnfeS5qg854
-jubQAEB2lmHEirywkRxwsvhfeXZXloIlCeFB/jY/3D5Za2y5rhQ/Ovt+ImYssG+z
-eY6uOfDrfYHqNNdX0gpb3O68eckkvm4GwRl5KkKgy5+23sBR0c4HqLZVzUJL0chB
-XV13QgGK1IMASURDvgOSPXZCsc2NWIKOpUosAVz7sYx/4NcXmAY2gHKIlKanh0QQ
-qTKpsvLb1LUMewAknKxu/7euGNxcqF+q6GFB95iL8dPCa0l0Z5z6Ah9LJov4CbsW
-pQ+2qZs2gttupwN88Udej7FvLMdgjdL1ThtUKXldZMIEmqDIz0Ps2W/JAfgwSjtK
-IXuM6SukCees+BtWqiyqqYArdXxJxPS2j0Ev1xHmBlDcem8tBu9FGiC4J1rhlWb5
-zUVedwFRQZHj1cDMmKRb
-=tPhT
------END PGP SIGNATURE-----
-
---FkmkrVfFsRoUs1wW--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
