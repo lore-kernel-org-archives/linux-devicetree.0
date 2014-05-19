@@ -1,7 +1,7 @@
 From: Xiubo Li <Li.Xiubo@freescale.com>
-Subject: [PATCHv4 2/3] ARM: dts: vf610: Add Freescale FlexTimer Module timer node.
-Date: Mon, 19 May 2014 17:36:07 +0800
-Message-ID: <1400492168-12813-3-git-send-email-Li.Xiubo@freescale.com>
+Subject: [PATCHv4 1/3] clocksource: ftm: Add FlexTimer Module (FTM) Timer devicetree Documentation
+Date: Mon, 19 May 2014 17:36:06 +0800
+Message-ID: <1400492168-12813-2-git-send-email-Li.Xiubo@freescale.com>
 References: <1400492168-12813-1-git-send-email-Li.Xiubo@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,36 +12,53 @@ To: daniel.lezcano@linaro.org, tglx@linutronix.de, shawn.guo@linaro.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Xiubo Li <Li.Xiubo@freescale.com>, Jingchang Lu <b35083@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
+The FTM binding could be used on Vybrid and LS1+, add a binding
+document for it.
+
 Signed-off-by: Xiubo Li <Li.Xiubo@freescale.com>
 Cc: Shawn Guo <shawn.guo@linaro.org>
 Cc: Jingchang Lu <b35083@freescale.com>
 ---
- arch/arm/boot/dts/vf610.dtsi | 13 +++++++++++++
- 1 file changed, 13 insertions(+)
+ .../devicetree/bindings/timer/fsl,ftm-timer.txt    | 31 ++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
 
-diff --git a/arch/arm/boot/dts/vf610.dtsi b/arch/arm/boot/dts/vf610.dtsi
-index 107e2c0..6ab65fa 100644
---- a/arch/arm/boot/dts/vf610.dtsi
-+++ b/arch/arm/boot/dts/vf610.dtsi
-@@ -281,6 +281,19 @@
- 				status = "disabled";
- 			};
- 
-+			ftm: ftm@400b8000 {
-+				compatible = "fsl,ftm-timer";
-+				reg = <0x400b8000 0x1000 0x400b9000 0x1000>;
-+				interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>;
-+				clock-names = "ftm-evt", "ftm-src",
-+					"ftm-evt-counter-en", "ftm-src-counter-en";
-+				clocks = <&clks VF610_CLK_FTM2>,
-+					<&clks VF610_CLK_FTM3>,
-+					<&clks VF610_CLK_FTM2_EXT_FIX_EN>,
-+					<&clks VF610_CLK_FTM3_EXT_FIX_EN>;
-+				status = "disabled";
-+			};
+diff --git a/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+new file mode 100644
+index 0000000..aa8c402
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/fsl,ftm-timer.txt
+@@ -0,0 +1,31 @@
++Freescale FlexTimer Module (FTM) Timer
 +
- 			fec0: ethernet@400d0000 {
- 				compatible = "fsl,mvf600-fec";
- 				reg = <0x400d0000 0x1000>;
++Required properties:
++
++- compatible : should be "fsl,ftm-timer"
++- reg : Specifies base physical address and size of the register sets for the
++  clock event device and clock source device.
++- interrupts : Should be the clock event device interrupt.
++- clocks : The clocks provided by the SoC to drive the timer, must contain an
++  entry for each entry in clock-names.
++- clock-names : Must include the following entries:
++  o "ftm-evt"
++  o "ftm-src"
++  o "ftm-evt-counter-en"
++  o "ftm-src-counter-en"
++- big-endian: One boolean property, the big endian mode will be in use if it is
++  present, or the little endian mode will be in use for all the device registers.
++
++Example:
++ftm: ftm@400b8000 {
++	compatible = "fsl,ftm-timer";
++	reg = <0x400b8000 0x1000 0x400b9000 0x1000>;
++	interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>;
++	clock-names = "ftm-evt", "ftm-src",
++		"ftm-evt-counter-en", "ftm-src-counter-en";
++	clocks = <&clks VF610_CLK_FTM2>,
++		<&clks VF610_CLK_FTM3>,
++		<&clks VF610_CLK_FTM2_EXT_FIX_EN>,
++		<&clks VF610_CLK_FTM3_EXT_FIX_EN>;
++	big-endian;
++};
 -- 
 1.8.4
