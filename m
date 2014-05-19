@@ -1,117 +1,147 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
-Subject: RE: [PATCH V8 0/9] PCI: Add SPEAr13xx PCie support
-Date: Mon, 19 May 2014 19:55:12 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB6619B94997E2B@EAPEX1MAIL1.st.com>
-References: <cover.1397555158.git.mohit.kumar@st.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 2/3] usb: host: xhci-plat: add support for the R-Car H2
+ and M2 xHCI controllers
+Date: Mon, 19 May 2014 13:58:48 +0200
+Message-ID: <CAMuHMdUMGc_SNLWruEF=91v0Z+w6pnEpYhb4MeU+NEk=Dfi5Xg@mail.gmail.com>
+References: <5379D805.3070002@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cover.1397555158.git.mohit.kumar-qxv4g6HH51o@public.gmane.org>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Arnd Bergmann (arnd-r2nGTMty4D4@public.gmane.org)" <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Nicholson <mark-5iakeXVP1y7by3iVrkZq2A@public.gmane.org>, "'Bjorn Helgaas' (bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org)" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5379D805.3070002@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: mathias.nyman@intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8gQXJuZCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBNb2hp
-dCBLVU1BUiBEQ0cNCj4gU2VudDogVHVlc2RheSwgQXByaWwgMTUsIDIwMTQgNToyMCBQTQ0KPiBU
-bzogc3BlYXItZGV2ZWw7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVA
-dmdlci5rZXJuZWwub3JnOw0KPiBsaW51eC1wY2lAdmdlci5rZXJuZWwub3JnOyBsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gQ2M6IE1vaGl0IEtVTUFSIERDRw0KPiBTdWJq
-ZWN0OiBbUEFUQ0ggVjggMC85XSBQQ0k6IEFkZCBTUEVBcjEzeHggUENpZSBzdXBwb3J0DQo+IA0K
-PiBQYXRjaCMgMSBhbmQgMjogSW1wcm92ZW1lbnQgYW5kIGZpeGVzIGZvciBTUEVBcjEzeHggc3Vw
-cG9ydC4NCj4gUGF0Y2gjIDMsNCBhbmQgNjogQWRkIERUIGJpbmRpbmdzIGZvciBzcGVhcjEzMTAv
-NDAtbWlwaHksIG1pc2MgYW5kIHBjaWUNCj4gbm9kZSBQYXRjaCMgNTogQWRkIHNwZWFyMTMxMC80
-MC1taXBoeSBkcml2ZXIgYW5kIHN1cHBvcnQgZm9yIHNwZWFyMTMxMC80MA0KPiBtaXBoeSB3cmFw
-cGVyLg0KPiBQYXRjaCMgNy05OiBBZGQgU1BFQXIxM3h4IFBDSWUgZHJpdmVyIGFuZCBkdCBzdXBw
-b3J0Lg0KPiANCj4gVGhlc2UgcGF0aGVzIGFyZSB0ZXN0ZWQgd2l0aCBsaW51eC0zLjE1IHRhZyBv
-ZiBhcm0tc29jIHRyZWUuDQo+IFRlc3RlZCB3aXRoIFNQRUFyMTMxMCBldmFsdWF0aW9uIGJvYXJk
-IHdpdGg6DQo+IAktIElOVEVMIFBSTyAxMDAvMTAwIEVQIGNhcmQNCj4gCS0gVVNCIHhoY2kgZ2Vu
-MiBjYXJkDQo+ICAJLSBBYm92ZSBjYXJkcyBjb25uZWN0ZWQgdGhyb3VnaCBMZUNST1kgUFRDIHN3
-aXRjaA0KPiANCj4gTW9kaWZpY2F0aW9ucyBmb3IgU0FUQSBhcmUgdGVzdGVkIHdpdGggU1BFQXIx
-MzQwLWV2YiBib2FyZA0KPiANCg0KSSB0aGluayAzLjE2IHdpbmRvd3MgaXMgYWJvdXQgdG8gY2xv
-c2UsIGFyZSB5b3UgcGxhbm5pbmcgdG8gbWVyZ2UgdGhpcyBzZXJpZXM/DQpQbHMgbGV0IG1lIGtu
-b3cgaWYgc29tZXRoaW5nIHBlbmRpbmcgb24gb3VyIHBhcnQuDQoNClJlZ2FyZHMNCk1vaGl0DQoN
-Cj4gQ2hhbmdlcyBzaW5jZSB2NzoNCj4gLSBSZWJhc2Ugb3ZlciBmb3ItbGludXMtMy4xNSB0YWcg
-b2YgYXJtLXNvYyB0cmVlIHNvIHRoYXQgY29tcGxldGUgcGF0Y2ggc2VyaWVzDQo+IGNhbiBiZSBh
-cHBsaWVkIGNsZWFubHkuDQo+IC0gSW5jb3Jwb3JhdGVkIGZldyBjb21tZW50cyBvbiBjb21tZW50
-IHN0eWxlIGFuZCBzdXBlcmZsdW91cyBjb21tZW50cw0KPiBDaGFuZ2VzIHNpbmNlIHY2Og0KPiAt
-IFNwbGl0IG1pcGh5IGRyaXZlciBmb3IgU1BFQXIxMzEwIGFuZCBTUEVBcjEzNDANCj4gLSBTb21l
-IGNsZWFudXAgYW5kIGluY29ycG9yYXRlZCBvdGhlciBtaW5vciBjb21tZW50cyBDaGFuZ2VzIHNp
-bmNlIHY1Og0KPiAtIFNwbGl0IERUIGJpbmRpbmdzIGZvciBtaXNjLCBtaXBoeS00MGxwIGFuZCBw
-Y2llIG5vZGUgaW50byBzZXBlYXJ0ZSBwYXRjaGVzDQo+IC0gTWVyZ2UgY29uZmlnIG9wdGlvbnMg
-UENJRV9TUEVBUjEzWFggYW5kIFBDSV9NU0kgaW50byBkZWZjb25maWcgcGF0Y2gNCj4gLSBJbmNv
-cnBvcmF0ZWQgb3RoZXIgbWlub3IgY29tbWVudHMNCj4gQ2hhbmdlcyBzaW5jZSB2NDoNCj4gLSBV
-c2VzIHBlciBkZXZpY2UgZnVuY3Rpb24gcG9pbnRlcnMgcGFzc2VkIGZyb20gLmRhdGEgZmllbGQg
-dG8NCj4gICB0aGUgb2ZfZGV2aWNlX2lkIGluc3RlYWQgb2Ygb2ZfZGV2aWNlX2lzX2NvbXBhdGli
-bGUuDQo+IC0gSW5jb3Jwb3JhdGVkIG90aGVyIG1pbm9yIGNvbW1lbnRzIGZyb20gdjQNCj4gDQo+
-IENoYW5nZXMgc2luY2UgdjM6DQo+IC0gUGh5IGRyaXZlciByZW5hbWVkIHRvIHBoeS1taXBoeTQw
-bHANCj4gLSBhaGNpIHBoeSBob29rIHBhdGNoIHVzZWQgYXMgc3VnZ2VzdGVkIGJ5IEFybmQNCj4g
-LSBJbmNvcnBvcmF0ZWQgb3RoZXIgbWlub3IgY29tbWVudHMgZnJvbSB2Mw0KPiANCj4gQ2hhbmdl
-cyBzaW5jZSB2MjoNCj4gLSBJbmNvcnBvcmF0ZWQgY29tbWVudHMgdG8gbW92ZSBTUEVBcjEzeHgg
-UENJZSBhbmQgU0FUQSBwaHkgc3BlY2lmaWMNCj4gcm91dGluZXMgdG8NCj4gICB0aGUgcGh5IGZy
-YW1ld29yaw0KPiAtIE1vZGlmeSBhaGNpIGRyaXZlciB0byBpbmNsdWRlIHBoeSBob29rcw0KPiAt
-IHBoeS1jb3JlIGRyaXZlciBtb2RpZmljYXRpb25zIGZvciBzdWJzeXNfaW5pdGNhbGwoKQ0KPiAN
-Cj4gQ2hhbmdlcyBzaW5jZSB2MToNCj4gLSBGZXcgcGF0Y2hlcyBvZiB0aGUgc2VyaWVzIGFyZSBh
-bHJlYWR5IGFjY2VwdGVkIGFuZCBhcHBsaWVkIHRvIG1haW5saW5lIGUuZy4NCj4gIHBjaWUgZGVz
-aWdud2FyZSBkcml2ZXIgaW1wcm92ZW1lbnRzLGZpeGVzIGZvciBJTyB0cmFuc2xhdGlvbiBidWcs
-IFBDSWUgZHcNCj4gZHJpdmVyIG1haW50YWluZXIuIFNvIGRyb3BwZWQgdGhlc2UgZnJvbSB2Mi4N
-Cj4gLSBJbmNvcnBvcmF0ZWQgY29tbWVudCB0byBtb3ZlIHRoZSBjb21tb24vcmVzZXQgUENJZSBj
-b2RlIHRvIHRoZQ0KPiBzZXBlcmF0ZSBkcml2ZXINCj4gLSBQQ0llIGFuZCBTQVRBIHNoYXJlIGNv
-bW1vbiBQSFkgY29uZmlndXJhdGlvbiByZWdpc3RlcnMsIHNvIG1vdmUgU0FUQQ0KPiBwbGF0Zm9y
-bSBjb2RlIHRvIHRoZSBzeXN0ZW0gY29uZmlnIGRyaXZlciBGb3VydGggcGF0Y2ggaXMgaW1wcm92
-ZXMgcGNpZQ0KPiBkZXNpZ253YXJlIGRyaXZlciBhbmQgZml4ZXMgdGhlIElPIHRyYW5zbGF0aW9u
-IGJ1Zy4gSU8gdHJhbnNsYXRpb24gYnVnIGZpeA0KPiBsZWFkcyB0byB0aGUgd29ya2luZyBvZiBQ
-Q0llIEVQIGRldmljZXMgY29ubmVjdGVkIHRvIFJDIHRocm91Z2ggc3dpdGNoLg0KPiANCj4gTW9o
-aXQgS3VtYXIgKDEpOg0KPiAgIFNQRUFyMTN4eDogZGVmY29uZmlnOiBVcGRhdGUNCj4gDQo+IFBy
-YXR5dXNoIEFuYW5kICg4KToNCj4gICBjbGs6IFNQRUFyMTNYWDogRml4IHBjaWUgY2xvY2sgbmFt
-ZQ0KPiAgIFNQRUFyMTNYWDogRml4IHN0YXRpYyBtYXBwaW5nIHRhYmxlDQo+ICAgcGh5OiBTUEVB
-cjEzMTAvNDAtbWlwaHk6IEFkZCBiaW5kaW5nIGluZm9ybWF0aW9uDQo+ICAgU1BFQXI6IG1pc2M6
-IEFkZCBiaW5kaW5nIGluZm9ybWF0aW9uDQo+ICAgcGh5OiBTUEVBcjEzMTAvNDAtbWlwaHk6IEFk
-ZCBwaHkgZHJpdmVyIGZvciBQQ0llIGFuZCBTQVRBDQo+ICAgU1BFQXIxM1hYOiBBZGQgYmluZGlu
-ZyBpbmZvcm1hdGlvbiBmb3IgUENJZSBjb250cm9sbGVyDQo+ICAgU1BFQXIxM1hYOiBkdHM6IEFk
-ZCBQQ0llIG5vZGUgaW5mb3JtYXRpb24NCj4gICBwY2llOiBTUEVBcjEzeHg6IEFkZCBkZXNpZ253
-YXJlIHdyYXBwZXIgc3VwcG9ydA0KPiANCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9z
-cGVhci1taXNjLnR4dCAgICAgICAgIHwgICAgOSArDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9wY2kvc3BlYXIxM3h4LXBjaWUudHh0ICAgICB8ICAgMTQgKw0KPiAgLi4uL2RldmljZXRyZWUv
-YmluZGluZ3MvcGh5L3N0LXNwZWFyMTMxMC1taXBoeS50eHQgfCAgIDEyICsNCj4gIC4uLi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3BoeS9zdC1zcGVhcjEzNDAtbWlwaHkudHh0IHwgICAxMSArDQo+ICBN
-QUlOVEFJTkVSUyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDYg
-Kw0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvc3BlYXIxMzEwLWV2Yi5kdHMgICAgICAgICAgICAgICAg
-fCAgICA0ICsNCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3NwZWFyMTMxMC5kdHNpICAgICAgICAgICAg
-ICAgICAgIHwgICA5MyArKysrKy0NCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3NwZWFyMTM0MC1ldmIu
-ZHRzICAgICAgICAgICAgICAgIHwgICAgNCArDQo+ICBhcmNoL2FybS9ib290L2R0cy9zcGVhcjEz
-NDAuZHRzaSAgICAgICAgICAgICAgICAgICB8ICAgMzAgKystDQo+ICBhcmNoL2FybS9ib290L2R0
-cy9zcGVhcjEzeHguZHRzaSAgICAgICAgICAgICAgICAgICB8ICAgIDkgKy0NCj4gIGFyY2gvYXJt
-L2NvbmZpZ3Mvc3BlYXIxM3h4X2RlZmNvbmZpZyAgICAgICAgICAgICAgIHwgICAxNiArDQo+ICBh
-cmNoL2FybS9tYWNoLXNwZWFyL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDQg
-Kw0KPiAgYXJjaC9hcm0vbWFjaC1zcGVhci9pbmNsdWRlL21hY2gvc3BlYXIuaCAgICAgICAgICAg
-fCAgICA0ICstDQo+ICBhcmNoL2FybS9tYWNoLXNwZWFyL3NwZWFyMTM0MC5jICAgICAgICAgICAg
-ICAgICAgICB8ICAxMjcgKy0tLS0tLQ0KPiAgYXJjaC9hcm0vbWFjaC1zcGVhci9zcGVhcjEzeHgu
-YyAgICAgICAgICAgICAgICAgICAgfCAgICAyICstDQo+ICBkcml2ZXJzL2Nsay9zcGVhci9zcGVh
-cjEzMTBfY2xvY2suYyAgICAgICAgICAgICAgICB8ICAgIDYgKy0NCj4gIGRyaXZlcnMvY2xrL3Nw
-ZWFyL3NwZWFyMTM0MF9jbG9jay5jICAgICAgICAgICAgICAgIHwgICAgMiArLQ0KPiAgZHJpdmVy
-cy9wY2kvaG9zdC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICA4ICsNCj4g
-IGRyaXZlcnMvcGNpL2hvc3QvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAg
-MSArDQo+ICBkcml2ZXJzL3BjaS9ob3N0L3BjaWUtc3BlYXIxM3h4LmMgICAgICAgICAgICAgICAg
-ICB8ICA0MDcgKysrKysrKysrKysrKysrKysrKysNCj4gIGRyaXZlcnMvcGh5L0tjb25maWcgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxMiArDQo+ICBkcml2ZXJzL3BoeS9NYWtl
-ZmlsZSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgIDIgKw0KPiAgZHJpdmVycy9w
-aHkvcGh5LXNwZWFyMTMxMC1taXBoeS5jICAgICAgICAgICAgICAgICAgfCAgMjc0ICsrKysrKysr
-KysrKysNCj4gIGRyaXZlcnMvcGh5L3BoeS1zcGVhcjEzNDAtbWlwaHkuYyAgICAgICAgICAgICAg
-ICAgIHwgIDMwMCArKysrKysrKysrKysrKw0KPiAgMjQgZmlsZXMgY2hhbmdlZCwgMTIxOCBpbnNl
-cnRpb25zKCspLCAxMzkgZGVsZXRpb25zKC0pICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9zcGVhci1taXNjLnR4dA0KPiAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvc3BlYXIx
-M3h4LQ0KPiBwY2llLnR4dA0KPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9waHkvc3QtDQo+IHNwZWFyMTMxMC1taXBoeS50eHQNCj4gIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3N0LQ0K
-PiBzcGVhcjEzNDAtbWlwaHkudHh0DQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9wY2kv
-aG9zdC9wY2llLXNwZWFyMTN4eC5jICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gZHJpdmVycy9waHkv
-cGh5LXNwZWFyMTMxMC1taXBoeS5jICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waHkvcGh5
-LQ0KPiBzcGVhcjEzNDAtbWlwaHkuYw0KDQo=
+Hi Shimoda-san,
+
+On Mon, May 19, 2014 at 12:08 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh@renesas.com> wrote:
+> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
+> some specific initilization related to the firmware downloading and
+> some specific registers. This patch adds the support for this special
+> configuration as an xHCI quirk executed during probe and start.
+
+Thanks for your patch!
+
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index 9247ad2..229e968 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -37,6 +37,14 @@ config USB_XHCI_MVEBU
+>           Say 'Y' to enable the support for the xHCI host controller
+>           found in Marvell Armada 375/38x ARM SOCs.
+>
+> +config USB_XHCI_RCAR
+> +       tristate "xHCI support for Renesas R-Car SoCs"
+> +       select USB_XHCI_PLATFORM
+> +       depends on ARCH_SHMOBILE || COMPILE_TEST
+> +       ---help---
+> +         Say 'Y' to enable the support for the xHCI host controller
+> +         found in Renesas R-Car ARM SoCs.
+
+Does R-Car Gen1 also have xHCI, and is it compatible?
+If not, you may want to call this driver USB_XHCI_RCAR2.
+
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 561d07e..3a2da1f 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+
+> @@ -39,6 +40,12 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
+>
+>  static int xhci_plat_start(struct usb_hcd *hcd)
+>  {
+> +       struct device_node *of_node = hcd->self.controller->of_node;
+> +
+> +       if (of_device_is_compatible(of_node, "renesas,r8a7790-xhci") ||
+> +           of_device_is_compatible(of_node, "renesas,r8a7790-xhci"))
+
+r8a7791, as Magnus already pointed out.
+
+> +               xhci_rcar_start(hcd);
+
+If CONFIG_USB_XHCI_RCAR is not defined, xhci_rcar_start() is a dummy
+function, but the of_device_is_compatible() checks will still be compiled in.
+
+Hence perhaps an #ifdef CONFIG_USB_XHCI_RCAR is warranted here,
+possibly combined with inclusion of a C-source file, like is done in
+drivers/usb/host/ohci-hcd.c? It's up to the USB maintainer to decide this,
+though.
+
+> +
+>         return xhci_run(hcd);
+>  }
+>
+> @@ -165,6 +172,15 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>                         goto unmap_registers;
+>         }
+>
+> +       if (of_device_is_compatible(pdev->dev.of_node,
+> +                                   "renesas,r8a7790-xhci") ||
+> +           of_device_is_compatible(pdev->dev.of_node,
+> +                                   "renesas,r8a7791-xhci")) {
+> +               ret = xhci_rcar_init_quirk(pdev);
+
+Same here.
+
+> +               if (ret)
+> +                       goto disable_clk;
+> +       }
+> +
+>         ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>         if (ret)
+>                 goto disable_clk;
+
+> --- /dev/null
+> +++ b/drivers/usb/host/xhci-rcar.c
+
+> +/* USB3.0 Configuraion */
+
+Configuration
+
+> +static int xhci_rcar_download_firmware(struct device *dev, void __iomem *regs)
+> +{
+> +       const struct firmware *fw;
+> +       int retval, index, j, time;
+> +       int timeout = 10000;
+> +       u32 data, val, temp;
+> +
+> +       /* request R-Car USB3.0 firmware */
+> +       retval = request_firmware(&fw, FIRMWARE_NAME, dev);
+> +       if (retval)
+> +               return retval;
+> +
+> +       /* download R-Car USB3.0 firmware */
+> +       temp = readl(regs + RCAR_USB3_DL_CTRL);
+> +       temp |= RCAR_USB3_DL_CTRL_ENABLE;
+> +       writel(temp, regs + RCAR_USB3_DL_CTRL);
+> +
+> +       for (index = 0; index < fw->size; index += 4) {
+> +               for (data = 0, j = 3; j >= 0; j--) {
+> +                       if ((j + index) >= fw->size)
+> +                               continue;
+> +                       data |= fw->data[index + j] << (8 * j);
+> +               }
+
+This is your custom get_unaligned_le32(), to avoid reading beyond the end
+of the buffer if its size is not a multiple of 4 bytes?
+Is there some way to just use get_unaligned_le32()?
+
+If you want to keep it, I would rewrite it as
+
+              for (data = 0, j = 3; j >= 0; j--) {
+                      if ((j + index) < fw->size)
+                              data |= fw->data[index + j] << (8 * j);
+              }
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torval
