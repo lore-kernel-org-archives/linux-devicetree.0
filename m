@@ -1,86 +1,145 @@
-From: Pekon Gupta <pekon@ti.com>
-Subject: [PATCH v4 4/4] mtd: nand: omap: Documentation: How to select correct ECC scheme for your device ?
-Date: Mon, 19 May 2014 13:24:42 +0530
-Message-ID: <1400486082-4345-5-git-send-email-pekon@ti.com>
-References: <1400486082-4345-1-git-send-email-pekon@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1400486082-4345-1-git-send-email-pekon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Brian Norris <computersforpeace@gmail.com>, Tony Lindgren <tony@atomide.com>
-Cc: linux-mtd <linux-mtd@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Stefan Roese <sr@denx.de>, Felipe Balbi <balbi@ti.com>, Pekon Gupta <pekon@ti.com>, devicetree@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv5 0/4] ARM: implement workaround for Cortex-A9/PL310/PCIe deadlock
+Date: Mon, 19 May 2014 10:13:50 +0200
+Message-ID: <1400487234-4501-1-git-send-email-thomas.petazzoni@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
- - Adds DT binding property for BCH16 ECC scheme
- - Adds describes on factors which determine choice of ECC scheme for particular device
+Russell, Will, Catalin,
 
-CC: devicetree@vger.kernel.org
-Signed-off-by: Pekon Gupta <pekon@ti.com>
----
- .../devicetree/bindings/mtd/gpmc-nand.txt          | 45 ++++++++++++++++++++++
- 1 file changed, 45 insertions(+)
+This patch series adresses a problem that affects the newer Marvell
+Armada 375 and 38x SOCs, based on Cortex-A9+PL310, combined with the
+Marvell PCIe hardware unit. When the hardware I/O coherency is
+enabled, the combination of Cortex-A9/PL310/Marvell PCIe hardware unit
+will quickly cause a deadlock when the PCIe bus is stressed.
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-index 5e1f31b..eb81435 100644
---- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-@@ -28,6 +28,8 @@ Optional properties:
- 		"ham1"		1-bit Hamming ecc code
- 		"bch4"		4-bit BCH ecc code
- 		"bch8"		8-bit BCH ecc code
-+		"bch16"		16-bit BCH ECC code
-+		Refer below "How to select correct ECC scheme for your device ?"
- 
-  - ti,nand-xfer-type:		A string setting the data transfer type. One of:
- 
-@@ -90,3 +92,46 @@ Example for an AM33xx board:
- 		};
- 	};
- 
-+How to select correct ECC scheme for your device ?
-+--------------------------------------------------
-+Higher ECC scheme usually means better protection against bit-flips and
-+increased system lifetime. However, selection of ECC scheme is dependent
-+on various other factors also like;
-+
-+(1) support of built in hardware engines.
-+	Some legacy OMAP SoC do not have ELM harware engine, so those SoC cannot
-+	support ecc-schemes with hardware error-correction (BCHx_HW). However
-+	such SoC can use ecc-schemes with software library for error-correction
-+	(BCHx_HW_DETECTION_SW). The error correction capability with software
-+	library remains equivalent to their hardware counter-part, but there is
-+	slight CPU penalty when too many bit-flips are detected during reads.
-+
-+(2) Device parameters like OOBSIZE.
-+	Other factor which governs the selection of ecc-scheme is oob-size.
-+	Higher ECC schemes require more OOB/Spare area to store ECC syndrome,
-+	so the device should have enough free bytes available its OOB/Spare
-+	area to accomodate ECC for entire page. In general following expression
-+	helps in determining if given device can accomodate ECC syndrome:
-+	"2 + (PAGESIZE / 512) * ECC_BYTES" >= OOBSIZE"
-+	where
-+		OOBSIZE		number of bytes in OOB/spare area
-+		PAGESIZE	number of bytes in main-area of device page
-+		ECC_BYTES	number of ECC bytes generated to protect
-+		                512 bytes of data, which is:
-+				'3' for HAM1_xx ecc schemes
-+				'7' for BCH4_xx ecc schemes
-+				'14' for BCH8_xx ecc schemes
-+				'26' for BCH16_xx ecc schemes
-+
-+	Example(a): For a device with PAGESIZE = 2048 and OOBSIZE = 64 and
-+		trying to use BCH16 (ECC_BYTES=26) ecc-scheme.
-+		Number of ECC bytes per page = (2 + (2048 / 512) * 26) = 106 B
-+		which is greater than capacity of NAND device (OOBSIZE=64)
-+		Hence, BCH16 cannot be supported on given device. But it can
-+		probably use lower ecc-schemes like BCH8.
-+
-+	Example(b): For a device with PAGESIZE = 2048 and OOBSIZE = 128 and
-+		trying to use BCH16 (ECC_BYTES=26) ecc-scheme.
-+		Number of ECC bytes per page = (2 + (2048 / 512) * 26) = 106 B
-+		which can be accomodate in the OOB/Spare area of this device
-+		(OOBSIZE=128). So this device can use BCH16 ecc-scheme.
+The workaround for this problem has been suggested by ARM, and
+consists in two things:
+
+ (1) Map the PCIe regions as strongly-ordered
+
+ (2) Disable the outer cache sync of the PL310 when hardware I/O
+     coherency is used, since it is unneeded and causes the deadlock.
+
+The following four patches address the problem in the following way:
+
+ * PATCH 1/4 adds a small API in arch/arm/mm/ioremap.c to allow
+   sub-architectures to override the memory type used for PCI I/O
+   mappings.
+
+ * PATCH 2/4 extends the l2x0 cache driver with a new property
+   "arm,io-coherent", valid for the PL310, which makes the driver
+   disable the outer cache sync operation. This patch should be routed
+   through Russell's tree.
+
+ * PATCH 3/4 actually implements the Armada 375/38x workaround, by
+   using MT_UNCACHED for PCI memory mappings, and adding the
+   "arm,io-coherent" property to the cache controller Device Tree node
+   when appropriate (i.e, when hardware I/O coherency is
+   enabled). This patch has no build dependency on the two previous
+   patches. It has already been merged by the mvebu maintainers.
+
+ * PATCH 4/4 uses the API introduced in PATCH 1/4 to map PCI I/O
+   regions as strongly ordered. It should also go through the mvebu
+   maintainers tree, but was kept separate from PATCH 3/4, since 1/
+   PATCH 3 has already been merged and 2/ PATCH 4 has a build
+   dependency on PATCH 1, which may cause a delay in merging of PATCH
+   4.
+
+Changes since v4:
+
+ - Re-introduce the patch to allow sub-architectures to override the
+   memory type used for PCI I/O mappings, since switching to
+   strongly-ordered for all platforms does not seem to be well
+   accepted/understood at this point.
+
+ - Remove the of_device_is_compatible() check for the PL310, when
+   testing for 'arm,io-coherent'. Suggested by Rob Herring. However,
+   the code tetsing 'arm,io-coherent' cannot be moved into
+   pl310_of_setup(), because this function is called *before* the
+   'outer_cache' structure is initialized.
+
+ - Add a separate patch to use the pci_ioremap_set_mem_type() API in
+   mach-mvebu/coherency.c.
+
+Changes since v3:
+
+ - Withdrawn all Acked-by tags since the changes compared to v3 are
+   quite significant.
+
+ - Instead of introducing a small mechanism to allow each
+   sub-architecture to override the memory type used for PCI I/O
+   mappings, simply make all of them mapped MT_UNCACHED instead of
+   MT_DEVICE, as suggested by Arnd Bergmann. This also has the nice
+   consequence that there is no longer a build dependency between
+   PATCH 3/3 and PATCH 1/3. Suggested by Arnd Bergmann.
+
+ - Change the name of the new property of the PL310 DT binding from
+   the too generic 'dma-coherent' to 'arm,io-coherent'. Suggested by
+   Rob Herring.
+
+ - Instead of adding a complete set of L2 cache operations in
+   cache-l2x0.c, simply nullify the outer_cache.sync operation when
+   'arm,io-coherent' is specified. Suggested by Rob Herring.
+
+ - Move the Armada 375/38x specific code from mach-mvebu/board-v7.c to
+   mach-mvebu/coherency.c, which makes more sense. Suggested by Arnd
+   Bergmann.
+
+Changes since v2:
+
+ - Added Acked-by from Catalin on "ARM: mm: allow sub-architectures to
+   override PCI I/O memory type".
+
+ - Dropped the patch fixing the of_update_property() function, since
+   we're no longer using it.
+
+ - Instead of using a different compatible string to identify PL310
+   used in an I/O coherent configuration, use a separate boolean
+   property. Suggested by Catalin.
+
+ - Rework the mach-mvebu/coherency.c to add the boolean property
+   "dma-coherent" when needed instead of updating the compatible
+   string of the cache controller.
+
+Changes since v1:
+
+ - Instead of introducing separate l2x0 initialization functions, rely
+   on a separate compatible string to identify whether we're coherent
+   or not. The compatible string *has* to be modified at runtime,
+   because Armada 375 and 38x are only I/O coherent when in SMP
+   mode. In non-SMP mode, they are not I/O coherent, so we cannot
+   change the DT to 'arm,pl310-coherent-cache'.
+
+ - Addition of the drivers/of fix to be able to use
+   of_update_property() early and fix up the PL310 compatible string,
+   as explained in the previous item.
+
+Thanks!
+
+Thomas
+
+Thomas Petazzoni (4):
+  ARM: mm: allow sub-architectures to override PCI I/O memory type
+  ARM: mm: add support for HW coherent systems in PL310
+  ARM: mvebu: implement L2/PCIe deadlock workaround
+  ARM: mvebu: use pci_ioremap_set_mem_type() to map PCI I/O as strongly
+    ordered
+
+ Documentation/devicetree/bindings/arm/l2cc.txt |  3 ++
+ arch/arm/include/asm/io.h                      |  6 ++++
+ arch/arm/mach-mvebu/coherency.c                | 40 ++++++++++++++++++++++++++
+ arch/arm/mm/cache-l2x0.c                       | 13 +++++++++
+ arch/arm/mm/ioremap.c                          |  9 +++++-
+ 5 files changed, 70 insertions(+), 1 deletion(-)
+
 -- 
-1.8.5.1.163.gd7aced9
+1.9.3
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
