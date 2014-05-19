@@ -1,107 +1,73 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [Patch v3 2/5] Power: reset: add bindings for keystone reset driver
-Date: Mon, 19 May 2014 13:25:52 +0300
-Message-ID: <1400495155-11136-3-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/4] clk: samsung: out: Add infrastructure to register
+ CLKOUT
+Date: Mon, 19 May 2014 12:44:11 +0200
+Message-ID: <5379E07B.9040507@gmail.com>
+References: <1399640410-30957-1-git-send-email-tushar.behera@linaro.org>	<1399640410-30957-2-git-send-email-tushar.behera@linaro.org>	<536DA243.6000600@samsung.com>	<53705243.1030704@linaro.org>	<CAPdUM4N=k-pPxdhPQgVHh0fb+nqkgs7StwM2Pb6C8gcjx6dw-w@mail.gmail.com>	<5374CA1C.8000207@samsung.com> <CAHbNUh03TVxbXZcT3e6618zPdu_53_y6nVjwJE7cWa6zxLMpqA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, arnd@arndb.de, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, olof@lixom.net, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHbNUh03TVxbXZcT3e6618zPdu_53_y6nVjwJE7cWa6zxLMpqA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>, Tomasz Figa <t.figa@samsung.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, sunil joshi <joshi@samsung.com>, Olof Johansson <olof@lixom.net>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-This node is intended to allow SoC reset in case of software reset
-or appropriate watchdogs.
+On 19.05.2014 05:30, Tushar Behera wrote:
+> On 15 May 2014 19:37, Tomasz Figa <t.figa@samsung.com> wrote:
+>> Hi Rahul, Tushar,
+>>
+>> On 15.05.2014 15:44, Rahul Sharma wrote:
+>>> Hi Tushar,
+>>>
+>>> Basically you are adding a new clock-type for Clkout. IMO clkout
+>>> is not a special hardware. Existing clock types can be reused to
+>>> support clkout. I see 3 major problem here:
+>>>
+>>> 1) Clkout -> (Mux + Gate). You clubbed mux and gate together, and
+>>> exposing as a single clock which is something like a composite clock.
+>>> IMO this is not a recommended way in CCF.
+>>>
+>>> 2) New Clock Type: Since clkout is just a combination of a simple
+>>> mux and gate which are already supported, it is a unnecessary
+>>> duplication.
+>>>
+>>> 3) Clkout registered along with CMU: which is not correct. Clkout is in PMU
+>>> (Separate physical IP) and should be registered as a independent Clock
+>>> provider which provides 1 mux and 1 gate clock (As if now). It should also be
+>>> well connected with main CMU.
+>>>
+>>> I understand the challenge in using regmap interface for a clock provider. But
+>>> we need to identify a clean solution. IMHO a independent clock provider with
+>>> iomap, is relatively cleaner approach till CCF is not ready with regmap based
+>>> reg access for clock registers.
+>>>
+>>> Experts!! please comment.
+>>
+>> It's quite unfortunate that Tushar has duplicated the effort to create a
+>> clkout driver, considering the fact that we did have such driver
+>> internally at SRPOL and it was quite nice and simple.
+>>
+> 
+> I had no idea that you had some solutions to this available to be posted :(
+> 
+> Now that the new series is posted, I will test that at my end and
+> update you later.
 
-The Keystone SoCs can contain up to 4 watchdog timers to reset
-SoC. Each watchdog timer event input is connected to the Reset Mux
-block. The Reset Mux block can be configured to cause reset or not.
+Again, sorry for this duplicated effort.
 
-Additionally soft or hard reset can be configured.
+The biggest problem is that we (SRPOL and Linaro) don't have a way to
+share our upstream TODO lists and say "hey, we have this working, if you
+need it, we can upstream it \o/" or "we need it too, but don't have
+resources right now to work on it :(".
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- .../bindings/power/reset/keystone-reset.txt        | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
+Maybe we should set up some wiki or any other semi-public site for this
+purpose? I need to talk with other people from my team and my manager to
+see what we can do. Other guys (other Samsung teams, Chromium folks,
+hobbyists) could also benefit from it.
 
-diff --git a/Documentation/devicetree/bindings/power/reset/keystone-reset.txt b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-new file mode 100644
-index 0000000..d1f6f00
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-@@ -0,0 +1,61 @@
-+* Device tree bindings for Texas Instruments keystone reset
-+
-+This node is intended to allow SoC reset in case of software reset
-+of selected watchdogs.
-+
-+The Keystone SoCs can contain up to 4 watchdog timers to reset
-+SoC. Each watchdog timer event input is connected to the Reset Mux
-+block. The Reset Mux block can be configured to cause reset or not.
-+
-+Additionally soft or hard reset can be configured.
-+
-+Required properties:
-+
-+- compatible:		ti,keystone-reset
-+
-+- reg:			Contains offset/length value for mux registers.
-+
-+			reg = <0x23100e4 0x10>,
-+			      <0x2620328 0x10>;
-+
-+-reg-names:		Contains two ranges "pllregs" and "muxregs".
-+			"pllregs" - PLL reset control regs: RSTYPE, RSCTRL,
-+			RSCFG, RSISO.
-+			"muxregs" - mux block registers for all watchdogs.
-+
-+Optional properties:
-+
-+- ti,soft-reset:	Boolean option indicating soft reset.
-+			By default hard reset is used.
-+
-+- ti,wdt_list:		WDT list that can cause SoC reset. It's not related
-+			to WDT driver, it's just needed to enable a SoC related
-+			reset that's triggered by one of WDTs. The list is
-+			in format: <0>, <2>; It can be in random order and
-+			begins from 0 to 3, as keystone can contain up to 4 SoC
-+			reset watchdogs and can be in random order.
-+
-+Example 1:
-+Setup keystone reset so that in case software reset or
-+WDT0 is triggered it issues hard reset for SoC.
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	reg = <0x23100e4 0x10>,
-+	      <0x2620328 0x10>;
-+	reg-names = "pllregs", "muxregs";
-+	ti,wdt_list = <0>;
-+};
-+
-+Example 2:
-+Setup keystone reset so that in case of software reset or
-+WDT0 or WDT2 is triggered it issues soft reset for SoC.
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	reg = <0x23100e4 0x10>,
-+	      <0x2620328 0x10>;
-+	reg-names = "pllregs", "muxregs";
-+	ti,wdt_list = <0>, <2>;
-+	ti,soft-reset;
-+};
--- 
-1.8.3.2
+Anyway, thanks for your understanding and testing.
+
+Best regards,
+Tomasz
