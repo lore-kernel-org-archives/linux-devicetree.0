@@ -1,128 +1,80 @@
-From: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
- 'dependencies' which contains a list of referenced phandles
-Date: Mon, 19 May 2014 19:26:28 +0200
-Message-ID: <537A3EC4.9060801@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-2-git-send-email-holler@ahsoftware.de>	<53775334.3030704@gmail.com>	<5379FAA5.10404@ahsoftware.de> <CAJgR-BhRtc1XGqk-TVOrf2y_pYS+nratkPrf+OenP4SFcyK3ng@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [Patch v3 0/5] Introduce keystone reset driver
+Date: Mon, 19 May 2014 19:47:13 +0200
+Message-ID: <5095812.b6DgWAxYzH@wuerfel>
+References: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <537A1E2C.8040102@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJgR-BhRtc1XGqk-TVOrf2y_pYS+nratkPrf+OenP4SFcyK3ng-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Loeliger <loeliger-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <537A1E2C.8040102@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dbaryshkov@gmail.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, olof@lixom.net, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, grant.likely@linaro.org, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dwmw2@infradead.org, w-kwok2@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Am 19.05.2014 17:49, schrieb Jon Loeliger:
-> [ Crap.  Sorry about the duplicate post.  Stupid HTML; didn't hit the
-> lists. -- jdl ]
->
->
->> What's still questionable about the patches for dtc is if dependencies to
->> devices and not just drivers should be included in the new property
->> dependencies too.
->
-> I don't think the DTC should have any semantic knowledge of why these
-> dependency arcs are being added to the graph.  Sure, it could be that
-> different types of arcs are added, and that the total dependency graph
-> travels multiple such arc types to obtains some valid topological sort,
-> but the DTC itself should just not care.
+On Monday 19 May 2014 11:07:24 Santosh Shilimkar wrote:
+> On Monday 19 May 2014 06:25 AM, Ivan Khoronzhuk wrote:
+> > These patches introduce keystone reset driver.
+> > 
+> > The keystone SoC can be rebooted in several ways. By external reset
+> > pin, by soft and by watchdogs. This driver allows software reset and reset
+> > by one of the watchdogs. Also added opportunity to set soft/hard reset type.
+> > 
+> > Based on v3.15-rc5
+> > 
+> Arnd,
+> Can I have have your ack/reviewed-by please since you did gave few comments
+> on previous version.
 
-I will remove those policies (which means including all dependencies). 
-As said below, I already thought it was evil premature optimization (I 
-did in order to make the graph a bit smaller and to save some bytes). 
-(No date, it isn't a paid project so I will do it whenever I feel good 
-to do so).
+Sorry for not getting back to you earlier on this topic.
 
-> After saying that, there are likely semantic checks that could be added to
-> ensure some policy about those arcs was followed.  Separate the
-> implementation from the policy.  There is already plenty of discussion
-> down that line within the DTC ongoing.
+> On 04/14/2014 09:44 PM, Arnd Bergmann wrote:
+> > On Monday 14 April 2014 20:41:20 Ivan Khoronzhuk wrote:
+> >> +Optional properties:
+> >> +
+> >> +- ti,soft-reset:       Boolean option indicating soft reset.
+> >> +                       By default hard reset is used.
+> >> +
+> >> +- ti,wdt_list:         WDT list that can cause SoC reset.
+> >> +                       The list in format: <0>, <2>;
+> >> +                       Begins from 0 to 3, as keystone can contain up
+> >> +                       to 4 SoC reset watchdogs.
+> > 
+> > This looks like your binding just describes a subset of the
+> > watchdog timer registers. If so, don't do a standalone reset
+> 
+> The registers are not a subset of watchdog hardware it's SoC specific future
+> controlled by SoC specific registers (bootregs and PLL regs).
+> 
+> For watchog IP setup, the Keystone uses the watchdog driver common with
+> other
+> SoCs -- davinci_watchdog that is not depend on other SoC settings like
+> this driver does.
+> 
+> The Keystone SoCs have separate registers to tune Keystone2 reset
+> functionality
+> by configuring Reset multiplexer &  PLL. And it tunes not only watchdog
+> usage.
+> The keystone SoC can be rebooted in several ways. By external reset pin,
+> by soft and
+> by watchdogs. This driver allows software reset or reset by one of the
+> watchdogs
+> (and other settings) independently on watchdog driver settings. This is
+> job of reset driver.
 
-Hmm, discussion about what? Those dependencies or about semantic checks?
+It sounds like you use a syscon area in the reset driver. This is not
+uncommon, but it means you should probably have a generic node for
+the SoC specific registers that contains all of them at once and
+exports them as a regmap using the drivers/mfd/syscon.c driver.
 
-Btw., if someone has a problem with the necessary time to do the 
-topological sort at boot time (needs a few ms on a single core omap with 
-600 MHz), there could be an additional option to add a new property 
-which includes the whole (already topological sorted) list. That 
-wouldn't be much effort. But currently I don't think any DT enabled 
-device is in need of having to avoid doing the topological sort itself.
-
-Regards,
-
-Alexander Holler
-
->
-> HTH,
-> jdl
->
->
-> On Mon, May 19, 2014 at 7:35 AM, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>wrote:
->
->> Am 17.05.2014 14:16, schrieb Tomasz Figa:
->>
->>
->>   References to phandles of parent or child nodes will not be added to this
->>>> property, because this information is already contained in the blob (in
->>>> the
->>>> form of the tree itself).
->>>>
->>>
->>> I wonder if we shouldn't be including them too for consistency related
->>> reasons, so we have all the necessary information in one place.
->>> References to child nodes are great recipes for cycles, though...
->>>
->>> No strong opinion, though, just an idea.
->>>
->>
->> As said, they are already in the tree itself. And they are already
->> included in the graph (these are the black edges), so they just don't
->> appear in the property dependencies.
->>
->>
->>
->>>
->>>> No dependencies to disabled nodes will be added.
->>>>
->>>>
->>> Same here. IMHO it might be wise to let the parsing entity (e.g. kernel)
->>> decide whether to ignore a dependency to disabled node or not.
->>>
->>> Otherwise, I like the simplicity of compile-time dependency list
->>> creation. Quite a nice work.
->>>
->>
->> Thanks.
->>
->> What's still questionable about the patches for dtc is if dependencies to
->> devices and not just drivers should be included in the new property
->> dependencies too. My current assumption is that all devices belonging to
->> one and the same driver don't have dependencies between each other. In
->> other words the order in which devices will be attached to one and the same
->> driver isn't important. If that assumption is correct it would be possible
->> to just attach all devices belonging to a driver after the driver was
->> loaded (also I haven't that done in my patches).
->>
->> And thinking about that again, I think I was wrong and doing so have been
->> some kind of evil premature optimization I did in order to spare a few
->> dependencies/edges. But changing this can done by removing a few lines in
->> the code for dtc (patch 1).
->>
->> Regards,
->>
->> Alexander Holler
->>
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->>
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
