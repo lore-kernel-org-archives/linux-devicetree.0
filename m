@@ -1,31 +1,103 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCHv5 4/4] ARM: mvebu: use pci_ioremap_set_mem_type() to map
- PCI I/O as strongly ordered
-Date: Mon, 19 May 2014 11:09:11 +0100
-Message-ID: <20140519100911.GF5113@arm.com>
-References: <1400487234-4501-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1400487234-4501-5-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] usb: host: xhci-plat: add support for the R-Car H2
+ and M2 xHCI controllers
+Date: Mon, 19 May 2014 19:21:04 +0900
+Message-ID: <CANqRtoQ7k8auQzrE-YA=W+9_eOZ1iT20=RKoqQxOqyofD+Jk=g@mail.gmail.com>
+References: <5379D805.3070002@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400487234-4501-5-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5379D805.3070002-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 19, 2014 at 09:13:54AM +0100, Thomas Petazzoni wrote:
-> Part of the workaround for the PCIe/SMP/PL310 deadlock on Armada
-> 375/38x is to map PCI mappings strongly ordered. Mapping PCI memory
-> regions as strongly ordered was already done thanks to the
-> arch_ioremap_caller mechanism. This patch does the same for the PCI
-> I/O regions by using the new pci_ioremap_set_mem_type() function.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Shimoda-san,
 
-Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Thanks for your patches, I did however find one typo below:
+
+On Mon, May 19, 2014 at 7:08 PM, Yoshihiro Shimoda
+<yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org> wrote:
+> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
+> some specific initilization related to the firmware downloading and
+> some specific registers. This patch adds the support for this special
+> configuration as an xHCI quirk executed during probe and start.
+>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/usb/host/Kconfig     |    8 ++
+>  drivers/usb/host/Makefile    |    3 +
+>  drivers/usb/host/xhci-plat.c |   18 +++++
+>  drivers/usb/host/xhci-rcar.c |  182 ++++++++++++++++++++++++++++++++++++++++++
+>  drivers/usb/host/xhci-rcar.h |   28 +++++++
+>  5 files changed, 239 insertions(+)
+>  create mode 100644 drivers/usb/host/xhci-rcar.c
+>  create mode 100644 drivers/usb/host/xhci-rcar.h
+>
+> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+> index 9247ad2..229e968 100644
+> --- a/drivers/usb/host/Kconfig
+> +++ b/drivers/usb/host/Kconfig
+> @@ -37,6 +37,14 @@ config USB_XHCI_MVEBU
+>           Say 'Y' to enable the support for the xHCI host controller
+>           found in Marvell Armada 375/38x ARM SOCs.
+>
+> +config USB_XHCI_RCAR
+> +       tristate "xHCI support for Renesas R-Car SoCs"
+> +       select USB_XHCI_PLATFORM
+> +       depends on ARCH_SHMOBILE || COMPILE_TEST
+> +       ---help---
+> +         Say 'Y' to enable the support for the xHCI host controller
+> +         found in Renesas R-Car ARM SoCs.
+> +
+>  endif # USB_XHCI_HCD
+>
+>  config USB_EHCI_HCD
+> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+> index 7c0886a..b59ca3c 100644
+> --- a/drivers/usb/host/Makefile
+> +++ b/drivers/usb/host/Makefile
+> @@ -22,6 +22,9 @@ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
+>  ifneq ($(CONFIG_USB_XHCI_MVEBU), )
+>         xhci-hcd-y              += xhci-mvebu.o
+>  endif
+> +ifneq ($(CONFIG_USB_XHCI_RCAR), )
+> +       xhci-hcd-y              += xhci-rcar.o
+> +endif
+>  endif
+>
+>  obj-$(CONFIG_USB_WHCI_HCD)     += whci/
+> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+> index 561d07e..3a2da1f 100644
+> --- a/drivers/usb/host/xhci-plat.c
+> +++ b/drivers/usb/host/xhci-plat.c
+> @@ -20,6 +20,7 @@
+>
+>  #include "xhci.h"
+>  #include "xhci-mvebu.h"
+> +#include "xhci-rcar.h"
+>
+>  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  {
+> @@ -39,6 +40,12 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
+>
+>  static int xhci_plat_start(struct usb_hcd *hcd)
+>  {
+> +       struct device_node *of_node = hcd->self.controller->of_node;
+> +
+> +       if (of_device_is_compatible(of_node, "renesas,r8a7790-xhci") ||
+> +           of_device_is_compatible(of_node, "renesas,r8a7790-xhci"))
+> +               xhci_rcar_start(hcd);
+> +
+
+This is most likely a typo - I believe this is supposed to be r8a7790
+and r8a7791?
+
+Cheers,
+
+/ magnus
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
