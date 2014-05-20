@@ -1,7 +1,7 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 03/11] ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
-Date: Tue, 20 May 2014 15:22:47 +0200
-Message-ID: <1400592175-13176-4-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v3 04/11] ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY fixed clocks
+Date: Tue, 20 May 2014 15:22:48 +0200
+Message-ID: <1400592175-13176-5-git-send-email-gabriel.fernandez@linaro.org>
 References: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1400592175-13176-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
@@ -10,35 +10,38 @@ To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CLK_S_ICN_REG_0 clock is no longer used.
+CLK_S_GMAC0_PHY &  CLK_S_ETH1_PH clocks are no longer used.
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stih416-clock.dtsi | 11 -----------
- 1 file changed, 11 deletions(-)
+ arch/arm/boot/dts/stih416-clock.dtsi | 14 --------------
+ 1 file changed, 14 deletions(-)
 
 diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index c4e5d42..600aeef 100644
+index 600aeef..072c587 100644
 --- a/arch/arm/boot/dts/stih416-clock.dtsi
 +++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -33,17 +33,6 @@
+@@ -33,20 +33,6 @@
  			clock-frequency = <600000000>;
  		};
  
--		/*
--		 * Bootloader initialized system infrastructure clock for
--		 * serial devices.
--		 */
--		CLK_S_ICN_REG_0: clockgenA0@4 {
+-		CLK_S_GMAC0_PHY: clockgenA1@7 {
 -			#clock-cells = <0>;
 -			compatible = "fixed-clock";
--			clock-frequency = <100000000>;
--			clock-output-names = "CLK_S_ICN_REG_0";
+-			clock-frequency = <25000000>;
+-			clock-output-names = "CLK_S_GMAC0_PHY";
 -		};
 -
- 		CLK_S_GMAC0_PHY: clockgenA1@7 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
+-		CLK_S_ETH1_PHY: clockgenA0@7 {
+-			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <25000000>;
+-			clock-output-names = "CLK_S_ETH1_PHY";
+-		};
+-
+ 		/*
+ 		 * ClockGenAs on SASG2
+ 		 */
 -- 
 1.9.1
 
