@@ -1,227 +1,330 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH v2 2/3] ARM: dts: overo: Add support for 4.3'' LCD output
-Date: Tue, 20 May 2014 14:31:08 +0200
-Message-ID: <1400589069-21572-3-git-send-email-florian.vaussard@epfl.ch>
-References: <1400589069-21572-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1400589069-21572-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v4 1/7] phy: add a driver for the Berlin SATA PHY
+Date: Tue, 20 May 2014 14:34:20 +0200
+Message-ID: <1821771.zFvTDGF2Ae@amdc1032>
+References: <1400576675-25265-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1400576675-25265-2-git-send-email-antoine.tenart@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-reply-to: <1400576675-25265-2-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
+Cc: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Chestnut43, Gallop43 and Palo43 expansion boards have a ZIF connector
-for a 4.3'' LCD. Add a common include file for this configuration, and
-use it on relevant expansion boards.
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
----
- .../boot/dts/omap3-overo-chestnut43-common.dtsi    |   1 +
- arch/arm/boot/dts/omap3-overo-common-lcd43.dtsi    | 157 +++++++++++++++++++++
- arch/arm/boot/dts/omap3-overo-gallop43-common.dtsi |   1 +
- arch/arm/boot/dts/omap3-overo-palo43-common.dtsi   |   1 +
- 4 files changed, 160 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-overo-common-lcd43.dtsi
+Hi,
 
-diff --git a/arch/arm/boot/dts/omap3-overo-chestnut43-common.dtsi b/arch/arm/boot/dts/omap3-overo-chestnut43-common.dtsi
-index 19de6ff..17b82f8 100644
---- a/arch/arm/boot/dts/omap3-overo-chestnut43-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-overo-chestnut43-common.dtsi
-@@ -11,6 +11,7 @@
-  */
- 
- #include "omap3-overo-common-peripherals.dtsi"
-+#include "omap3-overo-common-lcd43.dtsi"
- 
- #include <dt-bindings/input/input.h>
- 
-diff --git a/arch/arm/boot/dts/omap3-overo-common-lcd43.dtsi b/arch/arm/boot/dts/omap3-overo-common-lcd43.dtsi
-new file mode 100644
-index 0000000..0f80820
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-overo-common-lcd43.dtsi
-@@ -0,0 +1,157 @@
-+/*
-+ * Copyright (C) 2014 Florian Vaussard, EPFL Mobots group
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * 4.3'' LCD panel output for some Gumstix Overo boards (Gallop43, Chestnut43)
-+ */
-+
-+&omap3_pmx_core {
-+	dss_dpi_pins: pinmux_dss_dpi_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x20d4, PIN_OUTPUT | MUX_MODE0)	/* dss_pclk.dss_pclk */
-+			OMAP3_CORE1_IOPAD(0x20d6, PIN_OUTPUT | MUX_MODE0)	/* dss_hsync.dss_hsync */
-+			OMAP3_CORE1_IOPAD(0x20d8, PIN_OUTPUT | MUX_MODE0)	/* dss_vsync.dss_vsync */
-+			OMAP3_CORE1_IOPAD(0x20da, PIN_OUTPUT | MUX_MODE0)	/* dss_acbias.dss_acbias */
-+			OMAP3_CORE1_IOPAD(0x20dc, PIN_OUTPUT | MUX_MODE0)	/* dss_data0.dss_data0 */
-+			OMAP3_CORE1_IOPAD(0x20de, PIN_OUTPUT | MUX_MODE0)	/* dss_data1.dss_data1 */
-+			OMAP3_CORE1_IOPAD(0x20e0, PIN_OUTPUT | MUX_MODE0)	/* dss_data2.dss_data2 */
-+			OMAP3_CORE1_IOPAD(0x20e2, PIN_OUTPUT | MUX_MODE0)	/* dss_data3.dss_data3 */
-+			OMAP3_CORE1_IOPAD(0x20e4, PIN_OUTPUT | MUX_MODE0)	/* dss_data4.dss_data4 */
-+			OMAP3_CORE1_IOPAD(0x20e6, PIN_OUTPUT | MUX_MODE0)	/* dss_data5.dss_data5 */
-+			OMAP3_CORE1_IOPAD(0x20e8, PIN_OUTPUT | MUX_MODE0)	/* dss_data6.dss_data6 */
-+			OMAP3_CORE1_IOPAD(0x20ea, PIN_OUTPUT | MUX_MODE0)	/* dss_data7.dss_data7 */
-+			OMAP3_CORE1_IOPAD(0x20ec, PIN_OUTPUT | MUX_MODE0)	/* dss_data8.dss_data8 */
-+			OMAP3_CORE1_IOPAD(0x20ee, PIN_OUTPUT | MUX_MODE0)	/* dss_data9.dss_data9 */
-+			OMAP3_CORE1_IOPAD(0x20f0, PIN_OUTPUT | MUX_MODE0)	/* dss_data10.dss_data10 */
-+			OMAP3_CORE1_IOPAD(0x20f2, PIN_OUTPUT | MUX_MODE0)	/* dss_data11.dss_data11 */
-+			OMAP3_CORE1_IOPAD(0x20f4, PIN_OUTPUT | MUX_MODE0)	/* dss_data12.dss_data12 */
-+			OMAP3_CORE1_IOPAD(0x20f6, PIN_OUTPUT | MUX_MODE0)	/* dss_data13.dss_data13 */
-+			OMAP3_CORE1_IOPAD(0x20f8, PIN_OUTPUT | MUX_MODE0)	/* dss_data14.dss_data14 */
-+			OMAP3_CORE1_IOPAD(0x20fa, PIN_OUTPUT | MUX_MODE0)	/* dss_data15.dss_data15 */
-+			OMAP3_CORE1_IOPAD(0x20fc, PIN_OUTPUT | MUX_MODE0)	/* dss_data16.dss_data16 */
-+			OMAP3_CORE1_IOPAD(0x20fe, PIN_OUTPUT | MUX_MODE0)	/* dss_data17.dss_data17 */
-+			OMAP3_CORE1_IOPAD(0x2100, PIN_OUTPUT | MUX_MODE0)	/* dss_data18.dss_data18 */
-+			OMAP3_CORE1_IOPAD(0x2102, PIN_OUTPUT | MUX_MODE0)	/* dss_data19.dss_data19 */
-+			OMAP3_CORE1_IOPAD(0x2104, PIN_OUTPUT | MUX_MODE0)	/* dss_data20.dss_data20 */
-+			OMAP3_CORE1_IOPAD(0x2106, PIN_OUTPUT | MUX_MODE0)	/* dss_data21.dss_data21 */
-+			OMAP3_CORE1_IOPAD(0x2108, PIN_OUTPUT | MUX_MODE0)	/* dss_data22.dss_data22 */
-+			OMAP3_CORE1_IOPAD(0x210a, PIN_OUTPUT | MUX_MODE0)	/* dss_data23.dss_data23 */
-+			OMAP3_CORE1_IOPAD(0x2174, PIN_OUTPUT | MUX_MODE4)	/* uart2_cts.gpio_144 */
-+			OMAP3_CORE1_IOPAD(0x2176, PIN_OUTPUT | MUX_MODE4)	/* uart2_rts.gpio_145 */
-+		>;
-+	};
-+
-+	mcspi1_pins: pinmux_mcspi1_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x21c8, PIN_INPUT | MUX_MODE0)	/* mcspi1_clk.mcspi1_clk */
-+			OMAP3_CORE1_IOPAD(0x21ca, PIN_INPUT | MUX_MODE0)	/* mcspi1_simo.mcspi1_simo */
-+			OMAP3_CORE1_IOPAD(0x21cc, PIN_INPUT | MUX_MODE0)	/* mcspi1_somi.mcspi1_somi */
-+			OMAP3_CORE1_IOPAD(0x21ce, PIN_INPUT | MUX_MODE0)	/* mcspi1_cs0.mcspi1_cs0 */
-+		>;
-+	};
-+
-+	ads7846_pins: pinmux_ads7846_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x2138, PIN_INPUT_PULLDOWN | MUX_MODE4)	/* csi2_dx1.gpio_114 */
-+		>;
-+	};
-+};
-+
-+/* Needed to power the DPI pins */
-+&vpll2 {
-+	regulator-always-on;
-+};
-+
-+&dss {
-+	status = "ok";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dss_dpi_pins>;
-+
-+	port {
-+		dpi_out: endpoint {
-+			remote-endpoint = <&lcd_in>;
-+			data-lines = <24>;
-+		};
-+	};
-+};
-+
-+/ {
-+	aliases {
-+		display0 = &lcd0;
-+	};
-+
-+	lcd0: display@0 {
-+		compatible = "samsung,lte430wq-f0c", "panel-dpi";
-+		label = "lcd";
-+
-+		gpios = <&gpio5 16 GPIO_ACTIVE_HIGH		/* gpio_144: enable */
-+			 &gpio5 17 GPIO_ACTIVE_HIGH>;		/* gpio_145: brightness */
-+
-+		port {
-+			lcd_in: endpoint {
-+				remote-endpoint = <&dpi_out>;
-+			};
-+		};
-+
-+		panel-timing {
-+			clock-frequency = <9200000>;
-+			hactive = <480>;
-+			vactive = <272>;
-+			hfront-porch = <8>;
-+			hback-porch = <4>;
-+			hsync-len = <41>;
-+			vback-porch = <2>;
-+			vfront-porch = <4>;
-+			vsync-len = <10>;
-+
-+			hsync-active = <0>;
-+			vsync-active = <0>;
-+			de-active = <1>;
-+			pixelclk-active = <1>;
-+		};
-+	};
-+
-+	ads7846reg: ads7846-reg {
-+		compatible = "regulator-fixed";
-+		regulator-name = "ads7846-reg";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+	};
-+};
-+
-+&mcspi1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcspi1_pins>;
-+
-+	/* touch controller */
-+	ads7846@0 {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ads7846_pins>;
-+
-+		compatible = "ti,ads7846";
-+		vcc-supply = <&ads7846reg>;
-+
-+		reg = <0>;				/* CS0 */
-+		spi-max-frequency = <1500000>;
-+
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <18 0>;			/* gpio_114 */
-+		pendown-gpio = <&gpio4 18 0>;
-+
-+		ti,x-min = /bits/ 16 <0x0>;
-+		ti,x-max = /bits/ 16 <0x0fff>;
-+		ti,y-min = /bits/ 16 <0x0>;
-+		ti,y-max = /bits/ 16 <0x0fff>;
-+		ti,x-plate-ohms = /bits/ 16 <180>;
-+		ti,pressure-max = /bits/ 16 <255>;
-+
-+		linux,wakeup;
-+	};
-+};
-+
-diff --git a/arch/arm/boot/dts/omap3-overo-gallop43-common.dtsi b/arch/arm/boot/dts/omap3-overo-gallop43-common.dtsi
-index 5e848c2..49d2254 100644
---- a/arch/arm/boot/dts/omap3-overo-gallop43-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-overo-gallop43-common.dtsi
-@@ -11,6 +11,7 @@
-  */
- 
- #include "omap3-overo-common-peripherals.dtsi"
-+#include "omap3-overo-common-lcd43.dtsi"
- 
- #include <dt-bindings/input/input.h>
- 
-diff --git a/arch/arm/boot/dts/omap3-overo-palo43-common.dtsi b/arch/arm/boot/dts/omap3-overo-palo43-common.dtsi
-index abea232..087aedf 100644
---- a/arch/arm/boot/dts/omap3-overo-palo43-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-overo-palo43-common.dtsi
-@@ -11,6 +11,7 @@
-  */
- 
- #include "omap3-overo-common-peripherals.dtsi"
-+#include "omap3-overo-common-lcd43.dtsi"
- 
- #include <dt-bindings/input/input.h>
- 
--- 
-1.8.3.2
+=46ew minor issues below..
+
+On Tuesday, May 20, 2014 11:04:29 AM Antoine T=C3=A9nart wrote:
+> The Berlin SoC has a two SATA ports. Add a PHY driver to handle them.
+>=20
+> The mode selection can let us think this PHY can be configured to fit
+> other purposes. But there are reasons to think the SATA mode will be
+> the only one usable: the PHY registers are only accessible indirectly
+> through two registers in the SATA range, the PHY seems to be integrat=
+ed
+> and no information tells us the contrary. For these reasons, make the
+> driver a SATA PHY driver.
+>=20
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
+>
+> ---
+>  drivers/phy/Kconfig           |   5 +
+>  drivers/phy/Makefile          |   1 +
+>  drivers/phy/phy-berlin-sata.c | 230 ++++++++++++++++++++++++++++++++=
+++++++++++
+>  3 files changed, 236 insertions(+)
+>  create mode 100644 drivers/phy/phy-berlin-sata.c
+>=20
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 4906c27fa3bd..b31b1986fda4 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -15,6 +15,11 @@ config GENERIC_PHY
+>  	  phy users can obtain reference to the PHY. All the users of this
+>  	  framework should select this config.
+> =20
+> +config PHY_BERLIN_SATA
+> +	bool
+
+Is there any real reason why this cannot be tristate?
+
+> +	depends on ARCH_BERLIN && OF
+> +	select GENERIC_PHY
+> +
+>  config PHY_EXYNOS_MIPI_VIDEO
+>  	tristate "S5P/EXYNOS SoC series MIPI CSI-2/DSI PHY driver"
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 7728518572a4..40278706ac1b 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -3,6 +3,7 @@
+>  #
+> =20
+>  obj-$(CONFIG_GENERIC_PHY)		+=3D phy-core.o
+> +obj-$(CONFIG_PHY_BERLIN_SATA)		+=3D phy-berlin-sata.o
+>  obj-$(CONFIG_BCM_KONA_USB2_PHY)		+=3D phy-bcm-kona-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS_DP_VIDEO)	+=3D phy-exynos-dp-video.o
+>  obj-$(CONFIG_PHY_EXYNOS_MIPI_VIDEO)	+=3D phy-exynos-mipi-video.o
+> diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-s=
+ata.c
+> new file mode 100644
+> index 000000000000..597f008cae32
+> --- /dev/null
+> +++ b/drivers/phy/phy-berlin-sata.c
+> @@ -0,0 +1,230 @@
+> +/*
+> + * Marvell Berlin SATA PHY driver
+> + *
+> + * Copyright (C) 2014 Marvell Technology Group Ltd.
+> + *
+> + * Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+> + *
+> + * This file is licensed under the terms of the GNU General Public
+> + * License version 2. This program is licensed "as is" without any
+> + * warranty of any kind, whether express or implied.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/io.h>
+> +#include <linux/platform_device.h>
+> +
+> +#define HOST_VSA_ADDR		0x0
+> +#define HOST_VSA_DATA		0x4
+> +#define PORT_VSR_ADDR           0x78
+> +#define PORT_VSR_DATA           0x7c
+> +#define PORT_SCR_CTL		0x2c
+> +
+> +#define CONTROL_REGISTER	0x0
+> +#define MBUS_SIZE_CONTROL	0x4
+> +
+> +#define POWER_DOWN_PHY0			BIT(6)
+> +#define POWER_DOWN_PHY1			BIT(14)
+> +#define MBUS_WRITE_REQUEST_SIZE_128	(BIT(2) << 16)
+> +#define MBUS_READ_REQUEST_SIZE_128	(BIT(2) << 19)
+> +
+> +#define PHY_BASE                0x200
+> +
+> +/* register 0x01 */
+> +#define REF_FREF_SEL_25         BIT(0)
+> +#define PHY_MODE_SATA           (0x0 << 5)
+> +
+> +/* register 0x02 */
+> +#define USE_MAX_PLL_RATE        BIT(12)
+> +
+> +/* register 0x23 */
+> +#define DATA_BIT_WIDTH_10       (0x0 << 10)
+> +#define DATA_BIT_WIDTH_20       (0x1 << 10)
+> +#define DATA_BIT_WIDTH_40       (0x2 << 10)
+> +
+> +/* register 0x25 */
+> +#define PHY_GEN_MAX_1_5         (0x0 << 10)
+> +#define PHY_GEN_MAX_3_0         (0x1 << 10)
+> +#define PHY_GEN_MAX_6_0         (0x2 << 10)
+> +
+> +#define BERLIN_SATA_PHY_NB	2
+> +
+> +#define to_berlin_sata_phy_priv(desc)	\
+> +	container_of((desc), struct phy_berlin_priv, phys[(desc)->index])
+> +
+> +struct phy_berlin_desc {
+> +	struct phy	*phy;
+> +	u32		val;
+> +	unsigned	index;
+> +};
+> +
+> +struct phy_berlin_priv {
+> +	void __iomem		*base;
+> +	spinlock_t		lock;
+> +	struct phy_berlin_desc	phys[BERLIN_SATA_PHY_NB];
+> +};
+> +
+> +static inline void phy_berlin_sata_reg_setbits(void __iomem *ctrl_re=
+g, u32 reg,
+> +					       u32 mask, u32 val)
+> +{
+> +	u32 regval;
+> +
+> +	/* select register */
+> +	writel(PHY_BASE + reg, ctrl_reg + PORT_VSR_ADDR);
+> +
+> +	/* set bits */
+> +	regval =3D readl(ctrl_reg + PORT_VSR_DATA);
+> +	regval &=3D ~mask;
+> +	regval |=3D val;
+> +	writel(regval, ctrl_reg + PORT_VSR_DATA);
+> +}
+> +
+> +static int phy_berlin_sata_power_on(struct phy *phy)
+> +{
+> +	struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
+> +	struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc);
+> +	void __iomem *ctrl_reg =3D priv->base + 0x60 + (desc->index * 0x80)=
+;
+> +	int ret =3D 0;
+> +	u32 regval;
+> +
+> +	spin_lock(&priv->lock);
+> +
+> +	/* Power on PHY */
+> +	writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
+> +	regval =3D readl(priv->base + HOST_VSA_DATA);
+> +	regval &=3D ~(desc->val);
+> +	writel(regval, priv->base + HOST_VSA_DATA);
+> +
+> +	/* Configure MBus */
+> +	writel(MBUS_SIZE_CONTROL, priv->base + HOST_VSA_ADDR);
+> +	regval =3D readl(priv->base + HOST_VSA_DATA);
+> +	regval |=3D MBUS_WRITE_REQUEST_SIZE_128 | MBUS_READ_REQUEST_SIZE_12=
+8;
+> +	writel(regval, priv->base + HOST_VSA_DATA);
+> +
+> +	/* set PHY mode and ref freq to 25 MHz */
+> +	phy_berlin_sata_reg_setbits(ctrl_reg, 0x1, 0xff,
+> +				    REF_FREF_SEL_25 | PHY_MODE_SATA);
+> +
+> +	/* set PHY up to 6 Gbps */
+> +	phy_berlin_sata_reg_setbits(ctrl_reg, 0x25, 0xc00, PHY_GEN_MAX_6_0)=
+;
+> +
+> +	/* set 40 bits width */
+> +	phy_berlin_sata_reg_setbits(ctrl_reg, 0x23,  0xc00, DATA_BIT_WIDTH_=
+40);
+> +
+> +	/* use max pll rate */
+> +	phy_berlin_sata_reg_setbits(ctrl_reg, 0x2, 0x0, USE_MAX_PLL_RATE);
+> +
+> +	/* set the controller speed */
+> +	writel(0x31, ctrl_reg + PORT_SCR_CTL);
+> +
+> +	spin_unlock(&priv->lock);
+> +
+> +	return ret;
+> +}
+> +
+> +static int phy_berlin_sata_power_off(struct phy *phy)
+> +{
+> +	struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
+> +	struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc);
+> +	u32 regval;
+> +
+> +	spin_lock(&priv->lock);
+> +
+> +	/* Power down PHY */
+> +	writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
+> +	regval =3D readl(priv->base + HOST_VSA_DATA);
+> +	regval |=3D desc->val;
+> +	writel(regval, priv->base + HOST_VSA_DATA);
+> +
+> +	spin_unlock(&priv->lock);
+> +
+> +	return 0;
+> +}
+> +
+> +static struct phy *phy_berlin_sata_phy_xlate(struct device *dev,
+> +					     struct of_phandle_args *args)
+> +{
+> +	struct phy_berlin_priv *priv =3D dev_get_drvdata(dev);
+> +
+> +	if (WARN_ON(args->args[0] >=3D BERLIN_SATA_PHY_NB))
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	return priv->phys[args->args[0]].phy;
+> +}
+> +
+> +static struct phy_ops phy_berlin_sata_ops =3D {
+> +	.power_on	=3D phy_berlin_sata_power_on,
+> +	.power_off	=3D phy_berlin_sata_power_off,
+> +	.owner		=3D THIS_MODULE,
+> +};
+> +
+> +static struct phy_berlin_desc desc[] =3D {
+> +	{ .val =3D POWER_DOWN_PHY0 },
+> +	{ .val =3D POWER_DOWN_PHY1 },
+
+Only .val entry of struct phy_berlin_desc is initialized and needed,
+it seems that u32 vals[] should be used instead of desc[].
+
+> +	{ },
+> +};
+> +
+> +static int phy_berlin_sata_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct phy *phy;
+> +	struct phy_provider *phy_provider;
+> +	struct phy_berlin_priv *priv;
+> +	struct resource *res;
+> +	int i;
+> +
+> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base =3D devm_ioremap(dev, res->start, resource_size(res));
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+
+devm_ioremap() (contrary to devm_ioremap_resource()) returns a valid
+pointer or NULL so return value checking should be fixed.
+
+> +	dev_set_drvdata(dev, priv);
+> +	spin_lock_init(&priv->lock);
+> +
+> +	for (i =3D 0; i < BERLIN_SATA_PHY_NB; i++) {
+> +		phy =3D devm_phy_create(dev, &phy_berlin_sata_ops, NULL);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create PHY %d\n", i);
+> +			return PTR_ERR(phy);
+> +		}
+> +
+> +		priv->phys[i].phy =3D phy;
+> +		priv->phys[i].val =3D desc[i].val;
+> +		priv->phys[i].index =3D i;
+> +		phy_set_drvdata(phy, &priv->phys[i]);
+> +
+> +		/* Make sure the PHY is off */
+> +		phy_berlin_sata_power_off(phy);
+> +	}
+> +
+> +	phy_provider =3D
+> +		devm_of_phy_provider_register(dev, phy_berlin_sata_phy_xlate);
+> +	if (IS_ERR(phy_provider))
+> +		return PTR_ERR(phy_provider);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id phy_berlin_sata_of_match[] =3D {
+> +	{ .compatible =3D "marvell,berlin-sata-phy" },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver phy_berlin_sata_driver =3D {
+> +	.probe	=3D phy_berlin_sata_probe,
+> +	.driver	=3D {
+> +		.name		=3D "phy-berlin-sata",
+> +		.owner		=3D THIS_MODULE,
+> +		.of_match_table	=3D phy_berlin_sata_of_match,
+> +	},
+> +};
+> +module_platform_driver(phy_berlin_sata_driver);
+> +
+> +MODULE_DESCRIPTION("Marvell Berlin SATA PHY driver");
+> +MODULE_AUTHOR("Antoine T=C3=A9nart <antoine.tenart@free-electrons.co=
+m>");
+> +MODULE_LICENSE("GPL v2");
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
 
