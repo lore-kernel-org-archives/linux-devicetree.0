@@ -1,168 +1,63 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH v3 1/3] ARM: dts: overo: Add support for DVI output
-Date: Tue, 20 May 2014 15:58:55 +0200
-Message-ID: <1400594337-5096-2-git-send-email-florian.vaussard@epfl.ch>
-References: <1400594337-5096-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1400594337-5096-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v3 00/11] ARM: STi: Add Clock driver support STiH415 &
+ STiH416
+Date: Tue, 20 May 2014 15:59:41 +0200
+Message-ID: <537B5FCD.8040704@st.com>
+References: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Summit and Tobi expansion boards have a HDMI connector with a TFP410
-encoder. Add a common include file for this configuration, and then
-use it for Summit and Tobi.
+For the series:
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
----
- arch/arm/boot/dts/omap3-overo-common-dvi.dtsi    | 111 +++++++++++++++++++++++
- arch/arm/boot/dts/omap3-overo-summit-common.dtsi |   1 +
- arch/arm/boot/dts/omap3-overo-tobi-common.dtsi   |   1 +
- 3 files changed, 113 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-overo-common-dvi.dtsi
+Acked-by: Maxime Coquelin <maixme.coquelin@st.com>
 
-diff --git a/arch/arm/boot/dts/omap3-overo-common-dvi.dtsi b/arch/arm/boot/dts/omap3-overo-common-dvi.dtsi
-new file mode 100644
-index 0000000..802f704
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-overo-common-dvi.dtsi
-@@ -0,0 +1,111 @@
-+/*
-+ * Copyright (C) 2014 Florian Vaussard, EPFL Mobots group
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * DVI output for some Gumstix Overo boards (Tobi and Summit)
-+ */
-+
-+&omap3_pmx_core {
-+	dss_dpi_pins: pinmux_dss_dpi_pins {
-+		pinctrl-single,pins = <
-+			OMAP3_CORE1_IOPAD(0x20d4, PIN_OUTPUT | MUX_MODE0)	/* dss_pclk.dss_pclk */
-+			OMAP3_CORE1_IOPAD(0x20d6, PIN_OUTPUT | MUX_MODE0)	/* dss_hsync.dss_hsync */
-+			OMAP3_CORE1_IOPAD(0x20d8, PIN_OUTPUT | MUX_MODE0)	/* dss_vsync.dss_vsync */
-+			OMAP3_CORE1_IOPAD(0x20da, PIN_OUTPUT | MUX_MODE0)	/* dss_acbias.dss_acbias */
-+			OMAP3_CORE1_IOPAD(0x20dc, PIN_OUTPUT | MUX_MODE0)	/* dss_data0.dss_data0 */
-+			OMAP3_CORE1_IOPAD(0x20de, PIN_OUTPUT | MUX_MODE0)	/* dss_data1.dss_data1 */
-+			OMAP3_CORE1_IOPAD(0x20e0, PIN_OUTPUT | MUX_MODE0)	/* dss_data2.dss_data2 */
-+			OMAP3_CORE1_IOPAD(0x20e2, PIN_OUTPUT | MUX_MODE0)	/* dss_data3.dss_data3 */
-+			OMAP3_CORE1_IOPAD(0x20e4, PIN_OUTPUT | MUX_MODE0)	/* dss_data4.dss_data4 */
-+			OMAP3_CORE1_IOPAD(0x20e6, PIN_OUTPUT | MUX_MODE0)	/* dss_data5.dss_data5 */
-+			OMAP3_CORE1_IOPAD(0x20e8, PIN_OUTPUT | MUX_MODE0)	/* dss_data6.dss_data6 */
-+			OMAP3_CORE1_IOPAD(0x20ea, PIN_OUTPUT | MUX_MODE0)	/* dss_data7.dss_data7 */
-+			OMAP3_CORE1_IOPAD(0x20ec, PIN_OUTPUT | MUX_MODE0)	/* dss_data8.dss_data8 */
-+			OMAP3_CORE1_IOPAD(0x20ee, PIN_OUTPUT | MUX_MODE0)	/* dss_data9.dss_data9 */
-+			OMAP3_CORE1_IOPAD(0x20f0, PIN_OUTPUT | MUX_MODE0)	/* dss_data10.dss_data10 */
-+			OMAP3_CORE1_IOPAD(0x20f2, PIN_OUTPUT | MUX_MODE0)	/* dss_data11.dss_data11 */
-+			OMAP3_CORE1_IOPAD(0x20f4, PIN_OUTPUT | MUX_MODE0)	/* dss_data12.dss_data12 */
-+			OMAP3_CORE1_IOPAD(0x20f6, PIN_OUTPUT | MUX_MODE0)	/* dss_data13.dss_data13 */
-+			OMAP3_CORE1_IOPAD(0x20f8, PIN_OUTPUT | MUX_MODE0)	/* dss_data14.dss_data14 */
-+			OMAP3_CORE1_IOPAD(0x20fa, PIN_OUTPUT | MUX_MODE0)	/* dss_data15.dss_data15 */
-+			OMAP3_CORE1_IOPAD(0x20fc, PIN_OUTPUT | MUX_MODE0)	/* dss_data16.dss_data16 */
-+			OMAP3_CORE1_IOPAD(0x20fe, PIN_OUTPUT | MUX_MODE0)	/* dss_data17.dss_data17 */
-+			OMAP3_CORE1_IOPAD(0x2100, PIN_OUTPUT | MUX_MODE0)	/* dss_data18.dss_data18 */
-+			OMAP3_CORE1_IOPAD(0x2102, PIN_OUTPUT | MUX_MODE0)	/* dss_data19.dss_data19 */
-+			OMAP3_CORE1_IOPAD(0x2104, PIN_OUTPUT | MUX_MODE0)	/* dss_data20.dss_data20 */
-+			OMAP3_CORE1_IOPAD(0x2106, PIN_OUTPUT | MUX_MODE0)	/* dss_data21.dss_data21 */
-+			OMAP3_CORE1_IOPAD(0x2108, PIN_OUTPUT | MUX_MODE0)	/* dss_data22.dss_data22 */
-+			OMAP3_CORE1_IOPAD(0x210a, PIN_OUTPUT | MUX_MODE0)	/* dss_data23.dss_data23 */
-+		>;
-+	};
-+};
-+
-+/* Needed to power the DPI pins */
-+&vpll2 {
-+	regulator-always-on;
-+};
-+
-+&dss {
-+	status = "ok";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dss_dpi_pins>;
-+
-+	port {
-+		dpi_out: endpoint {
-+			remote-endpoint = <&tfp410_in>;
-+			data-lines = <24>;
-+		};
-+	};
-+};
-+
-+/ {
-+	aliases {
-+		display0 = &dvi0;
-+	};
-+
-+	tfp410: encoder@0 {
-+		compatible = "ti,tfp410";
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				tfp410_in: endpoint@0 {
-+					remote-endpoint = <&dpi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				tfp410_out: endpoint@0 {
-+					remote-endpoint = <&dvi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+
-+	dvi0: connector@0 {
-+		compatible = "dvi-connector";
-+		label = "dvi";
-+
-+		digital;
-+		ddc-i2c-bus = <&i2c3>;
-+
-+		port {
-+			dvi_connector_in: endpoint {
-+				remote-endpoint = <&tfp410_out>;
-+			};
-+		};
-+	};
-+};
-+
-diff --git a/arch/arm/boot/dts/omap3-overo-summit-common.dtsi b/arch/arm/boot/dts/omap3-overo-summit-common.dtsi
-index 999d1cd..0ac97ba 100644
---- a/arch/arm/boot/dts/omap3-overo-summit-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-overo-summit-common.dtsi
-@@ -11,6 +11,7 @@
-  */
- 
- #include "omap3-overo-common-peripherals.dtsi"
-+#include "omap3-overo-common-dvi.dtsi"
- 
- / {
- 	leds {
-diff --git a/arch/arm/boot/dts/omap3-overo-tobi-common.dtsi b/arch/arm/boot/dts/omap3-overo-tobi-common.dtsi
-index 13df50b..9e24b6a 100644
---- a/arch/arm/boot/dts/omap3-overo-tobi-common.dtsi
-+++ b/arch/arm/boot/dts/omap3-overo-tobi-common.dtsi
-@@ -11,6 +11,7 @@
-  */
- 
- #include "omap3-overo-common-peripherals.dtsi"
-+#include "omap3-overo-common-dvi.dtsi"
- 
- / {
- 	leds {
--- 
-1.8.3.2
+Thanks,
+Maxime
 
+On 05/20/2014 03:22 PM, Gabriel FERNANDEZ wrote:
+> Changes in v2:
+>   - cosmetic changes (lower case of clock nodes and names)
+>
+> Changes in v2:
+>   - move stih415-clks.h & stih416-clks.h to include/dt-bindings/clock/
+>   - add clk_ignore_unused to bootargs. Interconnect clocks are not yet
+>     managed at the init, then we have to start the kernel with
+>     clk_ignore_unused.
+>
+> The goal of this series is to add DT definition for STiH415
+> and STiH416 SoCs on B2000 and B2020 boards.
+>
+> Gabriel Fernandez (11):
+>    ARM: STi: DT: STiH41x: Rename CLK_SYSIN into clk_sysin
+>    ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
+>    ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
+>    ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+>      fixed clocks
+>    ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+>    ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
+>    ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
+>    ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
+>    ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+>      fixed clocks
+>    ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
+>    ARM: STi: DT: STiH41x Add clk_ignore_unused to bootargs
+>
+>   arch/arm/boot/dts/stih415-clock.dtsi     | 519 +++++++++++++++++++++-
+>   arch/arm/boot/dts/stih415.dtsi           |  18 +-
+>   arch/arm/boot/dts/stih416-clock.dtsi     | 735 ++++++++++++++++++++++++++++++-
+>   arch/arm/boot/dts/stih416.dtsi           |  18 +-
+>   arch/arm/boot/dts/stih41x-b2000.dtsi     |   2 +-
+>   arch/arm/boot/dts/stih41x-b2020.dtsi     |   2 +-
+>   include/dt-bindings/clock/stih415-clks.h |  15 +
+>   include/dt-bindings/clock/stih416-clks.h |  15 +
+>   8 files changed, 1268 insertions(+), 56 deletions(-)
+>   create mode 100644 include/dt-bindings/clock/stih415-clks.h
+>   create mode 100644 include/dt-bindings/clock/stih416-clks.h
+>
