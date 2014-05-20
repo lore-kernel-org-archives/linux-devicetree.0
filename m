@@ -1,76 +1,59 @@
-From: Brian Norris <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 4/9] of: mtd: add documentation for the
- ONFI NAND timing mode property
-Date: Tue, 20 May 2014 11:25:42 -0700
-Message-ID: <20140520182542.GS28907@ld-irv-0074>
-References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
- <1394647664-8258-5-git-send-email-b.brezillon.dev@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC/PATCH] of: platform: Remove unique device name enforcement
+Date: Tue, 20 May 2014 13:30:02 -0500
+Message-ID: <CAL_JsqJHhJ1ba5tOGnsNNp1DhPwnJWh8F9f2xL8b3FYj=kC1hA@mail.gmail.com>
+References: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+	<CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg@mail.gmail.com>
+	<20140520065014.493C3C412E3@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCZ6PSPVXMNBBMV452NQKGQEOG5MVKQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1394647664-8258-5-git-send-email-b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-To: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140520065014.493C3C412E3-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Guido_Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Tue, May 20, 2014 at 1:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Sun, 18 May 2014 18:11:07 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Sun, May 18, 2014 at 12:01 PM, Ezequiel Garcia
+>> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
+>> > When creating a device object for a devicetree node, the device name
+>> > is created by using the node name and the 'reg' property, to make a name
+>> > such as "a000.foo_device".
+>> >
+>> > For certain devices without an associated address, and hence no 'reg' property,
+>> > the current code attempts to make a unique name, by using a global integer.
+>> > Names look like "foo_device.1", "bar_device.2", and so on.
+>> > Examples of such devices are: gpio-keys', backlights and rotary-encoders.
+>> >
+>> > The system cannot know such devices name before hand, given they are determined
+>> > by the kernel probe order and by the nodes present in the devicetree. This can
+>> > be problematic, on systems that are tied to the device's name, e.g. when
+>> > catching hotplug events.
+>
+> The device's uevent file in sysfs contains both the ->name and
+> ->full_name values for a node. Does that help you?
+>
+> The big problem is not the structure under /sys/devices, but rather the
+> symlinks to devices that appear under /sys/bus/*/devices. If two leaf
+> nodes have the same name, then they will conflict when they get added to
+> a bus_type's array of devices.
+>
+> Another way to handle it is to only add the suffix when a conflict
+> actually occurs. That requires checking first whether or not a name will
+> conflict and ammending it only when that happens. I don't know if that
+> can be done nicely. I'll take a look.
 
-On Wed, Mar 12, 2014 at 07:07:39PM +0100, Boris BREZILLON wrote:
-> Add documentation for the ONFI NAND timing mode property.
-> 
-> Signed-off-by: Boris BREZILLON <b.brezillon.dev-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/nand.txt |    8 ++++++++
->  1 file changed, 8 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
-> index b53f92e..2046027 100644
-> --- a/Documentation/devicetree/bindings/mtd/nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
-> @@ -19,3 +19,11 @@ errors per {size} bytes".
->  The interpretation of these parameters is implementation-defined, so not all
->  implementations must support all possible combinations. However, implementations
->  are encouraged to further specify the value(s) they support.
-> +
-> +- onfi,nand-timing-mode: an integer encoding the supported ONFI timing modes of
-> +  the NAND chip. Each supported mode is represented as a bit position (i.e. :
-> +  mode 0 and 1 => (1 << 0) | (1 << 1) = 0x3).
-> +  This is only used when the chip does not support the ONFI standard.
-> +  The last bit set represent the closest mode fulfilling the NAND chip timings.
-> +  For a full description of the different timing modes see this document:
-> +  www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf
+That was my idea as well and to move to a local number so you have
+something like deviceA, deviceA.1, deviceB, deviceB.1 (maybe the
+number is always appended). Perhaps a random number instead so no one
+expects the names to be an ABI. ;)
 
-I'm not 100% convinced this property should go in the device tree. With
-most other flash properties (device size, page size, and even minimum
-ECC requirements), we try to auto-detect these parameters to some
-extent. ONFI makes it easy for some class of chips, but for others, we
-typically rely on an in-kernel device ID table or ID decoding heuristic
--- we don't require a DT description of every property of the flash. So
-what makes this property different?
+I think it should be doable.
 
-I realize that we may not include device ID entries for every flash that
-you need in the ID table (although we still are able to detect the
-important properties accurately, like page and block size). But would it
-suffice to default these flash to a lowest common timing mode, like mode
-0?
-
-If no other option works well, then I am still open to describing the
-supported timing modes in the DT.
-
-BTW, this bitfield property looks kinda strange to me. Do non-ONFI flash
-typically support multiple timing modes? And if so, how are we supposed
-to *change* modes? AFAIK, ONFI provides the only standard for
-configuring the flash's timing mode. So maybe you're really only wanting
-a "default timing mode" property that is a single integer, not a
-bitfield.
-
-Regards,
-Brian
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
