@@ -1,72 +1,62 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Tue, 20 May 2014 09:38:49 +0200
-Message-ID: <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
-	<20140514100856.5198DC4153D@trevor.secretlab.ca>
-	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
-	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
-	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
-	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
-	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4] i2c: add driver for Rockchip RK3xxx SoC I2C adapter
+Date: Tue, 20 May 2014 09:42:58 +0200
+Message-ID: <20140520074258.GC27329@lukather>
+References: <5192968.EzcUiXba22@typ>
+ <1956748.HoDAyYWJMb@typ>
+ <1547619.upPdAXDT0W@typ>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140520055026.E3A98C412DA-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1547619.upPdAXDT0W@typ>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko =?iso-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
 
-On Tue, May 20, 2014 at 7:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> Why has the overlay system been designed for plugging and unpluging whole
->> overlays?
->> That means the kernel has to remember the full stack, causing issues with
->> e.g. kexec.
->
-> Mostly so that drivers don't see any difference in the livetree data
-> structure. It also means that userspace sees a single representation of
-> the hardware at any given time.
+--7qSK/uQB79J36Y4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry, I don't follow the argument about the "single representation of the
-hardware".
+On Mon, May 19, 2014 at 11:32:55AM +0200, Max Schwarz wrote:
+> Driver for the native I2C adapter found in Rockchip RK3xxx SoCs.
+>=20
+> Configuration is only possible through devicetree. The driver is
+> interrupt driven and supports the I2C_M_IGNORE_NAK mangling bit.
+>=20
+> Signed-off-by: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
 
->> Why not allowing the addition of removal of subtrees of the full device
->> tree?
->
-> Overlays is more than just a subtree. A single overlay can make
-> manipulations of multiple subtrees that should be handled as logically
-> atomic.
+Reviewed-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Sure, it's more complicated due to the atomicity of multiple changes.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
->> This is similar to other hotpluggable subsystems (which are not necessarily
->> DT-based), like PCI Express. That way the kernel can pass a
->> DT-representation of the actual current device tree to a kexec'ed kernel.
->
-> I'm not following you argument. Hardware hotplug systems like PCIe don't
-> manipulate the firmware data. The kernel detects the new device and
-> populates the Linux device model directly. Firmware provided data (ACPI
-> or FDT) isn't involved.
+--7qSK/uQB79J36Y4o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-I mean the kernel doesn't remember the exact order in a stack, to reverse
-operations. E.g. I can add hotplug a PCIe bridge with multiple devices
-behind it, and unplug a single device later. It's still one subtree, though.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Gr{oetje,eeting}s,
+iQIcBAEBAgAGBQJTeweCAAoJEBx+YmzsjxAglZ4P/RCAiHZmM8OP60R04F+ZMvdO
+qvDPSzIpoyTmD1rdVmlBW/WyCCBQIk+i2BPidMm1YH1PNewcUQlwSDiquPgvG9sK
+n3DkPmYFTOGPYDcD2F17h0iW9E4Y9QWM2/AeqGnCqGa2XkEVIxJoqXWrc/LZs/nU
+/aGtmT+7wxsfjSiIBR+RppQ3J7jna2YKaOiJtBodxb6snaVj+Pt9NvljQsU15kA6
+JGIxRwVdtCQHHKrFVuPTJVBgx3ZRGAuUaaS8VJ/mUd4800mikPoRlyVcmYuCFEM1
+996MyS89hG3qpmdxxEZgXRXme46zK0QrSwO8K3mikOqk62KScS/IvtT0zsP+0UXf
+k0X0SFNE5+iIl2O3R451pd2tprgMdqCeUXKYoIXz7AkZR3I7XAzAlnWZedqbyAI6
+aOHzeo8cLh4765G2TY477rh09Q+DFSDfvl73Bi4r4k923oi2cbeBC52GdF6nHLtJ
+zE+NjIqTw2V1nSkOWu0kUWViZiu3uINK4J6s6WcyHoP1g1g6ac0MhpeCwelatfyy
+pON7TwfMD2PNwAcxJjVcbs0DjKxoD7yEYQDCYiADvSWqtcBKvClrlUzGM3EvLm8H
+Ux3bdXaJM1/cdX4rdgeYbVnm5xEuF52Rxylh/2P5HCa+5FPvJmVKJxCkE3i2jPxU
+fkfxowJW3LPLgNFgky03
+=dKs+
+-----END PGP SIGNATURE-----
 
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--7qSK/uQB79J36Y4o--
