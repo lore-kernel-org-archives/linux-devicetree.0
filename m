@@ -1,63 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 6/6] ARM: dts: STiH407: Add B2120 board support
-Date: Tue, 20 May 2014 08:20:48 +0100
-Message-ID: <20140520072048.GC20874@lee--X1>
-References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
- <1394614210-15698-7-git-send-email-maxime.coquelin@st.com>
- <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH net-next 5/9] fs_enet: use the new fixed PHY helpers
+Date: Mon, 19 May 2014 17:56:20 -0700
+Message-ID: <1400547384-11363-6-git-send-email-f.fainelli@gmail.com>
+References: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime COQUELIN <maxime.coquelin@st.com>
+Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
+To: netdev@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, Florian Fainelli <f.fainelli@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, davem@davemlof.net, Vitaly Bordug <vbordug@ru.mvista.com>, Kumar Gala <galak@codeaurora.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>, David S.
 List-Id: devicetree@vger.kernel.org
 
-PiA+IEIyMTIwIEhESyBpcyB0aGUgcmVmZXJlbmNlIGJvYXJkIGZvciBTVGlINDA3IFNvQy4KPiA+
-IEl0IGhhcyB0aGUgZm9sbG93aW5nIGNoYXJhY3RlcmlzdGljczoKPiA+ICAtIDFHQiBERFIzCj4g
-PiAgLSA4R0IgZU1NQyAvIFNELUNhcmQgc2xvdAo+ID4gIC0gMzJNQiBOT1IgRmxhc2gKPiA+ICAt
-IDEgeCBHYml0IEV0aGVybmV0Cj4gPiAgLSAxIHggVVNCIDMuMCBwb3J0Cj4gPiAgLSAxIHggTWlu
-aS1QQ0llCj4gPiAgLSAxIHggU0FUQQo+ID4gIC0gMSB4IEhETUkgb3V0cHV0Cj4gPiAgLSAxIHgg
-SERNSSBpbnB1dAo+ID4gIC0gMSB4IFNQRElGCj4gPgo+ID4gVGhpcyBwYXRjaCBvbmx5IGludHJv
-ZHVjZXMgYmFzaWMgZnVuY3Rpb25uYWxpdGllcywgc3VjaCBhcyBJMkMgYW5kIFVBUlQuCj4gPgo+
-ID4gQWNrZWQtYnk6IEdpdXNlcHBlIENhdmFsbGFybyA8cGVwcGUuY2F2YWxsYXJvQHN0LmNvbT4K
-PiA+IEFja2VkLWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gU2lnbmVk
-LW9mZi1ieTogR2l1c2VwcGUgQ2F2YWxsYXJvIDxwZXBwZS5jYXZhbGxhcm9Ac3QuY29tPgo+ID4g
-U2lnbmVkLW9mZi1ieTogTWF4aW1lIENvcXVlbGluIDxtYXhpbWUuY29xdWVsaW5Ac3QuY29tPgo+
-ID4gLS0tCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgfCAgMyArLQo+
-ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctYjIxMjAuZHRzIHwgNzggKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgODAgaW5zZXJ0
-aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9i
-b290L2R0cy9zdGloNDA3LWIyMTIwLmR0cwoKWy4uLl0KCj4gPiArLyB7Cj4gPiArICAgICAgIG1v
-ZGVsID0gIlNUaUg0MDcgQjIxMjAiOwo+ID4gKyAgICAgICBjb21wYXRpYmxlID0gInN0LHN0aWg0
-MDciLCAic3Qsc3RpaDQwNy1iMjEyMCI7Cj4gCj4gVGhpcyBzaG91bGQgZ28gZnJvbSBzcGVjaWZp
-YyB0byBnZW5lcmljLCBzbyB0aGUgb3JkZXIgbmVlZHMgdG8gYmUgdGhlIG90aGVyIHdheS4KCkkg
-ZGlkIGhhdmUgYSBwYXRjaC1zZXQgdGhhdCBjaGFuZ2VkIGFsbCBvZiB0aGVzZS4gIFdvbmRlciB3
-aGVyZSB0aGF0IHdlbnQhCgpbLi4uXQoKPiA+ICsgICAgICAgc29jIHsKPiA+ICsgICAgICAgICAg
-ICAgICBzYmNfc2VyaWFsMDogc2VyaWFsQDk1MzAwMDAgewo+ID4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgc3RhdHVzID0gIm9rYXkiOwo+ID4gKyAgICAgICAgICAgICAgIH07Cj4gCj4gWW91IG1p
-Z2h0IHdhbnQgdG8gY29uc2lkZXIgcmVmZXJlbmNlLWJhc2VkIHN5bnRheCBoZXJlIGluc3RlYWQs
-IHNvIHlvdQo+IGRvbid0IGhhdmUgdG8gbWltaWMgdGhlIGhpZXJhcmNoeS4gVGhhdCdkIGJlIChh
-dCB0aGUgcm9vdCBsZXZlbCBvZiB0aGUKPiBmaWxlLCBiZWxvdyB0aGlzIHNlY2lvbjoKPiAKPiAm
-c2JjX3NlcmlhbDA6IHsKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiB9OwoKSSdtIHBlcnNv
-bmFsbHkgbm90IGtlZW4gb24gdGhpcyBzY2hlbWUuICBJdCdzIHNvbWV0aW1lcyBoZWxwZnVsIHRv
-IGtub3cKdGhlIGhpZXJhcmNoeSBhbmQgSSBkb24ndCB0aGluayBpdCdzIGEgbGFyZ2Ugb3Zlcmhl
-YWQgdG8gZm9ybWF0IHRoZQpzdWJvcmRpbmF0ZSBEVFMgZmlsZXMgaW4gdGhpcyB3YXkuCgpQbGVh
-c2UgY29uc2lkZXIgbm90IGVuZm9yY2luZyB0aGlzLgoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RN
-aWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291
-cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0
-ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+b2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluaygpIGlzIGJlY29taW5nIG9ic29sZXRlLCBhbmQgYWxz
+byByZXF1aXJlZApwbGF0Zm9ybSBjb2RlIHRvIHJlZ2lzdGVyIHRoZSBmaXhlZCBQSFlzIGF0IHRo
+ZSBzcGVjaWZpZWQgYWRkcmVzc2VzIGZvcgp0aG9zZSB0byBiZSB1c2FibGUuIEdldCByaWQgb2Yg
+aXQgYW5kIHVzZSB0aGUgbmV3IG9mX3BoeV9pc19maXhlZF9saW5rKCkKcGx1cyBvZl9waHlfcmVn
+aXN0ZXJfZml4ZWRfbGluaygpIGhlbHBlcnMgdG8gdHJhbnNpdGlvbiBvdmVyIHRoZSBuZXcKc2No
+ZW1lLgoKU2lnbmVkLW9mZi1ieTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5j
+b20+Ci0tLQogZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL2ZzX2VuZXQvZnNfZW5ldC1t
+YWluLmMgfCAxNiArKysrKysrKystLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25z
+KCspLCA3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Zy
+ZWVzY2FsZS9mc19lbmV0L2ZzX2VuZXQtbWFpbi5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJl
+ZXNjYWxlL2ZzX2VuZXQvZnNfZW5ldC1tYWluLmMKaW5kZXggZGM4MGRiNDFkNmIzLi5kNjAyNzEx
+ZTAwZTkgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mc19lbmV0
+L2ZzX2VuZXQtbWFpbi5jCisrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9mc19l
+bmV0L2ZzX2VuZXQtbWFpbi5jCkBAIC03OTIsMTAgKzc5Miw2IEBAIHN0YXRpYyBpbnQgZnNfaW5p
+dF9waHkoc3RydWN0IG5ldF9kZXZpY2UgKmRldikKIAlwaHlkZXYgPSBvZl9waHlfY29ubmVjdChk
+ZXYsIGZlcC0+ZnBpLT5waHlfbm9kZSwgJmZzX2FkanVzdF9saW5rLCAwLAogCQkJCWlmYWNlKTsK
+IAlpZiAoIXBoeWRldikgewotCQlwaHlkZXYgPSBvZl9waHlfY29ubmVjdF9maXhlZF9saW5rKGRl
+diwgJmZzX2FkanVzdF9saW5rLAotCQkJCQkJICAgaWZhY2UpOwotCX0KLQlpZiAoIXBoeWRldikg
+ewogCQlkZXZfZXJyKCZkZXYtPmRldiwgIkNvdWxkIG5vdCBhdHRhY2ggdG8gUEhZXG4iKTsKIAkJ
+cmV0dXJuIC1FTk9ERVY7CiAJfQpAQCAtMTAyOSw5ICsxMDI1LDE1IEBAIHN0YXRpYyBpbnQgZnNf
+ZW5ldF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpvZmRldikKIAlmcGktPnVzZV9uYXBp
+ID0gMTsKIAlmcGktPm5hcGlfd2VpZ2h0ID0gMTc7CiAJZnBpLT5waHlfbm9kZSA9IG9mX3BhcnNl
+X3BoYW5kbGUob2ZkZXYtPmRldi5vZl9ub2RlLCAicGh5LWhhbmRsZSIsIDApOwotCWlmICgoIWZw
+aS0+cGh5X25vZGUpICYmICghb2ZfZ2V0X3Byb3BlcnR5KG9mZGV2LT5kZXYub2Zfbm9kZSwgImZp
+eGVkLWxpbmsiLAotCQkJCQkJICBOVUxMKSkpCi0JCWdvdG8gb3V0X2ZyZWVfZnBpOworCWlmICgh
+ZnBpLT5waHlfbm9kZSkgeworCQlpZiAob2ZfcGh5X2lzX2ZpeGVkX2xpbmsob2ZkZXYtPmRldi5v
+Zl9ub2RlKSkgeworCQkJZXJyID0gb2ZfcGh5X3JlZ2lzdGVyX2ZpeGVkX2xpbmsob2ZkZXYtPmRl
+di5vZl9ub2RlKTsKKwkJCWlmIChlcnIpCisJCQkJZ290byBvdXRfZnJlZV9mcGk7CisKKwkJCWZw
+aS0+cGh5X25vZGUgPSBvZmRldi0+ZGV2Lm9mX25vZGU7CisJCX0KKwl9CiAKIAlpZiAob2ZfZGV2
+aWNlX2lzX2NvbXBhdGlibGUob2ZkZXYtPmRldi5vZl9ub2RlLCAiZnNsLG1wYzUxMjUtZmVjIikp
+IHsKIAkJcGh5X2Nvbm5lY3Rpb25fdHlwZSA9IG9mX2dldF9wcm9wZXJ0eShvZmRldi0+ZGV2Lm9m
+X25vZGUsCi0tIAoxLjkuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KTGludXhwcGMtZGV2IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3ps
+YWJzLm9yZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
