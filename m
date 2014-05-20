@@ -1,85 +1,78 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Tue, 20 May 2014 14:50:26 +0900
-Message-ID: <20140520055026.E3A98C412DA@trevor.secretlab.ca>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
-	<20140514100856.5198DC4153D@trevor.secretlab.ca>
-	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
-	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
-	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
-	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek>
+From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 0/4] ARM: dts: enable display for peach-pit and snow boards
+Date: Tue, 20 May 2014 10:41:25 +0530
+Message-ID: <CAPdUM4OcHOiSAbNt_6yEo_YY3FqGxef=p33opW21nEt7P+m6Xw@mail.gmail.com>
+References: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
+	<537A25F8.4040604@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537A25F8.4040604-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 16 May 2014 13:52:42 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Hi Grant,
-> 
-> On Fri, May 16, 2014 at 12:58 PM, Grant Likely
-> <grant.likely@secretlab.ca> wrote:
-> > On Thu, 15 May 2014 09:20:24 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >> On Thu, May 15, 2014 at 9:12 AM, Pantelis Antoniou
-> >> <pantelis.antoniou@konsulko.com> wrote:
-> >> >> We also need to think about kexec. Kexec works by sucking the live tree
-> >> >> out of the kernel and creating a .dtb from it to pass to the new kernel.
-> >> >> What will the rules be when kexecing? Do all the overlays need to be
-> >> >> removed, or does the kernel get the tree with all the overlays applied
-> >> >> (in which case none of the overlays can be removed on the other side of
-> >> >> kexec).
-> >> >
-> >> > We can add a sysfs attribute that configures whether overlays are reverted before
-> >> > kexec or not. I can't really tell which is the correct option, so let's allow the
-> >> > policy up to user-space.
-> >>
-> >> Kexec'ing into a new kernel doesn't change the hardware, so IMHO the
-> >> in-kernel DT should not change.
-> >
-> > Conceptually though, if overlays are applied then the new kernel has a
-> > different tree from the old one. If the overlay is hotpluggable, then
-> > after the kexec, the new kernel would no longer be able to unplug the
-> > overlay if it uses the current state of the tree instead of pulling the
-> > overlays off first.
-> 
-> Which brings me to another question...
-> 
-> Why has the overlay system been designed for plugging and unpluging whole
-> overlays?
-> That means the kernel has to remember the full stack, causing issues with
-> e.g. kexec.
+Thanks Kukjin,
 
-Mostly so that drivers don't see any difference in the livetree data
-structure. It also means that userspace sees a single representation of
-the hardware at any given time.
+I have changed it in my environment now.
 
-> Why not allowing the addition of removal of subtrees of the full device
-> tree?
+Regards,
+Rahul Sharma.
 
-Overlays is more than just a subtree. A single overlay can make
-manipulations of multiple subtrees that should be handled as logically
-atomic.
-
-> This is similar to other hotpluggable subsystems (which are not necessarily
-> DT-based), like PCI Express. That way the kernel can pass a
-> DT-representation of the actual current device tree to a kexec'ed kernel.
-
-I'm not following you argument. Hardware hotplug systems like PCIe don't
-manipulate the firmware data. The kernel detects the new device and
-populates the Linux device model directly. Firmware provided data (ACPI
-or FDT) isn't involved.
-
-> 
-> I missed the initial design discussions, so forgive me if this has been
-> beaten to death before.
-
-It's a good question. An alternative would be to keep the overlay tree
-as a separate data structure and figure out how to make the core code
-reference the overlay when iterating over nodes and properties. I don't
-know how complex it would be to do that. We would definitely need to
-adjust the data structure a bit, but that isn't an insurmountable
-barrier.
-
-g.
+On 19 May 2014 21:10, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 05/09/14 19:09, Rahul Sharma wrote:
+>>
+>> From: Rahul Sharma<Rahul.Sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+>
+> Probably, should be "Rahul Sharma <rahul.sharma@...>"
+>
+> Please make sure your gitconfig has no problem.
+>
+> Just note, I found same thing and fixed your email address in my tree...
+>
+>
+>>
+>> Add nodes for fimd and dp controller for exynos5250 based snow
+>> and exynos5420 based peach-pit board.
+>>
+>> This series is based on Kukjin Kims, for-next branch.
+>>
+>> V3:
+>> 1) Dropped 1 patch "ARM: dts: move dp hpd line to the board file for
+>>   exynos5420".
+>> 2) Extra blank lines for readability.
+>> 3) dp hpd gpio name change (dp_hpd ->  dp_hpd_gpio)
+>>
+>> V2:
+>> 1) Rebase on Peach-pit dependent patches.
+>>
+>> It is dependent on
+>> 1) Andrew Bresticker's patch for hpd gpio addition, avilable at
+>> http://www.spinics.net/lists/linux-samsung-soc/msg28827.html [Patch is
+>> 'ACK'ed.]
+>> 2) Arun's patch for adding peach-pit board dts file at
+>> http://www.spinics.net/lists/linux-samsung-soc/msg30103.html. [Patch is
+>> 'ACK'ed.]
+>>
+>> Rahul Sharma (4):
+>>    ARM: dts: enable fimd for exynos5250 based snow board
+>>    ARM: dts: enable dp-controller for exynos5250 based snow board
+>>    ARM: dts: enable fimd for exynos5420 based peach-pit board
+>>    ARM: dts: enable dp-controller for exynos5420 based peach-pit board
+>>
+>>   arch/arm/boot/dts/exynos5250-snow.dts      |   35
+>> ++++++++++++++++++++++++
+>>   arch/arm/boot/dts/exynos5420-peach-pit.dts |   41
+>> ++++++++++++++++++++++++++++
+>>   2 files changed, 76 insertions(+)
+>>
+> OK, applied whole series with Jingoo's 'reviewed-by'.
+>
+> Thanks,
+> Kukjin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
